@@ -1,0 +1,43 @@
+id: desk-closeout-ritual
+title: Desk Closeout Ritual
+type: activity
+version: "1.0"
+metadata:
+  author: OpenCode
+  description: Phase-gated closeout flow for tracked desk tasks, including final validation, cleanup, and the dedicated closing commit gate.
+data:
+  start: start
+  end: closed
+  steps:
+    start:
+      label: Receive testing-to-closeout handoff
+      next: confirm_handoff
+    confirm_handoff:
+      label: Confirm passing evidence for contract, validations, and pills
+      next: rerun_validation
+    rerun_validation:
+      label: Run required validation commands and confirm they pass
+      next: confirm_pills
+    confirm_pills:
+      label: Confirm each bound pill was satisfied
+      next: cleanup_context
+    cleanup_context:
+      label: Remove stale context docs when no longer needed
+      next: untrack_task
+    untrack_task:
+      label: Untrack task document from local store if needed
+      next: delete_task
+    delete_task:
+      label: Delete resolved task file and remove it from the board
+      next: final_commit_gate
+    final_commit_gate:
+      label: Has the dedicated closing commit been created?
+      kind: decision
+      branches:
+        "yes": closed
+        "no": create_commit
+    create_commit:
+      label: Create one atomic closing commit
+      next: closed
+    closed:
+      label: Task closed with durable git record

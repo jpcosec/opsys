@@ -19,6 +19,7 @@ Route the active desk execution set: tasks, pills, and the ritual documents that
 - desk/contexts/pill-004-opsys-boundary.md
 - desk/contexts/pill-005-subagent-execution.md
 - desk/contexts/pill-006-self-described-store-layout.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
 
 ## Rituals
 
@@ -28,7 +29,7 @@ Route the active desk execution set: tasks, pills, and the ritual documents that
 
 ## Notes
 
-Every closed task must end in its own closing commit. Any missing SLDB capability discovered during execution must become a new active desk task.
+Every closed task must end in its own closing commit. Every non-trivial task must pass explicit initialization, execution, testing, and closeout gates. Any missing SLDB capability discovered during execution must become a new active desk task.
 
 ## Task Details
 

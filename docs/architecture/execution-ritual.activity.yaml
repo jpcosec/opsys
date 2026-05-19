@@ -1,0 +1,49 @@
+id: desk-execution-ritual
+title: Desk Execution Ritual
+type: activity
+version: "1.0"
+metadata:
+  author: OpenCode
+  description: Phase-gated execution flow for active desk tasks, including initialization, atomization, cold review, pill coverage, and testing handoff.
+data:
+  start: start
+  end: ready_for_testing
+  steps:
+    start:
+      label: Task becomes active
+      next: init_gate
+    init_gate:
+      label: Open initialization gate with scope, files, and validation targets
+      next: atomize
+    atomize:
+      label: Atomize into one coherent deliverable
+      next: audit
+    audit:
+      label: Audit code, docs, tests, and git state
+      next: cold_review
+    cold_review:
+      label: Fresh subagent reviews for ambiguity and missed pills
+      next: resolve_review
+    resolve_review:
+      label: Resolve or record cold-review findings
+      next: pill_sweep
+    pill_sweep:
+      label: Sweep board and task-local pills against scope and files
+      next: enough_coverage
+    enough_coverage:
+      label: Is pill coverage sufficient?
+      kind: decision
+      branches:
+        "yes": implement
+        "no": create_or_update_pill
+    create_or_update_pill:
+      label: Create or update pill before implementation
+      next: pill_sweep
+    implement:
+      label: Implement only scoped changes
+      next: prep_validation
+    prep_validation:
+      label: Prepare explicit handoff to testing
+      next: ready_for_testing
+    ready_for_testing:
+      label: Execution gate passed and testing handoff opened
