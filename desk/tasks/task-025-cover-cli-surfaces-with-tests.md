@@ -1,7 +1,7 @@
 # Cover CLI surfaces with tests
 
 ID: task-025
-Status: planned
+Status: active
 
 ## Goal
 

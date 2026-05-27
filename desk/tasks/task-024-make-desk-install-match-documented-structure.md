@@ -1,7 +1,7 @@
 # Make desk install match documented structure
 
 ID: task-024
-Status: planned
+Status: active
 
 ## Goal
 
@@ -29,6 +29,7 @@ Out of scope: broader repository discovery features or a full redesign of desk r
 - pill-002
 - pill-003
 - pill-004
+- pill-006
 - pill-007
 
 ## Files

@@ -36,32 +36,40 @@ class RepoCLI:
             "tags": tags,
         }
 
-        # Resolve registry root
-        desk_root = self._desk_root(args)
-        registry_dir = desk_root / "registry"
-        registry_dir.mkdir(parents=True, exist_ok=True)
+        # Preflight: resolve store context and model before any mutation
+        try:
+            store_path, root = self._store_context(args)
+        except SLDBStoreError as e:
+            print(f"Error: {e}")
+            return 1
 
-        # Build filename
-        filename = f"repo-{repo_id}.md"
-        output_path = registry_dir / filename
-
-        # Load model and render
-        store_path, root = self._store_context(args)
         try:
             model_type, entry, idx = registered_model(
                 store_path, "RepositoryDoc", args.pythonpath
             )
         except SLDBStoreError:
-            print("Warning: RepositoryDoc model not registered. Registry will not be tracked.")
-            # Fallback to direct write if model not found? 
-            # Or better: require registration for opsys to be "healthy"
+            print("Error: RepositoryDoc model is not registered in the store.")
+            print("Register it first with: sldb models add desk.models.repository:RepositoryDoc --store <path>")
+            return 1
+        except (FileNotFoundError, OSError) as e:
+            print(f"Error: cannot read store at {store_path}: {e}")
             return 1
 
         rendered = render_model_markdown(model_type, payload)
         valid, details = validate_model_input_roundtrip(model_type, rendered)
         if not valid:
-            raise SLDBValidationError("Repository registration failed validation", details)
+            print("Error: Repository registration failed validation.")
+            for issue in details:
+                print(f"  - {issue}")
+            return 1
 
+        # All prerequisites verified — mutate filesystem
+        desk_root = self._desk_root(args)
+        registry_dir = desk_root / "registry"
+        registry_dir.mkdir(parents=True, exist_ok=True)
+
+        filename = f"repo-{repo_id}.md"
+        output_path = registry_dir / filename
         output_path.write_text(rendered + "\n", encoding="utf-8")
         print(f"Wrote {output_path}")
 
@@ -95,7 +103,10 @@ class RepoCLI:
 
     def _store_context(self, args: Any) -> tuple[Path, Path]:
         if args.store:
-            return get_store_context(args.store)
+            try:
+                return get_store_context(args.store)
+            except (SLDBStoreError, FileNotFoundError, OSError) as e:
+                raise SLDBStoreError(str(e))
         local_store = find_local_store()
         if local_store is None:
             raise SLDBStoreError("No store found to anchor the registry.")

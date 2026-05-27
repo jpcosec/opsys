@@ -3,8 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
-from .repo import RepoCLI
-
 
 class DeskCLI:
     """Handle desk workspace scaffolding and rituals."""
@@ -19,86 +17,124 @@ class DeskCLI:
         if not target_path.exists():
             print(f"Error: Path {target_path} does not exist.")
             return 1
+        if not target_path.is_dir():
+            print(f"Error: Path {target_path} is not a directory.")
+            return 1
 
         desk_dir = target_path / "desk"
-        subdirs = ["tasks", "pills", "inbox", "registry"]
-        
-        print(f"Scaffolding desk at {desk_dir}...")
-        desk_dir.mkdir(exist_ok=True)
+        subdirs = [
+            "tasks",
+            "contexts",
+            "rituals",
+            "inbox",
+            "drawer",
+            "drawer/atoms",
+        ]
+
+        print(f"Scaffolding local desk at {desk_dir}...")
+        desk_dir.mkdir(parents=True, exist_ok=True)
         for sub in subdirs:
-            (desk_dir / sub).mkdir(exist_ok=True)
+            (desk_dir / sub).mkdir(parents=True, exist_ok=True)
 
-        # Write Board.md
-        board_path = desk_dir / "tasks" / "Board.md"
-        if not board_path.exists():
-            board_path.write_text(self._board_template(target_path.name), encoding="utf-8")
-            print(f"Wrote {board_path}")
+        self._write_if_missing(
+            desk_dir / "tasks" / "Board.md",
+            self._board_template(target_path.name),
+        )
+        self._write_if_missing(
+            desk_dir / "contexts" / "pills.md",
+            self._pills_template(target_path.name),
+        )
+        self._write_if_missing(
+            desk_dir / "rituals" / "execution.md",
+            self._execution_template(target_path.name),
+        )
+        self._write_if_missing(
+            desk_dir / "rituals" / "testing.md",
+            self._testing_template(target_path.name),
+        )
+        self._write_if_missing(
+            desk_dir / "rituals" / "closeout.md",
+            self._closeout_template(target_path.name),
+        )
+        self._write_if_missing(
+            desk_dir / "drawer" / "README.md",
+            self._drawer_template(target_path.name),
+        )
 
-        # Write STANDARDS.md
-        standards_path = desk_dir / "STANDARDS.md"
-        if not standards_path.exists():
-            standards_path.write_text(self._standards_template(target_path.name), encoding="utf-8")
-            print(f"Wrote {standards_path}")
+        print("Scaffold complete.")
+        print("Register the repo separately with 'deskops repo register ...' when you are ready.")
+        return 0
 
-        # Auto-register the repo in the ecosystem registry
-        print("Registering repository in ecosystem...")
-        repo_args = type('Args', (), {
-            'name': args.name or target_path.name,
-            'path': str(target_path.relative_to(self._ecosystem_root())),
-            'id': args.id,
-            'description': f"Workflow surface for {target_path.name}.",
-            'tags': "type:tool,layer:distributed",
-            'store': args.store,
-            'pythonpath': args.pythonpath,
-            'repo_command': 'register'
-        })
-        
-        repo_cli = RepoCLI()
-        return repo_cli.register(repo_args)
-
-    def _ecosystem_root(self) -> Path:
-        # Assuming ecosystem root is the parent of the root store
-        from sldb.store.resolver import find_local_store
-        from sldb.store.layout import project_root
-        
-        local_store = find_local_store()
-        if local_store:
-            return project_root(local_store)
-        return Path.cwd()
+    def _write_if_missing(self, path: Path, content: str) -> None:
+        if path.exists():
+            return
+        path.write_text(content, encoding="utf-8")
+        print(f"Wrote {path}")
 
     def _board_template(self, name: str) -> str:
         return f"""# {name} Board
 
-## Current State Summary
-
-Bootstrap complete. Execution surface ready.
-
-## Active
-
-- none
-
-## Recently Closed
-
-- none
-
-## Working Rules
-
-1. Every task ends in a closing commit.
-2. Decisions belong in pills.
-3. Inbox is for incoming noise/suggestions.
-"""
-
-    def _standards_template(self, name: str) -> str:
-        return f"""# {name} Desk Standards
+ID: board-001
+Scope: desk
 
 ## Purpose
 
-Maintain operational health for {name}.
+Route the active execution set for {name}.
+
+## Tasks
+
+- none
+
+## Pills
+
+- desk/contexts/pills.md
 
 ## Rituals
 
-- **Initialization**: Review Board.md and triage Inbox.
-- **Execution**: Small atomic commits.
-- **Testing**: Run local test suite.
-- **Closeout**: Update Board.md and move to next task.
+- desk/rituals/execution.md
+- desk/rituals/testing.md
+- desk/rituals/closeout.md
+
+## Notes
+
+Bootstrap complete. Add active task docs under `desk/tasks/` and route them here.
+
+## Tags
+
+- workspace:desk
+"""
+
+    def _pills_template(self, name: str) -> str:
+        return f"""# Pills
+
+Pills are reusable context documents for the {name} desk routine.
+
+## Notes
+
+- Keep active task-to-pill binding in task docs.
+- Add temporary context here only when it affects execution safety or scope.
+"""
+
+    def _execution_template(self, name: str) -> str:
+        return f"""# Execution ritual
+
+Review the board, bind the relevant pills, keep scope tight, and implement only the active task for {name}.
+"""
+
+    def _testing_template(self, name: str) -> str:
+        return f"""# Testing ritual
+
+Run the smallest relevant validation first, then broaden coverage when {name} changes shared behavior.
+"""
+
+    def _closeout_template(self, name: str) -> str:
+        return f"""# Closeout ritual
+
+Close a {name} task only after validation passes, the board is updated, and the final change is ready to commit.
+"""
+
+    def _drawer_template(self, name: str) -> str:
+        return f"""# Drawer
+
+Deferred desk work for {name} lives here until it is promoted into active execution.
 """

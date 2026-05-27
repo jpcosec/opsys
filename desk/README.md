@@ -20,8 +20,17 @@ Nothing in `desk/` is durable project history. Stable knowledge must end up in c
 - `desk/contexts/` - active context documents only.
 - `desk/contexts/pills.md` - pill conventions and current base shape.
 - `desk/rituals/` - structured ritual documents for execution, testing, and closeout.
+- `desk/inbox/` - incoming unclear points and suggestions.
 - `desk/drawer/` - deferred work kept inside the desk system until it becomes active execution.
 - `desk/drawer/atoms/` - durable conceptual source atoms owned by opsys and materialized into later-phase artifacts.
+
+## `desk install`
+
+`deskops desk install <path>` creates a minimal repo-local desk surface.
+
+Today that scaffold is intentionally local only: it creates `tasks/`, `contexts/`, `rituals/`, `inbox/`, and `drawer/` under the target repo's `desk/` directory, plus starter files for the board, pills, rituals, and drawer README.
+
+It does not auto-register the repository in any ecosystem registry. Use `deskops repo register ...` as a separate explicit step when you want cross-repo registry discovery.
 
 ## Models
 

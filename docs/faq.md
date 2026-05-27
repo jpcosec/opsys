@@ -104,9 +104,11 @@ This command is for cross-repo discovery inside the workflow ecosystem, not for 
 
 ## What does `desk install` do right now?
 
-It scaffolds an initial `desk/` surface in a target repository and then tries to register that repository in the ecosystem registry.
+It scaffolds a minimal repo-local `desk/` surface in a target repository.
 
-This command currently assumes a compatible `sldb` store context for the registration step. If that prerequisite is missing, the scaffold step may succeed before registration fails.
+The scaffold creates local `tasks/`, `contexts/`, `rituals/`, `inbox/`, and `drawer/` directories plus starter files for the board, pills, rituals, and drawer README.
+
+It does not auto-register the repository in an ecosystem registry. If you want cross-repo registry discovery, run `deskops repo register ...` as a separate step once the target repo is ready.
 
 ## How do I validate changes in this repo?
 

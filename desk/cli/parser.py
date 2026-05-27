@@ -25,12 +25,8 @@ def _add_desk_commands(
     p = subparsers.add_parser("desk", help="Desk workspace management.")
     s = p.add_subparsers(dest="desk_command", required=True)
 
-    ins = s.add_parser("install", help="Scaffold a standard desk/ surface in a repo.")
+    ins = s.add_parser("install", help="Scaffold a minimal local desk/ surface in a repo.")
     ins.add_argument("path", help="Target repository path")
-    ins.add_argument("--name", help="Repo name for the registry")
-    ins.add_argument("--id", help="Repo ID for the registry")
-    ins.add_argument("--store", help="Ecosystem store to update")
-    ins.add_argument("--pythonpath", help="Python path for model resolution")
 
 
 def _add_repo_commands(
