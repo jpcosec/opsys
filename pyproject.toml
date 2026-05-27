@@ -1,13 +1,17 @@
 [project]
-name = "opsys"
+name = "deskops"
 version = "0.1.0"
-description = "Workflow-domain layer built on top of SLDB"
+description = "Workflow-domain layer for the hum-ecosystem"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.0",
     "sldb>=0.1.0",
+    "PyYAML>=6.0",
 ]
+
+[project.scripts]
+deskops = "desk.cli.main:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
