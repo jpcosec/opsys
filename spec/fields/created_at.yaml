@@ -1,0 +1,10 @@
+id: field.created_at
+title: Created At Field
+type: field
+version: "0.1"
+
+data:
+  key: created_at
+  value_type: string
+  required: true
+  default: ""

@@ -1,0 +1,17 @@
+id: primitive.task.has_implementation_path
+title: Task Has Implementation Path
+type: primitive
+version: "0.1"
+
+data:
+  kind: condition
+  template:
+    title: Implementation path exists
+    id: condition-{task_id}-has-implementation-path
+    status: active
+    summary: Task implementation path must exist before execution.
+    subject: implementation_path
+    predicate: truthy
+    expected: ""
+    tags:
+      - primitive:condition

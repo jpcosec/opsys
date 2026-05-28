@@ -8,7 +8,7 @@ This FAQ is the first-use orientation layer for `deskops`.
 
 Use the installed console script `deskops ...`.
 
-You can also run the module form `python -m desk.cli.main ...` from this repo checkout.
+You can also run the module form `python -m deskops ...` from this repo checkout.
 
 Do not run `bash deskops ...`. `deskops` is a CLI entrypoint, not a shell script.
 
@@ -17,24 +17,88 @@ Examples:
 ```bash
 deskops --help
 deskops faq
-python -m desk.cli.main --help
+python -m deskops --help
 ```
 
 ## What does this repo provide today?
 
-The current public CLI surface is intentionally small:
+deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` define every artifact model, fields, and operational behavior. The compiler turns specs into sldb docs at runtime. The CLI is partially derived from specs.
 
-- `deskops faq` for first-use help
-- `deskops inbox` for writing and browsing desk inbox notes
-- `deskops repo register` for registering repositories in the ecosystem desk registry
-- `deskops desk install` for scaffolding a desk surface in a target repository
+### Core CLI commands
 
-The models under `desk/models/` and the materializers under `desk/materializers/` are also importable from Python.
+- `deskops about` — short overview and first-use orientation
+- `deskops bootstrap` — machine-level sldb and global-store setup
+- `deskops init` — initialize a repo-local `.sldb/` plus `desk/`
+- `deskops faq` — first-use help (this document)
+- `deskops inbox` — write and browse desk inbox notes
+- `deskops repo register` — register repositories in the ecosystem desk registry
+- `deskops desk install` — scaffold a desk surface in a target repository
+
+### Spec-driven artifact commands
+
+**Add artifacts** — `deskops add <artifact> [--flags...]`
+
+Creates compiled artifacts (sldb doc + field instances) from spec templates.
+
+Supported artifact types:
+
+| Subject | Description | Key flags |
+|---|---|---|
+| `task` | Actionable task bundle with routine | `--title`, `--goal`, `--scope` |
+| `pill` | Reusable context document | `--title`, `--what`, `--why` |
+| `ritual` | Repeatable procedure template | `--title`, `--purpose`, `--steps` |
+| `board` | Task coordination surface | `--title`, `--goal` |
+| `atom` | Durable architectural concept | `--title`, `--what`, `--why`, `--category` |
+| `repository` | Repo registration | `--name`, `--path`, `--status` |
+| `inbox-note` | Unclear point or suggestion | `--kind`, `--author`, `--title`, `--body` |
+| `faq-doc` | FAQ entry | (spec-defined flags) |
+| `step` | Procedure step | `--title`, `--action`, `--outcome` |
+| `condition` | Primitive: predicate guard | `--title`, `--subject`, `--predicate` |
+| `operator` | Primitive: state transition | `--title`, `--action`, `--target` |
+| `checklist` | Primitive: completion items | `--title`, `--items`, `--mode` |
+| `hook` | Primitive: side-effect trigger | `--title`, `--event`, `--target-ref` |
+| `edge` | Primitive: routine graph edge | `--title`, `--source`, `--target-node` |
+| `routine` | Primitive: procedure graph | `--title`, `--entrypoint`, `--decomposition` |
+
+**List artifacts** — `deskops list <artifacts>`
+
+Lists all docs of a given type:
+
+```
+deskops list tasks
+deskops list atoms
+deskops list pills
+deskops list inbox-notes
+deskops list repositories
+deskops list conditions
+...
+```
+
+**Show artifacts** — `deskops show <artifact> <doc-id>`
+
+Displays one artifact doc with all its fields and field refs:
+
+```
+deskops show atom atom-001
+deskops show task task-021
+deskops show repository repo-deskops
+```
+
+**Advance tasks** — `deskops advance task <task-id>`
+
+Walks a task through its routine: evaluates current checklists, checks edge conditions, and transitions to the next node via the matching operator.
+
+### Generated CLI surface
+
+The `add`, `list`, and `show` subcommands for spec-driven artifacts (atoms, pills, rituals, boards, repositories, inbox-notes, faq-docs, steps) are automatically generated from the artifact registry. When a new artifact type is added to `ARTIFACT_SUBJECTS` in `deskops/operations.py`, subcommands and `--flag` generation follow automatically.
+
+The models under `deskops.models` and the materializers under `deskops.materializers` are also importable from Python.
 
 Durable workflow guidance lives under `docs/`, including:
 
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
+- `docs/faq.md` (this file)
 
 ## What is the relationship between `deskops` and `sldb`?
 
@@ -44,14 +108,31 @@ Durable workflow guidance lives under `docs/`, including:
 
 ## How do I install it for local use?
 
-In the current workspace setup, install `sldb` first from a sibling checkout and then install `deskops`.
+Install `deskops` from this repo checkout.
 
 ```bash
-pip install -e ../sldb
 pip install -e .[dev]
 ```
 
+If `sldb` is not already installed, keep the sibling checkout at `../sldb` and run:
+
+```bash
+deskops bootstrap
+```
+
+That bootstrap flow installs or repairs `sldb`, creates `~/.sldb` when needed, and registers the deskops model set there.
+
 If you only need the runtime package instead of the dev extras, `pip install -e .` is enough.
+
+## What should I run first in a repo?
+
+Use `deskops init` from the target repo root.
+
+```bash
+deskops init .
+```
+
+This command ensures `sldb` is available, creates a local `.sldb/` store if it does not already exist, and scaffolds `desk/` if needed.
 
 ## Is a store required?
 
@@ -59,6 +140,7 @@ Not for every command.
 
 - `deskops faq` does not require a store.
 - `deskops inbox` can write directly into a repo-local `desk/inbox/` without a store if you pass `--desk-root` or run it from the target project.
+- `deskops bootstrap` creates or repairs the global `~/.sldb` store and registers the deskops models there.
 - `deskops repo register` and any auto-tracking behavior depend on a resolvable `sldb` store.
 
 If no store is available, commands that depend on registry lookup or tracked-document registration will fail until you provide `--store` or run them from the right project context.
@@ -110,6 +192,18 @@ The scaffold creates local `tasks/`, `contexts/`, `rituals/`, `inbox/`, and `dra
 
 It does not auto-register the repository in an ecosystem registry. If you want cross-repo registry discovery, run `deskops repo register ...` as a separate step once the target repo is ready.
 
+## What does `deskops bootstrap` do?
+
+It is the machine-level first-use repair command.
+
+When `sldb` is missing, it installs or repairs it from the sibling `../sldb` checkout. It then initializes the global `~/.sldb` store if needed and registers the deskops model set there.
+
+## What does `deskops init` do?
+
+It is the repo-level first-use command.
+
+It runs the bootstrap preflight, creates a local `.sldb/` store in the target repo if one does not already exist, and scaffolds `desk/` if it is missing.
+
 ## How do I validate changes in this repo?
 
 Run the test suite from the repo root.
@@ -121,6 +215,6 @@ pytest
 For CLI work, also run the relevant command directly, for example:
 
 ```bash
-python -m desk.cli.main --help
+python -m deskops --help
 deskops faq
 ```

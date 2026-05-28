@@ -1,0 +1,10 @@
+id: field.preconditions
+title: Preconditions Field
+type: field
+version: "0.1"
+
+data:
+  key: preconditions
+  value_type: list[string]
+  required: false
+  default: []

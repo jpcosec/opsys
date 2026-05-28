@@ -1,0 +1,27 @@
+id: artifact.atom
+title: Atom Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: AtomDoc
+    id_pattern: atom-{slug}
+    status_default: stable
+    tags:
+      - workspace:drawer
+      - artifact:atom
+  fields:
+    - field.title
+    - field.status
+    - field.category
+    - field.what
+    - field.why
+    - field.how
+    - field.when
+    - field.where
+    - field.for_whom
+    - field.related_atoms
+    - field.materializes_into
+    - field.stabilized_in
+    - field.distinct_from_pills

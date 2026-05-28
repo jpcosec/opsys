@@ -1,0 +1,17 @@
+id: primitive.task.activate
+title: Task Activate
+type: primitive
+version: "0.1"
+
+data:
+  kind: operator
+  template:
+    title: Activate task
+    id: operator-{task_id}-activate
+    status: active
+    summary: Moves the task into active execution.
+    action: set_field
+    target: status
+    value: active
+    tags:
+      - primitive:operator

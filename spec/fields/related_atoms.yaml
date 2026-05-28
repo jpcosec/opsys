@@ -1,0 +1,10 @@
+id: field.related_atoms
+title: Related Atoms Field
+type: field
+version: "0.1"
+
+data:
+  key: related_atoms
+  value_type: list[string]
+  required: false
+  default: []

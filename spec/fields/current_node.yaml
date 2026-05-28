@@ -1,0 +1,10 @@
+id: field.current_node
+title: Current Node Field
+type: field
+version: "0.1"
+
+data:
+  key: current_node
+  value_type: string
+  required: false
+  default: ""

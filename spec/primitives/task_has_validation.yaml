@@ -1,0 +1,17 @@
+id: primitive.task.has_validation
+title: Task Has Validation
+type: primitive
+version: "0.1"
+
+data:
+  kind: condition
+  template:
+    title: Validation exists
+    id: condition-{task_id}-has-validation
+    status: active
+    summary: Task validation must exist before testing handoff.
+    subject: validation
+    predicate: not_empty
+    expected: ""
+    tags:
+      - primitive:condition

@@ -1,0 +1,18 @@
+id: artifact.repository
+title: Repository Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: RepositoryDoc
+    id_pattern: repo-{slug}
+    status_default: active
+    tags:
+      - workspace:desk
+      - artifact:repository
+  fields:
+    - field.name
+    - field.path
+    - field.status
+    - field.description

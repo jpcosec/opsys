@@ -1,0 +1,10 @@
+id: field.status
+title: Status Field
+type: field
+version: "0.1"
+
+data:
+  key: status
+  value_type: string
+  required: true
+  default: draft

@@ -1,0 +1,17 @@
+id: primitive.task.ready_for_closeout
+title: Task Ready For Closeout
+type: primitive
+version: "0.1"
+
+data:
+  kind: condition
+  template:
+    title: Ready for closeout
+    id: condition-{task_id}-ready-for-closeout
+    status: active
+    summary: Task must be in ready_for_testing before closeout.
+    subject: status
+    predicate: equals
+    expected: ready_for_testing
+    tags:
+      - primitive:condition

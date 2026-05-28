@@ -1,0 +1,21 @@
+id: artifact.pill
+title: Pill Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: PillDoc
+    id_pattern: pill-{slug}
+    status_default: active
+    tags:
+      - workspace:desk
+      - artifact:pill
+  fields:
+    - field.title
+    - field.what
+    - field.why
+    - field.when
+    - field.where
+    - field.how
+    - field.how_not

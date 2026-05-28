@@ -1,0 +1,10 @@
+id: field.stabilized_in
+title: Stabilized In Field
+type: field
+version: "0.1"
+
+data:
+  key: stabilized_in
+  value_type: list[string]
+  required: false
+  default: []

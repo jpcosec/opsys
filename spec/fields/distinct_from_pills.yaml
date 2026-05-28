@@ -1,0 +1,10 @@
+id: field.distinct_from_pills
+title: Distinct From Pills Field
+type: field
+version: "0.1"
+
+data:
+  key: distinct_from_pills
+  value_type: string
+  required: true
+  default: ""

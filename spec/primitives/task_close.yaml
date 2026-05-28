@@ -1,0 +1,17 @@
+id: primitive.task.close
+title: Task Close
+type: primitive
+version: "0.1"
+
+data:
+  kind: operator
+  template:
+    title: Close task
+    id: operator-{task_id}-close
+    status: active
+    summary: Closes the task in the operational runtime.
+    action: set_field
+    target: status
+    value: closed
+    tags:
+      - primitive:operator

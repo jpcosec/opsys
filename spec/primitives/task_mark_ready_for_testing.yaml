@@ -1,0 +1,17 @@
+id: primitive.task.mark_ready_for_testing
+title: Task Mark Ready For Testing
+type: primitive
+version: "0.1"
+
+data:
+  kind: operator
+  template:
+    title: Mark ready for testing
+    id: operator-{task_id}-ready-for-testing
+    status: active
+    summary: Moves the task into the testing gate.
+    action: set_field
+    target: status
+    value: ready_for_testing
+    tags:
+      - primitive:operator

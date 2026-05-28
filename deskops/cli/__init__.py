@@ -1,0 +1,1 @@
+"""deskops CLI package."""

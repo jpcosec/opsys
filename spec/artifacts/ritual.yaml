@@ -1,0 +1,22 @@
+id: artifact.ritual
+title: Ritual Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: RitualDoc
+    id_pattern: ritual-{slug}
+    status_default: active
+    tags:
+      - workspace:desk
+      - artifact:ritual
+  fields:
+    - field.title
+    - field.purpose
+    - field.trigger
+    - field.preconditions
+    - field.steps
+    - field.validation
+    - field.failure_modes
+    - field.completion

@@ -1,0 +1,10 @@
+id: field.kind
+title: Kind Field
+type: field
+version: "0.1"
+
+data:
+  key: kind
+  value_type: string
+  required: true
+  default: unclear

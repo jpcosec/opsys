@@ -1,0 +1,10 @@
+id: field.scope
+title: Scope Field
+type: field
+version: "0.1"
+
+data:
+  key: scope
+  value_type: string
+  required: true
+  default: ""

@@ -1,0 +1,10 @@
+id: field.how
+title: How Field
+type: field
+version: "0.1"
+
+data:
+  key: how
+  value_type: string
+  required: true
+  default: ""

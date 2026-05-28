@@ -1,0 +1,10 @@
+id: field.description
+title: Description Field
+type: field
+version: "0.1"
+
+data:
+  key: description
+  value_type: string
+  required: true
+  default: ""

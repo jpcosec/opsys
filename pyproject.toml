@@ -6,12 +6,11 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
     "pydantic>=2.0",
-    "sldb>=0.1.0",
     "PyYAML>=6.0",
 ]
 
 [project.scripts]
-deskops = "desk.cli.main:main"
+deskops = "deskops.cli.main:main"
 
 [build-system]
 requires = ["setuptools>=61.0"]
@@ -24,7 +23,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["desk*"]
+include = ["desk*", "deskops*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

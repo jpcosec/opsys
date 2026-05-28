@@ -1,0 +1,10 @@
+id: field.done_when
+title: Done When Field
+type: field
+version: "0.1"
+
+data:
+  key: done_when
+  value_type: string
+  required: true
+  default: ""

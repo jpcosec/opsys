@@ -49,7 +49,7 @@ class RepoCLI:
             )
         except SLDBStoreError:
             print("Error: RepositoryDoc model is not registered in the store.")
-            print("Register it first with: sldb models add desk.models.repository:RepositoryDoc --store <path>")
+            print("Register it first with: python -m sldb models add deskops.models:RepositoryDoc --store <path>")
             return 1
         except (FileNotFoundError, OSError) as e:
             print(f"Error: cannot read store at {store_path}: {e}")

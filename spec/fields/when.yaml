@@ -1,0 +1,10 @@
+id: field.when
+title: When Field
+type: field
+version: "0.1"
+
+data:
+  key: when
+  value_type: string
+  required: true
+  default: ""

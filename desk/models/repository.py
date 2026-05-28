@@ -20,6 +20,10 @@ Status: ⸢rev•status⸥
 
 ⸢rev,markdown•description⸥
 
+## Field Refs
+
+- ⸢rev,list•field_refs⸥
+
 ## Tags
 
 - ⸢rev,list•tags⸥
@@ -33,6 +37,10 @@ Status: ⸢rev•status⸥
         description="Current status of the repository (e.g., active, maintenance, archived).",
     )
     description: str = Field(description="Markdown description of the repository's purpose and scope.")
+    field_refs: list[str] = Field(
+        default_factory=list,
+        description="Field instance identifiers composed into the repository artifact.",
+    )
     tags: list[str] = Field(
         default_factory=list,
         description="Semantic tags for categorization (e.g., type:tool, layer:infra).",

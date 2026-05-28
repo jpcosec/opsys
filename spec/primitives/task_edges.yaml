@@ -1,0 +1,62 @@
+id: primitive.task.edges
+title: Task Lifecycle Edges
+type: primitive
+version: "0.1"
+
+data:
+  kind: edge_set
+  template:
+    - title: Execution gate to activation
+      id: edge-{task_id}-execution-to-activate
+      status: active
+      summary: Execution gate passed.
+      source: checklist-{task_id}-execution-ready
+      target: operator-{task_id}-activate
+      condition_ref: ""
+      tags:
+        - primitive:edge
+    - title: Activation to testing gate
+      id: edge-{task_id}-activate-to-testing
+      status: active
+      summary: Activation complete.
+      source: operator-{task_id}-activate
+      target: checklist-{task_id}-testing-ready
+      condition_ref: ""
+      tags:
+        - primitive:edge
+    - title: Testing gate to testing-ready operator
+      id: edge-{task_id}-testing-to-ready
+      status: active
+      summary: Testing gate passed.
+      source: checklist-{task_id}-testing-ready
+      target: operator-{task_id}-ready-for-testing
+      condition_ref: ""
+      tags:
+        - primitive:edge
+    - title: Testing-ready operator to closeout gate
+      id: edge-{task_id}-ready-to-closeout
+      status: active
+      summary: Ready-for-testing state entered.
+      source: operator-{task_id}-ready-for-testing
+      target: checklist-{task_id}-closeout-ready
+      condition_ref: ""
+      tags:
+        - primitive:edge
+    - title: Closeout gate to close operator
+      id: edge-{task_id}-closeout-to-close
+      status: active
+      summary: Closeout gate passed.
+      source: checklist-{task_id}-closeout-ready
+      target: operator-{task_id}-close
+      condition_ref: ""
+      tags:
+        - primitive:edge
+    - title: Close operator to complete
+      id: edge-{task_id}-close-to-complete
+      status: active
+      summary: Task closed.
+      source: operator-{task_id}-close
+      target: complete
+      condition_ref: ""
+      tags:
+        - primitive:edge

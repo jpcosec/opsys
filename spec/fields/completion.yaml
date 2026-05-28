@@ -1,0 +1,10 @@
+id: field.completion
+title: Completion Field
+type: field
+version: "0.1"
+
+data:
+  key: completion
+  value_type: string
+  required: true
+  default: ""

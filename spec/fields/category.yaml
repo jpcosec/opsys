@@ -1,0 +1,10 @@
+id: field.category
+title: Category Field
+type: field
+version: "0.1"
+
+data:
+  key: category
+  value_type: string
+  required: true
+  default: ""

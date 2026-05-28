@@ -1,0 +1,19 @@
+id: primitive.task.testing_ready
+title: Task Testing Ready
+type: primitive
+version: "0.1"
+
+data:
+  kind: checklist
+  template:
+    title: Testing Ready
+    id: checklist-{task_id}-testing-ready
+    status: active
+    summary: Confirms the task is ready for testing handoff.
+    items:
+      - Validation exists
+    condition_refs:
+      - condition-{task_id}-has-validation
+    mode: all
+    tags:
+      - primitive:checklist

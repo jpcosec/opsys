@@ -1,0 +1,21 @@
+id: artifact.board
+title: Board Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: BoardDoc
+    id_pattern: board-{slug}
+    status_default: active
+    tags:
+      - workspace:desk
+      - artifact:board
+  fields:
+    - field.title
+    - field.scope
+    - field.purpose
+    - field.tasks
+    - field.pills
+    - field.rituals
+    - field.notes

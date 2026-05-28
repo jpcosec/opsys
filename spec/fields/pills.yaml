@@ -1,0 +1,10 @@
+id: field.pills
+title: Pills Field
+type: field
+version: "0.1"
+
+data:
+  key: pills
+  value_type: list[string]
+  required: false
+  default: []

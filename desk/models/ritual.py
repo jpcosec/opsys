@@ -1,9 +1,9 @@
 from pydantic import Field
 
-from sldb import StructuredNLDoc
+from .base import OperationalArtifactDoc
 
 
-class RitualDoc(StructuredNLDoc):
+class RitualDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "ritual"], "workspace": ["desk"]}
     __compositions__ = {
         "step_details": {
@@ -45,6 +45,10 @@ ID: ⸢rev•id⸥
 
 ⸢rev•completion⸥
 
+## Field Refs
+
+- ⸢rev,list•field_refs⸥
+
 ## Step Details
 
 ⸢render•step_details⸥
@@ -76,6 +80,10 @@ ID: ⸢rev•id⸥
     )
     completion: str = Field(
         description="What indicates that the ritual has been completed."
+    )
+    field_refs: list[str] = Field(
+        default_factory=list,
+        description="Field instance identifiers composed into the ritual artifact.",
     )
     tags: list[str] = Field(
         default_factory=list,

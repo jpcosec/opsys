@@ -1,0 +1,10 @@
+id: field.implementation_path
+title: Implementation Path Field
+type: field
+version: "0.1"
+
+data:
+  key: implementation_path
+  value_type: string
+  required: true
+  default: ""

@@ -1,9 +1,9 @@
 from pydantic import Field
 
-from sldb import StructuredNLDoc
+from .base import OperationalArtifactDoc
 
 
-class PillDoc(StructuredNLDoc):
+class PillDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "pill"], "workspace": ["desk"]}
     __template__ = """
 # ⸢rev•title⸥
@@ -34,6 +34,10 @@ ID: ⸢rev•id⸥
 
 ⸢rev•how_not⸥
 
+## Field Refs
+
+- ⸢rev,list•field_refs⸥
+
 ## Tags
 
 - ⸢rev,list•tags⸥
@@ -53,6 +57,10 @@ ID: ⸢rev•id⸥
     )
     how: str = Field(description="How to apply the guidance in practice.")
     how_not: str = Field(description="How not to apply the guidance or what to avoid.")
+    field_refs: list[str] = Field(
+        default_factory=list,
+        description="Field instance identifiers composed into the pill artifact.",
+    )
     tags: list[str] = Field(
         default_factory=list,
         description="Semantic tags placed at the end, using namespaced forms such as 'language:python' or 'library:pydantic'.",

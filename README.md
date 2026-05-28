@@ -15,16 +15,34 @@ Durable guides currently include:
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
 
-## Dependency
+## Install
 
-`deskops` depends on `sldb` as infrastructure. In a local sibling checkout:
+Install `deskops` from this repo checkout:
 
 ```bash
-pip install -e ../sldb
 pip install -e .[dev]
 ```
 
-Or run tests directly with the sibling checkout available.
+If `sldb` is not already available on the machine, `deskops` can bootstrap it from the sibling checkout at `../sldb`.
+
+Recommended first-use flow:
+
+```bash
+deskops bootstrap
+deskops init .
+```
+
+`deskops bootstrap` will:
+
+- install or repair `sldb` from the sibling checkout when it is missing
+- initialize the global store at `~/.sldb` when needed
+- register the `deskops` models into that global store
+
+`deskops init <path>` will:
+
+- ensure the bootstrap prerequisites are ready
+- create a local `.sldb/` store under the target repo when missing
+- scaffold `desk/` when missing
 
 ## CLI
 
@@ -32,11 +50,14 @@ Run the installed entrypoint as `deskops`, or use the module form from this repo
 
 ```bash
 deskops --help
-python -m desk.cli.main --help
+python -m deskops --help
 ```
 
 Current commands:
 
+- `deskops about`
+- `deskops bootstrap`
+- `deskops init`
 - `deskops faq`
 - `deskops inbox`
 - `deskops repo register`

@@ -1,0 +1,10 @@
+id: field.notes
+title: Notes Field
+type: field
+version: "0.1"
+
+data:
+  key: notes
+  value_type: string
+  required: false
+  default: No additional notes.

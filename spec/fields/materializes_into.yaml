@@ -1,0 +1,10 @@
+id: field.materializes_into
+title: Materializes Into Field
+type: field
+version: "0.1"
+
+data:
+  key: materializes_into
+  value_type: list[string]
+  required: false
+  default: []

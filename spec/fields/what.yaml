@@ -1,0 +1,10 @@
+id: field.what
+title: What Field
+type: field
+version: "0.1"
+
+data:
+  key: what
+  value_type: string
+  required: true
+  default: ""

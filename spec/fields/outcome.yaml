@@ -1,0 +1,10 @@
+id: field.outcome
+title: Outcome Field
+type: field
+version: "0.1"
+
+data:
+  key: outcome
+  value_type: string
+  required: true
+  default: ""

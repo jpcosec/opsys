@@ -1,0 +1,16 @@
+id: artifact.faq
+title: FAQ Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: FAQDoc
+    id_pattern: faq-{slug}
+    status_default: active
+    tags:
+      - workspace:docs
+      - artifact:faq
+  fields:
+    - field.title
+    - field.body

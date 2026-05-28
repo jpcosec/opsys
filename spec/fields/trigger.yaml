@@ -1,0 +1,10 @@
+id: field.trigger
+title: Trigger Field
+type: field
+version: "0.1"
+
+data:
+  key: trigger
+  value_type: string
+  required: true
+  default: ""

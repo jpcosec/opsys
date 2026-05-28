@@ -1,0 +1,52 @@
+id: artifact.task
+title: Task Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    id_pattern: task-{slug}
+    status_default: draft
+    tags:
+      - workspace:desk
+      - artifact:task
+  fields:
+    - field.title
+    - field.goal
+    - field.scope
+    - field.status
+    - field.implementation_path
+    - field.validation
+    - field.done_when
+    - field.current_node
+    - field.history
+  operational:
+    conditions:
+      - primitive.task.has_implementation_path
+      - primitive.task.has_validation
+      - primitive.task.ready_for_closeout
+    checklists:
+      - primitive.task.execution_ready
+      - primitive.task.testing_ready
+      - primitive.task.closeout_ready
+    operators:
+      - primitive.task.activate
+      - primitive.task.mark_ready_for_testing
+      - primitive.task.close
+    edges:
+      - primitive.task.edges
+    routine:
+      title: Routine for {title}
+      id: routine-{task_id}
+      status: active
+      summary: Actionable routine for {title}.
+      entrypoint: checklist-{task_id}-execution-ready
+      decomposition:
+        - checklist-{task_id}-execution-ready
+        - operator-{task_id}-activate
+        - checklist-{task_id}-testing-ready
+        - operator-{task_id}-ready-for-testing
+        - checklist-{task_id}-closeout-ready
+        - operator-{task_id}-close
+      terminal_nodes:
+        - complete

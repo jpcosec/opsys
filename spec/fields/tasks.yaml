@@ -1,0 +1,10 @@
+id: field.tasks
+title: Tasks Field
+type: field
+version: "0.1"
+
+data:
+  key: tasks
+  value_type: list[string]
+  required: false
+  default: []

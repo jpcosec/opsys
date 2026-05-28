@@ -1,0 +1,10 @@
+id: field.path
+title: Path Field
+type: field
+version: "0.1"
+
+data:
+  key: path
+  value_type: string
+  required: true
+  default: ""

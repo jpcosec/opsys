@@ -1,14 +1,14 @@
 from pydantic import Field
 
-from sldb import StructuredNLDoc
+from .base import OperationalArtifactDoc
 
 
-class BoardDoc(StructuredNLDoc):
+class BoardDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "board"], "workspace": ["desk"]}
     __compositions__ = {
         "task_summaries": {
             "source_field": "tasks",
-            "model": "desk.models:TaskDoc",
+            "model": "deskops.models:TaskDoc",
             "template": "- {title} [{status}] - {goal}",
         }
     }
@@ -38,6 +38,10 @@ Scope: ⸢rev•scope⸥
 
 ⸢rev•notes⸥
 
+## Field Refs
+
+- ⸢rev,list•field_refs⸥
+
 ## Task Details
 
 ⸢render•task_summaries⸥
@@ -66,6 +70,10 @@ Scope: ⸢rev•scope⸥
     notes: str = Field(
         default="No additional notes.",
         description="Short operational notes about the current routed set.",
+    )
+    field_refs: list[str] = Field(
+        default_factory=list,
+        description="Field instance identifiers composed into the board artifact.",
     )
     tags: list[str] = Field(
         default_factory=list,

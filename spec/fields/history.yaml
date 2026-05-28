@@ -1,0 +1,10 @@
+id: field.history
+title: History Field
+type: field
+version: "0.1"
+
+data:
+  key: history
+  value_type: list[string]
+  required: false
+  default: []

@@ -1,0 +1,10 @@
+id: field.validation
+title: Validation Field
+type: field
+version: "0.1"
+
+data:
+  key: validation
+  value_type: list[string]
+  required: false
+  default: []

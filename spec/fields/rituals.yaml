@@ -1,0 +1,10 @@
+id: field.rituals
+title: Rituals Field
+type: field
+version: "0.1"
+
+data:
+  key: rituals
+  value_type: list[string]
+  required: false
+  default: []

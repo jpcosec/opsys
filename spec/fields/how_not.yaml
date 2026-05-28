@@ -1,0 +1,10 @@
+id: field.how_not
+title: How Not Field
+type: field
+version: "0.1"
+
+data:
+  key: how_not
+  value_type: string
+  required: true
+  default: ""

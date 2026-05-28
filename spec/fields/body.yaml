@@ -1,0 +1,10 @@
+id: field.body
+title: Body Field
+type: field
+version: "0.1"
+
+data:
+  key: body
+  value_type: string
+  required: true
+  default: ""

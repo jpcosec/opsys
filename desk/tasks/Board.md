@@ -9,13 +9,6 @@ Route the active desk execution set: tasks, pills, and the ritual documents that
 
 ## Tasks
 
-- desk/tasks/task-021-operate-over-sldb-desk-tasks.md
-- desk/tasks/task-022-stabilize-cli-first-use-entrypoints.md
-- desk/tasks/task-023-align-first-use-docs-with-deskops.md
-- desk/tasks/task-024-make-desk-install-match-documented-structure.md
-- desk/tasks/task-025-cover-cli-surfaces-with-tests.md
-- desk/tasks/task-026-harden-repo-register-command.md
-
 
 ## Pills
 

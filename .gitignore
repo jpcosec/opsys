@@ -2,5 +2,6 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-.sldb/runtime/
-.sldb/.config/
+.sldb/
+*.egg-info/
+.serena/memories/

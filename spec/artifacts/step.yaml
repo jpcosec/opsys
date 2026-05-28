@@ -1,0 +1,17 @@
+id: artifact.step
+title: Step Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: StepDoc
+    id_pattern: step-{slug}
+    status_default: active
+    tags:
+      - workspace:desk
+      - artifact:step
+  fields:
+    - field.title
+    - field.action
+    - field.outcome

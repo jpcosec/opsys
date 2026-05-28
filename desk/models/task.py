@@ -1,9 +1,9 @@
 from pydantic import Field
 
-from sldb import StructuredNLDoc
+from .base import OperationalArtifactDoc
 
 
-class TaskDoc(StructuredNLDoc):
+class TaskDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
     __template__ = """
 # ⸢rev•title⸥
@@ -35,6 +35,22 @@ Status: ⸢rev•status⸥
 
 - ⸢rev,list•files⸥
 
+## Field Refs
+
+- ⸢rev,list•field_refs⸥
+
+## Routine
+
+⸢rev•routine⸥
+
+## Checklists
+
+- ⸢rev,list•checklists⸥
+
+## Current Node
+
+⸢rev•current_node⸥
+
 ## Implementation Path
 
 ⸢rev•implementation_path⸥
@@ -46,6 +62,10 @@ Status: ⸢rev•status⸥
 ## Done When
 
 ⸢rev•done_when⸥
+
+## History
+
+- ⸢rev,list•history⸥
 
 ## Tags
 
@@ -72,6 +92,10 @@ Status: ⸢rev•status⸥
     files: list[str] = Field(
         default_factory=list,
         description="Files or paths expected to change during the task.",
+    )
+    checklists: list[str] = Field(
+        default_factory=list,
+        description="Checklist identifiers that verify the task's operational routine.",
     )
     implementation_path: str = Field(
         description="Suggested implementation path for completing the task."

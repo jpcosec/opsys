@@ -1,0 +1,10 @@
+id: field.failure_modes
+title: Failure Modes Field
+type: field
+version: "0.1"
+
+data:
+  key: failure_modes
+  value_type: list[string]
+  required: false
+  default: []

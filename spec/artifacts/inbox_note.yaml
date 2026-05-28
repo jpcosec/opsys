@@ -1,0 +1,20 @@
+id: artifact.inbox_note
+title: Inbox Note Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: InboxNoteDoc
+    id_pattern: inbox-note-{slug}
+    status_default: open
+    tags:
+      - workspace:desk
+      - artifact:inbox-note
+  fields:
+    - field.kind
+    - field.author
+    - field.created_at
+    - field.status
+    - field.title
+    - field.body

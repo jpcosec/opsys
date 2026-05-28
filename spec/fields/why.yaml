@@ -1,0 +1,10 @@
+id: field.why
+title: Why Field
+type: field
+version: "0.1"
+
+data:
+  key: why
+  value_type: string
+  required: true
+  default: ""

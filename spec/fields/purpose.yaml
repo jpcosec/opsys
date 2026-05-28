@@ -1,0 +1,10 @@
+id: field.purpose
+title: Purpose Field
+type: field
+version: "0.1"
+
+data:
+  key: purpose
+  value_type: string
+  required: true
+  default: ""
