@@ -1,0 +1,105 @@
+{
+  "schema": "desk-source-graph-fixture-v1",
+  "description": "Small hand-authored property graph fixture for the desk/source graph vocabulary.",
+  "nodes": [
+    {
+      "id": "atom:atom-documents-point-to-atoms",
+      "kind": "atom",
+      "label": "Documents point to atoms",
+      "identity": "atom-documents-point-to-atoms"
+    },
+    {
+      "id": "task:task-004-create-static-graph-fixture",
+      "kind": "task",
+      "label": "Create static graph fixture",
+      "identity": "task-004-create-static-graph-fixture"
+    },
+    {
+      "id": "task:task-010-add-graph-neighbors-cli",
+      "kind": "task",
+      "label": "Add graph neighbors CLI",
+      "identity": "task-010-add-graph-neighbors-cli"
+    },
+    {
+      "id": "doc:docs/knowledge-graph/desk-source-graph-vocabulary.md",
+      "kind": "doc",
+      "label": "Desk Source Graph Vocabulary",
+      "identity": "docs/knowledge-graph/desk-source-graph-vocabulary.md"
+    },
+    {
+      "id": "source_file:desk/materializers/atoms.py",
+      "kind": "source_file",
+      "label": "Atom document materializer",
+      "identity": "desk/materializers/atoms.py"
+    },
+    {
+      "id": "test_file:tests/test_atom_materialization.py",
+      "kind": "test_file",
+      "label": "Atom materialization tests",
+      "identity": "tests/test_atom_materialization.py"
+    },
+    {
+      "id": "cli_command:deskops graph neighbors <id>",
+      "kind": "cli_command",
+      "label": "deskops graph neighbors <id>",
+      "identity": "deskops graph neighbors <id>"
+    }
+  ],
+  "edges": [
+    {
+      "source": "task:task-004-create-static-graph-fixture",
+      "target": "doc:docs/knowledge-graph/desk-source-graph-vocabulary.md",
+      "role": "references",
+      "source_kind": "declared",
+      "confidence": "high",
+      "provenance_path": "desk/tasks/004-create-static-graph-fixture.md",
+      "provenance_locator": "Goal"
+    },
+    {
+      "source": "doc:docs/knowledge-graph/desk-source-graph-vocabulary.md",
+      "target": "atom:atom-documents-point-to-atoms",
+      "role": "references",
+      "source_kind": "manual",
+      "confidence": "high",
+      "provenance_path": "docs/knowledge-graph/desk-source-graph-vocabulary.md",
+      "provenance_locator": "Edge Roles"
+    },
+    {
+      "source": "doc:docs/knowledge-graph/desk-source-graph-vocabulary.md",
+      "target": "atom:atom-documents-point-to-atoms",
+      "role": "materializes",
+      "source_kind": "manual",
+      "confidence": "high",
+      "provenance_path": "docs/knowledge-graph/desk-source-graph-vocabulary.md",
+      "provenance_locator": "Role Catalog"
+    },
+    {
+      "source": "source_file:desk/materializers/atoms.py",
+      "target": "atom:atom-documents-point-to-atoms",
+      "role": "implements",
+      "source_kind": "manual",
+      "confidence": "high",
+      "provenance_path": "desk/materializers/atoms.py",
+      "provenance_locator": "build_composed_doc_payload"
+    },
+    {
+      "source": "test_file:tests/test_atom_materialization.py",
+      "target": "atom:atom-documents-point-to-atoms",
+      "role": "validates",
+      "source_kind": "manual",
+      "confidence": "medium",
+      "provenance_path": "tests/test_atom_materialization.py",
+      "provenance_locator": "test_atom_materializer_builds_composed_document_payload",
+      "notes": "Fixture-level validation edge demonstrates the vocabulary; the test validates atom materialization behavior rather than this specific atom id."
+    },
+    {
+      "source": "task:task-010-add-graph-neighbors-cli",
+      "target": "cli_command:deskops graph neighbors <id>",
+      "role": "invokes",
+      "source_kind": "declared",
+      "confidence": "high",
+      "provenance_path": "desk/tasks/010-add-graph-neighbors-cli.md",
+      "provenance_locator": "Candidate Command"
+    }
+  ]
+}
