@@ -9,6 +9,7 @@ Route the active desk execution set: tasks, pills, and the ritual documents that
 
 ## Tasks
 
+No active tasks are routed on this board right now.
 
 ## Pills
 
@@ -30,16 +31,11 @@ Route the active desk execution set: tasks, pills, and the ritual documents that
 
 Every closed task must end in its own closing commit. Every non-trivial task must pass explicit initialization, execution, testing, and closeout gates. Any missing SLDB capability discovered during execution must become a new active desk task.
 
-Current readiness sweep split the first-use gaps into explicit tasks. Tasks 022-026 are complete in code/docs/tests; only task-021 remains active as the original cross-repo feature work.
+The obsolete proposed task set `046-052` has been distilled into drawer issues because it assumed the old atom model. Promote only the revised issues that match the current `AtomDoc`, sldb composition, and workflow-derived CLI model.
 
 ## Task Details
 
-- Enable opsys operation over repo-local sldb desk tasks [active] - Make the opsys layer able to discover, route, and operate over repo-local `desk/tasks` surfaces in sibling repos so backlog state does not have to be duplicated across `issues`, `inbox`, and manual handoff notes.
-- Stabilize CLI first-use entrypoints [done] - Make the package install and first-use CLI entry surface work predictably in a clean environment.
-- Align first-use docs with deskops [done] - Make the repo documentation describe this package's real install and usage paths instead of inherited `sldb` guidance.
-- Make desk install match documented structure [done] - Make `desk install` produce a coherent desk surface that matches the repo's documented structure and fails safely when prerequisites are missing.
-- Cover CLI surfaces with tests [done] - Add targeted tests for the real CLI surfaces so first-use regressions are caught automatically.
-- Harden repo register command [done] - Make `repo register` validate all prerequisites before any filesystem mutation.
+No active task details.
 
 ## Tags
 

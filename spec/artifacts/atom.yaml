@@ -7,21 +7,10 @@ data:
   doc:
     model: AtomDoc
     id_pattern: atom-{slug}
-    status_default: stable
     tags:
-      - workspace:drawer
-      - artifact:atom
+      - system:deskops
+      - topic:atoms
   fields:
     - field.title
-    - field.status
-    - field.category
-    - field.what
-    - field.why
-    - field.how
-    - field.when
-    - field.where
-    - field.for_whom
-    - field.related_atoms
-    - field.materializes_into
-    - field.stabilized_in
-    - field.distinct_from_pills
+    - field.five_wh_one_plus
+    - field.answer

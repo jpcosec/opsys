@@ -40,6 +40,10 @@ class CLI:
             from desk.cli.commands.desk import DeskCLI
 
             return DeskCLI().run(args)
+        if args.command == "atoms":
+            from desk.cli.commands.atoms import AtomsCLI
+
+            return AtomsCLI().run(args)
         if args.command in {"add", "list", "show", "advance"}:
             ready = bootstrap.ensure_sldb_available()
             if ready != 0:

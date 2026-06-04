@@ -1,0 +1,10 @@
+id: field.answer
+title: Answer Field
+type: field
+version: "0.1"
+
+data:
+  key: answer
+  value_type: markdown
+  required: true
+  default: ""

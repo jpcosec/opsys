@@ -1,0 +1,41 @@
+flowchart TB
+    subgraph Creation["Pill creation"]
+        task_need["Task needs bounded context"]
+        existing_ref["Context about existing thing\nreference, do not copy\natom / code / doc / spec"]
+        pattern["Context about non-existing thing\npattern to preserve"]
+        pill["Context pill\ntransient execution context"]
+    end
+
+    subgraph Use["Task use"]
+        bind["Bind pill to task"]
+        subagent["Clean subagent\nreceives pill as context"]
+        execute["Execute without improvisation"]
+    end
+
+    subgraph Resolution["Pill resolution"]
+        still_needed["Still needed by active tasks?"]
+        ingest["Ingest durable residue"]
+        atom["Atom\nif it becomes structured knowledge"]
+        docs["Docs\nif it explains usage/process/design"]
+        delete["Delete pill\nafter ingestion and no active use"]
+    end
+
+    task_need --> pill
+    existing_ref --> pill
+    pattern --> pill
+    pill --> bind
+    bind --> subagent
+    subagent --> execute
+    execute --> still_needed
+    still_needed -->|yes| bind
+    still_needed -->|no| ingest
+    ingest --> atom
+    ingest --> docs
+    ingest -->|after durable residue is handled| delete
+
+    classDef transient fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    classDef durable fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef decision fill:#fff3d9,stroke:#a66a00,color:#111;
+    class task_need,existing_ref,pattern,pill,bind,subagent,execute transient;
+    class atom,docs,delete durable;
+    class still_needed,ingest decision;

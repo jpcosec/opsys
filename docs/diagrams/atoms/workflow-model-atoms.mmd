@@ -1,0 +1,32 @@
+flowchart TB
+    core["Why\ndivide and conquer through persisted operations"]
+    atom_shape["What\natoms answer one raw question"]
+    doc_refs["How\ndocuments point to atoms"]
+    no_copy["How-not\npills reference, do not copy"]
+    transient["What\npills are transient context"]
+    phases["Where\ntask phases live inside board"]
+    ambiguity["When\nsubagent returns ambiguous task"]
+    auto["How\nautomatic routines differ from LLM tasks"]
+    diagrams["What\ndiagrams generate operational models"]
+    surfaces["How\ncodebase surfaces generate atom candidates"]
+
+    core --> atom_shape
+    atom_shape --> doc_refs
+    doc_refs --> no_copy
+    no_copy --> transient
+    core --> phases
+    phases --> ambiguity
+    ambiguity --> auto
+    diagrams --> surfaces
+    surfaces --> atom_shape
+    diagrams --> phases
+    diagrams --> auto
+
+    classDef why fill:#fff3d9,stroke:#a66a00,color:#111;
+    classDef what fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef how fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    classDef whenwhere fill:#efe8ff,stroke:#5d43a3,color:#111;
+    class core why;
+    class atom_shape,transient,diagrams what;
+    class doc_refs,no_copy,auto,surfaces how;
+    class phases,ambiguity whenwhere;

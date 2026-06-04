@@ -1,0 +1,47 @@
+flowchart TB
+    subgraph Current["Current process form"]
+        ritual["Ritual\ntextual process document"]
+        execution["Execution ritual"]
+        testing["Testing ritual"]
+        closeout["Closeout ritual"]
+    end
+
+    subgraph Decomposition["Target decomposition"]
+        routine["Routine\nstateful way of working"]
+        hook["Hook\nbefore/around specific operation"]
+        gate["Gate\nexplicit condition before progress"]
+    end
+
+    subgraph AppliedTo["Applied to"]
+        board["Tasks board\nplanning and phases"]
+        task["Task\nexecution and resolution"]
+        pill["Pill\ncreation, use, ingestion, deletion"]
+        phase["Board-local phase\ne2e and integration"]
+    end
+
+    ritual --> execution
+    ritual --> testing
+    ritual --> closeout
+    execution --> routine
+    testing --> routine
+    closeout --> routine
+    ritual --> hook
+    ritual --> gate
+
+    routine --> board
+    routine --> task
+    routine --> phase
+    hook --> task
+    hook --> pill
+    hook --> phase
+    gate --> board
+    gate --> task
+    gate --> pill
+    gate --> phase
+
+    classDef current fill:#ffe8ee,stroke:#9e3152,color:#111;
+    classDef target fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef applied fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    class ritual,execution,testing,closeout current;
+    class routine,hook,gate target;
+    class board,task,pill,phase applied;

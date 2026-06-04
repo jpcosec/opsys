@@ -1,0 +1,51 @@
+flowchart TB
+    subgraph Documents["Document kinds"]
+        structured["Structured docs\nsldb-backed\nfield-defined"]
+        loose["Less structured docs\nfeatures / issues / notes\nallowed to be looser"]
+    end
+
+    subgraph Fields["Structured field design"]
+        fields["Fields\nsmall semantic units"]
+        compose["Composition\nother docs select fields"]
+        nodrift["No unnecessary copied prose\nless drift"]
+    end
+
+    subgraph Actions["Primitives add action"]
+        primitive["Primitive\naction over sldb data"]
+        checklist["Checklist\nexplicit gate / completeness"]
+        condition["Condition\nreads payload state"]
+        operator["Operator\nmutates payload state"]
+        edge["Edge\nroutes progression"]
+        hook["Hook\nruns around operation"]
+    end
+
+    subgraph Example["Example"]
+        board["Board\nindexes tasks"]
+        indexed["Indexed task set"]
+    end
+
+    structured --> fields
+    fields --> compose
+    compose --> nodrift
+    loose -->|can later be structured| structured
+
+    structured --> primitive
+    primitive --> checklist
+    primitive --> condition
+    primitive --> operator
+    primitive --> edge
+    primitive --> hook
+
+    board -->|uses primitives to act on data| checklist
+    checklist --> indexed
+    condition --> indexed
+    edge --> indexed
+
+    classDef docs fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef fields fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    classDef action fill:#ffe8ee,stroke:#9e3152,color:#111;
+    classDef example fill:#fff3d9,stroke:#a66a00,color:#111;
+    class structured,loose docs;
+    class fields,compose,nodrift fields;
+    class primitive,checklist,condition,operator,edge,hook action;
+    class board,indexed example;

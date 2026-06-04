@@ -1,0 +1,127 @@
+documents:
+- name: atom-deskops
+  path: desk/atoms/atom-deskops.md
+  hash_c: e4bca53b5be988baf8124f83d124f4bb2629b11c1ffc19c5add137811d866a57
+  hash_d: 6966d15cf311ce6a5ea509100f418829d204c39d333141a92765a8f9e0241c38
+  semantic_tags:
+  - system:deskops
+  - system:sldb
+  - topic:workflow
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-deskops-models-are-sldb-documents
+  path: desk/atoms/atom-deskops-models-are-sldb-documents.md
+  hash_c: 49db76f21fdcfd2c5eb34b6817bb5af7692c9297152a114ffbeb5b19e3e980d9
+  hash_d: 11d7b190e5b2d78492e9e8a0da4c7632ee8030ee755d1976d72d29ca505fdf8e
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-deskops-reads-and-writes-through-sldb
+  path: desk/atoms/atom-deskops-reads-and-writes-through-sldb.md
+  hash_c: 4ac69dfa6f5681501030a92a1eeaafb8c9817772cd7e8302f13f318c91221feb
+  hash_d: fd3b3bbc30ee4477357aeaea64fa532a6bd07dec5ffa33221002b5f03b0cb8fa
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-divide-and-conquer-persisted-operations
+  path: desk/atoms/workflow-model/atom-divide-and-conquer-persisted-operations.md
+  hash_c: b2bdc5c6e2ae4a768369a958809ac6010d5070d1a395c4645063f72679bfb704
+  hash_d: d2a9e195b01a6f70b04788648b2479f422733df80825c9a94cd606f4edb76fd6
+  semantic_tags:
+  - system:deskops
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-atoms-answer-one-question
+  path: desk/atoms/workflow-model/atom-atoms-answer-one-question.md
+  hash_c: 8c7585ef2a04e1ee4dc9bf0be035bc178c5f67bf8d7add43c0a259f495852490
+  hash_d: b157e83515dc1c870e6f55e18506ec98fad8c0ae39f46cd717cde302bf375c75
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-documents-point-to-atoms
+  path: desk/atoms/workflow-model/atom-documents-point-to-atoms.md
+  hash_c: a3da0db872a8e4fbcdf7efba6eb7250371fea8aec838336f4c6630124b754ebe
+  hash_d: e7c14948be0d53b3264f369e533ba575fa69e16787751c3aaac21ce36a0d9330
+  semantic_tags:
+  - system:deskops
+  - system:sldb
+  - topic:atoms
+  - topic:composition
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-pills-reference-not-copy
+  path: desk/atoms/workflow-model/atom-pills-reference-not-copy.md
+  hash_c: c1ec191b3c5f7d4aac53473f9e002db3235578f4e32273b2ff8dc49cc1f263b0
+  hash_d: 65a5e1c5d98822cac1551097c17dd24aee2700a4768cb227151fd9dbccef2aae
+  semantic_tags:
+  - system:deskops
+  - topic:drift-control
+  - topic:pills
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-pills-are-transient
+  path: desk/atoms/workflow-model/atom-pills-are-transient.md
+  hash_c: 51f14b971bd40e3254459e520aa0b52759c4c4f27661099e293a17ae80a417f6
+  hash_d: a14e0f75d43108522133c87fd858e4fbeeca4c27e5bf3658c57abdda27abcdb1
+  semantic_tags:
+  - system:deskops
+  - topic:pills
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-task-board-phases
+  path: desk/atoms/workflow-model/atom-task-board-phases.md
+  hash_c: bbddfc019a54079fe6bc69d3760e9ea8fe55def676008a66a3bb7f27d5181bbb
+  hash_d: 6b5fcf1f664b11c6fa67311a8c5d4dd5f5e591caaddb98fbd19f62b3744a9f38
+  semantic_tags:
+  - system:deskops
+  - topic:boards
+  - topic:tasks
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-clean-subagent-ambiguity-review
+  path: desk/atoms/workflow-model/atom-clean-subagent-ambiguity-review.md
+  hash_c: d60859e7b8ca3147b62a7db0f1ce4b7f81453b86090d81806846560146b6d3af
+  hash_d: d1ff6863cfc397100cfddee3b424c0ef288ca1bc5b6ec2f00fe3f5c3f2b9969e
+  semantic_tags:
+  - system:deskops
+  - topic:subagents
+  - topic:tasks
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-automatic-routines-vs-llm-tasks
+  path: desk/atoms/workflow-model/atom-automatic-routines-vs-llm-tasks.md
+  hash_c: 59183c39a0f979b7a4b2262ab2a47c8b1640b7b391c4637348cf34e26924c3fc
+  hash_d: 15cc9af43de0898051d76e5c56219e41c967ad2692839a9785e28e07d5ac60cc
+  semantic_tags:
+  - system:deskops
+  - topic:hooks
+  - topic:routines
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-diagrams-generate-operational-models
+  path: desk/atoms/workflow-model/atom-diagrams-generate-operational-models.md
+  hash_c: ea0b68a48898089bf1427deb78330c1645cc58276012491c0260b256df153dc0
+  hash_d: d97b4569f9e5a4f84508aa06af804f8264a5b30bee273c5ec6efb04ef4355f26
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - topic:diagrams
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-codebase-surfaces-generate-atom-candidates
+  path: desk/atoms/workflow-model/atom-codebase-surfaces-generate-atom-candidates.md
+  hash_c: 19e1040ea79202a43244f5721409dffb53993f9c79fbda2fc02206c702f27108
+  hash_d: 7500813db4c78bca86ee73db77a985cd31f72453c56fff559fc53483a3982d97
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - topic:codebase
+  - type.knowledge.atom
+  - workspace.desk.atoms

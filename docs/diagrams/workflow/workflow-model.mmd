@@ -1,0 +1,93 @@
+flowchart TB
+    principle["Core principle\ndivide and conquer + persisted operations\nsmall units reduce LLM drift"]
+
+    subgraph Knowledge["Knowledge base"]
+        atoms["Atoms\ndesk/atoms\nminimum structured knowledge unit\nhierarchical by design domain"]
+        specs["Specs\nmaterialized from atoms"]
+        docs["Documentation\nmaterialized from atoms"]
+    end
+
+    subgraph Deferred["Deferred / not active yet"]
+        drawers["Drawers\nholding area before active work"]
+        features["Features\nfuture work\nless structured than tasks"]
+        issues["Issues\ndrawers/issues\nlooser problem detections"]
+    end
+
+    subgraph Coordination["Cross-project coordination"]
+        inbox["Inbox\nexternal requirements, questions, bugs\nfrom other projects"]
+    end
+
+    subgraph Active["Active work"]
+        boards["Boards\nfolder indexes\nfor tasks: stack/heap routing"]
+        tasks["Tasks\nserializable active work units\ntracked in git"]
+    end
+
+    subgraph Context["Execution context"]
+        pills["Context pills\ntransient agent context\nreferences atoms/code/docs\nor captures patterns"]
+    end
+
+    subgraph Process["Operating process"]
+        rituals["Rituals\ncurrent textual process docs\nused around task work/testing/pills"]
+        routines["Routines\ntarget decomposition\nstateful ways of working"]
+        hooks["Hooks\ntarget decomposition\nrun before specific operations"]
+    end
+
+    subgraph AgentWork["Clean-agent execution"]
+        subagent["Clean subagent\nexecutes one small task\nwith bounded context"]
+        code["Code / tests / docs changes"]
+        git["Git history\nobservable changes, closure, errors"]
+    end
+
+    principle --> atoms
+    principle --> rituals
+    principle --> tasks
+
+    atoms -->|materialize| specs
+    atoms -->|materialize| docs
+    atoms -->|referenced by| pills
+    atoms -->|referenced by| features
+
+    drawers --> features
+    drawers --> issues
+    features -->|promoted when active| tasks
+    issues -->|promoted when actionable| tasks
+    issues -->|may clarify into| atoms
+
+    inbox -->|triage| drawers
+    inbox -->|triage| tasks
+    inbox -->|may reveal knowledge gap| atoms
+
+    boards -->|index and route| tasks
+    tasks -->|requires context| pills
+    tasks -->|uses process| rituals
+    rituals -->|should decompose into| routines
+    rituals -->|should decompose into| hooks
+    routines -->|govern progression of| tasks
+    hooks -->|run around operations on| tasks
+    hooks -->|run around operations on| pills
+
+    tasks -->|assigned to| subagent
+    pills -->|bound context for| subagent
+    subagent --> code
+    code --> git
+    tasks -->|state/changes visible in| git
+
+    pills -->|before deletion ingest into| atoms
+    pills -->|before deletion ingest into| docs
+    pills -->|then delete when unused| git
+
+    classDef principle fill:#f8f8f8,stroke:#333,color:#111;
+    classDef knowledge fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef deferred fill:#fff3d9,stroke:#a66a00,color:#111;
+    classDef active fill:#efe8ff,stroke:#5d43a3,color:#111;
+    classDef context fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    classDef process fill:#ffe8ee,stroke:#9e3152,color:#111;
+    classDef agent fill:#f1f1f1,stroke:#555,color:#111;
+
+    class principle principle;
+    class atoms,specs,docs knowledge;
+    class drawers,features,issues,inbox deferred;
+    class boards,tasks active;
+    class pills context;
+    class rituals,routines,hooks process;
+    class subagent,code,git agent;

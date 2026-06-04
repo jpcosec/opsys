@@ -1,0 +1,10 @@
+id: field.five_wh_one_plus
+title: 5WH1+ Field
+type: field
+version: "0.1"
+
+data:
+  key: five_wh_one_plus
+  value_type: enum[what,why,how,how_not,when,where,for_whom]
+  required: true
+  default: what

@@ -1,0 +1,121 @@
+flowchart TB
+    subgraph README["README document"]
+        readme_what["Project identity\nwhat is this?"]
+        readme_use["How to use\nentry commands / flows"]
+        readme_entry["Entrypoints\nwhere to start"]
+    end
+
+    subgraph SPEC["Spec documents"]
+        spec_contract["Contract\nwhat must hold"]
+        spec_constraints["Constraints\nhow / how-not"]
+        spec_interfaces["Interfaces\nwhere integration happens"]
+    end
+
+    subgraph DOCS["Documentation"]
+        docs_concepts["Concept docs\nwhy / what"]
+        docs_arch["Architecture docs\nhow / where"]
+        docs_howto["How-to guides\nhow / when"]
+    end
+
+    subgraph BACKEND["Backend code"]
+        backend_modules["Modules\nwhere behavior lives"]
+        backend_api["API / service boundary\nhow consumers interact"]
+        backend_data["Data/runtime flow\nhow state moves"]
+    end
+
+    subgraph FRONTEND["Frontend / UX code"]
+        front_views["Views / screens\nwhat users see"]
+        front_flows["User flows\nwhen / how interaction happens"]
+        front_affordances["Affordances\nhow-not / constraints"]
+    end
+
+    subgraph TESTS["Test code"]
+        unit_tests["Unit tests\nlocal behavior"]
+        integration_tests["Integration tests\ncross-surface behavior"]
+        e2e_tests["E2E tests\nuser/system path"]
+    end
+
+    subgraph CONFIG["Config / deployment"]
+        env_config["Environment\nwhere it runs"]
+        deployment["Deployment\nwhen/how it is operated"]
+    end
+
+    subgraph DEPS["Libraries / dependencies"]
+        deps_contracts["External contracts\nwhat dependency promises"]
+        deps_limits["Dependency limits\nhow-not"]
+    end
+
+    subgraph WORKFLOW["Workflow docs"]
+        task_docs["Tasks\nactive work units"]
+        board_docs["Boards\nrouting/indexing"]
+        pill_docs["Pills\ntransient context"]
+        ritual_docs["Rituals\nprocess descriptions"]
+    end
+
+    subgraph GENERATED["Generated / rendered artifacts"]
+        generated_docs["Rendered docs\nprojection"]
+        generated_diagrams["Rendered diagrams\nprojection"]
+        generated_indexes["Indexes\nnavigation / lookup"]
+    end
+
+    %% README relations
+    readme_what -->|role: documents; target_kind: doc; five_wh_one_plus: what| docs_concepts
+    readme_use -->|role: uses; target_kind: code_backend; five_wh_one_plus: how| backend_api
+    readme_use -->|role: uses; target_kind: code_front; five_wh_one_plus: how| front_flows
+    readme_entry -->|role: documents; target_kind: config; five_wh_one_plus: where| env_config
+
+    %% Specs constrain implementation and tests
+    spec_contract -->|role: constrains; target_kind: code_backend; five_wh_one_plus: what| backend_modules
+    spec_contract -->|role: constrains; target_kind: code_front; five_wh_one_plus: what| front_views
+    spec_constraints -->|role: constrains; target_kind: code_backend; five_wh_one_plus: how_not| backend_data
+    spec_constraints -->|role: constrains; target_kind: code_front; five_wh_one_plus: how_not| front_affordances
+    spec_interfaces -->|role: specifies; target_kind: code_backend; five_wh_one_plus: where| backend_api
+    spec_contract -->|role: validates; target_kind: test; five_wh_one_plus: what| unit_tests
+    spec_interfaces -->|role: validates; target_kind: test; five_wh_one_plus: how| integration_tests
+
+    %% Docs explain and compose knowledge
+    docs_concepts -->|role: documents; target_kind: readme; five_wh_one_plus: why| readme_what
+    docs_arch -->|role: documents; target_kind: code_backend; five_wh_one_plus: how| backend_data
+    docs_arch -->|role: documents; target_kind: code_front; five_wh_one_plus: where| front_views
+    docs_howto -->|role: documents; target_kind: ux; five_wh_one_plus: when| front_flows
+
+    %% Code implies tests and can drift from specs/docs
+    backend_modules -->|role: implements; target_kind: spec; five_wh_one_plus: how| spec_contract
+    backend_api -->|role: implements; target_kind: spec; five_wh_one_plus: where| spec_interfaces
+    backend_data -->|role: validates; target_kind: test; five_wh_one_plus: how| integration_tests
+    front_flows -->|role: validates; target_kind: test; five_wh_one_plus: when| e2e_tests
+    front_affordances -->|role: validates; target_kind: test; five_wh_one_plus: how_not| e2e_tests
+
+    %% Dependencies/config constrain code
+    deps_contracts -->|role: constrains; target_kind: code_backend; five_wh_one_plus: what| backend_api
+    deps_limits -->|role: constrains; target_kind: code_backend; five_wh_one_plus: how_not| backend_modules
+    env_config -->|role: constrains; target_kind: code_backend; five_wh_one_plus: where| backend_data
+    deployment -->|role: constrains; target_kind: workflow; five_wh_one_plus: when| ritual_docs
+
+    %% Workflow docs reference all durable knowledge they use
+    task_docs -->|role: uses; target_kind: spec; five_wh_one_plus: what| spec_contract
+    task_docs -->|role: uses; target_kind: code_backend; five_wh_one_plus: where| backend_modules
+    task_docs -->|role: uses; target_kind: test; five_wh_one_plus: how| unit_tests
+    board_docs -->|role: uses; target_kind: workflow; five_wh_one_plus: where| task_docs
+    pill_docs -->|role: uses; target_kind: doc; five_wh_one_plus: why| docs_concepts
+    pill_docs -->|role: uses; target_kind: spec; five_wh_one_plus: how_not| spec_constraints
+    ritual_docs -->|role: specifies; target_kind: workflow; five_wh_one_plus: how| task_docs
+
+    %% Generated artifacts are projections, not sources of truth
+    docs_concepts -->|role: renders; target_kind: generated; five_wh_one_plus: what| generated_docs
+    spec_contract -->|role: renders; target_kind: generated; five_wh_one_plus: what| generated_diagrams
+    board_docs -->|role: renders; target_kind: generated; five_wh_one_plus: where| generated_indexes
+
+    classDef doc fill:#f1f1f1,stroke:#555,color:#111;
+    classDef spec fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef code fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    classDef test fill:#fff3d9,stroke:#a66a00,color:#111;
+    classDef workflow fill:#ffe8ee,stroke:#9e3152,color:#111;
+    classDef generated fill:#efe8ff,stroke:#5d43a3,color:#111;
+
+    class readme_what,readme_use,readme_entry,docs_concepts,docs_arch,docs_howto doc;
+    class spec_contract,spec_constraints,spec_interfaces spec;
+    class backend_modules,backend_api,backend_data,front_views,front_flows,front_affordances,env_config,deployment,deps_contracts,deps_limits code;
+    class unit_tests,integration_tests,e2e_tests test;
+    class task_docs,board_docs,pill_docs,ritual_docs workflow;
+    class generated_docs,generated_diagrams,generated_indexes generated;

@@ -1,0 +1,11 @@
+stores: []
+models:
+- name: AtomDoc
+  model_ref: desk.models:AtomDoc
+  path: desk/models/atom.py
+  models_index: .sldb/core/models/AtomDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+hash_a: 98b5fa8b61dc8e6e15b8d8117316746ed50ecc1ebd20709677abe1e4ff6d213d

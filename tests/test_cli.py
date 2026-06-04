@@ -23,7 +23,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{inbox,about,faq,repo,desk,bootstrap,init,add,list,show,advance}" in captured.out
+    assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,add,list,show,advance}" in captured.out
 
 
 def test_about_prints_first_use_summary(capsys) -> None:
@@ -61,7 +61,8 @@ def test_desk_install_scaffolds_expected_surface(tmp_path: Path, capsys) -> None
         tmp_path / "desk" / "rituals" / "closeout.md",
         tmp_path / "desk" / "inbox",
         tmp_path / "desk" / "drawer" / "README.md",
-        tmp_path / "desk" / "drawer" / "atoms",
+        tmp_path / "desk" / "atoms",
+        tmp_path / "desk" / "atoms" / "tag-namespaces.yaml",
     ]
     for path in expected_paths:
         assert path.exists()
@@ -155,6 +156,33 @@ def test_bootstrap_command_runs_machine_setup(monkeypatch) -> None:
 
     assert main(["bootstrap"]) == 0
     assert called["count"] == 1
+
+
+def test_atoms_add_namespace_updates_registry(tmp_path: Path, capsys) -> None:
+    result = main(
+        [
+            "atoms",
+            "add-namespace",
+            "pattern",
+            "--root",
+            str(tmp_path),
+            "--meaning",
+            "Reusable solution shape.",
+            "--use-when",
+            "The atom describes a repeatable solution.",
+            "--do-not-use-when",
+            "The atom only mentions a topic.",
+            "--example",
+            "pattern:roundtrip-validation",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    registry = tmp_path / "desk" / "atoms" / "tag-namespaces.yaml"
+    assert result == 0
+    assert "Added atom tag namespace pattern" in captured.out
+    assert registry.exists()
+    assert "pattern:" in registry.read_text(encoding="utf-8")
 
 
 def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> None:

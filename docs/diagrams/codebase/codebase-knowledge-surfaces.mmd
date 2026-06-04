@@ -1,0 +1,67 @@
+flowchart TB
+    subgraph Codebase["Codebase knowledge surfaces"]
+        readme["README / start here\nproject identity, use, entrypoints"]
+        docs["Documentation\nconcepts, guides, architecture"]
+        specs["Specs / contracts\nsemantic source and constraints"]
+        code["Code\nimplementation surface"]
+        tests["Tests / verification\nexpected behavior and checks"]
+        ux["UX / user flows\ninteraction and affordances"]
+        backend["Backend / runtime\ndata flow, APIs, services"]
+        libraries["Libraries / dependencies\nexternal contracts and boundaries"]
+        config["Config / deployment\nenvironment and operational setup"]
+        workflows["Workflow docs\ntasks, rituals, boards, pills"]
+        generated["Generated artifacts\ndiagrams, rendered docs, indexes"]
+    end
+
+    subgraph AtomLayer["Atom layer"]
+        atom["AtomDoc\none curated raw answer"]
+        hierarchy["Folder hierarchy\norders atoms by design domain"]
+        question["5WH1+\nwhat / why / how / how_not / when / where / for_whom"]
+        namespace["Tag namespaces\ncontrolled but extensible"]
+    end
+
+    subgraph ReferenceLayer["References and compositions live in other documents"]
+        atomref["atom reference\ndocument points to atom"]
+        composition["sldb composition\nselects atom fields"]
+        target_kind["target_kind\nwhat kind of surface uses it"]
+        role["role\nhow the document uses it"]
+    end
+
+    hierarchy --> atom
+    atom --> question
+    atom --> namespace
+    atomref --> atom
+    atomref --> target_kind
+    atomref --> role
+    composition --> atomref
+
+    readme --> atomref
+    docs --> composition
+    specs --> composition
+    code --> atomref
+    tests --> atomref
+    ux --> atomref
+    backend --> atomref
+    libraries --> atomref
+    config --> atomref
+    workflows --> atomref
+    generated --> composition
+
+    role -->|examples| supports["supports"]
+    role --> constrains["constrains"]
+    role --> specifies["specifies"]
+    role --> validates["validates"]
+    role --> renders["renders"]
+    role --> composes["composes"]
+    role --> transcludes["transcludes"]
+    role --> implements["implements"]
+    role --> documents["documents"]
+    role --> uses["uses"]
+    role --> violates["violates / drift"]
+
+    classDef surface fill:#f1f1f1,stroke:#555,color:#111;
+    classDef atom fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef relation fill:#fff3d9,stroke:#a66a00,color:#111;
+    class readme,docs,specs,code,tests,ux,backend,libraries,config,workflows,generated surface;
+    class atom,hierarchy,question,namespace atom;
+    class atomref,composition,target_kind,role,supports,constrains,specifies,validates,renders,composes,transcludes,implements,documents,uses,violates relation;

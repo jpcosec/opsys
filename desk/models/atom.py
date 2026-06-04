@@ -1,97 +1,60 @@
+from enum import StrEnum
+from typing import Annotated
+
 from pydantic import Field
 
 from sldb import StructuredNLDoc
 
 
+class AtomQuestion(StrEnum):
+    WHAT = "what"
+    WHY = "why"
+    HOW = "how"
+    HOW_NOT = "how_not"
+    WHEN = "when"
+    WHERE = "where"
+    FOR_WHOM = "for_whom"
+
+
+AtomTag = Annotated[
+    str,
+    Field(
+        pattern=r"^[a-z][a-z0-9_]*:[a-z][a-z0-9_-]*$",
+        description="Namespaced semantic tag in the form namespace:value.",
+    ),
+]
+
+
 class AtomDoc(StructuredNLDoc):
     __semantics__ = {
-        "type": ["workflow", "atom"],
-        "workspace": ["drawer", "atoms"],
+        "type": ["knowledge", "atom"],
+        "workspace": ["desk", "atoms"],
     }
     __template__ = """
 # ⸢rev•title⸥
 
 ID: ⸢rev•id⸥
-Status: ⸢rev•status⸥
-Category: ⸢rev•category⸥
+5WH1+: ⸢rev•five_wh_one_plus⸥
 
-## What
+## Answer
 
-⸢rev•what⸥
-
-## Why
-
-⸢rev•why⸥
-
-## How
-
-⸢rev•how⸥
-
-## When
-
-⸢rev•when⸥
-
-## Where
-
-⸢rev•where⸥
-
-## For Whom
-
-⸢rev•for_whom⸥
-
-## Related Atoms
-
-- ⸢rev,list•related_atoms⸥
-
-## Materializes Into
-
-- ⸢rev,list•materializes_into⸥
-
-## Stabilized In
-
-- ⸢rev,list•stabilized_in⸥
-
-## Distinct From
-
-⸢rev•distinct_from_pills⸥
+⸢rev•answer⸥
 
 ## Tags
 
 - ⸢rev,list•tags⸥
 """.strip()
 
-    title: str = Field(description="Short durable concept title.")
     id: str = Field(description="Stable atom identifier.")
-    status: str = Field(
-        description="Atom lifecycle state, such as stable or incubating."
+    title: str = Field(description="Short title for the atomic knowledge unit.")
+    five_wh_one_plus: AtomQuestion = Field(
+        description="The single 5WH1+ question this atom answers."
     )
-    category: str = Field(description="Concept category used to group related atoms.")
-    what: str = Field(description="Stable statement of what the concept is.")
-    why: str = Field(
-        description="Why the concept matters and what it protects or enables."
-    )
-    how: str = Field(description="How the concept should be applied or interpreted.")
-    when: str = Field(description="When the concept becomes relevant in the workflow.")
-    where: str = Field(
-        description="Where the concept applies in code, docs, or operations."
-    )
-    for_whom: str = Field(description="Who should use or care about this concept.")
-    related_atoms: list[str] = Field(
+    answer: str = Field(description="The curated raw answer to the selected question.")
+    tags: list[AtomTag] = Field(
         default_factory=list,
-        description="Related atom identifiers or references.",
-    )
-    materializes_into: list[str] = Field(
-        default_factory=list,
-        description="Derived artifact references such as docs, features, tasks, or pills.",
-    )
-    stabilized_in: list[str] = Field(
-        default_factory=list,
-        description="Durable artifacts where the atom has been stabilized or explained.",
-    )
-    distinct_from_pills: str = Field(
-        description="How this durable concept differs from temporary execution-time pills."
-    )
-    tags: list[str] = Field(
-        default_factory=list,
-        description="Semantic tags placed at the end, using namespaced forms such as 'topic:atoms' or 'system:sldb'.",
+        description=(
+            "Namespaced semantic tags used for retrieval and grouping. Tags do not "
+            "encode lifecycle, relations, evidence, or materialization."
+        ),
     )

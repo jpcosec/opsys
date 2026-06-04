@@ -29,12 +29,40 @@ def build_parser() -> argparse.ArgumentParser:
     _add_desk_commands(subparsers)
     _add_bootstrap_command(subparsers)
     _add_init_command(subparsers)
+    _add_atoms_commands(subparsers)
     _add_add_commands(subparsers)
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
     _add_advance_commands(subparsers)
 
     return parser
+
+
+def _add_atoms_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("atoms", help="Atom model and namespace management.")
+    s = p.add_subparsers(dest="atoms_command", required=True)
+
+    add_namespace = s.add_parser(
+        "add-namespace",
+        help="Add an extensible atom tag namespace to desk/atoms/tag-namespaces.yaml.",
+    )
+    add_namespace.add_argument("namespace", help="Namespace name, such as pattern.")
+    add_namespace.add_argument("--root", default=".", help="Target repository root.")
+    add_namespace.add_argument("--meaning", required=True, help="What this namespace means.")
+    add_namespace.add_argument("--use-when", required=True, help="When to use this namespace.")
+    add_namespace.add_argument(
+        "--do-not-use-when",
+        required=True,
+        help="When an existing namespace should be preferred instead.",
+    )
+    add_namespace.add_argument(
+        "--example",
+        action="append",
+        default=[],
+        help="Example tag using the namespace; repeat as needed.",
+    )
 
 
 def _add_desk_commands(

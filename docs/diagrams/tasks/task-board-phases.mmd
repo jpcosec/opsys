@@ -1,0 +1,60 @@
+flowchart TB
+    subgraph Board["Tasks Board"]
+        backlog["Backlog / candidate tasks\nknown work not ready to run"]
+        deps["Dependency map\nwhich tasks must precede others"]
+        surfaces["Touched surfaces map\nfiles / modules / docs / specs"]
+        phases["Phases\nboard-local execution batches"]
+
+        subgraph Phase1["Phase N"]
+            t1["Task A\nready"]
+            t2["Task B\nready"]
+            t3["Task C\nready"]
+        end
+
+        blocked["Blocked / waiting tasks\ndeps not satisfied or ambiguity unresolved"]
+        done["Resolved tasks\nremoved from active board after closeout"]
+    end
+
+    subgraph Gate["Phase construction rules"]
+        deps_rule["Dependencies satisfied"]
+        no_touch_rule["No touched-surface overlap"]
+        init_rule["Each task initialized\nscope validation pills rituals"]
+        ambiguity_rule["No unresolved ambiguity"]
+    end
+
+    subgraph Execution["Phase execution"]
+        agents["Clean subagents\none per task"]
+        unit["Per-task unit tests\nonly touched surface"]
+        e2e["Phase e2e tests\nafter all phase tasks"]
+        close["Close/test/commit hook\ntrigger/order still open"]
+    end
+
+    backlog --> deps
+    backlog --> surfaces
+    deps --> phases
+    surfaces --> phases
+
+    deps_rule --> phases
+    no_touch_rule --> phases
+    init_rule --> phases
+    ambiguity_rule --> phases
+
+    phases --> Phase1
+    Phase1 --> agents
+    agents --> unit
+    unit --> e2e
+    e2e -->|passes| close
+    close --> done
+    e2e -->|fails| blocked
+
+    blocked -->|clarified / dependency resolved| backlog
+
+    classDef board fill:#efe8ff,stroke:#5d43a3,color:#111;
+    classDef rule fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef exec fill:#e9f8ee,stroke:#2f7a44,color:#111;
+    classDef problem fill:#fff3d9,stroke:#a66a00,color:#111;
+
+    class backlog,deps,surfaces,phases,t1,t2,t3,done board;
+    class deps_rule,no_touch_rule,init_rule,ambiguity_rule rule;
+    class agents,unit,e2e,close exec;
+    class blocked problem;

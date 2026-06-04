@@ -1,0 +1,80 @@
+flowchart TB
+    subgraph Source["Atom source space"]
+        domain["Design domain folder\ndesk/atoms/<domain>/"]
+        atom["AtomDoc\none curated raw answer"]
+        question["5WH1+ field\nexactly one question"]
+        what["What atom"]
+        why["Why atom"]
+        how["How / How-not atom"]
+        when["When atom"]
+        where["Where atom"]
+        whom["For whom atom"]
+    end
+
+    subgraph Compositions["Durable compositions"]
+        specs["Specs\ncompose atoms as contracts"]
+        docs["Documentation\nREADME / concepts / guides"]
+        code_contract["Code-facing contract\nreferences what implementation must respect"]
+    end
+
+    subgraph References["Operational references"]
+        task["Task references atom\nwhen work touches durable knowledge"]
+        pill["Pill references atom\nwhen transient context explains existing knowledge"]
+        feature["Feature references atom\nwhen future work depends on concept"]
+        code["Code relation\nnon-compositional\nneeds definition"]
+    end
+
+    subgraph Creation["Creation workflow"]
+        trigger["Creation trigger\nmissing durable knowledge / repeated pattern / doc-spec need"]
+        source_doc["Source material\nissue / feature / conversation processing"]
+        create["Create AtomDoc\ncurated answer only"]
+        place["Place by design domain"]
+    end
+
+    subgraph Maintenance["Knowledge maintenance"]
+        drift["Drift detected\nspec/doc/code no longer matches atom"]
+        update_atom["Update atom\nif durable knowledge changed"]
+        update_materialization["Update materialization\nif implementation/doc/spec drifted"]
+    end
+
+    domain --> atom
+    atom --> question
+    question --> what
+    question --> why
+    question --> how
+    question --> when
+    question --> where
+    question --> whom
+    specs -->|sldb composition selects atoms| atom
+    docs -->|sldb composition selects atoms| atom
+    code_contract -->|reference / constraint relation| atom
+
+    task --> atom
+    pill --> atom
+    feature --> atom
+    code --> atom
+
+    trigger --> source_doc
+    source_doc --> create
+    create --> place
+    place --> domain
+
+    specs --> drift
+    docs --> drift
+    code_contract --> drift
+    drift -->|knowledge changed| update_atom
+    drift -->|artifact stale| update_materialization
+    update_atom --> atom
+    update_materialization --> specs
+    update_materialization --> docs
+    update_materialization --> code_contract
+
+    classDef source fill:#e7f2ff,stroke:#2a6099,color:#111;
+    classDef material fill:#f1f1f1,stroke:#555,color:#111;
+    classDef refs fill:#efe8ff,stroke:#5d43a3,color:#111;
+    classDef maint fill:#fff3d9,stroke:#a66a00,color:#111;
+    class domain,atom,question,what,why,how,when,where,whom source;
+    class specs,docs,code_contract material;
+    class task,pill,feature,code refs;
+    class trigger,draft,refine,place maint;
+    class drift,update_atom,update_materialization maint;

@@ -1,0 +1,49 @@
+flowchart TB
+    subgraph External["External coordination"]
+        project_a["Project A"]
+        project_b["Project B desk"]
+        inbox["Project B inbox\nrequirements / questions / bugs"]
+    end
+
+    subgraph Triage["Triage"]
+        classify["Classify message"]
+        requirement["Requirement"]
+        question["Question"]
+        bug["Bug / problem report"]
+    end
+
+    subgraph Holding["Deferred holding"]
+        drawers["Drawers\nholding area before active work"]
+        feature["Feature\nfuture work, less structured"]
+        issue["Issue\ndrawers/issues\nloose problem detection"]
+    end
+
+    subgraph Promotion["Promotion paths"]
+        task_candidate["Task candidate\nwhen active work is needed"]
+        atom_gap["Atom/doc gap\nwhen durable knowledge is missing"]
+        response["Response / clarification\nback to external project"]
+    end
+
+    project_a -->|writes to| inbox
+    inbox --> classify
+    classify --> requirement
+    classify --> question
+    classify --> bug
+    requirement --> drawers
+    requirement --> feature
+    question --> response
+    question --> atom_gap
+    bug --> issue
+    issue --> task_candidate
+    feature --> task_candidate
+    atom_gap --> task_candidate
+    project_b --> inbox
+
+    classDef external fill:#f1f1f1,stroke:#555,color:#111;
+    classDef triage fill:#fff3d9,stroke:#a66a00,color:#111;
+    classDef holding fill:#efe8ff,stroke:#5d43a3,color:#111;
+    classDef promo fill:#e7f2ff,stroke:#2a6099,color:#111;
+    class project_a,project_b,inbox external;
+    class classify,requirement,question,bug triage;
+    class drawers,feature,issue holding;
+    class task_candidate,atom_gap,response promo;

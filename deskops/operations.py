@@ -33,6 +33,9 @@ from deskops.runtime import Operator
 from deskops.runtime import Routine
 from deskops.runtime import Task
 from deskops.runtime import TransitionResult
+from deskops.atom_tags import default_registry_path
+from deskops.atom_tags import ensure_default_namespaces
+from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.specs import compile_task_bundle_spec
@@ -72,7 +75,7 @@ ARTIFACT_PATHS = {
     "artifact.pill": "contexts",
     "artifact.ritual": "rituals",
     "artifact.board": "tasks",
-    "artifact.atom": "drawer/atoms",
+    "artifact.atom": "atoms",
     "artifact.repository": "registry",
     "artifact.inbox_note": "inbox",
     "artifact.faq": "faq",
@@ -129,6 +132,7 @@ class DeskopsOperations:
         for relative in [
             Path("fields"),
             Path("routines"),
+            Path("atoms"),
             Path("steps"),
             Path("registry"),
             Path("faq"),
@@ -139,6 +143,7 @@ class DeskopsOperations:
             Path("primitives/edges"),
         ]:
             (self.desk_root / relative).mkdir(parents=True, exist_ok=True)
+        ensure_default_namespaces(default_registry_path(self.root))
 
     def create_task_bundle(self, raw_payload: dict[str, Any]) -> TaskBundle:
         self.ensure_workspace()
@@ -172,6 +177,11 @@ class DeskopsOperations:
             model_fields=model.model_fields.keys(),
         )
         path = self._artifact_path(artifact_id, compiled.artifact_payload["id"])
+        if artifact_id == "artifact.atom":
+            validate_atom_tag_namespaces(
+                list(compiled.artifact_payload.get("tags") or []),
+                default_registry_path(self.root),
+            )
         self._write_doc(path, model, compiled.artifact_payload)
         for item in compiled.field_payloads:
             self._write_doc(self._field_path(item["id"]), FieldInstanceDoc, item)

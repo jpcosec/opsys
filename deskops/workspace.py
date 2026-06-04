@@ -28,9 +28,9 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
         "tasks",
         "contexts",
         "rituals",
+        "atoms",
         "inbox",
         "drawer",
-        "drawer/atoms",
         "fields",
         "routines",
         "primitives/conditions",
@@ -75,6 +75,11 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
     _write_if_missing(
         desk_dir / "drawer" / "README.md",
         _drawer_template(target_path.name),
+        created_paths,
+    )
+    _write_if_missing(
+        desk_dir / "atoms" / "tag-namespaces.yaml",
+        _atom_tag_namespaces_template(),
         created_paths,
     )
 
@@ -159,4 +164,38 @@ def _drawer_template(name: str) -> str:
     return f"""# Drawer
 
 Deferred desk work for {name} lives here until it is promoted into active execution.
+"""
+
+
+def _atom_tag_namespaces_template() -> str:
+    return """namespaces:
+  domain:
+    do_not_use_when: A more specific system, topic, layer, or pattern tag applies.
+    examples:
+    - domain:knowledge-management
+    - domain:task-execution
+    meaning: Problem domain or durable area of concern.
+    use_when: The atom belongs to a reusable problem domain.
+  layer:
+    do_not_use_when: The tag names only a broad topic or system.
+    examples:
+    - layer:document-model
+    - layer:runtime
+    - layer:cli
+    meaning: Architectural layer where the atom applies.
+    use_when: The atom is scoped to a layer of the system.
+  system:
+    do_not_use_when: The tag is only a general topic.
+    examples:
+    - system:deskops
+    - system:sldb
+    meaning: System, project, or tool the atom belongs to.
+    use_when: The atom is about a specific system.
+  topic:
+    do_not_use_when: The atom describes a reusable implementation shape.
+    examples:
+    - topic:atoms
+    - topic:composition
+    meaning: Subject area discussed by the atom.
+    use_when: The atom is about a conceptual topic.
 """
