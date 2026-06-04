@@ -30,6 +30,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_bootstrap_command(subparsers)
     _add_init_command(subparsers)
     _add_atoms_commands(subparsers)
+    _add_graph_commands(subparsers)
     _add_add_commands(subparsers)
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
@@ -63,6 +64,25 @@ def _add_atoms_commands(
         default=[],
         help="Example tag using the namespace; repeat as needed.",
     )
+
+
+def _add_graph_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("graph", help="Build and inspect deskops KGDB graph runtime outputs.")
+    s = p.add_subparsers(dest="graph_command", required=True)
+
+    build = s.add_parser("build", help="Build the KGDB graph snapshot runtime artifact.")
+    build.add_argument("--root", default=".", help="Target repository root.")
+
+    neighbors = s.add_parser("neighbors", help="Show incoming and outgoing neighbors for one graph node.")
+    neighbors.add_argument("id", help="Graph node id to inspect.")
+    neighbors.add_argument("--root", default=".", help="Target repository root.")
+    neighbors.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+
+    missing = s.add_parser("missing", help="Report missing graph targets and dangling declared references.")
+    missing.add_argument("--root", default=".", help="Target repository root.")
+    missing.add_argument("--graph", help="Optional graph snapshot path to check for missing edge targets.")
 
 
 def _add_desk_commands(

@@ -23,7 +23,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,add,list,show,advance}" in captured.out
+    assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,graph,add,list,show,advance}" in captured.out
 
 
 def test_about_prints_first_use_summary(capsys) -> None:
@@ -183,6 +183,29 @@ def test_atoms_add_namespace_updates_registry(tmp_path: Path, capsys) -> None:
     assert "Added atom tag namespace pattern" in captured.out
     assert registry.exists()
     assert "pattern:" in registry.read_text(encoding="utf-8")
+
+
+def test_add_atom_does_not_create_orphan_field_instances(tmp_path: Path, capsys) -> None:
+    result = main(
+        [
+            "add",
+            "atom",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Atoms stay small",
+            "--five-wh-one-plus",
+            "what",
+            "--answer",
+            "An atom answers one raw question.",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert "Created atom atom-atoms-stay-small" in captured.out
+    assert (tmp_path / "desk" / "atoms" / "atom-atoms-stay-small.md").exists()
+    assert not list((tmp_path / "desk" / "fields").glob("field-instance-*.md"))
 
 
 def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> None:
@@ -522,7 +545,7 @@ def test_add_list_and_show_pill_from_specs(tmp_path: Path, capsys) -> None:
     assert created == 0
     assert "Created pill pill-guardrail-keep-layers-clean" in add_out.out
     assert (tmp_path / "desk" / "contexts" / "pill-guardrail-keep-layers-clean.md").exists()
-    assert (tmp_path / "desk" / "fields" / "field-instance-pill-guardrail-keep-layers-clean-what.md").exists()
+    assert not list((tmp_path / "desk" / "fields").glob("field-instance-*.md"))
 
     listed = main(["list", "pills", "--root", str(tmp_path)])
     list_out = capsys.readouterr()
