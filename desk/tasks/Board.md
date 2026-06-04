@@ -20,6 +20,10 @@ No active tasks are routed on this board right now.
 - desk/contexts/pill-005-subagent-execution.md
 - desk/contexts/pill-006-self-described-store-layout.md
 - desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+- desk/contexts/pill-009-source-file-graph-traceability.md
+- desk/contexts/pill-010-graph-runtime-output-policy.md
+- desk/contexts/pill-011-self-reflection-noise-control.md
 
 ## Rituals
 
@@ -32,10 +36,6 @@ No active tasks are routed on this board right now.
 Every closed task must end in its own closing commit. Every non-trivial task must pass explicit initialization, execution, testing, and closeout gates. Any missing SLDB capability discovered during execution must become a new active desk task.
 
 The obsolete proposed task set `046-052` has been distilled into drawer issues because it assumed the old atom model. Promote only the revised issues that match the current `AtomDoc`, sldb composition, and workflow-derived CLI model.
-
-## Task Details
-
-No active task details.
 
 ## Tags
 
