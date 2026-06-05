@@ -24,7 +24,6 @@ from desk.models import RitualDoc
 from desk.models import StepDoc
 from desk.models import TaskDoc
 from desk.models import AtomDoc
-from desk.models import FieldInstanceDoc
 from deskops.runtime import Checklist
 from deskops.runtime import Condition
 from deskops.runtime import Edge
@@ -130,7 +129,6 @@ class DeskopsOperations:
     def ensure_workspace(self) -> None:
         scaffold_desk(self.root)
         for relative in [
-            Path("fields"),
             Path("routines"),
             Path("atoms"),
             Path("steps"),
@@ -153,8 +151,6 @@ class DeskopsOperations:
 
         self._write_doc(self._task_path(task_id), TaskDoc, compiled.task_payload)
         self._write_doc(self._routine_path(compiled.routine_payload["id"]), RoutineDoc, compiled.routine_payload)
-        for item in compiled.field_payloads:
-            self._write_doc(self._field_path(item["id"]), FieldInstanceDoc, item)
         for item in compiled.condition_payloads:
             self._write_doc(self._primitive_path("conditions", item["id"]), ConditionDoc, item)
         for item in compiled.checklist_payloads:
@@ -183,8 +179,6 @@ class DeskopsOperations:
                 default_registry_path(self.root),
             )
         self._write_doc(path, model, compiled.artifact_payload)
-        for item in compiled.field_payloads:
-            self._write_doc(self._field_path(item["id"]), FieldInstanceDoc, item)
         return DocumentRecord(kind=artifact_id.split(".")[-1], doc_id=compiled.artifact_payload["id"], path=path)
 
     def create_primitive(self, kind: str, raw_payload: dict[str, Any]) -> DocumentRecord:
@@ -245,6 +239,8 @@ class DeskopsOperations:
         return task, statuses
 
     def show_artifact(self, artifact_id: str, doc_id: str) -> dict[str, Any]:
+        if not doc_id:
+            raise ValueError(f"No {artifact_id} ID provided")
         model = ARTIFACT_MODELS[artifact_id]
         directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
         matches = sorted(directory.glob(f"{doc_id}*.md"))
@@ -781,15 +777,11 @@ class DeskopsOperations:
             depends_on=list(payload.get("depends_on") or []),
             pills=list(payload.get("pills") or []),
             files=list(payload.get("files") or []),
-            field_refs=list(payload.get("field_refs") or []),
             checklists=list(payload.get("checklists") or []),
             implementation_path=payload.get("implementation_path", ""),
             validation=list(payload.get("validation") or []),
             done_when=payload.get("done_when", ""),
         )
-
-    def _field_path(self, field_id: str) -> Path:
-        return self.desk_root / "fields" / f"{field_id}.md"
 
     def _task_path(self, task_id: str) -> Path:
         return self.desk_root / "tasks" / f"{task_id}.md"

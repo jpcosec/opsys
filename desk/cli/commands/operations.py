@@ -107,15 +107,12 @@ class OperationsCLI:
             label = payload.get("title") or payload.get("name") or payload["id"]
             print(f"Title: {label}")
             for key, value in payload.items():
-                if key in {"id", "title", "routine", "current_node", "history", "field_refs", "tags"}:
+                if key in {"id", "title", "routine", "current_node", "history", "tags"}:
                     continue
                 if isinstance(value, list):
                     print(f"{key}: {', '.join(str(item) for item in value)}")
                 else:
                     print(f"{key}: {value}")
-            print("Field refs:")
-            for ref in payload.get("field_refs", []):
-                print(f"- {ref}")
             return 0
 
         if args.command == "show" and args.subject in {"condition", "operator", "checklist", "hook", "edge"}:
@@ -145,10 +142,10 @@ class OperationsCLI:
         if args.command == "advance" and args.subject == "task":
             task, result = operations.advance_task(args.task_id)
             if task is None:
-                print(f"No task found for {args.task_id}")
+                print(f"No task found for {args.task_id}", file=sys.stderr)
                 return 1
             if result is None:
-                print(f"Task {task.id} has no routine — cannot advance")
+                print(f"Task {task.id} has no routine — cannot advance", file=sys.stderr)
                 return 1
             print(f"Task: {task.id}")
             print(f"Status: {task.status}")

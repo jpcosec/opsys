@@ -158,7 +158,7 @@ class InboxCLI:
 
     def _print(self, payload: Any, fmt: str, key: str | None = None) -> int:
         if fmt == "json":
-            print(json.dumps({key: payload} if key else payload, indent=2))
+            print(json.dumps({key: payload} if key else payload, indent=2, default=str))
         elif fmt == "yaml":
             print(yaml.safe_dump({key: payload} if key else payload, sort_keys=False, allow_unicode=True))
         else:

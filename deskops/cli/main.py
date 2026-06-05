@@ -222,6 +222,9 @@ def main(argv: Any = None) -> int:
     except SystemExit:
         raise
     except Exception as exc:
+        if exc.__class__.__name__ == "ValidationError":
+            print(f"Validation error:\n{exc}", file=sys.stderr)
+            return 1
         raise SystemExit(f"Unexpected: {exc}")
 
 

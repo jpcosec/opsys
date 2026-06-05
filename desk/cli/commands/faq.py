@@ -23,6 +23,9 @@ class FAQCLI:
     def run(self, args: Any) -> int:
         faq_path = Path(args.faq_path)
         if not faq_path.exists():
+            if args.faq_path != "docs/faq.md":
+                import sys
+                print(f"Warning: FAQ path {args.faq_path} not found. Falling back to default.", file=sys.stderr)
             repo_faq = Path(__file__).resolve().parents[3] / "docs" / "faq.md"
             if repo_faq.exists():
                 faq_path = repo_faq
