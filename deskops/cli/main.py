@@ -221,9 +221,21 @@ def main(argv: Any = None) -> int:
         return CLI().run(argv)
     except SystemExit:
         raise
+    except FileNotFoundError as exc:
+        print(f"File not found: {exc}", file=sys.stderr)
+        return 1
+    except KeyError as exc:
+        print(f"Missing required field: {exc}", file=sys.stderr)
+        return 1
+    except ValueError as exc:
+        print(f"Invalid value: {exc}", file=sys.stderr)
+        return 1
     except Exception as exc:
         if exc.__class__.__name__ == "ValidationError":
             print(f"Validation error:\n{exc}", file=sys.stderr)
+            return 1
+        if exc.__class__.__name__ == "SLDBStoreError":
+            print(f"Store error: {exc}", file=sys.stderr)
             return 1
         raise SystemExit(f"Unexpected: {exc}")
 
