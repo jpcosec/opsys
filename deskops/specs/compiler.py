@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-import json
 from typing import Any
 from collections.abc import Collection
 
@@ -11,7 +10,6 @@ from .loader import SpecRegistry
 @dataclass(slots=True)
 class CompiledTaskBundleSpec:
     task_payload: dict[str, Any]
-    field_payloads: list[dict[str, Any]]
     condition_payloads: list[dict[str, Any]]
     checklist_payloads: list[dict[str, Any]]
     operator_payloads: list[dict[str, Any]]
@@ -22,7 +20,6 @@ class CompiledTaskBundleSpec:
 @dataclass(slots=True)
 class CompiledArtifactSpec:
     artifact_payload: dict[str, Any]
-    field_payloads: list[dict[str, Any]]
 
 
 def compile_task_bundle_spec(
@@ -57,7 +54,6 @@ def compile_task_bundle_spec(
     }
     context["status"] = task_payload["status"]
 
-    field_payloads = _compile_field_payloads(registry, artifact, task_payload, context)
     condition_payloads = _compile_primitives(registry, artifact["data"]["operational"]["conditions"], context)
     checklist_payloads = _compile_primitives(registry, artifact["data"]["operational"]["checklists"], context)
     operator_payloads = _compile_primitives(registry, artifact["data"]["operational"]["operators"], context)
@@ -69,17 +65,10 @@ def compile_task_bundle_spec(
     task_payload["routine"] = routine_payload["id"]
     task_payload["checklists"] = [item["id"] for item in checklist_payloads]
     task_payload["current_node"] = routine_payload["entrypoint"]
-    task_payload["field_refs"] = [item["id"] for item in field_payloads]
     context["current_node"] = task_payload["current_node"]
-
-    for payload in field_payloads:
-        if payload["field_key"] == "current_node":
-            payload["value"] = task_payload["current_node"]
-            payload["serialized_value"] = task_payload["current_node"]
 
     return CompiledTaskBundleSpec(
         task_payload=task_payload,
-        field_payloads=field_payloads,
         condition_payloads=condition_payloads,
         checklist_payloads=checklist_payloads,
         operator_payloads=operator_payloads,
@@ -97,9 +86,12 @@ def compile_artifact_spec(
 ) -> CompiledArtifactSpec:
     artifact = registry.artifacts[artifact_id]
     display_value = raw_payload.get("title") or raw_payload.get("name") or raw_payload.get("id")
+    if display_value is None:
+        raise KeyError(f"Payload for {artifact_id} must include 'title', 'name', or 'id'")
     title = str(display_value).strip()
+    if not title:
+        raise ValueError(f"Payload for {artifact_id} has empty title/name/id after stripping whitespace")
     slug = _slugify(title)
-    short_name = artifact_id.split(".")[-1]
     artifact_doc = artifact["data"]["doc"]
     doc_id = str(raw_payload.get("id") or artifact_doc["id_pattern"].format(slug=slug))
 
@@ -108,27 +100,11 @@ def compile_artifact_spec(
     if "title" in supported:
         payload["title"] = title
 
-    field_payloads: list[dict[str, Any]] = []
     for field_id in artifact["data"].get("fields", []):
         field_spec = registry.fields[field_id]
         field_key = str(field_spec["data"]["key"])
         value = raw_payload.get(field_key, field_spec["data"].get("default"))
         payload[field_key] = value
-        display_key = field_key.replace("_", "-")
-        field_payloads.append(
-            {
-                "title": field_spec["title"],
-                "id": f"field-instance-{doc_id}-{display_key}",
-                "status": "active",
-                "summary": f"Compiled field instance for {field_key}.",
-                "field_key": field_key,
-                "value_type": str(field_spec["data"]["value_type"]),
-                "owner_artifact": doc_id,
-                "value": value,
-                "serialized_value": _serialize_field_value(value),
-                "tags": ["primitive:field", f"field:{field_key}", f"artifact:{short_name}"],
-            }
-        )
 
     if "status" in supported and "status" not in raw_payload:
         payload["status"] = str(artifact_doc.get("status_default", "active"))
@@ -141,38 +117,7 @@ def compile_artifact_spec(
     if "history" in supported and "history" not in raw_payload:
         payload["history"] = _coerce_list(raw_payload.get("history") or [])
 
-    if "field_refs" in supported:
-        payload["field_refs"] = [item["id"] for item in field_payloads]
-    return CompiledArtifactSpec(artifact_payload=payload, field_payloads=field_payloads)
-
-
-def _compile_field_payloads(
-    registry: SpecRegistry,
-    artifact: dict[str, Any],
-    task_payload: dict[str, Any],
-    context: dict[str, str],
-) -> list[dict[str, Any]]:
-    payloads: list[dict[str, Any]] = []
-    for field_id in artifact["data"]["fields"]:
-        field_spec = registry.fields[field_id]
-        field_key = str(field_spec["data"]["key"])
-        value = task_payload.get(field_key, field_spec["data"].get("default"))
-        display_key = field_key.replace("_", "-")
-        payloads.append(
-            {
-                "title": field_spec["title"],
-                "id": f"field-instance-{context['task_id']}-{display_key}",
-                "status": "active",
-                "summary": f"Compiled field instance for {field_key}.",
-                "field_key": field_key,
-                "value_type": str(field_spec["data"]["value_type"]),
-                "owner_artifact": context["task_id"],
-                "value": value,
-                "serialized_value": _serialize_field_value(value),
-                "tags": ["primitive:field", f"field:{field_key}"],
-            }
-        )
-    return payloads
+    return CompiledArtifactSpec(artifact_payload=payload)
 
 
 def _compile_primitives(
@@ -210,12 +155,6 @@ def _compile_mapping(value: Any, context: dict[str, str]) -> Any:
     if isinstance(value, str):
         return value.format(**context)
     return value
-
-
-def _serialize_field_value(value: Any) -> str:
-    if isinstance(value, list):
-        return json.dumps(value)
-    return str(value)
 
 
 def _coerce_list(value: Any) -> list[str]:

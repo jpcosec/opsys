@@ -55,6 +55,22 @@ class RepoCLI:
             print(f"Error: cannot read store at {store_path}: {e}")
             return 1
 
+        desk_root = self._desk_root(args)
+        registry_dir = desk_root / "registry"
+        filename = f"repo-{repo_id}.md"
+        output_path = registry_dir / filename
+
+        if output_path.exists():
+            print(f"Error: Repository file already exists at {output_path}")
+            return 1
+
+        from sldb.store.io import load_models_index, load_documents_index
+        models_idx = load_models_index(root / entry.models_index)
+        docs_idx = load_documents_index(root / models_idx.documents_index)
+        if any(d.name == f"repo-{repo_id}" for d in docs_idx.documents):
+            print(f"Error: Repository repo-{repo_id} is already registered in the store.")
+            return 1
+
         rendered = render_model_markdown(model_type, payload)
         valid, details = validate_model_input_roundtrip(model_type, rendered)
         if not valid:
@@ -64,12 +80,8 @@ class RepoCLI:
             return 1
 
         # All prerequisites verified — mutate filesystem
-        desk_root = self._desk_root(args)
-        registry_dir = desk_root / "registry"
         registry_dir.mkdir(parents=True, exist_ok=True)
-
-        filename = f"repo-{repo_id}.md"
-        output_path = registry_dir / filename
+        
         output_path.write_text(rendered + "\n", encoding="utf-8")
         print(f"Wrote {output_path}")
 

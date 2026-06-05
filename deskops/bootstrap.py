@@ -95,13 +95,30 @@ class SLDBBootstrap:
         local_store = target_path / ".sldb"
         if local_store.exists():
             print(f"Local store already exists at {local_store}.")
-            return 0
-        print(f"Initializing local store at {local_store}...")
+        else:
+            print(f"Initializing local store at {local_store}...")
+            try:
+                self.run_sldb(["stores", "init", "--path", str(target_path)])
+            except RuntimeError as exc:
+                print(f"Error: {exc}")
+                return 1
+
         try:
-            self.run_sldb(["stores", "init", "--path", str(target_path)])
+            registered = self._registered_model_names(local_store)
         except RuntimeError as exc:
             print(f"Error: {exc}")
             return 1
+
+        for model_name, model_ref in MODEL_REFS.items():
+            if model_name in registered:
+                continue
+            print(f"Registering {model_name} in {local_store}...")
+            try:
+                self.run_sldb(["models", "add", model_ref, "--store", str(local_store)])
+            except RuntimeError as exc:
+                print(f"Error: {exc}")
+                return 1
+
         return 0
 
     def run_sldb(self, args: list[str], *, capture_output: bool = False) -> subprocess.CompletedProcess[str]:

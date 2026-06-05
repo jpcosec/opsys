@@ -149,19 +149,31 @@ class DeskopsOperations:
         compiled = compile_task_bundle_spec(self.spec_registry, payload)
         task_id = compiled.task_payload["id"]
 
-        self._write_doc(self._task_path(task_id), TaskDoc, compiled.task_payload)
-        self._write_doc(self._routine_path(compiled.routine_payload["id"]), RoutineDoc, compiled.routine_payload)
-        for item in compiled.condition_payloads:
-            self._write_doc(self._primitive_path("conditions", item["id"]), ConditionDoc, item)
-        for item in compiled.checklist_payloads:
-            self._write_doc(self._primitive_path("checklists", item["id"]), ChecklistDoc, item)
-        for item in compiled.operator_payloads:
-            self._write_doc(self._primitive_path("operators", item["id"]), OperatorDoc, item)
-        for item in compiled.edge_payloads:
-            self._write_doc(self._primitive_path("edges", item["id"]), EdgeDoc, item)
+        written_paths: list[Path] = []
+        
+        def write_and_track(path: Path, model: type[Any], doc_payload: dict[str, Any]) -> None:
+            self._write_doc(path, model, doc_payload)
+            written_paths.append(path)
 
-        self._append_task_to_board(task_id)
-        return TaskBundle(task_id=task_id, task_path=self._task_path(task_id), routine_path=self._routine_path(compiled.routine_payload["id"]))
+        try:
+            write_and_track(self._task_path(task_id), TaskDoc, compiled.task_payload)
+            write_and_track(self._routine_path(compiled.routine_payload["id"]), RoutineDoc, compiled.routine_payload)
+            for item in compiled.condition_payloads:
+                write_and_track(self._primitive_path("conditions", item["id"]), ConditionDoc, item)
+            for item in compiled.checklist_payloads:
+                write_and_track(self._primitive_path("checklists", item["id"]), ChecklistDoc, item)
+            for item in compiled.operator_payloads:
+                write_and_track(self._primitive_path("operators", item["id"]), OperatorDoc, item)
+            for item in compiled.edge_payloads:
+                write_and_track(self._primitive_path("edges", item["id"]), EdgeDoc, item)
+    
+            self._append_task_to_board(task_id)
+            return TaskBundle(task_id=task_id, task_path=self._task_path(task_id), routine_path=self._routine_path(compiled.routine_payload["id"]))
+        except Exception:
+            for path in written_paths:
+                if path.exists():
+                    path.unlink()
+            raise
 
     def create_artifact(self, artifact_id: str, raw_payload: dict[str, Any]) -> DocumentRecord:
         self.ensure_workspace()
@@ -199,36 +211,62 @@ class DeskopsOperations:
     def list_tasks(self) -> list[Task]:
         task_dir = self.desk_root / "tasks"
         if not task_dir.exists():
+            if not self.desk_root.exists():
+                raise FileNotFoundError(f"Desk root not found at {self.desk_root}. Run 'deskops init' to initialize.")
             return []
         tasks: list[Task] = []
         for path in sorted(task_dir.glob("task-*.md")):
-            tasks.append(self._load_task(path.stem))
+            try:
+                tasks.append(self._load_task(path.stem))
+            except Exception:
+                pass
         return tasks
 
     def list_artifacts(self, artifact_id: str) -> list[dict[str, Any]]:
         model = ARTIFACT_MODELS[artifact_id]
         directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
         if not directory.exists():
+            if not self.desk_root.exists():
+                raise FileNotFoundError(f"Desk root not found at {self.desk_root}. Run 'deskops init' to initialize.")
             return []
         pattern = self._artifact_glob_pattern(artifact_id)
-        return [self._read_doc(path, model) for path in sorted(directory.glob(pattern))]
+        results = []
+        for path in sorted(directory.glob(pattern)):
+            try:
+                results.append(self._read_doc(path, model))
+            except Exception:
+                pass
+        return results
 
     def list_routines(self) -> list[Routine]:
         routine_dir = self.desk_root / "routines"
         if not routine_dir.exists():
+            if not self.desk_root.exists():
+                raise FileNotFoundError(f"Desk root not found at {self.desk_root}. Run 'deskops init' to initialize.")
             return []
-        return [self._load_routine(path.stem) for path in sorted(routine_dir.glob("routine-*.md"))]
+        results = []
+        for path in sorted(routine_dir.glob("routine-*.md")):
+            try:
+                results.append(self._load_routine(path.stem))
+            except Exception:
+                pass
+        return results
 
     def list_primitives(self, kind: str) -> list[dict[str, Any]]:
         directory, model = PRIMITIVE_KINDS[kind]
         primitive_dir = self.desk_root / "primitives" / directory
         if not primitive_dir.exists():
+            if not self.desk_root.exists():
+                raise FileNotFoundError(f"Desk root not found at {self.desk_root}. Run 'deskops init' to initialize.")
             return []
         prefix = f"{kind}-"
-        return [
-            self._read_doc(path, model)
-            for path in sorted(primitive_dir.glob(f"{prefix}*.md"))
-        ]
+        results = []
+        for path in sorted(primitive_dir.glob(f"{prefix}*.md")):
+            try:
+                results.append(self._read_doc(path, model))
+            except Exception:
+                pass
+        return results
 
     def show_task(self, task_id: str) -> tuple[Task | None, dict[str, bool]]:
         try:
@@ -243,6 +281,9 @@ class DeskopsOperations:
             raise ValueError(f"No {artifact_id} ID provided")
         model = ARTIFACT_MODELS[artifact_id]
         directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
+        exact_match = directory / f"{doc_id}.md"
+        if exact_match.exists():
+            return self._read_doc(exact_match, model)
         matches = sorted(directory.glob(f"{doc_id}*.md"))
         if not matches:
             raise FileNotFoundError(f"No {artifact_id} file found for id '{doc_id}' in {directory}")
@@ -282,107 +323,113 @@ class DeskopsOperations:
         return self._hydrate_task(payload), result
 
     def parse_task_input(self, args: Any) -> dict[str, Any]:
+        payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            return yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {}
-        if getattr(args, "payload", None):
-            return json.loads(args.payload)
-        return {
-            "title": args.title,
-            "goal": args.goal,
-            "scope": args.scope,
-            "implementation_path": args.implementation_path,
-            "done_when": args.done_when,
-            "validation": args.validation or [],
-            "references": [],
-            "depends_on": [],
-            "pills": [],
-            "files": [],
-            "history": [],
-            "tags": ["workspace:desk", "artifact:task"],
-        }
+            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+        elif getattr(args, "payload", None):
+            payload.update(json.loads(args.payload))
+        
+        if getattr(args, "title", None): payload["title"] = args.title
+        if getattr(args, "goal", None): payload["goal"] = args.goal
+        if getattr(args, "scope", None): payload["scope"] = args.scope
+        if getattr(args, "implementation_path", None): payload["implementation_path"] = args.implementation_path
+        if getattr(args, "done_when", None): payload["done_when"] = args.done_when
+        if getattr(args, "validation", None): payload["validation"] = args.validation
+        
+        return payload
 
     def parse_artifact_input(self, artifact_id: str, args: Any) -> dict[str, Any]:
-        if getattr(args, "from_yaml", None):
-            return yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {}
-        artifact = self.spec_registry.artifacts[artifact_id]
         payload: dict[str, Any] = {}
+        if getattr(args, "from_yaml", None):
+            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+        artifact = self.spec_registry.artifacts[artifact_id]
         for field_id in artifact["data"].get("fields", []):
             field_spec = self.spec_registry.fields[field_id]
             key = str(field_spec["data"]["key"])
             attr = key
             value = getattr(args, attr, None)
-            if isinstance(value, list):
+            if isinstance(value, list) and value:
                 payload[key] = list(value)
-            elif value is not None:
+            elif value is not None and not isinstance(value, list):
                 payload[key] = value
         return payload
 
     def parse_primitive_input(self, kind: str, args: Any) -> dict[str, Any]:
+        payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            return yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {}
-        payload: dict[str, Any] = {
-            "title": args.title,
-            "summary": getattr(args, "summary", "") or "",
-            "status": getattr(args, "status", "active") or "active",
-            "tags": getattr(args, "tags", []) or [f"primitive:{kind}"],
-        }
+            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+        
+        if getattr(args, "title", None): payload["title"] = args.title
+        if getattr(args, "summary", None): payload["summary"] = args.summary
+        if getattr(args, "status", None): payload["status"] = args.status
+        if getattr(args, "tags", None): payload["tags"] = args.tags
+        
+        if "title" not in payload: payload["title"] = getattr(args, "title", None)
+        if "status" not in payload: payload["status"] = getattr(args, "status", "active") or "active"
+        if "tags" not in payload: payload["tags"] = getattr(args, "tags", []) or [f"primitive:{kind}"]
+
         if kind == "condition":
-            payload.update(
-                {
-                    "subject": args.subject_path,
-                    "predicate": args.predicate,
-                    "expected": args.expected or "",
-                }
-            )
+            if getattr(args, "subject_path", None): payload["subject"] = args.subject_path
+            if getattr(args, "predicate", None): payload["predicate"] = args.predicate
+            if getattr(args, "expected", None): payload["expected"] = args.expected
+            if "subject" not in payload: payload["subject"] = getattr(args, "subject_path", None)
+            if "predicate" not in payload: payload["predicate"] = getattr(args, "predicate", None)
         elif kind == "operator":
-            payload.update(
-                {
-                    "action": args.action,
-                    "target": args.target,
-                    "value": args.value or "",
-                }
-            )
+            if getattr(args, "action", None): payload["action"] = args.action
+            if getattr(args, "target", None): payload["target"] = args.target
+            if getattr(args, "value", None): payload["value"] = args.value
+            if "action" not in payload: payload["action"] = getattr(args, "action", None)
+            if "target" not in payload: payload["target"] = getattr(args, "target", None)
         elif kind == "checklist":
-            payload.update(
-                {
-                    "items": list(args.item or []),
-                    "condition_refs": list(args.condition_ref or []),
-                    "mode": args.mode or "all",
-                }
-            )
+            if getattr(args, "item", None): payload["items"] = list(args.item)
+            if getattr(args, "condition_ref", None): payload["condition_refs"] = list(args.condition_ref)
+            if getattr(args, "mode", None): payload["mode"] = args.mode
+            if "items" not in payload: payload["items"] = list(getattr(args, "item", []) or [])
+            if "condition_refs" not in payload: payload["condition_refs"] = list(getattr(args, "condition_ref", []) or [])
+            if "mode" not in payload: payload["mode"] = getattr(args, "mode", "all") or "all"
         elif kind == "hook":
-            payload.update(
-                {
-                    "event": args.event,
-                    "target": args.target_ref,
-                    "condition_ref": args.condition_ref or "",
-                }
-            )
+            if getattr(args, "event", None): payload["event"] = args.event
+            if getattr(args, "target_ref", None): payload["target"] = args.target_ref
+            if getattr(args, "condition_ref", None): payload["condition_ref"] = args.condition_ref
+            if "event" not in payload: payload["event"] = getattr(args, "event", None)
+            if "target" not in payload: payload["target"] = getattr(args, "target_ref", None)
         elif kind == "edge":
-            payload.update(
-                {
-                    "source": args.source,
-                    "target": args.target_node,
-                    "condition_ref": args.condition_ref or "",
-                }
-            )
+            if getattr(args, "source", None): payload["source"] = args.source
+            if getattr(args, "target_node", None): payload["target"] = args.target_node
+            if getattr(args, "condition_ref", None): payload["condition_ref"] = args.condition_ref
+            if "source" not in payload: payload["source"] = getattr(args, "source", None)
+            if "target" not in payload: payload["target"] = getattr(args, "target_node", None)
+            
         return payload
 
     def parse_routine_input(self, args: Any) -> dict[str, Any]:
+        payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            return yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {}
-        return {
-            "title": args.title,
-            "summary": args.summary or "",
-            "entrypoint": args.entrypoint,
-            "decomposition": list(args.decomposition or []),
-            "edges": list(args.edge or []),
-            "terminal_nodes": list(args.terminal_node or ["complete"]),
-            "tags": getattr(args, "tags", []) or ["primitive:routine"],
-        }
+            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+            
+        if getattr(args, "title", None): payload["title"] = args.title
+        if getattr(args, "summary", None): payload["summary"] = args.summary
+        if getattr(args, "entrypoint", None): payload["entrypoint"] = args.entrypoint
+        if getattr(args, "decomposition", None): payload["decomposition"] = list(args.decomposition)
+        if getattr(args, "edge", None): payload["edges"] = list(args.edge)
+        if getattr(args, "terminal_node", None): payload["terminal_nodes"] = list(args.terminal_node)
+        if getattr(args, "tags", None): payload["tags"] = args.tags
+        
+        if "title" not in payload: payload["title"] = getattr(args, "title", None)
+        if "summary" not in payload: payload["summary"] = getattr(args, "summary", "") or ""
+        if "entrypoint" not in payload: payload["entrypoint"] = getattr(args, "entrypoint", None)
+        if "decomposition" not in payload: payload["decomposition"] = list(getattr(args, "decomposition", []) or [])
+        if "edges" not in payload: payload["edges"] = list(getattr(args, "edge", []) or [])
+        if "terminal_nodes" not in payload: payload["terminal_nodes"] = list(getattr(args, "terminal_node", ["complete"]) or ["complete"])
+        if "tags" not in payload: payload["tags"] = getattr(args, "tags", []) or ["primitive:routine"]
+        return payload
 
     def _normalize_task_payload(self, payload: dict[str, Any]) -> dict[str, Any]:
+        if payload.get("title") is None:
+            raise KeyError("Task payload must include 'title'")
         title = str(payload["title"]).strip()
+        if not title:
+            raise ValueError("Task title cannot be empty")
         task_id = str(payload.get("id") or f"task-{slugify(title)}")
         return {
             "title": title,
@@ -390,12 +437,12 @@ class DeskopsOperations:
             "status": str(payload.get("status") or "draft"),
             "goal": str(payload.get("goal") or ""),
             "scope": str(payload.get("scope") or ""),
-            "references": list(payload.get("references") or []),
-            "depends_on": list(payload.get("depends_on") or []),
-            "pills": list(payload.get("pills") or []),
-            "files": list(payload.get("files") or []),
+            "references": self._coerce_list(payload.get("references") or []),
+            "depends_on": self._coerce_list(payload.get("depends_on") or []),
+            "pills": self._coerce_list(payload.get("pills") or []),
+            "files": self._coerce_list(payload.get("files") or []),
             "routine": str(payload.get("routine") or ""),
-            "checklists": list(payload.get("checklists") or []),
+            "checklists": self._coerce_list(payload.get("checklists") or []),
             "current_node": str(payload.get("current_node") or ""),
             "implementation_path": str(payload.get("implementation_path") or ""),
             "validation": self._coerce_list(payload.get("validation") or []),
@@ -457,7 +504,11 @@ class DeskopsOperations:
         return base
 
     def _normalize_routine_payload(self, payload: dict[str, Any]) -> dict[str, Any]:
+        if payload.get("title") is None:
+            raise KeyError("Routine payload must include 'title'")
         title = str(payload["title"]).strip()
+        if not title:
+            raise ValueError("Routine title cannot be empty")
         routine_id = str(payload.get("id") or f"routine-{slugify(title)}")
         return {
             "title": title,
@@ -790,6 +841,8 @@ class DeskopsOperations:
         return self.desk_root / ARTIFACT_PATHS[artifact_id] / f"{doc_id}.md"
 
     def _artifact_glob_pattern(self, artifact_id: str) -> str:
+        if artifact_id == "artifact.inbox_note":
+            return "*.md"
         spec = self.spec_registry.artifacts[artifact_id]
         id_pattern = str(spec["data"]["doc"]["id_pattern"])
         return id_pattern.replace("{slug}", "*") + ".md"
@@ -801,6 +854,9 @@ class DeskopsOperations:
         return self.desk_root / "primitives" / kind / f"{primitive_id}.md"
 
     def _resolve_glob(self, directory: Path, doc_id: str) -> Path:
+        exact_match = directory / f"{doc_id}.md"
+        if exact_match.exists():
+            return exact_match
         matches = sorted(directory.glob(f"{doc_id}*.md"))
         if not matches:
             raise FileNotFoundError(f"No file found for id '{doc_id}' in {directory}")
