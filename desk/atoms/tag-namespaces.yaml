@@ -14,6 +14,14 @@ namespaces:
     - layer:cli
     meaning: Architectural layer where the atom applies.
     use_when: The atom is scoped to a layer of the system.
+  multi_example:
+    do_not_use_when: not
+    examples:
+    - multi_example:ex1
+    - multi_example:ex2
+    - multi_example:ex3
+    meaning: test
+    use_when: testing
   pattern:
     do_not_use_when: The atom merely mentions a topic; use topic instead.
     examples:
@@ -27,6 +35,18 @@ namespaces:
     - system:sldb
     meaning: System, project, or tool the atom belongs to.
     use_when: The atom is about a specific system.
+  testex:
+    do_not_use_when: no examples needed
+    examples:
+    - testex:foo
+    - testex:bar
+    meaning: test examples
+    use_when: testing example flag
+  testns:
+    do_not_use_when: not testing
+    examples: []
+    meaning: test
+    use_when: testing
   topic:
     do_not_use_when: The atom describes a reusable implementation shape.
     examples:
@@ -34,3 +54,8 @@ namespaces:
     - topic:composition
     meaning: Subject area discussed by the atom.
     use_when: The atom is about a conceptual topic.
+  valid_underscore:
+    do_not_use_when: x
+    examples: []
+    meaning: x
+    use_when: x

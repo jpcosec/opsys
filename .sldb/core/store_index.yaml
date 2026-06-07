@@ -8,4 +8,12 @@ models:
   canonical: false
   family: null
   semantics: []
-hash_a: 98b5fa8b61dc8e6e15b8d8117316746ed50ecc1ebd20709677abe1e4ff6d213d
+- name: RepositoryDoc
+  model_ref: deskops.models:RepositoryDoc
+  path: desk/models/repository.py
+  models_index: .sldb/core/models/RepositoryDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+hash_a: 14bd169fde1be4f8610e427b571d90d9902df3bf3f93ea125cd10ad6dbf073a7

@@ -1,0 +1,102 @@
+documents:
+- name: repo-myrepo
+  path: desk/registry/repo-myrepo.md
+  hash_c: c5e245452839372dfa8f17fb0a2afef594736e29689b398d6b1f46cf83783345
+  hash_d: 210a54df0c0b3b51a9a302b8799fefa5175d444e8da00ab56d1d96201b786179
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-myrepo-etc
+  path: desk/registry/repo-myrepo-etc.md
+  hash_c: 31c2358801113ec7e73db74a1456e1e0f72a8b10d85fbb88ce000da75e6d68ad
+  hash_d: 7e05d5489c00f1ec8784f511e965b9179188f778832e3245354a236c1fbe3029
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-my-repo
+  path: desk/registry/repo-my-repo.md
+  hash_c: fb49f637648148d0708443551e1431d3c3d75947053223a23e08476608250421
+  hash_d: ba1183a6fc5a8957c87eb7081c47b7ae6ad69142b2ac6c4fd0cb2cc94237ee6b
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-tmp-repo
+  path: desk/registry/repo-tmp-repo.md
+  hash_c: db5c12531d5ad6ddff960ba0d4b7c8eb38263ad12306cb104bba3d590a6171fd
+  hash_d: 16cfc84e71d3e50c2cd5a9d86c56ccd657e08ffd4afbc40d2ea86c6120da6897
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-deskops-dir
+  path: desk/registry/repo-deskops-dir.md
+  hash_c: 9ecc88d5440f610005a7654be3ef1449bbd57bb42903b9cfd8bce32fc5351626
+  hash_d: 4e55d5cd1cfc1a5b517e5955912c6d626704d1eedda48f000704a40aa290b049
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-my-custom-id-123
+  path: desk/registry/repo-my-custom-id-123.md
+  hash_c: aad6604d60c83a2da7bf042dcbde6bc2c0dc8d6c0033cdf56b24a5316a0411a6
+  hash_d: 4725165b848dba318204658645e58f5ee0bc25b7774a02d745fe37d9eb8eb622
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-described-repo
+  path: desk/registry/repo-described-repo.md
+  hash_c: 23366d22c5d0c4b71a7162bf0f1c24985adbc7104d070938ea1003b9365c2bdd
+  hash_d: 4037dca8002508ac16f4baff42c9ee5a8c1dea2c3192a21de22b6cdcf54dc6d4
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-tagged-repo
+  path: desk/registry/repo-tagged-repo.md
+  hash_c: 868812cb4947215df3d53a90ae49722d32d1344ee8bff1a75d9387fc9d2661fa
+  hash_d: 25247d59a526a8a9c710ddaa497824b175378c8b0d394654fc01319e5d0f6b39
+  semantic_tags:
+  - ci/cd
+  - demo
+  - test
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-pythonpath-repo
+  path: desk/registry/repo-pythonpath-repo.md
+  hash_c: 0ee38f73540b94ecb0643395c6f70199797c3b850cc9507618048924513b7640
+  hash_d: fd168cace03d3ed7fd4b4de5f37f2b3b0c3447b3f1165a5d5be70c59ba8d37dc
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-store-test
+  path: desk/registry/repo-store-test.md
+  hash_c: 0ec833ac7c309010078b27b4f2a95136874a2731132bcdd237a62eb1eb683dd3
+  hash_d: 7b12257dd0e24693652cf34b53e6a3272a818950c9268495f00d8c2dbb338a1e
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-parent-path-test
+  path: desk/registry/repo-parent-path-test.md
+  hash_c: 1b3a94a1cff53a953ce793409bd9c1ebe9129ef0cf521b6e430d05ad725e1310
+  hash_d: 4fe81ffa79fedcf8bb461e34c4ec4905156136d61bbb7fdf5a7b3ecfcb18b4ad
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-stress-test-long-name
+  path: desk/registry/repo-stress-test-long-name.md
+  hash_c: 20b1e929453f8e8db735fd5f32c675c4069b1009553edc85a2aa20f78f68392b
+  hash_d: b31dc00bb15176b992a760032653087c2f3d0f32489c90393dbeda6f2580ae63
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-special-path
+  path: desk/registry/repo-special-path.md
+  hash_c: 553996f84bcd2ea20a46d2eea15ec0f10865ca8f383aad57ef1da89e1662d421
+  hash_d: 212168ddd3745fe04eddddac92c281b1dca97feb0de9602f62881bde97e20df3
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry
+- name: repo-deskops
+  path: desk/registry/repo-deskops.md
+  hash_c: 4dad4590627bc3c9d7884813de76258f2f3fa47a5fae1a56f08881136fae7397
+  hash_d: 6b989083d766943af95f03cfabf04d2a4f4536e00827df6ddb742ee1d2c07f28
+  semantic_tags:
+  - type.desk.repository
+  - workspace.desk.registry

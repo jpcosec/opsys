@@ -22,7 +22,7 @@ flowchart TB
 
     subgraph ReferenceLayer["References and compositions live in other documents"]
         atomref["atom reference\ndocument points to atom"]
-        composition["sldb composition\nselects atom fields"]
+        composition["sldb composition\nreferences atom docs or model payload fields"]
         target_kind["target_kind\nwhat kind of surface uses it"]
         role["role\nhow the document uses it"]
     end

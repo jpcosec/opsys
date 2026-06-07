@@ -30,6 +30,13 @@ class CLI:
                 return exc.code
             return 0 if exc.code is None else 1
 
+        if hasattr(args, "root"):
+            root_path = Path(args.root).resolve()
+            if not root_path.exists() or not root_path.is_dir():
+                import sys
+                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
+                return 1
+
         if args.command == "faq":
             from desk.cli.commands.faq import FAQCLI
 
@@ -128,6 +135,15 @@ class CLI:
             from deskops.graph.snapshot import write_graph_snapshot
 
             output_path = write_graph_snapshot(root)
+
+            import subprocess
+            import sys
+            nx_path = output_path.with_suffix("").with_suffix(".nx.json")
+            subprocess.run(
+                [sys.executable, "-m", "kgdb.main", "ingest", "--input", str(output_path), "--output", str(nx_path)],
+                check=False
+            )
+
         except GraphSnapshotCapabilityError as exc:
             print(f"Error: {exc}")
             return 1

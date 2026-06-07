@@ -12,8 +12,8 @@ flowchart TB
     end
 
     subgraph Fields["Structured field design"]
-        fields["Fields\nsmall semantic units"]
-        compose["Composition\nother docs select fields"]
+        fields["Model fields\nSLDB payload units"]
+        compose["Composition\ntracked docs and payload fields"]
         nodrift["No unnecessary copied prose\nless drift"]
     end
 
@@ -53,8 +53,8 @@ flowchart TB
 
 - If something is already written, reference it instead of copying it.
 - Copying already-written content creates drift.
-- Structured docs should be decomposed into fields that are small enough to compose safely.
-- A document composed from another structured document should be able to pull only the fields it needs.
+- Structured docs should expose model fields that are small enough to query and edit safely through SLDB.
+- A document composed from another structured document should use SLDB composition/query surfaces rather than duplicate prose or create separate field-instance docs.
 - Less structured docs are acceptable for future/deferred/unclear work, but can later be converted into structured docs when the workflow needs precision.
 - Primitives are what give action to `sldb` data.
 - A board can index tasks by using primitives such as checklists, conditions, edges, or other action units.

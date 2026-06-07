@@ -31,7 +31,6 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
         "atoms",
         "inbox",
         "drawer",
-        "fields",
         "routines",
         "primitives/conditions",
         "primitives/operators",

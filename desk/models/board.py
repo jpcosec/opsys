@@ -38,10 +38,6 @@ Scope: ⸢rev•scope⸥
 
 ⸢rev•notes⸥
 
-## Field Refs
-
-- ⸢rev,list•field_refs⸥
-
 ## Task Details
 
 ⸢render•task_summaries⸥
@@ -70,10 +66,6 @@ Scope: ⸢rev•scope⸥
     notes: str = Field(
         default="No additional notes.",
         description="Short operational notes about the current routed set.",
-    )
-    field_refs: list[str] = Field(
-        default_factory=list,
-        description="Field instance identifiers composed into the board artifact.",
     )
     tags: list[str] = Field(
         default_factory=list,

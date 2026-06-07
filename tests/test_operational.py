@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import pytest
+
 from deskops.runtime.primitives import Checklist
 from deskops.runtime.primitives import Condition
 from deskops.runtime.primitives import Edge
@@ -250,3 +252,78 @@ def test_routine_advance_runs_operators_until_next_gate() -> None:
     )
     assert third.current_node == "complete"
     assert payload["status"] == "closed"
+
+
+def test_routine_advance_rejects_missing_edge_target() -> None:
+    routine = Routine(
+        id="routine-task",
+        title="Task routine",
+        status="active",
+        summary="",
+        tags=[],
+        entrypoint="checklist-execution",
+        decomposition=["checklist-execution"],
+        edges=[
+            Edge(
+                id="edge-missing-target",
+                title="Bad edge",
+                status="active",
+                summary="",
+                tags=[],
+                source="checklist-execution",
+                target="operator-missing",
+                condition_ref="",
+            )
+        ],
+        terminal_nodes=["complete"],
+    )
+    checklists = {
+        "checklist-execution": Checklist(
+            id="checklist-execution",
+            title="Execution gate",
+            status="active",
+            summary="",
+            tags=[],
+            items=[],
+            condition_refs=[],
+            mode="all",
+        )
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="edge edge-missing-target targets unknown node operator-missing",
+    ):
+        routine.advance({}, conditions={}, operators={}, checklists=checklists)
+
+
+def test_routine_advance_rejects_missing_checklist_condition() -> None:
+    routine = Routine(
+        id="routine-task",
+        title="Task routine",
+        status="active",
+        summary="",
+        tags=[],
+        entrypoint="checklist-execution",
+        decomposition=["checklist-execution"],
+        edges=[],
+        terminal_nodes=["complete"],
+    )
+    checklists = {
+        "checklist-execution": Checklist(
+            id="checklist-execution",
+            title="Execution gate",
+            status="active",
+            summary="",
+            tags=[],
+            items=["Implementation exists"],
+            condition_refs=["condition-missing"],
+            mode="all",
+        )
+    }
+
+    with pytest.raises(
+        ValueError,
+        match="checklist checklist-execution references unknown condition condition-missing",
+    ):
+        routine.advance({}, conditions={}, operators={}, checklists=checklists)

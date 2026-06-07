@@ -161,6 +161,12 @@ class Routine(Primitive):
         operators: dict[str, Operator],
         checklists: dict[str, Checklist],
     ) -> TransitionResult:
+        self.validate_integrity(
+            payload,
+            conditions=conditions,
+            operators=operators,
+            checklists=checklists,
+        )
         start = payload.get("current_node") or self.entrypoint
         current = start
 
@@ -216,6 +222,51 @@ class Routine(Primitive):
                 return edge
         return None
 
+    def validate_integrity(
+        self,
+        payload: dict[str, Any],
+        *,
+        conditions: dict[str, Condition],
+        operators: dict[str, Operator],
+        checklists: dict[str, Checklist],
+    ) -> None:
+        known_nodes = set(checklists) | set(operators) | set(self.terminal_nodes) | {
+            "complete"
+        }
+        if self.entrypoint not in known_nodes:
+            raise ValueError(
+                f"routine {self.id} entrypoint references unknown node {self.entrypoint}"
+            )
+
+        current_node = payload.get("current_node")
+        if current_node and current_node not in known_nodes:
+            raise ValueError(
+                f"routine {self.id} current_node references unknown node {current_node}"
+            )
+
+        for node_id in self.decomposition:
+            if node_id not in known_nodes:
+                raise ValueError(
+                    f"routine {self.id} decomposition references unknown node {node_id}"
+                )
+
+        for checklist in checklists.values():
+            for condition_ref in checklist.condition_refs:
+                if condition_ref not in conditions:
+                    raise ValueError(
+                        f"checklist {checklist.id} references unknown condition {condition_ref}"
+                    )
+
+        for edge in self.edges:
+            if edge.source not in known_nodes:
+                raise ValueError(f"edge {edge.id} starts from unknown node {edge.source}")
+            if edge.target not in known_nodes:
+                raise ValueError(f"edge {edge.id} targets unknown node {edge.target}")
+            if edge.condition_ref and edge.condition_ref not in conditions:
+                raise ValueError(
+                    f"edge {edge.id} references unknown condition {edge.condition_ref}"
+                )
+
 
 @dataclass(slots=True)
 class OperationalArtifact(Primitive):
@@ -232,7 +283,6 @@ class Task(OperationalArtifact):
     depends_on: list[str]
     pills: list[str]
     files: list[str]
-    field_refs: list[str]
     checklists: list[str]
     implementation_path: str
     validation: list[str]

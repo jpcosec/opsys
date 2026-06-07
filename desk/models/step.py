@@ -18,10 +18,6 @@ ID: ⸢rev•id⸥
 
 ⸢rev•outcome⸥
 
-## Field Refs
-
-- ⸢rev,list•field_refs⸥
-
 ## Tags
 
 - ⸢rev,list•tags⸥
@@ -31,10 +27,6 @@ ID: ⸢rev•id⸥
     id: str = Field(description="Stable step identifier.")
     action: str = Field(description="What the step should do.")
     outcome: str = Field(description="What the step should produce or confirm.")
-    field_refs: list[str] = Field(
-        default_factory=list,
-        description="Field instance identifiers composed into the step artifact.",
-    )
     tags: list[str] = Field(
         default_factory=list,
         description="Semantic tags placed at the end, using namespaced forms such as 'topic:testing' or 'workspace:desk'.",

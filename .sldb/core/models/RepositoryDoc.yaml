@@ -1,0 +1,13 @@
+name: RepositoryDoc
+model_ref: deskops.models:RepositoryDoc
+path: desk/models/repository.py
+documents_index: .sldb/core/documents/RepositoryDoc.yaml
+sections_index: ''
+hash_b: 4d6e2ff57c3597b7b18f21633dcb513ebd84cc4b94e62fc22ae513537f25f9d9
+version: 1
+canonical: false
+family: null
+semantics:
+- type.desk.repository
+- workspace.desk.registry
+base_models: []

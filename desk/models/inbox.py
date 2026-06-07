@@ -20,10 +20,6 @@ status: ⸢rev•status⸥
 # ⸢rev•title⸥
 
 ⸢rev,markdown•body⸥
-
-## Field Refs
-
-- ⸢rev,list•field_refs⸥
 """
 
     kind: Literal["unclear", "suggestion"] = Field(
@@ -36,7 +32,3 @@ status: ⸢rev•status⸥
     )
     title: str = Field(description="Inbox note title shown as the H1 heading.")
     body: str = Field(description="Markdown body describing the question or suggestion in detail.")
-    field_refs: list[str] = Field(
-        default_factory=list,
-        description="Field instance identifiers composed into the inbox note artifact.",
-    )

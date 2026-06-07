@@ -10,12 +10,6 @@ Write user docs
 
 CLI reference available
 
-## Field Refs
-
-- field-instance-step-document-the-cli-title
-- field-instance-step-document-the-cli-action
-- field-instance-step-document-the-cli-outcome
-
 ## Tags
 
 - workspace:desk

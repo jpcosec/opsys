@@ -38,7 +38,7 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` defin
 
 **Add artifacts** — `deskops add <artifact> [--flags...]`
 
-Creates compiled artifacts (sldb doc + field instances) from spec templates.
+Creates structured artifact docs from spec templates. Spec fields populate the artifact model's own fields; they do not create separate desk field-instance documents.
 
 Supported artifact types:
 
@@ -47,8 +47,8 @@ Supported artifact types:
 | `task` | Actionable task bundle with routine | `--title`, `--goal`, `--scope` |
 | `pill` | Reusable context document | `--title`, `--what`, `--why` |
 | `ritual` | Repeatable procedure template | `--title`, `--purpose`, `--steps` |
-| `board` | Task coordination surface | `--title`, `--goal` |
-| `atom` | Durable architectural concept | `--title`, `--what`, `--why`, `--category` |
+| `board` | Task coordination surface | `--title`, `--scope`, `--purpose` |
+| `atom` | Durable architectural concept | `--title`, `--five-wh-one-plus`, `--answer` |
 | `repository` | Repo registration | `--name`, `--path`, `--status` |
 | `inbox-note` | Unclear point or suggestion | `--kind`, `--author`, `--title`, `--body` |
 | `faq-doc` | FAQ entry | (spec-defined flags) |
@@ -76,7 +76,7 @@ deskops list conditions
 
 **Show artifacts** — `deskops show <artifact> <doc-id>`
 
-Displays one artifact doc with all its fields and field refs:
+Displays one artifact doc with its model fields:
 
 ```
 deskops show atom atom-001

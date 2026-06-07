@@ -4,7 +4,6 @@ from desk.models import EdgeDoc
 from desk.models import AtomDoc
 from desk.models import BoardDoc
 from desk.models import FAQDoc
-from desk.models import FieldInstanceDoc
 from desk.models import HookDoc
 from desk.models import InboxNoteDoc
 from desk.models import OperatorDoc
@@ -24,7 +23,6 @@ __all__ = [
     "AtomDoc",
     "BoardDoc",
     "FAQDoc",
-    "FieldInstanceDoc",
     "HookDoc",
     "InboxNoteDoc",
     "OperatorDoc",

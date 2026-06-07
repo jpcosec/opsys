@@ -1,0 +1,44 @@
+flowchart TB
+    subgraph sldb[SLDB infrastructure]
+        store[".sldb store\nmodels, tracked docs, indexes"]
+        models["StructuredNLDoc models\nPydantic contracts"]
+        docs["Modeled Markdown docs\nextract/render/validate"]
+        fields["Fields and sections\nread/write/edit/query"]
+        semantic["Semantic indexes\nfind/navigation/trace"]
+    end
+
+    subgraph deskops[Deskops workflow domain]
+        specs["spec/ artifacts and fields\ncompiler vocabulary"]
+        primitives["Primitives\nstate checks, transitions, gates"]
+        materializers["Materializers\natom/task/doc projections"]
+        cli["deskops CLI\ncommands from workflow nouns"]
+        surfaces["desk/ surfaces\ntasks, atoms, rituals, inbox, drawer"]
+    end
+
+    subgraph outputs[Human and machine outputs]
+        bigdocs["Big docs\ncomposed explanations"]
+        diagrams["Diagrams\nspec2viz source -> projections"]
+        tests["Tests and validation\nroundtrip, tags, workflow gates"]
+        issues["Issues and inbox notes\nmissing capability or unclear decisions"]
+    end
+
+    specs -->|compile to| models
+    specs -->|define legal operations for| primitives
+    models -->|render/extract/validate| docs
+    docs -->|tracked by| store
+    fields -->|operate on| docs
+    semantic -->|indexes| store
+
+    cli -->|invokes| primitives
+    cli -->|creates/updates| surfaces
+    cli -->|delegates modeled document work to| docs
+    cli -->|delegates field operations to| fields
+    primitives -->|mutate/check| surfaces
+    materializers -->|project from| surfaces
+    materializers -->|write modeled docs through| docs
+
+    surfaces -->|materialize as| bigdocs
+    surfaces -->|materialize as| diagrams
+    surfaces -->|validated by| tests
+    issues -->|route missing infra to| sldb
+    issues -->|route missing diagram infra to| diagrams

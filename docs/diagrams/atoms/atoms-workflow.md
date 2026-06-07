@@ -50,8 +50,8 @@ flowchart TB
     question --> when
     question --> where
     question --> whom
-    specs -->|sldb composition selects atoms| atom
-    docs -->|sldb composition selects atoms| atom
+    specs -->|sldb composition references atoms| atom
+    docs -->|sldb composition references atoms| atom
     code_contract -->|reference / constraint relation| atom
 
     task --> atom
@@ -80,9 +80,9 @@ flowchart TB
 - Atoms live under `desk/atoms`, grouped by design domain.
 - Atoms are durable knowledge, not tasks.
 - Each atom answers exactly one `5WH1+` question: what, why, how, how-not, when, where, or for whom.
-- Specs and documentation should be sldb compositions of atoms.
-- Structured documents should expose fields that are modular enough for other documents to compose from them without pulling unnecessary information.
-- Good field design is the mechanism that keeps composed documents small and prevents duplication-driven drift.
+- Specs and documentation should reference or compose tracked atom documents through SLDB rather than copy atom prose.
+- Structured documents should expose useful model fields in their SLDB payloads, but those fields remain inside the owning document model.
+- Good model-field design plus explicit atom references keep composed documents small and prevent duplication-driven drift.
 - Tasks, pills, and features may reference atoms.
 - If a task changes code/spec/docs that touch durable knowledge, it should reference the relevant atoms.
 - Drift can mean either the atom is stale or a materialization is stale; the workflow must decide which side changes.

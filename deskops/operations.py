@@ -150,7 +150,7 @@ class DeskopsOperations:
         task_id = compiled.task_payload["id"]
 
         written_paths: list[Path] = []
-        
+
         def write_and_track(path: Path, model: type[Any], doc_payload: dict[str, Any]) -> None:
             self._write_doc(path, model, doc_payload)
             written_paths.append(path)
@@ -166,7 +166,7 @@ class DeskopsOperations:
                 write_and_track(self._primitive_path("operators", item["id"]), OperatorDoc, item)
             for item in compiled.edge_payloads:
                 write_and_track(self._primitive_path("edges", item["id"]), EdgeDoc, item)
-    
+
             self._append_task_to_board(task_id)
             return TaskBundle(task_id=task_id, task_path=self._task_path(task_id), routine_path=self._routine_path(compiled.routine_payload["id"]))
         except Exception:
@@ -231,7 +231,7 @@ class DeskopsOperations:
             return []
         pattern = self._artifact_glob_pattern(artifact_id)
         results = []
-        for path in sorted(directory.glob(pattern)):
+        for path in sorted(directory.rglob(pattern)):
             try:
                 results.append(self._read_doc(path, model))
             except Exception:
@@ -328,14 +328,14 @@ class DeskopsOperations:
             payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
         elif getattr(args, "payload", None):
             payload.update(json.loads(args.payload))
-        
+
         if getattr(args, "title", None): payload["title"] = args.title
         if getattr(args, "goal", None): payload["goal"] = args.goal
         if getattr(args, "scope", None): payload["scope"] = args.scope
         if getattr(args, "implementation_path", None): payload["implementation_path"] = args.implementation_path
         if getattr(args, "done_when", None): payload["done_when"] = args.done_when
         if getattr(args, "validation", None): payload["validation"] = args.validation
-        
+
         return payload
 
     def parse_artifact_input(self, artifact_id: str, args: Any) -> dict[str, Any]:
@@ -358,12 +358,12 @@ class DeskopsOperations:
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
             payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
-        
+
         if getattr(args, "title", None): payload["title"] = args.title
         if getattr(args, "summary", None): payload["summary"] = args.summary
         if getattr(args, "status", None): payload["status"] = args.status
         if getattr(args, "tags", None): payload["tags"] = args.tags
-        
+
         if "title" not in payload: payload["title"] = getattr(args, "title", None)
         if "status" not in payload: payload["status"] = getattr(args, "status", "active") or "active"
         if "tags" not in payload: payload["tags"] = getattr(args, "tags", []) or [f"primitive:{kind}"]
@@ -399,14 +399,14 @@ class DeskopsOperations:
             if getattr(args, "condition_ref", None): payload["condition_ref"] = args.condition_ref
             if "source" not in payload: payload["source"] = getattr(args, "source", None)
             if "target" not in payload: payload["target"] = getattr(args, "target_node", None)
-            
+
         return payload
 
     def parse_routine_input(self, args: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
             payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
-            
+
         if getattr(args, "title", None): payload["title"] = args.title
         if getattr(args, "summary", None): payload["summary"] = args.summary
         if getattr(args, "entrypoint", None): payload["entrypoint"] = args.entrypoint
@@ -414,7 +414,7 @@ class DeskopsOperations:
         if getattr(args, "edge", None): payload["edges"] = list(args.edge)
         if getattr(args, "terminal_node", None): payload["terminal_nodes"] = list(args.terminal_node)
         if getattr(args, "tags", None): payload["tags"] = args.tags
-        
+
         if "title" not in payload: payload["title"] = getattr(args, "title", None)
         if "summary" not in payload: payload["summary"] = getattr(args, "summary", "") or ""
         if "entrypoint" not in payload: payload["entrypoint"] = getattr(args, "entrypoint", None)
@@ -841,7 +841,7 @@ class DeskopsOperations:
         return self.desk_root / ARTIFACT_PATHS[artifact_id] / f"{doc_id}.md"
 
     def _artifact_glob_pattern(self, artifact_id: str) -> str:
-        if artifact_id == "artifact.inbox_note":
+        if artifact_id in {"artifact.inbox_note", "artifact.board", "artifact.ritual"}:
             return "*.md"
         spec = self.spec_registry.artifacts[artifact_id]
         id_pattern = str(spec["data"]["doc"]["id_pattern"])

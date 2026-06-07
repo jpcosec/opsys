@@ -1,0 +1,24 @@
+# Testing gate to testing-ready operator
+
+ID: edge-task-from-yaml-test-full-testing-to-ready
+Status: active
+
+## Summary
+
+Testing gate passed.
+
+## Source
+
+checklist-task-from-yaml-test-full-testing-ready
+
+## Target
+
+operator-task-from-yaml-test-full-ready-for-testing
+
+## Condition
+
+
+
+## Tags
+
+- primitive:edge

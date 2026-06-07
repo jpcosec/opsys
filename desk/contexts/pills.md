@@ -32,3 +32,10 @@ Required fields:
 - Non-trivial tasks should normally bind `pill-007` so the executor must pass through explicit initialization, testing, and closeout gates rather than treating them as implied follow-through.
 - Bind a pill when its `when` matches the task state, its `where` matches the surfaces being touched, or its `how_not` describes a plausible failure mode for the task.
 - If no existing pill covers a risky ambiguity, create or update a pill before continuing.
+
+## Current Graph Pills
+
+- `pill-008`: keep KGDB parallel to SLDB.
+- `pill-009`: source files are graph nodes.
+- `pill-010`: generated graph output is runtime state.
+- `pill-011`: self reflection must avoid noisy generation.

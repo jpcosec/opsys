@@ -48,17 +48,13 @@ def test_task_spec_compiler_builds_bundle_from_yaml_specs() -> None:
     assert compiled.task_payload["id"] == "task-spec-authored-task"
     assert compiled.task_payload["current_node"] == "checklist-task-spec-authored-task-execution-ready"
     assert compiled.routine_payload["id"] == "routine-task-spec-authored-task"
-    assert compiled.task_payload["field_refs"] == [
-        "field-instance-task-spec-authored-task-title",
-        "field-instance-task-spec-authored-task-goal",
-        "field-instance-task-spec-authored-task-scope",
-        "field-instance-task-spec-authored-task-status",
-        "field-instance-task-spec-authored-task-implementation-path",
-        "field-instance-task-spec-authored-task-validation",
-        "field-instance-task-spec-authored-task-done-when",
-        "field-instance-task-spec-authored-task-current-node",
-        "field-instance-task-spec-authored-task-history",
-    ]
+    assert "field_refs" not in compiled.task_payload
+    assert compiled.task_payload["title"] == "Spec authored task"
+    assert compiled.task_payload["goal"] == "Drive task creation from YAML specs."
+    assert compiled.task_payload["scope"] == "Task pipeline only."
+    assert compiled.task_payload["implementation_path"] == "Compile artifact spec into runtime-ready docs."
+    assert compiled.task_payload["validation"] == ["pytest"]
+    assert compiled.task_payload["done_when"] == "The task bundle is produced from specs."
     assert compiled.condition_payloads[0]["id"] == "condition-task-spec-authored-task-has-implementation-path"
     assert compiled.operator_payloads[-1]["value"] == "closed"
 

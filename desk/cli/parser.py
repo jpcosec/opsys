@@ -76,7 +76,7 @@ def _add_graph_commands(
     build.add_argument("--root", default=".", help="Target repository root.")
 
     neighbors = s.add_parser("neighbors", help="Show incoming and outgoing neighbors for one graph node.")
-    neighbors.add_argument("id", help="Graph node id to inspect.")
+    neighbors.add_argument("id", help="Graph node id to inspect, formatted as type:id (e.g. atom:atom-name, task:task-name, issue:issue-name).")
     neighbors.add_argument("--root", default=".", help="Target repository root.")
     neighbors.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
 

@@ -28,7 +28,7 @@ flowchart TB
 
     subgraph ReferenceLayer["References and compositions live in other documents"]
         atomref["Atom reference\ndocument points to atom"]
-        composition["sldb composition\nselects atom fields"]
+        composition["sldb composition\nreferences atom docs or model payload fields"]
         role["role\nhow the surface uses the atom"]
         target_kind["target_kind\nwhat kind of surface uses it"]
     end
@@ -71,7 +71,7 @@ flowchart TB
 |---|---|---|
 | README / start here | project identity, use path, entrypoints | should reference or render atoms for what/why/how-to-use |
 | Concept docs | durable explanations and architecture concepts | often direct materializations of atoms |
-| Specs / contracts | normative semantic rules and constraints | specs may compose or transclude atom fields; atoms can specify or constrain claims |
+| Specs / contracts | normative semantic rules and constraints | specs may reference or transclude atom docs; atoms can specify or constrain claims |
 | Code | implementation | code implements/respects/violates atoms; not simple composition |
 | Tests / verification | executable or procedural proof | tests validate atoms, specs, or behavior claims |
 | UX docs | user flows, affordances, interaction contracts | atoms can describe users, flows, constraints, and how-not |
@@ -96,7 +96,7 @@ Borrowing from `specyaml`, larger documents should declare explicit roles for ho
 | `validates` | test/check validates an atom or derived claim |
 | `implements` | code implements an atom's claim |
 | `uses` | artifact uses the atom as context or dependency |
-| `composes` | structured document composes atom fields |
+| `composes` | structured document composes tracked docs or model payload fields through SLDB |
 | `transcludes` | document includes atom content while preserving identity |
 | `renders` | generated artifact presents atom/spec semantics |
 | `violates` | artifact conflicts with the atom and indicates drift |

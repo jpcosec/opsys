@@ -6,7 +6,6 @@ from .checklist import ChecklistDoc
 from .condition import ConditionDoc
 from .edge import EdgeDoc
 from .faq import FAQDoc
-from .field import FieldInstanceDoc
 from .hook import HookDoc
 from .inbox import InboxNoteDoc
 from .operator import OperatorDoc
@@ -26,7 +25,6 @@ __all__ = [
     "ConditionDoc",
     "EdgeDoc",
     "FAQDoc",
-    "FieldInstanceDoc",
     "HookDoc",
     "InboxNoteDoc",
     "OperatorDoc",

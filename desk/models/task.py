@@ -35,10 +35,6 @@ Status: ⸢rev•status⸥
 
 - ⸢rev,list•files⸥
 
-## Field Refs
-
-- ⸢rev,list•field_refs⸥
-
 ## Routine
 
 ⸢rev•routine⸥

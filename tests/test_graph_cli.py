@@ -83,7 +83,7 @@ def test_graph_build_rejects_missing_root(tmp_path: Path, capsys) -> None:
 
     captured = capsys.readouterr()
     assert result == 1
-    assert f"Error: graph root is not a directory: {missing_root}" in captured.out
+    assert f"Error: Provided --root is not a valid directory: {missing_root}" in captured.err
 
 
 def test_graph_missing_reports_clean_fixture(tmp_path: Path, capsys) -> None:
