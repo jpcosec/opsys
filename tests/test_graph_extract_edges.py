@@ -120,6 +120,29 @@ This explicitly names `deskops/missing.py`.
     ]
 
 
+def test_extract_declared_edges_reads_drawer_question_maps(tmp_path: Path) -> None:
+    write(tmp_path / "desk/atoms/atom-workflow.md", "# Workflow\n\nID: atom-workflow\n")
+    write(
+        tmp_path / "desk/drawer/questions/workflow-question-map.md",
+        """# Workflow Question Map
+
+## Related Atoms
+
+- atom-workflow
+""",
+    )
+
+    result = extract_declared_edges(tmp_path)
+
+    assert [(edge.source_id, edge.target_id, edge.role) for edge in result.edges] == [
+        (
+            "question:desk/drawer/questions/workflow-question-map.md",
+            "atom:atom-workflow",
+            "references",
+        )
+    ]
+
+
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")

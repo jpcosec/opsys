@@ -138,7 +138,7 @@ Every larger document that uses atom knowledge should declare its atom reference
 
 Draft shape for documents that point to atoms:
 
-```yaml
+```text
 atoms:
   - id: atom-...
     target_kind: readme | doc | spec | code | test | ux | backend | library | config | workflow | generated

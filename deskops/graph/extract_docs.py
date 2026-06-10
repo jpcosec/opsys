@@ -68,6 +68,9 @@ def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
         (path, "issue") for path in _glob(root / "desk" / "drawer" / "issues", "*.md")
     )
     candidates.extend(
+        (path, "question") for path in _glob(root / "desk" / "drawer" / "questions", "*.md")
+    )
+    candidates.extend(
         (path, "diagram")
         for path in _glob(root / "docs" / "diagrams", "**/*")
         if path.suffix in {".md", ".mmd"}

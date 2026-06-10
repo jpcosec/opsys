@@ -17,6 +17,16 @@ from deskops.cli.main import CLI
 from deskops.cli.main import main
 
 
+ATOM_PAYLOAD_ARGS = [
+    "--title",
+    "Trackable atom",
+    "--five-wh-one-plus",
+    "what",
+    "--answer",
+    "Created atoms should be visible through deskops and sldb.",
+]
+
+
 def test_cli_help_uses_deskops_name(capsys) -> None:
     result = main(["--help"])
 
@@ -600,6 +610,65 @@ def test_add_list_and_show_ritual_from_specs(tmp_path: Path, capsys) -> None:
     assert shown == 0
     assert "Ritual: ritual-testing-ritual" in show_out.out
     assert "steps: Review tests, Run validation" in show_out.out
+
+
+def test_show_atom_finds_nested_atom(tmp_path: Path, capsys) -> None:
+    created = main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS])
+    capsys.readouterr()
+    assert created == 0
+
+    atom_path = tmp_path / "desk" / "atoms" / "atom-trackable-atom.md"
+    nested_path = tmp_path / "desk" / "atoms" / "topic" / "atom-trackable-atom.md"
+    nested_path.parent.mkdir(parents=True)
+    atom_path.rename(nested_path)
+
+    shown = main(["show", "atom", "atom-trackable-atom", "--root", str(tmp_path)])
+    show_out = capsys.readouterr()
+
+    assert shown == 0
+    assert "Atom: atom-trackable-atom" in show_out.out
+    assert "Created atoms should be visible through deskops and sldb." in show_out.out
+
+
+def test_add_atom_tracks_local_sldb_store_when_atomdoc_registered(tmp_path: Path, capsys) -> None:
+    from sldb.cli.main import main as sldb_main
+
+    store = tmp_path / ".sldb"
+    assert sldb_main(["stores", "init", "--path", str(tmp_path)]) == 0
+    assert sldb_main(
+        [
+            "models",
+            "add",
+            "deskops.models:AtomDoc",
+            "--store",
+            str(store),
+            "--pythonpath",
+            str(ROOT),
+        ]
+    ) == 0
+    capsys.readouterr()
+
+    created = main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS])
+    create_out = capsys.readouterr()
+    assert created == 0
+    assert "Created atom atom-trackable-atom" in create_out.out
+
+    shown = sldb_main(
+        [
+            "docs",
+            "show",
+            "atom-trackable-atom",
+            "--store",
+            str(store),
+            "--pythonpath",
+            str(ROOT),
+        ]
+    )
+    sldb_out = capsys.readouterr()
+
+    assert shown == 0
+    assert '"name": "atom-trackable-atom"' in sldb_out.out
+    assert '"model": "AtomDoc"' in sldb_out.out
 
 
 def test_add_list_and_show_board_from_specs(tmp_path: Path, capsys) -> None:

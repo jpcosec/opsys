@@ -191,6 +191,7 @@ class DeskopsOperations:
                 default_registry_path(self.root),
             )
         self._write_doc(path, model, compiled.artifact_payload)
+        self._track_created_artifact(artifact_id, model, path, compiled.artifact_payload["id"])
         return DocumentRecord(kind=artifact_id.split(".")[-1], doc_id=compiled.artifact_payload["id"], path=path)
 
     def create_primitive(self, kind: str, raw_payload: dict[str, Any]) -> DocumentRecord:
@@ -284,7 +285,10 @@ class DeskopsOperations:
         exact_match = directory / f"{doc_id}.md"
         if exact_match.exists():
             return self._read_doc(exact_match, model)
-        matches = sorted(directory.glob(f"{doc_id}*.md"))
+        exact_matches = sorted(directory.rglob(f"{doc_id}.md"))
+        if exact_matches:
+            return self._read_doc(exact_matches[0], model)
+        matches = sorted(directory.rglob(f"{doc_id}*.md"))
         if not matches:
             raise FileNotFoundError(f"No {artifact_id} file found for id '{doc_id}' in {directory}")
         return self._read_doc(matches[0], model)
@@ -865,6 +869,44 @@ class DeskopsOperations:
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_model_markdown(model, payload) + "\n", encoding="utf-8")
+
+    def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
+        if artifact_id != "artifact.atom":
+            return
+        store_path = self.root / ".sldb"
+        try:
+            from sldb.cli.utils import resolve_model_ref
+            from sldb.store.io import load_documents_index
+            from sldb.store.io import load_models_index
+            from sldb.store.io import load_store_index
+            from sldb.store.layout import store_exists
+            from sldb.store.ops import track_document
+        except ImportError:
+            return
+        if not store_exists(store_path):
+            return
+
+        store_index = load_store_index(store_path)
+        model_entry = next((entry for entry in store_index.models if entry.name == model.__name__), None)
+        if model_entry is None:
+            return
+
+        models_index = load_models_index(self.root / model_entry.models_index)
+        documents_index = load_documents_index(self.root / models_index.documents_index)
+        if any(entry.name == doc_id for entry in documents_index.documents):
+            return
+
+        track_document(
+            store_path,
+            self.root,
+            store_index,
+            model,
+            model_entry,
+            path,
+            doc_id,
+            resolve_model_ref,
+            str(Path(__file__).resolve().parents[1]),
+        )
 
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
         payload = extract_model_data(model, path.read_text(encoding="utf-8"))

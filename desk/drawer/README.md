@@ -11,6 +11,7 @@ Use it for:
 ## Surfaces
 
 - `desk/drawer/features/` holds deferred feature documents.
+- `desk/drawer/questions/` holds unresolved workflow/model questions before they become tasks, atoms, docs, specs, diagrams, or rituals.
 - `desk/drawer/tasks/Board.md` routes deferred items without promoting them into execution.
 
 ## Rule

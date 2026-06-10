@@ -1,8 +1,8 @@
 documents:
 - name: repo-myrepo
   path: desk/registry/repo-myrepo.md
-  hash_c: c5e245452839372dfa8f17fb0a2afef594736e29689b398d6b1f46cf83783345
-  hash_d: 210a54df0c0b3b51a9a302b8799fefa5175d444e8da00ab56d1d96201b786179
+  hash_c: f3895c7a26645d2f4c9798bf0203f69d001d2cb0f77bfa3ee4cd6b086f574928
+  hash_d: 99c92248c6587824dbf96f690c1ddb4e49d421f0e2e3945df91d0e1ec2f38d12
   semantic_tags:
   - type.desk.repository
   - workspace.desk.registry

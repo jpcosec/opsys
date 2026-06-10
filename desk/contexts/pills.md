@@ -39,3 +39,5 @@ Required fields:
 - `pill-009`: source files are graph nodes.
 - `pill-010`: generated graph output is runtime state.
 - `pill-011`: self reflection must avoid noisy generation.
+- `pill-012`: dispatch deskops CLI artifact fixes from the artifact contract.
+- `pill-013`: prevent partial writes and orphaned desk artifacts.
