@@ -3,7 +3,7 @@ model_ref: desk.models:AtomDoc
 path: desk/models/atom.py
 documents_index: .sldb/core/documents/AtomDoc.yaml
 sections_index: .sldb/runtime/sections/AtomDoc.yaml
-hash_b: 2e6690231df99530254c8fad24c24d7101b0d176399584e38954f4cf49bb292b
+hash_b: 22deb5a9f05b0bd8c4aa4104f1888406023153a41ed0c2df8dace5bd9608d450
 version: 1
 canonical: false
 family: null

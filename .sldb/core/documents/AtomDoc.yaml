@@ -323,3 +323,83 @@ documents:
   - topic:materialization
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-workflow-surfaces-have-operational-lifetimes
+  path: desk/atoms/workflow-model/atom-workflow-surfaces-have-operational-lifetimes.md
+  hash_c: e4665ed7e2ce6c8d6216f30973358f8dcae4bcd27e58924f8fa368e1c3e0077b
+  hash_d: 1fdd197c3fe511b6cf002bf4a72d05bc066efe476c3a704c82d1ffc52cfcafa3
+  semantic_tags:
+  - system:deskops
+  - topic:surfaces
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-workflow-vocabulary-separates-knowledge-and-work
+  path: desk/atoms/workflow-model/atom-workflow-vocabulary-separates-knowledge-and-work.md
+  hash_c: ed5100413a0fbc6e767e937201aa2e94700bf4ef8cb591530d430e7d5e5a25e9
+  hash_d: 35d5eacfcb6697b6dd87d9145c1fd3acb27e61370887833a62db83a52458aee4
+  semantic_tags:
+  - system:deskops
+  - topic:vocabulary
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-clean-agents-start-from-minimum-workflow-set
+  path: desk/atoms/workflow-model/atom-clean-agents-start-from-minimum-workflow-set.md
+  hash_c: 013082e796f9d366b91429d479395321892f82421f1d5bc7633f5e4685fe0d36
+  hash_d: 398c1cd36109a966b3f0429b492f18f12930e3e2007f3ab1fcea5a1df6f92e3b
+  semantic_tags:
+  - system:deskops
+  - topic:agents
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-first-safe-action-follows-read-route
+  path: desk/atoms/workflow-model/atom-first-safe-action-follows-read-route.md
+  hash_c: 765221883660b336508a46824447159fca16972d54006396d1947db25688a4aa
+  hash_d: 4d08d1ddc18e95d44725ee8e910a0d67c595873df5a2c88bb6e54a0b2ebe4422
+  semantic_tags:
+  - system:deskops
+  - topic:onboarding
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-agents-read-by-decision-need
+  path: desk/atoms/workflow-model/atom-agents-read-by-decision-need.md
+  hash_c: bf9200c80c3e4d6b583c37c42003cf07993d2f73faf0155c76925f54c47327ea
+  hash_d: 4077c62eba9806d89ee066895176e03878114f4a1314aa656a66c774bd484ba3
+  semantic_tags:
+  - system:deskops
+  - topic:agents
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-work-is-board-routed-to-preserve-intent
+  path: desk/atoms/workflow-model/atom-work-is-board-routed-to-preserve-intent.md
+  hash_c: 75c9bd2fb31a53205d834220edf8ce34a21be2f40b21722b42feab3d6f94efc0
+  hash_d: 6d83f9e1b165b2ab741efac4488ab729e52a9605ca242c6eda13088dc02ced7a
+  semantic_tags:
+  - system:deskops
+  - topic:boards
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-atom-candidates-come-from-durable-answers
+  path: desk/atoms/workflow-model/atom-atom-candidates-come-from-durable-answers.md
+  hash_c: 4fd488fd648de056926c6a7b4a9533d47e54a929478329dfd184ae8b9b5ebfea
+  hash_d: d9cc012c07ebf607c42dd58aaee0ae29ac5f14cd58349e5549d2601535354d8f
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-non-durable-notes-do-not-become-atoms
+  path: desk/atoms/workflow-model/atom-non-durable-notes-do-not-become-atoms.md
+  hash_c: d96d8465d3624a337356b6334db39073ecd8d548b54071d9c84674cfdfd68663
+  hash_d: 344943a025fb8e034da0c02cdd70a0be7b31b26e27141123388d0cf3361d3068
+  semantic_tags:
+  - system:deskops
+  - topic:atoms
+  - topic:workflow-model
+  - type.knowledge.atom
+  - workspace.desk.atoms

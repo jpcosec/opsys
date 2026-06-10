@@ -9,7 +9,20 @@ This board routes deferred work only.
 
 ## Tasks
 
-*No active drawer tasks.*
+Deferred task backlog:
+
+- `task-stabilize-first-use-cli-data-integrity`
+- `task-make-task-lifecycle-runnable-end-to-end`
+- `task-wire-closeout-knowledge-gates`
+- `task-complete-kgdb-graph-runtime-slice`
+- `task-connect-self-reflection-to-graph-cli`
+- `task-define-materialization-contract-slice`
+- `task-add-drift-check-review-loop`
+- `task-operationalize-inbox-drawer-promotion`
+- `task-design-operational-cli-grammar`
+- `task-add-desk-health-and-recovery-surface`
+- `task-define-atom-lifecycle-operations`
+- `task-write-end-to-end-operator-manual`
 
 ## Pills
 
