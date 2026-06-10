@@ -31,6 +31,7 @@ Deferred task backlog:
 ## Rituals
 
 - `desk/drawer/rituals/triage.md`
+- `desk/drawer/rituals/knowledge-distillation-pass.md`
 
 ## Notes
 
