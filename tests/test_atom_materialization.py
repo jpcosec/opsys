@@ -10,8 +10,8 @@ SLDB_SRC = ROOT.parent / "sldb" / "src"
 if str(SLDB_SRC) not in sys.path:
     sys.path.insert(0, str(SLDB_SRC))
 
-from desk.materializers import build_architecture_doc_payload
-from desk.models import AtomDoc
+from deskops.materializers import build_architecture_doc_payload
+from deskops.models import AtomDoc
 from sldb.runtime.validation import extract_model_data, render_model_markdown
 
 
@@ -37,5 +37,5 @@ def test_atom_materializer_builds_composed_document_payload() -> None:
     doc_payload = build_architecture_doc_payload(ATOM_SAMPLE)
 
     assert "Materialized from `atom-deskops-reads-through-sldb`" in doc_payload["body"]
-    assert "5WH1+: `how`" in doc_payload["body"]
+    assert "Question facet: `how`" in doc_payload["body"]
     assert ATOM_SAMPLE["answer"] in doc_payload["body"]

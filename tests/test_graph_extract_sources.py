@@ -7,7 +7,7 @@ from deskops.graph.extract_sources import extract_source_file_nodes
 
 def test_extract_source_file_nodes_reads_file_level_source_surfaces(tmp_path: Path) -> None:
     write(tmp_path / "deskops/operations.py", "def run() -> None:\n    pass\n")
-    write(tmp_path / "desk/cli/commands/atoms.py", "def main() -> None:\n    pass\n")
+    write(tmp_path / "deskops/cli/commands/atoms.py", "def main() -> None:\n    pass\n")
     write(tmp_path / "tests/test_atom_materialization.py", "def test_atom() -> None:\n    pass\n")
     write(tmp_path / "pyproject.toml", "[project]\nname = \"deskops\"\n")
     write(tmp_path / "desk/atoms/tag-namespaces.yaml", "namespaces: []\n")
@@ -22,7 +22,7 @@ def test_extract_source_file_nodes_reads_file_level_source_surfaces(tmp_path: Pa
     assert set(by_id) == {
         "config_file:desk/atoms/tag-namespaces.yaml",
         "config_file:pyproject.toml",
-        "source_file:desk/cli/commands/atoms.py",
+        "source_file:deskops/cli/commands/atoms.py",
         "source_file:deskops/operations.py",
         "spec:spec/artifacts/atom.yaml",
         "spec:spec/contracts/source-node.md",

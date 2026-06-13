@@ -9,7 +9,7 @@ if str(PACKAGE_ROOT) in sys.path:
     sys.path.remove(str(PACKAGE_ROOT))
 sys.path.insert(0, str(PACKAGE_ROOT))
 
-from desk.cli.parser import build_parser
+from deskops.cli.parser import build_parser
 
 from deskops.about import print_about
 from deskops.bootstrap import SLDBBootstrap
@@ -38,17 +38,17 @@ class CLI:
                 return 1
 
         if args.command == "faq":
-            from desk.cli.commands.faq import FAQCLI
+            from deskops.cli.commands.faq import FAQCLI
 
             return FAQCLI().run(args)
         if args.command == "about":
             return print_about()
         if args.command == "desk":
-            from desk.cli.commands.desk import DeskCLI
+            from deskops.cli.commands.desk import DeskCLI
 
             return DeskCLI().run(args)
         if args.command == "atoms":
-            from desk.cli.commands.atoms import AtomsCLI
+            from deskops.cli.commands.atoms import AtomsCLI
 
             return AtomsCLI().run(args)
         if args.command == "graph":
@@ -58,7 +58,7 @@ class CLI:
             if ready != 0:
                 return ready
 
-            from desk.cli.commands.operations import OperationsCLI
+            from deskops.cli.commands.operations import OperationsCLI
 
             return OperationsCLI().run(args)
         if args.command == "bootstrap":
@@ -73,11 +73,11 @@ class CLI:
         self._apply_default_pythonpath(args, bootstrap)
 
         if args.command == "inbox":
-            from desk.cli.commands.inbox import InboxCLI
+            from deskops.cli.commands.inbox import InboxCLI
 
             return InboxCLI().run(args)
         if args.command == "repo":
-            from desk.cli.commands.repo import RepoCLI
+            from deskops.cli.commands.repo import RepoCLI
 
             return RepoCLI().run(args)
 

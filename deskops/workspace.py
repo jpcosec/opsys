@@ -93,41 +93,40 @@ def _write_if_missing(path: Path, content: str, created_paths: list[Path]) -> No
 
 
 def _board_template(name: str) -> str:
-    return f"""# {name} Board
+    return f"""---
+id: board-001
+scope: desk
+tasks: []
+pills:
+- desk/contexts/pills.md
+rituals:
+- desk/rituals/execution.md
+- desk/rituals/testing.md
+- desk/rituals/closeout.md
+tags:
+- workspace:desk
+---
 
-ID: board-001
-Scope: desk
+# {name} Board
 
 ## Purpose
 
 Route the active execution set for {name}.
 
-## Tasks
-
-- none
-
-## Pills
-
-- desk/contexts/pills.md
-
-## Rituals
-
-- desk/rituals/execution.md
-- desk/rituals/testing.md
-- desk/rituals/closeout.md
-
 ## Notes
 
 Bootstrap complete. Add active task docs under `desk/tasks/` and route them here.
-
-## Tags
-
-- workspace:desk
 """
 
 
 def _pills_template(name: str) -> str:
-    return f"""# Pills
+    return f"""---
+id: contexts-pills
+tags:
+- workspace:desk
+---
+
+# Pills
 
 Pills are reusable context documents for the {name} desk routine.
 
@@ -139,21 +138,42 @@ Pills are reusable context documents for the {name} desk routine.
 
 
 def _execution_template(name: str) -> str:
-    return f"""# Execution ritual
+    return f"""---
+id: ritual-execution
+steps: []
+tags:
+- workspace:desk
+---
+
+# Execution ritual
 
 Review the board, bind the relevant pills, keep scope tight, and implement only the active task for {name}.
 """
 
 
 def _testing_template(name: str) -> str:
-    return f"""# Testing ritual
+    return f"""---
+id: ritual-testing
+steps: []
+tags:
+- workspace:desk
+---
+
+# Testing ritual
 
 Run the smallest relevant validation first, then broaden coverage when {name} changes shared behavior.
 """
 
 
 def _closeout_template(name: str) -> str:
-    return f"""# Closeout ritual
+    return f"""---
+id: ritual-closeout
+steps: []
+tags:
+- workspace:desk
+---
+
+# Closeout ritual
 
 Close a {name} task only after validation passes, the board is updated, and the final change is ready to commit.
 """

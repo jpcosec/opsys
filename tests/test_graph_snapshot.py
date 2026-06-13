@@ -11,7 +11,7 @@ from deskops.graph.snapshot import write_graph_snapshot
 
 
 def test_build_graph_snapshot_combines_nodes_and_declared_edges(tmp_path: Path) -> None:
-    write(tmp_path / "desk/atoms/atom-existing.md", "# Existing Atom\n\nID: atom-existing\n")
+    write_atom(tmp_path / "desk/atoms/atom-existing.md", "atom-existing", "Existing Atom")
     write(tmp_path / "deskops/operations.py", "def run() -> None:\n    pass\n")
     write(
         tmp_path / "desk/tasks/008-write-kgdb-graph-snapshot.md",
@@ -55,7 +55,7 @@ Explicit source file reference: `deskops/operations.py`.
 
 
 def test_write_graph_snapshot_uses_ignored_runtime_path(tmp_path: Path) -> None:
-    write(tmp_path / "desk/atoms/atom-existing.md", "# Existing Atom\n\nID: atom-existing\n")
+    write_atom(tmp_path / "desk/atoms/atom-existing.md", "atom-existing", "Existing Atom")
 
     output_path = write_graph_snapshot(tmp_path)
 
@@ -67,3 +67,22 @@ def test_write_graph_snapshot_uses_ignored_runtime_path(tmp_path: Path) -> None:
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+def write_atom(path: Path, atom_id: str, title: str) -> None:
+    write(
+        path,
+        f"""---
+id: {atom_id}
+title: {title}
+five_wh_one_plus: what
+tags: []
+---
+
+# {title}
+
+## Answer
+
+Existing knowledge.
+""",
+    )

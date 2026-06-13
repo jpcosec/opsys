@@ -27,10 +27,10 @@
       "identity": "docs/knowledge-graph/desk-source-graph-vocabulary.md"
     },
     {
-      "id": "source_file:desk/materializers/atoms.py",
+      "id": "source_file:deskops/materializers/atoms.py",
       "kind": "source_file",
       "label": "Atom document materializer",
-      "identity": "desk/materializers/atoms.py"
+      "identity": "deskops/materializers/atoms.py"
     },
     {
       "id": "test_file:tests/test_atom_materialization.py",
@@ -74,12 +74,12 @@
       "provenance_locator": "Role Catalog"
     },
     {
-      "source": "source_file:desk/materializers/atoms.py",
+      "source": "source_file:deskops/materializers/atoms.py",
       "target": "atom:atom-documents-point-to-atoms",
       "role": "implements",
       "source_kind": "manual",
       "confidence": "high",
-      "provenance_path": "desk/materializers/atoms.py",
+      "provenance_path": "deskops/materializers/atoms.py",
       "provenance_locator": "build_composed_doc_payload"
     },
     {

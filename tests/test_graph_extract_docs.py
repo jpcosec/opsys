@@ -6,9 +6,14 @@ from deskops.graph.extract_docs import extract_doc_nodes
 
 
 def test_extract_doc_nodes_reads_only_desk_document_surfaces(tmp_path: Path) -> None:
-    write(tmp_path / "desk/atoms/workflow/atom-documents-point-to-atoms.md", """# Documents point to atoms
+    write(tmp_path / "desk/atoms/workflow/atom-documents-point-to-atoms.md", """---
+id: atom-documents-point-to-atoms
+five_wh_one_plus: what
+tags:
+- system:deskops
+---
 
-ID: atom-documents-point-to-atoms
+# Documents point to atoms
 """)
     write(tmp_path / "desk/tasks/005-extract-desk-doc-graph-nodes.md", """# Extract desk doc graph nodes
 

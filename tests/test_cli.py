@@ -78,7 +78,7 @@ def test_desk_install_scaffolds_expected_surface(tmp_path: Path, capsys) -> None
         assert path.exists()
 
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
-    assert "## Rituals" in board_text
+    assert "rituals:\n- desk/rituals/execution.md" in board_text
     assert "desk/contexts/pills.md" in board_text
 
 
@@ -235,7 +235,7 @@ def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> No
         called["machine"] += 1
         return 0
 
-    monkeypatch.setattr("desk.cli.commands.inbox.InboxCLI", FakeInboxCLI)
+    monkeypatch.setattr("deskops.cli.commands.inbox.InboxCLI", FakeInboxCLI)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", fake_sldb_available)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_machine_ready", fake_machine_ready)
 
@@ -257,7 +257,7 @@ def test_cli_delegates_desk_command_without_bootstrap(monkeypatch) -> None:
         called["bootstrap"] += 1
         return 0
 
-    monkeypatch.setattr("desk.cli.commands.desk.DeskCLI", FakeDeskCLI)
+    monkeypatch.setattr("deskops.cli.commands.desk.DeskCLI", FakeDeskCLI)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_machine_ready", fake_machine_ready)
 
     assert CLI().run(["desk", "install", str(ROOT)]) == 0

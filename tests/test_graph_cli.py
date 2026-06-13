@@ -25,7 +25,7 @@ def test_graph_neighbors_shows_fixture_node_neighbors(capsys) -> None:
     assert "Node: atom:atom-documents-point-to-atoms (Documents point to atoms)" in captured.out
     assert "Outgoing:\n- none" in captured.out
     assert "doc:docs/knowledge-graph/desk-source-graph-vocabulary.md" in captured.out
-    assert "source_file:desk/materializers/atoms.py" in captured.out
+    assert "source_file:deskops/materializers/atoms.py" in captured.out
     assert "test_file:tests/test_atom_materialization.py" in captured.out
     assert "references" in captured.out
     assert "implements" in captured.out
@@ -51,7 +51,22 @@ def test_graph_neighbors_reports_missing_node(capsys) -> None:
 
 
 def test_graph_build_writes_runtime_snapshot(tmp_path: Path, capsys) -> None:
-    write(tmp_path / "desk/atoms/atom-existing.md", "# Existing Atom\n\nID: atom-existing\n")
+    write(
+        tmp_path / "desk/atoms/atom-existing.md",
+        """---
+id: atom-existing
+title: Existing Atom
+five_wh_one_plus: what
+tags: []
+---
+
+# Existing Atom
+
+## Answer
+
+Existing knowledge.
+""",
+    )
 
     result = main(["graph", "build", "--root", str(tmp_path)])
 

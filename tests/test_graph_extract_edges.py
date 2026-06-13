@@ -6,8 +6,8 @@ from deskops.graph.extract_edges import extract_declared_edges
 
 
 def test_extract_declared_edges_returns_explicit_references_with_provenance(tmp_path: Path) -> None:
-    write(tmp_path / "desk/atoms/atom-source.md", "# Source Atom\n\nID: atom-source\n")
-    write(tmp_path / "desk/atoms/atom-related.md", "# Related Atom\n\nID: atom-related\n")
+    write_atom(tmp_path / "desk/atoms/atom-source.md", "atom-source", "Source Atom")
+    write_atom(tmp_path / "desk/atoms/atom-related.md", "atom-related", "Related Atom")
     write(tmp_path / "desk/tasks/001-target.md", "# Target Task\n\nID: task-target\n")
     write(tmp_path / "desk/drawer/issues/issue-target.md", "# Target Issue\n\nID: issue-target\n")
     write(tmp_path / "deskops/operations.py", "def run() -> None:\n    pass\n")
@@ -79,7 +79,7 @@ Explicit source file reference: `deskops/operations.py`.
 
 
 def test_extract_declared_edges_reports_missing_targets(tmp_path: Path) -> None:
-    write(tmp_path / "desk/atoms/atom-existing.md", "# Existing\n\nID: atom-existing\n")
+    write_atom(tmp_path / "desk/atoms/atom-existing.md", "atom-existing", "Existing")
     write(
         tmp_path / "desk/drawer/issues/issue-missing-references.md",
         """# Missing References
@@ -121,7 +121,7 @@ This explicitly names `deskops/missing.py`.
 
 
 def test_extract_declared_edges_reads_drawer_question_maps(tmp_path: Path) -> None:
-    write(tmp_path / "desk/atoms/atom-workflow.md", "# Workflow\n\nID: atom-workflow\n")
+    write_atom(tmp_path / "desk/atoms/atom-workflow.md", "atom-workflow", "Workflow")
     write(
         tmp_path / "desk/drawer/questions/workflow-question-map.md",
         """# Workflow Question Map
@@ -146,3 +146,22 @@ def test_extract_declared_edges_reads_drawer_question_maps(tmp_path: Path) -> No
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+def write_atom(path: Path, atom_id: str, title: str) -> None:
+    write(
+        path,
+        f"""---
+id: {atom_id}
+title: {title}
+five_wh_one_plus: what
+tags: []
+---
+
+# {title}
+
+## Answer
+
+Existing knowledge.
+""",
+    )

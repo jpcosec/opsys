@@ -12,7 +12,7 @@ SLDB_SRC = ROOT.parent / "sldb" / "src"
 if str(SLDB_SRC) not in sys.path:
     sys.path.insert(0, str(SLDB_SRC))
 
-from desk.models import AtomDoc
+from deskops.models import AtomDoc
 from deskops.atom_tags import add_namespace
 from deskops.atom_tags import validate_atom_tag_namespaces
 from sldb.runtime.validation import extract_model_data
@@ -33,8 +33,10 @@ def test_atom_doc_roundtrips_new_single_answer_contract() -> None:
     extracted = extract_model_data(AtomDoc, rendered)
 
     assert extracted == ATOM_SAMPLE
-    assert "5WH1+: what" in rendered
+    assert rendered.startswith("---\nid: atom-deskops-models-are-sldb-documents\ntitle: Deskops models are sldb documents\nfive_wh_one_plus: what\ntags:\n- system:deskops")
+    assert "5WH1+: what" not in rendered
     assert "## Answer" in rendered
+    assert "## Tags" not in rendered
     assert "Status:" not in rendered
     assert "Materializes Into" not in rendered
 

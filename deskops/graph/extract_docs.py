@@ -97,13 +97,37 @@ def _glob(root: Path, pattern: str) -> list[Path]:
 def _read_metadata(path: Path) -> dict[str, str]:
     if path.suffix in {".yaml", ".yml"}:
         return _read_yaml_metadata(path)
+    frontmatter = _read_frontmatter_metadata(path)
+    if frontmatter:
+        metadata = _read_text_metadata(path)
+        metadata.update(frontmatter)
+        return metadata
     return _read_text_metadata(path)
+
+
+def _read_frontmatter_metadata(path: Path) -> dict[str, str]:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n"):
+        return {}
+    try:
+        _, rest = text.split("---\n", 1)
+        block, _body = rest.split("\n---", 1)
+    except ValueError:
+        return {}
+    loaded = yaml.safe_load(block) or {}
+    if not isinstance(loaded, dict):
+        return {}
+    return _metadata_from_mapping(loaded)
 
 
 def _read_yaml_metadata(path: Path) -> dict[str, str]:
     loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
     if not isinstance(loaded, dict):
         return {}
+    return _metadata_from_mapping(loaded)
+
+
+def _metadata_from_mapping(loaded: dict[str, Any]) -> dict[str, str]:
     metadata: dict[str, str] = {}
     for key in ("id", "title"):
         value = loaded.get(key)

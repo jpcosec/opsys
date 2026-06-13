@@ -23,7 +23,7 @@ dev = [
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["desk*", "deskops*"]
+include = ["deskops*"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

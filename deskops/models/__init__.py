@@ -1,20 +1,20 @@
-from desk.models import ChecklistDoc
-from desk.models import ConditionDoc
-from desk.models import EdgeDoc
-from desk.models import AtomDoc
-from desk.models import BoardDoc
-from desk.models import FAQDoc
-from desk.models import HookDoc
-from desk.models import InboxNoteDoc
-from desk.models import OperatorDoc
-from desk.models import OperationalArtifactDoc
-from desk.models import PillDoc
-from desk.models import PrimitiveDoc
-from desk.models import RepositoryDoc
-from desk.models import RitualDoc
-from desk.models import RoutineDoc
-from desk.models import StepDoc
-from desk.models import TaskDoc
+from .atom import AtomDoc
+from .base import OperationalArtifactDoc
+from .base import PrimitiveDoc
+from .board import BoardDoc
+from .checklist import ChecklistDoc
+from .condition import ConditionDoc
+from .edge import EdgeDoc
+from .faq import FAQDoc
+from .hook import HookDoc
+from .inbox import InboxNoteDoc
+from .operator import OperatorDoc
+from .pill import PillDoc
+from .repository import RepositoryDoc
+from .ritual import RitualDoc
+from .routine import RoutineDoc
+from .step import StepDoc
+from .task import TaskDoc
 
 __all__ = [
     "ChecklistDoc",

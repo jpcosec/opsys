@@ -10,7 +10,8 @@ SLDB_SRC = ROOT.parent / "sldb" / "src"
 if str(SLDB_SRC) not in sys.path:
     sys.path.insert(0, str(SLDB_SRC))
 
-from desk.models import BoardDoc, RitualDoc, StepDoc, TaskDoc
+from deskops.models import BoardDoc, RitualDoc, StepDoc, TaskDoc
+from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
 
@@ -59,6 +60,39 @@ def test_board_doc_renders_composed_task_summaries(tmp_path: Path):
         in rendered
     )
     assert "desk/contexts/pill-001-task-closure-commit.md" in rendered
+
+
+def test_task_doc_keeps_machine_metadata_in_frontmatter() -> None:
+    payload = {
+        "title": "Improve model editing",
+        "id": "task-a",
+        "status": "active",
+        "summary": "",
+        "goal": "Support safer contract editing from the CLI.",
+        "scope": "CLI model workflow only.",
+        "references": [],
+        "depends_on": ["task-root"],
+        "pills": ["pill-001"],
+        "files": ["src/sldb/cli/commands/models.py"],
+        "implementation_path": "Add draft-first mutations and validate before promotion.",
+        "validation": ["targeted pytest"],
+        "done_when": "The model edit workflow is safe.",
+        "routine": "routine-task-a",
+        "current_node": "implementation",
+        "checklists": ["checklist-task-a"],
+        "history": ["created"],
+        "tags": ["system:sldb"],
+    }
+
+    rendered = render_model_markdown(TaskDoc, payload)
+    extracted = extract_model_data(TaskDoc, rendered)
+
+    assert rendered.startswith("---\nid: task-a\nstatus: active")
+    assert "depends_on:\n- task-root" in rendered
+    assert "tags:\n- system:sldb" in rendered
+    assert "ID: task-a" not in rendered
+    assert "## Tags" not in rendered
+    assert extracted == payload
 
 
 def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
