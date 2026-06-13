@@ -456,6 +456,59 @@ def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
     assert (tmp_path / "desk" / "tasks" / "task-json-task.md").exists()
 
 
+def test_add_task_reports_invalid_yaml_without_creating_artifacts(tmp_path: Path, capsys) -> None:
+    payload = tmp_path / "bad-task.yaml"
+    payload.write_text("title: [unterminated\n", encoding="utf-8")
+
+    result = main(["add", "task", "--from-yaml", str(payload), "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Invalid value: Invalid YAML payload" in captured.err
+    assert not list((tmp_path / "desk" / "tasks").glob("task-*.md"))
+    assert not (tmp_path / "desk" / "routines").exists()
+
+
+def test_add_task_reports_invalid_json_without_creating_artifacts(tmp_path: Path, capsys) -> None:
+    result = main(["add", "task", '{"title": ', "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Invalid value: Invalid JSON payload" in captured.err
+    assert not list((tmp_path / "desk" / "tasks").glob("task-*.md"))
+
+
+def test_add_routine_rejects_non_mapping_yaml_without_creating_artifacts(tmp_path: Path, capsys) -> None:
+    payload = tmp_path / "routine.yaml"
+    payload.write_text("- not\n- a\n- mapping\n", encoding="utf-8")
+
+    result = main(["add", "routine", "--from-yaml", str(payload), "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "must be a mapping/object, got list" in captured.err
+    assert not list((tmp_path / "desk" / "routines").glob("routine-*.md"))
+
+
+@pytest.mark.parametrize(
+    ("args", "created_glob"),
+    [
+        (["add", "condition", "--from-yaml"], "desk/primitives/conditions/*.md"),
+        (["add", "pill", "--from-yaml"], "desk/contexts/*.md"),
+    ],
+)
+def test_add_surfaces_reject_non_mapping_yaml(tmp_path: Path, capsys, args: list[str], created_glob: str) -> None:
+    payload = tmp_path / "payload.yaml"
+    payload.write_text("scalar payload\n", encoding="utf-8")
+
+    result = main([*args, str(payload), "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "must be a mapping/object, got str" in captured.err
+    assert not list(tmp_path.glob(created_glob))
+
+
 def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, capsys) -> None:
     add_result = main(
         [

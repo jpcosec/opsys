@@ -11,7 +11,12 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-stabilize-first-use-cli-data-integrity`
+- `task-harden-cli-payload-parsing-errors`
+- `task-make-create-operations-rollback-safe`
+- `task-stabilize-show-selector-behavior`
+- `task-make-list-behavior-data-integrity-safe`
+- `task-stabilize-init-local-store-failures`
+- `task-add-json-output-for-modeled-documents`
 - `task-make-task-lifecycle-runnable-end-to-end`
 - `task-wire-closeout-knowledge-gates`
 - `task-complete-kgdb-graph-runtime-slice`

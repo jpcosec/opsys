@@ -99,6 +99,29 @@ def slugify(text: str) -> str:
     return "-".join(parts) or "item"
 
 
+def _load_yaml_mapping(path: Path) -> dict[str, Any]:
+    try:
+        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except yaml.YAMLError as exc:
+        raise ValueError(f"Invalid YAML payload in {path}: {exc}") from exc
+    return _ensure_mapping_payload(payload, f"YAML payload in {path}")
+
+
+def _load_json_mapping(raw: str) -> dict[str, Any]:
+    try:
+        payload = json.loads(raw)
+    except json.JSONDecodeError as exc:
+        raise ValueError(f"Invalid JSON payload: {exc.msg}") from exc
+    return _ensure_mapping_payload(payload, "JSON payload")
+
+
+def _ensure_mapping_payload(payload: Any, label: str) -> dict[str, Any]:
+    if not isinstance(payload, dict):
+        kind = type(payload).__name__
+        raise ValueError(f"{label} must be a mapping/object, got {kind}")
+    return dict(payload)
+
+
 @dataclass(slots=True)
 class TaskBundle:
     task_id: str
@@ -329,9 +352,9 @@ class DeskopsOperations:
     def parse_task_input(self, args: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+            payload.update(_load_yaml_mapping(Path(args.from_yaml)))
         elif getattr(args, "payload", None):
-            payload.update(json.loads(args.payload))
+            payload.update(_load_json_mapping(args.payload))
 
         if getattr(args, "title", None): payload["title"] = args.title
         if getattr(args, "goal", None): payload["goal"] = args.goal
@@ -345,7 +368,7 @@ class DeskopsOperations:
     def parse_artifact_input(self, artifact_id: str, args: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+            payload.update(_load_yaml_mapping(Path(args.from_yaml)))
         artifact = self.spec_registry.artifacts[artifact_id]
         for field_id in artifact["data"].get("fields", []):
             field_spec = self.spec_registry.fields[field_id]
@@ -361,7 +384,7 @@ class DeskopsOperations:
     def parse_primitive_input(self, kind: str, args: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+            payload.update(_load_yaml_mapping(Path(args.from_yaml)))
 
         if getattr(args, "title", None): payload["title"] = args.title
         if getattr(args, "summary", None): payload["summary"] = args.summary
@@ -409,7 +432,7 @@ class DeskopsOperations:
     def parse_routine_input(self, args: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
-            payload.update(yaml.safe_load(Path(args.from_yaml).read_text(encoding="utf-8")) or {})
+            payload.update(_load_yaml_mapping(Path(args.from_yaml)))
 
         if getattr(args, "title", None): payload["title"] = args.title
         if getattr(args, "summary", None): payload["summary"] = args.summary
