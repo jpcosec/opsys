@@ -23,21 +23,31 @@ tags: ⸢rev•tags⸥
 
 ## Goal
 
+_Describe the concrete result this task must produce._
+
 ⸢rev•goal⸥
 
 ## Scope
+
+_State what is in scope and what is out of scope._
 
 ⸢rev•scope⸥
 
 ## Implementation Path
 
+_Outline the expected implementation route or affected surface._
+
 ⸢rev•implementation_path⸥
 
 ## Validation
 
+_List the checks required before this task can close._
+
 - ⸢rev,list•validation⸥
 
 ## Done When
+
+_Name the observable condition that makes the task complete._
 
 ⸢rev•done_when⸥
 

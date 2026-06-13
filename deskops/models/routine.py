@@ -19,6 +19,8 @@ tags: ⸢rev•tags⸥
 
 ## Summary
 
+_Summarize what this routine does and how its nodes fit together._
+
 ⸢rev•summary⸥
 """.strip()
 

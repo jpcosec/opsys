@@ -18,6 +18,8 @@ tags: ⸢rev•tags⸥
 
 ## Summary
 
+_Summarize the state transition this operator performs._
+
 ⸢rev•summary⸥
 """.strip()
 

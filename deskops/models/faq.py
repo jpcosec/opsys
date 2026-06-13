@@ -11,6 +11,8 @@ class FAQDoc(StructuredNLDoc):
     __template__ = """
 # ⸢rev•title⸥
 
+_Write the FAQ content, including questions, answers, command examples, and references._
+
 ⸢rev•body⸥
 """.strip()
 

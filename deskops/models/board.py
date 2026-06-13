@@ -25,13 +25,19 @@ tags: ⸢rev•tags⸥
 
 ## Purpose
 
+_Explain what this board routes and why it exists._
+
 ⸢rev•purpose⸥
 
 ## Notes
 
+_Add short operational notes about the current routed set._
+
 ⸢rev•notes⸥
 
 ## Task Details
+
+_Generated from the task references above._
 
 ⸢render•task_summaries⸥
 

@@ -22,29 +22,43 @@ tags: ⸢rev•tags⸥
 
 ## Purpose
 
+_Explain why this ritual exists._
+
 ⸢rev•purpose⸥
 
 ## Trigger
+
+_State when this ritual should start._
 
 ⸢rev•trigger⸥
 
 ## Preconditions
 
+_List the conditions that must hold before running the ritual._
+
 - ⸢rev,list•preconditions⸥
 
 ## Validation
+
+_List the checks that prove the ritual was performed correctly._
 
 - ⸢rev,list•validation⸥
 
 ## Failure Modes
 
+_List common mistakes this ritual prevents._
+
 - ⸢rev,list•failure_modes⸥
 
 ## Completion
 
+_Describe what completion looks like._
+
 ⸢rev•completion⸥
 
 ## Step Details
+
+_Generated from the step references above._
 
 ⸢render•step_details⸥
 

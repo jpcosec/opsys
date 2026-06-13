@@ -41,6 +41,8 @@ tags: ⸢rev•tags⸥
 
 ## Answer
 
+_Answer the selected 5WH1+ question as one stable knowledge unit._
+
 ⸢rev•answer⸥
 """.strip()
 

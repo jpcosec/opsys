@@ -19,6 +19,8 @@ status: ⸢rev•status⸥
 
 # ⸢rev•title⸥
 
+_Describe the unclear point or suggestion with enough evidence to triage._
+
 ⸢rev,markdown•body⸥
 """
 

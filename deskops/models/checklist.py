@@ -17,9 +17,13 @@ tags: ⸢rev•tags⸥
 
 ## Summary
 
+_Summarize what this checklist proves._
+
 ⸢rev•summary⸥
 
 ## Items
+
+_List the human-readable checks in this checklist._
 
 - ⸢rev,list•items⸥
 

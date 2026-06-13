@@ -14,25 +14,37 @@ tags: ⸢rev•tags⸥
 
 ## What
 
+_Define the context or guardrail this pill carries._
+
 ⸢rev•what⸥
 
 ## Why
+
+_Explain why this context matters for safe execution._
 
 ⸢rev•why⸥
 
 ## When
 
+_Describe when an agent should apply this pill._
+
 ⸢rev•when⸥
 
 ## Where
+
+_Name the files, surfaces, or scope this pill applies to._
 
 ⸢rev•where⸥
 
 ## How
 
+_Describe the correct way to apply this guidance._
+
 ⸢rev•how⸥
 
 ## How Not
+
+_Describe the shortcut or failure mode to avoid._
 
 ⸢rev•how_not⸥
 

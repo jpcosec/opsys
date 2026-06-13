@@ -18,6 +18,8 @@ tags: ⸢rev•tags⸥
 
 ## Summary
 
+_Summarize the predicate this condition checks._
+
 ⸢rev•summary⸥
 """.strip()
 

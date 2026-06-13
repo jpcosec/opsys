@@ -21,6 +21,8 @@ tags: ⸢rev•tags⸥
 
 ## Description
 
+_Describe the repository purpose, scope, and role in the ecosystem._
+
 ⸢rev,markdown•description⸥
 """
 

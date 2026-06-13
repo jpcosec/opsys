@@ -14,9 +14,13 @@ tags: ⸢rev•tags⸥
 
 ## Action
 
+_Describe the action this step performs._
+
 ⸢rev•action⸥
 
 ## Outcome
+
+_Describe the result or evidence this step should produce._
 
 ⸢rev•outcome⸥
 

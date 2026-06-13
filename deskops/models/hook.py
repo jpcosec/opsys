@@ -18,6 +18,8 @@ tags: ⸢rev•tags⸥
 
 ## Summary
 
+_Summarize when this hook fires and what it invokes._
+
 ⸢rev•summary⸥
 """.strip()
 

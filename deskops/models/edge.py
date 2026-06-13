@@ -18,6 +18,8 @@ tags: ⸢rev•tags⸥
 
 ## Summary
 
+_Summarize the transition this edge represents._
+
 ⸢rev•summary⸥
 """.strip()
 
