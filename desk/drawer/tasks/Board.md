@@ -11,7 +11,6 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-harden-cli-payload-parsing-errors`
 - `task-make-create-operations-rollback-safe`
 - `task-stabilize-show-selector-behavior`
 - `task-make-list-behavior-data-integrity-safe`
