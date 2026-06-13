@@ -103,7 +103,11 @@ class OperationsCLI:
         show_artifacts = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if args.command == "show" and args.subject in show_artifacts:
             artifact_id = show_artifacts[args.subject]
-            payload = operations.show_artifact(artifact_id, args.doc_id)
+            try:
+                payload = operations.show_artifact(artifact_id, args.doc_id)
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
             print(f"{args.subject.capitalize()}: {payload['id']}")
             label = payload.get("title") or payload.get("name") or payload["id"]
             print(f"Title: {label}")

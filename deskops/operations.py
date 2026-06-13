@@ -305,16 +305,7 @@ class DeskopsOperations:
             raise ValueError(f"No {artifact_id} ID provided")
         model = ARTIFACT_MODELS[artifact_id]
         directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
-        exact_match = directory / f"{doc_id}.md"
-        if exact_match.exists():
-            return self._read_doc(exact_match, model)
-        exact_matches = sorted(directory.rglob(f"{doc_id}.md"))
-        if exact_matches:
-            return self._read_doc(exact_matches[0], model)
-        matches = sorted(directory.rglob(f"{doc_id}*.md"))
-        if not matches:
-            raise FileNotFoundError(f"No {artifact_id} file found for id '{doc_id}' in {directory}")
-        return self._read_doc(matches[0], model)
+        return self._read_doc(self._resolve_artifact_selector(artifact_id, directory, doc_id), model)
 
     def show_routine(self, routine_id: str) -> Routine | None:
         return self._load_routine(routine_id)
@@ -888,6 +879,24 @@ class DeskopsOperations:
         if not matches:
             raise FileNotFoundError(f"No file found for id '{doc_id}' in {directory}")
         return matches[0]
+
+    def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
+        pattern = self._artifact_glob_pattern(artifact_id)
+        candidates = sorted(directory.rglob(pattern))
+        exact = [path for path in candidates if selector in {path.name, path.stem}]
+        if exact:
+            return self._one_artifact_match(artifact_id, directory, selector, exact)
+
+        prefix = [path for path in candidates if path.name.startswith(selector) or path.stem.startswith(selector)]
+        if not prefix:
+            raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}' in {directory}")
+        return self._one_artifact_match(artifact_id, directory, selector, prefix)
+
+    def _one_artifact_match(self, artifact_id: str, directory: Path, selector: str, matches: list[Path]) -> Path:
+        if len(matches) == 1:
+            return matches[0]
+        relative = ", ".join(str(path.relative_to(directory)) for path in matches)
+        raise ValueError(f"Ambiguous {artifact_id} selector '{selector}' in {directory}: {relative}")
 
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)

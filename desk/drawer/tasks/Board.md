@@ -12,7 +12,6 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-make-create-operations-rollback-safe`
-- `task-stabilize-show-selector-behavior`
 - `task-make-list-behavior-data-integrity-safe`
 - `task-stabilize-init-local-store-failures`
 - `task-add-json-output-for-modeled-documents`

@@ -811,6 +811,84 @@ def test_show_atom_finds_nested_atom(tmp_path: Path, capsys) -> None:
     assert "Created atoms should be visible through deskops and sldb." in show_out.out
 
 
+def test_show_atom_accepts_filename_selector(tmp_path: Path, capsys) -> None:
+    created = main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS])
+    capsys.readouterr()
+    assert created == 0
+
+    shown = main(["show", "atom", "atom-trackable-atom.md", "--root", str(tmp_path)])
+    show_out = capsys.readouterr()
+
+    assert shown == 0
+    assert "Atom: atom-trackable-atom" in show_out.out
+
+
+def test_show_atom_exact_selector_wins_over_prefix(tmp_path: Path, capsys) -> None:
+    created = main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS])
+    capsys.readouterr()
+    assert created == 0
+    extra = tmp_path / "desk" / "atoms" / "atom-trackable-atom-extra.md"
+    extra.write_text(
+        "---\nid: atom-trackable-atom-extra\ntitle: Extra\nfive_wh_one_plus: what\ntags: []\n---\n\n"
+        "# Extra\n\n## Answer\n\nExtra atom.\n",
+        encoding="utf-8",
+    )
+
+    shown = main(["show", "atom", "atom-trackable-atom", "--root", str(tmp_path)])
+    show_out = capsys.readouterr()
+
+    assert shown == 0
+    assert "Atom: atom-trackable-atom" in show_out.out
+    assert "Extra atom" not in show_out.out
+
+
+def test_show_atom_prefix_fallback_finds_single_match(tmp_path: Path, capsys) -> None:
+    created = main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS])
+    capsys.readouterr()
+    assert created == 0
+
+    shown = main(["show", "atom", "atom-trackable", "--root", str(tmp_path)])
+    show_out = capsys.readouterr()
+
+    assert shown == 0
+    assert "Atom: atom-trackable-atom" in show_out.out
+
+
+def test_show_atom_rejects_duplicate_nested_exact_matches(tmp_path: Path, capsys) -> None:
+    created = main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS])
+    capsys.readouterr()
+    assert created == 0
+    atom_path = tmp_path / "desk" / "atoms" / "atom-trackable-atom.md"
+    nested_path = tmp_path / "desk" / "atoms" / "topic" / "atom-trackable-atom.md"
+    nested_path.parent.mkdir(parents=True)
+    nested_path.write_text(atom_path.read_text(encoding="utf-8"), encoding="utf-8")
+
+    shown = main(["show", "atom", "atom-trackable-atom", "--root", str(tmp_path)])
+    show_out = capsys.readouterr()
+
+    assert shown == 1
+    assert "Ambiguous artifact.atom selector 'atom-trackable-atom'" in show_out.out
+    assert "atom-trackable-atom.md" in show_out.out
+    assert "topic/atom-trackable-atom.md" in show_out.out
+
+
+def test_show_atom_rejects_ambiguous_prefix_matches(tmp_path: Path, capsys) -> None:
+    atoms_dir = tmp_path / "desk" / "atoms"
+    atoms_dir.mkdir(parents=True)
+    for atom_id in ["atom-shared-alpha", "atom-shared-beta"]:
+        (atoms_dir / f"{atom_id}.md").write_text(
+            f"---\nid: {atom_id}\ntitle: {atom_id}\nfive_wh_one_plus: what\ntags: []\n---\n\n"
+            f"# {atom_id}\n\n## Answer\n\nAnswer.\n",
+            encoding="utf-8",
+        )
+
+    shown = main(["show", "atom", "atom-shared", "--root", str(tmp_path)])
+    show_out = capsys.readouterr()
+
+    assert shown == 1
+    assert "Ambiguous artifact.atom selector 'atom-shared'" in show_out.out
+
+
 def test_add_atom_tracks_local_sldb_store_when_atomdoc_registered(tmp_path: Path, capsys) -> None:
     from sldb.cli.main import main as sldb_main
 
