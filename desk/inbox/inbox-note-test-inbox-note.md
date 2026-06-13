@@ -1,6 +1,6 @@
 ---
 kind: suggestion
-author: cli-test
+sender_project: deskops
 created_at:
 status: open
 ---

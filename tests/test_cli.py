@@ -244,6 +244,61 @@ def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> No
     assert called["sldb"] == 2
 
 
+def test_inbox_writes_sender_project_from_current_directory(tmp_path: Path, monkeypatch, capsys) -> None:
+    from deskops.cli.commands.inbox import InboxCLI
+
+    monkeypatch.chdir(tmp_path)
+    args = SimpleNamespace(
+        list=False,
+        show=None,
+        message="A message to this project.",
+        title="Self message",
+        kind="suggestion",
+        desk_root=str(tmp_path / "desk"),
+        repo=None,
+        store=None,
+        pythonpath=None,
+        limit=20,
+        format="text",
+    )
+
+    result = InboxCLI().run(args)
+
+    captured = capsys.readouterr()
+    notes = list((tmp_path / "desk" / "inbox").glob("*.md"))
+    assert result == 0
+    assert "Wrote" in captured.out
+    assert len(notes) == 1
+    assert f"sender_project: {tmp_path.name}" in notes[0].read_text(encoding="utf-8")
+
+
+def test_inbox_resolves_sender_project_from_repo_store(tmp_path: Path, monkeypatch) -> None:
+    from deskops.cli.commands.inbox import InboxCLI
+
+    sender_root = tmp_path / "sender-repo" / "subdir"
+    sender_root.mkdir(parents=True)
+    monkeypatch.chdir(sender_root)
+
+    def fake_documents(*_args):
+        return [
+            SimpleNamespace(
+                model_name="RepositoryDoc",
+                payload={"id": "sender-repo", "name": "Sender Repo", "path": "sender-repo"},
+            )
+        ]
+
+    monkeypatch.setattr(
+        InboxCLI,
+        "_store_context",
+        lambda self, args: (tmp_path / ".sldb", tmp_path),
+    )
+    monkeypatch.setattr("sldb.store.query.load_runtime_documents", fake_documents)
+
+    args = SimpleNamespace(store=str(tmp_path / ".sldb"), pythonpath=None)
+
+    assert InboxCLI()._sender_project(args) == "sender-repo"
+
+
 def test_cli_delegates_desk_command_without_bootstrap(monkeypatch) -> None:
     called = {"desk": 0, "bootstrap": 0}
 

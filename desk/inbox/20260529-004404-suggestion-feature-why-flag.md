@@ -1,6 +1,6 @@
 ---
 kind: suggestion
-author: cli
+sender_project: deskops
 created_at: 2026-05-29T00:44:04
 status: open
 ---

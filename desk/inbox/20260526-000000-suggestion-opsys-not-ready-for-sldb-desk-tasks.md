@@ -1,6 +1,6 @@
 ---
 kind: suggestion
-author: OpenCode via sldb
+sender_project: sldb
 created_at: 2026-05-26T00:00:00
 status: open
 ---

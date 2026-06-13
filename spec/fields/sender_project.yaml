@@ -1,0 +1,9 @@
+id: field.sender_project
+title: Sender Project Field
+type: field
+version: "0.1"
+
+data:
+  key: sender_project
+  value_type: string
+  required: true

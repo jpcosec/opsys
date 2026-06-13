@@ -13,7 +13,7 @@ data:
       - artifact:inbox-note
   fields:
     - field.kind
-    - field.author
+    - field.sender_project
     - field.created_at
     - field.status
     - field.title

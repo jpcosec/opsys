@@ -1,6 +1,6 @@
 ---
 kind: suggestion
-author: opencode
+sender_project: deskops
 created_at: 2026-06-07T00:00:00
 status: open
 ---

@@ -2,6 +2,8 @@
 
 `desk/drawer/` holds deferred opsys workflow-domain work that should not enter active execution yet.
 
+It is the place for internal planning and deferred work. Do not use `desk/inbox/` as an agent scratchpad for future work; inbox is for messages addressed to the project and records the sending project.
+
 Use it for:
 
 - future features

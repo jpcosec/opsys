@@ -12,14 +12,14 @@ class InboxNoteDoc(StructuredNLDoc):
     }
     __template__ = """---
 kind: ⸢rev•kind⸥
-author: ⸢rev•author⸥
+sender_project: ⸢rev•sender_project⸥
 created_at: ⸢rev•created_at⸥
 status: ⸢rev•status⸥
 ---
 
 # ⸢rev•title⸥
 
-_Describe the unclear point or suggestion with enough evidence to triage._
+_Describe the incoming message with enough evidence to triage._
 
 ⸢rev,markdown•body⸥
 """
@@ -27,7 +27,9 @@ _Describe the unclear point or suggestion with enough evidence to triage._
     kind: Literal["unclear", "suggestion"] = Field(
         description="Inbox note type indicating unresolved confusion or an improvement proposal."
     )
-    author: str = Field(description="Source label for who or what created the inbox note.")
+    sender_project: str = Field(
+        description="Project that sent the inbox message, resolved from the repo registry when possible."
+    )
     created_at: str = Field(description="Timestamp for when the inbox note was created.")
     status: Literal["open", "closed"] = Field(
         description="Whether the inbox note is still open or already handled."

@@ -109,7 +109,7 @@ MODEL_PAYLOADS = [
         InboxNoteDoc,
         {
             "kind": "suggestion",
-            "author": "test",
+            "sender_project": "test-project",
             "created_at": "2026-06-13T00:00:00",
             "status": "open",
             "title": "Template Inbox Note",

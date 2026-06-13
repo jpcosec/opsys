@@ -193,8 +193,8 @@ documents:
   - workspace.desk.atoms
 - name: atom-inbox-routes-external-needs-toward-work
   path: desk/atoms/workflow-model/atom-inbox-routes-external-needs-toward-work.md
-  hash_c: 4813e9a9d322b1e41c8c96e1b10d1a873a2f3755385dd6fef2c88dbe8371ca05
-  hash_d: f59a76c0f03029913b00bb840c52f40a00d6add8f2b74d0d86c893b6466fa0db
+  hash_c: 06b25fde132f6f39c92089ef387dd38d8b3dfb775f1928777033d40e063cbc05
+  hash_d: e846a86fba2a70063fc2978031a6e73c26215cf9fee4d4e8d160370e530f2a6b
   semantic_tags:
   - system:deskops
   - topic:coordination

@@ -56,7 +56,7 @@ This file now tracks only unresolved workflow questions. Questions with stable a
 ### Work Flow
 
 - How do drawers become tasks? -> `atom-drawers-feed-tasks-through-promotion`, `atom-drawer-is-not-active-work`
-- How do external needs enter the system? -> `atom-inbox-routes-external-needs-toward-work`, `atom-inbox-is-coordination-intake`
+- How do project-addressed messages enter the system? -> `atom-inbox-routes-external-needs-toward-work`, `atom-inbox-is-coordination-intake`
 - Why tasks plus pills? -> `atom-changes-flow-through-tasks-and-pills`, `atom-tasks-enable-zero-context-subagents`
 - What do pills do? -> `atom-pills-index-existing-and-bound-future-context`, `atom-pills-are-transient`, `atom-pills-reference-not-copy`, `atom-pills-end-as-atoms-docs-or-deletion`
 - Why phase gates? -> `atom-phase-gates-prevent-agent-skipping`

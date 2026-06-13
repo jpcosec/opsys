@@ -143,14 +143,14 @@ def _add_inbox_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
     p = subparsers.add_parser(
-        "inbox", help="Log unclear points or suggestions into the repo desk."
+        "inbox", help="Log a message arriving to a project inbox."
     )
     p.add_argument("message", nargs="?", help="Inbox note body")
     p.add_argument(
         "--kind",
         choices=("unclear", "suggestion"),
         default="unclear",
-        help="Type of desk note to write",
+        help="Type of inbox message to write",
     )
     p.add_argument("--title", help="Short title for the note")
     p.add_argument(
@@ -169,7 +169,6 @@ def _add_inbox_commands(
         "--pythonpath",
         help="Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model",
     )
-    p.add_argument("--author", default="cli", help="Source label for the inbox note")
     p.add_argument("--list", action="store_true", help="List desk inbox notes")
     p.add_argument("--show", help="Show one inbox note by filename, stem, or slug fragment")
     p.add_argument("--limit", type=int, default=20, help="Limit listed notes")

@@ -50,7 +50,7 @@ Supported artifact types:
 | `board` | Task coordination surface | `--title`, `--scope`, `--purpose` |
 | `atom` | Durable architectural concept | `--title`, `--five-wh-one-plus`, `--answer` |
 | `repository` | Repo registration | `--name`, `--path`, `--status` |
-| `inbox-note` | Unclear point or suggestion | `--kind`, `--author`, `--title`, `--body` |
+| `inbox-note` | Incoming project message | `--kind`, `--title`, `--body` |
 | `faq-doc` | FAQ entry | (spec-defined flags) |
 | `step` | Procedure step | `--title`, `--action`, `--outcome` |
 | `condition` | Primitive: predicate guard | `--title`, `--subject`, `--predicate` |

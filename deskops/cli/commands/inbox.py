@@ -16,7 +16,7 @@ from sldb.store.resolver import find_local_store
 
 
 class InboxCLI:
-    """Log desk notes for unclear points and suggestions."""
+    """Log messages arriving to a project inbox."""
 
     def run(self, args: Any) -> int:
         if args.list:
@@ -35,8 +35,9 @@ class InboxCLI:
         title = args.title.strip() if args.title else self._derive_title(args.message)
         slug = self._slug(title)
         path = inbox_dir / f"{created_at.strftime('%Y%m%d-%H%M%S')}-{args.kind}-{slug}.md"
+        sender_project = self._sender_project(args)
         path.write_text(
-            self._render_note(args.kind, title, args.message, args.author, created_at),
+            self._render_note(args.kind, title, args.message, sender_project, created_at),
             encoding="utf-8",
         )
         tracked_name = self._auto_track_note(args, path)
@@ -128,6 +129,7 @@ class InboxCLI:
             "id": path.stem,
             "path": str(path),
             "kind": frontmatter.get("kind", ""),
+            "sender_project": frontmatter.get("sender_project", ""),
             "status": frontmatter.get("status", ""),
             "created_at": frontmatter.get("created_at", ""),
             "title": title,
@@ -168,12 +170,12 @@ class InboxCLI:
                     return 0
                 for item in payload:
                     print(
-                        f"{item['id']} | {item['kind']} | {item['status']} | {item['title']}"
+                        f"{item['id']} | {item['kind']} | {item['sender_project']} | {item['status']} | {item['title']}"
                     )
             else:
                 print(f"# {payload['title']}")
                 print("")
-                for meta in ("kind", "author", "created_at", "status", "path"):
+                for meta in ("kind", "sender_project", "created_at", "status", "path"):
                     if meta in payload:
                         print(f"{meta}: {payload[meta]}")
                 print("")
@@ -189,13 +191,13 @@ class InboxCLI:
         return slug or "note"
 
     def _render_note(
-        self, kind: str, title: str, message: str, author: str, created_at: datetime
+        self, kind: str, title: str, message: str, sender_project: str, created_at: datetime
     ) -> str:
         return "\n".join(
             [
                 "---",
                 f"kind: {kind}",
-                f"author: {author}",
+                f"sender_project: {sender_project}",
                 f"created_at: {created_at.isoformat(timespec='seconds')}",
                 "status: open",
                 "---",
@@ -206,6 +208,31 @@ class InboxCLI:
                 "",
             ]
         )
+
+    def _sender_project(self, args: Any) -> str:
+        sender_root = Path.cwd().resolve()
+        context = self._store_context(args)
+        if context is None:
+            return sender_root.name
+        store_path, root = context
+        try:
+            from sldb.store.query import load_runtime_documents
+
+            docs = load_runtime_documents(store_path, resolve_model_ref, args.pythonpath)
+        except (SLDBStoreError, FileNotFoundError, OSError):
+            return sender_root.name
+
+        for doc in docs:
+            if doc.model_name != "RepositoryDoc":
+                continue
+            repo_path = doc.payload.get("path")
+            if not repo_path:
+                continue
+            registered_root = (root / repo_path).resolve()
+            if sender_root == registered_root or _is_relative_to(sender_root, registered_root):
+                return doc.payload.get("id") or doc.payload.get("name") or registered_root.name
+
+        return sender_root.name
 
     def _auto_track_note(self, args: Any, path: Path) -> str | None:
         context = self._store_context(args)
@@ -247,3 +274,11 @@ class InboxCLI:
         if local_store is None:
             return None
         return local_store, project_root(local_store)
+
+
+def _is_relative_to(path: Path, other: Path) -> bool:
+    try:
+        path.relative_to(other)
+    except ValueError:
+        return False
+    return True
