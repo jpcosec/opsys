@@ -124,6 +124,8 @@ class CLI:
             return self._graph_neighbors(args)
         if args.graph_command == "missing":
             return self._graph_missing(args)
+        if args.graph_command == "reflect":
+            return self._graph_reflect(args)
 
         print(f"Unknown graph command: {args.graph_command}")
         return 2
@@ -203,6 +205,34 @@ class CLI:
                 print(f"  provenance: {finding.provenance_path}{locator}")
             print(f"  reason: {finding.reason}")
         return 1
+
+    def _graph_reflect(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        if not root.exists() or not root.is_dir():
+            print(f"Error: graph root is not a directory: {root}")
+            return 1
+
+        from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+
+        graph_path = Path(args.graph).resolve() if args.graph else root / DEFAULT_SNAPSHOT_PATH
+        try:
+            from deskops.graph.checks import GraphMissingCheckError
+            from deskops.graph.checks import read_graph_snapshot
+            from deskops.graph.self_reflection import build_self_reflection_report
+            from deskops.graph.self_reflection import write_self_reflection_report
+
+            snapshot = read_graph_snapshot(graph_path)
+            report = build_self_reflection_report(snapshot)
+            output_path = write_self_reflection_report(root, report)
+        except GraphMissingCheckError as exc:
+            print(f"Error: {exc}")
+            return 1
+
+        summary = report["summary"]
+        print(f"Self-reflection report written: {output_path}")
+        print(f"Findings: {summary['finding_count']}")
+        print(f"Suppressed duplicates: {summary['suppressed_duplicate_count']}")
+        return 0
 
     def _print_graph_neighbors(self, node_id: str, neighbors: dict[str, Any]) -> None:
         nodes = neighbors["nodes"]

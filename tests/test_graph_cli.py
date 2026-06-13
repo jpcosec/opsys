@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from deskops.cli.main import main
+from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
 from deskops.graph.snapshot import GraphSnapshotCapabilityError
 
@@ -128,6 +129,45 @@ source_atoms:
     assert "Missing graph references:" in captured.out
     assert "dangling_source_atom_reference: doc:docs/guide.md -> atom:atom-missing" in captured.out
     assert "provenance: docs/guide.md:line:3:yaml" in captured.out
+
+
+def test_graph_reflect_writes_runtime_report_from_explicit_graph(tmp_path: Path, capsys) -> None:
+    result = main(["graph", "reflect", "--root", str(tmp_path), "--graph", str(FIXTURE_GRAPH)])
+
+    captured = capsys.readouterr()
+    report_path = tmp_path / DEFAULT_REPORT_PATH
+    assert result == 0
+    assert f"Self-reflection report written: {report_path}" in captured.out
+    assert "Findings:" in captured.out
+    assert report_path.exists()
+    assert not (tmp_path / "desk" / "inbox").exists()
+    assert not (tmp_path / "desk" / "drawer").exists()
+    assert not (tmp_path / "desk" / "tasks").exists()
+    assert not (tmp_path / "desk" / "atoms").exists()
+
+
+def test_graph_reflect_reports_missing_graph(tmp_path: Path, capsys) -> None:
+    graph_path = tmp_path / "missing-graph.json"
+
+    result = main(["graph", "reflect", "--root", str(tmp_path), "--graph", str(graph_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert f"Error: graph snapshot not found: {graph_path}" in captured.out
+    assert not (tmp_path / DEFAULT_REPORT_PATH).exists()
+
+
+def test_graph_reflect_uses_default_runtime_graph(tmp_path: Path, capsys) -> None:
+    graph_path = tmp_path / DEFAULT_SNAPSHOT_PATH
+    write(graph_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
+
+    result = main(["graph", "reflect", "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    report_path = tmp_path / DEFAULT_REPORT_PATH
+    assert result == 0
+    assert f"Self-reflection report written: {report_path}" in captured.out
+    assert report_path.exists()
 
 
 def write(path: Path, content: str) -> None:

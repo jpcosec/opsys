@@ -32,6 +32,7 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` defin
 - `deskops faq` — first-use help (this document)
 - `deskops inbox` — write and browse desk inbox notes
 - `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
+- `deskops graph` — build graph snapshots, inspect neighbors, check missing references, and write review-only reflection reports
 - `deskops repo register` — register repositories in the ecosystem desk registry
 - `deskops desk install` — scaffold a desk surface in a target repository
 

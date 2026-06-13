@@ -15,7 +15,6 @@ Deferred task backlog:
 - `task-make-task-lifecycle-runnable-end-to-end`
 - `task-wire-closeout-knowledge-gates`
 - `task-complete-kgdb-graph-runtime-slice`
-- `task-connect-self-reflection-to-graph-cli`
 - `task-define-materialization-contract-slice`
 - `task-add-drift-check-review-loop`
 - `task-design-operational-cli-grammar`

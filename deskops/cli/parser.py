@@ -85,6 +85,10 @@ def _add_graph_commands(
     missing.add_argument("--root", default=".", help="Target repository root.")
     missing.add_argument("--graph", help="Optional graph snapshot path to check for missing edge targets.")
 
+    reflect = s.add_parser("reflect", help="Write review-only self-reflection findings for a graph snapshot.")
+    reflect.add_argument("--root", default=".", help="Target repository root.")
+    reflect.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+
 
 def _add_promote_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
