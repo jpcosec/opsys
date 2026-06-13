@@ -74,6 +74,29 @@ source_atoms:
     ]
 
 
+def test_find_missing_graph_references_accepts_task_pill_references(tmp_path: Path) -> None:
+    write(
+        tmp_path / "desk/tasks/task-template-docs.md",
+        """---
+id: task-template-docs
+references:
+- desk/contexts/pill-template-docs.md
+---
+
+# Template docs
+""",
+    )
+    write(
+        tmp_path / "desk/contexts/pill-template-docs.md",
+        """# Template docs pill
+
+ID: pill-template-docs
+""",
+    )
+
+    assert find_missing_graph_references(tmp_path) == []
+
+
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")

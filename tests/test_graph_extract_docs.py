@@ -19,6 +19,10 @@ tags:
 
 ID: task-005-extract-desk-doc-graph-nodes
 """)
+    write(tmp_path / "desk/contexts/pill-context-routing.md", """# Context routing
+
+ID: pill-context-routing
+""")
     write(tmp_path / "desk/tasks/Board.md", "# Tasks Board\n")
     write(tmp_path / "desk/drawer/issues/issue-integrate-kgdb.md", "# Integrate KGDB\n")
     write(tmp_path / "docs/knowledge-graph/desk-source-graph-vocabulary.md", """# Desk Source Graph Vocabulary
@@ -39,6 +43,7 @@ type: artifact
 
     assert set(by_id) == {
         "atom:atom-documents-point-to-atoms",
+        "pill:pill-context-routing",
         "task:task-005-extract-desk-doc-graph-nodes",
         "issue:integrate-kgdb",
         "doc:docs/knowledge-graph/desk-source-graph-vocabulary.md",
@@ -50,6 +55,8 @@ type: artifact
     assert by_id["atom:atom-documents-point-to-atoms"].path == "desk/atoms/workflow/atom-documents-point-to-atoms.md"
     assert by_id["atom:atom-documents-point-to-atoms"].label == "Documents point to atoms"
     assert by_id["atom:atom-documents-point-to-atoms"].document_id == "atom-documents-point-to-atoms"
+    assert by_id["pill:pill-context-routing"].kind == "pill"
+    assert by_id["pill:pill-context-routing"].path == "desk/contexts/pill-context-routing.md"
     assert by_id["doc:docs/knowledge-graph/desk-source-graph-vocabulary.md"].document_id == "desk-source-graph-vocabulary"
     assert by_id["spec:spec/artifacts/atom.yaml"].document_id == "artifact.atom"
     assert by_id["spec:spec/artifacts/atom.yaml"].label == "Atom Artifact"

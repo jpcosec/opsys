@@ -59,6 +59,7 @@ def extract_doc_nodes(root: Path) -> list[DocGraphNode]:
 def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
     candidates: list[tuple[Path, str]] = []
     candidates.extend((path, "atom") for path in _glob(root / "desk" / "atoms", "**/*.md"))
+    candidates.extend((path, "pill") for path in _glob(root / "desk" / "contexts", "*.md"))
     candidates.extend(
         (path, "task")
         for path in _glob(root / "desk" / "tasks", "*.md")
@@ -156,7 +157,7 @@ def _identity_for(
     label: str,
     path: Path,
 ) -> str:
-    if kind in {"atom", "task"} and document_id:
+    if kind in {"atom", "pill", "task"} and document_id:
         return document_id
     if kind == "issue":
         return document_id or _slugify(label) or path.stem
