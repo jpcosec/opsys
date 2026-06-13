@@ -1,24 +1,13 @@
+---
+id: edge-from-yaml-test-edge
+status: active
+source: node_a
+target: ''
+condition_ref: ''
+tags:
+- primitive:edge
+---
+
 # From YAML Test Edge
 
-ID: edge-from-yaml-test-edge
-Status: active
-
 ## Summary
-
-
-
-## Source
-
-node_a
-
-## Target
-
-
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

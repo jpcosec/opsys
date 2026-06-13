@@ -1,13 +1,12 @@
-# Repository: deskops-dir
+---
+id: deskops-dir
+path: /home/jp/proyectos/hum-ecosystem/tools/deskops
+status: active
+tags: []
+---
 
-ID: deskops-dir
-Path: /home/jp/proyectos/hum-ecosystem/tools/deskops
-Status: active
+# Repository: deskops-dir
 
 ## Description
 
 Repository for deskops-dir.
-
-## Tags
-
--

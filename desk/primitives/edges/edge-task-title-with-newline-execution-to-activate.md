@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-title-with-newline-execution-to-activate
+status: active
+source: checklist-task-title-with-newline-execution-ready
+target: operator-task-title-with-newline-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-title-with-newline-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-title-with-newline-execution-ready
-
-## Target
-
-operator-task-title-with-newline-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

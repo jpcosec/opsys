@@ -1,7 +1,23 @@
-# Primitive Fields Test
+---
+id: task-primitive-fields-test
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-primitive-fields-test
+checklists:
+- checklist-task-primitive-fields-test-execution-ready
+- checklist-task-primitive-fields-test-testing-ready
+- checklist-task-primitive-fields-test-closeout-ready
+current_node: checklist-task-primitive-fields-test-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-primitive-fields-test
-Status: draft
+# Primitive Fields Test
 
 ## Goal
 
@@ -11,53 +27,14 @@ Test
 
 test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-primitive-fields-test
-
-## Checklists
-
-- checklist-task-primitive-fields-test-execution-ready
-- checklist-task-primitive-fields-test-testing-ready
-- checklist-task-primitive-fields-test-closeout-ready
-
-## Current Node
-
-checklist-task-primitive-fields-test-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

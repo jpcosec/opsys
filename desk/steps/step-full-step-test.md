@@ -1,6 +1,11 @@
-# Full Step Test
+---
+id: step-full-step-test
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-full-step-test
+# Full Step Test
 
 ## Action
 
@@ -9,8 +14,3 @@ Do everything
 ## Outcome
 
 Success
-
-## Tags
-
-- workspace:desk
-- artifact:step

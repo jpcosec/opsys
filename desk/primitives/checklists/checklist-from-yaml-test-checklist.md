@@ -1,7 +1,13 @@
-# From YAML Test Checklist
+---
+id: checklist-from-yaml-test-checklist
+status: active
+condition_refs: []
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-from-yaml-test-checklist
-Status: active
+# From YAML Test Checklist
 
 ## Summary
 
@@ -10,15 +16,3 @@ Status: active
 ## Items
 
 -
-
-## Conditions
-
--
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

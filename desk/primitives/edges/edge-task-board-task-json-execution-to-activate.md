@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-board-task-json-execution-to-activate
+status: active
+source: checklist-task-board-task-json-execution-ready
+target: operator-task-board-task-json-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-board-task-json-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-board-task-json-execution-ready
-
-## Target
-
-operator-task-board-task-json-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

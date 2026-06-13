@@ -1,33 +1,22 @@
-# Missing Scope Test
+---
+id: board-missing-scope-test
+scope: ''
+tasks: []
+pills: []
+rituals: []
+tags:
+- workspace:desk
+- artifact:board
+---
 
-ID: board-missing-scope-test
-Scope:
+# Missing Scope Test
 
 ## Purpose
 
 
-
-## Tasks
-
--
-
-## Pills
-
--
-
-## Rituals
-
--
 
 ## Notes
 
 No additional notes.
 
 ## Task Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:board

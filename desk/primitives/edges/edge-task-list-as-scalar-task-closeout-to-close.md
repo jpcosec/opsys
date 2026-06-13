@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-list-as-scalar-task-closeout-to-close
+status: active
+source: checklist-task-list-as-scalar-task-closeout-ready
+target: operator-task-list-as-scalar-task-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-list-as-scalar-task-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-list-as-scalar-task-closeout-ready
-
-## Target
-
-operator-task-list-as-scalar-task-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

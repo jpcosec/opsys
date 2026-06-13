@@ -1,7 +1,14 @@
-# Testing Ready
+---
+id: checklist-task-with-routine-ref-testing-ready
+status: active
+condition_refs:
+- condition-task-with-routine-ref-has-validation
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-task-with-routine-ref-testing-ready
-Status: active
+# Testing Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready for testing handoff.
 ## Items
 
 - Validation exists
-
-## Conditions
-
-- condition-task-with-routine-ref-has-validation
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

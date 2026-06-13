@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-tâsk-wîth-ünicöde-chàracters-activate-to-testing
+status: active
+source: operator-task-tâsk-wîth-ünicöde-chàracters-activate
+target: checklist-task-tâsk-wîth-ünicöde-chàracters-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-tâsk-wîth-ünicöde-chàracters-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-tâsk-wîth-ünicöde-chàracters-activate
-
-## Target
-
-checklist-task-tâsk-wîth-ünicöde-chàracters-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

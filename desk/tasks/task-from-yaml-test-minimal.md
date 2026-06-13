@@ -1,7 +1,23 @@
-# From YAML Test Minimal
+---
+id: task-from-yaml-test-minimal
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-from-yaml-test-minimal
+checklists:
+- checklist-task-from-yaml-test-minimal-execution-ready
+- checklist-task-from-yaml-test-minimal-testing-ready
+- checklist-task-from-yaml-test-minimal-closeout-ready
+current_node: checklist-task-from-yaml-test-minimal-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-from-yaml-test-minimal
-Status: draft
+# From YAML Test Minimal
 
 ## Goal
 
@@ -11,53 +27,14 @@ Test the minimal from-yaml
 
 stress-test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-from-yaml-test-minimal
-
-## Checklists
-
-- checklist-task-from-yaml-test-minimal-execution-ready
-- checklist-task-from-yaml-test-minimal-testing-ready
-- checklist-task-from-yaml-test-minimal-closeout-ready
-
-## Current Node
-
-checklist-task-from-yaml-test-minimal-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 passes
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

@@ -1,7 +1,25 @@
-# History Task
+---
+id: task-history-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-history-task
+checklists:
+- checklist-task-history-task-execution-ready
+- checklist-task-history-task-testing-ready
+- checklist-task-history-task-closeout-ready
+current_node: checklist-task-history-task-execution-ready
+history:
+- event-1
+- event-2
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-history-task
-Status: draft
+# History Task
 
 ## Goal
 
@@ -11,54 +29,14 @@ Test history
 
 test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-history-task
-
-## Checklists
-
-- checklist-task-history-task-execution-ready
-- checklist-task-history-task-testing-ready
-- checklist-task-history-task-closeout-ready
-
-## Current Node
-
-checklist-task-history-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
-- event-1
-- event-2
-
-## Tags
-
-- workspace:desk
-- artifact:task

@@ -1,6 +1,13 @@
-# Guardrail: force every task through explicit phase gates
+---
+id: pill-007
+tags:
+- system:sldb
+- workspace:desk
+- topic:workflow
+- topic:phase-gates
+---
 
-ID: pill-007
+# Guardrail: force every task through explicit phase gates
 
 ## What
 
@@ -25,10 +32,3 @@ Open each task with an initialization gate that confirms task clarity, file scop
 ## How Not
 
 Do not treat implementation as the default starting point. Do not jump from “code looks done” to task deletion or board cleanup without a testing handoff and a dedicated closing commit.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:workflow
-- topic:phase-gates

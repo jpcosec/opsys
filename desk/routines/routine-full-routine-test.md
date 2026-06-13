@@ -1,30 +1,20 @@
-# Full Routine Test
+---
+id: routine-full-routine-test
+status: active
+entrypoint: start_node
+decomposition:
+- start_node
+- middle_node
+- end_node
+edges: []
+terminal_nodes:
+- complete
+tags:
+- primitive:routine
+---
 
-ID: routine-full-routine-test
-Status: active
+# Full Routine Test
 
 ## Summary
 
 Comprehensive routine
-
-## Entrypoint
-
-start_node
-
-## Decomposition
-
-- start_node
-- middle_node
-- end_node
-
-## Edges
-
--
-
-## Terminal Nodes
-
-- complete
-
-## Tags
-
-- primitive:routine

@@ -1,24 +1,15 @@
-# Close operator to complete
+---
+id: edge-task-item-close-to-complete
+status: active
+source: operator-task-item-close
+target: complete
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-item-close-to-complete
-Status: active
+# Close operator to complete
 
 ## Summary
 
 Task closed.
-
-## Source
-
-operator-task-item-close
-
-## Target
-
-complete
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

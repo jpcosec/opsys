@@ -1,6 +1,13 @@
-# Guardrail: close every task with its own commit
+---
+id: pill-001
+tags:
+- system:sldb
+- workspace:desk
+- topic:git
+- topic:task-closure
+---
 
-ID: pill-001
+# Guardrail: close every task with its own commit
 
 ## What
 
@@ -25,10 +32,3 @@ Keep task files active until tests, cleanup, board updates, and the closing chan
 ## How Not
 
 Do not delete a finished task file and call it closed before the closing commit exists. Do not rely on memory or an uncommitted working tree as the record of closure.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:git
-- topic:task-closure

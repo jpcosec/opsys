@@ -1,24 +1,15 @@
-# Full Hook Test
+---
+id: hook-full-hook-test
+status: active
+event: on_start
+target: ''
+condition_ref: cond-1
+tags:
+- primitive:hook
+---
 
-ID: hook-full-hook-test
-Status: active
+# Full Hook Test
 
 ## Summary
 
 Full hook
-
-## Event
-
-on_start
-
-## Target
-
-
-
-## Condition
-
-cond-1
-
-## Tags
-
-- primitive:hook

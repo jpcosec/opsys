@@ -1,13 +1,12 @@
-# Repository: parent-path-test
+---
+id: parent-path-test
+path: ..
+status: active
+tags: []
+---
 
-ID: parent-path-test
-Path: ..
-Status: active
+# Repository: parent-path-test
 
 ## Description
 
 Repository for parent-path-test.
-
-## Tags
-
--

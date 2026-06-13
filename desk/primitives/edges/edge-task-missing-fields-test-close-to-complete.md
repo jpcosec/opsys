@@ -1,24 +1,15 @@
-# Close operator to complete
+---
+id: edge-task-missing-fields-test-close-to-complete
+status: active
+source: operator-task-missing-fields-test-close
+target: complete
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-missing-fields-test-close-to-complete
-Status: active
+# Close operator to complete
 
 ## Summary
 
 Task closed.
-
-## Source
-
-operator-task-missing-fields-test-close
-
-## Target
-
-complete
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

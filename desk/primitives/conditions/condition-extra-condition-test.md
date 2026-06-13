@@ -1,24 +1,15 @@
-# Extra Condition Test
+---
+id: condition-extra-condition-test
+status: active
+subject: ''
+predicate: truthy
+expected: ''
+tags:
+- primitive:condition
+---
 
-ID: condition-extra-condition-test
-Status: active
+# Extra Condition Test
 
 ## Summary
 
 Test
-
-## Subject
-
-
-
-## Predicate
-
-truthy
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

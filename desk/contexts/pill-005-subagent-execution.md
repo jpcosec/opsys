@@ -1,6 +1,13 @@
-# Pattern: execute opsys migration work through subagents
+---
+id: pill-005
+tags:
+- system:sldb
+- workspace:desk
+- topic:subagents
+- topic:execution
+---
 
-ID: pill-005
+# Pattern: execute opsys migration work through subagents
 
 ## What
 
@@ -25,10 +32,3 @@ Split work into focused subproblems, assign them to specialized subagents, colle
 ## How Not
 
 Do not try to carry the entire opsys migration as one monolithic thread in a single context. Do not let subagent outputs bypass the main validation, board, and commit workflow.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:subagents
-- topic:execution

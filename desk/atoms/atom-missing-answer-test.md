@@ -1,13 +1,14 @@
-# Missing Answer Test
+---
+id: atom-missing-answer-test
+title: Missing Answer Test
+five_wh_one_plus: what
+tags:
+- system:deskops
+- topic:atoms
+---
 
-ID: atom-missing-answer-test
-5WH1+: what
+# Missing Answer Test
 
 ## Answer
 
 
-
-## Tags
-
-- system:deskops
-- topic:atoms

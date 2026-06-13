@@ -1,24 +1,13 @@
+---
+id: operator-from-yaml-test-operator
+status: active
+action: activate
+target: ''
+value: ''
+tags:
+- primitive:operator
+---
+
 # From YAML Test Operator
 
-ID: operator-from-yaml-test-operator
-Status: active
-
 ## Summary
-
-
-
-## Action
-
-activate
-
-## Target
-
-
-
-## Value
-
-
-
-## Tags
-
-- primitive:operator

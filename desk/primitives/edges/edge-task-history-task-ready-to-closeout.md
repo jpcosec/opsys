@@ -1,24 +1,15 @@
-# Testing-ready operator to closeout gate
+---
+id: edge-task-history-task-ready-to-closeout
+status: active
+source: operator-task-history-task-ready-for-testing
+target: checklist-task-history-task-closeout-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-history-task-ready-to-closeout
-Status: active
+# Testing-ready operator to closeout gate
 
 ## Summary
 
 Ready-for-testing state entered.
-
-## Source
-
-operator-task-history-task-ready-for-testing
-
-## Target
-
-checklist-task-history-task-closeout-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

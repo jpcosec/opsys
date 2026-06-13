@@ -1,13 +1,12 @@
-# Repository: My Repo
+---
+id: my-repo
+path: .
+status: active
+tags: []
+---
 
-ID: my-repo
-Path: .
-Status: active
+# Repository: My Repo
 
 ## Description
 
 Repository for My Repo.
-
-## Tags
-
--

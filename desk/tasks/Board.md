@@ -1,18 +1,8 @@
-# Desk Board
-
-ID: board-001
-Scope: desk
-
-## Purpose
-
-Route the active desk execution set: tasks, pills, and the ritual documents that govern execution and closure.
-
-## Tasks
-
-No active tasks are routed on this board right now.
-
-## Pills
-
+---
+id: board-001
+scope: desk
+tasks: []
+pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-002-test-real-cli-surfaces.md
 - desk/contexts/pill-003-capture-cli-gaps.md
@@ -24,21 +14,24 @@ No active tasks are routed on this board right now.
 - desk/contexts/pill-009-source-file-graph-traceability.md
 - desk/contexts/pill-010-graph-runtime-output-policy.md
 - desk/contexts/pill-011-self-reflection-noise-control.md
-
-## Rituals
-
+rituals:
 - desk/rituals/execution.md
 - desk/rituals/closeout.md
 - desk/rituals/testing.md
+tags:
+- system:sldb
+- workspace:desk
+- topic:routing
+---
+
+# Desk Board
+
+## Purpose
+
+Route the active desk execution set: tasks, pills, and the ritual documents that govern execution and closure.
 
 ## Notes
 
 Every closed task must end in its own closing commit. Every non-trivial task must pass explicit initialization, execution, testing, and closeout gates. Any missing SLDB capability discovered during execution must become a new active desk task.
 
 The obsolete proposed task set `046-052` has been distilled into drawer issues because it assumed the old atom model. Promote only the revised issues that match the current `AtomDoc`, sldb composition, and workflow-derived CLI model.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:routing

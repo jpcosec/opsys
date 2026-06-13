@@ -1,13 +1,14 @@
-# From YAML Test Atom
+---
+id: atom-from-yaml-test-atom
+title: From YAML Test Atom
+five_wh_one_plus: what
+tags:
+- system:deskops
+- topic:atoms
+---
 
-ID: atom-from-yaml-test-atom
-5WH1+: what
+# From YAML Test Atom
 
 ## Answer
 
 Test answer
-
-## Tags
-
-- system:deskops
-- topic:atoms

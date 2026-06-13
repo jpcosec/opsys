@@ -1,7 +1,23 @@
-# Routine Ref Task
+---
+id: task-with-routine-ref
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-with-routine-ref
+checklists:
+- checklist-task-with-routine-ref-execution-ready
+- checklist-task-with-routine-ref-testing-ready
+- checklist-task-with-routine-ref-closeout-ready
+current_node: checklist-task-with-routine-ref-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-with-routine-ref
-Status: draft
+# Routine Ref Task
 
 ## Goal
 
@@ -11,53 +27,14 @@ Reference a routine
 
 test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-with-routine-ref
-
-## Checklists
-
-- checklist-task-with-routine-ref-execution-ready
-- checklist-task-with-routine-ref-testing-ready
-- checklist-task-with-routine-ref-closeout-ready
-
-## Current Node
-
-checklist-task-with-routine-ref-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

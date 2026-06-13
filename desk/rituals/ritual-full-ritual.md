@@ -1,6 +1,13 @@
-# Full Ritual
+---
+id: ritual-full-ritual
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- 1. Step 1
+---
 
-ID: ritual-full-ritual
+# Full Ritual
 
 ## Purpose
 
@@ -14,10 +21,6 @@ Event
 
 - Ready
 
-## Steps
-
-1. Step 1
-
 ## Validation
 
 - Validate
@@ -30,11 +33,7 @@ Event
 
 Done
 
-## Step Details
+## Steps
 
+- Step 1
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

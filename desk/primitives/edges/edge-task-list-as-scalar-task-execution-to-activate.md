@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-list-as-scalar-task-execution-to-activate
+status: active
+source: checklist-task-list-as-scalar-task-execution-ready
+target: operator-task-list-as-scalar-task-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-list-as-scalar-task-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-list-as-scalar-task-execution-ready
-
-## Target
-
-operator-task-list-as-scalar-task-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

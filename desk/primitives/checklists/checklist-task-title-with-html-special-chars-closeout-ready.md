@@ -1,7 +1,14 @@
-# Closeout Ready
+---
+id: checklist-task-title-with-html-special-chars-closeout-ready
+status: active
+condition_refs:
+- condition-task-title-with-html-special-chars-ready-for-closeout
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-task-title-with-html-special-chars-closeout-ready
-Status: active
+# Closeout Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready for closeout.
 ## Items
 
 - Task is ready for closeout
-
-## Conditions
-
-- condition-task-title-with-html-special-chars-ready-for-closeout
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

@@ -1,24 +1,15 @@
-# Test condition
+---
+id: condition-test-condition
+status: draft
+subject: /path
+predicate: equals
+expected: value
+tags:
+- primitive:condition
+---
 
-ID: condition-test-condition
-Status: draft
+# Test condition
 
 ## Summary
 
 A test
-
-## Subject
-
-/path
-
-## Predicate
-
-equals
-
-## Expected
-
-value
-
-## Tags
-
-- primitive:condition

@@ -1,13 +1,12 @@
-# Repository: myrepo-etc
+---
+id: myrepo-etc
+path: /etc
+status: active
+tags: []
+---
 
-ID: myrepo-etc
-Path: /etc
-Status: active
+# Repository: myrepo-etc
 
 ## Description
 
 Repository for myrepo-etc.
-
-## Tags
-
--

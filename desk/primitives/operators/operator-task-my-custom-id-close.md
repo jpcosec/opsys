@@ -1,24 +1,15 @@
-# Close task
+---
+id: operator-task-my-custom-id-close
+status: active
+action: set_field
+target: status
+value: closed
+tags:
+- primitive:operator
+---
 
-ID: operator-task-my-custom-id-close
-Status: active
+# Close task
 
 ## Summary
 
 Closes the task in the operational runtime.
-
-## Action
-
-set_field
-
-## Target
-
-status
-
-## Value
-
-closed
-
-## Tags
-
-- primitive:operator

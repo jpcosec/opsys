@@ -1,7 +1,23 @@
-# WithRootTask
+---
+id: task-withroottask
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-withroottask
+checklists:
+- checklist-task-withroottask-execution-ready
+- checklist-task-withroottask-testing-ready
+- checklist-task-withroottask-closeout-ready
+current_node: checklist-task-withroottask-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-withroottask
-Status: draft
+# WithRootTask
 
 ## Goal
 
@@ -11,53 +27,12 @@ Test with root
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-withroottask
-
-## Checklists
-
-- checklist-task-withroottask-execution-ready
-- checklist-task-withroottask-testing-ready
-- checklist-task-withroottask-closeout-ready
-
-## Current Node
-
-checklist-task-withroottask-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

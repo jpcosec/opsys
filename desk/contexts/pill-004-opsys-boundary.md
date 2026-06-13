@@ -1,6 +1,13 @@
-# Guardrail: keep sldb, specyaml, and opsys separated
+---
+id: pill-004
+tags:
+- system:sldb
+- workspace:desk
+- topic:opsys
+- topic:separation
+---
 
-ID: pill-004
+# Guardrail: keep sldb, specyaml, and opsys separated
 
 ## What
 
@@ -25,10 +32,3 @@ When adding or moving a model, ask first whether it belongs to infra, semantic c
 ## How Not
 
 Do not add desk or drawer domain logic as if it were generic sldb infrastructure. Do not treat specyaml as the place for operational workflow documents.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:opsys
-- topic:separation

@@ -1,13 +1,12 @@
-# Repository: tmp-repo
+---
+id: tmp-repo
+path: /tmp
+status: active
+tags: []
+---
 
-ID: tmp-repo
-Path: /tmp
-Status: active
+# Repository: tmp-repo
 
 ## Description
 
 Repository for tmp-repo.
-
-## Tags
-
--

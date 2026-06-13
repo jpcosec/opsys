@@ -1,7 +1,14 @@
-# Closeout Ready
+---
+id: checklist-task-12345-closeout-ready
+status: active
+condition_refs:
+- condition-task-12345-ready-for-closeout
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-task-12345-closeout-ready
-Status: active
+# Closeout Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready for closeout.
 ## Items
 
 - Task is ready for closeout
-
-## Conditions
-
-- condition-task-12345-ready-for-closeout
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

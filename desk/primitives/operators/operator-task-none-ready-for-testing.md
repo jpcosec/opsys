@@ -1,24 +1,15 @@
-# Mark ready for testing
+---
+id: operator-task-none-ready-for-testing
+status: active
+action: set_field
+target: status
+value: ready_for_testing
+tags:
+- primitive:operator
+---
 
-ID: operator-task-none-ready-for-testing
-Status: active
+# Mark ready for testing
 
 ## Summary
 
 Moves the task into the testing gate.
-
-## Action
-
-set_field
-
-## Target
-
-status
-
-## Value
-
-ready_for_testing
-
-## Tags
-
-- primitive:operator

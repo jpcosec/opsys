@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-withroottask-activate-to-testing
+status: active
+source: operator-task-withroottask-activate
+target: checklist-task-withroottask-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-withroottask-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-withroottask-activate
-
-## Target
-
-checklist-task-withroottask-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

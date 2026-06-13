@@ -1,7 +1,25 @@
-# Nested Structure Task
+---
+id: task-nested-structure-task
+status: draft
+references:
+- '{''name'': ''ref1'', ''url'': ''http://example.com''}'
+- '{''name'': ''ref2'', ''url'': ''http://test.com''}'
+depends_on: []
+pills: []
+files: []
+routine: routine-task-nested-structure-task
+checklists:
+- checklist-task-nested-structure-task-execution-ready
+- checklist-task-nested-structure-task-testing-ready
+- checklist-task-nested-structure-task-closeout-ready
+current_node: checklist-task-nested-structure-task-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-nested-structure-task
-Status: draft
+# Nested Structure Task
 
 ## Goal
 
@@ -11,54 +29,14 @@ Test
 
 test
 
-## References
-
-- {'name': 'ref1', 'url': 'http://example.com'}
-- {'name': 'ref2', 'url': 'http://test.com'}
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-nested-structure-task
-
-## Checklists
-
-- checklist-task-nested-structure-task-execution-ready
-- checklist-task-nested-structure-task-testing-ready
-- checklist-task-nested-structure-task-closeout-ready
-
-## Current Node
-
-checklist-task-nested-structure-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

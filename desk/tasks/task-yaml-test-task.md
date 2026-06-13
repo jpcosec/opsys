@@ -1,7 +1,23 @@
-# YAML test task
+---
+id: task-yaml-test-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-yaml-test-task
+checklists:
+- checklist-task-yaml-test-task-execution-ready
+- checklist-task-yaml-test-task-testing-ready
+- checklist-task-yaml-test-task-closeout-ready
+current_node: checklist-task-yaml-test-task-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-yaml-test-task
-Status: draft
+# YAML test task
 
 ## Goal
 
@@ -11,53 +27,12 @@ Test batch creation from YAML
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-yaml-test-task
-
-## Checklists
-
-- checklist-task-yaml-test-task-execution-ready
-- checklist-task-yaml-test-task-testing-ready
-- checklist-task-yaml-test-task-closeout-ready
-
-## Current Node
-
-checklist-task-yaml-test-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

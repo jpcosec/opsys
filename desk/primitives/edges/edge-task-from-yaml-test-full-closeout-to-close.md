@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-from-yaml-test-full-closeout-to-close
+status: active
+source: checklist-task-from-yaml-test-full-closeout-ready
+target: operator-task-from-yaml-test-full-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-from-yaml-test-full-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-from-yaml-test-full-closeout-ready
-
-## Target
-
-operator-task-from-yaml-test-full-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

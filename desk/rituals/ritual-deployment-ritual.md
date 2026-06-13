@@ -1,6 +1,13 @@
-# Deployment Ritual
+---
+id: ritual-deployment-ritual
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- '1.'
+---
 
-ID: ritual-deployment-ritual
+# Deployment Ritual
 
 ## Purpose
 
@@ -14,10 +21,6 @@ PR merged
 
 -
 
-## Steps
-
-1.
-
 ## Validation
 
 -
@@ -30,11 +33,7 @@ PR merged
 
 
 
-## Step Details
+## Steps
 
+1.
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

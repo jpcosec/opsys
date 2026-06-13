@@ -1,7 +1,23 @@
-# Tâsk wîth ünicöde chàracters
+---
+id: task-tâsk-wîth-ünicöde-chàracters
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-tâsk-wîth-ünicöde-chàracters
+checklists:
+- checklist-task-tâsk-wîth-ünicöde-chàracters-execution-ready
+- checklist-task-tâsk-wîth-ünicöde-chàracters-testing-ready
+- checklist-task-tâsk-wîth-ünicöde-chàracters-closeout-ready
+current_node: checklist-task-tâsk-wîth-ünicöde-chàracters-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-tâsk-wîth-ünicöde-chàracters
-Status: draft
+# Tâsk wîth ünicöde chàracters
 
 ## Goal
 
@@ -11,53 +27,14 @@ Test unicode
 
 test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-tâsk-wîth-ünicöde-chàracters
-
-## Checklists
-
-- checklist-task-tâsk-wîth-ünicöde-chàracters-execution-ready
-- checklist-task-tâsk-wîth-ünicöde-chàracters-testing-ready
-- checklist-task-tâsk-wîth-ünicöde-chàracters-closeout-ready
-
-## Current Node
-
-checklist-task-tâsk-wîth-ünicöde-chàracters-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

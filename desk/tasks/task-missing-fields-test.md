@@ -1,7 +1,23 @@
-# Missing Fields Test
+---
+id: task-missing-fields-test
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-missing-fields-test
+checklists:
+- checklist-task-missing-fields-test-execution-ready
+- checklist-task-missing-fields-test-testing-ready
+- checklist-task-missing-fields-test-closeout-ready
+current_node: checklist-task-missing-fields-test-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-missing-fields-test
-Status: draft
+# Missing Fields Test
 
 ## Goal
 
@@ -11,53 +27,12 @@ Status: draft
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-missing-fields-test
-
-## Checklists
-
-- checklist-task-missing-fields-test-execution-ready
-- checklist-task-missing-fields-test-testing-ready
-- checklist-task-missing-fields-test-closeout-ready
-
-## Current Node
-
-checklist-task-missing-fields-test-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

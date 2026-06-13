@@ -1,6 +1,13 @@
-# Decision: keep KGDB parallel to SLDB
+---
+id: pill-008
+tags:
+- system:deskops
+- system:sldb
+- system:kgdb
+- topic:knowledge-graph
+---
 
-ID: pill-008
+# Decision: keep KGDB parallel to SLDB
 
 ## What
 
@@ -25,10 +32,3 @@ Treat SLDB semantic tags, indexes, DAG nodes, sections, and document payloads as
 ## How Not
 
 Do not add SLDB document parsing or semantic tag derivation to KGDB. Do not make deskops own general graph persistence. Do not treat OWL or ontology reasoning as the first runtime dependency.
-
-## Tags
-
-- system:deskops
-- system:sldb
-- system:kgdb
-- topic:knowledge-graph

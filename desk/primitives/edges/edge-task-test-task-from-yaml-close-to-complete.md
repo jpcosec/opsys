@@ -1,24 +1,15 @@
-# Close operator to complete
+---
+id: edge-task-test-task-from-yaml-close-to-complete
+status: active
+source: operator-task-test-task-from-yaml-close
+target: complete
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-test-task-from-yaml-close-to-complete
-Status: active
+# Close operator to complete
 
 ## Summary
 
 Task closed.
-
-## Source
-
-operator-task-test-task-from-yaml-close
-
-## Target
-
-complete
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

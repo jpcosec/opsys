@@ -1,33 +1,22 @@
-# Sprint Board
+---
+id: board-sprint-board
+scope: Current sprint
+tasks: []
+pills: []
+rituals: []
+tags:
+- workspace:desk
+- artifact:board
+---
 
-ID: board-sprint-board
-Scope: Current sprint
+# Sprint Board
 
 ## Purpose
 
 
-
-## Tasks
-
--
-
-## Pills
-
--
-
-## Rituals
-
--
 
 ## Notes
 
 No additional notes.
 
 ## Task Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:board

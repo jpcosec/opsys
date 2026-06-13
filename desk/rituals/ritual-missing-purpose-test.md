@@ -1,6 +1,13 @@
-# Missing Purpose Test
+---
+id: ritual-missing-purpose-test
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- '1.'
+---
 
-ID: ritual-missing-purpose-test
+# Missing Purpose Test
 
 ## Purpose
 
@@ -14,10 +21,6 @@ ID: ritual-missing-purpose-test
 
 -
 
-## Steps
-
-1.
-
 ## Validation
 
 -
@@ -30,11 +33,7 @@ ID: ritual-missing-purpose-test
 
 
 
-## Step Details
+## Steps
 
+1.
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

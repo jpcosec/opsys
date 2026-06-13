@@ -1,7 +1,23 @@
-# JSON Test Task
+---
+id: task-json-test-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-json-test-task
+checklists:
+- checklist-task-json-test-task-execution-ready
+- checklist-task-json-test-task-testing-ready
+- checklist-task-json-test-task-closeout-ready
+current_node: checklist-task-json-test-task-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-json-test-task
-Status: draft
+# JSON Test Task
 
 ## Goal
 
@@ -11,53 +27,12 @@ Test from JSON
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-json-test-task
-
-## Checklists
-
-- checklist-task-json-test-task-execution-ready
-- checklist-task-json-test-task-testing-ready
-- checklist-task-json-test-task-closeout-ready
-
-## Current Node
-
-checklist-task-json-test-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

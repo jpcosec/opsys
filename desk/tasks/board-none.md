@@ -1,33 +1,20 @@
-#
+---
+id: board-none
+scope: ''
+tasks: []
+pills: []
+rituals: []
+tags: []
+---
 
-ID: board-none
-Scope:
+# Board None
 
 ## Purpose
 
 
 
-## Tasks
-
--
-
-## Pills
-
--
-
-## Rituals
-
--
-
 ## Notes
 
-No additional notes.
+
 
 ## Task Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:board

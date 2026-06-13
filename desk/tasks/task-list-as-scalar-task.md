@@ -1,7 +1,22 @@
-# List As Scalar Task
+---
+id: task-list-as-scalar-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-list-as-scalar-task
+checklists:
+- checklist-task-list-as-scalar-task-execution-ready
+- checklist-task-list-as-scalar-task-testing-ready
+- checklist-task-list-as-scalar-task-closeout-ready
+current_node: checklist-task-list-as-scalar-task-execution-ready
+history: []
+tags:
+- not_a_list_but_a_string
+---
 
-ID: task-list-as-scalar-task
-Status: draft
+# List As Scalar Task
 
 ## Goal
 
@@ -11,52 +26,14 @@ Test
 
 test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-list-as-scalar-task
-
-## Checklists
-
-- checklist-task-list-as-scalar-task-execution-ready
-- checklist-task-list-as-scalar-task-testing-ready
-- checklist-task-list-as-scalar-task-closeout-ready
-
-## Current Node
-
-checklist-task-list-as-scalar-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
--
-
-## Tags
-
-- not_a_list_but_a_string

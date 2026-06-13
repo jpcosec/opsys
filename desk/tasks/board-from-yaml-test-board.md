@@ -1,33 +1,22 @@
-# From YAML Test Board
+---
+id: board-from-yaml-test-board
+scope: Test scope
+tasks: []
+pills: []
+rituals: []
+tags:
+- workspace:desk
+- artifact:board
+---
 
-ID: board-from-yaml-test-board
-Scope: Test scope
+# From YAML Test Board
 
 ## Purpose
 
 
-
-## Tasks
-
--
-
-## Pills
-
--
-
-## Rituals
-
--
 
 ## Notes
 
 No additional notes.
 
 ## Task Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:board

@@ -1,33 +1,22 @@
-# test-board-stress
+---
+id: board-test-board-stress
+scope: testing
+tasks: []
+pills: []
+rituals: []
+tags:
+- workspace:desk
+- artifact:board
+---
 
-ID: board-test-board-stress
-Scope: testing
+# test-board-stress
 
 ## Purpose
 
 
-
-## Tasks
-
--
-
-## Pills
-
--
-
-## Rituals
-
--
 
 ## Notes
 
 No additional notes.
 
 ## Task Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:board

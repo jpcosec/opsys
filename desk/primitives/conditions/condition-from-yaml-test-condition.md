@@ -1,24 +1,15 @@
-# From YAML Test Condition
+---
+id: condition-from-yaml-test-condition
+status: active
+subject: ''
+predicate: truthy
+expected: ''
+tags:
+- primitive:condition
+---
 
-ID: condition-from-yaml-test-condition
-Status: active
+# From YAML Test Condition
 
 ## Summary
 
 Check something
-
-## Subject
-
-
-
-## Predicate
-
-truthy
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

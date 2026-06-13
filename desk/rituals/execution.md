@@ -1,6 +1,35 @@
-# Execution ritual for active desk tasks
+---
+id: ritual-execution
+tags:
+- system:sldb
+- workspace:desk
+- topic:rituals
+- topic:execution
+steps:
+- 1. Open the initialization gate by making the active task, task scope, touched files,
+  and validation targets explicit.
+- 1. Atomize the work into one coherent deliverable.
+- 1. Audit code, docs, tests, and git state before changing anything.
+- 1. Send one fresh subagent with no prior task context to review the task, board-routed
+  pills, and planned file touches only for ambiguity, missing guardrails, and likely
+  missed pills.
+- 1. Resolve or record the cold-review findings before implementation starts.
+- 1. Sweep the board-routed pills and any task-local pills against the task scope,
+  touched files, implementation path, and planned validation.
+- 1. Bind every pill whose `when`, `where`, or `how_not` matches a plausible part
+  of the task.
+- 1. If a risky ambiguity is still uncovered, create or update a pill before implementation
+  instead of proceeding on implicit assumptions.
+- 1. Do not start implementation until the initialization gate confirms atomization,
+  cold review, and pill coverage.
+- 1. Implement only the changes required for the active task.
+- 1. Keep scope tight and avoid unrelated fixes.
+- 1. Prepare validation before calling the work complete.
+- 1. Exit execution only by opening a handoff to testing that names the intended contract,
+  relevant tests, and pill guardrails that must be proven.
+---
 
-ID: ritual-execution
+# Execution ritual for active desk tasks
 
 ## Purpose
 
@@ -18,22 +47,6 @@ Start when a desk task becomes the current execution target.
 - The board routes the task as active.
 - The active board pills are visible to the executor.
 - The initialization gate is still open.
-
-## Steps
-
-1. Open the initialization gate by making the active task, task scope, touched files, and validation targets explicit.
-1. Atomize the work into one coherent deliverable.
-1. Audit code, docs, tests, and git state before changing anything.
-1. Send one fresh subagent with no prior task context to review the task, board-routed pills, and planned file touches only for ambiguity, missing guardrails, and likely missed pills.
-1. Resolve or record the cold-review findings before implementation starts.
-1. Sweep the board-routed pills and any task-local pills against the task scope, touched files, implementation path, and planned validation.
-1. Bind every pill whose `when`, `where`, or `how_not` matches a plausible part of the task.
-1. If a risky ambiguity is still uncovered, create or update a pill before implementation instead of proceeding on implicit assumptions.
-1. Do not start implementation until the initialization gate confirms atomization, cold review, and pill coverage.
-1. Implement only the changes required for the active task.
-1. Keep scope tight and avoid unrelated fixes.
-1. Prepare validation before calling the work complete.
-1. Exit execution only by opening a handoff to testing that names the intended contract, relevant tests, and pill guardrails that must be proven.
 
 ## Validation
 
@@ -62,9 +75,19 @@ Start when a desk task becomes the current execution target.
 
 The implementation is complete enough to enter the testing ritual through an explicit handoff gate.
 
-## Tags
+## Steps
 
-- system:sldb
-- workspace:desk
-- topic:rituals
-- topic:execution
+- Open the initialization gate by making the active task, task scope, touched files, and validation targets explicit.
+- Atomize the work into one coherent deliverable.
+- Audit code, docs, tests, and git state before changing anything.
+- Send one fresh subagent with no prior task context to review the task, board-routed pills, and planned file touches only for ambiguity, missing guardrails, and likely missed pills.
+- Resolve or record the cold-review findings before implementation starts.
+- Sweep the board-routed pills and any task-local pills against the task scope, touched files, implementation path, and planned validation.
+- Bind every pill whose `when`, `where`, or `how_not` matches a plausible part of the task.
+- If a risky ambiguity is still uncovered, create or update a pill before implementation instead of proceeding on implicit assumptions.
+- Do not start implementation until the initialization gate confirms atomization, cold review, and pill coverage.
+- Implement only the changes required for the active task.
+- Keep scope tight and avoid unrelated fixes.
+- Prepare validation before calling the work complete.
+- Exit execution only by opening a handoff to testing that names the intended contract, relevant tests, and pill guardrails that must be proven.
+

@@ -1,6 +1,13 @@
-# Guardrail: generated graph output is runtime state
+---
+id: pill-010
+tags:
+- system:deskops
+- system:kgdb
+- topic:runtime
+- topic:drift-control
+---
 
-ID: pill-010
+# Guardrail: generated graph output is runtime state
 
 ## What
 
@@ -25,10 +32,3 @@ Separate source specs/adapters from generated graph outputs. Add or update ignor
 ## How Not
 
 Do not commit full generated graph snapshots as documentation. Do not use generated graph output as the only source of relation truth.
-
-## Tags
-
-- system:deskops
-- system:kgdb
-- topic:runtime
-- topic:drift-control

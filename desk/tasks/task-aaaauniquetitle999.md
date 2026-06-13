@@ -1,7 +1,23 @@
-# AAAAUniqueTitle999
+---
+id: task-aaaauniquetitle999
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-aaaauniquetitle999
+checklists:
+- checklist-task-aaaauniquetitle999-execution-ready
+- checklist-task-aaaauniquetitle999-testing-ready
+- checklist-task-aaaauniquetitle999-closeout-ready
+current_node: checklist-task-aaaauniquetitle999-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-aaaauniquetitle999
-Status: draft
+# AAAAUniqueTitle999
 
 ## Goal
 
@@ -11,53 +27,12 @@ Testing unique title
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-aaaauniquetitle999
-
-## Checklists
-
-- checklist-task-aaaauniquetitle999-execution-ready
-- checklist-task-aaaauniquetitle999-testing-ready
-- checklist-task-aaaauniquetitle999-closeout-ready
-
-## Current Node
-
-checklist-task-aaaauniquetitle999-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

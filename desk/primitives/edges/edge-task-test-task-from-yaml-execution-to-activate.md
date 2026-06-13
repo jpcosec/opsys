@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-test-task-from-yaml-execution-to-activate
+status: active
+source: checklist-task-test-task-from-yaml-execution-ready
+target: operator-task-test-task-from-yaml-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-test-task-from-yaml-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-test-task-from-yaml-execution-ready
-
-## Target
-
-operator-task-test-task-from-yaml-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

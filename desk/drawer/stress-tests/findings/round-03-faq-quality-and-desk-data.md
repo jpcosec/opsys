@@ -17,7 +17,7 @@
 | `desk/atoms/` | 5 + 60 anidados | Solo 4 visibles via CLI |
 | `desk/contexts/` (pills) | 13 | 11 pills numbered + index + readme |
 | `desk/inbox/` | 11 | Notas con timestamp |
-| `desk/models/` | 17 | Model docs |
+| `deskops/models/` | 17 | Model docs |
 | `desk/rituals/` | 3 | closeout, execution, testing |
 | `desk/routines/` | 2 | Task routines |
 | `desk/steps/` | 1 | step-document-the-cli |

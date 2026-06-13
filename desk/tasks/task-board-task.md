@@ -1,7 +1,23 @@
-# Board task
+---
+id: task-board-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-board-task
+checklists:
+- checklist-task-board-task-execution-ready
+- checklist-task-board-task-testing-ready
+- checklist-task-board-task-closeout-ready
+current_node: checklist-task-board-task-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-board-task
-Status: draft
+# Board task
 
 ## Goal
 
@@ -11,53 +27,12 @@ Complete task
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-board-task
-
-## Checklists
-
-- checklist-task-board-task-execution-ready
-- checklist-task-board-task-testing-ready
-- checklist-task-board-task-closeout-ready
-
-## Current Node
-
-checklist-task-board-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

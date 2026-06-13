@@ -1,6 +1,14 @@
-# Atom: self-described store layout
+---
+id: pill-006
+tags:
+- source-atom:atom-001
+- system:sldb
+- workspace:desk
+- topic:atoms
+- topic:store
+---
 
-ID: pill-006
+# Atom: self-described store layout
 
 ## What
 
@@ -25,11 +33,3 @@ Ask of every `.sldb` file whether it is durable, rebuildable, or local-only. Rou
 ## How Not
 
 Do not treat runtime indexes or lock files as durable history, and do not hide shared contract changes in local config.
-
-## Tags
-
-- source-atom:atom-001
-- system:sldb
-- workspace:desk
-- topic:atoms
-- topic:store

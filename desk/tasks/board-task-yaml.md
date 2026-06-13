@@ -1,7 +1,23 @@
-# Board task YAML
+---
+id: board-task-yaml
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-board-task-yaml
+checklists:
+- checklist-board-task-yaml-execution-ready
+- checklist-board-task-yaml-testing-ready
+- checklist-board-task-yaml-closeout-ready
+current_node: checklist-board-task-yaml-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: board-task-yaml
-Status: draft
+# Board task YAML
 
 ## Goal
 
@@ -11,53 +27,12 @@ Complete task via YAML
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-board-task-yaml
-
-## Checklists
-
-- checklist-board-task-yaml-execution-ready
-- checklist-board-task-yaml-testing-ready
-- checklist-board-task-yaml-closeout-ready
-
-## Current Node
-
-checklist-board-task-yaml-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

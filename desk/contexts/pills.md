@@ -6,7 +6,7 @@ They are temporary in the workspace but durable in git history.
 
 ## Base Shape
 
-Pills currently use the base `PillDoc` model in `desk/models/pill.py`.
+Pills currently use the base `PillDoc` model in `deskops/models/pill.py`.
 
 Required fields:
 

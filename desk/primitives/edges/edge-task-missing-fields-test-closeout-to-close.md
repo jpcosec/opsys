@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-missing-fields-test-closeout-to-close
+status: active
+source: checklist-task-missing-fields-test-closeout-ready
+target: operator-task-missing-fields-test-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-missing-fields-test-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-missing-fields-test-closeout-ready
-
-## Target
-
-operator-task-missing-fields-test-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

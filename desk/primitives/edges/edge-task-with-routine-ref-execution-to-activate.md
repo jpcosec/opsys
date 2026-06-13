@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-with-routine-ref-execution-to-activate
+status: active
+source: checklist-task-with-routine-ref-execution-ready
+target: operator-task-with-routine-ref-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-with-routine-ref-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-with-routine-ref-execution-ready
-
-## Target
-
-operator-task-with-routine-ref-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

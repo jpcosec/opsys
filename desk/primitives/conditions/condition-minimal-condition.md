@@ -1,24 +1,13 @@
+---
+id: condition-minimal-condition
+status: active
+subject: ''
+predicate: truthy
+expected: ''
+tags:
+- primitive:condition
+---
+
 # Minimal condition
 
-ID: condition-minimal-condition
-Status: active
-
 ## Summary
-
-
-
-## Subject
-
-
-
-## Predicate
-
-truthy
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

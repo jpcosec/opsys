@@ -1,24 +1,15 @@
-# Validation exists
+---
+id: condition-task-pills-as-string-task-has-validation
+status: active
+subject: validation
+predicate: not_empty
+expected: ''
+tags:
+- primitive:condition
+---
 
-ID: condition-task-pills-as-string-task-has-validation
-Status: active
+# Validation exists
 
 ## Summary
 
 Task validation must exist before testing handoff.
-
-## Subject
-
-validation
-
-## Predicate
-
-not_empty
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

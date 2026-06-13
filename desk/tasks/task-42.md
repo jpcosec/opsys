@@ -1,7 +1,23 @@
-# 42
+---
+id: task-42
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-42
+checklists:
+- checklist-task-42-execution-ready
+- checklist-task-42-testing-ready
+- checklist-task-42-closeout-ready
+current_node: checklist-task-42-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-42
-Status: draft
+# 42
 
 ## Goal
 
@@ -11,53 +27,14 @@ Answer
 
 universe
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-42
-
-## Checklists
-
-- checklist-task-42-execution-ready
-- checklist-task-42-testing-ready
-- checklist-task-42-closeout-ready
-
-## Current Node
-
-checklist-task-42-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 solved
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-stress-test-task-activate-to-testing
+status: active
+source: operator-task-stress-test-task-activate
+target: checklist-task-stress-test-task-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-stress-test-task-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-stress-test-task-activate
-
-## Target
-
-checklist-task-stress-test-task-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

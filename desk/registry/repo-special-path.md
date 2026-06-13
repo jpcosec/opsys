@@ -1,13 +1,12 @@
-# Repository: special-path-test
+---
+id: special-path
+path: /tmp/path with spaces and !@#$%^&*()
+status: active
+tags: []
+---
 
-ID: special-path
-Path: /tmp/path with spaces and !@#$%^&*()
-Status: active
+# Repository: special-path-test
 
 ## Description
 
 Repository for special-path-test.
-
-## Tags
-
--

@@ -1,7 +1,14 @@
-# Execution Ready
+---
+id: checklist-task-history-task-execution-ready
+status: active
+condition_refs:
+- condition-task-history-task-has-implementation-path
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-task-history-task-execution-ready
-Status: active
+# Execution Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready to enter active execution.
 ## Items
 
 - Implementation path exists
-
-## Conditions
-
-- condition-task-history-task-has-implementation-path
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

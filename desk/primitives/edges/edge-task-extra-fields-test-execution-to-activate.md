@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-extra-fields-test-execution-to-activate
+status: active
+source: checklist-task-extra-fields-test-execution-ready
+target: operator-task-extra-fields-test-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-extra-fields-test-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-extra-fields-test-execution-ready
-
-## Target
-
-operator-task-extra-fields-test-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-anchor-test-closeout-to-close
+status: active
+source: checklist-task-anchor-test-closeout-ready
+target: operator-task-anchor-test-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-anchor-test-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-anchor-test-closeout-ready
-
-## Target
-
-operator-task-anchor-test-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

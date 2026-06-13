@@ -1,24 +1,15 @@
-# Testing-ready operator to closeout gate
+---
+id: edge-board-task-yaml-ready-to-closeout
+status: active
+source: operator-board-task-yaml-ready-for-testing
+target: checklist-board-task-yaml-closeout-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-board-task-yaml-ready-to-closeout
-Status: active
+# Testing-ready operator to closeout gate
 
 ## Summary
 
 Ready-for-testing state entered.
-
-## Source
-
-operator-board-task-yaml-ready-for-testing
-
-## Target
-
-checklist-board-task-yaml-closeout-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

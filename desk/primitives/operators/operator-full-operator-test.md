@@ -1,24 +1,15 @@
-# Full Operator Test
+---
+id: operator-full-operator-test
+status: active
+action: set_field
+target: status
+value: new_value
+tags:
+- primitive:operator
+---
 
-ID: operator-full-operator-test
-Status: active
+# Full Operator Test
 
 ## Summary
 
 Set a field
-
-## Action
-
-set_field
-
-## Target
-
-status
-
-## Value
-
-new_value
-
-## Tags
-
-- primitive:operator

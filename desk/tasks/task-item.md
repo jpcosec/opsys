@@ -1,7 +1,18 @@
-#
+---
+id: task-item
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: ''
+checklists: []
+current_node: ''
+history: []
+tags: []
+---
 
-ID: task-item
-Status: draft
+# Task Item
 
 ## Goal
 
@@ -11,53 +22,12 @@ Status: draft
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-item
-
-## Checklists
-
-- checklist-task-item-execution-ready
-- checklist-task-item-testing-ready
-- checklist-task-item-closeout-ready
-
-## Current Node
-
-checklist-task-item-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

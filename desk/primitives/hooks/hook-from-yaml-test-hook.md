@@ -1,24 +1,13 @@
+---
+id: hook-from-yaml-test-hook
+status: active
+event: on_complete
+target: ''
+condition_ref: ''
+tags:
+- primitive:hook
+---
+
 # From YAML Test Hook
 
-ID: hook-from-yaml-test-hook
-Status: active
-
 ## Summary
-
-
-
-## Event
-
-on_complete
-
-## Target
-
-
-
-## Condition
-
-
-
-## Tags
-
-- primitive:hook

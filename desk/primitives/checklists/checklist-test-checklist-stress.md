@@ -1,7 +1,13 @@
-# test-checklist-stress
+---
+id: checklist-test-checklist-stress
+status: active
+condition_refs: []
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-test-checklist-stress
-Status: active
+# test-checklist-stress
 
 ## Summary
 
@@ -10,15 +16,3 @@ Status: active
 ## Items
 
 -
-
-## Conditions
-
--
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

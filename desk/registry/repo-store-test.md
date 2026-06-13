@@ -1,13 +1,12 @@
-# Repository: Store Test
+---
+id: store-test
+path: .
+status: active
+tags: []
+---
 
-ID: store-test
-Path: .
-Status: active
+# Repository: Store Test
 
 ## Description
 
 Repository for Store Test.
-
-## Tags
-
--

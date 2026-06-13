@@ -1,6 +1,11 @@
-# Document the CLI
+---
+id: step-document-the-cli
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-document-the-cli
+# Document the CLI
 
 ## Action
 
@@ -9,8 +14,3 @@ Write user docs
 ## Outcome
 
 CLI reference available
-
-## Tags
-
-- workspace:desk
-- artifact:step

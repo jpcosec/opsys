@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-noroottask-activate-to-testing
+status: active
+source: operator-task-noroottask-activate
+target: checklist-task-noroottask-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-noroottask-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-noroottask-activate
-
-## Target
-
-checklist-task-noroottask-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

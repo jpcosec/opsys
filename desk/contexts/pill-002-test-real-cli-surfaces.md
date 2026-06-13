@@ -1,6 +1,13 @@
-# Pattern: test the real CLI surfaces while shaping the workflow
+---
+id: pill-002
+tags:
+- system:sldb
+- workspace:desk
+- topic:cli
+- topic:validation
+---
 
-ID: pill-002
+# Pattern: test the real CLI surfaces while shaping the workflow
 
 ## What
 
@@ -25,10 +32,3 @@ Prefer exercising the CLI end to end: add models, create or track documents, upd
 ## How Not
 
 Do not stop at static model design. Do not assume a command is usable just because it exists in code or docs.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:cli
-- topic:validation

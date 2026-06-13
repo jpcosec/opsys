@@ -1,16 +1,14 @@
-# Build
+---
+id: step-build
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-build
+# Build
 
 ## Action
 
 Run build
 
 ## Outcome
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:step

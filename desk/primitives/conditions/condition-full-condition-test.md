@@ -1,24 +1,15 @@
-# Full Condition Test
+---
+id: condition-full-condition-test
+status: active
+subject: /some/path
+predicate: equals
+expected: expected_value
+tags:
+- primitive:condition
+---
 
-ID: condition-full-condition-test
-Status: active
+# Full Condition Test
 
 ## Summary
 
 Check comprehensively
-
-## Subject
-
-/some/path
-
-## Predicate
-
-equals
-
-## Expected
-
-expected_value
-
-## Tags
-
-- primitive:condition

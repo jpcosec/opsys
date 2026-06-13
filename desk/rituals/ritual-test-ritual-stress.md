@@ -1,6 +1,13 @@
-# test-ritual-stress
+---
+id: ritual-test-ritual-stress
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- '1.'
+---
 
-ID: ritual-test-ritual-stress
+# test-ritual-stress
 
 ## Purpose
 
@@ -14,10 +21,6 @@ manual
 
 -
 
-## Steps
-
-1.
-
 ## Validation
 
 -
@@ -30,11 +33,7 @@ manual
 
 
 
-## Step Details
+## Steps
 
+1.
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

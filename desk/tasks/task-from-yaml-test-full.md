@@ -1,7 +1,26 @@
-# From YAML Test Full
+---
+id: task-from-yaml-test-full
+status: active
+references:
+- ref1
+depends_on:
+- dep1
+pills:
+- pill1
+files:
+- file1
+routine: routine-task-from-yaml-test-full
+checklists:
+- checklist-task-from-yaml-test-full-execution-ready
+- checklist-task-from-yaml-test-full-testing-ready
+- checklist-task-from-yaml-test-full-closeout-ready
+current_node: checklist-task-from-yaml-test-full-execution-ready
+history: []
+tags:
+- custom:tag
+---
 
-ID: task-from-yaml-test-full
-Status: active
+# From YAML Test Full
 
 ## Goal
 
@@ -10,36 +29,6 @@ Comprehensive from-yaml test
 ## Scope
 
 stress-test
-
-## References
-
-- ref1
-
-## Dependencies
-
-- dep1
-
-## Pills
-
-- pill1
-
-## Files
-
-- file1
-
-## Routine
-
-routine-task-from-yaml-test-full
-
-## Checklists
-
-- checklist-task-from-yaml-test-full-execution-ready
-- checklist-task-from-yaml-test-full-testing-ready
-- checklist-task-from-yaml-test-full-closeout-ready
-
-## Current Node
-
-checklist-task-from-yaml-test-full-execution-ready
 
 ## Implementation Path
 
@@ -53,11 +42,3 @@ checklist-task-from-yaml-test-full-execution-ready
 ## Done When
 
 all tests pass
-
-## History
-
--
-
-## Tags
-
-- custom:tag

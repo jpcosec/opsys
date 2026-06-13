@@ -1,24 +1,15 @@
-# Ready for closeout
+---
+id: condition-task-json-test-task-ready-for-closeout
+status: active
+subject: status
+predicate: equals
+expected: ready_for_testing
+tags:
+- primitive:condition
+---
 
-ID: condition-task-json-test-task-ready-for-closeout
-Status: active
+# Ready for closeout
 
 ## Summary
 
 Task must be in ready_for_testing before closeout.
-
-## Subject
-
-status
-
-## Predicate
-
-equals
-
-## Expected
-
-ready_for_testing
-
-## Tags
-
-- primitive:condition

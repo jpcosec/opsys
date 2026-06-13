@@ -1,6 +1,13 @@
-# Extra Ritual Test
+---
+id: ritual-extra-ritual-test
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- '1.'
+---
 
-ID: ritual-extra-ritual-test
+# Extra Ritual Test
 
 ## Purpose
 
@@ -14,10 +21,6 @@ Test
 
 -
 
-## Steps
-
-1.
-
 ## Validation
 
 -
@@ -30,11 +33,7 @@ Test
 
 
 
-## Step Details
+## Steps
 
+1.
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

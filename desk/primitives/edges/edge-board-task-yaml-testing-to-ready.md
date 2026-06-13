@@ -1,24 +1,15 @@
-# Testing gate to testing-ready operator
+---
+id: edge-board-task-yaml-testing-to-ready
+status: active
+source: checklist-board-task-yaml-testing-ready
+target: operator-board-task-yaml-ready-for-testing
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-board-task-yaml-testing-to-ready
-Status: active
+# Testing gate to testing-ready operator
 
 ## Summary
 
 Testing gate passed.
-
-## Source
-
-checklist-board-task-yaml-testing-ready
-
-## Target
-
-operator-board-task-yaml-ready-for-testing
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

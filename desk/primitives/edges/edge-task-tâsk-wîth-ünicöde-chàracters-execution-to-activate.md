@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-tâsk-wîth-ünicöde-chàracters-execution-to-activate
+status: active
+source: checklist-task-tâsk-wîth-ünicöde-chàracters-execution-ready
+target: operator-task-tâsk-wîth-ünicöde-chàracters-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-tâsk-wîth-ünicöde-chàracters-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-tâsk-wîth-ünicöde-chàracters-execution-ready
-
-## Target
-
-operator-task-tâsk-wîth-ünicöde-chàracters-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

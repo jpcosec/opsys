@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-my-custom-id-activate-to-testing
+status: active
+source: operator-task-my-custom-id-activate
+target: checklist-task-my-custom-id-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-my-custom-id-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-my-custom-id-activate
-
-## Target
-
-checklist-task-my-custom-id-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

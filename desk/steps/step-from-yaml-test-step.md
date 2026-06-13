@@ -1,16 +1,14 @@
-# From YAML Test Step
+---
+id: step-from-yaml-test-step
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-from-yaml-test-step
+# From YAML Test Step
 
 ## Action
 
 Do something
 
 ## Outcome
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:step

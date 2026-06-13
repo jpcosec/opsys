@@ -1,7 +1,23 @@
-# NoRootTask
+---
+id: task-noroottask
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-noroottask
+checklists:
+- checklist-task-noroottask-execution-ready
+- checklist-task-noroottask-testing-ready
+- checklist-task-noroottask-closeout-ready
+current_node: checklist-task-noroottask-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-noroottask
-Status: draft
+# NoRootTask
 
 ## Goal
 
@@ -11,53 +27,12 @@ Test without root
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-noroottask
-
-## Checklists
-
-- checklist-task-noroottask-execution-ready
-- checklist-task-noroottask-testing-ready
-- checklist-task-noroottask-closeout-ready
-
-## Current Node
-
-checklist-task-noroottask-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

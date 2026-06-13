@@ -1,16 +1,14 @@
-# test-step-stress
+---
+id: step-test-step-stress
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-test-step-stress
+# test-step-stress
 
 ## Action
 
 
 
 ## Outcome
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:step

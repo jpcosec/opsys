@@ -1,7 +1,23 @@
-# Title with <html> & special chars
+---
+id: task-title-with-html-special-chars
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-title-with-html-special-chars
+checklists:
+- checklist-task-title-with-html-special-chars-execution-ready
+- checklist-task-title-with-html-special-chars-testing-ready
+- checklist-task-title-with-html-special-chars-closeout-ready
+current_node: checklist-task-title-with-html-special-chars-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-title-with-html-special-chars
-Status: draft
+# Title with <html> & special chars
 
 ## Goal
 
@@ -11,53 +27,12 @@ Status: draft
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-title-with-html-special-chars
-
-## Checklists
-
-- checklist-task-title-with-html-special-chars-execution-ready
-- checklist-task-title-with-html-special-chars-testing-ready
-- checklist-task-title-with-html-special-chars-closeout-ready
-
-## Current Node
-
-checklist-task-title-with-html-special-chars-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

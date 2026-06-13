@@ -1,16 +1,14 @@
-# Missing Action Test
+---
+id: step-missing-action-test
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-missing-action-test
+# Missing Action Test
 
 ## Action
 
 
 
 ## Outcome
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:step

@@ -1,13 +1,12 @@
-# Repository: Pythonpath Repo
+---
+id: pythonpath-repo
+path: .
+status: active
+tags: []
+---
 
-ID: pythonpath-repo
-Path: .
-Status: active
+# Repository: Pythonpath Repo
 
 ## Description
 
 Repository for Pythonpath Repo.
-
-## Tags
-
--

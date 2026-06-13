@@ -1,24 +1,15 @@
-# Testing gate to testing-ready operator
+---
+id: edge-task-pills-as-string-task-testing-to-ready
+status: active
+source: checklist-task-pills-as-string-task-testing-ready
+target: operator-task-pills-as-string-task-ready-for-testing
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-pills-as-string-task-testing-to-ready
-Status: active
+# Testing gate to testing-ready operator
 
 ## Summary
 
 Testing gate passed.
-
-## Source
-
-checklist-task-pills-as-string-task-testing-ready
-
-## Target
-
-operator-task-pills-as-string-task-ready-for-testing
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

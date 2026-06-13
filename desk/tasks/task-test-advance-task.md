@@ -1,7 +1,23 @@
-# Test advance task
+---
+id: task-test-advance-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-test-advance-task
+checklists:
+- checklist-task-test-advance-task-execution-ready
+- checklist-task-test-advance-task-testing-ready
+- checklist-task-test-advance-task-closeout-ready
+current_node: checklist-task-test-advance-task-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-test-advance-task
-Status: draft
+# Test advance task
 
 ## Goal
 
@@ -11,53 +27,12 @@ Testing advancement
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-test-advance-task
-
-## Checklists
-
-- checklist-task-test-advance-task-execution-ready
-- checklist-task-test-advance-task-testing-ready
-- checklist-task-test-advance-task-closeout-ready
-
-## Current Node
-
-checklist-task-test-advance-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-anchor-test-execution-to-activate
+status: active
+source: checklist-task-anchor-test-execution-ready
+target: operator-task-anchor-test-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-anchor-test-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-anchor-test-execution-ready
-
-## Target
-
-operator-task-anchor-test-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

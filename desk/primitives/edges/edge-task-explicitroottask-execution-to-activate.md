@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-explicitroottask-execution-to-activate
+status: active
+source: checklist-task-explicitroottask-execution-ready
+target: operator-task-explicitroottask-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-explicitroottask-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-explicitroottask-execution-ready
-
-## Target
-
-operator-task-explicitroottask-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

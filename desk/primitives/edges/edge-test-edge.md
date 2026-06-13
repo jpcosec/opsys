@@ -1,24 +1,15 @@
-# Test edge
+---
+id: edge-test-edge
+status: active
+source: node-a
+target: node-b
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-test-edge
-Status: active
+# Test edge
 
 ## Summary
 
 Edge test
-
-## Source
-
-node-a
-
-## Target
-
-node-b
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

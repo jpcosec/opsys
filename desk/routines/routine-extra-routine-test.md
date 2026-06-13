@@ -1,28 +1,15 @@
+---
+id: routine-extra-routine-test
+status: active
+entrypoint: node_a
+decomposition: []
+edges: []
+terminal_nodes:
+- complete
+tags:
+- primitive:routine
+---
+
 # Extra Routine Test
 
-ID: routine-extra-routine-test
-Status: active
-
 ## Summary
-
-
-
-## Entrypoint
-
-node_a
-
-## Decomposition
-
--
-
-## Edges
-
--
-
-## Terminal Nodes
-
-- complete
-
-## Tags
-
-- primitive:routine

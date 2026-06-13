@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-primitive-fields-test-execution-to-activate
+status: active
+source: checklist-task-primitive-fields-test-execution-ready
+target: operator-task-primitive-fields-test-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-primitive-fields-test-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-primitive-fields-test-execution-ready
-
-## Target
-
-operator-task-primitive-fields-test-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

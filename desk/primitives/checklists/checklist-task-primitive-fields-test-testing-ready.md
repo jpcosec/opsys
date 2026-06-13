@@ -1,7 +1,14 @@
-# Testing Ready
+---
+id: checklist-task-primitive-fields-test-testing-ready
+status: active
+condition_refs:
+- condition-task-primitive-fields-test-has-validation
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-task-primitive-fields-test-testing-ready
-Status: active
+# Testing Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready for testing handoff.
 ## Items
 
 - Validation exists
-
-## Conditions
-
-- condition-task-primitive-fields-test-has-validation
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

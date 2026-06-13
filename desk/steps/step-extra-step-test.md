@@ -1,16 +1,14 @@
-# Extra Step Test
+---
+id: step-extra-step-test
+tags:
+- workspace:desk
+- artifact:step
+---
 
-ID: step-extra-step-test
+# Extra Step Test
 
 ## Action
 
 Test
 
 ## Outcome
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:step

@@ -5,8 +5,8 @@ The user has a concept they want to capture as an atom. They don't remember the 
 **Interaction flow:**
 
 1. `deskops atoms new "Why we use pydantic over dataclasses"` → scaffolds a new atom file
-2. Opens the file: template is pre-filled with ID, tags section, answer section
-3. User writes the answer, adds tags, saves
+2. Opens the file: template is pre-filled with frontmatter and an answer section
+3. User writes the answer, adjusts tags, saves
 4. `deskops atoms validate my-new-atom` → checks frontmatter, tags, link format
 5. `deskops graph build && deskops graph missing` → integrates into knowledge model
 6. Done.

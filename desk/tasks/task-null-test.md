@@ -1,7 +1,23 @@
-# Null Test
+---
+id: task-null-test
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-null-test
+checklists:
+- checklist-task-null-test-execution-ready
+- checklist-task-null-test-testing-ready
+- checklist-task-null-test-closeout-ready
+current_node: checklist-task-null-test-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-null-test
-Status: draft
+# Null Test
 
 ## Goal
 
@@ -11,53 +27,12 @@ Status: draft
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-null-test
-
-## Checklists
-
-- checklist-task-null-test-execution-ready
-- checklist-task-null-test-testing-ready
-- checklist-task-null-test-closeout-ready
-
-## Current Node
-
-checklist-task-null-test-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

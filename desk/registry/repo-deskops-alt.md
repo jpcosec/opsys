@@ -1,14 +1,14 @@
-# Repository: deskops-alt
+---
+id: repo-deskops-alt
+path: .
+status: active
+tags:
+- workspace:desk
+- artifact:repository
+---
 
-ID: repo-deskops-alt
-Path: .
-Status: active
+# Repository: deskops-alt
 
 ## Description
 
 Alternative registration
-
-## Tags
-
-- workspace:desk
-- artifact:repository

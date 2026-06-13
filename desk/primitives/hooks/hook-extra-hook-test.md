@@ -1,24 +1,13 @@
+---
+id: hook-extra-hook-test
+status: active
+event: on_complete
+target: ''
+condition_ref: ''
+tags:
+- primitive:hook
+---
+
 # Extra Hook Test
 
-ID: hook-extra-hook-test
-Status: active
-
 ## Summary
-
-
-
-## Event
-
-on_complete
-
-## Target
-
-
-
-## Condition
-
-
-
-## Tags
-
-- primitive:hook

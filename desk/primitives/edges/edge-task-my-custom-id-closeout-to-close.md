@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-my-custom-id-closeout-to-close
+status: active
+source: checklist-task-my-custom-id-closeout-ready
+target: operator-task-my-custom-id-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-my-custom-id-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-my-custom-id-closeout-ready
-
-## Target
-
-operator-task-my-custom-id-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

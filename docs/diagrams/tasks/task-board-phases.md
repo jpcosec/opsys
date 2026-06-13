@@ -74,9 +74,9 @@ The board should probably grow sections like these rather than creating `PhaseDo
 
 ## Touched Surfaces
 
-- task-a: desk/models/task.py, tests/test_task.py
+- task-a: deskops/models/task.py, tests/test_task.py
 - task-b: docs/README.md
-- task-c: desk/cli/parser.py
+- task-c: deskops/cli/parser.py
 
 ## Phases
 

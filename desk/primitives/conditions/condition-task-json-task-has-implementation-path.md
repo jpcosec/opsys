@@ -1,24 +1,15 @@
-# Implementation path exists
+---
+id: condition-task-json-task-has-implementation-path
+status: active
+subject: implementation_path
+predicate: truthy
+expected: ''
+tags:
+- primitive:condition
+---
 
-ID: condition-task-json-task-has-implementation-path
-Status: active
+# Implementation path exists
 
 ## Summary
 
 Task implementation path must exist before execution.
-
-## Subject
-
-implementation_path
-
-## Predicate
-
-truthy
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

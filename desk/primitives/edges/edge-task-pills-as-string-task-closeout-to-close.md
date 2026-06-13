@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-pills-as-string-task-closeout-to-close
+status: active
+source: checklist-task-pills-as-string-task-closeout-ready
+target: operator-task-pills-as-string-task-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-pills-as-string-task-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-pills-as-string-task-closeout-ready
-
-## Target
-
-operator-task-pills-as-string-task-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

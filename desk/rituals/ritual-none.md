@@ -1,6 +1,9 @@
-#
+---
+id: ritual-none
+tags: []
+---
 
-ID: ritual-none
+# Ritual None
 
 ## Purpose
 
@@ -14,10 +17,6 @@ ID: ritual-none
 
 -
 
-## Steps
-
-1.
-
 ## Validation
 
 -
@@ -28,13 +27,3 @@ ID: ritual-none
 
 ## Completion
 
-
-
-## Step Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

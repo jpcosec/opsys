@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-tâsk-wîth-ünicöde-chàracters-closeout-to-close
+status: active
+source: checklist-task-tâsk-wîth-ünicöde-chàracters-closeout-ready
+target: operator-task-tâsk-wîth-ünicöde-chàracters-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-tâsk-wîth-ünicöde-chàracters-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-tâsk-wîth-ünicöde-chàracters-closeout-ready
-
-## Target
-
-operator-task-tâsk-wîth-ünicöde-chàracters-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

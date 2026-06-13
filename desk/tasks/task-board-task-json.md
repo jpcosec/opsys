@@ -1,7 +1,23 @@
-# Board task JSON
+---
+id: task-board-task-json
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-board-task-json
+checklists:
+- checklist-task-board-task-json-execution-ready
+- checklist-task-board-task-json-testing-ready
+- checklist-task-board-task-json-closeout-ready
+current_node: checklist-task-board-task-json-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-board-task-json
-Status: draft
+# Board task JSON
 
 ## Goal
 
@@ -11,53 +27,12 @@ Complete task via JSON
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-board-task-json
-
-## Checklists
-
-- checklist-task-board-task-json-execution-ready
-- checklist-task-board-task-json-testing-ready
-- checklist-task-board-task-json-closeout-ready
-
-## Current Node
-
-checklist-task-board-task-json-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
-
-
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

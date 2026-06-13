@@ -1,6 +1,25 @@
-# Testing ritual for desk task closure
+---
+id: ritual-testing
+tags:
+- system:sldb
+- workspace:desk
+- topic:rituals
+- topic:testing
+steps:
+- 1. Confirm the incoming handoff names the intended contract, touched surfaces, and
+  pill guardrails to prove.
+- 1. Check whether existing tests are stale or encode obsolete behavior.
+- 1. Translate the bound pills into concrete assertions, especially the failure cases
+  implied by `how_not`.
+- 1. Add or update tests for the intended contract.
+- 1. Run the smallest relevant test scope first.
+- 1. Run broader validation when the task changes shared behavior.
+- 1. Do not proceed to closeout while relevant tests fail.
+- 1. Exit testing only by opening a closeout handoff that confirms passing evidence
+  for the contract and the bound pills.
+---
 
-ID: ritual-testing
+# Testing ritual for desk task closure
 
 ## Purpose
 
@@ -16,17 +35,6 @@ Run after implementation changes and before closeout.
 - Relevant tests or test locations are known.
 - Bound pills and their guardrails are known.
 - The execution-to-testing handoff gate is explicit.
-
-## Steps
-
-1. Confirm the incoming handoff names the intended contract, touched surfaces, and pill guardrails to prove.
-1. Check whether existing tests are stale or encode obsolete behavior.
-1. Translate the bound pills into concrete assertions, especially the failure cases implied by `how_not`.
-1. Add or update tests for the intended contract.
-1. Run the smallest relevant test scope first.
-1. Run broader validation when the task changes shared behavior.
-1. Do not proceed to closeout while relevant tests fail.
-1. Exit testing only by opening a closeout handoff that confirms passing evidence for the contract and the bound pills.
 
 ## Validation
 
@@ -48,9 +56,14 @@ Run after implementation changes and before closeout.
 
 The task has trustworthy test evidence and can proceed to closeout.
 
-## Tags
+## Steps
 
-- system:sldb
-- workspace:desk
-- topic:rituals
-- topic:testing
+- Confirm the incoming handoff names the intended contract, touched surfaces, and pill guardrails to prove.
+- Check whether existing tests are stale or encode obsolete behavior.
+- Translate the bound pills into concrete assertions, especially the failure cases implied by `how_not`.
+- Add or update tests for the intended contract.
+- Run the smallest relevant test scope first.
+- Run broader validation when the task changes shared behavior.
+- Do not proceed to closeout while relevant tests fail.
+- Exit testing only by opening a closeout handoff that confirms passing evidence for the contract and the bound pills.
+

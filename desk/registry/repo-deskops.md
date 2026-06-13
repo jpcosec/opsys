@@ -1,13 +1,12 @@
-# Repository: deskops
+---
+id: deskops
+path: .
+status: active
+tags: []
+---
 
-ID: deskops
-Path: .
-Status: active
+# Repository: deskops
 
 ## Description
 
 Main deskops repo
-
-## Tags
-
--

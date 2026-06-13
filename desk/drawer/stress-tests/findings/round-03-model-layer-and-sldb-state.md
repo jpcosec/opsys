@@ -7,7 +7,7 @@
 ```
 StructuredNLDoc (sldb)
 ├── AtomDoc, FAQDoc, InboxNoteDoc, RepositoryDoc, StepDoc
-└── PrimitiveDoc (desk.models.base)
+└── PrimitiveDoc (deskops.models.base)
     ├── ChecklistDoc, ConditionDoc, EdgeDoc, HookDoc, OperatorDoc, RoutineDoc
     └── OperationalArtifactDoc
         ├── BoardDoc, PillDoc, RitualDoc, TaskDoc
@@ -26,7 +26,7 @@ StructuredNLDoc (sldb)
 
 ## Spec-driven CLI generation
 
-El parser en `desk.cli.parser.build_parser()` genera dinámicamente los 15 subcomandos de `add`/`list`/`show` desde el spec registry. Cada `add` expone flags derivados de spec (`--title`, `--goal`, `--what`, `--why`, etc.). **El mecanismo funciona.**
+El parser en `deskops.cli.parser.build_parser()` genera dinámicamente los 15 subcomandos de `add`/`list`/`show` desde el spec registry. Cada `add` expone flags derivados de spec (`--title`, `--goal`, `--what`, `--why`, etc.). **El mecanismo funciona.**
 
 ## Runtime classes
 

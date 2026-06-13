@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-missing-fields-test-activate-to-testing
+status: active
+source: operator-task-missing-fields-test-activate
+target: checklist-task-missing-fields-test-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-missing-fields-test-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-missing-fields-test-activate
-
-## Target
-
-checklist-task-missing-fields-test-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

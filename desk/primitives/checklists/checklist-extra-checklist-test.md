@@ -1,7 +1,13 @@
-# Extra Checklist Test
+---
+id: checklist-extra-checklist-test
+status: active
+condition_refs: []
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-extra-checklist-test
-Status: active
+# Extra Checklist Test
 
 ## Summary
 
@@ -10,15 +16,3 @@ Status: active
 ## Items
 
 -
-
-## Conditions
-
--
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

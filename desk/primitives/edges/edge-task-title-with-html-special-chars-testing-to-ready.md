@@ -1,24 +1,15 @@
-# Testing gate to testing-ready operator
+---
+id: edge-task-title-with-html-special-chars-testing-to-ready
+status: active
+source: checklist-task-title-with-html-special-chars-testing-ready
+target: operator-task-title-with-html-special-chars-ready-for-testing
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-title-with-html-special-chars-testing-to-ready
-Status: active
+# Testing gate to testing-ready operator
 
 ## Summary
 
 Testing gate passed.
-
-## Source
-
-checklist-task-title-with-html-special-chars-testing-ready
-
-## Target
-
-operator-task-title-with-html-special-chars-ready-for-testing
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

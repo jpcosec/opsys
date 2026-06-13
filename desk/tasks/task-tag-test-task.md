@@ -1,7 +1,23 @@
-# Tag Test Task
+---
+id: task-tag-test-task
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-tag-test-task
+checklists:
+- checklist-task-tag-test-task-execution-ready
+- checklist-task-tag-test-task-testing-ready
+- checklist-task-tag-test-task-closeout-ready
+current_node: checklist-task-tag-test-task-execution-ready
+history: []
+tags:
+- custom:tag1
+- custom:tag2
+---
 
-ID: task-tag-test-task
-Status: draft
+# Tag Test Task
 
 ## Goal
 
@@ -11,53 +27,14 @@ Test tags
 
 test
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-tag-test-task
-
-## Checklists
-
-- checklist-task-tag-test-task-execution-ready
-- checklist-task-tag-test-task-testing-ready
-- checklist-task-tag-test-task-closeout-ready
-
-## Current Node
-
-checklist-task-tag-test-task-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 done
-
-## History
-
--
-
-## Tags
-
-- custom:tag1
-- custom:tag2

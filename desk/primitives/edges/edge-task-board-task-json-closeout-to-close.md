@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-board-task-json-closeout-to-close
+status: active
+source: checklist-task-board-task-json-closeout-ready
+target: operator-task-board-task-json-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-board-task-json-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-board-task-json-closeout-ready
-
-## Target
-
-operator-task-board-task-json-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

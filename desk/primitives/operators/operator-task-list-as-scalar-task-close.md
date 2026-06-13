@@ -1,24 +1,15 @@
-# Close task
+---
+id: operator-task-list-as-scalar-task-close
+status: active
+action: set_field
+target: status
+value: closed
+tags:
+- primitive:operator
+---
 
-ID: operator-task-list-as-scalar-task-close
-Status: active
+# Close task
 
 ## Summary
 
 Closes the task in the operational runtime.
-
-## Action
-
-set_field
-
-## Target
-
-status
-
-## Value
-
-closed
-
-## Tags
-
-- primitive:operator

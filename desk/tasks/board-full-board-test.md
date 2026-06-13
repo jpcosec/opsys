@@ -1,34 +1,26 @@
-# Full Board Test
+---
+id: board-full-board-test
+scope: Full scope
+tasks:
+- task-1
+- task-2
+pills:
+- pill-1
+rituals:
+- ritual-1
+tags:
+- workspace:desk
+- artifact:board
+---
 
-ID: board-full-board-test
-Scope: Full scope
+# Full Board Test
 
 ## Purpose
 
 Comprehensive testing
-
-## Tasks
-
-- task-1
-- task-2
-
-## Pills
-
-- pill-1
-
-## Rituals
-
-- ritual-1
 
 ## Notes
 
 Some notes
 
 ## Task Details
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:board

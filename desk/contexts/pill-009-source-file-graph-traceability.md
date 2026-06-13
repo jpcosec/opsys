@@ -1,6 +1,13 @@
-# Model: source files are graph nodes
+---
+id: pill-009
+tags:
+- system:deskops
+- system:kgdb
+- topic:source-code
+- topic:traceability
+---
 
-ID: pill-009
+# Model: source files are graph nodes
 
 ## What
 
@@ -25,10 +32,3 @@ Use stable path-based identifiers for source-file nodes first. Add symbol-level 
 ## How Not
 
 Do not start with symbol-level static analysis unless the task explicitly requires it. Do not infer high-confidence implementation edges from filename similarity alone.
-
-## Tags
-
-- system:deskops
-- system:kgdb
-- topic:source-code
-- topic:traceability

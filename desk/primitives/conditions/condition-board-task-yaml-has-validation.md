@@ -1,24 +1,15 @@
-# Validation exists
+---
+id: condition-board-task-yaml-has-validation
+status: active
+subject: validation
+predicate: not_empty
+expected: ''
+tags:
+- primitive:condition
+---
 
-ID: condition-board-task-yaml-has-validation
-Status: active
+# Validation exists
 
 ## Summary
 
 Task validation must exist before testing handoff.
-
-## Subject
-
-validation
-
-## Predicate
-
-not_empty
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

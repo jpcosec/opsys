@@ -1,24 +1,15 @@
-# Activate task
+---
+id: operator-task-missing-fields-test-activate
+status: active
+action: set_field
+target: status
+value: active
+tags:
+- primitive:operator
+---
 
-ID: operator-task-missing-fields-test-activate
-Status: active
+# Activate task
 
 ## Summary
 
 Moves the task into active execution.
-
-## Action
-
-set_field
-
-## Target
-
-status
-
-## Value
-
-active
-
-## Tags
-
-- primitive:operator

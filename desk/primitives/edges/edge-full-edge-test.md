@@ -1,24 +1,15 @@
-# Full Edge Test
+---
+id: edge-full-edge-test
+status: active
+source: node_a
+target: ''
+condition_ref: cond-1
+tags:
+- primitive:edge
+---
 
-ID: edge-full-edge-test
-Status: active
+# Full Edge Test
 
 ## Summary
 
 Full edge
-
-## Source
-
-node_a
-
-## Target
-
-
-
-## Condition
-
-cond-1
-
-## Tags
-
-- primitive:edge

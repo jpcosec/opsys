@@ -1,24 +1,13 @@
+---
+id: hook-test-hook-stress
+status: active
+event: ''
+target: ''
+condition_ref: ''
+tags:
+- primitive:hook
+---
+
 # test-hook-stress
 
-ID: hook-test-hook-stress
-Status: active
-
 ## Summary
-
-
-
-## Event
-
-
-
-## Target
-
-
-
-## Condition
-
-
-
-## Tags
-
-- primitive:hook

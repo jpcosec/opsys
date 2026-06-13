@@ -1,6 +1,13 @@
-# Pattern: turn CLI gaps into explicit desk tasks
+---
+id: pill-003
+tags:
+- system:sldb
+- workspace:desk
+- topic:cli
+- topic:task-routing
+---
 
-ID: pill-003
+# Pattern: turn CLI gaps into explicit desk tasks
 
 ## What
 
@@ -25,10 +32,3 @@ Capture the gap as a task with direct file references, expected behavior, and va
 ## How Not
 
 Do not leave capability gaps only in chat notes or memory.
-
-## Tags
-
-- system:sldb
-- workspace:desk
-- topic:cli
-- topic:task-routing

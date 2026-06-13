@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-title-with-newline-activate-to-testing
+status: active
+source: operator-task-title-with-newline-activate
+target: checklist-task-title-with-newline-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-title-with-newline-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-title-with-newline-activate
-
-## Target
-
-checklist-task-title-with-newline-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

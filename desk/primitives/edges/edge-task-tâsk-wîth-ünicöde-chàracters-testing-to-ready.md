@@ -1,24 +1,15 @@
-# Testing gate to testing-ready operator
+---
+id: edge-task-tâsk-wîth-ünicöde-chàracters-testing-to-ready
+status: active
+source: checklist-task-tâsk-wîth-ünicöde-chàracters-testing-ready
+target: operator-task-tâsk-wîth-ünicöde-chàracters-ready-for-testing
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-tâsk-wîth-ünicöde-chàracters-testing-to-ready
-Status: active
+# Testing gate to testing-ready operator
 
 ## Summary
 
 Testing gate passed.
-
-## Source
-
-checklist-task-tâsk-wîth-ünicöde-chàracters-testing-ready
-
-## Target
-
-operator-task-tâsk-wîth-ünicöde-chàracters-ready-for-testing
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

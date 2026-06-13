@@ -1,24 +1,15 @@
-# Close operator to complete
+---
+id: edge-task-json-task-close-to-complete
+status: active
+source: operator-task-json-task-close
+target: complete
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-json-task-close-to-complete
-Status: active
+# Close operator to complete
 
 ## Summary
 
 Task closed.
-
-## Source
-
-operator-task-json-task-close
-
-## Target
-
-complete
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

@@ -1,7 +1,13 @@
-# Missing Item Test
+---
+id: checklist-missing-item-test
+status: active
+condition_refs: []
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-missing-item-test
-Status: active
+# Missing Item Test
 
 ## Summary
 
@@ -10,15 +16,3 @@ Status: active
 ## Items
 
 -
-
-## Conditions
-
--
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

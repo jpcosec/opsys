@@ -1,24 +1,15 @@
-# Validation exists
+---
+id: condition-task-missing-fields-test-has-validation
+status: active
+subject: validation
+predicate: not_empty
+expected: ''
+tags:
+- primitive:condition
+---
 
-ID: condition-task-missing-fields-test-has-validation
-Status: active
+# Validation exists
 
 ## Summary
 
 Task validation must exist before testing handoff.
-
-## Subject
-
-validation
-
-## Predicate
-
-not_empty
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

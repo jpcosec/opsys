@@ -1,24 +1,15 @@
-# Testing gate to testing-ready operator
+---
+id: edge-task-item-testing-to-ready
+status: active
+source: checklist-task-item-testing-ready
+target: operator-task-item-ready-for-testing
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-item-testing-to-ready
-Status: active
+# Testing gate to testing-ready operator
 
 ## Summary
 
 Testing gate passed.
-
-## Source
-
-checklist-task-item-testing-ready
-
-## Target
-
-operator-task-item-ready-for-testing
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

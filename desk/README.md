@@ -14,7 +14,6 @@ Nothing in `desk/` is durable project history. Stable knowledge must end up in c
 
 ## Structure
 
-- `desk/models/` - SLDB models for desk documents.
 - `desk/tasks/` - active task documents only.
 - `desk/tasks/Board.md` - active routing board.
 - `desk/contexts/` - active context documents only.
@@ -22,7 +21,7 @@ Nothing in `desk/` is durable project history. Stable knowledge must end up in c
 - `desk/rituals/` - structured ritual documents for execution, testing, and closeout.
 - `desk/inbox/` - incoming unclear points and suggestions.
 - `desk/drawer/` - deferred work kept inside the desk system until it becomes active execution.
-- `desk/drawer/atoms/` - durable conceptual source atoms owned by opsys and materialized into later-phase artifacts.
+- `desk/atoms/` - durable atom documents for project knowledge.
 
 ## `desk install`
 
@@ -32,16 +31,15 @@ Today that scaffold is intentionally local only: it creates `tasks/`, `contexts/
 
 It does not auto-register the repository in any ecosystem registry. Use `deskops repo register ...` as a separate explicit step when you want cross-repo registry discovery.
 
-## Models
+## Code Boundary
 
-The current base desk models are:
+`desk/` is document data only. Python code for the workflow-domain layer lives under `deskops/`, including:
 
-- `BoardDoc`
-- `TaskDoc`
-- `PillDoc`
-- `RitualDoc`
+- `deskops/models/` - SLDB `StructuredNLDoc` models for desk documents.
+- `deskops/cli/` - command parsing and handlers.
+- `deskops/materializers/` - document materialization helpers.
 
-They live in `desk/models/` and use the current SLDB pattern: `StructuredNLDoc` plus inline `__template__` definitions.
+This keeps the installed desk surface readable as documents while keeping implementation code in the package namespace.
 
 ## Exclusions
 

@@ -1,24 +1,13 @@
+---
+id: condition-missing-summary-test
+status: active
+subject: ''
+predicate: truthy
+expected: ''
+tags:
+- primitive:condition
+---
+
 # Missing Summary Test
 
-ID: condition-missing-summary-test
-Status: active
-
 ## Summary
-
-
-
-## Subject
-
-
-
-## Predicate
-
-truthy
-
-## Expected
-
-
-
-## Tags
-
-- primitive:condition

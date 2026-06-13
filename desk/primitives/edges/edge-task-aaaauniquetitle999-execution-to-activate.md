@@ -1,24 +1,15 @@
-# Execution gate to activation
+---
+id: edge-task-aaaauniquetitle999-execution-to-activate
+status: active
+source: checklist-task-aaaauniquetitle999-execution-ready
+target: operator-task-aaaauniquetitle999-activate
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-aaaauniquetitle999-execution-to-activate
-Status: active
+# Execution gate to activation
 
 ## Summary
 
 Execution gate passed.
-
-## Source
-
-checklist-task-aaaauniquetitle999-execution-ready
-
-## Target
-
-operator-task-aaaauniquetitle999-activate
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

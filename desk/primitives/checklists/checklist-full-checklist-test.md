@@ -1,7 +1,13 @@
-# Full Checklist Test
+---
+id: checklist-full-checklist-test
+status: active
+condition_refs: []
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-full-checklist-test
-Status: active
+# Full Checklist Test
 
 ## Summary
 
@@ -10,15 +16,3 @@ Full checklist
 ## Items
 
 -
-
-## Conditions
-
--
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

@@ -1,6 +1,13 @@
-# Full Ritual Test
+---
+id: ritual-full-ritual-test
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- 1. step_1
+---
 
-ID: ritual-full-ritual-test
+# Full Ritual Test
 
 ## Purpose
 
@@ -14,10 +21,6 @@ on_demand
 
 - condition_1
 
-## Steps
-
-1. step_1
-
 ## Validation
 
 - validate_1
@@ -30,11 +33,7 @@ on_demand
 
 All steps done
 
-## Step Details
+## Steps
 
+- step_1
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual

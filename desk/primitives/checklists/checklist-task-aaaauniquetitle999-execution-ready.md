@@ -1,7 +1,14 @@
-# Execution Ready
+---
+id: checklist-task-aaaauniquetitle999-execution-ready
+status: active
+condition_refs:
+- condition-task-aaaauniquetitle999-has-implementation-path
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-task-aaaauniquetitle999-execution-ready
-Status: active
+# Execution Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready to enter active execution.
 ## Items
 
 - Implementation path exists
-
-## Conditions
-
-- condition-task-aaaauniquetitle999-has-implementation-path
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

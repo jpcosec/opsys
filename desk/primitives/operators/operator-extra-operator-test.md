@@ -1,24 +1,13 @@
+---
+id: operator-extra-operator-test
+status: active
+action: activate
+target: ''
+value: ''
+tags:
+- primitive:operator
+---
+
 # Extra Operator Test
 
-ID: operator-extra-operator-test
-Status: active
-
 ## Summary
-
-
-
-## Action
-
-activate
-
-## Target
-
-
-
-## Value
-
-
-
-## Tags
-
-- primitive:operator

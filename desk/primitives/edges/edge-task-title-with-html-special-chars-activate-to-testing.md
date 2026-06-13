@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-title-with-html-special-chars-activate-to-testing
+status: active
+source: operator-task-title-with-html-special-chars-activate
+target: checklist-task-title-with-html-special-chars-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-title-with-html-special-chars-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-title-with-html-special-chars-activate
-
-## Target
-
-checklist-task-title-with-html-special-chars-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

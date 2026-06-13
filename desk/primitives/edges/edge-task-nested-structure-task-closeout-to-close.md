@@ -1,24 +1,15 @@
-# Closeout gate to close operator
+---
+id: edge-task-nested-structure-task-closeout-to-close
+status: active
+source: checklist-task-nested-structure-task-closeout-ready
+target: operator-task-nested-structure-task-close
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-nested-structure-task-closeout-to-close
-Status: active
+# Closeout gate to close operator
 
 ## Summary
 
 Closeout gate passed.
-
-## Source
-
-checklist-task-nested-structure-task-closeout-ready
-
-## Target
-
-operator-task-nested-structure-task-close
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

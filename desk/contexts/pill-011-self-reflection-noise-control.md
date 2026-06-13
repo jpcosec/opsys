@@ -1,6 +1,13 @@
-# Guardrail: self reflection must avoid noisy generation
+---
+id: pill-011
+tags:
+- system:deskops
+- topic:self-reflection
+- topic:knowledge-graph
+- topic:drift-control
+---
 
-ID: pill-011
+# Guardrail: self reflection must avoid noisy generation
 
 ## What
 
@@ -25,10 +32,3 @@ Require confidence, provenance, and dedupe before writing new atoms or issues. P
 ## How Not
 
 Do not create atoms from low-confidence graph gaps. Do not open duplicate issues for the same missing relation. Do not silently mutate source artifacts during a reflection-only task.
-
-## Tags
-
-- system:deskops
-- topic:self-reflection
-- topic:knowledge-graph
-- topic:drift-control

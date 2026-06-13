@@ -1,13 +1,12 @@
-# Repository: Custom ID Test
+---
+id: my-custom-id-123
+path: /tmp
+status: active
+tags: []
+---
 
-ID: my-custom-id-123
-Path: /tmp
-Status: active
+# Repository: Custom ID Test
 
 ## Description
 
 Repository for Custom ID Test.
-
-## Tags
-
--

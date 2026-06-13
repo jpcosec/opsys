@@ -1,15 +1,15 @@
-# Repository: Tagged Repo
+---
+id: tagged-repo
+path: .
+status: active
+tags:
+- test
+- demo
+- ci/cd
+---
 
-ID: tagged-repo
-Path: .
-Status: active
+# Repository: Tagged Repo
 
 ## Description
 
 Repository for Tagged Repo.
-
-## Tags
-
-- test
-- demo
-- ci/cd

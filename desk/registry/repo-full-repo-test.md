@@ -1,14 +1,14 @@
-# Repository: Full Repo Test
+---
+id: repo-full-repo-test
+path: /tmp/test
+status: active
+tags:
+- workspace:desk
+- artifact:repository
+---
 
-ID: repo-full-repo-test
-Path: /tmp/test
-Status: active
+# Repository: Full Repo Test
 
 ## Description
 
 A test repository
-
-## Tags
-
-- workspace:desk
-- artifact:repository

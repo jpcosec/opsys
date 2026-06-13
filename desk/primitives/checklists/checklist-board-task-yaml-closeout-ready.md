@@ -1,7 +1,14 @@
-# Closeout Ready
+---
+id: checklist-board-task-yaml-closeout-ready
+status: active
+condition_refs:
+- condition-board-task-yaml-ready-for-closeout
+mode: all
+tags:
+- primitive:checklist
+---
 
-ID: checklist-board-task-yaml-closeout-ready
-Status: active
+# Closeout Ready
 
 ## Summary
 
@@ -10,15 +17,3 @@ Confirms the task is ready for closeout.
 ## Items
 
 - Task is ready for closeout
-
-## Conditions
-
-- condition-board-task-yaml-ready-for-closeout
-
-## Mode
-
-all
-
-## Tags
-
-- primitive:checklist

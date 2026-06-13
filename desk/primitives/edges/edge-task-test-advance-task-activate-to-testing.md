@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-task-test-advance-task-activate-to-testing
+status: active
+source: operator-task-test-advance-task-activate
+target: checklist-task-test-advance-task-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-test-advance-task-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-task-test-advance-task-activate
-
-## Target
-
-checklist-task-test-advance-task-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

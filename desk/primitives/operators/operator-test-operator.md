@@ -1,24 +1,15 @@
-# Test operator
+---
+id: operator-test-operator
+status: active
+action: activate
+target: /path
+value: done
+tags:
+- primitive:operator
+---
 
-ID: operator-test-operator
-Status: active
+# Test operator
 
 ## Summary
 
 A test
-
-## Action
-
-activate
-
-## Target
-
-/path
-
-## Value
-
-done
-
-## Tags
-
-- primitive:operator

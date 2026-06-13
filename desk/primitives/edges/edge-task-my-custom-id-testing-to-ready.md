@@ -1,24 +1,15 @@
-# Testing gate to testing-ready operator
+---
+id: edge-task-my-custom-id-testing-to-ready
+status: active
+source: checklist-task-my-custom-id-testing-ready
+target: operator-task-my-custom-id-ready-for-testing
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-task-my-custom-id-testing-to-ready
-Status: active
+# Testing gate to testing-ready operator
 
 ## Summary
 
 Testing gate passed.
-
-## Source
-
-checklist-task-my-custom-id-testing-ready
-
-## Target
-
-operator-task-my-custom-id-ready-for-testing
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

@@ -1,16 +1,12 @@
-#
+---
+id: step-none
+tags: []
+---
 
-ID: step-none
+# Step None
 
 ## Action
 
 
 
 ## Outcome
-
-
-
-## Tags
-
-- workspace:desk
-- artifact:step

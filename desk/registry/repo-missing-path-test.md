@@ -1,14 +1,12 @@
-# Repository: Missing Path Test
-
-ID: repo-missing-path-test
-Path:
-Status: active
-
-## Description
-
-
-
-## Tags
-
+---
+id: repo-missing-path-test
+path: ''
+status: active
+tags:
 - workspace:desk
 - artifact:repository
+---
+
+# Repository: Missing Path Test
+
+## Description

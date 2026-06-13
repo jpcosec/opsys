@@ -1,7 +1,23 @@
-# Boolean Test
+---
+id: task-boolean-test
+status: draft
+references: []
+depends_on: []
+pills: []
+files: []
+routine: routine-task-boolean-test
+checklists:
+- checklist-task-boolean-test-execution-ready
+- checklist-task-boolean-test-testing-ready
+- checklist-task-boolean-test-closeout-ready
+current_node: checklist-task-boolean-test-execution-ready
+history: []
+tags:
+- workspace:desk
+- artifact:task
+---
 
-ID: task-boolean-test
-Status: draft
+# Boolean Test
 
 ## Goal
 
@@ -11,53 +27,14 @@ True
 
 
 
-## References
-
--
-
-## Dependencies
-
--
-
-## Pills
-
--
-
-## Files
-
--
-
-## Routine
-
-routine-task-boolean-test
-
-## Checklists
-
-- checklist-task-boolean-test-execution-ready
-- checklist-task-boolean-test-testing-ready
-- checklist-task-boolean-test-closeout-ready
-
-## Current Node
-
-checklist-task-boolean-test-execution-ready
-
 ## Implementation Path
 
 
 
 ## Validation
 
--
+- 
 
 ## Done When
 
 True
-
-## History
-
--
-
-## Tags
-
-- workspace:desk
-- artifact:task

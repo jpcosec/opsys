@@ -1,24 +1,15 @@
-# Activation to testing gate
+---
+id: edge-board-task-yaml-activate-to-testing
+status: active
+source: operator-board-task-yaml-activate
+target: checklist-board-task-yaml-testing-ready
+condition_ref: ''
+tags:
+- primitive:edge
+---
 
-ID: edge-board-task-yaml-activate-to-testing
-Status: active
+# Activation to testing gate
 
 ## Summary
 
 Activation complete.
-
-## Source
-
-operator-board-task-yaml-activate
-
-## Target
-
-checklist-board-task-yaml-testing-ready
-
-## Condition
-
-
-
-## Tags
-
-- primitive:edge

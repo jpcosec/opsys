@@ -1,6 +1,13 @@
-# From YAML Test Ritual
+---
+id: ritual-from-yaml-test-ritual
+tags:
+- workspace:desk
+- artifact:ritual
+steps:
+- '1.'
+---
 
-ID: ritual-from-yaml-test-ritual
+# From YAML Test Ritual
 
 ## Purpose
 
@@ -14,10 +21,6 @@ Test purpose
 
 -
 
-## Steps
-
-1.
-
 ## Validation
 
 -
@@ -30,11 +33,7 @@ Test purpose
 
 
 
-## Step Details
+## Steps
 
+1.
 
-
-## Tags
-
-- workspace:desk
-- artifact:ritual
