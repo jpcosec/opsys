@@ -1,6 +1,6 @@
 name: RepositoryDoc
 model_ref: deskops.models:RepositoryDoc
-path: desk/models/repository.py
+path: deskops/models/repository.py
 documents_index: .sldb/core/documents/RepositoryDoc.yaml
 sections_index: .sldb/runtime/sections/RepositoryDoc.yaml
 hash_b: c71ae09e2ea4929c00104acdb9b280cb0461ee758a04efffe2bfd0f2234ca281

@@ -1,6 +1,6 @@
 name: AtomDoc
-model_ref: desk.models:AtomDoc
-path: desk/models/atom.py
+model_ref: deskops.models:AtomDoc
+path: deskops/models/atom.py
 documents_index: .sldb/core/documents/AtomDoc.yaml
 sections_index: .sldb/runtime/sections/AtomDoc.yaml
 hash_b: 22deb5a9f05b0bd8c4aa4104f1888406023153a41ed0c2df8dace5bd9608d450

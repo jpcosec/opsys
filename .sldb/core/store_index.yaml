@@ -1,8 +1,8 @@
 stores: []
 models:
 - name: AtomDoc
-  model_ref: desk.models:AtomDoc
-  path: desk/models/atom.py
+  model_ref: deskops.models:AtomDoc
+  path: deskops/models/atom.py
   models_index: .sldb/core/models/AtomDoc.yaml
   version: 1
   canonical: false
@@ -10,7 +10,7 @@ models:
   semantics: []
 - name: RepositoryDoc
   model_ref: deskops.models:RepositoryDoc
-  path: desk/models/repository.py
+  path: deskops/models/repository.py
   models_index: .sldb/core/models/RepositoryDoc.yaml
   version: 1
   canonical: false
