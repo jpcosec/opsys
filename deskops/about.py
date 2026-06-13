@@ -17,6 +17,7 @@ First-use commands:
 Useful commands:
 - deskops faq
 - deskops inbox
+- deskops promote
 - deskops repo register
 """
 

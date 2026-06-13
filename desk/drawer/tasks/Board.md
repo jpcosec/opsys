@@ -18,7 +18,6 @@ Deferred task backlog:
 - `task-connect-self-reflection-to-graph-cli`
 - `task-define-materialization-contract-slice`
 - `task-add-drift-check-review-loop`
-- `task-operationalize-inbox-drawer-promotion`
 - `task-design-operational-cli-grammar`
 - `task-add-desk-health-and-recovery-surface`
 - `task-define-atom-lifecycle-operations`

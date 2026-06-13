@@ -61,6 +61,10 @@ class CLI:
             from deskops.cli.commands.operations import OperationsCLI
 
             return OperationsCLI().run(args)
+        if args.command == "promote":
+            from deskops.cli.commands.promote import PromoteCLI
+
+            return PromoteCLI().run(args)
         if args.command == "bootstrap":
             return self._bootstrap()
         if args.command == "init":

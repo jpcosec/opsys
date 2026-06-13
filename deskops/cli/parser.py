@@ -35,6 +35,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
     _add_advance_commands(subparsers)
+    _add_promote_commands(subparsers)
 
     return parser
 
@@ -83,6 +84,29 @@ def _add_graph_commands(
     missing = s.add_parser("missing", help="Report missing graph targets and dangling declared references.")
     missing.add_argument("--root", default=".", help="Target repository root.")
     missing.add_argument("--graph", help="Optional graph snapshot path to check for missing edge targets.")
+
+
+def _add_promote_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("promote", help="Promote inbox and drawer items through desk workflow surfaces.")
+    s = p.add_subparsers(dest="promote_command", required=True)
+
+    inbox = s.add_parser(
+        "inbox-to-drawer-task",
+        help="Promote one inbox note into a deferred drawer task candidate.",
+    )
+    inbox.add_argument("selector", help="Inbox filename, stem, or unique slug fragment")
+    inbox.add_argument("--root", default=".", help="Target repository root")
+    inbox.add_argument("--title", help="Override the drawer task title")
+
+    drawer = s.add_parser(
+        "drawer-task-to-active-task",
+        help="Promote one drawer task candidate into an active task bundle.",
+    )
+    drawer.add_argument("selector", help="Drawer task filename, stem, or unique slug fragment")
+    drawer.add_argument("--root", default=".", help="Target repository root")
+    drawer.add_argument("--title", help="Override the active task title")
 
 
 def _add_desk_commands(

@@ -31,6 +31,7 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` defin
 - `deskops init` — initialize a repo-local `.sldb/` plus `desk/`
 - `deskops faq` — first-use help (this document)
 - `deskops inbox` — write and browse desk inbox notes
+- `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
 - `deskops repo register` — register repositories in the ecosystem desk registry
 - `deskops desk install` — scaffold a desk surface in a target repository
 
@@ -87,6 +88,15 @@ deskops show repository repo-deskops
 **Advance tasks** — `deskops advance task <task-id>`
 
 Walks a task through its routine: evaluates current checklists, checks edge conditions, and transitions to the next node via the matching operator.
+
+**Promote workflow items** — `deskops promote <promotion> <selector>`
+
+Moves project-addressed messages and deferred drawer work through explicit steps without silently deleting the source artifact:
+
+```
+deskops promote inbox-to-drawer-task <inbox-note-selector>
+deskops promote drawer-task-to-active-task <drawer-task-selector>
+```
 
 ### Generated CLI surface
 

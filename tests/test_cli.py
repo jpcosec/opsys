@@ -33,7 +33,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,graph,add,list,show,advance}" in captured.out
+    assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,graph,add,list,show,advance,promote}" in captured.out
 
 
 def test_about_prints_first_use_summary(capsys) -> None:
@@ -318,6 +318,79 @@ def test_cli_delegates_desk_command_without_bootstrap(monkeypatch) -> None:
     assert CLI().run(["desk", "install", str(ROOT)]) == 0
     assert called["desk"] == 1
     assert called["bootstrap"] == 0
+
+
+def test_promote_inbox_to_drawer_task_creates_candidate(tmp_path: Path, capsys) -> None:
+    inbox_dir = tmp_path / "desk" / "inbox"
+    inbox_dir.mkdir(parents=True)
+    note = inbox_dir / "20260613-000000-suggestion-need-cli-promotion.md"
+    note.write_text(
+        "---\nkind: suggestion\nsender_project: sibling\ncreated_at: 2026-06-13T00:00:00\nstatus: open\n---\n\n"
+        "# Need CLI promotion\n\nMake promotion explicit.\n",
+        encoding="utf-8",
+    )
+
+    result = main([
+        "promote",
+        "inbox-to-drawer-task",
+        "need-cli-promotion",
+        "--root",
+        str(tmp_path),
+    ])
+
+    captured = capsys.readouterr()
+    drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-need-cli-promotion.md"
+    assert result == 0
+    assert "Created drawer task candidate task-need-cli-promotion" in captured.out
+    assert drawer_task.exists()
+    text = drawer_task.read_text(encoding="utf-8")
+    assert "Make promotion explicit." in text
+    assert "desk/inbox/20260613-000000-suggestion-need-cli-promotion.md" in text
+    assert note.exists()
+
+
+def test_promote_drawer_task_to_active_task_creates_bundle(tmp_path: Path, capsys) -> None:
+    drawer_dir = tmp_path / "desk" / "drawer" / "tasks"
+    drawer_dir.mkdir(parents=True)
+    source = drawer_dir / "task-promote-demo.md"
+    source.write_text(
+        "# Promote Demo\n\n"
+        "ID: task-promote-demo\nStatus: deferred\n\n"
+        "## Goal\n\nMake promotion runnable.\n\n"
+        "## Scope\n\nPromotion CLI only.\n",
+        encoding="utf-8",
+    )
+
+    result = main([
+        "promote",
+        "drawer-task-to-active-task",
+        "promote-demo",
+        "--root",
+        str(tmp_path),
+    ])
+
+    captured = capsys.readouterr()
+    active_task = tmp_path / "desk" / "tasks" / "task-promote-demo.md"
+    assert result == 0
+    assert "Created active task bundle task-promote-demo" in captured.out
+    assert active_task.exists()
+    assert (tmp_path / "desk" / "routines" / "routine-task-promote-demo.md").exists()
+    board = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert "desk/tasks/task-promote-demo.md" in board
+    assert source.exists()
+
+
+def test_promote_rejects_ambiguous_inbox_selector(tmp_path: Path, capsys) -> None:
+    inbox_dir = tmp_path / "desk" / "inbox"
+    inbox_dir.mkdir(parents=True)
+    for name in ["20260613-a-suggestion-shared.md", "20260613-b-suggestion-shared.md"]:
+        (inbox_dir / name).write_text(f"# {name}\n\nBody.\n", encoding="utf-8")
+
+    result = main(["promote", "inbox-to-drawer-task", "shared", "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Ambiguous inbox note selector shared" in captured.out
 
 
 def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
