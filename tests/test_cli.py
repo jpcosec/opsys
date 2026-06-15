@@ -346,7 +346,7 @@ def test_promote_inbox_to_drawer_task_creates_candidate(tmp_path: Path, capsys) 
     text = drawer_task.read_text(encoding="utf-8")
     assert "Make promotion explicit." in text
     assert "desk/inbox/20260613-000000-suggestion-need-cli-promotion.md" in text
-    assert note.exists()
+    assert not note.exists()
 
 
 def test_promote_drawer_task_to_active_task_creates_bundle(tmp_path: Path, capsys) -> None:
@@ -377,7 +377,7 @@ def test_promote_drawer_task_to_active_task_creates_bundle(tmp_path: Path, capsy
     assert (tmp_path / "desk" / "routines" / "routine-task-promote-demo.md").exists()
     board = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-promote-demo.md" in board
-    assert source.exists()
+    assert not source.exists()
 
 
 def test_promote_rejects_ambiguous_inbox_selector(tmp_path: Path, capsys) -> None:

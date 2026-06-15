@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import json
 import re
 from typing import Any
 
@@ -17,7 +18,13 @@ class PromoteCLI:
         if args.promote_command == "inbox-to-drawer-task":
             return self._inbox_to_drawer_task(root, args.selector, args.title)
         if args.promote_command == "drawer-task-to-active-task":
-            return self._drawer_task_to_active_task(root, args.selector, args.title)
+            return self._drawer_task_to_active_task(
+                root,
+                args.selector,
+                args.title,
+                getattr(args, "payload", None),
+                getattr(args, "from_yaml", None),
+            )
         return 1
 
     def _inbox_to_drawer_task(self, root: Path, selector: str, title_override: str | None) -> int:
@@ -47,11 +54,20 @@ class PromoteCLI:
             ),
             encoding="utf-8",
         )
+        source.unlink(missing_ok=True)
         print(f"Created drawer task candidate {task_id}")
+        print(f"Deleted source file {source}")
         print(f"Path: {target}")
         return 0
 
-    def _drawer_task_to_active_task(self, root: Path, selector: str, title_override: str | None) -> int:
+    def _drawer_task_to_active_task(
+        self,
+        root: Path,
+        selector: str,
+        title_override: str | None,
+        payload_override: str | None = None,
+        from_yaml: str | None = None,
+    ) -> int:
         source = self._resolve_unique(root / "desk" / "drawer" / "tasks", selector)
         if source is None:
             print(f"No drawer task found for {selector}")
@@ -69,21 +85,30 @@ class PromoteCLI:
             return 1
 
         operations = DeskopsOperations(root)
-        bundle = operations.create_task_bundle(
-            {
-                "id": task_id,
-                "title": title,
-                "status": "active",
-                "goal": self._section(candidate["body"], "Goal") or f"Promote deferred work from {source.name}.",
-                "scope": self._section(candidate["body"], "Scope") or candidate["body"],
-                "implementation_path": f"Promoted from {source.relative_to(root)}.",
-                "validation": ["pytest"],
-                "done_when": "Promoted work is completed, validated, and closed with a commit.",
-                "references": [str(source.relative_to(root))],
-                "tags": ["workspace:desk", "artifact:task", "source:drawer"],
-            }
-        )
+        
+        override_data = {}
+        if from_yaml:
+            override_data = yaml.safe_load(Path(from_yaml).read_text(encoding="utf-8")) or {}
+        elif payload_override:
+            override_data = json.loads(payload_override)
+
+        task_payload = {
+            "id": override_data.get("id", task_id),
+            "title": override_data.get("title", title),
+            "status": override_data.get("status", "active"),
+            "goal": override_data.get("goal") or self._section(candidate["body"], "Goal") or f"Promote deferred work from {source.name}.",
+            "scope": override_data.get("scope") or self._section(candidate["body"], "Scope") or candidate["body"],
+            "implementation_path": override_data.get("implementation_path") or f"Promoted from {source.relative_to(root)}.",
+            "validation": override_data.get("validation", ["pytest"]),
+            "done_when": override_data.get("done_when") or "Promoted work is completed, validated, and closed with a commit.",
+            "references": override_data.get("references", [str(source.relative_to(root))]),
+            "tags": override_data.get("tags", ["workspace:desk", "artifact:task", "source:drawer"]),
+        }
+
+        bundle = operations.create_task_bundle(task_payload)
+        source.unlink(missing_ok=True)
         print(f"Created active task bundle {bundle.task_id}")
+        print(f"Deleted source file {source}")
         print(f"Task: {bundle.task_path}")
         return 0
 

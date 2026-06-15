@@ -109,6 +109,8 @@ def _add_promote_commands(
         help="Promote one drawer task candidate into an active task bundle.",
     )
     drawer.add_argument("selector", help="Drawer task filename, stem, or unique slug fragment")
+    drawer.add_argument("payload", nargs="?", help="Optional inline JSON payload to override task generation.")
+    drawer.add_argument("--from-yaml", help="Load an override payload from a YAML file.")
     drawer.add_argument("--root", default=".", help="Target repository root")
     drawer.add_argument("--title", help="Override the active task title")
 
