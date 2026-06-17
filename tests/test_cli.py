@@ -36,6 +36,22 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,graph,add,list,show,advance,promote}" in captured.out
 
 
+def test_repository_help_distinguishes_canonical_registration(capsys) -> None:
+    repo_help = main(["repo", "register", "--help"])
+    repo_output = capsys.readouterr()
+    repo_help_text = " ".join(repo_output.out.split())
+    assert repo_help == 0
+    assert "Canonically register a repository" in repo_help_text
+    assert "track it in SLDB" in repo_help_text
+
+    add_help = main(["add", "repository", "--help"])
+    add_output = capsys.readouterr()
+    add_help_text = " ".join(add_output.out.split())
+    assert add_help == 0
+    assert "local repository artifact doc" in add_help_text
+    assert "canonical ecosystem registration" in add_help_text
+
+
 def test_about_prints_first_use_summary(capsys) -> None:
     result = main(["about"])
 
@@ -1026,6 +1042,7 @@ def test_add_list_and_show_repository_from_specs(tmp_path: Path, capsys) -> None
     add_out = capsys.readouterr()
     assert created == 0
     assert "Created repository repo-opsys" in add_out.out
+    assert "Use 'deskops repo register' for canonical ecosystem registration." in add_out.out
 
     listed = main(["list", "repositories", "--root", str(tmp_path)])
     list_out = capsys.readouterr()

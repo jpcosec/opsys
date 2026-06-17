@@ -33,7 +33,7 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` defin
 - `deskops inbox` — write and browse desk inbox notes
 - `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
 - `deskops graph` — build graph snapshots, inspect neighbors, check missing references, and write review-only reflection reports
-- `deskops repo register` — register repositories in the ecosystem desk registry
+- `deskops repo register` — canonical repository registration in the ecosystem desk registry, tracked through SLDB
 - `deskops desk install` — scaffold a desk surface in a target repository
 
 ### Spec-driven artifact commands
@@ -51,7 +51,7 @@ Supported artifact types:
 | `ritual` | Repeatable procedure template | `--title`, `--purpose`, `--steps` |
 | `board` | Task coordination surface | `--title`, `--scope`, `--purpose` |
 | `atom` | Durable architectural concept | `--title`, `--five-wh-one-plus`, `--answer` |
-| `repository` | Repo registration | `--name`, `--path`, `--status` |
+| `repository` | Local repository artifact doc; not canonical ecosystem registration | `--name`, `--path`, `--status` |
 | `inbox-note` | Incoming project message | `--kind`, `--title`, `--body` |
 | `faq-doc` | FAQ entry | (spec-defined flags) |
 | `step` | Procedure step | `--title`, `--action`, `--outcome` |
@@ -102,6 +102,8 @@ deskops promote drawer-task-to-active-task <drawer-task-selector>
 ### Generated CLI surface
 
 The `add`, `list`, and `show` subcommands for spec-driven artifacts (atoms, pills, rituals, boards, repositories, inbox-notes, faq-docs, steps) are automatically generated from the artifact registry. When a new artifact type is added to `ARTIFACT_SUBJECTS` in `deskops/operations.py`, subcommands and `--flag` generation follow automatically.
+
+For repository registration, prefer `deskops repo register`. It is the canonical ecosystem registration path because it anchors the repository document in the configured SLDB store. `deskops add repository` only creates a local `desk/registry/repo-*.md` artifact through the generic spec-driven add path.
 
 The models under `deskops.models` and the materializers under `deskops.materializers` are also importable from Python.
 

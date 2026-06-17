@@ -159,7 +159,11 @@ def _add_repo_commands(
     p = subparsers.add_parser("repo", help="Repository registration and discovery.")
     s = p.add_subparsers(dest="repo_command", required=True)
 
-    reg = s.add_parser("register", help="Register a repository in the ecosystem.")
+    reg = s.add_parser(
+        "register",
+        help="Canonically register a repository in the ecosystem registry and track it in SLDB.",
+        description="Canonically register a repository in the ecosystem registry and track it in SLDB.",
+    )
     reg.add_argument("name", help="Human-readable name")
     reg.add_argument("path", help="Relative path to repo root")
     reg.add_argument("--id", help="Stable unique ID, defaults to slugified name")
@@ -311,7 +315,13 @@ def _add_add_commands(
     for artifact_id, meta in ARTIFACT_SUBJECTS.items():
         artifact = registry.artifacts[artifact_id]
         subject = meta["subject"]
-        generated = s.add_parser(subject, help=f"Create a {subject} artifact.")
+        help_text = f"Create a {subject} artifact."
+        if subject == "repository":
+            help_text = (
+                "Create a local repository artifact doc; use 'deskops repo register' "
+                "for canonical ecosystem registration."
+            )
+        generated = s.add_parser(subject, help=help_text, description=help_text)
         generated.add_argument("--root", default=".", help="Target repository root.")
         generated.add_argument("--from-yaml", help=f"Load the {subject} payload from a YAML file.")
         for field_id in artifact["data"].get("fields", []):

@@ -28,6 +28,8 @@ class OperationsCLI:
             record = operations.create_artifact(artifact_id, payload)
             print(f"Created {record.kind} {record.doc_id}")
             print(f"Path: {record.path}")
+            if args.subject == "repository":
+                print("Note: this is a local repository artifact. Use 'deskops repo register' for canonical ecosystem registration.")
             return 0
 
         if args.command == "add" and args.subject in {"condition", "operator", "checklist", "hook", "edge"}:
