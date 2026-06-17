@@ -33,7 +33,45 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{inbox,about,faq,repo,desk,bootstrap,init,atoms,graph,add,list,show,advance,promote}" in captured.out
+    assert "{about,faq,bootstrap,init,inbox,promote,add,list,show,advance,repo,desk,atoms,graph}" in captured.out
+    assert "Typical flow:" in captured.out
+    assert "deskops add task --root ." in captured.out
+    assert "Use docs/quickstart.md" in captured.out
+
+
+def test_core_help_documents_examples_and_selectors(capsys) -> None:
+    inbox_help = main(["inbox", "--help"])
+    inbox_output = " ".join(capsys.readouterr().out.split())
+    assert inbox_help == 0
+    assert "deskops inbox" in inbox_output
+    assert "--show selector" in inbox_output
+
+    promote_help = main(["promote", "--help"])
+    promote_output = " ".join(capsys.readouterr().out.split())
+    assert promote_help == 0
+    assert "inbox-to-drawer-task" in promote_output
+    assert "drawer-task-to-active-task" in promote_output
+
+    show_help = main(["show", "task", "--help"])
+    show_output = " ".join(capsys.readouterr().out.split())
+    assert show_help == 0
+    assert "deskops show task task-fix-thing" in show_output
+    assert "exact id, filename, stem, or unique slug fragment" in show_output
+
+    advance_help = main(["advance", "task", "--help"])
+    advance_output = " ".join(capsys.readouterr().out.split())
+    assert advance_help == 0
+    assert "deskops advance task task-fix-thing" in advance_output
+    assert "execution, testing, and closeout gates" in advance_output
+
+
+def test_generated_artifact_help_uses_value_descriptions(capsys) -> None:
+    result = main(["add", "pill", "--help"])
+    output = capsys.readouterr().out
+    assert result == 0
+    assert "Title Field" not in output
+    assert "Human-readable title." in output
+    assert "What this context explains." in output
 
 
 def test_repository_help_distinguishes_canonical_registration(capsys) -> None:

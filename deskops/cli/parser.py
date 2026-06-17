@@ -9,9 +9,52 @@ from deskops.specs import SpecRegistry
 
 SPEC_ROOT = Path(__file__).resolve().parents[2] / "spec"
 
+WORKFLOW_EPILOG = """
+Typical flow:
+  deskops bootstrap
+  deskops init .
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+  deskops list tasks --root .
+  deskops show task task-fix-thing --root .
+  deskops advance task task-fix-thing --root .
+
+Use docs/quickstart.md for the first full walkthrough.
+""".strip()
+
+SELECTOR_HELP = "Selectors accept an exact id, filename, stem, or unique slug fragment where supported."
+
+FIELD_HELP_OVERRIDES = {
+    "title": "Human-readable title.",
+    "name": "Human-readable name.",
+    "path": "Repository or artifact path.",
+    "status": "Workflow status, such as active or draft.",
+    "description": "Markdown description.",
+    "what": "What this context explains.",
+    "why": "Why this matters.",
+    "when": "When this applies.",
+    "where": "Where this applies.",
+    "how": "How to apply it.",
+    "how_not": "How not to use it; common misuse.",
+    "goal": "Outcome this work should achieve.",
+    "scope": "Boundary of the work.",
+    "validation": "Validation command or assertion.",
+    "answer": "Durable answer this atom records.",
+    "five_wh_one_plus": "Atom category: who, what, when, where, why, how, or how_much.",
+}
+
 
 def _spec_registry() -> SpecRegistry:
     return SpecRegistry.load(SPEC_ROOT)
+
+
+def _field_help(field_spec: dict[str, object]) -> str:
+    data = field_spec.get("data", {})
+    key = str(data.get("key", "value")) if isinstance(data, dict) else "value"
+    value_type = str(data.get("value_type", "str")) if isinstance(data, dict) else "str"
+    help_text = FIELD_HELP_OVERRIDES.get(key, f"{key.replace('_', ' ').capitalize()} value.")
+    if value_type.startswith("list["):
+        help_text = f"{help_text} Repeat as needed."
+    return help_text
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -19,23 +62,24 @@ def build_parser() -> argparse.ArgumentParser:
         prog="deskops",
         description="deskops: Workflow-domain layer for the hum-ecosystem.",
         formatter_class=argparse.RawTextHelpFormatter,
+        epilog=WORKFLOW_EPILOG,
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    _add_inbox_commands(subparsers)
     _add_about_command(subparsers)
     _add_faq_commands(subparsers)
-    _add_repo_commands(subparsers)
-    _add_desk_commands(subparsers)
     _add_bootstrap_command(subparsers)
     _add_init_command(subparsers)
-    _add_atoms_commands(subparsers)
-    _add_graph_commands(subparsers)
+    _add_inbox_commands(subparsers)
+    _add_promote_commands(subparsers)
     _add_add_commands(subparsers)
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
     _add_advance_commands(subparsers)
-    _add_promote_commands(subparsers)
+    _add_repo_commands(subparsers)
+    _add_desk_commands(subparsers)
+    _add_atoms_commands(subparsers)
+    _add_graph_commands(subparsers)
 
     return parser
 
@@ -93,7 +137,18 @@ def _add_graph_commands(
 def _add_promote_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
-    p = subparsers.add_parser("promote", help="Promote inbox and drawer items through desk workflow surfaces.")
+    p = subparsers.add_parser(
+        "promote",
+        help="Promote inbox and drawer items through desk workflow surfaces.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Examples:
+  deskops promote inbox-to-drawer-task 20260614-unclear --root .
+  deskops promote drawer-task-to-active-task task-write-guide --root .
+
+{SELECTOR_HELP}
+""".strip(),
+    )
     s = p.add_subparsers(dest="promote_command", required=True)
 
     inbox = s.add_parser(
@@ -177,7 +232,17 @@ def _add_inbox_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
     p = subparsers.add_parser(
-        "inbox", help="Log a message arriving to a project inbox."
+        "inbox",
+        help="Log, list, or show messages arriving to a project inbox.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Examples:
+  deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
+  deskops inbox --list --root .
+  deskops inbox --show 20260614-cli-help --root .
+
+--show selector: filename, stem, or slug fragment.
+""".strip(),
     )
     p.add_argument("message", nargs="?", help="Inbox note body")
     p.add_argument(
@@ -225,7 +290,16 @@ def _add_faq_commands(
 def _add_add_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
-    p = subparsers.add_parser("add", help="Create semantic workflow artifacts.")
+    p = subparsers.add_parser(
+        "add",
+        help="Create desk workflow artifacts from modeled templates.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Examples:
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..."
+""".strip(),
+    )
     s = p.add_subparsers(dest="subject", required=True)
 
     task = s.add_parser("task", help="Create an actionable task bundle.")
@@ -321,7 +395,13 @@ def _add_add_commands(
                 "Create a local repository artifact doc; use 'deskops repo register' "
                 "for canonical ecosystem registration."
             )
-        generated = s.add_parser(subject, help=help_text, description=help_text)
+        generated = s.add_parser(
+            subject,
+            help=help_text,
+            description=help_text,
+            formatter_class=argparse.RawTextHelpFormatter,
+            epilog=f"Example:\n  deskops add {subject} --root . --title \"Example\"",
+        )
         generated.add_argument("--root", default=".", help="Target repository root.")
         generated.add_argument("--from-yaml", help=f"Load the {subject} payload from a YAML file.")
         for field_id in artifact["data"].get("fields", []):
@@ -330,7 +410,7 @@ def _add_add_commands(
             value_type = str(field_spec["data"]["value_type"])
             option = f"--{key.replace('_', '-')}"
             required = bool(field_spec["data"].get("required", False)) and key != "title"
-            kwargs: dict[str, object] = {"required": False, "help": f"{field_spec['title']}"}
+            kwargs: dict[str, object] = {"required": False, "help": _field_help(field_spec)}
             if value_type.startswith("list["):
                 kwargs["action"] = "append"
                 kwargs["default"] = []
@@ -340,7 +420,17 @@ def _add_add_commands(
 def _add_list_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
-    p = subparsers.add_parser("list", help="List semantic workflow artifacts.")
+    p = subparsers.add_parser(
+        "list",
+        help="List desk workflow artifacts.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Examples:
+  deskops list tasks --root .
+  deskops list pills --root .
+  deskops list atoms --root .
+""".strip(),
+    )
     s = p.add_subparsers(dest="subject", required=True)
 
     tasks = s.add_parser("tasks", help="List actionable tasks.")
@@ -362,15 +452,36 @@ def _add_list_commands(
 def _add_show_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
-    p = subparsers.add_parser("show", help="Show one semantic workflow artifact.")
+    p = subparsers.add_parser(
+        "show",
+        help="Show one desk workflow artifact by selector.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Examples:
+  deskops show task task-fix-thing --root .
+  deskops show pill pill-keep-layers-clean --root .
+
+{SELECTOR_HELP}
+""".strip(),
+    )
     s = p.add_subparsers(dest="subject", required=True)
 
-    task = s.add_parser("task", help="Show one actionable task.")
-    task.add_argument("task_id", help="Task identifier.")
+    task = s.add_parser(
+        "task",
+        help="Show one actionable task by selector.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Example:
+  deskops show task task-fix-thing --root .
+
+{SELECTOR_HELP}
+""".strip(),
+    )
+    task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
     task.add_argument("--root", default=".", help="Target repository root.")
 
-    routine = s.add_parser("routine", help="Show one routine.")
-    routine.add_argument("routine_id", help="Routine identifier.")
+    routine = s.add_parser("routine", help="Show one routine by selector.")
+    routine.add_argument("routine_id", help=f"Routine selector. {SELECTOR_HELP}")
     routine.add_argument("--root", default=".", help="Target repository root.")
 
     condition = s.add_parser("condition", help="Show one condition.")
@@ -395,17 +506,39 @@ def _add_show_commands(
 
     for meta in ARTIFACT_SUBJECTS.values():
         subject = meta["subject"]
-        parser = s.add_parser(subject, help=f"Show one {subject}.")
-        parser.add_argument("doc_id", help=f"{subject.capitalize()} identifier.")
+        parser = s.add_parser(subject, help=f"Show one {subject} by selector.")
+        parser.add_argument("doc_id", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}")
         parser.add_argument("--root", default=".", help="Target repository root.")
 
 
 def _add_advance_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
-    p = subparsers.add_parser("advance", help="Advance an operational artifact through its routine.")
+    p = subparsers.add_parser(
+        "advance",
+        help="Advance an operational artifact through its routine gates.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Example:
+  deskops advance task task-fix-thing --root .
+
+Advancement walks a task through execution, testing, and closeout gates when its checklist conditions pass.
+{SELECTOR_HELP}
+""".strip(),
+    )
     s = p.add_subparsers(dest="subject", required=True)
 
-    task = s.add_parser("task", help="Advance one actionable task.")
-    task.add_argument("task_id", help="Task identifier.")
+    task = s.add_parser(
+        "task",
+        help="Advance one actionable task through its routine gates.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Example:
+  deskops advance task task-fix-thing --root .
+
+Advancement walks a task through execution, testing, and closeout gates when its checklist conditions pass.
+{SELECTOR_HELP}
+""".strip(),
+    )
+    task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
     task.add_argument("--root", default=".", help="Target repository root.")
