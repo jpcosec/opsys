@@ -53,7 +53,7 @@ class CLI:
             return AtomsCLI().run(args)
         if args.command == "graph":
             return self._graph(args)
-        if args.command in {"add", "list", "show", "advance"}:
+        if args.command in {"add", "edit", "list", "show", "advance"}:
             ready = bootstrap.ensure_sldb_available()
             if ready != 0:
                 return ready

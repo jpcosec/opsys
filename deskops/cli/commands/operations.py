@@ -46,6 +46,16 @@ class OperationsCLI:
             print(f"Path: {record.path}")
             return 0
 
+        if args.command == "edit":
+            try:
+                record = operations.edit_artifact_field(args.subject, args.selector, args.field, args.value)
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            print(f"Updated {record.kind} {record.doc_id} field {args.field.replace('-', '_')}")
+            print(f"Path: {record.path}")
+            return 0
+
         if args.command == "list" and args.subject == "tasks":
             for task in operations.list_tasks():
                 print(f"{task.id} | {task.status} | {task.current_node}")

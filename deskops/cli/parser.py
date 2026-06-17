@@ -73,6 +73,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_inbox_commands(subparsers)
     _add_promote_commands(subparsers)
     _add_add_commands(subparsers)
+    _add_edit_commands(subparsers)
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
     _add_advance_commands(subparsers)
@@ -415,6 +416,32 @@ Examples:
                 kwargs["action"] = "append"
                 kwargs["default"] = []
             generated.add_argument(option, dest=key, **kwargs)
+
+
+def _add_edit_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "edit",
+        help="Update one field on a modeled desk artifact.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Examples:
+  deskops edit task task-fix-thing goal "Updated goal" --root .
+  deskops edit pill pill-keep-layers-clean how-not "Do not bypass the guardrail." --root .
+
+Values are parsed with SLDB's field-value parser and the document is re-rendered through its model.
+{SELECTOR_HELP}
+""".strip(),
+    )
+    s = p.add_subparsers(dest="subject", required=True)
+    subjects = ["task", *[str(meta["subject"]) for meta in ARTIFACT_SUBJECTS.values()]]
+    for subject in subjects:
+        parser = s.add_parser(subject, help=f"Edit one {subject} field.")
+        parser.add_argument("selector", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}")
+        parser.add_argument("field", help="Model field name to update; hyphens are accepted for underscores.")
+        parser.add_argument("value", help="New field value, parsed like an SLDB field value.")
+        parser.add_argument("--root", default=".", help="Target repository root.")
 
 
 def _add_list_commands(

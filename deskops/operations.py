@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any, Callable
 
 import yaml
+from sldb.cli.utils import parse_data_value
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
@@ -236,6 +237,19 @@ class DeskopsOperations:
         path = self._routine_path(payload["id"])
         self._write_new_doc(path, RoutineDoc, payload)
         return DocumentRecord(kind="routine", doc_id=payload["id"], path=path)
+
+    def edit_artifact_field(self, subject: str, selector: str, field: str, raw_value: str) -> DocumentRecord:
+        self.ensure_workspace()
+        model, path, kind = self._editable_artifact(subject, selector)
+        field_name = field.replace("-", "_")
+        if field_name not in model.model_fields:
+            raise ValueError(f"Unknown field '{field_name}' for {subject}")
+        if field_name == "id":
+            raise ValueError("Cannot edit immutable field 'id'")
+        payload = self._read_doc(path, model)
+        payload[field_name] = parse_data_value(raw_value)
+        self._write_doc(path, model, payload)
+        return DocumentRecord(kind=kind, doc_id=str(payload.get("id", path.stem)), path=path)
 
     def list_tasks(self) -> list[Task]:
         task_dir = self.desk_root / "tasks"
@@ -904,6 +918,18 @@ class DeskopsOperations:
             return matches[0]
         relative = ", ".join(str(path.relative_to(directory)) for path in matches)
         raise ValueError(f"Ambiguous {artifact_id} selector '{selector}' in {directory}: {relative}")
+
+    def _editable_artifact(self, subject: str, selector: str) -> tuple[type[Any], Path, str]:
+        if subject == "task":
+            return TaskDoc, self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", selector), "task"
+        artifact_subjects = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
+        if subject not in artifact_subjects:
+            raise ValueError(f"Unsupported edit subject: {subject}")
+        artifact_id = artifact_subjects[subject]
+        model = ARTIFACT_MODELS[artifact_id]
+        directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
+        path = self._resolve_artifact_selector(artifact_id, directory, selector)
+        return model, path, subject
 
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)

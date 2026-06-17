@@ -33,7 +33,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,faq,bootstrap,init,inbox,promote,add,list,show,advance,repo,desk,atoms,graph}" in captured.out
+    assert "{about,faq,bootstrap,init,inbox,promote,add,edit,list,show,advance,repo,desk,atoms,graph}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -515,6 +515,194 @@ def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
     assert result == 0
     assert "Created task bundle task-json-task" in captured.out
     assert (tmp_path / "desk" / "tasks" / "task-json-task.md").exists()
+
+
+def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Editable task",
+            "--goal",
+            "Original goal.",
+            "--scope",
+            "Original scope.",
+            "--implementation-path",
+            "Original path.",
+            "--done-when",
+            "Original done when.",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+
+    edited = main([
+        "edit",
+        "task",
+        "task-editable-task",
+        "implementation-path",
+        "Use the modeled edit command.",
+        "--root",
+        str(tmp_path),
+    ])
+    edit_out = capsys.readouterr()
+
+    assert edited == 0
+    assert "Updated task task-editable-task field implementation_path" in edit_out.out
+    task_text = (tmp_path / "desk" / "tasks" / "task-editable-task.md").read_text(encoding="utf-8")
+    assert "## Implementation Path" in task_text
+    assert "Use the modeled edit command." in task_text
+    assert "Original scope." in task_text
+    assert not list((tmp_path / "desk" / "fields").glob("field-instance-*.md"))
+
+
+def test_edit_pill_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "pill",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Guardrail: Editable pill",
+            "--what",
+            "Original what.",
+            "--why",
+            "Original why.",
+            "--when",
+            "Original when.",
+            "--where",
+            "Original where.",
+            "--how",
+            "Original how.",
+            "--how-not",
+            "Original how not.",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+
+    edited = main([
+        "edit",
+        "pill",
+        "pill-guardrail-editable-pill",
+        "how-not",
+        "Do not edit raw Markdown for modeled fields.",
+        "--root",
+        str(tmp_path),
+    ])
+    capsys.readouterr()
+
+    assert edited == 0
+    pill_text = (tmp_path / "desk" / "contexts" / "pill-guardrail-editable-pill.md").read_text(encoding="utf-8")
+    assert "## How Not" in pill_text
+    assert "Do not edit raw Markdown for modeled fields." in pill_text
+    assert "Original how." in pill_text
+
+
+def test_edit_rejects_unknown_task_field(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Unknown field task",
+            "--goal",
+            "Goal.",
+            "--scope",
+            "Scope.",
+            "--implementation-path",
+            "Path.",
+            "--done-when",
+            "Done.",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+
+    edited = main([
+        "edit",
+        "task",
+        "task-unknown-field-task",
+        "not-a-field",
+        "value",
+        "--root",
+        str(tmp_path),
+    ])
+    edit_out = capsys.readouterr()
+
+    assert edited == 1
+    assert "Unknown field 'not_a_field' for task" in edit_out.out
+
+
+def test_edit_rejects_immutable_id_field(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Immutable id task",
+            "--goal",
+            "Goal.",
+            "--scope",
+            "Scope.",
+            "--implementation-path",
+            "Path.",
+            "--done-when",
+            "Done.",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+
+    edited = main(["edit", "task", "task-immutable-id-task", "id", "task-renamed", "--root", str(tmp_path)])
+    edit_out = capsys.readouterr()
+
+    assert edited == 1
+    assert "Cannot edit immutable field 'id'" in edit_out.out
+
+
+def test_edit_rejects_ambiguous_task_selector(tmp_path: Path, capsys) -> None:
+    tasks_dir = tmp_path / "desk" / "tasks"
+    tasks_dir.mkdir(parents=True)
+    for task_id in ["task-shared-alpha", "task-shared-beta"]:
+        (tasks_dir / f"{task_id}.md").write_text(
+            f"---\nid: {task_id}\nstatus: active\nreferences: []\ndepends_on: []\npills: []\nfiles: []\nroutine: \"\"\n"
+            "checklists: []\ncurrent_node: \"\"\nhistory: []\ntags: []\n---\n\n"
+            f"# {task_id}\n\n## Rationale\n\nWhy.\n\n## Goal\n\nGoal.\n\n## Scope\n\nScope.\n\n"
+            "## Implementation Path\n\nPath.\n\n## Validation\n\n- pytest\n\n## Done When\n\nDone.\n",
+            encoding="utf-8",
+        )
+
+    edited = main(["edit", "task", "task-shared", "goal", "Updated.", "--root", str(tmp_path)])
+    edit_out = capsys.readouterr()
+
+    assert edited == 1
+    assert "Ambiguous artifact.task selector 'task-shared'" in edit_out.out
+
+
+def test_edit_rejects_ambiguous_artifact_selector(tmp_path: Path, capsys) -> None:
+    atoms_dir = tmp_path / "desk" / "atoms"
+    atoms_dir.mkdir(parents=True)
+    for atom_id in ["atom-shared-alpha", "atom-shared-beta"]:
+        (atoms_dir / f"{atom_id}.md").write_text(
+            f"---\nid: {atom_id}\ntitle: {atom_id}\nfive_wh_one_plus: what\ntags: []\n---\n\n"
+            f"# {atom_id}\n\n## Answer\n\nAnswer.\n",
+            encoding="utf-8",
+        )
+
+    edited = main(["edit", "atom", "atom-shared", "answer", "Updated.", "--root", str(tmp_path)])
+    edit_out = capsys.readouterr()
+
+    assert edited == 1
+    assert "Ambiguous artifact.atom selector 'atom-shared'" in edit_out.out
 
 
 def test_add_task_reports_invalid_yaml_without_creating_artifacts(tmp_path: Path, capsys) -> None:
