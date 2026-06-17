@@ -12,6 +12,7 @@ data:
       - artifact:task
   fields:
     - field.title
+    - field.why
     - field.goal
     - field.scope
     - field.status

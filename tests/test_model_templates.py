@@ -199,6 +199,7 @@ MODEL_PAYLOADS = [
             "id": "task-template-test",
             "title": "Template Task",
             "status": "active",
+            "why": "It captures task intent.",
             "goal": "Render helpful task docs.",
             "scope": "Task template only.",
             "references": [],

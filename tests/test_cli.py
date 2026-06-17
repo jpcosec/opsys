@@ -402,6 +402,8 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
             str(tmp_path),
             "--title",
             "Ship semantic CLI",
+            "--why",
+            "Operators need explicit task intent.",
             "--goal",
             "Expose semantic task commands through deskops.",
             "--scope",
@@ -434,6 +436,11 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
         / "operators"
         / "operator-task-ship-semantic-cli-activate.md"
     ).exists()
+    task_text = (tmp_path / "desk" / "tasks" / "task-ship-semantic-cli.md").read_text(
+        encoding="utf-8"
+    )
+    assert "## Rationale" in task_text
+    assert "Operators need explicit task intent." in task_text
 
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-ship-semantic-cli.md" in board_text

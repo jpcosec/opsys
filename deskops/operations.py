@@ -348,6 +348,7 @@ class DeskopsOperations:
             payload.update(_load_json_mapping(args.payload))
 
         if getattr(args, "title", None): payload["title"] = args.title
+        if getattr(args, "why", None): payload["why"] = args.why
         if getattr(args, "goal", None): payload["goal"] = args.goal
         if getattr(args, "scope", None): payload["scope"] = args.scope
         if getattr(args, "implementation_path", None): payload["implementation_path"] = args.implementation_path
@@ -453,6 +454,7 @@ class DeskopsOperations:
             "title": title,
             "id": task_id,
             "status": str(payload.get("status") or "draft"),
+            "why": str(payload.get("why") or ""),
             "goal": str(payload.get("goal") or ""),
             "scope": str(payload.get("scope") or ""),
             "references": self._coerce_list(payload.get("references") or []),

@@ -229,6 +229,7 @@ def _add_add_commands(
     task.add_argument("--from-yaml", help="Load the task payload from a YAML file.")
     task.add_argument("--root", default=".", help="Target repository root.")
     task.add_argument("--title", help="Task title")
+    task.add_argument("--why", help="Rationale or business driver")
     task.add_argument("--goal", help="Task goal")
     task.add_argument("--scope", help="Task scope")
     task.add_argument("--implementation-path", help="Implementation path")

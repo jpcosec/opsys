@@ -21,6 +21,12 @@ tags: ⸢rev•tags⸥
 
 # ⸢rev•title⸥
 
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+⸢rev•why⸥
+
 ## Goal
 
 _Describe the concrete result this task must produce._
@@ -54,6 +60,7 @@ _Name the observable condition that makes the task complete._
 """.strip()
 
     title: str = Field(description="Short action-oriented task title.")
+    why: str | None = Field(default="", description="Rationale or business driver behind the task.")
     id: str = Field(description="Stable task identifier.")
     status: str = Field(description="Current task state, typically active or blocked.")
     goal: str = Field(description="Concrete intended result for the task.")

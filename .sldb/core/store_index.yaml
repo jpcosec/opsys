@@ -16,4 +16,12 @@ models:
   canonical: false
   family: null
   semantics: []
-hash_a: df45dbc537cef7ad1f8ffedcbb0d76188429566a15fd338bb2c8e9d2b000b1b4
+- name: TaskDoc
+  model_ref: deskops.models:TaskDoc
+  path: deskops/models/task.py
+  models_index: .sldb/core/models/TaskDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+hash_a: 59333ee255a5ad9f4815bd9cdc914690d50645eaf2db503121c32efdbad66e71

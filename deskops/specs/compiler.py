@@ -40,6 +40,7 @@ def compile_task_bundle_spec(
         "title": title,
         "id": task_id,
         "status": str(raw_payload.get("status") or artifact["data"]["doc"].get("status_default", "draft")),
+        "why": str(raw_payload.get("why") or ""),
         "goal": str(raw_payload.get("goal") or ""),
         "scope": str(raw_payload.get("scope") or ""),
         "references": _coerce_list(raw_payload.get("references") or []),
