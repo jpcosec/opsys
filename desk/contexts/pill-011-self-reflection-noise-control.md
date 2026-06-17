@@ -2,6 +2,7 @@
 id: pill-011
 tags:
 - system:deskops
+- pill-type:guardrail
 - topic:self-reflection
 - topic:knowledge-graph
 - topic:drift-control

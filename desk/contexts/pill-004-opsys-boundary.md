@@ -3,6 +3,7 @@ id: pill-004
 tags:
 - system:sldb
 - workspace:desk
+- pill-type:guardrail
 - topic:opsys
 - topic:separation
 ---

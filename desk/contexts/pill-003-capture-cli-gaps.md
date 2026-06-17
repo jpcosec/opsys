@@ -3,6 +3,7 @@ id: pill-003
 tags:
 - system:sldb
 - workspace:desk
+- pill-type:pattern
 - topic:cli
 - topic:task-routing
 ---

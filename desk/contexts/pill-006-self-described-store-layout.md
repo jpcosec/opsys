@@ -4,6 +4,7 @@ tags:
 - source-atom:atom-001
 - system:sldb
 - workspace:desk
+- pill-type:index
 - topic:atoms
 - topic:store
 ---

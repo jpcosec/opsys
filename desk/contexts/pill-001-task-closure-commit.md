@@ -3,6 +3,7 @@ id: pill-001
 tags:
 - system:sldb
 - workspace:desk
+- pill-type:guardrail
 - topic:git
 - topic:task-closure
 ---

@@ -3,6 +3,7 @@ id: pill-010
 tags:
 - system:deskops
 - system:kgdb
+- pill-type:guardrail
 - topic:runtime
 - topic:drift-control
 ---

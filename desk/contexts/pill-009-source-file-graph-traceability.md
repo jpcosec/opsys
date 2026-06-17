@@ -3,6 +3,7 @@ id: pill-009
 tags:
 - system:deskops
 - system:kgdb
+- pill-type:model
 - topic:source-code
 - topic:traceability
 ---

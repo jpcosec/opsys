@@ -3,6 +3,7 @@ id: pill-002
 tags:
 - system:sldb
 - workspace:desk
+- pill-type:pattern
 - topic:cli
 - topic:validation
 ---

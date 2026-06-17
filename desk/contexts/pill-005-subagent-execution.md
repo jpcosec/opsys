@@ -3,6 +3,7 @@ id: pill-005
 tags:
 - system:sldb
 - workspace:desk
+- pill-type:pattern
 - topic:subagents
 - topic:execution
 ---

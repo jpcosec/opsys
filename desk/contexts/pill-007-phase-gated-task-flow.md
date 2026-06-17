@@ -3,6 +3,7 @@ id: pill-007
 tags:
 - system:sldb
 - workspace:desk
+- pill-type:guardrail
 - topic:workflow
 - topic:phase-gates
 ---

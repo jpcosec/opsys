@@ -2,6 +2,7 @@
 id: pill-012
 tags:
 - system:deskops
+- pill-type:guardrail
 - topic:operations
 - topic:data-integrity
 - topic:rollback

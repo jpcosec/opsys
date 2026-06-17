@@ -4,6 +4,7 @@ tags:
 - system:deskops
 - system:sldb
 - system:kgdb
+- pill-type:decision
 - topic:knowledge-graph
 ---
 
