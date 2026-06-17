@@ -12,4 +12,6 @@ tags:
 
 ## Summary
 
+_Summarize the predicate this condition checks._
+
 Task validation must exist before testing handoff.

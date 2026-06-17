@@ -12,4 +12,6 @@ tags:
 
 ## Summary
 
+_Summarize the predicate this condition checks._
+
 Task implementation path must exist before execution.

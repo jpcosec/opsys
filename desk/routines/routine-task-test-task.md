@@ -23,8 +23,10 @@ tags:
 - primitive:routine
 ---
 
-# Routine for Test Task
+# Routine for Test task
 
 ## Summary
 
-Actionable routine for Test Task.
+_Summarize what this routine does and how its nodes fit together._
+
+Actionable routine for Test task.

@@ -12,4 +12,6 @@ tags:
 
 ## Summary
 
+_Summarize the state transition this operator performs._
+
 Closes the task in the operational runtime.

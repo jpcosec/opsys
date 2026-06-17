@@ -12,4 +12,6 @@ tags:
 
 ## Summary
 
+_Summarize the transition this edge represents._
+
 Closeout gate passed.

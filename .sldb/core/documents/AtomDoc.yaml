@@ -403,3 +403,10 @@ documents:
   - topic:workflow-model
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-stale-state-causes-agent-hallucination
+  path: desk/atoms/atom-stale-state-causes-agent-hallucination.md
+  hash_c: 86df8256d7d8734f6b32d07d3633ab7de7099e305a60512243eff1361c238597
+  hash_d: c212bdb5ee1f0272569e045cc67273f5279cdaf433c89a8052ae0e336d5defee
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms

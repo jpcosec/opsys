@@ -13,6 +13,7 @@ Use it for:
 ## Surfaces
 
 - `desk/drawer/features/` holds deferred feature documents.
+- `desk/drawer/attention/` holds inbox items that need human attention before they can be promoted, rejected, or deleted.
 - `desk/drawer/questions/` holds unresolved workflow/model questions before they become tasks, atoms, docs, specs, diagrams, or rituals.
 - `desk/drawer/rituals/` holds deferred ritual drafts before they are promoted into active `desk/rituals/` or decomposed into routines and hooks.
 - `desk/drawer/tasks/Board.md` routes deferred items without promoting them into execution.

@@ -12,4 +12,6 @@ tags:
 
 ## Summary
 
+_Summarize the state transition this operator performs._
+
 Moves the task into active execution.
