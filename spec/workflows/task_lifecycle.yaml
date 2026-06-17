@@ -1,0 +1,53 @@
+id: workflow.task_lifecycle
+version: "0.1"
+source_files:
+  implements:
+    - deskops/workflow/next_actions.py
+  exposes:
+    - deskops/cli/parser.py
+    - deskops/cli/main.py
+  validates:
+    - tests/test_cli.py
+states:
+  - id: execution_gate
+    current_node_suffix: -execution-ready
+    phase: execution
+    ritual: desk/rituals/execution.md
+    purpose: Confirm initialization gate before implementation.
+    next_actions:
+      - Make the active task, scope, touched files, and validation targets explicit.
+      - Run a fresh-context subagent review.
+      - Bind matching board and task pills.
+      - Start implementation only after the initialization gate is satisfied.
+    advance_when:
+      - Execution gate obligations are recorded or satisfied.
+  - id: testing_gate
+    current_node_suffix: -testing-ready
+    phase: testing
+    ritual: desk/rituals/testing.md
+    purpose: Prove the implementation contract and bound pill guardrails.
+    next_actions:
+      - Confirm the handoff names the contract, touched files, and pill guardrails.
+      - Add or update relevant tests.
+      - Run the smallest relevant test scope, then broader validation if shared behavior changed.
+    advance_when:
+      - Relevant tests pass and the testing-to-closeout handoff is explicit.
+  - id: closeout_gate
+    current_node_suffix: -closeout-ready
+    phase: closeout
+    ritual: desk/rituals/closeout.md
+    purpose: Close only after evidence, cleanup, and atomic commit.
+    next_actions:
+      - Confirm passing validation evidence and pill coverage.
+      - Remove the task from the active board and delete the resolved task file when ready.
+      - Untrack the store entry if tracked.
+      - Create one atomic closing commit.
+    advance_when:
+      - Closeout ritual obligations are satisfied.
+  - id: complete
+    current_node: complete
+    phase: complete
+    purpose: No further workflow action is required for this task.
+    next_actions:
+      - No active next action for this task.
+    advance_when: []

@@ -33,7 +33,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,faq,bootstrap,init,inbox,promote,add,edit,list,show,advance,repo,desk,atoms,graph}" in captured.out
+    assert "{about,faq,bootstrap,init,inbox,promote,add,edit,next,list,show,advance,repo,desk,atoms,graph}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -498,6 +498,57 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
 
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-ship-semantic-cli.md" in board_text
+
+
+def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Plan next action",
+            "--goal",
+            "Explain what to do next.",
+            "--scope",
+            "Read-only workflow state.",
+            "--implementation-path",
+            "deskops/workflow/next_actions.py",
+            "--done-when",
+            "Next action is visible.",
+            "--validation",
+            "pytest",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+    task_path = tmp_path / "desk" / "tasks" / "task-plan-next-action.md"
+    before = task_path.read_text(encoding="utf-8")
+
+    result = main(["next", "task-plan-next-action", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "Task: task-plan-next-action" in output.out
+    assert "Phase: execution" in output.out
+    assert "Required ritual:" in output.out
+    assert "desk/rituals/execution.md" in output.out
+    assert "Next actions:" in output.out
+    assert "Run a fresh-context subagent review." in output.out
+    assert "Sources:" in output.out
+    assert "spec/workflows/task_lifecycle.yaml" in output.out
+    assert task_path.read_text(encoding="utf-8") == before
+
+
+def test_next_diagram_renders_workflow_graph_from_spec(capsys) -> None:
+    result = main(["next", "--diagram"])
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "flowchart TD" in output.out
+    assert "execution_gate --> testing_gate" in output.out
+    assert "testing_gate --> closeout_gate" in output.out
 
 
 def test_list_tasks_include_repos_routes_registered_repo_board(tmp_path: Path, capsys) -> None:

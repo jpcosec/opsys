@@ -74,6 +74,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_promote_commands(subparsers)
     _add_add_commands(subparsers)
     _add_edit_commands(subparsers)
+    _add_next_command(subparsers)
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
     _add_advance_commands(subparsers)
@@ -442,6 +443,24 @@ Values are parsed with SLDB's field-value parser and the document is re-rendered
         parser.add_argument("field", help="Model field name to update; hyphens are accepted for underscores.")
         parser.add_argument("value", help="New field value, parsed like an SLDB field value.")
         parser.add_argument("--root", default=".", help="Target repository root.")
+
+
+def _add_next_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "next",
+        help="Show the next valid workflow action for a task without mutating it.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Examples:
+  deskops next task-fix-thing --root .
+  deskops next --diagram
+""".strip(),
+    )
+    p.add_argument("task_id", nargs="?", help=f"Task selector. {SELECTOR_HELP}")
+    p.add_argument("--root", default=".", help="Target repository root.")
+    p.add_argument("--diagram", action="store_true", help="Render the workflow state machine as Mermaid from its source spec.")
 
 
 def _add_list_commands(

@@ -56,6 +56,18 @@ class OperationsCLI:
             print(f"Path: {record.path}")
             return 0
 
+        if args.command == "next":
+            try:
+                if getattr(args, "diagram", False):
+                    print(operations.render_next_action_diagram())
+                    return 0
+                report = operations.next_action_report(getattr(args, "task_id", None))
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            self._print_next_action_report(report)
+            return 0
+
         if args.command == "list" and args.subject == "tasks":
             for task in operations.list_tasks():
                 print(f"{task.id} | {task.status} | {task.current_node}")
@@ -173,3 +185,27 @@ class OperationsCLI:
             return 0
 
         return 1
+
+    def _print_next_action_report(self, report: dict[str, Any]) -> None:
+        print(f"Task: {report['task']['id']}")
+        print(f"Title: {report['task']['title']}")
+        print(f"Status: {report['task']['status']}")
+        print(f"Current node: {report['task']['current_node']}")
+        print(f"Phase: {report['phase']}")
+        if report.get("ritual"):
+            print("Required ritual:")
+            print(f"- {report['ritual']}")
+        if report.get("pills"):
+            print("Required pills:")
+            for pill in report["pills"]:
+                print(f"- {pill}")
+        print("Next actions:")
+        for index, action in enumerate(report["next_actions"], start=1):
+            print(f"{index}. {action}")
+        if report.get("advance_when"):
+            print("Advance when:")
+            for item in report["advance_when"]:
+                print(f"- {item}")
+        print("Sources:")
+        for label, path in report["sources"].items():
+            print(f"- {label}: {path}")

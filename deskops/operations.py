@@ -40,6 +40,9 @@ from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.specs import compile_task_bundle_spec
 from deskops.workspace import scaffold_desk
+from deskops.workflow.next_actions import load_task_lifecycle_spec
+from deskops.workflow.next_actions import match_workflow_state
+from deskops.workflow.next_actions import render_workflow_mermaid
 
 
 PRIMITIVE_DIRS = {
@@ -261,6 +264,35 @@ class DeskopsOperations:
         payload[field_name] = parse_data_value(raw_value)
         self._write_doc(path, model, payload)
         return DocumentRecord(kind=kind, doc_id=str(payload.get("id", path.stem)), path=path)
+
+    def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
+        board_path = self.desk_root / "tasks" / "Board.md"
+        task_path = self._next_task_path(task_selector, board_path)
+        payload = self._read_doc(task_path, TaskDoc)
+        spec = load_task_lifecycle_spec(self.spec_root)
+        state = match_workflow_state(spec, str(payload.get("current_node") or ""))
+        pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("pills") or [])]))
+        return {
+            "task": {
+                "id": payload["id"],
+                "title": payload["title"],
+                "status": payload["status"],
+                "current_node": payload.get("current_node", ""),
+            },
+            "phase": state["phase"],
+            "ritual": state.get("ritual", ""),
+            "pills": pills,
+            "next_actions": list(state.get("next_actions") or []),
+            "advance_when": list(state.get("advance_when") or []),
+            "sources": {
+                "task": str(task_path.relative_to(self.root)),
+                "board": str(board_path.relative_to(self.root)),
+                "workflow": "spec/workflows/task_lifecycle.yaml",
+            },
+        }
+
+    def render_next_action_diagram(self) -> str:
+        return render_workflow_mermaid(load_task_lifecycle_spec(self.spec_root))
 
     def list_tasks(self) -> list[Task]:
         task_dir = self.desk_root / "tasks"
@@ -968,6 +1000,24 @@ class DeskopsOperations:
                 continue
         return repositories
 
+    def _next_task_path(self, task_selector: str | None, board_path: Path) -> Path:
+        if task_selector:
+            return self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", task_selector)
+        board_payload = self._read_doc(board_path, BoardDoc)
+        task_refs = list(board_payload.get("tasks") or [])
+        if not task_refs:
+            raise FileNotFoundError("No active tasks routed by desk/tasks/Board.md")
+        if len(task_refs) > 1:
+            raise ValueError("Multiple active tasks are routed; pass a task selector")
+        return self.root / str(task_refs[0])
+
+    def _board_pills(self, board_path: Path) -> list[str]:
+        try:
+            board_payload = self._read_doc(board_path, BoardDoc)
+        except Exception:
+            return []
+        return [str(pill) for pill in board_payload.get("pills") or []]
+
     def _repository_root(self, repository: dict[str, Any]) -> Path:
         repo_path = Path(str(repository["path"]))
         if repo_path.is_absolute():
@@ -1003,12 +1053,13 @@ class DeskopsOperations:
                 if isinstance(frontmatter, dict):
                     payload = frontmatter
         title = next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), task_path.stem)
+        legacy_status = next((line.split(":", 1)[1].strip() for line in text.splitlines() if line.startswith("Status:")), "unknown")
         task_id = str(payload.get("id") or task_path.stem)
         if not task_id.startswith("task-"):
             raise ValueError(f"Routed task id must start with 'task-': {task_id}")
         return {
             "id": task_id,
-            "status": str(payload.get("status") or "unknown"),
+            "status": str(payload.get("status") or legacy_status),
             "title": title,
         }
 
