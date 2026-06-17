@@ -20,11 +20,12 @@ def test_board_doc_renders_composed_task_summaries(tmp_path: Path):
     task_path.write_text(
         render_model_markdown(
             TaskDoc,
-            {
-                "title": "Improve model editing",
-                "id": "task-a",
-                "status": "active",
-                "goal": "Support safer contract editing from the CLI.",
+                {
+                    "title": "Improve model editing",
+                    "id": "task-a",
+                    "status": "active",
+                    "why": "Keep the editing intent explicit.",
+                    "goal": "Support safer contract editing from the CLI.",
                 "scope": "CLI model workflow only.",
                 "references": [],
                 "depends_on": [],
@@ -68,6 +69,7 @@ def test_task_doc_keeps_machine_metadata_in_frontmatter() -> None:
         "id": "task-a",
         "status": "active",
         "summary": "",
+        "why": "Keep the editing intent explicit.",
         "goal": "Support safer contract editing from the CLI.",
         "scope": "CLI model workflow only.",
         "references": [],

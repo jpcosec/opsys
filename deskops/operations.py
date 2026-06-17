@@ -454,7 +454,7 @@ class DeskopsOperations:
             "title": title,
             "id": task_id,
             "status": str(payload.get("status") or "draft"),
-            "why": str(payload.get("why") or ""),
+            "why": str(payload.get("why") or "Not provided."),
             "goal": str(payload.get("goal") or ""),
             "scope": str(payload.get("scope") or ""),
             "references": self._coerce_list(payload.get("references") or []),
