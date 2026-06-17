@@ -111,6 +111,7 @@ Durable workflow guidance lives under `docs/`, including:
 
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
+- `docs/quickstart.md`
 - `docs/faq.md` (this file)
 
 ## What is the relationship between `deskops` and `sldb`?

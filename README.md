@@ -16,6 +16,7 @@ Durable guides currently include:
 
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
+- `docs/quickstart.md`
 
 Repo-local agent guidance includes:
 
