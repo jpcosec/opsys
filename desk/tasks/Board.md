@@ -47,10 +47,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-
-
 ## Task Details
 
 _Generated from the task references above._
-
-- Automate source file deletion on promote [draft] - Enhance promote command to automatically delete the source file and support payload injection
