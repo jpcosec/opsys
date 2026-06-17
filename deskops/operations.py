@@ -3,7 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import yaml
 from sldb.runtime.validation import extract_model_data
@@ -172,11 +172,11 @@ class DeskopsOperations:
         compiled = compile_task_bundle_spec(self.spec_registry, payload)
         task_id = compiled.task_payload["id"]
 
-        written_paths: list[Path] = []
+        rollback_actions: list[Callable[[], None]] = []
 
         def write_and_track(path: Path, model: type[Any], doc_payload: dict[str, Any]) -> None:
-            self._write_doc(path, model, doc_payload)
-            written_paths.append(path)
+            self._write_new_doc(path, model, doc_payload)
+            rollback_actions.append(lambda path=path: self._remove_created_file(path))
 
         try:
             write_and_track(self._task_path(task_id), TaskDoc, compiled.task_payload)
@@ -190,12 +190,13 @@ class DeskopsOperations:
             for item in compiled.edge_payloads:
                 write_and_track(self._primitive_path("edges", item["id"]), EdgeDoc, item)
 
+            board_path = self.desk_root / "tasks" / "Board.md"
+            board_text = board_path.read_text(encoding="utf-8")
+            rollback_actions.append(lambda: board_path.write_text(board_text, encoding="utf-8"))
             self._append_task_to_board(task_id)
             return TaskBundle(task_id=task_id, task_path=self._task_path(task_id), routine_path=self._routine_path(compiled.routine_payload["id"]))
         except Exception:
-            for path in written_paths:
-                if path.exists():
-                    path.unlink()
+            self._rollback(rollback_actions)
             raise
 
     def create_artifact(self, artifact_id: str, raw_payload: dict[str, Any]) -> DocumentRecord:
@@ -213,8 +214,12 @@ class DeskopsOperations:
                 list(compiled.artifact_payload.get("tags") or []),
                 default_registry_path(self.root),
             )
-        self._write_doc(path, model, compiled.artifact_payload)
-        self._track_created_artifact(artifact_id, model, path, compiled.artifact_payload["id"])
+        self._write_new_doc(path, model, compiled.artifact_payload)
+        try:
+            self._track_created_artifact(artifact_id, model, path, compiled.artifact_payload["id"])
+        except Exception:
+            self._remove_created_file(path)
+            raise
         return DocumentRecord(kind=artifact_id.split(".")[-1], doc_id=compiled.artifact_payload["id"], path=path)
 
     def create_primitive(self, kind: str, raw_payload: dict[str, Any]) -> DocumentRecord:
@@ -222,14 +227,14 @@ class DeskopsOperations:
         directory, model = PRIMITIVE_KINDS[kind]
         payload = self._normalize_primitive_payload(kind, raw_payload)
         path = self._primitive_path(directory, payload["id"])
-        self._write_doc(path, model, payload)
+        self._write_new_doc(path, model, payload)
         return DocumentRecord(kind=kind, doc_id=payload["id"], path=path)
 
     def create_routine(self, raw_payload: dict[str, Any]) -> DocumentRecord:
         self.ensure_workspace()
         payload = self._normalize_routine_payload(raw_payload)
         path = self._routine_path(payload["id"])
-        self._write_doc(path, RoutineDoc, payload)
+        self._write_new_doc(path, RoutineDoc, payload)
         return DocumentRecord(kind="routine", doc_id=payload["id"], path=path)
 
     def list_tasks(self) -> list[Task]:
@@ -903,6 +908,23 @@ class DeskopsOperations:
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(render_model_markdown(model, payload) + "\n", encoding="utf-8")
+
+    def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
+        if path.exists():
+            raise FileExistsError(f"Refusing to overwrite existing document: {path}")
+        try:
+            self._write_doc(path, model, payload)
+        except Exception:
+            self._remove_created_file(path)
+            raise
+
+    def _remove_created_file(self, path: Path) -> None:
+        if path.exists():
+            path.unlink()
+
+    def _rollback(self, rollback_actions: list[Callable[[], None]]) -> None:
+        for action in reversed(rollback_actions):
+            action()
 
     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
         if artifact_id != "artifact.atom":

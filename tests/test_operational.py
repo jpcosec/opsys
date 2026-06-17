@@ -1,12 +1,167 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
+from deskops.operations import DeskopsOperations
 from deskops.runtime.primitives import Checklist
 from deskops.runtime.primitives import Condition
 from deskops.runtime.primitives import Edge
 from deskops.runtime.primitives import Operator
 from deskops.runtime.primitives import Routine
+
+
+def test_create_artifact_rolls_back_file_when_tracking_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    operations = DeskopsOperations(tmp_path)
+
+    def fail_tracking(*_args: object, **_kwargs: object) -> None:
+        raise RuntimeError("tracking failed")
+
+    monkeypatch.setattr(operations, "_track_created_artifact", fail_tracking)
+
+    with pytest.raises(RuntimeError, match="tracking failed"):
+        operations.create_artifact(
+            "artifact.atom",
+            {
+                "title": "Rollback atom",
+                "five_wh_one_plus": "what",
+                "answer": "Created files must disappear if tracking fails.",
+            },
+        )
+
+    assert not list((tmp_path / "desk" / "atoms").glob("atom-rollback-atom.md"))
+
+
+def test_create_primitive_rolls_back_partial_file_when_write_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    operations = DeskopsOperations(tmp_path)
+    original_write_doc = operations._write_doc
+
+    def fail_after_write(path: Path, model: type[object], payload: dict[str, object]) -> None:
+        original_write_doc(path, model, payload)
+        raise RuntimeError("write failed")
+
+    monkeypatch.setattr(operations, "_write_doc", fail_after_write)
+
+    with pytest.raises(RuntimeError, match="write failed"):
+        operations.create_primitive(
+            "condition",
+            {
+                "title": "Rollback condition",
+                "subject": "status",
+                "predicate": "truthy",
+            },
+        )
+
+    assert not (tmp_path / "desk" / "primitives" / "conditions" / "condition-rollback-condition.md").exists()
+
+
+def test_create_routine_rolls_back_partial_file_when_write_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    operations = DeskopsOperations(tmp_path)
+    original_write_doc = operations._write_doc
+
+    def fail_after_write(path: Path, model: type[object], payload: dict[str, object]) -> None:
+        original_write_doc(path, model, payload)
+        raise RuntimeError("write failed")
+
+    monkeypatch.setattr(operations, "_write_doc", fail_after_write)
+
+    with pytest.raises(RuntimeError, match="write failed"):
+        operations.create_routine(
+            {
+                "title": "Rollback routine",
+                "entrypoint": "checklist-ready",
+                "decomposition": ["checklist-ready"],
+                "edges": [],
+                "terminal_nodes": ["complete"],
+            },
+        )
+
+    assert not (tmp_path / "desk" / "routines" / "routine-rollback-routine.md").exists()
+
+
+def test_create_task_bundle_rolls_back_files_when_later_write_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    operations = DeskopsOperations(tmp_path)
+    original_write_doc = operations._write_doc
+
+    def fail_on_checklist(path: Path, model: type[object], payload: dict[str, object]) -> None:
+        original_write_doc(path, model, payload)
+        if path.name == "checklist-task-rollback-bundle-execution-ready.md":
+            raise RuntimeError("checklist write failed")
+
+    monkeypatch.setattr(operations, "_write_doc", fail_on_checklist)
+
+    with pytest.raises(RuntimeError, match="checklist write failed"):
+        operations.create_task_bundle(
+            {
+                "title": "Rollback bundle",
+                "goal": "Prove rollback.",
+                "scope": "Task bundle creates.",
+                "implementation_path": "deskops/operations.py",
+                "done_when": "No orphan files remain.",
+            }
+        )
+
+    assert not list((tmp_path / "desk" / "tasks").glob("task-rollback-bundle.md"))
+    assert not list((tmp_path / "desk" / "routines").glob("routine-task-rollback-bundle.md"))
+    assert not list((tmp_path / "desk" / "primitives").rglob("*task-rollback-bundle*.md"))
+    board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert "desk/tasks/task-rollback-bundle.md" not in board_text
+
+
+def test_create_task_bundle_restores_board_when_append_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    operations = DeskopsOperations(tmp_path)
+    operations.ensure_workspace()
+    board_path = tmp_path / "desk" / "tasks" / "Board.md"
+    original_board_text = board_path.read_text(encoding="utf-8")
+    original_append = operations._append_task_to_board
+
+    def fail_after_append(task_id: str) -> None:
+        original_append(task_id)
+        raise RuntimeError("board append failed")
+
+    monkeypatch.setattr(operations, "_append_task_to_board", fail_after_append)
+
+    with pytest.raises(RuntimeError, match="board append failed"):
+        operations.create_task_bundle(
+            {
+                "title": "Rollback board",
+                "goal": "Prove board rollback.",
+                "scope": "Board mutation.",
+                "implementation_path": "deskops/operations.py",
+                "done_when": "Board is restored.",
+            }
+        )
+
+    assert board_path.read_text(encoding="utf-8") == original_board_text
+    assert not list((tmp_path / "desk" / "tasks").glob("task-rollback-board.md"))
+    assert not list((tmp_path / "desk").rglob("*task-rollback-board*.md"))
+
+
+def test_create_primitive_refuses_existing_file_without_overwriting(tmp_path: Path) -> None:
+    operations = DeskopsOperations(tmp_path)
+    created = operations.create_primitive(
+        "condition",
+        {
+            "title": "Existing condition",
+            "subject": "status",
+            "predicate": "truthy",
+        },
+    )
+    original_text = created.path.read_text(encoding="utf-8")
+
+    with pytest.raises(FileExistsError):
+        operations.create_primitive(
+            "condition",
+            {
+                "title": "Existing condition",
+                "subject": "changed",
+                "predicate": "equals",
+                "expected": "done",
+            },
+        )
+
+    assert created.path.read_text(encoding="utf-8") == original_text
 
 
 def test_condition_and_checklist_evaluate_against_payload() -> None:
