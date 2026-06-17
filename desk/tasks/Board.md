@@ -6,7 +6,6 @@ tasks:
 - desk/tasks/task-improve-cli-help-progressive-disclosure.md
 - desk/tasks/task-write-human-quickstart-guide.md
 - desk/tasks/task-add-artifact-edit-command.md
-- desk/tasks/task-formalize-pill-taxonomy.md
 - desk/tasks/task-consume-repo-local-desk-tasks.md
 - desk/tasks/task-add-next-action-workflow-state-command.md
 pills:
