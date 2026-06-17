@@ -11,8 +11,6 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-rollback-single-file-creates` (Slice A of promoted rollback task)
-- `task-rollback-task-bundle` (Slice B of promoted rollback task)
 - `task-make-list-behavior-data-integrity-safe`
 - `task-add-json-output-for-modeled-documents`
 - `task-make-task-lifecycle-runnable-end-to-end`
