@@ -2,7 +2,6 @@
 id: board-001
 scope: desk
 tasks:
-- desk/tasks/task-consume-repo-local-desk-tasks.md
 - desk/tasks/task-add-next-action-workflow-state-command.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
