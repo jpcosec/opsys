@@ -192,6 +192,19 @@ There are three main targeting modes:
 
 If you use `--repo`, the target repository must already be registered and discoverable from the chosen store context.
 
+## How do I route sibling repo tasks without copying them?
+
+Register sibling repositories as local repository artifacts, then ask `list tasks` to include repo-routed boards:
+
+```bash
+deskops add repository --root . --name "SLDB" --path ../sldb --description "Structured document infrastructure."
+deskops list tasks --root . --include-repos
+```
+
+`--include-repos` reads `desk/registry/repo-*.md`, resolves each registered repository path, opens that repo's `desk/tasks/Board.md`, and lists only the task files routed by that board. It does not copy sibling task files into the current repo and it does not require those task files to be tracked in SLDB.
+
+This keeps the boundary clear: `deskops` is the current implementation of the broader `opsys` workflow layer, while SLDB remains the modeled Markdown/store layer. Cross-repo mutation, advancement, and closeout are intentionally separate future workflow decisions.
+
 ## What does `repo register` do?
 
 It writes a repository registration document into the ecosystem desk registry and tracks it through `sldb` when the `RepositoryDoc` model is registered.

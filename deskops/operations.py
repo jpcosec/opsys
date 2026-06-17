@@ -137,6 +137,17 @@ class DocumentRecord:
     path: Path
 
 
+@dataclass(slots=True)
+class RepoTaskRoute:
+    repo_id: str
+    repo_root: Path
+    task_id: str
+    task_path: Path
+    board_path: Path
+    title: str
+    status: str
+
+
 class DeskopsOperations:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
@@ -264,6 +275,38 @@ class DeskopsOperations:
             except Exception:
                 pass
         return tasks
+
+    def list_repo_task_routes(self) -> list[RepoTaskRoute]:
+        routes: list[RepoTaskRoute] = []
+        for repository in self._registered_repositories():
+            repo_root = self._repository_root(repository)
+            board_path = repo_root / "desk" / "tasks" / "Board.md"
+            if not board_path.exists():
+                continue
+            try:
+                board_payload = self._read_doc(board_path, BoardDoc)
+            except Exception:
+                continue
+            for task_ref in board_payload.get("tasks") or []:
+                task_path = self._resolve_repo_board_task_path(repo_root, str(task_ref))
+                if task_path is None:
+                    continue
+                try:
+                    summary = self._task_route_summary(task_path)
+                except (OSError, UnicodeDecodeError, ValueError):
+                    continue
+                routes.append(
+                    RepoTaskRoute(
+                        repo_id=str(repository["id"]),
+                        repo_root=repo_root,
+                        task_id=summary["id"],
+                        task_path=task_path,
+                        board_path=board_path,
+                        title=summary["title"],
+                        status=summary["status"],
+                    )
+                )
+        return routes
 
     def list_artifacts(self, artifact_id: str) -> list[dict[str, Any]]:
         model = ARTIFACT_MODELS[artifact_id]
@@ -912,6 +955,62 @@ class DeskopsOperations:
         if not prefix:
             raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}' in {directory}")
         return self._one_artifact_match(artifact_id, directory, selector, prefix)
+
+    def _registered_repositories(self) -> list[dict[str, Any]]:
+        registry_dir = self.desk_root / "registry"
+        if not registry_dir.exists():
+            return []
+        repositories = []
+        for path in sorted(registry_dir.glob("repo-*.md")):
+            try:
+                repositories.append(self._read_doc(path, RepositoryDoc))
+            except Exception:
+                continue
+        return repositories
+
+    def _repository_root(self, repository: dict[str, Any]) -> Path:
+        repo_path = Path(str(repository["path"]))
+        if repo_path.is_absolute():
+            return repo_path.resolve()
+        return (self.root / repo_path).resolve()
+
+    def _resolve_repo_board_task_path(self, repo_root: Path, task_ref: str) -> Path | None:
+        tasks_root = (repo_root / "desk" / "tasks").resolve()
+        task_path = Path(task_ref)
+        if not task_path.is_absolute():
+            task_path = repo_root / task_path
+        task_path = task_path.resolve()
+        try:
+            task_path.relative_to(tasks_root)
+        except ValueError:
+            return None
+        if not task_path.name.startswith("task-") or task_path.suffix != ".md":
+            return None
+        if not task_path.is_file():
+            return None
+        return task_path
+
+    def _task_route_summary(self, task_path: Path) -> dict[str, str]:
+        text = task_path.read_text(encoding="utf-8")
+        payload: dict[str, Any] = {}
+        if text.startswith("---"):
+            parts = text.split("---", 2)
+            if len(parts) >= 3:
+                try:
+                    frontmatter = yaml.safe_load(parts[1])
+                except yaml.YAMLError:
+                    frontmatter = None
+                if isinstance(frontmatter, dict):
+                    payload = frontmatter
+        title = next((line[2:].strip() for line in text.splitlines() if line.startswith("# ")), task_path.stem)
+        task_id = str(payload.get("id") or task_path.stem)
+        if not task_id.startswith("task-"):
+            raise ValueError(f"Routed task id must start with 'task-': {task_id}")
+        return {
+            "id": task_id,
+            "status": str(payload.get("status") or "unknown"),
+            "title": title,
+        }
 
     def _one_artifact_match(self, artifact_id: str, directory: Path, selector: str, matches: list[Path]) -> Path:
         if len(matches) == 1:

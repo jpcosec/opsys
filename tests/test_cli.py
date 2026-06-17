@@ -500,6 +500,125 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
     assert "desk/tasks/task-ship-semantic-cli.md" in board_text
 
 
+def test_list_tasks_include_repos_routes_registered_repo_board(tmp_path: Path, capsys) -> None:
+    registered = main(
+        [
+            "add",
+            "repository",
+            "--root",
+            str(tmp_path),
+            "--name",
+            "Sibling Repo",
+            "--path",
+            "sibling",
+            "--description",
+            "Sibling project.",
+        ]
+    )
+    capsys.readouterr()
+    assert registered == 0
+
+    sibling_tasks = tmp_path / "sibling" / "desk" / "tasks"
+    sibling_tasks.mkdir(parents=True)
+    (sibling_tasks / "Board.md").write_text(
+        """---
+id: board-sibling
+scope: desk
+tasks:
+- desk/tasks/task-sibling-demo.md
+pills: []
+rituals: []
+tags: []
+---
+
+# Sibling Board
+
+## Purpose
+
+Route sibling work.
+
+## Notes
+
+None.
+""",
+        encoding="utf-8",
+    )
+    (sibling_tasks / "task-sibling-demo.md").write_text(
+        """---
+id: task-sibling-demo
+status: active
+---
+
+# Sibling demo
+
+## Goal
+
+Prove routed sibling task discovery.
+""",
+        encoding="utf-8",
+    )
+
+    listed = main(["list", "tasks", "--root", str(tmp_path), "--include-repos"])
+    list_out = capsys.readouterr()
+
+    assert listed == 0
+    assert "repo-sibling-repo:task-sibling-demo | active | Sibling demo" in list_out.out
+    assert str(sibling_tasks / "task-sibling-demo.md") in list_out.out
+
+
+def test_list_tasks_include_repos_skips_board_refs_outside_repo_tasks(tmp_path: Path, capsys) -> None:
+    registered = main(
+        [
+            "add",
+            "repository",
+            "--root",
+            str(tmp_path),
+            "--name",
+            "Sibling Repo",
+            "--path",
+            "sibling",
+            "--description",
+            "Sibling project.",
+        ]
+    )
+    capsys.readouterr()
+    assert registered == 0
+
+    sibling_root = tmp_path / "sibling"
+    sibling_tasks = sibling_root / "desk" / "tasks"
+    sibling_tasks.mkdir(parents=True)
+    secret = sibling_root / "secret.md"
+    secret.write_text("# Secret\n", encoding="utf-8")
+    bad_dir = sibling_tasks / "task-directory.md"
+    bad_dir.mkdir()
+    (sibling_tasks / "Board.md").write_text(
+        f"""---
+id: board-sibling
+scope: desk
+tasks:
+- {secret}
+- desk/tasks/Board.md
+- desk/secret.md
+- desk/tasks/task-directory.md
+pills: []
+rituals: []
+tags: []
+---
+
+# Sibling Board
+""",
+        encoding="utf-8",
+    )
+
+    listed = main(["list", "tasks", "--root", str(tmp_path), "--include-repos"])
+    list_out = capsys.readouterr()
+
+    assert listed == 0
+    assert "Secret" not in list_out.out
+    assert "Sibling Board" not in list_out.out
+    assert "task-directory" not in list_out.out
+
+
 def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
     result = main(
         [

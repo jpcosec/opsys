@@ -59,6 +59,9 @@ class OperationsCLI:
         if args.command == "list" and args.subject == "tasks":
             for task in operations.list_tasks():
                 print(f"{task.id} | {task.status} | {task.current_node}")
+            if getattr(args, "include_repos", False):
+                for route in operations.list_repo_task_routes():
+                    print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
             return 0
 
         if args.command == "list" and args.subject == "routines":

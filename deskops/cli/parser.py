@@ -462,6 +462,11 @@ Examples:
 
     tasks = s.add_parser("tasks", help="List actionable tasks.")
     tasks.add_argument("--root", default=".", help="Target repository root.")
+    tasks.add_argument(
+        "--include-repos",
+        action="store_true",
+        help="Also list tasks routed by registered sibling repositories' desk/tasks/Board.md files.",
+    )
 
     routines = s.add_parser("routines", help="List routines.")
     routines.add_argument("--root", default=".", help="Target repository root.")
