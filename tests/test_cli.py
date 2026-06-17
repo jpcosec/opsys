@@ -570,6 +570,36 @@ def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, cap
     assert "Current node: complete" in third.out
 
 
+def test_advance_task_allows_empty_implementation_path(tmp_path: Path, capsys) -> None:
+    add_result = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Advance without path",
+            "--goal",
+            "Keep task progression usable.",
+            "--scope",
+            "Task state machine only.",
+            "--done-when",
+            "The task can enter active execution.",
+            "--validation",
+            "pytest",
+        ]
+    )
+    capsys.readouterr()
+    assert add_result == 0
+
+    first_advance = main(["advance", "task", "task-advance-without-path", "--root", str(tmp_path)])
+    first = capsys.readouterr()
+
+    assert first_advance == 0
+    assert "Status: active" in first.out
+    assert "Current node: checklist-task-advance-without-path-testing-ready" in first.out
+
+
 def test_add_and_show_condition_as_first_class_primitive(tmp_path: Path, capsys) -> None:
     result = main(
         [

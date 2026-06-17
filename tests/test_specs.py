@@ -56,6 +56,7 @@ def test_task_spec_compiler_builds_bundle_from_yaml_specs() -> None:
     assert compiled.task_payload["validation"] == ["pytest"]
     assert compiled.task_payload["done_when"] == "The task bundle is produced from specs."
     assert compiled.condition_payloads[0]["id"] == "condition-task-spec-authored-task-has-implementation-path"
+    assert compiled.checklist_payloads[0]["condition_refs"] == []
     assert compiled.operator_payloads[-1]["value"] == "closed"
 
 
