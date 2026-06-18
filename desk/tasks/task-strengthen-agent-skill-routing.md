@@ -4,8 +4,14 @@ status: active
 references:
 - desk/drawer/tasks/task-strengthen-agent-skill-routing.md
 depends_on: []
-pills: []
-files: []
+pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-004-opsys-boundary.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+files:
+- AGENTS.md
+- .opencode/skills/use-deskops/SKILL.md
 routine: routine-task-strengthen-agent-skill-routing
 checklists:
 - checklist-task-strengthen-agent-skill-routing-execution-ready
@@ -46,7 +52,7 @@ _State what is in scope and what is out of scope._
 
 _Outline the expected implementation route or affected surface._
 
-Promoted from desk/drawer/tasks/task-strengthen-agent-skill-routing.md.
+Update AGENTS.md with skill routing and workflow boundaries; update .opencode/skills/use-deskops/SKILL.md with drawer-first workflow, commit boundaries, exact vocabulary, and role-skill routing.
 
 ## Validation
 

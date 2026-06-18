@@ -15,6 +15,16 @@ Read in this order before changing files:
 
 If the active board does not route a task, do not treat fixture-looking files in `desk/tasks/` as real work by default. Use `desk/drawer/tasks/Board.md` for deferred backlog, and promote drawer work before implementation.
 
+## Skill Route
+
+Load the local role skill that matches the surface before changing files:
+
+- `use-deskops` for `desk/` surfaces, tasks, drawer work, pills, rituals, primitives, routines, repo registry, and workflow operations.
+- `use-sldb` for `StructuredNLDoc` models, reversible Markdown markers, `.sldb` stores, document tracking, model registration, rendering, extraction, or field operations.
+- `use-kgdb` for graph contracts, graph snapshots, nodes, edges, provenance, `deskops graph build`, `deskops graph missing`, or graph runtime validation.
+- `use-spec2viz` for diagram specs, Mermaid/projection outputs, and generated diagram surfaces under `docs/diagrams/`.
+- `customize-opencode` only for opencode configuration, `.opencode/` agents, skills, plugins, MCP servers, permissions, or `AGENTS.md`/opencode routing changes.
+
 ## Core Boundaries
 
 - `deskops/` contains Python implementation code.
@@ -28,6 +38,8 @@ Do not add desk-local field documents to duplicate SLDB field behavior. If an ex
 ## Working Rules
 
 - Start with ambiguity review. If a task would require improvisation, record or resolve the ambiguity before implementation.
+- New unrouted repo-local project work starts in `desk/drawer/tasks/`, not `desk/inbox/`. Reserve inbox for incoming notes, unclear external input, or cross-repo intake.
+- Commit the drawer task creation before promotion. Commit drawer-to-active promotion before implementation.
 - Keep one coherent deliverable per task.
 - For active desk tasks, run the execution-ritual fresh-context subagent review before implementation. Use additional subagents for broad exploration when the task is non-trivial.
 - Bind relevant pills by checking `when`, `where`, and `how_not`, not just titles.
