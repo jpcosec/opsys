@@ -14,7 +14,6 @@ Deferred task backlog:
 
 - `task-make-list-behavior-data-integrity-safe`
 - `task-add-json-output-for-modeled-documents`
-- `task-make-task-lifecycle-runnable-end-to-end`
 - `task-wire-closeout-knowledge-gates`
 - `task-define-materialization-contract-slice` (deskops surface only)
 - `task-add-drift-check-review-loop`
@@ -51,6 +50,7 @@ KGDB inbox (`tools/kgdb/desk/inbox/`):
 Removed from this drawer (moved out):
 - `task-stabilize-init-local-store-failures` → atomized as SLDB inbox items above
 - `task-complete-kgdb-graph-runtime-slice` → atomized as KGDB inbox items above
+- `task-make-task-lifecycle-runnable-end-to-end` → atomized as active child tasks
 
 ## Pills
 
