@@ -2,6 +2,7 @@
 id: board-001
 scope: desk
 tasks:
+- desk/tasks/task-strengthen-agent-skill-routing.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-002-test-real-cli-surfaces.md
@@ -37,6 +38,10 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
+
+
 ## Task Details
 
 _Generated from the task references above._
+
+- Strengthen agent skill routing [active] - Make the repo onboarding and deskops skill enforce the local workflow and route agents toward the role-specific skills for deskops, SLDB, KGDB, spec2viz, and opencode configuration work.

@@ -21,7 +21,6 @@ Deferred task backlog:
 - `task-add-desk-health-and-recovery-surface` (deskops slice only)
 - `task-define-atom-lifecycle-operations`
 - `task-write-end-to-end-operator-manual`
-- `task-strengthen-agent-skill-routing`
 
 Promoted to active desk tasks:
 
