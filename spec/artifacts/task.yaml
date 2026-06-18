@@ -21,6 +21,7 @@ data:
     - field.done_when
     - field.current_node
     - field.history
+    - field.depends_on
   operational:
     conditions:
       - primitive.task.has_implementation_path

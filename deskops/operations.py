@@ -448,6 +448,7 @@ class DeskopsOperations:
         if getattr(args, "implementation_path", None): payload["implementation_path"] = args.implementation_path
         if getattr(args, "done_when", None): payload["done_when"] = args.done_when
         if getattr(args, "validation", None): payload["validation"] = args.validation
+        if getattr(args, "depends_on", None): payload["depends_on"] = args.depends_on
 
         return payload
 

@@ -320,6 +320,12 @@ Examples:
         default=[],
         help="Validation command or assertion; repeat as needed.",
     )
+    task.add_argument(
+        "--depends-on",
+        action="append",
+        default=[],
+        help="Task identifiers that must complete first; repeat as needed.",
+    )
 
     condition = s.add_parser("condition", help="Create a condition primitive.")
     condition.add_argument("--root", default=".", help="Target repository root.")

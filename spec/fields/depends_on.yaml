@@ -1,0 +1,10 @@
+id: field.depends_on
+title: Depends On Field
+type: field
+version: "0.1"
+
+data:
+  key: depends_on
+  value_type: list[string]
+  required: false
+  default: []
