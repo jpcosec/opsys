@@ -6,6 +6,7 @@ This board routes deferred work only.
 
 - `desk/drawer/use-cases/` — 15 use-case narratives covering all CLI surfaces
 - `desk/drawer/stress-tests/` — 15 UX stress-tests derived from use-cases
+- `desk/drawer/features/semantic-execution-adapter.md` — deferred adapter architecture for semantic execution via external agent platforms
 
 ## Tasks
 
