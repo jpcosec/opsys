@@ -1,7 +1,8 @@
 ---
 id: board-001
 scope: desk
-tasks: []
+tasks:
+- desk/tasks/task-semantic-execution-adapter-contract.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-002-test-real-cli-surfaces.md
@@ -42,3 +43,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- Semantic execution adapter contract [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260617-212711-suggestion-semantic-execution-adapter-contract.md`.
