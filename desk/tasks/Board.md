@@ -1,11 +1,7 @@
 ---
 id: board-001
 scope: desk
-tasks:
-- desk/tasks/task-task-lifecycle-implement-pill-binding-command.md
-- desk/tasks/task-task-lifecycle-enforce-phase-gates-during-advancement.md
-- desk/tasks/task-task-lifecycle-clean-up-closed-task-artifacts.md
-- desk/tasks/task-task-lifecycle-preserve-evidence-on-closeout.md
+tasks: []
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-002-test-real-cli-surfaces.md
@@ -41,15 +37,10 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Task Lifecycle: Implement pill binding command [draft] - Provide a CLI command or safe field append operation to bind a pill to a task.
-- Task Lifecycle: Enforce phase gates during advancement [draft] - Ensure deskops advance task respects strict phase gates (execution -> testing -> closeout).
-- Task Lifecycle: Clean up closed task artifacts [draft] - Automatically remove or move task artifacts when a task reaches the closed state.
+- No active board-routed tasks. The task-lifecycle tranche is complete.
 
 ## Task Details
 
 _Generated from the task references above._
 
-- Task Lifecycle: Implement pill binding command [draft] - Provide a CLI command or safe field append operation to bind a pill to a task.
-- Task Lifecycle: Enforce phase gates during advancement [draft] - Ensure deskops advance task respects strict phase gates (execution -> testing -> closeout).
-- Task Lifecycle: Clean up closed task artifacts [draft] - Automatically remove or move task artifacts when a task reaches the closed state.
-- Task Lifecycle: Preserve evidence on closeout [draft] - Integrate knowledge extraction and evidence checking into the closeout gate.
+- No active tasks routed.
