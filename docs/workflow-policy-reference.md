@@ -9,263 +9,175 @@ This reference is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
 - `desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md`
 - `desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md`
+- `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
+- `desk/atoms/workflow-model/atom-phase-closeout-reconciles-pills-and-next-work.md`
+- `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md`
+- `desk/atoms/workflow-model/atom-task-board-phases.md`
 
-Copied from `/home/jp/proyectos/humble/backups_cotizador/dev_backup/WORKFLOW.md` on 2026-06-04 to preserve the task workflow policy that informed the current deskops graph task atomization.
+This reference summarizes the current workflow policy used by `deskops`.
 
-> **No task is complete without testing.**
+> **No task is complete without testing and its own commit. No phase is complete without integration validation and pill reconciliation.**
 
 ## Quick Links
 
 - [Task Management](../desk/tasks/Board.md) - Active tasks
 - [Pills Reference](../desk/contexts/pills.md) - Context pill format
 - [Deferred Work](../desk/drawer/README.md) - Waiting items
+- [Phase Ritual](../desk/rituals/phase.md) - Dependency-layer execution and closeout
 
 ---
 
-## The 4-Zone Model
+## Core Model
 
-```text
-plan/           # Initial planning. Ephemeral - deleted when U-* completes.
-|               # Context pills are drafted here during planification.
-desk/
-  tasks/       # Active work surface. Tasks deleted when resolved.
-  drawers/     # Deferred work. Ideas waiting for prioritization.
-  pills/       # Context pills bound to tasks. Audited after each step.
-```
+### Tasks
 
-**Rule:** No surface may reference below it. `desk/` may reference `plan/` (rationale), never reverse.
+A task is the atomic workflow unit.
 
----
+- One coherent deliverable.
+- May depend on other tasks.
+- Executes in a fresh subagent context.
+- Closes only after targeted validation and its own atomic commit.
 
-## Context Pills
+### Phases
 
-### What They Are
+Tasks form an execution dependency graph.
 
-Pre-drafted rationale that makes tasks unambiguous. Subagents should **not create** anything - context was already drafted during planification.
+A **phase** is one horizontal dependency layer in that graph:
 
-Each pill captures:
+- task prerequisites are already satisfied
+- tasks are ready at the same time
+- planned operational changes do not overlap
+- tasks may run in parallel when the environment supports it
 
-- **Why** this approach over alternatives
-- **What** constraints/guardrails drive the decision
-- **Where** in the codebase changes apply
-- **How** the pattern/model informs implementation
-- **Language** - terminology conventions, naming rules
-- **Scope** - context vs. implementation artifact
+A phase has execution meaning, not business meaning. It is the workflow unit above individual tasks and below the whole board.
 
-### Dimensions
+### Boards
 
-| Dimension | Values |
-|---|---|
-| Type | `guardrail`, `decision`, `pattern`, `model` |
-| Scope | `global`, `domain`, `component` |
-| Language | `en`, `es`, Python, Typescript, etc |
-| Nature | `context` (rationale) or `implementation` (artifact to create) |
+The board is the routing surface for active work.
 
-### Pill Lifecycle
-
-```text
-Drafted (plan/) -> Bound to task (desk/pills/) -> Audited after step ->
-  -> Still needed? Keep.
-  -> Durable ruling stabilized? Distill to atoms first.
-  -> Materialize docs/specs/code from atoms as needed.
-  -> No active need remains? Delete pill.
-```
-
-**Non-redundancy rule:** Pills should reference already-settled code/docs/atoms instead of copying them. Pills may still carry in-flight reasoning or not-yet-incorporated implementation knowledge during bugfix or feature work, but once that knowledge becomes durable it must graduate into atoms rather than remaining pill-only.
+- It names the active tasks.
+- It routes board-wide pills and rituals.
+- Its current ready dependency layer is the current phase.
 
 ---
 
-## Context Audit Ritual
+## Fresh Subagent Rule
 
-After each step/execution:
+Each active task should execute through one fresh subagent context bundle containing only what the task needs:
 
-```text
-1. CHECK  -> Is every task aspect covered by a pill?
-2. AUDIT  -> Are pills still accurate or stale?
-3. UPDATE -> Update stale pills or delete them.
-4. BIND   -> Link new pills to tasks as needed.
-```
+- the task doc
+- board-routed instructions and rituals
+- bound pills
+- linked atoms
+- linked files
+- validation targets
 
----
+The coordinator session integrates outputs, runs shared validation, and enforces task and phase closeout.
 
-## Pre-Execution Gate
-
-Before starting any task, subagent must ask:
-
-> **"Is there any ambiguous or unclear aspect not covered by the context machine?"**
-
-- **If no:** Proceed with execution.
-- **If yes:** Call context composer agent to create additional pills. Do not proceed until task is unambiguous.
+Do not carry multiple unrelated tasks through one long-lived context.
 
 ---
 
-## The Rituals
+## Pill Lifecycle
 
-### 1. Initialization Ritual
-
-Before starting any work for an entire board or phase:
+Pills are temporary execution aids.
 
 ```text
-1. ATOMIZE   -> Break into smallest possible child tasks
-2. DEDUPE    -> Merge overlapping items
-3. CLEAN     -> Delete legacy content
-4. AUDIT     -> Verify existing work before claiming completion:
-               - Check git history for phase commit messages
-               - Verify artifacts exist as specified
-               - Run tests to confirm state
-5. RESOLVE   -> Resolve contradictory end states
-6. BIND      -> Link context pills to tasks
-7. INDEX     -> Regenerate desk/tasks/Board.md
-8. EXECUTE   -> Begin work with explicit boundaries
+Draft or refresh pills -> bind pills to tasks -> execute tasks ->
+close tasks -> reconcile pills at phase closeout ->
+keep / delete / merge / graduate to atoms -> prepare next phase pills
 ```
 
-> **Critical:** Do not mark a task "completed" without auditing git history. Trust the code, not the task file.
+At phase closeout, classify touched pills explicitly:
 
-### 2. Execution Ritual
+- **still active** - keep for the next phase
+- **stale** - delete or retire
+- **redundant** - merge or remove duplicates
+- **durable** - promote the stabilized residue into atoms first
+- **materialization-worthy** - land resulting changes in code, specs, or docs as needed
 
-When a task is **done**:
-
-```text
-1. INVALIDATE -> Check if existing tests are broken. Update/delete.
-2. VERIFY    -> Add new tests where necessary.
-3. TEST      -> Run tests. ALL relevant tests must pass.
-4. CHANGELOG -> Update changelog.md when the repo uses one.
-5. AUDIT     -> Run Context Audit Ritual (check pills, distill durable residue to atoms, delete stale).
-6. DELETE    -> Remove task file.
-7. BOARD     -> Update desk/tasks/Board.md.
-8. COMMIT    -> Make atomic commit.
-```
-
-### 3. Phase Completion Ritual
-
-When all tasks in a phase are done:
-
-```text
-1. COMPILE   -> Rebuild if applicable (bundles, dist).
-2. AUDIT     -> Run tests + any quality checks.
-3. REGRESS   -> Fix any test failures.
-4. FLOW      -> Knowledge flows: pills -> atoms -> code/docs as needed. Delete redundant pills.
-5. ADVANCE   -> Move to next phase.
-```
+Do not let durable knowledge remain pill-only once it stabilizes.
 
 ---
 
-## The Tasks Board
+## Ritual Stack
 
-**Location:** `desk/tasks/Board.md`
+### 1. Phase Ritual
+
+Before starting a ready dependency layer:
 
 ```text
-# Tasks Board
+1. IDENTIFY -> Find the ready non-overlapping dependency layer.
+2. BUNDLE   -> Confirm each task has its fresh context bundle.
+3. EXECUTE  -> Run the execution ritual per task.
+4. CLOSE    -> Require each task to close with tests and a task commit.
+5. VALIDATE -> Run phase-level integration or end-to-end checks.
+6. REGRESS  -> Fix interaction regressions.
+7. RECONCILE-> Audit pills; delete, merge, or graduate them.
+8. SURFACE  -> Capture newly discovered tasks and next-phase pills.
+9. COMMIT   -> Make the phase-closing commit.
+```
 
-> Single entry point for all active work. Read this before starting any task.
+### 2. Task Execution Ritual
 
-## Active (status=open|in_progress)
-| ID | Domain | Task | Priority | Depends On | Pills |
-|----|--------|------|----------|------------|-------|
+For each task in the phase:
 
-## Blocked (status=blocked)
-| ID | Domain | Blocker | Gate |
-|----|--------|--------|------|
+```text
+1. INIT   -> Confirm task scope, files, pills, and validation.
+2. REVIEW -> Run one fresh-context ambiguity review.
+3. BIND   -> Bind every relevant pill.
+4. IMPLEMENT -> Make only task-scoped changes.
+5. HANDOFF   -> Open an explicit testing handoff.
+```
 
-## Ready to Promote (from drawers/)
-| ID | Domain | Item |
-|----|--------|------|
+### 3. Task Testing Ritual
+
+```text
+1. CHECK  -> Confirm the intended contract and pill guardrails.
+2. UPDATE -> Fix stale tests or add missing ones.
+3. RUN    -> Execute the smallest relevant scope first.
+4. EXPAND -> Run broader checks when shared behavior changed.
+5. HANDOFF-> Open an explicit closeout handoff.
+```
+
+### 4. Task Closeout Ritual
+
+```text
+1. VERIFY -> Confirm passing evidence for the contract and pills.
+2. CLEAN  -> Remove stale task-local context when appropriate.
+3. DELETE -> Remove the resolved task from active routing.
+4. COMMIT -> Make the dedicated task-closing commit.
+5. WAIT   -> If this was the last task in the phase, do not start the next phase until phase closeout passes.
 ```
 
 ---
 
-## The Deferred Board
+## Commit Rules
 
-**Location:** `desk/drawer/README.md` in this repo.
+### Task commit
 
-```text
-# Drawers - Deferred Work
+Every closed task gets its own atomic commit.
 
-> Items waiting for prioritization. Stale after 6 months.
+### Phase commit
 
-## Deferred Items
-| ID | Topic | Stale After | Last Reviewed |
-|----|-------|-------------|---------------|
-```
+When all tasks in a phase are closed, make one separate descriptive phase commit for:
 
-**Stale rule:** Review at 6 months -> promote, delete, or re-date. No graveyard.
+- integration fixes
+- pill reconciliation
+- captured next work
+- board/phase bookkeeping
 
----
-
-## Commit Triggers
-
-Commits are made **only** when the Execution Ritual completes.
-
-| Situation | Commit? | Message |
-|---|---|---|
-| Phase objectives fully checked | Yes | Use phase's specified message |
-| Critical bug fix mid-phase | Yes | `fix(<scope>): <description>` |
-| Chores (deps, config) | Yes | `chore(<scope>): <description>` |
-| Phase not done | No | Work-in-progress is not a commit |
+Do not hide unfinished task work inside a phase commit.
 
 ---
 
-## Pre-Completion Audit
+## Anti-Patterns
 
-Before marking a task as **completed**, verify:
-
-```text
-1. GIT HISTORY  -> Do commits match the phase commit messages?
-2. ARTIFACTS   -> Do all specified outputs exist at the specified locations?
-3. TESTS       -> Do all tests pass?
-4. CLEAN TREE  -> Are all untracked files either gitignored or tracked?
-```
-
-If any check fails:
-
-- **Git history mismatch** -> Either rebase to match or update task to reflect reality
-- **Artifacts missing** -> Implement them
-- **Tests failing** -> Fix tests first
-- **Dirty tree** -> Clean up before declaring done
-
-> **Rule:** Trust the code, not the task file. The task file describes intent; git history is truth.
-
----
-
-## Commit Message Format
-
-```text
-<type>(<scope>): <description>
-
-Types:   feat, fix, docs, refactor, chore, test, perf
-Scopes:  plan, database, persistence, runtime, quotation, item, etc.
-```
-
----
-
-## Branch Strategy
-
-| Branch | Purpose | Policy |
-|---|---|---|
-| `dev` | Active development | Commit when Execution Ritual completes |
-| `master` | Production | PR required; CI must pass |
-| `legacy` | Archived reference | Never commit |
-
----
-
-## CI Gate
-
-E2E tests run automatically on PRs and pushes to `master` when configured.
-
-- PRs to master require passing CI.
-- Do not merge with failing tests.
-
----
-
-## What NOT to Do (Anti-Patterns)
-
-- Proceed with ambiguous task without calling context composer.
-- Create implementation artifacts instead of referencing existing pills.
-- Let pills drift from code/docs (redundant or stale).
-- Keep pills after plan completion (knowledge should flow to code/docs).
-- Mark task complete without auditing git history.
-- Commit with untracked files (gitignore or track first).
-- Skip tests to "get it done".
-- Force-push to hide failures.
-- Keep drawer items older than 6 months without review.
-- Reference surfaces below current layer.
+- Starting implementation before identifying the ready phase.
+- Treating semantic milestones as phases when tasks still depend on each other.
+- Running multiple unrelated tasks through one stale context.
+- Closing tasks without targeted tests and a dedicated task commit.
+- Starting the next phase after isolated green task tests without integration validation.
+- Carrying stale or overlapping pills forward because each task passed independently.
+- Leaving durable rules only in pills instead of promoting them into atoms.
+- Skipping newly discovered task capture at phase closeout.

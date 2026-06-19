@@ -22,7 +22,7 @@ steps:
 
 ## Purpose
 
-Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit.
+Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual.
 
 ## Trigger
 
@@ -56,7 +56,7 @@ Start when the implementation work for a task is complete.
 
 ## Completion
 
-The task has left the active workspace and its closure is recorded by its own git commit.
+The task has left the active workspace and its closure is recorded by its own git commit. If it was the last open task in the current phase, the board must still pass through phase closeout before the next phase begins.
 
 ## Steps
 

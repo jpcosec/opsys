@@ -6,13 +6,14 @@ tags:
 - topic:rituals
 - topic:execution
 steps:
+- 1. Confirm the current phase is explicit and that this task belongs to the ready dependency layer being executed.
 - 1. Open the initialization gate by making the active task, task scope, touched files,
   and validation targets explicit.
 - 1. Atomize the work into one coherent deliverable.
 - 1. Audit code, docs, tests, and git state before changing anything.
 - 1. Send one fresh subagent with no prior task context to review the task, board-routed
-  pills, and planned file touches only for ambiguity, missing guardrails, and likely
-  missed pills.
+  instructions, bound pills, linked atoms, linked files, and planned validation only
+  for ambiguity, missing guardrails, and likely missed pills.
 - 1. Resolve or record the cold-review findings before implementation starts.
 - 1. Sweep the board-routed pills and any task-local pills against the task scope,
   touched files, implementation path, and planned validation.
@@ -33,7 +34,7 @@ steps:
 
 ## Purpose
 
-Carry one active desk task through scoped implementation with explicit task and pill binding, including a coverage check strong enough to catch missing guardrails before implementation starts.
+Carry one active desk task through scoped implementation inside an explicit phase with task and pill binding, including a fresh-context coverage check strong enough to catch missing guardrails before implementation starts.
 
 ## Trigger
 
@@ -42,6 +43,7 @@ Start when a desk task becomes the current execution target.
 ## Preconditions
 
 - The task exists in desk/tasks.
+- The current phase or ready dependency layer is explicit.
 - Dependencies are explicit.
 - Required pills exist.
 - The board routes the task as active.
@@ -51,7 +53,7 @@ Start when a desk task becomes the current execution target.
 ## Validation
 
 - The active task is explicit.
-- A fresh-context subagent reviewed the task before implementation.
+- A fresh-context subagent reviewed the task bundle before implementation.
 - Required pills are named in the task.
 - Cold-review ambiguities were resolved, tracked, or converted into pill updates before code changes.
 - Each changed surface is either covered by a named pill or explicitly judged to need no pill.
@@ -77,10 +79,11 @@ The implementation is complete enough to enter the testing ritual through an exp
 
 ## Steps
 
+- Confirm the current phase is explicit and that this task belongs to the ready dependency layer being executed.
 - Open the initialization gate by making the active task, task scope, touched files, and validation targets explicit.
 - Atomize the work into one coherent deliverable.
 - Audit code, docs, tests, and git state before changing anything.
-- Send one fresh subagent with no prior task context to review the task, board-routed pills, and planned file touches only for ambiguity, missing guardrails, and likely missed pills.
+- Send one fresh subagent with no prior task context to review the task, board-routed instructions, bound pills, linked atoms, linked files, and planned validation only for ambiguity, missing guardrails, and likely missed pills.
 - Resolve or record the cold-review findings before implementation starts.
 - Sweep the board-routed pills and any task-local pills against the task scope, touched files, implementation path, and planned validation.
 - Bind every pill whose `when`, `where`, or `how_not` matches a plausible part of the task.

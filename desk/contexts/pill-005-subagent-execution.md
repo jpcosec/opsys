@@ -8,28 +8,28 @@ tags:
 - topic:execution
 ---
 
-# Pattern: execute opsys migration work through subagents
+# Pattern: execute active tasks through fresh subagents
 
 ## What
 
-Use specialized subagents as the normal execution surface for the opsys migration tasks, with the primary session acting as coordinator, integrator, and final verifier.
+Use one fresh subagent as the normal execution surface for each active task, with the primary session acting as coordinator, integrator, and final verifier.
 
 ## Why
 
-The remaining tasks span architecture, store migration, AtomDoc design, semantic mapping, and workflow materialization. Subagents reduce context overload and make it easier to keep each line of work coherent while preserving a single coordinated plan.
+Fresh task-specific contexts reduce context overload, make ambiguity easier to spot, and keep execution aligned with the task's actual bundle of files, pills, atoms, and validations instead of leaked memory from earlier work.
 
 ## When
 
-Apply this pill whenever task-013 through task-020 are executed or decomposed.
+Apply this pill whenever an active task enters execution, especially when the board contains multiple parallel-ready tasks in the same phase.
 
 ## Where
 
-Applies to opsys-boundary work, .sldb redesign, AtomDoc modeling, materialization routines, and proof-slice execution.
+Applies to `desk/rituals/execution.md`, `desk/rituals/phase.md`, active task execution, and any workflow tooling that launches or simulates subagent work.
 
 ## How
 
-Split work into focused subproblems, assign them to specialized subagents, collect their outputs back into the active task flow, and only close tasks after the main session integrates results, runs validations, and records the final commit.
+Give each task its own clean execution bundle: the task doc, routed instructions, bound pills, linked atoms, linked files, and validation targets. Let the primary session coordinate handoffs, integration, and final verification across tasks and phases.
 
 ## How Not
 
-Do not try to carry the entire opsys migration as one monolithic thread in a single context. Do not let subagent outputs bypass the main validation, board, and commit workflow.
+Do not carry multiple unrelated tasks through one long-lived context. Do not let subagent outputs bypass the task's own validation, closeout, and commit workflow.

@@ -23,7 +23,7 @@ steps:
 
 ## Purpose
 
-Verify the intended behavior with the right test scope before a task can close.
+Verify the intended task behavior with the right test scope before a task can close, while leaving shared integration or end-to-end proof for phase closeout.
 
 ## Trigger
 
@@ -54,7 +54,7 @@ Run after implementation changes and before closeout.
 
 ## Completion
 
-The task has trustworthy test evidence and can proceed to closeout.
+The task has trustworthy test evidence and can proceed to closeout, with any broader cross-task validation obligations handed forward to the phase ritual.
 
 ## Steps
 

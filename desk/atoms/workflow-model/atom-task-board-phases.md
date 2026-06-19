@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-A phase is not a standalone document. It is a board-local grouping of initialized tasks whose dependencies are satisfied and whose touched surfaces do not overlap.
+A phase is not a standalone document. It is a board-local dependency layer: the current horizontal slice of initialized tasks whose prerequisites are satisfied and whose planned operational changes do not overlap. Phases organize execution order and parallelism inside the board rather than introducing a separate semantic work object.

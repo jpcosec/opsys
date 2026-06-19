@@ -77,7 +77,7 @@ Fresh subagents validate pill coverage by checking:
 - `pill-002`: `pill-type:pattern` - test real CLI surfaces while shaping workflow.
 - `pill-003`: `pill-type:pattern` - turn CLI gaps into explicit desk tasks.
 - `pill-004`: `pill-type:guardrail` - keep sldb, specyaml, and opsys separated.
-- `pill-005`: `pill-type:pattern` - execute opsys migration work through subagents.
+- `pill-005`: `pill-type:pattern` - execute active tasks through fresh subagents.
 - `pill-006`: `pill-type:index` - points to the self-described store layout atom.
 - `pill-007`: `pill-type:guardrail` - force explicit phase gates.
 - `pill-008`: `pill-type:decision` - keep KGDB parallel to SLDB.
@@ -85,3 +85,4 @@ Fresh subagents validate pill coverage by checking:
 - `pill-010`: `pill-type:guardrail` - generated graph output is runtime state.
 - `pill-011`: `pill-type:guardrail` - self reflection must avoid noisy generation.
 - `pill-012`: `pill-type:guardrail` - create operations must be transactional.
+- `pill-phase-closeout-reconciles-pills-and-surfaces-next-work`: `pill-type:guardrail` - phase closeout must reconcile pills and prepare the next ready work.

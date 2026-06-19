@@ -6,6 +6,7 @@ This guide is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
 - `desk/atoms/workflow-model/atom-routine-based-task-execution.md`
 - `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+- `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
 - `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
 
 Create and close your first desk task without learning SLDB internals first.
@@ -144,7 +145,7 @@ git add <changed-files>
 git commit -m "docs(desk): close quickstart task"
 ```
 
-See `desk/rituals/execution.md`, `desk/rituals/testing.md`, and `desk/rituals/closeout.md` for the full phase-gated workflow.
+See `desk/rituals/phase.md`, `desk/rituals/execution.md`, `desk/rituals/testing.md`, and `desk/rituals/closeout.md` for the full phase-gated workflow.
 
 ## Next References
 

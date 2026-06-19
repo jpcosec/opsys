@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-Tasks should be modular, testable, and accompanied by sufficient pills so a clean subagent with no prior context can execute without improvisation, ambiguity, or context overload.
+Tasks should be modular, testable, and accompanied by sufficient pills so a clean subagent with no prior context can execute without improvisation, ambiguity, or context overload. The expected task bundle is explicit: task doc, routed instructions, bound pills, linked atoms, linked files, and validation targets.
