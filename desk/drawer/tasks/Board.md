@@ -12,20 +12,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-make-list-behavior-data-integrity-safe`
-- `task-add-json-output-for-modeled-documents`
-- `task-wire-closeout-knowledge-gates`
-- `task-define-materialization-contract-slice` (deskops surface only)
-- `task-add-drift-check-review-loop`
-- `task-design-operational-cli-grammar`
-- `task-add-desk-health-and-recovery-surface` (deskops slice only)
-- `task-define-atom-lifecycle-operations`
-- `task-write-end-to-end-operator-manual`
-- `task-establish-horizontal-desk-discovery-and-identity`
-- `task-make-cross-desk-inbox-delivery-verifiable`
-- `task-add-per-project-desk-config-and-version-contract`
-- `task-detect-and-migrate-legacy-desk-workspaces`
-- `task-enforce-pill-to-atom-knowledge-graduation`
+- No deferred drawer tasks routed right now.
 
 Promoted to active desk tasks:
 
@@ -38,6 +25,21 @@ Promoted to active desk tasks:
 - `task-formalize-pill-taxonomy`
 - `task-consume-repo-local-desk-tasks`
 - `task-add-next-action-workflow-state-command`
+- `task-add-desk-health-and-recovery-surface-deskops-slice`
+- `task-add-drift-check-review-loop`
+- `task-add-json-output-for-modeled-documents`
+- `task-add-per-project-desk-config-and-version-contract`
+- `task-define-atom-lifecycle-operations`
+- `task-define-materialization-contract-slice-deskops-surface`
+- `task-design-operational-cli-grammar`
+- `task-detect-and-migrate-legacy-desk-workspaces`
+- `task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout`
+- `task-establish-horizontal-desk-discovery-and-canonical-identity`
+- `task-make-cross-desk-inbox-delivery-verifiable-and-actionable`
+- `task-make-list-behavior-data-integrity-safe`
+- `task-make-task-lifecycle-runnable-from-intake-to-closeout`
+- `task-wire-closeout-to-knowledge-gates`
+- `task-write-end-to-end-deskops-operator-manual`
 
 ## Routed to sibling repos
 
@@ -84,3 +86,5 @@ Removed from this drawer (moved out):
 Promote work from `desk/drawer/` into the active surfaces of `desk/` before implementation starts.
 
 The current deferred board has been atomized at the guardrail level: config/version policy, horizontal desk identity, cross-desk inbox delivery, list integrity, machine-readable output contracts, materialization contracts, atom lifecycle provenance, drift review, desk health boundaries, CLI grammar, closeout knowledge gates, and manual sequencing now each have explicit pills.
+
+All currently routed drawer tasks have been promoted into active desk task bundles. New repo-local work should enter the drawer first before the next promotion wave.
