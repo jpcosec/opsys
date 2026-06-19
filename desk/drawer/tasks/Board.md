@@ -21,6 +21,8 @@ Deferred task backlog:
 - `task-add-desk-health-and-recovery-surface` (deskops slice only)
 - `task-define-atom-lifecycle-operations`
 - `task-write-end-to-end-operator-manual`
+- `task-establish-horizontal-desk-discovery-and-identity`
+- `task-make-cross-desk-inbox-delivery-verifiable`
 
 Promoted to active desk tasks:
 
