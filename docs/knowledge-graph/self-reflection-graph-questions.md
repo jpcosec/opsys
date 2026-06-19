@@ -1,5 +1,12 @@
 # Self Reflection Graph Questions
 
+This document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-kgdb-owns-relations-between-knowledge-surfaces.md`
+- `desk/atoms/knowledge-model/atom-self-reflection-is-a-feedback-loop.md`
+- `desk/atoms/knowledge-model/atom-networkx-is-first-graph-runtime.md`
+
 ID: self-reflection-graph-questions
 
 ## Purpose

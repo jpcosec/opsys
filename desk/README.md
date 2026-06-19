@@ -1,5 +1,12 @@
 # Desk (opsys)
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-desk-is-document-data-only.md`
+- `desk/atoms/workflow-model/atom-drawer-is-not-active-work.md`
+- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+
 Operational workspace for the SLDB-driven routine.
 
 `desk/` is the entrypoint for the **opsys** workflow-domain layer — the repo's operating system around work.

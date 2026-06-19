@@ -1,5 +1,11 @@
 # Document Structure and Primitives
 
+This diagram document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+
 The desk has both structured and less structured documents.
 
 Structured documents are backed by `sldb`. Less structured documents can exist where precision is not yet useful, such as future features, loose issues, or notes in drawers.

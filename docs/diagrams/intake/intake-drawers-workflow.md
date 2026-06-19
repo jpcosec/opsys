@@ -1,5 +1,11 @@
 # Inbox, Drawers, Features, and Issues Workflow
 
+This diagram document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+
 This workflow covers coordination and deferred work. It is separate from active task execution.
 
 ```mermaid

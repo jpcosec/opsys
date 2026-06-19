@@ -1,5 +1,13 @@
 # deskops Quickstart
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+- `desk/atoms/workflow-model/atom-routine-based-task-execution.md`
+- `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+- `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
+
 Create and close your first desk task without learning SLDB internals first.
 
 In this guide you will install deskops, initialize a repo, create one task, advance it through the workflow, run validation, and close it with a commit.

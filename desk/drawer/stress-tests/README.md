@@ -1,5 +1,12 @@
 # UX stress-tests
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+- `desk/atoms/workflow-model/atom-ease-of-use-requires-progressive-disclosure.md`
+- `desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md`
+
 Cada test es un script de interacción CLI que pone al sistema bajo estrés desde la perspectiva del usuario.
 
 ## Formato

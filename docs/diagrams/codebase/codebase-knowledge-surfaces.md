@@ -1,5 +1,11 @@
 # Codebase Knowledge Surfaces
 
+This diagram document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+
 This is a draft outward-facing model. It starts from the large documents and knowledge surfaces that compose a codebase, then asks what atom relations and indexes are needed to connect them without duplicating prose.
 
 The reference shape comes from `core/specyaml`, especially its split between semantic elements, relations, anchors, evidence, coverage, composition, profiles, renderers, lint, and machine contracts.

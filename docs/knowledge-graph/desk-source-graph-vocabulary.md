@@ -1,5 +1,11 @@
 # Desk Source Graph Vocabulary
 
+This document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-kgdb-owns-relations-between-knowledge-surfaces.md`
+- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+
 ID: desk-source-graph-vocabulary
 
 ## Purpose

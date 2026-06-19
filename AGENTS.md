@@ -33,6 +33,8 @@ Load the local role skill that matches the surface before changing files:
 - KGDB owns graph contracts and graph runtime validation.
 - Spec2viz owns structured diagram sources and generated diagram projections.
 
+Docs are human-facing materializations of atoms, not the durable source of truth by themselves. When adding or changing a substantive rule in `docs/`, first capture it in one or more atoms under `desk/atoms/`, then make the doc reflect those atoms.
+
 Do not add desk-local field documents to duplicate SLDB field behavior. If an expected SLDB path fails, capture the gap in the sibling `sldb` repo inbox first, then route an explicit desk task before building a deskops workaround.
 
 ## Working Rules
@@ -45,6 +47,7 @@ Do not add desk-local field documents to duplicate SLDB field behavior. If an ex
 - Bind relevant pills by checking `when`, `where`, and `how_not`, not just titles.
 - Do not skip from implementation to closeout. Pass execution, testing, and closeout gates explicitly.
 - Keep changes small and scoped. Do not clean unrelated dirty worktree changes.
+- For mutating CLI exploration or UX testing, write to a disposable sandbox desk such as `.tmp/deskops-cli-test`, not the repo's real `desk/`, unless the task is intentionally changing the tracked desk.
 - Every closed task ends with its own atomic commit.
 
 ## Validation
@@ -92,5 +95,7 @@ deskops graph missing --root .
 - `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md`
 - `desk/atoms/workflow-model/atom-clean-subagent-ambiguity-review.md`
 - `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md`
 
 The broader manual is deferred in `desk/drawer/tasks/task-write-end-to-end-operator-manual.md`.

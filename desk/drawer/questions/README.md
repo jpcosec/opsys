@@ -1,5 +1,12 @@
 # Questions Drawer
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-unwritten-knowledge-belongs-in-atoms-or-materializations.md`
+- `desk/atoms/workflow-model/atom-atom-candidates-come-from-durable-answers.md`
+- `desk/atoms/workflow-model/atom-drawer-is-not-active-work.md`
+
 `desk/drawer/questions/` holds unresolved workflow questions that are not active tasks yet.
 
 Use this drawer when a concept, connection, flow, diagram, or 5WH1+ answer is unclear enough that promoting it directly into an atom, task, spec, ritual, or implementation would create drift.

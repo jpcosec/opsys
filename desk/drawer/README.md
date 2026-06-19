@@ -1,5 +1,12 @@
 # Drawer (opsys)
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-drawer-is-not-active-work.md`
+- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+
 `desk/drawer/` holds deferred opsys workflow-domain work that should not enter active execution yet.
 
 It is the place for internal planning and deferred work. Do not use `desk/inbox/` as an agent scratchpad for future work; inbox is for messages addressed to the project and records the sending project.

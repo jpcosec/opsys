@@ -1,5 +1,13 @@
 # Workflow Policy Reference
 
+This reference is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+- `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
+- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
+- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+
 Copied from `/home/jp/proyectos/humble/backups_cotizador/dev_backup/WORKFLOW.md` on 2026-06-04 to preserve the task workflow policy that informed the current deskops graph task atomization.
 
 > **No task is complete without testing.**

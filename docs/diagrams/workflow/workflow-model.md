@@ -1,5 +1,11 @@
 # Deskops Workflow Model
 
+This diagram document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+
 This is the semantic workflow model as currently understood. It intentionally avoids infrastructure details and focuses on what each artifact does in the operating system.
 
 ```mermaid

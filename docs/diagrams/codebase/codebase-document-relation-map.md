@@ -1,5 +1,11 @@
 # Codebase Document Relation Map
 
+This diagram document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+
 This draft treats the codebase as a set of large document/surface families. Each surface has internal sections. Crosses between sections are labeled with:
 
 - `role`: how the source surface relates to the target surface

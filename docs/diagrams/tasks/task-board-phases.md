@@ -1,5 +1,11 @@
 # Task Board Phases
 
+This diagram document is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+
 `Phase` is not a standalone document. It is a board-local grouping inside the tasks board.
 
 The tasks board owns active routing. A phase is the board's current execution batch: tasks that can run at the same time because their dependencies are satisfied and their touched surfaces do not overlap.

@@ -1,5 +1,10 @@
 # How To Test UX CLI
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md`
+
 This is the canonical `deskops` guide for testing CLI user experience, not only CLI correctness.
 
 ## Purpose
@@ -27,6 +32,22 @@ Always include these contexts when relevant:
 - uninitialized workspace
 - shared or global state
 - degraded documentation alignment
+
+## Test Sandbox
+
+Run exploratory or UX CLI mutation against a dedicated sandbox root under `.tmp/`, not the repo's real `desk/`.
+
+Recommended setup:
+
+```bash
+export DESKOPS_TEST_ROOT=.tmp/deskops-cli-test
+rm -rf "$DESKOPS_TEST_ROOT"
+mkdir -p "$DESKOPS_TEST_ROOT"
+```
+
+When `DESKOPS_TEST_ROOT` is set, `deskops` commands that default to `--root .` will use that sandbox root instead. This keeps ad hoc `add`, `edit`, `show`, `list`, `advance`, `promote`, `inbox`, `repo`, and `graph` testing from polluting the repository's tracked `desk/` surfaces.
+
+If you want to test the real repo desk intentionally, pass an explicit `--root .` only after unsetting `DESKOPS_TEST_ROOT`.
 
 ## Test Method
 

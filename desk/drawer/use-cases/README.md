@@ -1,5 +1,11 @@
 # Use-cases drawer
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-ease-of-use-requires-progressive-disclosure.md`
+- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+
 Intuitive user interaction narratives. These are not specs — they're thought-collection for later UX stress-testing.
 
 ## Surfaces covered
