@@ -23,3 +23,9 @@ Consolidate the methodology into one operational playbook after runnable slices 
 ## Done When
 
 - A new project can adopt deskops by following one coherent manual.
+
+## Suggested Pills
+
+- `desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md`
+- `desk/contexts/pill-002-test-real-cli-surfaces.md`
+- `desk/contexts/pill-007-phase-gated-task-flow.md`

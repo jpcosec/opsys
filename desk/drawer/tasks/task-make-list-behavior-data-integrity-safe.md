@@ -22,3 +22,9 @@ Ensure `deskops list` commands do not silently hide malformed workflow documents
 - Empty initialized sections list cleanly.
 - Malformed documents are reported clearly instead of silently skipped.
 - Regression tests cover malformed docs in listed directories.
+
+## Suggested Pills
+
+- `desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md`
+- `desk/contexts/pill-002-test-real-cli-surfaces.md`
+- `desk/contexts/pill-012-deskops-cli-artifact-contract.md`

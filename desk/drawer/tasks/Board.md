@@ -23,6 +23,7 @@ Deferred task backlog:
 - `task-write-end-to-end-operator-manual`
 - `task-establish-horizontal-desk-discovery-and-identity`
 - `task-make-cross-desk-inbox-delivery-verifiable`
+- `task-add-per-project-desk-config-and-version-contract`
 
 Promoted to active desk tasks:
 
@@ -56,7 +57,18 @@ Removed from this drawer (moved out):
 
 ## Pills
 
-*No active drawer pills.*
+- `desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md`
+- `desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md`
+- `desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md`
+- `desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md`
+- `desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md`
+- `desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md`
+- `desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md`
+- `desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md`
+- `desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md`
+- `desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md`
+- `desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md`
+- `desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md`
 
 ## Rituals
 
@@ -66,3 +78,5 @@ Removed from this drawer (moved out):
 ## Notes
 
 Promote work from `desk/drawer/` into the active surfaces of `desk/` before implementation starts.
+
+The current deferred board has been atomized at the guardrail level: config/version policy, horizontal desk identity, cross-desk inbox delivery, list integrity, machine-readable output contracts, materialization contracts, atom lifecycle provenance, drift review, desk health boundaries, CLI grammar, closeout knowledge gates, and manual sequencing now each have explicit pills.

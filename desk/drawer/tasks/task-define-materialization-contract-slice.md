@@ -23,3 +23,9 @@ KGDB relation extraction for materialization is routed to the sibling `kgdb` rep
 - A materialization contract can be declared via deskops CLI or model
 - Contract validates source existence and target path
 - Contract metadata (intent, projection, validation rules) is queryable
+
+## Suggested Pills
+
+- `desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md`
+- `desk/contexts/pill-004-opsys-boundary.md`
+- `desk/contexts/pill-010-graph-runtime-output-policy.md`

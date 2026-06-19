@@ -21,3 +21,9 @@ Turn the documented task lifecycle into an executable deskops path.
 
 - A user can run one complete task lifecycle with deskops commands.
 - The lifecycle records validation evidence and refuses ambiguous closure.
+
+## Suggested Pills
+
+- `desk/contexts/pill-007-phase-gated-task-flow.md`
+- `desk/contexts/pill-001-task-closure-commit.md`
+- `desk/contexts/pill-012-deskops-cli-artifact-contract.md`

@@ -20,3 +20,9 @@ Define and implement atom creation, validation, split, merge, deletion, and trac
 ## Done When
 
 - Atoms can evolve without creating stale, duplicate, or orphaned knowledge.
+
+## Suggested Pills
+
+- `desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md`
+- `desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md`
+- `desk/contexts/pill-009-source-file-graph-traceability.md`

@@ -22,3 +22,9 @@ SLDB store health and model registration checks are routed to the sibling `sldb`
 - `deskops doctor` detects missing `desk/`, untracked docs, stale runtime files, and invalid workflow documents
 - Clear repair instructions or non-destructive fixes for each
 - SLDB store checks delegate to `sldb stores check`
+
+## Suggested Pills
+
+- `desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md`
+- `desk/contexts/pill-006-self-described-store-layout.md`
+- `desk/contexts/pill-004-opsys-boundary.md`

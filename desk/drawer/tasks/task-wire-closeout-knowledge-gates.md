@@ -19,3 +19,9 @@ Make closeout check tests, atoms, graph links, materialization status, cleanup, 
 ## Done When
 
 - Closeout cannot silently skip validation, graph/atom traceability, cleanup, or commit requirements.
+
+## Suggested Pills
+
+- `desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md`
+- `desk/contexts/pill-001-task-closure-commit.md`
+- `desk/contexts/pill-007-phase-gated-task-flow.md`
