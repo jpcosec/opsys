@@ -7,6 +7,8 @@ This reference is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
 - `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
 - `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+- `desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md`
+- `desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md`
 
 Copied from `/home/jp/proyectos/humble/backups_cotizador/dev_backup/WORKFLOW.md` on 2026-06-04 to preserve the task workflow policy that informed the current deskops graph task atomization.
 
@@ -64,11 +66,12 @@ Each pill captures:
 ```text
 Drafted (plan/) -> Bound to task (desk/pills/) -> Audited after step ->
   -> Still needed? Keep.
-  -> Redundant with code/docs? Delete.
-  -> Complete. Knowledge flows to code/docs. Delete.
+  -> Durable ruling stabilized? Distill to atoms first.
+  -> Materialize docs/specs/code from atoms as needed.
+  -> No active need remains? Delete pill.
 ```
 
-**Non-redundancy rule:** Code is truth. Docs is index. Context is reasoning (subset of subset). Context pills must not repeat what is already in code or docs.
+**Non-redundancy rule:** Pills should reference already-settled code/docs/atoms instead of copying them. Pills may still carry in-flight reasoning or not-yet-incorporated implementation knowledge during bugfix or feature work, but once that knowledge becomes durable it must graduate into atoms rather than remaining pill-only.
 
 ---
 
@@ -127,7 +130,7 @@ When a task is **done**:
 2. VERIFY    -> Add new tests where necessary.
 3. TEST      -> Run tests. ALL relevant tests must pass.
 4. CHANGELOG -> Update changelog.md when the repo uses one.
-5. AUDIT     -> Run Context Audit Ritual (check pills, delete stale).
+5. AUDIT     -> Run Context Audit Ritual (check pills, distill durable residue to atoms, delete stale).
 6. DELETE    -> Remove task file.
 7. BOARD     -> Update desk/tasks/Board.md.
 8. COMMIT    -> Make atomic commit.
@@ -141,7 +144,7 @@ When all tasks in a phase are done:
 1. COMPILE   -> Rebuild if applicable (bundles, dist).
 2. AUDIT     -> Run tests + any quality checks.
 3. REGRESS   -> Fix any test failures.
-4. FLOW      -> Knowledge flows: pills -> code/docs. Delete redundant pills.
+4. FLOW      -> Knowledge flows: pills -> atoms -> code/docs as needed. Delete redundant pills.
 5. ADVANCE   -> Move to next phase.
 ```
 

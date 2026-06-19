@@ -11,4 +11,4 @@ tags:
 
 ## Answer
 
-Context pills exist to bound a clean subagent's task context. They are temporary and must be deleted when unused, after their durable residue has been ingested into atoms, documentation, or both.
+Context pills exist to bound a clean subagent's task and phase context. They are temporary workspace surfaces, but they may carry transitional knowledge that is not yet stable enough to live as a durable atom. Once the task no longer needs that context, the pill must either hand its durable residue to atoms/docs or be deleted if nothing durable remains.

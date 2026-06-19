@@ -25,6 +25,7 @@ Deferred task backlog:
 - `task-make-cross-desk-inbox-delivery-verifiable`
 - `task-add-per-project-desk-config-and-version-contract`
 - `task-detect-and-migrate-legacy-desk-workspaces`
+- `task-enforce-pill-to-atom-knowledge-graduation`
 
 Promoted to active desk tasks:
 
@@ -70,6 +71,7 @@ Removed from this drawer (moved out):
 - `desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md`
 - `desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md`
 - `desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md`
+- `desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md`
 - `desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md`
 
 ## Rituals

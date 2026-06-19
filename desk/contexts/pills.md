@@ -2,7 +2,7 @@
 
 Pills are the reusable context documents of the desk routine.
 
-They are temporary in the workspace but durable in git history.
+They are temporary in the workspace but durable in git history. A pill may either point at already-settled knowledge or carry transitional task knowledge that has not yet been incorporated into the durable atom base.
 
 ## Base Shape
 
@@ -27,6 +27,7 @@ Required fields:
 - Human-readable title prefixes such as `Guardrail:`, `Pattern:`, `Decision:`, and `Model:` should match the `pill-type:*` tag when practical.
 - Tags go at the end and should use namespaced forms such as `language:python`, `library:pydantic`, or `system:sldb`.
 - `where` may be either a general applicability description or a reference to already existing code or docs.
+- Pills are allowed to carry not-yet-implemented bugfix/feature knowledge during execution, but that knowledge should not remain pill-only once it stabilizes.
 - A pill can be deleted once it is no longer needed in the active workspace; reuse remains available through git history.
 - Coverage is only sufficient when the executor checks active board pills plus task-local pills against the task scope, touched files, and validation plan.
 - For risky or non-trivial tasks, run at least one cold review through a fresh-context subagent before finalizing pill coverage.
@@ -42,7 +43,7 @@ Required fields:
 - `pill-type:model` defines a conceptual shape or representation rule. Bind it when the task creates, extracts, validates, or changes that representation.
 - `pill-type:index` points to existing atoms, docs, specs, or source surfaces that provide required context. Bind it when the task needs orientation but should not duplicate the referenced knowledge.
 
-Avoid `pill-type:atom`. A pill that only surfaces durable knowledge should be an `index` pill and should reference the atom instead of copying it. Once no active task needs that transient context, delete the pill or promote the stable content into atoms/docs.
+Avoid `pill-type:atom`. A pill that only surfaces durable knowledge should be an `index` pill and should reference the atom instead of copying it. A pill that captures in-flight implementation knowledge is valid during the task, but once that knowledge becomes durable project ruling it should be distilled into atoms, with docs/specs/code following from the atom base. Once no active task needs the transient context, delete the pill.
 
 ## Fresh Subagent Guidance
 

@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-Pills serve two roles: they point agents to existing atoms, code, docs, or specs that matter for a task, and they carry bounded context for work that has not yet been implemented.
+Pills serve two roles: they point agents to existing atoms, code, docs, or specs that matter for a task, and they carry bounded context for work whose governing knowledge is still being discovered, tested, or implemented. That in-flight knowledge belongs in pills during execution and should graduate into atoms once it becomes durable project ruling.

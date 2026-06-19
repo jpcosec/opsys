@@ -6,6 +6,7 @@ This guide is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-desk-is-document-data-only.md`
 - `desk/atoms/workflow-model/atom-drawer-is-not-active-work.md`
 - `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+- `desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md`
 
 Operational workspace for the SLDB-driven routine.
 
@@ -17,7 +18,7 @@ It contains:
 2. deferred surfaces kept inside the same operational system
 3. rituals for changing code, testing, documenting, and keeping the repo and git state clean
 
-Nothing in `desk/` is durable project history. Stable knowledge must end up in code, tests, docs, or git history.
+Most of `desk/` is operational workspace, not durable project history. The main durable exception is `desk/atoms/`, which holds stabilized project knowledge and rulings. Transitional task knowledge may live temporarily in pills and should graduate into atoms once it becomes durable.
 
 ## Structure
 
