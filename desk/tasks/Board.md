@@ -17,6 +17,7 @@ tasks:
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-wire-closeout-to-knowledge-gates.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+- desk/tasks/task-conciliate-active-pills-for-reuse-and-next-phase.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-002-test-real-cli-surfaces.md
@@ -89,3 +90,4 @@ _Generated from the task references above._
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
+- Conciliate active pills for reuse and next phase [active] - Audit the current active context pills, remove overfit or stale pills, make the reusable many-to-many pill model explicit, and leave the board with a smaller reconciled pill set for the next phase.
