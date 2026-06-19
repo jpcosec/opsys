@@ -24,6 +24,7 @@ Deferred task backlog:
 - `task-establish-horizontal-desk-discovery-and-identity`
 - `task-make-cross-desk-inbox-delivery-verifiable`
 - `task-add-per-project-desk-config-and-version-contract`
+- `task-detect-and-migrate-legacy-desk-workspaces`
 
 Promoted to active desk tasks:
 
@@ -58,6 +59,7 @@ Removed from this drawer (moved out):
 ## Pills
 
 - `desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md`
+- `desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md`
 - `desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md`
 - `desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md`
 - `desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md`
