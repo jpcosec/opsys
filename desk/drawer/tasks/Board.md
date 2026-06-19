@@ -12,7 +12,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-formalize-phase-layer-workflow`
+- No deferred drawer tasks routed right now.
 
 Promoted to active desk tasks:
 
@@ -40,6 +40,7 @@ Promoted to active desk tasks:
 - `task-make-task-lifecycle-runnable-from-intake-to-closeout`
 - `task-wire-closeout-to-knowledge-gates`
 - `task-write-end-to-end-deskops-operator-manual`
+- `task-formalize-phase-layer-workflow`
 
 ## Routed to sibling repos
 

@@ -17,6 +17,7 @@ tasks:
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-wire-closeout-to-knowledge-gates.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+- desk/tasks/task-formalize-phase-layer-workflow.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-002-test-real-cli-surfaces.md
@@ -66,6 +67,7 @@ _Add short operational notes about the current routed set._
 - Make list behavior data-integrity-safe [active] - Ensure `deskops list` commands do not silently hide malformed workflow documents.
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
+- Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
 
 ## Task Details
 
@@ -86,3 +88,4 @@ _Generated from the task references above._
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
+- Formalize phase-layer workflow [active] - Define the missing phase-level workflow layer so deskops explicitly models task execution as a dependency graph with horizontal execution phases, per-task fresh-subagent execution, per-task unit-test-plus-commit closeout, and per-phase integration plus pill-reconciliation closeout.
