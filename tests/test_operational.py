@@ -168,6 +168,7 @@ def test_condition_and_checklist_evaluate_against_payload() -> None:
     payload = {
         "status": "draft",
         "validation": ["pytest"],
+        "references": ["pytest tests/test_operational.py"],
         "implementation_path": "Ship the runtime.",
     }
     conditions = {
@@ -212,6 +213,8 @@ def test_routine_advance_runs_operators_until_next_gate() -> None:
         "status": "draft",
         "implementation_path": "Create the runtime.",
         "validation": ["pytest"],
+        "references": [],
+        "closeout_evidence_verified": False,
         "done_when": "The task reaches closed.",
         "current_node": "checklist-execution",
     }
@@ -234,6 +237,16 @@ def test_routine_advance_runs_operators_until_next_gate() -> None:
             tags=[],
             subject="validation",
             predicate="not_empty",
+            expected="",
+        ),
+        "condition-has-closeout-evidence": Condition(
+            id="condition-has-closeout-evidence",
+            title="Durable evidence is verified",
+            status="active",
+            summary="",
+            tags=[],
+            subject="closeout_evidence_verified",
+            predicate="truthy",
             expected="",
         ),
         "condition-ready-for-closeout": Condition(
@@ -274,8 +287,8 @@ def test_routine_advance_runs_operators_until_next_gate() -> None:
             status="active",
             summary="",
             tags=[],
-            items=["Task is ready for closeout"],
-            condition_refs=["condition-ready-for-closeout"],
+            items=["Task is ready for closeout", "Durable evidence is verified"],
+            condition_refs=["condition-ready-for-closeout", "condition-has-closeout-evidence"],
             mode="all",
         ),
     }
@@ -405,7 +418,19 @@ def test_routine_advance_runs_operators_until_next_gate() -> None:
         operators=operators,
         checklists=checklists,
     )
-    assert third.current_node == "complete"
+    assert third.current_node == "checklist-closeout"
+    assert third.blocked is True
+    assert payload["status"] == "ready_for_testing"
+
+    payload["references"] = ["pytest tests/test_operational.py::test_routine_advance_runs_operators_until_next_gate"]
+    payload["closeout_evidence_verified"] = True
+    fourth = routine.advance(
+        payload,
+        conditions=conditions,
+        operators=operators,
+        checklists=checklists,
+    )
+    assert fourth.current_node == "complete"
     assert payload["status"] == "closed"
 
 

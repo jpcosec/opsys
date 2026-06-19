@@ -1,5 +1,14 @@
 # deskops FAQ
 
+This guide is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
+
 This FAQ is the first-use orientation layer for `deskops`.
 
 `deskops` is the workflow-domain layer that sits on top of `sldb`. It owns the operational workspace surfaces in `desk/`, including tasks, pills, rituals, inbox notes, deferred drawer work, and the repo registry helpers.
@@ -32,6 +41,7 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` defin
 - `deskops faq` — first-use help (this document)
 - `deskops inbox` — write and browse desk inbox notes
 - `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
+- `deskops bind pill` — bind a context pill to an active task through the modeled task surface
 - `deskops graph` — build graph snapshots, inspect neighbors, check missing references, and write review-only reflection reports
 - `deskops repo register` — canonical repository registration in the ecosystem desk registry, tracked through SLDB
 - `deskops desk install` — scaffold a desk surface in a target repository

@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 import json
 from pathlib import Path
+import subprocess
 from typing import Any, Callable
 
 import yaml
@@ -265,6 +266,20 @@ class DeskopsOperations:
         self._write_doc(path, model, payload)
         return DocumentRecord(kind=kind, doc_id=str(payload.get("id", path.stem)), path=path)
 
+    def bind_pill_to_task(self, task_selector: str, pill_selector: str) -> tuple[DocumentRecord, str, bool]:
+        self.ensure_workspace()
+        task_path = self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", task_selector)
+        pill_path = self._resolve_artifact_selector("artifact.pill", self.desk_root / "contexts", pill_selector)
+        task_payload = self._read_doc(task_path, TaskDoc)
+        self._read_doc(pill_path, PillDoc)
+        pill_ref = str(pill_path.relative_to(self.root))
+        pills = list(task_payload.get("pills") or [])
+        if pill_ref in pills:
+            return DocumentRecord(kind="task", doc_id=str(task_payload.get("id", task_path.stem)), path=task_path), pill_ref, False
+        task_payload["pills"] = [*pills, pill_ref]
+        self._write_doc(task_path, TaskDoc, task_payload)
+        return DocumentRecord(kind="task", doc_id=str(task_payload.get("id", task_path.stem)), path=task_path), pill_ref, True
+
     def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
         board_path = self.desk_root / "tasks" / "Board.md"
         task_path = self._next_task_path(task_selector, board_path)
@@ -425,14 +440,19 @@ class DeskopsOperations:
         conditions = self._load_conditions(task)
         operators = self._load_operators(routine)
         checklists = self._load_checklists(task)
+        payload["closeout_evidence_verified"] = self._has_verified_task_closeout_evidence(payload)
         result = routine.advance(
             payload,
             conditions=conditions,
             operators=operators,
             checklists=checklists,
         )
+        advanced_task = self._hydrate_task(payload)
+        if payload.get("status") == "closed" and payload.get("current_node") == "complete":
+            self._remove_task_runtime_artifacts(str(payload.get("id", task_id)), str(payload.get("routine") or ""))
+            return advanced_task, result
         self._write_doc(task_path, TaskDoc, payload)
-        return self._hydrate_task(payload), result
+        return advanced_task, result
 
     def parse_task_input(self, args: Any) -> dict[str, Any]:
         payload: dict[str, Any] = {}
@@ -667,10 +687,20 @@ class DeskopsOperations:
                 "tags": ["primitive:condition"],
             },
             {
+                "title": "Durable evidence is verified",
+                "id": f"condition-{task_id}-has-closeout-evidence",
+                "status": "active",
+                "summary": "Task references must point to a real atom, test, or git commit before closeout.",
+                "subject": "closeout_evidence_verified",
+                "predicate": "truthy",
+                "expected": "",
+                "tags": ["primitive:condition"],
+            },
+            {
                 "title": "Ready for closeout",
                 "id": f"condition-{task_id}-ready-for-closeout",
                 "status": "active",
-                "summary": "Task must be in ready_for_testing before closeout.",
+                "summary": "Task must be in ready_for_testing and carry testing evidence before closeout.",
                 "subject": "status",
                 "predicate": "equals",
                 "expected": "ready_for_testing",
@@ -705,8 +735,11 @@ class DeskopsOperations:
                 "id": f"checklist-{task_id}-closeout-ready",
                 "status": "active",
                 "summary": "Confirms the task is ready for closeout.",
-                "items": ["Task is ready for closeout"],
-                "condition_refs": [f"condition-{task_id}-ready-for-closeout"],
+                "items": ["Task is ready for closeout", "Durable evidence is verified"],
+                "condition_refs": [
+                    f"condition-{task_id}-ready-for-closeout",
+                    f"condition-{task_id}-has-closeout-evidence",
+                ],
                 "mode": "all",
                 "tags": ["primitive:checklist"],
             },
@@ -819,6 +852,91 @@ class DeskopsOperations:
             tasks.append(task_ref)
             board_payload["tasks"] = tasks
             self._write_doc(board_path, BoardDoc, board_payload)
+
+    def _remove_task_runtime_artifacts(self, task_id: str, routine_id: str) -> None:
+        board_path = self.desk_root / "tasks" / "Board.md"
+        if board_path.exists():
+            board_payload = self._read_doc(board_path, BoardDoc)
+            task_ref = f"desk/tasks/{task_id}.md"
+            tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
+            board_payload["tasks"] = tasks
+            self._write_doc(board_path, BoardDoc, board_payload)
+        task_path = self.desk_root / "tasks" / f"{task_id}.md"
+        if task_path.exists():
+            task_path.unlink()
+        if routine_id:
+            routine_path = self._routine_path(routine_id)
+            if routine_path.exists():
+                routine_path.unlink()
+
+    def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
+        for reference in self._coerce_list(payload.get("references") or []):
+            ref = str(reference).strip()
+            if not ref:
+                continue
+            if self._reference_points_to_atom(ref):
+                return True
+            if self._reference_points_to_test(ref):
+                return True
+            if self._reference_points_to_commit(ref):
+                return True
+        return False
+
+    def _reference_points_to_atom(self, reference: str) -> bool:
+        candidate = reference.strip()
+        if not candidate:
+            return False
+        path_text = candidate.split("::", 1)[0]
+        path = Path(path_text)
+        if not path.is_absolute():
+            path = self.root / path
+        if path.suffix == ".md" and path.exists():
+            try:
+                path.relative_to(self.desk_root / "atoms")
+                return True
+            except ValueError:
+                pass
+        atom_id = candidate.removeprefix("atom:")
+        if not atom_id.startswith("atom-"):
+            return False
+        return any(atom_path.stem == atom_id for atom_path in (self.desk_root / "atoms").rglob("*.md"))
+
+    def _reference_points_to_test(self, reference: str) -> bool:
+        candidates: list[str] = []
+        stripped = reference.strip()
+        if stripped.startswith("pytest "):
+            for token in stripped.split()[1:]:
+                token = token.strip("\"'")
+                if token.startswith("-"):
+                    continue
+                if ".py" in token:
+                    candidates.append(token)
+        elif ".py" in stripped:
+            candidates.append(stripped)
+        for candidate in candidates:
+            path_text = candidate.split("::", 1)[0]
+            path = Path(path_text)
+            if not path.is_absolute():
+                path = self.root / path
+            if path.suffix == ".py" and path.exists():
+                return True
+        return False
+
+    def _reference_points_to_commit(self, reference: str) -> bool:
+        candidate = reference.strip()
+        if not candidate or " " in candidate:
+            return False
+        try:
+            result = subprocess.run(
+                ["git", "rev-parse", "--verify", f"{candidate}^{{commit}}"],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+        except FileNotFoundError:
+            return False
+        return result.returncode == 0
 
     def _load_task(self, task_id: str) -> Task:
         path = self._resolve_glob(self.desk_root / "tasks", task_id)

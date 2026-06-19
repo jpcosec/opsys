@@ -12,8 +12,10 @@ data:
     summary: Confirms the task is ready for closeout.
     items:
       - Task is ready for closeout
+      - Durable evidence is verified
     condition_refs:
       - condition-{task_id}-ready-for-closeout
+      - condition-{task_id}-has-closeout-evidence
     mode: all
     tags:
       - primitive:checklist

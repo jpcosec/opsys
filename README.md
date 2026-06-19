@@ -1,5 +1,13 @@
 # deskops
 
+This README is a human-facing materialization of these atoms:
+
+- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+- `desk/atoms/workflow-model/atom-sldb-is-read-write-edit-surface.md`
+- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+
 Workflow-domain instance built on top of `sldb`.
 
 This repo owns the operational surfaces that should not live inside generic `sldb` infrastructure: `desk/`, deferred drawer work, workflow-native models, pills, rituals, atoms, and materializers.
@@ -163,6 +171,7 @@ Current commands:
 - `deskops init`
 - `deskops faq`
 - `deskops inbox`
+- `deskops bind pill`
 - `deskops repo register`
 - `deskops desk install`
 

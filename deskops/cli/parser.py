@@ -74,6 +74,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_promote_commands(subparsers)
     _add_add_commands(subparsers)
     _add_edit_commands(subparsers)
+    _add_bind_commands(subparsers)
     _add_next_command(subparsers)
     _add_list_commands(subparsers)
     _add_show_commands(subparsers)
@@ -449,6 +450,39 @@ Values are parsed with SLDB's field-value parser and the document is re-rendered
         parser.add_argument("field", help="Model field name to update; hyphens are accepted for underscores.")
         parser.add_argument("value", help="New field value, parsed like an SLDB field value.")
         parser.add_argument("--root", default=".", help="Target repository root.")
+
+
+def _add_bind_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "bind",
+        help="Bind workflow context artifacts to tasks.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Examples:
+  deskops bind pill task-fix-thing pill-phase-gate --root .
+
+This updates the task's modeled `pills` list through the deskops artifact layer.
+{SELECTOR_HELP}
+""".strip(),
+    )
+    s = p.add_subparsers(dest="subject", required=True)
+
+    pill = s.add_parser(
+        "pill",
+        help="Bind one pill to one task.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog=f"""
+Example:
+  deskops bind pill task-fix-thing pill-phase-gate --root .
+
+{SELECTOR_HELP}
+""".strip(),
+    )
+    pill.add_argument("task", help=f"Task selector. {SELECTOR_HELP}")
+    pill.add_argument("pill", help=f"Pill selector. {SELECTOR_HELP}")
+    pill.add_argument("--root", default=".", help="Target repository root.")
 
 
 def _add_next_command(

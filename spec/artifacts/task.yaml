@@ -26,6 +26,7 @@ data:
     conditions:
       - primitive.task.has_implementation_path
       - primitive.task.has_validation
+      - primitive.task.has_closeout_evidence
       - primitive.task.ready_for_closeout
     checklists:
       - primitive.task.execution_ready

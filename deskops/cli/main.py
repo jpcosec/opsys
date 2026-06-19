@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import sys
 from typing import Any
@@ -30,6 +31,8 @@ class CLI:
                 return exc.code
             return 0 if exc.code is None else 1
 
+        self._apply_test_root_override(args)
+
         if hasattr(args, "root"):
             root_path = Path(args.root).resolve()
             if not root_path.exists() or not root_path.is_dir():
@@ -53,7 +56,7 @@ class CLI:
             return AtomsCLI().run(args)
         if args.command == "graph":
             return self._graph(args)
-        if args.command in {"add", "edit", "next", "list", "show", "advance"}:
+        if args.command in {"add", "edit", "bind", "next", "list", "show", "advance"}:
             ready = bootstrap.ensure_sldb_available()
             if ready != 0:
                 return ready
@@ -116,6 +119,20 @@ class CLI:
             print(f"Desk already exists at {target_path / 'desk'}.")
         print("Initialization complete.")
         return 0
+
+    def _apply_test_root_override(self, args: Any) -> None:
+        test_root = os.environ.get("DESKOPS_TEST_ROOT", "").strip()
+        if not test_root:
+            return
+        if not hasattr(args, "root"):
+            return
+        if getattr(args, "root", None) != ".":
+            return
+        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "inbox", "repo", "graph"}:
+            return
+        root_path = Path(test_root).resolve()
+        root_path.mkdir(parents=True, exist_ok=True)
+        args.root = str(root_path)
 
     def _graph(self, args: Any) -> int:
         if args.graph_command == "build":

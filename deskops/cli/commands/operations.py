@@ -56,6 +56,17 @@ class OperationsCLI:
             print(f"Path: {record.path}")
             return 0
 
+        if args.command == "bind" and args.subject == "pill":
+            try:
+                record, pill_id, changed = operations.bind_pill_to_task(args.task, args.pill)
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            verb = "Bound" if changed else "Already bound"
+            print(f"{verb} pill {pill_id} to task {record.doc_id}")
+            print(f"Path: {record.path}")
+            return 0
+
         if args.command == "next":
             try:
                 if getattr(args, "diagram", False):
@@ -182,7 +193,8 @@ class OperationsCLI:
             print(f"Task: {task.id}")
             print(f"Status: {task.status}")
             print(f"Current node: {task.current_node}")
-            return 0
+            print(f"Message: {result.message}")
+            return 1 if result.blocked else 0
 
         return 1
 

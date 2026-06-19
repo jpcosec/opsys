@@ -1,0 +1,17 @@
+id: primitive.task.has_closeout_evidence
+title: Task Has Closeout Evidence
+type: primitive
+version: "0.1"
+
+data:
+  kind: condition
+  template:
+    title: Durable evidence is verified
+    id: condition-{task_id}-has-closeout-evidence
+    status: active
+    summary: Task references must point to a real atom, test, or git commit before closeout.
+    subject: closeout_evidence_verified
+    predicate: truthy
+    expected: ""
+    tags:
+      - primitive:condition
