@@ -8,6 +8,7 @@ This reference is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
 - `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
 - `desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md`
+- `desk/atoms/workflow-model/atom-pills-are-reusable-across-tasks.md`
 - `desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md`
 - `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
 - `desk/atoms/workflow-model/atom-phase-closeout-reconciles-pills-and-next-work.md`
@@ -80,10 +81,10 @@ Do not carry multiple unrelated tasks through one long-lived context.
 
 ## Pill Lifecycle
 
-Pills are temporary execution aids.
+Pills are temporary execution aids, but they are not task-specific instances.
 
 ```text
-Draft or refresh pills -> bind pills to tasks -> execute tasks ->
+Draft or refresh reusable pills -> bind pills to tasks opportunistically -> execute tasks ->
 close tasks -> reconcile pills at phase closeout ->
 keep / delete / merge / graduate to atoms -> prepare next phase pills
 ```
@@ -96,7 +97,7 @@ At phase closeout, classify touched pills explicitly:
 - **durable** - promote the stabilized residue into atoms first
 - **materialization-worthy** - land resulting changes in code, specs, or docs as needed
 
-Do not let durable knowledge remain pill-only once it stabilizes.
+Do not let durable knowledge remain pill-only once it stabilizes. Do not create a new pill just because a new task exists; create or update a pill only when there is a reusable atomic truth worth rebinding.
 
 ---
 

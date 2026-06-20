@@ -17,21 +17,14 @@ tasks:
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-wire-closeout-to-knowledge-gates.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
-- desk/tasks/task-conciliate-active-pills-for-reuse-and-next-phase.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
-- desk/contexts/pill-002-test-real-cli-surfaces.md
-- desk/contexts/pill-003-capture-cli-gaps.md
-- desk/contexts/pill-004-opsys-boundary.md
 - desk/contexts/pill-005-subagent-execution.md
-- desk/contexts/pill-006-self-described-store-layout.md
 - desk/contexts/pill-007-phase-gated-task-flow.md
-- desk/contexts/pill-008-kgdb-sldb-boundary.md
-- desk/contexts/pill-009-source-file-graph-traceability.md
-- desk/contexts/pill-010-graph-runtime-output-policy.md
-- desk/contexts/pill-011-self-reflection-noise-control.md
-- desk/contexts/pill-012-create-operations-transactional-rollback.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
 - desk/contexts/pill-phase-closeout-reconciles-pills-and-surfaces-next-work.md
+- desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
+- desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md
 rituals:
 - desk/rituals/phase.md
 - desk/rituals/execution.md
@@ -54,6 +47,8 @@ _Explain what this board routes and why it exists._
 ## Notes
 
 _Add short operational notes about the current routed set._
+
+- The board-routed pill baseline has been reconciled to reusable cross-task guardrails; domain-specific pills should now be bound on the tasks that actually need them.
 
 - Add desk health and recovery surface (deskops slice) [active] - Detect and repair common broken desk states safely (deskops-owned surfaces only).
 - Add drift check review loop [active] - Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.
@@ -90,4 +85,3 @@ _Generated from the task references above._
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
-- Conciliate active pills for reuse and next phase [active] - Audit the current active context pills, remove overfit or stale pills, make the reusable many-to-many pill model explicit, and leave the board with a smaller reconciled pill set for the next phase.

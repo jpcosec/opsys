@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-When a pill is no longer actively used, any stabilized ruling, pattern, or project knowledge it introduced should be promoted into atoms first, with docs following as materializations when needed. The pill itself should then be deleted if no active task still needs that bounded execution context.
+When a pill is no longer actively used, any stabilized ruling, pattern, or project knowledge it introduced should be promoted into atoms first, with docs following as materializations when needed. The pill itself should then be deleted if no active task or phase still needs that bounded reusable execution context.

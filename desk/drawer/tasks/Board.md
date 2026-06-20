@@ -12,7 +12,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-conciliate-active-pills-for-reuse-and-next-phase`
+- No deferred drawer tasks routed right now.
 
 Promoted to active desk tasks:
 
@@ -41,6 +41,7 @@ Promoted to active desk tasks:
 - `task-wire-closeout-to-knowledge-gates`
 - `task-write-end-to-end-deskops-operator-manual`
 - `task-formalize-phase-layer-workflow`
+- `task-conciliate-active-pills-for-reuse-and-next-phase`
 
 ## Routed to sibling repos
 

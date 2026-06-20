@@ -2,7 +2,7 @@
 
 Pills are the reusable context documents of the desk routine.
 
-They are temporary in the workspace but durable in git history. A pill may either point at already-settled knowledge or carry transitional task knowledge that has not yet been incorporated into the durable atom base.
+They are temporary in the workspace but durable in git history. A pill is not a task instance: it is a reusable atomic execution truth that may be rebound across many tasks and phases. A pill may either point at already-settled knowledge or carry transitional task knowledge that has not yet been incorporated into the durable atom base.
 
 ## Base Shape
 
@@ -23,6 +23,7 @@ Required fields:
 ## Notes
 
 - Task-to-pill binding lives in task documents, not in pills.
+- The relationship is many-to-many: one task can bind many pills, and one pill can apply to many tasks.
 - Pill type is a namespaced tag convention, not a modeled field. Use exactly one `pill-type:*` tag on active pills.
 - Human-readable title prefixes such as `Guardrail:`, `Pattern:`, `Decision:`, and `Model:` should match the `pill-type:*` tag when practical.
 - Tags go at the end and should use namespaced forms such as `language:python`, `library:pydantic`, or `system:sldb`.
@@ -33,7 +34,8 @@ Required fields:
 - For risky or non-trivial tasks, run at least one cold review through a fresh-context subagent before finalizing pill coverage.
 - Non-trivial tasks should normally bind `pill-007` so the executor must pass through explicit initialization, testing, and closeout gates rather than treating them as implied follow-through.
 - Bind a pill when its `when` matches the task state, its `where` matches the surfaces being touched, or its `how_not` describes a plausible failure mode for the task.
-- If no existing pill covers a risky ambiguity, create or update a pill before continuing.
+- If no existing pill covers a risky ambiguity, create or update a reusable pill before continuing.
+- If a context note only makes sense for one narrow task and cannot be reused, prefer the task doc unless the note should graduate directly into atoms.
 
 ## Pill Types
 
@@ -74,15 +76,9 @@ Fresh subagents validate pill coverage by checking:
 ## Current Board-Routed Pills
 
 - `pill-001`: `pill-type:guardrail` - close every task with its own commit.
-- `pill-002`: `pill-type:pattern` - test real CLI surfaces while shaping workflow.
-- `pill-003`: `pill-type:pattern` - turn CLI gaps into explicit desk tasks.
-- `pill-004`: `pill-type:guardrail` - keep sldb, specyaml, and opsys separated.
 - `pill-005`: `pill-type:pattern` - execute active tasks through fresh subagents.
-- `pill-006`: `pill-type:index` - points to the self-described store layout atom.
 - `pill-007`: `pill-type:guardrail` - force explicit phase gates.
-- `pill-008`: `pill-type:decision` - keep KGDB parallel to SLDB.
-- `pill-009`: `pill-type:model` - source files are graph nodes.
-- `pill-010`: `pill-type:guardrail` - generated graph output is runtime state.
-- `pill-011`: `pill-type:guardrail` - self reflection must avoid noisy generation.
-- `pill-012`: `pill-type:guardrail` - create operations must be transactional.
+- `pill-durable-pill-knowledge-graduates-to-atoms-at-closeout`: `pill-type:guardrail` - durable pill residue must graduate at closeout.
 - `pill-phase-closeout-reconciles-pills-and-surfaces-next-work`: `pill-type:guardrail` - phase closeout must reconcile pills and prepare the next ready work.
+- `pill-ready-phases-prove-dependencies-and-non-overlap`: `pill-type:guardrail` - ready phases must prove dependency satisfaction and non-overlap.
+- `pill-board-routed-pills-stay-minimal-and-reusable`: `pill-type:guardrail` - board-routed pills should stay minimal and reusable.
