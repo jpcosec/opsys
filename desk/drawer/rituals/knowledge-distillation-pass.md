@@ -33,9 +33,9 @@ Use this ritual when a conversation, investigation, drift finding, missing manua
 ## Deskops Tools Used
 
 - `python -m deskops show atom <atom-id>` to verify nested atoms through the deskops artifact layer.
-- `python -m deskops graph build --root .` to rebuild the deskops KGDB snapshot and runtime graph.
-- `python -m deskops graph missing --root .` to reject dangling declared references before closeout.
-- `python -m deskops graph neighbors <node-id> --root .` to verify that questions, docs, diagrams, or other surfaces point to relevant atoms.
+- `python -m deskops graph build` to rebuild the deskops KGDB snapshot and runtime graph.
+- `python -m deskops graph missing` to reject dangling declared references before closeout.
+- `python -m deskops graph neighbors <node-id>` to verify that questions, docs, diagrams, or other surfaces point to relevant atoms.
 - `desk/drawer/questions/` to hold unresolved questions that are not active work.
 - `desk/drawer/tasks/` to hold deferred implementation work discovered during distillation.
 - `desk/atoms/` to hold durable one-question answers.
@@ -69,9 +69,9 @@ Use this ritual when a conversation, investigation, drift finding, missing manua
 1. Keep unresolved questions grouped by decision area.
 1. Write actionable missing work as deferred drawer tasks.
 1. Add supported relation declarations such as `## Related Atoms` on question maps, docs, diagrams, or other source surfaces.
-1. Rebuild the graph with `python -m deskops graph build --root .`.
-1. Check for graph dangling references with `python -m deskops graph missing --root .`.
-1. Query at least one representative atom with `python -m deskops graph neighbors atom:<id> --root .`.
+1. Rebuild the graph with `python -m deskops graph build`.
+1. Check for graph dangling references with `python -m deskops graph missing`.
+1. Query at least one representative atom with `python -m deskops graph neighbors atom:<id>`.
 1. Check SLDB integrity with `sldb stores check --store .sldb --pythonpath .`.
 1. Run focused tests for touched behavior.
 1. Commit with a descriptive message.
@@ -80,7 +80,7 @@ Use this ritual when a conversation, investigation, drift finding, missing manua
 
 - Every new atom is a tracked `AtomDoc` visible through `sldb docs show`.
 - `sldb stores check --store .sldb --pythonpath .` passes.
-- `python -m deskops graph missing --root .` reports no real missing references.
+- `python -m deskops graph missing` reports no real missing references.
 - At least one representative new or updated atom has an incoming relation from the distilled surface.
 - Answered questions are not left as open questions.
 - Unresolved questions remain in drawer questions.

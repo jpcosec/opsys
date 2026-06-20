@@ -73,7 +73,7 @@ For graph or store work, prefer semantic checks:
 
 ```bash
 sldb stores check --store .sldb
-deskops graph missing --root .
+deskops graph missing
 ```
 
 ## Selected Source Documents

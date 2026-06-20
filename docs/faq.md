@@ -148,6 +148,20 @@ That bootstrap flow installs or repairs `sldb`, creates `~/.sldb` when needed, a
 
 If you only need the runtime package instead of the dev extras, `pip install -e .` is enough.
 
+## Do I need `--root .` when I am already in the repo?
+
+Usually no.
+
+When you run `deskops` from the target repo root, the local desk is the implied default. Prefer the shorter local form in human-facing examples:
+
+```bash
+deskops list tasks
+deskops show task task-fix-thing
+deskops advance task task-fix-thing
+```
+
+Use `--root` when you are intentionally overriding the local default, for example in cross-repo commands, sandbox tests, scripts, or unusual working-directory setups.
+
 ## What should I run first in a repo?
 
 Use `deskops init` from the target repo root.
@@ -207,8 +221,8 @@ If you use `--repo`, the target repository must already be registered and discov
 Register sibling repositories as local repository artifacts, then ask `list tasks` to include repo-routed boards:
 
 ```bash
-deskops add repository --root . --name "SLDB" --path ../sldb --description "Structured document infrastructure."
-deskops list tasks --root . --include-repos
+deskops add repository --name "SLDB" --path ../sldb --description "Structured document infrastructure."
+deskops list tasks --include-repos
 ```
 
 `--include-repos` reads `desk/registry/repo-*.md`, resolves each registered repository path, opens that repo's `desk/tasks/Board.md`, and lists only the task files routed by that board. It does not copy sibling task files into the current repo and it does not require those task files to be tracked in SLDB.

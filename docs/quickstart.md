@@ -69,7 +69,6 @@ Create a first task with a concrete goal and validation command:
 
 ```bash
 deskops add task \
-  --root . \
   --title "Try deskops quickstart" \
   --goal "Complete one task lifecycle" \
   --scope "Documentation walkthrough only" \
@@ -88,8 +87,8 @@ This creates:
 Check the task:
 
 ```bash
-deskops list tasks --root .
-deskops show task task-try-deskops-quickstart --root .
+deskops list tasks
+deskops show task task-try-deskops-quickstart
 ```
 
 ## Advance The Task
@@ -97,13 +96,13 @@ deskops show task task-try-deskops-quickstart --root .
 Advance the task through its routine:
 
 ```bash
-deskops advance task task-try-deskops-quickstart --root .
+deskops advance task task-try-deskops-quickstart
 ```
 
 Then inspect the result:
 
 ```bash
-deskops show task task-try-deskops-quickstart --root .
+deskops show task task-try-deskops-quickstart
 ```
 
 The first advance moves the task into active execution. Later advances move it toward testing and closeout when the generated checklist conditions pass.
@@ -119,7 +118,7 @@ pytest
 For CLI changes, also run the affected command directly. For graph or store work, prefer semantic checks such as:
 
 ```bash
-deskops graph missing --root .
+deskops graph missing
 ```
 
 See `docs/how-to-test-ux-cli.md` and `desk/rituals/testing.md` for deeper testing guidance.

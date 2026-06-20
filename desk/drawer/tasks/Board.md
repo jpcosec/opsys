@@ -12,7 +12,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- `task-prefer-implicit-local-desk-examples`
+- No deferred drawer tasks routed right now.
 
 Promoted to active desk tasks:
 
@@ -43,6 +43,7 @@ Promoted to active desk tasks:
 - `task-formalize-phase-layer-workflow`
 - `task-conciliate-active-pills-for-reuse-and-next-phase`
 - `task-bind-next-phase-pills-to-active-tasks`
+- `task-prefer-implicit-local-desk-examples`
 
 ## Routed to sibling repos
 
