@@ -4,7 +4,9 @@ status: active
 references:
 - desk/drawer/tasks/task-define-atom-lifecycle-operations.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
 files: []
 routine: routine-task-define-atom-lifecycle-operations
 checklists:

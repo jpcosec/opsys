@@ -2,7 +2,7 @@
 
 Pills are the reusable context documents of the desk routine.
 
-They are temporary in the workspace but durable in git history. A pill is not a task instance: it is a reusable atomic execution truth that may be rebound across many tasks and phases. A pill may either point at already-settled knowledge or carry transitional task knowledge that has not yet been incorporated into the durable atom base.
+They are temporary in the workspace but durable in git history. Correction: pills are not 1:1 with tasks. A pill is not a task instance: it is a reusable atomic execution truth that may be rebound across many tasks and phases. A pill may either point at already-settled knowledge or carry transitional task knowledge that has not yet been incorporated into the durable atom base.
 
 ## Base Shape
 

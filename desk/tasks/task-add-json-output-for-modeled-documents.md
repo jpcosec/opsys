@@ -4,7 +4,9 @@ status: active
 references:
 - desk/drawer/tasks/task-add-json-output-for-modeled-documents.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files: []
 routine: routine-task-add-json-output-for-modeled-documents
 checklists:

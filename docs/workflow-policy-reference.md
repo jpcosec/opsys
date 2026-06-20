@@ -81,7 +81,7 @@ Do not carry multiple unrelated tasks through one long-lived context.
 
 ## Pill Lifecycle
 
-Pills are temporary execution aids, but they are not task-specific instances.
+Pills are temporary execution aids, but they are not task-specific instances. Correction: pills are not 1:1 with tasks.
 
 ```text
 Draft or refresh reusable pills -> bind pills to tasks opportunistically -> execute tasks ->

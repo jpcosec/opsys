@@ -4,7 +4,12 @@ status: active
 references:
 - desk/drawer/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+- desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+- desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files: []
 routine: routine-task-detect-and-migrate-legacy-desk-workspaces
 checklists:

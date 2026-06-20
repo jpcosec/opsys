@@ -45,6 +45,7 @@ Do not add desk-local field documents to duplicate SLDB field behavior. If an ex
 - Keep one coherent deliverable per task.
 - Treat active work as a dependency graph: tasks are atomic units, phases are the current horizontal layer of non-overlapping ready tasks, and the next phase does not begin until the current phase passes its closeout ritual.
 - For active desk tasks, run the execution-ritual fresh-context subagent review before implementation. Each task should execute in its own fresh subagent context bundle: the task doc, routed instructions, bound pills, linked atoms, linked files, and validation targets. Use additional subagents for broad exploration when the task is non-trivial.
+- Correction: pills are not 1:1 with tasks.
 - Treat pills as reusable atomic truths, not one-to-one task artifacts.
 - Bind relevant pills by checking `when`, `where`, and `how_not`, not just titles.
 - Do not skip from implementation to closeout. Pass execution, testing, and closeout gates explicitly.

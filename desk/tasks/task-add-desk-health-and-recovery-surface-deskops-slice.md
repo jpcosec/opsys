@@ -4,7 +4,10 @@ status: active
 references:
 - desk/drawer/tasks/task-add-desk-health-and-recovery-surface.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+- desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files: []
 routine: routine-task-add-desk-health-and-recovery-surface-deskops-slice
 checklists:

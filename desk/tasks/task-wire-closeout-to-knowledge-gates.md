@@ -4,7 +4,11 @@ status: active
 references:
 - desk/drawer/tasks/task-wire-closeout-knowledge-gates.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
 files: []
 routine: routine-task-wire-closeout-to-knowledge-gates
 checklists:

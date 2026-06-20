@@ -4,7 +4,10 @@ status: active
 references:
 - desk/drawer/tasks/task-add-drift-check-review-loop.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
+- desk/contexts/pill-011-self-reflection-noise-control.md
+- desk/contexts/pill-009-source-file-graph-traceability.md
 files: []
 routine: routine-task-add-drift-check-review-loop
 checklists:

@@ -4,7 +4,10 @@ status: active
 references:
 - desk/drawer/tasks/task-design-operational-cli-grammar.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
 routine: routine-task-design-operational-cli-grammar
 checklists:

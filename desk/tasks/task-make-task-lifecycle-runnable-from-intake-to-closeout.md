@@ -4,7 +4,11 @@ status: active
 references:
 - desk/drawer/tasks/task-make-task-lifecycle-runnable-end-to-end.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
 routine: routine-task-make-task-lifecycle-runnable-from-intake-to-closeout
 checklists:

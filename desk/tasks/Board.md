@@ -48,7 +48,8 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- The board-routed pill baseline has been reconciled to reusable cross-task guardrails; domain-specific pills should now be bound on the tasks that actually need them.
+- The board-routed pill baseline has been reconciled to reusable cross-task guardrails; domain-specific pills are now bound on the tasks that actually need them.
+- Correction made explicit in workflow guidance: pills are not 1:1 with tasks; they are reusable atomic truths rebound across tasks and phases.
 
 - Add desk health and recovery surface (deskops slice) [active] - Detect and repair common broken desk states safely (deskops-owned surfaces only).
 - Add drift check review loop [active] - Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.

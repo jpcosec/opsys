@@ -4,7 +4,9 @@ status: active
 references:
 - desk/drawer/tasks/task-define-materialization-contract-slice.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
 files: []
 routine: routine-task-define-materialization-contract-slice-deskops-surface
 checklists:

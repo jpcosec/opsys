@@ -4,7 +4,10 @@ status: active
 references:
 - desk/drawer/tasks/task-write-end-to-end-operator-manual.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
 routine: routine-task-write-end-to-end-deskops-operator-manual
 checklists:

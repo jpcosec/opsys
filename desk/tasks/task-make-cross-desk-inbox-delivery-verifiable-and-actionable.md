@@ -4,7 +4,11 @@ status: active
 references:
 - desk/drawer/tasks/task-make-cross-desk-inbox-delivery-verifiable.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
 routine: routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable
 checklists:

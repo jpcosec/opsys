@@ -12,6 +12,7 @@ This guide is a human-facing materialization of these atoms:
 This directory contains active context documents, currently centered on pills.
 
 - Context documents are temporary execution aids.
+- Correction: pills are not 1:1 with tasks.
 - Pills are reusable atomic execution truths, not one-pill-per-task mirrors.
 - They may reference already-settled durable knowledge or carry transitional task knowledge that has not stabilized yet.
 - Task-to-context binding lives in task documents.

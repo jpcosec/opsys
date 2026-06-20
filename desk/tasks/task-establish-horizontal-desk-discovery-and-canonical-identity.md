@@ -4,7 +4,9 @@ status: active
 references:
 - desk/drawer/tasks/task-establish-horizontal-desk-discovery-and-identity.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
 files: []
 routine: routine-task-establish-horizontal-desk-discovery-and-canonical-identity
 checklists:

@@ -4,7 +4,10 @@ status: active
 references:
 - desk/drawer/tasks/task-make-list-behavior-data-integrity-safe.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files: []
 routine: routine-task-make-list-behavior-data-integrity-safe
 checklists:

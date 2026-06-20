@@ -4,7 +4,10 @@ status: active
 references:
 - desk/drawer/tasks/task-add-per-project-desk-config-and-version-contract.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
 files: []
 routine: routine-task-add-per-project-desk-config-and-version-contract
 checklists:

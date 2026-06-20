@@ -4,7 +4,9 @@ status: active
 references:
 - desk/drawer/tasks/task-enforce-pill-to-atom-knowledge-graduation.md
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
 files: []
 routine: routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
 checklists:
