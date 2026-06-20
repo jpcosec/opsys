@@ -17,6 +17,7 @@ tasks:
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-wire-closeout-to-knowledge-gates.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+- desk/tasks/task-prefer-implicit-local-desk-examples-in-docs.md
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-005-subagent-execution.md
@@ -47,9 +48,6 @@ _Explain what this board routes and why it exists._
 ## Notes
 
 _Add short operational notes about the current routed set._
-
-- The board-routed pill baseline has been reconciled to reusable cross-task guardrails; domain-specific pills are now bound on the tasks that actually need them.
-- Correction made explicit in workflow guidance: pills are not 1:1 with tasks; they are reusable atomic truths rebound across tasks and phases.
 
 - Add desk health and recovery surface (deskops slice) [active] - Detect and repair common broken desk states safely (deskops-owned surfaces only).
 - Add drift check review loop [active] - Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.
@@ -86,3 +84,4 @@ _Generated from the task references above._
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
+- Prefer implicit local-desk examples in docs [active] - Update operator-facing guidance so commands run from the repo root prefer the implicit local-desk default instead of spelling `--root .` everywhere, while keeping explicit-root examples where cross-repo, sandbox, or unusual targeting matters.
