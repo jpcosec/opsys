@@ -12,7 +12,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- No deferred drawer tasks routed right now.
+- `task-prefer-implicit-local-desk-examples`
 
 Promoted to active desk tasks:
 
