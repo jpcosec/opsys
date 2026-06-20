@@ -12,7 +12,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- No deferred drawer tasks routed right now.
+- `task-bind-next-phase-pills-to-active-tasks`
 
 Promoted to active desk tasks:
 
