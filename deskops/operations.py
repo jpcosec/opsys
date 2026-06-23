@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 import json
+import logging
 from pathlib import Path
 import subprocess
 import sys
@@ -159,6 +160,30 @@ class DeskopsOperations:
         self.desk_root = self.root / "desk"
         self.spec_root = Path(__file__).resolve().parents[1] / "spec"
         self._spec_registry: SpecRegistry | None = None
+        self._setup_logging()
+
+    def _setup_logging(self) -> None:
+        log_file = self.root / ".deskops.log"
+        self.logger = logging.getLogger("deskops")
+        self.logger.setLevel(logging.DEBUG)
+        if not self.logger.handlers:
+            fh = logging.FileHandler(log_file)
+            fh.setLevel(logging.DEBUG)
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            fh.setFormatter(formatter)
+            self.logger.addHandler(fh)
+        self._setup_logging()
+
+    def _setup_logging(self) -> None:
+        log_file = self.root / ".deskops.log"
+        self.logger = logging.getLogger("deskops")
+        self.logger.setLevel(logging.DEBUG)
+        if not self.logger.handlers:
+            fh = logging.FileHandler(log_file)
+            fh.setLevel(logging.DEBUG)
+            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+            fh.setFormatter(formatter)
+            self.logger.addHandler(fh)
 
     @property
     def spec_registry(self) -> SpecRegistry:
@@ -450,9 +475,11 @@ class DeskopsOperations:
         )
         advanced_task = self._hydrate_task(payload)
         if payload.get("status") == "closed" and payload.get("current_node") == "complete":
-            self._remove_task_runtime_artifacts(str(payload.get("id", task_id)), str(payload.get("routine") or ""))
+            self.logger.info(f"Task {task_id} is complete. Performing auto-commit and cleanup.")
+            self._auto_commit_task_closure(payload, task_path)
             return advanced_task, result
         self._write_doc(task_path, TaskDoc, payload)
+        self.logger.info(f"Advanced task {task_id} to node {payload.get('current_node')}")
         return advanced_task, result
 
     def parse_task_input(self, args: Any) -> dict[str, Any]:
@@ -854,7 +881,44 @@ class DeskopsOperations:
             board_payload["tasks"] = tasks
             self._write_doc(board_path, BoardDoc, board_payload)
 
+    def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
+        task_id = payload.get("id", "unknown-task")
+        title = payload.get("title", "No title")
+        routine_id = payload.get("routine", "")
+        files = self._coerce_list(payload.get("files") or [])
+        
+        # 1. Stage project files modified by the task
+        for file in files:
+            file_path = self.root / file
+            if file_path.exists():
+                self.logger.debug(f"Staging file: {file}")
+                subprocess.run(["git", "add", str(file)], cwd=self.root, check=False)
+                
+        # 2. Stage board changes before removing the task (since it reads the board)
+        subprocess.run(["git", "add", "desk/tasks/Board.md"], cwd=self.root, check=False)
+        
+        # 3. Clean up and stage task removal
+        if task_path.exists():
+            subprocess.run(["git", "rm", "--ignore-unmatch", str(task_path.relative_to(self.root))], cwd=self.root, check=False)
+        
+        if routine_id:
+            routine_path = self._routine_path(routine_id)
+            if routine_path.exists():
+                subprocess.run(["git", "rm", "--ignore-unmatch", str(routine_path.relative_to(self.root))], cwd=self.root, check=False)
+                
+        self._remove_task_runtime_artifacts(task_id, routine_id)
+        
+        subprocess.run(["git", "add", "-u", "desk/tasks/"], cwd=self.root, check=False)
+        subprocess.run(["git", "add", "-u", "desk/routines/"], cwd=self.root, check=False)
+        subprocess.run(["git", "add", "-u", "desk/primitives/"], cwd=self.root, check=False)
+        
+        # 4. Commit
+        commit_msg = f"chore(task): {title}\n\nAuto-closing task {task_id}"
+        self.logger.info(f"Committing closure for {task_id}: {commit_msg}")
+        subprocess.run(["git", "commit", "-m", commit_msg], cwd=self.root, check=False)
+
     def _remove_task_runtime_artifacts(self, task_id: str, routine_id: str) -> None:
+        self.logger.debug(f"Removing runtime artifacts for task {task_id}")
         board_path = self.desk_root / "tasks" / "Board.md"
         if board_path.exists():
             board_payload = self._read_doc(board_path, BoardDoc)
@@ -869,6 +933,14 @@ class DeskopsOperations:
             routine_path = self._routine_path(routine_id)
             if routine_path.exists():
                 routine_path.unlink()
+        
+        # Clean up task-specific primitives
+        for directory in ["conditions", "checklists", "operators", "edges", "hooks"]:
+            prim_dir = self.desk_root / "primitives" / directory
+            if prim_dir.exists():
+                for prim_path in prim_dir.glob(f"*-{task_id}*.md"):
+                    self.logger.debug(f"Removing primitive {prim_path.name}")
+                    prim_path.unlink()
 
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
         for reference in self._coerce_list(payload.get("references") or []):
