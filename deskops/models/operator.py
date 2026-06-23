@@ -6,11 +6,17 @@ from .base import PrimitiveDoc
 class OperatorDoc(PrimitiveDoc):
     __semantics__ = {"type": ["workflow", "operator"], "workspace": ["desk", "primitives"]}
     __template__ = """---
+# operator-xxx
 id: ⸢rev•id⸥
+# active | archived
 status: ⸢rev•status⸥
+# Atomic runtime action, e.g., set_field, append_list
 action: ⸢rev•action⸥
+# Payload path modified by the operator
 target: ⸢rev•target⸥
+# Value used by the operator action
 value: ⸢rev•value⸥
+# e.g., system:deskops
 tags: ⸢rev•tags⸥
 ---
 

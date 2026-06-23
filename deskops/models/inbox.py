@@ -11,9 +11,13 @@ class InboxNoteDoc(StructuredNLDoc):
         "workspace": ["desk", "inbox"],
     }
     __template__ = """---
+# unclear | suggestion
 kind: ⸢rev•kind⸥
+# e.g., other_repo
 sender_project: ⸢rev•sender_project⸥
+# ISO 8601 timestamp
 created_at: ⸢rev•created_at⸥
+# open | closed
 status: ⸢rev•status⸥
 ---
 

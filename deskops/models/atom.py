@@ -31,9 +31,13 @@ class AtomDoc(StructuredNLDoc):
         "workspace": ["desk", "atoms"],
     }
     __template__ = """---
+# atom-xxx, unique identifier
 id: ⸢rev•id⸥
+# Short, descriptive title
 title: ⸢rev•title⸥
+# what | why | how | how_not | when | where | for_whom
 five_wh_one_plus: ⸢rev•five_wh_one_plus⸥
+# e.g., system:deskops, topic:templates
 tags: ⸢rev•tags⸥
 ---
 

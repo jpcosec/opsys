@@ -13,8 +13,11 @@ class RitualDoc(OperationalArtifactDoc):
         }
     }
     __template__ = """---
+# ritual-xxx
 id: ⸢rev•id⸥
+# List of step-xxx paths
 steps: ⸢rev•steps⸥
+# e.g., layer:workflow, system:sldb
 tags: ⸢rev•tags⸥
 ---
 

@@ -6,11 +6,17 @@ from .base import PrimitiveDoc
 class ConditionDoc(PrimitiveDoc):
     __semantics__ = {"type": ["workflow", "condition"], "workspace": ["desk", "primitives"]}
     __template__ = """---
+# condition-xxx
 id: ⸢rev•id⸥
+# active | archived
 status: ⸢rev•status⸥
+# Payload path the condition reads
 subject: ⸢rev•subject⸥
+# Predicate applied to the value (e.g., eq, contains)
 predicate: ⸢rev•predicate⸥
+# Expected value used by the predicate
 expected: ⸢rev•expected⸥
+# e.g., system:deskops
 tags: ⸢rev•tags⸥
 ---
 

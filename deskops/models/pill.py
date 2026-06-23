@@ -6,7 +6,9 @@ from .base import OperationalArtifactDoc
 class PillDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "pill"], "workspace": ["desk"]}
     __template__ = """---
+# pill-xxx
 id: ⸢rev•id⸥
+# e.g., language:python, library:pydantic
 tags: ⸢rev•tags⸥
 ---
 

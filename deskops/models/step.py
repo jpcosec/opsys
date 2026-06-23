@@ -6,7 +6,9 @@ from sldb import StructuredNLDoc
 class StepDoc(StructuredNLDoc):
     __semantics__ = {"type": ["workflow", "step"], "workspace": ["desk"]}
     __template__ = """---
+# step-xxx
 id: ⸢rev•id⸥
+# e.g., topic:testing, workspace:desk
 tags: ⸢rev•tags⸥
 ---
 

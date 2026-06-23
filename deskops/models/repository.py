@@ -11,9 +11,13 @@ class RepositoryDoc(StructuredNLDoc):
         "workspace": ["desk", "registry"],
     }
     __template__ = """---
+# repo-xxx
 id: ⸢rev•id⸥
+# Relative path to repository
 path: ⸢rev•path⸥
+# active | maintenance | archived
 status: ⸢rev•status⸥
+# e.g., type:tool, layer:infra
 tags: ⸢rev•tags⸥
 ---
 

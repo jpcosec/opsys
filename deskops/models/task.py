@@ -6,16 +6,27 @@ from .base import OperationalArtifactDoc
 class TaskDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
     __template__ = """---
+# task-xxx, unique task identifier
 id: ⸢rev•id⸥
+# draft | active | blocked | closed
 status: ⸢rev•status⸥
+# Relevant file or doc paths
 references: ⸢rev•references⸥
+# Task identifiers that must complete first
 depends_on: ⸢rev•depends_on⸥
+# Pill identifiers required
 pills: ⸢rev•pills⸥
+# Files expected to change
 files: ⸢rev•files⸥
+# Routine identifier for operations
 routine: ⸢rev•routine⸥
+# Checklist identifiers for verification
 checklists: ⸢rev•checklists⸥
+# Active routine node
 current_node: ⸢rev•current_node⸥
+# Execution history references
 history: ⸢rev•history⸥
+# e.g., system:deskops, topic:cli
 tags: ⸢rev•tags⸥
 ---
 

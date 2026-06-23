@@ -1,9 +1,50 @@
 ---
+# task-xxx, unique task identifier
 id: task-enrich-templates-with-instructional-text
-status: draft
+# draft | active | blocked | closed
+status: active
+# Relevant file or doc paths
 references:
 - desk/contexts/pill-sldb-template-markers.md
 - desk/contexts/pill-template-instructional-text.md
+- tests/test_model_templates.py
+# Task identifiers that must complete first
+depends_on: []
+# Pill identifiers required
+pills:
+- desk/contexts/pill-template-instructional-text.md
+# Files expected to change
+files:
+- deskops/models/atom.py
+- deskops/models/board.py
+- deskops/models/checklist.py
+- deskops/models/condition.py
+- deskops/models/edge.py
+- deskops/models/faq.py
+- deskops/models/hook.py
+- deskops/models/inbox.py
+- deskops/models/operator.py
+- deskops/models/pill.py
+- deskops/models/repository.py
+- deskops/models/ritual.py
+- deskops/models/routine.py
+- deskops/models/step.py
+- deskops/models/task.py
+# Routine identifier for operations
+routine: routine-task-enrich-templates-with-instructional-text
+# Checklist identifiers for verification
+checklists:
+- checklist-task-enrich-templates-with-instructional-text-execution-ready
+- checklist-task-enrich-templates-with-instructional-text-testing-ready
+- checklist-task-enrich-templates-with-instructional-text-closeout-ready
+# Active routine node
+current_node: complete
+# Execution history references
+history:
+- 'created: 2026-06-21T00:00:00'
+- status changed to active
+- 'entered execution_gate: checklist-task-enrich-templates-with-instructional-text-execution-ready'
+# e.g., system:deskops, topic:cli
 tags:
 - system:deskops
 - topic:templates
@@ -12,106 +53,40 @@ tags:
 
 # Enrich all deskops model templates with instructional fixed text
 
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Los templates actuales son esqueletos mínimos, no hay texto que explique qué va en cada campo al crear un documento nuevo.
+
 ## Goal
 
-Que cada `__template__` en los modelos de deskops contenga texto fijo instructivo que:
-- Guíe a quien escribe el documento sobre qué poner en cada campo
-- Sirva de anclaje para SLDB al extraer datos (más robusto que texto vacío)
-- Haga que un documento nuevo renderizado sea útil como punto de partida
+_Describe the concrete result this task must produce._
+
+Que cada `__template__` en los modelos de deskops contenga texto fijo instructivo que guíe a quien escribe el documento sobre qué poner en cada campo.
 
 ## Scope
 
-### In scope
+_State what is in scope and what is out of scope._
 
-- Todos los modelos en `deskops/models/*.py`
-- Solo texto instructivo **fijo** (el que aparece igual en todos los documentos del tipo)
-- No incluye implementación de `⸢rev,table•⸥` (es issue separado en SLDB)
+In scope: Todos los modelos en `deskops/models/*.py`. Solo texto instructivo fijo.
+Out of scope: Cambios al motor de templates SLDB.
 
-### Out of scope
+## Implementation Path
 
-- Cambios al motor de templates SLDB
-- Agregar/quitar campos de los modelos
-- `⸢rev,table•⸥` marker
+_Outline the expected implementation route or affected surface._
 
-## Current state
-
-Los templates actuales son esqueletos mínimos. Por ejemplo `TaskDoc.__template__`:
-
-```python
-__template__ = """---
-id: ⸢rev•id⸥
-status: ⸢rev•status⸥
----
-
-# ⸢rev•title⸥
-
-## Goal
-
-⸢rev•goal⸥
-"""
-```
-
-No hay texto que explique qué va en cada campo al crear un documento nuevo.
-
-## Target state
-
-Cada template debe incluir texto instructivo corto al lado de los marcadores. Ejemplo:
-
-```python
-__template__ = """---
-id: ⸢rev•id⸥            # task-xxx, único por tarea
-status: ⸢rev•status⸥      # draft | active | blocked | closed
-tags: ⸢rev•tags⸥
----
-
-# ⸢rev•title⸥
-
-## Goal
-
-_Resultado concreto que debe producir esta tarea._
-
-⸢rev•goal⸥
-
-## Scope
-
-_Qué está dentro y fuera del alcance._
-
-⸢rev•scope⸥
+Agregar texto instructivo como comentarios YAML (#) en el frontmatter y texto en itálicas (_) en el markdown de cada template.
 
 ## Validation
 
-_Criterios que debe cumplir antes de cerrarse._
-
-- ⸢rev,list•validation⸥
-"""
-```
-
-## Models to update
-
-- `deskops/models/atom.py` — AtomDoc
-- `deskops/models/task.py` — TaskDoc
-- `deskops/models/board.py` — BoardDoc
-- `deskops/models/pill.py` — PillDoc
-- `deskops/models/ritual.py` — RitualDoc
-- `deskops/models/step.py` — StepDoc
-- `deskops/models/routine.py` — RoutineDoc
-- `deskops/models/repository.py` — RepositoryDoc
-- `deskops/models/operator.py` — OperatorDoc
-- `deskops/models/hook.py` — HookDoc
-- `deskops/models/condition.py` — ConditionDoc
-- `deskops/models/checklist.py` — ChecklistDoc
-- `deskops/models/edge.py` — EdgeDoc
-- `deskops/models/inbox.py` — InboxNoteDoc
-- `deskops/models/faq.py` — FAQDoc
-
-## Validation
+_List the checks required before this task can close._
 
 - `⸢rev•⸥` markers siguen presentes y funcionales
 - Tests de roundtrip pasan (extract → render → extract)
-- Un documento nuevo renderizado se entiende sin contexto externo
-- El texto instructivo no interfiere con la extracción (SLDB lo ignora al parsear)
 
-## Pills
+## Done When
 
-- `pill-sldb-template-markers.md` — cómo funcionan los marcadores
-- `pill-template-instructional-text.md` — cómo escribir buen texto instructivo
+_Name the observable condition that makes the task complete._
+
+All deskops models have instructional text in their templates and tests pass.

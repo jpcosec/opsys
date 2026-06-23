@@ -6,10 +6,15 @@ from .base import PrimitiveDoc
 class ChecklistDoc(PrimitiveDoc):
     __semantics__ = {"type": ["workflow", "checklist"], "workspace": ["desk", "primitives"]}
     __template__ = """---
+# checklist-xxx
 id: ⸢rev•id⸥
+# draft | active | complete | archived
 status: ⸢rev•status⸥
+# List of condition-xxx paths
 condition_refs: ⸢rev•condition_refs⸥
+# all | any
 mode: ⸢rev•mode⸥
+# e.g., system:deskops
 tags: ⸢rev•tags⸥
 ---
 

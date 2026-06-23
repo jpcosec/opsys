@@ -13,11 +13,17 @@ class BoardDoc(OperationalArtifactDoc):
         }
     }
     __template__ = """---
+# board-xxx
 id: ⸢rev•id⸥
+# Affected workspace or domain
 scope: ⸢rev•scope⸥
+# List of task-xxx paths
 tasks: ⸢rev•tasks⸥
+# List of pill-xxx paths
 pills: ⸢rev•pills⸥
+# List of ritual-xxx paths
 rituals: ⸢rev•rituals⸥
+# e.g., system:sldb, workspace:desk
 tags: ⸢rev•tags⸥
 ---
 
