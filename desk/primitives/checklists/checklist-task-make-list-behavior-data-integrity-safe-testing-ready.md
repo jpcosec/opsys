@@ -1,6 +1,6 @@
 ---
 id: checklist-task-make-list-behavior-data-integrity-safe-testing-ready
-status: active
+status: complete
 condition_refs:
 - condition-task-make-list-behavior-data-integrity-safe-has-validation
 mode: all

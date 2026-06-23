@@ -1,6 +1,9 @@
 ---
+# board-xxx
 id: board-001
+# Affected workspace or domain
 scope: desk
+# List of task-xxx paths
 tasks:
 - desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
 - desk/tasks/task-add-drift-check-review-loop.md
@@ -13,10 +16,10 @@ tasks:
 - desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
 - desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md
 - desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
-- desk/tasks/task-make-list-behavior-data-integrity-safe.md
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-wire-closeout-to-knowledge-gates.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+# List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 - desk/contexts/pill-005-subagent-execution.md
@@ -25,11 +28,13 @@ pills:
 - desk/contexts/pill-phase-closeout-reconciles-pills-and-surfaces-next-work.md
 - desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
 - desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md
+# List of ritual-xxx paths
 rituals:
 - desk/rituals/phase.md
 - desk/rituals/execution.md
 - desk/rituals/closeout.md
 - desk/rituals/testing.md
+# e.g., system:sldb, workspace:desk
 tags:
 - system:sldb
 - workspace:desk
@@ -48,7 +53,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Local-desk commands are now documented with the implicit current-repo default unless the example is specifically about alternate roots, cross-repo targeting, or sandbox behavior.
 - Add desk health and recovery surface (deskops slice) [active] - Detect and repair common broken desk states safely (deskops-owned surfaces only).
 - Add drift check review loop [active] - Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.
 - Add JSON output for modeled documents [active] - Make modeled document `list` and `show` commands scriptable with JSON output.
@@ -80,7 +84,6 @@ _Generated from the task references above._
 - Enforce pill-to-atom knowledge graduation during task closeout [active] - Make task closeout verify that durable knowledge discovered through pills is promoted into atoms before transient execution context is deleted.
 - Establish horizontal desk discovery and canonical identity [active] - Make desks discoverable to each other through one canonical per-project identity path, so cross-repo workflow commands can resolve sibling desks without ambiguous local heuristics.
 - Make cross-desk inbox delivery verifiable and actionable [active] - Make cross-desk inbox communication operationally useful by ensuring the sender, target, delivery result, and follow-up path are explicit across project desks.
-- Make list behavior data-integrity-safe [active] - Ensure `deskops list` commands do not silently hide malformed workflow documents.
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.

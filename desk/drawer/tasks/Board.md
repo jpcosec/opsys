@@ -7,6 +7,10 @@ This board routes deferred work only.
 - `desk/drawer/use-cases/` — 15 use-case narratives covering all CLI surfaces
 - `desk/drawer/stress-tests/` — 15 UX stress-tests derived from use-cases
 - `desk/drawer/features/semantic-execution-adapter.md` — deferred adapter architecture for semantic execution via external agent platforms
+- `desk/drawer/features/router.md` — agent role model: router (imported from paper_IEEE)
+- `desk/drawer/features/supervisor.md` — agent role model: supervisor (imported from paper_IEEE)
+- `desk/drawer/features/executor.md` — agent role model: executor (imported from paper_IEEE)
+- `desk/drawer/features/workflow-execution-engine.md` — automated workflow engine with hooks, state machines, condition evaluators, and gated execution pipeline
 
 ## Tasks
 
@@ -62,6 +66,26 @@ Removed from this drawer (moved out):
 - `task-stabilize-init-local-store-failures` → atomized as SLDB inbox items above
 - `task-complete-kgdb-graph-runtime-slice` → atomized as KGDB inbox items above
 - `task-make-task-lifecycle-runnable-end-to-end` → atomized as active child tasks
+
+## Imports from paper_IEEE
+
+Items imported from `paper_IEEE/desk/` on 2026-06-22, filtered for deskops relevance. The sender project is `paper_IEEE`.
+
+### Attention (desk/drawer/attention/)
+
+Items triaged into `desk/drawer/attention/` for human review before promotion:
+
+- `20260621-034212-suggestion-clarify-atoms-vs-pills-and-knowledge-flow-in-deskops-docs.md` — epistemic flow documentation gap (overlaps drawer issue)
+- `20260621-034342-unclear-clarify-inbox-model-for-inter-project-communication.md` — inter-project inbox model (overlaps drawer issue)
+- `20260621-113406-note-tmux-usage-for-development-and-testing-only.md` — tmux boundary: external orchestration only, not runtime logic
+- `20260621-120052-note-task-closeout-requires-testing-and-commit-boundary.md` — closeout gate: commit boundary required before retirement
+- `20260621-160450-note-workflow-summary-so-far.md` — comprehensive workflow model documentation
+- `20260621-160930-note-current-workflow-invariants.md` — 13 concise workflow invariants
+- `20260621-164028-note-subagent-ready-task-standard-checklist.md` — 100% subagent-ready task checklist (13 sections)
+
+### Features (desk/drawer/features/)
+
+- `router.md`, `supervisor.md`, `executor.md` — agent role model files (overlaps drawer issue)
 
 ## Pills
 

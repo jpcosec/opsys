@@ -1,6 +1,6 @@
 ---
 id: checklist-task-make-list-behavior-data-integrity-safe-closeout-ready
-status: active
+status: complete
 condition_refs:
 - condition-task-make-list-behavior-data-integrity-safe-ready-for-closeout
 - condition-task-make-list-behavior-data-integrity-safe-has-closeout-evidence

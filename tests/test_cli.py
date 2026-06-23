@@ -582,6 +582,18 @@ def test_next_diagram_renders_workflow_graph_from_spec(capsys) -> None:
     assert "testing_gate --> closeout_gate" in output.out
 
 
+def test_list_tasks_warns_on_malformed_artifact(tmp_path: Path, capsys) -> None:
+    main(["init", str(tmp_path)])
+    task_dir = tmp_path / "desk" / "tasks"
+    malformed_task = task_dir / "task-malformed.md"
+    malformed_task.write_text("---\ninvalid yaml\n---", encoding="utf-8")
+
+    main(["list", "tasks", "--root", str(tmp_path)])
+    captured = capsys.readouterr()
+    assert "Warning: Failed to load task" in captured.err
+    assert "task-malformed.md" in captured.err
+
+
 def test_list_tasks_include_repos_routes_registered_repo_board(tmp_path: Path, capsys) -> None:
     registered = main(
         [

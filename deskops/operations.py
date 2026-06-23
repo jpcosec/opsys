@@ -4,6 +4,7 @@ from dataclasses import dataclass
 import json
 from pathlib import Path
 import subprocess
+import sys
 from typing import Any, Callable
 
 import yaml
@@ -319,8 +320,8 @@ class DeskopsOperations:
         for path in sorted(task_dir.glob("task-*.md")):
             try:
                 tasks.append(self._load_task(path.stem))
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Warning: Failed to load task {path}: {e}", file=sys.stderr)
         return tasks
 
     def list_repo_task_routes(self) -> list[RepoTaskRoute]:
@@ -367,8 +368,8 @@ class DeskopsOperations:
         for path in sorted(directory.rglob(pattern)):
             try:
                 results.append(self._read_doc(path, model))
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Warning: Failed to load artifact {path}: {e}", file=sys.stderr)
         return results
 
     def list_routines(self) -> list[Routine]:
@@ -381,8 +382,8 @@ class DeskopsOperations:
         for path in sorted(routine_dir.glob("routine-*.md")):
             try:
                 results.append(self._load_routine(path.stem))
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Warning: Failed to load routine {path}: {e}", file=sys.stderr)
         return results
 
     def list_primitives(self, kind: str) -> list[dict[str, Any]]:
@@ -397,8 +398,8 @@ class DeskopsOperations:
         for path in sorted(primitive_dir.glob(f"{prefix}*.md")):
             try:
                 results.append(self._read_doc(path, model))
-            except Exception:
-                pass
+            except Exception as e:
+                print(f"Warning: Failed to load primitive {path}: {e}", file=sys.stderr)
         return results
 
     def show_task(self, task_id: str) -> tuple[Task | None, dict[str, bool]]:
@@ -1115,7 +1116,8 @@ class DeskopsOperations:
         for path in sorted(registry_dir.glob("repo-*.md")):
             try:
                 repositories.append(self._read_doc(path, RepositoryDoc))
-            except Exception:
+            except Exception as e:
+                print(f"Warning: Failed to load repository {path}: {e}", file=sys.stderr)
                 continue
         return repositories
 

@@ -1,6 +1,6 @@
 ---
 id: checklist-task-make-list-behavior-data-integrity-safe-execution-ready
-status: active
+status: complete
 condition_refs: []
 mode: all
 tags:
