@@ -1,0 +1,5 @@
+Next actions:
+1. Clean obvious scratch artifacts.
+2. Inspect bulk atom rewrite and decide revert vs isolate.
+3. Preserve coherent doctor lane changes only.
+4. Write result-summary and validation evidence.

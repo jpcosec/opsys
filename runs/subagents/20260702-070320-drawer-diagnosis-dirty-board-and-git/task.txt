@@ -1,0 +1,2 @@
+Task: drawer-diagnosis-dirty-board-and-git
+Scope: create one diagnosis file in desk/drawer/issues/diagnosis/ capturing why the git worktree and board/task routing became dirty/stale; optionally add a minimal traceability update if truly needed; create one isolated commit only for the diagnosis surface if possible.

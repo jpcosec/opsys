@@ -1,0 +1,5 @@
+Next actions:
+1. Read board/list/git evidence.
+2. Draft one diagnosis atom in the appropriate diagnosis subtree.
+3. Keep scope minimal and evidence-backed.
+4. If the resulting diff is isolated to the diagnosis surface, create a dedicated commit for it.

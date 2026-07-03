@@ -1,0 +1,100 @@
+flowchart TB
+    subgraph PiBoot["Pi startup and discovery"]
+        pi_settings[".pi/settings.json\npackages: pi-subagents\nskills: ../.skills, ../.agents/skills"]
+        skill_dirs["Skill directories\n.skills/sldb\n.agents/skills/*"]
+        pi_runtime["Pi runtime\nauto-discovers available skills at startup"]
+    end
+
+    subgraph Entry["Entry and repo recovery"]
+        user_req["User request / session goal"]
+        agents["AGENTS.md\nrepo entry route"]
+        read_route["Read route\nREADME.md, docs/faq.md, Board.md, rituals"]
+        board["desk/tasks/Board.md\nactive routing surface"]
+        repo_skill["Skill loaded on demand\ndeskops-workflow"]
+    end
+
+    subgraph RoleSelection["Role selection and bounded lane"]
+        role_lock["Choose one role\nsupervisor / executor / tester"]
+        sup_skill["workflow-supervisor\nfor routing / review / closeout discipline"]
+        exec_skill["workflow-executor\nfor bounded implementation"]
+        test_skill["workflow-tester\nfor validation lane"]
+        subexec_skill["subagent-execution\nfor launching worker lanes"]
+    end
+
+    subgraph StateSurfaces["Repo surfaces touched during workflow"]
+        tasks["desk/tasks/*.md\nactive task docs"]
+        rituals["desk/rituals/*.md\nexecution/testing/closeout gates"]
+        pills["desk/contexts/*.md\nboard + task pills"]
+        atoms["desk/atoms/**/*.md\ndurable knowledge"]
+        specs["spec/workflows/*.yaml\nspec/primitives/*.yaml\nspec/artifacts/*.yaml"]
+        runtime["desk/routines/*.md\ndesk/primitives/{conditions,checklists,operators,edges,hooks}/*.md"]
+        code["deskops/*.py\nCLI/runtime implementation"]
+        tests["tests/*.py\nvalidation surfaces"]
+        runs["runs/subagents/*\nexecution/testing evidence"]
+        git["git status / add / rm / commit\ndurable closure evidence"]
+    end
+
+    subgraph AutomaticToday["Automation that exists today"]
+        auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
+        auto_bundle["deskops add task / create_task_bundle\nauto-creates task + routine + conditions + checklists + operators + edges\nand appends the task to Board.md"]
+        auto_next["deskops next\nreads Board + task + spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
+        auto_advance["deskops advance task\nevaluates conditions/checklists/operators\nand advances current_node/status deterministically"]
+        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove task/routine/primitives from desk\nunroute from Board.md\ngit add/rm + git commit"]
+    end
+
+    subgraph NotAutomaticYet["Things modeled but not generally auto-fired yet"]
+        hook_docs["desk/primitives/hooks/*.md\nmodeled hook documents exist"]
+        no_hook_engine["No generic hook dispatcher currently scans hook docs\nand fires them by event as a runtime engine"]
+        rituals_still_manual["Ritual obligations are still mostly enforced\nby agent behavior + deskops commands\nnot by a full automatic hook system"]
+    end
+
+    subgraph ExecutionFlow["Current operational flow"]
+        recover["Recover state\ndeskops show board\ndeskops list/show task\ndeskops next\ndeskops graph missing\ngit status"]
+        bind["Bind references / pills / touched files / validation"]
+        maybe_sldb{"Tracked structured doc\nor model operation?"}
+        sldb_skill["Load .skills/sldb\nuse sldb docs/fields/models/stores commands"]
+        implement["Implement bounded change\ncode/docs/spec/task edits"]
+        validate["Run focused validation first\npytest / sldb stores check / CLI checks"]
+        handoff["Write run evidence\nresult-summary.md / validation.log"]
+        close_gate["Closeout review\nevidence + pills + graph + board + commit gate"]
+    end
+
+    user_req --> agents --> read_route --> board --> repo_skill
+    pi_settings --> skill_dirs --> pi_runtime --> auto_discovery
+    auto_discovery --> repo_skill
+    repo_skill --> role_lock
+    role_lock --> sup_skill
+    role_lock --> exec_skill
+    role_lock --> test_skill
+    sup_skill --> subexec_skill
+
+    board --> recover
+    tasks --> recover
+    rituals --> bind
+    pills --> bind
+    atoms --> bind
+    specs --> bind
+    code --> implement
+    tests --> validate
+    runs --> handoff
+    git --> close_gate
+    runtime --> auto_advance
+
+    recover --> bind --> maybe_sldb
+    maybe_sldb -- yes --> sldb_skill --> implement
+    maybe_sldb -- no --> implement
+    implement --> validate --> handoff --> close_gate
+
+    auto_bundle --> tasks
+    auto_bundle --> runtime
+    auto_bundle --> board
+    auto_next --> rituals
+    auto_next --> pills
+    auto_advance --> tasks
+    auto_close --> tasks
+    auto_close --> runtime
+    auto_close --> board
+    auto_close --> git
+
+    hook_docs --> no_hook_engine --> rituals_still_manual
+    close_gate --> auto_advance

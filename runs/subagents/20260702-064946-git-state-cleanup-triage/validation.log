@@ -1,0 +1,21 @@
+$ git status --short --branch
+## main...origin/main [ahead 37]
+ M .serena/project.yml
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M docs/diagrams/README.md
+ M tests/test_cli.py
+?? .agents/
+?? .pi/
+?? desk/drawer/issues/diagnosis/
+?? deskops/cli/commands/doctor.py
+?? docs/diagrams/process/current-agent-workflow-and-automation.md
+?? docs/diagrams/process/current-agent-workflow-and-automation.mmd
+?? inbox/
+?? runs/
+
+$ git diff --cached --name-only
+
+$ pytest tests/test_cli.py -k doctor -q
+..                                                                       [100%]
+2 passed, 60 deselected in 9.15s

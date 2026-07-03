@@ -1,0 +1,2 @@
+Task: git-state-cleanup-triage
+Scope: remove obvious scratch artifacts, isolate or revert bulk atom rewrite, preserve active doctor lane, do not implement unrelated product work, do not self-retire any task.

@@ -1,0 +1,69 @@
+$ git status --short --branch
+## main...origin/main [ahead 37]
+ M .serena/project.yml
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M docs/diagrams/README.md
+ M tests/test_cli.py
+?? .agents/
+?? .deskops.log
+?? .pi/
+?? desk/drawer/issues/diagnosis/
+?? deskops/cli/commands/doctor.py
+?? docs/diagrams/process/current-agent-workflow-and-automation.md
+?? docs/diagrams/process/current-agent-workflow-and-automation.mmd
+?? inbox/
+?? runs/
+
+$ git add desk/drawer/issues/diagnosis/10-workspace-health/atom-dirty-worktree-and-stale-board-state-come-from-mixed-lanes-and-diverged-truth-surfaces.md
+
+$ git diff --cached --name-only
+desk/drawer/issues/diagnosis/10-workspace-health/atom-dirty-worktree-and-stale-board-state-come-from-mixed-lanes-and-diverged-truth-surfaces.md
+
+$ git diff --cached --stat
+ ...from-mixed-lanes-and-diverged-truth-surfaces.md | 42 ++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
+
+$ git commit -m "docs(diagnosis): capture dirty worktree and stale board-state diagnosis"
+[main 93895fd] docs(diagnosis): capture dirty worktree and stale board-state diagnosis
+ 1 file changed, 42 insertions(+)
+ create mode 100644 desk/drawer/issues/diagnosis/10-workspace-health/atom-dirty-worktree-and-stale-board-state-come-from-mixed-lanes-and-diverged-truth-surfaces.md
+
+$ git rev-parse HEAD
+93895fd45d3ae578e11acb621ee0b909be5c4b5b
+
+$ git status --short --branch
+## main...origin/main [ahead 38]
+ M .serena/project.yml
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M docs/diagrams/README.md
+ M tests/test_cli.py
+?? .agents/
+?? .deskops.log
+?? .pi/
+?? desk/drawer/issues/diagnosis/01-summary/
+?? desk/drawer/issues/diagnosis/02-observed-problems/
+?? desk/drawer/issues/diagnosis/03-evidence-and-symptoms/
+?? desk/drawer/issues/diagnosis/04-expected-model/
+?? desk/drawer/issues/diagnosis/05-gaps/
+?? desk/drawer/issues/diagnosis/06-worklines/
+?? desk/drawer/issues/diagnosis/07-priority-use-cases/
+?? desk/drawer/issues/diagnosis/08-risks/
+?? desk/drawer/issues/diagnosis/09-advancement-criteria/
+?? desk/drawer/issues/diagnosis/10-workspace-health/atom-legacy-and-versioned-desk-state-remain-fragile.md
+?? desk/drawer/issues/diagnosis/10-workspace-health/atom-workspace-health-and-recovery-need-explicit-diagnosis.md
+?? desk/drawer/issues/diagnosis/11-cross-desk-identity/
+?? desk/drawer/issues/diagnosis/12-cli-surface/
+?? desk/drawer/issues/diagnosis/13-atom-mutation-provenance/
+?? desk/drawer/issues/diagnosis/14-drift/
+?? desk/drawer/issues/diagnosis/15-core-realignment/
+?? desk/drawer/issues/diagnosis/README.md
+?? desk/drawer/issues/diagnosis/TASK_TRACEABILITY.md
+?? deskops/cli/commands/doctor.py
+?? docs/diagrams/process/current-agent-workflow-and-automation.md
+?? docs/diagrams/process/current-agent-workflow-and-automation.mmd
+?? inbox/
+?? runs/
+
+$ git diff --cached --name-only

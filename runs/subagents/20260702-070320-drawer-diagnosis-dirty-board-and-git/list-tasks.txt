@@ -1,0 +1,15 @@
+task-add-desk-health-and-recovery-surface-deskops-slice | active | checklist-task-add-desk-health-and-recovery-surface-deskops-slice-execution-ready
+task-add-drift-check-review-loop | active | checklist-task-add-drift-check-review-loop-execution-ready
+task-add-json-output-for-modeled-documents | active | checklist-task-add-json-output-for-modeled-documents-execution-ready
+task-add-per-project-desk-config-and-version-contract | active | checklist-task-add-per-project-desk-config-and-version-contract-execution-ready
+task-define-atom-lifecycle-operations | active | checklist-task-define-atom-lifecycle-operations-execution-ready
+task-define-materialization-contract-slice-deskops-surface | active | checklist-task-define-materialization-contract-slice-deskops-surface-execution-ready
+task-design-operational-cli-grammar | active | checklist-task-design-operational-cli-grammar-execution-ready
+task-detect-and-migrate-legacy-desk-workspaces | active | checklist-task-detect-and-migrate-legacy-desk-workspaces-execution-ready
+task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout | active | checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready
+task-enrich-templates-with-instructional-text | active | complete
+task-establish-horizontal-desk-discovery-and-canonical-identity | active | checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready
+task-make-cross-desk-inbox-delivery-verifiable-and-actionable | active | checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready
+task-make-task-lifecycle-runnable-from-intake-to-closeout | active | checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready
+task-wire-closeout-to-knowledge-gates | active | checklist-task-wire-closeout-to-knowledge-gates-execution-ready
+task-write-end-to-end-deskops-operator-manual | active | checklist-task-write-end-to-end-deskops-operator-manual-execution-ready

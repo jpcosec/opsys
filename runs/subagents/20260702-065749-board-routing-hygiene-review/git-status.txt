@@ -1,0 +1,15 @@
+## main...origin/main [ahead 37]
+ M .serena/project.yml
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M docs/diagrams/README.md
+ M tests/test_cli.py
+?? .agents/
+?? .deskops.log
+?? .pi/
+?? desk/drawer/issues/diagnosis/
+?? deskops/cli/commands/doctor.py
+?? docs/diagrams/process/current-agent-workflow-and-automation.md
+?? docs/diagrams/process/current-agent-workflow-and-automation.mmd
+?? inbox/
+?? runs/

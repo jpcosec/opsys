@@ -1,0 +1,9 @@
+Task: task-add-desk-health-and-recovery-surface-deskops-slice
+Title: Add desk health and recovery surface (deskops slice)
+Status: active
+Current node: checklist-task-add-desk-health-and-recovery-surface-deskops-slice-execution-ready
+Routine: routine-task-add-desk-health-and-recovery-surface-deskops-slice
+Checklist status:
+- checklist-task-add-desk-health-and-recovery-surface-deskops-slice-execution-ready: complete
+- checklist-task-add-desk-health-and-recovery-surface-deskops-slice-testing-ready: complete
+- checklist-task-add-desk-health-and-recovery-surface-deskops-slice-closeout-ready: pending

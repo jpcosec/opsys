@@ -1,0 +1,124 @@
+## main...origin/main [ahead 37]
+ M .serena/project.yml
+ M desk/atoms/atom-001-self-described-store-layout.md
+ M desk/atoms/atom-deskops-architecture.md
+ M desk/atoms/atom-deskops-models-are-sldb-documents.md
+ M desk/atoms/atom-deskops-reads-and-writes-through-sldb.md
+ M desk/atoms/atom-deskops.md
+ M desk/atoms/atom-extra-atom-test.md
+ M desk/atoms/atom-from-yaml-test-atom.md
+ M desk/atoms/atom-missing-answer-test.md
+ M desk/atoms/atom-stale-state-causes-agent-hallucination.md
+ M desk/atoms/atom-test-atom-stress.md
+ M desk/atoms/knowledge-model/atom-atom-references-carry-roles.md
+ M desk/atoms/knowledge-model/atom-atoms-distill-project-knowledge.md
+ M desk/atoms/knowledge-model/atom-big-documents-need-explicit-modeling-strategy.md
+ M desk/atoms/knowledge-model/atom-diagrams-project-knowledge-relations.md
+ M desk/atoms/knowledge-model/atom-docs-materialize-atoms-for-humans.md
+ M desk/atoms/knowledge-model/atom-drift-checks-compare-atoms-materializations-implementation.md
+ M desk/atoms/knowledge-model/atom-extensibility-is-a-contract.md
+ M desk/atoms/knowledge-model/atom-implementation-feedback-refines-atoms.md
+ M desk/atoms/knowledge-model/atom-kgdb-is-graph-substrate-not-reasoner.md
+ M desk/atoms/knowledge-model/atom-kgdb-should-parallel-sldb-not-compete.md
+ M desk/atoms/knowledge-model/atom-knowledge-graph-connects-desk-and-source-files.md
+ M desk/atoms/knowledge-model/atom-main-docs-are-composed-materializations.md
+ M desk/atoms/knowledge-model/atom-materialization-contracts-bind-source-output-validation.md
+ M desk/atoms/knowledge-model/atom-materialization-metadata-is-not-atom-content.md
+ M desk/atoms/knowledge-model/atom-materializations-declare-source-atoms.md
+ M desk/atoms/knowledge-model/atom-networkx-is-first-graph-runtime.md
+ M desk/atoms/knowledge-model/atom-promotion-needs-explicit-criteria.md
+ M desk/atoms/knowledge-model/atom-raw-signals-need-distillation-before-formalization.md
+ M desk/atoms/knowledge-model/atom-reverse-traceability-is-derived.md
+ M desk/atoms/knowledge-model/atom-self-reflection-is-a-feedback-loop.md
+ M desk/atoms/knowledge-model/atom-sldb-semantics-are-graph-inputs.md
+ M desk/atoms/knowledge-model/atom-source-file-relations-make-knowledge-actionable.md
+ M desk/atoms/knowledge-model/atom-specs-formalize-atoms-as-contracts.md
+ M desk/atoms/workflow-model/atom-agents-read-by-decision-need.md
+ M desk/atoms/workflow-model/atom-agents-read-through-semantic-tools.md
+ M desk/atoms/workflow-model/atom-atom-candidates-come-from-durable-answers.md
+ M desk/atoms/workflow-model/atom-atoms-answer-one-question.md
+ M desk/atoms/workflow-model/atom-atoms-are-stable-documentation-core.md
+ M desk/atoms/workflow-model/atom-automatic-routines-vs-llm-tasks.md
+ M desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md
+ M desk/atoms/workflow-model/atom-changes-flow-through-tasks-and-pills.md
+ M desk/atoms/workflow-model/atom-clean-agents-start-from-minimum-workflow-set.md
+ M desk/atoms/workflow-model/atom-clean-code-reduces-knowledge-drift.md
+ M desk/atoms/workflow-model/atom-clean-subagent-ambiguity-review.md
+ M desk/atoms/workflow-model/atom-cli-gaps-become-tracked-work.md
+ M desk/atoms/workflow-model/atom-cli-is-thin-over-primitives-and-sldb.md
+ M desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md
+ M desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md
+ M desk/atoms/workflow-model/atom-closeout-validates-knowledge-surfaces.md
+ M desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md
+ M desk/atoms/workflow-model/atom-codebase-surfaces-generate-atom-candidates.md
+ M desk/atoms/workflow-model/atom-create-operations-should-rollback-on-failure.md
+ M desk/atoms/workflow-model/atom-desk-is-document-data-only.md
+ M desk/atoms/workflow-model/atom-deskops-automates-repeated-workflow-obligations.md
+ M desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md
+ M desk/atoms/workflow-model/atom-diagrams-generate-operational-models.md
+ M desk/atoms/workflow-model/atom-divide-and-conquer-persisted-operations.md
+ M desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md
+ M desk/atoms/workflow-model/atom-documents-point-to-atoms.md
+ M desk/atoms/workflow-model/atom-drawer-is-not-active-work.md
+ M desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md
+ M desk/atoms/workflow-model/atom-ease-of-use-requires-progressive-disclosure.md
+ M desk/atoms/workflow-model/atom-every-change-needs-descriptive-commit.md
+ M desk/atoms/workflow-model/atom-failed-sldb-paths-become-sldb-inbox-issues.md
+ M desk/atoms/workflow-model/atom-field-oriented-document-composition.md
+ M desk/atoms/workflow-model/atom-first-safe-action-follows-read-route.md
+ M desk/atoms/workflow-model/atom-git-history-is-the-past.md
+ M desk/atoms/workflow-model/atom-git-is-explanatory-surface-for-changes.md
+ M desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md
+ M desk/atoms/workflow-model/atom-inbox-routes-external-needs-toward-work.md
+ M desk/atoms/workflow-model/atom-kgdb-owns-relations-between-knowledge-surfaces.md
+ M desk/atoms/workflow-model/atom-large-worktree-changes-need-explanatory-slices.md
+ M desk/atoms/workflow-model/atom-non-durable-notes-do-not-become-atoms.md
+ M desk/atoms/workflow-model/atom-operational-primitives-model.md
+ M desk/atoms/workflow-model/atom-orphan-artifacts-are-knowledge-system-failures.md
+ M desk/atoms/workflow-model/atom-phase-closeout-reconciles-pills-and-next-work.md
+ M desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md
+ M desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md
+ M desk/atoms/workflow-model/atom-pills-are-reusable-across-tasks.md
+ M desk/atoms/workflow-model/atom-pills-are-transient.md
+ M desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md
+ M desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md
+ M desk/atoms/workflow-model/atom-pills-index-existing-and-bound-future-context.md
+ M desk/atoms/workflow-model/atom-pills-reference-not-copy.md
+ M desk/atoms/workflow-model/atom-primitives-encode-operational-rules.md
+ M desk/atoms/workflow-model/atom-raw-file-reads-flatten-knowledge-layers.md
+ M desk/atoms/workflow-model/atom-real-cli-surfaces-prove-workflow-behavior.md
+ M desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md
+ M desk/atoms/workflow-model/atom-repo-artifacts-need-atom-traceability.md
+ M desk/atoms/workflow-model/atom-reports-capture-evidence-and-next-decision-surface.md
+ M desk/atoms/workflow-model/atom-reports-carry-minimal-reproduction-evidence.md
+ M desk/atoms/workflow-model/atom-rituals-precede-routines.md
+ M desk/atoms/workflow-model/atom-routine-based-task-execution.md
+ M desk/atoms/workflow-model/atom-self-generating-spec-derived-cli.md
+ M desk/atoms/workflow-model/atom-sldb-is-read-write-edit-surface.md
+ M desk/atoms/workflow-model/atom-spec-driven-artifact-architecture.md
+ M desk/atoms/workflow-model/atom-spec-fields-compile-into-model-fields.md
+ M desk/atoms/workflow-model/atom-spec-to-visualization-pipeline.md
+ M desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md
+ M desk/atoms/workflow-model/atom-task-board-phases.md
+ M desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md
+ M desk/atoms/workflow-model/atom-unwritten-knowledge-belongs-in-atoms-or-materializations.md
+ M desk/atoms/workflow-model/atom-upstream-routing-needs-convenient-command.md
+ M desk/atoms/workflow-model/atom-used-source-artifacts-are-deleted.md
+ M desk/atoms/workflow-model/atom-work-is-board-routed-to-preserve-intent.md
+ M desk/atoms/workflow-model/atom-workflow-surfaces-have-operational-lifetimes.md
+ M desk/atoms/workflow-model/atom-workflow-vocabulary-separates-knowledge-and-work.md
+ M deskops/models/atom.py
+ M docs/diagrams/README.md
+ M tests/test_atom_materialization.py
+ M tests/test_atom_tags.py
+?? .agents/
+?? .deskops.log
+?? .pi/
+?? desk/atoms/index.md
+?? desk/atoms/knowledge-model/index.md
+?? desk/atoms/workflow-model/index.md
+?? desk/drawer/issues/diagnosis/
+?? docs/diagrams/process/current-agent-workflow-and-automation.md
+?? docs/diagrams/process/current-agent-workflow-and-automation.mmd
+?? inbox/
+?? runs/

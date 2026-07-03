@@ -1,0 +1,6 @@
+tests/test_cli.py::test_add_list_and_show_step_from_specs PASSED         [ 96%]
+tests/test_cli.py::test_doctor_reports_untracked_documents_and_missing_structure PASSED [ 98%]
+tests/test_cli.py::test_doctor_reports_invalid_documents PASSED          [100%]
+
+============================= 62 passed in 20.87s ==============================
+EXIT_CODE: 0

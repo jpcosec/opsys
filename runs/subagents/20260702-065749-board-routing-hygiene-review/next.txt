@@ -1,0 +1,5 @@
+Next actions:
+1. Compare board-routed tasks vs desk/tasks/*.md.
+2. Inspect stale completed task docs still listed by CLI.
+3. Inspect code path for list tasks and board/routing semantics.
+4. Recommend supervisor cleanup path.

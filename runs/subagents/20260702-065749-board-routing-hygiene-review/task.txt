@@ -1,0 +1,2 @@
+Task: board-routing-hygiene-review
+Scope: read-only review of stale task/list/board mismatch, task retirement semantics, and routing truth sources.
