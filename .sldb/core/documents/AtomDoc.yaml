@@ -68,7 +68,7 @@ documents:
   - workspace.desk.atoms
 - name: atom-pills-are-transient
   path: desk/atoms/workflow-model/atom-pills-are-transient.md
-  hash_c: dc6160ed9237a7b56cb3cf14a38f821ef02e919152a46b358f8538305e438433
+  hash_c: 5602483f993e5d350be59aea1af76a3110f858d14592566b63af0c14ec7423df
   hash_d: f84ce219a3b2a7b23c4b119ee2121898955d3d3043dd99f23fb867d97255785f
   semantic_tags:
   - system:deskops
@@ -77,7 +77,7 @@ documents:
   - workspace.desk.atoms
 - name: atom-task-board-phases
   path: desk/atoms/workflow-model/atom-task-board-phases.md
-  hash_c: ae417f34ec59b4b436040d3c7357e7a137521e693ac77dbd3c8f2d5ba607cac3
+  hash_c: cddb3e314aa01dfcaad0e750ae84a3ed18ab5d4a8c869f4fcedea8fa41931140
   hash_d: f98211796c21460c0432ee6dfc05932f1f370c8f9b869ee03e1873e2097f0f58
   semantic_tags:
   - system:deskops
@@ -248,7 +248,7 @@ documents:
   - workspace.desk.atoms
 - name: atom-tasks-enable-zero-context-subagents
   path: desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md
-  hash_c: 8ff35b4406346c1ec996301487af207b339f5fec08f71da800555ddc5a4e0850
+  hash_c: 1a6b53f75156ba35cb394896fe525197ca42f6cf8ff3f716415d192dd11d76e5
   hash_d: 4223b587534201839328235cd7a5bafbe1c12889ff451c97747d23a0d3b538a4
   semantic_tags:
   - system:deskops
@@ -270,7 +270,7 @@ documents:
   - workspace.desk.atoms
 - name: atom-pills-index-existing-and-bound-future-context
   path: desk/atoms/workflow-model/atom-pills-index-existing-and-bound-future-context.md
-  hash_c: 426c30f4ad408d92e1137fce0f93c166dc84bf2c8314660b357f9b46152fc738
+  hash_c: fb80031e7c6a3f9a8a7aca38d3f3de522009527774c31f26996fe656f7954336
   hash_d: 4c680badd8156c1cc9a27ab83a9a9a2dc7308d59850697874413f0d4f9173f57
   semantic_tags:
   - system:deskops
@@ -281,7 +281,7 @@ documents:
   - workspace.desk.atoms
 - name: atom-pills-end-as-atoms-docs-or-deletion
   path: desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md
-  hash_c: 3dffa854cf404d279d9a94fc315f7123a0839594303b1249f288f928abc67977
+  hash_c: d1ffa1e0724db4e331d9f12b85f4e528c7496d954fa9e1d8d739fb636be249f9
   hash_d: 6f149a452a72e85ddac798a3e17a1f2357578a257fd62b2e6395bca6626c57d7
   semantic_tags:
   - system:deskops
@@ -408,5 +408,48 @@ documents:
   hash_c: 86df8256d7d8734f6b32d07d3633ab7de7099e305a60512243eff1361c238597
   hash_d: c212bdb5ee1f0272569e045cc67273f5279cdaf433c89a8052ae0e336d5defee
   semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-desk-repair-is-owned-by-deskops
+  path: desk/atoms/atom-desk-repair-is-owned-by-deskops.md
+  hash_c: c45dfc651ea66a16d24383af35666a07bf6a0593448604223f5249607787ca4a
+  hash_d: 9dced1976545beb5f2996d8b6738470f8f4d4d10557384364616df1a8dc1fed9
+  semantic_tags:
+  - system:deskops
+  - topic:boundary
+  - topic:ownership
+  - topic:workspace-health
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-desk-health-is-measured-by-cli-diagnostics
+  path: desk/atoms/atom-desk-health-is-measured-by-cli-diagnostics.md
+  hash_c: 88b8a3034e2c81cc891f7c2d1c5579d89656d7e6c531744d83ac4b2ed60d3047
+  hash_d: 50f78402133a92e42a40fb9e589818610a5eff073721a652cbe7914247faead3
+  semantic_tags:
+  - system:deskops
+  - topic:cli
+  - topic:diagnosis
+  - topic:workspace-health
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-desk-health-delegates-store-diagnostics-to-sldb
+  path: desk/atoms/atom-desk-health-delegates-store-diagnostics-to-sldb.md
+  hash_c: 0638aac4f4a4a6c66af5cb212cfafffae64c928310f503e3721a746bfa0b465c
+  hash_d: d8b4dfc93d6ea97ac05f12707ca847c0347c1de7bacb993e42b3852a2ed7574c
+  semantic_tags:
+  - system:deskops
+  - topic:boundary
+  - topic:sldb
+  - topic:workspace-health
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-desk-health-is-workspace-integrity-state
+  path: desk/atoms/atom-desk-health-is-workspace-integrity-state.md
+  hash_c: e27d2298496a4ea4931c89728e66e53cab928b30f8fd6c823c8b83d55ed2ad85
+  hash_d: 2da40b67bb07273a4d993953f4e5c663bf5c28af8d8b3658cf71cc710c7cab15
+  semantic_tags:
+  - system:deskops
+  - topic:diagnosis
+  - topic:workspace-health
   - type.knowledge.atom
   - workspace.desk.atoms

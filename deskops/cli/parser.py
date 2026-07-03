@@ -67,6 +67,7 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     _add_about_command(subparsers)
+    _add_doctor_command(subparsers)
     _add_faq_commands(subparsers)
     _add_bootstrap_command(subparsers)
     _add_init_command(subparsers)
@@ -190,6 +191,17 @@ def _add_about_command(
         "about",
         help="Print a short overview of deskops and its first-use commands.",
     )
+
+
+def _add_doctor_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "doctor",
+        help="Detect and repair common broken desk states safely.",
+    )
+    p.add_argument("--root", default=".", help="Target repository root.")
+    p.add_argument("--repair", action="store_true", help="Attempt non-destructive repairs.")
 
 
 def _add_bootstrap_command(

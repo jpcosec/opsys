@@ -14,6 +14,6 @@ Diagram groups:
 - `codebase/` - codebase knowledge surfaces, document relation maps, and SLDB/primitives/docs/CLI component diagrams.
 - `documents/` - structured documents, less structured documents, and primitives.
 - `intake/` - inbox, drawers, features, and issues.
-- `process/` - rituals, routines, hooks, and gates.
+- `process/` - rituals, routines, hooks, gates, and the current agent workflow/automation map.
 
 Each diagram is stored as both `.md` and `.mmd` when available.

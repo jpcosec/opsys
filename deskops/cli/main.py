@@ -46,6 +46,10 @@ class CLI:
             return FAQCLI().run(args)
         if args.command == "about":
             return print_about()
+        if args.command == "doctor":
+            from deskops.cli.commands.doctor import DoctorCLI
+
+            return DoctorCLI().run(args)
         if args.command == "desk":
             from deskops.cli.commands.desk import DeskCLI
 
