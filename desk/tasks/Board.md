@@ -5,7 +5,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
 - desk/tasks/task-add-drift-check-review-loop.md
 - desk/tasks/task-add-json-output-for-modeled-documents.md
 - desk/tasks/task-add-per-project-desk-config-and-version-contract.md
@@ -53,7 +52,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Add desk health and recovery surface (deskops slice) [active] - Detect and repair common broken desk states safely (deskops-owned surfaces only).
 - Add drift check review loop [active] - Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.
 - Add JSON output for modeled documents [active] - Make modeled document `list` and `show` commands scriptable with JSON output.
 - Add per-project desk config and version contract [active] - Give each project desk one explicit local configuration contract that declares desk identity, desk/version expectations, and per-project testing defaults such as sandbox behavior.
@@ -73,7 +71,6 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Add desk health and recovery surface (deskops slice) [active] - Detect and repair common broken desk states safely (deskops-owned surfaces only).
 - Add drift check review loop [active] - Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.
 - Add JSON output for modeled documents [active] - Make modeled document `list` and `show` commands scriptable with JSON output.
 - Add per-project desk config and version contract [active] - Give each project desk one explicit local configuration contract that declares desk identity, desk/version expectations, and per-project testing defaults such as sandbox behavior.

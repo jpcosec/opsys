@@ -1,0 +1,125 @@
+from __future__ import annotations
+
+import argparse
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+from deskops.bootstrap import SLDBBootstrap
+from deskops.workspace import scaffold_desk
+
+
+class DoctorCLI:
+    def run(self, args: argparse.Namespace) -> int:
+        root = Path(args.root).resolve()
+        repair = getattr(args, "repair", False)
+
+        findings: list[str] = []
+        fixed: list[str] = []
+
+        desk_dir = root / "desk"
+        missing_desk_files: list[str] = []
+
+        if not desk_dir.exists():
+            missing_desk_files.append("desk/")
+        else:
+            if not (desk_dir / "tasks" / "Board.md").exists():
+                missing_desk_files.append("desk/tasks/Board.md")
+            if not (desk_dir / "drawer").exists():
+                missing_desk_files.append("desk/drawer/")
+
+        if missing_desk_files:
+            findings.append(f"Missing desk structure: {', '.join(missing_desk_files)}")
+            if repair:
+                scaffold_desk(root)
+                fixed.append("Scaffolded missing desk/ structure.")
+
+        untracked: list[Path] = []
+        invalid_docs: list[str] = []
+        
+        if desk_dir.exists():
+            all_mds = set(p.resolve() for p in desk_dir.rglob("*.md"))
+            tracked_mds = set()
+            
+            result = subprocess.run(
+                [sys.executable, "-m", "sldb", "stores", "check", "--store", str(root / ".sldb"), "--format", "json"],
+                capture_output=True,
+                text=True,
+                check=False
+            )
+            
+            if result.stdout:
+                try:
+                    payload = json.loads(result.stdout)
+                    for model in payload.get("models", []):
+                        for doc in model.get("documents", []):
+                            doc_path = doc.get("path")
+                            if not doc_path:
+                                continue
+                            
+                            tracked_path = (root / doc_path).resolve()
+                            tracked_mds.add(tracked_path)
+                            
+                            if doc.get("note") not in ("ok", "benign_mutation") and doc_path.startswith("desk/"):
+                                invalid_docs.append(f"{doc_path} ({doc.get('note')})")
+                except json.JSONDecodeError:
+                    findings.append("Failed to parse SLDB store check output.")
+                    
+            if result.returncode != 0 and not result.stdout:
+                # If SLDB crashes, it usually means a document failed validation completely
+                findings.append(f"SLDB store check crashed (likely malformed documents): {result.stderr.strip().split(chr(10))[0]}")
+            
+            # Remove scaffolding files from untracked logic if they haven't been tracked
+            untracked = [p for p in all_mds if p not in tracked_mds and p.name not in ("Board.md", "pills.md", "execution.md", "testing.md", "closeout.md", "README.md", "tag-namespaces.yaml")]
+            
+            # If SLDB crashed, we can't reliably know what's untracked vs tracked, so we don't report untracked
+            if result.returncode != 0 and not result.stdout:
+                untracked = []
+            
+        if untracked:
+            rel_untracked = [str(p.relative_to(root)) for p in untracked]
+            findings.append(f"Untracked desk documents: {', '.join(rel_untracked)}")
+            if repair:
+                findings.append("Manual repair required to track documents (use sldb docs track).")
+
+        if invalid_docs:
+            findings.append(f"Invalid desk documents: {', '.join(invalid_docs)}")
+            if repair:
+                findings.append("Manual repair required for invalid documents (check syntax or run sldb stores update).")
+
+        runtime_dir = root / ".sldb" / "runtime"
+        stale_files: list[Path] = []
+        if runtime_dir.exists():
+            for p in runtime_dir.glob("*.json"):
+                stale_files.append(p)
+        
+        if stale_files:
+            rel_stale = [str(p.relative_to(root)) for p in stale_files]
+            findings.append(f"Stale graph runtime files found: {', '.join(rel_stale)}")
+            if repair:
+                for p in stale_files:
+                    p.unlink()
+                fixed.append(f"Deleted stale graph runtime files: {', '.join(rel_stale)}")
+
+        if not findings:
+            print("Desk is healthy. No issues found.")
+            return 0
+        
+        print("Doctor Findings:")
+        for f in findings:
+            print(f"- {f}")
+        
+        if fixed:
+            print("\nRepairs applied:")
+            for fx in fixed:
+                print(f"- {fx}")
+        
+        if repair and len(fixed) < len([f for f in findings if "Manual repair required" not in f]):
+            print("\nSome issues could not be repaired automatically.")
+            return 1
+        elif not repair:
+            print("\nRun with --repair to attempt automatic fixes.")
+            return 1
+
+        return 0

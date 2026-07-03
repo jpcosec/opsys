@@ -33,7 +33,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph}" in captured.out
+    assert "{about,doctor,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -1789,3 +1789,77 @@ def test_add_list_and_show_step_from_specs(tmp_path: Path, capsys) -> None:
     assert shown == 0
     assert "Step: step-validate-draft" in show_out.out
     assert "action: Run validation" in show_out.out
+
+def test_doctor_reports_untracked_documents_and_missing_structure(tmp_path: Path, capsys) -> None:
+    from deskops.cli.main import main
+    import subprocess
+    import sys
+
+    root = tmp_path / "project"
+    root.mkdir()
+    
+    # Run init to get a valid store and desk scaffolding
+    assert main(["init", str(root)]) == 0
+    capsys.readouterr()
+
+    # Now we break the desk structure
+    import shutil
+    shutil.rmtree(root / "desk" / "drawer")
+
+    # Add an untracked document
+    (root / "desk" / "tasks" / "untracked-task.md").write_text("# Untracked\n", encoding="utf-8")
+
+    # Add a stale graph runtime file
+    runtime_dir = root / ".sldb" / "runtime"
+    runtime_dir.mkdir(parents=True, exist_ok=True)
+    stale_kg = runtime_dir / "knowledge_graph.kg.json"
+    stale_kg.write_text("{}", encoding="utf-8")
+
+    # Run doctor without repair
+    assert main(["doctor", "--root", str(root)]) == 1
+    out, err = capsys.readouterr()
+    assert "Doctor Findings:" in out
+    assert "Missing desk structure: desk/drawer/" in out
+    assert "Untracked desk documents: desk/tasks/untracked-task.md" in out
+    assert "Stale graph runtime files found: .sldb/runtime/knowledge_graph.kg.json" in out
+    assert "Run with --repair to attempt automatic fixes." in out
+
+    # Run doctor with repair
+    assert main(["doctor", "--root", str(root), "--repair"]) == 1
+    out, err = capsys.readouterr()
+    assert "Scaffolded missing desk/ structure." in out
+    assert "Deleted stale graph runtime files: .sldb/runtime/knowledge_graph.kg.json" in out
+    assert "Manual repair required to track documents (use sldb docs track)." in out
+
+    # Check if things were repaired
+    assert (root / "desk" / "drawer").exists()
+    assert not stale_kg.exists()
+
+def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
+    from deskops.cli.main import main
+    import subprocess
+    import sys
+
+    root = tmp_path / "project"
+    root.mkdir()
+    
+    assert main(["init", str(root)]) == 0
+    capsys.readouterr()
+
+    # Track a document cleanly
+    task_doc = root / "desk" / "tasks" / "task-foo.md"
+    main(["add", "task", "--title", "Foo", "--root", str(root)])
+    # We must track it in SLDB
+    subprocess.run([sys.executable, "-m", "sldb", "docs", "track", str(task_doc), "--model", "TaskDoc", "--store", str(root / ".sldb")], check=True)
+    capsys.readouterr()
+
+    # Corrupt it
+    task_doc.write_text("corrupted content", encoding="utf-8")
+    
+    # Let's run stores update so hash_c changes, but hash_d might be broken because it fails to parse
+    # Or just let doctor detect hash_c/hash_d mismatch from store check
+    
+    # Run doctor
+    assert main(["doctor", "--root", str(root)]) == 1
+    out, err = capsys.readouterr()
+    assert "SLDB store check crashed (likely malformed documents)" in out
