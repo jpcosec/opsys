@@ -17,13 +17,15 @@ If the active board does not route a task, do not treat fixture-looking files in
 
 ## Skill Route
 
-Load the local role skill that matches the surface before changing files:
+Load the global surface skill that matches the work before changing files. Workflow roles such as supervisor, executor, and tester are system-prompt concerns, not repo-local skills:
 
 - `use-deskops` for `desk/` surfaces, tasks, drawer work, pills, rituals, primitives, routines, repo registry, and workflow operations.
-- `use-sldb` for `StructuredNLDoc` models, reversible Markdown markers, `.sldb` stores, document tracking, model registration, rendering, extraction, or field operations.
+- `use-sldb` for `StructuredNLDoc` models, reversible Markdown markers, `.sldb` stores, document tracking, model registration, rendering, extraction, or field operations. The authoritative global Pi skill lives in the sibling `../sldb/.pi/skills/use-sldb/`.
 - `use-kgdb` for graph contracts, graph snapshots, nodes, edges, provenance, `deskops graph build`, `deskops graph missing`, or graph runtime validation.
 - `use-spec2viz` for diagram specs, Mermaid/projection outputs, and generated diagram surfaces under `docs/diagrams/`.
 - `customize-opencode` only for opencode configuration, `.opencode/` agents, skills, plugins, MCP servers, permissions, or `AGENTS.md`/opencode routing changes.
+
+For Pi in this repo, prefer the project skills under `.pi/skills/`.
 
 ## Core Boundaries
 
@@ -82,8 +84,11 @@ deskops graph missing
 - `docs/faq.md`
 - `docs/workflow-policy-reference.md`
 - `docs/how-to-test-ux-cli.md`
-- `.skills/sldb/SKILL.md`
-- `.opencode/skills/use-deskops/SKILL.md`
+- `.pi/skills/use-deskops/SKILL.md`
+- `../sldb/.pi/skills/use-sldb/SKILL.md`
+- `docs/agent-system-prompts/README.md`
+- `.opencode/skills/use-deskops/SKILL.md` (parallel copy)
+- `.opencode/skills/use-sldb/SKILL.md` (parallel copy)
 - `desk/tasks/Board.md`
 - `desk/drawer/tasks/Board.md`
 - `desk/rituals/phase.md`

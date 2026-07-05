@@ -25,4 +25,4 @@ The task model should gain a field or composition layer for execution plans that
 
 - `deskops/operations.py` current task normalization and bundle creation show the present task contract and where an execution-plan layer could attach.
 - `desk/rituals/execution.md` requires explicit touched files and validation, which aligns with a more concrete execution-plan field or composition.
-- `.agents/skills/workflow-executor/SKILL.md` describes the need for exact touched surfaces and bounded action, which an execution plan could encode directly.
+- `/home/jp/.pi/agent/agents/deskops-executor.md` describes the need for exact touched surfaces and bounded action, which an execution plan could encode directly.

@@ -25,4 +25,4 @@ Current tasks usually capture goal, scope, files, and validation, but they do no
 
 - `spec/artifacts/task.yaml` — task artifacts are modeled at the current task-document layer rather than as detailed edit-action bundles.
 - `deskops/operations.py` — normalized task payloads focus on title, goal, scope, references, files, validation, and routine linkage.
-- `.agents/skills/workflow-executor/SKILL.md` — still frames execution mainly as reading task scope and then implementing, not as consuming a compiled edit-plan composition.
+- `/home/jp/.pi/agent/agents/deskops-executor.md` — still frames execution mainly as reading task scope and then implementing, not as consuming a compiled edit-plan composition.

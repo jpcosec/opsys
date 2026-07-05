@@ -31,4 +31,21 @@ class AtomsCLI:
             print(f"Path: {registry_path}")
             return 0
 
+        # Proxy these to the main operation CLI or mark as not implemented
+        if args.atoms_command == "list":
+            args.command = "list"
+            args.subject = "atoms"
+            from deskops.cli.commands.operations import OperationsCLI
+            return OperationsCLI().run(args)
+
+        if args.atoms_command == "show":
+            args.command = "show"
+            args.subject = "atom"
+            from deskops.cli.commands.operations import OperationsCLI
+            return OperationsCLI().run(args)
+
+        if args.atoms_command in ("new", "validate"):
+            print(f"atoms {args.atoms_command} grammar added; implementation deferred.")
+            return 0
+
         return 1

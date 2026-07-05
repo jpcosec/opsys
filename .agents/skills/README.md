@@ -1,20 +1,19 @@
 # Repo-local agent skills
 
-These skills generalize the workflow-role pattern used in other repos into `deskops` itself.
+This directory is now intentionally narrow.
 
-They are not product features. They are operational prompts for Pi-style agents so the agent can:
+Repo-local skills should only cover workflow helpers that are specific to this repository and that make sense as on-demand skills.
 
-- recover real desk state from repo artifacts
-- separate supervisor and executor behavior
-- preserve evidence for subagent runs
-- respect execution, testing, and closeout gates
-- use `sldb` correctly for structured-document work
+## Current repo-local skill
 
-Available skills:
+- `subagent-execution` — bounded helper for launching one deskops execution lane with run evidence.
 
-- `deskops-workflow`
-- `workflow-executor`
-- `workflow-supervisor`
-- `workflow-tester`
-- `subagent-execution`
-- existing structured-doc skill: `.skills/sldb/SKILL.md`
+## Not skills anymore
+
+The following were previously modeled as repo-local skills, but they are better treated as global guidance or system-prompt concerns:
+
+- `use-deskops` is the comprehensive global deskops surface skill at `.opencode/skills/use-deskops/SKILL.md`
+- `use-sldb` is the comprehensive global SLDB surface skill at `.opencode/skills/use-sldb/SKILL.md`
+- workflow roles such as supervisor, executor, and tester live under `docs/agent-system-prompts/` as role-prompt references, not auto-discovered skills or project agents
+
+This keeps project skill discovery focused on surfaces and tools instead of role identity.

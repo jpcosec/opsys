@@ -72,9 +72,9 @@ The direction of derivation matters:
 
 Candidate sources:
 
-- `.agents/skills/workflow-supervisor/SKILL.md`
-- `.agents/skills/workflow-executor/SKILL.md`
-- `.agents/skills/workflow-tester/SKILL.md`
+- `/home/jp/.pi/agent/agents/deskops-supervisor.md`
+- `/home/jp/.pi/agent/agents/deskops-executor.md`
+- `/home/jp/.pi/agent/agents/deskops-tester.md`
 - `desk/drawer/features/supervisor.md`
 - `desk/drawer/features/executor.md`
 - `desk/drawer/features/router.md`

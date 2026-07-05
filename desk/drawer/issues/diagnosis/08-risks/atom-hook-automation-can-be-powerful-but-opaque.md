@@ -25,4 +25,4 @@ Hook automation should not become an invisible side-effect machine. If hooks beg
 
 - `_auto_commit_task_closure()` in `deskops/operations.py` shows how impactful automatic workflow side effects can already be.
 - `docs/diagrams/process/llm-tasks-vs-automatic-routines.md` says automatic routines should block or return work rather than invent semantic decisions.
-- `.agents/skills/workflow-supervisor/SKILL.md` emphasizes evidence review and truthful routing, which opaque automation could undermine.
+- `/home/jp/.pi/agent/agents/deskops-supervisor.md` emphasizes evidence review and truthful routing, which opaque automation could undermine.

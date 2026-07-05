@@ -10,7 +10,7 @@ This diagram document is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
 - `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md`
 
-This diagram shows the **current** deskops workflow as it exists today across Pi skill discovery, desk recovery, role skills, task execution, structured-document work, deterministic workflow automation, and closeout.
+This diagram shows the **current** deskops workflow as it exists today across Pi skill discovery, desk recovery, global surface skills, role system prompts, task execution, structured-document work, deterministic workflow automation, and closeout.
 
 It intentionally distinguishes:
 
@@ -22,8 +22,8 @@ It intentionally distinguishes:
 ```mermaid
 flowchart TB
     subgraph PiBoot["Pi startup and discovery"]
-        pi_settings[".pi/settings.json\npackages: pi-subagents\nskills: ../.skills, ../.agents/skills"]
-        skill_dirs["Skill directories\n.skills/sldb\n.agents/skills/*"]
+        pi_settings["Pi runtime settings\nglobal skills + project skill locations"]
+        skill_dirs["Project skill directories\n.pi/skills/*\n.agents/skills/*"]
         pi_runtime["Pi runtime\nauto-discovers available skills at startup"]
     end
 
@@ -32,14 +32,14 @@ flowchart TB
         agents["AGENTS.md\nrepo entry route"]
         read_route["Read route\nREADME.md, docs/faq.md, Board.md, rituals"]
         board["desk/tasks/Board.md\nactive routing surface"]
-        repo_skill["Skill loaded on demand\ndeskops-workflow"]
+        repo_skill["Global skill loaded on demand\nuse-deskops"]
     end
 
     subgraph RoleSelection["Role selection and bounded lane"]
         role_lock["Choose one role\nsupervisor / executor / tester"]
-        sup_skill["workflow-supervisor\nfor routing / review / closeout discipline"]
-        exec_skill["workflow-executor\nfor bounded implementation"]
-        test_skill["workflow-tester\nfor validation lane"]
+        sup_skill["deskops-supervisor\nrole system prompt"]
+        exec_skill["deskops-executor\nrole system prompt"]
+        test_skill["deskops-tester\nrole system prompt"]
         subexec_skill["subagent-execution\nfor launching worker lanes"]
     end
 
@@ -74,7 +74,7 @@ flowchart TB
         recover["Recover state\ndeskops show board\ndeskops list/show task\ndeskops next\ndeskops graph missing\ngit status"]
         bind["Bind references / pills / touched files / validation"]
         maybe_sldb{"Tracked structured doc\nor model operation?"}
-        sldb_skill["Load .skills/sldb\nuse sldb docs/fields/models/stores commands"]
+        sldb_skill["Load use-sldb\nuse sldb docs/fields/models/stores commands"]
         implement["Implement bounded change\ncode/docs/spec/task edits"]
         validate["Run focused validation first\npytest / sldb stores check / CLI checks"]
         handoff["Write run evidence\nresult-summary.md / validation.log"]
@@ -126,8 +126,8 @@ flowchart TB
 
 ### 1. Pi discovery
 
-- `.pi/settings.json`
-- `.skills/sldb/SKILL.md`
+- Pi runtime settings
+- `.pi/skills/*/SKILL.md`
 - `.agents/skills/*/SKILL.md`
 
 What is automatic here:
@@ -152,15 +152,15 @@ Primary surfaces:
 
 Primary skill:
 
-- `deskops-workflow`
+- `use-deskops`
 
 ## 3. Role-specific work
 
 ### Supervisor lane
 
-Primary skill:
+Primary role prompt:
 
-- `workflow-supervisor`
+- `deskops-supervisor`
 
 Main surfaces:
 
@@ -171,9 +171,9 @@ Main surfaces:
 
 ### Executor lane
 
-Primary skill:
+Primary role prompt:
 
-- `workflow-executor`
+- `deskops-executor`
 
 Main surfaces:
 
@@ -186,9 +186,9 @@ Main surfaces:
 
 ### Tester lane
 
-Primary skill:
+Primary role prompt:
 
-- `workflow-tester`
+- `deskops-tester`
 
 Main surfaces:
 
@@ -210,7 +210,7 @@ Main surfaces:
 
 ## 4. Structured-document lane
 
-Use `.skills/sldb/SKILL.md` when the task touches:
+Use `.pi/skills/use-sldb/SKILL.md` when the task touches:
 
 - `StructuredNLDoc` models
 - tracked Markdown docs

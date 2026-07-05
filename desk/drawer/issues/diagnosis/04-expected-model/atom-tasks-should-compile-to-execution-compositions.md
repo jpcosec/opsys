@@ -25,4 +25,4 @@ A task should not stop at human-readable intent. Deskops should be able to compi
 
 - `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md` — pushes tasks toward bounded autonomous execution.
 - `desk/rituals/execution.md` — requires explicit scope, touched files, and validation targets before implementation.
-- `.agents/skills/subagent-execution/SKILL.md` and `.agents/skills/workflow-executor/SKILL.md` — already assume the need for bounded execution bundles and evidence, which points toward a compiled execution composition.
+- `.agents/skills/subagent-execution/SKILL.md` and `/home/jp/.pi/agent/agents/deskops-executor.md` — already assume the need for bounded execution bundles and evidence, which points toward a compiled execution composition.

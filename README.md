@@ -26,9 +26,13 @@ Durable guides currently include:
 - `docs/how-to-test-ux-cli.md`
 - `docs/quickstart.md`
 
-Repo-local agent guidance includes:
+Pi/project agent guidance includes:
 
-- `.skills/sldb/SKILL.md`
+- `.pi/skills/use-deskops/SKILL.md`
+- `../sldb/.pi/skills/use-sldb/SKILL.md`
+- `docs/agent-system-prompts/README.md`
+
+Parallel opencode copies also exist under `.opencode/skills/`.
 
 ## SLDB Boundary
 

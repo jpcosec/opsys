@@ -1,89 +1,189 @@
 ---
 name: use-deskops
-description: Use when working in deskops, desk/ documents, atoms, tasks, routines, or workflow operations in the hum ecosystem.
+description: Comprehensive global deskops workflow skill. Use when working in this repository's desk/, task lifecycle, atoms, pills, rituals, graph surfaces, or deskops CLI.
 ---
 
 # Use Deskops
 
-Deskops is the workflow-domain layer for repository-local operational documents.
+Deskops is the workflow-domain layer for repository-local operational knowledge and execution.
 
-Use `deskops` when the task involves:
+Use this global skill when the task involves:
 
-- `desk/` document surfaces.
-- Atoms, tasks, pills, routines, rituals, primitives, inbox, repo registry, or graph commands.
-- Creating or reading workflow artifacts through SLDB-backed models.
-- Building or checking the deskops knowledge graph snapshot.
+- `desk/` workflow surfaces.
+- Tasks, boards, drawer work, inbox notes, pills, rituals, routines, primitives, atoms, or repository registry docs.
+- Desk discovery, graph checks, task advancement, promotion, closeout, or workflow automation.
+- Understanding how this repo's CLI maps to the project knowledge model.
 
-Workflow vocabulary:
+## What deskops owns
 
-- `drawer task`: deferred repo-local work under `desk/drawer/tasks/`.
-- `board-routed task`: work referenced by `desk/tasks/Board.md`.
-- `active task bundle`: task plus generated routine/primitives created by promotion.
-- Avoid inventing alternate categories such as active/inactive unless a repo document uses them.
+Deskops owns the workflow domain built on top of SLDB.
 
-Core boundaries:
+It owns:
 
-- `desk/` is document data only.
-- Python implementation code belongs under `deskops/`.
-- Structured document infrastructure belongs to SLDB.
-- Graph contract/runtime validation belongs to KGDB.
-- Diagram rendering belongs to spec2viz.
+- active and deferred workflow surfaces under `desk/`
+- task routing through `desk/tasks/Board.md`
+- rituals, pills, atoms, routines, and primitives
+- repo-local workflow commands such as `deskops add`, `deskops list`, `deskops show`, `deskops promote`, `deskops advance task`, and `deskops graph`
+- operational rules for intake, promotion, execution, testing, closeout, and phase gates
 
-Drawer-first workflow:
+It does **not** own generic structured-document infrastructure. That belongs to SLDB.
 
-- New unrouted repo-local project work starts directly in `desk/drawer/tasks/`, not `desk/inbox/`.
-- Use `desk/inbox/` for incoming notes, unclear external input, or cross-repo intake that needs triage.
-- Commit drawer task creation before promoting it.
-- Promote drawer work before implementation starts.
-- Commit drawer-to-active promotion before implementation starts.
-- For board-routed work, run execution, testing, and closeout gates; do not jump from implementation to closeout.
-- Every closed task ends with its own atomic closeout commit.
+## Mandatory read route
 
-Role skills:
+Before changing files, recover state from repo artifacts in this order:
 
-- Load `use-deskops` for `desk/` workflow surfaces, drawer/task routing, pills, rituals, routines, primitives, and repo registry work.
-- Load `use-sldb` when the change touches SLDB models, reversible markers, `.sldb` stores, document tracking, rendering, extraction, or field operations.
-- Load `use-kgdb` when the change touches graph contracts, graph snapshots, provenance, nodes, edges, or `deskops graph` behavior.
-- Load `use-spec2viz` when the change touches diagram specs, Mermaid outputs, generated diagram projections, or `docs/diagrams/` surfaces.
-- Load `customize-opencode` only for opencode config, `.opencode/` agents, skills, plugins, MCP servers, permissions, or opencode routing files.
+1. `AGENTS.md`
+2. `README.md`
+3. `docs/faq.md`
+4. `desk/tasks/Board.md`
+5. matching board-routed pills in `desk/contexts/`
+6. `desk/rituals/phase.md`
+7. `desk/rituals/execution.md`
+8. `desk/rituals/testing.md`
+9. `desk/rituals/closeout.md`
+10. relevant atoms under `desk/atoms/`
 
-Common commands:
+Prefer semantic discovery over blind scanning when possible:
+
+```bash
+sldb find title --in physical --store .sldb --pythonpath .
+sldb find topic:atoms --in semantic --store .sldb --pythonpath .
+deskops graph missing
+```
+
+## Workflow model
+
+The project logic is:
+
+- **tasks** are bounded units of work
+- **boards** route active tasks and shared pills
+- **pills** are reusable execution truths, not one-per-task notes
+- **atoms** are durable knowledge and architecture truths
+- **rituals** define the gates for execution, testing, closeout, and phases
+- **drawer tasks** are deferred repo-local work not yet promoted to the active board
+- **inbox notes** are incoming unclear or external input, not the default place for new repo-local project work
+
+Key rules:
+
+- New unrouted repo-local work starts in `desk/drawer/tasks/`, not `desk/inbox/`.
+- Promote drawer work before implementation.
+- Keep one coherent deliverable per task.
+- Do not skip execution, testing, or closeout gates.
+- Every closed task ends with its own atomic commit.
+- When a whole ready dependency layer closes, run the phase ritual before starting the next layer.
+- Docs are human-facing materializations of atoms, not the only durable source of truth.
+
+## Task-state recovery commands
+
+Use direct CLI commands instead of improvising from chat state:
+
+```bash
+deskops show board Board --root .
+deskops list tasks --root .
+deskops show task <task-id> --root .
+deskops next <task-id> --root .
+deskops graph missing --root .
+git status --short --branch
+```
+
+If the task changes graph or store semantics, also use:
+
+```bash
+sldb stores check --store .sldb
+deskops graph build --root .
+deskops graph missing --root .
+```
+
+## CLI surface
+
+Common deskops commands:
 
 ```bash
 deskops --help
+deskops faq
+deskops bootstrap
 deskops init .
-deskops desk install .
-deskops add atom --root . --title "..." --answer "..." --five-wh-one-plus what --tag system:deskops
-deskops add task --root . --title "..." --goal "..." --scope "..." --implementation-path "..." --done-when "..."
+deskops add task --root . --title "..." --goal "..." --scope "..."
+deskops add atom --root . --title "..." --answer "..." --five-wh-one-plus what
 deskops list tasks --root .
+deskops list atoms --root .
 deskops show task <task-id> --root .
+deskops show atom <atom-id> --root .
+deskops promote drawer-task-to-active-task <task-selector>
+deskops bind pill <pill-selector> --task <task-id> --root .
+deskops advance task <task-id> --root .
 deskops graph build --root .
 deskops graph missing --root .
-deskops graph neighbors atom:<atom-id> --root .
+deskops repo register ...
+deskops desk install .
 ```
 
-Validation:
+CLI usage rules:
+
+- Use `deskops ...`, not `bash deskops ...`.
+- Prefer local repo-root execution instead of unnecessary `--root .` in prose, but include `--root .` in explicit workflow instructions when clarity matters.
+- For CLI mutation or UX experiments, use a disposable sandbox desk such as `.tmp/deskops-cli-test` unless the task intentionally changes the tracked desk.
+
+## Role logic
+
+Workflow roles are **global/system-prompt concerns**, not repo-local skills:
+
+- supervisor: routes, dispatches, reviews evidence, and enforces closeout gates
+- executor: implements one bounded task
+- tester: proves the intended contract and pill guardrails
+
+Repo-local skills should stay focused on surfaces and tools. Do not reintroduce workflow-role prompts as auto-discovered project skills.
+
+`subagent-execution` may still exist as a narrow repo-local helper for launching bounded worker lanes.
+
+## Atoms, pills, and docs
+
+Use these distinctions consistently:
+
+- Put durable architecture or policy in atoms.
+- Put reusable execution guardrails in pills.
+- Put active routed work in tasks.
+- Put deferred candidate work in drawer tasks.
+- Treat docs under `docs/` as materializations of atom truth.
+
+When a doc rule changes materially, update the relevant atom first, then reflect it in the doc.
+
+## When to load other skills
+
+- Load `use-sldb` for `StructuredNLDoc` models, tracked Markdown, reversible markers, `.sldb` stores, document tracking, field operations, rendering, extraction, or model changes.
+- Load `use-kgdb` for graph contracts, graph snapshots, provenance, node/edge behavior, or graph runtime validation.
+- Load `use-spec2viz` for structured diagram specs and generated diagram projections.
+- Load `customize-opencode` only for opencode config, `.opencode/` agents, skills, plugins, MCP servers, permissions, or routing configuration.
+
+## Validation
+
+Minimum repo validation:
 
 ```bash
 pytest
 ```
 
-Atom format:
+For CLI work, also run the affected commands directly, for example:
 
-```markdown
----
-id: atom-example
-title: Example
-five_wh_one_plus: what
-tags:
-- system:deskops
----
-
-# Example
-
-## Answer
-
-The atom answer goes here.
+```bash
+python -m deskops --help
+deskops faq
 ```
 
-When editing models, update tests and existing document examples together.
+For graph or store work, prefer semantic checks:
+
+```bash
+sldb stores check --store .sldb
+deskops graph missing
+```
+
+## Anti-patterns
+
+Do not:
+
+- invent alternate workflow categories when repo docs already define them
+- treat unrouted `desk/tasks/` files as active by default
+- bypass the board, pills, or rituals because the task seems familiar
+- use ad hoc file edits where SLDB should own the structured-document operation
+- skip from implementation straight to closeout
+- treat role prompts as repo-local skills

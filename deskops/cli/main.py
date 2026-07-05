@@ -46,7 +46,7 @@ class CLI:
             return FAQCLI().run(args)
         if args.command == "about":
             return print_about()
-        if args.command == "doctor":
+        if args.command in {"doctor", "status"}:
             from deskops.cli.commands.doctor import DoctorCLI
 
             return DoctorCLI().run(args)
@@ -68,6 +68,9 @@ class CLI:
             from deskops.cli.commands.operations import OperationsCLI
 
             return OperationsCLI().run(args)
+        if args.command in {"drift", "materialize", "closeout"}:
+            print(f"{args.command} grammar added; implementation deferred.")
+            return 0
         if args.command == "promote":
             from deskops.cli.commands.promote import PromoteCLI
 
@@ -147,6 +150,9 @@ class CLI:
             return self._graph_missing(args)
         if args.graph_command == "reflect":
             return self._graph_reflect(args)
+        if args.graph_command == "trace":
+            print("graph trace grammar added; implementation deferred.")
+            return 0
 
         print(f"Unknown graph command: {args.graph_command}")
         return 2

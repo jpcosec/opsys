@@ -68,6 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     _add_about_command(subparsers)
     _add_doctor_command(subparsers)
+    _add_status_command(subparsers)
     _add_faq_commands(subparsers)
     _add_bootstrap_command(subparsers)
     _add_init_command(subparsers)
@@ -84,6 +85,9 @@ def build_parser() -> argparse.ArgumentParser:
     _add_desk_commands(subparsers)
     _add_atoms_commands(subparsers)
     _add_graph_commands(subparsers)
+    _add_drift_commands(subparsers)
+    _add_materialize_command(subparsers)
+    _add_closeout_command(subparsers)
 
     return parser
 
@@ -114,6 +118,24 @@ def _add_atoms_commands(
         help="Example tag using the namespace; repeat as needed.",
     )
 
+    list_cmd = s.add_parser("list", help="List all atoms.")
+    list_cmd.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(list_cmd)
+
+    show_cmd = s.add_parser("show", help="Show an atom.")
+    show_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
+    show_cmd.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(show_cmd)
+
+    new_cmd = s.add_parser("new", help="Create a new atom.")
+    new_cmd.add_argument("--root", default=".", help="Target repository root.")
+    # In a full implementation, we'd add the exact fields like 'deskops add atom'.
+    # Here we just provide the basic grammar layout.
+
+    validate_cmd = s.add_parser("validate", help="Validate an atom's materializations.")
+    validate_cmd.add_argument("doc_id", nargs="?", help=f"Atom selector. {SELECTOR_HELP}")
+    validate_cmd.add_argument("--root", default=".", help="Target repository root.")
+
 
 def _add_graph_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
@@ -136,6 +158,11 @@ def _add_graph_commands(
     reflect = s.add_parser("reflect", help="Write review-only self-reflection findings for a graph snapshot.")
     reflect.add_argument("--root", default=".", help="Target repository root.")
     reflect.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+
+    trace = s.add_parser("trace", help="Trace a graph node to its root sources.")
+    trace.add_argument("id", help="Graph node id to trace.")
+    trace.add_argument("--root", default=".", help="Target repository root.")
+    trace.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
 
 
 def _add_promote_commands(
@@ -204,6 +231,16 @@ def _add_doctor_command(
     p.add_argument("--repair", action="store_true", help="Attempt non-destructive repairs.")
 
 
+def _add_status_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "status",
+        help="Show current workspace and workflow status.",
+    )
+    p.add_argument("--root", default=".", help="Target repository root.")
+
+
 def _add_bootstrap_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
@@ -241,6 +278,9 @@ def _add_repo_commands(
     reg.add_argument("--tags", help="Comma-separated tags")
     reg.add_argument("--store", help="Store path to anchor the registry")
     reg.add_argument("--pythonpath", help="Python path for model resolution")
+
+    ctx = s.add_parser("context", help="Manage repository contexts.")
+    ctx.add_argument("--root", default=".", help="Target repository root.")
 
 
 def _add_inbox_commands(
@@ -667,3 +707,23 @@ Advancement walks a task through execution, testing, and closeout gates when its
     )
     task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
     task.add_argument("--root", default=".", help="Target repository root.")
+
+def _add_drift_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("drift", help="Detect workspace drift.")
+    s = p.add_subparsers(dest="drift_command", required=True)
+    check = s.add_parser("check", help="Check for drift between atoms and materializations.")
+    check.add_argument("--root", default=".", help="Target repository root.")
+
+def _add_materialize_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("materialize", help="Materialize workflow artifacts.")
+    p.add_argument("--root", default=".", help="Target repository root.")
+
+def _add_closeout_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("closeout", help="Perform workflow phase closeout.")
+    p.add_argument("--root", default=".", help="Target repository root.")
