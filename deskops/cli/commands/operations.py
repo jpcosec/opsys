@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+from dataclasses import asdict
 from pathlib import Path
+import json
 import sys
 from typing import Any
 
@@ -80,29 +82,48 @@ class OperationsCLI:
             return 0
 
         if args.command == "list" and args.subject == "tasks":
-            for task in operations.list_tasks():
+            tasks = operations.list_tasks()
+            repo_routes = operations.list_repo_task_routes() if getattr(args, "include_repos", False) else []
+            if args.format == "json":
+                payload = {"tasks": self._normalize(tasks)}
+                if getattr(args, "include_repos", False):
+                    payload["repo_routes"] = self._normalize(repo_routes)
+                self._print_json(payload)
+                return 0
+            for task in tasks:
                 print(f"{task.id} | {task.status} | {task.current_node}")
-            if getattr(args, "include_repos", False):
-                for route in operations.list_repo_task_routes():
-                    print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
+            for route in repo_routes:
+                print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
             return 0
 
         if args.command == "list" and args.subject == "routines":
-            for routine in operations.list_routines():
+            routines = operations.list_routines()
+            if args.format == "json":
+                self._print_json({"routines": self._normalize(routines)})
+                return 0
+            for routine in routines:
                 print(f"{routine.id} | {routine.status} | {routine.entrypoint}")
             return 0
 
         list_artifacts = {meta["list_subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if args.command == "list" and args.subject in list_artifacts:
             artifact_id = list_artifacts[args.subject]
-            for payload in operations.list_artifacts(artifact_id):
+            payloads = operations.list_artifacts(artifact_id)
+            if args.format == "json":
+                self._print_json({args.subject: self._normalize(payloads)})
+                return 0
+            for payload in payloads:
                 label = payload.get("title") or payload.get("name") or payload["id"]
                 print(f"{payload['id']} | {label}")
             return 0
 
         if args.command == "list" and args.subject in {"conditions", "operators", "checklists", "hooks", "edges"}:
             kind = args.subject[:-1]
-            for payload in operations.list_primitives(kind):
+            payloads = operations.list_primitives(kind)
+            if args.format == "json":
+                self._print_json({args.subject: self._normalize(payloads)})
+                return 0
+            for payload in payloads:
                 print(f"{payload['id']} | {payload['status']} | {payload['title']}")
             return 0
 
@@ -111,6 +132,11 @@ class OperationsCLI:
             if task is None:
                 print(f"No task found for {args.task_id}")
                 return 1
+            if args.format == "json":
+                payload = self._normalize(task)
+                payload["checklist_statuses"] = self._normalize(statuses)
+                self._print_json(payload)
+                return 0
             print(f"Task: {task.id}")
             print(f"Title: {task.title}")
             print(f"Status: {task.status}")
@@ -126,6 +152,9 @@ class OperationsCLI:
             if routine is None:
                 print(f"No routine found for {args.routine_id}")
                 return 1
+            if args.format == "json":
+                self._print_json(self._normalize(routine))
+                return 0
             print(f"Routine: {routine.id}")
             print(f"Title: {routine.title}")
             print(f"Status: {routine.status}")
@@ -146,6 +175,9 @@ class OperationsCLI:
             except (FileNotFoundError, ValueError) as exc:
                 print(f"Error: {exc}")
                 return 1
+            if args.format == "json":
+                self._print_json(self._normalize(payload))
+                return 0
             print(f"{args.subject.capitalize()}: {payload['id']}")
             label = payload.get("title") or payload.get("name") or payload["id"]
             print(f"Title: {label}")
@@ -160,6 +192,9 @@ class OperationsCLI:
 
         if args.command == "show" and args.subject in {"condition", "operator", "checklist", "hook", "edge"}:
             payload = operations.show_primitive(args.subject, args.primitive_id)
+            if args.format == "json":
+                self._print_json(self._normalize(payload))
+                return 0
             print(f"{args.subject.capitalize()}: {payload['id']}")
             print(f"Title: {payload['title']}")
             print(f"Status: {payload['status']}")
@@ -221,3 +256,17 @@ class OperationsCLI:
         print("Sources:")
         for label, path in report["sources"].items():
             print(f"- {label}: {path}")
+
+    def _print_json(self, payload: Any) -> None:
+        print(json.dumps(self._normalize(payload), indent=2))
+
+    def _normalize(self, payload: Any) -> Any:
+        if hasattr(payload, "__dataclass_fields__"):
+            return self._normalize(asdict(payload))
+        if isinstance(payload, Path):
+            return str(payload)
+        if isinstance(payload, dict):
+            return {str(key): self._normalize(value) for key, value in payload.items()}
+        if isinstance(payload, (list, tuple)):
+            return [self._normalize(value) for value in payload]
+        return payload

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 from types import SimpleNamespace
@@ -713,6 +714,72 @@ tags: []
     assert "task-directory" not in list_out.out
 
 
+def test_list_tasks_include_repos_supports_json_output(tmp_path: Path, capsys) -> None:
+    registered = main(
+        [
+            "add",
+            "repository",
+            "--root",
+            str(tmp_path),
+            "--name",
+            "Sibling Repo",
+            "--path",
+            "sibling",
+            "--description",
+            "Sibling project.",
+        ]
+    )
+    capsys.readouterr()
+    assert registered == 0
+
+    sibling_tasks = tmp_path / "sibling" / "desk" / "tasks"
+    sibling_tasks.mkdir(parents=True)
+    (sibling_tasks / "Board.md").write_text(
+        """---
+id: board-sibling
+scope: desk
+tasks:
+- desk/tasks/task-sibling-demo.md
+pills: []
+rituals: []
+tags: []
+---
+
+# Sibling Board
+""",
+        encoding="utf-8",
+    )
+    task_path = sibling_tasks / "task-sibling-demo.md"
+    task_path.write_text(
+        """---
+id: task-sibling-demo
+status: active
+---
+
+# Sibling demo
+""",
+        encoding="utf-8",
+    )
+
+    listed = main(["list", "tasks", "--root", str(tmp_path), "--include-repos", "--format", "json"])
+    list_out = capsys.readouterr()
+
+    assert listed == 0
+    payload = json.loads(list_out.out)
+    assert payload["tasks"] == []
+    assert payload["repo_routes"] == [
+        {
+            "repo_id": "repo-sibling-repo",
+            "repo_root": str((tmp_path / "sibling").resolve()),
+            "task_id": "task-sibling-demo",
+            "task_path": str(task_path),
+            "board_path": str(sibling_tasks / "Board.md"),
+            "title": "Sibling demo",
+            "status": "active",
+        }
+    ]
+
+
 def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
     result = main(
         [
@@ -1128,6 +1195,187 @@ def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, cap
     assert not (tmp_path / "desk" / "routines" / "routine-task-advance-task-runtime.md").exists()
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-advance-task-runtime.md" not in board_text
+
+
+
+def test_list_and_show_task_support_json_output(tmp_path: Path, capsys) -> None:
+    add_result = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "JSON task output",
+            "--goal",
+            "Expose task data through the CLI.",
+            "--scope",
+            "Task list/show surfaces only.",
+            "--implementation-path",
+            "Serialize the modeled task payload.",
+            "--done-when",
+            "The CLI returns parseable task JSON.",
+            "--validation",
+            "pytest",
+        ]
+    )
+    capsys.readouterr()
+    assert add_result == 0
+
+    listed = main(["list", "tasks", "--root", str(tmp_path), "--format", "json"])
+    list_out = capsys.readouterr()
+    assert listed == 0
+    list_payload = json.loads(list_out.out)
+    assert list_payload["tasks"][0]["id"] == "task-json-task-output"
+    assert list_payload["tasks"][0]["status"] == "draft"
+    assert list_payload["tasks"][0]["validation"] == ["pytest"]
+
+    shown = main(["show", "task", "task-json-task-output", "--root", str(tmp_path), "--format", "json"])
+    show_out = capsys.readouterr()
+    assert shown == 0
+    show_payload = json.loads(show_out.out)
+    assert show_payload["id"] == "task-json-task-output"
+    assert show_payload["routine"] == "routine-task-json-task-output"
+    assert isinstance(
+        show_payload["checklist_statuses"]["checklist-task-json-task-output-execution-ready"],
+        bool,
+    )
+
+
+
+def test_list_and_show_routine_support_json_output(tmp_path: Path, capsys) -> None:
+    add_result = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "JSON routine output",
+            "--goal",
+            "Expose routine data through the CLI.",
+            "--scope",
+            "Routine list/show surfaces only.",
+            "--implementation-path",
+            "Serialize the modeled routine payload.",
+            "--done-when",
+            "The CLI returns parseable routine JSON.",
+            "--validation",
+            "pytest",
+        ]
+    )
+    capsys.readouterr()
+    assert add_result == 0
+
+    listed = main(["list", "routines", "--root", str(tmp_path), "--format", "json"])
+    list_out = capsys.readouterr()
+    assert listed == 0
+    list_payload = json.loads(list_out.out)
+    assert list_payload["routines"][0]["id"] == "routine-task-json-routine-output"
+    assert list_payload["routines"][0]["entrypoint"] == "checklist-task-json-routine-output-execution-ready"
+
+    shown = main(
+        ["show", "routine", "routine-task-json-routine-output", "--root", str(tmp_path), "--format", "json"]
+    )
+    show_out = capsys.readouterr()
+    assert shown == 0
+    show_payload = json.loads(show_out.out)
+    assert show_payload["id"] == "routine-task-json-routine-output"
+    assert show_payload["edges"][0]["source"] == "checklist-task-json-routine-output-execution-ready"
+    assert show_payload["edges"][0]["target"] == "operator-task-json-routine-output-activate"
+
+
+
+def test_list_and_show_primitive_support_json_output(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "condition",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "JSON condition output",
+            "--subject",
+            "goal",
+            "--predicate",
+            "truthy",
+            "--summary",
+            "Expose primitive data through the CLI.",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+
+    listed = main(["list", "conditions", "--root", str(tmp_path), "--format", "json"])
+    list_out = capsys.readouterr()
+    assert listed == 0
+    list_payload = json.loads(list_out.out)
+    assert list_payload["conditions"][0]["id"] == "condition-json-condition-output"
+    assert list_payload["conditions"][0]["status"] == "active"
+    assert list_payload["conditions"][0]["summary"] == "Expose primitive data through the CLI."
+    assert "primitive:condition" in list_payload["conditions"][0]["tags"]
+    assert list_payload["conditions"][0]["subject"] == "goal"
+    assert list_payload["conditions"][0]["predicate"] == "truthy"
+    assert list_payload["conditions"][0]["expected"] == ""
+
+    shown = main(
+        [
+            "show",
+            "condition",
+            "condition-json-condition-output",
+            "--root",
+            str(tmp_path),
+            "--format",
+            "json",
+        ]
+    )
+    show_out = capsys.readouterr()
+    assert shown == 0
+    show_payload = json.loads(show_out.out)
+    assert show_payload["id"] == "condition-json-condition-output"
+    assert show_payload["predicate"] == "truthy"
+
+
+
+def test_list_and_show_artifact_support_json_output(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "pill",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "JSON pill output",
+            "--what",
+            "Expose artifact data through the CLI.",
+            "--why",
+            "Scripts need a stable contract.",
+            "--when",
+            "When operators read modeled pill data.",
+            "--where",
+            "List/show surfaces.",
+            "--how",
+            "Serialize the stored payload.",
+            "--how-not",
+            "Do not rely on text scraping.",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+
+    listed = main(["list", "pills", "--root", str(tmp_path), "--format", "json"])
+    list_out = capsys.readouterr()
+    assert listed == 0
+    list_payload = json.loads(list_out.out)
+    assert list_payload["pills"][0]["id"] == "pill-json-pill-output"
+    assert list_payload["pills"][0]["title"] == "JSON pill output"
+
+    shown = main(["show", "pill", "pill-json-pill-output", "--root", str(tmp_path), "--format", "json"])
+    show_out = capsys.readouterr()
+    assert shown == 0
+    show_payload = json.loads(show_out.out)
+    assert show_payload["id"] == "pill-json-pill-output"
+    assert show_payload["how_not"] == "Do not rely on text scraping."
 
 
 

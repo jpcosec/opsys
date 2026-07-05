@@ -515,6 +515,16 @@ Examples:
     p.add_argument("--diagram", action="store_true", help="Render the workflow state machine as Mermaid from its source spec.")
 
 
+def _add_output_format_argument(parser: argparse.ArgumentParser) -> None:
+    parser.add_argument(
+        "--format",
+        choices=("text", "json"),
+        default="text",
+        help="Output format.",
+    )
+
+
+
 def _add_list_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
@@ -538,18 +548,22 @@ Examples:
         action="store_true",
         help="Also list tasks routed by registered sibling repositories' desk/tasks/Board.md files.",
     )
+    _add_output_format_argument(tasks)
 
     routines = s.add_parser("routines", help="List routines.")
     routines.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(routines)
 
     for kind in ("conditions", "operators", "checklists", "hooks", "edges"):
         parser = s.add_parser(kind, help=f"List {kind}.")
         parser.add_argument("--root", default=".", help="Target repository root.")
+        _add_output_format_argument(parser)
 
     for meta in ARTIFACT_SUBJECTS.values():
         kind = meta["list_subject"]
         parser = s.add_parser(kind, help=f"List {kind}.")
         parser.add_argument("--root", default=".", help="Target repository root.")
+        _add_output_format_argument(parser)
 
 
 def _add_show_commands(
@@ -582,36 +596,44 @@ Example:
     )
     task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
     task.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(task)
 
     routine = s.add_parser("routine", help="Show one routine by selector.")
     routine.add_argument("routine_id", help=f"Routine selector. {SELECTOR_HELP}")
     routine.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(routine)
 
     condition = s.add_parser("condition", help="Show one condition.")
     condition.add_argument("primitive_id", help="Condition identifier.")
     condition.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(condition)
 
     operator = s.add_parser("operator", help="Show one operator.")
     operator.add_argument("primitive_id", help="Operator identifier.")
     operator.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(operator)
 
     checklist = s.add_parser("checklist", help="Show one checklist.")
     checklist.add_argument("primitive_id", help="Checklist identifier.")
     checklist.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(checklist)
 
     hook = s.add_parser("hook", help="Show one hook.")
     hook.add_argument("primitive_id", help="Hook identifier.")
     hook.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(hook)
 
     edge = s.add_parser("edge", help="Show one edge.")
     edge.add_argument("primitive_id", help="Edge identifier.")
     edge.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(edge)
 
     for meta in ARTIFACT_SUBJECTS.values():
         subject = meta["subject"]
         parser = s.add_parser(subject, help=f"Show one {subject} by selector.")
         parser.add_argument("doc_id", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}")
         parser.add_argument("--root", default=".", help="Target repository root.")
+        _add_output_format_argument(parser)
 
 
 def _add_advance_commands(
