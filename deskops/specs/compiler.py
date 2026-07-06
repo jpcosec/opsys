@@ -4,6 +4,11 @@ from dataclasses import dataclass
 from typing import Any
 from collections.abc import Collection
 
+from pydantic.fields import PydanticUndefined
+
+from deskops.cli.model_introspection import artifact_id_pattern
+from deskops.cli.model_introspection import artifact_tags_default
+from deskops.cli.model_introspection import DEFAULT_FACTORY
 from .loader import SpecRegistry
 
 
@@ -85,6 +90,14 @@ def compile_artifact_spec(
     *,
     model_fields: Collection[str] | None = None,
 ) -> CompiledArtifactSpec:
+    """Compile a raw payload into an artifact payload using the Pydantic model.
+
+    The Pydantic model is the single source of truth for which fields exist and
+    their defaults. The YAML spec (via registry) is consulted only for artifact-
+    level config: id_pattern and status_default.
+    """
+    from deskops.operations import ARTIFACT_MODELS
+
     artifact = registry.artifacts[artifact_id]
     display_value = raw_payload.get("title") or raw_payload.get("name") or raw_payload.get("id")
     if display_value is None:
@@ -93,30 +106,57 @@ def compile_artifact_spec(
     if not title:
         raise ValueError(f"Payload for {artifact_id} has empty title/name/id after stripping whitespace")
     slug = _slugify(title)
-    artifact_doc = artifact["data"]["doc"]
-    doc_id = str(raw_payload.get("id") or artifact_doc["id_pattern"].format(slug=slug))
+
+    # id_pattern from model_introspection (was in YAML doc section)
+    id_pattern = artifact_id_pattern(artifact_id)
+    doc_id = str(raw_payload.get("id") or id_pattern.format(slug=slug))
 
     supported = set(model_fields or [])
     payload: dict[str, Any] = {"id": doc_id}
     if "title" in supported:
         payload["title"] = title
 
-    for field_id in artifact["data"].get("fields", []):
-        field_spec = registry.fields[field_id]
-        field_key = str(field_spec["data"]["key"])
-        value = raw_payload.get(field_key, field_spec["data"].get("default"))
-        payload[field_key] = value
+    model = ARTIFACT_MODELS.get(artifact_id)
+    if model is not None:
+        for field_name, field_info in model.model_fields.items():
+            if field_name == "id":
+                continue  # already handled
 
-    if "status" in supported and "status" not in raw_payload:
-        payload["status"] = str(artifact_doc.get("status_default", "active"))
-    if "tags" in supported and "tags" not in raw_payload:
-        payload["tags"] = _coerce_list(artifact_doc.get("tags", []))
-    if "routine" in supported and "routine" not in raw_payload:
-        payload["routine"] = ""
-    if "current_node" in supported and "current_node" not in raw_payload:
-        payload["current_node"] = ""
-    if "history" in supported and "history" not in raw_payload:
-        payload["history"] = _coerce_list(raw_payload.get("history") or [])
+            # Value from raw_payload overrides everything
+            if field_name in raw_payload and raw_payload[field_name] is not None:
+                payload[field_name] = raw_payload[field_name]
+                continue
+
+            # Apply defaults from the Pydantic model
+            default = field_info.default
+            if default is PydanticUndefined:
+                factory = getattr(field_info, "default_factory", None)
+                if factory is not None:
+                    payload[field_name] = []  # default_factory=list
+                # else: required field, leave as None (model validation handles it)
+            elif isinstance(default, str):
+                payload[field_name] = default
+            elif isinstance(default, (list, tuple)):
+                payload[field_name] = list(default)
+            # else: other default types — leave for model validation
+
+    # Handle status_default from artifact config (not in model)
+    if "status" in supported and "status" not in payload:
+        status_default = str(artifact["data"]["doc"].get("status_default", "active"))
+        payload["status"] = status_default
+
+    # Handle tags default — prefer model factory, fall back to artifact config
+    if "tags" in supported and "tags" not in payload:
+        # Check if model has default_factory for tags
+        if model is not None and "tags" in model.model_fields:
+            field_info = model.model_fields["tags"]
+            factory = getattr(field_info, "default_factory", None)
+            if factory is not None:
+                payload["tags"] = []
+            else:
+                payload["tags"] = _coerce_list(artifact_tags_default(artifact_id))
+        else:
+            payload["tags"] = _coerce_list(artifact_tags_default(artifact_id))
 
     return CompiledArtifactSpec(artifact_payload=payload)
 

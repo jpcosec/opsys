@@ -66,13 +66,18 @@ def test_core_help_documents_examples_and_selectors(capsys) -> None:
     assert "execution, testing, and closeout gates" in advance_output
 
 
-def test_generated_artifact_help_uses_value_descriptions(capsys) -> None:
+def test_generated_artifact_help_uses_model_descriptions(capsys) -> None:
+    # Help text now comes from Pydantic field descriptions (model as single source of truth),
+    # not from YAML spec FIELD_HELP_OVERRIDES.
     result = main(["add", "pill", "--help"])
     output = capsys.readouterr().out
     assert result == 0
     assert "Title Field" not in output
-    assert "Human-readable title." in output
-    assert "What this context explains." in output
+    # Help text from PillDoc field descriptions
+    assert "Pill title" in output
+    assert "What the pill defines" in output  # --what help text
+    # tags is now exposed (was missing before model-as-source-of-truth fix)
+    assert "--tags" in output
 
 
 def test_repository_help_distinguishes_canonical_registration(capsys) -> None:
@@ -1100,15 +1105,32 @@ def test_add_routine_rejects_non_mapping_yaml_without_creating_artifacts(tmp_pat
 @pytest.mark.parametrize(
     ("args", "created_glob"),
     [
-        (["add", "condition", "--from-yaml"], "desk/primitives/conditions/*.md"),
-        (["add", "pill", "--from-yaml"], "desk/contexts/*.md"),
+        (
+            ["add", "condition", "--from-yaml"],
+            "desk/primitives/conditions/*.md",
+        ),
+        (
+            [
+                "add", "pill",
+                "--what", "W", "--why", "Y", "--when", "T",
+                "--where", "L", "--how", "H", "--how-not", "N",
+            ],
+            "desk/contexts/*.md",
+        ),
     ],
 )
-def test_add_surfaces_reject_non_mapping_yaml(tmp_path: Path, capsys, args: list[str], created_glob: str) -> None:
+def test_add_surfaces_reject_non_mapping_yaml(
+    tmp_path: Path, capsys, args: list[str], created_glob: str
+) -> None:
+    # Note: pill args must provide all required fields (--what, --why, etc.).
+    # --from-yaml comes at the end so str(payload) is its value.
+    yaml_flag = "--from-yaml"
+    cmd_args = [a for a in args if a != yaml_flag]
     payload = tmp_path / "payload.yaml"
     payload.write_text("scalar payload\n", encoding="utf-8")
 
-    result = main([*args, str(payload), "--root", str(tmp_path)])
+    cmd = [*cmd_args, yaml_flag, str(payload), "--root", str(tmp_path)]
+    result = main(cmd)
 
     captured = capsys.readouterr()
     assert result == 1

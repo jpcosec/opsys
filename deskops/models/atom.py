@@ -39,6 +39,8 @@ title: ⸢rev•title⸥
 five_wh_one_plus: ⸢rev•five_wh_one_plus⸥
 # e.g., system:deskops, topic:templates
 tags: ⸢rev•tags⸥
+# Optional URL or path to the authoritative source of this knowledge
+provenance: ⸢rev•provenance⸥
 ---
 
 # ⸢render•title⸥
@@ -61,5 +63,12 @@ _Answer the selected 5WH1+ question as one stable knowledge unit._
         description=(
             "Namespaced semantic tags used for retrieval and grouping. Tags do not "
             "encode lifecycle, relations, evidence, or materialization."
+        ),
+    )
+    provenance: str = Field(
+        default="",
+        description=(
+            "URL or path to the authoritative source of this atom's knowledge. "
+            "Used for traceability and provenance tracking."
         ),
     )

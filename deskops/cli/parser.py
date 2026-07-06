@@ -3,11 +3,10 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from deskops.cli.model_introspection import artifact_model_fields
+from deskops.cli.model_introspection import model_cli_fields
 from deskops.operations import ARTIFACT_SUBJECTS
-from deskops.specs import SpecRegistry
 
-
-SPEC_ROOT = Path(__file__).resolve().parents[2] / "spec"
 
 WORKFLOW_EPILOG = """
 Typical flow:
@@ -22,39 +21,6 @@ Use docs/quickstart.md for the first full walkthrough.
 """.strip()
 
 SELECTOR_HELP = "Selectors accept an exact id, filename, stem, or unique slug fragment where supported."
-
-FIELD_HELP_OVERRIDES = {
-    "title": "Human-readable title.",
-    "name": "Human-readable name.",
-    "path": "Repository or artifact path.",
-    "status": "Workflow status, such as active or draft.",
-    "description": "Markdown description.",
-    "what": "What this context explains.",
-    "why": "Why this matters.",
-    "when": "When this applies.",
-    "where": "Where this applies.",
-    "how": "How to apply it.",
-    "how_not": "How not to use it; common misuse.",
-    "goal": "Outcome this work should achieve.",
-    "scope": "Boundary of the work.",
-    "validation": "Validation command or assertion.",
-    "answer": "Durable answer this atom records.",
-    "five_wh_one_plus": "Atom category: who, what, when, where, why, how, or how_much.",
-}
-
-
-def _spec_registry() -> SpecRegistry:
-    return SpecRegistry.load(SPEC_ROOT)
-
-
-def _field_help(field_spec: dict[str, object]) -> str:
-    data = field_spec.get("data", {})
-    key = str(data.get("key", "value")) if isinstance(data, dict) else "value"
-    value_type = str(data.get("value_type", "str")) if isinstance(data, dict) else "str"
-    help_text = FIELD_HELP_OVERRIDES.get(key, f"{key.replace('_', ' ').capitalize()} value.")
-    if value_type.startswith("list["):
-        help_text = f"{help_text} Repeat as needed."
-    return help_text
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -446,9 +412,9 @@ Examples:
     routine.add_argument("--edge", action="append", default=[], help="Edge id")
     routine.add_argument("--terminal-node", action="append", default=[], help="Terminal node id")
 
-    registry = _spec_registry()
+    # Build CLI args from the Pydantic model — the single source of truth.
+    # YAML specs are no longer consulted for field-level CLI metadata.
     for artifact_id, meta in ARTIFACT_SUBJECTS.items():
-        artifact = registry.artifacts[artifact_id]
         subject = meta["subject"]
         help_text = f"Create a {subject} artifact."
         if subject == "repository":
@@ -465,17 +431,30 @@ Examples:
         )
         generated.add_argument("--root", default=".", help="Target repository root.")
         generated.add_argument("--from-yaml", help=f"Load the {subject} payload from a YAML file.")
-        for field_id in artifact["data"].get("fields", []):
-            field_spec = registry.fields[field_id]
-            key = str(field_spec["data"]["key"])
-            value_type = str(field_spec["data"]["value_type"])
-            option = f"--{key.replace('_', '-')}"
-            required = bool(field_spec["data"].get("required", False)) and key != "title"
-            kwargs: dict[str, object] = {"required": False, "help": _field_help(field_spec)}
-            if value_type.startswith("list["):
+
+        models = artifact_model_fields()
+        model = models.get(artifact_id)
+        if model is None:
+            continue
+
+        include_special = artifact_id in {
+            "artifact.task",
+        }
+        for fmeta in model_cli_fields(model, include_special=include_special):
+            # title is never required=True in CLI — slugified from the value
+            required = fmeta.is_required and fmeta.name != "title"
+            kwargs: dict[str, object] = {"required": required, "help": fmeta.help}
+            if fmeta.is_list:
                 kwargs["action"] = "append"
                 kwargs["default"] = []
-            generated.add_argument(option, dest=key, **kwargs)
+            if fmeta.choices:
+                kwargs["choices"] = fmeta.choices
+            # Carry the default if set (but not DEFAULT_FACTORY sentinel)
+            from deskops.cli.model_introspection import DEFAULT_FACTORY
+            if fmeta.default is not None and fmeta.default is not DEFAULT_FACTORY:
+                kwargs["default"] = fmeta.default
+
+            generated.add_argument(fmeta.cli_option, dest=fmeta.name, **kwargs)
 
 
 def _add_edit_commands(

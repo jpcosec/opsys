@@ -25,6 +25,7 @@ ATOM_SAMPLE = {
     "five_wh_one_plus": "what",
     "answer": "Deskops persists workflow artifacts as sldb StructuredNLDoc models.",
     "tags": ["system:deskops", "system:sldb", "topic:document-model"],
+    "provenance": "",
 }
 
 
@@ -33,7 +34,7 @@ def test_atom_doc_roundtrips_new_single_answer_contract() -> None:
     extracted = extract_model_data(AtomDoc, rendered)
 
     assert extracted == ATOM_SAMPLE
-    assert rendered.startswith("---\n# atom-xxx, unique identifier\nid: atom-deskops-models-are-sldb-documents\n# Short, descriptive title\ntitle: Deskops models are sldb documents\n# what | why | how | how_not | when | where | for_whom\nfive_wh_one_plus: what\n# e.g., system:deskops, topic:templates\ntags:\n- system:deskops")
+    assert rendered.startswith("---\n# atom-xxx, unique identifier\nid: atom-deskops-models-are-sldb-documents\n# Short, descriptive title\ntitle: Deskops models are sldb documents\n# what | why | how | how_not | when | where | for_whom\nfive_wh_one_plus: what\n# e.g., system:deskops, topic:templates\ntags:\n- system:deskops\n- system:sldb\n- topic:document-model\n# Optional URL or path to the authoritative source of this knowledge\nprovenance: ''")
     assert "5WH1+: what" not in rendered
     assert "## Answer" in rendered
     assert "## Tags" not in rendered

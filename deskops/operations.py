@@ -501,19 +501,28 @@ class DeskopsOperations:
         return payload
 
     def parse_artifact_input(self, artifact_id: str, args: Any) -> dict[str, Any]:
+        """Parse a raw payload for artifact creation.
+
+        YAML payload (--from-yaml) is loaded first, then CLI args override it.
+        Field names come from the Pydantic model (the single source of truth),
+        not from the YAML spec's fields list.
+        """
         payload: dict[str, Any] = {}
         if getattr(args, "from_yaml", None):
             payload.update(_load_yaml_mapping(Path(args.from_yaml)))
-        artifact = self.spec_registry.artifacts[artifact_id]
-        for field_id in artifact["data"].get("fields", []):
-            field_spec = self.spec_registry.fields[field_id]
-            key = str(field_spec["data"]["key"])
-            attr = key
-            value = getattr(args, attr, None)
-            if isinstance(value, list) and value:
-                payload[key] = list(value)
-            elif value is not None and not isinstance(value, list):
-                payload[key] = value
+
+        model = ARTIFACT_MODELS.get(artifact_id)
+        if model is not None:
+            # Iterate over model fields, not YAML spec fields
+            for field_name in model.model_fields:
+                if field_name == "id":
+                    continue  # id is generated from slug
+                value = getattr(args, field_name, None)
+                if isinstance(value, list) and value:
+                    payload[field_name] = list(value)
+                elif value is not None and not isinstance(value, list):
+                    payload[field_name] = value
+
         return payload
 
     def parse_primitive_input(self, kind: str, args: Any) -> dict[str, Any]:
