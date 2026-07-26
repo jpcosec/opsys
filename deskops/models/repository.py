@@ -1,3 +1,5 @@
+from typing import Optional
+
 from pydantic import Field
 
 from sldb import StructuredNLDoc
@@ -31,8 +33,14 @@ _Describe the repository purpose, scope, and role in the ecosystem._
 """
 
     name: str = Field(description="Short human-readable name of the repository.")
-    id: str = Field(description="Stable unique identifier for the repository.")
-    path: str = Field(description="Relative path to the repository root from the ecosystem root.")
+    id: Optional[str] = Field(
+        default=None,
+        description="Stable unique identifier for the repository."
+    )
+    path: Optional[str] = Field(
+        default=None,
+        description="Relative path to the repository root from the ecosystem root."
+    )
     status: str = Field(
         default="active",
         description="Current status of the repository (e.g., active, maintenance, archived).",

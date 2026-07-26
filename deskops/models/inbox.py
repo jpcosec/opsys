@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from pydantic import Field
 
@@ -31,7 +31,8 @@ _Describe the incoming message with enough evidence to triage._
     kind: Literal["unclear", "suggestion"] = Field(
         description="Inbox note type indicating unresolved confusion or an improvement proposal."
     )
-    sender_project: str = Field(
+    sender_project: Optional[str] = Field(
+        default=None,
         description="Project that sent the inbox message, resolved from the repo registry when possible."
     )
     created_at: str = Field(description="Timestamp for when the inbox note was created.")
