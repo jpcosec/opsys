@@ -74,7 +74,7 @@ Inspect at least:
 - `next.txt`
 - `graph.txt`
 - `git-status.txt`
-- `result-summary.md`
+- `result-summary.md` with `run_id`, child `session` path, and `session_sha256`
 - `validation.log` when applicable
 
 A green exit code alone is not enough.
@@ -88,7 +88,7 @@ Do not retire unless all are true:
 - graph is clean or understood
 - board state is correct
 - evidence exists on disk
-- a dedicated closing commit exists
+- the closing commit was created via `deskops closeout commit` (trailers present, `index.jsonl` updated)
 
 ## Anti-patterns
 

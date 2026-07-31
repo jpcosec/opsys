@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-from pathlib import Path
 
 from deskops.cli.model_introspection import artifact_model_fields
 from deskops.cli.model_introspection import model_cli_fields
@@ -79,9 +78,10 @@ def _add_atoms_commands(
     )
     add_namespace.add_argument(
         "--example",
-        action="append",
+        action="extend",
+        nargs="+",
         default=[],
-        help="Example tag using the namespace; repeat as needed.",
+        help="Example tag using the namespace; repeat or space-separate as needed.",
     )
 
     list_cmd = s.add_parser("list", help="List all atoms.")
@@ -256,7 +256,7 @@ def _add_inbox_commands(
         "inbox",
         help="Log, list, or show messages arriving to a project inbox.",
         formatter_class=argparse.RawTextHelpFormatter,
-        epilog=f"""
+        epilog="""
 Examples:
   deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
   deskops inbox --list --root .
@@ -335,15 +335,17 @@ Examples:
     task.add_argument("--done-when", help="Task completion rule")
     task.add_argument(
         "--validation",
-        action="append",
+        action="extend",
+        nargs="+",
         default=[],
-        help="Validation command or assertion; repeat as needed.",
+        help="Validation command or assertion; repeat or space-separate as needed.",
     )
     task.add_argument(
         "--depends-on",
-        action="append",
+        action="extend",
+        nargs="+",
         default=[],
-        help="Task identifiers that must complete first; repeat as needed.",
+        help="Task identifiers that must complete first; repeat or space-separate as needed.",
     )
 
     condition = s.add_parser("condition", help="Create a condition primitive.")
@@ -372,12 +374,13 @@ Examples:
     checklist.add_argument("--title", required=False, help="Checklist title")
     checklist.add_argument("--summary", help="Checklist summary")
     checklist.add_argument("--status", default="active", help="Checklist status")
-    checklist.add_argument("--item", action="append", default=[], help="Checklist item; repeat as needed.")
+    checklist.add_argument("--item", action="extend", nargs="+", default=[], help="Checklist item; repeat or space-separate as needed.")
     checklist.add_argument(
         "--condition-ref",
-        action="append",
+        action="extend",
+        nargs="+",
         default=[],
-        help="Condition id; repeat as needed.",
+        help="Condition id; repeat or space-separate as needed.",
     )
     checklist.add_argument("--mode", default="all", help="Checklist completion mode")
 
@@ -408,9 +411,9 @@ Examples:
     routine.add_argument("--summary", help="Routine summary")
     routine.add_argument("--status", default="active", help="Routine status")
     routine.add_argument("--entrypoint", required=False, help="Entrypoint node id")
-    routine.add_argument("--decomposition", action="append", default=[], help="Decomposition node id")
-    routine.add_argument("--edge", action="append", default=[], help="Edge id")
-    routine.add_argument("--terminal-node", action="append", default=[], help="Terminal node id")
+    routine.add_argument("--decomposition", action="extend", nargs="+", default=[], help="Decomposition node id; repeat or space-separate as needed.")
+    routine.add_argument("--edge", action="extend", nargs="+", default=[], help="Edge id; repeat or space-separate as needed.")
+    routine.add_argument("--terminal-node", action="extend", nargs="+", default=[], help="Terminal node id; repeat or space-separate as needed.")
 
     # Build CLI args from the Pydantic model — the single source of truth.
     # YAML specs are no longer consulted for field-level CLI metadata.
@@ -445,13 +448,17 @@ Examples:
             required = fmeta.is_required and fmeta.name != "title"
             kwargs: dict[str, object] = {"required": required, "help": fmeta.help}
             if fmeta.is_list:
-                kwargs["action"] = "append"
+                kwargs["action"] = "extend"
+                kwargs["nargs"] = "+"
                 kwargs["default"] = []
             if fmeta.choices:
                 kwargs["choices"] = fmeta.choices
-            # Carry the default if set (but not DEFAULT_FACTORY sentinel)
-            from deskops.cli.model_introspection import DEFAULT_FACTORY
-            if fmeta.default is not None and fmeta.default is not DEFAULT_FACTORY:
+            # Carry the default if set (but not sentinel values)
+            from deskops.cli.model_introspection import DEFAULT_FACTORY, REQUIRED
+            if fmeta.default is not None and fmeta.default not in (
+                DEFAULT_FACTORY,
+                REQUIRED,
+            ):
                 kwargs["default"] = fmeta.default
 
             generated.add_argument(fmeta.cli_option, dest=fmeta.name, **kwargs)
@@ -685,6 +692,7 @@ Advancement walks a task through execution, testing, and closeout gates when its
 """.strip(),
     )
     task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
+    task.add_argument("--to", required=True, help="Target node or status to advance to.")
     task.add_argument("--root", default=".", help="Target repository root.")
 
 def _add_drift_commands(
@@ -704,5 +712,29 @@ def _add_materialize_command(
 def _add_closeout_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
-    p = subparsers.add_parser("closeout", help="Perform workflow phase closeout.")
-    p.add_argument("--root", default=".", help="Target repository root.")
+    p = subparsers.add_parser("closeout", help="Workflow closeout operations.")
+    s = p.add_subparsers(dest="closeout_command", required=True)
+
+    commit = s.add_parser(
+        "commit",
+        help="Create the tool-made closing commit linked to a run evidence directory.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Example:
+  deskops closeout commit --root . --task task-fix-thing \\
+    --run-dir runs/subagents/20260729-120000-task-fix-thing \\
+    --run-id 6046eaef --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \\
+    --paths deskops/foo.py tests/test_foo.py
+
+The commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256 trailers and the
+commit hash is recorded back into runs/subagents/index.jsonl. The commit is made
+by this command, not by agent discretion.
+""".strip(),
+    )
+    commit.add_argument("--root", default=".", help="Target repository root.")
+    commit.add_argument("--run-dir", required=True, help="Run evidence dir under runs/subagents/.")
+    commit.add_argument("--task", required=True, help="Task id being closed.")
+    commit.add_argument("-m", "--message", help="Commit message subject.")
+    commit.add_argument("--paths", nargs="*", default=None, help="Paths to stage; defaults to run.yaml touched paths, else staged index.")
+    commit.add_argument("--run-id", help="Subagent run id to record in run.yaml.")
+    commit.add_argument("--session", help="Child session.jsonl path to hash into run.yaml.")

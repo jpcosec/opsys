@@ -99,7 +99,7 @@ sldb stores check --store .sldb
 - `graph.txt`
 - `git-status.txt`
 - `validation.log` when validation was run
-- `result-summary.md`
+- `result-summary.md` with `run_id`, child `session` path, and `session_sha256`
 
 ## Handoff contract
 
@@ -107,6 +107,7 @@ The result summary should state at least:
 
 - task id
 - role = tester
+- run id, session path, and session sha256
 - validations run
 - pass/fail status
 - guardrails proven

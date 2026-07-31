@@ -81,8 +81,10 @@ If the change touches tracked structured docs or models, also use `.opencode/ski
 - `next.txt`
 - `graph.txt`
 - `git-status.txt`
-- `result-summary.md`
+- `result-summary.md` with `run_id`, child `session` path, and `session_sha256`
 - `validation.log` when applicable
+
+Closeout commits are made only via `deskops closeout commit --task <id> --run-dir <dir>`; never handcraft them with plain `git commit`.
 
 ## Anti-patterns
 

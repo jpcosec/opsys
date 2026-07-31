@@ -68,9 +68,13 @@ class CLI:
             from deskops.cli.commands.operations import OperationsCLI
 
             return OperationsCLI().run(args)
-        if args.command in {"drift", "materialize", "closeout"}:
+        if args.command in {"drift", "materialize"}:
             print(f"{args.command} grammar added; implementation deferred.")
             return 0
+        if args.command == "closeout":
+            from deskops.cli.commands.closeout import CloseoutCLI
+
+            return CloseoutCLI().run(args)
         if args.command == "promote":
             from deskops.cli.commands.promote import PromoteCLI
 
@@ -128,16 +132,34 @@ class CLI:
         return 0
 
     def _apply_test_root_override(self, args: Any) -> None:
-        test_root = os.environ.get("DESKOPS_TEST_ROOT", "").strip()
-        if not test_root:
-            return
         if not hasattr(args, "root"):
             return
         if getattr(args, "root", None) != ".":
             return
         if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "inbox", "repo", "graph"}:
             return
-        root_path = Path(test_root).resolve()
+            
+        from deskops.config import DeskConfig
+        from pathlib import Path
+        import os
+
+        # CLI root is "."
+        original_root = Path(".").resolve()
+        desk_root = original_root / "desk"
+        
+        test_root = os.environ.get("DESKOPS_TEST_ROOT", "").strip()
+        
+        # Load config to get sandbox policy
+        config = DeskConfig.load(desk_root)
+        
+        if test_root:
+            target_root = test_root
+        elif config.sandbox.enabled and config.sandbox.sandbox_root:
+            target_root = config.sandbox.sandbox_root
+        else:
+            return
+
+        root_path = Path(target_root).resolve()
         root_path.mkdir(parents=True, exist_ok=True)
         args.root = str(root_path)
 
