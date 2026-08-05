@@ -1,0 +1,58 @@
+Missing graph references:
+- missing_declared_target: issue:adopt-agent-role-segregation-supervisor-vs-executor -> desk/agents/executor.md
+  provenance: desk/drawer/issues/issue-adopt-agent-role-segregation.md:line:22:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:adopt-agent-role-segregation-supervisor-vs-executor -> desk/agents/executor.md
+  provenance: desk/drawer/issues/issue-adopt-agent-role-segregation.md:line:33:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:adopt-agent-role-segregation-supervisor-vs-executor -> desk/agents/supervisor.md
+  provenance: desk/drawer/issues/issue-adopt-agent-role-segregation.md:line:21:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:adopt-agent-role-segregation-supervisor-vs-executor -> desk/agents/supervisor.md
+  provenance: desk/drawer/issues/issue-adopt-agent-role-segregation.md:line:33:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:enforce-commit-boundary-task-retirement-rule -> desk/rituals/closeout.md
+  provenance: desk/drawer/issues/issue-enforce-commit-boundary-task-retirement.md:line:34:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:formalize-epistemic-knowledge-flow-pills-to-atoms -> task:task-knowledge
+  provenance: desk/drawer/issues/issue-formalize-epistemic-knowledge-flow.md:line:42:related atoms
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-add-drift-check-review-loop -> desk/drawer/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/tasks/task-add-drift-check-review-loop.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-add-json-output-for-modeled-documents -> desk/drawer/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/tasks/task-add-json-output-for-modeled-documents.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-add-per-project-desk-config-and-version-contract -> desk/drawer/tasks/task-add-per-project-desk-config-and-version-contract.md
+  provenance: desk/tasks/task-add-per-project-desk-config-and-version-contract.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-define-atom-lifecycle-operations -> desk/drawer/tasks/task-define-atom-lifecycle-operations.md
+  provenance: desk/tasks/task-define-atom-lifecycle-operations.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-define-materialization-contract-slice-deskops-surface -> desk/drawer/tasks/task-define-materialization-contract-slice.md
+  provenance: desk/tasks/task-define-materialization-contract-slice-deskops-surface.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-design-operational-cli-grammar -> desk/drawer/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/tasks/task-design-operational-cli-grammar.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-detect-and-migrate-legacy-desk-workspaces -> desk/drawer/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+  provenance: desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout -> desk/drawer/tasks/task-enforce-pill-to-atom-knowledge-graduation.md
+  provenance: desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-establish-horizontal-desk-discovery-and-canonical-identity -> desk/drawer/tasks/task-establish-horizontal-desk-discovery-and-identity.md
+  provenance: desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-make-cross-desk-inbox-delivery-verifiable-and-actionable -> desk/drawer/tasks/task-make-cross-desk-inbox-delivery-verifiable.md
+  provenance: desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-make-task-lifecycle-runnable-from-intake-to-closeout -> desk/drawer/tasks/task-make-task-lifecycle-runnable-end-to-end.md
+  provenance: desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-wire-closeout-to-knowledge-gates -> desk/drawer/tasks/task-wire-closeout-knowledge-gates.md
+  provenance: desk/tasks/task-wire-closeout-to-knowledge-gates.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-write-end-to-end-deskops-operator-manual -> desk/drawer/tasks/task-write-end-to-end-operator-manual.md
+  provenance: desk/tasks/task-write-end-to-end-deskops-operator-manual.md:line:5:source-file-reference
+  reason: declared target was not found among extracted graph nodes

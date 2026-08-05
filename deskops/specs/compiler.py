@@ -57,6 +57,10 @@ def compile_task_bundle_spec(
         "done_when": str(raw_payload.get("done_when") or ""),
         "history": _coerce_list(raw_payload.get("history") or []),
         "tags": _coerce_list(raw_payload.get("tags") or artifact["data"]["doc"].get("tags", [])),
+        "task_type": str(raw_payload.get("task_type") or ""),
+        "inherits_from": _coerce_list(raw_payload.get("inherits_from") or []),
+        "inherit_acceptance_context": bool(raw_payload.get("inherit_acceptance_context") or False),
+        "atoms": _coerce_list(raw_payload.get("atoms") or []),
     }
     context["status"] = task_payload["status"]
 

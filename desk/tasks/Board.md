@@ -54,7 +54,6 @@ _Add short operational notes about the current routed set._
 - Add per-project desk config and version contract [active] - Give each project desk one explicit local configuration contract that declares desk identity, desk/version expectations, and per-project testing defaults such as sandbox behavior.
 - Define atom lifecycle operations [active] - Define and implement atom creation, validation, split, merge, deletion, and traceability operations.
 - Define materialization contract slice (deskops surface) [active] - Implement the deskops CLI and contract definition surface for materialization.
-- Design operational CLI grammar [active] - Align deskops CLI commands with spoken workflow nouns and user intent.
 - Detect and migrate legacy desk workspaces [active] - Make deskops detect legacy or hand-rolled desk layouts explicitly and provide a safe adaptation path into the current modeled workspace contract.
 - Enforce pill-to-atom knowledge graduation during task closeout [active] - Make task closeout verify that durable knowledge discovered through pills is promoted into atoms before transient execution context is deleted.
 - Establish horizontal desk discovery and canonical identity [active] - Make desks discoverable to each other through one canonical per-project identity path, so cross-repo workflow commands can resolve sibling desks without ambiguous local heuristics.

@@ -1,0 +1,48 @@
+2026-07-05 02:34:05,124 - deskops - INFO - Advanced task task-add-json-output-for-modeled-documents to node checklist-task-add-json-output-for-modeled-documents-testing-ready
+2026-07-05 02:35:04,606 - deskops - INFO - Advanced task task-add-json-output-for-modeled-documents to node checklist-task-add-json-output-for-modeled-documents-closeout-ready
+2026-07-05 02:42:04,106 - deskops - INFO - Advanced task task-add-json-output-for-modeled-documents to node checklist-task-add-json-output-for-modeled-documents-closeout-ready
+2026-07-05 02:46:06,155 - deskops - INFO - Advanced task task-add-json-output-for-modeled-documents to node checklist-task-add-json-output-for-modeled-documents-closeout-ready
+2026-07-05 02:56:05,509 - deskops - INFO - Task task-add-json-output-for-modeled-documents is complete. Performing auto-commit and cleanup.
+2026-07-05 02:56:05,525 - deskops - DEBUG - Removing runtime artifacts for task task-add-json-output-for-modeled-documents
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive condition-task-add-json-output-for-modeled-documents-has-implementation-path.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive condition-task-add-json-output-for-modeled-documents-ready-for-closeout.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive condition-task-add-json-output-for-modeled-documents-has-validation.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive condition-task-add-json-output-for-modeled-documents-has-closeout-evidence.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive checklist-task-add-json-output-for-modeled-documents-testing-ready.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive checklist-task-add-json-output-for-modeled-documents-execution-ready.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive checklist-task-add-json-output-for-modeled-documents-closeout-ready.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive operator-task-add-json-output-for-modeled-documents-ready-for-testing.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive operator-task-add-json-output-for-modeled-documents-close.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive operator-task-add-json-output-for-modeled-documents-activate.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive edge-task-add-json-output-for-modeled-documents-execution-to-activate.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive edge-task-add-json-output-for-modeled-documents-close-to-complete.md
+2026-07-05 02:56:05,576 - deskops - DEBUG - Removing primitive edge-task-add-json-output-for-modeled-documents-testing-to-ready.md
+2026-07-05 02:56:05,577 - deskops - DEBUG - Removing primitive edge-task-add-json-output-for-modeled-documents-ready-to-closeout.md
+2026-07-05 02:56:05,577 - deskops - DEBUG - Removing primitive edge-task-add-json-output-for-modeled-documents-activate-to-testing.md
+2026-07-05 02:56:05,577 - deskops - DEBUG - Removing primitive edge-task-add-json-output-for-modeled-documents-closeout-to-close.md
+2026-07-05 02:56:05,583 - deskops - INFO - Committing closure for task-add-json-output-for-modeled-documents: chore(task): Add JSON output for modeled documents
+
+Auto-closing task task-add-json-output-for-modeled-documents
+2026-07-05 03:57:09,704 - deskops - INFO - Advanced task task-design-operational-cli-grammar to node checklist-task-design-operational-cli-grammar-testing-ready
+2026-07-05 03:58:09,872 - deskops - INFO - Advanced task task-design-operational-cli-grammar to node checklist-task-design-operational-cli-grammar-closeout-ready
+2026-07-05 04:02:10,554 - deskops - INFO - Task task-design-operational-cli-grammar is complete. Performing auto-commit and cleanup.
+2026-07-05 04:02:10,561 - deskops - DEBUG - Removing runtime artifacts for task task-design-operational-cli-grammar
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive condition-task-design-operational-cli-grammar-has-validation.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive condition-task-design-operational-cli-grammar-has-implementation-path.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive condition-task-design-operational-cli-grammar-ready-for-closeout.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive condition-task-design-operational-cli-grammar-has-closeout-evidence.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive checklist-task-design-operational-cli-grammar-execution-ready.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive checklist-task-design-operational-cli-grammar-closeout-ready.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive checklist-task-design-operational-cli-grammar-testing-ready.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive operator-task-design-operational-cli-grammar-close.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive operator-task-design-operational-cli-grammar-ready-for-testing.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive operator-task-design-operational-cli-grammar-activate.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive edge-task-design-operational-cli-grammar-activate-to-testing.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive edge-task-design-operational-cli-grammar-ready-to-closeout.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive edge-task-design-operational-cli-grammar-closeout-to-close.md
+2026-07-05 04:02:10,604 - deskops - DEBUG - Removing primitive edge-task-design-operational-cli-grammar-execution-to-activate.md
+2026-07-05 04:02:10,605 - deskops - DEBUG - Removing primitive edge-task-design-operational-cli-grammar-close-to-complete.md
+2026-07-05 04:02:10,605 - deskops - DEBUG - Removing primitive edge-task-design-operational-cli-grammar-testing-to-ready.md
+2026-07-05 04:02:10,611 - deskops - INFO - Committing closure for task-design-operational-cli-grammar: chore(task): Design operational CLI grammar
+
+Auto-closing task task-design-operational-cli-grammar

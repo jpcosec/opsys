@@ -1,0 +1,9 @@
+Task: task-add-json-output-for-modeled-documents
+Title: Add JSON output for modeled documents
+Status: active
+Current node: checklist-task-add-json-output-for-modeled-documents-execution-ready
+Routine: routine-task-add-json-output-for-modeled-documents
+Checklist status:
+- checklist-task-add-json-output-for-modeled-documents-execution-ready: complete
+- checklist-task-add-json-output-for-modeled-documents-testing-ready: complete
+- checklist-task-add-json-output-for-modeled-documents-closeout-ready: pending

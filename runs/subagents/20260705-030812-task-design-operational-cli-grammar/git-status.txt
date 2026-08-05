@@ -1,0 +1,23 @@
+## main...origin/main [ahead 45]
+ M .agents/skills/README.md
+ D .agents/skills/deskops-workflow/SKILL.md
+ D .agents/skills/workflow-executor/SKILL.md
+ D .agents/skills/workflow-supervisor/SKILL.md
+ D .agents/skills/workflow-tester/SKILL.md
+ M .opencode/skills/use-deskops/SKILL.md
+ M .opencode/skills/use-sldb/SKILL.md
+ D .skills/sldb/SKILL.md
+ M AGENTS.md
+ M README.md
+ M desk/drawer/features/pi-artifact-materialization-runtime.md
+ M desk/drawer/issues/diagnosis/02-observed-problems/atom-tasks-are-not-yet-atomized-to-execution-actions.md
+ M desk/drawer/issues/diagnosis/04-expected-model/atom-tasks-should-compile-to-execution-compositions.md
+ M desk/drawer/issues/diagnosis/06-worklines/atom-workline-add-execution-plan-to-task-model.md
+ M desk/drawer/issues/diagnosis/08-risks/atom-hook-automation-can-be-powerful-but-opaque.md
+ M docs/diagrams/process/current-agent-workflow-and-automation.md
+ M docs/diagrams/process/current-agent-workflow-and-automation.mmd
+?? .deskops.log
+?? .opencode/skills/use-sldb/legacy-local-sldb-skill.md
+?? docs/agent-system-prompts/
+?? runs/subagents/20260703-180811-task-add-json-output-for-modeled-documents/
+?? runs/subagents/20260705-030812-task-design-operational-cli-grammar/

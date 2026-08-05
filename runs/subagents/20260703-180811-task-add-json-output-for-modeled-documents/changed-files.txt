@@ -1,0 +1,3 @@
+deskops/cli/commands/operations.py
+deskops/cli/parser.py
+tests/test_cli.py

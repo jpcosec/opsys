@@ -1,33 +1,32 @@
-from pydantic import Field
+from pydantic import Field, model_validator
 
 from .base import OperationalArtifactDoc
 
 
 class TaskDoc(OperationalArtifactDoc):
+    model_config = {"extra": "allow"}
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
+    
+    frontmatter: dict | None = Field(default=None, description="YAML frontmatter containing task metadata", exclude=True)
+
+    @model_validator(mode="before")
+    @classmethod
+    def _merge_frontmatter(cls, data: dict) -> dict:
+        if isinstance(data, dict) and "frontmatter" in data and isinstance(data["frontmatter"], dict):
+            fm = data.pop("frontmatter")
+            for k, v in fm.items():
+                if k not in data or data[k] is None:
+                    data[k] = v
+        return data
+
+    def model_dump(self, **kwargs) -> dict:
+        data = super().model_dump(**kwargs)
+        body_fields = {"title", "why", "goal", "scope", "implementation_path", "validation", "done_when"}
+        data["frontmatter"] = {k: v for k, v in data.items() if k not in body_fields}
+        return data
+
     __template__ = """---
-# task-xxx, unique task identifier
-id: ⸢rev•id⸥
-# draft | active | blocked | closed
-status: ⸢rev•status⸥
-# Relevant file or doc paths
-references: ⸢rev•references⸥
-# Task identifiers that must complete first
-depends_on: ⸢rev•depends_on⸥
-# Pill identifiers required
-pills: ⸢rev•pills⸥
-# Files expected to change
-files: ⸢rev•files⸥
-# Routine identifier for operations
-routine: ⸢rev•routine⸥
-# Checklist identifiers for verification
-checklists: ⸢rev•checklists⸥
-# Active routine node
-current_node: ⸢rev•current_node⸥
-# Execution history references
-history: ⸢rev•history⸥
-# e.g., system:deskops, topic:cli
-tags: ⸢rev•tags⸥
+⸢rev,dict•frontmatter⸥
 ---
 
 # ⸢rev•title⸥
@@ -107,4 +106,20 @@ _Name the observable condition that makes the task complete._
     tags: list[str] = Field(
         default_factory=list,
         description="Semantic tags placed at the end, using namespaced forms such as 'system:sldb' or 'language:python'.",
+    )
+    task_type: str = Field(
+        default="",
+        description="Workflow task type such as design, implementation, test, reflection, or closeout.",
+    )
+    inherits_from: list[str] = Field(
+        default_factory=list,
+        description="Task identifiers that provide inherited workflow context.",
+    )
+    inherit_acceptance_context: bool = Field(
+        default=False,
+        description="Whether validation and done-when context should be inherited from referenced tasks.",
+    )
+    atoms: list[str] = Field(
+        default_factory=list,
+        description="Workflow or knowledge atoms explicitly bound to the task.",
     )

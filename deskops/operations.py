@@ -309,16 +309,18 @@ class DeskopsOperations:
     def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
         board_path = self.desk_root / "tasks" / "Board.md"
         task_path = self._next_task_path(task_selector, board_path)
-        payload = self._read_doc(task_path, TaskDoc)
+        payload = self._resolve_task_payload(task_path.stem)
         spec = load_task_lifecycle_spec(self.spec_root)
         state = match_workflow_state(spec, str(payload.get("current_node") or ""))
-        pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("pills") or [])]))
+        pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("effective_pills") or payload.get("pills") or [])]))
         return {
             "task": {
                 "id": payload["id"],
                 "title": payload["title"],
                 "status": payload["status"],
                 "current_node": payload.get("current_node", ""),
+                "task_type": payload.get("task_type", ""),
+                "inherits_from": list(payload.get("inherits_from") or []),
             },
             "phase": state["phase"],
             "ritual": state.get("ritual", ""),
@@ -452,16 +454,27 @@ class DeskopsOperations:
             model,
         )
 
-    def advance_task(self, task_id: str) -> tuple[Task | None, TransitionResult | None]:
+    def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:
         try:
             task_path = self._resolve_glob(self.desk_root / "tasks", task_id)
         except FileNotFoundError:
             return None, None
         payload = self._read_doc(task_path, TaskDoc)
         task = self._hydrate_task(payload)
+        
+        if target_node:
+            from .runtime.primitives import TransitionResult
+            if target_node in ["draft", "open", "in_progress", "blocked", "closed"]:
+                payload["status"] = target_node
+            else:
+                payload["current_node"] = target_node
+            self._write_doc(task_path, TaskDoc, payload)
+            advanced_task = self._hydrate_task(payload)
+            self.logger.info(f"Advanced task {task_id} manually to {target_node}")
+            return advanced_task, TransitionResult(target_node, payload.get("status", ""), True, False, f"Forced transition to {target_node}.")
+
         routine = self._load_routine(task.routine)
         if routine is None:
-            print(f"Task {task_id} has no routine — cannot advance")
             return task, None
         conditions = self._load_conditions(task)
         operators = self._load_operators(routine)
@@ -497,6 +510,10 @@ class DeskopsOperations:
         if getattr(args, "done_when", None): payload["done_when"] = args.done_when
         if getattr(args, "validation", None): payload["validation"] = args.validation
         if getattr(args, "depends_on", None): payload["depends_on"] = args.depends_on
+        if getattr(args, "task_type", None): payload["task_type"] = args.task_type
+        if getattr(args, "inherits_from", None): payload["inherits_from"] = args.inherits_from
+        if getattr(args, "atom", None): payload["atoms"] = args.atom
+        if getattr(args, "inherit_acceptance_context", False): payload["inherit_acceptance_context"] = True
 
         return payload
 
@@ -621,6 +638,10 @@ class DeskopsOperations:
             "done_when": str(payload.get("done_when") or ""),
             "history": self._coerce_list(payload.get("history") or []),
             "tags": self._coerce_list(payload.get("tags") or ["workspace:desk", "artifact:task"]),
+            "task_type": str(payload.get("task_type") or ""),
+            "inherits_from": self._coerce_list(payload.get("inherits_from") or []),
+            "inherit_acceptance_context": bool(payload.get("inherit_acceptance_context") or False),
+            "atoms": self._coerce_list(payload.get("atoms") or []),
         }
 
     def _normalize_primitive_payload(self, kind: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -1020,9 +1041,65 @@ class DeskopsOperations:
             return False
         return result.returncode == 0
 
-    def _load_task(self, task_id: str) -> Task:
+    def _merge_unique(self, *values: list[str]) -> list[str]:
+        merged: list[str] = []
+        seen: set[str] = set()
+        for value_list in values:
+            for value in value_list:
+                item = str(value)
+                if item in seen:
+                    continue
+                seen.add(item)
+                merged.append(item)
+        return merged
+
+    def _resolve_task_payload(self, task_id: str, stack: tuple[str, ...] = ()) -> dict[str, Any]:
+        if task_id in stack:
+            chain = " -> ".join([*stack, task_id])
+            raise ValueError(f"Task inheritance cycle detected: {chain}")
         path = self._resolve_glob(self.desk_root / "tasks", task_id)
-        return self._hydrate_task(self._read_doc(path, TaskDoc))
+        payload = self._normalize_task_payload(self._read_doc(path, TaskDoc))
+        inherited_ids = self._coerce_list(payload.get("inherits_from") or [])
+        inherited_payloads = [self._resolve_task_payload(parent_id, (*stack, task_id)) for parent_id in inherited_ids]
+
+        payload["effective_references"] = self._merge_unique(
+            *[parent.get("effective_references", parent.get("references", [])) for parent in inherited_payloads],
+            payload.get("references", []),
+        )
+        payload["effective_pills"] = self._merge_unique(
+            *[parent.get("effective_pills", parent.get("pills", [])) for parent in inherited_payloads],
+            payload.get("pills", []),
+        )
+        payload["effective_tags"] = self._merge_unique(
+            *[parent.get("effective_tags", parent.get("tags", [])) for parent in inherited_payloads],
+            payload.get("tags", []),
+        )
+        payload["effective_atoms"] = self._merge_unique(
+            *[parent.get("effective_atoms", parent.get("atoms", [])) for parent in inherited_payloads],
+            payload.get("atoms", []),
+        )
+
+        if payload.get("inherit_acceptance_context"):
+            payload["effective_validation"] = self._merge_unique(
+                *[parent.get("effective_validation", parent.get("validation", [])) for parent in inherited_payloads],
+                payload.get("validation", []),
+            )
+            parent_done_when = next(
+                (
+                    str(parent.get("effective_done_when") or parent.get("done_when") or "")
+                    for parent in inherited_payloads
+                    if str(parent.get("effective_done_when") or parent.get("done_when") or "")
+                ),
+                "",
+            )
+            payload["effective_done_when"] = str(payload.get("done_when") or parent_done_when)
+        else:
+            payload["effective_validation"] = self._coerce_list(payload.get("validation") or [])
+            payload["effective_done_when"] = str(payload.get("done_when") or "")
+        return payload
+
+    def _load_task(self, task_id: str) -> Task:
+        return self._hydrate_task(self._resolve_task_payload(task_id))
 
     def _load_routine(self, routine_id: str) -> Routine | None:
         if not routine_id:
@@ -1147,6 +1224,16 @@ class DeskopsOperations:
             implementation_path=payload.get("implementation_path", ""),
             validation=list(payload.get("validation") or []),
             done_when=payload.get("done_when", ""),
+            task_type=payload.get("task_type", ""),
+            inherits_from=list(payload.get("inherits_from") or []),
+            inherit_acceptance_context=bool(payload.get("inherit_acceptance_context") or False),
+            atoms=list(payload.get("atoms") or []),
+            effective_references=list(payload.get("effective_references") or payload.get("references") or []),
+            effective_pills=list(payload.get("effective_pills") or payload.get("pills") or []),
+            effective_tags=list(payload.get("effective_tags") or payload.get("tags") or []),
+            effective_atoms=list(payload.get("effective_atoms") or payload.get("atoms") or []),
+            effective_validation=list(payload.get("effective_validation") or payload.get("validation") or []),
+            effective_done_when=payload.get("effective_done_when", payload.get("done_when", "")),
         )
 
     def _task_path(self, task_id: str) -> Path:

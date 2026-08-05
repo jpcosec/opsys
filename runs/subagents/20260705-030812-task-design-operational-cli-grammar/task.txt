@@ -1,0 +1,9 @@
+Task: task-design-operational-cli-grammar
+Title: Design operational CLI grammar
+Status: active
+Current node: checklist-task-design-operational-cli-grammar-execution-ready
+Routine: routine-task-design-operational-cli-grammar
+Checklist status:
+- checklist-task-design-operational-cli-grammar-execution-ready: complete
+- checklist-task-design-operational-cli-grammar-testing-ready: complete
+- checklist-task-design-operational-cli-grammar-closeout-ready: pending

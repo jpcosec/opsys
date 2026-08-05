@@ -39,6 +39,7 @@ class CliFieldMeta:
 
 
 DEFAULT_FACTORY = object()  # sentinel for fields with default_factory=list
+REQUIRED = object()  # sentinel for fields with no default at all
 
 
 # ---------------------------------------------------------------------------
@@ -78,15 +79,15 @@ def _resolve_field_default(field: FieldInfo) -> Any:
     """Return the resolved default for a Pydantic field.
 
     Returns DEFAULT_FACTORY when the field uses default_factory.
-    Returns the actual default value when set explicitly.
-    Returns the sentinel when there is no default (required field).
+    Returns the actual default value when set explicitly (including None).
+    Returns REQUIRED when there is no default (required field).
     """
     default = field.default
     if default is PydanticUndefined:
         factory = getattr(field, "default_factory", None)
         if factory is not None:
             return DEFAULT_FACTORY
-        return None  # required — no default at all
+        return REQUIRED
     return default
 
 
@@ -207,7 +208,7 @@ def introspect_model(model: type[BaseModel]) -> list[CliFieldMeta]:
         choices = _extract_enum_choices(model, name)
         pattern = _extract_pattern(model, name)
         default = _resolve_field_default(fInfo)
-        is_required = default is None
+        is_required = default is REQUIRED
 
         # Use field description as help text
         help_text = fInfo.description or f"{name.replace('_', ' ').capitalize()}."

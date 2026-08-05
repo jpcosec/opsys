@@ -347,6 +347,26 @@ Examples:
         default=[],
         help="Task identifiers that must complete first; repeat or space-separate as needed.",
     )
+    task.add_argument("--task-type", help="Workflow task type such as design, implementation, test, reflection, or closeout.")
+    task.add_argument(
+        "--inherits-from",
+        action="extend",
+        nargs="+",
+        default=[],
+        help="Task identifiers that provide inherited workflow context; repeat or space-separate as needed.",
+    )
+    task.add_argument(
+        "--atom",
+        action="extend",
+        nargs="+",
+        default=[],
+        help="Workflow or knowledge atom refs bound to the task; repeat or space-separate as needed.",
+    )
+    task.add_argument(
+        "--inherit-acceptance-context",
+        action="store_true",
+        help="Inherit validation and done-when context from tasks listed in --inherits-from.",
+    )
 
     condition = s.add_parser("condition", help="Create a condition primitive.")
     condition.add_argument("--root", default=".", help="Target repository root.")

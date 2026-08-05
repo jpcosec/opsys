@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import json
 from typing import Any
 
@@ -287,3 +287,13 @@ class Task(OperationalArtifact):
     implementation_path: str
     validation: list[str]
     done_when: str
+    task_type: str = ""
+    inherits_from: list[str] = field(default_factory=list)
+    inherit_acceptance_context: bool = False
+    atoms: list[str] = field(default_factory=list)
+    effective_references: list[str] = field(default_factory=list)
+    effective_pills: list[str] = field(default_factory=list)
+    effective_tags: list[str] = field(default_factory=list)
+    effective_atoms: list[str] = field(default_factory=list)
+    effective_validation: list[str] = field(default_factory=list)
+    effective_done_when: str = ""

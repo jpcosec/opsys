@@ -102,6 +102,8 @@ def _classify_path(relative_path: str, path: Path) -> tuple[str, str] | None:
 
     if parts and parts[0] == "spec" and suffix in SPEC_SUFFIXES:
         return "spec", "spec"
+    if len(parts) >= 3 and parts[:3] == ("docs", "architecture", "spec2viz") and suffix in SPEC_SUFFIXES:
+        return "spec", "spec"
     if parts and parts[0] == "tests" and suffix in SOURCE_SUFFIXES:
         return "test_file", "test"
     if _is_config_file(relative_path, path):
@@ -133,4 +135,4 @@ def _has_path_prefix(relative_path: str, prefix: str) -> bool:
 
 
 def _relative_path(root: Path, path: Path) -> str:
-    return path.resolve().relative_to(root).as_posix()
+    return path.relative_to(root).as_posix()

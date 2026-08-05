@@ -1,0 +1,6 @@
+## main...origin/main [ahead 42]
+ M deskops/cli/commands/operations.py
+ M deskops/cli/parser.py
+ M tests/test_cli.py
+?? .deskops.log
+?? runs/subagents/20260703-180811-task-add-json-output-for-modeled-documents/

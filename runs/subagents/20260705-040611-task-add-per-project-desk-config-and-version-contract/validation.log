@@ -1,0 +1,27 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/jp/proyectos/hum-ecosystem/tools/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, langsmith-0.7.22
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 134 items
+
+tests/test_atom_materialization.py ..                                    [  1%]
+tests/test_atom_tags.py .....                                            [  5%]
+tests/test_cli.py ...................................................... [ 45%]
+.............                                                            [ 55%]
+tests/test_composition.py ...                                            [ 57%]
+tests/test_config.py ...                                                 [ 59%]
+tests/test_gitignore_policy.py .                                         [ 60%]
+tests/test_graph_checks.py ....                                          [ 63%]
+tests/test_graph_cli.py ...........                                      [ 71%]
+tests/test_graph_extract_docs.py .                                       [ 72%]
+tests/test_graph_extract_edges.py ...                                    [ 74%]
+tests/test_graph_extract_sources.py ..                                   [ 76%]
+tests/test_graph_self_reflection.py ..                                   [ 77%]
+tests/test_graph_snapshot.py ..                                          [ 79%]
+tests/test_model_templates.py ...............                            [ 90%]
+tests/test_operational.py ..........                                     [ 97%]
+tests/test_specs.py ...                                                  [100%]
+
+============================= 134 passed in 22.72s =============================

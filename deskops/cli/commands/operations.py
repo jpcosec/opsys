@@ -141,7 +141,25 @@ class OperationsCLI:
             print(f"Title: {task.title}")
             print(f"Status: {task.status}")
             print(f"Current node: {task.current_node}")
+            print(f"Task type: {task.task_type}")
+            if task.inherits_from:
+                print("Inherits from:")
+                for item in task.inherits_from:
+                    print(f"- {item}")
             print(f"Routine: {task.routine}")
+            if task.effective_pills:
+                print("Effective pills:")
+                for item in task.effective_pills:
+                    print(f"- {item}")
+            if task.effective_atoms:
+                print("Effective atoms:")
+                for item in task.effective_atoms:
+                    print(f"- {item}")
+            if task.inherit_acceptance_context:
+                print("Effective validation:")
+                for item in task.effective_validation:
+                    print(f"- {item}")
+                print(f"Effective done when: {task.effective_done_when}")
             print("Checklist status:")
             for checklist_id, complete in statuses.items():
                 print(f"- {checklist_id}: {'complete' if complete else 'pending'}")
@@ -218,7 +236,7 @@ class OperationsCLI:
             return 0
 
         if args.command == "advance" and args.subject == "task":
-            task, result = operations.advance_task(args.task_id)
+            task, result = operations.advance_task(args.task_id, target_node=getattr(args, "to", None))
             if task is None:
                 print(f"No task found for {args.task_id}", file=sys.stderr)
                 return 1
@@ -238,6 +256,12 @@ class OperationsCLI:
         print(f"Title: {report['task']['title']}")
         print(f"Status: {report['task']['status']}")
         print(f"Current node: {report['task']['current_node']}")
+        if report['task'].get('task_type'):
+            print(f"Task type: {report['task']['task_type']}")
+        if report['task'].get('inherits_from'):
+            print("Inherits from:")
+            for item in report['task']['inherits_from']:
+                print(f"- {item}")
         print(f"Phase: {report['phase']}")
         if report.get("ritual"):
             print("Required ritual:")

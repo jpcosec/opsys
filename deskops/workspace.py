@@ -47,6 +47,12 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
             created_paths.append(subdir)
 
     _write_if_missing(
+        desk_dir / "config.json",
+        _config_template(target_path.name),
+        created_paths,
+    )
+
+    _write_if_missing(
         desk_dir / "tasks" / "Board.md",
         _board_template(target_path.name),
         created_paths,
@@ -84,6 +90,21 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
 
     return DeskScaffoldResult(created_paths=created_paths)
 
+
+def _config_template(name: str) -> str:
+    import json
+    data = {
+        "project_identity": name,
+        "versions": {
+            "desk_format": "1.0.0",
+            "model_version": "1.0.0"
+        },
+        "sandbox": {
+            "enabled": False,
+            "sandbox_root": ".tmp/deskops-sandbox"
+        }
+    }
+    return json.dumps(data, indent=2) + "\n"
 
 def _write_if_missing(path: Path, content: str, created_paths: list[Path]) -> None:
     if path.exists():

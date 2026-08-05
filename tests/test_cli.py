@@ -1068,6 +1068,88 @@ def test_edit_rejects_ambiguous_artifact_selector(tmp_path: Path, capsys) -> Non
     assert "Ambiguous artifact.atom selector 'atom-shared'" in edit_out.out
 
 
+def test_show_task_json_resolves_inherited_workflow_context(tmp_path: Path, capsys) -> None:
+    from deskops.models import TaskDoc
+    from sldb.runtime.validation import render_model_markdown
+
+    tasks_dir = tmp_path / "desk" / "tasks"
+    tasks_dir.mkdir(parents=True)
+    parent = tasks_dir / "task-parent.md"
+    child = tasks_dir / "task-child.md"
+    parent.write_text(
+        render_model_markdown(
+            TaskDoc,
+            {
+                "id": "task-parent",
+                "title": "Parent",
+                "status": "active",
+                "why": "Why.",
+                "goal": "Parent goal.",
+                "scope": "Parent scope.",
+                "references": ["docs/parent.md"],
+                "depends_on": [],
+                "pills": ["desk/contexts/pill-parent.md"],
+                "files": [],
+                "routine": "",
+                "checklists": [],
+                "current_node": "",
+                "history": [],
+                "implementation_path": "Parent path.",
+                "validation": ["pytest parent"],
+                "done_when": "Parent done.",
+                "tags": ["tag:parent"],
+                "task_type": "design",
+                "inherits_from": [],
+                "inherit_acceptance_context": False,
+                "atoms": ["desk/atoms/atom-parent.md"],
+            },
+        ),
+        encoding="utf-8",
+    )
+    child.write_text(
+        render_model_markdown(
+            TaskDoc,
+            {
+                "id": "task-child",
+                "title": "Child",
+                "status": "active",
+                "why": "Why.",
+                "goal": "Child goal.",
+                "scope": "Child scope.",
+                "references": ["docs/child.md"],
+                "depends_on": [],
+                "pills": ["desk/contexts/pill-child.md"],
+                "files": [],
+                "routine": "",
+                "checklists": [],
+                "current_node": "",
+                "history": [],
+                "implementation_path": "Child path.",
+                "validation": ["pytest child"],
+                "done_when": "Child done.",
+                "tags": ["tag:child"],
+                "task_type": "implementation",
+                "inherits_from": ["task-parent"],
+                "inherit_acceptance_context": True,
+                "atoms": ["desk/atoms/atom-child.md"],
+            },
+        ),
+        encoding="utf-8",
+    )
+
+    result = main(["show", "task", "task-child", "--root", str(tmp_path), "--format", "json"])
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+
+    assert result == 0
+    assert payload["task_type"] == "implementation"
+    assert payload["inherits_from"] == ["task-parent"]
+    assert payload["effective_pills"] == ["desk/contexts/pill-parent.md", "desk/contexts/pill-child.md"]
+    assert payload["effective_atoms"] == ["desk/atoms/atom-parent.md", "desk/atoms/atom-child.md"]
+    assert payload["effective_validation"] == ["pytest parent", "pytest child"]
+    assert payload["effective_done_when"] == "Child done."
+
+
 def test_add_task_reports_invalid_yaml_without_creating_artifacts(tmp_path: Path, capsys) -> None:
     payload = tmp_path / "bad-task.yaml"
     payload.write_text("title: [unterminated\n", encoding="utf-8")

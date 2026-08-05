@@ -179,7 +179,7 @@ def _identity_for(
 
 
 def _relative_path(root: Path, path: Path) -> str:
-    return path.resolve().relative_to(root).as_posix()
+    return path.relative_to(root).as_posix()
 
 
 def _title_from_path(path: Path) -> str:

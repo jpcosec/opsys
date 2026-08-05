@@ -16,7 +16,7 @@ This board routes deferred work only.
 
 Deferred task backlog:
 
-- No deferred drawer tasks routed right now.
+- `task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization` — roles as sldb-tracked RoleDocs; pi agents as materializations (atom-anchored)
 
 Promoted to active desk tasks:
 

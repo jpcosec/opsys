@@ -1,0 +1,9 @@
+Task: task-add-per-project-desk-config-and-version-contract
+Title: Add per-project desk config and version contract
+Status: active
+Current node: checklist-task-add-per-project-desk-config-and-version-contract-execution-ready
+Routine: routine-task-add-per-project-desk-config-and-version-contract
+Checklist status:
+- checklist-task-add-per-project-desk-config-and-version-contract-execution-ready: complete
+- checklist-task-add-per-project-desk-config-and-version-contract-testing-ready: complete
+- checklist-task-add-per-project-desk-config-and-version-contract-closeout-ready: pending

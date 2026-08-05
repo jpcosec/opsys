@@ -1,0 +1,585 @@
+$ pytest tests/test_cli.py -k "support_json_output" -q
+....                                                                     [100%]
+4 passed, 63 deselected in 0.79s
+
+$ pytest tests/test_cli.py -q
+...................................................................      [100%]
+67 passed in 22.68s
+
+$ python -m deskops list tasks --root . --format json
+{
+  "tasks": [
+    {
+      "id": "task-add-drift-check-review-loop",
+      "title": "Add drift check review loop",
+      "status": "active",
+      "summary": "Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-add-drift-check-review-loop",
+      "current_node": "checklist-task-add-drift-check-review-loop-execution-ready",
+      "history": [],
+      "goal": "Add a review-only drift check that compares atoms, materializations, graph links, tests, diagrams, and implementation surfaces.",
+      "scope": "- provenance-backed findings\n- confidence labels\n- dedupe keys\n- accepted/rejected decision storage\n- promotion paths to tasks, questions, or atoms",
+      "references": [
+        "desk/drawer/tasks/task-add-drift-check-review-loop.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md",
+        "desk/contexts/pill-011-self-reflection-noise-control.md",
+        "desk/contexts/pill-009-source-file-graph-traceability.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-add-drift-check-review-loop-execution-ready",
+        "checklist-task-add-drift-check-review-loop-testing-ready",
+        "checklist-task-add-drift-check-review-loop-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-add-drift-check-review-loop.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-add-json-output-for-modeled-documents",
+      "title": "Add JSON output for modeled documents",
+      "status": "active",
+      "summary": "Make modeled document `list` and `show` commands scriptable with JSON output.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-add-json-output-for-modeled-documents",
+      "current_node": "checklist-task-add-json-output-for-modeled-documents-execution-ready",
+      "history": [],
+      "goal": "Make modeled document `list` and `show` commands scriptable with JSON output.",
+      "scope": "- `deskops list ... --format json`\n- `deskops show ... --format json`\n- modeled artifacts, tasks, routines, and primitives",
+      "references": [
+        "desk/drawer/tasks/task-add-json-output-for-modeled-documents.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md",
+        "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-add-json-output-for-modeled-documents-execution-ready",
+        "checklist-task-add-json-output-for-modeled-documents-testing-ready",
+        "checklist-task-add-json-output-for-modeled-documents-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-add-json-output-for-modeled-documents.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-add-per-project-desk-config-and-version-contract",
+      "title": "Add per-project desk config and version contract",
+      "status": "active",
+      "summary": "Give each project desk one explicit local configuration contract that declares desk identity, desk/version expectations, and per-project testing defaults such as sandbox behavior.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-add-per-project-desk-config-and-version-contract",
+      "current_node": "checklist-task-add-per-project-desk-config-and-version-contract-execution-ready",
+      "history": [],
+      "goal": "Give each project desk one explicit local configuration contract that declares desk identity, desk/version expectations, and per-project testing defaults such as sandbox behavior.",
+      "scope": "- tracked project config for shared desk behavior\n- optional local override file for machine-specific settings\n- explicit desk format or migration version\n- explicit model/workflow expectation version fields\n- per-project testing sandbox policy instead of shell-global heuristics\n- interaction with environment overrides and explicit CLI flags",
+      "references": [
+        "desk/drawer/tasks/task-add-per-project-desk-config-and-version-contract.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md",
+        "desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md",
+        "desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-add-per-project-desk-config-and-version-contract-execution-ready",
+        "checklist-task-add-per-project-desk-config-and-version-contract-testing-ready",
+        "checklist-task-add-per-project-desk-config-and-version-contract-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-add-per-project-desk-config-and-version-contract.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-define-atom-lifecycle-operations",
+      "title": "Define atom lifecycle operations",
+      "status": "active",
+      "summary": "Define and implement atom creation, validation, split, merge, deletion, and traceability operations.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-define-atom-lifecycle-operations",
+      "current_node": "checklist-task-define-atom-lifecycle-operations-execution-ready",
+      "history": [],
+      "goal": "Define and implement atom creation, validation, split, merge, deletion, and traceability operations.",
+      "scope": "- atom creation from scratch\n- atom creation from pills, graph findings, and diagrams\n- one-question validation\n- tag namespace validation\n- split/merge/delete rules\n- relation to materialization contracts and provenance",
+      "references": [
+        "desk/drawer/tasks/task-define-atom-lifecycle-operations.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md",
+        "desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-define-atom-lifecycle-operations-execution-ready",
+        "checklist-task-define-atom-lifecycle-operations-testing-ready",
+        "checklist-task-define-atom-lifecycle-operations-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-define-atom-lifecycle-operations.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-define-materialization-contract-slice-deskops-surface",
+      "title": "Define materialization contract slice (deskops surface)",
+      "status": "active",
+      "summary": "Implement the deskops CLI and contract definition surface for materialization.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-define-materialization-contract-slice-deskops-surface",
+      "current_node": "checklist-task-define-materialization-contract-slice-deskops-surface-execution-ready",
+      "history": [],
+      "goal": "Implement the deskops CLI and contract definition surface for materialization.",
+      "scope": "- source atom references\n- target artifact identity/path\n- materialization intent model\n- validation checks\n- generated/projection metadata\n\nKGDB relation extraction for materialization is routed to the sibling `kgdb` repo's inbox. This task assumes the extraction API exists.",
+      "references": [
+        "desk/drawer/tasks/task-define-materialization-contract-slice.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md",
+        "desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-define-materialization-contract-slice-deskops-surface-execution-ready",
+        "checklist-task-define-materialization-contract-slice-deskops-surface-testing-ready",
+        "checklist-task-define-materialization-contract-slice-deskops-surface-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-define-materialization-contract-slice.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-design-operational-cli-grammar",
+      "title": "Design operational CLI grammar",
+      "status": "active",
+      "summary": "Align deskops CLI commands with spoken workflow nouns and user intent.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-design-operational-cli-grammar",
+      "current_node": "checklist-task-design-operational-cli-grammar-execution-ready",
+      "history": [],
+      "goal": "Align deskops CLI commands with spoken workflow nouns and user intent.",
+      "scope": "- `status` or `doctor`\n- `atoms list/show/new/validate`\n- `graph trace/reflect/missing`\n- `materialize`\n- `drift check`\n- `closeout`\n- repo context commands",
+      "references": [
+        "desk/drawer/tasks/task-design-operational-cli-grammar.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md",
+        "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md",
+        "desk/contexts/pill-cli-gaps-become-tracked-work.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-design-operational-cli-grammar-execution-ready",
+        "checklist-task-design-operational-cli-grammar-testing-ready",
+        "checklist-task-design-operational-cli-grammar-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-design-operational-cli-grammar.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-detect-and-migrate-legacy-desk-workspaces",
+      "title": "Detect and migrate legacy desk workspaces",
+      "status": "active",
+      "summary": "Make deskops detect legacy or hand-rolled desk layouts explicitly and provide a safe adaptation path into the current modeled workspace contract.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-detect-and-migrate-legacy-desk-workspaces",
+      "current_node": "checklist-task-detect-and-migrate-legacy-desk-workspaces-execution-ready",
+      "history": [],
+      "goal": "Make deskops detect legacy or hand-rolled desk layouts explicitly and provide a safe adaptation path into the current modeled workspace contract.",
+      "scope": "- detect legacy `desk/` layouts whose board, task, pill, or ritual docs do not satisfy current deskops models\n- distinguish empty/fresh desks from incompatible/legacy desks\n- report which current modeled surfaces are missing or malformed\n- define a migration or adoption path for legacy boards, tasks, pills, and contexts\n- preserve user-authored legacy content instead of overwriting it blindly\n- clarify how this interacts with per-project config and desk/version contracts",
+      "references": [
+        "desk/drawer/tasks/task-detect-and-migrate-legacy-desk-workspaces.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md",
+        "desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md",
+        "desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md",
+        "desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md",
+        "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-detect-and-migrate-legacy-desk-workspaces-execution-ready",
+        "checklist-task-detect-and-migrate-legacy-desk-workspaces-testing-ready",
+        "checklist-task-detect-and-migrate-legacy-desk-workspaces-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-detect-and-migrate-legacy-desk-workspaces.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout",
+      "title": "Enforce pill-to-atom knowledge graduation during task closeout",
+      "status": "active",
+      "summary": "Make task closeout verify that durable knowledge discovered through pills is promoted into atoms before transient execution context is deleted.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout",
+      "current_node": "checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready",
+      "history": [],
+      "goal": "Make task closeout verify that durable knowledge discovered through pills is promoted into atoms before transient execution context is deleted.",
+      "scope": "- define how closeout distinguishes transitional pill context from durable residue\n- require pill audit during closeout for bugfix, feature, and migration tasks\n- record or verify atom updates when a task refined project rulings or reusable patterns\n- avoid forcing atom updates when a pill only routed already-existing knowledge\n- integrate the rule with task deletion, pill cleanup, and closeout evidence",
+      "references": [
+        "desk/drawer/tasks/task-enforce-pill-to-atom-knowledge-graduation.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md",
+        "desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready",
+        "checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-testing-ready",
+        "checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-enforce-pill-to-atom-knowledge-graduation.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-enrich-templates-with-instructional-text",
+      "title": "Enrich all deskops model templates with instructional fixed text",
+      "status": "active",
+      "summary": "Que cada `__template__` en los modelos de deskops contenga texto fijo instructivo que gu\u00ede a quien escribe el documento sobre qu\u00e9 poner en cada campo.",
+      "tags": [
+        "system:deskops",
+        "topic:templates",
+        "topic:documentation"
+      ],
+      "routine": "routine-task-enrich-templates-with-instructional-text",
+      "current_node": "complete",
+      "history": [
+        "created: 2026-06-21T00:00:00",
+        "status changed to active",
+        "entered execution_gate: checklist-task-enrich-templates-with-instructional-text-execution-ready"
+      ],
+      "goal": "Que cada `__template__` en los modelos de deskops contenga texto fijo instructivo que gu\u00ede a quien escribe el documento sobre qu\u00e9 poner en cada campo.",
+      "scope": "In scope: Todos los modelos en `deskops/models/*.py`. Solo texto instructivo fijo.\nOut of scope: Cambios al motor de templates SLDB.",
+      "references": [
+        "desk/contexts/pill-sldb-template-markers.md",
+        "desk/contexts/pill-template-instructional-text.md",
+        "tests/test_model_templates.py"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-template-instructional-text.md"
+      ],
+      "files": [
+        "deskops/models/atom.py",
+        "deskops/models/board.py",
+        "deskops/models/checklist.py",
+        "deskops/models/condition.py",
+        "deskops/models/edge.py",
+        "deskops/models/faq.py",
+        "deskops/models/hook.py",
+        "deskops/models/inbox.py",
+        "deskops/models/operator.py",
+        "deskops/models/pill.py",
+        "deskops/models/repository.py",
+        "deskops/models/ritual.py",
+        "deskops/models/routine.py",
+        "deskops/models/step.py",
+        "deskops/models/task.py"
+      ],
+      "checklists": [
+        "checklist-task-enrich-templates-with-instructional-text-execution-ready",
+        "checklist-task-enrich-templates-with-instructional-text-testing-ready",
+        "checklist-task-enrich-templates-with-instructional-text-closeout-ready"
+      ],
+      "implementation_path": "Agregar texto instructivo como comentarios YAML (#) en el frontmatter y texto en it\u00e1licas (_) en el markdown de cada template.",
+      "validation": [
+        "`\u2e22rev\u2022\u2e25` markers siguen presentes y funcionales",
+        "Tests de roundtrip pasan (extract \u2192 render \u2192 extract)"
+      ],
+      "done_when": "All deskops models have instructional text in their templates and tests pass."
+    },
+    {
+      "id": "task-establish-horizontal-desk-discovery-and-canonical-identity",
+      "title": "Establish horizontal desk discovery and canonical identity",
+      "status": "active",
+      "summary": "Make desks discoverable to each other through one canonical per-project identity path, so cross-repo workflow commands can resolve sibling desks without ambiguous local heuristics.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-establish-horizontal-desk-discovery-and-canonical-identity",
+      "current_node": "checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready",
+      "history": [],
+      "goal": "Make desks discoverable to each other through one canonical per-project identity path, so cross-repo workflow commands can resolve sibling desks without ambiguous local heuristics.",
+      "scope": "- define the minimal per-project desk identity contract\n- decide how local desk identity relates to SLDB-backed ecosystem registration\n- make repo self-discovery answer \"who am I?\" reliably at the current root\n- make sibling desk discovery answer \"where is that repo's desk?\" reliably from canonical identity\n- route duplicate-root and duplicate-id ambiguity into explicit failure instead of first-match guessing",
+      "references": [
+        "desk/drawer/tasks/task-establish-horizontal-desk-discovery-and-identity.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md",
+        "desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready",
+        "checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-testing-ready",
+        "checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-establish-horizontal-desk-discovery-and-identity.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-make-cross-desk-inbox-delivery-verifiable-and-actionable",
+      "title": "Make cross-desk inbox delivery verifiable and actionable",
+      "status": "active",
+      "summary": "Make cross-desk inbox communication operationally useful by ensuring the sender, target, delivery result, and follow-up path are explicit across project desks.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable",
+      "current_node": "checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready",
+      "history": [],
+      "goal": "Make cross-desk inbox communication operationally useful by ensuring the sender, target, delivery result, and follow-up path are explicit across project desks.",
+      "scope": "- define what successful cross-desk inbox delivery must prove\n- require clear sender and target identity instead of inferred ambiguity\n- decide how recipients discover, acknowledge, or pull pending cross-desk updates\n- design a reply or follow-up path so inbox notes do not become write-only dead drops\n- identify the minimum implementation slice needed before inbox can be treated as a real horizontal coordination surface",
+      "references": [
+        "desk/drawer/tasks/task-make-cross-desk-inbox-delivery-verifiable.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md",
+        "desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md",
+        "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md",
+        "desk/contexts/pill-cli-gaps-become-tracked-work.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready",
+        "checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-testing-ready",
+        "checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-make-cross-desk-inbox-delivery-verifiable.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-make-task-lifecycle-runnable-from-intake-to-closeout",
+      "title": "Make task lifecycle runnable from intake to closeout",
+      "status": "active",
+      "summary": "Turn the documented task lifecycle into an executable deskops path.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-make-task-lifecycle-runnable-from-intake-to-closeout",
+      "current_node": "checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready",
+      "history": [],
+      "goal": "Turn the documented task lifecycle into an executable deskops path.",
+      "scope": "- promote drawer or inbox item into task candidate\n- create routed task bundle\n- bind pills\n- advance through execution, testing, and closeout gates\n- delete closed active task artifacts\n- preserve durable evidence in atoms, docs, graph relations, tests, and git",
+      "references": [
+        "desk/drawer/tasks/task-make-task-lifecycle-runnable-end-to-end.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md",
+        "desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md",
+        "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md",
+        "desk/contexts/pill-cli-gaps-become-tracked-work.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready",
+        "checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-testing-ready",
+        "checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-make-task-lifecycle-runnable-end-to-end.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-wire-closeout-to-knowledge-gates",
+      "title": "Wire closeout to knowledge gates",
+      "status": "active",
+      "summary": "Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-wire-closeout-to-knowledge-gates",
+      "current_node": "checklist-task-wire-closeout-to-knowledge-gates-execution-ready",
+      "history": [],
+      "goal": "Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.",
+      "scope": "- relevant tests pass\n- changed files have atom/materialization links or routed follow-up work\n- generated artifacts declare sources\n- stale tasks/pills are deleted or promoted\n- dedicated commit exists",
+      "references": [
+        "desk/drawer/tasks/task-wire-closeout-knowledge-gates.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md",
+        "desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md",
+        "desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md",
+        "desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-wire-closeout-to-knowledge-gates-execution-ready",
+        "checklist-task-wire-closeout-to-knowledge-gates-testing-ready",
+        "checklist-task-wire-closeout-to-knowledge-gates-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-wire-closeout-knowledge-gates.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    },
+    {
+      "id": "task-write-end-to-end-deskops-operator-manual",
+      "title": "Write end-to-end deskops operator manual",
+      "status": "active",
+      "summary": "Consolidate the methodology into one operational playbook after runnable slices are stable.",
+      "tags": [
+        "workspace:desk",
+        "artifact:task",
+        "source:drawer"
+      ],
+      "routine": "routine-task-write-end-to-end-deskops-operator-manual",
+      "current_node": "checklist-task-write-end-to-end-deskops-operator-manual-execution-ready",
+      "history": [],
+      "goal": "Consolidate the methodology into one operational playbook after runnable slices are stable.",
+      "scope": "- first use\n- capture and triage\n- task execution\n- pill binding\n- atom and graph queries\n- materialization\n- drift/self-reflection\n- closeout and commit\n- CI integration",
+      "references": [
+        "desk/drawer/tasks/task-write-end-to-end-operator-manual.md"
+      ],
+      "depends_on": [],
+      "pills": [
+        "desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md",
+        "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md",
+        "desk/contexts/pill-cli-gaps-become-tracked-work.md"
+      ],
+      "files": [],
+      "checklists": [
+        "checklist-task-write-end-to-end-deskops-operator-manual-execution-ready",
+        "checklist-task-write-end-to-end-deskops-operator-manual-testing-ready",
+        "checklist-task-write-end-to-end-deskops-operator-manual-closeout-ready"
+      ],
+      "implementation_path": "Promoted from desk/drawer/tasks/task-write-end-to-end-operator-manual.md.",
+      "validation": [
+        "pytest"
+      ],
+      "done_when": "Promoted work is completed, validated, and closed with a commit."
+    }
+  ]
+}
+
+$ python -m deskops show task task-add-json-output-for-modeled-documents --root . --format json
+{
+  "id": "task-add-json-output-for-modeled-documents",
+  "title": "Add JSON output for modeled documents",
+  "status": "active",
+  "summary": "Make modeled document `list` and `show` commands scriptable with JSON output.",
+  "tags": [
+    "workspace:desk",
+    "artifact:task",
+    "source:drawer"
+  ],
+  "routine": "routine-task-add-json-output-for-modeled-documents",
+  "current_node": "checklist-task-add-json-output-for-modeled-documents-execution-ready",
+  "history": [],
+  "goal": "Make modeled document `list` and `show` commands scriptable with JSON output.",
+  "scope": "- `deskops list ... --format json`\n- `deskops show ... --format json`\n- modeled artifacts, tasks, routines, and primitives",
+  "references": [
+    "desk/drawer/tasks/task-add-json-output-for-modeled-documents.md"
+  ],
+  "depends_on": [],
+  "pills": [
+    "desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md",
+    "desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md"
+  ],
+  "files": [],
+  "checklists": [
+    "checklist-task-add-json-output-for-modeled-documents-execution-ready",
+    "checklist-task-add-json-output-for-modeled-documents-testing-ready",
+    "checklist-task-add-json-output-for-modeled-documents-closeout-ready"
+  ],
+  "implementation_path": "Promoted from desk/drawer/tasks/task-add-json-output-for-modeled-documents.md.",
+  "validation": [
+    "pytest"
+  ],
+  "done_when": "Promoted work is completed, validated, and closed with a commit.",
+  "checklist_statuses": {
+    "checklist-task-add-json-output-for-modeled-documents-execution-ready": true,
+    "checklist-task-add-json-output-for-modeled-documents-testing-ready": true,
+    "checklist-task-add-json-output-for-modeled-documents-closeout-ready": false
+  }
+}
+
+$ pytest -q
+........................................................................ [ 54%]
+...........................................................              [100%]
+131 passed in 23.48s

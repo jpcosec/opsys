@@ -1,0 +1,1505 @@
+diff --git a/.agents/skills/README.md b/.agents/skills/README.md
+index 8cf3309..68ddc2a 100644
+--- a/.agents/skills/README.md
++++ b/.agents/skills/README.md
+@@ -1,20 +1,19 @@
+ # Repo-local agent skills
+ 
+-These skills generalize the workflow-role pattern used in other repos into `deskops` itself.
++This directory is now intentionally narrow.
+ 
+-They are not product features. They are operational prompts for Pi-style agents so the agent can:
++Repo-local skills should only cover workflow helpers that are specific to this repository and that make sense as on-demand skills.
+ 
+-- recover real desk state from repo artifacts
+-- separate supervisor and executor behavior
+-- preserve evidence for subagent runs
+-- respect execution, testing, and closeout gates
+-- use `sldb` correctly for structured-document work
++## Current repo-local skill
+ 
+-Available skills:
++- `subagent-execution` — bounded helper for launching one deskops execution lane with run evidence.
+ 
+-- `deskops-workflow`
+-- `workflow-executor`
+-- `workflow-supervisor`
+-- `workflow-tester`
+-- `subagent-execution`
+-- existing structured-doc skill: `.skills/sldb/SKILL.md`
++## Not skills anymore
++
++The following were previously modeled as repo-local skills, but they are better treated as global guidance or system-prompt concerns:
++
++- `use-deskops` is the comprehensive global deskops surface skill at `.opencode/skills/use-deskops/SKILL.md`
++- `use-sldb` is the comprehensive global SLDB surface skill at `.opencode/skills/use-sldb/SKILL.md`
++- workflow roles such as supervisor, executor, and tester live under `docs/agent-system-prompts/` as role-prompt references, not auto-discovered skills or project agents
++
++This keeps project skill discovery focused on surfaces and tools instead of role identity.
+diff --git a/.agents/skills/deskops-workflow/SKILL.md b/.agents/skills/deskops-workflow/SKILL.md
+deleted file mode 100644
+index 0517dde..0000000
+--- a/.agents/skills/deskops-workflow/SKILL.md
++++ /dev/null
+@@ -1,94 +0,0 @@
+----
+-name: deskops-workflow
+-description: Use when operating on this repository through deskops. Recover state from the real board at desk/tasks/Board.md, use direct deskops CLI commands, choose one role at a time, and enforce execution, testing, and closeout gates.
+----
+-
+-# Deskops Workflow
+-
+-Use this skill when doing desk-managed work in this repository.
+-
+-## What this skill is for
+-
+-This is an operational skill, not product logic.
+-It helps the agent recover real repo state from desk artifacts instead of improvising from chat memory.
+-
+-## Non-negotiables
+-
+-- The real board is `desk/tasks/Board.md`.
+-- Use the board selector `Board`.
+-- Use direct `deskops` CLI commands.
+-- Choose exactly one role before acting: supervisor, executor, or tester.
+-- Do not skip execution, testing, or closeout gates.
+-- Keep scope tight and avoid unrelated cleanup.
+-
+-## Recovery
+-
+-Start with:
+-
+-```bash
+-deskops show board Board --root .
+-deskops list tasks --root .
+-git status --short --branch
+-```
+-
+-If a task is active:
+-
+-```bash
+-deskops show task <task-id> --root .
+-deskops next <task-id> --root .
+-deskops graph missing --root .
+-```
+-
+-Read these repo sources as needed:
+-
+-- `AGENTS.md`
+-- `README.md`
+-- `docs/faq.md`
+-- `desk/tasks/Board.md`
+-- `desk/rituals/execution.md`
+-- `desk/rituals/testing.md`
+-- `desk/rituals/closeout.md`
+-- `.skills/sldb/SKILL.md`
+-
+-## Core rules
+-
+-- One bounded task at a time.
+-- Treat board-routed work as the source of truth.
+-- Use `sldb` for tracked structured-document operations when applicable.
+-- Prefer evidence on disk over unsupported claims.
+-- Do not retire tasks without a dedicated closing commit.
+-
+-## Useful commands
+-
+-Inspect state:
+-
+-```bash
+-deskops show board Board --root .
+-deskops list tasks --root .
+-deskops show task <task-id> --root .
+-deskops next <task-id> --root .
+-deskops graph missing --root .
+-```
+-
+-Update routing:
+-
+-```bash
+-deskops edit board Board tasks '["task-foo"]' --root .
+-```
+-
+-Validation examples:
+-
+-```bash
+-pytest
+-sldb stores check --store .sldb
+-```
+-
+-## Anti-patterns
+-
+-Do not:
+-
+-- use hidden chat context instead of desk recovery
+-- operate against alternate board files
+-- bypass `sldb` with ad hoc edits when the document is tracked
+-- mix supervisor and executor behavior casually
+-- close from implementation alone without testing and closeout
+diff --git a/.agents/skills/workflow-executor/SKILL.md b/.agents/skills/workflow-executor/SKILL.md
+deleted file mode 100644
+index 038b412..0000000
+--- a/.agents/skills/workflow-executor/SKILL.md
++++ /dev/null
+@@ -1,84 +0,0 @@
+----
+-name: workflow-executor
+-description: Use when acting as the executor for one bounded deskops task in this repository. Recover board and task state, implement only the assigned scope, persist run evidence, run the smallest relevant validation first, and hand off without self-retirement.
+----
+-
+-# Workflow Executor
+-
+-Use this skill when your role is **executor**.
+-
+-## Non-negotiables
+-
+-- Implement one bounded task only.
+-- Recover state from `Board` before changing files.
+-- Keep evidence on disk under `runs/subagents/` when doing non-trivial work.
+-- Run the smallest relevant validation first.
+-- Do not self-retire the task.
+-
+-## Recovery
+-
+-```bash
+-deskops show board Board --root .
+-deskops show task <task-id> --root .
+-deskops next <task-id> --root .
+-deskops graph missing --root .
+-git status --short --branch
+-```
+-
+-## Executor duties
+-
+-- read the assigned task
+-- read bound references, pills, and files
+-- confirm exact touched surfaces
+-- snapshot desk and git state into run evidence
+-- implement only task scope
+-- run focused validation first
+-- write a result summary for handoff
+-
+-## Evidence snapshot pattern
+-
+-```bash
+-TS="$(date +%Y%m%d-%H%M%S)"
+-RUN_DIR="runs/subagents/$TS-<task-id>"
+-mkdir -p "$RUN_DIR"
+-
+-deskops show board Board --root . > "$RUN_DIR/board.txt"
+-deskops show task <task-id> --root . > "$RUN_DIR/task.txt"
+-deskops next <task-id> --root . > "$RUN_DIR/next.txt"
+-deskops graph missing --root . > "$RUN_DIR/graph.txt"
+-git status --short --branch > "$RUN_DIR/git-status.txt"
+-```
+-
+-## Validation discipline
+-
+-Prefer the smallest meaningful proof first.
+-
+-Examples:
+-
+-```bash
+-pytest tests/<targeted-scope> -q
+-pytest
+-sldb stores check --store .sldb
+-```
+-
+-If the change touches tracked structured docs or models, also use `.skills/sldb/SKILL.md`.
+-
+-## Required outputs
+-
+-- `board.txt`
+-- `task.txt`
+-- `next.txt`
+-- `graph.txt`
+-- `git-status.txt`
+-- `result-summary.md`
+-- `validation.log` when applicable
+-
+-## Anti-patterns
+-
+-Do not:
+-
+-- expand into other tasks
+-- change board routing casually
+-- claim closeout is done
+-- skip validation evidence
+-- rewrite unrelated files because they are already dirty
+diff --git a/.agents/skills/workflow-supervisor/SKILL.md b/.agents/skills/workflow-supervisor/SKILL.md
+deleted file mode 100644
+index 9431159..0000000
+--- a/.agents/skills/workflow-supervisor/SKILL.md
++++ /dev/null
+@@ -1,90 +0,0 @@
+----
+-name: workflow-supervisor
+-description: Use when acting as the desk workflow supervisor in this repository. Recover state from Board.md, choose or confirm the active task, dispatch bounded execution, inspect evidence, update routing truthfully, and enforce commit-boundary closeout.
+----
+-
+-# Workflow Supervisor
+-
+-Use this skill when your role is **supervisor**.
+-
+-## Non-negotiables
+-
+-- The real board is `desk/tasks/Board.md` with selector `Board`.
+-- Supervisor routes and reviews; it should not silently become the executor.
+-- Keep routing truthful.
+-- Require evidence, validation, and a commit boundary before retirement.
+-
+-## Recovery
+-
+-```bash
+-deskops show board Board --root .
+-deskops list tasks --root .
+-deskops show task <task-id> --root .
+-deskops next <task-id> --root .
+-deskops graph missing --root .
+-git status --short --branch
+-```
+-
+-## Supervisor duties
+-
+-- recover active board state
+-- choose or confirm the active task
+-- verify scope, files, references, and pills
+-- dispatch one bounded executor lane when implementation is needed
+-- inspect run evidence and validation evidence
+-- update board state truthfully
+-- enforce commit-boundary closeout
+-
+-## Role lock check
+-
+-Before any action that looks like implementation, ask:
+-
+-1. Am I still acting as supervisor?
+-2. Is this implementation work for an active task?
+-3. Should this be done by an executor lane instead?
+-
+-If yes, dispatch instead of implementing inline.
+-
+-## Dispatch guidance
+-
+-Prefer bounded execution with explicit instructions such as:
+-
+-- recover board and task state first
+-- operate only within task scope
+-- persist run evidence under `runs/subagents/`
+-- run the smallest relevant validation first
+-- do not self-retire the task
+-
+-## Evidence expectations
+-
+-Inspect at least:
+-
+-- `board.txt`
+-- `task.txt`
+-- `next.txt`
+-- `graph.txt`
+-- `git-status.txt`
+-- `result-summary.md`
+-- `validation.log` when applicable
+-
+-A green exit code alone is not enough.
+-
+-## Closeout checklist
+-
+-Do not retire unless all are true:
+-
+-- implementation exists
+-- relevant tests pass
+-- graph is clean or understood
+-- board state is correct
+-- evidence exists on disk
+-- a dedicated closing commit exists
+-
+-## Anti-patterns
+-
+-Do not:
+-
+-- implement active-task changes inline while claiming to be supervisor
+-- accept missing validation evidence
+-- leave stale routing on the board
+-- retire work without the final commit gate
+diff --git a/.agents/skills/workflow-tester/SKILL.md b/.agents/skills/workflow-tester/SKILL.md
+deleted file mode 100644
+index 8e87019..0000000
+--- a/.agents/skills/workflow-tester/SKILL.md
++++ /dev/null
+@@ -1,112 +0,0 @@
+----
+-name: workflow-tester
+-description: Use when acting as the tester for one bounded deskops task in this repository. Recover board and task state, verify the execution handoff, translate task and pill guardrails into concrete checks, run the smallest relevant validation first, and hand off to closeout without changing routing or implementation scope.
+----
+-
+-# Workflow Tester
+-
+-Use this skill when your role is **tester**.
+-
+-## Non-negotiables
+-
+-- Test one bounded task only.
+-- Recover board and task state before validation.
+-- Confirm the execution handoff names the intended contract, touched surfaces, and guardrails to prove.
+-- Run the smallest relevant validation first.
+-- Do not silently expand into implementation or closeout work.
+-- Persist validation evidence on disk for non-trivial work.
+-
+-## Recovery
+-
+-```bash
+-deskops show board Board --root .
+-deskops show task <task-id> --root .
+-deskops next <task-id> --root .
+-deskops graph missing --root .
+-git status --short --branch
+-```
+-
+-Read as needed:
+-
+-- `AGENTS.md`
+-- `desk/rituals/testing.md`
+-- `desk/rituals/closeout.md`
+-- `.agents/skills/deskops-workflow/SKILL.md`
+-- `.skills/sldb/SKILL.md` when tracked structured docs or models are involved
+-
+-## Tester duties
+-
+-- confirm the incoming contract and guardrails
+-- inspect whether existing tests are stale or encode obsolete behavior
+-- translate pills and task constraints into assertions, especially failure cases
+-- add or update focused tests when needed
+-- run focused validation first, then broaden only if shared behavior changed
+-- record evidence for handoff to closeout
+-
+-## Evidence snapshot pattern
+-
+-```bash
+-TS="$(date +%Y%m%d-%H%M%S)"
+-RUN_DIR="runs/subagents/$TS-<task-id>-testing"
+-mkdir -p "$RUN_DIR"
+-
+-deskops show board Board --root . > "$RUN_DIR/board.txt"
+-deskops show task <task-id> --root . > "$RUN_DIR/task.txt"
+-deskops next <task-id> --root . > "$RUN_DIR/next.txt"
+-deskops graph missing --root . > "$RUN_DIR/graph.txt"
+-git status --short --branch > "$RUN_DIR/git-status.txt"
+-```
+-
+-Save validation output, for example:
+-
+-```bash
+-pytest tests/<targeted-scope> -q | tee "$RUN_DIR/validation.log"
+-```
+-
+-## Validation discipline
+-
+-Default order:
+-
+-1. task-specific or narrowly targeted tests
+-2. boundary or negative tests implied by `how_not`
+-3. broader shared validation only when the change affects shared behavior
+-
+-Examples:
+-
+-```bash
+-pytest tests/<targeted-scope> -q
+-pytest
+-sldb stores check --store .sldb
+-```
+-
+-## Required outputs
+-
+-- `board.txt`
+-- `task.txt`
+-- `next.txt`
+-- `graph.txt`
+-- `git-status.txt`
+-- `validation.log` when validation was run
+-- `result-summary.md`
+-
+-## Handoff contract
+-
+-The result summary should state at least:
+-
+-- task id
+-- role = tester
+-- validations run
+-- pass/fail status
+-- guardrails proven
+-- stale or missing tests found
+-- follow-up needed before closeout
+-
+-## Anti-patterns
+-
+-Do not:
+-
+-- treat stale tests as proof
+-- skip negative or boundary cases just to get green output
+-- mutate board routing from the testing lane
+-- self-retire the task
+-- perform unrelated implementation while claiming to test
+diff --git a/.opencode/skills/use-deskops/SKILL.md b/.opencode/skills/use-deskops/SKILL.md
+index ee7b242..c3c5630 100644
+--- a/.opencode/skills/use-deskops/SKILL.md
++++ b/.opencode/skills/use-deskops/SKILL.md
+@@ -1,89 +1,189 @@
+ ---
+ name: use-deskops
+-description: Use when working in deskops, desk/ documents, atoms, tasks, routines, or workflow operations in the hum ecosystem.
++description: Comprehensive global deskops workflow skill. Use when working in this repository's desk/, task lifecycle, atoms, pills, rituals, graph surfaces, or deskops CLI.
+ ---
+ 
+ # Use Deskops
+ 
+-Deskops is the workflow-domain layer for repository-local operational documents.
++Deskops is the workflow-domain layer for repository-local operational knowledge and execution.
+ 
+-Use `deskops` when the task involves:
++Use this global skill when the task involves:
+ 
+-- `desk/` document surfaces.
+-- Atoms, tasks, pills, routines, rituals, primitives, inbox, repo registry, or graph commands.
+-- Creating or reading workflow artifacts through SLDB-backed models.
+-- Building or checking the deskops knowledge graph snapshot.
++- `desk/` workflow surfaces.
++- Tasks, boards, drawer work, inbox notes, pills, rituals, routines, primitives, atoms, or repository registry docs.
++- Desk discovery, graph checks, task advancement, promotion, closeout, or workflow automation.
++- Understanding how this repo's CLI maps to the project knowledge model.
+ 
+-Workflow vocabulary:
++## What deskops owns
+ 
+-- `drawer task`: deferred repo-local work under `desk/drawer/tasks/`.
+-- `board-routed task`: work referenced by `desk/tasks/Board.md`.
+-- `active task bundle`: task plus generated routine/primitives created by promotion.
+-- Avoid inventing alternate categories such as active/inactive unless a repo document uses them.
++Deskops owns the workflow domain built on top of SLDB.
+ 
+-Core boundaries:
++It owns:
+ 
+-- `desk/` is document data only.
+-- Python implementation code belongs under `deskops/`.
+-- Structured document infrastructure belongs to SLDB.
+-- Graph contract/runtime validation belongs to KGDB.
+-- Diagram rendering belongs to spec2viz.
++- active and deferred workflow surfaces under `desk/`
++- task routing through `desk/tasks/Board.md`
++- rituals, pills, atoms, routines, and primitives
++- repo-local workflow commands such as `deskops add`, `deskops list`, `deskops show`, `deskops promote`, `deskops advance task`, and `deskops graph`
++- operational rules for intake, promotion, execution, testing, closeout, and phase gates
+ 
+-Drawer-first workflow:
++It does **not** own generic structured-document infrastructure. That belongs to SLDB.
+ 
+-- New unrouted repo-local project work starts directly in `desk/drawer/tasks/`, not `desk/inbox/`.
+-- Use `desk/inbox/` for incoming notes, unclear external input, or cross-repo intake that needs triage.
+-- Commit drawer task creation before promoting it.
+-- Promote drawer work before implementation starts.
+-- Commit drawer-to-active promotion before implementation starts.
+-- For board-routed work, run execution, testing, and closeout gates; do not jump from implementation to closeout.
+-- Every closed task ends with its own atomic closeout commit.
++## Mandatory read route
+ 
+-Role skills:
++Before changing files, recover state from repo artifacts in this order:
+ 
+-- Load `use-deskops` for `desk/` workflow surfaces, drawer/task routing, pills, rituals, routines, primitives, and repo registry work.
+-- Load `use-sldb` when the change touches SLDB models, reversible markers, `.sldb` stores, document tracking, rendering, extraction, or field operations.
+-- Load `use-kgdb` when the change touches graph contracts, graph snapshots, provenance, nodes, edges, or `deskops graph` behavior.
+-- Load `use-spec2viz` when the change touches diagram specs, Mermaid outputs, generated diagram projections, or `docs/diagrams/` surfaces.
+-- Load `customize-opencode` only for opencode config, `.opencode/` agents, skills, plugins, MCP servers, permissions, or opencode routing files.
++1. `AGENTS.md`
++2. `README.md`
++3. `docs/faq.md`
++4. `desk/tasks/Board.md`
++5. matching board-routed pills in `desk/contexts/`
++6. `desk/rituals/phase.md`
++7. `desk/rituals/execution.md`
++8. `desk/rituals/testing.md`
++9. `desk/rituals/closeout.md`
++10. relevant atoms under `desk/atoms/`
+ 
+-Common commands:
++Prefer semantic discovery over blind scanning when possible:
++
++```bash
++sldb find title --in physical --store .sldb --pythonpath .
++sldb find topic:atoms --in semantic --store .sldb --pythonpath .
++deskops graph missing
++```
++
++## Workflow model
++
++The project logic is:
++
++- **tasks** are bounded units of work
++- **boards** route active tasks and shared pills
++- **pills** are reusable execution truths, not one-per-task notes
++- **atoms** are durable knowledge and architecture truths
++- **rituals** define the gates for execution, testing, closeout, and phases
++- **drawer tasks** are deferred repo-local work not yet promoted to the active board
++- **inbox notes** are incoming unclear or external input, not the default place for new repo-local project work
++
++Key rules:
++
++- New unrouted repo-local work starts in `desk/drawer/tasks/`, not `desk/inbox/`.
++- Promote drawer work before implementation.
++- Keep one coherent deliverable per task.
++- Do not skip execution, testing, or closeout gates.
++- Every closed task ends with its own atomic commit.
++- When a whole ready dependency layer closes, run the phase ritual before starting the next layer.
++- Docs are human-facing materializations of atoms, not the only durable source of truth.
++
++## Task-state recovery commands
++
++Use direct CLI commands instead of improvising from chat state:
++
++```bash
++deskops show board Board --root .
++deskops list tasks --root .
++deskops show task <task-id> --root .
++deskops next <task-id> --root .
++deskops graph missing --root .
++git status --short --branch
++```
++
++If the task changes graph or store semantics, also use:
++
++```bash
++sldb stores check --store .sldb
++deskops graph build --root .
++deskops graph missing --root .
++```
++
++## CLI surface
++
++Common deskops commands:
+ 
+ ```bash
+ deskops --help
++deskops faq
++deskops bootstrap
+ deskops init .
+-deskops desk install .
+-deskops add atom --root . --title "..." --answer "..." --five-wh-one-plus what --tag system:deskops
+-deskops add task --root . --title "..." --goal "..." --scope "..." --implementation-path "..." --done-when "..."
++deskops add task --root . --title "..." --goal "..." --scope "..."
++deskops add atom --root . --title "..." --answer "..." --five-wh-one-plus what
+ deskops list tasks --root .
++deskops list atoms --root .
+ deskops show task <task-id> --root .
++deskops show atom <atom-id> --root .
++deskops promote drawer-task-to-active-task <task-selector>
++deskops bind pill <pill-selector> --task <task-id> --root .
++deskops advance task <task-id> --root .
+ deskops graph build --root .
+ deskops graph missing --root .
+-deskops graph neighbors atom:<atom-id> --root .
++deskops repo register ...
++deskops desk install .
+ ```
+ 
+-Validation:
++CLI usage rules:
++
++- Use `deskops ...`, not `bash deskops ...`.
++- Prefer local repo-root execution instead of unnecessary `--root .` in prose, but include `--root .` in explicit workflow instructions when clarity matters.
++- For CLI mutation or UX experiments, use a disposable sandbox desk such as `.tmp/deskops-cli-test` unless the task intentionally changes the tracked desk.
++
++## Role logic
++
++Workflow roles are **global/system-prompt concerns**, not repo-local skills:
++
++- supervisor: routes, dispatches, reviews evidence, and enforces closeout gates
++- executor: implements one bounded task
++- tester: proves the intended contract and pill guardrails
++
++Repo-local skills should stay focused on surfaces and tools. Do not reintroduce workflow-role prompts as auto-discovered project skills.
++
++`subagent-execution` may still exist as a narrow repo-local helper for launching bounded worker lanes.
++
++## Atoms, pills, and docs
++
++Use these distinctions consistently:
++
++- Put durable architecture or policy in atoms.
++- Put reusable execution guardrails in pills.
++- Put active routed work in tasks.
++- Put deferred candidate work in drawer tasks.
++- Treat docs under `docs/` as materializations of atom truth.
++
++When a doc rule changes materially, update the relevant atom first, then reflect it in the doc.
++
++## When to load other skills
++
++- Load `use-sldb` for `StructuredNLDoc` models, tracked Markdown, reversible markers, `.sldb` stores, document tracking, field operations, rendering, extraction, or model changes.
++- Load `use-kgdb` for graph contracts, graph snapshots, provenance, node/edge behavior, or graph runtime validation.
++- Load `use-spec2viz` for structured diagram specs and generated diagram projections.
++- Load `customize-opencode` only for opencode config, `.opencode/` agents, skills, plugins, MCP servers, permissions, or routing configuration.
++
++## Validation
++
++Minimum repo validation:
+ 
+ ```bash
+ pytest
+ ```
+ 
+-Atom format:
+-
+-```markdown
+----
+-id: atom-example
+-title: Example
+-five_wh_one_plus: what
+-tags:
+-- system:deskops
+----
++For CLI work, also run the affected commands directly, for example:
+ 
+-# Example
++```bash
++python -m deskops --help
++deskops faq
++```
+ 
+-## Answer
++For graph or store work, prefer semantic checks:
+ 
+-The atom answer goes here.
++```bash
++sldb stores check --store .sldb
++deskops graph missing
+ ```
+ 
+-When editing models, update tests and existing document examples together.
++## Anti-patterns
++
++Do not:
++
++- invent alternate workflow categories when repo docs already define them
++- treat unrouted `desk/tasks/` files as active by default
++- bypass the board, pills, or rituals because the task seems familiar
++- use ad hoc file edits where SLDB should own the structured-document operation
++- skip from implementation straight to closeout
++- treat role prompts as repo-local skills
+diff --git a/.opencode/skills/use-sldb/SKILL.md b/.opencode/skills/use-sldb/SKILL.md
+index 89d6f3a..f35b320 100644
+--- a/.opencode/skills/use-sldb/SKILL.md
++++ b/.opencode/skills/use-sldb/SKILL.md
+@@ -1,49 +1,181 @@
+ ---
+ name: use-sldb
+-description: Use when working with SLDB StructuredNLDoc models, reversible markers, Markdown rendering/extraction, model registration, or .sldb stores.
++description: Comprehensive global SLDB skill. Use for StructuredNLDoc models, reversible Markdown markers, render/extract flows, tracked-document edits, field operations, and .sldb store workflows.
+ ---
+ 
+ # Use SLDB
+ 
+ SLDB owns reusable structured Markdown document infrastructure.
+ 
+-Use SLDB when the task involves:
++Use this global skill when the work involves:
+ 
+-- `StructuredNLDoc` models.
+-- `__template__` rendering/extraction.
+-- Reversible markers such as `⸢rev•field⸥`, `⸢rev,list•items⸥`, or `⸢rev,dict•frontmatter⸥`.
+-- Frontmatter extraction/rendering.
+-- `.sldb` stores, model registration, document tracking, and query/export commands.
++- `StructuredNLDoc` models and their Markdown documents
++- reversible render/extract markers such as `⸢rev•field⸥`
++- tracked document creation, updates, composition, recovery, or validation
++- field-level query, create, update, append, clean, or remove operations
++- `.sldb` stores, model registration, and semantic/physical search
++- model templates, field contracts, section ownership, and store-backed document workflows
+ 
+-Core boundary:
++## Core boundary
+ 
+-- SLDB should not contain deskops workflow logic.
+-- SLDB should provide generic document modeling, validation, stores, and queries.
+-- Domain-specific models can live in downstream packages such as `deskops.models`.
++SLDB owns:
+ 
+-Common commands:
++- model contracts
++- reversible Markdown templates
++- render and extract workflows
++- document tracking and recovery
++- field mutation and section-aware edits
++- store indexing, integrity checks, and semantic queries
++
++SLDB does **not** own deskops workflow logic such as tasks, boards, pills, rituals, or closeout policy.
++
++## Core rules
++
++- Every `StructuredNLDoc` field must use `Field(description="...")` with a non-empty description.
++- The Markdown document is the source surface; the `.sldb/` store is the indexed query/edit layer over that source.
++- Fields are already first-class through SLDB payloads, templates, sections, and field commands.
++- Do not create desk-local field-instance docs just to make fields reusable, queryable, writable, or editable.
++- Prefer `sldb` document and field commands over ad hoc manual edits when the document is tracked by a model.
++- If an expected SLDB path fails, capture the gap in the sibling `sldb` repo instead of silently bypassing SLDB.
++- Run validation before finishing a structured-document workflow.
++
++## Common commands
+ 
+ ```bash
+ python -m sldb --help
+ python -m sldb stores init --path .
++python -m sldb stores check --store .sldb
++python -m sldb stores update --store .sldb --pythonpath .
+ python -m sldb models add deskops.models:AtomDoc --store .sldb --pythonpath .
++python -m sldb models show AtomDoc --store .sldb --pythonpath .
++python -m sldb models template edit AtomDoc --input <template.md> --store .sldb --pythonpath .
++python -m sldb models fields add AtomDoc <field> --type <type> --description "..." --store .sldb --pythonpath .
++python -m sldb models fields remove AtomDoc <field> --store .sldb --pythonpath .
++python -m sldb models validate AtomDoc --store .sldb --pythonpath .
++python -m sldb models validate AtomDoc --promote --store .sldb --pythonpath .
++python -m sldb docs create --model AtomDoc -o <path> <payload> --store .sldb --pythonpath .
+ python -m sldb docs track <path> --model AtomDoc --store .sldb --pythonpath .
+-python -m sldb validate deskops.models:AtomDoc <doc.md> --pythonpath .
++python -m sldb docs update <doc> <payload> --store .sldb --pythonpath .
++python -m sldb docs recover <doc> --store .sldb --pythonpath .
++python -m sldb docs compose <doc> --store .sldb --pythonpath .
++python -m sldb fields query <field> --store .sldb --pythonpath .
++python -m sldb fields show docs/<doc>/<field> --store .sldb --pythonpath .
++python -m sldb fields create docs/<doc>/<field> <value> --store .sldb --pythonpath .
++python -m sldb fields update docs/<doc>/<field> <value> --store .sldb --pythonpath .
++python -m sldb fields append docs/<doc>/<field> <value> --store .sldb --pythonpath .
++python -m sldb fields remove docs/<doc>/<field> --store .sldb --pythonpath .
++python -m sldb fields clean docs/<doc>/<field> --dedupe --drop-empty --store .sldb --pythonpath .
++python -m sldb sections fields docs/<doc>/<section> --store .sldb --pythonpath .
++python -m sldb ast show docs/<doc> --store .sldb --pythonpath .
+ python -m sldb extract deskops.models:AtomDoc <doc.md> <out.yaml> --pythonpath .
+ python -m sldb render deskops.models:AtomDoc <payload.yaml> <out.md> --pythonpath .
++python -m sldb validate deskops.models:AtomDoc --input <doc.md> --pythonpath .
++```
++
++If the installed CLI is available as `sldb`, that shorter form is also fine.
++
++## Model editing workflow
++
++When changing a `StructuredNLDoc` contract:
++
++1. register the model if needed
++2. inspect the current contract
++3. edit the template through the SLDB draft flow
++4. add or remove fields with model commands
++5. validate the draft
++6. promote only after validation passes
++7. update the store so indexes match the new contract
++
++Typical commands:
++
++```bash
++sldb models add <model-ref> --store .sldb --pythonpath .
++sldb models show <ModelName> --store .sldb --pythonpath .
++sldb ast show models/<ModelName> --store .sldb --pythonpath .
++sldb models template edit <ModelName> --input <template.md> --store .sldb --pythonpath .
++sldb models fields add <ModelName> <field> --type <type> --description "..." --store .sldb --pythonpath .
++sldb models validate <ModelName> --store .sldb --pythonpath .
++sldb models validate <ModelName> --promote --store .sldb --pythonpath .
++sldb stores update --store .sldb --pythonpath .
++```
++
++Do not manually rewrite a model contract and call it done if the same change should travel through SLDB's draft/validate/promote workflow.
++
++## Search modes
++
++Use physical search for literal names or paths:
++
++- file paths
++- document names
++- model names
++- section titles
++- field paths such as `title`, `goal`, or `tags`
++
++Examples:
++
++```bash
++sldb find desk/atoms --in physical --store .sldb --pythonpath .
++sldb find title --in physical --store .sldb --pythonpath .
+ ```
+ 
+-Template guidance:
++Use semantic search for meaning-oriented discovery:
+ 
+-- Put machine metadata in YAML frontmatter where possible.
+-- Keep human content in Markdown sections.
+-- Use reversible markers only once per canonical field.
+-- Keep render-only markers out of extracted payload requirements.
++- model semantics such as `type.knowledge.atom`
++- semantic tags such as `system:deskops`
++- topic-oriented discovery such as `topic:atoms`
+ 
+-Validation:
++Examples:
++
++```bash
++sldb find topic:atoms --in semantic --store .sldb --pythonpath .
++sldb find type.knowledge.atom --in semantic --store .sldb --pythonpath .
++sldb find <term> --in both --store .sldb --pythonpath .
++sldb find <term> --in semantic --global --store .sldb --pythonpath .
++```
++
++## Store guidance
++
++The `.sldb/` store tracks:
++
++- registered model contracts
++- tracked document identities and paths
++- extracted field payloads
++- semantic indexes
++- section ownership and section context
++- integrity hashes
++- linked-store discovery metadata
++
++Use:
++
++```bash
++sldb stores check --store .sldb
++sldb stores update --store .sldb --pythonpath .
++```
++
++Run `stores update` after model changes, tracked-doc changes, document moves, or when results look stale.
++
++## Deskops boundary
++
++If the work is about reading, rendering, validating, creating, tracking, updating, querying, composing, or mutating fields in a structured Markdown document, use SLDB.
++
++If the work is about deciding workflow state, routing tasks, binding pills, closeout, or project execution logic, use deskops.
++
++## Validation
++
++For SLDB-heavy work, use the smallest relevant proof first, then downstream tests when needed:
+ 
+ ```bash
+ pytest
++sldb stores check --store .sldb
+ ```
+ 
+-When changing SLDB extraction/rendering, run the SLDB suite and downstream deskops tests if deskops uses the changed behavior.
++When changing extraction or rendering used by deskops, run SLDB tests and the affected downstream deskops tests.
++
++## Anti-patterns
++
++Do not:
++
++- build desk-local workarounds for missing SLDB behavior before recording the gap
++- treat the store as the source of truth instead of the Markdown doc
++- create duplicate field-instance documents for behavior SLDB already owns
++- bypass tracked-document commands with ad hoc edits when a safe SLDB operation exists
+diff --git a/.skills/sldb/SKILL.md b/.skills/sldb/SKILL.md
+deleted file mode 100644
+index ab7da12..0000000
+--- a/.skills/sldb/SKILL.md
++++ /dev/null
+@@ -1,138 +0,0 @@
+----
+-name: sldb
+-description: Use for StructuredNLDoc models, Markdown roundtrips, store-backed querying, and writing/editing structured Markdown through SLDB rather than ad hoc file edits or desk-local field documents.
+----
+-
+-# SLDB
+-
+-Use `sldb` for `StructuredNLDoc` models and their Markdown documents.
+-
+-## When To Use
+-
+-- Any `StructuredNLDoc`-backed document that should roundtrip as structured data.
+-- Any structured document change that needs model-level idempotency validation.
+-- Any field-level inspection, query, update, append, clean, or removal for tracked Markdown documents.
+-- Any creation, tracking, update, recovery, or composition of structured Markdown documents.
+-- Any task that touches model templates, `Field(...)` definitions, store indexes, document tracking, sections, or composition.
+-
+-## Core Rules
+-
+-- Every `StructuredNLDoc` field must use `Field(description="...")` with a non-empty description.
+-- The Markdown document is the source surface; the SLDB store indexes, queries, writes, and safely rewrites it through the model contract.
+-- Fields are first-class through SLDB model payloads, templates, sections, store queries, and field mutation commands.
+-- Do not create desk-local field instance documents to make fields reusable, queryable, writable, or editable. Use `sldb docs`, `sldb fields`, `sldb sections`, `sldb ast`, and tracked document payloads instead.
+-- If an SLDB write/edit/query path does not work, add the issue to the `sldb` repo's inbox instead of bypassing SLDB silently.
+-- For every `StructuredNLDoc` workflow, run `sldb validate` before finishing.
+-
+-## Useful Commands
+-
+-- `sldb extract <model-ref> <input-markdown> <output-json-or-yaml>`
+-- `sldb render <model-ref> <input-data> <output-markdown>`
+-- `sldb validate <model-ref> --input <markdown>`
+-- `sldb validate <model-ref> --data <json-or-yaml>`
+-- `sldb stores init --path .`
+-- `sldb stores check --store .sldb`
+-- `sldb stores update --store .sldb --pythonpath .`
+-- `sldb models add <model-ref> --store .sldb --pythonpath .`
+-- `sldb models show <ModelName> --store .sldb --pythonpath .`
+-- `sldb models template edit <ModelName> --input <template.md> --store .sldb --pythonpath .`
+-- `sldb models fields add <ModelName> <field> --type <type> --description <text> --store .sldb --pythonpath .`
+-- `sldb models fields remove <ModelName> <field> --store .sldb --pythonpath .`
+-- `sldb models validate <ModelName> --store .sldb --pythonpath .`
+-- `sldb models validate <ModelName> --promote --store .sldb --pythonpath .`
+-- `sldb docs create --model <ModelName> -o <path> <payload> --store .sldb --pythonpath .`
+-- `sldb docs track <path> --model <ModelName> --store .sldb --pythonpath .`
+-- `sldb docs update <doc> <payload> --store .sldb --pythonpath .`
+-- `sldb docs recover <doc> --store .sldb --pythonpath .`
+-- `sldb docs compose <doc> --store .sldb --pythonpath .`
+-- `sldb fields query <field> --store .sldb --pythonpath .`
+-- `sldb fields show docs/<doc>/<field> --store .sldb --pythonpath .`
+-- `sldb fields create docs/<doc>/<field> <value> --store .sldb --pythonpath .`
+-- `sldb fields update docs/<doc>/<field> <value> --store .sldb --pythonpath .`
+-- `sldb fields append docs/<doc>/<field> <value> --store .sldb --pythonpath .`
+-- `sldb fields remove docs/<doc>/<field> --store .sldb --pythonpath .`
+-- `sldb fields clean docs/<doc>/<field> --dedupe --drop-empty --store .sldb --pythonpath .`
+-- `sldb sections fields docs/<doc>/<section> --store .sldb --pythonpath .`
+-- `sldb ast show docs/<doc> --store .sldb --pythonpath .`
+-- `sldb find <term> --in physical --store .sldb --pythonpath .`
+-- `sldb find <term> --in semantic --store .sldb --pythonpath .`
+-- `sldb find <term> --in both --store .sldb --pythonpath .`
+-- `sldb find <term> --in semantic --global --store .sldb --pythonpath .`
+-
+-## Model Editing Workflow
+-
+-Use SLDB model commands when changing a `StructuredNLDoc` contract.
+-
+-- Register models with `sldb models add` before relying on store-backed operations.
+-- Inspect contracts with `sldb models show` and `sldb ast show models/<ModelName>`.
+-- Edit templates with `sldb models template edit`, which writes a draft instead of replacing the active contract immediately.
+-- Add or remove fields with `sldb models fields add` and `sldb models fields remove`.
+-- Validate draft model changes with `sldb models validate`.
+-- Promote only after validation passes with `sldb models validate --promote`.
+-- Run `sldb stores update` after accepted model/doc changes so semantic, section, and field indexes match the current files.
+-
+-Do not manually rewrite a model contract and call it done if the same change should be represented through SLDB's draft/validate/promote workflow. If the workflow cannot express the needed change, record that gap in the sibling `sldb` repo's inbox.
+-
+-## Search Modes
+-
+-SLDB has two primary search modes.
+-
+-Use physical search when looking for literal or structural names:
+-
+-- file paths
+-- tracked document names
+-- model names
+-- section titles and slugs
+-- field paths such as `title`, `goal`, or `tags`
+-
+-Example:
+-
+-- `sldb find desk/atoms --in physical --store .sldb --pythonpath .`
+-- `sldb find title --in physical --store .sldb --pythonpath .`
+-
+-Use semantic search when looking for meaning encoded by model semantics, document tags, section context, or semantic indexes:
+-
+-- `type.knowledge.atom`
+-- `system:deskops`
+-- `topic:atoms`
+-- section about terms
+-
+-Example:
+-
+-- `sldb find topic:atoms --in semantic --store .sldb --pythonpath .`
+-- `sldb find type.knowledge.atom --in semantic --store .sldb --pythonpath .`
+-
+-Use `--in both` when unsure. Use `--global` when the local store should include linked/federated stores.
+-
+-## Semantic Store
+-
+-The `.sldb/` store is not the document source. It is the indexed semantic/query/edit layer over tracked Markdown documents.
+-
+-It tracks:
+-
+-- registered model contracts
+-- tracked document paths and logical names
+-- extracted field payloads
+-- semantic tags and model semantics
+-- section ownership and section context
+-- integrity hashes for model and document drift
+-- linked stores for global/federated discovery
+-
+-Use `sldb stores check` to inspect integrity. Use `sldb stores update` after bulk edits, model changes, document moves, or when search results look stale.
+-
+-Use semantic search and field queries through the store before inventing deskops-specific query surfaces.
+-
+-## Boundary With Deskops
+-
+-`sldb` owns reusable structured-document infrastructure: model contracts, reversible templates, document creation, document updates, field extraction, field mutation, section ownership, store tracking, integrity hashes, recovery, and composition primitives.
+-
+-`deskops` owns workflow-domain surfaces: tasks, boards, rituals, pills, atoms, routines, hooks, inbox, drawer triage, and operational gates.
+-
+-If the work is about reading, rendering, validating, creating, tracking, updating, querying, composing, or mutating fields in a structured Markdown document, use SLDB. If the work is about deciding what operational workflow should happen next, use deskops.
+-
+-If an expected SLDB operation fails or is missing, record it in the sibling `sldb` repo's inbox with the failing command, expected behavior, actual behavior, and any relevant file/model references. Do not build a duplicate deskops-specific workaround before the SLDB gap is captured.
+-
+-## Python Marker Modes
+-
+-- Safe mode is the default; `py` markers stay literal and are not evaluated.
+-- Unsafe mode enables `py` marker evaluation for trusted templates only.
+diff --git a/AGENTS.md b/AGENTS.md
+index 62181f4..f9de36c 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -17,14 +17,16 @@ If the active board does not route a task, do not treat fixture-looking files in
+ 
+ ## Skill Route
+ 
+-Load the local role skill that matches the surface before changing files:
++Load the global surface skill that matches the work before changing files. Workflow roles such as supervisor, executor, and tester are system-prompt concerns, not repo-local skills:
+ 
+ - `use-deskops` for `desk/` surfaces, tasks, drawer work, pills, rituals, primitives, routines, repo registry, and workflow operations.
+-- `use-sldb` for `StructuredNLDoc` models, reversible Markdown markers, `.sldb` stores, document tracking, model registration, rendering, extraction, or field operations.
++- `use-sldb` for `StructuredNLDoc` models, reversible Markdown markers, `.sldb` stores, document tracking, model registration, rendering, extraction, or field operations. The authoritative global Pi skill lives in the sibling `../sldb/.pi/skills/use-sldb/`.
+ - `use-kgdb` for graph contracts, graph snapshots, nodes, edges, provenance, `deskops graph build`, `deskops graph missing`, or graph runtime validation.
+ - `use-spec2viz` for diagram specs, Mermaid/projection outputs, and generated diagram surfaces under `docs/diagrams/`.
+ - `customize-opencode` only for opencode configuration, `.opencode/` agents, skills, plugins, MCP servers, permissions, or `AGENTS.md`/opencode routing changes.
+ 
++For Pi in this repo, prefer the project skills under `.pi/skills/`.
++
+ ## Core Boundaries
+ 
+ - `deskops/` contains Python implementation code.
+@@ -82,8 +84,11 @@ deskops graph missing
+ - `docs/faq.md`
+ - `docs/workflow-policy-reference.md`
+ - `docs/how-to-test-ux-cli.md`
+-- `.skills/sldb/SKILL.md`
+-- `.opencode/skills/use-deskops/SKILL.md`
++- `.pi/skills/use-deskops/SKILL.md`
++- `../sldb/.pi/skills/use-sldb/SKILL.md`
++- `docs/agent-system-prompts/README.md`
++- `.opencode/skills/use-deskops/SKILL.md` (parallel copy)
++- `.opencode/skills/use-sldb/SKILL.md` (parallel copy)
+ - `desk/tasks/Board.md`
+ - `desk/drawer/tasks/Board.md`
+ - `desk/rituals/phase.md`
+diff --git a/README.md b/README.md
+index ec7f6a7..8d72f44 100644
+--- a/README.md
++++ b/README.md
+@@ -26,9 +26,13 @@ Durable guides currently include:
+ - `docs/how-to-test-ux-cli.md`
+ - `docs/quickstart.md`
+ 
+-Repo-local agent guidance includes:
++Pi/project agent guidance includes:
+ 
+-- `.skills/sldb/SKILL.md`
++- `.pi/skills/use-deskops/SKILL.md`
++- `../sldb/.pi/skills/use-sldb/SKILL.md`
++- `docs/agent-system-prompts/README.md`
++
++Parallel opencode copies also exist under `.opencode/skills/`.
+ 
+ ## SLDB Boundary
+ 
+diff --git a/desk/drawer/features/pi-artifact-materialization-runtime.md b/desk/drawer/features/pi-artifact-materialization-runtime.md
+index 8746a16..d03bfda 100644
+--- a/desk/drawer/features/pi-artifact-materialization-runtime.md
++++ b/desk/drawer/features/pi-artifact-materialization-runtime.md
+@@ -72,9 +72,9 @@ The direction of derivation matters:
+ 
+ Candidate sources:
+ 
+-- `.agents/skills/workflow-supervisor/SKILL.md`
+-- `.agents/skills/workflow-executor/SKILL.md`
+-- `.agents/skills/workflow-tester/SKILL.md`
++- `/home/jp/.pi/agent/agents/deskops-supervisor.md`
++- `/home/jp/.pi/agent/agents/deskops-executor.md`
++- `/home/jp/.pi/agent/agents/deskops-tester.md`
+ - `desk/drawer/features/supervisor.md`
+ - `desk/drawer/features/executor.md`
+ - `desk/drawer/features/router.md`
+diff --git a/desk/drawer/issues/diagnosis/02-observed-problems/atom-tasks-are-not-yet-atomized-to-execution-actions.md b/desk/drawer/issues/diagnosis/02-observed-problems/atom-tasks-are-not-yet-atomized-to-execution-actions.md
+index 796dc57..be6243c 100644
+--- a/desk/drawer/issues/diagnosis/02-observed-problems/atom-tasks-are-not-yet-atomized-to-execution-actions.md
++++ b/desk/drawer/issues/diagnosis/02-observed-problems/atom-tasks-are-not-yet-atomized-to-execution-actions.md
+@@ -25,4 +25,4 @@ Current tasks usually capture goal, scope, files, and validation, but they do no
+ 
+ - `spec/artifacts/task.yaml` — task artifacts are modeled at the current task-document layer rather than as detailed edit-action bundles.
+ - `deskops/operations.py` — normalized task payloads focus on title, goal, scope, references, files, validation, and routine linkage.
+-- `.agents/skills/workflow-executor/SKILL.md` — still frames execution mainly as reading task scope and then implementing, not as consuming a compiled edit-plan composition.
++- `/home/jp/.pi/agent/agents/deskops-executor.md` — still frames execution mainly as reading task scope and then implementing, not as consuming a compiled edit-plan composition.
+diff --git a/desk/drawer/issues/diagnosis/04-expected-model/atom-tasks-should-compile-to-execution-compositions.md b/desk/drawer/issues/diagnosis/04-expected-model/atom-tasks-should-compile-to-execution-compositions.md
+index c429197..927cc4d 100644
+--- a/desk/drawer/issues/diagnosis/04-expected-model/atom-tasks-should-compile-to-execution-compositions.md
++++ b/desk/drawer/issues/diagnosis/04-expected-model/atom-tasks-should-compile-to-execution-compositions.md
+@@ -25,4 +25,4 @@ A task should not stop at human-readable intent. Deskops should be able to compi
+ 
+ - `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md` — pushes tasks toward bounded autonomous execution.
+ - `desk/rituals/execution.md` — requires explicit scope, touched files, and validation targets before implementation.
+-- `.agents/skills/subagent-execution/SKILL.md` and `.agents/skills/workflow-executor/SKILL.md` — already assume the need for bounded execution bundles and evidence, which points toward a compiled execution composition.
++- `.agents/skills/subagent-execution/SKILL.md` and `/home/jp/.pi/agent/agents/deskops-executor.md` — already assume the need for bounded execution bundles and evidence, which points toward a compiled execution composition.
+diff --git a/desk/drawer/issues/diagnosis/06-worklines/atom-workline-add-execution-plan-to-task-model.md b/desk/drawer/issues/diagnosis/06-worklines/atom-workline-add-execution-plan-to-task-model.md
+index a7644ca..c8b6441 100644
+--- a/desk/drawer/issues/diagnosis/06-worklines/atom-workline-add-execution-plan-to-task-model.md
++++ b/desk/drawer/issues/diagnosis/06-worklines/atom-workline-add-execution-plan-to-task-model.md
+@@ -25,4 +25,4 @@ The task model should gain a field or composition layer for execution plans that
+ 
+ - `deskops/operations.py` current task normalization and bundle creation show the present task contract and where an execution-plan layer could attach.
+ - `desk/rituals/execution.md` requires explicit touched files and validation, which aligns with a more concrete execution-plan field or composition.
+-- `.agents/skills/workflow-executor/SKILL.md` describes the need for exact touched surfaces and bounded action, which an execution plan could encode directly.
++- `/home/jp/.pi/agent/agents/deskops-executor.md` describes the need for exact touched surfaces and bounded action, which an execution plan could encode directly.
+diff --git a/desk/drawer/issues/diagnosis/08-risks/atom-hook-automation-can-be-powerful-but-opaque.md b/desk/drawer/issues/diagnosis/08-risks/atom-hook-automation-can-be-powerful-but-opaque.md
+index a4209cd..6c763cb 100644
+--- a/desk/drawer/issues/diagnosis/08-risks/atom-hook-automation-can-be-powerful-but-opaque.md
++++ b/desk/drawer/issues/diagnosis/08-risks/atom-hook-automation-can-be-powerful-but-opaque.md
+@@ -25,4 +25,4 @@ Hook automation should not become an invisible side-effect machine. If hooks beg
+ 
+ - `_auto_commit_task_closure()` in `deskops/operations.py` shows how impactful automatic workflow side effects can already be.
+ - `docs/diagrams/process/llm-tasks-vs-automatic-routines.md` says automatic routines should block or return work rather than invent semantic decisions.
+-- `.agents/skills/workflow-supervisor/SKILL.md` emphasizes evidence review and truthful routing, which opaque automation could undermine.
++- `/home/jp/.pi/agent/agents/deskops-supervisor.md` emphasizes evidence review and truthful routing, which opaque automation could undermine.
+diff --git a/deskops/cli/commands/atoms.py b/deskops/cli/commands/atoms.py
+index 114c6b9..326af02 100644
+--- a/deskops/cli/commands/atoms.py
++++ b/deskops/cli/commands/atoms.py
+@@ -31,4 +31,21 @@ class AtomsCLI:
+             print(f"Path: {registry_path}")
+             return 0
+ 
++        # Proxy these to the main operation CLI or mark as not implemented
++        if args.atoms_command == "list":
++            args.command = "list"
++            args.subject = "atoms"
++            from deskops.cli.commands.operations import OperationsCLI
++            return OperationsCLI().run(args)
++
++        if args.atoms_command == "show":
++            args.command = "show"
++            args.subject = "atom"
++            from deskops.cli.commands.operations import OperationsCLI
++            return OperationsCLI().run(args)
++
++        if args.atoms_command in ("new", "validate"):
++            print(f"atoms {args.atoms_command} grammar added; implementation deferred.")
++            return 0
++
+         return 1
+diff --git a/deskops/cli/commands/repo.py b/deskops/cli/commands/repo.py
+index fee167a..31f2191 100644
+--- a/deskops/cli/commands/repo.py
++++ b/deskops/cli/commands/repo.py
+@@ -18,6 +18,9 @@ class RepoCLI:
+     def run(self, args: Any) -> int:
+         if args.repo_command == "register":
+             return self.register(args)
++        if args.repo_command == "context":
++            print("repo context grammar added; implementation deferred.")
++            return 0
+         return 1
+ 
+     def register(self, args: Any) -> int:
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 1a4557c..d67aea6 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -46,7 +46,7 @@ class CLI:
+             return FAQCLI().run(args)
+         if args.command == "about":
+             return print_about()
+-        if args.command == "doctor":
++        if args.command in {"doctor", "status"}:
+             from deskops.cli.commands.doctor import DoctorCLI
+ 
+             return DoctorCLI().run(args)
+@@ -68,6 +68,9 @@ class CLI:
+             from deskops.cli.commands.operations import OperationsCLI
+ 
+             return OperationsCLI().run(args)
++        if args.command in {"drift", "materialize", "closeout"}:
++            print(f"{args.command} grammar added; implementation deferred.")
++            return 0
+         if args.command == "promote":
+             from deskops.cli.commands.promote import PromoteCLI
+ 
+@@ -147,6 +150,9 @@ class CLI:
+             return self._graph_missing(args)
+         if args.graph_command == "reflect":
+             return self._graph_reflect(args)
++        if args.graph_command == "trace":
++            print("graph trace grammar added; implementation deferred.")
++            return 0
+ 
+         print(f"Unknown graph command: {args.graph_command}")
+         return 2
+diff --git a/deskops/cli/parser.py b/deskops/cli/parser.py
+index 871eb8c..9913ff9 100644
+--- a/deskops/cli/parser.py
++++ b/deskops/cli/parser.py
+@@ -68,6 +68,7 @@ def build_parser() -> argparse.ArgumentParser:
+ 
+     _add_about_command(subparsers)
+     _add_doctor_command(subparsers)
++    _add_status_command(subparsers)
+     _add_faq_commands(subparsers)
+     _add_bootstrap_command(subparsers)
+     _add_init_command(subparsers)
+@@ -84,6 +85,9 @@ def build_parser() -> argparse.ArgumentParser:
+     _add_desk_commands(subparsers)
+     _add_atoms_commands(subparsers)
+     _add_graph_commands(subparsers)
++    _add_drift_commands(subparsers)
++    _add_materialize_command(subparsers)
++    _add_closeout_command(subparsers)
+ 
+     return parser
+ 
+@@ -114,6 +118,24 @@ def _add_atoms_commands(
+         help="Example tag using the namespace; repeat as needed.",
+     )
+ 
++    list_cmd = s.add_parser("list", help="List all atoms.")
++    list_cmd.add_argument("--root", default=".", help="Target repository root.")
++    _add_output_format_argument(list_cmd)
++
++    show_cmd = s.add_parser("show", help="Show an atom.")
++    show_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
++    show_cmd.add_argument("--root", default=".", help="Target repository root.")
++    _add_output_format_argument(show_cmd)
++
++    new_cmd = s.add_parser("new", help="Create a new atom.")
++    new_cmd.add_argument("--root", default=".", help="Target repository root.")
++    # In a full implementation, we'd add the exact fields like 'deskops add atom'.
++    # Here we just provide the basic grammar layout.
++
++    validate_cmd = s.add_parser("validate", help="Validate an atom's materializations.")
++    validate_cmd.add_argument("doc_id", nargs="?", help=f"Atom selector. {SELECTOR_HELP}")
++    validate_cmd.add_argument("--root", default=".", help="Target repository root.")
++
+ 
+ def _add_graph_commands(
+     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+@@ -137,6 +159,11 @@ def _add_graph_commands(
+     reflect.add_argument("--root", default=".", help="Target repository root.")
+     reflect.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+ 
++    trace = s.add_parser("trace", help="Trace a graph node to its root sources.")
++    trace.add_argument("id", help="Graph node id to trace.")
++    trace.add_argument("--root", default=".", help="Target repository root.")
++    trace.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
++
+ 
+ def _add_promote_commands(
+     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+@@ -204,6 +231,16 @@ def _add_doctor_command(
+     p.add_argument("--repair", action="store_true", help="Attempt non-destructive repairs.")
+ 
+ 
++def _add_status_command(
++    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
++) -> None:
++    p = subparsers.add_parser(
++        "status",
++        help="Show current workspace and workflow status.",
++    )
++    p.add_argument("--root", default=".", help="Target repository root.")
++
++
+ def _add_bootstrap_command(
+     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+ ) -> None:
+@@ -242,6 +279,9 @@ def _add_repo_commands(
+     reg.add_argument("--store", help="Store path to anchor the registry")
+     reg.add_argument("--pythonpath", help="Python path for model resolution")
+ 
++    ctx = s.add_parser("context", help="Manage repository contexts.")
++    ctx.add_argument("--root", default=".", help="Target repository root.")
++
+ 
+ def _add_inbox_commands(
+     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+@@ -667,3 +707,23 @@ Advancement walks a task through execution, testing, and closeout gates when its
+     )
+     task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
+     task.add_argument("--root", default=".", help="Target repository root.")
++
++def _add_drift_commands(
++    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
++) -> None:
++    p = subparsers.add_parser("drift", help="Detect workspace drift.")
++    s = p.add_subparsers(dest="drift_command", required=True)
++    check = s.add_parser("check", help="Check for drift between atoms and materializations.")
++    check.add_argument("--root", default=".", help="Target repository root.")
++
++def _add_materialize_command(
++    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
++) -> None:
++    p = subparsers.add_parser("materialize", help="Materialize workflow artifacts.")
++    p.add_argument("--root", default=".", help="Target repository root.")
++
++def _add_closeout_command(
++    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
++) -> None:
++    p = subparsers.add_parser("closeout", help="Perform workflow phase closeout.")
++    p.add_argument("--root", default=".", help="Target repository root.")
+diff --git a/docs/diagrams/process/current-agent-workflow-and-automation.md b/docs/diagrams/process/current-agent-workflow-and-automation.md
+index d2cbfb6..bd47a2e 100644
+--- a/docs/diagrams/process/current-agent-workflow-and-automation.md
++++ b/docs/diagrams/process/current-agent-workflow-and-automation.md
+@@ -10,7 +10,7 @@ This diagram document is a human-facing materialization of these atoms:
+ - `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+ - `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md`
+ 
+-This diagram shows the **current** deskops workflow as it exists today across Pi skill discovery, desk recovery, role skills, task execution, structured-document work, deterministic workflow automation, and closeout.
++This diagram shows the **current** deskops workflow as it exists today across Pi skill discovery, desk recovery, global surface skills, role system prompts, task execution, structured-document work, deterministic workflow automation, and closeout.
+ 
+ It intentionally distinguishes:
+ 
+@@ -22,8 +22,8 @@ It intentionally distinguishes:
+ ```mermaid
+ flowchart TB
+     subgraph PiBoot["Pi startup and discovery"]
+-        pi_settings[".pi/settings.json\npackages: pi-subagents\nskills: ../.skills, ../.agents/skills"]
+-        skill_dirs["Skill directories\n.skills/sldb\n.agents/skills/*"]
++        pi_settings["Pi runtime settings\nglobal skills + project skill locations"]
++        skill_dirs["Project skill directories\n.pi/skills/*\n.agents/skills/*"]
+         pi_runtime["Pi runtime\nauto-discovers available skills at startup"]
+     end
+ 
+@@ -32,14 +32,14 @@ flowchart TB
+         agents["AGENTS.md\nrepo entry route"]
+         read_route["Read route\nREADME.md, docs/faq.md, Board.md, rituals"]
+         board["desk/tasks/Board.md\nactive routing surface"]
+-        repo_skill["Skill loaded on demand\ndeskops-workflow"]
++        repo_skill["Global skill loaded on demand\nuse-deskops"]
+     end
+ 
+     subgraph RoleSelection["Role selection and bounded lane"]
+         role_lock["Choose one role\nsupervisor / executor / tester"]
+-        sup_skill["workflow-supervisor\nfor routing / review / closeout discipline"]
+-        exec_skill["workflow-executor\nfor bounded implementation"]
+-        test_skill["workflow-tester\nfor validation lane"]
++        sup_skill["deskops-supervisor\nrole system prompt"]
++        exec_skill["deskops-executor\nrole system prompt"]
++        test_skill["deskops-tester\nrole system prompt"]
+         subexec_skill["subagent-execution\nfor launching worker lanes"]
+     end
+ 
+@@ -74,7 +74,7 @@ flowchart TB
+         recover["Recover state\ndeskops show board\ndeskops list/show task\ndeskops next\ndeskops graph missing\ngit status"]
+         bind["Bind references / pills / touched files / validation"]
+         maybe_sldb{"Tracked structured doc\nor model operation?"}
+-        sldb_skill["Load .skills/sldb\nuse sldb docs/fields/models/stores commands"]
++        sldb_skill["Load use-sldb\nuse sldb docs/fields/models/stores commands"]
+         implement["Implement bounded change\ncode/docs/spec/task edits"]
+         validate["Run focused validation first\npytest / sldb stores check / CLI checks"]
+         handoff["Write run evidence\nresult-summary.md / validation.log"]
+@@ -126,8 +126,8 @@ flowchart TB
+ 
+ ### 1. Pi discovery
+ 
+-- `.pi/settings.json`
+-- `.skills/sldb/SKILL.md`
++- Pi runtime settings
++- `.pi/skills/*/SKILL.md`
+ - `.agents/skills/*/SKILL.md`
+ 
+ What is automatic here:
+@@ -152,15 +152,15 @@ Primary surfaces:
+ 
+ Primary skill:
+ 
+-- `deskops-workflow`
++- `use-deskops`
+ 
+ ## 3. Role-specific work
+ 
+ ### Supervisor lane
+ 
+-Primary skill:
++Primary role prompt:
+ 
+-- `workflow-supervisor`
++- `deskops-supervisor`
+ 
+ Main surfaces:
+ 
+@@ -171,9 +171,9 @@ Main surfaces:
+ 
+ ### Executor lane
+ 
+-Primary skill:
++Primary role prompt:
+ 
+-- `workflow-executor`
++- `deskops-executor`
+ 
+ Main surfaces:
+ 
+@@ -186,9 +186,9 @@ Main surfaces:
+ 
+ ### Tester lane
+ 
+-Primary skill:
++Primary role prompt:
+ 
+-- `workflow-tester`
++- `deskops-tester`
+ 
+ Main surfaces:
+ 
+@@ -210,7 +210,7 @@ Main surfaces:
+ 
+ ## 4. Structured-document lane
+ 
+-Use `.skills/sldb/SKILL.md` when the task touches:
++Use `.pi/skills/use-sldb/SKILL.md` when the task touches:
+ 
+ - `StructuredNLDoc` models
+ - tracked Markdown docs
+diff --git a/docs/diagrams/process/current-agent-workflow-and-automation.mmd b/docs/diagrams/process/current-agent-workflow-and-automation.mmd
+index 53b6840..9b36283 100644
+--- a/docs/diagrams/process/current-agent-workflow-and-automation.mmd
++++ b/docs/diagrams/process/current-agent-workflow-and-automation.mmd
+@@ -1,7 +1,7 @@
+ flowchart TB
+     subgraph PiBoot["Pi startup and discovery"]
+-        pi_settings[".pi/settings.json\npackages: pi-subagents\nskills: ../.skills, ../.agents/skills"]
+-        skill_dirs["Skill directories\n.skills/sldb\n.agents/skills/*"]
++        pi_settings["Pi runtime settings\nglobal skills + project skill locations"]
++        skill_dirs["Project skill directories\n.pi/skills/*\n.agents/skills/*"]
+         pi_runtime["Pi runtime\nauto-discovers available skills at startup"]
+     end
+ 
+@@ -10,14 +10,14 @@ flowchart TB
+         agents["AGENTS.md\nrepo entry route"]
+         read_route["Read route\nREADME.md, docs/faq.md, Board.md, rituals"]
+         board["desk/tasks/Board.md\nactive routing surface"]
+-        repo_skill["Skill loaded on demand\ndeskops-workflow"]
++        repo_skill["Global skill loaded on demand\nuse-deskops"]
+     end
+ 
+     subgraph RoleSelection["Role selection and bounded lane"]
+         role_lock["Choose one role\nsupervisor / executor / tester"]
+-        sup_skill["workflow-supervisor\nfor routing / review / closeout discipline"]
+-        exec_skill["workflow-executor\nfor bounded implementation"]
+-        test_skill["workflow-tester\nfor validation lane"]
++        sup_skill["deskops-supervisor\nrole system prompt"]
++        exec_skill["deskops-executor\nrole system prompt"]
++        test_skill["deskops-tester\nrole system prompt"]
+         subexec_skill["subagent-execution\nfor launching worker lanes"]
+     end
+ 
+@@ -52,7 +52,7 @@ flowchart TB
+         recover["Recover state\ndeskops show board\ndeskops list/show task\ndeskops next\ndeskops graph missing\ngit status"]
+         bind["Bind references / pills / touched files / validation"]
+         maybe_sldb{"Tracked structured doc\nor model operation?"}
+-        sldb_skill["Load .skills/sldb\nuse sldb docs/fields/models/stores commands"]
++        sldb_skill["Load use-sldb\nuse sldb docs/fields/models/stores commands"]
+         implement["Implement bounded change\ncode/docs/spec/task edits"]
+         validate["Run focused validation first\npytest / sldb stores check / CLI checks"]
+         handoff["Write run evidence\nresult-summary.md / validation.log"]
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index b569c56..bc476d6 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -34,7 +34,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
+     captured = capsys.readouterr()
+     assert result == 0
+     assert "usage: deskops" in captured.out
+-    assert "{about,doctor,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph}" in captured.out
++    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,drift,materialize,closeout}" in captured.out
+     assert "Typical flow:" in captured.out
+     assert "deskops add task --root ." in captured.out
+     assert "Use docs/quickstart.md" in captured.out

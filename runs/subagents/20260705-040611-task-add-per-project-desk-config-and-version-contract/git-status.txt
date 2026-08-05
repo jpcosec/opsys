@@ -1,0 +1,7 @@
+## main...origin/main [ahead 47]
+?? .deskops.log
+?? .opencode/skills/use-sldb/legacy-local-sldb-skill.md
+?? docs/agent-system-prompts/
+?? runs/subagents/20260703-180811-task-add-json-output-for-modeled-documents/
+?? runs/subagents/20260705-030812-task-design-operational-cli-grammar/
+?? runs/subagents/20260705-040611-task-add-per-project-desk-config-and-version-contract/

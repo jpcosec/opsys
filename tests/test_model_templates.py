@@ -214,6 +214,10 @@ MODEL_PAYLOADS = [
             "validation": ["pytest tests/test_model_templates.py"],
             "done_when": "The task template roundtrips.",
             "tags": ["topic:templates"],
+            "task_type": "test",
+            "inherits_from": ["task-parent-template"],
+            "inherit_acceptance_context": True,
+            "atoms": ["desk/atoms/atom-deskops.md"],
         },
     ),
 ]
