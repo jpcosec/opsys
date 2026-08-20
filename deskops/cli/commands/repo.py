@@ -4,7 +4,8 @@ from pathlib import Path
 import re
 from typing import Any
 
-from sldb.cli.utils import get_store_context, registered_model, resolve_model_ref
+from sldb.cli.model_utils import registered_model, resolve_model_ref
+from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
 from sldb.runtime.validation import render_model_markdown, validate_model_input_roundtrip
 from sldb.store.layout import project_root

@@ -7,7 +7,8 @@ import re
 from typing import Any
 
 import yaml
-from sldb.cli.utils import get_store_context, registered_model, resolve_model_ref
+from sldb.cli.model_utils import registered_model, resolve_model_ref
+from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
 from sldb.runtime.validation import validate_model_input_roundtrip
 from sldb.store.layout import project_root
@@ -77,7 +78,6 @@ class InboxCLI:
 
     def _resolve_repo_desk(self, repo_name: str, store_arg: str | None, pythonpath: str | None) -> Path:
         from sldb.store.query import load_runtime_documents
-        from sldb.cli.utils import resolve_model_ref
 
         store_path, root = self._store_context_safe(store_arg)
         # Load all documents tracked under RepositoryDoc

@@ -712,7 +712,7 @@ Advancement walks a task through execution, testing, and closeout gates when its
 """.strip(),
     )
     task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
-    task.add_argument("--to", required=True, help="Target node or status to advance to.")
+    task.add_argument("--to", help="Optional target node or status for a manual override.")
     task.add_argument("--root", default=".", help="Target repository root.")
 
 def _add_drift_commands(

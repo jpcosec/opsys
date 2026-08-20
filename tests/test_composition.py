@@ -84,12 +84,16 @@ def test_task_doc_keeps_machine_metadata_in_frontmatter() -> None:
         "checklists": ["checklist-task-a"],
         "history": ["created"],
         "tags": ["system:sldb"],
+        "task_type": "",
+        "inherits_from": [],
+        "inherit_acceptance_context": False,
+        "atoms": [],
     }
 
     rendered = render_model_markdown(TaskDoc, payload)
     extracted = extract_model_data(TaskDoc, rendered)
 
-    assert rendered.startswith("---\n# task-xxx, unique task identifier\nid: task-a\n# draft | active | blocked | closed\nstatus: active")
+    assert rendered.startswith("---\nid: task-a\nstatus: active")
     assert "depends_on:\n- task-root" in rendered
     assert "tags:\n- system:sldb" in rendered
     assert "ID: task-a" not in rendered

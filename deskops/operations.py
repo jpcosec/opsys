@@ -1396,7 +1396,7 @@ class DeskopsOperations:
             return
         store_path = self.root / ".sldb"
         try:
-            from sldb.cli.utils import resolve_model_ref
+            from sldb.cli.model_utils import resolve_model_ref
             from sldb.store.io import load_documents_index
             from sldb.store.io import load_models_index
             from sldb.store.io import load_store_index

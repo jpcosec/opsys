@@ -19,8 +19,8 @@ class TaskDoc(OperationalArtifactDoc):
                     data[k] = v
         return data
 
-    def model_dump(self, **kwargs) -> dict:
-        data = super().model_dump(**kwargs)
+    def render_payload(self) -> dict:
+        data = super().model_dump(mode="json")
         body_fields = {"title", "why", "goal", "scope", "implementation_path", "validation", "done_when"}
         data["frontmatter"] = {k: v for k, v in data.items() if k not in body_fields}
         return data
