@@ -4,6 +4,9 @@ import json
 from pathlib import Path
 from typing import Any
 
+from deskops.graph.extract_coverage import EXTRACTOR_NAME as COVERAGE_EXTRACTOR
+from deskops.graph.extract_coverage import CoverageGraphEdge
+from deskops.graph.extract_coverage import extract_coverage_graph
 from deskops.graph.extract_docs import EXTRACTOR_NAME as DOC_NODE_EXTRACTOR
 from deskops.graph.extract_docs import extract_doc_nodes
 from deskops.graph.extract_edges import EXTRACTOR_NAME as DECLARED_EDGE_EXTRACTOR
@@ -51,9 +54,11 @@ def build_graph_snapshot(root: Path) -> dict[str, Any]:
     doc_nodes = [node.to_dict() for node in extract_doc_nodes(project_root)]
     source_nodes = [node.to_dict() for node in extract_source_file_nodes(project_root)]
     edge_result = extract_declared_edges(project_root)
+    coverage_result = extract_coverage_graph(project_root)
 
-    nodes_by_id = _merge_nodes([*doc_nodes, *source_nodes])
-    edges_by_source = _edges_by_source(edge_result.edges)
+    nodes_by_id = _merge_nodes([*doc_nodes, *source_nodes, *[node.to_dict() for node in coverage_result.nodes]])
+    all_edges = [*edge_result.edges, *coverage_result.edges]
+    edges_by_source = _edges_by_source(all_edges)
     snapshot_nodes = [
         _kgdb_node(node, edges_by_source.get(node_id, []))
         for node_id, node in sorted(nodes_by_id.items())
@@ -70,9 +75,10 @@ def build_graph_snapshot(root: Path) -> dict[str, Any]:
                 DOC_NODE_EXTRACTOR,
                 SOURCE_FILE_NODE_EXTRACTOR,
                 DECLARED_EDGE_EXTRACTOR,
+                COVERAGE_EXTRACTOR,
             ],
             "node_count": len(snapshot_nodes),
-            "edge_count": len(edge_result.edges),
+            "edge_count": len(all_edges),
         },
     }
 
@@ -167,14 +173,14 @@ def _merge_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
     return merged
 
 
-def _edges_by_source(edges: list[DeclaredGraphEdge]) -> dict[str, list[DeclaredGraphEdge]]:
-    grouped: dict[str, list[DeclaredGraphEdge]] = {}
+def _edges_by_source(edges: list[DeclaredGraphEdge | CoverageGraphEdge]) -> dict[str, list[DeclaredGraphEdge | CoverageGraphEdge]]:
+    grouped: dict[str, list[DeclaredGraphEdge | CoverageGraphEdge]] = {}
     for edge in edges:
         grouped.setdefault(edge.source_id, []).append(edge)
     return grouped
 
 
-def _kgdb_node(node: dict[str, Any], edges: list[DeclaredGraphEdge]) -> dict[str, Any]:
+def _kgdb_node(node: dict[str, Any], edges: list[DeclaredGraphEdge | CoverageGraphEdge]) -> dict[str, Any]:
     node_id = node["id"]
     node_kind = node["kind"]
     return {
@@ -195,16 +201,21 @@ def _kgdb_node(node: dict[str, Any], edges: list[DeclaredGraphEdge]) -> dict[str
     }
 
 
-def _kgdb_edge(edge: DeclaredGraphEdge) -> dict[str, Any]:
+def _kgdb_edge(edge: DeclaredGraphEdge | CoverageGraphEdge) -> dict[str, Any]:
+    metadata = {
+        "role": edge.role,
+        "source_kind": edge.source_kind,
+        "confidence": edge.confidence,
+        "provenance_path": edge.provenance_path,
+        "provenance_locator": edge.provenance_locator,
+        "extractor": edge.extractor,
+    }
+    for key in ("atom_id", "facet", "score", "match_basis", "evidence", "source_field"):
+        value = getattr(edge, key, None)
+        if value is not None:
+            metadata[key] = value
     return {
         "target_id": edge.target_id,
         "relation_type": edge.role,
-        "metadata": {
-            "role": edge.role,
-            "source_kind": edge.source_kind,
-            "confidence": edge.confidence,
-            "provenance_path": edge.provenance_path,
-            "provenance_locator": edge.provenance_locator,
-            "extractor": edge.extractor,
-        },
+        "metadata": metadata,
     }
