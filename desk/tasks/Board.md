@@ -16,6 +16,8 @@ tasks:
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-wire-closeout-to-knowledge-gates.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+- desk/tasks/task-anti-pattern-monolithic-api-endpoint-in-sldb-viewer.md
+- desk/tasks/task-fix-sldb-deskops-cli-drift-breaking-11-tests.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -61,6 +63,7 @@ _Add short operational notes about the current routed set._
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
+- Anti-pattern: Monolithic API endpoint in SLDB Viewer [draft] - Ensure we never couple independent SLDB surfaces into monolithic UI API endpoints.
 
 ## Task Details
 
@@ -77,3 +80,5 @@ _Generated from the task references above._
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
 - Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
+- Anti-pattern: Monolithic API endpoint in SLDB Viewer [draft] - Ensure we never couple independent SLDB surfaces into monolithic UI API endpoints.
+- Fix sldb<->deskops CLI drift breaking 11 tests [draft] - Restore green deskops CLI test suite by realigning deskops to the current sldb CLI API and fixing the TaskDoc render expectation drift.
