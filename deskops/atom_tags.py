@@ -8,7 +8,7 @@ import yaml
 
 
 NAMESPACE_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
-TAG_PATTERN = re.compile(r"^(?P<namespace>[a-z][a-z0-9_]*):[a-z][a-z0-9_-]*$")
+TAG_PATTERN = re.compile(r"^(?P<namespace>[a-z][a-z0-9_]*):[a-z][a-z0-9_.-]*$")
 
 DEFAULT_ATOM_TAG_NAMESPACES: dict[str, dict[str, Any]] = {
     "system": {

@@ -1,0 +1,176 @@
+documents:
+- name: routine-task-define-atom-lifecycle-operations
+  path: desk/routines/routine-task-define-atom-lifecycle-operations.md
+  hash_c: 925e10a7a3697b4cf027cb12344d408520ba2406d51345d68ca372464fce4949
+  hash_d: 751df2f0e3652b993f62008f1212b00c0f4d982c87e65bbb781f90ea5d95ad7c
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-make-task-lifecycle-runnable-from-intake-to-closeout
+  path: desk/routines/routine-task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  hash_c: eca0de2e069f7efd3d70647ff1e0456b5e23f0a64dfa1d5ecf65dd469c75c327
+  hash_d: 89edc956d9bd9961057ab058aaa80df7dfe42834848ca787a776f79720c3c80f
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-board-task-yaml
+  path: desk/routines/routine-board-task-yaml.md
+  hash_c: 5e6c20602db8e3297633e60aafa8fd55061a3c3352448ad58fed32c8af10dc5f
+  hash_d: 0f4fe818d7800a6adf697239ebb1949bd8ac66be49f10a3bd5d308ed8e94ca31
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-test-routine
+  path: desk/routines/routine-test-routine.md
+  hash_c: 4b5350a4770934e106fe4e55e2ba839490d85c6a83ef422b005deaf9209060d8
+  hash_d: c6f7dc941fc6bb58f3f2cd12013a8a7158ef94f4dd658cda11169b55d8c36640
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+- name: routine-task-detect-and-migrate-legacy-desk-workspaces
+  path: desk/routines/routine-task-detect-and-migrate-legacy-desk-workspaces.md
+  hash_c: 50863b966b45e0d3931d87f2772794ea3242c350e14b0b3022aa08f00f7b2b00
+  hash_d: b4644579c7891fafe65c5d97f326b69d88cd6f2611d4917b27d6b5bef6baf0d7
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-add-desk-health-and-recovery-surface-deskops-slice
+  path: desk/routines/routine-task-add-desk-health-and-recovery-surface-deskops-slice.md
+  hash_c: 7d5f6f86a6848faebc74cc8b907344cd055218eb5c52bdfb3eb9470ffb7c6801
+  hash_d: 65be73925c43d5cbf32d10f375bdf7ecf42dd1b67f6070a2819f15d10dafba85
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-add-drift-check-review-loop
+  path: desk/routines/routine-task-add-drift-check-review-loop.md
+  hash_c: b073e05964a9aac229b6ffaf7327c68b5d8d2fc6614287d5d3bd7b4126354ac1
+  hash_d: 074086bf6a5c7299f2ae23e8f8a8850427b9bc5e6a9c7e993b901d92cc58073f
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-from-yaml-test-routine
+  path: desk/routines/routine-from-yaml-test-routine.md
+  hash_c: c112fb6648928684927463008fbff92b8d39537d61e0f0d1d324b73b7b40347e
+  hash_d: 51f727ab56c314aeb716bade3a8eed9af79417a739406abc329541f30c11d8d1
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+- name: routine-task-test-task-yaml
+  path: desk/routines/routine-task-test-task-yaml.md
+  hash_c: b001fa1046b9c1d95ef4377fc909fc249bc26d413a86ff761041611082d4cbae
+  hash_d: cb0d390940cdc70eeab0fe10e7b464a97ad0eaa772b6e9a571f84635a40ed706
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-add-per-project-desk-config-and-version-contract
+  path: desk/routines/routine-task-add-per-project-desk-config-and-version-contract.md
+  hash_c: 04f746684ac840b8a9201b7ff7ca7066ba8bd28176a500010be6a8b9db8e1075
+  hash_d: e96de56416d0948758e9d8281b5f574d0519ea98776ba04e63f57f6d65acee56
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-extra-routine-test
+  path: desk/routines/routine-extra-routine-test.md
+  hash_c: 92d6fc1b90f0110c8c1fb306b68628a0f10cc94859d2de8de2dcd4e790f38f6a
+  hash_d: 49e7c5d4dc5207dab86d3360b613d2c2f21cfa15d72c0c9e8aa66d89d069ba0a
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+- name: routine-full-routine-test
+  path: desk/routines/routine-full-routine-test.md
+  hash_c: 07bdda9ad29fff75934ecd8e49c6f27064caf3807e7d7b424ffddf11e3c96eba
+  hash_d: 51a52f9626558755ebc0f74d1c78f7ff72b864717fe4d5e31ef8c2c761e7b782
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+- name: routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+  path: desk/routines/routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
+  hash_c: 33733627ccb1a494a48e4506ad7a0b9ebc79f709d8d19fba1b36a5452a08a820
+  hash_d: f31376d30b2fea503356573fdf10f5d49d25fbc9b562676fb7cbe7d9f0ff0e10
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-write-end-to-end-deskops-operator-manual
+  path: desk/routines/routine-task-write-end-to-end-deskops-operator-manual.md
+  hash_c: 8e8b7ec06e99cf876169b7ffb2d79bbe6dd33a2714fe3fb3d84b698383d864bf
+  hash_d: b35600e2589534b67c810ff9db605091ad9f10ce3844794654e02d79aedb14c4
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-define-materialization-contract-slice-deskops-surface
+  path: desk/routines/routine-task-define-materialization-contract-slice-deskops-surface.md
+  hash_c: 64e6ae5d3956ddee417ba1c100f6da6216336c8df0c6993cac7081a9ab4ac8f2
+  hash_d: 48c62d76c854c5b6f86f90bd300f1a8d15b5227aa8eccc5b4d3aa0d45b59b7a4
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-missing-entrypoint-test
+  path: desk/routines/routine-missing-entrypoint-test.md
+  hash_c: 33a4066b3aa24b04ca75b787b768c9b2c66131ac39d82596aebcc0dbd41d60ed
+  hash_d: c17d9682b97bd5037426b3cab9cdbd1efad48c7b9389dbc7626c9fa43bdaa1f9
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+- name: routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+  path: desk/routines/routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
+  hash_c: 41d23442678a25b3160fa479d64642ac291d3c9df2e0579f0349fb5525cb549d
+  hash_d: 72cb264093ec14011406512700056ace6d8a15b6bee66a2924fa6f7af968c952
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-establish-horizontal-desk-discovery-and-canonical-identity
+  path: desk/routines/routine-task-establish-horizontal-desk-discovery-and-canonical-identity.md
+  hash_c: a1fe421e427c0d82e4bf9cb2e9996a292a5063bfc8ddd9cc76dd61a8068871e8
+  hash_d: a2d601a2b1288ad7ee2010be22d7121d1863b0915a1d7f9b77f807e168982e65
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-wire-closeout-to-knowledge-gates
+  path: desk/routines/routine-task-wire-closeout-to-knowledge-gates.md
+  hash_c: 767a398b2eeba75f12fd906d9cbc62a4e1f6c0101c97519f50138d27333a50ed
+  hash_d: e87b91a91da552230242802bd6fecf663c41885f1ae6daadd0689a45b4d536a0
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
+- name: routine-task-test-task
+  path: desk/routines/routine-task-test-task.md
+  hash_c: e3f35390e93553ef45446716292e6a2f3e866600e022e1c61cbc2debbefc5b61
+  hash_d: d1631996a26d9e8bef1322cb139e83c31cfb99cf1016a341365994a9406f619d
+  semantic_tags:
+  - primitive:routine
+  - type.workflow.routine
+  - workspace.desk.routines
+  - workspace:desk
