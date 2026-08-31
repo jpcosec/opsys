@@ -1,8 +1,7 @@
 ---
 id: task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
 status: active
-references:
-- desk/drawer/tasks/task-enforce-pill-to-atom-knowledge-graduation.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md

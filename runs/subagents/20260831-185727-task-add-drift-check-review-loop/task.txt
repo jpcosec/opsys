@@ -1,0 +1,14 @@
+Task: task-add-drift-check-review-loop
+Title: Add drift check review loop
+Status: active
+Current node: checklist-task-add-drift-check-review-loop-execution-ready
+Task type: 
+Routine: routine-task-add-drift-check-review-loop
+Effective pills:
+- desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
+- desk/contexts/pill-011-self-reflection-noise-control.md
+- desk/contexts/pill-009-source-file-graph-traceability.md
+Checklist status:
+- checklist-task-add-drift-check-review-loop-execution-ready: complete
+- checklist-task-add-drift-check-review-loop-testing-ready: complete
+- checklist-task-add-drift-check-review-loop-closeout-ready: pending

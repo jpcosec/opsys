@@ -34,7 +34,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,drift,materialize,closeout}" in captured.out
+    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,closeout}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -2161,31 +2161,22 @@ def test_doctor_reports_untracked_documents_and_missing_structure(tmp_path: Path
     # Add an untracked document
     (root / "desk" / "tasks" / "untracked-task.md").write_text("# Untracked\n", encoding="utf-8")
 
-    # Add a stale graph runtime file
-    runtime_dir = root / ".sldb" / "runtime"
-    runtime_dir.mkdir(parents=True, exist_ok=True)
-    stale_kg = runtime_dir / "knowledge_graph.kg.json"
-    stale_kg.write_text("{}", encoding="utf-8")
-
     # Run doctor without repair
     assert main(["doctor", "--root", str(root)]) == 1
     out, err = capsys.readouterr()
     assert "Doctor Findings:" in out
     assert "Missing desk structure: desk/drawer/" in out
     assert "Untracked desk documents: desk/tasks/untracked-task.md" in out
-    assert "Stale graph runtime files found: .sldb/runtime/knowledge_graph.kg.json" in out
     assert "Run with --repair to attempt automatic fixes." in out
 
     # Run doctor with repair
     assert main(["doctor", "--root", str(root), "--repair"]) == 1
     out, err = capsys.readouterr()
     assert "Scaffolded missing desk/ structure." in out
-    assert "Deleted stale graph runtime files: .sldb/runtime/knowledge_graph.kg.json" in out
     assert "Manual repair required to track documents (use sldb docs track)." in out
 
     # Check if things were repaired
     assert (root / "desk" / "drawer").exists()
-    assert not stale_kg.exists()
 
 def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
     from deskops.cli.main import main

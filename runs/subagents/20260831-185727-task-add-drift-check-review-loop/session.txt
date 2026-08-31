@@ -1,0 +1,10 @@
+Task: task-add-drift-check-review-loop
+Role: executor
+Key actions:
+- Recovered board/task/next/graph/git state and saved snapshots.
+- Implemented review-loop metadata in deskops/graph/self_reflection.py.
+- Added decision-ledger initialization at .sldb/runtime/self_reflection_decisions.json.
+- Added dangling generated artifact detection for rendered diagram markdown files missing source-link edges.
+- Updated tests/test_graph_self_reflection.py to cover report schema v2, promotion targets, decision storage, and diagram drift findings.
+Validation:
+- pytest tests/test_graph_self_reflection.py -q

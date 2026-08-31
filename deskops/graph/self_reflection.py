@@ -10,8 +10,10 @@ from deskops.graph.checks import GraphMissingFinding
 from deskops.graph.checks import find_missing_snapshot_targets
 
 
-REPORT_SCHEMA = "deskops_self_reflection_report_v1"
+REPORT_SCHEMA = "deskops_self_reflection_report_v2"
+DECISIONS_SCHEMA = "deskops_self_reflection_decisions_v1"
 DEFAULT_REPORT_PATH = Path(".sldb/runtime/self_reflection_findings.json")
+DEFAULT_DECISIONS_PATH = Path(".sldb/runtime/self_reflection_decisions.json")
 
 ATOM_REFERENCE_ROLES = {"references", "documents", "specifies", "constrains", "validates"}
 SOURCE_LINK_ROLES = {
@@ -67,6 +69,7 @@ class SelfReflectionFinding:
     reason: str
     later_action: str
     dedupe_key: str
+    promotion_targets: list[str]
     duplicate_count: int = 0
 
     def to_dict(self) -> dict[str, Any]:
@@ -80,6 +83,7 @@ def build_self_reflection_report(
     """Return review-only self-reflection findings for a graph snapshot."""
     findings = [
         *_missing_atom_reference_findings(snapshot, missing_findings or []),
+        *_dangling_generated_artifact_findings(snapshot, missing_findings or []),
         *_unlinked_source_file_findings(snapshot),
     ]
     grouped_findings = _group_duplicate_findings(findings)
@@ -87,6 +91,18 @@ def build_self_reflection_report(
         "schema": REPORT_SCHEMA,
         "runtime_only": True,
         "mutation_policy": "review_only_no_source_artifact_mutation",
+        "review_loop": {
+            "decision_storage": {
+                "schema": DECISIONS_SCHEMA,
+                "runtime_output_path": DEFAULT_DECISIONS_PATH.as_posix(),
+                "allowed_statuses": ["pending", "accepted", "rejected"],
+            },
+            "promotion_paths": {
+                "task": "accepted finding -> create or promote a desk task when remediation work is clear",
+                "question": "accepted finding -> route a desk question when owner intent or source of truth is unclear",
+                "atom": "accepted finding -> update or create an atom when the durable knowledge gap is understood",
+            },
+        },
         "summary": {
             "finding_count": len(grouped_findings),
             "suppressed_duplicate_count": sum(finding.duplicate_count for finding in grouped_findings),
@@ -104,7 +120,37 @@ def write_self_reflection_report(
     destination = output_path or root / DEFAULT_REPORT_PATH
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    write_self_reflection_decisions_store(root, report_path=destination)
     return destination
+
+
+def write_self_reflection_decisions_store(
+    root: Path,
+    report_path: Path,
+    output_path: Path | None = None,
+) -> Path:
+    """Persist the review-loop decision ledger alongside the generated findings report."""
+    destination = output_path or root / DEFAULT_DECISIONS_PATH
+    payload = _read_existing_decisions(destination)
+    payload.update(
+        {
+            "schema": DECISIONS_SCHEMA,
+            "runtime_only": True,
+            "report_path": report_path.relative_to(root).as_posix() if report_path.is_absolute() else report_path.as_posix(),
+            "allowed_statuses": ["pending", "accepted", "rejected"],
+        }
+    )
+    payload.setdefault("decisions", [])
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    destination.write_text(json.dumps(payload, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return destination
+
+
+def _read_existing_decisions(path: Path) -> dict[str, Any]:
+    if not path.exists() or not path.is_file():
+        return {}
+    loaded = json.loads(path.read_text(encoding="utf-8"))
+    return loaded if isinstance(loaded, dict) else {}
 
 
 def _missing_atom_reference_findings(
@@ -156,6 +202,7 @@ def _missing_atom_finding_from_snapshot(edge: dict[str, str]) -> SelfReflectionF
         reason="declared atom reference target was not found among graph nodes",
         later_action="atom_candidate",
         dedupe_key=_dedupe_key("missing-atom-references", edge["source_id"], edge["target_id"], edge.get("role")),
+        promotion_targets=["atom", "question"],
     )
 
 
@@ -173,7 +220,75 @@ def _missing_atom_finding_from_check(finding: GraphMissingFinding) -> SelfReflec
         reason="declared atom reference target was not found among graph nodes",
         later_action="atom_candidate",
         dedupe_key=_dedupe_key("missing-atom-references", finding.source_id, finding.target_id, role),
+        promotion_targets=["atom", "question"],
     )
+
+
+def _dangling_generated_artifact_findings(
+    snapshot: dict[str, Any],
+    missing_findings: list[GraphMissingFinding],
+) -> list[SelfReflectionFinding]:
+    findings: list[SelfReflectionFinding] = []
+    nodes = _snapshot_nodes(snapshot)
+    node_ids = {node["id"] for node in nodes}
+    linked_pairs = {
+        (edge["source"], edge["target"])
+        for edge in _snapshot_edges(snapshot)
+        if edge.get("role") in {"references", "generated_from", "materializes", "renders", "source_for"}
+    }
+
+    for finding in [*_snapshot_missing_targets(snapshot), *missing_findings]:
+        if not finding.source_id.startswith("diagram:"):
+            continue
+        if not finding.target_id.startswith("diagram:"):
+            continue
+        source_path = _path_from_node_id(finding.source_id)
+        target_path = _path_from_node_id(finding.target_id)
+        if not (source_path.startswith("docs/diagrams/") and source_path.endswith(".md") and target_path.endswith(".mmd")):
+            continue
+        findings.append(
+            SelfReflectionFinding(
+                question_id="dangling-generated-artifacts",
+                kind="dangling_generated_artifact",
+                source_id=finding.source_id,
+                target_id=finding.target_id,
+                role=finding.role or "references",
+                provenance_path=finding.provenance_path or source_path,
+                provenance_locator=finding.provenance_locator or f"missing:{finding.source_id}:{finding.target_id}",
+                confidence="high",
+                reason="rendered diagram declares a source artifact that is missing from the graph snapshot",
+                later_action="issue_candidate",
+                dedupe_key=_dedupe_key("dangling-generated-artifacts", finding.source_id, finding.target_id, finding.role or "references"),
+                promotion_targets=["task", "question"],
+            )
+        )
+
+    for node in nodes:
+        if node.get("kind") != "diagram":
+            continue
+        path = str(node.get("path") or node.get("identity") or _path_from_node_id(node["id"]))
+        if not (path.startswith("docs/diagrams/") and path.endswith(".md")):
+            continue
+        source_id = f"diagram:{path[:-3]}.mmd"
+        if source_id not in node_ids or (node["id"], source_id) in linked_pairs:
+            continue
+        findings.append(
+            SelfReflectionFinding(
+                question_id="dangling-generated-artifacts",
+                kind="dangling_generated_artifact",
+                source_id=node["id"],
+                target_id=source_id,
+                role="source_for",
+                provenance_path=path,
+                provenance_locator=f"sibling-source:{source_id}",
+                confidence="medium",
+                reason="rendered diagram has a sibling Mermaid source file but no declared graph edge linking them",
+                later_action="issue_candidate",
+                dedupe_key=_dedupe_key("dangling-generated-artifacts", node["id"], source_id, "source_for"),
+                promotion_targets=["task", "question"],
+            )
+        )
+    return findings
 
 
 def _unlinked_source_file_findings(snapshot: dict[str, Any]) -> list[SelfReflectionFinding]:
@@ -199,6 +314,7 @@ def _unlinked_source_file_findings(snapshot: dict[str, Any]) -> list[SelfReflect
                 reason="source file has no graph edge connecting it to a desk knowledge surface",
                 later_action="issue_candidate",
                 dedupe_key=f"unlinked-source-files:{node['id']}",
+                promotion_targets=["task", "question"],
             )
         )
     return findings

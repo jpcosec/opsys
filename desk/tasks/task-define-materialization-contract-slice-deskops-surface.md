@@ -1,8 +1,7 @@
 ---
 id: task-define-materialization-contract-slice-deskops-surface
 status: active
-references:
-- desk/drawer/tasks/task-define-materialization-contract-slice.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md
@@ -47,11 +46,23 @@ _State what is in scope and what is out of scope._
 
 KGDB relation extraction for materialization is routed to the sibling `kgdb` repo's inbox. This task assumes the extraction API exists.
 
+## Resolved Decisions
+
+Supervisor rulings that remove ambiguity before implementation:
+
+- Model name: `MaterializationContractDoc` in `deskops/models/materialization.py`, mirroring `AtomDoc` (semantics + template).
+- Fields: `id` (`materialization-{slug}`), `title`, `source_atoms: list[str]`, `target_kind: str`, `target_identity: str`, `intent: str`, `validation: list[str]`, `tags: list[AtomTag]`, `provenance: str | None`.
+- Storage: `desk/materializations/`; scaffold in `ensure_workspace`.
+- CLI: reuse the auto-generated `add`/`edit`/`list`/`show` via `ARTIFACT_SUBJECTS` (no bespoke command group).
+- Validation depth for this slice: reference-resolution only (source_atoms resolve to real atoms; target_identity resolves). Drift/staleness comparison is OUT (owned by the drift-check task).
+- Do NOT adopt the orphaned `spec/fields/materializes_into.yaml`; add explicit field specs.
+- Atom-lifecycle materialization-link rerouting is OUT (owned by the atom-lifecycle task).
+
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
 
-Promoted from desk/drawer/tasks/task-define-materialization-contract-slice.md.
+Model + spec + operations registration + auto-generated CLI + reference-resolution validation via doctor/graph. Tests in tests/test_materialization_contract.py using tmp_path sandbox.
 
 ## Validation
 

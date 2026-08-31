@@ -1,8 +1,7 @@
 ---
 id: task-wire-closeout-to-knowledge-gates
 status: active
-references:
-- desk/drawer/tasks/task-wire-closeout-knowledge-gates.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md

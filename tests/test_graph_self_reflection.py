@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from deskops.graph.checks import GraphMissingFinding
+from deskops.graph.self_reflection import DEFAULT_DECISIONS_PATH
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.self_reflection import build_self_reflection_report
 from deskops.graph.self_reflection import write_self_reflection_report
@@ -14,14 +15,30 @@ FIXTURE_GRAPH = Path(__file__).parent / "fixtures/knowledge_graph/static_desk_so
 
 def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp_path: Path) -> None:
     snapshot = json.loads(FIXTURE_GRAPH.read_text(encoding="utf-8"))
-    snapshot["nodes"].append(
-        {
-            "id": "source_file:deskops/unlinked.py",
-            "kind": "source_file",
-            "label": "Unlinked source",
-            "identity": "deskops/unlinked.py",
-            "path": "deskops/unlinked.py",
-        }
+    snapshot["nodes"].extend(
+        [
+            {
+                "id": "source_file:deskops/unlinked.py",
+                "kind": "source_file",
+                "label": "Unlinked source",
+                "identity": "deskops/unlinked.py",
+                "path": "deskops/unlinked.py",
+            },
+            {
+                "id": "diagram:docs/diagrams/example/rendered.md",
+                "kind": "diagram",
+                "label": "Rendered diagram",
+                "identity": "docs/diagrams/example/rendered.md",
+                "path": "docs/diagrams/example/rendered.md",
+            },
+            {
+                "id": "diagram:docs/diagrams/example/rendered.mmd",
+                "kind": "diagram",
+                "label": "Rendered diagram source",
+                "identity": "docs/diagrams/example/rendered.mmd",
+                "path": "docs/diagrams/example/rendered.mmd",
+            },
+        ]
     )
     snapshot["edges"].append(
         {
@@ -35,14 +52,51 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
 
     report = build_self_reflection_report(snapshot)
     report_path = write_self_reflection_report(tmp_path, report)
+    decisions_path = tmp_path / DEFAULT_DECISIONS_PATH
 
     assert report_path == tmp_path / DEFAULT_REPORT_PATH
     assert report_path.exists()
+    assert decisions_path.exists()
+    assert json.loads(decisions_path.read_text(encoding="utf-8")) == {
+        "allowed_statuses": ["pending", "accepted", "rejected"],
+        "decisions": [],
+        "report_path": ".sldb/runtime/self_reflection_findings.json",
+        "runtime_only": True,
+        "schema": "deskops_self_reflection_decisions_v1",
+    }
     assert not (tmp_path / "desk").exists()
+    assert report["schema"] == "deskops_self_reflection_report_v2"
     assert report["runtime_only"] is True
     assert report["mutation_policy"] == "review_only_no_source_artifact_mutation"
-    assert report["summary"] == {"finding_count": 2, "suppressed_duplicate_count": 0}
+    assert report["review_loop"] == {
+        "decision_storage": {
+            "schema": "deskops_self_reflection_decisions_v1",
+            "runtime_output_path": ".sldb/runtime/self_reflection_decisions.json",
+            "allowed_statuses": ["pending", "accepted", "rejected"],
+        },
+        "promotion_paths": {
+            "task": "accepted finding -> create or promote a desk task when remediation work is clear",
+            "question": "accepted finding -> route a desk question when owner intent or source of truth is unclear",
+            "atom": "accepted finding -> update or create an atom when the durable knowledge gap is understood",
+        },
+    }
+    assert report["summary"] == {"finding_count": 3, "suppressed_duplicate_count": 0}
     assert report["findings"] == [
+        {
+            "question_id": "dangling-generated-artifacts",
+            "kind": "dangling_generated_artifact",
+            "source_id": "diagram:docs/diagrams/example/rendered.md",
+            "target_id": "diagram:docs/diagrams/example/rendered.mmd",
+            "role": "source_for",
+            "provenance_path": "docs/diagrams/example/rendered.md",
+            "provenance_locator": "sibling-source:diagram:docs/diagrams/example/rendered.mmd",
+            "confidence": "medium",
+            "reason": "rendered diagram has a sibling Mermaid source file but no declared graph edge linking them",
+            "later_action": "issue_candidate",
+            "dedupe_key": "dangling-generated-artifacts:diagram:docs/diagrams/example/rendered.md:diagram:docs/diagrams/example/rendered.mmd:source_for",
+            "promotion_targets": ["task", "question"],
+            "duplicate_count": 0,
+        },
         {
             "question_id": "missing-atom-references",
             "kind": "dangling_source_atom_reference",
@@ -55,6 +109,7 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
             "reason": "declared atom reference target was not found among graph nodes",
             "later_action": "atom_candidate",
             "dedupe_key": "missing-atom-references:task:task-004-create-static-graph-fixture:atom:atom-missing-reflection:references",
+            "promotion_targets": ["atom", "question"],
             "duplicate_count": 0,
         },
         {
@@ -69,6 +124,7 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
             "reason": "source file has no graph edge connecting it to a desk knowledge surface",
             "later_action": "issue_candidate",
             "dedupe_key": "unlinked-source-files:source_file:deskops/unlinked.py",
+            "promotion_targets": ["task", "question"],
             "duplicate_count": 0,
         },
     ]
@@ -110,4 +166,5 @@ def test_self_reflection_report_suppresses_duplicate_findings() -> None:
 
     assert report["summary"] == {"finding_count": 1, "suppressed_duplicate_count": 1}
     assert report["findings"][0]["dedupe_key"] == "missing-atom-references:task:source:atom:missing:references"
+    assert report["findings"][0]["promotion_targets"] == ["atom", "question"]
     assert report["findings"][0]["duplicate_count"] == 1

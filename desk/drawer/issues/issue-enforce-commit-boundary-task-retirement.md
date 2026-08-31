@@ -31,7 +31,7 @@ Only after this boundary is secured should the task be removed from active plann
 
 ## Follow-Up Shape
 
-- Update `desk/rituals/closeout.md` to require a commit boundary.
+- Update the closeout ritual contract to require a commit boundary.
 - Implement checks in `deskops` routines to ensure git status is clean or commits are mapped to tasks before retirement.
 - Document the retirement order in the task lifecycle atoms.
 

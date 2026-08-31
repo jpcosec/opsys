@@ -3,6 +3,9 @@
 id: board-001
 # Affected workspace or domain
 scope: desk
+# Current dependency layer index
+phase: 1
+phase_label: "Workflow foundations: lifecycle, contracts, and knowledge integrity"
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-add-drift-check-review-loop.md

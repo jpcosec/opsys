@@ -68,9 +68,6 @@ class CLI:
             from deskops.cli.commands.operations import OperationsCLI
 
             return OperationsCLI().run(args)
-        if args.command in {"drift", "materialize"}:
-            print(f"{args.command} grammar added; implementation deferred.")
-            return 0
         if args.command == "closeout":
             from deskops.cli.commands.closeout import CloseoutCLI
 
@@ -172,10 +169,6 @@ class CLI:
             return self._graph_missing(args)
         if args.graph_command == "reflect":
             return self._graph_reflect(args)
-        if args.graph_command == "trace":
-            print("graph trace grammar added; implementation deferred.")
-            return 0
-
         print(f"Unknown graph command: {args.graph_command}")
         return 2
 

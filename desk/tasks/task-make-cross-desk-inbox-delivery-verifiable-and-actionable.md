@@ -1,8 +1,7 @@
 ---
 id: task-make-cross-desk-inbox-delivery-verifiable-and-actionable
 status: active
-references:
-- desk/drawer/tasks/task-make-cross-desk-inbox-delivery-verifiable.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md

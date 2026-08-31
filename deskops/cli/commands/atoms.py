@@ -44,8 +44,4 @@ class AtomsCLI:
             from deskops.cli.commands.operations import OperationsCLI
             return OperationsCLI().run(args)
 
-        if args.atoms_command in ("new", "validate"):
-            print(f"atoms {args.atoms_command} grammar added; implementation deferred.")
-            return 0
-
         return 1

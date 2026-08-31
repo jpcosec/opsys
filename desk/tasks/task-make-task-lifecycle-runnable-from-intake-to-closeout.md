@@ -1,8 +1,7 @@
 ---
 id: task-make-task-lifecycle-runnable-from-intake-to-closeout
 status: active
-references:
-- desk/drawer/tasks/task-make-task-lifecycle-runnable-end-to-end.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md

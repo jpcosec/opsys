@@ -1,8 +1,7 @@
 ---
 id: task-add-per-project-desk-config-and-version-contract
 status: active
-references:
-- desk/drawer/tasks/task-add-per-project-desk-config-and-version-contract.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
@@ -47,11 +46,22 @@ _State what is in scope and what is out of scope._
 - per-project testing sandbox policy instead of shell-global heuristics
 - interaction with environment overrides and explicit CLI flags
 
+## Resolved Decisions
+
+Much of this is already built (`deskops/config.py`, `workspace.py` scaffold, `main.py` sandbox override, `.gitignore`, `tests/test_config.py`). Remaining delta for THIS task:
+
+- Format: JSON (`desk/config.json` + `desk/config.local.json`). Confirmed.
+- Harden `DeskConfig.load` into one deterministic deep-merge (config.json then config.local.json), including nested `versions`. Keep tolerant of missing files, but do not swallow malformed JSON silently — surface via a load warning/flag.
+- Precedence (authoritative, document it): explicit CLI flag > `DESKOPS_TEST_ROOT` env > `config.local.json` > `config.json` > defaults.
+- Single source of truth for current `desk_format` constant (dedupe the two hardcoded `"1.0.0"` in config.py and workspace.py).
+- OUT: consuming `project_identity` for routing (owned by horizontal-discovery). OUT: legacy detection/migration (owned by legacy-migrate). `model_version` stays a declared field; no consumer added here.
+- Capture the precedence rule as an atom under desk/atoms/ then reflect in README/docs.
+
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
 
-Promoted from desk/drawer/tasks/task-add-per-project-desk-config-and-version-contract.md.
+deskops/config.py deep-merge + version constant; add nested-override test; atom + README precedence doc.
 
 ## Validation
 

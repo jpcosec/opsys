@@ -1,8 +1,7 @@
 ---
 id: task-add-drift-check-review-loop
 status: active
-references:
-- desk/drawer/tasks/task-add-drift-check-review-loop.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md

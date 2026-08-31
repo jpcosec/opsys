@@ -19,9 +19,6 @@ class RepoCLI:
     def run(self, args: Any) -> int:
         if args.repo_command == "register":
             return self.register(args)
-        if args.repo_command == "context":
-            print("repo context grammar added; implementation deferred.")
-            return 0
         return 1
 
     def register(self, args: Any) -> int:

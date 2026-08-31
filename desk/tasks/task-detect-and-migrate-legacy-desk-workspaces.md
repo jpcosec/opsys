@@ -1,8 +1,7 @@
 ---
 id: task-detect-and-migrate-legacy-desk-workspaces
 status: active
-references:
-- desk/drawer/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md

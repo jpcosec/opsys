@@ -1,0 +1,25 @@
+## main...origin/main
+ M .sldb/core/documents/AtomDoc.yaml
+ M .sldb/core/models/AtomDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/drawer/issues/issue-adopt-agent-role-segregation.md
+ M desk/drawer/issues/issue-enforce-commit-boundary-task-retirement.md
+ M desk/tasks/Board.md
+ M desk/tasks/task-add-drift-check-review-loop.md
+ M desk/tasks/task-add-per-project-desk-config-and-version-contract.md
+ M desk/tasks/task-define-atom-lifecycle-operations.md
+ M desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+ M desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+ M desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
+ M desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md
+ M desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
+ M desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+ M desk/tasks/task-wire-closeout-to-knowledge-gates.md
+ M desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+ M deskops/cli/commands/atoms.py
+ M deskops/cli/commands/doctor.py
+ M deskops/cli/commands/repo.py
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M tests/test_cli.py
+?? runs/subagents/20260831-185727-task-add-drift-check-review-loop/

@@ -1,8 +1,7 @@
 ---
 id: task-write-end-to-end-deskops-operator-manual
 status: active
-references:
-- desk/drawer/tasks/task-write-end-to-end-operator-manual.md
+references: []
 depends_on: []
 pills:
 - desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md

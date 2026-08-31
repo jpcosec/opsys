@@ -28,6 +28,8 @@ class DoctorCLI:
                 missing_desk_files.append("desk/tasks/Board.md")
             if not (desk_dir / "drawer").exists():
                 missing_desk_files.append("desk/drawer/")
+            if not (desk_dir / "rituals" / "phase.md").exists():
+                missing_desk_files.append("desk/rituals/phase.md")
 
         if missing_desk_files:
             findings.append(f"Missing desk structure: {', '.join(missing_desk_files)}")
@@ -87,20 +89,6 @@ class DoctorCLI:
             findings.append(f"Invalid desk documents: {', '.join(invalid_docs)}")
             if repair:
                 findings.append("Manual repair required for invalid documents (check syntax or run sldb stores update).")
-
-        runtime_dir = root / ".sldb" / "runtime"
-        stale_files: list[Path] = []
-        if runtime_dir.exists():
-            for p in runtime_dir.glob("*.json"):
-                stale_files.append(p)
-        
-        if stale_files:
-            rel_stale = [str(p.relative_to(root)) for p in stale_files]
-            findings.append(f"Stale graph runtime files found: {', '.join(rel_stale)}")
-            if repair:
-                for p in stale_files:
-                    p.unlink()
-                fixed.append(f"Deleted stale graph runtime files: {', '.join(rel_stale)}")
 
         if not findings:
             print("Desk is healthy. No issues found.")
