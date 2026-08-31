@@ -1,8 +1,13 @@
 ---
 id: task-write-end-to-end-deskops-operator-manual
-status: active
+status: deferred
 references: []
-depends_on: []
+depends_on:
+- task-make-task-lifecycle-runnable-from-intake-to-closeout
+- task-wire-closeout-to-knowledge-gates
+- task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+- task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+- task-detect-and-migrate-legacy-desk-workspaces
 pills:
 - desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md

@@ -46,11 +46,22 @@ _State what is in scope and what is out of scope._
 - design a reply or follow-up path so inbox notes do not become write-only dead drops
 - identify the minimum implementation slice needed before inbox can be treated as a real horizontal coordination surface
 
+## Resolved Decisions
+
+Supervisor rulings — MINIMUM SLICE only:
+
+- Successful delivery = target desk resolved via canonical identity resolver (deskops/identity.py, from Wave A) AND note written AND note tracked/validated AND a verification result echoed to sender (resolved sender + target + path).
+- Sender/target: consume the shared identity resolver; fail loudly on ambiguous/unresolvable identity instead of falling back to cwd().name. Add optional `--sender` override.
+- Model: extend InboxNoteDoc with OPTIONAL, defaulted fields `target_project` and `acknowledged_by`/`acknowledged_at` (backward compatible; existing notes still validate). Mirror defaults in cli/model_introspection.py.
+- Delivery result: honor `--format {text,json,yaml}`; non-zero exit if delivery cannot be verified.
+- Follow-up: implement a single ACK action `deskops inbox --ack <selector>` that flips status open->closed and records ack metadata. Reply-threading / writing back to sender desk is OUT (defer to drawer).
+- Route any discovered CLI gaps to desk/drawer/tasks/ per pill-cli-gaps-become-tracked-work.
+
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
 
-Promoted from desk/drawer/tasks/task-make-cross-desk-inbox-delivery-verifiable.md.
+deskops/models/inbox.py + model_introspection.py (optional fields); inbox.py (resolver consume, delivery result, --ack); parser.py flags; tests in tests/test_cli.py + test_model_templates.py.
 
 ## Validation
 

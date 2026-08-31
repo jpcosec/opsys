@@ -48,11 +48,23 @@ _State what is in scope and what is out of scope._
 - preserve user-authored legacy content instead of overwriting it blindly
 - clarify how this interacts with per-project config and desk/version contracts
 
+## Resolved Decisions
+
+Supervisor rulings:
+
+- Add `classify_desk(root)` in deskops/workspace.py returning one of: `absent`, `empty`, `legacy`, `current`.
+- Legacy markers (any triggers `legacy`): authored Board.md/tasks/pills present BUT missing `desk/config.json`, OR `config.json` lacks a recognized `desk_format` (use the shared desk_format constant from Wave A), OR modeled Board/Task/pill docs fail `sldb stores check` validation. `empty` = desk dir exists but no board/task/pill docs. Keep `empty` strictly distinct from `legacy`.
+- Command surface: extend `deskops doctor` to emit a 'Legacy desk detected' finding listing missing/malformed surfaces (non-zero exit), AND add `deskops desk migrate --root <p>` for the adaptation path.
+- Migration is STRICTLY ADDITIVE / preservation-first: scaffold ONLY missing modeled surfaces (reuse the non-destructive _write_if_missing pattern), write/patch config.json with the current desk_format, and NEVER overwrite authored Board/task/pill content. Emit a report of adopted vs preserved vs still-manual. Assert byte-identical authored files in tests.
+- Migration does NOT auto-transform authored prose docs into modeled docs (leave for manual fixup; report them). Does NOT auto-`sldb docs track` (report as manual), matching current doctor behavior.
+- Keep desk-repair vs SLDB-health separated (delegate store checks to sldb; do not reimplement).
+- Provide at least one representative legacy fixture in tests (authored Board.md + a task, no config.json).
+
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
 
-Promoted from desk/drawer/tasks/task-detect-and-migrate-legacy-desk-workspaces.md.
+deskops/workspace.py classify_desk + additive migrate; doctor.py legacy findings; parser.py + main.py wire 'desk migrate'; tests/test_cli.py legacy/empty/current + non-destructive assertions.
 
 ## Validation
 

@@ -82,6 +82,6 @@ _Generated from the task references above._
 - Make cross-desk inbox delivery verifiable and actionable [active] - Make cross-desk inbox communication operationally useful by ensuring the sender, target, delivery result, and follow-up path are explicit across project desks.
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Wire closeout to knowledge gates [active] - Make closeout check tests, atoms, graph links, materialization status, cleanup, and commit evidence before work leaves the active desk.
-- Write end-to-end deskops operator manual [active] - Consolidate the methodology into one operational playbook after runnable slices are stable.
+- Write end-to-end deskops operator manual [deferred] - Blocked by design until Wave B runnable slices are stable; depends_on set explicitly.
 - Anti-pattern: Monolithic API endpoint in SLDB Viewer [draft] - Ensure we never couple independent SLDB surfaces into monolithic UI API endpoints.
 - Fix sldb<->deskops CLI drift breaking 11 tests [draft] - Restore green deskops CLI test suite by realigning deskops to the current sldb CLI API and fixing the TaskDoc render expectation drift.

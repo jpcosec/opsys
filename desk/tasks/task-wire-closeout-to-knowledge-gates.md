@@ -46,11 +46,22 @@ _State what is in scope and what is out of scope._
 - stale tasks/pills are deleted or promoted
 - dedicated commit exists
 
+## Resolved Decisions
+
+Supervisor rulings (this task OWNS closeout evidence aggregation):
+
+- Add a `deskops closeout verify --task <id> [--root]` surface that runs the evidence predicate and exits non-zero when a required gate is unmet, so the gate is enforced at commit time (not only during advance).
+- Aggregation: keep the existing per-reference resolution (atom OR test OR commit) but expose a structured report of WHICH gates are satisfied (tests / atom-or-materialization link / commit). Do NOT silently tighten the existing advance-time any-of gate this pass (avoid breaking all in-flight tasks); the new `verify` surface is the strict all-of check operators run before the tool-made commit.
+- 'changed files have links': check via graph materialization edges + atom references; if none, require a routed follow-up reference. Reference-resolution only (reuse Wave A materialization validation); no drift comparison (owned by drift-check task).
+- 'generated artifacts declare sources': a rendered artifact with a sibling source but no declared source_atoms/provenance is a verify finding.
+- pill->atom graduation item is OUT (owned by the enforce-pill-to-atom task); consume its `pill_graduation_verified` field if present but do not redefine it.
+- Capture durable rule as atom(s) under desk/atoms/workflow-model/; reflect in desk/rituals/closeout.md.
+
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
 
-Promoted from desk/drawer/tasks/task-wire-closeout-knowledge-gates.md.
+deskops/cli/commands/closeout.py + parser.py: add 'closeout verify'; predicate helpers in operations.py; atom + closeout.md; tests in tests/test_closeout.py.
 
 ## Validation
 
