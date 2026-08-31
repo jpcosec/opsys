@@ -260,6 +260,7 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
         BoardDoc,
         FAQDoc,
         InboxNoteDoc,
+        MaterializationContractDoc,
         PillDoc,
         RepositoryDoc,
         RitualDoc,
@@ -271,6 +272,7 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
         "artifact.board": BoardDoc,
         "artifact.faq": FAQDoc,
         "artifact.inbox_note": InboxNoteDoc,
+        "artifact.materialization": MaterializationContractDoc,
         "artifact.pill": PillDoc,
         "artifact.repository": RepositoryDoc,
         "artifact.ritual": RitualDoc,
@@ -308,6 +310,11 @@ _ARTIFACT_DEFAULTS: dict[str, dict[str, Any]] = {
         "id_pattern": "inbox-note-{slug}",
         "status_default": "open",
         "tags": ["workspace:desk", "artifact:inbox-note"],
+    },
+    "artifact.materialization": {
+        "id_pattern": "materialization-{slug}",
+        "status_default": None,
+        "tags": ["system:deskops", "topic:materialization"],
     },
     "artifact.pill": {
         "id_pattern": "pill-{slug}",

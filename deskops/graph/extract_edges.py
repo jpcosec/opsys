@@ -78,7 +78,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
         text = path.read_text(encoding="utf-8")
         relative_path = source_node.path
 
-        declarations = [*_atom_declarations(text), *_section_declarations(text)]
+        declarations = [*_frontmatter_declarations(text), *_atom_declarations(text), *_section_declarations(text)]
         if source_node.kind == "diagram":
             declarations.extend(_diagram_source_declarations(text))
         if source_node.kind in {"task", "issue"}:
@@ -135,6 +135,20 @@ class _Declaration:
     locator: str
 
 
+def _frontmatter_declarations(text: str) -> list[_Declaration]:
+    if not text.startswith("---\n"):
+        return []
+    try:
+        _, rest = text.split("---\n", 1)
+        block, _body = rest.split("\n---", 1)
+    except ValueError:
+        return []
+    loaded = yaml.safe_load(block)
+    if not isinstance(loaded, dict):
+        return []
+    return _declarations_from_mapping(loaded, "frontmatter")
+
+
 def _atom_declarations(text: str) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     for match in YAML_FENCE_RE.finditer(text):
@@ -142,11 +156,11 @@ def _atom_declarations(text: str) -> list[_Declaration]:
         if not isinstance(loaded, dict):
             continue
         line_number = text[: match.start()].count("\n") + 1
-        declarations.extend(_atom_declarations_from_mapping(loaded, f"line:{line_number}:yaml"))
+        declarations.extend(_declarations_from_mapping(loaded, f"line:{line_number}:yaml"))
     return declarations
 
 
-def _atom_declarations_from_mapping(mapping: dict[Any, Any], locator: str) -> list[_Declaration]:
+def _declarations_from_mapping(mapping: dict[Any, Any], locator: str) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     for key in ("atoms", "source_atoms", "related_atoms"):
         declarations.extend(_atom_declarations_from_value(mapping.get(key), locator, DEFAULT_ROLE))
@@ -155,7 +169,15 @@ def _atom_declarations_from_mapping(mapping: dict[Any, Any], locator: str) -> li
         declarations.extend(
             _atom_declarations_from_value(materialization.get("source_atoms"), locator, DEFAULT_ROLE)
         )
+        declarations.extend(_target_identity_declaration(materialization.get("target_identity"), locator))
+    declarations.extend(_target_identity_declaration(mapping.get("target_identity"), locator))
     return declarations
+
+
+def _target_identity_declaration(value: Any, locator: str) -> list[_Declaration]:
+    if not isinstance(value, str) or not value.strip():
+        return []
+    return [_Declaration(value.strip(), DEFAULT_ROLE, locator)]
 
 
 def _atom_declarations_from_value(value: Any, locator: str, default_role: str) -> list[_Declaration]:
@@ -249,6 +271,8 @@ def _missing_target_id(target: str) -> str:
     parts = Path(path).parts
     if parts[:2] == ("docs", "diagrams"):
         return f"diagram:{path}"
+    if parts and parts[0] == "docs":
+        return f"doc:{path}"
     if parts and parts[0] == "tests":
         return f"test_file:{path}"
     if parts and parts[0] == "spec":

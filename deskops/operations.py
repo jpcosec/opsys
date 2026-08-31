@@ -21,6 +21,7 @@ from deskops.models import EdgeDoc
 from deskops.models import FAQDoc
 from deskops.models import HookDoc
 from deskops.models import InboxNoteDoc
+from deskops.models import MaterializationContractDoc
 from deskops.models import OperatorDoc
 from deskops.models import PillDoc
 from deskops.models import RepositoryDoc
@@ -70,6 +71,7 @@ ARTIFACT_MODELS = {
     "artifact.ritual": RitualDoc,
     "artifact.board": BoardDoc,
     "artifact.atom": AtomDoc,
+    "artifact.materialization": MaterializationContractDoc,
     "artifact.repository": RepositoryDoc,
     "artifact.inbox_note": InboxNoteDoc,
     "artifact.faq": FAQDoc,
@@ -82,6 +84,7 @@ ARTIFACT_PATHS = {
     "artifact.ritual": "rituals",
     "artifact.board": "tasks",
     "artifact.atom": "atoms",
+    "artifact.materialization": "materializations",
     "artifact.repository": "registry",
     "artifact.inbox_note": "inbox",
     "artifact.faq": "faq",
@@ -93,6 +96,7 @@ ARTIFACT_SUBJECTS = {
     "artifact.ritual": {"subject": "ritual", "list_subject": "rituals"},
     "artifact.board": {"subject": "board", "list_subject": "boards"},
     "artifact.atom": {"subject": "atom", "list_subject": "atoms"},
+    "artifact.materialization": {"subject": "materialization", "list_subject": "materializations"},
     "artifact.repository": {"subject": "repository", "list_subject": "repositories"},
     "artifact.inbox_note": {"subject": "inbox-note", "list_subject": "inbox-notes"},
     "artifact.faq": {"subject": "faq-doc", "list_subject": "faq-docs"},
@@ -196,6 +200,7 @@ class DeskopsOperations:
         for relative in [
             Path("routines"),
             Path("atoms"),
+            Path("materializations"),
             Path("steps"),
             Path("registry"),
             Path("faq"),

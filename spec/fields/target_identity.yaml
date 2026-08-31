@@ -1,0 +1,10 @@
+id: field.target_identity
+title: Target Identity Field
+type: field
+version: "0.1"
+
+data:
+  key: target_identity
+  value_type: string
+  required: true
+  default: ""

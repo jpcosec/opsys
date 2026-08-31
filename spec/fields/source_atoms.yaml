@@ -1,0 +1,10 @@
+id: field.source_atoms
+title: Source Atoms Field
+type: field
+version: "0.1"
+
+data:
+  key: source_atoms
+  value_type: list[string]
+  required: false
+  default: []

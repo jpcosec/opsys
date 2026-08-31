@@ -1,0 +1,10 @@
+id: field.intent
+title: Intent Field
+type: field
+version: "0.1"
+
+data:
+  key: intent
+  value_type: string
+  required: true
+  default: ""

@@ -1,0 +1,20 @@
+id: artifact.materialization
+title: Materialization Artifact
+type: artifact
+version: "0.1"
+
+data:
+  doc:
+    model: MaterializationContractDoc
+    id_pattern: materialization-{slug}
+    tags:
+      - system:deskops
+      - topic:materialization
+  fields:
+    - field.title
+    - field.source_atoms
+    - field.target_kind
+    - field.target_identity
+    - field.intent
+    - field.validation
+    - field.provenance

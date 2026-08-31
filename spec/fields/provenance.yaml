@@ -1,0 +1,10 @@
+id: field.provenance
+title: Provenance Field
+type: field
+version: "0.1"
+
+data:
+  key: provenance
+  value_type: string
+  required: false
+  default: ""

@@ -8,6 +8,7 @@ from .edge import EdgeDoc
 from .faq import FAQDoc
 from .hook import HookDoc
 from .inbox import InboxNoteDoc
+from .materialization import MaterializationContractDoc
 from .operator import OperatorDoc
 from .pill import PillDoc
 from .repository import RepositoryDoc
@@ -25,6 +26,7 @@ __all__ = [
     "FAQDoc",
     "HookDoc",
     "InboxNoteDoc",
+    "MaterializationContractDoc",
     "OperatorDoc",
     "OperationalArtifactDoc",
     "PillDoc",
