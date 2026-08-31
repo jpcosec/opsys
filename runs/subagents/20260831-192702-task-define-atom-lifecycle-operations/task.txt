@@ -1,0 +1,13 @@
+Task: task-define-atom-lifecycle-operations
+Title: Define atom lifecycle operations
+Status: active
+Current node: checklist-task-define-atom-lifecycle-operations-execution-ready
+Task type: 
+Routine: routine-task-define-atom-lifecycle-operations
+Effective pills:
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+Checklist status:
+- checklist-task-define-atom-lifecycle-operations-execution-ready: complete
+- checklist-task-define-atom-lifecycle-operations-testing-ready: complete
+- checklist-task-define-atom-lifecycle-operations-closeout-ready: pending

@@ -4,9 +4,11 @@ from dataclasses import dataclass
 import json
 import logging
 from pathlib import Path
+import re
 import subprocess
 import sys
 from typing import Any, Callable
+from urllib.parse import urlparse
 
 import yaml
 from sldb.cli.utils import parse_data_value
@@ -156,6 +158,13 @@ class RepoTaskRoute:
     board_path: Path
     title: str
     status: str
+
+
+@dataclass(slots=True)
+class AtomValidationRecord:
+    doc_id: str
+    path: Path
+    errors: list[str]
 
 
 class DeskopsOperations:
@@ -448,6 +457,35 @@ class DeskopsOperations:
         model = ARTIFACT_MODELS[artifact_id]
         directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
         return self._read_doc(self._resolve_artifact_selector(artifact_id, directory, doc_id), model)
+
+    def validate_atoms(self, selector: str | None = None) -> list[dict[str, Any]]:
+        self.ensure_workspace()
+        paths = [self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)] if selector else self._all_atom_paths()
+        results: list[dict[str, Any]] = []
+        for path in paths:
+            record = self._validate_atom_path(path)
+            results.append({
+                "id": record.doc_id,
+                "path": str(path),
+                "errors": list(record.errors),
+            })
+        return results
+
+    def delete_atom(self, selector: str, *, force: bool = False) -> DocumentRecord:
+        self.ensure_workspace()
+        path = self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)
+        payload = self._read_doc(path, AtomDoc)
+        atom_id = str(payload.get("id") or path.stem)
+        inbound_references = self._find_inbound_atom_references(atom_id, excluded_path=path)
+        if inbound_references and not force:
+            refs = "; ".join(inbound_references)
+            raise ValueError(
+                f"Refusing to delete {atom_id}; inbound references found: {refs}. Re-run with --force to delete without rewriting references."
+            )
+        untracked = self._untrack_atom_document(atom_id)
+        if path.exists():
+            path.unlink()
+        return DocumentRecord(kind="atom-untracked" if untracked else "atom", doc_id=atom_id, path=path)
 
     def show_routine(self, routine_id: str) -> Routine | None:
         return self._load_routine(routine_id)
@@ -1008,6 +1046,112 @@ class DeskopsOperations:
         if not atom_id.startswith("atom-"):
             return False
         return any(atom_path.stem == atom_id for atom_path in (self.desk_root / "atoms").rglob("*.md"))
+
+    def _all_atom_paths(self) -> list[Path]:
+        atoms_dir = self.desk_root / "atoms"
+        if not atoms_dir.exists():
+            return []
+        return sorted(
+            path for path in atoms_dir.rglob("*.md")
+            if path.name != "tag-namespaces.yaml"
+        )
+
+    def _validate_atom_path(self, path: Path) -> AtomValidationRecord:
+        errors: list[str] = []
+        doc_id = path.stem
+        payload: dict[str, Any] | None = None
+        try:
+            payload = self._read_doc(path, AtomDoc)
+            doc_id = str(payload.get("id") or path.stem)
+            AtomDoc(**payload)
+        except Exception as exc:
+            errors.append(f"model validation failed: {exc}")
+            return AtomValidationRecord(doc_id=doc_id, path=path, errors=errors)
+
+        if path.stem != doc_id:
+            errors.append(f"filename must match atom id '{doc_id}'")
+        if not self._is_valid_atom_slug(doc_id):
+            errors.append("atom id must follow slug convention atom-<slug>")
+
+        try:
+            validate_atom_tag_namespaces(
+                list(payload.get("tags") or []),
+                default_registry_path(self.root),
+            )
+        except ValueError as exc:
+            errors.append(str(exc))
+
+        provenance = str(payload.get("provenance") or "").strip()
+        if provenance and not self._provenance_is_resolvable(provenance):
+            errors.append(f"provenance is not resolvable: {provenance}")
+
+        return AtomValidationRecord(doc_id=doc_id, path=path, errors=errors)
+
+    def _is_valid_atom_slug(self, atom_id: str) -> bool:
+        if not atom_id.startswith("atom-"):
+            return False
+        slug = atom_id.removeprefix("atom-")
+        return bool(slug) and slug == slugify(slug)
+
+    def _provenance_is_resolvable(self, provenance: str) -> bool:
+        parsed = urlparse(provenance)
+        if parsed.scheme in {"http", "https"} and parsed.netloc:
+            return True
+        path_text = provenance.split("::", 1)[0].split("#", 1)[0].strip()
+        if not path_text:
+            return False
+        path = Path(path_text)
+        if not path.is_absolute():
+            path = self.root / path
+        return path.exists()
+
+    def _find_inbound_atom_references(self, atom_id: str, *, excluded_path: Path | None = None) -> list[str]:
+        needle = f"atom:{atom_id}"
+        matches: list[str] = []
+        if not self.desk_root.exists():
+            return matches
+        for path in sorted(self.desk_root.rglob("*")):
+            if excluded_path is not None and path == excluded_path:
+                continue
+            if not path.is_file() or path.suffix not in {".md", ".yaml", ".yml", ".json", ".txt"}:
+                continue
+            try:
+                lines = path.read_text(encoding="utf-8").splitlines()
+            except (OSError, UnicodeDecodeError):
+                continue
+            for line_number, line in enumerate(lines, start=1):
+                for reference in re.findall(r"atom:[a-zA-Z0-9_.-]+", line):
+                    if reference == needle and self._reference_points_to_atom(reference):
+                        matches.append(f"{path.relative_to(self.root)}:{line_number}")
+                        break
+        return matches
+
+    def _untrack_atom_document(self, atom_id: str) -> bool:
+        store_path = self.root / ".sldb"
+        try:
+            from sldb.store.io import load_documents_index
+            from sldb.store.io import load_models_index
+            from sldb.store.io import load_store_index
+            from sldb.store.layout import store_exists
+            from sldb.cli.commands.doc_helpers import save_untrack_indexes
+        except ImportError:
+            return False
+        if not store_exists(store_path):
+            return False
+
+        store_index = load_store_index(store_path)
+        model_entry = next((entry for entry in store_index.models if entry.name == AtomDoc.__name__), None)
+        if model_entry is None:
+            return False
+
+        models_index = load_models_index(self.root / model_entry.models_index)
+        documents_index = load_documents_index(self.root / models_index.documents_index)
+        tracked_doc = next((entry for entry in documents_index.documents if entry.name == atom_id or entry.path.endswith(f"/{atom_id}.md") or entry.path == f"desk/atoms/{atom_id}.md"), None)
+        if tracked_doc is None:
+            return False
+        documents_index.documents = [entry for entry in documents_index.documents if entry.name != tracked_doc.name]
+        save_untrack_indexes(store_path, self.root, store_index, model_entry, models_index, documents_index, str(Path(__file__).resolve().parents[1]))
+        return True
 
     def _reference_points_to_test(self, reference: str) -> bool:
         candidates: list[str] = []

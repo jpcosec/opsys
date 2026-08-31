@@ -91,6 +91,23 @@ def _add_atoms_commands(
     show_cmd.add_argument("--root", default=".", help="Target repository root.")
     _add_output_format_argument(show_cmd)
 
+    validate_cmd = s.add_parser(
+        "validate",
+        help="Validate one atom or all atoms for lifecycle safety checks.",
+    )
+    validate_target = validate_cmd.add_mutually_exclusive_group(required=True)
+    validate_target.add_argument("doc_id", nargs="?", help=f"Atom selector. {SELECTOR_HELP}")
+    validate_target.add_argument("--all", action="store_true", help="Validate all atoms under desk/atoms/.")
+    validate_cmd.add_argument("--root", default=".", help="Target repository root.")
+
+    delete_cmd = s.add_parser(
+        "delete",
+        help="Delete one atom after checking inbound references.",
+    )
+    delete_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
+    delete_cmd.add_argument("--root", default=".", help="Target repository root.")
+    delete_cmd.add_argument("--force", action="store_true", help="Delete even when inbound atom:<id> references are present.")
+
 
 def _add_graph_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
