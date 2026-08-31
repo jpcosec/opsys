@@ -1,0 +1,13 @@
+Task: task-establish-horizontal-desk-discovery-and-canonical-identity
+Title: Establish horizontal desk discovery and canonical identity
+Status: active
+Current node: checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready
+Task type: 
+Routine: routine-task-establish-horizontal-desk-discovery-and-canonical-identity
+Effective pills:
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+Checklist status:
+- checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready: complete
+- checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-testing-ready: complete
+- checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-ready: pending

@@ -1,0 +1,8 @@
+## main...origin/main [ahead 3]
+ M deskops/cli/commands/inbox.py
+ M deskops/cli/commands/repo.py
+ M deskops/cli/parser.py
+ M tests/test_cli.py
+?? deskops/identity.py
+?? runs/subagents/20260831-193556-task-establish-horizontal-desk-discovery-and-canonical-identity/
+?? tests/test_repo_identity.py

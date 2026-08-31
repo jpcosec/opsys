@@ -334,25 +334,35 @@ def test_inbox_writes_sender_project_from_current_directory(tmp_path: Path, monk
 
 def test_inbox_resolves_sender_project_from_repo_store(tmp_path: Path, monkeypatch) -> None:
     from deskops.cli.commands.inbox import InboxCLI
+    from sldb.runtime.validation import render_model_markdown
+
+    from deskops.models import RepositoryDoc
 
     sender_root = tmp_path / "sender-repo" / "subdir"
     sender_root.mkdir(parents=True)
     monkeypatch.chdir(sender_root)
 
-    def fake_documents(*_args):
-        return [
-            SimpleNamespace(
-                model_name="RepositoryDoc",
-                payload={"id": "sender-repo", "name": "Sender Repo", "path": "sender-repo"},
-            )
-        ]
+    registry_dir = tmp_path / "desk" / "registry"
+    registry_dir.mkdir(parents=True)
+    payload = {
+        "id": "sender-repo",
+        "name": "Sender Repo",
+        "path": "sender-repo",
+        "status": "active",
+        "description": "Repository for sender-repo.",
+        "tags": [],
+    }
+    (registry_dir / "repo-sender-repo.md").write_text(
+        render_model_markdown(RepositoryDoc, payload) + "\n",
+        encoding="utf-8",
+    )
 
     monkeypatch.setattr(
         InboxCLI,
         "_store_context",
         lambda self, args: (tmp_path / ".sldb", tmp_path),
     )
-    monkeypatch.setattr("sldb.store.query.load_runtime_documents", fake_documents)
+    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (tmp_path / ".sldb", tmp_path))
 
     args = SimpleNamespace(store=str(tmp_path / ".sldb"), pythonpath=None)
 

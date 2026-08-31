@@ -1,0 +1,13 @@
+Missing graph references:
+- missing_declared_target: issue:formalize-epistemic-knowledge-flow-pills-to-atoms -> task:task-knowledge
+  provenance: desk/drawer/issues/issue-formalize-epistemic-knowledge-flow.md:line:42:related atoms
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-add-per-project-desk-config-and-version-contract -> desk/config.local.json
+  provenance: desk/tasks/task-add-per-project-desk-config-and-version-contract.md:line:53:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-establish-horizontal-desk-discovery-and-canonical-identity -> source_file:deskops/identity.py
+  provenance: desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md:line:55:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-establish-horizontal-desk-discovery-and-canonical-identity -> source_file:deskops/identity.py
+  provenance: desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md:line:63:source-file-reference
+  reason: declared target was not found among extracted graph nodes

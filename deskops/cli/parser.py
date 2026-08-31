@@ -246,6 +246,14 @@ def _add_repo_commands(
     reg.add_argument("--store", help="Store path to anchor the registry")
     reg.add_argument("--pythonpath", help="Python path for model resolution")
 
+    whoami = s.add_parser(
+        "whoami",
+        help="Print the canonical project identity for the current repository.",
+        description="Print the canonical project identity for the current repository.",
+    )
+    whoami.add_argument("--root", default=".", help="Repository root to identify")
+    whoami.add_argument("--store", help="Store path to anchor the registry lookup")
+
 
 
 def _add_inbox_commands(

@@ -15,6 +15,9 @@ from sldb.store.layout import project_root
 from sldb.store.ops import track_document
 from sldb.store.resolver import find_local_store
 
+from deskops.identity import infer_sender_project_identity
+from deskops.identity import resolve_registered_desk
+
 
 class InboxCLI:
     """Log messages arriving to a project inbox."""
@@ -77,22 +80,8 @@ class InboxCLI:
         return (Path.cwd() / "desk").resolve()
 
     def _resolve_repo_desk(self, repo_name: str, store_arg: str | None, pythonpath: str | None) -> Path:
-        from sldb.store.query import load_runtime_documents
-
-        store_path, root = self._store_context_safe(store_arg)
-        # Load all documents tracked under RepositoryDoc
-        docs = load_runtime_documents(store_path, resolve_model_ref, pythonpath)
-        
-        for doc in docs:
-            if doc.model_name == "RepositoryDoc":
-                # Check if name or id matches
-                if doc.payload.get("name") == repo_name or doc.payload.get("id") == repo_name:
-                    repo_path = doc.payload.get("path")
-                    if repo_path:
-                        # Path is relative to ecosystem root (which is 'root' here)
-                        return (root / repo_path / "desk").resolve()
-        
-        raise SLDBStoreError(f"Repository '{repo_name}' not found in registry.")
+        _ = pythonpath
+        return resolve_registered_desk(repo_name, store_arg)
 
     def _store_context_safe(self, store_arg: str | None) -> tuple[Path, Path]:
         if store_arg:
@@ -214,25 +203,10 @@ class InboxCLI:
         context = self._store_context(args)
         if context is None:
             return sender_root.name
-        store_path, root = context
-        try:
-            from sldb.store.query import load_runtime_documents
-
-            docs = load_runtime_documents(store_path, resolve_model_ref, args.pythonpath)
-        except (SLDBStoreError, FileNotFoundError, OSError):
+        sender_project = infer_sender_project_identity(sender_root, args.store)
+        if sender_project is None:
             return sender_root.name
-
-        for doc in docs:
-            if doc.model_name != "RepositoryDoc":
-                continue
-            repo_path = doc.payload.get("path")
-            if not repo_path:
-                continue
-            registered_root = (root / repo_path).resolve()
-            if sender_root == registered_root or _is_relative_to(sender_root, registered_root):
-                return doc.payload.get("id") or doc.payload.get("name") or registered_root.name
-
-        return sender_root.name
+        return sender_project
 
     def _auto_track_note(self, args: Any, path: Path) -> str | None:
         context = self._store_context(args)
@@ -275,10 +249,3 @@ class InboxCLI:
             return None
         return local_store, project_root(local_store)
 
-
-def _is_relative_to(path: Path, other: Path) -> bool:
-    try:
-        path.relative_to(other)
-    except ValueError:
-        return False
-    return True

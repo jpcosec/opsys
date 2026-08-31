@@ -12,6 +12,9 @@ from sldb.store.layout import project_root
 from sldb.store.ops import track_document
 from sldb.store.resolver import find_local_store
 
+from deskops.identity import load_repository_registry
+from deskops.identity import resolve_canonical_project_identity
+
 
 class RepoCLI:
     """Handle repository registration and discovery."""
@@ -19,6 +22,8 @@ class RepoCLI:
     def run(self, args: Any) -> int:
         if args.repo_command == "register":
             return self.register(args)
+        if args.repo_command == "whoami":
+            return self.whoami(args)
         return 1
 
     def register(self, args: Any) -> int:
@@ -65,6 +70,26 @@ class RepoCLI:
             print(f"Error: Repository file already exists at {output_path}")
             return 1
 
+        try:
+            existing_entries = load_repository_registry(desk_root, root)
+        except SLDBStoreError as e:
+            print(f"Error: {e}")
+            return 1
+
+        resolved_repo_root = self._resolve_registered_root(root, path)
+        for entry in existing_entries:
+            if entry.id == repo_id:
+                print(
+                    f"Error: Repository id '{repo_id}' is already registered by {entry.source_path}."
+                )
+                return 1
+            if entry.repo_root is not None and resolved_repo_root == entry.repo_root:
+                print(
+                    "Error: Repository root "
+                    f"'{resolved_repo_root}' is already registered as '{entry.id}' by {entry.source_path}."
+                )
+                return 1
+
         from sldb.store.io import load_models_index, load_documents_index
         models_idx = load_models_index(root / entry.models_index)
         docs_idx = load_documents_index(root / models_idx.documents_index)
@@ -102,6 +127,15 @@ class RepoCLI:
 
         return 0
 
+    def whoami(self, args: Any) -> int:
+        try:
+            project_id = resolve_canonical_project_identity(Path(args.root), args.store)
+        except SLDBStoreError as e:
+            print(f"Error: {e}")
+            return 1
+        print(project_id)
+        return 0
+
     def _slug(self, text: str) -> str:
         slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
         return slug or "repo"
@@ -124,3 +158,9 @@ class RepoCLI:
         if local_store is None:
             raise SLDBStoreError("No store found to anchor the registry.")
         return local_store, project_root(local_store)
+
+    def _resolve_registered_root(self, ecosystem_root: Path, repo_path: str) -> Path:
+        candidate = Path(repo_path)
+        if candidate.is_absolute():
+            return candidate.resolve()
+        return (ecosystem_root / candidate).resolve()
