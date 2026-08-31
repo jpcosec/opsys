@@ -1,0 +1,14 @@
+Task: task-add-per-project-desk-config-and-version-contract
+Title: Add per-project desk config and version contract
+Status: active
+Current node: checklist-task-add-per-project-desk-config-and-version-contract-execution-ready
+Task type: 
+Routine: routine-task-add-per-project-desk-config-and-version-contract
+Effective pills:
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+Checklist status:
+- checklist-task-add-per-project-desk-config-and-version-contract-execution-ready: complete
+- checklist-task-add-per-project-desk-config-and-version-contract-testing-ready: complete
+- checklist-task-add-per-project-desk-config-and-version-contract-closeout-ready: pending

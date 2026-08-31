@@ -1,0 +1,4 @@
+## main...origin/main [ahead 4]
+?? runs/subagents/20260831-194603-task-add-per-project-desk-config-and-version-contract/
+?? runs/subagents/20260831-194627-task-add-per-project-desk-config-and-version-contract/
+?? runs/subagents/20260831-194634-task-add-per-project-desk-config-and-version-contract/

@@ -1,0 +1,7 @@
+Missing graph references:
+- missing_declared_target: issue:formalize-epistemic-knowledge-flow-pills-to-atoms -> task:task-knowledge
+  provenance: desk/drawer/issues/issue-formalize-epistemic-knowledge-flow.md:line:42:related atoms
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-add-per-project-desk-config-and-version-contract -> desk/config.local.json
+  provenance: desk/tasks/task-add-per-project-desk-config-and-version-contract.md:line:53:source-file-reference
+  reason: declared target was not found among extracted graph nodes

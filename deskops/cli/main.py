@@ -140,15 +140,16 @@ class CLI:
         from pathlib import Path
         import os
 
-        # CLI root is "."
+        # Authoritative precedence for test-root selection:
+        # explicit CLI flag > DESKOPS_TEST_ROOT env > config.local.json > config.json > defaults.
+        # This helper only applies when the CLI root is still the default ".".
         original_root = Path(".").resolve()
         desk_root = original_root / "desk"
-        
+
         test_root = os.environ.get("DESKOPS_TEST_ROOT", "").strip()
-        
-        # Load config to get sandbox policy
+
         config = DeskConfig.load(desk_root)
-        
+
         if test_root:
             target_root = test_root
         elif config.sandbox.enabled and config.sandbox.sandbox_root:

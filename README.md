@@ -7,6 +7,7 @@ This README is a human-facing materialization of these atoms:
 - `desk/atoms/workflow-model/atom-sldb-is-read-write-edit-surface.md`
 - `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
 - `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+- `desk/atoms/workflow-model/atom-desk-test-root-precedence-is-explicit.md`
 
 Workflow-domain instance built on top of `sldb`.
 
@@ -158,6 +159,20 @@ deskops init .
 - ensure the bootstrap prerequisites are ready
 - create a local `.sldb/` store under the target repo when missing
 - scaffold `desk/` when missing
+
+## Per-project desk config precedence
+
+Each desk can declare tracked shared config in `desk/config.json` and optional machine-local overrides in `desk/config.local.json`.
+
+For root/sandbox resolution, precedence is authoritative:
+
+1. explicit CLI flag such as `--root`
+2. `DESKOPS_TEST_ROOT`
+3. `desk/config.local.json`
+4. `desk/config.json`
+5. built-in defaults
+
+`desk/config.local.json` is intended for disposable local overrides such as sandbox settings; tracked shared expectations such as `versions.desk_format` belong in `desk/config.json`.
 
 ## CLI
 

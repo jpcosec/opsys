@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from deskops.constants import CURRENT_DESK_FORMAT
+
 
 @dataclass
 class DeskScaffoldResult:
@@ -96,7 +98,7 @@ def _config_template(name: str) -> str:
     data = {
         "project_identity": name,
         "versions": {
-            "desk_format": "1.0.0",
+            "desk_format": CURRENT_DESK_FORMAT,
             "model_version": "1.0.0"
         },
         "sandbox": {

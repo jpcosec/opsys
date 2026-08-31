@@ -1,44 +1,76 @@
-from typing import Any
-from pathlib import Path
+from __future__ import annotations
+
 import json
+import warnings
+from pathlib import Path
+from typing import Any
+
 from pydantic import BaseModel, Field
+
+from deskops.constants import CURRENT_DESK_FORMAT
+
 
 class SandboxPolicy(BaseModel):
     enabled: bool = False
     sandbox_root: str | None = None
 
+
 class VersionExpectations(BaseModel):
-    desk_format: str = "1.0.0"
+    desk_format: str = CURRENT_DESK_FORMAT
     model_version: str = "1.0.0"
+
 
 class DeskConfig(BaseModel):
     project_identity: str = Field(default="unknown-project", description="Canonical project desk identity")
     versions: VersionExpectations = Field(default_factory=VersionExpectations)
     sandbox: SandboxPolicy = Field(default_factory=SandboxPolicy)
+    load_warnings: list[str] = Field(default_factory=list, exclude=True)
+
+    @property
+    def has_load_warnings(self) -> bool:
+        return bool(self.load_warnings)
 
     @classmethod
     def load(cls, desk_root: Path) -> "DeskConfig":
-        config_path = desk_root / "config.json"
-        local_config_path = desk_root / "config.local.json"
+        merged_data: dict[str, Any] = {}
+        load_warnings: list[str] = []
 
-        data: dict[str, Any] = {}
-        if config_path.exists():
-            try:
-                data = json.loads(config_path.read_text(encoding="utf-8"))
-            except Exception:
-                pass
+        for config_path in (desk_root / "config.json", desk_root / "config.local.json"):
+            file_data = _load_json_object(config_path, load_warnings)
+            if file_data is None:
+                continue
+            merged_data = _deep_merge_dicts(merged_data, file_data)
 
-        if local_config_path.exists():
-            try:
-                local_data = json.loads(local_config_path.read_text(encoding="utf-8"))
-                # basic merge
-                if "project_identity" in local_data:
-                    data["project_identity"] = local_data["project_identity"]
-                if "versions" in local_data:
-                    data.setdefault("versions", {}).update(local_data["versions"])
-                if "sandbox" in local_data:
-                    data.setdefault("sandbox", {}).update(local_data["sandbox"])
-            except Exception:
-                pass
+        return cls(**merged_data, load_warnings=load_warnings)
 
-        return cls(**data)
+
+def _load_json_object(path: Path, load_warnings: list[str]) -> dict[str, Any] | None:
+    if not path.exists():
+        return None
+
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        message = f"Failed to parse desk config {path}: {exc.msg}"
+        load_warnings.append(message)
+        warnings.warn(message, stacklevel=2)
+        return None
+
+    if not isinstance(data, dict):
+        message = f"Desk config {path} must contain a JSON object at the top level."
+        load_warnings.append(message)
+        warnings.warn(message, stacklevel=2)
+        return None
+
+    return data
+
+
+def _deep_merge_dicts(base: dict[str, Any], override: dict[str, Any]) -> dict[str, Any]:
+    merged: dict[str, Any] = dict(base)
+    for key, override_value in override.items():
+        base_value = merged.get(key)
+        if isinstance(base_value, dict) and isinstance(override_value, dict):
+            merged[key] = _deep_merge_dicts(base_value, override_value)
+        else:
+            merged[key] = override_value
+    return merged
