@@ -1,6 +1,16 @@
 ---
 id: task-add-drift-check-review-loop
-status: active
+status: ready_for_testing
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+routine: routine-task-add-drift-check-review-loop
+current_node: checklist-task-add-drift-check-review-loop-closeout-ready
+history:
+- operator-task-add-drift-check-review-loop-activate
+- operator-task-add-drift-check-review-loop-ready-for-testing
 references: []
 depends_on: []
 pills:
@@ -8,17 +18,16 @@ pills:
 - desk/contexts/pill-011-self-reflection-noise-control.md
 - desk/contexts/pill-009-source-file-graph-traceability.md
 files: []
-routine: routine-task-add-drift-check-review-loop
 checklists:
 - checklist-task-add-drift-check-review-loop-execution-ready
 - checklist-task-add-drift-check-review-loop-testing-ready
 - checklist-task-add-drift-check-review-loop-closeout-ready
-current_node: checklist-task-add-drift-check-review-loop-execution-ready
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+closeout_evidence_verified: false
+pill_graduation_verified: false
 ---
 
 # Add drift check review loop
