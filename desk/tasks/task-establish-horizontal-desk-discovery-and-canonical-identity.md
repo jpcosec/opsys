@@ -1,23 +1,36 @@
 ---
 id: task-establish-horizontal-desk-discovery-and-canonical-identity
-status: active
-references: []
+status: ready_for_testing
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+routine: routine-task-establish-horizontal-desk-discovery-and-canonical-identity
+current_node: checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-ready
+history:
+- operator-task-establish-horizontal-desk-discovery-and-canonical-identity-activate
+- operator-task-establish-horizontal-desk-discovery-and-canonical-identity-ready-for-testing
+references:
+- '1104094'
+- tests/test_repo_identity.py
+- atom:atom-canonical-project-identity-resolves-through-a-shared-registry-resolver
 depends_on: []
 pills:
 - desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
 - desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
 files: []
-routine: routine-task-establish-horizontal-desk-discovery-and-canonical-identity
 checklists:
 - checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready
 - checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-testing-ready
 - checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-ready
-current_node: checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms:
+- atom-canonical-project-identity-resolves-through-a-shared-registry-resolver
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # Establish horizontal desk discovery and canonical identity
@@ -44,9 +57,9 @@ _State what is in scope and what is out of scope._
 - make sibling desk discovery answer "where is that repo's desk?" reliably from canonical identity
 - route duplicate-root and duplicate-id ambiguity into explicit failure instead of first-match guessing
 
-## Resolved Decisions
+## Implementation Path
 
-Supervisor rulings:
+_Outline the expected implementation route or affected surface._
 
 - Canonical identity = `DeskConfig.project_identity`, which must equal `RepositoryDoc.id` for the registered repo (1:1). Sentinel `"unknown-project"` means "not established".
 - Authority on conflict: if config identity and registry-derived identity disagree, FAIL loudly (do not pick one silently).
@@ -55,12 +68,6 @@ Supervisor rulings:
 - Shared resolver: add `deskops/identity.py` with load-registry -> match-by-id -> match-by-root -> detect-duplicates; consumed by inbox.py, repo.py, whoami.
 - Registration guard: `repo register` rejects when id OR resolved root already maps to another entry.
 - Config identity fields themselves are owned by the per-project-config task; this task only CONSUMES them. Legacy migration of `"unknown-project"` desks is OUT (owned by legacy-migrate task).
-
-## Implementation Path
-
-_Outline the expected implementation route or affected surface._
-
-Add deskops/identity.py shared resolver; wire repo whoami in parser/main/repo.py; make inbox.py resolution fail-on-duplicate; guard repo register. Tests in tests/test_repo_identity.py.
 
 ## Validation
 
