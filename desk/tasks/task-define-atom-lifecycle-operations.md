@@ -1,23 +1,36 @@
 ---
 id: task-define-atom-lifecycle-operations
-status: active
-references: []
+status: ready_for_testing
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+routine: routine-task-define-atom-lifecycle-operations
+current_node: checklist-task-define-atom-lifecycle-operations-closeout-ready
+history:
+- operator-task-define-atom-lifecycle-operations-activate
+- operator-task-define-atom-lifecycle-operations-ready-for-testing
+references:
+- 59fe162
+- tests/test_atoms_cli.py
+- atom:atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard
 depends_on: []
 pills:
 - desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
 - desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
 files: []
-routine: routine-task-define-atom-lifecycle-operations
 checklists:
 - checklist-task-define-atom-lifecycle-operations-execution-ready
 - checklist-task-define-atom-lifecycle-operations-testing-ready
 - checklist-task-define-atom-lifecycle-operations-closeout-ready
-current_node: checklist-task-define-atom-lifecycle-operations-execution-ready
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms:
+- atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # Define atom lifecycle operations
@@ -45,9 +58,9 @@ _State what is in scope and what is out of scope._
 - split/merge/delete rules
 - relation to materialization contracts and provenance
 
-## Resolved Decisions
+## Implementation Path
 
-Supervisor rulings to keep this a single coherent deliverable (the full six-capability set is decomposed; only the safe, high-value slice ships here):
+_Outline the expected implementation route or affected surface._
 
 - IN SCOPE this task: `deskops atoms validate [<id>|--all]` and `deskops atoms delete <id> [--force]`.
 - `validate`: checks single 5WH1+ (already modeled), tag-namespace validity via `validate_atom_tag_namespaces`, provenance resolvability, id slug convention `atom-<slug>`. Exit non-zero on invalid.
@@ -56,12 +69,6 @@ Supervisor rulings to keep this a single coherent deliverable (the full six-capa
 - OUT (deferred to new drawer tasks): split, merge, create-from-pill/graph/diagram. Capture as drawer backlog at closeout.
 - CLI namespace stays plural: `deskops atoms ...`.
 - Verify SLDB exposes an untrack API before relying on it; if absent, route a sldb inbox note and keep file removal + graph-check as the delete evidence.
-
-## Implementation Path
-
-_Outline the expected implementation route or affected surface._
-
-Add validate/delete subcommands in parser + atoms.py, logic in operations.py (reuse _reference_points_to_atom). Tests in tests/ using sandbox desk.
 
 ## Validation
 
