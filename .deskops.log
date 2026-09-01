@@ -49,3 +49,234 @@ Auto-closing task task-design-operational-cli-grammar
 2026-08-19 23:33:51,497 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests manually to testing_gate
 2026-08-19 23:33:51,833 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests manually to closeout_gate
 2026-08-19 23:33:52,223 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests manually to complete
+2026-09-01 18:28:58,670 - deskops - INFO - Advanced task task-add-drift-check-review-loop to node checklist-task-add-drift-check-review-loop-testing-ready
+2026-09-01 18:29:07,585 - deskops - INFO - Advanced task task-add-drift-check-review-loop to node checklist-task-add-drift-check-review-loop-closeout-ready
+2026-09-01 18:29:16,237 - deskops - INFO - Advanced task task-add-drift-check-review-loop to node checklist-task-add-drift-check-review-loop-closeout-ready
+2026-09-01 18:31:34,215 - deskops - INFO - Task task-add-drift-check-review-loop is complete. Performing auto-commit and cleanup.
+2026-09-01 18:31:34,230 - deskops - DEBUG - Removing runtime artifacts for task task-add-drift-check-review-loop
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive condition-task-add-drift-check-review-loop-has-implementation-path.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive condition-task-add-drift-check-review-loop-has-validation.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive condition-task-add-drift-check-review-loop-has-closeout-evidence.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive condition-task-add-drift-check-review-loop-ready-for-closeout.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive checklist-task-add-drift-check-review-loop-closeout-ready.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive checklist-task-add-drift-check-review-loop-testing-ready.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive checklist-task-add-drift-check-review-loop-execution-ready.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive operator-task-add-drift-check-review-loop-close.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive operator-task-add-drift-check-review-loop-activate.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive operator-task-add-drift-check-review-loop-ready-for-testing.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive edge-task-add-drift-check-review-loop-close-to-complete.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive edge-task-add-drift-check-review-loop-closeout-to-close.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive edge-task-add-drift-check-review-loop-testing-to-ready.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive edge-task-add-drift-check-review-loop-execution-to-activate.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive edge-task-add-drift-check-review-loop-activate-to-testing.md
+2026-09-01 18:31:34,285 - deskops - DEBUG - Removing primitive edge-task-add-drift-check-review-loop-ready-to-closeout.md
+2026-09-01 18:31:34,293 - deskops - INFO - Committing closure for task-add-drift-check-review-loop: closeout: task-add-drift-check-review-loop
+
+Task-Id: task-add-drift-check-review-loop
+2026-09-01 18:32:51,046 - deskops - INFO - Advanced task task-define-materialization-contract-slice-deskops-surface to node checklist-task-define-materialization-contract-slice-deskops-surface-testing-ready
+2026-09-01 18:32:51,335 - deskops - INFO - Advanced task task-define-materialization-contract-slice-deskops-surface to node checklist-task-define-materialization-contract-slice-deskops-surface-closeout-ready
+2026-09-01 18:32:51,886 - deskops - INFO - Task task-define-materialization-contract-slice-deskops-surface is complete. Performing auto-commit and cleanup.
+2026-09-01 18:32:51,899 - deskops - DEBUG - Removing runtime artifacts for task task-define-materialization-contract-slice-deskops-surface
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive condition-task-define-materialization-contract-slice-deskops-surface-has-implementation-path.md
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive condition-task-define-materialization-contract-slice-deskops-surface-has-validation.md
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive condition-task-define-materialization-contract-slice-deskops-surface-ready-for-closeout.md
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive condition-task-define-materialization-contract-slice-deskops-surface-has-closeout-evidence.md
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive checklist-task-define-materialization-contract-slice-deskops-surface-testing-ready.md
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive checklist-task-define-materialization-contract-slice-deskops-surface-closeout-ready.md
+2026-09-01 18:32:51,981 - deskops - DEBUG - Removing primitive checklist-task-define-materialization-contract-slice-deskops-surface-execution-ready.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive operator-task-define-materialization-contract-slice-deskops-surface-ready-for-testing.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive operator-task-define-materialization-contract-slice-deskops-surface-close.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive operator-task-define-materialization-contract-slice-deskops-surface-activate.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive edge-task-define-materialization-contract-slice-deskops-surface-closeout-to-close.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive edge-task-define-materialization-contract-slice-deskops-surface-testing-to-ready.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive edge-task-define-materialization-contract-slice-deskops-surface-execution-to-activate.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive edge-task-define-materialization-contract-slice-deskops-surface-ready-to-closeout.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive edge-task-define-materialization-contract-slice-deskops-surface-activate-to-testing.md
+2026-09-01 18:32:51,982 - deskops - DEBUG - Removing primitive edge-task-define-materialization-contract-slice-deskops-surface-close-to-complete.md
+2026-09-01 18:32:51,990 - deskops - INFO - Committing closure for task-define-materialization-contract-slice-deskops-surface: closeout: task-define-materialization-contract-slice-deskops-surface
+
+Task-Id: task-define-materialization-contract-slice-deskops-surface
+2026-09-01 18:32:53,962 - deskops - INFO - Advanced task task-define-atom-lifecycle-operations to node checklist-task-define-atom-lifecycle-operations-testing-ready
+2026-09-01 18:32:54,252 - deskops - INFO - Advanced task task-define-atom-lifecycle-operations to node checklist-task-define-atom-lifecycle-operations-closeout-ready
+2026-09-01 18:32:54,820 - deskops - INFO - Task task-define-atom-lifecycle-operations is complete. Performing auto-commit and cleanup.
+2026-09-01 18:32:54,834 - deskops - DEBUG - Removing runtime artifacts for task task-define-atom-lifecycle-operations
+2026-09-01 18:32:54,911 - deskops - DEBUG - Removing primitive condition-task-define-atom-lifecycle-operations-has-implementation-path.md
+2026-09-01 18:32:54,911 - deskops - DEBUG - Removing primitive condition-task-define-atom-lifecycle-operations-has-closeout-evidence.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive condition-task-define-atom-lifecycle-operations-has-validation.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive condition-task-define-atom-lifecycle-operations-ready-for-closeout.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive checklist-task-define-atom-lifecycle-operations-testing-ready.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive checklist-task-define-atom-lifecycle-operations-closeout-ready.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive checklist-task-define-atom-lifecycle-operations-execution-ready.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive operator-task-define-atom-lifecycle-operations-activate.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive operator-task-define-atom-lifecycle-operations-close.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive operator-task-define-atom-lifecycle-operations-ready-for-testing.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive edge-task-define-atom-lifecycle-operations-closeout-to-close.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive edge-task-define-atom-lifecycle-operations-ready-to-closeout.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive edge-task-define-atom-lifecycle-operations-testing-to-ready.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive edge-task-define-atom-lifecycle-operations-close-to-complete.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive edge-task-define-atom-lifecycle-operations-activate-to-testing.md
+2026-09-01 18:32:54,912 - deskops - DEBUG - Removing primitive edge-task-define-atom-lifecycle-operations-execution-to-activate.md
+2026-09-01 18:32:54,920 - deskops - INFO - Committing closure for task-define-atom-lifecycle-operations: closeout: task-define-atom-lifecycle-operations
+
+Task-Id: task-define-atom-lifecycle-operations
+2026-09-01 18:32:56,979 - deskops - INFO - Advanced task task-establish-horizontal-desk-discovery-and-canonical-identity to node checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-testing-ready
+2026-09-01 18:32:57,309 - deskops - INFO - Advanced task task-establish-horizontal-desk-discovery-and-canonical-identity to node checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-ready
+2026-09-01 18:32:57,909 - deskops - INFO - Task task-establish-horizontal-desk-discovery-and-canonical-identity is complete. Performing auto-commit and cleanup.
+2026-09-01 18:32:57,923 - deskops - DEBUG - Removing runtime artifacts for task task-establish-horizontal-desk-discovery-and-canonical-identity
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive condition-task-establish-horizontal-desk-discovery-and-canonical-identity-has-closeout-evidence.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive condition-task-establish-horizontal-desk-discovery-and-canonical-identity-ready-for-closeout.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive condition-task-establish-horizontal-desk-discovery-and-canonical-identity-has-implementation-path.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive condition-task-establish-horizontal-desk-discovery-and-canonical-identity-has-validation.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-testing-ready.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-ready.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive checklist-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-ready.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive operator-task-establish-horizontal-desk-discovery-and-canonical-identity-close.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive operator-task-establish-horizontal-desk-discovery-and-canonical-identity-ready-for-testing.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive operator-task-establish-horizontal-desk-discovery-and-canonical-identity-activate.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive edge-task-establish-horizontal-desk-discovery-and-canonical-identity-execution-to-activate.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive edge-task-establish-horizontal-desk-discovery-and-canonical-identity-activate-to-testing.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive edge-task-establish-horizontal-desk-discovery-and-canonical-identity-ready-to-closeout.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive edge-task-establish-horizontal-desk-discovery-and-canonical-identity-testing-to-ready.md
+2026-09-01 18:32:57,965 - deskops - DEBUG - Removing primitive edge-task-establish-horizontal-desk-discovery-and-canonical-identity-close-to-complete.md
+2026-09-01 18:32:57,966 - deskops - DEBUG - Removing primitive edge-task-establish-horizontal-desk-discovery-and-canonical-identity-closeout-to-close.md
+2026-09-01 18:32:57,973 - deskops - INFO - Committing closure for task-establish-horizontal-desk-discovery-and-canonical-identity: closeout: task-establish-horizontal-desk-discovery-and-canonical-identity
+
+Task-Id: task-establish-horizontal-desk-discovery-and-canonical-identity
+2026-09-01 18:33:09,918 - deskops - INFO - Advanced task task-add-per-project-desk-config-and-version-contract to node checklist-task-add-per-project-desk-config-and-version-contract-testing-ready
+2026-09-01 18:33:10,272 - deskops - INFO - Advanced task task-add-per-project-desk-config-and-version-contract to node checklist-task-add-per-project-desk-config-and-version-contract-closeout-ready
+2026-09-01 18:33:10,860 - deskops - INFO - Task task-add-per-project-desk-config-and-version-contract is complete. Performing auto-commit and cleanup.
+2026-09-01 18:33:10,874 - deskops - DEBUG - Removing runtime artifacts for task task-add-per-project-desk-config-and-version-contract
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive condition-task-add-per-project-desk-config-and-version-contract-ready-for-closeout.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive condition-task-add-per-project-desk-config-and-version-contract-has-validation.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive condition-task-add-per-project-desk-config-and-version-contract-has-closeout-evidence.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive condition-task-add-per-project-desk-config-and-version-contract-has-implementation-path.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive checklist-task-add-per-project-desk-config-and-version-contract-execution-ready.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive checklist-task-add-per-project-desk-config-and-version-contract-testing-ready.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive checklist-task-add-per-project-desk-config-and-version-contract-closeout-ready.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive operator-task-add-per-project-desk-config-and-version-contract-ready-for-testing.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive operator-task-add-per-project-desk-config-and-version-contract-close.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive operator-task-add-per-project-desk-config-and-version-contract-activate.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive edge-task-add-per-project-desk-config-and-version-contract-closeout-to-close.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive edge-task-add-per-project-desk-config-and-version-contract-ready-to-closeout.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive edge-task-add-per-project-desk-config-and-version-contract-close-to-complete.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive edge-task-add-per-project-desk-config-and-version-contract-activate-to-testing.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive edge-task-add-per-project-desk-config-and-version-contract-execution-to-activate.md
+2026-09-01 18:33:10,912 - deskops - DEBUG - Removing primitive edge-task-add-per-project-desk-config-and-version-contract-testing-to-ready.md
+2026-09-01 18:33:10,919 - deskops - INFO - Committing closure for task-add-per-project-desk-config-and-version-contract: closeout: task-add-per-project-desk-config-and-version-contract
+
+Task-Id: task-add-per-project-desk-config-and-version-contract
+2026-09-01 18:33:12,888 - deskops - INFO - Advanced task task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout to node checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-testing-ready
+2026-09-01 18:33:13,197 - deskops - INFO - Advanced task task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout to node checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-ready
+2026-09-01 18:33:13,763 - deskops - INFO - Task task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout is complete. Performing auto-commit and cleanup.
+2026-09-01 18:33:13,776 - deskops - DEBUG - Removing runtime artifacts for task task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive condition-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-has-implementation-path.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive condition-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-ready-for-closeout.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive condition-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-has-validation.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive condition-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-has-closeout-evidence.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-ready.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-testing-ready.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive operator-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-ready-for-testing.md
+2026-09-01 18:33:13,842 - deskops - DEBUG - Removing primitive operator-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-activate.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive operator-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-close.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive edge-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-close-to-complete.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive edge-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-to-close.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive edge-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-activate-to-testing.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive edge-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-to-activate.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive edge-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-ready-to-closeout.md
+2026-09-01 18:33:13,843 - deskops - DEBUG - Removing primitive edge-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-testing-to-ready.md
+2026-09-01 18:33:13,850 - deskops - INFO - Committing closure for task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout: closeout: task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+
+Task-Id: task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+2026-09-01 18:33:15,964 - deskops - INFO - Advanced task task-wire-closeout-to-knowledge-gates to node checklist-task-wire-closeout-to-knowledge-gates-testing-ready
+2026-09-01 18:33:16,335 - deskops - INFO - Advanced task task-wire-closeout-to-knowledge-gates to node checklist-task-wire-closeout-to-knowledge-gates-closeout-ready
+2026-09-01 18:33:16,934 - deskops - INFO - Task task-wire-closeout-to-knowledge-gates is complete. Performing auto-commit and cleanup.
+2026-09-01 18:33:16,948 - deskops - DEBUG - Removing runtime artifacts for task task-wire-closeout-to-knowledge-gates
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive condition-task-wire-closeout-to-knowledge-gates-ready-for-closeout.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive condition-task-wire-closeout-to-knowledge-gates-has-validation.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive condition-task-wire-closeout-to-knowledge-gates-has-closeout-evidence.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive condition-task-wire-closeout-to-knowledge-gates-has-implementation-path.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive checklist-task-wire-closeout-to-knowledge-gates-execution-ready.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive checklist-task-wire-closeout-to-knowledge-gates-closeout-ready.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive checklist-task-wire-closeout-to-knowledge-gates-testing-ready.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive operator-task-wire-closeout-to-knowledge-gates-close.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive operator-task-wire-closeout-to-knowledge-gates-activate.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive operator-task-wire-closeout-to-knowledge-gates-ready-for-testing.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive edge-task-wire-closeout-to-knowledge-gates-closeout-to-close.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive edge-task-wire-closeout-to-knowledge-gates-activate-to-testing.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive edge-task-wire-closeout-to-knowledge-gates-execution-to-activate.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive edge-task-wire-closeout-to-knowledge-gates-close-to-complete.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive edge-task-wire-closeout-to-knowledge-gates-testing-to-ready.md
+2026-09-01 18:33:16,984 - deskops - DEBUG - Removing primitive edge-task-wire-closeout-to-knowledge-gates-ready-to-closeout.md
+2026-09-01 18:33:16,992 - deskops - INFO - Committing closure for task-wire-closeout-to-knowledge-gates: closeout: task-wire-closeout-to-knowledge-gates
+
+Task-Id: task-wire-closeout-to-knowledge-gates
+2026-09-01 18:33:19,200 - deskops - INFO - Advanced task task-make-cross-desk-inbox-delivery-verifiable-and-actionable to node checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-testing-ready
+2026-09-01 18:33:19,530 - deskops - INFO - Advanced task task-make-cross-desk-inbox-delivery-verifiable-and-actionable to node checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-ready
+2026-09-01 18:33:20,128 - deskops - INFO - Task task-make-cross-desk-inbox-delivery-verifiable-and-actionable is complete. Performing auto-commit and cleanup.
+2026-09-01 18:33:20,142 - deskops - DEBUG - Removing runtime artifacts for task task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive condition-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-has-validation.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive condition-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-has-implementation-path.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive condition-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-ready-for-closeout.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive condition-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-has-closeout-evidence.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-testing-ready.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-ready.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive operator-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-close.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive operator-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-activate.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive operator-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-ready-for-testing.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive edge-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-testing-to-ready.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive edge-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-to-activate.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive edge-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-close-to-complete.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive edge-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-to-close.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive edge-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-activate-to-testing.md
+2026-09-01 18:33:20,170 - deskops - DEBUG - Removing primitive edge-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-ready-to-closeout.md
+2026-09-01 18:33:20,178 - deskops - INFO - Committing closure for task-make-cross-desk-inbox-delivery-verifiable-and-actionable: closeout: task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+
+Task-Id: task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+2026-09-01 18:33:22,216 - deskops - INFO - Advanced task task-detect-and-migrate-legacy-desk-workspaces to node checklist-task-detect-and-migrate-legacy-desk-workspaces-testing-ready
+2026-09-01 18:33:22,550 - deskops - INFO - Advanced task task-detect-and-migrate-legacy-desk-workspaces to node checklist-task-detect-and-migrate-legacy-desk-workspaces-closeout-ready
+2026-09-01 18:33:23,146 - deskops - INFO - Task task-detect-and-migrate-legacy-desk-workspaces is complete. Performing auto-commit and cleanup.
+2026-09-01 18:33:23,159 - deskops - DEBUG - Removing runtime artifacts for task task-detect-and-migrate-legacy-desk-workspaces
+2026-09-01 18:33:23,179 - deskops - DEBUG - Removing primitive condition-task-detect-and-migrate-legacy-desk-workspaces-has-implementation-path.md
+2026-09-01 18:33:23,179 - deskops - DEBUG - Removing primitive condition-task-detect-and-migrate-legacy-desk-workspaces-ready-for-closeout.md
+2026-09-01 18:33:23,179 - deskops - DEBUG - Removing primitive condition-task-detect-and-migrate-legacy-desk-workspaces-has-closeout-evidence.md
+2026-09-01 18:33:23,179 - deskops - DEBUG - Removing primitive condition-task-detect-and-migrate-legacy-desk-workspaces-has-validation.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive checklist-task-detect-and-migrate-legacy-desk-workspaces-closeout-ready.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive checklist-task-detect-and-migrate-legacy-desk-workspaces-testing-ready.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive checklist-task-detect-and-migrate-legacy-desk-workspaces-execution-ready.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive operator-task-detect-and-migrate-legacy-desk-workspaces-activate.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive operator-task-detect-and-migrate-legacy-desk-workspaces-close.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive operator-task-detect-and-migrate-legacy-desk-workspaces-ready-for-testing.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive edge-task-detect-and-migrate-legacy-desk-workspaces-closeout-to-close.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive edge-task-detect-and-migrate-legacy-desk-workspaces-activate-to-testing.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive edge-task-detect-and-migrate-legacy-desk-workspaces-execution-to-activate.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive edge-task-detect-and-migrate-legacy-desk-workspaces-ready-to-closeout.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive edge-task-detect-and-migrate-legacy-desk-workspaces-close-to-complete.md
+2026-09-01 18:33:23,180 - deskops - DEBUG - Removing primitive edge-task-detect-and-migrate-legacy-desk-workspaces-testing-to-ready.md
+2026-09-01 18:33:23,186 - deskops - INFO - Committing closure for task-detect-and-migrate-legacy-desk-workspaces: closeout: task-detect-and-migrate-legacy-desk-workspaces
+
+Task-Id: task-detect-and-migrate-legacy-desk-workspaces
+2026-09-01 18:33:25,222 - deskops - INFO - Advanced task task-make-task-lifecycle-runnable-from-intake-to-closeout to node checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-testing-ready
+2026-09-01 18:33:25,554 - deskops - INFO - Advanced task task-make-task-lifecycle-runnable-from-intake-to-closeout to node checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-ready
+2026-09-01 18:33:26,181 - deskops - INFO - Task task-make-task-lifecycle-runnable-from-intake-to-closeout is complete. Performing auto-commit and cleanup.
+2026-09-01 18:33:26,188 - deskops - DEBUG - Removing runtime artifacts for task task-make-task-lifecycle-runnable-from-intake-to-closeout
+2026-09-01 18:33:26,207 - deskops - DEBUG - Removing primitive condition-task-make-task-lifecycle-runnable-from-intake-to-closeout-ready-for-closeout.md
+2026-09-01 18:33:26,207 - deskops - DEBUG - Removing primitive condition-task-make-task-lifecycle-runnable-from-intake-to-closeout-has-implementation-path.md
+2026-09-01 18:33:26,207 - deskops - DEBUG - Removing primitive condition-task-make-task-lifecycle-runnable-from-intake-to-closeout-has-closeout-evidence.md
+2026-09-01 18:33:26,207 - deskops - DEBUG - Removing primitive condition-task-make-task-lifecycle-runnable-from-intake-to-closeout-has-validation.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-ready.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-testing-ready.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive operator-task-make-task-lifecycle-runnable-from-intake-to-closeout-close.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive operator-task-make-task-lifecycle-runnable-from-intake-to-closeout-ready-for-testing.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive operator-task-make-task-lifecycle-runnable-from-intake-to-closeout-activate.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive edge-task-make-task-lifecycle-runnable-from-intake-to-closeout-testing-to-ready.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive edge-task-make-task-lifecycle-runnable-from-intake-to-closeout-close-to-complete.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive edge-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-to-close.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive edge-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-to-activate.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive edge-task-make-task-lifecycle-runnable-from-intake-to-closeout-ready-to-closeout.md
+2026-09-01 18:33:26,208 - deskops - DEBUG - Removing primitive edge-task-make-task-lifecycle-runnable-from-intake-to-closeout-activate-to-testing.md
+2026-09-01 18:33:26,214 - deskops - INFO - Committing closure for task-make-task-lifecycle-runnable-from-intake-to-closeout: closeout: task-make-task-lifecycle-runnable-from-intake-to-closeout
+
+Task-Id: task-make-task-lifecycle-runnable-from-intake-to-closeout
