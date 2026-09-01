@@ -1,7 +1,20 @@
 ---
 id: task-make-cross-desk-inbox-delivery-verifiable-and-actionable
-status: active
-references: []
+status: ready_for_testing
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+routine: routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+current_node: checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-ready
+history:
+- operator-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-activate
+- operator-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-ready-for-testing
+references:
+- ad86203
+- tests/test_cli.py
+- atom:atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable
 depends_on: []
 pills:
 - desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md
@@ -9,17 +22,17 @@ pills:
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 - desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
-routine: routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable
 checklists:
 - checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready
 - checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-testing-ready
 - checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-ready
-current_node: checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms:
+- atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # Make cross-desk inbox delivery verifiable and actionable
@@ -46,9 +59,9 @@ _State what is in scope and what is out of scope._
 - design a reply or follow-up path so inbox notes do not become write-only dead drops
 - identify the minimum implementation slice needed before inbox can be treated as a real horizontal coordination surface
 
-## Resolved Decisions
+## Implementation Path
 
-Supervisor rulings — MINIMUM SLICE only:
+_Outline the expected implementation route or affected surface._
 
 - Successful delivery = target desk resolved via canonical identity resolver (deskops/identity.py, from Wave A) AND note written AND note tracked/validated AND a verification result echoed to sender (resolved sender + target + path).
 - Sender/target: consume the shared identity resolver; fail loudly on ambiguous/unresolvable identity instead of falling back to cwd().name. Add optional `--sender` override.
@@ -56,12 +69,6 @@ Supervisor rulings — MINIMUM SLICE only:
 - Delivery result: honor `--format {text,json,yaml}`; non-zero exit if delivery cannot be verified.
 - Follow-up: implement a single ACK action `deskops inbox --ack <selector>` that flips status open->closed and records ack metadata. Reply-threading / writing back to sender desk is OUT (defer to drawer).
 - Route any discovered CLI gaps to desk/drawer/tasks/ per pill-cli-gaps-become-tracked-work.
-
-## Implementation Path
-
-_Outline the expected implementation route or affected surface._
-
-deskops/models/inbox.py + model_introspection.py (optional fields); inbox.py (resolver consume, delivery result, --ack); parser.py flags; tests in tests/test_cli.py + test_model_templates.py.
 
 ## Validation
 
