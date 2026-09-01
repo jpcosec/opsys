@@ -1,7 +1,20 @@
 ---
 id: task-make-task-lifecycle-runnable-from-intake-to-closeout
-status: active
-references: []
+status: ready_for_testing
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+routine: routine-task-make-task-lifecycle-runnable-from-intake-to-closeout
+current_node: checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-ready
+history:
+- operator-task-make-task-lifecycle-runnable-from-intake-to-closeout-activate
+- operator-task-make-task-lifecycle-runnable-from-intake-to-closeout-ready-for-testing
+references:
+- 791aa20
+- tests/test_lifecycle_end_to_end.py
+- atom:atom-task-lifecycle-is-cli-runnable-end-to-end
 depends_on: []
 pills:
 - desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
@@ -9,17 +22,17 @@ pills:
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 - desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
-routine: routine-task-make-task-lifecycle-runnable-from-intake-to-closeout
 checklists:
 - checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready
 - checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-testing-ready
 - checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-ready
-current_node: checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms:
+- atom-task-lifecycle-is-cli-runnable-end-to-end
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # Make task lifecycle runnable from intake to closeout
@@ -47,9 +60,9 @@ _State what is in scope and what is out of scope._
 - delete closed active task artifacts
 - preserve durable evidence in atoms, docs, graph relations, tests, and git
 
-## Resolved Decisions
+## Implementation Path
 
-Supervisor rulings (the machinery mostly exists; this is dogfood + gap-fix + regression-lock):
+_Outline the expected implementation route or affected surface._
 
 - Deliverable: (a) an end-to-end regression test driving promote -> promote -> advance(xN) through the REAL CLI on a temp git repo + scaffolded desk, asserting final status=closed, task/routine/primitive files removed, Board unlinked, closing commit present; PLUS (b) the minimal fix so the gated path is actually traversable.
 - Known blocker to fix: create_task_bundle defaults `references` to the deleted drawer source, so `closeout_evidence_verified` is False by default and closeout cannot pass without manual evidence. Decision: this is intended (operator must supply real atom/test/commit evidence) — the E2E test supplies real evidence rather than changing the default. Only touch promote.py/operations.py if a stage is genuinely broken (not merely requiring evidence).
@@ -57,12 +70,6 @@ Supervisor rulings (the machinery mostly exists; this is dogfood + gap-fix + reg
 - Standardize the closing mechanism on the auto-commit path (_auto_commit_task_closure); `deskops closeout commit` remains the run-evidence trailer surface.
 - All mutating exploration uses a disposable desk (tmp_path / .tmp), never the real desk/.
 - Route non-blocking gaps to desk/drawer/tasks/. Capture the durable 'lifecycle is CLI-runnable end-to-end' ruling as an atom.
-
-## Implementation Path
-
-_Outline the expected implementation route or affected surface._
-
-New tests/test_lifecycle_end_to_end.py (real-CLI, temp git repo); minimal fixes in operations.py/promote.py only if a stage is broken; atom capture.
 
 ## Validation
 
