@@ -1,11 +1,14 @@
----
-kind: suggestion
-sender_project: mepu
-created_at: 2026-09-01T15:45:00
-status: open
----
-
 # Empaquetar deskops como módulo de pi-subagents
+
+ID: task-empaquetar-deskops-como-m-dulo-de-pi-subagents
+Status: deferred
+Priority: medium
+
+## Goal
+
+Triage and resolve the inbox message promoted from `desk/inbox/20260901-154500-suggestion-empaquetar-deskops-como-modulo-pi-subagents.md`.
+
+## Scope
 
 ## Contexto
 
@@ -111,3 +114,11 @@ Sin tener que lidiar con chains, supervisión, ni ciclo de vida ajeno.
 - **Nada se rompe**: el resto de agents existentes (deskops-executor, supervisor, tester) siguen funcionando igual. Esto es un worker liviano, no un remplazo.
 - **Bajo mantenimiento**: solo necesita mantener las skills actualizadas. El sistema prompt es ~5 líneas.
 - **Alta demanda**: cualquier repo con deskops activo (mepu, antonIA, vitali, teva) podría usarlo.
+
+## Source
+
+- `desk/inbox/20260901-154500-suggestion-empaquetar-deskops-como-modulo-pi-subagents.md`
+
+## Done When
+
+- The message is resolved, answered, or promoted into active work.
