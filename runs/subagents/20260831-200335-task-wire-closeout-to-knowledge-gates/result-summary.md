@@ -1,0 +1,21 @@
+# Result summary
+
+- run_id: unknown
+- session: unavailable-in-child-api-context
+- session_sha256: unknown
+- task: task-wire-closeout-to-knowledge-gates
+- scope: add `deskops closeout verify`, strict closeout evidence aggregation helpers, durable atom/doc updates, and focused tests.
+- touched files:
+  - deskops/cli/commands/closeout.py
+  - deskops/cli/parser.py
+  - deskops/operations.py
+  - tests/test_closeout.py
+  - desk/atoms/workflow-model/atom-closeout-verify-requires-tests-links-and-commit.md
+  - desk/rituals/closeout.md
+- validation:
+  - `pytest tests/test_closeout.py -q` ✅
+  - `pytest` ✅
+- notes:
+  - Existing advance-time any-of closeout evidence remains soft: atom OR test OR commit.
+  - New `closeout verify` is the strict all-of gate and emits structured JSON.
+  - Generated artifacts with sibling sources but without declared `source_atoms`/`provenance` now surface as verify findings.

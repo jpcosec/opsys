@@ -167,6 +167,20 @@ class AtomValidationRecord:
     errors: list[str]
 
 
+@dataclass(slots=True)
+class CloseoutGateReport:
+    ok: bool
+    evidence: list[str]
+    findings: list[dict[str, str]]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "ok": self.ok,
+            "evidence": list(self.evidence),
+            "findings": [dict(item) for item in self.findings],
+        }
+
+
 class DeskopsOperations:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
@@ -1031,17 +1045,117 @@ class DeskopsOperations:
                     prim_path.unlink()
 
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
+        evidence = self._closeout_reference_evidence(payload)
+        return any(
+            bool(evidence[key])
+            for key in ("atom", "tests", "commit")
+        )
+
+    def verify_task_closeout(self, task_selector: str) -> dict[str, Any]:
+        task_path = self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", task_selector)
+        payload = self._resolve_task_payload(task_path.stem)
+        reference_evidence = self._closeout_reference_evidence(payload)
+        changed_files = self._coerce_list(payload.get("files") or [])
+        link_gate = self._closeout_link_gate(payload, changed_files, reference_evidence)
+        tests_gate = CloseoutGateReport(
+            ok=bool(reference_evidence["tests"]),
+            evidence=reference_evidence["tests"],
+            findings=[] if reference_evidence["tests"] else [{"code": "missing_tests_evidence", "message": "No resolvable test evidence reference found."}],
+        )
+        commit_gate = CloseoutGateReport(
+            ok=bool(reference_evidence["commit"]),
+            evidence=reference_evidence["commit"],
+            findings=[] if reference_evidence["commit"] else [{"code": "missing_commit_evidence", "message": "No resolvable commit reference found."}],
+        )
+        gate_dict = {
+            "tests": tests_gate.to_dict(),
+            "atom_or_materialization_link": link_gate.to_dict(),
+            "commit": commit_gate.to_dict(),
+        }
+        findings = [
+            *tests_gate.findings,
+            *link_gate.findings,
+            *commit_gate.findings,
+        ]
+        report = {
+            "task_id": str(payload.get("id") or task_path.stem),
+            "ok": tests_gate.ok and link_gate.ok and commit_gate.ok,
+            "gates": gate_dict,
+            "findings": findings,
+        }
+        if "pill_graduation_verified" in payload:
+            report["pill_graduation_verified"] = payload.get("pill_graduation_verified")
+        return report
+
+    def _closeout_reference_evidence(self, payload: dict[str, Any]) -> dict[str, list[str]]:
+        evidence = {"tests": [], "atom": [], "commit": [], "follow_up": []}
         for reference in self._coerce_list(payload.get("references") or []):
             ref = str(reference).strip()
             if not ref:
                 continue
-            if self._reference_points_to_atom(ref):
-                return True
             if self._reference_points_to_test(ref):
-                return True
+                evidence["tests"].append(ref)
+            if self._reference_points_to_atom(ref):
+                evidence["atom"].append(ref)
             if self._reference_points_to_commit(ref):
-                return True
-        return False
+                evidence["commit"].append(ref)
+            if self._reference_points_to_routed_follow_up(ref):
+                evidence["follow_up"].append(ref)
+        return evidence
+
+    def _closeout_link_gate(
+        self,
+        payload: dict[str, Any],
+        changed_files: list[str],
+        reference_evidence: dict[str, list[str]],
+    ) -> CloseoutGateReport:
+        evidence = list(reference_evidence["atom"])
+        findings: list[dict[str, str]] = []
+        graph_context = self._build_closeout_graph_context()
+
+        for raw_path in changed_files:
+            relative_path = self._normalize_repo_relative_path(raw_path)
+            if relative_path is None:
+                findings.append(
+                    {
+                        "code": "changed_file_missing",
+                        "path": str(raw_path),
+                        "message": "Changed file path does not resolve inside the repository.",
+                    }
+                )
+                continue
+
+            source_finding = self._generated_artifact_source_finding(relative_path)
+            if source_finding is not None:
+                findings.append(source_finding)
+
+            file_evidence = self._changed_file_link_evidence(relative_path, graph_context)
+            if file_evidence:
+                evidence.extend(file_evidence)
+                continue
+
+            if reference_evidence["follow_up"]:
+                for follow_up in reference_evidence["follow_up"]:
+                    evidence.append(f"follow-up:{follow_up} -> {relative_path}")
+                continue
+
+            findings.append(
+                {
+                    "code": "missing_changed_file_link",
+                    "path": relative_path,
+                    "message": "Changed file has no atom/materialization link and no routed follow-up reference.",
+                }
+            )
+
+        if not changed_files and not reference_evidence["atom"]:
+            findings.append(
+                {
+                    "code": "missing_atom_or_materialization_link",
+                    "message": "No atom reference or changed-file materialization coverage found.",
+                }
+            )
+
+        return CloseoutGateReport(ok=not findings, evidence=self._dedupe_preserve_order(evidence), findings=findings)
 
     def _has_verified_task_pill_graduation(self, payload: dict[str, Any]) -> bool:
         pills = self._coerce_list(payload.get("pills") or [])
@@ -1071,6 +1185,32 @@ class DeskopsOperations:
         if not atom_id.startswith("atom-"):
             return False
         return any(atom_path.stem == atom_id for atom_path in (self.desk_root / "atoms").rglob("*.md"))
+
+    def _reference_points_to_routed_follow_up(self, reference: str) -> bool:
+        candidate = reference.strip()
+        if not candidate:
+            return False
+        if candidate.startswith(("task:", "issue:")):
+            return self._reference_points_to_existing_route(candidate)
+        if candidate.endswith(".md"):
+            path = Path(candidate.split("::", 1)[0])
+            if not path.is_absolute():
+                path = self.root / path
+            return path.exists() and any(
+                self._is_under(path, self.root / relative)
+                for relative in ("desk/tasks", "desk/drawer/issues", "desk/drawer/tasks")
+            )
+        return False
+
+    def _reference_points_to_existing_route(self, reference: str) -> bool:
+        kind, _, identifier = reference.partition(":")
+        if not identifier:
+            return False
+        if kind == "task":
+            return any(path.stem == identifier for path in (self.desk_root / "tasks").glob("task-*.md"))
+        if kind == "issue":
+            return any(path.stem == identifier for path in (self.desk_root / "drawer" / "issues").rglob("issue-*.md"))
+        return False
 
     def _all_atom_paths(self) -> list[Path]:
         atoms_dir = self.desk_root / "atoms"
@@ -1214,6 +1354,120 @@ class DeskopsOperations:
         except FileNotFoundError:
             return False
         return result.returncode == 0
+
+    def _build_closeout_graph_context(self) -> dict[str, Any]:
+        from deskops.graph.extract_docs import extract_doc_nodes
+        from deskops.graph.extract_edges import extract_declared_edges
+        from deskops.graph.extract_sources import extract_source_file_nodes
+
+        doc_nodes = extract_doc_nodes(self.root)
+        source_nodes = extract_source_file_nodes(self.root)
+        by_path = {node.path: node.id for node in [*doc_nodes, *source_nodes]}
+        extraction = extract_declared_edges(self.root)
+        invalid_materializations = {
+            missing.source_id
+            for missing in extraction.missing_targets
+            if missing.source_id.startswith("materialization:")
+        }
+        return {
+            "node_ids_by_path": by_path,
+            "edges": extraction.edges,
+            "invalid_materializations": invalid_materializations,
+        }
+
+    def _changed_file_link_evidence(self, relative_path: str, graph_context: dict[str, Any]) -> list[str]:
+        evidence: list[str] = []
+        path = self.root / relative_path
+        if path.suffix == ".md" and self._is_under(path, self.desk_root / "atoms"):
+            evidence.append(f"atom-doc:{relative_path}")
+        node_id = graph_context["node_ids_by_path"].get(relative_path)
+        if node_id is None:
+            return evidence
+        for edge in graph_context["edges"]:
+            if edge.source_id == node_id and edge.target_id.startswith("atom:"):
+                evidence.append(f"graph:{node_id}->{edge.target_id}")
+            if edge.target_id == node_id and edge.source_id.startswith("materialization:"):
+                if edge.source_id in graph_context["invalid_materializations"]:
+                    continue
+                evidence.append(f"materialization:{edge.source_id}->{relative_path}")
+        return self._dedupe_preserve_order(evidence)
+
+    def _generated_artifact_source_finding(self, relative_path: str) -> dict[str, str] | None:
+        path = self.root / relative_path
+        sibling = self._find_generated_artifact_source_sibling(path)
+        if sibling is None or not path.exists() or path.suffix not in {".md", ".json"}:
+            return None
+        if self._declares_materialization_sources(path):
+            return None
+        return {
+            "code": "generated_artifact_missing_declared_sources",
+            "path": relative_path,
+            "message": f"Rendered artifact has sibling source {sibling.name} but does not declare source_atoms or provenance.",
+        }
+
+    def _find_generated_artifact_source_sibling(self, path: Path) -> Path | None:
+        for suffix in (".mmd", ".yaml", ".yml"):
+            sibling = path.with_suffix(suffix)
+            if sibling != path and sibling.exists():
+                return sibling
+        return None
+
+    def _declares_materialization_sources(self, path: Path) -> bool:
+        if path.suffix not in {".md", ".yaml", ".yml", ".json"}:
+            return False
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            return False
+        if path.suffix == ".json":
+            try:
+                loaded = json.loads(text)
+            except json.JSONDecodeError:
+                return False
+            if not isinstance(loaded, dict):
+                return False
+            return bool(loaded.get("source_atoms") or loaded.get("provenance"))
+        if not text.startswith("---\n"):
+            return False
+        try:
+            _, rest = text.split("---\n", 1)
+            block, _body = rest.split("\n---", 1)
+        except ValueError:
+            return False
+        loaded = yaml.safe_load(block) or {}
+        if not isinstance(loaded, dict):
+            return False
+        return bool(loaded.get("source_atoms") or loaded.get("provenance"))
+
+    def _normalize_repo_relative_path(self, raw_path: str) -> str | None:
+        candidate = Path(str(raw_path).split("::", 1)[0].strip())
+        if not candidate:
+            return None
+        if not candidate.is_absolute():
+            candidate = (self.root / candidate).resolve()
+        else:
+            candidate = candidate.resolve()
+        try:
+            return candidate.relative_to(self.root).as_posix()
+        except ValueError:
+            return None
+
+    def _dedupe_preserve_order(self, values: list[str]) -> list[str]:
+        result: list[str] = []
+        seen: set[str] = set()
+        for value in values:
+            if value in seen:
+                continue
+            seen.add(value)
+            result.append(value)
+        return result
+
+    def _is_under(self, path: Path, parent: Path) -> bool:
+        try:
+            path.resolve().relative_to(parent.resolve())
+            return True
+        except ValueError:
+            return False
 
     def _merge_unique(self, *values: list[str]) -> list[str]:
         merged: list[str] = []

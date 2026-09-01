@@ -8,6 +8,8 @@ from typing import Any
 
 import yaml
 
+from deskops.operations import DeskopsOperations
+
 
 class CloseoutCLI:
     """Tool-made closing commits linked to run evidence.
@@ -21,10 +23,19 @@ class CloseoutCLI:
     REQUIRED_EVIDENCE = ["board.txt", "task.txt", "git-status.txt", "result-summary.md"]
 
     def run(self, args: Any) -> int:
-        if getattr(args, "closeout_command", None) != "commit":
-            print("Usage: deskops closeout commit --run-dir <dir> --task <task-id>")
-            return 1
-        return self._commit(args)
+        command = getattr(args, "closeout_command", None)
+        if command == "commit":
+            return self._commit(args)
+        if command == "verify":
+            return self._verify(args)
+        print("Usage: deskops closeout {commit|verify} ...")
+        return 1
+
+    def _verify(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        report = DeskopsOperations(root).verify_task_closeout(args.task)
+        print(json.dumps(report, indent=2, sort_keys=True))
+        return 0 if report["ok"] else 1
 
     def _commit(self, args: Any) -> int:
         root = Path(args.root).resolve()

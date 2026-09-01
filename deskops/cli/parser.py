@@ -751,3 +751,10 @@ by this command, not by agent discretion.
     commit.add_argument("--paths", nargs="*", default=None, help="Paths to stage; defaults to run.yaml touched paths, else staged index.")
     commit.add_argument("--run-id", help="Subagent run id to record in run.yaml.")
     commit.add_argument("--session", help="Child session.jsonl path to hash into run.yaml.")
+
+    verify = s.add_parser(
+        "verify",
+        help="Strictly verify closeout evidence gates for one task and print a structured report.",
+    )
+    verify.add_argument("--root", default=".", help="Target repository root.")
+    verify.add_argument("--task", required=True, help="Task id being verified.")

@@ -1,0 +1,6 @@
+$ pytest tests/test_closeout.py -q
+.......                                                                  [100%]
+7 passed in 0.67s
+
+$ pytest
+162 passed in 34.83s

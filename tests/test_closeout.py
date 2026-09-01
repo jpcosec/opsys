@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from deskops.cli.commands.closeout import CloseoutCLI
+from deskops.cli.main import main
 
 
 def _git(root: Path, *argv: str) -> str:
@@ -55,6 +56,76 @@ def _args(root: Path, **overrides) -> SimpleNamespace:
     }
     base.update(overrides)
     return SimpleNamespace(**base)
+
+
+def _write(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+
+
+def _write_atom(root: Path, atom_id: str = "atom-evidence") -> None:
+    _write(
+        root / "desk" / "atoms" / f"{atom_id}.md",
+        f"""---
+id: {atom_id}
+title: Evidence Atom
+five_wh_one_plus: what
+tags: []
+provenance: null
+---
+
+# Evidence Atom
+
+## Answer
+
+Closeout evidence.
+""",
+    )
+
+
+def _write_task(root: Path, references: list[str], files: list[str], *, task_id: str = "task-x") -> None:
+    _write(
+        root / "desk" / "tasks" / f"{task_id}.md",
+        f"""---
+id: {task_id}
+status: active
+references:
+{yaml.safe_dump(references, sort_keys=False).rstrip()}
+depends_on: []
+pills: []
+files:
+{yaml.safe_dump(files, sort_keys=False).rstrip()}
+checklists: []
+tags: []
+---
+
+# Task X
+
+## Rationale
+
+Not provided.
+
+## Goal
+
+Verify closeout.
+
+## Scope
+
+Stay scoped.
+
+## Implementation Path
+
+Implement verify.
+
+## Validation
+
+- pytest
+
+## Done When
+
+Verified.
+""",
+    )
 
 
 def test_closeout_commit_links_commit_to_run(tmp_path: Path) -> None:
@@ -129,3 +200,121 @@ def test_closeout_commit_uses_staged_index_without_paths(tmp_path: Path) -> None
 
     assert rc == 0
     assert "closeout: task-x" in _git(root, "log", "-1", "--format=%B")
+
+
+def test_closeout_verify_passes_with_complete_evidence(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    root = _make_repo(tmp_path)
+    commit = _git(root, "rev-parse", "HEAD")
+    _write_atom(root)
+    _write_task(
+        root,
+        references=[
+            "pytest tests/test_feature.py::test_feature",
+            "desk/atoms/atom-evidence.md",
+            commit,
+        ],
+        files=["desk/atoms/atom-evidence.md"],
+    )
+    _write(root / "tests" / "test_feature.py", "def test_feature():\n    assert True\n")
+
+    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
+    out = capsys.readouterr()
+
+    assert rc == 0
+    report = json.loads(out.out)
+    assert report["ok"] is True
+    assert report["gates"]["tests"]["ok"] is True
+    assert report["gates"]["atom_or_materialization_link"]["ok"] is True
+    assert report["gates"]["commit"]["ok"] is True
+
+
+def test_closeout_verify_fails_non_zero_when_required_gate_is_missing(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    root = _make_repo(tmp_path)
+    _write_atom(root)
+    _write_task(
+        root,
+        references=[
+            "pytest tests/test_feature.py::test_feature",
+            "desk/atoms/atom-evidence.md",
+        ],
+        files=["desk/atoms/atom-evidence.md"],
+    )
+    _write(root / "tests" / "test_feature.py", "def test_feature():\n    assert True\n")
+
+    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
+    out = capsys.readouterr()
+
+    assert rc == 1
+    report = json.loads(out.out)
+    assert report["ok"] is False
+    assert report["gates"]["commit"]["ok"] is False
+    assert report["findings"][0]["code"] == "missing_commit_evidence"
+
+
+def test_closeout_verify_reports_structured_generated_artifact_findings(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    root = _make_repo(tmp_path)
+    commit = _git(root, "rev-parse", "HEAD")
+    _write_task(
+        root,
+        references=[
+            "pytest tests/test_diagram.py::test_diagram",
+            commit,
+            "task:task-follow-up",
+        ],
+        files=["docs/diagrams/example.md"],
+    )
+    _write(
+        root / "desk" / "tasks" / "task-follow-up.md",
+        """---
+id: task-follow-up
+status: active
+references: []
+depends_on: []
+pills: []
+files: []
+checklists: []
+tags: []
+---
+
+# Task Follow Up
+
+## Rationale
+
+Not provided.
+
+## Goal
+
+Follow up.
+
+## Scope
+
+Scoped.
+
+## Implementation Path
+
+Route follow-up.
+
+## Validation
+
+- pytest
+
+## Done When
+
+Done.
+""",
+    )
+    _write(root / "tests" / "test_diagram.py", "def test_diagram():\n    assert True\n")
+    _write(root / "docs" / "diagrams" / "example.mmd", "flowchart TD\n    A-->B\n")
+    _write(root / "docs" / "diagrams" / "example.md", "# Example\n")
+
+    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
+    out = capsys.readouterr()
+
+    assert rc == 1
+    report = json.loads(out.out)
+    assert set(report["gates"].keys()) == {"tests", "atom_or_materialization_link", "commit"}
+    assert report["gates"]["tests"]["ok"] is True
+    assert report["gates"]["commit"]["ok"] is True
+    assert report["gates"]["atom_or_materialization_link"]["ok"] is False
+    assert any(item["code"] == "generated_artifact_missing_declared_sources" for item in report["findings"])
+    assert any("follow-up:task:task-follow-up -> docs/diagrams/example.md" == item for item in report["gates"]["atom_or_materialization_link"]["evidence"])

@@ -1,0 +1,15 @@
+Task: task-wire-closeout-to-knowledge-gates
+Title: Wire closeout to knowledge gates
+Status: active
+Current node: checklist-task-wire-closeout-to-knowledge-gates-execution-ready
+Task type: 
+Routine: routine-task-wire-closeout-to-knowledge-gates
+Effective pills:
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
+Checklist status:
+- checklist-task-wire-closeout-to-knowledge-gates-execution-ready: complete
+- checklist-task-wire-closeout-to-knowledge-gates-testing-ready: complete
+- checklist-task-wire-closeout-to-knowledge-gates-closeout-ready: pending

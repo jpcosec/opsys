@@ -1,0 +1,2 @@
+## main...origin/main [ahead 7]
+?? runs/subagents/20260831-200335-task-wire-closeout-to-knowledge-gates/
