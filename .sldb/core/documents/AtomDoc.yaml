@@ -830,3 +830,31 @@ documents:
   semantic_tags:
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-desk-workspaces-classify-as-absent-empty-legacy-or-current
+  path: desk/atoms/atom-desk-workspaces-classify-as-absent-empty-legacy-or-current.md
+  hash_c: 9be4e095fa02e7341105133acf8872023d670c1a3ef7dec9ade54058ce4e2c38
+  hash_d: 4d088b84cdddef5570f525500cc27bb8edf51c7222e2f5c15fbad050410e8336
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable
+  path: desk/atoms/atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable.md
+  hash_c: 8efbfe934cd9d25945efa8f8c6086a3837ee677979662e848eeb043eb3e78343
+  hash_d: 3bfa25312f92adeaebbc0d3e225dd2935ae84bf71fa0ea31379856552dd457f9
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-canonical-project-identity-resolves-through-a-shared-registry-resolver
+  path: desk/atoms/atom-canonical-project-identity-resolves-through-a-shared-registry-resolver.md
+  hash_c: 60bb3a12748382ea883192b7887e5fccdd340a6376eebeeebb4ad478226cb6c1
+  hash_d: b7b3f4ce7e39b9976b255c3dc9ce0f1bd9f6c8ac7ca83730b5989edb23d36f28
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard
+  path: desk/atoms/atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard.md
+  hash_c: f0931620067c90bb1398bd9a5bfcc0bced65e5a4e5383fc4e517df016bc87642
+  hash_d: 06db2032ed6bf09be9cfe813993fadd71651456454bccd3b2867167bf08e02ce
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
