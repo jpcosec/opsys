@@ -985,38 +985,37 @@ class DeskopsOperations:
 
     def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
         task_id = payload.get("id", "unknown-task")
-        title = payload.get("title", "No title")
         routine_id = payload.get("routine", "")
         files = self._coerce_list(payload.get("files") or [])
-        
-        # 1. Stage project files modified by the task
+
+        # 1. Stage project files modified by the task.
         for file in files:
             file_path = self.root / file
             if file_path.exists():
                 self.logger.debug(f"Staging file: {file}")
                 subprocess.run(["git", "add", str(file)], cwd=self.root, check=False)
-                
-        # 2. Stage board changes before removing the task (since it reads the board)
+
+        # 2. Stage board changes before removing the task.
         subprocess.run(["git", "add", "desk/tasks/Board.md"], cwd=self.root, check=False)
-        
-        # 3. Clean up and stage task removal
+
+        # 3. Clean up and stage task removal.
         if task_path.exists():
             subprocess.run(["git", "rm", "--ignore-unmatch", str(task_path.relative_to(self.root))], cwd=self.root, check=False)
-        
+
         if routine_id:
             routine_path = self._routine_path(routine_id)
             if routine_path.exists():
                 subprocess.run(["git", "rm", "--ignore-unmatch", str(routine_path.relative_to(self.root))], cwd=self.root, check=False)
-                
+
         self._remove_task_runtime_artifacts(task_id, routine_id)
-        
+
         subprocess.run(["git", "add", "-u", "desk/tasks/"], cwd=self.root, check=False)
         subprocess.run(["git", "add", "-u", "desk/routines/"], cwd=self.root, check=False)
         subprocess.run(["git", "add", "-u", "desk/primitives/"], cwd=self.root, check=False)
-        
-        # 4. Commit
-        commit_msg = f"chore(task): {title}\n\nAuto-closing task {task_id}"
-        self.logger.info(f"Committing closure for {task_id}: {commit_msg}")
+
+        # 4. Commit using the standardized closeout subject used by the CLI closeout surface.
+        commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+        self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
         subprocess.run(["git", "commit", "-m", commit_msg], cwd=self.root, check=False)
 
     def _remove_task_runtime_artifacts(self, task_id: str, routine_id: str) -> None:

@@ -1,0 +1,15 @@
+Task: task-make-task-lifecycle-runnable-from-intake-to-closeout
+Title: Make task lifecycle runnable from intake to closeout
+Status: active
+Current node: checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready
+Task type: 
+Routine: routine-task-make-task-lifecycle-runnable-from-intake-to-closeout
+Effective pills:
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+Checklist status:
+- checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-execution-ready: complete
+- checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-testing-ready: complete
+- checklist-task-make-task-lifecycle-runnable-from-intake-to-closeout-closeout-ready: pending
