@@ -280,3 +280,30 @@ Task-Id: task-detect-and-migrate-legacy-desk-workspaces
 2026-09-01 18:33:26,214 - deskops - INFO - Committing closure for task-make-task-lifecycle-runnable-from-intake-to-closeout: closeout: task-make-task-lifecycle-runnable-from-intake-to-closeout
 
 Task-Id: task-make-task-lifecycle-runnable-from-intake-to-closeout
+2026-09-01 18:48:57,429 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests to node complete
+2026-09-01 18:50:19,935 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests manually to checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-closeout-ready
+2026-09-01 18:50:20,308 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests to node checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-closeout-ready
+2026-09-01 18:50:28,868 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests manually to checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-execution-ready
+2026-09-01 18:50:29,239 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests to node checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-testing-ready
+2026-09-01 18:50:29,621 - deskops - INFO - Advanced task task-fix-sldb-deskops-cli-drift-breaking-11-tests to node checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-closeout-ready
+2026-09-01 18:51:18,490 - deskops - INFO - Task task-fix-sldb-deskops-cli-drift-breaking-11-tests is complete. Performing auto-commit and cleanup.
+2026-09-01 18:51:18,504 - deskops - DEBUG - Removing runtime artifacts for task task-fix-sldb-deskops-cli-drift-breaking-11-tests
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive condition-task-fix-sldb-deskops-cli-drift-breaking-11-tests-has-implementation-path.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive condition-task-fix-sldb-deskops-cli-drift-breaking-11-tests-ready-for-closeout.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive condition-task-fix-sldb-deskops-cli-drift-breaking-11-tests-has-validation.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive condition-task-fix-sldb-deskops-cli-drift-breaking-11-tests-has-closeout-evidence.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-closeout-ready.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-execution-ready.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive checklist-task-fix-sldb-deskops-cli-drift-breaking-11-tests-testing-ready.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive operator-task-fix-sldb-deskops-cli-drift-breaking-11-tests-ready-for-testing.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive operator-task-fix-sldb-deskops-cli-drift-breaking-11-tests-close.md
+2026-09-01 18:51:18,518 - deskops - DEBUG - Removing primitive operator-task-fix-sldb-deskops-cli-drift-breaking-11-tests-activate.md
+2026-09-01 18:51:18,519 - deskops - DEBUG - Removing primitive edge-task-fix-sldb-deskops-cli-drift-breaking-11-tests-ready-to-closeout.md
+2026-09-01 18:51:18,519 - deskops - DEBUG - Removing primitive edge-task-fix-sldb-deskops-cli-drift-breaking-11-tests-close-to-complete.md
+2026-09-01 18:51:18,519 - deskops - DEBUG - Removing primitive edge-task-fix-sldb-deskops-cli-drift-breaking-11-tests-testing-to-ready.md
+2026-09-01 18:51:18,519 - deskops - DEBUG - Removing primitive edge-task-fix-sldb-deskops-cli-drift-breaking-11-tests-closeout-to-close.md
+2026-09-01 18:51:18,519 - deskops - DEBUG - Removing primitive edge-task-fix-sldb-deskops-cli-drift-breaking-11-tests-activate-to-testing.md
+2026-09-01 18:51:18,519 - deskops - DEBUG - Removing primitive edge-task-fix-sldb-deskops-cli-drift-breaking-11-tests-execution-to-activate.md
+2026-09-01 18:51:18,525 - deskops - INFO - Committing closure for task-fix-sldb-deskops-cli-drift-breaking-11-tests: closeout: task-fix-sldb-deskops-cli-drift-breaking-11-tests
+
+Task-Id: task-fix-sldb-deskops-cli-drift-breaking-11-tests
