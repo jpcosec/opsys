@@ -1,0 +1,22 @@
+commit 685f4d6e3f83e78a8aa4a7d2b8aa05827277797f
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Aug 19 23:33:41 2026 -0400
+
+    Fix sldb<->deskops CLI drift: repoint moved imports, restore --to optional, clean TaskDoc frontmatter render
+    
+    - get_store_context -> sldb.cli.store_context
+    - registered_model/resolve_model_ref -> sldb.cli.model_utils (repo.py, inbox.py, operations.py)
+    - advance task: --to optional again (was forcing exit 2 on runtime advance)
+    - TaskDoc: inject frontmatter via render_payload not model_dump (clean extract)
+    - test_composition: assert current clean YAML frontmatter contract
+    
+    Suite: 140 passed / 0 failed (was 11 failed).
+
+ deskops/cli/commands/inbox.py | 4 ++--
+ deskops/cli/commands/repo.py  | 3 ++-
+ deskops/cli/parser.py         | 2 +-
+ deskops/models/task.py        | 4 ++--
+ deskops/operations.py         | 2 +-
+ tests/test_composition.py     | 6 +++++-
+ 6 files changed, 13 insertions(+), 8 deletions(-)
+No task found for task-fix-sldb-deskops-cli-drift-breaking-11-tests

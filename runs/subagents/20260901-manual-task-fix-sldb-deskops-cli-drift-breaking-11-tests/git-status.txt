@@ -1,0 +1,5 @@
+## main...origin/main [ahead 1]
+ M .deskops.log
+?? runs/subagents/20260901-manual-task-fix-sldb-deskops-cli-drift-breaking-11-tests/board.txt
+?? runs/subagents/20260901-manual-task-fix-sldb-deskops-cli-drift-breaking-11-tests/git-status.txt
+?? runs/subagents/20260901-manual-task-fix-sldb-deskops-cli-drift-breaking-11-tests/task.txt
