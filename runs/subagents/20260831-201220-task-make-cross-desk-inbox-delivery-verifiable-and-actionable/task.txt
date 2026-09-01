@@ -1,0 +1,15 @@
+Task: task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+Title: Make cross-desk inbox delivery verifiable and actionable
+Status: active
+Current node: checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready
+Task type: 
+Routine: routine-task-make-cross-desk-inbox-delivery-verifiable-and-actionable
+Effective pills:
+- desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+Checklist status:
+- checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-execution-ready: complete
+- checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-testing-ready: complete
+- checklist-task-make-cross-desk-inbox-delivery-verifiable-and-actionable-closeout-ready: pending

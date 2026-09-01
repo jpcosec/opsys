@@ -41,6 +41,15 @@ class CliFieldMeta:
 DEFAULT_FACTORY = object()  # sentinel for fields with default_factory=list
 REQUIRED = object()  # sentinel for fields with no default at all
 
+# Mirror a small set of field defaults that are part of the operator-facing CLI
+# contract for selected models. This keeps argparse metadata aligned with the
+# model contract when these fields are intentionally optional/backward-compatible.
+_MODEL_FIELD_DEFAULT_OVERRIDES: dict[tuple[str, str], Any] = {
+    ("InboxNoteDoc", "target_project"): None,
+    ("InboxNoteDoc", "acknowledged_by"): None,
+    ("InboxNoteDoc", "acknowledged_at"): None,
+}
+
 
 # ---------------------------------------------------------------------------
 # List detection
@@ -207,7 +216,10 @@ def introspect_model(model: type[BaseModel]) -> list[CliFieldMeta]:
         is_list = _is_list_annotation(fInfo.annotation)
         choices = _extract_enum_choices(model, name)
         pattern = _extract_pattern(model, name)
-        default = _resolve_field_default(fInfo)
+        default = _MODEL_FIELD_DEFAULT_OVERRIDES.get(
+            (model.__name__, name),
+            _resolve_field_default(fInfo),
+        )
         is_required = default is REQUIRED
 
         # Use field description as help text

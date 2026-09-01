@@ -1,0 +1,15 @@
+$ pytest tests/test_cli.py -q -k inbox tests/test_model_templates.py -q
+.........                                                                [100%]
+
+$ pytest tests/test_cli.py -q
+......................................................................   [100%]
+70 passed in 32.94s
+
+$ pytest
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/jp/proyectos/hum-ecosystem/tools/deskops
+configfile: pyproject.toml
+collected 165 items
+...
+============================= 165 passed in 38.38s =============================

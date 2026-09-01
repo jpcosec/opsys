@@ -19,6 +19,7 @@ from deskops.models import StepDoc
 from deskops.models import TaskDoc
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
+from sldb.runtime.validation import validate_model_input_roundtrip
 
 
 MODEL_PAYLOADS = [
@@ -110,8 +111,11 @@ MODEL_PAYLOADS = [
         {
             "kind": "suggestion",
             "sender_project": "test-project",
+            "target_project": "target-project",
             "created_at": "2026-06-13T00:00:00",
             "status": "open",
+            "acknowledged_by": None,
+            "acknowledged_at": None,
             "title": "Template Inbox Note",
             "body": "Capture enough evidence to triage this note.",
         },
@@ -238,3 +242,26 @@ def test_model_templates_roundtrip_with_instructional_text(model, payload) -> No
             assert "_Describe" not in value
             assert "_List" not in value
             assert "_Summarize" not in value
+
+
+def test_inbox_note_model_remains_backward_compatible_without_new_optional_fields() -> None:
+    legacy_note = """---
+kind: suggestion
+sender_project: legacy-project
+created_at: 2026-06-13T00:00:00
+status: open
+---
+
+# Legacy Inbox Note
+
+This note predates target and ack metadata.
+"""
+
+    valid, details = validate_model_input_roundtrip(InboxNoteDoc, legacy_note)
+    extracted = extract_model_data(InboxNoteDoc, legacy_note)
+
+    assert valid, details
+    assert extracted["sender_project"] == "legacy-project"
+    assert extracted["target_project"] is None
+    assert extracted["acknowledged_by"] is None
+    assert extracted["acknowledged_at"] is None

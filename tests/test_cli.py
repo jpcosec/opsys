@@ -16,6 +16,9 @@ if str(SLDB_SRC) not in sys.path:
 
 from deskops.cli.main import CLI
 from deskops.cli.main import main
+from deskops.models import InboxNoteDoc
+from deskops.models import RepositoryDoc
+from sldb.runtime.validation import render_model_markdown
 
 
 ATOM_PAYLOAD_ARGS = [
@@ -45,7 +48,7 @@ def test_core_help_documents_examples_and_selectors(capsys) -> None:
     inbox_output = " ".join(capsys.readouterr().out.split())
     assert inbox_help == 0
     assert "deskops inbox" in inbox_output
-    assert "--show selector" in inbox_output
+    assert "--show/--ack selector" in inbox_output
 
     promote_help = main(["promote", "--help"])
     promote_output = " ".join(capsys.readouterr().out.split())
@@ -304,69 +307,177 @@ def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> No
     assert called["sldb"] == 2
 
 
-def test_inbox_writes_sender_project_from_current_directory(tmp_path: Path, monkeypatch, capsys) -> None:
-    from deskops.cli.commands.inbox import InboxCLI
-
-    monkeypatch.chdir(tmp_path)
-    args = SimpleNamespace(
-        list=False,
-        show=None,
-        message="A message to this project.",
-        title="Self message",
-        kind="suggestion",
-        desk_root=str(tmp_path / "desk"),
-        repo=None,
-        store=None,
-        pythonpath=None,
-        limit=20,
-        format="text",
-    )
-
-    result = InboxCLI().run(args)
-
-    captured = capsys.readouterr()
-    notes = list((tmp_path / "desk" / "inbox").glob("*.md"))
-    assert result == 0
-    assert "Wrote" in captured.out
-    assert len(notes) == 1
-    assert f"sender_project: {tmp_path.name}" in notes[0].read_text(encoding="utf-8")
-
-
-def test_inbox_resolves_sender_project_from_repo_store(tmp_path: Path, monkeypatch) -> None:
-    from deskops.cli.commands.inbox import InboxCLI
-    from sldb.runtime.validation import render_model_markdown
-
-    from deskops.models import RepositoryDoc
-
-    sender_root = tmp_path / "sender-repo" / "subdir"
-    sender_root.mkdir(parents=True)
-    monkeypatch.chdir(sender_root)
-
-    registry_dir = tmp_path / "desk" / "registry"
-    registry_dir.mkdir(parents=True)
+def _write_repo_doc(registry_dir: Path, *, repo_id: str, repo_path: str, name: str | None = None) -> None:
     payload = {
-        "id": "sender-repo",
-        "name": "Sender Repo",
-        "path": "sender-repo",
+        "id": repo_id,
+        "name": name or repo_id,
+        "path": repo_path,
         "status": "active",
-        "description": "Repository for sender-repo.",
+        "description": f"Repository for {repo_id}.",
         "tags": [],
     }
-    (registry_dir / "repo-sender-repo.md").write_text(
+    (registry_dir / f"repo-{repo_id}.md").write_text(
         render_model_markdown(RepositoryDoc, payload) + "\n",
         encoding="utf-8",
     )
 
-    monkeypatch.setattr(
-        InboxCLI,
-        "_store_context",
-        lambda self, args: (tmp_path / ".sldb", tmp_path),
-    )
-    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (tmp_path / ".sldb", tmp_path))
 
-    args = SimpleNamespace(store=str(tmp_path / ".sldb"), pythonpath=None)
+
+def _write_desk_config(repo_root: Path, project_identity: str) -> None:
+    (repo_root / "desk").mkdir(parents=True, exist_ok=True)
+    (repo_root / "desk" / "config.json").write_text(
+        json.dumps({"project_identity": project_identity}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+
+
+def _setup_inbox_identity_env(tmp_path: Path, monkeypatch) -> tuple[Path, Path, Path]:
+    registry_dir = tmp_path / "desk" / "registry"
+    registry_dir.mkdir(parents=True)
+    sender_repo = tmp_path / "sender-repo"
+    target_repo = tmp_path / "target-repo"
+    _write_desk_config(sender_repo, "sender-repo")
+    _write_desk_config(target_repo, "target-repo")
+    _write_repo_doc(registry_dir, repo_id="sender-repo", repo_path="sender-repo", name="Sender Repo")
+    _write_repo_doc(registry_dir, repo_id="target-repo", repo_path="target-repo", name="Target Repo")
+
+    store_path = tmp_path / ".sldb"
+    tracked: list[str] = []
+
+    monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
+    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
+    monkeypatch.setattr("deskops.cli.commands.inbox.get_store_context", lambda _arg: (store_path, tmp_path))
+    monkeypatch.setattr(
+        "deskops.cli.commands.inbox.registered_model",
+        lambda store, name, pythonpath: (InboxNoteDoc, object(), "idx"),
+    )
+
+    def fake_track_document(store_path_arg, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
+        tracked.append(note_name)
+
+    monkeypatch.setattr("deskops.cli.commands.inbox.track_document", fake_track_document)
+    return sender_repo, target_repo, store_path
+
+
+
+def test_inbox_delivery_returns_verification_result_json(tmp_path: Path, monkeypatch, capsys) -> None:
+    sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
+    monkeypatch.chdir(sender_repo)
+
+    result = main(
+        [
+            "inbox",
+            "A message to this project.",
+            "--title",
+            "Cross desk message",
+            "--kind",
+            "suggestion",
+            "--repo",
+            "target-repo",
+            "--store",
+            str(store_path),
+            "--format",
+            "json",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    notes = list((target_repo / "desk" / "inbox").glob("*.md"))
+    assert result == 0
+    assert payload["sender_project"] == "sender-repo"
+    assert payload["target_project"] == "target-repo"
+    assert payload["verified"] is True
+    assert len(notes) == 1
+    note_text = notes[0].read_text(encoding="utf-8")
+    assert "sender_project: sender-repo" in note_text
+    assert "target_project: target-repo" in note_text
+
+
+
+def test_inbox_resolves_sender_project_from_repo_store(tmp_path: Path, monkeypatch) -> None:
+    from deskops.cli.commands.inbox import InboxCLI
+
+    sender_repo, _target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
+    sender_subdir = sender_repo / "subdir"
+    sender_subdir.mkdir(parents=True, exist_ok=True)
+    monkeypatch.chdir(sender_subdir)
+
+    args = SimpleNamespace(store=str(store_path), pythonpath=None, sender=None)
 
     assert InboxCLI()._sender_project(args) == "sender-repo"
+
+
+
+def test_inbox_fails_when_sender_identity_is_unresolvable(tmp_path: Path, monkeypatch, capsys) -> None:
+    _sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
+    unknown_repo = tmp_path / "unknown-repo"
+    unknown_repo.mkdir(parents=True, exist_ok=True)
+    monkeypatch.chdir(unknown_repo)
+
+    result = main(
+        [
+            "inbox",
+            "A message without a resolvable sender.",
+            "--title",
+            "Unknown sender",
+            "--desk-root",
+            str(target_repo / "desk"),
+            "--store",
+            str(store_path),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Unable to resolve sender identity" in captured.out
+
+
+
+def test_inbox_ack_flips_status_and_records_metadata(tmp_path: Path, monkeypatch, capsys) -> None:
+    sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
+    monkeypatch.chdir(sender_repo)
+    assert main(
+        [
+            "inbox",
+            "Please acknowledge this note.",
+            "--title",
+            "Ack me",
+            "--repo",
+            "target-repo",
+            "--store",
+            str(store_path),
+        ]
+    ) == 0
+    capsys.readouterr()
+
+    note = next((target_repo / "desk" / "inbox").glob("*.md"))
+    monkeypatch.chdir(target_repo)
+    result = main(
+        [
+            "inbox",
+            "--ack",
+            note.stem,
+            "--desk-root",
+            str(target_repo / "desk"),
+            "--store",
+            str(store_path),
+            "--format",
+            "json",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    payload = json.loads(captured.out)
+    note_text = note.read_text(encoding="utf-8")
+    assert result == 0
+    assert payload["status"] == "closed"
+    assert payload["acknowledged_by"] == "target-repo"
+    assert payload["target_project"] == "target-repo"
+    assert "status: closed" in note_text
+    assert "acknowledged_by: target-repo" in note_text
+    assert "acknowledged_at:" in note_text
 
 
 def test_cli_delegates_desk_command_without_bootstrap(monkeypatch) -> None:

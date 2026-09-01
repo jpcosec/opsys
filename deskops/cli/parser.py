@@ -266,10 +266,12 @@ def _add_inbox_commands(
         epilog="""
 Examples:
   deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
+  deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
   deskops inbox --list --root .
   deskops inbox --show 20260614-cli-help --root .
+  deskops inbox --ack 20260614-cli-help --root .
 
---show selector: filename, stem, or slug fragment.
+--show/--ack selector: filename, stem, or slug fragment.
 """.strip(),
     )
     p.add_argument("message", nargs="?", help="Inbox note body")
@@ -293,11 +295,16 @@ Examples:
         help="Target a registered repository name in the ecosystem",
     )
     p.add_argument(
+        "--sender",
+        help="Override the resolved sender identity with a registered project id",
+    )
+    p.add_argument(
         "--pythonpath",
         help="Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model",
     )
     p.add_argument("--list", action="store_true", help="List desk inbox notes")
     p.add_argument("--show", help="Show one inbox note by filename, stem, or slug fragment")
+    p.add_argument("--ack", help="Acknowledge one inbox note by filename, stem, or slug fragment")
     p.add_argument("--limit", type=int, default=20, help="Limit listed notes")
     p.add_argument("--format", choices=("text", "json", "yaml"), default="text")
 
