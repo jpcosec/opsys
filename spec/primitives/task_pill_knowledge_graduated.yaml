@@ -1,0 +1,17 @@
+id: primitive.task.pill_knowledge_graduated
+title: Task Pill Knowledge Graduated
+type: primitive
+version: "0.1"
+
+data:
+  kind: condition
+  template:
+    title: Pill knowledge is graduated when required
+    id: condition-{task_id}-pill-knowledge-graduated
+    status: active
+    summary: Tasks with bound pills should reference an atom when durable pill knowledge was discovered; tasks without bound pills pass trivially.
+    subject: pill_graduation_verified
+    predicate: truthy
+    expected: ""
+    tags:
+      - primitive:condition

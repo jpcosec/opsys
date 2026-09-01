@@ -1,0 +1,3 @@
+## main...origin/main [ahead 6]
+?? runs/subagents/20260831-195346-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout/
+?? runs/subagents/20260831-195354-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout/

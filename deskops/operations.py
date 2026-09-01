@@ -523,6 +523,7 @@ class DeskopsOperations:
         operators = self._load_operators(routine)
         checklists = self._load_checklists(task)
         payload["closeout_evidence_verified"] = self._has_verified_task_closeout_evidence(payload)
+        payload["pill_graduation_verified"] = self._has_verified_task_pill_graduation(payload)
         result = routine.advance(
             payload,
             conditions=conditions,
@@ -798,6 +799,16 @@ class DeskopsOperations:
                 "tags": ["primitive:condition"],
             },
             {
+                "title": "Pill knowledge is graduated when required",
+                "id": f"condition-{task_id}-pill-knowledge-graduated",
+                "status": "active",
+                "summary": "Tasks with bound pills should reference an atom when durable pill knowledge was discovered; tasks without bound pills pass trivially.",
+                "subject": "pill_graduation_verified",
+                "predicate": "truthy",
+                "expected": "",
+                "tags": ["primitive:condition"],
+            },
+            {
                 "title": "Ready for closeout",
                 "id": f"condition-{task_id}-ready-for-closeout",
                 "status": "active",
@@ -836,7 +847,11 @@ class DeskopsOperations:
                 "id": f"checklist-{task_id}-closeout-ready",
                 "status": "active",
                 "summary": "Confirms the task is ready for closeout.",
-                "items": ["Task is ready for closeout", "Durable evidence is verified"],
+                "items": [
+                    "Task is ready for closeout",
+                    "Durable evidence is verified",
+                    "Pill knowledge is graduated to atoms when required",
+                ],
                 "condition_refs": [
                     f"condition-{task_id}-ready-for-closeout",
                     f"condition-{task_id}-has-closeout-evidence",
@@ -1027,6 +1042,16 @@ class DeskopsOperations:
             if self._reference_points_to_commit(ref):
                 return True
         return False
+
+    def _has_verified_task_pill_graduation(self, payload: dict[str, Any]) -> bool:
+        pills = self._coerce_list(payload.get("pills") or [])
+        if not pills:
+            return True
+        return any(
+            self._reference_points_to_atom(str(reference).strip())
+            for reference in self._coerce_list(payload.get("references") or [])
+            if str(reference).strip()
+        )
 
     def _reference_points_to_atom(self, reference: str) -> bool:
         candidate = reference.strip()

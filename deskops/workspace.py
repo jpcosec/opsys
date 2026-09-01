@@ -198,7 +198,7 @@ tags:
 
 # Closeout ritual
 
-Close a {name} task only after validation passes, the board is updated, and the final change is ready to commit.
+Close a {name} task only after validation passes, any durable knowledge from bound pills is linked to an atom when needed, the board is updated, and the final change is ready to commit.
 """
 
 

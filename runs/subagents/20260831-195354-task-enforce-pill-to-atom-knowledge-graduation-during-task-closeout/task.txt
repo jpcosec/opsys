@@ -1,0 +1,13 @@
+Task: task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+Title: Enforce pill-to-atom knowledge graduation during task closeout
+Status: active
+Current node: checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready
+Task type: 
+Routine: routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+Effective pills:
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+Checklist status:
+- checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready: complete
+- checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-testing-ready: complete
+- checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-ready: pending

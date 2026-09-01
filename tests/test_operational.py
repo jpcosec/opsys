@@ -4,6 +4,7 @@ from pathlib import Path
 
 import pytest
 
+from deskops.models.task import TaskDoc
 from deskops.operations import DeskopsOperations
 from deskops.runtime.primitives import Checklist
 from deskops.runtime.primitives import Condition
@@ -507,3 +508,127 @@ def test_routine_advance_rejects_missing_checklist_condition() -> None:
         match="checklist checklist-execution references unknown condition condition-missing",
     ):
         routine.advance({}, conditions={}, operators={}, checklists=checklists)
+
+
+def test_advance_task_sets_pill_graduation_verified_when_bound_pills_have_atom_reference(tmp_path: Path) -> None:
+    operations = DeskopsOperations(tmp_path)
+    operations.create_artifact(
+        "artifact.atom",
+        {
+            "title": "Graduated knowledge",
+            "five_wh_one_plus": "what",
+            "answer": "Atom references satisfy pill knowledge graduation.",
+        },
+    )
+    operations.create_task_bundle(
+        {
+            "title": "Pill graduation with atom",
+            "goal": "Prove atom-backed graduation.",
+            "scope": "Closeout payload only.",
+            "implementation_path": "deskops/operations.py",
+            "validation": ["pytest"],
+            "done_when": "Payload records the verified graduation state.",
+            "pills": ["desk/contexts/pill-example.md"],
+            "references": ["desk/atoms/atom-graduated-knowledge.md"],
+        }
+    )
+
+    task, result = operations.advance_task("task-pill-graduation-with-atom")
+
+    assert result is not None
+    assert task is not None
+    payload = operations._read_doc(
+        tmp_path / "desk" / "tasks" / "task-pill-graduation-with-atom.md",
+        TaskDoc,
+    )
+    assert payload["pill_graduation_verified"] is True
+
+
+def test_bound_pills_without_atom_reference_leave_graduation_item_unaffirmed_but_non_blocking(tmp_path: Path) -> None:
+    operations = DeskopsOperations(tmp_path)
+    test_file = tmp_path / "tests" / "test_runtime.py"
+    test_file.parent.mkdir(parents=True, exist_ok=True)
+    test_file.write_text("def test_runtime():\n    assert True\n", encoding="utf-8")
+    operations.create_task_bundle(
+        {
+            "title": "Pill graduation without atom",
+            "goal": "Keep the closeout graduation item soft.",
+            "scope": "Checklist and condition generation.",
+            "implementation_path": "deskops/operations.py",
+            "validation": ["pytest"],
+            "done_when": "The graduation item is visible without becoming a hard gate.",
+            "pills": ["desk/contexts/pill-example.md"],
+            "references": ["tests/test_runtime.py::test_runtime"],
+        }
+    )
+
+    assert operations.advance_task("task-pill-graduation-without-atom")[1] is not None
+    task, result = operations.advance_task("task-pill-graduation-without-atom")
+
+    assert result is not None
+    assert task is not None
+    payload = operations._read_doc(
+        tmp_path / "desk" / "tasks" / "task-pill-graduation-without-atom.md",
+        TaskDoc,
+    )
+    assert payload["pill_graduation_verified"] is False
+
+    conditions = operations._load_conditions(task)
+    checklists = operations._load_checklists(task)
+    graduation_condition_id = "condition-task-pill-graduation-without-atom-pill-knowledge-graduated"
+    closeout_checklist_id = "checklist-task-pill-graduation-without-atom-closeout-ready"
+
+    assert conditions[graduation_condition_id].evaluate(payload) is False
+    assert "Pill knowledge is graduated to atoms when required" in checklists[closeout_checklist_id].items
+    assert checklists[closeout_checklist_id].is_complete(payload, conditions) is True
+
+
+def test_advance_task_trivially_verifies_pill_graduation_when_no_pills_are_bound(tmp_path: Path) -> None:
+    operations = DeskopsOperations(tmp_path)
+    operations.create_task_bundle(
+        {
+            "title": "Pill graduation without pills",
+            "goal": "Skip the graduation check when no pills are bound.",
+            "scope": "Closeout payload only.",
+            "implementation_path": "deskops/operations.py",
+            "validation": ["pytest"],
+            "done_when": "Tasks without pills pass the graduation check trivially.",
+        }
+    )
+
+    task, result = operations.advance_task("task-pill-graduation-without-pills")
+
+    assert result is not None
+    assert task is not None
+    payload = operations._read_doc(
+        tmp_path / "desk" / "tasks" / "task-pill-graduation-without-pills.md",
+        TaskDoc,
+    )
+    assert payload["pill_graduation_verified"] is True
+
+
+def test_create_task_bundle_generates_pill_graduation_condition_and_closeout_item(tmp_path: Path) -> None:
+    operations = DeskopsOperations(tmp_path)
+    operations.create_task_bundle(
+        {
+            "title": "Generated pill graduation primitives",
+            "goal": "Create the closeout graduation surfaces.",
+            "scope": "Default task bundle primitives.",
+            "implementation_path": "deskops/operations.py",
+            "done_when": "The condition and checklist item are generated.",
+        }
+    )
+
+    condition_payload = operations.show_primitive(
+        "condition",
+        "condition-task-generated-pill-graduation-primitives-pill-knowledge-graduated",
+    )
+    checklist_payload = operations.show_primitive(
+        "checklist",
+        "checklist-task-generated-pill-graduation-primitives-closeout-ready",
+    )
+
+    assert condition_payload["subject"] == "pill_graduation_verified"
+    assert condition_payload["predicate"] == "truthy"
+    assert "Pill knowledge is graduated to atoms when required" in checklist_payload["items"]
+    assert "condition-task-generated-pill-graduation-primitives-pill-knowledge-graduated" not in checklist_payload["condition_refs"]

@@ -13,6 +13,7 @@ data:
     items:
       - Task is ready for closeout
       - Durable evidence is verified
+      - Pill knowledge is graduated to atoms when required
     condition_refs:
       - condition-{task_id}-ready-for-closeout
       - condition-{task_id}-has-closeout-evidence
