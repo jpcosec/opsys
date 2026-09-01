@@ -5,7 +5,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
 - desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
 - desk/tasks/task-write-end-to-end-deskops-operator-manual.md
 - desk/tasks/task-anti-pattern-monolithic-api-endpoint-in-sldb-viewer.md
@@ -45,7 +44,6 @@ _Explain what this board routes and why it exists._
 _Add short operational notes about the current routed set._
 
 - Detect and migrate legacy desk workspaces [active] - Make deskops detect legacy or hand-rolled desk layouts explicitly and provide a safe adaptation path into the current modeled workspace contract.
-- Make cross-desk inbox delivery verifiable and actionable [active] - Make cross-desk inbox communication operationally useful by ensuring the sender, target, delivery result, and follow-up path are explicit across project desks.
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Write end-to-end deskops operator manual [deferred] - Consolidate the methodology into one operational playbook after runnable slices are stable.
 - Anti-pattern: Monolithic API endpoint in SLDB Viewer [draft] - Ensure we never couple independent SLDB surfaces into monolithic UI API endpoints.
@@ -55,7 +53,6 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Detect and migrate legacy desk workspaces [active] - Make deskops detect legacy or hand-rolled desk layouts explicitly and provide a safe adaptation path into the current modeled workspace contract.
 - Make task lifecycle runnable from intake to closeout [active] - Turn the documented task lifecycle into an executable deskops path.
 - Write end-to-end deskops operator manual [deferred] - Consolidate the methodology into one operational playbook after runnable slices are stable.
 - Anti-pattern: Monolithic API endpoint in SLDB Viewer [draft] - Ensure we never couple independent SLDB surfaces into monolithic UI API endpoints.
