@@ -50,7 +50,7 @@ _State what is in scope and what is out of scope._
 
 Much of this is already built (`deskops/config.py`, `workspace.py` scaffold, `main.py` sandbox override, `.gitignore`, `tests/test_config.py`). Remaining delta for THIS task:
 
-- Format: JSON (`desk/config.json` + `desk/config.local.json`). Confirmed.
+- Format: JSON. The tracked config file plus an optional gitignored local-override file. Confirmed.
 - Harden `DeskConfig.load` into one deterministic deep-merge (config.json then config.local.json), including nested `versions`. Keep tolerant of missing files, but do not swallow malformed JSON silently — surface via a load warning/flag.
 - Precedence (authoritative, document it): explicit CLI flag > `DESKOPS_TEST_ROOT` env > `config.local.json` > `config.json` > defaults.
 - Single source of truth for current `desk_format` constant (dedupe the two hardcoded `"1.0.0"` in config.py and workspace.py).

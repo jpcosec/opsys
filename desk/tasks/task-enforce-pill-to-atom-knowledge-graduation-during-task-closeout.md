@@ -53,7 +53,7 @@ Supervisor rulings (frontier vs the wire-closeout task, which owns evidence aggr
 - The all-of evidence aggregation (test AND link AND commit) is OUT (owned by wire-closeout-to-knowledge-gates).
 - Evidence form: reuse existing `references` list; an atom reference satisfies graduation. No new dedicated field.
 - Scope by presence of bound pills (not by task_type; task_type default when unset would over-block).
-- Capture the durable rule as an atom under desk/atoms/workflow-model/ first, then reflect in desk/rituals/closeout.md and the workspace _closeout_template.
+- Capture the durable rule as an atom under the workflow-model atoms folder first, then reflect it in the closeout ritual and the workspace closeout template.
 - Keep this at task closeout only; phase-level pill reconciliation is already handled by the phase ritual.
 
 ## Implementation Path
