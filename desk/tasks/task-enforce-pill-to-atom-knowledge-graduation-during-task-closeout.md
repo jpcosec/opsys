@@ -1,23 +1,36 @@
 ---
 id: task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
-status: active
-references: []
+status: ready_for_testing
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+routine: routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
+current_node: checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-ready
+history:
+- operator-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-activate
+- operator-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-ready-for-testing
+references:
+- cf735e2
+- tests/test_operational.py
+- atom:atom-task-closeout-checks-pill-knowledge-graduation
 depends_on: []
 pills:
 - desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
 - desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
 files: []
-routine: routine-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
 checklists:
 - checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready
 - checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-testing-ready
 - checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-closeout-ready
-current_node: checklist-task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout-execution-ready
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms:
+- atom-task-closeout-checks-pill-knowledge-graduation
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # Enforce pill-to-atom knowledge graduation during task closeout
@@ -44,9 +57,9 @@ _State what is in scope and what is out of scope._
 - avoid forcing atom updates when a pill only routed already-existing knowledge
 - integrate the rule with task deletion, pill cleanup, and closeout evidence
 
-## Resolved Decisions
+## Implementation Path
 
-Supervisor rulings (frontier vs the wire-closeout task, which owns evidence aggregation):
+_Outline the expected implementation route or affected surface._
 
 - Mechanism: a soft, AFFIRMED closeout checklist item, NOT a hard heuristic gate. "Durable vs transitional" is not machine-detectable, so do not auto-block on it.
 - This task OWNS only: adding `condition-<task>-pill-knowledge-graduated` + wiring it into `checklist-<task>-closeout-ready` as an affirmable item, plus the payload field `pill_graduation_verified` populated in advance_task. When the task has zero bound pills, the item passes trivially.
@@ -55,12 +68,6 @@ Supervisor rulings (frontier vs the wire-closeout task, which owns evidence aggr
 - Scope by presence of bound pills (not by task_type; task_type default when unset would over-block).
 - Capture the durable rule as an atom under the workflow-model atoms folder first, then reflect it in the closeout ritual and the workspace closeout template.
 - Keep this at task closeout only; phase-level pill reconciliation is already handled by the phase ritual.
-
-## Implementation Path
-
-_Outline the expected implementation route or affected surface._
-
-deskops/operations.py: add pill_graduation_verified payload + condition + closeout checklist item; atom + closeout.md + _closeout_template; tests in tests/test_operational.py.
 
 ## Validation
 
