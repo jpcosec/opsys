@@ -858,3 +858,10 @@ documents:
   semantic_tags:
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-deskops-imports-sldb-cli-helpers-from-their-current-modules
+  path: desk/atoms/atom-deskops-imports-sldb-cli-helpers-from-their-current-modules.md
+  hash_c: 408a3840329b2763730a4c6374a1e0634e66b16faa8ce90a38fbd493eb9c5e31
+  hash_d: 702ae3a20d005fa1926c5af35a1569a119656bdefb38bbfd1094503b487556b1
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
