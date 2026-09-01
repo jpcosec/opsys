@@ -6,7 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-from deskops.bootstrap import SLDBBootstrap
+from deskops.workspace import inspect_desk
 from deskops.workspace import scaffold_desk
 
 
@@ -18,12 +18,13 @@ class DoctorCLI:
         findings: list[str] = []
         fixed: list[str] = []
 
+        inspection = inspect_desk(root)
         desk_dir = root / "desk"
         missing_desk_files: list[str] = []
 
-        if not desk_dir.exists():
+        if inspection.classification == "absent":
             missing_desk_files.append("desk/")
-        else:
+        elif desk_dir.exists():
             if not (desk_dir / "tasks" / "Board.md").exists():
                 missing_desk_files.append("desk/tasks/Board.md")
             if not (desk_dir / "drawer").exists():
@@ -37,20 +38,29 @@ class DoctorCLI:
                 scaffold_desk(root)
                 fixed.append("Scaffolded missing desk/ structure.")
 
+        if inspection.classification == "legacy":
+            legacy_surfaces = [*inspection.missing_surfaces, *inspection.malformed_surfaces]
+            findings.append(
+                "Legacy desk detected: "
+                + (", ".join(legacy_surfaces) if legacy_surfaces else "board/task/pill surfaces need explicit migration")
+            )
+            if repair:
+                findings.append("Manual migration entrypoint: deskops desk migrate --root <repo>.")
+
         untracked: list[Path] = []
         invalid_docs: list[str] = []
-        
+
         if desk_dir.exists():
             all_mds = set(p.resolve() for p in desk_dir.rglob("*.md"))
-            tracked_mds = set()
-            
+            tracked_mds = set(inspection.tracked_surface_docs)
+
             result = subprocess.run(
                 [sys.executable, "-m", "sldb", "stores", "check", "--store", str(root / ".sldb"), "--format", "json"],
                 capture_output=True,
                 text=True,
-                check=False
+                check=False,
             )
-            
+
             if result.stdout:
                 try:
                     payload = json.loads(result.stdout)
@@ -59,26 +69,28 @@ class DoctorCLI:
                             doc_path = doc.get("path")
                             if not doc_path:
                                 continue
-                            
+
                             tracked_path = (root / doc_path).resolve()
                             tracked_mds.add(tracked_path)
-                            
+
                             if doc.get("note") not in ("ok", "benign_mutation") and doc_path.startswith("desk/"):
                                 invalid_docs.append(f"{doc_path} ({doc.get('note')})")
                 except json.JSONDecodeError:
                     findings.append("Failed to parse SLDB store check output.")
-                    
+
             if result.returncode != 0 and not result.stdout:
-                # If SLDB crashes, it usually means a document failed validation completely
                 findings.append(f"SLDB store check crashed (likely malformed documents): {result.stderr.strip().split(chr(10))[0]}")
-            
-            # Remove scaffolding files from untracked logic if they haven't been tracked
-            untracked = [p for p in all_mds if p not in tracked_mds and p.name not in ("Board.md", "pills.md", "execution.md", "testing.md", "closeout.md", "README.md", "tag-namespaces.yaml")]
-            
-            # If SLDB crashed, we can't reliably know what's untracked vs tracked, so we don't report untracked
+
+            untracked = [
+                p
+                for p in all_mds
+                if p not in tracked_mds
+                and p.name not in ("Board.md", "pills.md", "execution.md", "testing.md", "closeout.md", "README.md", "tag-namespaces.yaml")
+            ]
+
             if result.returncode != 0 and not result.stdout:
                 untracked = []
-            
+
         if untracked:
             rel_untracked = [str(p.relative_to(root)) for p in untracked]
             findings.append(f"Untracked desk documents: {', '.join(rel_untracked)}")
@@ -93,20 +105,20 @@ class DoctorCLI:
         if not findings:
             print("Desk is healthy. No issues found.")
             return 0
-        
+
         print("Doctor Findings:")
-        for f in findings:
-            print(f"- {f}")
-        
+        for finding in findings:
+            print(f"- {finding}")
+
         if fixed:
             print("\nRepairs applied:")
             for fx in fixed:
                 print(f"- {fx}")
-        
+
         if repair and len(fixed) < len([f for f in findings if "Manual repair required" not in f]):
             print("\nSome issues could not be repaired automatically.")
             return 1
-        elif not repair:
+        if not repair:
             print("\nRun with --repair to attempt automatic fixes.")
             return 1
 

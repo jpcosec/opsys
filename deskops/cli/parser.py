@@ -177,6 +177,12 @@ def _add_desk_commands(
     ins = s.add_parser("install", help="Scaffold a minimal local desk/ surface in a repo.")
     ins.add_argument("path", help="Target repository path")
 
+    migrate = s.add_parser(
+        "migrate",
+        help="Adopt a legacy or partial desk into the current non-destructive workspace contract.",
+    )
+    migrate.add_argument("--root", default=".", help="Target repository root.")
+
 
 def _add_about_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],

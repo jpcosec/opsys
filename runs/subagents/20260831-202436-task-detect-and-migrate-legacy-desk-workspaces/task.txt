@@ -1,0 +1,16 @@
+Task: task-detect-and-migrate-legacy-desk-workspaces
+Title: Detect and migrate legacy desk workspaces
+Status: active
+Current node: checklist-task-detect-and-migrate-legacy-desk-workspaces-execution-ready
+Task type: 
+Routine: routine-task-detect-and-migrate-legacy-desk-workspaces
+Effective pills:
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+- desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+- desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Checklist status:
+- checklist-task-detect-and-migrate-legacy-desk-workspaces-execution-ready: complete
+- checklist-task-detect-and-migrate-legacy-desk-workspaces-testing-ready: complete
+- checklist-task-detect-and-migrate-legacy-desk-workspaces-closeout-ready: pending

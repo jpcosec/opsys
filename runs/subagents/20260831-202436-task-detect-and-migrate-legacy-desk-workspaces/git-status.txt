@@ -1,0 +1,8 @@
+## main...origin/main [ahead 9]
+ M deskops/cli/commands/desk.py
+ M deskops/cli/commands/doctor.py
+ M deskops/cli/parser.py
+ M deskops/workspace.py
+ M tests/test_cli.py
+?? runs/subagents/20260831-202423-task-detect-and-migrate-legacy-desk-workspaces/
+?? runs/subagents/20260831-202436-task-detect-and-migrate-legacy-desk-workspaces/

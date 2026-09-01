@@ -16,8 +16,10 @@ if str(SLDB_SRC) not in sys.path:
 
 from deskops.cli.main import CLI
 from deskops.cli.main import main
+from deskops.constants import CURRENT_DESK_FORMAT
 from deskops.models import InboxNoteDoc
 from deskops.models import RepositoryDoc
+from deskops.workspace import classify_desk
 from sldb.runtime.validation import render_model_markdown
 
 
@@ -167,6 +169,99 @@ def test_desk_install_rejects_non_directory_target(tmp_path: Path, capsys) -> No
     captured = capsys.readouterr()
     assert result == 1
     assert "is not a directory" in captured.out
+
+
+def _write_legacy_desk_fixture(root: Path) -> tuple[Path, Path, bytes, bytes]:
+    board = root / "desk" / "tasks" / "Board.md"
+    task = root / "desk" / "tasks" / "task-legacy-demo.md"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    board.write_text(
+        "# Legacy Board\n\nThis is an authored board without modeled frontmatter.\n",
+        encoding="utf-8",
+    )
+    task.write_text(
+        "# Legacy Task\n\nThis is an authored task without modeled frontmatter.\n",
+        encoding="utf-8",
+    )
+    return board, task, board.read_bytes(), task.read_bytes()
+
+
+@pytest.mark.parametrize(
+    ("setup", "expected"),
+    [
+        (lambda root: None, "absent"),
+        (lambda root: (root / "desk").mkdir(parents=True, exist_ok=True), "empty"),
+        (_write_legacy_desk_fixture, "legacy"),
+        (lambda root: main(["desk", "install", str(root)]), "current"),
+    ],
+)
+def test_classify_desk_distinguishes_workspace_states(tmp_path: Path, setup, expected: str) -> None:
+    root = tmp_path / expected
+    root.mkdir()
+    setup(root)
+    assert classify_desk(root) == expected
+
+
+def test_doctor_reports_legacy_desk_with_missing_config(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "legacy-project"
+    root.mkdir()
+    _write_legacy_desk_fixture(root)
+
+    result = main(["doctor", "--root", str(root)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Doctor Findings:" in captured.out
+    assert "Legacy desk detected: desk/config.json" in captured.out
+    assert "Run with --repair to attempt automatic fixes." in captured.out
+
+
+def test_desk_migrate_preserves_authored_legacy_files_and_scaffolds_missing_surfaces(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "legacy-project"
+    root.mkdir()
+    board, task, board_before, task_before = _write_legacy_desk_fixture(root)
+
+    result = main(["desk", "migrate", "--root", str(root)])
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert board.read_bytes() == board_before
+    assert task.read_bytes() == task_before
+    assert (root / "desk" / "contexts" / "pills.md").exists()
+    config = json.loads((root / "desk" / "config.json").read_text(encoding="utf-8"))
+    assert config["versions"]["desk_format"] == CURRENT_DESK_FORMAT
+    assert classify_desk(root) == "current"
+    assert "Adopted:" in captured.out
+    assert "- desk/config.json" in captured.out
+    assert "- desk/contexts/pills.md" in captured.out
+    assert "Preserved:" in captured.out
+    assert f"- {board.relative_to(root)}" in captured.out
+    assert f"- {task.relative_to(root)}" in captured.out
+    assert "Still manual:" in captured.out
+    assert "manual model conversion or sldb docs track required" in captured.out
+
+
+def test_desk_migrate_patches_unrecognized_desk_format_without_overwriting_board(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "format-project"
+    root.mkdir()
+    assert main(["desk", "install", str(root)]) == 0
+    capsys.readouterr()
+    board = root / "desk" / "tasks" / "Board.md"
+    board_before = board.read_bytes()
+    (root / "desk" / "config.json").write_text(
+        json.dumps({"project_identity": "format-project", "versions": {"desk_format": "0.1.0"}}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+
+    assert classify_desk(root) == "legacy"
+    result = main(["desk", "migrate", "--root", str(root)])
+    captured = capsys.readouterr()
+
+    config = json.loads((root / "desk" / "config.json").read_text(encoding="utf-8"))
+    assert result == 0
+    assert config["versions"]["desk_format"] == CURRENT_DESK_FORMAT
+    assert board.read_bytes() == board_before
+    assert "desk/config.json (patched desk_format)" in captured.out
 
 
 def test_repo_register_fails_without_store(tmp_path: Path, monkeypatch, capsys) -> None:
