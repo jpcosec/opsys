@@ -823,3 +823,10 @@ documents:
   - topic:tasks
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-drift-checks-are-review-surfaces-not-mutators
+  path: desk/atoms/atom-drift-checks-are-review-surfaces-not-mutators.md
+  hash_c: 9f7767218a52550d10173a3282a385592695d6f778b90c6e69610457bb0b340f
+  hash_d: 42fa2fd773b4f2140450fec7833078b14cf31e20acf2d84d2ccf06d871ad25dc
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
