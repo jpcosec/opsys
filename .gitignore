@@ -7,3 +7,4 @@ __pycache__/
 .serena/
 .pi/
 desk/config.local.json
+.tmp/

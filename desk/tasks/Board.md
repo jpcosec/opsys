@@ -40,8 +40,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- add/promote no trackean el bundle generado en el store [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260901-000500-unclear-add-promote-no-trackean-el-bundle-generado.md`.
-
 ## Task Details
 
 _Generated from the task references above._
