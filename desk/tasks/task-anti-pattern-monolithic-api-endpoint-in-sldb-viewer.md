@@ -8,7 +8,8 @@ tags:
 routine: routine-task-anti-pattern-monolithic-api-endpoint-in-sldb-viewer
 current_node: checklist-task-anti-pattern-monolithic-api-endpoint-in-sldb-viewer-execution-ready
 history: []
-references: []
+references:
+- atom:atom-anti-pattern-monolithic-api-endpoints-in-sldb-viewer
 depends_on: []
 pills: []
 files: []
@@ -19,7 +20,8 @@ checklists:
 task_type: ''
 inherits_from: []
 inherit_acceptance_context: false
-atoms: []
+atoms:
+- atom-anti-pattern-monolithic-api-endpoints-in-sldb-viewer
 ---
 
 # Anti-pattern: Monolithic API endpoint in SLDB Viewer
@@ -52,7 +54,7 @@ _Outline the expected implementation route or affected surface._
 
 _List the checks required before this task can close._
 
-- AST and StructuredDocModel are queried separately via independent endpoints using atomic commands (sldb ast show, sldb fields), markdown frontmatter is safely preserved on save, and we don't mock 'coming soon' UI states for unbuilt surfaces.
+- 
 
 ## Done When
 

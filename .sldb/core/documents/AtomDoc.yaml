@@ -865,3 +865,10 @@ documents:
   semantic_tags:
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-anti-pattern-monolithic-api-endpoints-in-sldb-viewer
+  path: desk/atoms/atom-anti-pattern-monolithic-api-endpoints-in-sldb-viewer.md
+  hash_c: d0c53dea524fb1ed48e1c4480d62c9493788c6cb8fb87a564959def02222214f
+  hash_d: 3b0539216f665284e835743eefd1fd96d2702ccbce1a05b7c25926c39de818af
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
