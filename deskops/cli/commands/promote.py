@@ -8,6 +8,8 @@ from typing import Any
 import yaml
 
 from deskops.operations import DeskopsOperations
+from deskops.operations import parse_task_sections
+from deskops.operations import parse_validation_section
 
 
 class PromoteCLI:
@@ -44,6 +46,7 @@ class PromoteCLI:
             print(f"Drawer task already exists: {target}")
             return 1
 
+        parsed = parse_task_sections(note["body"])
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(
             self._render_drawer_task(
@@ -51,6 +54,7 @@ class PromoteCLI:
                 task_id=task_id,
                 source_path=source.relative_to(root),
                 body=note["body"],
+                parsed_sections=parsed,
             ),
             encoding="utf-8",
         )
@@ -85,22 +89,27 @@ class PromoteCLI:
             return 1
 
         operations = DeskopsOperations(root)
-        
+
         override_data = {}
         if from_yaml:
             override_data = yaml.safe_load(Path(from_yaml).read_text(encoding="utf-8")) or {}
         elif payload_override:
             override_data = json.loads(payload_override)
 
+        candidate_body = self._strip_leading_metadata(candidate["body"])
+        parsed = parse_task_sections(candidate_body)
+        parsed_fields = parsed["fields"]
+
         task_payload = {
             "id": override_data.get("id", task_id),
             "title": override_data.get("title", title),
             "status": override_data.get("status", "active"),
-            "goal": override_data.get("goal") or self._section(candidate["body"], "Goal") or f"Promote deferred work from {source.name}.",
-            "scope": override_data.get("scope") or self._section(candidate["body"], "Scope") or candidate["body"],
-            "implementation_path": override_data.get("implementation_path") or f"Promoted from {source.relative_to(root)}.",
-            "validation": override_data.get("validation", ["pytest"]),
-            "done_when": override_data.get("done_when") or "Promoted work is completed, validated, and closed with a commit.",
+            "why": override_data.get("why") or parsed_fields.get("why") or "Not provided.",
+            "goal": override_data.get("goal") or parsed_fields.get("goal") or f"Promote deferred work from {source.name}.",
+            "scope": override_data.get("scope") or parsed_fields.get("scope") or (candidate_body if not parsed["has_task_sections"] else parsed["preamble"]) or "",
+            "implementation_path": override_data.get("implementation_path") or parsed_fields.get("implementation_path") or f"Promoted from {source.relative_to(root)}.",
+            "validation": override_data.get("validation") or parse_validation_section(parsed_fields.get("validation", "")) or ["pytest"],
+            "done_when": override_data.get("done_when") or parsed_fields.get("done_when") or "Promoted work is completed, validated, and closed with a commit.",
             "references": override_data.get("references", [str(source.relative_to(root))]),
             "tags": override_data.get("tags", ["workspace:desk", "artifact:task", "source:drawer"]),
         }
@@ -138,38 +147,56 @@ class PromoteCLI:
         content = "\n".join(lines[1:]).strip() if lines and lines[0].startswith("# ") else body.strip()
         return {"title": title, "body": content}
 
-    def _render_drawer_task(self, *, title: str, task_id: str, source_path: Path, body: str) -> str:
-        return "\n".join(
-            [
-                f"# {title}",
-                "",
-                f"ID: {task_id}",
-                "Status: deferred",
-                "Priority: medium",
-                "",
-                "## Goal",
-                "",
-                f"Triage and resolve the inbox message promoted from `{source_path}`.",
-                "",
-                "## Scope",
-                "",
-                body.strip() or "No additional detail provided.",
-                "",
-                "## Source",
-                "",
-                f"- `{source_path}`",
-                "",
-                "## Done When",
-                "",
-                "- The message is resolved, answered, or promoted into active work.",
-                "",
-            ]
-        )
+    def _render_drawer_task(
+        self,
+        *,
+        title: str,
+        task_id: str,
+        source_path: Path,
+        body: str,
+        parsed_sections: dict[str, Any],
+    ) -> str:
+        fields = parsed_sections["fields"]
+        scope = fields.get("scope") or body.strip() or "No additional detail provided."
+        lines = [
+            f"# {title}",
+            "",
+            f"ID: {task_id}",
+            "Status: deferred",
+            "Priority: medium",
+            "",
+        ]
 
-    def _section(self, body: str, heading: str) -> str:
-        pattern = rf"^## {re.escape(heading)}\s*$\n(.*?)(?=^## |\Z)"
-        match = re.search(pattern, body, flags=re.MULTILINE | re.DOTALL)
-        return match.group(1).strip() if match else ""
+        if fields.get("why"):
+            lines.extend(["## Rationale", "", fields["why"], ""])
+        lines.extend([
+            "## Goal",
+            "",
+            fields.get("goal") or f"Triage and resolve the inbox message promoted from `{source_path}`.",
+            "",
+            "## Scope",
+            "",
+            scope,
+            "",
+        ])
+        if fields.get("implementation_path"):
+            lines.extend(["## Implementation Path", "", fields["implementation_path"], ""])
+        if fields.get("validation"):
+            lines.extend(["## Validation", "", fields["validation"], ""])
+        lines.extend([
+            "## Source",
+            "",
+            f"- `{source_path}`",
+            "",
+            "## Done When",
+            "",
+            fields.get("done_when") or "- The message is resolved, answered, or promoted into active work.",
+            "",
+        ])
+        return "\n".join(lines)
+
+    def _strip_leading_metadata(self, body: str) -> str:
+        return re.sub(r"^(?:[A-Za-z][A-Za-z ]*:\s.*\n)+\s*", "", body, count=1)
 
     def _slug(self, text: str) -> str:
         slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")

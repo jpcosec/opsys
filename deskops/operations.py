@@ -106,10 +106,114 @@ ARTIFACT_SUBJECTS = {
 }
 
 
+TASK_SECTION_FIELDS: tuple[tuple[str, str], ...] = (
+    ("why", "Rationale"),
+    ("goal", "Goal"),
+    ("scope", "Scope"),
+    ("implementation_path", "Implementation Path"),
+    ("validation", "Validation"),
+    ("done_when", "Done When"),
+)
+
+TASK_HEADING_TO_FIELD = {heading.lower(): field for field, heading in TASK_SECTION_FIELDS}
+TASK_FIELD_TO_HEADING = {field: heading for field, heading in TASK_SECTION_FIELDS}
+TASK_SECTION_PLACEHOLDERS = {
+    "Rationale": "_Explain why this task exists or the business driver behind it._",
+    "Goal": "_Describe the concrete result this task must produce._",
+    "Scope": "_State what is in scope and what is out of scope._",
+    "Implementation Path": "_Outline the expected implementation route or affected surface._",
+    "Validation": "_List the checks required before this task can close._",
+    "Done When": "_Name the observable condition that makes the task complete._",
+}
+
+
 def slugify(text: str) -> str:
     lowered = "".join(ch.lower() if ch.isalnum() else "-" for ch in text)
     parts = [part for part in lowered.split("-") if part]
     return "-".join(parts) or "item"
+
+
+def strip_markdown_frontmatter(text: str) -> str:
+    if not text.startswith("---\n"):
+        return text
+    try:
+        _, rest = text.split("---\n", 1)
+        _frontmatter, body = rest.split("\n---\n", 1)
+    except ValueError:
+        return text
+    return body
+
+
+def parse_task_sections(text: str) -> dict[str, Any]:
+    body = strip_markdown_frontmatter(text)
+    lines = body.splitlines()
+    if lines and lines[0].startswith("# "):
+        lines = lines[1:]
+
+    preamble: list[str] = []
+    sections: dict[str, str] = {}
+    active_heading: str | None = None
+    buffer: list[str] = []
+
+    def flush() -> None:
+        nonlocal buffer, active_heading
+        if active_heading is None:
+            return
+        heading = active_heading
+        active_heading = None
+        field = TASK_HEADING_TO_FIELD[heading.lower()]
+        if field in sections:
+            buffer = []
+            return
+        content = "\n".join(buffer).strip()
+        placeholder = TASK_SECTION_PLACEHOLDERS.get(heading)
+        if placeholder:
+            content_lines = content.splitlines()
+            while content_lines and not content_lines[0].strip():
+                content_lines.pop(0)
+            if content_lines and content_lines[0].strip() == placeholder:
+                content_lines.pop(0)
+                while content_lines and not content_lines[0].strip():
+                    content_lines.pop(0)
+            content = "\n".join(content_lines).strip()
+        sections[field] = content
+        buffer = []
+
+    for line in lines:
+        match = re.match(r"^##\s+(.+?)\s*$", line)
+        if match:
+            heading = match.group(1).strip()
+            if heading.lower() in TASK_HEADING_TO_FIELD:
+                flush()
+                active_heading = heading
+                continue
+        if active_heading is None:
+            preamble.append(line)
+        else:
+            buffer.append(line)
+    flush()
+
+    cleaned_preamble = "\n".join(preamble).strip()
+    return {
+        "fields": sections,
+        "preamble": cleaned_preamble,
+        "has_task_sections": bool(sections),
+    }
+
+
+def parse_validation_section(content: str) -> list[str]:
+    lines = [line.strip() for line in content.splitlines() if line.strip()]
+    bullets: list[str] = []
+    saw_bullet = False
+    for line in lines:
+        if line.startswith("-"):
+            saw_bullet = True
+            item = line[1:].strip()
+            if item:
+                bullets.append(item)
+    if saw_bullet:
+        return bullets
+    return [line for line in lines if line != "-"]
 
 
 def _load_yaml_mapping(path: Path) -> dict[str, Any]:
@@ -1863,7 +1967,15 @@ class DeskopsOperations:
         )
 
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
-        payload = extract_model_data(model, path.read_text(encoding="utf-8"))
+        raw_text = path.read_text(encoding="utf-8")
+        payload = extract_model_data(model, raw_text)
+        if model is TaskDoc:
+            parsed_sections = parse_task_sections(raw_text)
+            for field, content in parsed_sections["fields"].items():
+                if field == "validation":
+                    payload[field] = parse_validation_section(content)
+                else:
+                    payload[field] = content
         if "id" not in payload:
             payload["id"] = path.stem
         return payload
