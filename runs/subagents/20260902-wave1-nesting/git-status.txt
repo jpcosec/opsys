@@ -1,0 +1,6 @@
+## main...origin/main [ahead 9]
+ M .deskops.log
+ M desk/tasks/task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields.md
+ M runs/subagents/20260902-wave1-nesting/board.txt
+ M runs/subagents/20260902-wave1-nesting/task.txt
+?? runs/subagents/20260902-wave1-nesting/git-status.txt

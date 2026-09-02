@@ -1,10 +1,10 @@
-Task: task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
-Title: Prevent promotion from nesting structured source sections into active task fields
-Status: active
-Current node: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready
-Task type: 
-Routine: routine-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
-Checklist status:
-- checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready: complete
-- checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-testing-ready: complete
-- checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-ready: pending
+commit 2542d1a0e5ef5ac57ced87471fbc81423ab90ebe
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Sep 2 13:45:44 2026 -0400
+
+    fix(promotion): flatten structured source sections into task fields on promote and TaskDoc read
+
+ deskops/cli/commands/promote.py | 103 +++++++++++++++++----------
+ deskops/operations.py           | 114 +++++++++++++++++++++++++++++-
+ tests/test_promotion_nesting.py | 150 ++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 328 insertions(+), 39 deletions(-)
