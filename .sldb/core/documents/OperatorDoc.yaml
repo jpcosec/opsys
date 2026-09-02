@@ -1,0 +1,217 @@
+documents:
+- name: operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-activate
+  path: desk/primitives/operators/operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-activate.md
+  hash_c: d26312f0bfee228543b86bb1c5a49e4e92eb0c5e40fcdf0c387ca131f1e037a9
+  hash_d: 5f2db16f2e875a78788d35fb74b25232f4f53c49b85f271551a676ec0648ecb6
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-for-testing
+  path: desk/primitives/operators/operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-for-testing.md
+  hash_c: d558c719333e606496e16e5970fce58743412193e747e26b14686df7e124fb5f
+  hash_d: 218364497043772e5a514747ad1ca4dc3f23a55fb398c966eb9b08936b4460c4
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-close
+  path: desk/primitives/operators/operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-close.md
+  hash_c: 0dd56d0f7d593a26c230bece30ee07b7fe952d59a9ab3b972290b3c577f743d8
+  hash_d: 9e8ba4fb8a9e70191bd8949e96e047b102e89e12706b3b2cd54a0cbf826cdaed
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-activate
+  path: desk/primitives/operators/operator-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-activate.md
+  hash_c: f113442a4f15053bc29b1039454f054cda6ee7a2cff13d470ef1047c7d428c8b
+  hash_d: a1cf28cf0821f703f00900ae1b6df72bef1e9233ed5a40e31aa73c484bb13bdb
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-ready-for-testing
+  path: desk/primitives/operators/operator-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-ready-for-testing.md
+  hash_c: e501ae273f221b18f35620bbf0232a308d1357785c18c18c13069a8257dba894
+  hash_d: 60d2d00a8b56b4c3e89a1a98969031626ab98b9e266cede1c57bc0230808bcea
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-close
+  path: desk/primitives/operators/operator-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-close.md
+  hash_c: ef3aba8f4c2f16b23e59c0a539030d506f37d313b65f9e9121421d8790441d01
+  hash_d: 177dc3d5efc5a459fec0495720421020cee6d561ea1e6c00e311d86f0400ca69
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-activate
+  path: desk/primitives/operators/operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-activate.md
+  hash_c: 8cb41b823cacf6c8e52d4cb89bbeeadc019e8fe9f93ead6c897b5d064547770b
+  hash_d: 035ba2552240eaf2e6ce5e61cbbba4afa7320fdcca024b257ac44445c6a29ffa
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-for-testing
+  path: desk/primitives/operators/operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-for-testing.md
+  hash_c: 5c4e714bcc2a95983d01e1c7ad6c06b67903c7806b5abef6a1509e7dc8cbd733
+  hash_d: 653e154f131e2298a93b271f58e3551147f5e4bfdbe585c19bc73134dce49403
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-close
+  path: desk/primitives/operators/operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-close.md
+  hash_c: 73c0e4407e8be3a1f1a0acce109ac87045a8cc9733e8a7a1a9684b3fe5df9313
+  hash_d: b14c0c0c0d54c0ffce3dd929bd3e8a2c8811f8fb8667499cf5be1cf4b61eff00
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-ritual-zero-context-subagent-stress-test-activate
+  path: desk/primitives/operators/operator-task-ritual-zero-context-subagent-stress-test-activate.md
+  hash_c: 26147e4d46852e39d609832ccc9d457dacbfba11371ce8996e5e7b090af4ab9d
+  hash_d: 182ff9b6766d87a54638cc4ca4a9965b73363e78a510d4656c7501bb234f9a9b
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-ritual-zero-context-subagent-stress-test-ready-for-testing
+  path: desk/primitives/operators/operator-task-ritual-zero-context-subagent-stress-test-ready-for-testing.md
+  hash_c: d07c7e791f875b8755cf99c3c8203a29f5e1b7347cc50e7d07b384eb3c92b389
+  hash_d: ca66ab0811b590d91645a1b0b7d2502bdb3a6dd0859cf81f72e01dbe20d4a73f
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-ritual-zero-context-subagent-stress-test-close
+  path: desk/primitives/operators/operator-task-ritual-zero-context-subagent-stress-test-close.md
+  hash_c: 3fe1001f55d00084821c8756d94fc317b27a5e94c5feb083ab3a69679b0cd353
+  hash_d: 598055219ca017faf1ccee0376720bde0133b8250a5e5bafa90e9d7e8a198f9c
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-split-atoms-with-provenance-safe-rerouting-activate
+  path: desk/primitives/operators/operator-task-split-atoms-with-provenance-safe-rerouting-activate.md
+  hash_c: ba940a17ea1af442ac85f482d44f7016f316f0874fb405709515e89117f4284f
+  hash_d: 1b263e86c1a751cdc1cb37a7f691e20e2d6dd1ad7aa9f805b8e2d25ce0bf93d0
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-split-atoms-with-provenance-safe-rerouting-ready-for-testing
+  path: desk/primitives/operators/operator-task-split-atoms-with-provenance-safe-rerouting-ready-for-testing.md
+  hash_c: 11cc13620b4d1a3f3ded193091682ef4aca8ce92e4c7dba7db7e035d51b2b007
+  hash_d: 218bf2fa017e8a34c22fff8d03148c4cb66e161e5fb25d52e305916c5838d18a
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-split-atoms-with-provenance-safe-rerouting-close
+  path: desk/primitives/operators/operator-task-split-atoms-with-provenance-safe-rerouting-close.md
+  hash_c: 9cbea65c752bee39eb563003912ca4de21d328d44a5732c7253d8096a949cf90
+  hash_d: c94d4bf40874a39c98380d7643c7d9bec73c554377d8a3b2c2b9ba572e851804
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-merge-atoms-with-reference-reconciliation-activate
+  path: desk/primitives/operators/operator-task-merge-atoms-with-reference-reconciliation-activate.md
+  hash_c: d94c4d233656279832b036771719db0ba6a9e2cfae027f4d456bf58700a3d043
+  hash_d: e6219adb8e77ab50321a4a8a9a72d3bede917e77db02765a8d9eafa91f612c7c
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-merge-atoms-with-reference-reconciliation-ready-for-testing
+  path: desk/primitives/operators/operator-task-merge-atoms-with-reference-reconciliation-ready-for-testing.md
+  hash_c: 71ff18a4161366c787e32aefd3e2062883deacf234935426dca2e533dd504856
+  hash_d: c545f0a758c1172a0ea7d8c82018c700804babc5683ef1acdb642545c2966057
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-merge-atoms-with-reference-reconciliation-close
+  path: desk/primitives/operators/operator-task-merge-atoms-with-reference-reconciliation-close.md
+  hash_c: 3d41f7c52f9bd3a8dd0f706df43f9bc82883de24e3f270bec9fd63599b461a28
+  hash_d: bee33c20e7af724fa8748f5ba0c478b15fd84e7505a409e6b31aa41d1fe346a1
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-create-atoms-from-pill-graph-and-diagram-sources-activate
+  path: desk/primitives/operators/operator-task-create-atoms-from-pill-graph-and-diagram-sources-activate.md
+  hash_c: 2e9aa4e9c949f48829a0ab9dc1c1b754c40b265d7c303065b169558a9067a444
+  hash_d: 8bc22e60ee982520ea0d241c40612cf439514bfb19cc061944ab75998f0bfbcb
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-create-atoms-from-pill-graph-and-diagram-sources-ready-for-testing
+  path: desk/primitives/operators/operator-task-create-atoms-from-pill-graph-and-diagram-sources-ready-for-testing.md
+  hash_c: 1f4afe990c8d6e96f8e848169fc7e1e1b6980192af0b968fa2c8454b6009077e
+  hash_d: 7fb3ca8a522d4a7d0f9bae5fba96b130703f479c481b02634c474b26f1f4b538
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-create-atoms-from-pill-graph-and-diagram-sources-close
+  path: desk/primitives/operators/operator-task-create-atoms-from-pill-graph-and-diagram-sources-close.md
+  hash_c: 712a06334e2e222e0d08a624d23b08a216df36c44d749de9663e6924669d69a2
+  hash_d: 2c3c50d14051b29e6287590e3276de3767caf2f6fc3eb5cdc3941909d3732c17
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-activate
+  path: desk/primitives/operators/operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-activate.md
+  hash_c: aad984b1c39435507cbfd03bac034c78b3c6bb18fc79c1c45240fd0c80168ab5
+  hash_d: a4f9fe4c744c721bcef2d8ee7144acc83400eb920a083286f87444f5be57d387
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-for-testing
+  path: desk/primitives/operators/operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-for-testing.md
+  hash_c: 99ace97cc987ed06e3a6f7ebb7efc71c83cfc072a58eb6941c439cc46e7441dd
+  hash_d: 07548413ab2c0e83d16db6aa9c3bb99d83d7e54e3e27aeaeab425e8b7b5d369e
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-close
+  path: desk/primitives/operators/operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-close.md
+  hash_c: 11ae07568cc0bac5b87e1ce41609edeeb668cfe334b7d7e2c8defd9807ea115d
+  hash_d: cf245e2d7e0c4410c3cbc3ccba8bd6cb1e3fa17629853e25e86bc24a60d93410
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-activate
+  path: desk/primitives/operators/operator-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-activate.md
+  hash_c: e7d3a1087629b510c7f810804ada936f935147b6e1d378eef346fc5113ee28ec
+  hash_d: fa1830adf1846eb404783da31d5f105e51cd5e4956cf1caf69d5de9b5f6ba50c
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-ready-for-testing
+  path: desk/primitives/operators/operator-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-ready-for-testing.md
+  hash_c: 4cf3697bb50b68f87607a0a098bb3d5ca9ec80cfefe2444504b291211a34ad48
+  hash_d: d4bfd25d371eb1364143d428e5f1292c4b0d273381cd4e076911787ae21fe0b8
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives
+- name: operator-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-close
+  path: desk/primitives/operators/operator-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-close.md
+  hash_c: 7629bd01181f4f1d404558e5a980767c9a78c1ad8317692145974965820cb2d7
+  hash_d: 883df2a9b8ebd25a7bc08b928903fd9975b6142847fe77dcfa8b406c04383d66
+  semantic_tags:
+  - primitive:operator
+  - type.workflow.operator
+  - workspace.desk.primitives

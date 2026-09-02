@@ -1,0 +1,361 @@
+documents:
+- name: condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-has-implementation-path
+  path: desk/primitives/conditions/condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-has-implementation-path.md
+  hash_c: 4f669cbec77cd822dcad60ab00f642aaf0bbfa5a6a53552dcdf95d5aa944d92c
+  hash_d: f5bae58d4915db34b058cabfeb784bc4ff92bdd4cd23a15dc415bbecd1b20902
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-has-validation
+  path: desk/primitives/conditions/condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-has-validation.md
+  hash_c: 0767314f1c3fdf81271ae2ff600f6cfe5c08c9868bba2f143d9ca7a3daac6600
+  hash_d: 6aa19e8660ba4c8ab35c32ccbb3bc25f93517e766af52d08276863587039a954
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-has-closeout-evidence.md
+  hash_c: d83e1c3d305477ab3b70a1709423a5aa19d714fed4abcd1093d6c51feb79026d
+  hash_d: 427a8f0ee7934167602ff7bb6d72540761630f00c04211cbd9d5dea2bbbf5788
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-pill-knowledge-graduated.md
+  hash_c: 2158d53e3a5fce2ae3e28eedc6f6ef7ece799ecd7f501e616cc56996381dad90
+  hash_d: 71a6a1f3d08bcd4d7a1eb1183d5acbf71104468eb712ed593bf038fa15bc102e
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-for-closeout.md
+  hash_c: 1c926f5db24bc8e3ba7264410cfd3287ffe438db514a7787281a3289ff271f9d
+  hash_d: cc6cc0ab5313a29f47f6a66c69da65da3e32e971ec0406cb33473dbab67a2e26
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-has-implementation-path
+  path: desk/primitives/conditions/condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-has-implementation-path.md
+  hash_c: c8cae4fb234005f161ffa40f3a693151645514f02f5feb2d81f084fa99538361
+  hash_d: c6bab6ccb6365db8732c5a6d81db945baf9435bcfa4600e0df4409f03a146c02
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-has-validation
+  path: desk/primitives/conditions/condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-has-validation.md
+  hash_c: 8d2e5d0b3c0202b31fa5f8ff79ecec0d1cc151acc8605c57de2dd6865d922ae4
+  hash_d: 7c0a497dd235b9271b5953ba77608a6d9961860299c3e29986ede8f3c90edef9
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-has-closeout-evidence.md
+  hash_c: b2799662e3a2e5ab9e8abe083adbdb4476cbfc44b89cf932456ed9a3b862f6f6
+  hash_d: 7c5cb1c84e6b0e049bdd331fc468e777a065e96e9e407ac9e7edd75a200cfc92
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-pill-knowledge-graduated.md
+  hash_c: e2d4a69b11da58bb3a21c8581f67ad77ab93c2083c9b4f7fb84b71a2a39fde16
+  hash_d: e50aa618eccfaa2ab27df886cb95f2ddaed6b23d12d646538927a162ce980818
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-ready-for-closeout.md
+  hash_c: 83dded35d0216e7f3e38646d022a8548f4c8b5a74d1deb1e55e509f748983fe2
+  hash_d: c366147f4b5a47084c1fab0ec25638301452531b5d6df05646d763bb6d9018e7
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-has-implementation-path
+  path: desk/primitives/conditions/condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-has-implementation-path.md
+  hash_c: 2d366c05a5797d36dd70819fe4ee8594f3bf15252d83116309bcf600a879eb56
+  hash_d: e17a060d0f006951ba7b74ea416df93addaecb83fb49b520a4aa7d170e26c3a0
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-has-validation
+  path: desk/primitives/conditions/condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-has-validation.md
+  hash_c: a0176d4e658726cf1368dd0f18ee8fd5347765365da6647342ba6116a1491ef2
+  hash_d: 07789c0839976c479f45b89fcc78a5033f9883d65df5254c6a5cffb37578882c
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-has-closeout-evidence.md
+  hash_c: f0e2ceb3332b1e89ff6893e28849895c91ba7df91e9aa43703b6d9315d5fb55d
+  hash_d: c5981da3b11ef6e6717b5a6cf54cdc7fd7490223f89dabdf380025652545978a
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-pill-knowledge-graduated.md
+  hash_c: 01250d00f7d3a4cf71bf374a45a7715475b9d908d6c78a85b5c15a5e9665a30a
+  hash_d: cd638a35dd33681f9761a516ee7f3c0d5ac0cd1dd2474139784d89e0e88a50c9
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-for-closeout.md
+  hash_c: f584b02f190629047192e3b90de2ed3df501bedb0fd9d802c55d46c3826571c7
+  hash_d: 9f0bc6b776d7c09addb8c5953fb4cd6f29a3ccdaf3783d7ffc010acd77bf018c
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-ritual-zero-context-subagent-stress-test-has-implementation-path
+  path: desk/primitives/conditions/condition-task-ritual-zero-context-subagent-stress-test-has-implementation-path.md
+  hash_c: 075aab4ba12ab1a13a4d6bbbb3d48c0f004c661a509ace03f1ffa099dbc66e1f
+  hash_d: 76d80130a09ce932ea164a34baf47caeacc49793e998be3d7896393c0247a668
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-ritual-zero-context-subagent-stress-test-has-validation
+  path: desk/primitives/conditions/condition-task-ritual-zero-context-subagent-stress-test-has-validation.md
+  hash_c: 1374bcf3b7e32a21db78d25ae201ea0b5ea341c5f2c5a8a51b736d22cf9e16b8
+  hash_d: ef64785b8e0a09d88f4e0ec9a75d0fdb99d3dc552f841ee3a9aa5ab85718c00a
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-ritual-zero-context-subagent-stress-test-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-ritual-zero-context-subagent-stress-test-has-closeout-evidence.md
+  hash_c: 1b9f939d2c98e061256cdf643ed02e2274491633680c7bcbc0fc4ff3a62af356
+  hash_d: 1e60a428014dba5da6e5ab11f351390b5f5e3927a3f2d773769cf6c5c4c9b5f0
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-ritual-zero-context-subagent-stress-test-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-ritual-zero-context-subagent-stress-test-pill-knowledge-graduated.md
+  hash_c: 66c40e0d5bd3f3d7776cfd31e8675d402a24dbabf97e38d97c98f1d24859fc09
+  hash_d: 9d7d8c22d564112d0f45faf0e38f004a4b63f2f4b50edb938e601b4b96edceed
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-ritual-zero-context-subagent-stress-test-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-ritual-zero-context-subagent-stress-test-ready-for-closeout.md
+  hash_c: d855a3355c01fef85d62833824c1f19c90f4fd80908419f6cab455791b08783f
+  hash_d: b42ed1edf9fa42d14fd88f7d1789a47b266df38991a0ef3c19a7c478f73f1a9d
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-split-atoms-with-provenance-safe-rerouting-has-implementation-path
+  path: desk/primitives/conditions/condition-task-split-atoms-with-provenance-safe-rerouting-has-implementation-path.md
+  hash_c: 772a120006dfc6be419e2de5ebf7d177c65eda893f6db5f700ae7ea93ca2a713
+  hash_d: f42fe9b71f4ec6c05ee6439b33b5e86b5c5d413449295e6b4ae225e772c03e36
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-split-atoms-with-provenance-safe-rerouting-has-validation
+  path: desk/primitives/conditions/condition-task-split-atoms-with-provenance-safe-rerouting-has-validation.md
+  hash_c: 6361f18ccbb1b8220ae574cde1d2d6b139fb8baa45c12dc682dbb275e581d779
+  hash_d: 9c78a9b252494103fac914f2b7b23e596b59ec7570b027205adcab16a0f05b69
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-split-atoms-with-provenance-safe-rerouting-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-split-atoms-with-provenance-safe-rerouting-has-closeout-evidence.md
+  hash_c: fdb518865a7612598259209354caae5e8d6552d358c962c1a6f7a0771f32267e
+  hash_d: 47c2e8ecf2beba0c8100e9febabbe30da9b895f7cf0ca25eb198999be46a5eef
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-split-atoms-with-provenance-safe-rerouting-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-split-atoms-with-provenance-safe-rerouting-pill-knowledge-graduated.md
+  hash_c: ccfc1c9360e87fff93deae45942026b7a97613fdb99785d2123948a75d74f697
+  hash_d: 44cd9d3d6a7423941801f8c377e830e988eb960cde0a584cfdae0caa1c4c44ac
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-split-atoms-with-provenance-safe-rerouting-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-split-atoms-with-provenance-safe-rerouting-ready-for-closeout.md
+  hash_c: f98f3fab33fb3f1a17f1df21220a0a17df1a8d6b09386e559ae8d0a067e0a78f
+  hash_d: 201fe855ba1fc61489227883e74504a8948e7fa845df6649ad1980fb7c6bb777
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-merge-atoms-with-reference-reconciliation-has-implementation-path
+  path: desk/primitives/conditions/condition-task-merge-atoms-with-reference-reconciliation-has-implementation-path.md
+  hash_c: d6f174b03b447310a1e315ee1e2a1b520f5eb4c73294e6b038f67571b50c2a27
+  hash_d: c52bf6aeabfd3c3cf656a1209246754dbb4578486cb0688d1797a820c66a3fc3
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-merge-atoms-with-reference-reconciliation-has-validation
+  path: desk/primitives/conditions/condition-task-merge-atoms-with-reference-reconciliation-has-validation.md
+  hash_c: 84a5778145e61d4b7e8a0f90e85f06fc06cfb5e99022ca99f65675ac550ed068
+  hash_d: df8d1739b2d202199f093419a837b2959b9ac30e3a0a926bb3e154273642e2d1
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-merge-atoms-with-reference-reconciliation-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-merge-atoms-with-reference-reconciliation-has-closeout-evidence.md
+  hash_c: 2a3f9614c8ecfe411559bba39ea5ced1a0df3610e380155f00b1686c2173a158
+  hash_d: c661ee14fb66d19264fa50f984c940873a58e9b5604202ffba428c280167f1c2
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-merge-atoms-with-reference-reconciliation-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-merge-atoms-with-reference-reconciliation-pill-knowledge-graduated.md
+  hash_c: e8482b96c82d3ddbc29b06809405077871e4261f88c1ea781a49e053ca992fa2
+  hash_d: 9592276d9501298d43df6e17397b788d819b1e17cd71181d70c2397d137aa3b6
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-merge-atoms-with-reference-reconciliation-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-merge-atoms-with-reference-reconciliation-ready-for-closeout.md
+  hash_c: a0f598a31bdb89e5abca891c1f3ef7a9e3fefba1bcb4fc82eaf3f957481b2172
+  hash_d: 472d659d3705832728ced6049dff269fd40487e092dc1ed1013c0366fcae3c40
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-implementation-path
+  path: desk/primitives/conditions/condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-implementation-path.md
+  hash_c: 1e20e990142001293052b4ea4a77f6ed4f8578e7abce60a76cc430976a7365ab
+  hash_d: 3e6e2393be18bc34600a8d90f56bcab435b35355e8cc116086908b8b3413f5dd
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-validation
+  path: desk/primitives/conditions/condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-validation.md
+  hash_c: 30f095666fdbf510d9b9d73e89a3593ba2ca0bb5e89ba0660776e2b69ed406fb
+  hash_d: 613cdeac5e064c2da1323ef4c5519b1f566bd545aa71f2591c656a31f1e7bf8f
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-closeout-evidence.md
+  hash_c: 0f11038402c3334bf485214cf19250b81d1c0b55920e937b281945957d0e9913
+  hash_d: cc05a27597abc8d2abd878fcc70b4aa4c7ce345df23dbf5db864435b8cda2899
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-create-atoms-from-pill-graph-and-diagram-sources-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-create-atoms-from-pill-graph-and-diagram-sources-pill-knowledge-graduated.md
+  hash_c: 3733ff54f7324be4d52b0aa766d0fa6527ebeb5f3f9e3455f2f7b2156f2116cc
+  hash_d: 191047752b8f4b754d7c8f9386afde29ff0a585c0dc99eb155b3d557da3fe3d1
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-create-atoms-from-pill-graph-and-diagram-sources-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-create-atoms-from-pill-graph-and-diagram-sources-ready-for-closeout.md
+  hash_c: 5e55270b91e081ab6e92ab4d24c433f24dcfc7b6bc3750257e6e934d7fd9b11b
+  hash_d: ba5bbafcb880d76a33d61b1418419b0a212368bc9676303cd4d5616b4f2450ae
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-implementation-path
+  path: desk/primitives/conditions/condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-implementation-path.md
+  hash_c: 2afe5998a40ff574079ac29392497da24f2a9f726ebc6f326ef9d626d35e4840
+  hash_d: 912ff666367bc91d6fd1c86abb9ace1d327614850ba4d61ded35c84e07587be7
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-validation
+  path: desk/primitives/conditions/condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-validation.md
+  hash_c: 4ce22e32690f44c9347df58cc25ff179e366bbdb07c9995da94ebaa206c0160b
+  hash_d: d9967a78572e55b1fb4c3f08ac68b14c4fd617595adb0bdc4eec555dbccff14d
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-closeout-evidence.md
+  hash_c: dbab4da08a4cf9d98dcf7e3837c8ebd480c7cbef96a07ceb64d750ac7b61cb6c
+  hash_d: 30b461fdfa66438d9e2f968900f6c73f784b37f511f6f29b72e898348a937f8f
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-pill-knowledge-graduated.md
+  hash_c: dab1706e02682d3caa728a4bcd56bd913749a6d42bc8d4b5cd083e3c03697ecb
+  hash_d: 163ecd192599714a7a7bb2146c742c59064fcb75ef8b89f550efb0aed8e4c909
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-for-closeout.md
+  hash_c: dcffeeda24614837966a200144a54db1da03ceda5894c0506b5a62607fafe798
+  hash_d: 9d93d94444495de5a7ddb24d9923819b615f1c4a908d474915993b47b4b539e4
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-has-implementation-path
+  path: desk/primitives/conditions/condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-has-implementation-path.md
+  hash_c: 0a39584b845af0bbb460538a816091c75916c26e323092e09f0e87e8debf9dd3
+  hash_d: 104d26ce8d4cfd27627a18953719bb2204b53bfb908414705ae44d524e1ddd47
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-has-validation
+  path: desk/primitives/conditions/condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-has-validation.md
+  hash_c: c388edd9bb220de7e3dbd73e99febd3513716280051157cef09def7725d9fb4b
+  hash_d: 26263b2a474e2d9130612dc1356147baff2a9018a849095d5a4fb3959c5aed60
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-has-closeout-evidence
+  path: desk/primitives/conditions/condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-has-closeout-evidence.md
+  hash_c: ae781ab159cb135e2d5f77e20540055ef5eb5d6d5953f5bfdd1ae4598a28e1d6
+  hash_d: 3a275a8e96a91ce8516c60d3b8b993c9be5b5633818508707da25243bce654f5
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-pill-knowledge-graduated
+  path: desk/primitives/conditions/condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-pill-knowledge-graduated.md
+  hash_c: e6f23015906d8db4b1d842ef24ee611cdb633d76d275357f9f8e55e24561bd0b
+  hash_d: c14eeb2065fe259a3e32ad8477d55ba925a57c42288d280a6e544745b1e6352e
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives
+- name: condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-ready-for-closeout
+  path: desk/primitives/conditions/condition-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-ready-for-closeout.md
+  hash_c: fd3cdf67af748f023ec9507bc24703a7020af1c19be5225adc149aa845acc9c4
+  hash_d: 4c45500b05d878d31f2201e3e46ef57f38cf9facc5e4c202447a17cbb52a52bf
+  semantic_tags:
+  - primitive:condition
+  - type.workflow.condition
+  - workspace.desk.primitives

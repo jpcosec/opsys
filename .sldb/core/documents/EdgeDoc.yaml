@@ -1,0 +1,433 @@
+documents:
+- name: edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-to-activate
+  path: desk/primitives/edges/edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-to-activate.md
+  hash_c: 3dde0090702fdb5cdc243ed8067eb16b179099b927575c9dbe99b38ebd355b9a
+  hash_d: 5862c93dc5c2ae8c7eb382b54386a88ded9402ede352ec85e9993dbddf81f442
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-activate-to-testing
+  path: desk/primitives/edges/edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-activate-to-testing.md
+  hash_c: 17b37b620b0f974ea7a48ee6e9f4c329f4ddb2acdf52ee2901aedc52ef5b7cb0
+  hash_d: 3640e7c5c677247ad887e701847210f88893db130c6e1069319866ba0dcf01f8
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-testing-to-ready
+  path: desk/primitives/edges/edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-testing-to-ready.md
+  hash_c: c305b22a2cf6de2f5c01fec97c33b58e5092a81a7355c3c09e866a68640a00e9
+  hash_d: 4d36e3947d09b79dcb845b81c7ce802334aea5098aae094d6c2ac2b302eb7806
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-to-closeout
+  path: desk/primitives/edges/edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-to-closeout.md
+  hash_c: f76ad6eefb0786f503acfb9999108f22728a7b7ccd41565a87516eb7a7f46b4f
+  hash_d: 67a4b0059f004bf30161148554b2c02e47168f6aab5bccdf7ad67e7b81de91f8
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-to-close
+  path: desk/primitives/edges/edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-to-close.md
+  hash_c: 43a85225c8607866a045dbee81d50f4a1a8772363437da1fd9bbdc0387348c3c
+  hash_d: d6fe7a3e837ad49b2f00b83c33618ebc33135bf66ef57cc2272e4d26b1dcc46f
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-close-to-complete
+  path: desk/primitives/edges/edge-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-close-to-complete.md
+  hash_c: 839678c3cbf46579a3ace7ad375eaf41835459247ab8753fd0b2bd28bd695f4d
+  hash_d: 3388f388c03c68601c7a932b363e7055fd625dbd6510aab92651c4f9503f2db9
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-to-activate
+  path: desk/primitives/edges/edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-to-activate.md
+  hash_c: 9daefd3bc360bafb7a58c86eb87384f17d7f195d36daeee032e108269599a232
+  hash_d: 670d9f7326343c41060b6149cd21d2f401e901114813a81e2e0332a358f2eb71
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-activate-to-testing
+  path: desk/primitives/edges/edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-activate-to-testing.md
+  hash_c: 4d75dff18701de28e97aa4447f20317234b4b0ff889b3ba0e5bae0c5ee8536fa
+  hash_d: 1469638ec730665bc507932fe5bb718e04ead73fdbadb8180aec126d92d7a6f5
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-testing-to-ready
+  path: desk/primitives/edges/edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-testing-to-ready.md
+  hash_c: 7d0c36a006a0af13efb40e6ccb7e26115286d837e58b695e588a9a94022c06ab
+  hash_d: cac401c2472eaddce532238d85efe4a38b07a7f25f0f8652c5497477522c69e1
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-ready-to-closeout
+  path: desk/primitives/edges/edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-ready-to-closeout.md
+  hash_c: c07fb583de27a28f2764b1f906c66a5ed99701cb50f029db1f94f99dcdd46360
+  hash_d: 148c40a2c0e7643c3aebf8ab808909252eb1db6f8f8fdd77283f350521fd6db0
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-closeout-to-close
+  path: desk/primitives/edges/edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-closeout-to-close.md
+  hash_c: c82ea5c2286c964279c146d8198b1622c15ede4d63a7b8cf0236549b02af58cf
+  hash_d: 91cfc1c744cf7e914f6fedfadf144d2d5de372ed206ce54fea4578e6b73b28aa
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-close-to-complete
+  path: desk/primitives/edges/edge-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-close-to-complete.md
+  hash_c: cff37e70899fd431aa1f66061db268ac0b0d18d94aebbcaa93d9fc5f1b68a8b7
+  hash_d: 957dfb3be09ff5a39443f8fd1780fbdc7a87d680c43220d37176059578a8d972
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-to-activate
+  path: desk/primitives/edges/edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-to-activate.md
+  hash_c: 97251e570bb2aca56cc2a42201b12647b80f92da24a657f53851c4bd1dc21968
+  hash_d: 1d204ae3c0a9e07b59278e5c6bae4599a449804a56a14ceae54c311dbf58c256
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-activate-to-testing
+  path: desk/primitives/edges/edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-activate-to-testing.md
+  hash_c: 15805bf4abab1d11b2f0880f7b141cf36d567daf0344b44b28864b825e973b04
+  hash_d: e73a1b2573733e75fdfdb6bb01abd55b48af511255bf3078a6887517c90e4575
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-testing-to-ready
+  path: desk/primitives/edges/edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-testing-to-ready.md
+  hash_c: 3f0b3e683d47aff96a5706135814aaf9b1d5a927608848899cda662288607246
+  hash_d: 798be155318ee0ffc63ffee954fbeb52b77cede499828c55ea67632a880734f6
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-to-closeout
+  path: desk/primitives/edges/edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-to-closeout.md
+  hash_c: 381ef0f1d0a353c346a6e2e58ab86d27ec19c107a587afc804d32d99f66bf8b9
+  hash_d: 13ca625c38c4d6682e357f25dcc230f5aaabedb223c0e8e202de5d3ff9fc8b10
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-to-close
+  path: desk/primitives/edges/edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-to-close.md
+  hash_c: af62290cf23ffabdfa0657847ef00cd14339343a65ca95c3da4fbb6ccd47a2fb
+  hash_d: a9765d215ddd80baa6b7e0d6d7c2f7d1acacb493649b7307b8c2059c08cc1ee1
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-close-to-complete
+  path: desk/primitives/edges/edge-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-close-to-complete.md
+  hash_c: 6f6f40d831386d8c9f7a06ecca81ea29a5a3c38757add05900e9ee0fd9419cf0
+  hash_d: 11a8cdc906512577b80a8df503aefde3bc31b6fec2f2fd1f8db47d7dd2d04042
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-ritual-zero-context-subagent-stress-test-execution-to-activate
+  path: desk/primitives/edges/edge-task-ritual-zero-context-subagent-stress-test-execution-to-activate.md
+  hash_c: 0a6636c53d45c4f3b94d12078527006ab88d3507d06179a92af880504502789c
+  hash_d: 9143887de189bd913ff6e20ffef0325274fd9c885dd44a3be99b786b7a65d019
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-ritual-zero-context-subagent-stress-test-activate-to-testing
+  path: desk/primitives/edges/edge-task-ritual-zero-context-subagent-stress-test-activate-to-testing.md
+  hash_c: bad291098fa87145becc2bea5ccd0d428c50d86a1c979b7ef47e15f3499be5c4
+  hash_d: 4fe8ba824f74bdefde460d8d0f2f02d59fa81a7af11e934736929115667b26bc
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-ritual-zero-context-subagent-stress-test-testing-to-ready
+  path: desk/primitives/edges/edge-task-ritual-zero-context-subagent-stress-test-testing-to-ready.md
+  hash_c: e77bd3463462639e032450616f09c4259ff49387e1f264a46a286c843cb431a6
+  hash_d: d188cb458e18474e0b1a540632570bce172a4c7b667a4789d5252292147ef870
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-ritual-zero-context-subagent-stress-test-ready-to-closeout
+  path: desk/primitives/edges/edge-task-ritual-zero-context-subagent-stress-test-ready-to-closeout.md
+  hash_c: e5e4383cddec4280e05ec623bcb1096ea2166199cf5af1fcaf09351366e3452e
+  hash_d: 87fb51dbefc03d97fd2750ea60e5b2241216e77518f4b66699513ba215abc2f4
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-ritual-zero-context-subagent-stress-test-closeout-to-close
+  path: desk/primitives/edges/edge-task-ritual-zero-context-subagent-stress-test-closeout-to-close.md
+  hash_c: e4349ac17ec466bdd45fd0b85407c174395f24ac13101b2f43ea2794603f712d
+  hash_d: c19e1b769514a9c948cde1b1979a11c302ade710c5ea110f3b8950e6ab3209c3
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-ritual-zero-context-subagent-stress-test-close-to-complete
+  path: desk/primitives/edges/edge-task-ritual-zero-context-subagent-stress-test-close-to-complete.md
+  hash_c: 6f7639eb6fa36e6cc9d5d005f6478b14017bb801cc9b4d372ee51b88c8c378e4
+  hash_d: a364ad71345d1eb1779b43a0e367e87f7d758bc9fa3267e64718b9799bc4fb20
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-split-atoms-with-provenance-safe-rerouting-execution-to-activate
+  path: desk/primitives/edges/edge-task-split-atoms-with-provenance-safe-rerouting-execution-to-activate.md
+  hash_c: 8ac3f20f144e47ae084cc28c958afd3082a183f7de7f5d2d62e35c93dc15114d
+  hash_d: bf1e96ed9db0dd098b123a7b65e9df99a9a383ce39accf5c57af16bb57899f61
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-split-atoms-with-provenance-safe-rerouting-activate-to-testing
+  path: desk/primitives/edges/edge-task-split-atoms-with-provenance-safe-rerouting-activate-to-testing.md
+  hash_c: c6f17c4cdbcfb7b753c99e6caa4d60d35d9d9d03bb9c5f170fe0ab79d027f864
+  hash_d: cbc0386808f9c3090503cd9387d26feece48d6761140ed16d06343a3b91f4bea
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-split-atoms-with-provenance-safe-rerouting-testing-to-ready
+  path: desk/primitives/edges/edge-task-split-atoms-with-provenance-safe-rerouting-testing-to-ready.md
+  hash_c: 6efad69aba21fa6b970db56e28d1a2224ddce318b12a9f476f21a6735a94a7b8
+  hash_d: fae45e4971516d7901726f5dcd2ac54c823d48f1d58b4d6002f786f42dfaa5af
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-split-atoms-with-provenance-safe-rerouting-ready-to-closeout
+  path: desk/primitives/edges/edge-task-split-atoms-with-provenance-safe-rerouting-ready-to-closeout.md
+  hash_c: 0e471cd025d730f73fc1f29da06ce2ff24ffb7ba19dd36f6083f66e710d11741
+  hash_d: 51f77390d08f1602ab1b9b41e3c76d71fdf8d0246161d3e6e407a945243b21e6
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-split-atoms-with-provenance-safe-rerouting-closeout-to-close
+  path: desk/primitives/edges/edge-task-split-atoms-with-provenance-safe-rerouting-closeout-to-close.md
+  hash_c: f71dd642f8bb48c5cbc603b849d355cd1f235b769d71c4bcbebf24c6dc30b01d
+  hash_d: 87d5e5d9b47f4543eeba0cc3b0a65be02a9cec25da0375936cb7b5ccccb22b01
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-split-atoms-with-provenance-safe-rerouting-close-to-complete
+  path: desk/primitives/edges/edge-task-split-atoms-with-provenance-safe-rerouting-close-to-complete.md
+  hash_c: 3baee214cf0ecc86253dcfc218422a7d859bb416ea5fc89c12ac4915cffe2eb8
+  hash_d: 45958222c4efca83df85ca67d09f0c5d5435ac6afd4dd7f6598ebfe482472bd6
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-merge-atoms-with-reference-reconciliation-execution-to-activate
+  path: desk/primitives/edges/edge-task-merge-atoms-with-reference-reconciliation-execution-to-activate.md
+  hash_c: 89ade9aba11462ab493f2a8c1233254def7bde5ed76f556b452fcc84017bbcdc
+  hash_d: 452055a6b5c960d41cb53c1dcfdc2633ed73c497fd9c0cfcb055e6df70f6ac60
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-merge-atoms-with-reference-reconciliation-activate-to-testing
+  path: desk/primitives/edges/edge-task-merge-atoms-with-reference-reconciliation-activate-to-testing.md
+  hash_c: 93c566fb8d755dcc0a6528d311b1b1213c296f19b83c359baabeb78eaf5bf0cd
+  hash_d: df8c24110c6f46baaf23dd35c0eafa8b87e4c69609eb2e87932f9f13a97b84dd
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-merge-atoms-with-reference-reconciliation-testing-to-ready
+  path: desk/primitives/edges/edge-task-merge-atoms-with-reference-reconciliation-testing-to-ready.md
+  hash_c: a54ab7a4dbef16c65890d0c272be5f179333c028136cb7ddd494150041deafba
+  hash_d: 04114680cd384d6926f7f1334e2c23dbb004381f7ff0cd9956100ccc0e029c7b
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-merge-atoms-with-reference-reconciliation-ready-to-closeout
+  path: desk/primitives/edges/edge-task-merge-atoms-with-reference-reconciliation-ready-to-closeout.md
+  hash_c: 481ebad04fe0249e121f16f08632446316141fa012f6f3a345058e20492430b5
+  hash_d: 13e57f99e8a7f7467ed4898913c3bf3f144bf341fd52a2d212bb80fdce8ac30a
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-merge-atoms-with-reference-reconciliation-closeout-to-close
+  path: desk/primitives/edges/edge-task-merge-atoms-with-reference-reconciliation-closeout-to-close.md
+  hash_c: d3861082d8ff1f3ecf0a3b0bb1decde0668b393d019987be20dbdc99ccebf0fa
+  hash_d: 5c6804ff86e5602c96d01f009ce6908c408a1dc3774c9c1b30ee3d75c51e039a
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-merge-atoms-with-reference-reconciliation-close-to-complete
+  path: desk/primitives/edges/edge-task-merge-atoms-with-reference-reconciliation-close-to-complete.md
+  hash_c: afaf6abd37a557655e0c3bbb843486e67563e908de6ab0faaa60da48d6a44392
+  hash_d: f1bb7e3f080a4f0981ab046d3241fae992b1383c48943a572978e09927780713
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-create-atoms-from-pill-graph-and-diagram-sources-execution-to-activate
+  path: desk/primitives/edges/edge-task-create-atoms-from-pill-graph-and-diagram-sources-execution-to-activate.md
+  hash_c: e259057b0360056ba8f6782c34717956226a49964ce0f9df0056d69ca4c97485
+  hash_d: 3b29734a0be4f8520d2ed806c58aa245c5ca536a0e0fcdfd8acc2635485df0e0
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-create-atoms-from-pill-graph-and-diagram-sources-activate-to-testing
+  path: desk/primitives/edges/edge-task-create-atoms-from-pill-graph-and-diagram-sources-activate-to-testing.md
+  hash_c: 53dd5b2a08bbe6e2257aa1476bebd51823debc9b6de87adb608c94646574fe3b
+  hash_d: ed525d8c9720d595ed7bec65011a461e00c6dfe6596cc9891c64a99eb398b9df
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-create-atoms-from-pill-graph-and-diagram-sources-testing-to-ready
+  path: desk/primitives/edges/edge-task-create-atoms-from-pill-graph-and-diagram-sources-testing-to-ready.md
+  hash_c: 8191588001e86c6550ca3d54f94b9785f0b2649b6d43f55084f8db2a0ed65229
+  hash_d: 7dbfffb9c2dade86f428968adf66faf77e46f53ebfd44dc2e8cb4ecc9a2453a4
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-create-atoms-from-pill-graph-and-diagram-sources-ready-to-closeout
+  path: desk/primitives/edges/edge-task-create-atoms-from-pill-graph-and-diagram-sources-ready-to-closeout.md
+  hash_c: 19bedacd6bbb812432e33dcef895e6ec9c1b898371f0baca8c45d5f80456100a
+  hash_d: 86550748acaef8d6b89d879bee2cf8e3eda273440c590a3643fd413ef884f266
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-to-close
+  path: desk/primitives/edges/edge-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-to-close.md
+  hash_c: 25c0b263805af0dd48cc486afae51d1ac98780954da061928e6cc1371b2617d2
+  hash_d: 5acff454a9a5b3ab13d0210fdeb9517258c1bd5cf2205bb9e73954835c2c8180
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-create-atoms-from-pill-graph-and-diagram-sources-close-to-complete
+  path: desk/primitives/edges/edge-task-create-atoms-from-pill-graph-and-diagram-sources-close-to-complete.md
+  hash_c: 1f391aa7a2282949c411be6c03259f28c7c7f7e4c1d2c0bf51acb7d0fc0c3bf7
+  hash_d: 28311fff3f11a92c56781bac313bd5c61e233db511c75047441af98e97f12197
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-to-activate
+  path: desk/primitives/edges/edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-to-activate.md
+  hash_c: 91a47f5dc60a418c1f652e281ed884e7e7522ee4a2a2511c076bf5febccb9cdc
+  hash_d: 7da5a2ccb24d8698b84873c4b2d43a34aac768ce276974b6d8302247897be5d2
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-activate-to-testing
+  path: desk/primitives/edges/edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-activate-to-testing.md
+  hash_c: 250161fafbb9a152c037240bd81bf31da337a56411c53cba7e7a9468732f05e2
+  hash_d: 51a1a77acf4989804105d67b293d07c9bc20b3e88569336c38b069034c29bff8
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-to-ready
+  path: desk/primitives/edges/edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-to-ready.md
+  hash_c: dfd85c04fee7c0f075675c20fae99e5808e94363a30312d1fb8a0d4b1c1b5945
+  hash_d: 9317fd9e0ee798797b6142c8e7ea52f038fd8e25d10fc1ffd0e79ef2c1973970
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-to-closeout
+  path: desk/primitives/edges/edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-to-closeout.md
+  hash_c: 605bdb727bd1fcd12db8b70e18f11a47aba2941c8e378a64cc32ef961750e08d
+  hash_d: 8e32e9d4e1a73250cb6a1b28300e50d26cbdb9bdb92009b758c37feba76e1900
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-to-close
+  path: desk/primitives/edges/edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-to-close.md
+  hash_c: 978919a8df986b456378e0a0c95375ea9be8099f8d5d95b21ee57ce5b82f3de5
+  hash_d: c45545097410101052e2e62e88f08f1b5256033569a7fbcd7dfec00da3ea4864
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-close-to-complete
+  path: desk/primitives/edges/edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-close-to-complete.md
+  hash_c: 13c5b192822f038a9c90c0945d67fd821b914ba24ee111fa85b6d01f878733f0
+  hash_d: 047680260f824a378f1e116295089b369c907b11635e06d8ccca1fddb6b3a2e7
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-execution-to-activate
+  path: desk/primitives/edges/edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-execution-to-activate.md
+  hash_c: 4a5643788fb7c97c4d266ca3028ee7b7545d8e4e350b4c807611e48a2c37c42a
+  hash_d: f991a9cb2f06262ccb6929a1c46f2764bf15e24c7dd16c2d7ff876cbb3d6098e
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-activate-to-testing
+  path: desk/primitives/edges/edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-activate-to-testing.md
+  hash_c: ef4f64f53a4d54cd5fcbcfa89cf6041ea4226e1ecd43e21311a64b2e44e01953
+  hash_d: 4659368fac67082f842485c0b8e25b51c46551763235c339a375b5c81fe68e4a
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-testing-to-ready
+  path: desk/primitives/edges/edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-testing-to-ready.md
+  hash_c: 65d01185a475f88499fd46b7f4d329e101b25ddf24009babb33311f5b6dedc2b
+  hash_d: 8a4e33c1205a505f2d38c461741fba61ec3d8e7e7da81a749f20af17da9d5fbd
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-ready-to-closeout
+  path: desk/primitives/edges/edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-ready-to-closeout.md
+  hash_c: 2d715fa72b662f392c0c68347578f6e3d95b56d9ed1ece6f561370a9a958b383
+  hash_d: 3d823aa1b6668a679c38bfcbaaef13ba6746f358011553f65c41824540bc17f0
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-closeout-to-close
+  path: desk/primitives/edges/edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-closeout-to-close.md
+  hash_c: 692a0d20084262ee02e493af7497e54e68211bd39265734dde560a3fc011a4c4
+  hash_d: 3d0b0f955b986ce060e173d0a9aea596534e25919bf969fc7a34bad2f5951480
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives
+- name: edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-close-to-complete
+  path: desk/primitives/edges/edge-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-close-to-complete.md
+  hash_c: ab40bc767fc61212f8499e322071f1a76c43734d07e8fb5d097f90ff5b2b6e90
+  hash_d: 031125b6dab5a9c4cb1ce2ef3fe6795cc41ec46e29a10aaa271263862b7198a7
+  semantic_tags:
+  - primitive:edge
+  - type.workflow.edge
+  - workspace.desk.primitives

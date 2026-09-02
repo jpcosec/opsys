@@ -1,0 +1,217 @@
+documents:
+- name: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready
+  path: desk/primitives/checklists/checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready.md
+  hash_c: 23639a992ac2830257921947b31fe5698c8ea733c78ef57eb60bdc2035223783
+  hash_d: 87601a05e3e5351c7de68a1dac4d1e68752cf9b26a3d6a1d06030cf49bdaf96e
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-testing-ready
+  path: desk/primitives/checklists/checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-testing-ready.md
+  hash_c: 9de6384a982a40275611823708f71fc9beb861a6e3f99429f2d9f318b2cbbd1e
+  hash_d: cd34898653cd364baee73aa0f9627f18f1cefae875228cbd9cff73d3e1c1b7ac
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-ready
+  path: desk/primitives/checklists/checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-ready.md
+  hash_c: 386d4bf4c7dcba062ab1b77c4b1e64b7a27a83d9da18fa31a7d487b49da2be42
+  hash_d: bc76c4ee52987a6db856be93127bb92c976ad8d9b9195e07be14d8a2e84f8b46
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-ready
+  path: desk/primitives/checklists/checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-ready.md
+  hash_c: f1f01fcabf7e270122d4163186520927446f2ba984dbb576389fa47cd4075f2a
+  hash_d: 05b0e3fb18ef5dd7325f0f61f793822dc41bf2fe537896986d1228c936809510
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-testing-ready
+  path: desk/primitives/checklists/checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-testing-ready.md
+  hash_c: 1d2e20a14fd383c83a2772aa61fd4ffc3acc42662d75509227120672c32100d3
+  hash_d: 28190c9c76072d4426f784a2816390d0d00d4c7e004799ddf042bdfab024ea69
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-closeout-ready
+  path: desk/primitives/checklists/checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-closeout-ready.md
+  hash_c: 00911831e8ffae044f3f708b31a83eafb8995e7a8b0fcdf7a10a37ecc6ff0708
+  hash_d: a9ae84aa4c305f5c66d1303c6da5e5d7ccd60b23602c7b0c2f80ca003ff4342b
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready
+  path: desk/primitives/checklists/checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready.md
+  hash_c: a56ff66e226b4a41c049078a5315f5cf122e4fd101dca107d868b0fcb66be68c
+  hash_d: 517b3309c53b37fe7848564709305f8f3e2bbafbf088b4a886534ba9eabd2370
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-testing-ready
+  path: desk/primitives/checklists/checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-testing-ready.md
+  hash_c: 79678dcd1425de1c7fb7ef0df383f7c033e824fddfe32a1d8167457b5a5b9aef
+  hash_d: 12b38ade3e248d3d99f7442f19ff0efeabfae7fda0e5d37e543864d8fc7bf9b7
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-ready
+  path: desk/primitives/checklists/checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-ready.md
+  hash_c: 3b264cdb142814cb550d16b612785c2d78a363b056135a97995b07497cb74e3e
+  hash_d: 95bda5c3ff281b13e785b14a4f37c0dbd4a9d1bc966c57b7a24141dfc8902809
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-ritual-zero-context-subagent-stress-test-execution-ready
+  path: desk/primitives/checklists/checklist-task-ritual-zero-context-subagent-stress-test-execution-ready.md
+  hash_c: ac388a649c71a97f2cce0e3b4b24ae6fe3fcbf710895c59a3f0f45850fdda41b
+  hash_d: 411b5cbbc5b39ac76982a073ec9a126b41ce08785aaed6c95c4fdc425e81b597
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-ritual-zero-context-subagent-stress-test-testing-ready
+  path: desk/primitives/checklists/checklist-task-ritual-zero-context-subagent-stress-test-testing-ready.md
+  hash_c: 845da2694cd9cd6d68f916c9ab231dd3e47019c41a386048296beee8d13561ad
+  hash_d: aa71e9179dbc16dc1351fdb4ecb3019cf994aee0c98368ca56c8359019d4269d
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-ritual-zero-context-subagent-stress-test-closeout-ready
+  path: desk/primitives/checklists/checklist-task-ritual-zero-context-subagent-stress-test-closeout-ready.md
+  hash_c: 29d523230fa87679442017b93420f9c0a7b76ff6fda7e429bdb7d9b7a57f094c
+  hash_d: cc8d43ec1007c733670c23bf34e476c59d00c5ed65a991d9f50897e0f4fbc215
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-split-atoms-with-provenance-safe-rerouting-execution-ready
+  path: desk/primitives/checklists/checklist-task-split-atoms-with-provenance-safe-rerouting-execution-ready.md
+  hash_c: 64abecdaba568553cb589a1953e32de975c45a1882fa58cad2bc591a9daf32f8
+  hash_d: a07ce21a7399ef167478190a96ad9c49a38f751b475352d890a34d9de9cb2ea4
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-split-atoms-with-provenance-safe-rerouting-testing-ready
+  path: desk/primitives/checklists/checklist-task-split-atoms-with-provenance-safe-rerouting-testing-ready.md
+  hash_c: c0c4729652b8de7516d39e2d5c1441a014cb8093a7fd25b24805f419c66be701
+  hash_d: eb57fd4215f035b58cf2a4bbae687a99ec264b605ddec18e20ef32d0873cde1c
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-split-atoms-with-provenance-safe-rerouting-closeout-ready
+  path: desk/primitives/checklists/checklist-task-split-atoms-with-provenance-safe-rerouting-closeout-ready.md
+  hash_c: 2876bb5d980522f5fdccdf89f6419818e38b1d93660020085b7637c41e169716
+  hash_d: afcb5c2509846c132bc24d743643a439e254d5ada90482016b2bc22f9c8568c2
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-merge-atoms-with-reference-reconciliation-execution-ready
+  path: desk/primitives/checklists/checklist-task-merge-atoms-with-reference-reconciliation-execution-ready.md
+  hash_c: 20c4cb872790089661e7d022e94dd42e1a3542d002b172689761626685220b6a
+  hash_d: a652eb9c80cbd3735a50b938760730b95b73786546a984161606d3ac5a83bdf8
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-merge-atoms-with-reference-reconciliation-testing-ready
+  path: desk/primitives/checklists/checklist-task-merge-atoms-with-reference-reconciliation-testing-ready.md
+  hash_c: 4ff7ac5991451c0cd797d26c570f14dd0bb7e5143b307469d646b634cc5e6d99
+  hash_d: bd4719567bd092ed4b7cb476679a94a47d35f9e3274911041c5cfba5f6431c3a
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-merge-atoms-with-reference-reconciliation-closeout-ready
+  path: desk/primitives/checklists/checklist-task-merge-atoms-with-reference-reconciliation-closeout-ready.md
+  hash_c: 25754a5f3bc03ca0d66eb566af8d79477e729cd62efe59dcb6d7a8c3a1e3e275
+  hash_d: e18271af29958f25ec52639188020b7ee2062c32fe0827050b74e6167c48b711
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-create-atoms-from-pill-graph-and-diagram-sources-execution-ready
+  path: desk/primitives/checklists/checklist-task-create-atoms-from-pill-graph-and-diagram-sources-execution-ready.md
+  hash_c: e02a16432baf9febc81980848411cce82cfef12dd7831143de1bfa7efdb3ed9d
+  hash_d: 2bbb2ddf374f43d6614ee554e6fdb168e2ca1a4d5448e9ab7a11c55bc2f7f52f
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-create-atoms-from-pill-graph-and-diagram-sources-testing-ready
+  path: desk/primitives/checklists/checklist-task-create-atoms-from-pill-graph-and-diagram-sources-testing-ready.md
+  hash_c: 62c4c0727cbcf3de6d2249f8dfe6ded6cef3f5243e410a91c2faae5c79fe5f4a
+  hash_d: fa1e638a78fae584d04abd40cb3855b2bc8c4a453557034a3caebe357e8ae6a2
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-ready
+  path: desk/primitives/checklists/checklist-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-ready.md
+  hash_c: 27c5321d18b7c5c872b52b85058fece5d2cf602576116d4af0f180308d39bf54
+  hash_d: e8f8889e0a22b35a3dcc9df002152a9abf9708f0954f2a9803191f85ac288484
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready
+  path: desk/primitives/checklists/checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready.md
+  hash_c: d4c3a77977c91db554ab8d64bc32df8a14440f2256799db07f94b237d67f2f5a
+  hash_d: 770bd9851ba88349fe7b0c7e5edca4ae9b0a3d76021aa67b28a5e684e4df2195
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-ready
+  path: desk/primitives/checklists/checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-ready.md
+  hash_c: ce43fcf95f689add7717e80b36c74b5925d3ceb05273b4f21d0293df102e53fb
+  hash_d: ce69fcc754f6d47009753f6906e2de8601beb13de1dddcb64e2f03f0bff72999
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-ready
+  path: desk/primitives/checklists/checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-ready.md
+  hash_c: 873a120ce62a5510908f07dca870f0084fdf63cfb78928ad6061dbbad2c1870f
+  hash_d: 6158ab04afb8bf968ecb29069cb2ee6c387f2383a0aa48ba3794cea4bd9adf54
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-execution-ready
+  path: desk/primitives/checklists/checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-execution-ready.md
+  hash_c: 00304d1b4ba59a0341b4982d1c85310a953c99e5bc8eda3e1ebada0ae4bf5149
+  hash_d: ccd1685abf52290bd8e4cc8c05b208a0e911494a9cffb5ae793b86eb23069904
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-testing-ready
+  path: desk/primitives/checklists/checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-testing-ready.md
+  hash_c: 79e9437908028fbaada259cc84c05e356e08ec8165488f88064aca9e255635d9
+  hash_d: 8f30f3d2f3bf1bb53f109fbf66b5f3a8ab3cd3615f52cca419ff6be5fa66f42d
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives
+- name: checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-closeout-ready
+  path: desk/primitives/checklists/checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-closeout-ready.md
+  hash_c: 6eddbf3e463a7150af5a4919f294bac00b4ce5435c0a7e58d1366c500a7f7648
+  hash_d: cba55f3aca88015c66f5a2f829b719def6e13c7f485e6e52514bcb9321da22fa
+  semantic_tags:
+  - primitive:checklist
+  - type.workflow.checklist
+  - workspace.desk.primitives

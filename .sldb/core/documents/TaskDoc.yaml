@@ -1,1 +1,91 @@
-documents: []
+documents:
+- name: task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
+  path: desk/tasks/task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea.md
+  hash_c: f9021a523d788395d805f1b1f20c5de097445785d23a51daedb87320dc8619c0
+  hash_d: f9d2ee2c9d385770eb570b326eb0f3675145008b2b0670c21d037893f5c59972
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb
+  path: desk/tasks/task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb.md
+  hash_c: aa274b3cc3a63d96f40aaf5e75bc39cedae54cda40f5ddd95d845ec183ab0ea6
+  hash_d: a833d72b10097210730cff35eec615f1077ccdecb56682f8cf2f6bcfb6e37f84
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
+  path: desk/tasks/task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields.md
+  hash_c: 88c962fc35522a33da64bc720dd1a902df9030e3df445bc08bc908035f1313ba
+  hash_d: e4ce95006728804b996fa26d91544f95db7ca3d5fb708eea8db8c46c7b9ef81d
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-ritual-zero-context-subagent-stress-test
+  path: desk/tasks/task-ritual-zero-context-subagent-stress-test.md
+  hash_c: 019686fce6ba99d1a875c1ff6fe1cba74d36f1f95702f30dc6ca46702f59244b
+  hash_d: 38ce57f86b7e21b19626ae223f5ca74d886e9fc640a450a3cd618d788f54f6f9
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-split-atoms-with-provenance-safe-rerouting
+  path: desk/tasks/task-split-atoms-with-provenance-safe-rerouting.md
+  hash_c: d17d6fd98260bc6fa1556c4aaae89b8efbee57835805bf8ea7d33e1880e46944
+  hash_d: d6fedd1500f87427c909be533554bbc0ef1858af7fdc50ac920e571347247c75
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-merge-atoms-with-reference-reconciliation
+  path: desk/tasks/task-merge-atoms-with-reference-reconciliation.md
+  hash_c: a006b29f3351cf9d08fd38b4ba26f2d9919a8b7db4f44a41c843d22efd1ec5f5
+  hash_d: 422bc1ffa8c7401fe6e199853239d8bdc894812e029c8b74fb3e22c2c6eda526
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-create-atoms-from-pill-graph-and-diagram-sources
+  path: desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md
+  hash_c: 0ad4649a11cf2902d369685be8711009fe9cc8bf7c5b39093cc164f4fa9e2f5c
+  hash_d: adf1a770e22bc455413536cb49497451fa0fbfb647e276ac5059a4007926bcad
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
+  path: desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
+  hash_c: 52c31bdb3fa07819be3e896d2817a1569f77a47b88c93584d5efc53f26750279
+  hash_d: 5a84075ed1dec867bbad9c78a4cf5a79ccf46805309f77b07b2d0385f5bc6a8a
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk
+- name: task-empaquetar-deskops-como-m-dulo-de-pi-subagents
+  path: desk/tasks/task-empaquetar-deskops-como-m-dulo-de-pi-subagents.md
+  hash_c: 5fa176d8be0c3a263299e4de1835f99075776b7e79015c55b6de305a436f8c29
+  hash_d: 41c1e75b2e09e28fc7d8043373cc1e041ab9181927b95f8ff98ab480e32ceea1
+  semantic_tags:
+  - artifact:task
+  - source:drawer
+  - type.workflow.task
+  - workspace.desk
+  - workspace:desk

@@ -1,0 +1,13 @@
+name: ConditionDoc
+model_ref: deskops.models:ConditionDoc
+path: deskops/models/condition.py
+documents_index: .sldb/core/documents/ConditionDoc.yaml
+sections_index: ''
+hash_b: d89de08c4a289ed7c1d982cae6eb73b3cd2c5bc49f20347ad521d566360da879
+version: 1
+canonical: false
+family: null
+semantics:
+- type.workflow.condition
+- workspace.desk.primitives
+base_models: []

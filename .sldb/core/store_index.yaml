@@ -24,5 +24,45 @@ models:
   canonical: false
   family: null
   semantics: []
+- name: RoutineDoc
+  model_ref: deskops.models:RoutineDoc
+  path: deskops/models/routine.py
+  models_index: .sldb/core/models/RoutineDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+- name: ConditionDoc
+  model_ref: deskops.models:ConditionDoc
+  path: deskops/models/condition.py
+  models_index: .sldb/core/models/ConditionDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+- name: ChecklistDoc
+  model_ref: deskops.models:ChecklistDoc
+  path: deskops/models/checklist.py
+  models_index: .sldb/core/models/ChecklistDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+- name: OperatorDoc
+  model_ref: deskops.models:OperatorDoc
+  path: deskops/models/operator.py
+  models_index: .sldb/core/models/OperatorDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
+- name: EdgeDoc
+  model_ref: deskops.models:EdgeDoc
+  path: deskops/models/edge.py
+  models_index: .sldb/core/models/EdgeDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
 predicates: []
-hash_a: 2753e077050ec6b151e952aff84efd61c614f63217078fb322a1a99f8cced784
+hash_a: ad62746ce7fa448fc6a890be1a3a955005a835a96bcdb52f110ad73a446ef495

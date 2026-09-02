@@ -1,0 +1,13 @@
+name: ChecklistDoc
+model_ref: deskops.models:ChecklistDoc
+path: deskops/models/checklist.py
+documents_index: .sldb/core/documents/ChecklistDoc.yaml
+sections_index: ''
+hash_b: 94dbb13c15c8e1bbb3a71d0fa1e1e5d37d3d4b073351d6161d5205b31502ae9d
+version: 1
+canonical: false
+family: null
+semantics:
+- type.workflow.checklist
+- workspace.desk.primitives
+base_models: []
