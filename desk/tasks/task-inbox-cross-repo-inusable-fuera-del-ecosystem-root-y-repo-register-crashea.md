@@ -1,16 +1,20 @@
 ---
 id: task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
-status: active
+status: ready_for_testing
 summary: ''
 tags:
 - workspace:desk
 - artifact:task
 - source:drawer
 routine: routine-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
-current_node: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready
-history: []
+current_node: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-ready
+history:
+- operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-activate
+- operator-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-ready-for-testing
 references:
-- desk/drawer/tasks/task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea.md
+- 70f6326
+- tests/test_registry_robustness.py
+- atom:atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix
 depends_on: []
 pills: []
 files: []
@@ -21,7 +25,10 @@ checklists:
 task_type: ''
 inherits_from: []
 inherit_acceptance_context: false
-atoms: []
+atoms:
+- atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # inbox cross-repo inusable fuera del ecosystem root y repo register crashea
