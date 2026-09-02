@@ -1,16 +1,20 @@
 ---
 id: task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
-status: active
+status: ready_for_testing
 summary: ''
 tags:
 - workspace:desk
 - artifact:task
 - source:drawer
 routine: routine-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
-current_node: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready
-history: []
+current_node: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-ready
+history:
+- operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-activate
+- operator-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-ready-for-testing
 references:
-- desk/drawer/tasks/task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields.md
+- 2542d1a
+- tests/test_promotion_nesting.py
+- atom:atom-promotion-flattens-structured-source-sections-into-task-fields
 depends_on: []
 pills: []
 files: []
@@ -21,7 +25,10 @@ checklists:
 task_type: ''
 inherits_from: []
 inherit_acceptance_context: false
-atoms: []
+atoms:
+- atom-promotion-flattens-structured-source-sections-into-task-fields
+closeout_evidence_verified: true
+pill_graduation_verified: true
 ---
 
 # Prevent promotion from nesting structured source sections into active task fields
