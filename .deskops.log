@@ -331,3 +331,75 @@ Task-Id: task-fix-sldb-deskops-cli-drift-breaking-11-tests
 2026-09-02 12:53:49,190 - deskops - INFO - Committing closure for task-add-promote-no-trackean-el-bundle-generado-en-el-store: closeout: task-add-promote-no-trackean-el-bundle-generado-en-el-store
 
 Task-Id: task-add-promote-no-trackean-el-bundle-generado-en-el-store
+2026-09-02 14:31:10,950 - deskops - INFO - Advanced task task-split-atoms-with-provenance-safe-rerouting to node checklist-task-split-atoms-with-provenance-safe-rerouting-testing-ready
+2026-09-02 14:31:11,392 - deskops - INFO - Advanced task task-split-atoms-with-provenance-safe-rerouting to node checklist-task-split-atoms-with-provenance-safe-rerouting-closeout-ready
+2026-09-02 14:31:12,424 - deskops - INFO - Task task-split-atoms-with-provenance-safe-rerouting is complete. Performing auto-commit and cleanup.
+2026-09-02 14:31:12,431 - deskops - DEBUG - Removing runtime artifacts for task task-split-atoms-with-provenance-safe-rerouting
+2026-09-02 14:31:12,450 - deskops - DEBUG - Removing primitive condition-task-split-atoms-with-provenance-safe-rerouting-has-implementation-path.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive condition-task-split-atoms-with-provenance-safe-rerouting-pill-knowledge-graduated.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive condition-task-split-atoms-with-provenance-safe-rerouting-has-closeout-evidence.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive condition-task-split-atoms-with-provenance-safe-rerouting-has-validation.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive condition-task-split-atoms-with-provenance-safe-rerouting-ready-for-closeout.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive checklist-task-split-atoms-with-provenance-safe-rerouting-testing-ready.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive checklist-task-split-atoms-with-provenance-safe-rerouting-execution-ready.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive checklist-task-split-atoms-with-provenance-safe-rerouting-closeout-ready.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive operator-task-split-atoms-with-provenance-safe-rerouting-close.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive operator-task-split-atoms-with-provenance-safe-rerouting-ready-for-testing.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive operator-task-split-atoms-with-provenance-safe-rerouting-activate.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive edge-task-split-atoms-with-provenance-safe-rerouting-close-to-complete.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive edge-task-split-atoms-with-provenance-safe-rerouting-closeout-to-close.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive edge-task-split-atoms-with-provenance-safe-rerouting-execution-to-activate.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive edge-task-split-atoms-with-provenance-safe-rerouting-ready-to-closeout.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive edge-task-split-atoms-with-provenance-safe-rerouting-testing-to-ready.md
+2026-09-02 14:31:12,451 - deskops - DEBUG - Removing primitive edge-task-split-atoms-with-provenance-safe-rerouting-activate-to-testing.md
+2026-09-02 14:31:12,459 - deskops - INFO - Committing closure for task-split-atoms-with-provenance-safe-rerouting: closeout: task-split-atoms-with-provenance-safe-rerouting
+
+Task-Id: task-split-atoms-with-provenance-safe-rerouting
+2026-09-02 14:31:14,721 - deskops - INFO - Advanced task task-merge-atoms-with-reference-reconciliation to node checklist-task-merge-atoms-with-reference-reconciliation-testing-ready
+2026-09-02 14:31:15,113 - deskops - INFO - Advanced task task-merge-atoms-with-reference-reconciliation to node checklist-task-merge-atoms-with-reference-reconciliation-closeout-ready
+2026-09-02 14:31:16,251 - deskops - INFO - Task task-merge-atoms-with-reference-reconciliation is complete. Performing auto-commit and cleanup.
+2026-09-02 14:31:16,260 - deskops - DEBUG - Removing runtime artifacts for task task-merge-atoms-with-reference-reconciliation
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive condition-task-merge-atoms-with-reference-reconciliation-ready-for-closeout.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive condition-task-merge-atoms-with-reference-reconciliation-has-implementation-path.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive condition-task-merge-atoms-with-reference-reconciliation-has-validation.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive condition-task-merge-atoms-with-reference-reconciliation-has-closeout-evidence.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive condition-task-merge-atoms-with-reference-reconciliation-pill-knowledge-graduated.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive checklist-task-merge-atoms-with-reference-reconciliation-testing-ready.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive checklist-task-merge-atoms-with-reference-reconciliation-execution-ready.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive checklist-task-merge-atoms-with-reference-reconciliation-closeout-ready.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive operator-task-merge-atoms-with-reference-reconciliation-activate.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive operator-task-merge-atoms-with-reference-reconciliation-close.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive operator-task-merge-atoms-with-reference-reconciliation-ready-for-testing.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive edge-task-merge-atoms-with-reference-reconciliation-execution-to-activate.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive edge-task-merge-atoms-with-reference-reconciliation-close-to-complete.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive edge-task-merge-atoms-with-reference-reconciliation-ready-to-closeout.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive edge-task-merge-atoms-with-reference-reconciliation-testing-to-ready.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive edge-task-merge-atoms-with-reference-reconciliation-closeout-to-close.md
+2026-09-02 14:31:16,281 - deskops - DEBUG - Removing primitive edge-task-merge-atoms-with-reference-reconciliation-activate-to-testing.md
+2026-09-02 14:31:16,293 - deskops - INFO - Committing closure for task-merge-atoms-with-reference-reconciliation: closeout: task-merge-atoms-with-reference-reconciliation
+
+Task-Id: task-merge-atoms-with-reference-reconciliation
+2026-09-02 14:31:18,795 - deskops - INFO - Advanced task task-create-atoms-from-pill-graph-and-diagram-sources to node checklist-task-create-atoms-from-pill-graph-and-diagram-sources-testing-ready
+2026-09-02 14:31:19,255 - deskops - INFO - Advanced task task-create-atoms-from-pill-graph-and-diagram-sources to node checklist-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-ready
+2026-09-02 14:31:20,225 - deskops - INFO - Task task-create-atoms-from-pill-graph-and-diagram-sources is complete. Performing auto-commit and cleanup.
+2026-09-02 14:31:20,232 - deskops - DEBUG - Removing runtime artifacts for task task-create-atoms-from-pill-graph-and-diagram-sources
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-closeout-evidence.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-validation.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive condition-task-create-atoms-from-pill-graph-and-diagram-sources-pill-knowledge-graduated.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive condition-task-create-atoms-from-pill-graph-and-diagram-sources-has-implementation-path.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive condition-task-create-atoms-from-pill-graph-and-diagram-sources-ready-for-closeout.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive checklist-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-ready.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive checklist-task-create-atoms-from-pill-graph-and-diagram-sources-execution-ready.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive checklist-task-create-atoms-from-pill-graph-and-diagram-sources-testing-ready.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive operator-task-create-atoms-from-pill-graph-and-diagram-sources-activate.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive operator-task-create-atoms-from-pill-graph-and-diagram-sources-close.md
+2026-09-02 14:31:20,247 - deskops - DEBUG - Removing primitive operator-task-create-atoms-from-pill-graph-and-diagram-sources-ready-for-testing.md
+2026-09-02 14:31:20,248 - deskops - DEBUG - Removing primitive edge-task-create-atoms-from-pill-graph-and-diagram-sources-activate-to-testing.md
+2026-09-02 14:31:20,248 - deskops - DEBUG - Removing primitive edge-task-create-atoms-from-pill-graph-and-diagram-sources-testing-to-ready.md
+2026-09-02 14:31:20,248 - deskops - DEBUG - Removing primitive edge-task-create-atoms-from-pill-graph-and-diagram-sources-execution-to-activate.md
+2026-09-02 14:31:20,248 - deskops - DEBUG - Removing primitive edge-task-create-atoms-from-pill-graph-and-diagram-sources-close-to-complete.md
+2026-09-02 14:31:20,248 - deskops - DEBUG - Removing primitive edge-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-to-close.md
+2026-09-02 14:31:20,248 - deskops - DEBUG - Removing primitive edge-task-create-atoms-from-pill-graph-and-diagram-sources-ready-to-closeout.md
+2026-09-02 14:31:20,256 - deskops - INFO - Committing closure for task-create-atoms-from-pill-graph-and-diagram-sources: closeout: task-create-atoms-from-pill-graph-and-diagram-sources
+
+Task-Id: task-create-atoms-from-pill-graph-and-diagram-sources
