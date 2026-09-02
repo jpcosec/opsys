@@ -10,7 +10,6 @@ tasks:
 - desk/tasks/task-merge-atoms-with-reference-reconciliation.md
 - desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md
 - desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
-- desk/tasks/task-empaquetar-deskops-como-m-dulo-de-pi-subagents.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,7 +44,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Ritual: Zero-context subagent stress test [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260825-020103-suggestion-ritual-zero-context-subagent-stress-test.md`.
 - Split atoms with provenance-safe rerouting [active] - Define and implement a split workflow for atoms that preserves provenance and handles downstream references explicitly.
 - Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
 - Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
@@ -60,4 +58,3 @@ _Generated from the task references above._
 - Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
 - Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
 - Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.
-- Empaquetar deskops como módulo de pi-subagents [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260901-154500-suggestion-empaquetar-deskops-como-modulo-pi-subagents.md`.
