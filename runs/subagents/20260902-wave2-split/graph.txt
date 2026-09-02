@@ -1,0 +1,19 @@
+Missing graph references:
+- missing_declared_target: issue:formalize-epistemic-knowledge-flow-pills-to-atoms -> task:task-knowledge
+  provenance: desk/drawer/issues/issue-formalize-epistemic-knowledge-flow.md:line:42:related atoms
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-create-atoms-from-pill-graph-and-diagram-sources -> desk/drawer/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md
+  provenance: desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md:line:13:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization -> desk/drawer/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
+  provenance: desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md:line:13:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization -> source_file:deskops/models/role.py
+  provenance: desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md:line:45:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-merge-atoms-with-reference-reconciliation -> desk/drawer/tasks/task-merge-atoms-with-reference-reconciliation.md
+  provenance: desk/tasks/task-merge-atoms-with-reference-reconciliation.md:line:13:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-split-atoms-with-provenance-safe-rerouting -> desk/drawer/tasks/task-split-atoms-with-provenance-safe-rerouting.md
+  provenance: desk/tasks/task-split-atoms-with-provenance-safe-rerouting.md:line:13:source-file-reference
+  reason: declared target was not found among extracted graph nodes

@@ -1,0 +1,8 @@
+## main...origin/main [ahead 1]
+ M .deskops.log
+ M desk/tasks/task-split-atoms-with-provenance-safe-rerouting.md
+?? runs/subagents/20260902-wave2-create/
+?? runs/subagents/20260902-wave2-merge/
+?? runs/subagents/20260902-wave2-split/
+?? tests/test_atoms_create_from_source.py
+?? tests/test_atoms_merge.py
