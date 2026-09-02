@@ -28,7 +28,10 @@ class RepoCLI:
 
     def register(self, args: Any) -> int:
         name = args.name
-        path = args.path
+        path = args.path_option or args.path
+        if not path:
+            print("Error: repository path is required. Use 'deskops repo register <name> --path <abs>' or provide the positional path.")
+            return 1
         repo_id = args.id or self._slug(name)
         description = args.description or f"Repository for {name}."
         tags = [t.strip() for p in (args.tags or "").split(",") if (t := p.strip())]
@@ -77,16 +80,16 @@ class RepoCLI:
             return 1
 
         resolved_repo_root = self._resolve_registered_root(root, path)
-        for entry in existing_entries:
-            if entry.id == repo_id:
+        for existing_entry in existing_entries:
+            if existing_entry.id == repo_id:
                 print(
-                    f"Error: Repository id '{repo_id}' is already registered by {entry.source_path}."
+                    f"Error: Repository id '{repo_id}' is already registered by {existing_entry.source_path}."
                 )
                 return 1
-            if entry.repo_root is not None and resolved_repo_root == entry.repo_root:
+            if existing_entry.repo_root is not None and resolved_repo_root == existing_entry.repo_root:
                 print(
                     "Error: Repository root "
-                    f"'{resolved_repo_root}' is already registered as '{entry.id}' by {entry.source_path}."
+                    f"'{resolved_repo_root}' is already registered as '{existing_entry.id}' by {existing_entry.source_path}."
                 )
                 return 1
 

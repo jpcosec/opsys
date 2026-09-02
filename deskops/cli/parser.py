@@ -245,7 +245,8 @@ def _add_repo_commands(
         description="Canonically register a repository in the ecosystem registry and track it in SLDB.",
     )
     reg.add_argument("name", help="Human-readable name")
-    reg.add_argument("path", help="Relative path to repo root")
+    reg.add_argument("path", nargs="?", help="Repository root path (relative to ecosystem root or absolute)")
+    reg.add_argument("--path", dest="path_option", help="Repository root path (relative to ecosystem root or absolute)")
     reg.add_argument("--id", help="Stable unique ID, defaults to slugified name")
     reg.add_argument("--description", help="Markdown description")
     reg.add_argument("--tags", help="Comma-separated tags")

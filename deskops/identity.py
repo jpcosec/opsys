@@ -65,10 +65,15 @@ def load_repository_registry(registry_desk_root: Path, ecosystem_root: Path) -> 
     return entries
 
 
-def resolve_registered_repo(entries: list[RegisteredRepository], repo_id: str) -> RegisteredRepository:
+def resolve_registered_repo(
+    entries: list[RegisteredRepository],
+    repo_id: str,
+    *,
+    registry_dir: Path | None = None,
+) -> RegisteredRepository:
     matches = [entry for entry in entries if entry.id == repo_id]
     if not matches:
-        raise SLDBStoreError(f"Repository id '{repo_id}' not found in registry.")
+        raise SLDBStoreError(_missing_repository_message(repo_id, registry_dir=registry_dir))
     if len(matches) > 1:
         raise SLDBStoreError(_duplicate_id_message(repo_id, matches))
     return matches[0]
@@ -97,8 +102,9 @@ def resolve_registered_repo_by_root(
 
 def resolve_registered_desk(repo_id: str, store_arg: str | None) -> Path:
     _store_path, ecosystem_root = resolve_store_context(store_arg)
-    entries = load_repository_registry(ecosystem_root / "desk", ecosystem_root)
-    entry = resolve_registered_repo(entries, repo_id)
+    registry_desk_root = ecosystem_root / "desk"
+    entries = load_repository_registry(registry_desk_root, ecosystem_root)
+    entry = resolve_registered_repo(entries, repo_id, registry_dir=registry_desk_root / "registry")
     if entry.desk_root is None:
         raise SLDBStoreError(f"Repository id '{repo_id}' has no registered root path.")
     return entry.desk_root.resolve()
@@ -115,12 +121,17 @@ def resolve_canonical_project_identity(repo_root: Path, store_arg: str | None) -
         )
 
     _store_path, ecosystem_root = resolve_store_context(store_arg)
-    entries = load_repository_registry(ecosystem_root / "desk", ecosystem_root)
-    repo_by_id = resolve_registered_repo(entries, config_identity)
+    registry_desk_root = ecosystem_root / "desk"
+    entries = load_repository_registry(registry_desk_root, ecosystem_root)
+    repo_by_id = resolve_registered_repo(
+        entries,
+        config_identity,
+        registry_dir=registry_desk_root / "registry",
+    )
     repo_by_root = resolve_registered_repo_by_root(entries, repo_root)
     if repo_by_root is None:
         raise SLDBStoreError(
-            f"Current repository root '{repo_root}' is not registered in the ecosystem registry."
+            _unregistered_current_repo_message(repo_root, registry_dir=registry_desk_root / "registry")
         )
     if repo_by_id.id != repo_by_root.id:
         raise SLDBStoreError(
@@ -172,6 +183,24 @@ def _raise_on_duplicate_roots(entries: list[RegisteredRepository]) -> None:
 def _duplicate_id_message(repo_id: str, matches: list[RegisteredRepository]) -> str:
     locations = ", ".join(str(entry.source_path) for entry in matches)
     return f"Duplicate repository id '{repo_id}' in registry: {locations}."
+
+
+def _missing_repository_message(repo_id: str, *, registry_dir: Path | None) -> str:
+    registry_hint = f" at '{registry_dir}'" if registry_dir is not None else ""
+    return (
+        f"Repository id '{repo_id}' not found in registry{registry_hint}. "
+        "Supported path: run 'deskops repo register <name> --path <abs>' "
+        "or add an entry to the ecosystem registry."
+    )
+
+
+def _unregistered_current_repo_message(repo_root: Path, *, registry_dir: Path | None) -> str:
+    registry_hint = f" at '{registry_dir}'" if registry_dir is not None else ""
+    return (
+        f"Current repository root '{repo_root}' is not registered in the ecosystem registry{registry_hint}. "
+        f"Supported path: run 'deskops repo register <name> --path {repo_root}' "
+        "or add an entry to the ecosystem registry."
+    )
 
 
 def _resolve_registered_root(ecosystem_root: Path, repo_path: str | None) -> Path | None:
