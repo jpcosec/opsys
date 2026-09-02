@@ -900,3 +900,10 @@ documents:
   semantic_tags:
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-atom-lifecycle-is-complete-create-from-source-split-merge
+  path: desk/atoms/atom-atom-lifecycle-is-complete-create-from-source-split-merge.md
+  hash_c: f2de762cb9af04feade520506507daf110f681a9c3b007ec3d2949ff8086abb9
+  hash_d: 941eb7be4ad9cc6323b60d4e2b15a4cca56e5a3acbc6ebfff086c04ed51d59a7
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms

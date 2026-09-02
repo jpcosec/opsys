@@ -100,6 +100,47 @@ def _add_atoms_commands(
     validate_target.add_argument("--all", action="store_true", help="Validate all atoms under desk/atoms/.")
     validate_cmd.add_argument("--root", default=".", help="Target repository root.")
 
+    create_cmd = s.add_parser(
+        "create",
+        help="Create one atom from a pill, graph finding, or diagram source while preserving exact provenance.",
+    )
+    create_cmd.add_argument("doc_id", help="New atom id to create, conventionally atom-<slug>.")
+    create_cmd.add_argument(
+        "--five-wh-one-plus",
+        required=True,
+        choices=("what", "why", "how", "how_not", "when", "where", "for_whom"),
+        help="The single 5WH1+ question this atom answers.",
+    )
+    create_cmd.add_argument("--title", help="Optional title override for the created atom.")
+    create_cmd.add_argument(
+        "--tag",
+        action="extend",
+        nargs="+",
+        default=[],
+        help="Atom tag to add; repeat or space-separate as needed.",
+    )
+    create_sources = create_cmd.add_mutually_exclusive_group(required=True)
+    create_sources.add_argument(
+        "--from-pill",
+        metavar="PILL_ID",
+        help="Create the atom from one pill field chosen by --five-wh-one-plus.",
+    )
+    create_sources.add_argument(
+        "--from-graph",
+        metavar="SOURCE_ID->TARGET_ID",
+        help="Create the atom from one missing graph finding resolved by source and target ids.",
+    )
+    create_sources.add_argument(
+        "--from-diagram",
+        metavar="SPEC_PATH",
+        help="Create the atom from one diagram source file such as docs/diagrams/example/source.mmd.",
+    )
+    create_cmd.add_argument(
+        "--graph",
+        help="Optional graph snapshot path consulted in addition to declared-edge findings when resolving --from-graph.",
+    )
+    create_cmd.add_argument("--root", default=".", help="Target repository root.")
+
     delete_cmd = s.add_parser(
         "delete",
         help="Delete one atom after checking inbound references.",
@@ -107,6 +148,59 @@ def _add_atoms_commands(
     delete_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
     delete_cmd.add_argument("--root", default=".", help="Target repository root.")
     delete_cmd.add_argument("--force", action="store_true", help="Delete even when inbound atom:<id> references are present.")
+
+    split_cmd = s.add_parser(
+        "split",
+        help="Split one atom into new atoms while keeping the original as a redirect stub.",
+    )
+    split_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
+    split_cmd.add_argument(
+        "--into",
+        nargs="+",
+        required=True,
+        metavar="NEW_ATOM_ID",
+        help="New atom ids to create from the source atom. Provide at least two.",
+    )
+    split_cmd.add_argument(
+        "--section",
+        action="append",
+        default=[],
+        metavar="NEW_ATOM_ID:SECTION_HEADING",
+        help=(
+            "Assign a created atom id to a specific markdown heading inside the source atom answer. "
+            "Repeat once per target. When omitted, sections are assigned to --into ids in order."
+        ),
+    )
+    split_cmd.add_argument("--root", default=".", help="Target repository root.")
+    split_cmd.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "Proceed even when inbound atom:<id> references exist. The original atom is kept as a redirect stub; "
+            "referrers are not rewritten automatically."
+        ),
+    )
+
+    merge_cmd = s.add_parser(
+        "merge",
+        help="Merge one source atom into an existing target atom while rewriting inbound references.",
+    )
+    merge_cmd.add_argument("doc_id", help=f"Source atom selector. {SELECTOR_HELP}")
+    merge_cmd.add_argument(
+        "--into",
+        required=True,
+        metavar="TARGET_ATOM_ID",
+        help="Existing target atom selector that absorbs the source atom.",
+    )
+    merge_cmd.add_argument("--root", default=".", help="Target repository root.")
+    merge_cmd.add_argument(
+        "--force",
+        action="store_true",
+        help=(
+            "Proceed when merge semantics are ambiguous, such as conflicting five_wh_one_plus values. "
+            "Inbound atom:<source> references are rewritten to atom:<target>, and the source atom is kept as a redirect stub for traceability."
+        ),
+    )
 
 
 def _add_graph_commands(
