@@ -6,6 +6,7 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-add-promote-no-trackean-el-bundle-generado-en-el-store.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +46,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- add/promote no trackean el bundle generado en el store [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260901-000500-unclear-add-promote-no-trackean-el-bundle-generado.md`.
