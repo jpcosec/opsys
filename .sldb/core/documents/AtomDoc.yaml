@@ -879,3 +879,24 @@ documents:
   semantic_tags:
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-doctor-separates-unmodeled-desk-surfaces-from-broken-tracking
+  path: desk/atoms/atom-doctor-separates-unmodeled-desk-surfaces-from-broken-tracking.md
+  hash_c: 665aba51f48831523e587bf04d620d9e8cb9b61424d7f0d09a2ca22168c30d2a
+  hash_d: 62bfb5aaabb6f901d185923b3073667e3e55a5191b01a119636e09aa0782a351
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix
+  path: desk/atoms/atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix.md
+  hash_c: 610b9f3f816e3396f325079ad085873f4a5c147d18b5759224325f1dae832840
+  hash_d: 2985e76fb613893de014f6d5c1d32bfe6925bf0401a79c1f0b5623956aa9afa9
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms
+- name: atom-promotion-flattens-structured-source-sections-into-task-fields
+  path: desk/atoms/atom-promotion-flattens-structured-source-sections-into-task-fields.md
+  hash_c: 9b0b8877bbd9de674db4527c0161b9e971567cb76aceb115f12c722f3d97d714
+  hash_d: b4a0808292f0069fb6ed93b071dc17c7621bf58f8fd3e37415cb83a747760fba
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms

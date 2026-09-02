@@ -1,0 +1,5 @@
+## main...origin/main
+ M deskops/cli/commands/doctor.py
+ M deskops/workspace.py
+?? runs/subagents/20260902-wave1-doctor-unmodeled/
+?? tests/test_doctor_unmodeled_surfaces.py

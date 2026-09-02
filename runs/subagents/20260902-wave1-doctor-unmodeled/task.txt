@@ -1,0 +1,10 @@
+Task: task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb
+Title: Doctor confunde superficies no modeladas con untracked en sldb
+Status: active
+Current node: checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-ready
+Task type: 
+Routine: routine-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb
+Checklist status:
+- checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-ready: complete
+- checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-testing-ready: complete
+- checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-closeout-ready: pending

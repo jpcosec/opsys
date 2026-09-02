@@ -1,0 +1,13 @@
+before_untracked_count=411
+after_untracked_count=239
+after_sample=
+desk/atoms/atom-001-self-described-store-layout.md
+desk/atoms/atom-deskops-architecture.md
+desk/atoms/atom-extra-atom-test.md
+desk/atoms/atom-from-yaml-test-atom.md
+desk/atoms/atom-missing-answer-test.md
+desk/atoms/atom-test-atom-stress.md
+desk/atoms/knowledge-model/atom-atom-references-carry-roles.md
+desk/atoms/knowledge-model/atom-atoms-distill-project-knowledge.md
+desk/atoms/knowledge-model/atom-big-documents-need-explicit-modeling-strategy.md
+desk/atoms/knowledge-model/atom-diagrams-project-knowledge-relations.md
