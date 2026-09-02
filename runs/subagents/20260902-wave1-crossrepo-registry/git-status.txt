@@ -1,9 +1,10 @@
-## main...origin/main
- M deskops/cli/commands/doctor.py
- M deskops/workspace.py
-?? runs/subagents/20260902-wave1-crossrepo-registry/
-?? runs/subagents/20260902-wave1-doctor-unmodeled/
-?? runs/subagents/20260902-wave1-nesting/
-?? runs/subagents/20260902-wave1-piworker/
-?? runs/subagents/20260902-wave1-ritual-preflight/
-?? tests/test_doctor_unmodeled_surfaces.py
+## main...origin/main [ahead 5]
+ M .deskops.log
+ M desk/tasks/task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea.md
+ M deskops/cli/commands/promote.py
+ M deskops/operations.py
+ M runs/subagents/20260902-wave1-crossrepo-registry/board.txt
+ M runs/subagents/20260902-wave1-crossrepo-registry/git-status.txt
+ M runs/subagents/20260902-wave1-crossrepo-registry/task.txt
+ M runs/subagents/index.jsonl
+?? tests/test_promotion_nesting.py

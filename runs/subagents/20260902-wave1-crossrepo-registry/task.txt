@@ -1,10 +1,11 @@
-Task: task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
-Title: inbox cross-repo inusable fuera del ecosystem root y repo register crashea
-Status: active
-Current node: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready
-Task type: 
-Routine: routine-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
-Checklist status:
-- checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready: complete
-- checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-testing-ready: complete
-- checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-ready: pending
+commit 70f6326b8bb8d754b9f2633b96c2a80b1282435a
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Sep 2 13:44:39 2026 -0400
+
+    fix(registry): repo register --path support, no-crash on model-entry shadowing, actionable registry errors
+
+ deskops/cli/commands/repo.py      |  15 ++--
+ deskops/cli/parser.py             |   3 +-
+ deskops/identity.py               |  43 ++++++++++--
+ tests/test_registry_robustness.py | 141 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 188 insertions(+), 14 deletions(-)
