@@ -20,6 +20,11 @@ MODEL_REFS = {
     "StepDoc": "deskops.models:StepDoc",
     "AtomDoc": "deskops.models:AtomDoc",
     "FAQDoc": "deskops.models:FAQDoc",
+    "RoutineDoc": "deskops.models:RoutineDoc",
+    "ConditionDoc": "deskops.models:ConditionDoc",
+    "ChecklistDoc": "deskops.models:ChecklistDoc",
+    "OperatorDoc": "deskops.models:OperatorDoc",
+    "EdgeDoc": "deskops.models:EdgeDoc",
 }
 
 

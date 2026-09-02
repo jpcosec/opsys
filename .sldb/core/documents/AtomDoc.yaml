@@ -872,3 +872,10 @@ documents:
   semantic_tags:
   - type.knowledge.atom
   - workspace.desk.atoms
+- name: atom-task-bundles-are-tracked-in-the-store-at-creation-time
+  path: desk/atoms/atom-task-bundles-are-tracked-in-the-store-at-creation-time.md
+  hash_c: 82983c3e2c7247d38b06e5eafa3642e39f30538a5aa48046befdfc62c317330e
+  hash_d: e00c124ce87336571a9a82511adaa645c19653ddd4902a165d64eefcc46fdba4
+  semantic_tags:
+  - type.knowledge.atom
+  - workspace.desk.atoms

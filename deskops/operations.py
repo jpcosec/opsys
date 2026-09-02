@@ -247,6 +247,7 @@ class DeskopsOperations:
         def write_and_track(path: Path, model: type[Any], doc_payload: dict[str, Any]) -> None:
             self._write_new_doc(path, model, doc_payload)
             rollback_actions.append(lambda path=path: self._remove_created_file(path))
+            self._track_created_document(model, path, str(doc_payload["id"]))
 
         try:
             write_and_track(self._task_path(task_id), TaskDoc, compiled.task_payload)
@@ -1821,6 +1822,9 @@ class DeskopsOperations:
     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
         if artifact_id != "artifact.atom":
             return
+        self._track_created_document(model, path, doc_id)
+
+    def _track_created_document(self, model: type[Any], path: Path, doc_id: str) -> None:
         store_path = self.root / ".sldb"
         try:
             from sldb.cli.model_utils import resolve_model_ref
@@ -1837,7 +1841,9 @@ class DeskopsOperations:
         store_index = load_store_index(store_path)
         model_entry = next((entry for entry in store_index.models if entry.name == model.__name__), None)
         if model_entry is None:
-            return
+            raise RuntimeError(
+                f"Model {model.__name__} is not registered in store {store_path}; cannot track {path.relative_to(self.root)}"
+            )
 
         models_index = load_models_index(self.root / model_entry.models_index)
         documents_index = load_documents_index(self.root / models_index.documents_index)

@@ -656,6 +656,61 @@ def test_promote_drawer_task_to_active_task_creates_bundle(tmp_path: Path, capsy
     assert not source.exists()
 
 
+def test_promote_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, capsys) -> None:
+    from sldb.cli.main import main as sldb_main
+
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    drawer_dir = tmp_path / "desk" / "drawer" / "tasks"
+    drawer_dir.mkdir(parents=True, exist_ok=True)
+    source = drawer_dir / "task-promote-track-demo.md"
+    source.write_text(
+        "# Promote Track Demo\n\n"
+        "ID: task-promote-track-demo\nStatus: deferred\n\n"
+        "## Goal\n\nTrack promoted docs.\n\n"
+        "## Scope\n\nPromotion CLI only.\n",
+        encoding="utf-8",
+    )
+
+    promoted = main(
+        [
+            "promote",
+            "drawer-task-to-active-task",
+            "promote-track-demo",
+            "--root",
+            str(tmp_path),
+        ]
+    )
+    promote_out = capsys.readouterr()
+    assert promoted == 0
+    assert "Created active task bundle task-promote-track-demo" in promote_out.out
+
+    for doc_id, model_name in [
+        ("task-promote-track-demo", "TaskDoc"),
+        ("routine-task-promote-track-demo", "RoutineDoc"),
+        ("checklist-task-promote-track-demo-execution-ready", "ChecklistDoc"),
+        ("condition-task-promote-track-demo-has-validation", "ConditionDoc"),
+        ("operator-task-promote-track-demo-activate", "OperatorDoc"),
+        ("edge-task-promote-track-demo-execution-to-activate", "EdgeDoc"),
+    ]:
+        shown = sldb_main(
+            [
+                "docs",
+                "show",
+                doc_id,
+                "--store",
+                str(tmp_path / ".sldb"),
+                "--pythonpath",
+                str(ROOT),
+            ]
+        )
+        sldb_out = capsys.readouterr()
+        assert shown == 0
+        assert f'"name": "{doc_id}"' in sldb_out.out
+        assert f'"model": "{model_name}"' in sldb_out.out
+
+
 def test_promote_rejects_ambiguous_inbox_selector(tmp_path: Path, capsys) -> None:
     inbox_dir = tmp_path / "desk" / "inbox"
     inbox_dir.mkdir(parents=True)
@@ -720,6 +775,59 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
 
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-ship-semantic-cli.md" in board_text
+
+
+def test_add_task_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, capsys) -> None:
+    from sldb.cli.main import main as sldb_main
+
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Track bundle",
+            "--goal",
+            "Persist generated bundle docs in the store.",
+            "--scope",
+            "Task bundle creation only.",
+            "--implementation-path",
+            "Track task bundle docs right after creation.",
+            "--validation",
+            "pytest tests/test_cli.py -q",
+        ]
+    )
+    create_out = capsys.readouterr()
+    assert created == 0
+    assert "Created task bundle task-track-bundle" in create_out.out
+
+    for doc_id, model_name in [
+        ("task-track-bundle", "TaskDoc"),
+        ("routine-task-track-bundle", "RoutineDoc"),
+        ("checklist-task-track-bundle-execution-ready", "ChecklistDoc"),
+        ("condition-task-track-bundle-has-validation", "ConditionDoc"),
+        ("operator-task-track-bundle-activate", "OperatorDoc"),
+        ("edge-task-track-bundle-execution-to-activate", "EdgeDoc"),
+    ]:
+        shown = sldb_main(
+            [
+                "docs",
+                "show",
+                doc_id,
+                "--store",
+                str(tmp_path / ".sldb"),
+                "--pythonpath",
+                str(ROOT),
+            ]
+        )
+        sldb_out = capsys.readouterr()
+        assert shown == 0
+        assert f'"name": "{doc_id}"' in sldb_out.out
+        assert f'"model": "{model_name}"' in sldb_out.out
 
 
 def test_add_task_uses_test_root_override_for_sandboxed_generation(tmp_path: Path, monkeypatch, capsys) -> None:
@@ -2405,11 +2513,9 @@ def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
     assert main(["init", str(root)]) == 0
     capsys.readouterr()
 
-    # Track a document cleanly
+    # Create a tracked document cleanly
     task_doc = root / "desk" / "tasks" / "task-foo.md"
     main(["add", "task", "--title", "Foo", "--root", str(root)])
-    # We must track it in SLDB
-    subprocess.run([sys.executable, "-m", "sldb", "docs", "track", str(task_doc), "--model", "TaskDoc", "--store", str(root / ".sldb")], check=True)
     capsys.readouterr()
 
     # Corrupt it
