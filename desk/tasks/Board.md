@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-ritual-zero-context-subagent-stress-test.md
 - desk/tasks/task-split-atoms-with-provenance-safe-rerouting.md
 - desk/tasks/task-merge-atoms-with-reference-reconciliation.md
 - desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md
@@ -46,7 +45,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Prevent promotion from nesting structured source sections into active task fields [active] - Keep inbox-to-drawer-to-active promotion robust when the source note already uses structured headings.
 - Ritual: Zero-context subagent stress test [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260825-020103-suggestion-ritual-zero-context-subagent-stress-test.md`.
 - Split atoms with provenance-safe rerouting [active] - Define and implement a split workflow for atoms that preserves provenance and handles downstream references explicitly.
 - Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
@@ -58,7 +56,6 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Ritual: Zero-context subagent stress test [active] - Triage and resolve the inbox message promoted from `desk/inbox/20260825-020103-suggestion-ritual-zero-context-subagent-stress-test.md`.
 - Split atoms with provenance-safe rerouting [active] - Define and implement a split workflow for atoms that preserves provenance and handles downstream references explicitly.
 - Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
 - Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
