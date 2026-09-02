@@ -1,0 +1,8 @@
+## main...origin/main
+ M deskops/cli/commands/atoms.py
+ M deskops/cli/parser.py
+ M deskops/operations.py
+?? runs/subagents/20260902-wave2-merge/
+?? runs/subagents/20260902-wave2-split/
+?? tests/test_atoms_merge.py
+?? tests/test_atoms_split.py

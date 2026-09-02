@@ -1,0 +1,10 @@
+Task: task-merge-atoms-with-reference-reconciliation
+Title: Merge atoms with reference reconciliation
+Status: active
+Current node: checklist-task-merge-atoms-with-reference-reconciliation-execution-ready
+Task type: 
+Routine: routine-task-merge-atoms-with-reference-reconciliation
+Checklist status:
+- checklist-task-merge-atoms-with-reference-reconciliation-execution-ready: complete
+- checklist-task-merge-atoms-with-reference-reconciliation-testing-ready: complete
+- checklist-task-merge-atoms-with-reference-reconciliation-closeout-ready: pending

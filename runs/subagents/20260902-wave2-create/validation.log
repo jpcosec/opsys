@@ -1,0 +1,3 @@
+pytest tests/test_atoms_create_from_source.py -q -> 3 passed
+pytest tests/test_atoms_create_from_source.py tests/test_atoms_split.py tests/test_atoms_merge.py -q -> 10 passed
+pytest -q -> 194 passed

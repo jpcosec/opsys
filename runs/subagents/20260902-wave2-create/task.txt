@@ -1,0 +1,10 @@
+Task: task-create-atoms-from-pill-graph-and-diagram-sources
+Title: Create atoms from pill, graph, and diagram sources
+Status: active
+Current node: checklist-task-create-atoms-from-pill-graph-and-diagram-sources-execution-ready
+Task type: 
+Routine: routine-task-create-atoms-from-pill-graph-and-diagram-sources
+Checklist status:
+- checklist-task-create-atoms-from-pill-graph-and-diagram-sources-execution-ready: complete
+- checklist-task-create-atoms-from-pill-graph-and-diagram-sources-testing-ready: complete
+- checklist-task-create-atoms-from-pill-graph-and-diagram-sources-closeout-ready: pending
