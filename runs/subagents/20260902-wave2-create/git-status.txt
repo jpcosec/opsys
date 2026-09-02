@@ -1,10 +1,8 @@
-## main...origin/main
- M deskops/cli/commands/atoms.py
- M deskops/cli/parser.py
- M deskops/operations.py
-?? runs/subagents/20260902-wave2-create/
-?? runs/subagents/20260902-wave2-merge/
-?? runs/subagents/20260902-wave2-split/
+## main...origin/main [ahead 7]
+ M .deskops.log
+ M desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md
+ M runs/subagents/20260902-wave2-create/board.txt
+ M runs/subagents/20260902-wave2-create/git-status.txt
+ M runs/subagents/20260902-wave2-create/task.txt
 ?? tests/test_atoms_create_from_source.py
 ?? tests/test_atoms_merge.py
-?? tests/test_atoms_split.py
