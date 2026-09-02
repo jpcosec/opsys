@@ -403,3 +403,27 @@ Task-Id: task-merge-atoms-with-reference-reconciliation
 2026-09-02 14:31:20,256 - deskops - INFO - Committing closure for task-create-atoms-from-pill-graph-and-diagram-sources: closeout: task-create-atoms-from-pill-graph-and-diagram-sources
 
 Task-Id: task-create-atoms-from-pill-graph-and-diagram-sources
+2026-09-02 14:50:13,158 - deskops - INFO - Advanced task task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization to node checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-ready
+2026-09-02 14:50:13,652 - deskops - INFO - Advanced task task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization to node checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-ready
+2026-09-02 14:50:14,831 - deskops - INFO - Task task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization is complete. Performing auto-commit and cleanup.
+2026-09-02 14:50:14,838 - deskops - DEBUG - Removing runtime artifacts for task task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-closeout-evidence.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-implementation-path.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-for-closeout.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-has-validation.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive condition-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-pill-knowledge-graduated.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-ready.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-ready.md
+2026-09-02 14:50:14,847 - deskops - DEBUG - Removing primitive checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-for-testing.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-close.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive operator-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-activate.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-to-activate.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-to-ready.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-close-to-complete.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-ready-to-closeout.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-to-close.md
+2026-09-02 14:50:14,848 - deskops - DEBUG - Removing primitive edge-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-activate-to-testing.md
+2026-09-02 14:50:14,856 - deskops - INFO - Committing closure for task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization: closeout: task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
+
+Task-Id: task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
