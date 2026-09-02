@@ -1,10 +1,40 @@
-Task: task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
-Title: Make role prompts sldb-tracked RoleDocs with pi-agent materialization
-Status: active
-Current node: checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready
-Task type: 
-Routine: routine-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
-Checklist status:
-- checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready: complete
-- checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-ready: complete
-- checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-ready: pending
+commit 49a4414525a4951311f95c814ad0e203e552b425
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Sep 2 14:50:04 2026 -0400
+
+    feat(roledocs): RoleDoc model + desk/roles/ sources + materialize/drift-check commands (197 passed)
+
+ .sldb/core/documents/RoleDoc.yaml                  |  22 ++
+ .sldb/core/models/RoleDoc.yaml                     |  13 ++
+ .sldb/core/store_index.yaml                        |  10 +-
+ .../issues/issue-adopt-agent-role-segregation.md   |   6 +-
+ .../roles}/deskops-executor.md                     |   1 +
+ .../roles}/deskops-supervisor.md                   |   1 +
+ .../roles}/deskops-tester.md                       |   1 +
+ deskops/bootstrap.py                               |   1 +
+ deskops/cli/commands/drift.py                      |  23 +++
+ deskops/cli/commands/materialize.py                |  20 ++
+ deskops/cli/main.py                                |  18 +-
+ deskops/cli/parser.py                              |  34 +++
+ deskops/graph/extract_docs.py                      |   3 +-
+ deskops/materializers/__init__.py                  |   6 +
+ deskops/materializers/roles.py                     | 132 ++++++++++++
+ deskops/models/__init__.py                         |   2 +
+ deskops/models/role.py                             |  45 ++++
+ deskops/workspace.py                               |   2 +
+ docs/agent-system-prompts/README.md                |   5 +-
+ runs/subagents/20260902-wave3-roledocs/board.txt   |  10 +
+ .../20260902-wave3-roledocs/drift-output.txt       |   1 +
+ .../20260902-wave3-roledocs/git-status.txt         |  26 +++
+ runs/subagents/20260902-wave3-roledocs/graph.txt   |   7 +
+ .../20260902-wave3-roledocs/materialize-output.txt |   4 +
+ runs/subagents/20260902-wave3-roledocs/next.txt    |  26 +++
+ .../20260902-wave3-roledocs/result-summary.md      | 100 +++++++++
+ .../20260902-wave3-roledocs/store-check.txt        |   1 +
+ runs/subagents/20260902-wave3-roledocs/task.txt    |  10 +
+ .../20260902-wave3-roledocs/validation.log         |   9 +
+ tests/test_atoms_create_from_source.py             | 153 ++++++++++++++
+ tests/test_atoms_merge.py                          | 230 +++++++++++++++++++++
+ tests/test_cli.py                                  |   3 +-
+ tests/test_role_materialization.py                 |  81 ++++++++
+ 33 files changed, 995 insertions(+), 11 deletions(-)
