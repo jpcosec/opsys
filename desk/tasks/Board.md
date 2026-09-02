@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-merge-atoms-with-reference-reconciliation.md
 - desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md
 - desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
 # List of pill-xxx paths
@@ -43,7 +42,6 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Split atoms with provenance-safe rerouting [active] - Define and implement a split workflow for atoms that preserves provenance and handles downstream references explicitly.
 - Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
 - Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
 - Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.
@@ -52,6 +50,5 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
 - Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
 - Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.
