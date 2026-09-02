@@ -1,0 +1,67 @@
+$ sed -n "1,12p" .pi/agents/deskops-worker.md
+---
+name: worker
+package: deskops
+description: Lightweight bounded deskops CLI worker for fresh-context execution without supervisor/tester lifecycle management
+tools: read, grep, find, ls, bash, edit, write
+systemPromptMode: replace
+inheritProjectContext: false
+inheritSkills: false
+defaultContext: fresh
+skills: use-deskops, pi-subagents
+---
+
+
+$ node (jiti) parse/discover smoke check
+parsed.frontmatter= {
+  "name": "worker",
+  "package": "deskops",
+  "description": "Lightweight bounded deskops CLI worker for fresh-context execution without supervisor/tester lifecycle management",
+  "tools": "read, grep, find, ls, bash, edit, write",
+  "systemPromptMode": "replace",
+  "inheritProjectContext": "false",
+  "inheritSkills": "false",
+  "defaultContext": "fresh",
+  "skills": "use-deskops, pi-subagents"
+}
+discovered= yes
+{
+  "runtimeName": "deskops.worker",
+  "localName": "worker",
+  "packageName": "deskops",
+  "source": "project",
+  "filePath": "/home/jp/proyectos/hum-ecosystem/tools/deskops/.pi/agents/deskops-worker.md",
+  "defaultContext": "fresh",
+  "inheritProjectContext": false,
+  "inheritSkills": false,
+  "skills": [
+    "use-deskops",
+    "pi-subagents"
+  ],
+  "tools": [
+    "read",
+    "grep",
+    "find",
+    "ls",
+    "bash",
+    "edit",
+    "write"
+  ]
+}
+
+$ git status --short --branch
+## main...origin/main
+ M desk/rituals/execution.md
+ M deskops/cli/commands/doctor.py
+ M deskops/cli/commands/repo.py
+ M deskops/cli/parser.py
+ M deskops/identity.py
+ M deskops/workspace.py
+?? desk/contexts/pill-zero-context-preflight-precedes-executor.md
+?? runs/subagents/20260902-wave1-crossrepo-registry/
+?? runs/subagents/20260902-wave1-doctor-unmodeled/
+?? runs/subagents/20260902-wave1-nesting/
+?? runs/subagents/20260902-wave1-piworker/
+?? runs/subagents/20260902-wave1-ritual-preflight/
+?? tests/test_doctor_unmodeled_surfaces.py
+?? tests/test_registry_robustness.py

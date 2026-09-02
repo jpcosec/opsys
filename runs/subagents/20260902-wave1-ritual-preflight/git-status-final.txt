@@ -1,19 +1,18 @@
-## main...origin/main [ahead 2]
+## main...origin/main
  M desk/rituals/execution.md
- M desk/tasks/task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb.md
+ M deskops/cli/commands/doctor.py
  M deskops/cli/commands/promote.py
  M deskops/cli/commands/repo.py
  M deskops/cli/parser.py
  M deskops/identity.py
  M deskops/operations.py
- M runs/subagents/20260902-wave1-doctor-unmodeled/git-status.txt
- M runs/subagents/20260902-wave1-doctor-unmodeled/task.txt
-?? desk/atoms/atom-promotion-flattens-structured-source-sections-into-task-fields.md
-?? desk/atoms/atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix.md
+ M deskops/workspace.py
 ?? desk/contexts/pill-zero-context-preflight-precedes-executor.md
 ?? runs/subagents/20260902-wave1-crossrepo-registry/
+?? runs/subagents/20260902-wave1-doctor-unmodeled/
 ?? runs/subagents/20260902-wave1-nesting/
 ?? runs/subagents/20260902-wave1-piworker/
 ?? runs/subagents/20260902-wave1-ritual-preflight/
+?? tests/test_doctor_unmodeled_surfaces.py
 ?? tests/test_promotion_nesting.py
 ?? tests/test_registry_robustness.py

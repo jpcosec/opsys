@@ -1,0 +1,10 @@
+## main...origin/main
+ M desk/rituals/execution.md
+ M deskops/cli/commands/doctor.py
+ M deskops/workspace.py
+?? runs/subagents/20260902-wave1-crossrepo-registry/
+?? runs/subagents/20260902-wave1-doctor-unmodeled/
+?? runs/subagents/20260902-wave1-nesting/
+?? runs/subagents/20260902-wave1-piworker/
+?? runs/subagents/20260902-wave1-ritual-preflight/
+?? tests/test_doctor_unmodeled_surfaces.py

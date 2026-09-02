@@ -1,0 +1,10 @@
+Task: task-empaquetar-deskops-como-m-dulo-de-pi-subagents
+Title: Empaquetar deskops como módulo de pi-subagents
+Status: active
+Current node: checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-execution-ready
+Task type: 
+Routine: routine-task-empaquetar-deskops-como-m-dulo-de-pi-subagents
+Checklist status:
+- checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-execution-ready: complete
+- checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-testing-ready: complete
+- checklist-task-empaquetar-deskops-como-m-dulo-de-pi-subagents-closeout-ready: pending

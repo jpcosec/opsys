@@ -1,0 +1,10 @@
+Task: task-ritual-zero-context-subagent-stress-test
+Title: Ritual: Zero-context subagent stress test
+Status: active
+Current node: checklist-task-ritual-zero-context-subagent-stress-test-execution-ready
+Task type: 
+Routine: routine-task-ritual-zero-context-subagent-stress-test
+Checklist status:
+- checklist-task-ritual-zero-context-subagent-stress-test-execution-ready: complete
+- checklist-task-ritual-zero-context-subagent-stress-test-testing-ready: complete
+- checklist-task-ritual-zero-context-subagent-stress-test-closeout-ready: pending

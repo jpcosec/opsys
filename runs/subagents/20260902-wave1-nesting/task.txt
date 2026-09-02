@@ -1,0 +1,10 @@
+Task: task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
+Title: Prevent promotion from nesting structured source sections into active task fields
+Status: active
+Current node: checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready
+Task type: 
+Routine: routine-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields
+Checklist status:
+- checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-execution-ready: complete
+- checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-testing-ready: complete
+- checklist-task-prevent-promotion-from-nesting-structured-source-sections-into-active-task-fields-closeout-ready: pending

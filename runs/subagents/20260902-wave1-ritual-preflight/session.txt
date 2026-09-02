@@ -1,0 +1,2 @@
+Child executor session artifact for task-ritual-zero-context-subagent-stress-test.
+This API run does not expose an external chat transcript file, so this file records the bounded session evidence for hashing.

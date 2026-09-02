@@ -1,0 +1,10 @@
+Task: task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
+Title: inbox cross-repo inusable fuera del ecosystem root y repo register crashea
+Status: active
+Current node: checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready
+Task type: 
+Routine: routine-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea
+Checklist status:
+- checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-execution-ready: complete
+- checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-testing-ready: complete
+- checklist-task-inbox-cross-repo-inusable-fuera-del-ecosystem-root-y-repo-register-crashea-closeout-ready: pending

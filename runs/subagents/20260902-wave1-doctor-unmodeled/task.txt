@@ -1,10 +1,10 @@
-Task: task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb
-Title: Doctor confunde superficies no modeladas con untracked en sldb
-Status: active
-Current node: checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-ready
-Task type: 
-Routine: routine-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb
-Checklist status:
-- checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-execution-ready: complete
-- checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-testing-ready: complete
-- checklist-task-doctor-confunde-superficies-no-modeladas-con-untracked-en-sldb-closeout-ready: pending
+commit 10f5702595246169a897d0d10c843041e5a4879b
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Sep 2 13:41:43 2026 -0400
+
+    fix(doctor): exclude unmodeled desk surfaces from untracked findings (411->239), clarify broken-tracking wording
+
+ deskops/cli/commands/doctor.py          |  45 +++++++++--
+ deskops/workspace.py                    |  59 +++++++++++++++
+ tests/test_doctor_unmodeled_surfaces.py | 129 ++++++++++++++++++++++++++++++++
+ 3 files changed, 225 insertions(+), 8 deletions(-)
