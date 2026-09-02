@@ -1,0 +1,19 @@
+commit 2a8e917c10cd17e7d9933526d39ede1ee1c15884
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Sep 2 12:53:33 2026 -0400
+
+    feat(add/promote): track generated bundle docs in sldb store at creation
+    
+    - create_task_bundle tracks every bundle doc via sldb.store.ops.track_document
+    - new generic _track_created_document helper; fail (not skip) on unregistered model
+    - bootstrap registers RoutineDoc/ConditionDoc/ChecklistDoc/OperatorDoc/EdgeDoc
+    - tests: add/promote tracking coverage (suite 175 passed)
+
+ .sldb/core/documents/AtomDoc.yaml                  |   7 ++
+ .sldb/core/models/AtomDoc.yaml                     |   2 +-
+ .sldb/core/store_index.yaml                        |   2 +-
+ ...es-are-tracked-in-the-store-at-creation-time.md |  13 +++
+ deskops/bootstrap.py                               |   5 +
+ deskops/operations.py                              |   8 +-
+ tests/test_cli.py                                  | 112 ++++++++++++++++++++-
+ 7 files changed, 143 insertions(+), 6 deletions(-)

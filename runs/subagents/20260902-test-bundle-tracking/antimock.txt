@@ -1,0 +1,7 @@
+1835:            from sldb.store.ops import track_document
+1853:        track_document(
+ChecklistDoc
+ConditionDoc
+EdgeDoc
+OperatorDoc
+RoutineDoc

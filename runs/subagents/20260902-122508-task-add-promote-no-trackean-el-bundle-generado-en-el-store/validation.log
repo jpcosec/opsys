@@ -1,0 +1,91 @@
+$ pytest tests/test_cli.py -q
+........................................................................ [ 91%]
+.......                                                                  [100%]
+79 passed in 70.61s (0:01:10)
+
+$ rm -rf .tmp/deskops-cli-test
+$ python -m deskops.cli.main init .tmp/deskops-cli-test
+Error: Path /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test does not exist.
+$ (cd .tmp/deskops-cli-test && python -m deskops.cli.main add task --root . --title Repro bundle tracking)
+/bin/bash: line 10: cd: .tmp/deskops-cli-test: No such file or directory
+$ (cd .tmp/deskops-cli-test && python -m deskops.cli.main doctor --root .)
+/bin/bash: line 12: cd: .tmp/deskops-cli-test: No such file or directory
+$ rm -rf .tmp/deskops-cli-test
+
+# retry sandbox repro with precreated root
+$ mkdir -p .tmp/deskops-cli-test
+$ python -m deskops.cli.main init .tmp/deskops-cli-test
+Initialized store at /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb
+Registered 'BoardDoc'
+Registered 'TaskDoc'
+Registered 'PillDoc'
+Registered 'RitualDoc'
+Registered 'InboxNoteDoc'
+Registered 'RepositoryDoc'
+Registered 'StepDoc'
+Registered 'AtomDoc'
+Registered 'FAQDoc'
+Registered 'RoutineDoc'
+Registered 'ConditionDoc'
+Registered 'ChecklistDoc'
+Registered 'OperatorDoc'
+Registered 'EdgeDoc'
+Global deskops model registry is ready.
+Initializing local store at /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering BoardDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering TaskDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering PillDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering RitualDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering InboxNoteDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering RepositoryDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering StepDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering AtomDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering FAQDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering RoutineDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering ConditionDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering ChecklistDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering OperatorDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Registering EdgeDoc in /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/.sldb...
+Scaffolded desk at /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk.
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/tasks
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/contexts
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/atoms
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/inbox
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/drawer
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/routines
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/conditions
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/operators
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/checklists
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/hooks
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/edges
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/config.json
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/tasks/Board.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/contexts/pills.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/execution.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/testing.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/closeout.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/drawer/README.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/atoms/tag-namespaces.yaml
+Initialization complete.
+$ (cd .tmp/deskops-cli-test && python -m deskops.cli.main add task --root . --title Repro bundle tracking)
+Created task bundle task-repro-bundle-tracking
+Task: /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/tasks/task-repro-bundle-tracking.md
+Routine: /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/routines/routine-task-repro-bundle-tracking.md
+$ (cd .tmp/deskops-cli-test && python -m deskops.cli.main doctor --root .)
+Doctor Findings:
+- Missing desk structure: desk/rituals/phase.md
+- Legacy desk detected: sldb stores check failed
+
+Run with --repair to attempt automatic fixes.
+$ rm -rf .tmp/deskops-cli-test
+
+# sandbox repro focused on untracked-doc symptom
+$ grep -n "Untracked desk documents" /tmp/deskops-doctor.log
+no untracked desk documents reported
+$ tail -n 20 /tmp/deskops-doctor.log
+Doctor Findings:
+- Missing desk structure: desk/rituals/phase.md
+- Legacy desk detected: sldb stores check failed
+
+Run with --repair to attempt automatic fixes.

@@ -1,0 +1,5 @@
+## main...origin/main [ahead 2]
+ M .deskops.log
+?? .tmp/
+?? runs/subagents/20260902-122508-task-add-promote-no-trackean-el-bundle-generado-en-el-store/
+?? runs/subagents/20260902-test-bundle-tracking/
