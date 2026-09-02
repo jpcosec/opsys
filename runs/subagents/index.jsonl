@@ -18,3 +18,4 @@
 {"task_id": "task-empaquetar-deskops-como-m-dulo-de-pi-subagents", "run_id": null, "run_dir": "runs/subagents/20260902-wave1-piworker", "commit": "d502b799850259cdd55580d52ab8df6ddbcdf956", "session_sha256": null}
 {"task_id": "task-split-atoms-with-provenance-safe-rerouting", "run_id": null, "run_dir": "runs/subagents/20260902-wave2-split", "commit": "6d2b01131c575719254e2516a61047315d16a0f7", "session_sha256": null}
 {"task_id": "task-merge-atoms-with-reference-reconciliation", "run_id": null, "run_dir": "runs/subagents/20260902-wave2-merge", "commit": "0bd506963985651292264c2f0d8c0b5067e15673", "session_sha256": null}
+{"task_id": "task-create-atoms-from-pill-graph-and-diagram-sources", "run_id": null, "run_dir": "runs/subagents/20260902-wave2-create", "commit": "170491a32fdb5b0ad58bda3e3aab0f997156b864", "session_sha256": null}
