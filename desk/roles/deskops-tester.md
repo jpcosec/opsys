@@ -1,4 +1,5 @@
 ---
+id: role-deskops-tester
 name: deskops-tester
 description: Use when acting as the tester for one bounded deskops task in this repository. Recover board and task state, verify the execution handoff, translate task and pill guardrails into concrete checks, run the smallest relevant validation first, and hand off to closeout without changing routing or implementation scope.
 ---

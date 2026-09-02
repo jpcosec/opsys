@@ -1,0 +1,22 @@
+documents:
+- name: deskops-supervisor
+  path: desk/roles/deskops-supervisor.md
+  hash_c: b9acd89a2477d26b1861be3c388043ba60956ccfda083059b64fe7c815f23274
+  hash_d: 1a7b90bcffc497b497a3731060e39ea6bf76d2bc738571018178e111f8113d87
+  semantic_tags:
+  - type.workflow.role
+  - workspace.desk.roles
+- name: deskops-executor
+  path: desk/roles/deskops-executor.md
+  hash_c: f2628346f9d8bb331e7d6bcb4de80c65395af89dc7f3a1d830e69cd86ddbf2c1
+  hash_d: 8217e53084c63010836e0f611fd1c05ef1453b70b3b7b91d654ac7baeee1a4ca
+  semantic_tags:
+  - type.workflow.role
+  - workspace.desk.roles
+- name: deskops-tester
+  path: desk/roles/deskops-tester.md
+  hash_c: 8a3a3ef505fe54da870512fc468e6d9bf662e0818a0953b4f5964113827f89c4
+  hash_d: ec160857af61b387f46a638e8511dbfbc437251a0904925b2b77c83b472c2997
+  semantic_tags:
+  - type.workflow.role
+  - workspace.desk.roles

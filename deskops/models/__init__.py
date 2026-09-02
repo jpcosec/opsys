@@ -13,6 +13,7 @@ from .operator import OperatorDoc
 from .pill import PillDoc
 from .repository import RepositoryDoc
 from .ritual import RitualDoc
+from .role import RoleDoc
 from .routine import RoutineDoc
 from .step import StepDoc
 from .task import TaskDoc
@@ -33,6 +34,7 @@ __all__ = [
     "PrimitiveDoc",
     "RepositoryDoc",
     "RitualDoc",
+    "RoleDoc",
     "RoutineDoc",
     "StepDoc",
     "TaskDoc",

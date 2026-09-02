@@ -1,0 +1,10 @@
+Task: task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
+Title: Make role prompts sldb-tracked RoleDocs with pi-agent materialization
+Status: active
+Current node: checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready
+Task type: 
+Routine: routine-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization
+Checklist status:
+- checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-execution-ready: complete
+- checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-testing-ready: complete
+- checklist-task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization-closeout-ready: pending

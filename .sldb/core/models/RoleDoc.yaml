@@ -1,0 +1,13 @@
+name: RoleDoc
+model_ref: deskops.models:RoleDoc
+path: deskops/models/role.py
+documents_index: .sldb/core/documents/RoleDoc.yaml
+sections_index: .sldb/runtime/sections/RoleDoc.yaml
+hash_b: dfb243c1d9760d37768f96be7a5bcaa984461c69b1045ef37768857c2ba05763
+version: 1
+canonical: false
+family: null
+semantics:
+- type.workflow.role
+- workspace.desk.roles
+base_models: []

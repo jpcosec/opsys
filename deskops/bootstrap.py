@@ -17,6 +17,7 @@ MODEL_REFS = {
     "RitualDoc": "deskops.models:RitualDoc",
     "InboxNoteDoc": "deskops.models:InboxNoteDoc",
     "RepositoryDoc": "deskops.models:RepositoryDoc",
+    "RoleDoc": "deskops.models:RoleDoc",
     "StepDoc": "deskops.models:StepDoc",
     "AtomDoc": "deskops.models:AtomDoc",
     "FAQDoc": "deskops.models:FAQDoc",

@@ -39,7 +39,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,closeout}" in captured.out
+    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -138,6 +138,7 @@ def test_desk_install_scaffolds_expected_surface(tmp_path: Path, capsys) -> None
         tmp_path / "desk" / "drawer" / "README.md",
         tmp_path / "desk" / "atoms",
         tmp_path / "desk" / "atoms" / "tag-namespaces.yaml",
+        tmp_path / "desk" / "roles",
     ]
     for path in expected_paths:
         assert path.exists()

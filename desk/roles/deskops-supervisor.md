@@ -1,4 +1,5 @@
 ---
+id: role-deskops-supervisor
 name: deskops-supervisor
 description: Use when acting as the desk workflow supervisor in this repository. Recover state from Board.md, choose or confirm the active task, dispatch bounded execution, inspect evidence, update routing truthfully, and enforce commit-boundary closeout.
 ---

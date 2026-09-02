@@ -50,6 +50,8 @@ def build_parser() -> argparse.ArgumentParser:
     _add_desk_commands(subparsers)
     _add_atoms_commands(subparsers)
     _add_graph_commands(subparsers)
+    _add_materialize_command(subparsers)
+    _add_drift_commands(subparsers)
     _add_closeout_command(subparsers)
 
     return parser
@@ -224,6 +226,38 @@ def _add_graph_commands(
     reflect = s.add_parser("reflect", help="Write review-only self-reflection findings for a graph snapshot.")
     reflect.add_argument("--root", default=".", help="Target repository root.")
     reflect.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+
+
+def _add_materialize_command(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "materialize",
+        help="Render tracked desk role prompts into installed pi-agent files.",
+    )
+    p.add_argument("--root", default=".", help="Target repository root.")
+    p.add_argument(
+        "--out",
+        help="Output directory override; defaults to ~/.pi/agent/agents.",
+    )
+
+
+
+def _add_drift_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "drift",
+        help="Check for role-agent drift between tracked role docs and installed agent files.",
+    )
+    s = p.add_subparsers(dest="drift_command", required=True)
+    check = s.add_parser("check", help="Compare rendered role-agent output to installed files.")
+    check.add_argument("--root", default=".", help="Target repository root.")
+    check.add_argument(
+        "--out",
+        help="Agent directory override; defaults to ~/.pi/agent/agents.",
+    )
+
 
 
 def _add_promote_commands(

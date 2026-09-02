@@ -64,5 +64,13 @@ models:
   canonical: false
   family: null
   semantics: []
+- name: RoleDoc
+  model_ref: deskops.models:RoleDoc
+  path: deskops/models/role.py
+  models_index: .sldb/core/models/RoleDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics: []
 predicates: []
-hash_a: 95469dbd06b3ac22b1edaa573dfbb3e79ea090db473ed265a82006e55ab8494a
+hash_a: 59247319d1302fb1d21361d7acf66569b90ce4328842bda2ee84da27c0b315a2

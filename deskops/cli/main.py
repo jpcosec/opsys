@@ -50,6 +50,22 @@ class CLI:
             from deskops.cli.commands.doctor import DoctorCLI
 
             return DoctorCLI().run(args)
+        if args.command == "materialize":
+            ready = bootstrap.ensure_sldb_available()
+            if ready != 0:
+                return ready
+
+            from deskops.cli.commands.materialize import MaterializeCLI
+
+            return MaterializeCLI().run(args)
+        if args.command == "drift":
+            ready = bootstrap.ensure_sldb_available()
+            if ready != 0:
+                return ready
+
+            from deskops.cli.commands.drift import DriftCLI
+
+            return DriftCLI().run(args)
         if args.command == "desk":
             from deskops.cli.commands.desk import DeskCLI
 
@@ -133,7 +149,7 @@ class CLI:
             return
         if getattr(args, "root", None) != ".":
             return
-        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "inbox", "repo", "graph"}:
+        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "inbox", "repo", "graph", "materialize", "drift"}:
             return
             
         from deskops.config import DeskConfig

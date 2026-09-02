@@ -1,0 +1,26 @@
+## main...origin/main
+ M .sldb/core/store_index.yaml
+ M desk/drawer/issues/issue-adopt-agent-role-segregation.md
+ M deskops/bootstrap.py
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M deskops/graph/extract_docs.py
+ M deskops/materializers/__init__.py
+ M deskops/models/__init__.py
+ M deskops/workspace.py
+ M docs/agent-system-prompts/README.md
+ D docs/agent-system-prompts/deskops-executor.md
+ D docs/agent-system-prompts/deskops-supervisor.md
+ D docs/agent-system-prompts/deskops-tester.md
+ M tests/test_cli.py
+?? .sldb/core/documents/RoleDoc.yaml
+?? .sldb/core/models/RoleDoc.yaml
+?? desk/roles/
+?? deskops/cli/commands/drift.py
+?? deskops/cli/commands/materialize.py
+?? deskops/materializers/roles.py
+?? deskops/models/role.py
+?? runs/subagents/20260902-wave3-roledocs/
+?? tests/test_atoms_create_from_source.py
+?? tests/test_atoms_merge.py
+?? tests/test_role_materialization.py

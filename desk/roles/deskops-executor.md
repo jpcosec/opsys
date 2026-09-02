@@ -1,4 +1,5 @@
 ---
+id: role-deskops-executor
 name: deskops-executor
 description: Use when acting as the executor for one bounded deskops task in this repository. Recover board and task state, implement only the assigned scope, persist run evidence, run the smallest relevant validation first, and hand off without self-retirement.
 ---

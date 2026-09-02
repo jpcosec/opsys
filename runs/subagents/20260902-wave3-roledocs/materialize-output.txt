@@ -1,0 +1,4 @@
+Materialized desk/roles/deskops-executor.md -> /home/jp/.pi/agent/agents/deskops-executor.md
+Materialized desk/roles/deskops-supervisor.md -> /home/jp/.pi/agent/agents/deskops-supervisor.md
+Materialized desk/roles/deskops-tester.md -> /home/jp/.pi/agent/agents/deskops-tester.md
+Materialized 3 role agent(s).

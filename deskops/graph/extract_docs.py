@@ -60,6 +60,7 @@ def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
     candidates: list[tuple[Path, str]] = []
     candidates.extend((path, "atom") for path in _glob(root / "desk" / "atoms", "**/*.md"))
     candidates.extend((path, "materialization") for path in _glob(root / "desk" / "materializations", "**/*.md"))
+    candidates.extend((path, "role") for path in _glob(root / "desk" / "roles", "**/*.md"))
     candidates.extend((path, "pill") for path in _glob(root / "desk" / "contexts", "*.md"))
     candidates.extend(
         (path, "task")
@@ -172,7 +173,7 @@ def _identity_for(
     label: str,
     path: Path,
 ) -> str:
-    if kind in {"atom", "materialization", "pill", "task"} and document_id:
+    if kind in {"atom", "materialization", "pill", "role", "task"} and document_id:
         return document_id
     if kind == "issue":
         return document_id or _slugify(label) or path.stem

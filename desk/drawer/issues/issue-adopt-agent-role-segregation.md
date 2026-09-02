@@ -18,8 +18,8 @@ In successful implementations (like the IEEE tutoring paper desk), splitting res
 
 Refactor the agent onboarding and execution model to explicitly separate roles:
 - **Router** (`AGENTS.md`): Purely directs the incoming agent to adopt a specific operational role based on context.
-- **Supervisor** (`docs/agent-system-prompts/deskops-supervisor.md`): Handles planning, routing tasks, launching subagents, monitoring testing, syncing the board, and enforcing closeout rituals.
-- **Executor** (`docs/agent-system-prompts/deskops-executor.md`): Operates blindly on exactly *one* bounded task at a time, writes the code/tests, persists run traces, and stops exactly at the task boundary.
+- **Supervisor** (`desk/roles/deskops-supervisor.md`): Handles planning, routing tasks, launching subagents, monitoring testing, syncing the board, and enforcing closeout rituals.
+- **Executor** (`desk/roles/deskops-executor.md`): Operates blindly on exactly *one* bounded task at a time, writes the code/tests, persists run traces, and stops exactly at the task boundary.
 
 ## Questions
 
@@ -30,7 +30,7 @@ Refactor the agent onboarding and execution model to explicitly separate roles:
 ## Follow-Up Shape
 
 - Rewrite `AGENTS.md` to be a pure router.
-- Create default `docs/agent-system-prompts/deskops-supervisor.md` and `docs/agent-system-prompts/deskops-executor.md` templates in the deskops scaffold.
+- Create default `desk/roles/deskops-supervisor.md` and `desk/roles/deskops-executor.md` templates in the deskops scaffold.
 - Update the operator manual to reflect role-based workflow.
 
 ## Related Atoms
