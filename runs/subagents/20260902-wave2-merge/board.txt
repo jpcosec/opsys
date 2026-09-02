@@ -4,10 +4,9 @@ status:
 summary: 
 scope: desk
 purpose: 
-tasks: desk/tasks/task-write-end-to-end-deskops-operator-manual, desk/tasks/task-split-atoms-with-provenance-safe-rerouting.md, desk/tasks/task-merge-atoms-with-reference-reconciliation.md, desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md, desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
+tasks: desk/tasks/task-write-end-to-end-deskops-operator-manual, desk/tasks/task-merge-atoms-with-reference-reconciliation.md, desk/tasks/task-create-atoms-from-pill-graph-and-diagram-sources.md, desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
 pills: desk/contexts/pill-001-task-closure-commit.md, desk/contexts/pill-005-subagent-execution.md, desk/contexts/pill-007-phase-gated-task-flow.md, desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md, desk/contexts/pill-phase-closeout-reconciles-pills-and-surfaces-next-work.md, desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md, desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md
 rituals: desk/rituals/phase.md, desk/rituals/execution.md, desk/rituals/closeout.md, desk/rituals/testing.md
-notes: - Split atoms with provenance-safe rerouting [active] - Define and implement a split workflow for atoms that preserves provenance and handles downstream references explicitly.
-- Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
+notes: - Merge atoms with reference reconciliation [active] - Define and implement a merge workflow for atoms that reconciles references, provenance, and downstream materializations.
 - Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
 - Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.

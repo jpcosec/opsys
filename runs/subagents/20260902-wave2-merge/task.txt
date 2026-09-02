@@ -1,10 +1,15 @@
-Task: task-merge-atoms-with-reference-reconciliation
-Title: Merge atoms with reference reconciliation
-Status: active
-Current node: checklist-task-merge-atoms-with-reference-reconciliation-execution-ready
-Task type: 
-Routine: routine-task-merge-atoms-with-reference-reconciliation
-Checklist status:
-- checklist-task-merge-atoms-with-reference-reconciliation-execution-ready: complete
-- checklist-task-merge-atoms-with-reference-reconciliation-testing-ready: complete
-- checklist-task-merge-atoms-with-reference-reconciliation-closeout-ready: pending
+commit b106c191e6479a3d05ffd1f11aa9f2754cd4ebee
+Author: jp_ruiz <juanpablo.ruiz.r@gmail.com>
+Date:   Wed Sep 2 14:30:48 2026 -0400
+
+    feat(atoms): split with provenance-safe rerouting + inbound-ref guard
+
+ .sldb/core/documents/AtomDoc.yaml                  |   7 +
+ .sldb/core/models/AtomDoc.yaml                     |   2 +-
+ .sldb/core/store_index.yaml                        |   2 +-
+ ...e-is-complete-create-from-source-split-merge.md |  13 +
+ deskops/cli/commands/atoms.py                      |  68 +++
+ deskops/cli/parser.py                              |  94 ++++
+ deskops/operations.py                              | 582 +++++++++++++++++++++
+ tests/test_atoms_split.py                          | 167 ++++++
+ 8 files changed, 933 insertions(+), 2 deletions(-)
