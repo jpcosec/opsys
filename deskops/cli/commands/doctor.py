@@ -6,8 +6,11 @@ from pathlib import Path
 import subprocess
 import sys
 
+from deskops.workspace import desk_doc_unmodeled_reason
 from deskops.workspace import inspect_desk
+from deskops.workspace import modeled_desk_markdown_docs
 from deskops.workspace import scaffold_desk
+from deskops.workspace import unmodeled_desk_markdown_docs
 
 
 class DoctorCLI:
@@ -49,9 +52,25 @@ class DoctorCLI:
 
         untracked: list[Path] = []
         invalid_docs: list[str] = []
+        unmodeled_reasons: list[str] = []
 
         if desk_dir.exists():
-            all_mds = set(p.resolve() for p in desk_dir.rglob("*.md"))
+            ignored_modeled_names = {
+                "Board.md",
+                "pills.md",
+                "execution.md",
+                "testing.md",
+                "closeout.md",
+                "phase.md",
+                "README.md",
+                "tag-namespaces.yaml",
+            }
+            modeled_mds = {
+                path.resolve()
+                for path in modeled_desk_markdown_docs(root, desk_dir)
+                if path.name not in ignored_modeled_names
+            }
+            unmodeled_mds = unmodeled_desk_markdown_docs(root, desk_dir)
             tracked_mds = set(inspection.tracked_surface_docs)
 
             result = subprocess.run(
@@ -81,19 +100,29 @@ class DoctorCLI:
             if result.returncode != 0 and not result.stdout:
                 findings.append(f"SLDB store check crashed (likely malformed documents): {result.stderr.strip().split(chr(10))[0]}")
 
-            untracked = [
-                p
-                for p in all_mds
-                if p not in tracked_mds
-                and p.name not in ("Board.md", "pills.md", "execution.md", "testing.md", "closeout.md", "README.md", "tag-namespaces.yaml")
-            ]
+            untracked = [p for p in modeled_mds if p not in tracked_mds]
+
+            unmodeled_reasons = sorted(
+                {
+                    reason
+                    for path in unmodeled_mds
+                    if (reason := desk_doc_unmodeled_reason(root, path)) is not None
+                }
+            )
 
             if result.returncode != 0 and not result.stdout:
                 untracked = []
 
         if untracked:
             rel_untracked = [str(p.relative_to(root)) for p in untracked]
-            findings.append(f"Untracked desk documents: {', '.join(rel_untracked)}")
+            finding = (
+                "Untracked desk documents: "
+                + ", ".join(rel_untracked)
+                + ". These are SLDB-modeled surfaces with broken tracking/state, not intentionally unmodeled desk notes."
+            )
+            if unmodeled_reasons:
+                finding += " Ignored by design: " + "; ".join(unmodeled_reasons)
+            findings.append(finding)
             if repair:
                 findings.append("Manual repair required to track documents (use sldb docs track).")
 

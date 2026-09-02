@@ -11,6 +11,18 @@ from deskops.constants import CURRENT_DESK_FORMAT
 
 DeskClassification = Literal["absent", "empty", "legacy", "current"]
 
+_MODELED_DESK_TOP_LEVEL_DIRS = {
+    "tasks",
+    "contexts",
+    "rituals",
+    "atoms",
+    "registry",
+    "steps",
+    "faq",
+    "routines",
+    "primitives",
+}
+
 
 @dataclass
 class DeskScaffoldResult:
@@ -403,6 +415,53 @@ def _atom_tag_namespaces_template() -> str:
     meaning: Subject area discussed by the atom.
     use_when: The atom is about a conceptual topic.
 """
+
+
+def desk_markdown_docs(desk_dir: Path) -> list[Path]:
+    return sorted(path for path in desk_dir.rglob("*.md") if path.is_file())
+
+
+def desk_doc_is_modeled_by_sldb(root: Path, doc_path: Path) -> bool:
+    try:
+        relative = doc_path.resolve().relative_to((root / "desk").resolve())
+    except ValueError:
+        return False
+
+    parts = relative.parts
+    if not parts:
+        return False
+
+    top_level = parts[0]
+    if len(parts) == 1 and relative.suffix == ".md":
+        return False
+
+    return top_level in _MODELED_DESK_TOP_LEVEL_DIRS
+
+
+def desk_doc_unmodeled_reason(root: Path, doc_path: Path) -> str | None:
+    try:
+        relative = doc_path.resolve().relative_to((root / "desk").resolve())
+    except ValueError:
+        return None
+
+    parts = relative.parts
+    if not parts:
+        return None
+
+    top_level = parts[0]
+    if len(parts) == 1 and relative.suffix == ".md":
+        return f"desk/{relative.name} is a top-level desk note intentionally not SLDB-modeled"
+    if top_level not in _MODELED_DESK_TOP_LEVEL_DIRS:
+        return f"desk/{top_level}/** is intentionally not SLDB-modeled"
+    return None
+
+
+def modeled_desk_markdown_docs(root: Path, desk_dir: Path) -> list[Path]:
+    return [path for path in desk_markdown_docs(desk_dir) if desk_doc_is_modeled_by_sldb(root, path)]
+
+
+def unmodeled_desk_markdown_docs(root: Path, desk_dir: Path) -> list[Path]:
+    return [path for path in desk_markdown_docs(desk_dir) if not desk_doc_is_modeled_by_sldb(root, path)]
 
 
 def _surface_docs(desk_dir: Path) -> list[Path]:
