@@ -5,7 +5,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-fix-sldb-deskops-cli-drift-breaking-11-tests
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 # List of pill-xxx paths
 pills:
@@ -41,8 +40,7 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Write end-to-end deskops operator manual [deferred] - Consolidate the methodology into one operational playbook after runnable slices are stable.
-- Anti-pattern: Monolithic API endpoint in SLDB Viewer [draft] - Ensure we never couple independent SLDB surfaces into monolithic UI API endpoints.
+
 
 ## Task Details
 
