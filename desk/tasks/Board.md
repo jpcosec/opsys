@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -41,11 +40,8 @@ _Explain what this board routes and why it exists._
 
 _Add short operational notes about the current routed set._
 
-- Create atoms from pill, graph, and diagram sources [active] - Define and implement atom creation flows sourced from pills, graph findings, and diagrams.
 - Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.
 
 ## Task Details
 
 _Generated from the task references above._
-
-- Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.
