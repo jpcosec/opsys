@@ -11,6 +11,7 @@ This board routes deferred work only.
 - `desk/drawer/features/supervisor.md` — agent role model: supervisor (imported from paper_IEEE)
 - `desk/drawer/features/executor.md` — agent role model: executor (imported from paper_IEEE)
 - `desk/drawer/features/workflow-execution-engine.md` — automated workflow engine with hooks, state machines, condition evaluators, and gated execution pipeline
+- `desk/drawer/features/feature-adhoc-subagent-launcher-tmux-multi-cli.md` — ad-hoc subagent launcher via tmux + codex/agy/pi, with context injection, monitoring, and persisted run output
 
 ## Tasks
 
