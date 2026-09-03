@@ -18,6 +18,7 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization` — roles as sldb-tracked RoleDocs; pi agents as materializations (atom-anchored)
+- `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
 
 Promoted to active desk tasks:
 
