@@ -39,9 +39,14 @@ from deskops.runtime import Operator
 from deskops.runtime import Routine
 from deskops.runtime import Task
 from deskops.runtime import TransitionResult
+from deskops.atom_tags import axis_folder_relpath
+from deskops.atom_tags import axis_values
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import ensure_default_namespaces
+from deskops.atom_tags import folder_axis_value
+from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
+from deskops.config import DeskConfig
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.specs import compile_task_bundle_spec
@@ -412,12 +417,17 @@ class DeskopsOperations:
             raw_payload,
             model_fields=model.model_fields.keys(),
         )
-        path = self._artifact_path(artifact_id, compiled.artifact_payload["id"])
         if artifact_id == "artifact.atom":
             validate_atom_tag_namespaces(
                 list(compiled.artifact_payload.get("tags") or []),
                 default_registry_path(self.root),
             )
+            path = self._atom_doc_path(
+                compiled.artifact_payload["id"],
+                list(compiled.artifact_payload.get("tags") or []),
+            )
+        else:
+            path = self._artifact_path(artifact_id, compiled.artifact_payload["id"])
         self._write_new_doc(path, model, compiled.artifact_payload)
         try:
             self._track_created_artifact(artifact_id, model, path, compiled.artifact_payload["id"])
@@ -561,6 +571,79 @@ class DeskopsOperations:
                 print(f"Warning: Failed to load artifact {path}: {e}", file=sys.stderr)
         return results
 
+    def list_atoms(self, axis_value: str | None = None) -> tuple[str | None, list[dict[str, Any]]]:
+        """List atoms annotated with their folder-axis value.
+
+        Returns (axis, payloads). Each payload carries 'axis_values' with every
+        value of the configured axis namespace found on the atom's tags.
+        """
+        axis = self.atom_folder_axis()
+        if axis_value is not None and axis is None:
+            raise ValueError(
+                "--axis-value requires 'atom_folder_axis' to be configured in desk/config.json."
+            )
+        payloads = self.list_artifacts("artifact.atom")
+        results: list[dict[str, Any]] = []
+        for payload in payloads:
+            values = axis_values(list(payload.get("tags") or []), axis) if axis else []
+            payload["axis_values"] = values
+            if axis_value is not None and axis_value not in values:
+                continue
+            results.append(payload)
+        return axis, results
+
+    def reorganize_atoms(self, *, dry_run: bool = False) -> dict[str, Any]:
+        """Move atoms carrying a folder-axis tag into their axis subfolder.
+
+        Idempotent: atoms already in the right place are skipped. Atoms without
+        an axis tag are left untouched, preserving manual folder organization.
+        Atoms with multiple axis values are reported as errors and skipped.
+        """
+        self.ensure_workspace()
+        axis = self.atom_folder_axis()
+        if axis is None:
+            raise ValueError(
+                "No 'atom_folder_axis' configured in desk/config.json; nothing to reorganize."
+            )
+        moves: list[dict[str, str]] = []
+        errors: list[str] = []
+        retargets: dict[str, str] = {}
+        for path in self._all_atom_paths():
+            try:
+                payload = self._read_doc(path, AtomDoc)
+            except Exception as exc:
+                errors.append(f"{path.relative_to(self.root)}: unreadable atom ({exc})")
+                continue
+            atom_id = str(payload.get("id") or path.stem)
+            tags = list(payload.get("tags") or [])
+            try:
+                value = folder_axis_value(tags, axis)
+            except ValueError as exc:
+                errors.append(f"{path.relative_to(self.root)}: {exc}")
+                continue
+            if value is None:
+                continue
+            target = self.desk_root / "atoms" / axis_folder_relpath(value) / f"{atom_id}.md"
+            if target == path:
+                continue
+            if target.exists():
+                errors.append(
+                    f"{path.relative_to(self.root)}: target already exists at {target.relative_to(self.root)}"
+                )
+                continue
+            moves.append({
+                "id": atom_id,
+                "from": str(path.relative_to(self.root)),
+                "to": str(target.relative_to(self.root)),
+            })
+            if not dry_run:
+                target.parent.mkdir(parents=True, exist_ok=True)
+                path.rename(target)
+                retargets[atom_id] = str(target.relative_to(self.root))
+        if retargets:
+            self._retarget_atom_documents(retargets)
+        return {"axis": axis, "moves": moves, "errors": errors, "dry_run": dry_run}
+
     def list_routines(self) -> list[Routine]:
         routine_dir = self.desk_root / "routines"
         if not routine_dir.exists():
@@ -692,7 +775,7 @@ class DeskopsOperations:
             )
             source_kind = "diagram"
 
-        path = self._artifact_path("artifact.atom", atom_id)
+        path = self._atom_doc_path(atom_id, list(payload.get("tags") or []))
         self._write_new_doc(path, AtomDoc, payload)
         try:
             self._track_created_artifact("artifact.atom", AtomDoc, path, atom_id)
@@ -759,7 +842,7 @@ class DeskopsOperations:
                     "tags": list(payload.get("tags") or []),
                     "provenance": payload.get("provenance"),
                 }
-                new_path = self._artifact_path("artifact.atom", target_id)
+                new_path = self._atom_doc_path(target_id, list(new_payload.get("tags") or []))
                 self._write_new_doc(new_path, AtomDoc, new_payload)
                 rollback_actions.append(lambda new_path=new_path: self._remove_created_file(new_path))
                 self._track_created_artifact("artifact.atom", AtomDoc, new_path, target_id)
@@ -1977,6 +2060,38 @@ class DeskopsOperations:
                 rewritten.append(f"{path.relative_to(self.root)}:{line_number}")
         return rewritten
 
+    def _retarget_atom_documents(self, retargets: dict[str, str]) -> bool:
+        """Update tracked atom document paths in the .sldb store after moves."""
+        store_path = self.root / ".sldb"
+        try:
+            from sldb.store.io import load_documents_index
+            from sldb.store.io import load_models_index
+            from sldb.store.io import load_store_index
+            from sldb.store.layout import store_exists
+            from sldb.cli.commands.doc_helpers import save_untrack_indexes
+        except ImportError:
+            return False
+        if not store_exists(store_path):
+            return False
+
+        store_index = load_store_index(store_path)
+        model_entry = next((entry for entry in store_index.models if entry.name == AtomDoc.__name__), None)
+        if model_entry is None:
+            return False
+
+        models_index = load_models_index(self.root / model_entry.models_index)
+        documents_index = load_documents_index(self.root / models_index.documents_index)
+        changed = False
+        for entry in documents_index.documents:
+            new_path = retargets.get(entry.name)
+            if new_path is not None and entry.path != new_path:
+                entry.path = new_path
+                changed = True
+        if not changed:
+            return False
+        save_untrack_indexes(store_path, self.root, store_index, model_entry, models_index, documents_index, str(Path(__file__).resolve().parents[1]))
+        return True
+
     def _untrack_atom_document(self, atom_id: str) -> bool:
         store_path = self.root / ".sldb"
         try:
@@ -2355,6 +2470,31 @@ class DeskopsOperations:
 
     def _artifact_path(self, artifact_id: str, doc_id: str) -> Path:
         return self.desk_root / ARTIFACT_PATHS[artifact_id] / f"{doc_id}.md"
+
+    def atom_folder_axis(self) -> str | None:
+        """Return the configured folder axis namespace for atoms, or None (flat)."""
+        axis = DeskConfig.load(self.desk_root).atom_folder_axis
+        if axis is None:
+            return None
+        axis = str(axis).strip()
+        if not axis:
+            return None
+        namespaces = load_namespaces(default_registry_path(self.root))
+        if axis not in namespaces:
+            raise ValueError(
+                f"Configured atom_folder_axis '{axis}' is not a registered atom tag namespace. "
+                "Register it with 'deskops atoms add-namespace' or fix desk/config.json."
+            )
+        return axis
+
+    def _atom_doc_path(self, atom_id: str, tags: list[str]) -> Path:
+        base = self.desk_root / "atoms"
+        axis = self.atom_folder_axis()
+        if axis is not None:
+            value = folder_axis_value(tags, axis)
+            if value is not None:
+                return base / axis_folder_relpath(value) / f"{atom_id}.md"
+        return base / f"{atom_id}.md"
 
     def _artifact_glob_pattern(self, artifact_id: str) -> str:
         if artifact_id in {"artifact.inbox_note", "artifact.board", "artifact.ritual"}:

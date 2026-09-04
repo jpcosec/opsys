@@ -91,6 +91,43 @@ def add_namespace(
     _write_registry(path, registry)
 
 
+def axis_values(tags: list[str], axis: str) -> list[str]:
+    """Return the sorted unique values carried by tags of the axis namespace."""
+    values: set[str] = set()
+    for tag in tags:
+        match = TAG_PATTERN.fullmatch(str(tag))
+        if match is not None and match.group("namespace") == axis:
+            values.add(str(tag).split(":", 1)[1])
+    return sorted(values)
+
+
+def folder_axis_value(tags: list[str], axis: str) -> str | None:
+    """Return the single folder-axis value for an atom, or None when absent.
+
+    Raises ValueError when the atom carries more than one value of the axis
+    namespace, because the physical folder placement must be deterministic.
+    """
+    values = axis_values(tags, axis)
+    if len(values) > 1:
+        raise ValueError(
+            f"Atom carries multiple '{axis}' axis values: {', '.join(values)}. "
+            f"The folder axis requires exactly one '{axis}:<value>' tag; "
+            "remove the extra axis tags or split the atom."
+        )
+    return values[0] if values else None
+
+
+def axis_folder_relpath(value: str) -> Path:
+    """Map a dot-notated axis value to a nested folder path.
+
+    Example: 'mepu.licitaciones' -> Path('mepu/licitaciones').
+    """
+    parts = [part for part in str(value).split(".") if part]
+    if not parts:
+        raise ValueError(f"Axis value '{value}' does not produce a valid folder path.")
+    return Path(*parts)
+
+
 def validate_atom_tag_namespaces(tags: list[str], path: Path) -> None:
     namespaces = load_namespaces(path)
     for tag in tags:

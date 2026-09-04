@@ -106,6 +106,23 @@ class OperationsCLI:
             return 0
 
         list_artifacts = {meta["list_subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
+        if args.command == "list" and args.subject == "atoms":
+            try:
+                axis, payloads = operations.list_atoms(getattr(args, "axis_value", None))
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            if args.format == "json":
+                self._print_json({"axis": axis, "atoms": self._normalize(payloads)})
+                return 0
+            for payload in payloads:
+                label = payload.get("title") or payload.get("name") or payload["id"]
+                if axis:
+                    values = ",".join(payload.get("axis_values") or []) or "-"
+                    print(f"{payload['id']} | {label} | {axis}:{values}")
+                else:
+                    print(f"{payload['id']} | {label}")
+            return 0
         if args.command == "list" and args.subject in list_artifacts:
             artifact_id = list_artifacts[args.subject]
             payloads = operations.list_artifacts(artifact_id)

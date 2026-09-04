@@ -24,6 +24,10 @@ class DeskConfig(BaseModel):
     project_identity: str = Field(default="unknown-project", description="Canonical project desk identity")
     versions: VersionExpectations = Field(default_factory=VersionExpectations)
     sandbox: SandboxPolicy = Field(default_factory=SandboxPolicy)
+    atom_folder_axis: str | None = Field(
+        default=None,
+        description="Tag namespace used as the physical folder axis for atoms under desk/atoms/. Null keeps flat layout.",
+    )
     load_warnings: list[str] = Field(default_factory=list, exclude=True)
 
     @property

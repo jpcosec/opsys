@@ -130,12 +130,40 @@ class AtomsCLI:
                     print(f"- {item}")
             return 0
 
-        # Proxy these to the main operation CLI or mark as not implemented
+        if args.atoms_command == "reorganize":
+            try:
+                report = operations.reorganize_atoms(dry_run=bool(getattr(args, "dry_run", False)))
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            verb = "Would move" if report["dry_run"] else "Moved"
+            print(f"Folder axis: {report['axis']}")
+            if not report["moves"]:
+                print("No atoms need to move.")
+            for move in report["moves"]:
+                print(f"{verb} {move['id']}: {move['from']} -> {move['to']}")
+            for error in report["errors"]:
+                print(f"Skipped: {error}")
+            return 1 if report["errors"] else 0
+
         if args.atoms_command == "list":
-            args.command = "list"
-            args.subject = "atoms"
-            from deskops.cli.commands.operations import OperationsCLI
-            return OperationsCLI().run(args)
+            try:
+                axis, payloads = operations.list_atoms(getattr(args, "axis_value", None))
+            except (FileNotFoundError, ValueError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            if getattr(args, "format", "text") == "json":
+                import json
+                print(json.dumps({"axis": axis, "atoms": payloads}, indent=2, default=str))
+                return 0
+            for payload in payloads:
+                label = payload.get("title") or payload["id"]
+                if axis:
+                    values = ",".join(payload.get("axis_values") or []) or "-"
+                    print(f"{payload['id']} | {label} | {axis}:{values}")
+                else:
+                    print(f"{payload['id']} | {label}")
+            return 0
 
         if args.atoms_command == "show":
             args.command = "show"

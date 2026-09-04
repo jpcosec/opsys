@@ -86,7 +86,18 @@ def _add_atoms_commands(
 
     list_cmd = s.add_parser("list", help="List all atoms.")
     list_cmd.add_argument("--root", default=".", help="Target repository root.")
+    list_cmd.add_argument(
+        "--axis-value",
+        help="Filter atoms by the configured atom_folder_axis namespace value (e.g. licitaciones).",
+    )
     _add_output_format_argument(list_cmd)
+
+    reorganize_cmd = s.add_parser(
+        "reorganize",
+        help="Move atoms into folders derived from the configured atom_folder_axis tag namespace. Idempotent.",
+    )
+    reorganize_cmd.add_argument("--root", default=".", help="Target repository root.")
+    reorganize_cmd.add_argument("--dry-run", action="store_true", help="Report planned moves without changing files.")
 
     show_cmd = s.add_parser("show", help="Show an atom.")
     show_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
@@ -758,6 +769,11 @@ Examples:
         kind = meta["list_subject"]
         parser = s.add_parser(kind, help=f"List {kind}.")
         parser.add_argument("--root", default=".", help="Target repository root.")
+        if kind == "atoms":
+            parser.add_argument(
+                "--axis-value",
+                help="Filter atoms by the configured atom_folder_axis namespace value (e.g. licitaciones).",
+            )
         _add_output_format_argument(parser)
 
 

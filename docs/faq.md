@@ -255,6 +255,22 @@ It is the repo-level first-use command.
 
 It runs the bootstrap preflight, creates a local `.sldb/` store in the target repo if one does not already exist, and scaffolds `desk/` if it is missing.
 
+## How do I organize atoms into folders by a tag namespace?
+
+Set `atom_folder_axis` in `desk/config.json` to one registered tag namespace, for example:
+
+```json
+{ "atom_folder_axis": "object" }
+```
+
+Behavior (see `desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md`):
+
+- `deskops add atom` with one `object:<value>` tag lands in `desk/atoms/<value>/`; dot-notation nests (`object:mepu.licitaciones` → `desk/atoms/mepu/licitaciones/`).
+- Atoms without an axis tag, and desks without the config, stay flat (fully backwards compatible).
+- Multiple axis values on one atom are rejected with an explicit error.
+- `deskops list atoms --axis-value <value>` filters by the axis value; the axis value is shown in list output.
+- `deskops atoms reorganize [--dry-run]` idempotently moves existing atoms into their axis folders and retargets tracked paths in the `.sldb` store.
+
 ## How do I validate changes in this repo?
 
 Run the test suite from the repo root.
