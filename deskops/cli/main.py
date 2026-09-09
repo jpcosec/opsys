@@ -84,6 +84,10 @@ class CLI:
             from deskops.cli.commands.operations import OperationsCLI
 
             return OperationsCLI().run(args)
+        if args.command == "runtime":
+            from deskops.cli.commands.runtime import RuntimeCLI
+
+            return RuntimeCLI().run(args)
         if args.command == "closeout":
             from deskops.cli.commands.closeout import CloseoutCLI
 
@@ -197,17 +201,22 @@ class CLI:
 
         try:
             from deskops.graph.snapshot import GraphSnapshotCapabilityError
+            from deskops.graph.snapshot import networkx_path_for_snapshot
             from deskops.graph.snapshot import write_graph_snapshot
 
-            output_path = write_graph_snapshot(root)
-
-            import subprocess
-            import sys
-            nx_path = output_path.with_suffix("").with_suffix(".nx.json")
-            subprocess.run(
-                [sys.executable, "-m", "kgdb.main", "ingest", "--input", str(output_path), "--output", str(nx_path)],
-                check=False
+            requested_output = Path(args.output) if args.output else None
+            if requested_output is not None and not requested_output.is_absolute():
+                requested_output = root / requested_output
+            output_path = (
+                write_graph_snapshot(root, requested_output)
+                if requested_output is not None
+                else write_graph_snapshot(root)
             )
+
+            from kgdb.graph import load_graph
+            from kgdb.graph import save_graph
+
+            save_graph(load_graph(output_path), networkx_path_for_snapshot(output_path))
 
         except GraphSnapshotCapabilityError as exc:
             print(f"Error: {exc}")
@@ -218,9 +227,9 @@ class CLI:
 
     def _graph_neighbors(self, args: Any) -> int:
         root = Path(args.root).resolve()
-        from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+        from deskops.graph.snapshot import default_snapshot_read_path
 
-        graph_path = Path(args.graph).resolve() if args.graph else root / DEFAULT_SNAPSHOT_PATH
+        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
 
         try:
             from deskops.graph.snapshot import GraphSnapshotReadError
@@ -271,9 +280,9 @@ class CLI:
             print(f"Error: graph root is not a directory: {root}")
             return 1
 
-        from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+        from deskops.graph.snapshot import default_snapshot_read_path
 
-        graph_path = Path(args.graph).resolve() if args.graph else root / DEFAULT_SNAPSHOT_PATH
+        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
         try:
             from deskops.graph.checks import GraphMissingCheckError
             from deskops.graph.checks import read_graph_snapshot

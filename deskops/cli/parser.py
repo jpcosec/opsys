@@ -53,9 +53,24 @@ def build_parser() -> argparse.ArgumentParser:
     _add_materialize_command(subparsers)
     _add_drift_commands(subparsers)
     _add_closeout_command(subparsers)
+    _add_runtime_commands(subparsers)
 
     return parser
 
+
+def _add_runtime_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("runtime", help="Manage the live Herdr runtime for this DeskOps desk.")
+    s = p.add_subparsers(dest="runtime_command", required=True)
+    init = s.add_parser("init", help="Initialize or reuse this desk's Herdr Space.")
+    init.add_argument("--root", default=".", help="DeskOps repository root.")
+    init.add_argument("--agents", action="store_true", help="Start executor and tester Pi agents.")
+    init.add_argument("--herdr", default="herdr", help="Herdr executable.")
+    for name, help_text in (("status", "Show this desk's Herdr Space."), ("attach", "Focus this desk's Herdr Space."), ("stop", "Close this desk's Herdr Space.")):
+        command = s.add_parser(name, help=help_text)
+        command.add_argument("--root", default=".", help="DeskOps repository root.")
+        command.add_argument("--herdr", default="herdr", help="Herdr executable.")
 
 def _add_atoms_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
@@ -224,6 +239,10 @@ def _add_graph_commands(
 
     build = s.add_parser("build", help="Build the KGDB graph snapshot runtime artifact.")
     build.add_argument("--root", default=".", help="Target repository root.")
+    build.add_argument(
+        "--output",
+        help="GraphSnapshot destination; relative paths are resolved from --root.",
+    )
 
     neighbors = s.add_parser("neighbors", help="Show incoming and outgoing neighbors for one graph node.")
     neighbors.add_argument("id", help="Graph node id to inspect, formatted as type:id (e.g. atom:atom-name, task:task-name, issue:issue-name).")

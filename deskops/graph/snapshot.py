@@ -18,7 +18,8 @@ from deskops.graph.extract_sources import extract_source_file_nodes
 
 SNAPSHOT_SCHEMA = "deskops_kgdb_graph_snapshot_v1"
 SNAPSHOT_EXTRACTOR = "deskops_kgdb_snapshot_v1"
-DEFAULT_SNAPSHOT_PATH = Path(".sldb/runtime/knowledge_graph.kg.json")
+DEFAULT_SNAPSHOT_PATH = Path(".sldb/runtime/graphs/deskops.kg.json")
+LEGACY_SNAPSHOT_PATH = Path(".sldb/runtime/knowledge_graph.kg.json")
 
 
 class GraphSnapshotCapabilityError(RuntimeError):
@@ -27,6 +28,23 @@ class GraphSnapshotCapabilityError(RuntimeError):
 
 class GraphSnapshotReadError(RuntimeError):
     """Raised when an existing graph snapshot cannot satisfy a read query."""
+
+
+def networkx_path_for_snapshot(snapshot_path: Path) -> Path:
+    """Return the sibling NetworkX path for a GraphSnapshot destination."""
+    without_json = snapshot_path.with_suffix("")
+    if without_json.suffix == ".kg":
+        return without_json.with_suffix(".nx.json")
+    return snapshot_path.with_suffix(".nx.json")
+
+
+def default_snapshot_read_path(root: Path) -> Path:
+    """Prefer the DeskOps projection and fall back to the read-only legacy path."""
+    preferred = root / DEFAULT_SNAPSHOT_PATH
+    if preferred.exists():
+        return preferred
+    legacy = root / LEGACY_SNAPSHOT_PATH
+    return legacy if legacy.exists() else preferred
 
 
 def read_graph_neighbors(snapshot_path: Path, node_id: str) -> dict[str, Any]:

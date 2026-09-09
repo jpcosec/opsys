@@ -6,6 +6,8 @@ from deskops.cli.main import main
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
 from deskops.graph.snapshot import GraphSnapshotCapabilityError
+from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
+from deskops.graph.snapshot import networkx_path_for_snapshot
 
 FIXTURE_GRAPH = Path(__file__).parent / "fixtures/knowledge_graph/static_desk_source_graph.json"
 
@@ -73,9 +75,91 @@ Existing knowledge.
 
     captured = capsys.readouterr()
     output_path = tmp_path / DEFAULT_SNAPSHOT_PATH
+    networkx_path = networkx_path_for_snapshot(output_path)
     assert result == 0
     assert f"Graph snapshot written: {output_path}" in captured.out
     assert output_path.exists()
+    assert networkx_path.exists()
+
+
+def test_graph_build_does_not_modify_knowledge_or_legacy_artifacts(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    write(
+        tmp_path / "desk/atoms/atom-existing.md",
+        """---
+id: atom-existing
+title: Existing Atom
+five_wh_one_plus: what
+tags: []
+---
+
+# Existing Atom
+
+## Answer
+
+Existing knowledge.
+""",
+    )
+    protected = {
+        tmp_path / ".sldb/runtime/graphs/knowledge.kg.json": "knowledge snapshot\n",
+        tmp_path / ".sldb/runtime/graphs/knowledge.nx.json": "knowledge networkx\n",
+        tmp_path / LEGACY_SNAPSHOT_PATH: "legacy snapshot\n",
+        tmp_path / ".sldb/runtime/knowledge_graph.nx.json": "legacy networkx\n",
+    }
+    for path, content in protected.items():
+        write(path, content)
+
+    result = main(["graph", "build", "--root", str(tmp_path)])
+
+    capsys.readouterr()
+    assert result == 0
+    assert all(path.read_text(encoding="utf-8") == content for path, content in protected.items())
+
+
+def test_graph_build_resolves_relative_output_from_root(tmp_path: Path, capsys) -> None:
+    relative_output = Path("runtime/custom.kg.json")
+
+    result = main(
+        [
+            "graph",
+            "build",
+            "--root",
+            str(tmp_path),
+            "--output",
+            str(relative_output),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    output_path = tmp_path / relative_output
+    assert result == 0
+    assert f"Graph snapshot written: {output_path}" in captured.out
+    assert output_path.is_file()
+    assert networkx_path_for_snapshot(output_path).is_file()
+    assert not (tmp_path / DEFAULT_SNAPSHOT_PATH).exists()
+
+
+def test_graph_build_preserves_absolute_output_path(tmp_path: Path, capsys) -> None:
+    output_path = tmp_path / "absolute-output" / "deskops.kg.json"
+
+    result = main(
+        [
+            "graph",
+            "build",
+            "--root",
+            str(tmp_path),
+            "--output",
+            str(output_path),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert f"Graph snapshot written: {output_path}" in captured.out
+    assert output_path.is_file()
+    assert networkx_path_for_snapshot(output_path).is_file()
 
 
 def test_graph_build_reports_missing_kgdb_capability(tmp_path: Path, monkeypatch, capsys) -> None:
@@ -160,6 +244,59 @@ def test_graph_reflect_reports_missing_graph(tmp_path: Path, capsys) -> None:
 def test_graph_reflect_uses_default_runtime_graph(tmp_path: Path, capsys) -> None:
     graph_path = tmp_path / DEFAULT_SNAPSHOT_PATH
     write(graph_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
+
+    result = main(["graph", "reflect", "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    report_path = tmp_path / DEFAULT_REPORT_PATH
+    assert result == 0
+    assert f"Self-reflection report written: {report_path}" in captured.out
+    assert report_path.exists()
+
+
+def test_graph_neighbors_falls_back_to_legacy_runtime_graph(tmp_path: Path, capsys) -> None:
+    legacy_path = tmp_path / LEGACY_SNAPSHOT_PATH
+    write(legacy_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
+
+    result = main(
+        [
+            "graph",
+            "neighbors",
+            "atom:atom-documents-point-to-atoms",
+            "--root",
+            str(tmp_path),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert "Node: atom:atom-documents-point-to-atoms" in captured.out
+
+
+def test_graph_neighbors_prefers_deskops_runtime_graph(tmp_path: Path, capsys) -> None:
+    preferred_path = tmp_path / DEFAULT_SNAPSHOT_PATH
+    legacy_path = tmp_path / LEGACY_SNAPSHOT_PATH
+    write(preferred_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
+    write(legacy_path, "not json")
+
+    result = main(
+        [
+            "graph",
+            "neighbors",
+            "atom:atom-documents-point-to-atoms",
+            "--root",
+            str(tmp_path),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert "Node: atom:atom-documents-point-to-atoms" in captured.out
+
+
+def test_graph_reflect_falls_back_to_legacy_runtime_graph(tmp_path: Path, capsys) -> None:
+    legacy_path = tmp_path / LEGACY_SNAPSHOT_PATH
+    write(legacy_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
 
     result = main(["graph", "reflect", "--root", str(tmp_path)])
 
