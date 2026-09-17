@@ -1,0 +1,32 @@
+graph TD
+    subgraph sldb_selfdoc ["sldb selfdoc python-scan - YA EXISTE"]
+        sym_doc["PythonSymbolDoc - contrato trackeado por sldb"]
+        sym_facts["qualname, kind, path, line_start, line_end, source_sha256 (624 simbolos)"]
+        sym_docstring["docstring declarado (75 de 624 - cobertura 12 por ciento)"]
+        sym_imports["imports del modulo contenedor - declarados, NO resueltos"]
+    end
+    authored["Campos autorales de sldb - purpose y architecture"]
+    subgraph gap ["BRECHA - sldb no resuelve imports ni dependencias de runtime"]
+        gap_calls["Grafo de llamadas - quien llama a quien"]
+        gap_resolve["Resolucion de import a simbolo concreto"]
+    end
+    test_bridge["Puente test-codigo por imports - tests importan deskops.operations 55 veces"]
+    coverage["TestCoverageDoc - que test cubre que simbolo"]
+    plan_target["PlanTargetDoc - el planificador dice que tocar"]
+    affected_code["Que codigo revisar - vecindad del simbolo"]
+    affected_tests["Que tests correr - set minimo derivado"]
+    change["ChangeDoc - hunk de git resuelto a simbolo por rango"]
+    task_view["La tarea muestra que cambio, cuando y que se toco"]
+    explore["sldb explore --source docstrings - busqueda semantica ya disponible"]
+    sldb_selfdoc -->|"produce"| sym_doc
+    sym_docstring -->|"indexado para busqueda"| explore
+    authored -->|"purpose y architecture escritos a mano"| sym_doc
+    sym_imports -->|"los tests declaran que importan"| test_bridge
+    test_bridge -->|"deriva"| coverage
+    plan_target -->|"apunta al simbolo"| sym_doc
+    sym_doc -->|"vecindad por imports"| affected_code
+    gap_calls -->|"precision que hoy falta"| affected_code
+    coverage -->|"set minimo"| affected_tests
+    change -->|"rango resuelto a simbolo"| sym_doc
+    change -->|"alimenta"| task_view
+    explore -->|"el planificador busca por docstring"| plan_target

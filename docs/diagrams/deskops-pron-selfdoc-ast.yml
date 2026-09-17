@@ -1,0 +1,120 @@
+id: deskops-pron.selfdoc-ast
+title: selfdoc de sldb + AST - de que tocar a que testear
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    sldb_selfdoc:
+      label: sldb selfdoc python-scan - YA EXISTE
+      kind: datastore
+      contains:
+        - sym_doc
+        - sym_facts
+        - sym_docstring
+        - sym_imports
+
+    sym_doc:
+      label: PythonSymbolDoc - contrato trackeado por sldb
+      kind: datastore
+
+    sym_facts:
+      label: qualname, kind, path, line_start, line_end, source_sha256 (624 simbolos)
+      kind: datastore
+
+    sym_docstring:
+      label: docstring declarado (75 de 624 - cobertura 12 por ciento)
+      kind: datastore
+
+    sym_imports:
+      label: imports del modulo contenedor - declarados, NO resueltos
+      kind: datastore
+
+    authored:
+      label: Campos autorales de sldb - purpose y architecture
+      kind: core
+
+    gap:
+      label: BRECHA - sldb no resuelve imports ni dependencias de runtime
+      kind: external
+      contains:
+        - gap_calls
+        - gap_resolve
+
+    gap_calls:
+      label: Grafo de llamadas - quien llama a quien
+      kind: external
+
+    gap_resolve:
+      label: Resolucion de import a simbolo concreto
+      kind: external
+
+    test_bridge:
+      label: Puente test-codigo por imports - tests importan deskops.operations 55 veces
+      kind: integration
+
+    coverage:
+      label: TestCoverageDoc - que test cubre que simbolo
+      kind: integration
+
+    plan_target:
+      label: PlanTargetDoc - el planificador dice que tocar
+      kind: core
+
+    affected_code:
+      label: Que codigo revisar - vecindad del simbolo
+      kind: integration
+
+    affected_tests:
+      label: Que tests correr - set minimo derivado
+      kind: integration
+
+    change:
+      label: ChangeDoc - hunk de git resuelto a simbolo por rango
+      kind: integration
+
+    task_view:
+      label: La tarea muestra que cambio, cuando y que se toco
+      kind: core
+
+    explore:
+      label: sldb explore --source docstrings - busqueda semantica ya disponible
+      kind: datastore
+
+  edges:
+    - from: sldb_selfdoc
+      to: sym_doc
+      relation: produce
+    - from: sym_docstring
+      to: explore
+      relation: indexado para busqueda
+    - from: authored
+      to: sym_doc
+      relation: purpose y architecture escritos a mano
+    - from: sym_imports
+      to: test_bridge
+      relation: los tests declaran que importan
+    - from: test_bridge
+      to: coverage
+      relation: deriva
+    - from: plan_target
+      to: sym_doc
+      relation: apunta al simbolo
+    - from: sym_doc
+      to: affected_code
+      relation: vecindad por imports
+    - from: gap_calls
+      to: affected_code
+      relation: precision que hoy falta
+    - from: coverage
+      to: affected_tests
+      relation: set minimo
+    - from: change
+      to: sym_doc
+      relation: rango resuelto a simbolo
+    - from: change
+      to: task_view
+      relation: alimenta
+    - from: explore
+      to: plan_target
+      relation: el planificador busca por docstring

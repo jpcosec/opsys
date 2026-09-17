@@ -34,7 +34,12 @@ worlds:
       El código como documentos. Derivado: se reconstruye por AST y por git,
       nunca se escribe a mano. Es lo que permite que una task muestre qué
       cambió, cuándo y qué se tocó.
-    models: [SymbolDoc, CommitDoc, ChangeDoc, TestCoverageDoc]
+
+      NO define su propio modelo de símbolo: usa PythonSymbolDoc de sldb
+      (`sldb selfdoc python-scan`), que ya captura AST + docstring + imports
+      y está trackeado como documento. Medido sobre deskops: 624 símbolos
+      (522 funciones, 102 clases), 75 con docstring.
+    models: [PythonSymbolDoc, CommitDoc, ChangeDoc, TestCoverageDoc]
 
 # ---------------------------------------------------------------------------
 # Conocimiento permanente
@@ -152,16 +157,16 @@ models:
 # (.py como nodo); no hay símbolos ni llamadas. Sin esto, "qué revisar y qué
 # testear" es adivinanza.
 # ---------------------------------------------------------------------------
-  - name: SymbolDoc
-    doc: Un módulo, clase o función. Derivado por AST.
-    fields:
-      - kind: str             # module | class | function | method
-      - qualname: str         # deskops.operations:DeskopsOperations.advance_task
-      - path: str
-      - line_start: int
-      - line_end: int
-      - signature: str
-      - docstring: str
+  # PythonSymbolDoc NO se declara acá: es de sldb (sldb.models:PythonSymbolDoc).
+  # Se registra en el store y se puebla con:
+  #   sldb selfdoc python-sync --source-root deskops --package deskops
+  #
+  # Campos que ya trae: id, system, module, qualname, kind, source_path,
+  # source_span, source_sha256, signature, docstring, imports, y dos campos
+  # AUTORALES que deskops debe llenar: purpose y architecture.
+  #
+  # `sldb explore --source docstrings` ya da búsqueda sobre ellos: es la
+  # entrada del planificador para encontrar qué tocar.
 
   - name: CommitDoc
     doc: Derivado de git. Permite ver desde la task qué cambió y cuándo.
@@ -182,14 +187,23 @@ models:
       - line_end: int
       - added: int
       - removed: int
-      - symbol: str           # ref a SymbolDoc, resuelto por rango
+      - symbol: str           # ref a PythonSymbolDoc, resuelto por source_span
 
   - name: TestCoverageDoc
-    doc: Qué test ejercita qué símbolo. Da el set mínimo de tests a correr.
+    doc: |
+      Qué test ejercita qué símbolo. Da el set mínimo de tests a correr.
+
+      Se deriva SIN ejecutar nada: `sldb selfdoc python-scan --source-root
+      tests` da 350 símbolos de test con sus imports declarados, y esos
+      imports ya apuntan al código (medido: deskops.cli.main 235 veces,
+      deskops.operations 55, deskops.workspace 99).
+      Precisión a nivel módulo hoy; a nivel símbolo cuando exista el grafo
+      de llamadas (ver gap más abajo).
     fields:
       - test_qualname: str
       - covers_symbol: str
-      - source: str           # ast_import | pytest_trace | manual
+      - granularity: str      # module | symbol
+      - source: str           # import_decl | pytest_trace | manual
 
 # ---------------------------------------------------------------------------
 # EJECUCIÓN
@@ -259,17 +273,20 @@ relation_types:
   - {name: graduates_to, from: PillDoc, to: AtomDoc, mode: assert}
 
   # Planificación → código
-  - {name: plans_change, from: PlanTargetDoc, to: SymbolDoc, mode: assert}
+  - {name: plans_change, from: PlanTargetDoc, to: PythonSymbolDoc, mode: assert}
   - {name: iterates, from: PlanIterationDoc, to: PlanDoc, mode: assert}
 
-  # AST
-  - {name: calls, from: SymbolDoc, to: SymbolDoc, mode: assert}
-  - {name: imports, from: SymbolDoc, to: SymbolDoc, mode: assert}
-  - {name: defines, from: SymbolDoc, to: SymbolDoc, mode: assert}
-  - {name: covers, from: TestCoverageDoc, to: SymbolDoc, mode: assert}
+  # AST (sobre PythonSymbolDoc de sldb)
+  - {name: imports, from: PythonSymbolDoc, to: PythonSymbolDoc, mode: assert}
+  - {name: defines, from: PythonSymbolDoc, to: PythonSymbolDoc, mode: assert}
+  - {name: covers, from: TestCoverageDoc, to: PythonSymbolDoc, mode: assert}
+  # `calls` NO se declara todavía: sldb documenta explícitamente que no
+  # resuelve imports ni establece dependencias de runtime. Ver GAP.
+  - {name: documents, from: AtomDoc, to: PythonSymbolDoc, mode: assert,
+     doc: "Un átomo puede explicar un símbolo. Une la KB permanente con el código."}
 
   # git
-  - {name: touches, from: ChangeDoc, to: SymbolDoc, mode: assert}
+  - {name: touches, from: ChangeDoc, to: PythonSymbolDoc, mode: assert}
   - {name: contains_change, from: CommitDoc, to: ChangeDoc, mode: assert}
   - {name: produced_commit, from: RunDoc, to: CommitDoc, mode: assert}
   - {name: evidences, from: RunDoc, to: TaskDoc, mode: assert}
@@ -281,3 +298,25 @@ states:
     machine: TaskDoc.status
     values: [drawer, active, planning, execution, testing, closeout, closed]
     doc: "Se agrega planning: el supervisor suelta al planificador antes de ejecutar."
+
+# ---------------------------------------------------------------------------
+# GAP contra sldb (para el gap-log)
+#
+# `sldb selfdoc` documenta explícitamente: "The record does not resolve
+# imports or establish runtime dependencies".
+#
+# Consecuencia práctica:
+#   - "qué tests correr" sale a nivel MÓDULO (por imports declarados), no de
+#     símbolo. Suficiente para empezar; impreciso en módulos grandes como
+#     operations.py (2.765 líneas, 55 imports desde tests).
+#   - "qué código revisar" no tiene cierre transitivo real sin grafo de
+#     llamadas.
+#
+# Propuesta a sldb: emitir aristas `calls` en el scan (ast.Call resuelto
+# contra los imports del módulo). Es el mismo AST que ya recorre.
+# Mientras tanto: granularidad de módulo, declarada en TestCoverageDoc.
+#
+# Cobertura de docstrings medida en deskops: 75/624 (12%). Los campos
+# autorales `purpose` y `architecture` de PythonSymbolDoc son el lugar
+# donde eso se completa, y `sldb selfdoc python-check` reporta la deriva.
+# ---------------------------------------------------------------------------

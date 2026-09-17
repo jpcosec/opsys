@@ -55,3 +55,11 @@ vistas:
     src: deskops-pron-planning-ast.mmd
     specs:
       - deskops-pron-planning-ast.yml
+  - id: deskops-pron-selfdoc-ast
+    category: Arquitectura
+    title: selfdoc de sldb y AST
+    nav: Workflow
+    desc: sldb ya indexa simbolos con docstrings e imports via selfdoc python-scan - 624 simbolos medidos en deskops. deskops no define su propio modelo de simbolo. Los imports declarados por los tests dan el mapa test-codigo sin ejecutar nada. La brecha es el grafo de llamadas, que sldb explicitamente no resuelve.
+    src: deskops-pron-selfdoc-ast.mmd
+    specs:
+      - deskops-pron-selfdoc-ast.yml
