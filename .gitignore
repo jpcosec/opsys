@@ -10,3 +10,6 @@ __pycache__/
 .pi/
 desk/config.local.json
 .tmp/
+
+# herdr runtime coordination transcripts (per-run, not source of truth)
+.herdr-coordination.md
