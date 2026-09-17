@@ -1,7 +1,7 @@
 # pron gap log (deskops-on-pron rewrite)
 
 Every pron limitation found during the deskops rewrite, one row per gap, in the
-format from `docs/plan-pron-rewrite.md` §5. Fed to pron's inbox at P6 closeout.
+format from `docs/implementation-plan.md`. Fed to pron's inbox at closeout.
 
 Row format: `date | lane | what deskops needed | pron API consulted | gap | repro (cmd/pytest) | proposed pron change`
 

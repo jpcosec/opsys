@@ -35,10 +35,10 @@ Separar el seam y el gap-log de la migración del store y del transcript.
 `.herdr-coordination.md` al ignore, `HERDR_TRANSCRIPT` fuera del repo.
 Gate: `git show --stat HEAD` solo toca `deskops/world.py`, `desk/pron-gap-log.md`, `.gitignore`.
 
-**T1.2 Borrar el plan obsoleto**
-Eliminar `docs/plan-pron-rewrite.md`; dejar este como único plan. Actualizar
-la task activa para que apunte acá.
-Gate: no quedan referencias al plan viejo (`grep -r plan-pron-rewrite`).
+**T1.2 Borrar el plan obsoleto** (hecho)
+El plan anterior (refactor CRUD en lanes) quedó eliminado; este documento es el
+único plan y la task activa apunta acá.
+Gate: ningún `*.md` del repo contiene el nombre del plan viejo (grep da 0).
 
 **T1.3 Registrar los modelos de sldb que se usan**
 `PythonSymbolDoc` de sldb registrado en el store del worktree.

@@ -61,7 +61,7 @@ _State what is in scope and what is out of scope._
 
 _Outline the expected implementation route or affected surface._
 
-Follow `docs/plan-pron-rewrite.md` §2 architecture and §3 lanes (P0–P6).
+Follow `docs/implementation-plan.md` (current plan; the previous lane-based plan was removed).
 Implementation is coordinated via herdr subagents, one lane per dispatch,
 sequentially, with pytest verification between lanes. Promote this task to
 active before any implementation dispatch.

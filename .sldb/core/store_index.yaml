@@ -188,5 +188,17 @@ models:
   - source.document.markdown
   - type.workflow.step
   - workspace.desk
+- name: PythonSymbolDoc
+  model_ref: sldb.models.knowledge_surface:PythonSymbolDoc
+  path: /home/jp/proyectos/hum-ecosystem/tools/sldb/src/sldb/models/python_symbol_doc.py
+  models_index: .sldb/core/models/PythonSymbolDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.code.python
+  - type.knowledge.code_symbol
+  - workspace.knowledge.symbols
 predicates: []
-hash_a: 5e73832ccb6a36ea56237c310bed6485da6be16b8e2f908855d5f4c98bd49ec3
+hash_a: 559c66ea33a97bd58268b3d61bce12a39b44da6b3910dda7051cdea833d6282c

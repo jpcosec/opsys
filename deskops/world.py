@@ -3,7 +3,7 @@
 Every sldb/kgdb contact in deskops goes through this module: `get_world`
 opens a `pron.World`, and the rest of deskops imports `World`, `Store`,
 `Graph`, `extract_model_data`, `render_model_markdown` and `GraphSnapshot`
-from here — never directly from sldb/kgdb (docs/plan-pron-rewrite.md §2).
+from here — never directly from sldb/kgdb (docs/implementation-plan.md; seam rule).
 
 Documented exceptions, allowed here only (each imports sldb/kgdb directly):
 
