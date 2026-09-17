@@ -1,0 +1,10 @@
+name: operator-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-ready-for-testing
+path: desk/primitives/operators/operator-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-ready-for-testing.md
+hash_c: 06ae5769dbe475bc40ff013417a459c8eb4e73a8ca5487018048be26b19c302f
+hash_d: 11d69430345d22c725313d5054a58e9c79293b2f9f4d27a4be4a57f32e3c5991
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

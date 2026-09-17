@@ -1,0 +1,10 @@
+name: edge-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-ready-to-closeout
+path: desk/primitives/edges/edge-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-ready-to-closeout.md
+hash_c: 6b326b625e9a954b40903cd6b8966fdf4094671117b199b4156db3d480536376
+hash_d: 44dc335c76810820894a6ab821fbe06db3fe86815407f50ba5d507ce4c0bd25f
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

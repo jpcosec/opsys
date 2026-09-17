@@ -1,0 +1,10 @@
+name: edge-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-testing-to-ready
+path: desk/primitives/edges/edge-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-testing-to-ready.md
+hash_c: ed99a9096487e10ac8579d1d7ada9c6ff07482a2418ddcde2fefd02d381870f8
+hash_d: 8b17b5fa3af880f6a1ca5abeb627f36830ae2364b18904909a2466007f61b44f
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

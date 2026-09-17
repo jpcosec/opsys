@@ -1,0 +1,12 @@
+name: task-deskops-rebuilt-on-pron-total-refactor-fireproof-test
+path: desk/tasks/task-deskops-rebuilt-on-pron-total-refactor-fireproof-test.md
+hash_c: 8f146681cdba78fd445b7e38406f46be76f44351e6f72928eeef0fbc77cbec33
+hash_d: 3bbdf1163701c019fb8f56e4034913c1df4f7e8dc6866dacb21f080e3591ba32
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- source:drawer
+- type.workflow.task
+- workspace.desk
+- workspace:desk

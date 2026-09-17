@@ -1,0 +1,10 @@
+name: checklist-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-closeout-ready
+path: desk/primitives/checklists/checklist-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-closeout-ready.md
+hash_c: b451e2e2c1a09b7de8445773a974ec7c1f6938922a3fd4619f3b2ef609e6628f
+hash_d: 02e535b62cd7101ee9e9942c08ac79a25eab9e2b08cdf10c763abb65cb5f9290
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

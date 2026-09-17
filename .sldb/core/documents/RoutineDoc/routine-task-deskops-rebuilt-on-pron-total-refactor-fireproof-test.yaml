@@ -1,0 +1,11 @@
+name: routine-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test
+path: desk/routines/routine-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test.md
+hash_c: 7b0b2d126a527d25c86d163cbfcc77ef724418b75de5c2c17922e08e08fb9844
+hash_d: 94293b72f12af258423c8bcec851ffd8258176f7f742c30b332db450d1d9275c
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

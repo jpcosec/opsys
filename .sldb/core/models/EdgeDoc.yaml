@@ -2,8 +2,9 @@ name: EdgeDoc
 model_ref: deskops.models:EdgeDoc
 path: deskops/models/edge.py
 documents_index: .sldb/core/documents/EdgeDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+sections_index: .sldb/runtime/sections/EdgeDoc.yaml
+hash_b: 247ac724f23b2609c2c0557ef66f0278d9e7e1e8fa9761300bf2d6181cdd00c3
+documents_count: 6
 version: 1
 canonical: false
 family: null

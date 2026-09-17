@@ -1,0 +1,10 @@
+name: condition-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-ready-for-closeout
+path: desk/primitives/conditions/condition-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-ready-for-closeout.md
+hash_c: 4370cf33b2092382306d0e53963adabb9107ef7487162ef8e8d84a424c48b51c
+hash_d: e228bd1fb3094bde4c2fedb4c53f62800bb4785946cc8bc3a022ea66f7b9c12c
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -6,6 +6,7 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-deskops-rebuilt-on-pron-total-refactor-fireproof-test.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +46,10 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- deskops rebuilt on pron (total refactor, fireproof test) [active] - In worktree `../deskops-pron` (branch `deskops-pron`): deskops' Python
+rewritten so every sldb/kgdb contact goes through a single seam
+(`deskops/world.py` → `pron.World`), CLI verb surface preserved 1:1, the 273
+existing tests passing as the behavioral contract, and a gap log
+(`desk/pron-gap-log.md`) capturing every pron limitation found for pron's
+inbox.

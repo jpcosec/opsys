@@ -2,8 +2,9 @@ name: ConditionDoc
 model_ref: deskops.models:ConditionDoc
 path: deskops/models/condition.py
 documents_index: .sldb/core/documents/ConditionDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+sections_index: .sldb/runtime/sections/ConditionDoc.yaml
+hash_b: ff9680524bb5c749265f2d18852217432fe3cf9abb424b472d0bcd2ba60cb620
+documents_count: 5
 version: 1
 canonical: false
 family: null

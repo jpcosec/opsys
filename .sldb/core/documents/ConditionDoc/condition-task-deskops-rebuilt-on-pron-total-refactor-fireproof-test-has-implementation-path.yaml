@@ -1,0 +1,10 @@
+name: condition-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-has-implementation-path
+path: desk/primitives/conditions/condition-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-has-implementation-path.md
+hash_c: 641a3f8171ae1c617473e036950d07a51de60cfbaeb703b78b03b71ab4998630
+hash_d: f6b4b0bb347ef91809be4c1604f56c869ed0780c9297c6a98095e5b34276991d
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

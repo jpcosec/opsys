@@ -1,0 +1,10 @@
+name: condition-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-pill-knowledge-graduated
+path: desk/primitives/conditions/condition-task-deskops-rebuilt-on-pron-total-refactor-fireproof-test-pill-knowledge-graduated.md
+hash_c: 20e0308e0a55349d3adb0247f3b0c54b6f4b1a6a8472e4230a51307536a53c4a
+hash_d: 2e5e2f6d8aef701a70933e26a752fc60f697acc7bd6104f54963247322231ce5
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives
