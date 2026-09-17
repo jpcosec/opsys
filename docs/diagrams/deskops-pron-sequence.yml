@@ -1,0 +1,57 @@
+id: deskops-pron.sequence
+title: Un movimiento de deskops como forma — deskops bind pill a task
+type: sequence
+version: "0.1"
+data:
+  participants:
+    - id: Operador
+      kind: actor
+    - id: deskopsCLI
+      kind: component
+    - id: CapaDeFormas
+      kind: component
+    - id: pronSession
+      kind: component
+    - id: sldb
+      kind: boundary
+    - id: kgdb
+      kind: boundary
+    - id: Ledger
+      kind: boundary
+  messages:
+    - from: Operador
+      to: deskopsCLI
+      message: deskops bind pill-005 task-x
+    - from: deskopsCLI
+      to: CapaDeFormas
+      message: intención - ligar pill a task
+    - from: CapaDeFormas
+      to: pronSession
+      message: "eval: move assert binds doc TaskDoc task-x doc PillDoc pill-005"
+      kind: sync
+    - from: pronSession
+      to: sldb
+      message: resolver sustantivos a direcciones
+      kind: sync
+    - from: pronSession
+      to: sldb
+      message: prevalidar movimiento completo contra copia en memoria
+      kind: sync
+    - from: pronSession
+      to: sldb
+      message: escribir RelationDoc
+      kind: sync
+    - from: pronSession
+      to: kgdb
+      message: refrescar grafo tipado
+      kind: sync
+    - from: pronSession
+      to: Ledger
+      message: MoveDoc - formas, resueltas, hash antes y despues
+      kind: sync
+    - from: pronSession
+      to: deskopsCLI
+      message: Response - escrituras y respuesta
+    - from: deskopsCLI
+      to: Operador
+      message: confirmacion - undo y why disponibles

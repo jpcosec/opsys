@@ -1,0 +1,29 @@
+graph TD
+    subgraph deskops_cli ["deskops CLI (verbos preservados)"]
+        verb_handlers["Handlers (add/edit/bind/advance/promote/atoms/closeout)"]
+        board_render["Vistas de board, next, list, show"]
+    end
+    subgraph forms_layer ["Capa de formas deskops (s-expressions)"]
+        form_builders["Constructores de formas — (create TaskDoc ...), (change ...), (assert ...)"]
+        deskops_aliases["Alias de deskops declarados como documentos del mundo (spec 05)"]
+    end
+    subgraph pron_eval ["pron — Session.eval(formas)"]
+        resolve["Resolver sustantivos → direcciones sldb"]
+        prevalidate["Prevalidación del movimiento completo"]
+        execute["Ejecución — docs create, fields update, RelationDoc"]
+        refresh["Refresh del grafo tipado"]
+        ledger["MoveDoc por movimiento (traza + undo + why)"]
+    end
+    pron_world["pron World / Store / Graph (lectura)"]
+    sldb["sldb — documentos y direcciones"]
+    kgdb["kgdb — grafo de relaciones tipadas"]
+    models["deskops/models — modelos de documento (lo único que se conserva)"]
+    deskops_cli -->|"emite intención"| forms_layer
+    forms_layer -->|"eval(formas)"| pron_eval
+    deskops_cli -->|"lecturas directas"| pron_world
+    pron_eval -->|"escribe"| sldb
+    pron_eval -->|"refresca"| kgdb
+    pron_world -->|"lee"| sldb
+    pron_world -->|"lee"| kgdb
+    models -->|"registra modelos"| sldb
+    deskops_aliases -->|"nombra formas compuestas"| pron_eval

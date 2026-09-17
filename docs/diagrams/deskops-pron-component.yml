@@ -1,0 +1,111 @@
+id: deskops-pron.component
+title: deskops sobre pron — capas
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    deskops_cli:
+      label: deskops CLI (verbos preservados)
+      kind: core
+      contains:
+        - verb_handlers
+        - board_render
+
+    verb_handlers:
+      label: Handlers (add/edit/bind/advance/promote/atoms/closeout)
+      kind: core
+
+    board_render:
+      label: Vistas de board, next, list, show
+      kind: core
+
+    forms_layer:
+      label: Capa de formas deskops (s-expressions)
+      kind: core
+      contains:
+        - form_builders
+        - deskops_aliases
+
+    form_builders:
+      label: Constructores de formas — (create TaskDoc ...), (change ...), (assert ...)
+      kind: core
+
+    deskops_aliases:
+      label: Alias de deskops declarados como documentos del mundo (spec 05)
+      kind: integration
+
+    pron_eval:
+      label: pron — Session.eval(formas)
+      kind: integration
+      contains:
+        - resolve
+        - prevalidate
+        - execute
+        - refresh
+        - ledger
+
+    resolve:
+      label: Resolver sustantivos → direcciones sldb
+      kind: integration
+
+    prevalidate:
+      label: Prevalidación del movimiento completo
+      kind: integration
+
+    execute:
+      label: Ejecución — docs create, fields update, RelationDoc
+      kind: integration
+
+    refresh:
+      label: Refresh del grafo tipado
+      kind: integration
+
+    ledger:
+      label: MoveDoc por movimiento (traza + undo + why)
+      kind: integration
+
+    pron_world:
+      label: pron World / Store / Graph (lectura)
+      kind: integration
+
+    sldb:
+      label: sldb — documentos y direcciones
+      kind: datastore
+
+    kgdb:
+      label: kgdb — grafo de relaciones tipadas
+      kind: datastore
+
+    models:
+      label: deskops/models — modelos de documento (lo único que se conserva)
+      kind: core
+
+  edges:
+    - from: deskops_cli
+      to: forms_layer
+      relation: emite intención
+    - from: forms_layer
+      to: pron_eval
+      relation: eval(formas)
+    - from: deskops_cli
+      to: pron_world
+      relation: lecturas directas
+    - from: pron_eval
+      to: sldb
+      relation: escribe
+    - from: pron_eval
+      to: kgdb
+      relation: refresca
+    - from: pron_world
+      to: sldb
+      relation: lee
+    - from: pron_world
+      to: kgdb
+      relation: lee
+    - from: models
+      to: sldb
+      relation: registra modelos
+    - from: deskops_aliases
+      to: pron_eval
+      relation: nombra formas compuestas

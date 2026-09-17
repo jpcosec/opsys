@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Operador
+    participant deskopsCLI
+    participant CapaDeFormas
+    participant pronSession
+    participant sldb
+    participant kgdb
+    participant Ledger
+    Operador->>deskopsCLI: deskops bind pill-005 task-x
+    deskopsCLI->>CapaDeFormas: intención - ligar pill a task
+    CapaDeFormas->>pronSession: eval: move assert binds doc TaskDoc task-x doc PillDoc pill-005
+    pronSession->>sldb: resolver sustantivos a direcciones
+    pronSession->>sldb: prevalidar movimiento completo contra copia en memoria
+    pronSession->>sldb: escribir RelationDoc
+    pronSession->>kgdb: refrescar grafo tipado
+    pronSession->>Ledger: MoveDoc - formas, resueltas, hash antes y despues
+    pronSession->>deskopsCLI: Response - escrituras y respuesta
+    deskopsCLI->>Operador: confirmacion - undo y why disponibles

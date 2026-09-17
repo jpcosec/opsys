@@ -1,0 +1,20 @@
+@startuml
+actor Operador
+participant deskopsCLI
+participant CapaDeFormas
+participant pronSession
+boundary sldb
+boundary kgdb
+boundary Ledger
+
+Operador -> deskopsCLI: deskops bind pill-005 task-x
+deskopsCLI -> CapaDeFormas: intención - ligar pill a task
+CapaDeFormas -> pronSession: eval (move (assert binds (doc TaskDoc:task-x) (doc PillDoc:pill-005)))
+pronSession -> sldb: resolver sustantivos a direcciones
+pronSession -> pronSession: prevalidar movimiento completo en copia en memoria
+pronSession -> sldb: escribir RelationDoc
+pronSession -> kgdb: refrescar grafo tipado
+pronSession -> Ledger: MoveDoc - formas, resueltas, hash antes y despues
+pronSession -> deskopsCLI: Response - escrituras y respuesta
+deskopsCLI -> Operador: confirmacion; undo y why disponibles
+@enduml
