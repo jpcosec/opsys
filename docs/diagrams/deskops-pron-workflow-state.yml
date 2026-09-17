@@ -1,0 +1,54 @@
+id: deskops-pron.workflow-state
+title: Ciclo de vida de una task - maquina de estados declarativa
+type: state
+version: "0.1"
+data:
+  entity: TaskDoc
+  initial: intake
+  states:
+    - id: intake
+      label: Inbox - nota entrante
+    - id: drawer
+      label: Drawer - backlog diferido
+    - id: active
+      label: Task activa en el board
+    - id: execution_gate
+      label: Gate de ejecucion
+    - id: testing_gate
+      label: Gate de testing
+    - id: closeout_gate
+      label: Gate de closeout
+    - id: closed
+      label: Cerrada - commit atomico
+  transitions:
+    - from: intake
+      to: drawer
+      "on": promote inbox-to-drawer-task
+      action: crea TaskDoc en drawer
+    - from: drawer
+      to: active
+      "on": promote drawer-task-to-active-task
+      guard: commit de creacion existe
+      action: agrega al Board
+    - from: active
+      to: execution_gate
+      "on": checklist execution-ready
+      guard: implementation_path y validation presentes
+    - from: execution_gate
+      to: testing_gate
+      "on": operator activate
+      guard: checklist execution-ready en modo all
+      action: set_field status active
+    - from: testing_gate
+      to: closeout_gate
+      "on": operator ready-for-testing
+      guard: tests relevantes pasan
+    - from: closeout_gate
+      to: closed
+      "on": operator close
+      guard: evidencia de validacion y pills reconciliadas
+      action: untrack, quita del Board, commit atomico
+    - from: testing_gate
+      to: execution_gate
+      "on": regresion detectada
+      guard: handoff de testing falla

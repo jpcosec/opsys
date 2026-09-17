@@ -1,0 +1,23 @@
+graph TD
+    subgraph routine ["RoutineDoc - la maquina de un tipo de task"]
+        checklist["ChecklistDoc - agrupa condiciones (mode all/any)"]
+        operator["OperatorDoc - accion (action, target, value)"]
+        edge["EdgeDoc - source, target, condition_ref"]
+        hook["HookDoc - event, target, condition_ref"]
+    end
+    condition["ConditionDoc - subject, predicate, expected"]
+    relation_types["RelationTypeDoc de kgdb - binds, depends_on, blocks, gates"]
+    alias["AliasDoc - nombra una forma compuesta (spec 05)"]
+    pron_eval["pron eval - prevalidacion, transiciones, condiciones de arista"]
+    ledger["MoveDoc - traza, undo, why"]
+    ritual["RitualDoc - steps del ritual (execution, testing, closeout, phase)"]
+    next_action["deskops next - proxima accion desde el estado"]
+    condition -->|"condition_refs"| checklist
+    condition -->|"condition_ref"| edge
+    condition -->|"condition_ref"| hook
+    routine -->|"se evalua como transiciones"| pron_eval
+    relation_types -->|"verbos verificados"| pron_eval
+    alias -->|"promote, bind, advance, closeout"| pron_eval
+    pron_eval -->|"registra cada movimiento"| ledger
+    ritual -->|"provee steps"| next_action
+    ledger -->|"estado real desde la traza"| next_action

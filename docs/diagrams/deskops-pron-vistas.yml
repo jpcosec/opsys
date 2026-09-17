@@ -1,0 +1,33 @@
+vistas:
+  - id: deskops-pron-component
+    category: Arquitectura
+    title: deskops sobre pron - capas
+    nav: Componentes
+    desc: Las seis capas de deskops reconstruido sobre pron. El CLI emite intenciones, la capa de formas arma s-expressions, y pron resuelve, prevalida, ejecuta, refresca y registra. sldb y kgdb quedan detras de pron.
+    src: deskops-pron-component.mmd
+    specs:
+      - deskops-pron-component.yml
+  - id: deskops-pron-sequence
+    category: Arquitectura
+    title: Un movimiento como forma - bind pill a task
+    nav: Secuencia
+    desc: Un movimiento completo de deskops expresado como forma. Prevalidacion antes de escribir, un solo refresh del grafo, y un MoveDoc con la forma dicha, la resuelta y el hash del mundo antes y despues.
+    src: deskops-pron-sequence.mmd
+    specs:
+      - deskops-pron-sequence.yml
+  - id: deskops-pron-workflow-state
+    category: Arquitectura
+    title: Ciclo de vida de una task
+    nav: Workflow
+    desc: La maquina de estados declarativa del workflow de deskops. Cada transicion tiene guarda (ConditionDoc) y efecto (OperatorDoc). Es lo que pron evalua como formas.
+    src: deskops-pron-workflow-state.mmd
+    specs:
+      - deskops-pron-workflow-state.yml
+  - id: deskops-pron-primitives
+    category: Arquitectura
+    title: Primitivas de workflow como documentos
+    nav: Workflow
+    desc: Conditions, operators, edges, hooks, checklists y routines dejan de ser codigo Python interpretado por deskops y pasan a ser documentos del mundo evaluados por pron.
+    src: deskops-pron-primitives.mmd
+    specs:
+      - deskops-pron-primitives.yml

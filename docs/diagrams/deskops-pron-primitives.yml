@@ -1,0 +1,88 @@
+id: deskops-pron.primitives
+title: Primitivas de workflow - de codigo Python a documentos del mundo
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    routine:
+      label: RoutineDoc - la maquina de un tipo de task
+      kind: core
+      contains:
+        - checklist
+        - operator
+        - edge
+        - hook
+
+    checklist:
+      label: ChecklistDoc - agrupa condiciones (mode all/any)
+      kind: core
+
+    operator:
+      label: OperatorDoc - accion (action, target, value)
+      kind: core
+
+    edge:
+      label: EdgeDoc - source, target, condition_ref
+      kind: core
+
+    hook:
+      label: HookDoc - event, target, condition_ref
+      kind: core
+
+    condition:
+      label: ConditionDoc - subject, predicate, expected
+      kind: core
+
+    relation_types:
+      label: RelationTypeDoc de kgdb - binds, depends_on, blocks, gates
+      kind: integration
+
+    alias:
+      label: AliasDoc - nombra una forma compuesta (spec 05)
+      kind: integration
+
+    pron_eval:
+      label: pron eval - prevalidacion, transiciones, condiciones de arista
+      kind: integration
+
+    ledger:
+      label: MoveDoc - traza, undo, why
+      kind: datastore
+
+    ritual:
+      label: RitualDoc - steps del ritual (execution, testing, closeout, phase)
+      kind: core
+
+    next_action:
+      label: deskops next - proxima accion desde el estado
+      kind: core
+
+  edges:
+    - from: condition
+      to: checklist
+      relation: condition_refs
+    - from: condition
+      to: edge
+      relation: condition_ref
+    - from: condition
+      to: hook
+      relation: condition_ref
+    - from: routine
+      to: pron_eval
+      relation: se evalua como transiciones
+    - from: relation_types
+      to: pron_eval
+      relation: verbos verificados
+    - from: alias
+      to: pron_eval
+      relation: promote, bind, advance, closeout
+    - from: pron_eval
+      to: ledger
+      relation: registra cada movimiento
+    - from: ritual
+      to: next_action
+      relation: provee steps
+    - from: ledger
+      to: next_action
+      relation: estado real desde la traza

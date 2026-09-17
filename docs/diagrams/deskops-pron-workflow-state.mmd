@@ -1,0 +1,16 @@
+stateDiagram-v2
+    state "Inbox - nota entrante" as intake
+    state "Drawer - backlog diferido" as drawer
+    state "Task activa en el board" as active
+    state "Gate de ejecucion" as execution_gate
+    state "Gate de testing" as testing_gate
+    state "Gate de closeout" as closeout_gate
+    state "Cerrada - commit atomico" as closed
+    [*] --> intake
+    intake --> drawer : promote inbox-to-drawer-task
+    drawer --> active : promote drawer-task-to-active-task [commit de creacion existe]
+    active --> execution_gate : checklist execution-ready [implementation_path y validation presentes]
+    execution_gate --> testing_gate : operator activate [checklist execution-ready en modo all]
+    testing_gate --> closeout_gate : operator ready-for-testing [tests relevantes pasan]
+    closeout_gate --> closed : operator close [evidencia de validacion y pills reconciliadas]
+    testing_gate --> execution_gate : regresion detectada [handoff de testing falla]
