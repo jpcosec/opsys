@@ -47,3 +47,11 @@ vistas:
     src: deskops-pron-taxonomy.mmd
     specs:
       - deskops-pron-taxonomy.yml
+  - id: deskops-pron-two-worlds
+    category: Arquitectura
+    title: Dos KBs - permanente y transitoria
+    nav: Taxonomia
+    desc: Separacion estricta. La KB de conocimiento (crossroads, atomos, protoatomos, contratos de materializacion) se orquesta desde spec2viz y no tiene estados. La KB operacional de deskops tiene lo que avanza y caduca, y lee la permanente como store enlazado. La arista graduates_to es la frontera.
+    src: deskops-pron-two-worlds.mmd
+    specs:
+      - deskops-pron-two-worlds.yml

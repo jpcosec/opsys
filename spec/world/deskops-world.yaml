@@ -1,159 +1,206 @@
-# Declaración del mundo deskops: modelos, estados y transiciones.
+# KB operacional: workflow agéntico/humano transitorio.
 #
-# Traducción de desk/primitives/ (ConditionDoc, OperatorDoc, EdgeDoc,
-# RoutineDoc interpretados por Python) al modelo que pron ya evalúa:
-# documentos State con `machine: Model.field`, aristas `transitions_to`
-# como RelationDoc, y condiciones como predicados sldb (spec 03).
+# Store local de deskops. Enlaza la KB de conocimiento por nombre, y la
+# referencia por id cruzado ("knowledge:AtomDoc:nombre").
 #
-# Esto es declaración, no código. Va a diff, a CI y al store.
+# Regla: acá vive lo que avanza y caduca. Cuando algo se vuelve durable,
+# gradúa a la KB de conocimiento y acá queda solo la referencia.
 
 world: deskops
-version: "0.1"
+version: "0.2"
+store: .sldb
+
+linked_stores:
+  - name: knowledge
+    path: ../knowledge/.sldb-knowledge
+    doc: KB permanente. Solo lectura desde acá.
 
 # ---------------------------------------------------------------------------
-# Tipos de relación (RelationTypeDoc de kgdb)
+# TaskDoc descompuesto (decisión 4)
+#
+# Antes: 20 campos propios en un solo documento.
+# Ahora: el núcleo, más tres documentos contenidos que hoy son listas sueltas.
 # ---------------------------------------------------------------------------
+models:
+  - name: TaskDoc
+    extends: OperationalArtifactDoc
+    doc: El núcleo de la task. Sin current_node ni history — los da el ledger.
+    fields:
+      - why: str
+      - goal: str
+      - scope: str
+      - task_type: str
+      - status: str          # la máquina de estados vive acá
+    contains:
+      intent: [TaskIntentDoc]
+      acceptance: [AcceptanceDoc]
+      binding: [TaskBindingDoc]
+
+  - name: TaskIntentDoc
+    doc: |
+      Qué se va a hacer y dónde. Hoy son implementation_path + files,
+      dos campos sueltos que nadie puede validar por separado.
+    fields:
+      - implementation_path: str
+      - files: list[str]
+      - out_of_scope: str
+
+  - name: AcceptanceDoc
+    doc: |
+      Cómo se prueba que está hecho. Hoy validation + done_when +
+      inherit_acceptance_context mezclados en el mismo doc.
+      Separarlo permite que el gate de testing lea un solo documento.
+    fields:
+      - validation: list[str]     # comandos ejecutables
+      - done_when: list[str]      # criterios
+      - evidence: list[str]       # qué prueba que pasó
+
+  - name: TaskBindingDoc
+    doc: |
+      A qué se liga la task. Hoy pills + atoms + references + depends_on +
+      inherits_from + from_drawer, seis listas de strings sin tipo.
+      Pasan a ser aristas tipadas; este doc queda como el nodo que las ancla.
+    fields:
+      - rationale: str
+
+  # --- Trabajo -------------------------------------------------------------
+  - name: BoardDoc
+    extends: OperationalArtifactDoc
+    doc: Se instancia (decisión 1). Hoy es Board.md sin trackear.
+    fields:
+      - scope: str
+      - purpose: str
+      - notes: str
+    contains:
+      tasks: [TaskDoc]
+      pills: [PillDoc]
+      rituals: [RitualDoc]
+
+  - name: PillDoc
+    extends: OperationalArtifactDoc
+    doc: Se instancia. 34 en markdown fuera del store.
+    fields:
+      - what: str
+      - why: str
+      - when: str
+      - where: str
+      - how: str
+      - how_not: str
+
+  - name: InboxNoteDoc
+    doc: Se instancia. 4 en disco. Intake cross-repo.
+    fields:
+      - kind: str
+      - sender_project: str
+      - target_project: str
+      - created_at: str
+      - acknowledged_by: str
+      - acknowledged_at: str
+      - body: str
+
+  # --- Procedimiento -------------------------------------------------------
+  - name: RitualDoc
+    extends: OperationalArtifactDoc
+    doc: Se instancia. 12 en disco.
+    fields:
+      - purpose: str
+      - trigger: str
+      - preconditions: list[str]
+      - validation: str
+      - failure_modes: list[str]
+      - completion: str
+    contains:
+      steps: [StepDoc]
+
+  - name: StepDoc
+    doc: Se instancia. Hoy los steps son strings en el frontmatter del ritual.
+    fields:
+      - action: str
+      - outcome: str
+
+  # --- Entorno -------------------------------------------------------------
+  - name: RunDoc
+    doc: |
+      Se instancia (decisión 3). 3 runs en disco sin modelar.
+      Vale la pena meter más: el ledger de pron da hash antes/después,
+      así que RunDoc puede apuntar al MoveDoc en vez de duplicar evidencia.
+    fields:
+      - kind: str
+      - run_dir: str
+      - herdr_pane_id: str
+      - session_path: str
+      - session_sha256: str
+      - started_at: str
+      - ended_at: str
+      - outcome: str
+      - commit_sha: str
+      - move_id: str          # NUEVO: el MoveDoc del ledger de pron
+
+  - name: RoleDoc
+    fields: [name, description, kind, model, fallback_models, tools,
+             system_prompt_mode, inherit_project_context, inherit_skills,
+             default_context, body]
+
+  - name: RuntimeProfileDoc
+    extends: PrimitiveDoc
+    fields: [kind, binary, model_flag, fallback_models_flag, tools_flag,
+             system_prompt_flag, system_prompt_delivery, session_flag,
+             extra_args, unsupported_role_fields, notes]
+
+  - name: RepositoryDoc
+    fields: [name, path, description]
+
+  - name: HookDoc
+    extends: PrimitiveDoc
+    doc: |
+      Se instancia (decisión 3). Se queda en deskops por ahora;
+      si el comportamiento se estabiliza, la primitiva se lleva a pron.
+    fields:
+      - event: str
+      - target: str
+      - condition: str        # predicado sldb, no condition_ref
+
+# ---------------------------------------------------------------------------
+# Modelos que DESAPARECEN (absorbidos por pron)
+#
+#   ConditionDoc  -> predicado sldb con llaves: "{implementation_path} != ''"
+#   OperatorDoc   -> cambiar el campo ya es el efecto (spec 03)
+#   EdgeDoc       -> RelationDoc transitions_to
+#   ChecklistDoc  -> condición compuesta en la guarda de la transición
+#   RoutineDoc    -> se parte: máquina (State) + procedimiento (RitualDoc)
+#   current_node  -> lo mantiene el MoveDoc del ledger
+#   history       -> lo mantiene el MoveDoc del ledger
+# ---------------------------------------------------------------------------
+
 relation_types:
-  - name: transitions_to
-    from: State
-    to: State
-    mode: assert
-    doc: Movimiento legal entre dos valores de un campo de estado.
+  - {name: transitions_to, from: State, to: State, mode: assert}
+  - {name: has_step, from: RitualDoc, to: StepDoc, mode: assert}
+  - {name: next_step, from: StepDoc, to: StepDoc, mode: assert}
+  - {name: binds, from: TaskBindingDoc, to: PillDoc, mode: assert}
+  - {name: depends_on, from: TaskDoc, to: TaskDoc, mode: assert}
+  - {name: blocks, from: TaskDoc, to: TaskDoc, mode: read}
+  - {name: inherits_from, from: TaskDoc, to: TaskDoc, mode: assert}
+  - {name: from_drawer, from: TaskDoc, to: TaskDoc, mode: assert}
+  - {name: evidences, from: RunDoc, to: TaskDoc, mode: assert}
+  - {name: executed_by, from: RunDoc, to: RoleDoc, mode: assert}
+  - {name: runs_on, from: RoleDoc, to: RuntimeProfileDoc, mode: assert}
 
-  - name: has_step
-    from: RitualDoc
-    to: StepDoc
-    mode: assert
-    doc: Un ritual agrupa los steps de su fase.
-
-  - name: next_step
-    from: StepDoc
-    to: StepDoc
-    mode: assert
-    doc: Orden entre steps dentro de un ritual.
-
-  - name: binds
-    from: TaskDoc
-    to: PillDoc
-    mode: assert
-    doc: Una task liga una pill como guardarraíl de ejecución.
-
-  - name: depends_on
-    from: TaskDoc
-    to: TaskDoc
-    mode: assert
-    doc: Dependencia entre tasks. Define las capas de fase.
-
-  - name: blocks
-    from: TaskDoc
-    to: TaskDoc
-    mode: read
-    doc: Inversa derivada de depends_on.
-
-  - name: graduates_to
-    from: PillDoc
-    to: AtomDoc
-    mode: assert
-    doc: Residuo durable de una pill promovido a átomo.
-
+  # Cruzan hacia la KB permanente
   - name: references
-    from: TaskDoc
-    to: AtomDoc
+    from: TaskBindingDoc
+    to: knowledge:AtomDoc
     mode: assert
     doc: Evidencia de closeout que apunta a conocimiento durable.
 
-  - name: from_drawer
-    from: TaskDoc
-    to: TaskDoc
+  - name: graduates_to
+    from: PillDoc
+    to: knowledge:AtomDoc
     mode: assert
-    doc: Procedencia de una task promovida desde el drawer.
+    doc: |
+      El residuo durable de una pill cruza a la KB permanente.
+      Esta arista ES la frontera entre las dos KBs.
 
-# ---------------------------------------------------------------------------
-# Máquina de estados de TaskDoc.status
-#
-# Reemplaza: EdgeDoc + ConditionDoc + OperatorDoc de desk/primitives/.
-# El operator desaparece: cambiar el campo ES el efecto (spec 03).
-# ---------------------------------------------------------------------------
 states:
   - model: State
     machine: TaskDoc.status
-    values:
-      - name: drawer
-        doc: Backlog diferido. Aún no rutea trabajo.
-
-      - name: active
-        doc: En el board, lista para ejecución.
-
-      - name: execution
-        doc: Gate de ejecución pasado, implementación en curso.
-
-      - name: testing
-        doc: Implementación completa, probando el contrato.
-
-      - name: closeout
-        doc: Tests verdes, cerrando con evidencia.
-
-      - name: closed
-        doc: Cerrada con commit atómico.
-
-transitions:
-  - from: drawer
-    to: active
-    # Reemplaza condition-board-task-yaml-has-implementation-path
-    # y condition-board-task-yaml-has-validation.
-    condition: "{implementation_path} != '' and {validation} != ''"
-    doc: Promoción al board exige camino de implementación y validación.
-
-  - from: active
-    to: execution
-    condition: "{routine} != ''"
-    doc: Solo avanza una task con routine que la haga accionable.
-
-  - from: execution
-    to: testing
-    condition: "{implementation_path} != ''"
-    doc: Gate de ejecución satisfecho.
-
-  - from: testing
-    to: closeout
-    condition: "{validation} != ''"
-    doc: Contrato probado, handoff explícito.
-
-  - from: testing
-    to: execution
-    condition: ""
-    doc: Regresión detectada, vuelve a implementación. Sin guarda.
-
-  - from: closeout
-    to: closed
-    # Reemplaza condition-board-task-yaml-ready-for-closeout.
-    condition: "{done_when} != '' and {references} != ''"
-    doc: Cierre exige criterio cumplido y evidencia referenciada.
-
-# ---------------------------------------------------------------------------
-# Rituales y steps
-#
-# RoutineDoc se parte en dos: la máquina (arriba) y el procedimiento (acá).
-# Los steps dejan de ser strings dentro del frontmatter de un ritual y pasan
-# a ser StepDoc con `action` y `outcome`, ordenados por `next_step`.
-# ---------------------------------------------------------------------------
-rituals:
-  - id: ritual-execution
-    phase: execution
-    binds_state: execution
-  - id: ritual-testing
-    phase: testing
-    binds_state: testing
-  - id: ritual-closeout
-    phase: closeout
-    binds_state: closeout
-  - id: ritual-phase
-    phase: phase
-    doc: Capa horizontal sobre tasks. No es un estado de TaskDoc.
-
-# ---------------------------------------------------------------------------
-# Lo que NO se declara acá todavía (decisión del operador)
-#
-# hooks: se quedan en deskops por ahora. Si el comportamiento se estabiliza,
-#        la primitiva se lleva a pron. No es el foco.
-# ---------------------------------------------------------------------------
+    values: [drawer, active, execution, testing, closeout, closed]

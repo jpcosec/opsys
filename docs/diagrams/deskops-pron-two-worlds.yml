@@ -1,0 +1,163 @@
+id: deskops-pron.two-worlds
+title: Dos KBs - conocimiento permanente y workflow transitorio
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    kb_knowledge:
+      label: KB DE CONOCIMIENTO - permanente - orquestada desde spec2viz
+      kind: core
+      contains:
+        - k_crossroad
+        - k_atom
+        - k_protoatom
+        - k_materialization
+        - k_spec
+
+    k_crossroad:
+      label: CrossroadDoc - raiz de dominio - padre obligatorio (21)
+      kind: core
+
+    k_atom:
+      label: AtomDoc - five_wh_one_plus, answer, provenance (137)
+      kind: core
+
+    k_protoatom:
+      label: ProtoAtomDoc - capturado antes de tipar - se instancia
+      kind: core
+
+    k_materialization:
+      label: MaterializationContractDoc - de que atomos sale cada doc
+      kind: core
+
+    k_spec:
+      label: Specs de spec2viz - diagramas como proyeccion de atomos
+      kind: core
+
+    kb_ops:
+      label: KB OPERACIONAL - transitoria - deskops
+      kind: integration
+      contains:
+        - o_task
+        - o_board
+        - o_pill
+        - o_inbox
+        - o_ritual
+        - o_step
+        - o_run
+        - o_role
+        - o_runtime
+        - o_repo
+
+    o_task:
+      label: TaskDoc - descompuesto en docs mas chicos
+      kind: integration
+
+    o_board:
+      label: BoardDoc - se instancia
+      kind: integration
+
+    o_pill:
+      label: PillDoc - se instancia (34 en markdown)
+      kind: integration
+
+    o_inbox:
+      label: InboxNoteDoc - se instancia (4)
+      kind: integration
+
+    o_ritual:
+      label: RitualDoc - se instancia (12)
+      kind: integration
+
+    o_step:
+      label: StepDoc - se instancia
+      kind: integration
+
+    o_run:
+      label: RunDoc - se instancia (3 runs en disco)
+      kind: integration
+
+    o_role:
+      label: RoleDoc (3)
+      kind: integration
+
+    o_runtime:
+      label: RuntimeProfileDoc (2)
+      kind: integration
+
+    o_repo:
+      label: RepositoryDoc (14)
+      kind: integration
+
+    absorbed:
+      label: ABSORBIDO POR PRON - deja de ser modelo de deskops
+      kind: external
+      contains:
+        - a_condition
+        - a_operator
+        - a_edge
+        - a_routine
+        - a_current_node
+
+    a_condition:
+      label: ConditionDoc - pasa a predicado sldb con llaves
+      kind: external
+
+    a_operator:
+      label: OperatorDoc - cambiar el campo ya es el efecto
+      kind: external
+
+    a_edge:
+      label: EdgeDoc - pasa a RelationDoc transitions_to
+      kind: external
+
+    a_routine:
+      label: RoutineDoc - se parte en maquina y procedimiento
+      kind: external
+
+    a_current_node:
+      label: current_node e history - los mantiene el MoveDoc
+      kind: external
+
+    link:
+      label: Store enlazado - la KB operacional lee la permanente por id cruzado
+      kind: integration
+
+  edges:
+    - from: k_crossroad
+      to: k_atom
+      relation: padre de dominio
+    - from: k_protoatom
+      to: k_atom
+      relation: se tipa como
+    - from: k_atom
+      to: k_materialization
+      relation: fuente de
+    - from: k_atom
+      to: k_spec
+      relation: proyectado como diagrama
+    - from: o_task
+      to: link
+      relation: referencia atomos
+    - from: o_pill
+      to: link
+      relation: gradua residuo durable
+    - from: link
+      to: kb_knowledge
+      relation: lee por id cruzado
+    - from: o_board
+      to: o_task
+      relation: contiene
+    - from: o_ritual
+      to: o_step
+      relation: contiene
+    - from: o_run
+      to: o_task
+      relation: evidencia de
+    - from: o_run
+      to: o_role
+      relation: ejecutado por
+    - from: o_role
+      to: o_runtime
+      relation: corre en
