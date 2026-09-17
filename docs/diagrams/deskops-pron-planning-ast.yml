@@ -1,0 +1,129 @@
+id: deskops-pron.planning-ast
+title: Planificacion, AST y git - el eje que faltaba
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    supervisor:
+      label: Agente supervisor - suelta al planificador
+      kind: core
+
+    planner:
+      label: Agente planificador - produce el PlanDoc
+      kind: core
+
+    plan:
+      label: PlanDoc - lo que hay que tocar y por que
+      kind: integration
+      contains:
+        - plan_target
+        - plan_iteration
+
+    plan_target:
+      label: PlanTargetDoc - un archivo o simbolo a tocar, con rationale
+      kind: integration
+
+    plan_iteration:
+      label: PlanIterationDoc - una vuelta de la rutina, con lo aprendido
+      kind: integration
+
+    ast:
+      label: Indice AST del codigo - modulos, clases, funciones, imports
+      kind: datastore
+      contains:
+        - symbol
+        - symbol_edge
+
+    symbol:
+      label: SymbolDoc - modulo, clase o funcion, con rango de lineas
+      kind: datastore
+
+    symbol_edge:
+      label: calls, imports, defines - aristas entre simbolos
+      kind: datastore
+
+    test_map:
+      label: Mapa simbolo-test - que test cubre que simbolo
+      kind: datastore
+
+    git:
+      label: Indice git - commits, diffs, archivos tocados
+      kind: datastore
+      contains:
+        - commit
+        - change
+
+    commit:
+      label: CommitDoc - sha, autor, fecha, mensaje
+      kind: datastore
+
+    change:
+      label: ChangeDoc - archivo, rango, simbolo afectado
+      kind: datastore
+
+    task:
+      label: TaskDoc - ve directo que cambio, cuando y que se toco
+      kind: core
+
+    run:
+      label: RunDoc - rellenado por el ejecutor, no por deskops
+      kind: core
+
+    runtime_evidence:
+      label: run.yaml y result-summary en runs/subagents - lo que ya existe
+      kind: external
+
+    affected:
+      label: Alcance derivado - que revisar y que tests correr
+      kind: integration
+
+  edges:
+    - from: supervisor
+      to: planner
+      relation: suelta
+    - from: planner
+      to: plan
+      relation: produce
+    - from: plan
+      to: plan_target
+      relation: contiene
+    - from: plan
+      to: plan_iteration
+      relation: contiene
+    - from: plan_target
+      to: symbol
+      relation: apunta a simbolo
+    - from: symbol
+      to: symbol_edge
+      relation: relacionado por
+    - from: symbol_edge
+      to: affected
+      relation: cierre transitivo da el alcance
+    - from: symbol
+      to: test_map
+      relation: cubierto por
+    - from: test_map
+      to: affected
+      relation: que tests correr
+    - from: affected
+      to: run
+      relation: alcance del ejecutor
+    - from: run
+      to: commit
+      relation: produce
+    - from: commit
+      to: change
+      relation: contiene
+    - from: change
+      to: symbol
+      relation: toco este simbolo
+    - from: change
+      to: task
+      relation: visible desde la tarea
+    - from: runtime_evidence
+      to: run
+      relation: el ejecutor lo rellena
+    - from: plan_iteration
+      to: plan
+      relation: la rutina itera

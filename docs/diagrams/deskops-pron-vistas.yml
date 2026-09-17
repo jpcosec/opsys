@@ -47,11 +47,11 @@ vistas:
     src: deskops-pron-taxonomy.mmd
     specs:
       - deskops-pron-taxonomy.yml
-  - id: deskops-pron-two-worlds
+  - id: deskops-pron-planning-ast
     category: Arquitectura
-    title: Dos KBs - permanente y transitoria
-    nav: Taxonomia
-    desc: Separacion estricta. La KB de conocimiento (crossroads, atomos, protoatomos, contratos de materializacion) se orquesta desde spec2viz y no tiene estados. La KB operacional de deskops tiene lo que avanza y caduca, y lee la permanente como store enlazado. La arista graduates_to es la frontera.
-    src: deskops-pron-two-worlds.mmd
+    title: Planificacion, AST y git
+    nav: Workflow
+    desc: El supervisor suelta un planificador que produce un PlanDoc. Cada target del plan apunta a un simbolo del AST, y el cierre transitivo de calls e imports da que codigo revisar y que tests correr. Los commits se resuelven a simbolos por rango de lineas, asi la tarea muestra que cambio, cuando y que se toco.
+    src: deskops-pron-planning-ast.mmd
     specs:
-      - deskops-pron-two-worlds.yml
+      - deskops-pron-planning-ast.yml

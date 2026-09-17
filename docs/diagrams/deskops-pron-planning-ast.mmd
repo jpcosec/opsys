@@ -1,0 +1,36 @@
+graph TD
+    supervisor["Agente supervisor - suelta al planificador"]
+    planner["Agente planificador - produce el PlanDoc"]
+    subgraph plan ["PlanDoc - lo que hay que tocar y por que"]
+        plan_target["PlanTargetDoc - un archivo o simbolo a tocar, con rationale"]
+        plan_iteration["PlanIterationDoc - una vuelta de la rutina, con lo aprendido"]
+    end
+    subgraph ast ["Indice AST del codigo - modulos, clases, funciones, imports"]
+        symbol["SymbolDoc - modulo, clase o funcion, con rango de lineas"]
+        symbol_edge["calls, imports, defines - aristas entre simbolos"]
+    end
+    test_map["Mapa simbolo-test - que test cubre que simbolo"]
+    subgraph git ["Indice git - commits, diffs, archivos tocados"]
+        commit["CommitDoc - sha, autor, fecha, mensaje"]
+        change["ChangeDoc - archivo, rango, simbolo afectado"]
+    end
+    task["TaskDoc - ve directo que cambio, cuando y que se toco"]
+    run["RunDoc - rellenado por el ejecutor, no por deskops"]
+    runtime_evidence["run.yaml y result-summary en runs/subagents - lo que ya existe"]
+    affected["Alcance derivado - que revisar y que tests correr"]
+    supervisor -->|"suelta"| planner
+    planner -->|"produce"| plan
+    plan -->|"contiene"| plan_target
+    plan -->|"contiene"| plan_iteration
+    plan_target -->|"apunta a simbolo"| symbol
+    symbol -->|"relacionado por"| symbol_edge
+    symbol_edge -->|"cierre transitivo da el alcance"| affected
+    symbol -->|"cubierto por"| test_map
+    test_map -->|"que tests correr"| affected
+    affected -->|"alcance del ejecutor"| run
+    run -->|"produce"| commit
+    commit -->|"contiene"| change
+    change -->|"toco este simbolo"| symbol
+    change -->|"visible desde la tarea"| task
+    runtime_evidence -->|"el ejecutor lo rellena"| run
+    plan_iteration -->|"la rutina itera"| plan

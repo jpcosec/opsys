@@ -1,129 +1,205 @@
-# KB operacional: workflow agéntico/humano transitorio.
+# Declaración de worlds sobre UN store sldb.
 #
-# Store local de deskops. Enlaza la KB de conocimiento por nombre, y la
-# referencia por id cruzado ("knowledge:AtomDoc:nombre").
+# Corrección: sldb es la primitiva, común a deskops y a lo que spec2viz usa.
+# No hay dos stores. Hay un `.sldb` y dos worlds declarados encima, con
+# modelos distintos y proyecciones distintas.
 #
-# Regla: acá vive lo que avanza y caduca. Cuando algo se vuelve durable,
-# gradúa a la KB de conocimiento y acá queda solo la referencia.
+# La separación permanente/transitorio es de MODELOS y PROYECCIÓN, no de
+# almacenamiento.
 
-world: deskops
-version: "0.2"
 store: .sldb
-
-linked_stores:
-  - name: knowledge
-    path: ../knowledge/.sldb-knowledge
-    doc: KB permanente. Solo lectura desde acá.
+version: "0.3"
 
 # ---------------------------------------------------------------------------
-# TaskDoc descompuesto (decisión 4)
-#
-# Antes: 20 campos propios en un solo documento.
-# Ahora: el núcleo, más tres documentos contenidos que hoy son listas sueltas.
+# WORLD 1: conocimiento permanente. Proyección orquestada desde spec2viz.
+# Sin estados: el conocimiento no transiciona.
+# ---------------------------------------------------------------------------
+worlds:
+  - name: knowledge
+    projection: knowledge
+    doc: Lo durable. spec2viz proyecta estos documentos como diagramas.
+    models: [CrossroadDoc, AtomDoc, ProtoAtomDoc, MaterializationContractDoc]
+
+  - name: deskops
+    projection: operational
+    doc: Lo que avanza y caduca. El harness de workflow.
+    models: [TaskDoc, TaskIntentDoc, AcceptanceDoc, TaskBindingDoc,
+             BoardDoc, PillDoc, InboxNoteDoc, RitualDoc, StepDoc,
+             PlanDoc, PlanTargetDoc, PlanIterationDoc,
+             RunDoc, RoleDoc, RuntimeProfileDoc, RepositoryDoc, HookDoc]
+
+  - name: code
+    projection: code
+    doc: |
+      El código como documentos. Derivado: se reconstruye por AST y por git,
+      nunca se escribe a mano. Es lo que permite que una task muestre qué
+      cambió, cuándo y qué se tocó.
+    models: [SymbolDoc, CommitDoc, ChangeDoc, TestCoverageDoc]
+
+# ---------------------------------------------------------------------------
+# Conocimiento permanente
 # ---------------------------------------------------------------------------
 models:
+  - name: CrossroadDoc
+    extends: PrimitiveDoc
+    fields: [path, content]
+    doc: Raíz de dominio. Padre obligatorio de todo átomo. 21 en disco.
+
+  - name: AtomDoc
+    extends: PrimitiveDoc        # baja a la jerarquía (hallazgo 4)
+    fields: [five_wh_one_plus, answer, provenance]
+    doc: 137 en disco.
+
+  - name: ProtoAtomDoc
+    extends: PrimitiveDoc
+    fields: [content, typed_as, provenance]
+    doc: Se instancia. Buffer de captura antes de tipar.
+
+  - name: MaterializationContractDoc
+    fields: [source_atoms, target_kind, target_identity, intent, validation, provenance]
+
+# ---------------------------------------------------------------------------
+# Trabajo: TaskDoc descompuesto
+# ---------------------------------------------------------------------------
   - name: TaskDoc
     extends: OperationalArtifactDoc
-    doc: El núcleo de la task. Sin current_node ni history — los da el ledger.
-    fields:
-      - why: str
-      - goal: str
-      - scope: str
-      - task_type: str
-      - status: str          # la máquina de estados vive acá
+    fields: [why, goal, scope, task_type, status]
     contains:
       intent: [TaskIntentDoc]
       acceptance: [AcceptanceDoc]
       binding: [TaskBindingDoc]
+      plan: [PlanDoc]
 
   - name: TaskIntentDoc
-    doc: |
-      Qué se va a hacer y dónde. Hoy son implementation_path + files,
-      dos campos sueltos que nadie puede validar por separado.
-    fields:
-      - implementation_path: str
-      - files: list[str]
-      - out_of_scope: str
+    fields: [implementation_path, files, out_of_scope]
 
   - name: AcceptanceDoc
-    doc: |
-      Cómo se prueba que está hecho. Hoy validation + done_when +
-      inherit_acceptance_context mezclados en el mismo doc.
-      Separarlo permite que el gate de testing lea un solo documento.
-    fields:
-      - validation: list[str]     # comandos ejecutables
-      - done_when: list[str]      # criterios
-      - evidence: list[str]       # qué prueba que pasó
+    fields: [validation, done_when, evidence]
 
   - name: TaskBindingDoc
-    doc: |
-      A qué se liga la task. Hoy pills + atoms + references + depends_on +
-      inherits_from + from_drawer, seis listas de strings sin tipo.
-      Pasan a ser aristas tipadas; este doc queda como el nodo que las ancla.
-    fields:
-      - rationale: str
+    fields: [rationale]
 
-  # --- Trabajo -------------------------------------------------------------
   - name: BoardDoc
     extends: OperationalArtifactDoc
-    doc: Se instancia (decisión 1). Hoy es Board.md sin trackear.
-    fields:
-      - scope: str
-      - purpose: str
-      - notes: str
-    contains:
-      tasks: [TaskDoc]
-      pills: [PillDoc]
-      rituals: [RitualDoc]
+    fields: [scope, purpose, notes]
+    contains: {tasks: [TaskDoc], pills: [PillDoc], rituals: [RitualDoc]}
 
   - name: PillDoc
     extends: OperationalArtifactDoc
-    doc: Se instancia. 34 en markdown fuera del store.
-    fields:
-      - what: str
-      - why: str
-      - when: str
-      - where: str
-      - how: str
-      - how_not: str
+    fields: [what, why, when, where, how, how_not]
 
   - name: InboxNoteDoc
-    doc: Se instancia. 4 en disco. Intake cross-repo.
-    fields:
-      - kind: str
-      - sender_project: str
-      - target_project: str
-      - created_at: str
-      - acknowledged_by: str
-      - acknowledged_at: str
-      - body: str
+    fields: [kind, sender_project, target_project, created_at,
+             acknowledged_by, acknowledged_at, body]
 
-  # --- Procedimiento -------------------------------------------------------
   - name: RitualDoc
     extends: OperationalArtifactDoc
-    doc: Se instancia. 12 en disco.
-    fields:
-      - purpose: str
-      - trigger: str
-      - preconditions: list[str]
-      - validation: str
-      - failure_modes: list[str]
-      - completion: str
-    contains:
-      steps: [StepDoc]
+    fields: [purpose, trigger, preconditions, validation, failure_modes, completion]
+    contains: {steps: [StepDoc]}
 
   - name: StepDoc
-    doc: Se instancia. Hoy los steps son strings en el frontmatter del ritual.
+    fields: [action, outcome]
+
+# ---------------------------------------------------------------------------
+# PLANIFICACIÓN (nuevo)
+#
+# Hoy vive en runs/planning/*.md: 10 planes en Markdown sin modelar, escritos
+# por un planificador y leídos por nadie salvo un humano. Modelarlos es lo que
+# permite que la rutina itere.
+# ---------------------------------------------------------------------------
+  - name: PlanDoc
+    extends: OperationalArtifactDoc
+    doc: |
+      Lo que un agente planificador produce cuando el supervisor lo suelta.
+      Reemplaza runs/planning/*.md.
     fields:
-      - action: str
+      - goal: str
+      - context_findings: str      # qué ya existe (la sección más útil hoy)
+      - interpretation: str        # por qué se lee así la task
+      - risks: str
+      - ambiguities: list[str]     # lo que NO se decide solo
+    contains:
+      targets: [PlanTargetDoc]
+      iterations: [PlanIterationDoc]
+
+  - name: PlanTargetDoc
+    doc: |
+      Una cosa que hay que tocar. El puente con el AST: `symbol` apunta a un
+      SymbolDoc, y de ahí sale solo qué revisar y qué tests correr.
+    fields:
+      - surface: str          # archivo o superficie
+      - symbol: str           # ref a SymbolDoc — el enganche con el AST
+      - change_kind: str      # add | modify | delete | verify
+      - rationale: str
+      - acceptance: str
+
+  - name: PlanIterationDoc
+    doc: |
+      Una vuelta de la rutina. Esto es lo que hace iterable el plan: cada
+      pasada del supervisor deja qué se intentó, qué se aprendió y qué
+      cambió del plan.
+    fields:
+      - round: int
+      - trigger: str          # qué gatilló la vuelta
+      - findings: str
+      - plan_delta: str       # qué cambió respecto de la vuelta anterior
       - outcome: str
 
-  # --- Entorno -------------------------------------------------------------
+# ---------------------------------------------------------------------------
+# CÓDIGO: AST y git (nuevo)
+#
+# Derivado, nunca escrito a mano. Hoy extract_sources.py solo lista archivos
+# (.py como nodo); no hay símbolos ni llamadas. Sin esto, "qué revisar y qué
+# testear" es adivinanza.
+# ---------------------------------------------------------------------------
+  - name: SymbolDoc
+    doc: Un módulo, clase o función. Derivado por AST.
+    fields:
+      - kind: str             # module | class | function | method
+      - qualname: str         # deskops.operations:DeskopsOperations.advance_task
+      - path: str
+      - line_start: int
+      - line_end: int
+      - signature: str
+      - docstring: str
+
+  - name: CommitDoc
+    doc: Derivado de git. Permite ver desde la task qué cambió y cuándo.
+    fields:
+      - sha: str
+      - author: str
+      - committed_at: str
+      - message: str
+      - trailers: dict
+
+  - name: ChangeDoc
+    doc: |
+      Un hunk. Es la unión de git y AST: el rango de líneas se resuelve a
+      símbolo, y por eso la task puede decir qué función se tocó.
+    fields:
+      - path: str
+      - line_start: int
+      - line_end: int
+      - added: int
+      - removed: int
+      - symbol: str           # ref a SymbolDoc, resuelto por rango
+
+  - name: TestCoverageDoc
+    doc: Qué test ejercita qué símbolo. Da el set mínimo de tests a correr.
+    fields:
+      - test_qualname: str
+      - covers_symbol: str
+      - source: str           # ast_import | pytest_trace | manual
+
+# ---------------------------------------------------------------------------
+# EJECUCIÓN
+# ---------------------------------------------------------------------------
   - name: RunDoc
     doc: |
-      Se instancia (decisión 3). 3 runs en disco sin modelar.
-      Vale la pena meter más: el ledger de pron da hash antes/después,
-      así que RunDoc puede apuntar al MoveDoc en vez de duplicar evidencia.
+      Rellenable por el EJECUTOR, no por deskops. Hoy el ejecutor deja
+      runs/subagents/<ts>/{run.yaml,result-summary.md,validation.log} y
+      deskops los lee después. El modelo debe calzar con eso: el ejecutor
+      escribe, deskops valida.
     fields:
       - kind: str
       - run_dir: str
@@ -132,9 +208,11 @@ models:
       - session_sha256: str
       - started_at: str
       - ended_at: str
-      - outcome: str
+      - outcome: str          # in_progress | success | failure | aborted
       - commit_sha: str
-      - move_id: str          # NUEVO: el MoveDoc del ledger de pron
+      - move_id: str          # MoveDoc del ledger de pron
+      - result_summary: str   # lo que hoy es result-summary.md
+      - validation_log: str   # lo que hoy es validation.log
 
   - name: RoleDoc
     fields: [name, description, kind, model, fallback_models, tools,
@@ -152,55 +230,54 @@ models:
 
   - name: HookDoc
     extends: PrimitiveDoc
-    doc: |
-      Se instancia (decisión 3). Se queda en deskops por ahora;
-      si el comportamiento se estabiliza, la primitiva se lleva a pron.
-    fields:
-      - event: str
-      - target: str
-      - condition: str        # predicado sldb, no condition_ref
+    fields: [event, target, condition]
+    doc: Se queda en deskops. Si se estabiliza, la primitiva va a pron.
 
 # ---------------------------------------------------------------------------
-# Modelos que DESAPARECEN (absorbidos por pron)
-#
-#   ConditionDoc  -> predicado sldb con llaves: "{implementation_path} != ''"
-#   OperatorDoc   -> cambiar el campo ya es el efecto (spec 03)
-#   EdgeDoc       -> RelationDoc transitions_to
-#   ChecklistDoc  -> condición compuesta en la guarda de la transición
-#   RoutineDoc    -> se parte: máquina (State) + procedimiento (RitualDoc)
-#   current_node  -> lo mantiene el MoveDoc del ledger
-#   history       -> lo mantiene el MoveDoc del ledger
+# DESAPARECEN (absorbidos por pron)
+#   ConditionDoc -> predicado sldb "{implementation_path} != ''"
+#   OperatorDoc  -> cambiar el campo ya es el efecto
+#   EdgeDoc      -> RelationDoc transitions_to
+#   ChecklistDoc -> guarda compuesta
+#   RoutineDoc   -> State (máquina) + RitualDoc (procedimiento)
+#   current_node, history -> MoveDoc del ledger
 # ---------------------------------------------------------------------------
 
 relation_types:
+  # Workflow
   - {name: transitions_to, from: State, to: State, mode: assert}
   - {name: has_step, from: RitualDoc, to: StepDoc, mode: assert}
   - {name: next_step, from: StepDoc, to: StepDoc, mode: assert}
   - {name: binds, from: TaskBindingDoc, to: PillDoc, mode: assert}
   - {name: depends_on, from: TaskDoc, to: TaskDoc, mode: assert}
   - {name: blocks, from: TaskDoc, to: TaskDoc, mode: read}
-  - {name: inherits_from, from: TaskDoc, to: TaskDoc, mode: assert}
-  - {name: from_drawer, from: TaskDoc, to: TaskDoc, mode: assert}
+
+  # Conocimiento (cruzan de world, mismo store)
+  - {name: domain_parent, from: AtomDoc, to: CrossroadDoc, mode: assert}
+  - {name: typed_as, from: ProtoAtomDoc, to: AtomDoc, mode: assert}
+  - {name: references, from: TaskBindingDoc, to: AtomDoc, mode: assert}
+  - {name: graduates_to, from: PillDoc, to: AtomDoc, mode: assert}
+
+  # Planificación → código
+  - {name: plans_change, from: PlanTargetDoc, to: SymbolDoc, mode: assert}
+  - {name: iterates, from: PlanIterationDoc, to: PlanDoc, mode: assert}
+
+  # AST
+  - {name: calls, from: SymbolDoc, to: SymbolDoc, mode: assert}
+  - {name: imports, from: SymbolDoc, to: SymbolDoc, mode: assert}
+  - {name: defines, from: SymbolDoc, to: SymbolDoc, mode: assert}
+  - {name: covers, from: TestCoverageDoc, to: SymbolDoc, mode: assert}
+
+  # git
+  - {name: touches, from: ChangeDoc, to: SymbolDoc, mode: assert}
+  - {name: contains_change, from: CommitDoc, to: ChangeDoc, mode: assert}
+  - {name: produced_commit, from: RunDoc, to: CommitDoc, mode: assert}
   - {name: evidences, from: RunDoc, to: TaskDoc, mode: assert}
   - {name: executed_by, from: RunDoc, to: RoleDoc, mode: assert}
   - {name: runs_on, from: RoleDoc, to: RuntimeProfileDoc, mode: assert}
 
-  # Cruzan hacia la KB permanente
-  - name: references
-    from: TaskBindingDoc
-    to: knowledge:AtomDoc
-    mode: assert
-    doc: Evidencia de closeout que apunta a conocimiento durable.
-
-  - name: graduates_to
-    from: PillDoc
-    to: knowledge:AtomDoc
-    mode: assert
-    doc: |
-      El residuo durable de una pill cruza a la KB permanente.
-      Esta arista ES la frontera entre las dos KBs.
-
 states:
   - model: State
     machine: TaskDoc.status
-    values: [drawer, active, execution, testing, closeout, closed]
+    values: [drawer, active, planning, execution, testing, closeout, closed]
+    doc: "Se agrega planning: el supervisor suelta al planificador antes de ejecutar."
