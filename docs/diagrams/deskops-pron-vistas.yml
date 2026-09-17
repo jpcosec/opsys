@@ -31,3 +31,11 @@ vistas:
     src: deskops-pron-primitives.mmd
     specs:
       - deskops-pron-primitives.yml
+  - id: deskops-pron-routine-translation
+    category: Arquitectura
+    title: RoutineDoc traducido al mundo
+    nav: Workflow
+    desc: Como se traduce RoutineDoc. La routine no es una relacion - es un grafo. Se parte en dos - la maquina de estados (State con machine TaskDoc.status y aristas transitions_to) y el procedimiento (StepDoc ordenados por next_step). El OperatorDoc desaparece porque cambiar el campo ya es el efecto.
+    src: deskops-pron-routine-translation.mmd
+    specs:
+      - deskops-pron-routine-translation.yml

@@ -1,0 +1,159 @@
+# Declaración del mundo deskops: modelos, estados y transiciones.
+#
+# Traducción de desk/primitives/ (ConditionDoc, OperatorDoc, EdgeDoc,
+# RoutineDoc interpretados por Python) al modelo que pron ya evalúa:
+# documentos State con `machine: Model.field`, aristas `transitions_to`
+# como RelationDoc, y condiciones como predicados sldb (spec 03).
+#
+# Esto es declaración, no código. Va a diff, a CI y al store.
+
+world: deskops
+version: "0.1"
+
+# ---------------------------------------------------------------------------
+# Tipos de relación (RelationTypeDoc de kgdb)
+# ---------------------------------------------------------------------------
+relation_types:
+  - name: transitions_to
+    from: State
+    to: State
+    mode: assert
+    doc: Movimiento legal entre dos valores de un campo de estado.
+
+  - name: has_step
+    from: RitualDoc
+    to: StepDoc
+    mode: assert
+    doc: Un ritual agrupa los steps de su fase.
+
+  - name: next_step
+    from: StepDoc
+    to: StepDoc
+    mode: assert
+    doc: Orden entre steps dentro de un ritual.
+
+  - name: binds
+    from: TaskDoc
+    to: PillDoc
+    mode: assert
+    doc: Una task liga una pill como guardarraíl de ejecución.
+
+  - name: depends_on
+    from: TaskDoc
+    to: TaskDoc
+    mode: assert
+    doc: Dependencia entre tasks. Define las capas de fase.
+
+  - name: blocks
+    from: TaskDoc
+    to: TaskDoc
+    mode: read
+    doc: Inversa derivada de depends_on.
+
+  - name: graduates_to
+    from: PillDoc
+    to: AtomDoc
+    mode: assert
+    doc: Residuo durable de una pill promovido a átomo.
+
+  - name: references
+    from: TaskDoc
+    to: AtomDoc
+    mode: assert
+    doc: Evidencia de closeout que apunta a conocimiento durable.
+
+  - name: from_drawer
+    from: TaskDoc
+    to: TaskDoc
+    mode: assert
+    doc: Procedencia de una task promovida desde el drawer.
+
+# ---------------------------------------------------------------------------
+# Máquina de estados de TaskDoc.status
+#
+# Reemplaza: EdgeDoc + ConditionDoc + OperatorDoc de desk/primitives/.
+# El operator desaparece: cambiar el campo ES el efecto (spec 03).
+# ---------------------------------------------------------------------------
+states:
+  - model: State
+    machine: TaskDoc.status
+    values:
+      - name: drawer
+        doc: Backlog diferido. Aún no rutea trabajo.
+
+      - name: active
+        doc: En el board, lista para ejecución.
+
+      - name: execution
+        doc: Gate de ejecución pasado, implementación en curso.
+
+      - name: testing
+        doc: Implementación completa, probando el contrato.
+
+      - name: closeout
+        doc: Tests verdes, cerrando con evidencia.
+
+      - name: closed
+        doc: Cerrada con commit atómico.
+
+transitions:
+  - from: drawer
+    to: active
+    # Reemplaza condition-board-task-yaml-has-implementation-path
+    # y condition-board-task-yaml-has-validation.
+    condition: "{implementation_path} != '' and {validation} != ''"
+    doc: Promoción al board exige camino de implementación y validación.
+
+  - from: active
+    to: execution
+    condition: "{routine} != ''"
+    doc: Solo avanza una task con routine que la haga accionable.
+
+  - from: execution
+    to: testing
+    condition: "{implementation_path} != ''"
+    doc: Gate de ejecución satisfecho.
+
+  - from: testing
+    to: closeout
+    condition: "{validation} != ''"
+    doc: Contrato probado, handoff explícito.
+
+  - from: testing
+    to: execution
+    condition: ""
+    doc: Regresión detectada, vuelve a implementación. Sin guarda.
+
+  - from: closeout
+    to: closed
+    # Reemplaza condition-board-task-yaml-ready-for-closeout.
+    condition: "{done_when} != '' and {references} != ''"
+    doc: Cierre exige criterio cumplido y evidencia referenciada.
+
+# ---------------------------------------------------------------------------
+# Rituales y steps
+#
+# RoutineDoc se parte en dos: la máquina (arriba) y el procedimiento (acá).
+# Los steps dejan de ser strings dentro del frontmatter de un ritual y pasan
+# a ser StepDoc con `action` y `outcome`, ordenados por `next_step`.
+# ---------------------------------------------------------------------------
+rituals:
+  - id: ritual-execution
+    phase: execution
+    binds_state: execution
+  - id: ritual-testing
+    phase: testing
+    binds_state: testing
+  - id: ritual-closeout
+    phase: closeout
+    binds_state: closeout
+  - id: ritual-phase
+    phase: phase
+    doc: Capa horizontal sobre tasks. No es un estado de TaskDoc.
+
+# ---------------------------------------------------------------------------
+# Lo que NO se declara acá todavía (decisión del operador)
+#
+# hooks: se quedan en deskops por ahora. Si el comportamiento se estabiliza,
+#        la primitiva se lleva a pron. No es el foco.
+# ---------------------------------------------------------------------------

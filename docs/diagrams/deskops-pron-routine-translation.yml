@@ -1,0 +1,106 @@
+id: deskops-pron.routine-translation
+title: RoutineDoc traducido al mundo - estados, transiciones y steps
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    routine_before:
+      label: ANTES - RoutineDoc como grafo interpretado por Python
+      kind: external
+      contains:
+        - before_entrypoint
+        - before_decomposition
+        - before_edges
+        - before_terminal
+
+    before_entrypoint:
+      label: entrypoint - id de nodo inicial (string suelto)
+      kind: external
+
+    before_decomposition:
+      label: decomposition - ids de primitivas (lista de strings)
+      kind: external
+
+    before_edges:
+      label: edges - ids de EdgeDoc (lista de strings)
+      kind: external
+
+    before_terminal:
+      label: terminal_nodes - ids terminales (lista de strings)
+      kind: external
+
+    state_doc:
+      label: State - machine TaskDoc.status - un doc por valor legal del campo
+      kind: core
+
+    transitions_to:
+      label: transitions_to - RelationDoc entre estados, con condicion
+      kind: integration
+
+    condition_pred:
+      label: Condicion - predicado sldb con llaves - status vacio o implementation_path truthy
+      kind: integration
+
+    step_doc:
+      label: StepDoc - action y outcome - el procedimiento humano
+      kind: core
+
+    step_relation:
+      label: has_step y next_step - RelationDoc que ordenan los steps
+      kind: integration
+
+    ritual_doc:
+      label: RitualDoc - agrupa steps por fase
+      kind: core
+
+    pron_transition:
+      label: pron StateMachine.transition - verifica arista y condicion
+      kind: integration
+
+    pron_condition:
+      label: pron ConditionCheck.holds - evalua el predicado sobre el sujeto
+      kind: integration
+
+    advance:
+      label: deskops advance - cambia un campo, pron decide si es legal
+      kind: core
+
+    hooks_deskops:
+      label: Hooks on_complete - se quedan en deskops por ahora
+      kind: core
+
+  edges:
+    - from: before_entrypoint
+      to: state_doc
+      relation: se vuelve estado inicial
+    - from: before_edges
+      to: transitions_to
+      relation: se vuelve arista tipada
+    - from: before_terminal
+      to: state_doc
+      relation: estados sin salida
+    - from: before_decomposition
+      to: step_doc
+      relation: los steps se separan de la maquina
+    - from: condition_pred
+      to: transitions_to
+      relation: guarda de la arista
+    - from: transitions_to
+      to: pron_transition
+      relation: verificada por
+    - from: condition_pred
+      to: pron_condition
+      relation: evaluada por
+    - from: advance
+      to: pron_transition
+      relation: cambia status - la legalidad la decide pron
+    - from: step_doc
+      to: step_relation
+      relation: ordenados por
+    - from: step_relation
+      to: ritual_doc
+      relation: agrupados en
+    - from: advance
+      to: hooks_deskops
+      relation: dispara despues del movimiento

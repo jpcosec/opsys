@@ -1,0 +1,28 @@
+graph TD
+    subgraph routine_before ["ANTES - RoutineDoc como grafo interpretado por Python"]
+        before_entrypoint["entrypoint - id de nodo inicial (string suelto)"]
+        before_decomposition["decomposition - ids de primitivas (lista de strings)"]
+        before_edges["edges - ids de EdgeDoc (lista de strings)"]
+        before_terminal["terminal_nodes - ids terminales (lista de strings)"]
+    end
+    state_doc["State - machine TaskDoc.status - un doc por valor legal del campo"]
+    transitions_to["transitions_to - RelationDoc entre estados, con condicion"]
+    condition_pred["Condicion - predicado sldb con llaves - status vacio o implementation_path truthy"]
+    step_doc["StepDoc - action y outcome - el procedimiento humano"]
+    step_relation["has_step y next_step - RelationDoc que ordenan los steps"]
+    ritual_doc["RitualDoc - agrupa steps por fase"]
+    pron_transition["pron StateMachine.transition - verifica arista y condicion"]
+    pron_condition["pron ConditionCheck.holds - evalua el predicado sobre el sujeto"]
+    advance["deskops advance - cambia un campo, pron decide si es legal"]
+    hooks_deskops["Hooks on_complete - se quedan en deskops por ahora"]
+    before_entrypoint -->|"se vuelve estado inicial"| state_doc
+    before_edges -->|"se vuelve arista tipada"| transitions_to
+    before_terminal -->|"estados sin salida"| state_doc
+    before_decomposition -->|"los steps se separan de la maquina"| step_doc
+    condition_pred -->|"guarda de la arista"| transitions_to
+    transitions_to -->|"verificada por"| pron_transition
+    condition_pred -->|"evaluada por"| pron_condition
+    advance -->|"cambia status - la legalidad la decide pron"| pron_transition
+    step_doc -->|"ordenados por"| step_relation
+    step_relation -->|"agrupados en"| ritual_doc
+    advance -->|"dispara despues del movimiento"| hooks_deskops
