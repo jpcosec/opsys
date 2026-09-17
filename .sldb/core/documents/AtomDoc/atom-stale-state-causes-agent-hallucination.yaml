@@ -1,0 +1,9 @@
+name: atom-stale-state-causes-agent-hallucination
+path: desk/atoms/atom-stale-state-causes-agent-hallucination.md
+hash_c: 86df8256d7d8734f6b32d07d3633ab7de7099e305a60512243eff1361c238597
+hash_d: 988fcd63ac12f9b2bd39da7bbfeb7a25d39c5b61dd820e5031037ab15749a777
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.atom
+- workspace.desk.atoms

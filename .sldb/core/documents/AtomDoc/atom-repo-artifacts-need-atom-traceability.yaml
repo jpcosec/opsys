@@ -1,0 +1,13 @@
+name: atom-repo-artifacts-need-atom-traceability
+path: desk/atoms/workflow-model/atom-repo-artifacts-need-atom-traceability.md
+hash_c: d67b05e4a2de02698b01286c04e6c1cab7bbb9d33ff045065deb2bfd304742f8
+hash_d: 7a7cb010674d8ba05907de6f93f8dcda027722e94090675f6125b786c764b1b8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:knowledge-graph
+- topic:traceability
+- type.knowledge.atom
+- workspace.desk.atoms

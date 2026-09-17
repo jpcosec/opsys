@@ -1,0 +1,9 @@
+name: deskops-tester
+path: desk/roles/deskops-tester.md
+hash_c: 8a3a3ef505fe54da870512fc468e6d9bf662e0818a0953b4f5964113827f89c4
+hash_d: ec160857af61b387f46a638e8511dbfbc437251a0904925b2b77c83b472c2997
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.role
+- workspace.desk.roles

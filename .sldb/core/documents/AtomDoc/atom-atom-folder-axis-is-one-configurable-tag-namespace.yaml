@@ -1,0 +1,12 @@
+name: atom-atom-folder-axis-is-one-configurable-tag-namespace
+path: desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md
+hash_c: 56acd230e8a8e151c1b058e23c8fc79c81c6ded115c582cfa453251115c8601f
+hash_d: 4f08f3cbb63bda00472ff62c9411e5194ac543134f24ed572e96d502e95b2ca5
+semantic_tags:
+- layer:cli
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,13 @@
+name: atom-docs-are-human-facing-atom-materializations
+path: desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md
+hash_c: d01cf34ed2237c772874f72fef66f8eac523a04e89b5cb6216bcfc88f199e192
+hash_d: cfe9065adf12ddcb670968ab1a21fddbb5b4a16c899898ea64177b4857d64b66
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:documentation
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms

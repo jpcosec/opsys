@@ -1,0 +1,13 @@
+name: atom-every-change-needs-descriptive-commit
+path: desk/atoms/workflow-model/atom-every-change-needs-descriptive-commit.md
+hash_c: 7c80bceb5fde522c9594eefb047667722ee2969f78d9ef38e4a3a2f433bae852
+hash_d: c0199af7293fb71890ef0c140df9af21f41305a0de566ec608995499b69d07cc
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:git
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

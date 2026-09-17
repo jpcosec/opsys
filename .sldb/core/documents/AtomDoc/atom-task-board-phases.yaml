@@ -1,0 +1,12 @@
+name: atom-task-board-phases
+path: desk/atoms/workflow-model/atom-task-board-phases.md
+hash_c: cddb3e314aa01dfcaad0e750ae84a3ed18ab5d4a8c869f4fcedea8fa41931140
+hash_d: d09c88720b5b39c6b95d91848f0e55eb309d652f37b430639240cd701e5bac76
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boards
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

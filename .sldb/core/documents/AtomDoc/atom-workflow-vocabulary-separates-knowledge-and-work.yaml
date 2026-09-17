@@ -1,0 +1,12 @@
+name: atom-workflow-vocabulary-separates-knowledge-and-work
+path: desk/atoms/workflow-model/atom-workflow-vocabulary-separates-knowledge-and-work.md
+hash_c: e463110d7290b595ae4ac5f9340ef098993350b3c85099ef89bf621b3d21dcca
+hash_d: 4502b9e7c9684dd7363e38c856fefe3796c50c108676fe38ec227d83fee0ca70
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:vocabulary
+- topic:workflow-model
+- type.knowledge.atom
+- workspace.desk.atoms

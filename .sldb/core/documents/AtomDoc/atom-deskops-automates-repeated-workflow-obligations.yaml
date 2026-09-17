@@ -1,0 +1,13 @@
+name: atom-deskops-automates-repeated-workflow-obligations
+path: desk/atoms/workflow-model/atom-deskops-automates-repeated-workflow-obligations.md
+hash_c: 88b2a99fb4162ce8f8a9cfa63d2b75c73b9af2f355a4e74ff354dc560d938a02
+hash_d: f9403b5ccb208e81b463fba5013ff2418f9ed93b031be279502a506be07bc91a
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:automation
+- topic:tasks
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

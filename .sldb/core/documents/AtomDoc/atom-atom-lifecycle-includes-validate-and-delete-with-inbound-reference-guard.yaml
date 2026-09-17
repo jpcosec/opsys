@@ -1,0 +1,9 @@
+name: atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard
+path: desk/atoms/atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard.md
+hash_c: f0931620067c90bb1398bd9a5bfcc0bced65e5a4e5383fc4e517df016bc87642
+hash_d: 06db2032ed6bf09be9cfe813993fadd71651456454bccd3b2867167bf08e02ce
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,13 @@
+name: atom-upstream-routing-needs-convenient-command
+path: desk/atoms/workflow-model/atom-upstream-routing-needs-convenient-command.md
+hash_c: c607466502f75351820ca6c1efa7868f0fefb3626b22870e3237b846a08f97c3
+hash_d: 1d2487e1ece8702717ff0158f0e8e3dcefb4b85ed529eb71be24bdc44b38a8b5
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:inbox
+- topic:tooling
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

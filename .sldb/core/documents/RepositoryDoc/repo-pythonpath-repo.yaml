@@ -1,0 +1,9 @@
+name: repo-pythonpath-repo
+path: desk/registry/repo-pythonpath-repo.md
+hash_c: 86f242173b138a8dae4ec964fdffad3559139715c0c0a8907b89dca80f2421a1
+hash_d: bce631301904877de3dd2b6ced9fc4a5f710ab642ae65796f043ce39783fd62d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry

@@ -1,0 +1,13 @@
+name: atom-rendered-diagrams-are-projections
+path: desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md
+hash_c: 2acf702c86686411d866492bddb63aaa7fbb5e23443bc4f31f9d27bb7e95e1b2
+hash_d: b42d04e7e7113480c0cb57f96bf1a122ed93c2a0de157b2174169f6ea00ed8af
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:spec2viz
+- topic:diagrams
+- topic:drift-control
+- type.knowledge.atom
+- workspace.desk.atoms

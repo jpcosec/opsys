@@ -1,0 +1,12 @@
+name: atom-workflow-surfaces-have-operational-lifetimes
+path: desk/atoms/workflow-model/atom-workflow-surfaces-have-operational-lifetimes.md
+hash_c: 6e8d76f56e82ea3e0ad694b59106de783b96db7eb165350c3bb5b9f5330ca0e1
+hash_d: 4156d23d4290353ef27153bfa56332f2d56837e7ec898b616f5964c75ecd10b5
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:surfaces
+- topic:workflow-model
+- type.knowledge.atom
+- workspace.desk.atoms

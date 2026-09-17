@@ -1,0 +1,9 @@
+name: atom-canonical-project-identity-resolves-through-a-shared-registry-resolver
+path: desk/atoms/atom-canonical-project-identity-resolves-through-a-shared-registry-resolver.md
+hash_c: 60bb3a12748382ea883192b7887e5fccdd340a6376eebeeebb4ad478226cb6c1
+hash_d: b7b3f4ce7e39b9976b255c3dc9ce0f1bd9f6c8ac7ca83730b5989edb23d36f28
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,9 @@
+name: repo-described-repo
+path: desk/registry/repo-described-repo.md
+hash_c: 77d7cc78dfad4f2b757506dd8e5ca3029c7f6bfb6baa9d692cfdaa066a7142d1
+hash_d: 9c294c4e519652615bf615b2dfbfba082a326b70b01fdbe5c9579ea27a0b5200
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry

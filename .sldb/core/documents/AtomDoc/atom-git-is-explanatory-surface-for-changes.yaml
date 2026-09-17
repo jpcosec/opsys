@@ -1,0 +1,12 @@
+name: atom-git-is-explanatory-surface-for-changes
+path: desk/atoms/workflow-model/atom-git-is-explanatory-surface-for-changes.md
+hash_c: f7b12df306a5cbc7209873db69d574de72cb4c95658da239302890186359bca8
+hash_d: 647b2b05cec49eb0cb7157ad50709cc1ca219cf29d6da1e0794ccf9269e8b1ae
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:drift-control
+- topic:git
+- type.knowledge.atom
+- workspace.desk.atoms

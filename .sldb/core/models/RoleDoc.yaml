@@ -3,7 +3,8 @@ model_ref: deskops.models:RoleDoc
 path: deskops/models/role.py
 documents_index: .sldb/core/documents/RoleDoc.yaml
 sections_index: .sldb/runtime/sections/RoleDoc.yaml
-hash_b: dfb243c1d9760d37768f96be7a5bcaa984461c69b1045ef37768857c2ba05763
+hash_b: a36208d5d86970a5a041ebde82230eb3cb5598f9d1fa108803872e267856403a
+documents_count: 3
 version: 1
 canonical: false
 family: null

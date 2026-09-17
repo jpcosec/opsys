@@ -1,0 +1,13 @@
+name: atom-git-history-is-the-past
+path: desk/atoms/workflow-model/atom-git-history-is-the-past.md
+hash_c: b29f670404907217c123ade4225703c963e9904c68476a51023854e3f5e799ea
+hash_d: 0c9e54705148edc1838e83a09c071a08a73a32aee57071524eafad9922abc9f1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cleanup
+- topic:drawer
+- topic:git
+- type.knowledge.atom
+- workspace.desk.atoms

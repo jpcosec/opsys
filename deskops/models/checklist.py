@@ -5,6 +5,8 @@ from .base import PrimitiveDoc
 
 class ChecklistDoc(PrimitiveDoc):
     __semantics__ = {"type": ["workflow", "checklist"], "workspace": ["desk", "primitives"]}
+    __containment__ = {}
+    __references__ = ["condition_refs"]
     __template__ = """---
 # checklist-xxx
 id: ⸢rev•id⸥

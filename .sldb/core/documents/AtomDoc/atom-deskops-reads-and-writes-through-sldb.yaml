@@ -1,0 +1,11 @@
+name: atom-deskops-reads-and-writes-through-sldb
+path: desk/atoms/atom-deskops-reads-and-writes-through-sldb.md
+hash_c: 46efada20594a14d6add4053762ff4d09b998aad00c9ffabab189a7e6f8830f1
+hash_d: 549fa5a8d914a6f6a0809e513ae5577f42d6523bc83b6f3d1580c16dd50436c3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

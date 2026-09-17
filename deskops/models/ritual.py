@@ -5,6 +5,8 @@ from .base import OperationalArtifactDoc
 
 class RitualDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "ritual"], "workspace": ["desk"]}
+    __containment__ = {}
+    __references__ = ["steps"]
     __compositions__ = {
         "step_details": {
             "source_field": "steps",

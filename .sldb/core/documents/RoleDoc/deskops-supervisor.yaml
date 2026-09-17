@@ -1,0 +1,9 @@
+name: deskops-supervisor
+path: desk/roles/deskops-supervisor.md
+hash_c: b9acd89a2477d26b1861be3c388043ba60956ccfda083059b64fe7c815f23274
+hash_d: 1a7b90bcffc497b497a3731060e39ea6bf76d2bc738571018178e111f8113d87
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.role
+- workspace.desk.roles

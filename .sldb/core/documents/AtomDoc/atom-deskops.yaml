@@ -1,0 +1,12 @@
+name: atom-deskops
+path: desk/atoms/atom-deskops.md
+hash_c: fe1d9cf6139d580ebfb6e574d657517fc7dbf9526ffb90b0f1839e8ffe0da7fc
+hash_d: c269423423528e441c77e0f1f179a54b6d0b92d548a717ceed08a2111733ccac
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:sldb
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

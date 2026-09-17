@@ -1,0 +1,13 @@
+name: atom-desk-health-is-measured-by-cli-diagnostics
+path: desk/atoms/atom-desk-health-is-measured-by-cli-diagnostics.md
+hash_c: 88b8a3034e2c81cc891f7c2d1c5579d89656d7e6c531744d83ac4b2ed60d3047
+hash_d: 160c3dfb48f868f441280896dad4b73b30f407ea4db26a3f44a79e5b019c4f81
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:diagnosis
+- topic:workspace-health
+- type.knowledge.atom
+- workspace.desk.atoms

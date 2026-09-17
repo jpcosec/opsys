@@ -1,0 +1,9 @@
+name: repo-myrepo-etc
+path: desk/registry/repo-myrepo-etc.md
+hash_c: c686b14d9ba487f3350bc17b2c3f69cb97c8c939c82928683001add086ac9a4b
+hash_d: 36abeede5e52abc883f3a0fcda287509d2c379e8a6f08be1383e063e5268cad4
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry

@@ -1,0 +1,13 @@
+name: atom-role-prompts-are-tracked-documents-agent-files-are-materializations
+path: desk/atoms/atom-role-prompts-are-tracked-documents-agent-files-are-materializations.md
+hash_c: f1effad9fa43ac5e67a4da506eb4d3b3a3f482ce844202e5a9de9a5e8f713965
+hash_d: 257d3dee2921dff70fdab5f915a807219e87ee6e7fd5875e2b8f300d98143638
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:drift-control
+- topic:materialization
+- topic:roles
+- type.knowledge.atom
+- workspace.desk.atoms

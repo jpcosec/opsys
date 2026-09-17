@@ -5,6 +5,8 @@ from .base import PrimitiveDoc
 
 class EdgeDoc(PrimitiveDoc):
     __semantics__ = {"type": ["workflow", "edge"], "workspace": ["desk", "primitives"]}
+    __containment__ = {}
+    __references__ = ["source", "target", "condition_ref"]
     __template__ = """---
 # edge-xxx
 id: ⸢rev•id⸥

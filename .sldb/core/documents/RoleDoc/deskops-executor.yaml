@@ -1,0 +1,9 @@
+name: deskops-executor
+path: desk/roles/deskops-executor.md
+hash_c: f2628346f9d8bb331e7d6bcb4de80c65395af89dc7f3a1d830e69cd86ddbf2c1
+hash_d: 8217e53084c63010836e0f611fd1c05ef1453b70b3b7b91d654ac7baeee1a4ca
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.role
+- workspace.desk.roles

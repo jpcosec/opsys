@@ -3,7 +3,8 @@ model_ref: deskops.models:RepositoryDoc
 path: deskops/models/repository.py
 documents_index: .sldb/core/documents/RepositoryDoc.yaml
 sections_index: .sldb/runtime/sections/RepositoryDoc.yaml
-hash_b: 525560a642b1bcda52e00dc4197ce0b40aa97c61eb1e3d80c68b19953b4ab835
+hash_b: 61e3e2fef02386b099471d52607b8edeac938ccf47706712499c1c880f8525dd
+documents_count: 14
 version: 1
 canonical: false
 family: null

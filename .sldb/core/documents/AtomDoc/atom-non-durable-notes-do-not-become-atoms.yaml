@@ -1,0 +1,12 @@
+name: atom-non-durable-notes-do-not-become-atoms
+path: desk/atoms/workflow-model/atom-non-durable-notes-do-not-become-atoms.md
+hash_c: e902939fd69022c5ead71ed17650fd3f4c3e2fa46aa6a90aa4b77a6cb9df4b8a
+hash_d: 6efe8b18640fb79ed766fd8b0a2fcf1e70d7f3fbd69cfff4c99ae94726d82c37
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:workflow-model
+- type.knowledge.atom
+- workspace.desk.atoms

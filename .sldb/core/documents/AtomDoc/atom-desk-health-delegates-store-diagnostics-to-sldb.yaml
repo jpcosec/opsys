@@ -1,0 +1,13 @@
+name: atom-desk-health-delegates-store-diagnostics-to-sldb
+path: desk/atoms/atom-desk-health-delegates-store-diagnostics-to-sldb.md
+hash_c: 0638aac4f4a4a6c66af5cb212cfafffae64c928310f503e3721a746bfa0b465c
+hash_d: 3830108bf3a7fce10a12e3c2cac9001ba699d17025fdfcccca83a25d942acc9e
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boundary
+- topic:sldb
+- topic:workspace-health
+- type.knowledge.atom
+- workspace.desk.atoms

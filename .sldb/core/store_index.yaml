@@ -72,5 +72,121 @@ models:
   canonical: false
   family: null
   semantics: []
+- name: BoardDoc
+  model_ref: deskops.models:BoardDoc
+  path: deskops/models/board.py
+  models_index: .sldb/core/models/BoardDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.board
+  - workspace.desk
+- name: FAQDoc
+  model_ref: deskops.models:FAQDoc
+  path: deskops/models/faq.py
+  models_index: .sldb/core/models/FAQDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.documentation.faq
+  - workspace.docs.faq
+- name: HookDoc
+  model_ref: deskops.models:HookDoc
+  path: deskops/models/hook.py
+  models_index: .sldb/core/models/HookDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.hook
+  - workspace.desk.primitives
+- name: InboxNoteDoc
+  model_ref: deskops.models:InboxNoteDoc
+  path: deskops/models/inbox.py
+  models_index: .sldb/core/models/InboxNoteDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.desk.inbox-note
+  - workspace.desk.inbox
+- name: MaterializationContractDoc
+  model_ref: deskops.models:MaterializationContractDoc
+  path: deskops/models/materialization.py
+  models_index: .sldb/core/models/MaterializationContractDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.knowledge.materialization_contract
+  - workspace.desk.materializations
+- name: OperationalArtifactDoc
+  model_ref: deskops.models:OperationalArtifactDoc
+  path: deskops/models/base.py
+  models_index: .sldb/core/models/OperationalArtifactDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+- name: PillDoc
+  model_ref: deskops.models:PillDoc
+  path: deskops/models/pill.py
+  models_index: .sldb/core/models/PillDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.pill
+  - workspace.desk
+- name: PrimitiveDoc
+  model_ref: deskops.models:PrimitiveDoc
+  path: deskops/models/base.py
+  models_index: .sldb/core/models/PrimitiveDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+- name: RitualDoc
+  model_ref: deskops.models:RitualDoc
+  path: deskops/models/ritual.py
+  models_index: .sldb/core/models/RitualDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.ritual
+  - workspace.desk
+- name: StepDoc
+  model_ref: deskops.models:StepDoc
+  path: deskops/models/step.py
+  models_index: .sldb/core/models/StepDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.step
+  - workspace.desk
 predicates: []
-hash_a: 659332f5cf069e2f3556830bb50c17be4fea911b7783eda8879097dd7b621d16
+hash_a: 5e73832ccb6a36ea56237c310bed6485da6be16b8e2f908855d5f4c98bd49ec3

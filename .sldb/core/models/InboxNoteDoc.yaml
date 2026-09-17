@@ -1,0 +1,16 @@
+name: InboxNoteDoc
+model_ref: deskops.models:InboxNoteDoc
+path: deskops/models/inbox.py
+documents_index: .sldb/core/documents/InboxNoteDoc.yaml
+sections_index: ''
+hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+documents_count: 0
+version: 1
+canonical: false
+family: null
+semantics:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+base_models: []

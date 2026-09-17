@@ -6,8 +6,17 @@ from .base import OperationalArtifactDoc
 class TaskDoc(OperationalArtifactDoc):
     model_config = {"extra": "allow"}
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
-    
-    frontmatter: dict | None = Field(default=None, description="YAML frontmatter containing task metadata", exclude=True)
+    __containment__ = {}
+    __references__ = [
+        "routine",
+        "depends_on",
+        "inherits_from",
+        "pills",
+        "checklists",
+        "atoms",
+    ]
+
+    frontmatter: dict | None = Field(default=None, description="YAML frontmatter containing task metadata.", exclude=True)
 
     @model_validator(mode="before")
     @classmethod

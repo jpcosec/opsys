@@ -1,0 +1,12 @@
+name: atom-spec-to-visualization-pipeline
+path: desk/atoms/workflow-model/atom-spec-to-visualization-pipeline.md
+hash_c: b74fce2a8a645230dfcdf122e048ee89a487ea47c167a106881365418bcbf0aa
+hash_d: 2241cab51df37188e6fb449d07f7504b502cdd27da44fe27c0d17b7e49313bcf
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:diagrams
+- topic:specs
+- type.knowledge.atom
+- workspace.desk.atoms

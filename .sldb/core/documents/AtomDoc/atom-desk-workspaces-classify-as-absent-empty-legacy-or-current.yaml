@@ -1,0 +1,9 @@
+name: atom-desk-workspaces-classify-as-absent-empty-legacy-or-current
+path: desk/atoms/atom-desk-workspaces-classify-as-absent-empty-legacy-or-current.md
+hash_c: 9be4e095fa02e7341105133acf8872023d670c1a3ef7dec9ade54058ce4e2c38
+hash_d: 4d088b84cdddef5570f525500cc27bb8edf51c7222e2f5c15fbad050410e8336
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.atom
+- workspace.desk.atoms

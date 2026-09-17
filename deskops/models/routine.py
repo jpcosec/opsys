@@ -5,6 +5,8 @@ from .base import PrimitiveDoc
 
 class RoutineDoc(PrimitiveDoc):
     __semantics__ = {"type": ["workflow", "routine"], "workspace": ["desk", "routines"]}
+    __containment__ = {}
+    __references__ = ["entrypoint", "decomposition", "edges", "terminal_nodes"]
     __template__ = """---
 # routine-xxx
 id: ⸢rev•id⸥

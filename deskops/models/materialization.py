@@ -10,6 +10,8 @@ class MaterializationContractDoc(StructuredNLDoc):
         "type": ["knowledge", "materialization_contract"],
         "workspace": ["desk", "materializations"],
     }
+    __containment__ = {}
+    __references__ = ["source_atoms"]
     __template__ = """---
 id: ⸢rev•id⸥
 title: ⸢rev•title⸥
