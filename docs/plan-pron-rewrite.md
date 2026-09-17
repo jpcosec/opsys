@@ -15,13 +15,31 @@ worktree/branch. Fireproof test for pron; total refactoring for deskops.
   init, inbox, promote, add, edit, bind, next, list, show, advance, repo, desk,
   atoms, graph, materialize, drift, closeout, runtime`) — same verbs, same
   flags, same printed artifacts. `desk/` content, skills, and docs keep working.
-- **Acceptance gate**: the 273 existing tests are the behavioral contract. All
-  must pass against the pron-backed implementation. CLI checks:
+- **Acceptance gate**: the existing test suite is the behavioral contract:
+  **216 passing / 3 known-red at baseline** (§1.1). No lane may increase the
+  red count; lanes that touch a red test must fix it or gap-log why not. CLI checks:
   `python -m deskops --help`, `deskops faq`, `deskops graph build`,
   `deskops graph missing`, plus `World` semantic checks after each write lane.
 - **Gap log**: every pron limitation found during the rewrite goes to
   `desk/pron-gap-log.md` (worktree) with a repro. This log is the deliverable
   that later feeds pron's inbox. Do NOT patch around gaps in deskops code.
+
+## 1.1 Baseline (P0, measured in the worktree)
+
+- Command: `cd ../deskops-pron && PYTHONPATH=$PWD python -m pytest -q`
+  → **216 passed, 3 failed** at `529e990` (a `wip:` commit).
+- **Environment rule (mandatory for every worker)**: always export
+  `PYTHONPATH=$PWD` from the worktree root. A stale non-editable `deskops`
+  0.1.0 lives in site-packages; tests that run `python -m deskops` with
+  `cwd` set to a temp repo will silently execute that stale copy otherwise.
+- Known-red at baseline (pre-existing, not caused by the worktree):
+  1. `tests/test_cli.py::test_cli_help_uses_deskops_name` — asserts the verb
+     list without `runtime`; parser already ships `runtime`.
+  2. `tests/test_atoms_cli.py::test_atoms_delete_force_removes_file_and_untracks_store`
+     — also red on `main`.
+  3. `tests/test_atom_folder_axis.py::test_reorganize_moves_flat_atoms_and_updates_store`.
+  4. `tests/test_lifecycle_end_to_end.py::test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli`
+     — passes once `PYTHONPATH` is pinned (stale-install artifact).
 
 ## 1. Current state (measured)
 
