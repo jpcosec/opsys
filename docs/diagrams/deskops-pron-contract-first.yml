@@ -1,0 +1,56 @@
+id: deskops-pron.contract-first
+title: Docstring, lint y test como entrada del workflow, no salida
+type: sequence
+version: "0.1"
+data:
+  participants:
+    - id: Supervisor
+      kind: actor
+    - id: Planificador
+      kind: component
+    - id: PlanTarget
+      kind: component
+    - id: ContractDoc
+      kind: component
+    - id: Ejecutor
+      kind: component
+    - id: Codigo
+      kind: boundary
+    - id: Gate
+      kind: boundary
+  messages:
+    - from: Supervisor
+      to: Planificador
+      message: suelta al planificador sobre la task
+    - from: Planificador
+      to: Codigo
+      message: sldb explore --source docstrings - busca que existe
+      kind: sync
+    - from: Planificador
+      to: PlanTarget
+      message: declara que simbolo tocar y de que tipo es el cambio
+    - from: PlanTarget
+      to: ContractDoc
+      message: exige contrato ANTES de implementar
+      kind: sync
+    - from: ContractDoc
+      to: ContractDoc
+      message: docstring + signature + lint + test declarados
+    - from: Gate
+      to: ContractDoc
+      message: sin contrato no se entra a execution
+      kind: sync
+    - from: ContractDoc
+      to: Ejecutor
+      message: el ejecutor recibe el contrato, no una instruccion vaga
+    - from: Ejecutor
+      to: Codigo
+      message: implementa contra el contrato
+      kind: sync
+    - from: Codigo
+      to: Gate
+      message: sldb selfdoc python-check - deriva docstring vs contrato
+      kind: sync
+    - from: Gate
+      to: Supervisor
+      message: verde o vuelve a planning con PlanIteration

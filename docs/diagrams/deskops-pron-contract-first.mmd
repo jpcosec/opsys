@@ -1,0 +1,18 @@
+sequenceDiagram
+    actor Supervisor
+    participant Planificador
+    participant PlanTarget
+    participant ContractDoc
+    participant Ejecutor
+    participant Codigo
+    participant Gate
+    Supervisor->>Planificador: suelta al planificador sobre la task
+    Planificador->>Codigo: sldb explore --source docstrings - busca que existe
+    Planificador->>PlanTarget: declara que simbolo tocar y de que tipo es el cambio
+    PlanTarget->>ContractDoc: exige contrato ANTES de implementar
+    ContractDoc->>ContractDoc: docstring + signature + lint + test declarados
+    Gate->>ContractDoc: sin contrato no se entra a execution
+    ContractDoc->>Ejecutor: el ejecutor recibe el contrato, no una instruccion vaga
+    Ejecutor->>Codigo: implementa contra el contrato
+    Codigo->>Gate: sldb selfdoc python-check - deriva docstring vs contrato
+    Gate->>Supervisor: verde o vuelve a planning con PlanIteration

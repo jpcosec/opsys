@@ -25,7 +25,7 @@ worlds:
     doc: Lo que avanza y caduca. El harness de workflow.
     models: [TaskDoc, TaskIntentDoc, AcceptanceDoc, TaskBindingDoc,
              BoardDoc, PillDoc, InboxNoteDoc, RitualDoc, StepDoc,
-             PlanDoc, PlanTargetDoc, PlanIterationDoc,
+             PlanDoc, PlanTargetDoc, PlanIterationDoc, SymbolContractDoc,
              RunDoc, RoleDoc, RuntimeProfileDoc, RepositoryDoc, HookDoc]
 
   - name: code
@@ -130,13 +130,46 @@ models:
   - name: PlanTargetDoc
     doc: |
       Una cosa que hay que tocar. El puente con el AST: `symbol` apunta a un
-      SymbolDoc, y de ahí sale solo qué revisar y qué tests correr.
+      PythonSymbolDoc, y de ahí sale solo qué revisar y qué tests correr.
+
+      Todo target con change_kind add|modify DEBE contener un
+      SymbolContractDoc antes de que la task entre a `execution`.
     fields:
       - surface: str          # archivo o superficie
-      - symbol: str           # ref a SymbolDoc — el enganche con el AST
+      - symbol: str           # ref a PythonSymbolDoc — el enganche con el AST
       - change_kind: str      # add | modify | delete | verify
       - rationale: str
       - acceptance: str
+    contains:
+      contract: [SymbolContractDoc]
+
+  - name: SymbolContractDoc
+    doc: |
+      El contrato de un símbolo, escrito ANTES de implementarlo.
+
+      Invierte el flujo: hoy docstring, lint y test son residuo de la
+      implementación; acá son su entrada. El planificador los declara, el
+      gate los exige, el ejecutor implementa contra ellos.
+
+      `docstring` no tiene excusa para faltar: si el planificador no puede
+      escribir qué hace el símbolo, no entendió el cambio y la task vuelve
+      a planning. Medición actual en deskops: 75/624 símbolos documentados
+      (12%). El contrato es el mecanismo para que eso no vuelva a pasar.
+
+      Se materializa en dos lugares: el docstring real del código, y los
+      campos autorales `purpose`/`architecture` de PythonSymbolDoc (que
+      sldb inicializa en "Not documented.").
+    fields:
+      - qualname: str         # a qué símbolo le pone contrato
+      - kind: str             # module | class | function | method
+      - signature: str        # firma esperada, antes de existir
+      - docstring: str        # OBLIGATORIO. Qué hace y por qué existe.
+      - purpose: str          # campo autoral de PythonSymbolDoc
+      - architecture: str     # campo autoral de PythonSymbolDoc
+      - invariants: list[str] # qué debe seguir siendo cierto
+      - lint_rules: list[str] # reglas que aplican (complejidad, largo)
+      - test_plan: list[str]  # qué casos prueba, antes de escribirlos
+      - test_qualname: str    # dónde va a vivir el test
 
   - name: PlanIterationDoc
     doc: |
@@ -275,6 +308,10 @@ relation_types:
   # Planificación → código
   - {name: plans_change, from: PlanTargetDoc, to: PythonSymbolDoc, mode: assert}
   - {name: iterates, from: PlanIterationDoc, to: PlanDoc, mode: assert}
+  - {name: contracts, from: SymbolContractDoc, to: PythonSymbolDoc, mode: assert,
+     doc: "El contrato declarado antes de que el símbolo exista. Tras implementar, sldb selfdoc python-check compara."}
+  - {name: verifies, from: SymbolContractDoc, to: TestCoverageDoc, mode: assert,
+     doc: "El test declarado en el contrato, una vez escrito."}
 
   # AST (sobre PythonSymbolDoc de sldb)
   - {name: imports, from: PythonSymbolDoc, to: PythonSymbolDoc, mode: assert}
@@ -297,6 +334,44 @@ states:
   - model: State
     machine: TaskDoc.status
     values: [drawer, active, planning, execution, testing, closeout, closed]
+
+transitions:
+  - from: active
+    to: planning
+    condition: "{goal} != ''"
+    doc: El supervisor suelta al planificador.
+
+  - from: planning
+    to: execution
+    # ESTA es la guarda que invierte el flujo.
+    condition: "{plan_targets_without_contract} == 0"
+    doc: |
+      No se implementa nada sin contrato. Todo PlanTargetDoc con
+      change_kind add|modify debe tener su SymbolContractDoc con docstring
+      no vacio, test_plan no vacio y lint_rules declaradas.
+      Si el planificador no puede escribir que hace el simbolo, no entendio
+      el cambio: vuelve a planning con un PlanIterationDoc.
+
+  - from: execution
+    to: testing
+    condition: "{contracts_implemented} == {contracts_declared}"
+    doc: Cada contrato declarado tiene su simbolo real con docstring.
+
+  - from: testing
+    to: closeout
+    condition: "{tests_from_contracts_passing} == true"
+    doc: |
+      Los tests que corren son los declarados en los contratos, mas los
+      derivados por TestCoverageDoc sobre los simbolos tocados.
+
+  - from: testing
+    to: planning
+    condition: ""
+    doc: Regresion o contrato equivocado. Vuelve a planning, no a execution.
+
+  - from: closeout
+    to: closed
+    condition: "{evidence} != '' and {done_when} != ''"
     doc: "Se agrega planning: el supervisor suelta al planificador antes de ejecutar."
 
 # ---------------------------------------------------------------------------

@@ -63,3 +63,11 @@ vistas:
     src: deskops-pron-selfdoc-ast.mmd
     specs:
       - deskops-pron-selfdoc-ast.yml
+  - id: deskops-pron-contract-first
+    category: Arquitectura
+    title: Contrato primero - docstring, lint y test como entrada
+    nav: Workflow
+    desc: La inversion del flujo. El docstring deja de ser residuo de la implementacion y pasa a ser su especificacion, escrita por el planificador cuando todavia es barata. Sin contrato no se entra a execution, y una regresion vuelve a planning, no a execution.
+    src: deskops-pron-contract-first.mmd
+    specs:
+      - deskops-pron-contract-first.yml
