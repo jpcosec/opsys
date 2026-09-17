@@ -39,3 +39,11 @@ vistas:
     src: deskops-pron-routine-translation.mmd
     specs:
       - deskops-pron-routine-translation.yml
+  - id: deskops-pron-taxonomy
+    category: Arquitectura
+    title: Taxonomia de documentos
+    nav: Taxonomia
+    desc: Las 23 clases de documento de deskops agrupadas en cinco familias - conocimiento, trabajo, procedimiento, maquinaria y entorno. Las flechas son contencion y referencia declaradas en los modelos.
+    src: deskops-pron-taxonomy.mmd
+    specs:
+      - deskops-pron-taxonomy.yml

@@ -1,0 +1,49 @@
+graph TD
+    subgraph conocimiento ["CONOCIMIENTO - lo durable"]
+        atom["AtomDoc - five_wh_one_plus, answer, provenance (95 docs)"]
+        protoatom["ProtoAtomDoc - content, typed_as, provenance (0 docs)"]
+        crossroad["CrossroadDoc - path, content (1 doc)"]
+        materialization["MaterializationContractDoc - source_atoms, target_kind, intent"]
+    end
+    subgraph trabajo ["TRABAJO - lo que se mueve por el board"]
+        task["TaskDoc - goal, scope, validation, done_when (1 doc)"]
+        board["BoardDoc - tasks, pills, rituals, scope"]
+        pill["PillDoc - what, why, when, where, how, how_not"]
+        inbox["InboxNoteDoc - kind, sender_project, body"]
+    end
+    subgraph procedimiento ["PROCEDIMIENTO - como se hace"]
+        ritual["RitualDoc - purpose, trigger, preconditions, steps"]
+        step["StepDoc - action, outcome"]
+        routine["RoutineDoc - entrypoint, decomposition, edges, terminal_nodes (1 doc)"]
+    end
+    subgraph maquinaria ["MAQUINARIA - las primitivas que pron absorbe"]
+        condition["ConditionDoc - subject, predicate, expected (5 docs)"]
+        operator["OperatorDoc - action, target, value (3 docs)"]
+        edge["EdgeDoc - source, target, condition_ref (6 docs)"]
+        hook["HookDoc - event, target, condition_ref (0 docs)"]
+        checklist["ChecklistDoc - items, condition_refs, mode (3 docs)"]
+    end
+    subgraph entorno ["ENTORNO - quien y donde ejecuta"]
+        role["RoleDoc - model, tools, system_prompt_mode (3 docs)"]
+        runtime["RuntimeProfileDoc - binary, flags por CLI (2 docs)"]
+        run["RunDoc - task_id, role_id, herdr_pane_id, outcome (0 docs)"]
+        repository["RepositoryDoc - name, path (14 docs)"]
+    end
+    task -->|"contiene"| checklist
+    task -->|"contiene"| pill
+    task -->|"contiene"| atom
+    board -->|"contiene"| task
+    board -->|"contiene"| pill
+    board -->|"contiene"| ritual
+    ritual -->|"contiene"| step
+    routine -->|"contiene"| edge
+    routine -->|"contiene"| checklist
+    checklist -->|"contiene"| condition
+    edge -->|"refiere"| condition
+    hook -->|"refiere"| condition
+    protoatom -->|"se tipa como"| atom
+    pill -->|"gradua a"| atom
+    materialization -->|"materializa desde"| atom
+    run -->|"refiere"| task
+    run -->|"refiere"| role
+    role -->|"ejecuta en"| runtime

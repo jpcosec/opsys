@@ -1,0 +1,187 @@
+id: deskops-pron.taxonomy
+title: Taxonomia de documentos de deskops
+type: component
+version: "0.1"
+
+data:
+  nodes:
+    conocimiento:
+      label: CONOCIMIENTO - lo durable
+      kind: core
+      contains:
+        - atom
+        - protoatom
+        - crossroad
+        - materialization
+
+    atom:
+      label: AtomDoc - five_wh_one_plus, answer, provenance (95 docs)
+      kind: core
+
+    protoatom:
+      label: ProtoAtomDoc - content, typed_as, provenance (0 docs)
+      kind: core
+
+    crossroad:
+      label: CrossroadDoc - path, content (1 doc)
+      kind: core
+
+    materialization:
+      label: MaterializationContractDoc - source_atoms, target_kind, intent
+      kind: core
+
+    trabajo:
+      label: TRABAJO - lo que se mueve por el board
+      kind: integration
+      contains:
+        - task
+        - board
+        - pill
+        - inbox
+
+    task:
+      label: TaskDoc - goal, scope, validation, done_when (1 doc)
+      kind: integration
+
+    board:
+      label: BoardDoc - tasks, pills, rituals, scope
+      kind: integration
+
+    pill:
+      label: PillDoc - what, why, when, where, how, how_not
+      kind: integration
+
+    inbox:
+      label: InboxNoteDoc - kind, sender_project, body
+      kind: integration
+
+    procedimiento:
+      label: PROCEDIMIENTO - como se hace
+      kind: datastore
+      contains:
+        - ritual
+        - step
+        - routine
+
+    ritual:
+      label: RitualDoc - purpose, trigger, preconditions, steps
+      kind: datastore
+
+    step:
+      label: StepDoc - action, outcome
+      kind: datastore
+
+    routine:
+      label: RoutineDoc - entrypoint, decomposition, edges, terminal_nodes (1 doc)
+      kind: datastore
+
+    maquinaria:
+      label: MAQUINARIA - las primitivas que pron absorbe
+      kind: external
+      contains:
+        - condition
+        - operator
+        - edge
+        - hook
+        - checklist
+
+    condition:
+      label: ConditionDoc - subject, predicate, expected (5 docs)
+      kind: external
+
+    operator:
+      label: OperatorDoc - action, target, value (3 docs)
+      kind: external
+
+    edge:
+      label: EdgeDoc - source, target, condition_ref (6 docs)
+      kind: external
+
+    hook:
+      label: HookDoc - event, target, condition_ref (0 docs)
+      kind: external
+
+    checklist:
+      label: ChecklistDoc - items, condition_refs, mode (3 docs)
+      kind: external
+
+    entorno:
+      label: ENTORNO - quien y donde ejecuta
+      kind: core
+      contains:
+        - role
+        - runtime
+        - run
+        - repository
+
+    role:
+      label: RoleDoc - model, tools, system_prompt_mode (3 docs)
+      kind: core
+
+    runtime:
+      label: RuntimeProfileDoc - binary, flags por CLI (2 docs)
+      kind: core
+
+    run:
+      label: RunDoc - task_id, role_id, herdr_pane_id, outcome (0 docs)
+      kind: core
+
+    repository:
+      label: RepositoryDoc - name, path (14 docs)
+      kind: core
+
+  edges:
+    - from: task
+      to: checklist
+      relation: contiene
+    - from: task
+      to: pill
+      relation: contiene
+    - from: task
+      to: atom
+      relation: contiene
+    - from: board
+      to: task
+      relation: contiene
+    - from: board
+      to: pill
+      relation: contiene
+    - from: board
+      to: ritual
+      relation: contiene
+    - from: ritual
+      to: step
+      relation: contiene
+    - from: routine
+      to: edge
+      relation: contiene
+    - from: routine
+      to: checklist
+      relation: contiene
+    - from: checklist
+      to: condition
+      relation: contiene
+    - from: edge
+      to: condition
+      relation: refiere
+    - from: hook
+      to: condition
+      relation: refiere
+    - from: protoatom
+      to: atom
+      relation: se tipa como
+    - from: pill
+      to: atom
+      relation: gradua a
+    - from: materialization
+      to: atom
+      relation: materializa desde
+    - from: run
+      to: task
+      relation: refiere
+    - from: run
+      to: role
+      relation: refiere
+    - from: role
+      to: runtime
+      relation: ejecuta en
