@@ -1,0 +1,10 @@
+name: hook-missing-event-test
+path: desk/primitives/hooks/hook-missing-event-test.md
+hash_c: 6fc7a0fe683e2ece0d54a2a5bdc4ed9ee0948f5b738308b1a96589b17c581d8c
+hash_d: 8a40dbeabf4fafa52ca8ecd5a73c61ef4947e05859e5703eaf963678ad0a6ff5
+semantic_tags:
+- primitive:hook
+- representation.markdown
+- source.document.markdown
+- type.workflow.hook
+- workspace.desk.primitives

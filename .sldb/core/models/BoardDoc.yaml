@@ -2,9 +2,9 @@ name: BoardDoc
 model_ref: deskops.models:BoardDoc
 path: deskops/models/board.py
 documents_index: .sldb/core/documents/BoardDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-documents_count: 0
+sections_index: .sldb/runtime/sections/BoardDoc.yaml
+hash_b: 5fc7dd23588a4bde0f9d74161a619433d861e5d79cdcebdceeb8ce6df6c02288
+documents_count: 1
 version: 1
 canonical: false
 family: null

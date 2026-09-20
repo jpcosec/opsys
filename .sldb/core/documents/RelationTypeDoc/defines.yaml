@@ -1,0 +1,9 @@
+name: defines
+path: desk/relation_types/defines.md
+hash_c: ac0d987c7c63fbe425aceebc2eda8099bc27cad331f637a9d84dd5fe31b17be0
+hash_d: 47580be8ef1ee91895347504aa5fcb63c6fccc1ccc316efef35e967f01f69a4f
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

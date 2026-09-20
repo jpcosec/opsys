@@ -1,0 +1,10 @@
+name: routine-full-routine-test
+path: desk/routines/routine-full-routine-test.md
+hash_c: 07bdda9ad29fff75934ecd8e49c6f27064caf3807e7d7b424ffddf11e3c96eba
+hash_d: 51a52f9626558755ebc0f74d1c78f7ff72b864717fe4d5e31ef8c2c761e7b782
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines

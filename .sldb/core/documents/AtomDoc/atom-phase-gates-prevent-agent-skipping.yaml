@@ -1,0 +1,12 @@
+name: atom-phase-gates-prevent-agent-skipping
+path: desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md
+hash_c: 3275c2b12f804270c7f6b4bddbab4ad5018e9d92afebd48cf54f0b68188d46d0
+hash_d: 3f77730b7d2564c778c8f3b8a0f52545ff1c0d6c621a2c1aa5b4c1bb39ced1af
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:phase-gates
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

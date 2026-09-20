@@ -1,0 +1,10 @@
+name: edge-task-test-task-activate-to-testing
+path: desk/primitives/edges/edge-task-test-task-activate-to-testing.md
+hash_c: 6d378ac42390ad37196185e4d43b87a2e4eaa1ce82d28844302ca6ccd1c5fcd4
+hash_d: 64c3b880084665a770b5fa3e1b64522559315cf293e84e286b03d2a0bf52ebcc
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

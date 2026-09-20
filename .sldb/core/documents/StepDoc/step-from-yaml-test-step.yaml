@@ -1,0 +1,11 @@
+name: step-from-yaml-test-step
+path: desk/steps/step-from-yaml-test-step.md
+hash_c: 306660cf831ab628f597d5d96b676a372511b72733539e77f88949e9c93bf29b
+hash_d: d4a1464943210db7910e7f3ab836d0787cb61664e6011b56b1691e3045c2f06d
+semantic_tags:
+- artifact:step
+- representation.markdown
+- source.document.markdown
+- type.workflow.step
+- workspace.desk
+- workspace:desk

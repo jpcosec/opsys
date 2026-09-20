@@ -1,0 +1,10 @@
+name: edge-task-test-task-ready-to-closeout
+path: desk/primitives/edges/edge-task-test-task-ready-to-closeout.md
+hash_c: 1beb5fc5f3b9bd152a39450db82f2801d57e71cabcc1bee69325990ae5c23880
+hash_d: bfdde3e5912756e112dcbbdc502059fbc95b2476df7fa990e1bd24207764524f
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

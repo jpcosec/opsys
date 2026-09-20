@@ -1,0 +1,9 @@
+name: faq-missing-body-test
+path: desk/faq/faq-missing-body-test.md
+hash_c: 9fe3631b2ff54806a551a352b1746063c6f0c1a56ee64b6b89786f294b736b13
+hash_d: 7762d976c47d432fb2d8efabd5061adb0e1dfa407f621211bc98f8ed8f4ffc70
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.documentation.faq
+- workspace.docs.faq

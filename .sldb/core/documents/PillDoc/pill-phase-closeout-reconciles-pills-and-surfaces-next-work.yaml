@@ -1,0 +1,15 @@
+name: pill-phase-closeout-reconciles-pills-and-surfaces-next-work
+path: desk/contexts/pill-phase-closeout-reconciles-pills-and-surfaces-next-work.md
+hash_c: e4db8b31a8c15bddb9c70b5f6cb4df202af95f7934c2c9d5bf4c7eda60b10d7e
+hash_d: cf1097a9108862bab280960bd605de5a94222ad90b97bf32b41ec759ff07b515
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:phases
+- topic:pills
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

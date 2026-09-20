@@ -1,0 +1,10 @@
+name: operator-board-task-yaml-close
+path: desk/primitives/operators/operator-board-task-yaml-close.md
+hash_c: c086254029de7c9be34c89fab27dd28b1f45d154f92110b8483bed5b4d1afe1c
+hash_d: 9d779195e2038caa21a0fecb02e115659bae99a4e93f5e850086d060aabb2dc1
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

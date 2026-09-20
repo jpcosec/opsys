@@ -1,0 +1,9 @@
+name: faq-extra-faq-test
+path: desk/faq/faq-extra-faq-test.md
+hash_c: 40b0ac0607d1f1c8cacffb25d262ec06880a15e9a0c59c96abb9c19fab40733a
+hash_d: 987e3cee2881c0df491ae81e069bb4cffc387fd91b9ecefa3737534558dc3dc5
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.documentation.faq
+- workspace.docs.faq

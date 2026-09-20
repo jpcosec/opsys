@@ -1,0 +1,10 @@
+name: checklist-task-document-how-stale-state-causes-agent-hallucination-closeout-ready
+path: desk/primitives/checklists/checklist-task-document-how-stale-state-causes-agent-hallucination-closeout-ready.md
+hash_c: 8030a841c5d25e5934060d52633169a062d6d28b9d3b1cbec38efbe74ff33ecc
+hash_d: 1e6a283c0d0acb5925bc901518435ac9e6be62133988a62cfc95bf8451d7bd57
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

@@ -1,0 +1,14 @@
+name: pill-operator-manual-follows-stable-runnable-slices
+path: desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md
+hash_c: 041c7b0d77281a30705377fd493cee6d8d23a387d1c107880c77a0a41484f0ec
+hash_d: 5d8b1c61a71e6ca50951ae588b064296f5ee4e1acead6314dffbdbdab4d5863e
+semantic_tags:
+- pill-type:pattern
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:documentation
+- topic:operator-manual
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

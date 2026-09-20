@@ -1,0 +1,14 @@
+name: pill-012-create-operations-transactional-rollback
+path: desk/contexts/pill-012-create-operations-transactional-rollback.md
+hash_c: 121f7135fad0a0cd71d3bd99b2cc3114e4b321d8a704545b5ad545a8032d8298
+hash_d: 0866ca445f9b543da4fe0295221462714e4d70ca8f56be58fb2422814e25628e
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:data-integrity
+- topic:operations
+- topic:rollback
+- type.workflow.pill
+- workspace.desk

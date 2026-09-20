@@ -1,0 +1,11 @@
+name: ritual-extra-ritual-test
+path: desk/rituals/ritual-extra-ritual-test.md
+hash_c: 8015d9d79a9c442b96712fdc195eac308ea5f2c45b2552372de6a3fc5775cd5b
+hash_d: d7b2e6113e13aa9d556c6103ecba606bebdc4826e470ea50176fe751b4528749
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

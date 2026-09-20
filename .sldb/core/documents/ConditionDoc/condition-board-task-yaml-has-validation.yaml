@@ -1,0 +1,10 @@
+name: condition-board-task-yaml-has-validation
+path: desk/primitives/conditions/condition-board-task-yaml-has-validation.md
+hash_c: 59f3437058c2c64cfddca1db779a101601d97dcb9a843d91601a064d37f331bb
+hash_d: 2883b6040d0b633a33d5e03fb655a179a65cefedad149c26fad179de9dca6095
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

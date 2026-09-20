@@ -1,0 +1,13 @@
+name: atom-knowledge-graph-connects-desk-and-source-files
+path: desk/atoms/knowledge-model/atom-knowledge-graph-connects-desk-and-source-files.md
+hash_c: 88659585c0a7fac25a3cd5be35e01047cd296873d0a4f9f49199fb9aa4ef3192
+hash_d: e43d983b97a2ea673b04b8b2ad21816e67611c17ab8ab5664cddf88fa4095095
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- topic:knowledge-graph
+- topic:source-code
+- type.knowledge.atom
+- workspace.desk.atoms

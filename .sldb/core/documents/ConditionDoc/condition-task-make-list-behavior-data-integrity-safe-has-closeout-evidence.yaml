@@ -1,0 +1,10 @@
+name: condition-task-make-list-behavior-data-integrity-safe-has-closeout-evidence
+path: desk/primitives/conditions/condition-task-make-list-behavior-data-integrity-safe-has-closeout-evidence.md
+hash_c: 66b8916c0356aa5391eda52ac6fc0c70d2475b599df3ae76a7a21b8948c3656a
+hash_d: da0abbc85725b5719a793d638783ad4c2f050b48f7cfd46549f0f7b177942a08
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

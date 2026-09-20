@@ -1,0 +1,10 @@
+name: operator-missing-action-test
+path: desk/primitives/operators/operator-missing-action-test.md
+hash_c: 0e9f78778659a4a651d8d7805663b96a3694d26be8ccc91659cfe9cf43b94207
+hash_d: 75386a13ac255d353c0d7578593b863150271f6c870dfcc79a6415fae6fe8733
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

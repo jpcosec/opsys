@@ -1,0 +1,9 @@
+name: iterates
+path: desk/relation_types/iterates.md
+hash_c: 495acfdbfcc6a4ececdc8029dd29d2a0fb5a26af9dd7aa401d1dc49e74680192
+hash_d: 6933a4ddb411f835216d34425a25dcbf8f3776cfad0368f1ef55bdd39f5af034
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

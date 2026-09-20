@@ -2,9 +2,9 @@ name: FAQDoc
 model_ref: deskops.models:FAQDoc
 path: deskops/models/faq.py
 documents_index: .sldb/core/documents/FAQDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-documents_count: 0
+sections_index: .sldb/runtime/sections/FAQDoc.yaml
+hash_b: 1c44b008693d366829ed3e97b9a9945a2cf1406661b7d17cb563fcb3dd230278
+documents_count: 6
 version: 1
 canonical: false
 family: null

@@ -1,0 +1,14 @@
+name: pill-ready-phases-prove-dependencies-and-non-overlap
+path: desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
+hash_c: b1629b964790796611812a616b793f4a2d5edeb4ef390ff583a4e678d9819642
+hash_d: f893fea311051b47e3f691ad1533dd6264d6453ccaf14e61c8652f936283971e
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:dependencies
+- topic:phases
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

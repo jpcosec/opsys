@@ -1,0 +1,10 @@
+name: routine-from-yaml-test-routine
+path: desk/routines/routine-from-yaml-test-routine.md
+hash_c: c112fb6648928684927463008fbff92b8d39537d61e0f0d1d324b73b7b40347e
+hash_d: 51f727ab56c314aeb716bade3a8eed9af79417a739406abc329541f30c11d8d1
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines

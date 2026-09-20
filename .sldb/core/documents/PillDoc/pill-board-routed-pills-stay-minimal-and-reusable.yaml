@@ -1,0 +1,15 @@
+name: pill-board-routed-pills-stay-minimal-and-reusable
+path: desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md
+hash_c: 82d4a58ca727b8505e77fa780c77bd59bd5c4bc7dcd08c5a67f9af55e739ad9b
+hash_d: 468cb67ecb5ff2d750a59db879fa5a6a28fdf8c29f128cbd80383f2ca7154961
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boards
+- topic:pills
+- topic:routing
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

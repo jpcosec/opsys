@@ -1,0 +1,9 @@
+name: next_step
+path: desk/relation_types/next_step.md
+hash_c: 47bb26453a531c5e44170e52a1b0975880be9bfd2f7c5b91c2abfdb340b47df3
+hash_d: 495c3d0790bef9a3dc265f4740f7ac01aaf642a4877c7f5f1d0aaf962fc42423
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

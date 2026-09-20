@@ -1,0 +1,10 @@
+name: condition-task-test-task-ready-for-closeout
+path: desk/primitives/conditions/condition-task-test-task-ready-for-closeout.md
+hash_c: 792e4b6b6305ab92cef285c6435ebfdcffea025493e8bd673cf972413e911767
+hash_d: 349fe71280a83f29eebce4ce93d1db1d73f899933f77bec6171b19a658eefba0
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

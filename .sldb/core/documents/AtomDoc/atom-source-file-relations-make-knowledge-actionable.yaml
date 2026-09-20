@@ -1,0 +1,13 @@
+name: atom-source-file-relations-make-knowledge-actionable
+path: desk/atoms/knowledge-model/atom-source-file-relations-make-knowledge-actionable.md
+hash_c: 015f30be043adf9bf2246c788e4545d871acd1b0966a80777123bb3b2d1cc0ba
+hash_d: 35f10fcd46a6def704cb6a4b9d26d1dcf330144cb7ba75d901b20423845aa383
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:knowledge-graph
+- topic:source-code
+- topic:traceability
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,10 @@
+name: condition-task-test-task-has-implementation-path
+path: desk/primitives/conditions/condition-task-test-task-has-implementation-path.md
+hash_c: 02807fdf4ecdd7ca71b874caf2115f0ba8a75fa67c2c828f7bc98ac294d4530f
+hash_d: 02881f39a5da1e4dcc7e0671539699db04f4e24109f2fd0bec2677c4bb2b9ed9
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

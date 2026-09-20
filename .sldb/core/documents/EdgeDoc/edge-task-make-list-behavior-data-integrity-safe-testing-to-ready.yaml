@@ -1,0 +1,10 @@
+name: edge-task-make-list-behavior-data-integrity-safe-testing-to-ready
+path: desk/primitives/edges/edge-task-make-list-behavior-data-integrity-safe-testing-to-ready.md
+hash_c: c9014a849f4b514d1986eded2911aec559ec3422c809eb3e3459c1a251dce967
+hash_d: 8f8825f70da1e875748191e8173561cb9e55d616189f6283f5b2c1593b1ebc12
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

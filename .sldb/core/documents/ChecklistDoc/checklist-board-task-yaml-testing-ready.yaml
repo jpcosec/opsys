@@ -1,0 +1,10 @@
+name: checklist-board-task-yaml-testing-ready
+path: desk/primitives/checklists/checklist-board-task-yaml-testing-ready.md
+hash_c: 0d2fb4bb08b44bd087780a7b714755eeb16553aaeb23f6fdad1039587adf7560
+hash_d: 3beb66c50d6f23279e294f769b66a497a4877e0a48f89c6a515dcae965e5cb58
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

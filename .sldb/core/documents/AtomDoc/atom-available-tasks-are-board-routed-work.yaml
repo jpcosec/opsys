@@ -1,0 +1,12 @@
+name: atom-available-tasks-are-board-routed-work
+path: desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md
+hash_c: c4d8174ba3c8057d97f2f547aa3e6a6865c53074833b200a8d3c77af128f754c
+hash_d: fbd047e4ff2241fcae030477f85acc660cdf31bcba34d2861ce0b56a20174c50
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boards
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

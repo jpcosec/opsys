@@ -1,0 +1,13 @@
+name: closeout
+path: desk/rituals/closeout.md
+hash_c: 9597432cabac1b5e778c744ad9f8e83dc9e36c5c4fcf3686b7a0aa59b5e8dd93
+hash_d: effe2c14abb907d68fbb79f15902e615074942e9fb6b45d2b4138d2f25f30f10
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:closeout
+- topic:rituals
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

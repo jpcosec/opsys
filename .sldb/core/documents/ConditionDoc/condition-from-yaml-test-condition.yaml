@@ -1,0 +1,10 @@
+name: condition-from-yaml-test-condition
+path: desk/primitives/conditions/condition-from-yaml-test-condition.md
+hash_c: b4babffbf28abe695317f69ec74d36ab9eae14e1e233625089b48b91484a2268
+hash_d: 286c0c5c10dbc03c218499812027476c0ecd189dcd4dbbecaacc82819f64c725
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

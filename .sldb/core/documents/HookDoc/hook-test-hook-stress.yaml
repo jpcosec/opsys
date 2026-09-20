@@ -1,0 +1,10 @@
+name: hook-test-hook-stress
+path: desk/primitives/hooks/hook-test-hook-stress.md
+hash_c: d90e8d4af4ee8e62017f7c34aa606453f7d32784bbaa8a5fb6805ede7d5e35ca
+hash_d: 69de070684ab59bdcdae3267379eaf9a5d36992cfd423711b3655e95243acfe8
+semantic_tags:
+- primitive:hook
+- representation.markdown
+- source.document.markdown
+- type.workflow.hook
+- workspace.desk.primitives

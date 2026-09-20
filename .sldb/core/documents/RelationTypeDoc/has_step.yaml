@@ -1,0 +1,9 @@
+name: has_step
+path: desk/relation_types/has_step.md
+hash_c: 4b9f4896d2680b8b35ff6c66a9792853e0292217efa69a2c955d376cd8de1e60
+hash_d: 11a48d06008dbd7a3717faac69ac2ae2507bbdedfae66c29eba648d7d9895879
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

@@ -1,0 +1,10 @@
+name: operator-task-write-end-to-end-deskops-operator-manual-ready-for-testing
+path: desk/primitives/operators/operator-task-write-end-to-end-deskops-operator-manual-ready-for-testing.md
+hash_c: 77c21098cfdaf62c6f7a27dece46bbec65ddb01389b40357f098a947c4af6dc3
+hash_d: 1e21067090175e1d775e5ea9ca65c76001f5aa89110e63df98e61bd1163d73a4
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

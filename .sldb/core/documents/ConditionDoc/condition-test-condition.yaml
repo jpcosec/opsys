@@ -1,0 +1,10 @@
+name: condition-test-condition
+path: desk/primitives/conditions/condition-test-condition.md
+hash_c: 8ff275c71f06b8e3d56dd7e70aae2e29dfa72ffeb3eafdd35bb853a8c68f0038
+hash_d: 4477b4c14cf6cd19afc7d2ecbd04b827682f6b741e6d1c4fa869b616a505a162
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

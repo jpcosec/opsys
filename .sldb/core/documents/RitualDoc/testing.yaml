@@ -1,0 +1,13 @@
+name: testing
+path: desk/rituals/testing.md
+hash_c: e399a5275f44b8a961f4f6f44feee05cf18811138cca4d6586ec1212b194c14d
+hash_d: 420d67dba031a519d33a5b91e6063d12ab98561f7e7c1b9fd3408d8c9a963e98
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:rituals
+- topic:testing
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

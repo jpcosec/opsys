@@ -1,0 +1,10 @@
+name: operator-extra-operator-test
+path: desk/primitives/operators/operator-extra-operator-test.md
+hash_c: 14ab685c05f3fe46981faf6bf2e23790d6fc70e0b74dc1fe535db0eaf9a25ad0
+hash_d: c53f28939b66c973c9b618f3c4e2b33334c1b69169c365280eacebfc4af31ed1
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

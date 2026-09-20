@@ -1,0 +1,9 @@
+name: contains_change
+path: desk/relation_types/contains_change.md
+hash_c: bd60d53f1a202049d172df8a9239bf47ac909cd3d8d46f38b3b2e28106ac0a9c
+hash_d: 5391d8d71566eff5727d3084ec4104dac23049a26e3b7d66a660c8c838940c64
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

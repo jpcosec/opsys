@@ -1,0 +1,11 @@
+name: atom-test-atom-stress
+path: desk/atoms/atom-test-atom-stress.md
+hash_c: 8111ab4622a0bdd89257df174eb065bb2dd464fda2dbdf5fd80d70e27c65f015
+hash_d: 243147cf8da10ed39fd004c9b9f3149a5d65cc9d651b0620ed2c0c4f54bd1fa2
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

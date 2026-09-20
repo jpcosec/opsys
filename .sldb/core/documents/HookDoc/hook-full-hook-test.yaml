@@ -1,0 +1,10 @@
+name: hook-full-hook-test
+path: desk/primitives/hooks/hook-full-hook-test.md
+hash_c: 496cc52123f5ed22001977fb60082472a98db213c631bd327c303aa16cf37abf
+hash_d: f01d78356b23a94e55c6588409cdc7ed45386f1b8ecfa8bf34fc274f02bc858f
+semantic_tags:
+- primitive:hook
+- representation.markdown
+- source.document.markdown
+- type.workflow.hook
+- workspace.desk.primitives

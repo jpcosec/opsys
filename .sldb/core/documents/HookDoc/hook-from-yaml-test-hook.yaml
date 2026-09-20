@@ -1,0 +1,10 @@
+name: hook-from-yaml-test-hook
+path: desk/primitives/hooks/hook-from-yaml-test-hook.md
+hash_c: 637f87b5f70de9b1100a686f87a57311bd98eb5119eadc504deef5f0bac55969
+hash_d: 9469db56b99e98210de4ede52afcf5583699f70a6a46f424ea8630936974035d
+semantic_tags:
+- primitive:hook
+- representation.markdown
+- source.document.markdown
+- type.workflow.hook
+- workspace.desk.primitives

@@ -1,0 +1,10 @@
+name: condition-full-condition-test
+path: desk/primitives/conditions/condition-full-condition-test.md
+hash_c: 26d0fd93981e9783d3db6a483474743dfb346b5947e8882378505742d9f12e64
+hash_d: cf987855060b3f5372c3284d2a0de6f7a8e340d7119372c83987a317e4c8c728
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

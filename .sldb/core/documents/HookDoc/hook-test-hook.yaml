@@ -1,0 +1,10 @@
+name: hook-test-hook
+path: desk/primitives/hooks/hook-test-hook.md
+hash_c: dca294192eb6c29b72a39f19daab588c9266294e4628a81e71bcb6354dd11f02
+hash_d: 3b59e378c951d0033c08c98dd18c2af4528f84f8f52656073b5d3383d2528fb7
+semantic_tags:
+- primitive:hook
+- representation.markdown
+- source.document.markdown
+- type.workflow.hook
+- workspace.desk.primitives

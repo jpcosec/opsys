@@ -1,0 +1,14 @@
+name: pill-007-phase-gated-task-flow
+path: desk/contexts/pill-007-phase-gated-task-flow.md
+hash_c: 53f9edb37c6aa5643ee42b64d8aad25739d5427c72149f51af730386d4a9171a
+hash_d: 67303df8f281569353a7bb23c1338fba11b59085e64519cd5f935c6b03789351
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:phase-gates
+- topic:workflow
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

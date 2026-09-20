@@ -1,0 +1,15 @@
+name: pill-durable-pill-knowledge-graduates-to-atoms-at-closeout
+path: desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+hash_c: 286b70841415949188b47c509cfb7d7f0b4930f0d83a3ff3480fe9e9fc6c5a57
+hash_d: b99fa6bdb39a0a9752ee2c02abd53ba85960a638c942b6da9d5fc89cc0bf3e38
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:closeout
+- topic:pills
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

@@ -1,0 +1,13 @@
+name: atom-desk-test-root-precedence-is-explicit
+path: desk/atoms/workflow-model/atom-desk-test-root-precedence-is-explicit.md
+hash_c: 84b879a084aeebbfc627ad9117576dc70f7b6303ea6852de3b691360b205a34e
+hash_d: 4b1821f5bc577aa9b6abf14b12c6476488e2087ed5d57fb74483d4b2a416fcce
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:config
+- topic:testing
+- type.knowledge.atom
+- workspace.desk.atoms

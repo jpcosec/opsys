@@ -1,0 +1,10 @@
+name: checklist-task-document-how-stale-state-causes-agent-hallucination-testing-ready
+path: desk/primitives/checklists/checklist-task-document-how-stale-state-causes-agent-hallucination-testing-ready.md
+hash_c: 52bf1180d52977a987e8d691bf42ecc53509e8fe978127363e6f798a1554441e
+hash_d: cdec10299af9fa31403ac635f90fa47ce694f0a5598a92e602df6086b9c7bd52
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

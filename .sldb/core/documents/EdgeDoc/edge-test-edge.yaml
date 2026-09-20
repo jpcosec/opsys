@@ -1,0 +1,10 @@
+name: edge-test-edge
+path: desk/primitives/edges/edge-test-edge.md
+hash_c: f585dad28fd37a4ce4aad6c22ad64dc88dc0cdf0359bc591b9ae68e85f7ca4ea
+hash_d: 9400c5c38c97e8e8c5116d1ea14cbe425e27042be006620806e92f6bc81c87bf
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

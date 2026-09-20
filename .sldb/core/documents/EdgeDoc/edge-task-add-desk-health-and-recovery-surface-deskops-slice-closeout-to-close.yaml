@@ -1,0 +1,10 @@
+name: edge-task-add-desk-health-and-recovery-surface-deskops-slice-closeout-to-close
+path: desk/primitives/edges/edge-task-add-desk-health-and-recovery-surface-deskops-slice-closeout-to-close.md
+hash_c: 2ffb022ac1b4b736a6df95282c382084398414ba38a7ded5ead1fb3558e45157
+hash_d: b848655f98353a1447c9d3110e744365b699469a9148f42ccadedd35db13047c
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

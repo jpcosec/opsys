@@ -1,0 +1,14 @@
+name: pill-list-surfaces-must-expose-malformed-docs
+path: desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
+hash_c: 5ed62280aa532e8de349ded8e886a8c8c34e89ac3ed2d1770df5358e7ce08c6c
+hash_d: 305818bb9da6dfff61af9559cfbf2be3d37e64eafce433c700f5ede5ebf85446
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:data-integrity
+- topic:list
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

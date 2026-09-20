@@ -1,0 +1,10 @@
+name: edge-task-make-list-behavior-data-integrity-safe-closeout-to-close
+path: desk/primitives/edges/edge-task-make-list-behavior-data-integrity-safe-closeout-to-close.md
+hash_c: fe396f35b8b56d1cc8f64b34f5ebc1453745b52d5b036745360d746b6e799562
+hash_d: dfb585f7fbe04d47a5ad5d57a385ba964bcd7523d8dd433fe31bdfebd995658f
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

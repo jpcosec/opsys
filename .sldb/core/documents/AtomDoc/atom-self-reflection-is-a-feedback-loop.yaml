@@ -1,0 +1,13 @@
+name: atom-self-reflection-is-a-feedback-loop
+path: desk/atoms/knowledge-model/atom-self-reflection-is-a-feedback-loop.md
+hash_c: 600d88343001ee1877ce5acfdaf26f7b01079c5170747bccb92cf034b15303d3
+hash_d: 1af86d7c46b2764bc28e5c6d62d147e2d48d17fcedfe0a1382f84d03e7c26418
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:feedback
+- topic:knowledge-management
+- topic:self-reflection
+- type.knowledge.atom
+- workspace.desk.atoms

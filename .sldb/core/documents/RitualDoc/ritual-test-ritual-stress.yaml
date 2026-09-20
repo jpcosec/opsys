@@ -1,0 +1,11 @@
+name: ritual-test-ritual-stress
+path: desk/rituals/ritual-test-ritual-stress.md
+hash_c: 27ae680f090304aff3a19ea9ed5374149e56ed02bf3ff44b743d3db1bb035640
+hash_d: 2742110e37db9adb3c0c8ee7f198a8d286efa1ef8b4dce4a6e2ce5c2f405ca1f
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

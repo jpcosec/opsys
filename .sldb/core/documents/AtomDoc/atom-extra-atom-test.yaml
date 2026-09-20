@@ -1,0 +1,11 @@
+name: atom-extra-atom-test
+path: desk/atoms/atom-extra-atom-test.md
+hash_c: 43c6f6f7221f3289d6f9325e5b682526ea2d23120cadf67ebac456d12dfbf3c6
+hash_d: b64eb71a149ec20c9c722b69cb8e3d9a06c2cf40dabf76a38dcc724540820784
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,10 @@
+name: condition-missing-summary-test
+path: desk/primitives/conditions/condition-missing-summary-test.md
+hash_c: 7fb75e657bf4bce32d224c0393f0ea6ef81bc1cc28b63f3886eebddfac429c41
+hash_d: 434c0fe2fb316c6c010d728818452e039049967d5c2ab8b551b5f6c2f846511c
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,11 @@
+name: repo-full-repo-test
+path: desk/registry/repo-full-repo-test.md
+hash_c: 4a5f0c1534de272237a0dc972c09a05913f97abdaf2da54bbb64a5704649eadc
+hash_d: b016a6e9ba207727fc7733f227908e7d1c336e980803620857cf8c9e926d890d
+semantic_tags:
+- artifact:repository
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry
+- workspace:desk

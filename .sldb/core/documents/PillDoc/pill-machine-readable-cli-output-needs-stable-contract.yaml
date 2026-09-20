@@ -1,0 +1,14 @@
+name: pill-machine-readable-cli-output-needs-stable-contract
+path: desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md
+hash_c: 9874452940ea553c75fa6def1292ce0a8ebb3513d9b19dae9d01b4855f2dd211
+hash_d: 6b435efa4df491a3b9d52d63dfe1b22bc7ce71841de6edf3b757adb0c3af24df
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:serialization
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

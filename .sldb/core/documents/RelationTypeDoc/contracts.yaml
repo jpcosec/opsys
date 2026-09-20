@@ -1,0 +1,9 @@
+name: contracts
+path: desk/relation_types/contracts.md
+hash_c: 8fac72a52c1123ed7168edf77a630c5139071e3ac2efb756ad887d88d2f90b89
+hash_d: bb356dd25db48136f69b7d60efec9990af8af5f86e6e40a2d5a4c4eb1e701706
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

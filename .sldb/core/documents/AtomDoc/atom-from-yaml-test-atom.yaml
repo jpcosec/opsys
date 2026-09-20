@@ -1,0 +1,11 @@
+name: atom-from-yaml-test-atom
+path: desk/atoms/atom-from-yaml-test-atom.md
+hash_c: 6a511865fb8ac0c86e7a72f568666c4a61802e90d27b3195d2d74b8edd2fc3c1
+hash_d: 296f967d61d90c1096fb26720dcfd63cb547ae357d59be9e5b9e62e37ab4d360
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,10 @@
+name: checklist-task-test-task-closeout-ready
+path: desk/primitives/checklists/checklist-task-test-task-closeout-ready.md
+hash_c: 46daf78102b6d20302b8f1d499614d8cf11be997e7c5edeaac6c1e32f1907fa3
+hash_d: 7dc699e468e07534f238e78795927c679490b495015af86e9840dc8f082b31de
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

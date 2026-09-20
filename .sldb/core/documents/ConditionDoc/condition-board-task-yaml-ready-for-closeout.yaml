@@ -1,0 +1,10 @@
+name: condition-board-task-yaml-ready-for-closeout
+path: desk/primitives/conditions/condition-board-task-yaml-ready-for-closeout.md
+hash_c: 0e880005fe0513ec197fb5ed8c2bf23fd9dc39c5a8474d543116d756456e06f7
+hash_d: 458ffa3ff58dbe0608ec571b5072bb6b3bc8df6c019560f40e9b119ef1c61a31
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,10 @@
+name: edge-task-add-desk-health-and-recovery-surface-deskops-slice-execution-to-activate
+path: desk/primitives/edges/edge-task-add-desk-health-and-recovery-surface-deskops-slice-execution-to-activate.md
+hash_c: 96fb5218689e1e8ad3751d0e47db7dcc2923caff2fabffff2406674c02264aea
+hash_d: 0dff003da52258b06ce4ee6ab5cb2bcdfdc6b9dfb019b28333cfae5682c5ea72
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

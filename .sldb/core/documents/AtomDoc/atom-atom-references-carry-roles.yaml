@@ -1,0 +1,13 @@
+name: atom-atom-references-carry-roles
+path: desk/atoms/knowledge-model/atom-atom-references-carry-roles.md
+hash_c: d7d5cca453b2170832bc8305efbc498cc005610886d05e49fdf9877b8e33bd9f
+hash_d: 2ddb03c893e2f14862a51292abdf70480b1722eefcae467470629e1edb16ec8f
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:metadata
+- topic:traceability
+- type.knowledge.atom
+- workspace.desk.atoms

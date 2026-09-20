@@ -1,0 +1,9 @@
+name: verifies
+path: desk/relation_types/verifies.md
+hash_c: fa11de92451feddd0c3bdc6ca9c42ddd8e1e8c07af5f26187f07e1cce1542da4
+hash_d: 951ff6bcb9b7eaac1cbd2f711cabfcf58d21b934d8d447433363ffe65684469c
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

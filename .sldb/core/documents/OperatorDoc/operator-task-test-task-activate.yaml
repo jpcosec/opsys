@@ -1,0 +1,10 @@
+name: operator-task-test-task-activate
+path: desk/primitives/operators/operator-task-test-task-activate.md
+hash_c: 9f63a7991d60dfcaf6321dc30133a5e4b18f071aafc0abda9d3b13b9875ee492
+hash_d: 9a9aa95c780cf3aece54f7372958f1baafdb4c9461773049697f1d1ec70cb49d
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

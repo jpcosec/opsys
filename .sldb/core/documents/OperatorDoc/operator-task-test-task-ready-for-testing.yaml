@@ -1,0 +1,10 @@
+name: operator-task-test-task-ready-for-testing
+path: desk/primitives/operators/operator-task-test-task-ready-for-testing.md
+hash_c: 00d66b86204dcb3ee34fe7e63adc791339477a408dcf9e6f9557c31a0e7ca5a7
+hash_d: 23b57f376ccce57ea5cad7c4826a9fa69a3483da2a55253b388e685dc65cf4ba
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

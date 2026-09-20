@@ -1,0 +1,14 @@
+name: pill-005-subagent-execution
+path: desk/contexts/pill-005-subagent-execution.md
+hash_c: 514536f72da99189d580b64bc54d6ac443ebf0255c2aa0b196c938691a94263d
+hash_d: 4499a32727c0ad7e3a32edc59120591928c48b3a3891d153045332ebc86699d8
+semantic_tags:
+- pill-type:pattern
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:execution
+- topic:subagents
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

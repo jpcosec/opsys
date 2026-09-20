@@ -1,0 +1,11 @@
+name: repo-test-repo-stress
+path: desk/registry/repo-test-repo-stress.md
+hash_c: 0dfa20aedf6123d8d8a45498c71c32ed1c9138ca1da9c84d102cab5b54c27ef5
+hash_d: a46c2b9f0486d6c85230deb73101ac9b70110fd5232c7b23f9f5bf950be5bf1d
+semantic_tags:
+- artifact:repository
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry
+- workspace:desk

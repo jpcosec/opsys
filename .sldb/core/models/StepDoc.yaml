@@ -2,9 +2,9 @@ name: StepDoc
 model_ref: deskops.models:StepDoc
 path: deskops/models/step.py
 documents_index: .sldb/core/documents/StepDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-documents_count: 0
+sections_index: .sldb/runtime/sections/StepDoc.yaml
+hash_b: 3caf217ddb9f4a529b8d5b462f22861bc066f9d282ceb8b9eafcc8d836f09f08
+documents_count: 8
 version: 1
 canonical: false
 family: null

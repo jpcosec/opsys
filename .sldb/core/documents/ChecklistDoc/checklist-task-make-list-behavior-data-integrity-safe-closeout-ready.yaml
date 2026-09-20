@@ -1,0 +1,10 @@
+name: checklist-task-make-list-behavior-data-integrity-safe-closeout-ready
+path: desk/primitives/checklists/checklist-task-make-list-behavior-data-integrity-safe-closeout-ready.md
+hash_c: ba50f4ea16e17902bcdb71d62f6f1001ed9890d9a6ce4c0e37e16c8913c37b63
+hash_d: 1e10c81032d529a8f2f2f212e7cff8a0746220d72f1d8289c96e20d4e0a93079
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

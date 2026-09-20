@@ -1,0 +1,10 @@
+name: condition-task-make-list-behavior-data-integrity-safe-has-validation
+path: desk/primitives/conditions/condition-task-make-list-behavior-data-integrity-safe-has-validation.md
+hash_c: 9a41794484aa4b72ae0674fa898dede2c2354c316f8e681b9e8a1c8ecd4ed80a
+hash_d: be343d131b1d070f8e9d1c5ddd066496e63ea27d438fa3f9728b607298d4fd37
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,10 @@
+name: checklist-task-test-task-testing-ready
+path: desk/primitives/checklists/checklist-task-test-task-testing-ready.md
+hash_c: 0466a4fc6126e60a78dee2fc8e241cccd85e6f5b6e33e544dcbe8519c091a807
+hash_d: b8b8f64ace4e95af68f2867e1dcba754ecbc45a49d6371c50a8ae4dfb1af13ba
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

@@ -1,0 +1,9 @@
+name: runs_on
+path: desk/relation_types/runs_on.md
+hash_c: 1a45fe8abf054c99b022e7750207e465cdcfe478c9730a915c37600145b68f74
+hash_d: cbcc3b6e6d3af587dc83a0d14f529c70ecdd0f79932943d3929289c87a903333
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

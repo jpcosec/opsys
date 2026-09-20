@@ -1,0 +1,9 @@
+name: evidences
+path: desk/relation_types/evidences.md
+hash_c: 63e82eadc1b0008d264c9df499087f0d03e00201bd98cd90b71aa82b4cd5e1bc
+hash_d: dd6c51cf6fadf14a227ccde633d3de619b3671b6f0bcb694089af57523dc850a
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

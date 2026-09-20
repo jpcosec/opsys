@@ -2,9 +2,9 @@ name: InboxNoteDoc
 model_ref: deskops.models:InboxNoteDoc
 path: deskops/models/inbox.py
 documents_index: .sldb/core/documents/InboxNoteDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-documents_count: 0
+sections_index: .sldb/runtime/sections/InboxNoteDoc.yaml
+hash_b: 04eda5d7323881a910f69ce78e5226bdb4fdf9b093c2a52edd4bfd80b0f54a88
+documents_count: 4
 version: 1
 canonical: false
 family: null

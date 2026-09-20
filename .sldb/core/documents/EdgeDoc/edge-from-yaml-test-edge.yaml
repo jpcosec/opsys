@@ -1,0 +1,10 @@
+name: edge-from-yaml-test-edge
+path: desk/primitives/edges/edge-from-yaml-test-edge.md
+hash_c: 3fdde563fff78a1c45b30010d5efc69880b99b4af59e8a3c3a68e353bd0750d0
+hash_d: 3c6e3e66f878609ea72bf4f6cddf5b21ebe547a4c53a98bd70f3d58e5a558dc3
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

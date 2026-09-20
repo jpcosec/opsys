@@ -1,0 +1,13 @@
+name: atom-materialization-contracts-bind-source-output-validation
+path: desk/atoms/knowledge-model/atom-materialization-contracts-bind-source-output-validation.md
+hash_c: 2a57edbbb2595b605b8b88313d49bd1aa9fcd8c7a5ef8760eda7270c4148e68f
+hash_d: c89bd2d2b3f2234141492941cc736e8e9e49f095461fc5629a34c4942ca4b0c3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:materialization
+- topic:traceability
+- topic:validation
+- type.knowledge.atom
+- workspace.desk.atoms

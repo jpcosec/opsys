@@ -3,8 +3,8 @@ model_ref: sldb.models.relation_type_doc:RelationTypeDoc
 path: /home/jp/proyectos/hum-ecosystem/tools/sldb/src/sldb/models/relation_type_doc.py
 documents_index: .sldb/core/documents/RelationTypeDoc.yaml
 sections_index: .sldb/runtime/sections/RelationTypeDoc.yaml
-hash_b: 01d70148bdf13f0dad29e57ed59e65cd7bd80f30b6037182f46b5c9139383e03
-documents_count: 34
+hash_b: 01b5db17bc5280e6d2f0c82ad2e0bf5879483df14f8f739cd9808489fb931223
+documents_count: 57
 version: 1
 canonical: false
 family: relation

@@ -1,0 +1,10 @@
+name: edge-board-task-yaml-ready-to-closeout
+path: desk/primitives/edges/edge-board-task-yaml-ready-to-closeout.md
+hash_c: 2ca049379f526ddd3ba9566cea1f5cf4152130be7cc727e19a1997e9869ee629
+hash_d: b942207f8097ab9993ecac1b65bea23f526a46b9e776a7e78abd79393f529742
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

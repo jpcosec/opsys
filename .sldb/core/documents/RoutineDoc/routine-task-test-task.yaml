@@ -1,0 +1,11 @@
+name: routine-task-test-task
+path: desk/routines/routine-task-test-task.md
+hash_c: e3f35390e93553ef45446716292e6a2f3e866600e022e1c61cbc2debbefc5b61
+hash_d: d1631996a26d9e8bef1322cb139e83c31cfb99cf1016a341365994a9406f619d
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

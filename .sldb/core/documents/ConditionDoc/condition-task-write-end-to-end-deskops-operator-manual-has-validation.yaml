@@ -1,0 +1,10 @@
+name: condition-task-write-end-to-end-deskops-operator-manual-has-validation
+path: desk/primitives/conditions/condition-task-write-end-to-end-deskops-operator-manual-has-validation.md
+hash_c: 673f01d76753b3994285552fe78855dc6b9d6e56bb63920544674733de1629ea
+hash_d: 44184cdcfc469ffb6cb8f18e57abd5d36e3350f0e429287f0e9557e346b98b88
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

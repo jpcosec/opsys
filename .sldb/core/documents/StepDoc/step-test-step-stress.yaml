@@ -1,0 +1,11 @@
+name: step-test-step-stress
+path: desk/steps/step-test-step-stress.md
+hash_c: 1c060f760d43999e722011f636ea975bb9e20edb0cfb2d3083ae66f887401c70
+hash_d: b8cdf121ba540aab542da9054444c7995161ad95059e00aeaec0af713ac74fe8
+semantic_tags:
+- artifact:step
+- representation.markdown
+- source.document.markdown
+- type.workflow.step
+- workspace.desk
+- workspace:desk

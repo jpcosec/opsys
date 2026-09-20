@@ -1,0 +1,9 @@
+name: domain_parent
+path: desk/relation_types/domain_parent.md
+hash_c: f7931e3709dfc71af3faf4a4a1e386b39f8d137c85d0a5ca295ed5b91941b294
+hash_d: 2dac111a5c195736f83612562b1d4116fe19f96e86fcd8277ca915b7a8fdd51e
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

@@ -1,0 +1,11 @@
+name: ritual-from-yaml-test-ritual
+path: desk/rituals/ritual-from-yaml-test-ritual.md
+hash_c: 17e148b24fb9a64c01849f7b5e2f2e6ca1753c856366352b222115ba094c53be
+hash_d: c9b305747b748b12aef8e087c78b6da5ecde21c397ba5a258b1774d7d7a3bad4
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

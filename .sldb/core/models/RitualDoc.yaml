@@ -2,9 +2,9 @@ name: RitualDoc
 model_ref: deskops.models:RitualDoc
 path: deskops/models/ritual.py
 documents_index: .sldb/core/documents/RitualDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-documents_count: 0
+sections_index: .sldb/runtime/sections/RitualDoc.yaml
+hash_b: 2160ea0f6abd0a886b25a023d7f860c903f87d88dbed87d955c27d0cfbeca87e
+documents_count: 9
 version: 1
 canonical: false
 family: null

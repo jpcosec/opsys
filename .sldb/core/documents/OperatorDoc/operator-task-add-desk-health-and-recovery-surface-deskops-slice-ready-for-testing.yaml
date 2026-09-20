@@ -1,0 +1,10 @@
+name: operator-task-add-desk-health-and-recovery-surface-deskops-slice-ready-for-testing
+path: desk/primitives/operators/operator-task-add-desk-health-and-recovery-surface-deskops-slice-ready-for-testing.md
+hash_c: d13d8e425bd897cae59eaf336896e9daca33e2839d43d6b0a284ffcbd742980e
+hash_d: 687726efcde68a57addee869c3ef0a1643c7512c7ddb0cc5f89733393c764c83
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

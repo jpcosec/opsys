@@ -1,0 +1,11 @@
+name: condition-task-enrich-templates-with-instructional-text-has-implementation-path
+path: desk/primitives/conditions/condition-task-enrich-templates-with-instructional-text-has-implementation-path.md
+hash_c: ca8d2173e91941d49d1364e3eb9520b0d6ec76bed6195e613fdeee41f3960bcc
+hash_d: 39341cbcb3a1190887855d92f910d2c23cc10752275a953e8307018b2ae51d30
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:templates
+- type.workflow.condition
+- workspace.desk.primitives

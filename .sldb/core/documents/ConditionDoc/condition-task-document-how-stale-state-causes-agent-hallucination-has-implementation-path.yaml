@@ -1,0 +1,10 @@
+name: condition-task-document-how-stale-state-causes-agent-hallucination-has-implementation-path
+path: desk/primitives/conditions/condition-task-document-how-stale-state-causes-agent-hallucination-has-implementation-path.md
+hash_c: 34423bf258f952a301e8bca773763607cdbae1b3de89abd7a5f2dc94c02c4d5a
+hash_d: e6e3c6aa8700121e41014c9da86b1665cffae9b99d9a16c3000f6482482804b5
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

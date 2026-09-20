@@ -1,0 +1,10 @@
+name: edge-task-test-task-testing-to-ready
+path: desk/primitives/edges/edge-task-test-task-testing-to-ready.md
+hash_c: 304575fdd6ea74d599f8ffab0173f236c0f3f52e164e243b8513d75e9fe77cc2
+hash_d: a381a7a565e1159b591520b79c29e5aa68bbe676b0097ff54be09e9671e00c68
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

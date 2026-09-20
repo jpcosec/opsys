@@ -1,0 +1,10 @@
+name: operator-board-task-yaml-ready-for-testing
+path: desk/primitives/operators/operator-board-task-yaml-ready-for-testing.md
+hash_c: 9f000ed4dd2ce1f8c73f5081ad6d280ed74dacbafaa5042d85f1c8991b7561cd
+hash_d: 1c8be6ee236e40bc670c2bd3fcdb5d31561d813b7cb96ad4c57918fec1f9b210
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

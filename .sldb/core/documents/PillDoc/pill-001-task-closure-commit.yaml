@@ -1,0 +1,14 @@
+name: pill-001-task-closure-commit
+path: desk/contexts/pill-001-task-closure-commit.md
+hash_c: 97042d84348863d5d5a544c4d63c05cd1bf7493af2501e821fac6c0322fa90e0
+hash_d: 583a86e0458d07329e9db4c5b9f9456b575cda792d5f901a3845979349c333e2
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:git
+- topic:task-closure
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

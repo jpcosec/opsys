@@ -1,0 +1,10 @@
+name: operator-task-add-desk-health-and-recovery-surface-deskops-slice-close
+path: desk/primitives/operators/operator-task-add-desk-health-and-recovery-surface-deskops-slice-close.md
+hash_c: 5551579a863a7818f9a8ca746c16babf14fb5f4a71381208162fa645c6c2b24e
+hash_d: 8c559db64281a7ab5a8add4bacfa56716a75d27d86e05ebeefe6df18b9159027
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

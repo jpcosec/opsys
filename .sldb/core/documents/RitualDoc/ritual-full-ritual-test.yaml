@@ -1,0 +1,11 @@
+name: ritual-full-ritual-test
+path: desk/rituals/ritual-full-ritual-test.md
+hash_c: 787cea5ed78ae749e8e820cfe61feab6e98370c9ba28552b5d75aed8c0cd6ff2
+hash_d: 6d77ca04131331854bb3a1fc1e03d11d0318d78a3d496f38c7a5332283b75f21
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

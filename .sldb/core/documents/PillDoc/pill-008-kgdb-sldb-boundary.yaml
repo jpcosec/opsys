@@ -1,0 +1,14 @@
+name: pill-008-kgdb-sldb-boundary
+path: desk/contexts/pill-008-kgdb-sldb-boundary.md
+hash_c: 7258a16ace607035bfbac1c6456427996123ae3c6c17a7133978d1b83a41eaa2
+hash_d: a578b82048aaae1b08484eaa2e19fe7e867004216a5f05a92792b451887ce0a5
+semantic_tags:
+- pill-type:decision
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- system:sldb
+- topic:knowledge-graph
+- type.workflow.pill
+- workspace.desk

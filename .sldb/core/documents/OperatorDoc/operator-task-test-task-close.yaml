@@ -1,0 +1,10 @@
+name: operator-task-test-task-close
+path: desk/primitives/operators/operator-task-test-task-close.md
+hash_c: c09dad84f1fd6daa0015966d1dbec204432b8fcf2f1101c79fdff9a10802728b
+hash_d: 13084e4b00c1376784bb1b50279e13a5689cf7f31bfbb1bbef53cdca45a155dc
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

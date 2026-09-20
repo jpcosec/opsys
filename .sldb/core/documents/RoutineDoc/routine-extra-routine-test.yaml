@@ -1,0 +1,10 @@
+name: routine-extra-routine-test
+path: desk/routines/routine-extra-routine-test.md
+hash_c: 92d6fc1b90f0110c8c1fb306b68628a0f10cc94859d2de8de2dcd4e790f38f6a
+hash_d: 49e7c5d4dc5207dab86d3360b613d2c2f21cfa15d72c0c9e8aa66d89d069ba0a
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines

@@ -1,0 +1,11 @@
+name: ritual-missing-purpose-test
+path: desk/rituals/ritual-missing-purpose-test.md
+hash_c: cc82c7bc5a04f52ff9a30a1a7f80a9cdfc9f83b6abb2c75e2bc9524cea9e0f4a
+hash_d: 8418570968093a140b4807a33585d56dad9c7792bdd45452c6e963c1c095c47c
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

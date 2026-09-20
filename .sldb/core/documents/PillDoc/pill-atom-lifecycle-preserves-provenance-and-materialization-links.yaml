@@ -1,0 +1,14 @@
+name: pill-atom-lifecycle-preserves-provenance-and-materialization-links
+path: desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
+hash_c: 4cd21246d9de6c7d649affc2c41c640e1927cf2838853090de99ddd2f7cc66c8
+hash_d: 362e8faa66a314d4181fcdfcd47356889b90b1f9bf99f7f477e444969bb75d67
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:provenance
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

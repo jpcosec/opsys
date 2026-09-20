@@ -1,0 +1,10 @@
+name: checklist-board-task-yaml-closeout-ready
+path: desk/primitives/checklists/checklist-board-task-yaml-closeout-ready.md
+hash_c: b3176930659c26ae1439983e664923b3f1f64f49b19e4f8cc495605c0208d94c
+hash_d: 80fb2fc0a5c4cf370c848afaa617b6c75aefdde6a84aff64a3bcd227db983b67
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

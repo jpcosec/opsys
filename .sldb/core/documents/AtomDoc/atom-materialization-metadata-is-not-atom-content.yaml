@@ -1,0 +1,13 @@
+name: atom-materialization-metadata-is-not-atom-content
+path: desk/atoms/knowledge-model/atom-materialization-metadata-is-not-atom-content.md
+hash_c: 97744c5800953e6bd72e7ec507c7904bed5c3cb517270b1ea1b1907c5118af1c
+hash_d: 370d5a7fec1d104d1f39d93d4f24b06f16576ea6365be19b17c2a800f3282a9b
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:materialization
+- topic:metadata
+- type.knowledge.atom
+- workspace.desk.atoms

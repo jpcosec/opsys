@@ -1,0 +1,9 @@
+name: typed_as
+path: desk/relation_types/typed_as.md
+hash_c: e36f39f46950ebd6177130be3b29915d558987b3c5e302f8b12495085698d151
+hash_d: c5313d8fbb43819bdcc0c7f130a775c1340257fa307822b2d1615ad4655cbe84
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

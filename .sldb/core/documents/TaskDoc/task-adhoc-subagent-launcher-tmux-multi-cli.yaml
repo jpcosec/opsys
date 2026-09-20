@@ -1,0 +1,13 @@
+name: task-adhoc-subagent-launcher-tmux-multi-cli
+path: desk/drawer/tasks/task-adhoc-subagent-launcher-tmux-multi-cli.md
+hash_c: ce77543449252081a21e6bf5e97a80930d6338cc7865c0424cac6aad2feb1950
+hash_d: 4492aea140c8fc07a363d5b428204cf0eb420adb47c180fe5cd617a0d4cd83ee
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- source:drawer
+- topic:launcher
+- type.workflow.task
+- workspace.desk
+- workspace:desk

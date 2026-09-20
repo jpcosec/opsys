@@ -1,0 +1,10 @@
+name: edge-board-task-yaml-execution-to-activate
+path: desk/primitives/edges/edge-board-task-yaml-execution-to-activate.md
+hash_c: 25d23589fe32f8aa86c81d837ed7a3fc06cf0fbb2a5e22fb4c7d5721e4353438
+hash_d: dcd93be32c78797774acbf9fdd3a28d4e9b9b9b6e78418fd2fcdf304aa8e6b97
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

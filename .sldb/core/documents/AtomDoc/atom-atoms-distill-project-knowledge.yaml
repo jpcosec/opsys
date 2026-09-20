@@ -1,0 +1,12 @@
+name: atom-atoms-distill-project-knowledge
+path: desk/atoms/knowledge-model/atom-atoms-distill-project-knowledge.md
+hash_c: 849548e7868287b7926a568ca02bd5f815ebcb3552d3cca970d12075b536215c
+hash_d: 66e22f327ffe705e9929aba366370d4328a697fb236731efd14560e76b1ab426
+semantic_tags:
+- domain:knowledge-management
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

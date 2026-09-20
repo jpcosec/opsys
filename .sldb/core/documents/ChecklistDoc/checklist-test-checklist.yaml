@@ -1,0 +1,10 @@
+name: checklist-test-checklist
+path: desk/primitives/checklists/checklist-test-checklist.md
+hash_c: 1765c0cbece4f45e0106f18cadfd749fd7bbb5289548877f715caaf327df4fd3
+hash_d: 6b845aa433d9efece8515cc7b17c5d7c148fc0b6cb6e16a4609c118ecc2e2e18
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

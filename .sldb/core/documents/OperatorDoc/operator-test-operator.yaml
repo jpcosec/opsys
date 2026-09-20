@@ -1,0 +1,10 @@
+name: operator-test-operator
+path: desk/primitives/operators/operator-test-operator.md
+hash_c: 466025b7bb10ef8dd5e910816fa3796edbff8812c44cad636c408a5834c22f50
+hash_d: 1090f8fc665d9885d3e34b443ca962cd4c18c103e0978c651cb58208d0591e3a
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

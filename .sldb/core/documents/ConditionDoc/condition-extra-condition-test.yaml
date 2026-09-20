@@ -1,0 +1,10 @@
+name: condition-extra-condition-test
+path: desk/primitives/conditions/condition-extra-condition-test.md
+hash_c: 1fafb54072eec914160c29678660cd4632b1de85c014e77eabb51f2dcebb9f45
+hash_d: dc40af08b5a7a343f0f7314a27d243fd31c34826bd50648cd40680f15a616c9f
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

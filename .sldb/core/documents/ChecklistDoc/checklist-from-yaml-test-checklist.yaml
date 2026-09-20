@@ -1,0 +1,10 @@
+name: checklist-from-yaml-test-checklist
+path: desk/primitives/checklists/checklist-from-yaml-test-checklist.md
+hash_c: aa74e3c449d40c63165d872d44791bd9e6a632aa46691bc2b28479656cd773d4
+hash_d: cbd6f7ca76445bcd4b2fc35674afe1dd49a111f0bd174a388407336af03b442f
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

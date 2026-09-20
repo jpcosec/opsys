@@ -1,0 +1,9 @@
+name: binds
+path: desk/relation_types/binds.md
+hash_c: 35f745765895c91c01738972c33ac683555457dd65ca335b0e5744e1a392b076
+hash_d: 0f25570f3e47f06e89de129dd73e5921101261a7f0d49800707c3c9ec5a3744c
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

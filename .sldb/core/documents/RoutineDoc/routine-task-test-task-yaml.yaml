@@ -1,0 +1,11 @@
+name: routine-task-test-task-yaml
+path: desk/routines/routine-task-test-task-yaml.md
+hash_c: b001fa1046b9c1d95ef4377fc909fc249bc26d413a86ff761041611082d4cbae
+hash_d: cb0d390940cdc70eeab0fe10e7b464a97ad0eaa772b6e9a571f84635a40ed706
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

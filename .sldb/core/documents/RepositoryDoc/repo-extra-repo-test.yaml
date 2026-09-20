@@ -1,0 +1,11 @@
+name: repo-extra-repo-test
+path: desk/registry/repo-extra-repo-test.md
+hash_c: 123e7f4730ef23f34e5773a8792e4b08b977508f5e59172f61aaa6790f59b0bb
+hash_d: 86d618140f64089b489522368957e420ebfcf83d2e6fff60c4ad8f04f21a60e1
+semantic_tags:
+- artifact:repository
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry
+- workspace:desk

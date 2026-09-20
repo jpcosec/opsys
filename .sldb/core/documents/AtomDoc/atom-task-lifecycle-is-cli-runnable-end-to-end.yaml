@@ -1,0 +1,13 @@
+name: atom-task-lifecycle-is-cli-runnable-end-to-end
+path: desk/atoms/workflow-model/atom-task-lifecycle-is-cli-runnable-end-to-end.md
+hash_c: a853339bbc4e2a8547f83d80b84da579a8a372430198b25187ae0f63ef937aa6
+hash_d: 8debaab0aa0c83cc87e10ab08fa67d5b676a5f7406c346fff5d6c76899943843
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:tasks
+- topic:workflow-model
+- type.knowledge.atom
+- workspace.desk.atoms

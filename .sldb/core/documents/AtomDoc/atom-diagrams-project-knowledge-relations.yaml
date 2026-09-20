@@ -1,0 +1,13 @@
+name: atom-diagrams-project-knowledge-relations
+path: desk/atoms/knowledge-model/atom-diagrams-project-knowledge-relations.md
+hash_c: 4d97ee81438cc1b7c8df960db427194f22c4a01d542abb9bb4be50a2a1696150
+hash_d: c101fc30d2ddbc016a830bb289d33254fe7daaa41559fe2f57f7138f81a797c0
+semantic_tags:
+- domain:knowledge-management
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:diagrams
+- type.knowledge.atom
+- workspace.desk.atoms

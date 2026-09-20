@@ -1,0 +1,10 @@
+name: checklist-task-add-desk-health-and-recovery-surface-deskops-slice-testing-ready
+path: desk/primitives/checklists/checklist-task-add-desk-health-and-recovery-surface-deskops-slice-testing-ready.md
+hash_c: 6e44f182eada3753a3c7f40cdc766f259b8e12c7b53945a94f0ce245f76de391
+hash_d: fde1d136af7e3d33198823383e1d377492be52b93ce70eff3d8e1ebdcb0c4cdc
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

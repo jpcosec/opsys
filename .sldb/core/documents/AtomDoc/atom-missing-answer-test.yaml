@@ -1,0 +1,11 @@
+name: atom-missing-answer-test
+path: desk/atoms/atom-missing-answer-test.md
+hash_c: 779502b537727dd4d21e1c6bc6ac8b27b971f655c43b979f2f6d26b42da251f0
+hash_d: 11f1b4bccb3837f096ad3f09abf641ce80781d46da9a5159f7ef8cf4f5f10c34
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

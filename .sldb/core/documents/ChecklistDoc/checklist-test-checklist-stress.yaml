@@ -1,0 +1,10 @@
+name: checklist-test-checklist-stress
+path: desk/primitives/checklists/checklist-test-checklist-stress.md
+hash_c: bd47142bf9320de75e78584110e27b5a5978c2449dddcaef02bf87a7a0cd83ef
+hash_d: 4a8e9a97bd4da33f5f7c023825ecb87e3c00c147c7dba4eb321f1643b004d3a7
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

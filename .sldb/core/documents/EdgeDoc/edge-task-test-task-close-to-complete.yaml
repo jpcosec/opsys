@@ -1,0 +1,10 @@
+name: edge-task-test-task-close-to-complete
+path: desk/primitives/edges/edge-task-test-task-close-to-complete.md
+hash_c: 4e4bbc3d47516cf10190c416b253e2eb51ccc952e7b7493b0ee2c2a38573d81b
+hash_d: 358bf1b9679434ef2cf5a0975d3d8fd2ee2fd47e9069e8ea9a9da66b0cd6f755
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

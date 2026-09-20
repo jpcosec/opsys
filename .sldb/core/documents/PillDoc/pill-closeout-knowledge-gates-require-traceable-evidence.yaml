@@ -1,0 +1,14 @@
+name: pill-closeout-knowledge-gates-require-traceable-evidence
+path: desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+hash_c: f2324fd246f2e0f201e6d3efbfb73af89f442ca02d930b38818dd51d195d54ec
+hash_d: b68a58f720b8d7d66850f8238c0469612828aaf9fcb63f013de4e5132b326db6
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:knowledge
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

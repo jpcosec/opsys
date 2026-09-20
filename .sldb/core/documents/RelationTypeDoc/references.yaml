@@ -1,0 +1,9 @@
+name: references
+path: desk/relation_types/references.md
+hash_c: 73ad5b0066a7b422a1e4be79fc3c2e766df7fea2236fe36db1e0f5eff29737b4
+hash_d: 348caca275bc429cf598d5edab51244f3cd82a9940ceb443f14dfcd9493f8b36
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

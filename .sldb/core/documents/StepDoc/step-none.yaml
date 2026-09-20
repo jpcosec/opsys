@@ -1,0 +1,9 @@
+name: step-none
+path: desk/steps/step-none.md
+hash_c: 036e19eec4e3b68f105e84b2d92829af830d9e3c26cc0b893a4f7f6b871f6d7a
+hash_d: fa2ffb27fa2b911f3acb321cb153a73ae50e127bfb6915b78b592afbf15ae9ae
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.step
+- workspace.desk

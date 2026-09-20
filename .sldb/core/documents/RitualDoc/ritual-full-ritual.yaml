@@ -1,0 +1,11 @@
+name: ritual-full-ritual
+path: desk/rituals/ritual-full-ritual.md
+hash_c: 18ae02ea89dee78f4f3bcf9ee0430bd6dcfcff9a1bd42395601b3c48a273f908
+hash_d: 5299e83f8700f9acaa5bc632b3ce1861b1f25b0039b9f55e9b3db12bc816fa9e
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

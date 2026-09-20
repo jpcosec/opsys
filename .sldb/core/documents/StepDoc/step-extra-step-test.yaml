@@ -1,0 +1,11 @@
+name: step-extra-step-test
+path: desk/steps/step-extra-step-test.md
+hash_c: a6215fd7d85069146600c8acb67fb8bdabccf6c51b96d939a8688a6048d49c68
+hash_d: 6b84a3dba76760af9a4eb484b5d0fca64bc7ef7d12531eb49b307db753cf26c6
+semantic_tags:
+- artifact:step
+- representation.markdown
+- source.document.markdown
+- type.workflow.step
+- workspace.desk
+- workspace:desk

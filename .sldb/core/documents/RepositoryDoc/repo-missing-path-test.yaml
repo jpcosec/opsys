@@ -1,0 +1,11 @@
+name: repo-missing-path-test
+path: desk/registry/repo-missing-path-test.md
+hash_c: ff04d870d240c1ef740e384796765fb0a4032a41b08e4d2acf27f470c5303c4f
+hash_d: 187b46dec076240c5bb2dd3d8310fc381dd904439aaa12909b4af1e80462b4cc
+semantic_tags:
+- artifact:repository
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry
+- workspace:desk

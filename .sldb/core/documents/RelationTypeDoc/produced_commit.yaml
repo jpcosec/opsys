@@ -1,0 +1,9 @@
+name: produced_commit
+path: desk/relation_types/produced_commit.md
+hash_c: 2bd4f419b1a88f88259d5af3a9188dd48b02cd56878715476e98232a0898c1e5
+hash_d: 2bba1807d1d51790d80f85ea37f63200eed1221ecc2c52fd9ba4ddbba53137ee
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

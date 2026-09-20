@@ -1,0 +1,11 @@
+name: repo-from-yaml-test-repo
+path: desk/registry/repo-from-yaml-test-repo.md
+hash_c: 0d64d0db0d3b0829e20826b869fe9808818a12d6920e80d995f605575b5db5ea
+hash_d: a128b7f05a33423b416fe5c9b21c759ae305f3b9a70f4fc9aea8e6042b996923
+semantic_tags:
+- artifact:repository
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry
+- workspace:desk

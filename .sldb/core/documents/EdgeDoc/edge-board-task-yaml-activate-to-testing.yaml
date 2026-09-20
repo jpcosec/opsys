@@ -1,0 +1,10 @@
+name: edge-board-task-yaml-activate-to-testing
+path: desk/primitives/edges/edge-board-task-yaml-activate-to-testing.md
+hash_c: cc6389a1908c84595f1ba78ea703352fde99508a00567e514ab4f9298f18fe82
+hash_d: 543959921c41ee2b84fd158184f9b2fb913eb0196b9959a54cc20bf848bd8910
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

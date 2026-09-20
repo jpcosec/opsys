@@ -1,0 +1,10 @@
+name: condition-task-write-end-to-end-deskops-operator-manual-has-closeout-evidence
+path: desk/primitives/conditions/condition-task-write-end-to-end-deskops-operator-manual-has-closeout-evidence.md
+hash_c: aabd2fcb200046da12ffb1253b89ad65a042fe6c7487a94af8f293b7a60ecef7
+hash_d: 019a3dea59e032ad812c2320d971ef8f2f28c4960d27fbbc7e44e19433061824
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

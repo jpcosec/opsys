@@ -1,0 +1,10 @@
+name: edge-task-document-how-stale-state-causes-agent-hallucination-closeout-to-close
+path: desk/primitives/edges/edge-task-document-how-stale-state-causes-agent-hallucination-closeout-to-close.md
+hash_c: 80bfaa2933d4c215b393f5cbdc75bcbdfb4d1105f09bcb4046ac1d8fcce802f1
+hash_d: 6fc7034be6a3164b5290354a8851ccf2b9c4d4a129ea98027c9c15fe2fa97361
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

@@ -1,0 +1,14 @@
+name: pill-pattern-supervisor-playbook-buenas-tareas-bundle-contexto-cero-y-frontera-de-modelos
+path: desk/contexts/pill-pattern-supervisor-playbook-buenas-tareas-bundle-contexto-cero-y-frontera-de-modelos.md
+hash_c: 7e61860c29b98a78f4dbd4ae2cfa6024308b03e7a83d5e7865b6979fd78c9eed
+hash_d: 4921aff0aba9cab2af1051cea052b98e5e755f0c201eed2e6a5b0e6da2ca25a6
+semantic_tags:
+- pill-type:pattern
+- representation.markdown
+- source.document.markdown
+- topic:subagents
+- topic:supervision
+- topic:task-authoring
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

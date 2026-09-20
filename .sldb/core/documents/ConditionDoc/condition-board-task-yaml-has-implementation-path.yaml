@@ -1,0 +1,10 @@
+name: condition-board-task-yaml-has-implementation-path
+path: desk/primitives/conditions/condition-board-task-yaml-has-implementation-path.md
+hash_c: 841a0a711e1bb41c198a9261f657875fc03305862a359f660f67ee9e0d426d3b
+hash_d: aaeb44d212ca379cded9981fbef4b5b21fb406f0616c0f27483a79a251511718
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

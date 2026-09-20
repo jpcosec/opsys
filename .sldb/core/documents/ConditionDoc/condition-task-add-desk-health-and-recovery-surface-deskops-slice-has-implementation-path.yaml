@@ -1,0 +1,10 @@
+name: condition-task-add-desk-health-and-recovery-surface-deskops-slice-has-implementation-path
+path: desk/primitives/conditions/condition-task-add-desk-health-and-recovery-surface-deskops-slice-has-implementation-path.md
+hash_c: 2a12a672609ac36febc6840b124bc47e50e224c48c743e694c3b101d60859eea
+hash_d: 962665d09435b3817699f57575da7fb2a50adf33d6ae354747c3235c03168c13
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

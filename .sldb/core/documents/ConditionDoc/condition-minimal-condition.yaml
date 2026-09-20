@@ -1,0 +1,10 @@
+name: condition-minimal-condition
+path: desk/primitives/conditions/condition-minimal-condition.md
+hash_c: b7c0539044f2dcdddf92a9eec68b98717ce3f8a9d43a374985575d11010eb0bd
+hash_d: 0a0641c15bedc2751ca63472f27f982d64cd51ccfd3a16fc2d9ee74198d47bbe
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

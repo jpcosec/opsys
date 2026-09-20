@@ -1,0 +1,9 @@
+name: executed_by
+path: desk/relation_types/executed_by.md
+hash_c: 9ffbf6488e38175c9e44e086c3d38a3efd4c30f51d32d5c359f0c43a84be0dcb
+hash_d: df73ee05aa5bc3f65c6888f51f95bcc1c6b3c56f4e5154ceea5c08adbe3fd4db
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

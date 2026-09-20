@@ -1,0 +1,10 @@
+name: edge-task-write-end-to-end-deskops-operator-manual-activate-to-testing
+path: desk/primitives/edges/edge-task-write-end-to-end-deskops-operator-manual-activate-to-testing.md
+hash_c: ebd0ee142f961c5a03edafe142037c245febf81afde09e265815eb9882247e16
+hash_d: afcc5296d52d6e9efb77a9cad9304c38273014e6e035981bceb16baee1a449a3
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

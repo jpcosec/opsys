@@ -1,0 +1,10 @@
+name: operator-from-yaml-test-operator
+path: desk/primitives/operators/operator-from-yaml-test-operator.md
+hash_c: fb6ed41b12737c2e1c11de1f0b35433d30719074d66a81365f1d88d53e43ee00
+hash_d: 61ccd4a11a2d4e7e46067e98dce244eefccf876aa2139077dc656b1bf21de677
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

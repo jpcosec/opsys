@@ -1,0 +1,12 @@
+name: atom-routine-based-task-execution
+path: desk/atoms/workflow-model/atom-routine-based-task-execution.md
+hash_c: d68b37c08f93e20817f20017266f54924c55facc3de0fe7b56f9c88f82343a0b
+hash_d: 02e31c2add013ef994817ff08aceac691f7ce25802abc12f3c430c947935c1da
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:routines
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

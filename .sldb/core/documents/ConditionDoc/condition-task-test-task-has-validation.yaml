@@ -1,0 +1,10 @@
+name: condition-task-test-task-has-validation
+path: desk/primitives/conditions/condition-task-test-task-has-validation.md
+hash_c: 9217f6a69b2bcba2c8fbb17b3199af8efde99a500e2f3112008787f4b234750a
+hash_d: ba6f3ba09bbbf295692dbf2726ff17ebc5fe71a4e22ccd46bd8d1ff09b9d3391
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

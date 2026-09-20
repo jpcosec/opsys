@@ -1,0 +1,10 @@
+name: edge-board-task-yaml-close-to-complete
+path: desk/primitives/edges/edge-board-task-yaml-close-to-complete.md
+hash_c: dccc33c73c3b46f45eec3c41968f313051da4cafcdacc77d642f01dd2e491d33
+hash_d: 87d0a0ce15cd62e63d7c73eb3043f26a9f7fa1f58f87d6dd12c8eb079fd1d9d4
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

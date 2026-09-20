@@ -2,9 +2,9 @@ name: HookDoc
 model_ref: deskops.models:HookDoc
 path: deskops/models/hook.py
 documents_index: .sldb/core/documents/HookDoc.yaml
-sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-documents_count: 0
+sections_index: .sldb/runtime/sections/HookDoc.yaml
+hash_b: 98c154623689d7b7c38bc265e26c3a09b889597616ecc6ca3a72ae1cb200607f
+documents_count: 6
 version: 1
 canonical: false
 family: null

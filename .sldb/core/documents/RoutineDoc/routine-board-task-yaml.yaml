@@ -1,0 +1,11 @@
+name: routine-board-task-yaml
+path: desk/routines/routine-board-task-yaml.md
+hash_c: 5e6c20602db8e3297633e60aafa8fd55061a3c3352448ad58fed32c8af10dc5f
+hash_d: 0f4fe818d7800a6adf697239ebb1949bd8ac66be49f10a3bd5d308ed8e94ca31
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

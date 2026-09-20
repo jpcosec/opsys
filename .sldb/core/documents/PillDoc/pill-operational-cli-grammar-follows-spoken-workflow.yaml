@@ -1,0 +1,14 @@
+name: pill-operational-cli-grammar-follows-spoken-workflow
+path: desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md
+hash_c: e627391c40423cd8b048e77713866473ca3a745ee0195b1868f146d196e835c2
+hash_d: 5694a8e0a53069753986fc361fe5f65c4f40d3178da5a0eb6fa102abdfe2c34b
+semantic_tags:
+- pill-type:pattern
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:workflow-language
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

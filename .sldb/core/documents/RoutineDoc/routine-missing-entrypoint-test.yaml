@@ -1,0 +1,10 @@
+name: routine-missing-entrypoint-test
+path: desk/routines/routine-missing-entrypoint-test.md
+hash_c: 33a4066b3aa24b04ca75b787b768c9b2c66131ac39d82596aebcc0dbd41d60ed
+hash_d: c17d9682b97bd5037426b3cab9cdbd1efad48c7b9389dbc7626c9fa43bdaa1f9
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
