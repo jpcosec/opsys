@@ -39,7 +39,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout}" in captured.out
+    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out

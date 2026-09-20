@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -16,7 +17,10 @@ def _git(root: Path, *argv: str) -> str:
 
 
 def _cli(root: Path, *argv: str, check: bool = True) -> subprocess.CompletedProcess[str]:
-    result = subprocess.run([*CLI, *argv], cwd=root, capture_output=True, text=True)
+    # The plan's env rule: a stale deskops 0.1.0 in site-packages hijacks the
+    # subprocess unless the worktree is on PYTHONPATH.
+    env = {**os.environ, "PYTHONPATH": str(ROOT)}
+    result = subprocess.run([*CLI, *argv], cwd=root, capture_output=True, text=True, env=env)
     if check:
         assert result.returncode == 0, result.stderr or result.stdout
     return result
