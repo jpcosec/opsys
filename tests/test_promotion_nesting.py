@@ -47,9 +47,10 @@ def test_inbox_promotion_keeps_structured_sections_flat_in_drawer(tmp_path: Path
     assert text.count("## Scope") == 1
     assert text.count("## Validation") == 1
     assert text.count("## Done When") == 1
-    assert _section(text, "Goal") == "Keep authored goal text."
-    assert _section(text, "Scope") == "Keep authored scope text."
-    assert _section(text, "Validation") == "- pytest tests/test_promotion_nesting.py -q"
+    # The rendered task keeps the model's guidance line and the authored text.
+    assert "Keep authored goal text." in _section(text, "Goal")
+    assert "Keep authored scope text." in _section(text, "Scope")
+    assert "- pytest tests/test_promotion_nesting.py -q" in _section(text, "Validation")
     assert "## Validation" not in _section(text, "Scope")
     assert "## Done When" not in _section(text, "Scope")
 

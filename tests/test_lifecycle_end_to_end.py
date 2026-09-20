@@ -46,7 +46,15 @@ def _make_repo(tmp_path: Path) -> Path:
 
 
 def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path) -> None:
+    """Intake -> drawer -> routed -> derived status ladder -> closed commit.
+
+    The CLI drives intake, promotion and the advance gates; the documents a
+    task needs to climb the ladder (plan, target, contract, symbol, coverage,
+    run, acceptance) are written through the library, which is what the plan's
+    F5/F6 commands will wrap.
+    """
     root = _make_repo(tmp_path)
+    sys.path.insert(0, str(ROOT / "tests"))
 
     install = _cli(root, "desk", "install", str(root))
     assert "Scaffold complete." in install.stdout
@@ -84,70 +92,18 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     assert drawer_task.exists()
     assert not inbox_note.exists()
 
+    # An unrouted task cannot advance: the gate names the routing.
+    blocked = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
+    assert blocked.returncode == 1
+    assert "Status: drawer" in blocked.stdout
+    assert "not routed by a board" in blocked.stdout
+
     second_promote = _cli(root, "promote", "drawer-task-to-active-task", "lifecycle-e2e", "--root", str(root))
     active_task = root / "desk" / "tasks" / "task-lifecycle-e2e.md"
-    routine = root / "desk" / "routines" / "routine-task-lifecycle-e2e.md"
-    assert "Created active task bundle task-lifecycle-e2e" in second_promote.stdout
+    assert "Promoted task task-lifecycle-e2e" in second_promote.stdout
     assert active_task.exists()
-    assert routine.exists()
     assert not drawer_task.exists()
-
-    board_text = (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
-    assert "desk/tasks/task-lifecycle-e2e.md" in board_text
-
-    first_advance = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
-    assert "Status: active" in first_advance.stdout
-    assert "Current node: checklist-task-lifecycle-e2e-testing-ready" in first_advance.stdout
-
-    second_advance = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
-    assert "Status: ready_for_testing" in second_advance.stdout
-    assert "Current node: checklist-task-lifecycle-e2e-closeout-ready" in second_advance.stdout
-
-    blocked_closeout = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
-    assert blocked_closeout.returncode == 1
-    assert "Status: ready_for_testing" in blocked_closeout.stdout
-    assert "Current node: checklist-task-lifecycle-e2e-closeout-ready" in blocked_closeout.stdout
-    assert "is not complete" in blocked_closeout.stdout
-
-    _write(root, "tests/test_lifecycle_smoke.py", "def test_lifecycle_smoke():\n    assert True\n")
-    seed_commit = _git(root, "rev-parse", "HEAD")
-    references = (
-        '["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md", '
-        '"pytest tests/test_lifecycle_smoke.py::test_lifecycle_smoke", '
-        f'"{seed_commit}"]'
-    )
-    files = '["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md", "tests/test_lifecycle_smoke.py"]'
-
-    edit_references = _cli(
-        root,
-        "edit",
-        "task",
-        "task-lifecycle-e2e",
-        "references",
-        references,
-        "--root",
-        str(root),
-    )
-    assert "Updated task task-lifecycle-e2e field references" in edit_references.stdout
-
-    edit_files = _cli(
-        root,
-        "edit",
-        "task",
-        "task-lifecycle-e2e",
-        "files",
-        files,
-        "--root",
-        str(root),
-    )
-    assert "Updated task task-lifecycle-e2e field files" in edit_files.stdout
-
-    closed = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
-    assert "Status: closed" in closed.stdout
-    assert "Current node: complete" in closed.stdout
-
-    assert not active_task.exists()
-    assert not routine.exists()
+    assert not list((root / "desk" / "routines").glob("routine-task-lifecycle-e2e.md"))
     primitive_dirs = [
         root / "desk" / "primitives" / "conditions",
         root / "desk" / "primitives" / "operators",
@@ -157,14 +113,80 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     ]
     assert all(not list(directory.glob("*task-lifecycle-e2e*.md")) for directory in primitive_dirs)
 
-    final_board_text = (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
-    assert "desk/tasks/task-lifecycle-e2e.md" not in final_board_text
+    routed = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
+    assert routed.returncode == 1
+    assert "Status: active" in routed.stdout
+    assert "No plan targets are declared" in routed.stdout
 
+    # The documents that climb the ladder, written through the library.
+    from derived_support import bind_task_plan, contract_payload, cover_and_prove, create, document_symbol, target_payload
+    from deskops import forms
+
+    world = forms.world_for(root)
+    contract = contract_payload("contract-lifecycle-e2e", "deskops.forms:advance_task")
+    create(world, "SymbolContractDoc", "contract-lifecycle-e2e", contract, "desk/plans")
+    bind_task_plan(
+        world,
+        "task-lifecycle-e2e",
+        "plan-lifecycle-e2e",
+        [target_payload("plan-target-lifecycle-e2e", contract="SymbolContractDoc:contract-lifecycle-e2e")],
+    )
+
+    execution = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
+    assert execution.returncode == 1
+    assert "Status: execution" in execution.stdout
+    assert "contracts are not implemented" in execution.stdout
+
+    document_symbol(world, "deskops.forms:advance_task")
+    testing = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
+    assert testing.returncode == 1
+    assert "Status: testing" in testing.stdout
+    assert "tests are not proven" in testing.stdout
+
+    _write(root, "tests/test_lifecycle_smoke.py", "def test_lifecycle_smoke():\n    assert True\n")
+    cover_and_prove(world, contract, "task-lifecycle-e2e", run_id="run-lifecycle-e2e")
+    closeout = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
+    assert closeout.returncode == 1
+    assert "Status: closeout" in closeout.stdout
+    assert "Closeout evidence is missing" in closeout.stdout
+
+    create(
+        world,
+        "AcceptanceDoc",
+        "acceptance-task-lifecycle-e2e",
+        {
+            "id": "acceptance-task-lifecycle-e2e",
+            "title": "Acceptance",
+            "status": "complete",
+            "summary": "Closing rules.",
+            "validation": ["pytest tests/test_lifecycle_smoke.py::test_lifecycle_smoke"],
+            "done_when": ["the suite is green"],
+            "evidence": ["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md", "run-lifecycle-e2e"],
+            "tags": ["workspace:desk"],
+        },
+        "desk/tasks",
+    )
+    bind_task_plan(
+        world,
+        "task-lifecycle-e2e",
+        "plan-lifecycle-e2e",
+        [target_payload("plan-target-lifecycle-e2e", contract="SymbolContractDoc:contract-lifecycle-e2e")],
+        acceptance="AcceptanceDoc:acceptance-task-lifecycle-e2e",
+    )
+
+    closed = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
+    assert "Status: closed" in closed.stdout
+
+    # The closing commit is the operator's move in the new architecture: the
+    # status is derived, so the ledger entry names the task and its evidence.
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "closeout: task-lifecycle-e2e\n\nTask-Id: task-lifecycle-e2e")
     closing_message = _git(root, "log", "-1", "--format=%B")
     assert "closeout: task-lifecycle-e2e" in closing_message
     assert "Task-Id: task-lifecycle-e2e" in closing_message
 
     committed_files = _git(root, "show", "--name-only", "--format=", "HEAD").split()
+    assert "desk/tasks/task-lifecycle-e2e.md" in committed_files
     assert "desk/tasks/Board.md" in committed_files
     assert "desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md" in committed_files
     assert "tests/test_lifecycle_smoke.py" in committed_files

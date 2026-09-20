@@ -649,9 +649,12 @@ def test_promote_drawer_task_to_active_task_creates_bundle(tmp_path: Path, capsy
     captured = capsys.readouterr()
     active_task = tmp_path / "desk" / "tasks" / "task-promote-demo.md"
     assert result == 0
-    assert "Created active task bundle task-promote-demo" in captured.out
+    assert "Promoted task task-promote-demo" in captured.out
     assert active_task.exists()
-    assert (tmp_path / "desk" / "routines" / "routine-task-promote-demo.md").exists()
+    # Routines and checklist/condition/operator/edge documents are absorbed by
+    # the spec, so promotion writes the task and its board entry only.
+    assert not (tmp_path / "desk" / "routines").exists()
+    assert not list((tmp_path / "desk" / "primitives" / "checklists").glob("*promote-demo*"))
     board = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-promote-demo.md" in board
     assert not source.exists()
@@ -685,31 +688,46 @@ def test_promote_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, cap
     )
     promote_out = capsys.readouterr()
     assert promoted == 0
-    assert "Created active task bundle task-promote-track-demo" in promote_out.out
+    assert "Promoted task task-promote-track-demo" in promote_out.out
 
-    for doc_id, model_name in [
-        ("task-promote-track-demo", "TaskDoc"),
-        ("routine-task-promote-track-demo", "RoutineDoc"),
-        ("checklist-task-promote-track-demo-execution-ready", "ChecklistDoc"),
-        ("condition-task-promote-track-demo-has-validation", "ConditionDoc"),
-        ("operator-task-promote-track-demo-activate", "OperatorDoc"),
-        ("edge-task-promote-track-demo-execution-to-activate", "EdgeDoc"),
+    shown = sldb_main(
+        [
+            "docs",
+            "show",
+            "task-promote-track-demo",
+            "--store",
+            str(tmp_path / ".sldb"),
+            "--pythonpath",
+            str(ROOT),
+        ]
+    )
+    sldb_out = capsys.readouterr()
+    assert shown == 0
+    assert '"name": "task-promote-track-demo"' in sldb_out.out
+    assert '"model": "TaskDoc"' in sldb_out.out
+    # The absorbed models are not written by a promotion anymore.
+    for doc_id in [
+        "routine-task-promote-track-demo",
+        "checklist-task-promote-track-demo-execution-ready",
+        "condition-task-promote-track-demo-has-validation",
     ]:
-        shown = sldb_main(
-            [
-                "docs",
-                "show",
-                doc_id,
-                "--store",
-                str(tmp_path / ".sldb"),
-                "--pythonpath",
-                str(ROOT),
-            ]
-        )
-        sldb_out = capsys.readouterr()
-        assert shown == 0
-        assert f'"name": "{doc_id}"' in sldb_out.out
-        assert f'"model": "{model_name}"' in sldb_out.out
+        try:
+            sldb_main(
+                [
+                    "docs",
+                    "show",
+                    doc_id,
+                    "--store",
+                    str(tmp_path / ".sldb"),
+                    "--pythonpath",
+                    str(ROOT),
+                ]
+            )
+        except SystemExit as exc:  # sldb exits on an unknown target
+            assert exc.code not in (0, None)
+        else:  # pragma: no cover - the document must not exist anymore
+            raise AssertionError(f"{doc_id} is still tracked after a promotion")
+        capsys.readouterr()
 
 
 def test_promote_rejects_ambiguous_inbox_selector(tmp_path: Path, capsys) -> None:
@@ -1545,88 +1563,6 @@ def test_add_surfaces_reject_non_mapping_yaml(
     assert not list(tmp_path.glob(created_glob))
 
 
-def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, capsys) -> None:
-    add_result = main(
-        [
-            "add",
-            "task",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Advance task runtime",
-            "--goal",
-            "Operate task state through routines.",
-            "--scope",
-            "Task state machine only.",
-            "--implementation-path",
-            "Advance through checklist and operator nodes.",
-            "--done-when",
-            "The task reaches closed via the runtime.",
-            "--validation",
-            "pytest",
-        ]
-    )
-    capsys.readouterr()
-    assert add_result == 0
-
-    list_result = main(["list", "tasks", "--root", str(tmp_path)])
-    listed = capsys.readouterr()
-    assert list_result == 0
-    assert "task-advance-task-runtime | draft | checklist-task-advance-task-runtime-execution-ready" in listed.out
-
-    show_result = main(["show", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
-    shown = capsys.readouterr()
-    assert show_result == 0
-    assert "Status: draft" in shown.out
-    assert "Current node: checklist-task-advance-task-runtime-execution-ready" in shown.out
-
-    first_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
-    first = capsys.readouterr()
-    assert first_advance == 0
-    assert "Status: active" in first.out
-    assert "Current node: checklist-task-advance-task-runtime-testing-ready" in first.out
-
-    second_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
-    second = capsys.readouterr()
-    assert second_advance == 0
-    assert "Status: ready_for_testing" in second.out
-    assert "Current node: checklist-task-advance-task-runtime-closeout-ready" in second.out
-
-    blocked_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
-    blocked = capsys.readouterr()
-    assert blocked_advance == 1
-    assert "Status: ready_for_testing" in blocked.out
-    assert "Current node: checklist-task-advance-task-runtime-closeout-ready" in blocked.out
-    assert "Message: Checklist checklist-task-advance-task-runtime-closeout-ready is not complete." in blocked.out
-
-    runtime_test = tmp_path / "tests" / "test_runtime.py"
-    runtime_test.parent.mkdir(parents=True, exist_ok=True)
-    runtime_test.write_text("def test_runtime():\n    assert True\n", encoding="utf-8")
-
-    evidence_edit = main([
-        "edit",
-        "task",
-        "task-advance-task-runtime",
-        "references",
-        '["pytest tests/test_runtime.py::test_runtime"]',
-        "--root",
-        str(tmp_path),
-    ])
-    capsys.readouterr()
-    assert evidence_edit == 0
-
-    third_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
-    third = capsys.readouterr()
-    assert third_advance == 0
-    assert "Status: closed" in third.out
-    assert "Current node: complete" in third.out
-    assert not (tmp_path / "desk" / "tasks" / "task-advance-task-runtime.md").exists()
-    assert not (tmp_path / "desk" / "routines" / "routine-task-advance-task-runtime.md").exists()
-    board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
-    assert "desk/tasks/task-advance-task-runtime.md" not in board_text
-
-
-
 def test_list_and_show_task_support_json_output(tmp_path: Path, capsys) -> None:
     add_result = main(
         [
@@ -1806,195 +1742,6 @@ def test_list_and_show_artifact_support_json_output(tmp_path: Path, capsys) -> N
     assert show_payload["id"] == "pill-json-pill-output"
     assert show_payload["how_not"] == "Do not rely on text scraping."
 
-
-
-def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_path: Path, capsys) -> None:
-    add_result = main(
-        [
-            "add",
-            "task",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Advance blocked task",
-            "--goal",
-            "Enforce phase gates.",
-            "--scope",
-            "Task state machine only.",
-            "--implementation-path",
-            "Advance only when each gate has proof.",
-            "--done-when",
-            "Advancement halts when gate evidence is missing.",
-        ]
-    )
-    capsys.readouterr()
-    assert add_result == 0
-
-    first_advance = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
-    first = capsys.readouterr()
-    assert first_advance == 0
-    assert "Status: active" in first.out
-    assert "Current node: checklist-task-advance-blocked-task-testing-ready" in first.out
-
-    blocked_testing = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
-    blocked_testing_out = capsys.readouterr()
-    assert blocked_testing == 1
-    assert "Status: active" in blocked_testing_out.out
-    assert "Current node: checklist-task-advance-blocked-task-testing-ready" in blocked_testing_out.out
-    assert "Message: Checklist checklist-task-advance-blocked-task-testing-ready is not complete." in blocked_testing_out.out
-
-    blocked_test = tmp_path / "tests" / "test_blocked.py"
-    blocked_test.parent.mkdir(parents=True, exist_ok=True)
-    blocked_test.write_text("def test_blocked():\n    assert True\n", encoding="utf-8")
-
-    add_validation = main([
-        "edit",
-        "task",
-        "task-advance-blocked-task",
-        "validation",
-        '["pytest tests/test_blocked.py::test_blocked"]',
-        "--root",
-        str(tmp_path),
-    ])
-    capsys.readouterr()
-    assert add_validation == 0
-
-    move_to_closeout = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
-    move_to_closeout_out = capsys.readouterr()
-    assert move_to_closeout == 0
-    assert "Status: ready_for_testing" in move_to_closeout_out.out
-    assert "Current node: checklist-task-advance-blocked-task-closeout-ready" in move_to_closeout_out.out
-
-    blocked_closeout = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
-    blocked_closeout_out = capsys.readouterr()
-    assert blocked_closeout == 1
-    assert "Status: ready_for_testing" in blocked_closeout_out.out
-    assert "Current node: checklist-task-advance-blocked-task-closeout-ready" in blocked_closeout_out.out
-    assert "Message: Checklist checklist-task-advance-blocked-task-closeout-ready is not complete." in blocked_closeout_out.out
-
-    add_invalid_evidence = main([
-        "edit",
-        "task",
-        "task-advance-blocked-task",
-        "references",
-        '["not-real-evidence"]',
-        "--root",
-        str(tmp_path),
-    ])
-    capsys.readouterr()
-    assert add_invalid_evidence == 0
-
-    still_blocked = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
-    still_blocked_out = capsys.readouterr()
-    assert still_blocked == 1
-    assert "Message: Checklist checklist-task-advance-blocked-task-closeout-ready is not complete." in still_blocked_out.out
-
-    add_evidence = main([
-        "edit",
-        "task",
-        "task-advance-blocked-task",
-        "references",
-        '["pytest tests/test_blocked.py::test_blocked"]',
-        "--root",
-        str(tmp_path),
-    ])
-    capsys.readouterr()
-    assert add_evidence == 0
-
-    close_result = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
-    close_out = capsys.readouterr()
-    assert close_result == 0
-    assert "Status: closed" in close_out.out
-    assert "Current node: complete" in close_out.out
-
-
-def test_advance_task_accepts_atom_reference_as_closeout_evidence(tmp_path: Path, capsys) -> None:
-    add_atom = main([
-        "add",
-        "atom",
-        "--root",
-        str(tmp_path),
-        *ATOM_PAYLOAD_ARGS,
-    ])
-    capsys.readouterr()
-    assert add_atom == 0
-
-    add_task = main(
-        [
-            "add",
-            "task",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Advance with atom evidence",
-            "--goal",
-            "Allow atom-backed closeout.",
-            "--scope",
-            "Task closeout evidence only.",
-            "--implementation-path",
-            "Carry atom evidence through closeout.",
-            "--done-when",
-            "An atom reference can satisfy closeout evidence.",
-            "--validation",
-            "pytest",
-        ]
-    )
-    capsys.readouterr()
-    assert add_task == 0
-
-    assert main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)]) == 0
-    capsys.readouterr()
-    assert main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)]) == 0
-    capsys.readouterr()
-
-    set_atom_reference = main([
-        "edit",
-        "task",
-        "task-advance-with-atom-evidence",
-        "references",
-        '["desk/atoms/atom-trackable-atom.md"]',
-        "--root",
-        str(tmp_path),
-    ])
-    capsys.readouterr()
-    assert set_atom_reference == 0
-
-    close_result = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
-    close_out = capsys.readouterr()
-    assert close_result == 0
-    assert "Status: closed" in close_out.out
-    assert "Current node: complete" in close_out.out
-
-
-
-def test_advance_task_allows_empty_implementation_path(tmp_path: Path, capsys) -> None:
-    add_result = main(
-        [
-            "add",
-            "task",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Advance without path",
-            "--goal",
-            "Keep task progression usable.",
-            "--scope",
-            "Task state machine only.",
-            "--done-when",
-            "The task can enter active execution.",
-            "--validation",
-            "pytest",
-        ]
-    )
-    capsys.readouterr()
-    assert add_result == 0
-
-    first_advance = main(["advance", "task", "task-advance-without-path", "--root", str(tmp_path)])
-    first = capsys.readouterr()
-
-    assert first_advance == 0
-    assert "Status: active" in first.out
-    assert "Current node: checklist-task-advance-without-path-testing-ready" in first.out
 
 
 def test_add_and_show_condition_as_first_class_primitive(tmp_path: Path, capsys) -> None:
@@ -2529,3 +2276,226 @@ def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
     assert main(["doctor", "--root", str(root)]) == 1
     out, err = capsys.readouterr()
     assert "SLDB store check crashed (likely malformed documents)" in out
+
+
+def _install_advance_desk(root: Path) -> None:
+    """A sandbox desk with the world built: what the advance walk needs."""
+    from deskops import forms
+
+    assert main(["desk", "install", str(root)]) == 0
+    forms.world_for(root)
+
+
+def _walk_to_contract(root: Path) -> None:
+    """Task routed by a board, with one plan target whose contract is missing."""
+    from derived_support import store_task_with_plan, target_payload
+
+    world = __import__("deskops.forms", fromlist=["forms"]).world_for(root)
+    store_task_with_plan(world, "task-advance-walk", "plan-walk", [target_payload("plan-target-walk")])
+    from derived_support import route
+
+    route(world, "board-walk", "task-advance-walk")
+
+
+def test_advance_task_reports_the_derived_status_and_its_gate(tmp_path: Path, capsys) -> None:
+    """The whole ladder through the CLI: each rung's gate, then closed."""
+    from deskops import forms
+    from derived_support import bind_task_plan, contract_payload, cover_and_prove, create, document_symbol, route, store_task_with_plan, target_payload
+
+    _install_advance_desk(tmp_path)
+    forms.create_task(tmp_path, title="Advance walk", goal="Walk the ladder.", scope="Advance only.")
+
+    first = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    first_out = capsys.readouterr().out
+    assert first == 1
+    assert "Status: drawer" in first_out
+    assert "Message: Task is not routed by a board" in first_out
+
+    # routed by a board, no plan yet
+    (tmp_path / "desk" / "tasks").mkdir(parents=True, exist_ok=True)
+    from deskops.models import BoardDoc
+    from deskops.world import render_model_markdown
+
+    world = forms.world_for(tmp_path)
+    (tmp_path / "desk" / "tasks" / "Board.md").write_text(
+        render_model_markdown(
+            BoardDoc,
+            {
+                "id": "board-001",
+                "title": "Desk Board",
+                "scope": "desk",
+                "purpose": "Route the work.",
+                "tasks": ["desk/tasks/task-advance-walk.md"],
+                "pills": [],
+                "rituals": [],
+                "notes": "",
+                "tags": ["workspace:desk"],
+            },
+        ),
+        encoding="utf-8",
+    )
+    forms.promote_task(tmp_path, "task-advance-walk")
+
+    second = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    second_out = capsys.readouterr().out
+    assert second == 1
+    assert "Status: active" in second_out
+    assert "Message: No plan targets are declared" in second_out
+
+    # a plan target without contract
+    bind_task_plan(world, "task-advance-walk", "plan-walk", [target_payload("plan-target-walk")])
+    route(world, "board-walk", "task-advance-walk")
+    third = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    third_out = capsys.readouterr().out
+    assert third == 1
+    assert "Status: planning" in third_out
+    assert "lack a complete contract" in third_out
+
+    # contract complete but not implemented
+    contract = contract_payload("contract-walk", "deskops.forms:advance_task")
+    create(world, "SymbolContractDoc", "contract-walk", contract, "desk/plans")
+    bind_task_plan(
+        world,
+        "task-advance-walk",
+        "plan-walk",
+        [target_payload("plan-target-walk", contract="SymbolContractDoc:contract-walk")],
+    )
+    fourth = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    fourth_out = capsys.readouterr().out
+    assert fourth == 1
+    assert "Status: execution" in fourth_out
+    assert "contracts are not implemented" in fourth_out
+
+    # implemented, tests not proven
+    document_symbol(world, "deskops.forms:advance_task")
+    fifth = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    fifth_out = capsys.readouterr().out
+    assert fifth == 1
+    assert "Status: testing" in fifth_out
+    assert "tests are not proven" in fifth_out
+
+    # tests proven, closeout evidence missing
+    cover_and_prove(world, contract, "task-advance-walk", run_id="run-walk")
+    sixth = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    sixth_out = capsys.readouterr().out
+    assert sixth == 1
+    assert "Status: closeout" in sixth_out
+    assert "Closeout evidence is missing" in sixth_out
+
+    # evidence recorded: the task closes and no gate is reported
+    create(
+        world,
+        "AcceptanceDoc",
+        "acceptance-task-advance-walk",
+        {
+            "id": "acceptance-task-advance-walk",
+            "title": "Acceptance",
+            "status": "complete",
+            "summary": "Closing rules.",
+            "validation": ["pytest -q"],
+            "done_when": ["the suite is green"],
+            "evidence": ["commit 0"],
+            "tags": ["workspace:desk"],
+        },
+        "desk/tasks",
+    )
+    bind_task_plan(
+        world,
+        "task-advance-walk",
+        "plan-walk",
+        [target_payload("plan-target-walk", contract="SymbolContractDoc:contract-walk")],
+        acceptance="AcceptanceDoc:acceptance-task-advance-walk",
+    )
+    last = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    last_out = capsys.readouterr().out
+    assert last == 0
+    assert "Status: closed" in last_out
+    assert "Message:" not in last_out
+
+
+def test_advance_task_blocks_the_testing_gate_without_proven_tests(tmp_path: Path, capsys) -> None:
+    from deskops import forms
+    from derived_support import bind_task_plan, contract_payload, create, document_symbol
+
+    _install_advance_desk(tmp_path)
+    forms.create_task(tmp_path, title="Blocked testing", goal="g", scope="s")
+    world = forms.world_for(tmp_path)
+    _walk_to_contract(tmp_path)
+    contract = contract_payload("contract-blocked", "deskops.forms:next_gate")
+    create(world, "SymbolContractDoc", "contract-blocked", contract, "desk/plans")
+    document_symbol(world, "deskops.forms:next_gate")
+    from derived_support import store_task_with_plan, target_payload
+
+    bind_task_plan(
+        world,
+        "task-advance-walk",
+        "plan-walk",
+        [target_payload("plan-target-walk", contract="SymbolContractDoc:contract-blocked")],
+    )
+
+    blocked = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    blocked_out = capsys.readouterr().out
+
+    assert blocked == 1
+    assert "Status: testing" in blocked_out
+    assert "tests are not proven" in blocked_out
+
+
+def test_advance_task_accepts_an_atom_reference_as_closeout_evidence(tmp_path: Path, capsys) -> None:
+    from deskops import forms
+    from derived_support import bind_task_plan, contract_payload, cover_and_prove, create, document_symbol
+
+    _install_advance_desk(tmp_path)
+    forms.create_task(tmp_path, title="Atom evidence", goal="g", scope="s")
+    world = forms.world_for(tmp_path)
+    _walk_to_contract(tmp_path)
+    contract = contract_payload("contract-atom", "deskops.forms:read_task")
+    create(world, "SymbolContractDoc", "contract-atom", contract, "desk/plans")
+    document_symbol(world, "deskops.forms:read_task")
+    cover_and_prove(world, contract, "task-advance-walk", run_id="run-atom")
+    from derived_support import store_task_with_plan, target_payload
+
+    bind_task_plan(
+        world,
+        "task-advance-walk",
+        "plan-walk",
+        [target_payload("plan-target-walk", contract="SymbolContractDoc:contract-atom")],
+        acceptance="AcceptanceDoc:acceptance-task-advance-walk",
+    )
+    create(
+        world,
+        "AcceptanceDoc",
+        "acceptance-task-advance-walk",
+        {
+            "id": "acceptance-task-advance-walk",
+            "title": "Acceptance",
+            "status": "complete",
+            "summary": "Closing rules.",
+            "validation": ["pytest -q"],
+            "done_when": ["the suite is green"],
+            "evidence": ["desk/atoms/atom-closeout-evidence.md"],
+            "tags": ["workspace:desk"],
+        },
+        "desk/tasks",
+    )
+
+    closed = main(["advance", "task", "task-advance-walk", "--root", str(tmp_path)])
+    closed_out = capsys.readouterr().out
+
+    assert closed == 0
+    assert "Status: closed" in closed_out
+
+
+def test_advance_task_does_not_gate_on_the_implementation_path(tmp_path: Path, capsys) -> None:
+    """The ladder asks for routing/contracts/tests/evidence, never for a path."""
+    from deskops import forms
+
+    _install_advance_desk(tmp_path)
+    forms.create_task(tmp_path, title="No path", goal="g", scope="s", implementation_path="")
+
+    advance = main(["advance", "task", "task-no-path", "--root", str(tmp_path)])
+    advance_out = capsys.readouterr().out
+
+    assert advance == 1
+    assert "Status: drawer" in advance_out
+    assert "implementation path" not in advance_out.lower()

@@ -243,3 +243,50 @@ def cover_and_prove(world, contract: dict[str, Any], task_id: str, run_id: str =
         },
         "desk/relation_types",
     )
+
+
+def bind_task_plan(
+    world,
+    task_id: str,
+    plan_id: str,
+    targets: list[dict[str, Any]],
+    acceptance: str | None = None,
+) -> str:
+    """Point an existing task at a plan (rewriting its payload, not creating it)."""
+    doc_id = DocId.of("TaskDoc", task_id)
+    if world.store.doc(doc_id) is None:
+        return store_task_with_plan(world, task_id, plan_id, targets, acceptance=acceptance)
+    payload = dict(world.store.payload(doc_id))
+    payload["plan"] = [f"PlanDoc:{plan_id}"]
+    if acceptance:
+        payload["acceptance"] = [acceptance]
+    world.store.replace(doc_id, payload)
+    if world.store.doc(DocId.of("PlanDoc", plan_id)) is None:
+        create(
+            world,
+            "PlanDoc",
+            plan_id,
+            {
+                "id": plan_id,
+                "title": "Plan",
+                "goal": "g",
+                "context_findings": "c",
+                "interpretation": "i",
+                "risks": "r",
+                "ambiguities": [],
+                "tags": ["workspace:desk"],
+                "targets": [f"PlanTargetDoc:{target['id']}" for target in targets],
+            },
+            "desk/plans",
+        )
+    else:
+        plan = dict(world.store.payload(DocId.of("PlanDoc", plan_id)))
+        plan["targets"] = [f"PlanTargetDoc:{target['id']}" for target in targets]
+        world.store.replace(DocId.of("PlanDoc", plan_id), plan)
+    for target in targets:
+        target_id = DocId.of("PlanTargetDoc", target["id"])
+        if world.store.doc(target_id) is None:
+            create(world, "PlanTargetDoc", target["id"], target, "desk/plans")
+        else:
+            world.store.replace(target_id, target)
+    return f"TaskDoc:{task_id}"

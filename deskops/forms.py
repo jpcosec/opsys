@@ -153,13 +153,25 @@ def create_task(
 
 
 def read_task(root: str | Path, task_id: str) -> TaskView:
-    """The task as the store holds it, with its derived status."""
+    """The task as the store holds it, with its derived status.
+
+    An authored task file the store does not track yet is adopted first: the
+    desk still holds files written before the world existed, and a read must
+    work on them (`deskops doctor`/F7 migrate report the rest).
+    """
     world = world_for(root)
     ref = task_id if ":" in task_id else f"TaskDoc:{task_id}"
     name = split_ref(ref)[1]
-    doc = world.store.doc(DocId.of("TaskDoc", name))
-    if doc is None:
+    authored = find_task_file(root, name)
+    if authored is None:
         raise UnknownTaskError(task_id)
+    if world.store.doc(DocId.of("TaskDoc", name)) is None:
+        world, name, doc = ensure_tracked(root, name)
+    else:
+        doc = world.store.doc(DocId.of("TaskDoc", name))
+    if doc is None:  # pragma: no cover - ensure_tracked already raised
+        raise UnknownTaskError(task_id)
+    ref = f"TaskDoc:{name}"
     derivation = derive_status(world, ref)
     return TaskView(
         id=name,
@@ -218,6 +230,65 @@ def find_task_file(root: str | Path, task_id: str) -> Path | None:
     return None
 
 
+# The section headings the pre-world task files used, mapped to model fields.
+LEGACY_TASK_SECTIONS = {
+    "rationale": "why",
+    "goal": "goal",
+    "scope": "scope",
+    "implementation path": "implementation_path",
+    "validation": "validation",
+    "done when": "done_when",
+}
+
+
+def payload_from_legacy_task(text: str, name: str) -> dict[str, Any]:
+    """Read a pre-world task file (no frontmatter, no markers) into a payload.
+
+    Every task file written before the world existed looks like this: a title,
+    `ID:`/`Status:` lines and `## Section` bodies with an italic placeholder the
+    author was meant to replace. Sections that only carry the placeholder are
+    left empty, list sections read their bullets.
+    """
+    payload: dict[str, Any] = {
+        "id": name,
+        "title": name,
+        "status": "deferred",
+        "why": "",
+        "goal": "",
+        "scope": "",
+        "implementation_path": "",
+        "validation": [],
+        "done_when": "",
+        "tags": ["workspace:desk", "artifact:task"],
+    }
+    current: str | None = None
+    body: dict[str, list[str]] = {}
+    for line in text.splitlines():
+        if line.startswith("# ") and payload["title"] == name:
+            payload["title"] = line[2:].strip() or name
+            continue
+        if line.startswith("## "):
+            current = line[3:].strip().lower()
+            body.setdefault(current, [])
+            continue
+        if line.startswith("ID:") and not payload.get("id"):
+            payload["id"] = line[3:].strip() or name
+        if current is not None:
+            body[current].append(line)
+    for heading, field in LEGACY_TASK_SECTIONS.items():
+        lines = [line.strip() for line in body.get(heading, [])]
+        if field == "validation":
+            payload[field] = [line.lstrip("- ").strip() for line in lines if line.startswith("- ")]
+            continue
+        values = [
+            line
+            for line in lines
+            if line and not (line.startswith("_") and line.endswith("_"))
+        ]
+        payload[field] = values[0] if values else ""
+    return payload
+
+
 def ensure_tracked(root: str | Path, task_id: str):
     """The tracked TaskDoc for `task_id`, adopting an authored file if needed."""
     world = world_for(root)
@@ -228,6 +299,14 @@ def ensure_tracked(root: str | Path, task_id: str):
     authored = find_task_file(root, name)
     if authored is None:
         raise FileNotFoundError(f"No task found for {task_id}")
+    text = authored.read_text(encoding="utf-8")
+    model = world.store.model_type("TaskDoc")
+    try:
+        extract_model_data(model, text)
+    except Exception:  # noqa: BLE001 - a pre-world file: normalize it first
+        authored.write_text(
+            render_model_markdown(model, payload_from_legacy_task(text, name)), encoding="utf-8"
+        )
     world.store.track(DocId.of("TaskDoc", name), authored.relative_to(Path(root).resolve()))
     doc = world.store.doc(DocId.of("TaskDoc", name))
     if doc is None:
@@ -306,23 +385,31 @@ def next_gate(root: str | Path, task_id: str) -> Gate:
     return Gate(True, "Task is closed.")
 
 
-def promote_task(root: str | Path, task_id: str) -> TaskView:
-    """Route a drawer task: move it into `desk/tasks/` and list it on the board.
+def promote_task(root: str | Path, task_id: str, **fields: Any) -> TaskView:
+    """Route a task and mark it active: the move out of the drawer.
 
-    The move is two writes: the task document changes folder (and the store
-    tracks it where it now lives) and the active BoardDoc gains the entry that
-    makes the task routed, which is what takes it out of `drawer`.
+    Two writes on purpose: the task document becomes active where the desk
+    keeps routed work (and the store tracks it there), and the active BoardDoc
+    gains the entry that makes the task routed, which is what takes it out of
+    `drawer`. Field overrides land in the same write as the status.
     """
     root_path = Path(root).resolve()
-    world = world_for(root_path)
-    name = resolve_task_id(root_path, split_ref(task_id if ":" in task_id else f"TaskDoc:{task_id}")[1])
+    world, name, doc = ensure_tracked(root_path, task_id)
+    payload = dict(doc.payload)
+    payload.update({key: value for key, value in fields.items() if value is not None})
+    payload["status"] = "active"
+    world.store.replace(DocId.of("TaskDoc", name), payload)
+
     source = root_path / "desk" / "drawer" / "tasks" / f"{name}.md"
     target = root_path / "desk" / "tasks" / f"{name}.md"
     if source.exists() and not target.exists():
         target.parent.mkdir(parents=True, exist_ok=True)
         source.replace(target)
-        world.store.untrack(DocId.of("TaskDoc", name))
-    world.store.track(DocId.of("TaskDoc", name), target.relative_to(root_path))
+        try:
+            world.store.untrack(DocId.of("TaskDoc", name))
+        except Exception:  # noqa: BLE001 - already untracked
+            pass
+        world.store.track(DocId.of("TaskDoc", name), target.relative_to(root_path))
     _route_on_board(world, root_path, name)
     return read_task(root_path, name)
 
@@ -332,18 +419,38 @@ def _route_on_board(world: World, root: Path, task_name: str) -> None:
     root = root.resolve()
     board_path = root / "desk" / "tasks" / "Board.md"
     if not board_path.exists():
-        return
+        # Routing needs a board: a desk without one gets the minimal board the
+        # scaffold would have written.
+        board_path.parent.mkdir(parents=True, exist_ok=True)
+        board_path.write_text(
+            render_model_markdown(
+                world.store.model_type("BoardDoc"),
+                {
+                    "id": "board-001",
+                    "title": "Desk Board",
+                    "scope": "desk",
+                    "purpose": "Route the active work.",
+                    "tasks": [],
+                    "pills": [],
+                    "rituals": [],
+                    "notes": "",
+                    "tags": ["workspace:desk"],
+                },
+            ),
+            encoding="utf-8",
+        )
     model = world.store.model_type("BoardDoc")
     payload = extract_model_data(model, board_path.read_text(encoding="utf-8"))
     entry = f"desk/tasks/{task_name}.md"
     tasks = [str(item) for item in payload.get("tasks") or []]
-    if entry in tasks or f"TaskDoc:{task_name}" in tasks:
-        return
-    tasks.append(entry)
-    payload["tasks"] = tasks
     payload.setdefault("id", "board-001")
     payload.setdefault("title", "Desk Board")
-    board_path.write_text(render_model_markdown(model, payload), encoding="utf-8")
+    if entry not in tasks and f"TaskDoc:{task_name}" not in tasks:
+        tasks.append(entry)
+        payload["tasks"] = tasks
+        board_path.write_text(render_model_markdown(model, payload), encoding="utf-8")
+    # The board must be a tracked document: routing is read from the store, and
+    # a board file nobody tracks routes nothing.
     if world.store.doc(DocId.of("BoardDoc", str(payload["id"]))) is None:
         world.store.track(DocId.of("BoardDoc", str(payload["id"])), board_path.relative_to(root.resolve()))
 

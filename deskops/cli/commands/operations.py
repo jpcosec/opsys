@@ -269,18 +269,19 @@ class OperationsCLI:
             return 0
 
         if args.command == "advance" and args.subject == "task":
-            task, result = operations.advance_task(args.task_id, target_node=getattr(args, "to", None))
-            if task is None:
-                print(f"No task found for {args.task_id}", file=sys.stderr)
+            # F4 T4.4: the status is derived, so `advance` does not move a state
+            # machine — it reports the derived status and the gate that the next
+            # rung of the ladder still needs.
+            try:
+                view, gate = forms.advance_task(root, args.task_id)
+            except (forms.FormsError, UnknownTaskError, FileNotFoundError) as exc:
+                print(f"Error: {exc}", file=sys.stderr)
                 return 1
-            if result is None:
-                print(f"Task {task.id} has no routine — cannot advance", file=sys.stderr)
-                return 1
-            print(f"Task: {task.id}")
-            print(f"Status: {task.status}")
-            print(f"Current node: {task.current_node}")
-            print(f"Message: {result.message}")
-            return 1 if result.blocked else 0
+            print(f"Task: {view.id}")
+            print(f"Status: {view.status}")
+            if not gate.satisfied:
+                print(f"Message: {gate.message}")
+            return 0 if gate.satisfied else 1
 
         return 1
 
