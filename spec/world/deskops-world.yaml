@@ -336,6 +336,12 @@ relation_types:
 # aristas y los documentos conectados, nunca avanzando de un estado al
 # siguiente. `status` queda como campo plano de TaskDoc; aquí se declara qué
 # significa cada valor y con qué predicado se deriva.
+#
+# Los peldaños son ACUMULATIVOS: cada uno implica el anterior, y el status
+# derivado es el peldaño más profundo cuyo predicado se cumple. Sin esto la
+# escalera no cierra: `execution` es la negación literal de `planning`, así
+# que se cumpliría apenas falla `planning` y ningún peldaño posterior sería
+# alcanzable. Implementación: deskops/derived_status.py.
 # ---------------------------------------------------------------------------
 derived_status:
   model: TaskDoc
@@ -351,6 +357,7 @@ derived_status:
 
 # Predicados derivados del grafo (T3.3). Cada uno se calcula recorriendo
 # aristas y comparando campos de documentos conectados; no hay transiciones.
+# Implementación: deskops/derived_conditions.py.
 derived_conditions:
   - name: plan_targets_without_contract
     doc: |
