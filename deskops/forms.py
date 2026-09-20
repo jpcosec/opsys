@@ -22,6 +22,7 @@ from pathlib import Path
 from typing import Any
 import json
 import re
+import sys
 
 from deskops.derived_conditions import UnknownTaskError
 from deskops.derived_conditions import split_ref
@@ -187,14 +188,30 @@ def show_task(root: str | Path, task_id: str) -> TaskView:
 
 
 def list_tasks(root: str | Path) -> list[TaskView]:
-    """Every tracked task with its derived status, in store order."""
+    """Every task of the desk with its derived status.
+
+    The desk's task files come first (a file written before the world existed
+    is adopted when it is readable) and any tracked document the scan did not
+    see follows. A task that cannot be read is a warning on stderr, never a
+    silent omission.
+    """
     world = world_for(root)
-    views: list[TaskView] = []
+    root_path = Path(root).resolve()
+    names: list[str] = []
+    for folder in ("desk/tasks", "desk/drawer/tasks"):
+        for path in sorted((root_path / folder).glob("task-*.md")):
+            if path.stem not in names:
+                names.append(path.stem)
     for doc in world.store.docs_of("TaskDoc"):
+        if doc.name not in names:
+            names.append(doc.name)
+    views: list[TaskView] = []
+    for name in names:
         try:
-            views.append(read_task(root, f"TaskDoc:{doc.name}"))
-        except UnknownTaskError:  # pragma: no cover - defensive
-            continue
+            views.append(read_task(root_path, name))
+        except Exception as exc:  # noqa: BLE001 - one bad file must not hide the rest
+            located = find_task_file(root_path, name) or name
+            print(f"Warning: Failed to load task {located}: {exc}", file=sys.stderr)
     return views
 
 
@@ -289,6 +306,71 @@ def payload_from_legacy_task(text: str, name: str) -> dict[str, Any]:
     return payload
 
 
+def _merge_unique(*groups: Any) -> list[str]:
+    """The values of every group, in order, without repeats."""
+    merged: list[str] = []
+    for group in groups:
+        items = [group] if isinstance(group, str) else list(group or [])
+        for item in items:
+            text = str(item)
+            if text and text not in merged:
+                merged.append(text)
+    return merged
+
+
+def effective_payload(root: str | Path, task_id: str, stack: tuple[str, ...] = ()) -> dict[str, Any]:
+    """The task payload plus the `effective_*` fields `inherits_from` resolves.
+
+    Parents contribute first, then the task itself; `inherit_acceptance_context`
+    decides whether validation and done_when follow the same rule. A cycle is an
+    error, not a silent truncation.
+    """
+    view = read_task(root, task_id)
+    name = view.id
+    if name in stack:
+        raise FormsError(f"Task inheritance cycle detected: {' -> '.join([*stack, name])}")
+    payload = dict(view.payload)
+    parents = [
+        effective_payload(root, split_ref(parent)[1] or str(parent), (*stack, name))
+        for parent in (payload.get("inherits_from") or [])
+    ]
+    payload["effective_references"] = _merge_unique(
+        *[parent.get("effective_references", parent.get("references", [])) for parent in parents],
+        payload.get("references", []),
+    )
+    payload["effective_pills"] = _merge_unique(
+        *[parent.get("effective_pills", parent.get("pills", [])) for parent in parents],
+        payload.get("pills", []),
+    )
+    payload["effective_tags"] = _merge_unique(
+        *[parent.get("effective_tags", parent.get("tags", [])) for parent in parents],
+        payload.get("tags", []),
+    )
+    payload["effective_atoms"] = _merge_unique(
+        *[parent.get("effective_atoms", parent.get("atoms", [])) for parent in parents],
+        payload.get("atoms", []),
+    )
+    if payload.get("inherit_acceptance_context"):
+        payload["effective_validation"] = _merge_unique(
+            *[parent.get("effective_validation", parent.get("validation", [])) for parent in parents],
+            payload.get("validation", []),
+        )
+        parent_done_when = next(
+            (
+                str(parent.get("effective_done_when") or parent.get("done_when") or "")
+                for parent in parents
+                if str(parent.get("effective_done_when") or parent.get("done_when") or "")
+            ),
+            "",
+        )
+        payload["effective_done_when"] = str(payload.get("done_when") or parent_done_when)
+    else:
+        payload["effective_validation"] = list(payload.get("validation") or [])
+        payload["effective_done_when"] = str(payload.get("done_when") or "")
+    payload["status"] = view.status
+    return payload
+
+
 def ensure_tracked(root: str | Path, task_id: str):
     """The tracked TaskDoc for `task_id`, adopting an authored file if needed."""
     world = world_for(root)
@@ -304,6 +386,10 @@ def ensure_tracked(root: str | Path, task_id: str):
     try:
         extract_model_data(model, text)
     except Exception:  # noqa: BLE001 - a pre-world file: normalize it first
+        if text.lstrip().startswith("---"):
+            # Broken frontmatter is corruption, not a pre-world file: guessing
+            # here would hide it. The reader reports it instead.
+            raise
         authored.write_text(
             render_model_markdown(model, payload_from_legacy_task(text, name)), encoding="utf-8"
         )

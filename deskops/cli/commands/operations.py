@@ -98,16 +98,26 @@ class OperationsCLI:
             return 0
 
         if args.command == "list" and args.subject == "tasks":
-            tasks = operations.list_tasks()
+            # F4 T4.2: the row a task shows is its derived status.
+            tasks = forms.list_tasks(root)
+            rows = [
+                {
+                    "id": task.id,
+                    "status": task.status,
+                    "title": str(task.payload.get("title") or task.id),
+                    **forms.effective_payload(root, task.id),
+                }
+                for task in tasks
+            ]
             repo_routes = operations.list_repo_task_routes() if getattr(args, "include_repos", False) else []
             if args.format == "json":
-                payload = {"tasks": self._normalize(tasks)}
+                payload = {"tasks": self._normalize(rows)}
                 if getattr(args, "include_repos", False):
                     payload["repo_routes"] = self._normalize(repo_routes)
                 self._print_json(payload)
                 return 0
-            for task in tasks:
-                print(f"{task.id} | {task.status} | {task.current_node}")
+            for row in rows:
+                print(f"{row['id']} | {row['status']} | {row['title']}")
             for route in repo_routes:
                 print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
             return 0
@@ -161,41 +171,37 @@ class OperationsCLI:
             return 0
 
         if args.command == "show" and args.subject == "task":
-            task, statuses = operations.show_task(args.task_id)
-            if task is None:
+            # F4 T4.2: same read as list, for one task, with its derived status.
+            try:
+                payload = forms.effective_payload(root, args.task_id)
+            except (forms.FormsError, UnknownTaskError, FileNotFoundError):
                 print(f"No task found for {args.task_id}")
                 return 1
             if args.format == "json":
-                payload = self._normalize(task)
-                payload["checklist_statuses"] = self._normalize(statuses)
-                self._print_json(payload)
+                self._print_json(self._normalize(payload))
                 return 0
-            print(f"Task: {task.id}")
-            print(f"Title: {task.title}")
-            print(f"Status: {task.status}")
-            print(f"Current node: {task.current_node}")
-            print(f"Task type: {task.task_type}")
-            if task.inherits_from:
+            print(f"Task: {payload['id']}")
+            print(f"Title: {payload.get('title', '')}")
+            print(f"Status: {payload['status']}")
+            print(f"Task type: {payload.get('task_type', '')}")
+            if payload.get("inherits_from"):
                 print("Inherits from:")
-                for item in task.inherits_from:
+                for item in payload["inherits_from"]:
                     print(f"- {item}")
-            print(f"Routine: {task.routine}")
-            if task.effective_pills:
+            print(f"Routine: {payload.get('routine', '')}")
+            if payload.get("effective_pills"):
                 print("Effective pills:")
-                for item in task.effective_pills:
+                for item in payload["effective_pills"]:
                     print(f"- {item}")
-            if task.effective_atoms:
+            if payload.get("effective_atoms"):
                 print("Effective atoms:")
-                for item in task.effective_atoms:
+                for item in payload["effective_atoms"]:
                     print(f"- {item}")
-            if task.inherit_acceptance_context:
+            if payload.get("inherit_acceptance_context"):
                 print("Effective validation:")
-                for item in task.effective_validation:
+                for item in payload.get("effective_validation", []):
                     print(f"- {item}")
-                print(f"Effective done when: {task.effective_done_when}")
-            print("Checklist status:")
-            for checklist_id, complete in statuses.items():
-                print(f"- {checklist_id}: {'complete' if complete else 'pending'}")
+                print(f"Effective done when: {payload.get('effective_done_when', '')}")
             return 0
 
         if args.command == "show" and args.subject == "routine":

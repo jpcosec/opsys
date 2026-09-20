@@ -1592,7 +1592,8 @@ def test_list_and_show_task_support_json_output(tmp_path: Path, capsys) -> None:
     assert listed == 0
     list_payload = json.loads(list_out.out)
     assert list_payload["tasks"][0]["id"] == "task-json-task-output"
-    assert list_payload["tasks"][0]["status"] == "draft"
+    # The status a task shows is derived: an unrouted task is in the drawer.
+    assert list_payload["tasks"][0]["status"] == "drawer"
     assert list_payload["tasks"][0]["validation"] == ["pytest"]
 
     shown = main(["show", "task", "task-json-task-output", "--root", str(tmp_path), "--format", "json"])
@@ -1600,11 +1601,8 @@ def test_list_and_show_task_support_json_output(tmp_path: Path, capsys) -> None:
     assert shown == 0
     show_payload = json.loads(show_out.out)
     assert show_payload["id"] == "task-json-task-output"
+    assert show_payload["status"] == "drawer"
     assert show_payload["routine"] == "routine-task-json-task-output"
-    assert isinstance(
-        show_payload["checklist_statuses"]["checklist-task-json-task-output-execution-ready"],
-        bool,
-    )
 
 
 
