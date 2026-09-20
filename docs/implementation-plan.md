@@ -64,10 +64,10 @@ Gate por tarea: `pytest tests/test_model_templates.py` + registro OK.
 
 ## F3 — El mundo (4 tareas)
 
-**T3.1 `RelationTypeDoc`** — las 24 relaciones del world declaradas y `kgdb init`.
-**T3.2 Estados y transiciones** — documentos `State` con `machine: TaskDoc.status` y aristas `transitions_to` con sus guardas.
-**T3.3 Condiciones derivadas** — los predicados calculados de las guardas
-(`plan_targets_without_contract`, `contracts_implemented`, `tests_from_contracts_passing`).
+**T3.1 `RelationTypeDoc`** — las 23 relaciones del grafo declaradas y `init_relations`.
+**T3.2 Status derivado** — `status` de TaskDoc es una proyección del grafo, no una máquina: declarar `derived_status`/`derived_conditions`.
+**T3.3 Condiciones derivadas** — los predicados calculados sobre el grafo
+(`plan_targets_without_contract`, `contracts_declared`, `contracts_implemented`, `tests_from_contracts_passing`).
 **T3.4 Bootstrap del mundo** — `deskops init` construye todo lo anterior desde `spec/world/deskops-world.yaml`.
 
 Gate: `World.refresh()` sin error; `pron say "which tasks are in planning?"` responde.

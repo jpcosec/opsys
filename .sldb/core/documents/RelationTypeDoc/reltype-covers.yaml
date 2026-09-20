@@ -1,0 +1,9 @@
+name: reltype-covers
+path: desk/relation_types/covers.md
+hash_c: ba3f7ff66151e6b4b54d0510200e1a3cd0f53250fc85a866f786b47bf7c24bfb
+hash_d: aa78dddc876f496e95391bf586629734fd0d8746c8b48d6d44ca943644443626
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

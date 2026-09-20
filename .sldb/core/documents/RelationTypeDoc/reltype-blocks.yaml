@@ -1,0 +1,9 @@
+name: reltype-blocks
+path: desk/relation_types/blocks.md
+hash_c: 203e816ed980ec617e8c2f72b441f3a38dca69a33c3feb1f1849b15479ebb783
+hash_d: debe16a77fdfa8588e568b92b3a0e36c8b18174a520bd6b887f68ded6010cfcf
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

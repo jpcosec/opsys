@@ -284,15 +284,15 @@ models:
 # DESAPARECEN (absorbidos por pron)
 #   ConditionDoc -> predicado sldb "{implementation_path} != ''"
 #   OperatorDoc  -> cambiar el campo ya es el efecto
-#   EdgeDoc      -> RelationDoc transitions_to
-#   ChecklistDoc -> guarda compuesta
-#   RoutineDoc   -> State (máquina) + RitualDoc (procedimiento)
+#   EdgeDoc      -> RelationDoc (arista dirigida del grafo)
+#   ChecklistDoc -> predicado compuesto sobre el grafo
+#   RoutineDoc   -> RitualDoc (procedimiento) + aristas has_step/next_step
 #   current_node, history -> MoveDoc del ledger
+#   State/máquina lineal -> status derivado del grafo (ver derived_status)
 # ---------------------------------------------------------------------------
 
 relation_types:
   # Workflow
-  - {name: transitions_to, from: State, to: State, mode: assert}
   - {name: has_step, from: RitualDoc, to: StepDoc, mode: assert}
   - {name: next_step, from: StepDoc, to: StepDoc, mode: assert}
   - {name: binds, from: TaskBindingDoc, to: PillDoc, mode: assert}
@@ -330,49 +330,40 @@ relation_types:
   - {name: executed_by, from: RunDoc, to: RoleDoc, mode: assert}
   - {name: runs_on, from: RoleDoc, to: RuntimeProfileDoc, mode: assert}
 
-states:
-  - model: State
-    machine: TaskDoc.status
-    values: [drawer, active, planning, execution, testing, closeout, closed]
+# ---------------------------------------------------------------------------
+# El status de una task NO es una máquina lineal. Es una proyección derivada
+# de la posición de la task en el grafo: se calcula con predicados sobre sus
+# aristas y los documentos conectados, nunca avanzando de un estado al
+# siguiente. `status` queda como campo plano de TaskDoc; aquí se declara qué
+# significa cada valor y con qué predicado se deriva.
+# ---------------------------------------------------------------------------
+derived_status:
+  model: TaskDoc
+  field: status
+  values:
+    drawer: "sin board que lo rutee (sin arista BoardDoc.tasks -> TaskDoc)"
+    active: "ruteado por un BoardDoc (arista BoardDoc.tasks -> TaskDoc)"
+    planning: "tiene PlanDoc con targets sin contrato: {plan_targets_without_contract} > 0"
+    execution: "todo target con change_kind add|modify tiene contrato: {plan_targets_without_contract} == 0"
+    testing: "todo contrato implementado: {contracts_implemented} == {contracts_declared}"
+    closeout: "tests de contrato pasando: {tests_from_contracts_passing} == true"
+    closed: "evidencia y done_when presentes: {evidence} != '' and {done_when} != ''"
 
-transitions:
-  - from: active
-    to: planning
-    condition: "{goal} != ''"
-    doc: El supervisor suelta al planificador.
-
-  - from: planning
-    to: execution
-    # ESTA es la guarda que invierte el flujo.
-    condition: "{plan_targets_without_contract} == 0"
+# Predicados derivados del grafo (T3.3). Cada uno se calcula recorriendo
+# aristas y comparando campos de documentos conectados; no hay transiciones.
+derived_conditions:
+  - name: plan_targets_without_contract
     doc: |
-      No se implementa nada sin contrato. Todo PlanTargetDoc con
-      change_kind add|modify debe tener su SymbolContractDoc con docstring
-      no vacio, test_plan no vacio y lint_rules declaradas.
-      Si el planificador no puede escribir que hace el simbolo, no entendio
-      el cambio: vuelve a planning con un PlanIterationDoc.
-
-  - from: execution
-    to: testing
-    condition: "{contracts_implemented} == {contracts_declared}"
-    doc: Cada contrato declarado tiene su simbolo real con docstring.
-
-  - from: testing
-    to: closeout
-    condition: "{tests_from_contracts_passing} == true"
-    doc: |
-      Los tests que corren son los declarados en los contratos, mas los
-      derivados por TestCoverageDoc sobre los simbolos tocados.
-
-  - from: testing
-    to: planning
-    condition: ""
-    doc: Regresion o contrato equivocado. Vuelve a planning, no a execution.
-
-  - from: closeout
-    to: closed
-    condition: "{evidence} != '' and {done_when} != ''"
-    doc: "Se agrega planning: el supervisor suelta al planificador antes de ejecutar."
+      PlanTargetDoc con change_kind add|modify sin arista `contracts` hacia
+      un SymbolContractDoc con docstring no vacío, test_plan no vacío y
+      lint_rules declaradas. Si el planificador no puede escribir qué hace el
+      símbolo, no entendió el cambio.
+  - name: contracts_declared
+    doc: "Número de SymbolContractDoc declarados para la task."
+  - name: contracts_implemented
+    doc: "SymbolContractDoc cuyo PythonSymbolDoc real tiene docstring (o purpose/architecture) que calza con el contrato."
+  - name: tests_from_contracts_passing
+    doc: "Los TestCoverageDoc/verifies derivados de los contratos, con sus tests pasando."
 
 # ---------------------------------------------------------------------------
 # GAP contra sldb (para el gap-log)

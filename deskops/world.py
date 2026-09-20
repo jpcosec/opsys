@@ -19,6 +19,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from pron.world.doc_id import DocId
 from pron.world.graph import Graph
 from pron.world.store import Store
 from pron.world.world import World
@@ -36,6 +37,7 @@ __all__ = [
     "World",
     "Store",
     "Graph",
+    "DocId",
     "get_world",
     "extract_model_data",
     "render_model_markdown",

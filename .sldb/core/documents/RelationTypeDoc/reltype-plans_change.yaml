@@ -1,0 +1,9 @@
+name: reltype-plans_change
+path: desk/relation_types/plans_change.md
+hash_c: 10fcea9ce3eefdd9d408ef1553e8d23b686e2ce3d0307339060d1b4dab506180
+hash_d: d02c5d1666d31239d3a125cb07f8f052ba493cc5942fa594cf721cd60d82eaf2
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

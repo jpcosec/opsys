@@ -1,0 +1,9 @@
+name: reltype-imports
+path: desk/relation_types/imports.md
+hash_c: 29c39a903dca522d130dc698a76ff19d6d107d00952b976f5848aa292a4649a0
+hash_d: 30ed8ff83441edab4ca0815bf882f7992d65dfbeb7f2d694148710526de0e3d5
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

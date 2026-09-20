@@ -1,0 +1,9 @@
+name: reltype-touches
+path: desk/relation_types/touches.md
+hash_c: 5f05eb462f054538f6dcd9dd318190a1733041e15c04f18a9a14ca18e362afb2
+hash_d: 658ffe16b950ab2b32a35f7fb184386649ebe8026c1e08a7794b18860f891283
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

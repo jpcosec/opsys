@@ -1,0 +1,9 @@
+name: reltype-graduates_to
+path: desk/relation_types/graduates_to.md
+hash_c: e00e00a1d1329c9b766b9680bbe4f6be24e22b0e20c1b47ecc03b5886917d87b
+hash_d: 0fad06ec1f0be59c2431d9c7c0eeb7166642883cb1a1187d69c361caebd942d3
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

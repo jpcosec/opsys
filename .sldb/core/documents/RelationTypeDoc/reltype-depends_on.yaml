@@ -1,0 +1,9 @@
+name: reltype-depends_on
+path: desk/relation_types/depends_on.md
+hash_c: 5428a0b9fd09f1b0333ead20f8ef1f896b235a6adc375669012f46fc58568d18
+hash_d: 71f4acb1abc184bb6797cb86d5050bba51e662c0bb481030b99d9a363fbadfd6
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type

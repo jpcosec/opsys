@@ -1,0 +1,9 @@
+name: reltype-documents
+path: desk/relation_types/documents.md
+hash_c: 4f41cf30fd56e031914b14df0f09bbce997b5e64402648ef15f4f2add87cef8f
+hash_d: d5b9a1e0ade1930d7e524c18f63143b7fc032f1eb56f2b9bb28635025c3b7166
+semantic_tags:
+- layer.topology
+- representation.markdown
+- source.document.markdown
+- type.relation.type
