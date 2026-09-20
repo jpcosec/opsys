@@ -68,7 +68,21 @@ models:
 # ---------------------------------------------------------------------------
   - name: TaskDoc
     extends: OperationalArtifactDoc
-    fields: [why, goal, scope, task_type, status]
+    fields: [why, goal, scope, task_type, status, implementation_path,
+             validation, done_when]
+    doc: |
+      El archivo de task (`desk/tasks/task-x.md`) materializa el task completo
+      EN UN SOLO DOCUMENTO: núcleo + intent + acceptance inline, con las
+      secciones `## Implementation Path`, `## Validation` y `## Done When`.
+
+      Decisión (F4, 2026-09-20): `contains:` sigue declarado y los modelos
+      TaskIntentDoc/AcceptanceDoc/TaskBindingDoc/PlanDoc quedan para cuando el
+      contenido se materializa APARTE (un archivo por documento). El caso
+      común —una task, un archivo— no puede cumplir `contains:` sin partir el
+      archivo, y la evidencia manda: los 34 archivos de `desk/tasks/` y los
+      tests de CLI leen y escriben cuerpo y campos en un solo archivo.
+      Consecuencia: `implementation_path`, `validation` y `done_when` están
+      declarados en TaskDoc y también en los modelos que los contienen.
     contains:
       intent: [TaskIntentDoc]
       acceptance: [AcceptanceDoc]

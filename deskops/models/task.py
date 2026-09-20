@@ -30,7 +30,15 @@ class TaskDoc(OperationalArtifactDoc):
 
     def render_payload(self) -> dict:
         data = super().model_dump(mode="json")
-        body_fields = {"title", "why", "goal", "scope"}
+        body_fields = {
+            "title",
+            "why",
+            "goal",
+            "scope",
+            "implementation_path",
+            "validation",
+            "done_when",
+        }
         data["frontmatter"] = {k: v for k, v in data.items() if k not in body_fields}
         return data
 
@@ -57,6 +65,24 @@ _Describe the concrete result this task must produce._
 _State what is in scope and what is out of scope._
 
 ⸢rev•scope⸥
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+⸢rev•implementation_path⸥
+
+## Validation
+
+_List the checks required before this task can close._
+
+- ⸢rev,list•validation⸥
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+⸢rev•done_when⸥
 """.strip()
 
     title: str = Field(description="Short action-oriented task title.")
@@ -68,4 +94,16 @@ _State what is in scope and what is out of scope._
     task_type: str = Field(
         default="",
         description="Workflow task type such as design, implementation, test, reflection, or closeout.",
+    )
+    implementation_path: str = Field(
+        default="",
+        description="Expected implementation route for this task, materialized inline in the task file.",
+    )
+    validation: list[str] = Field(
+        default_factory=list,
+        description="Tests, checks or commands required before closure, materialized inline in the task file.",
+    )
+    done_when: str = Field(
+        default="",
+        description="Observable completion rule for this task, materialized inline in the task file.",
     )

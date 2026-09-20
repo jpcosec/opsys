@@ -9,6 +9,9 @@ from typing import Any
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
 
+from deskops import forms
+from deskops.derived_conditions import UnknownTaskError
+
 
 class OperationsCLI:
     def run(self, args: Any) -> int:
@@ -46,6 +49,19 @@ class OperationsCLI:
             record = operations.create_routine(payload)
             print(f"Created routine {record.doc_id}")
             print(f"Path: {record.path}")
+            return 0
+
+        if args.command == "edit" and args.subject == "task":
+            # F4 T4.3: the task edit is a forms-layer move (read the document,
+            # patch the modeled field, re-render), not a CRUD record.
+            field = args.field.replace("-", "_")
+            try:
+                view = forms.edit_task_field(root, args.selector, field, args.value)
+            except (forms.FormsError, UnknownTaskError, FileNotFoundError) as exc:
+                print(f"Error: {exc}")
+                return 1
+            print(f"Updated task {view.id} field {field}")
+            print(f"Path: {view.path}")
             return 0
 
         if args.command == "edit":
