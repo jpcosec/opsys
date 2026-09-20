@@ -18,6 +18,9 @@ surface: ⸢rev•surface⸥
 symbol: ⸢rev•symbol⸥
 # add | modify | delete | verify
 change_kind: ⸢rev•change_kind⸥
+# Contención: ref al SymbolContractDoc de este target (obligatorio para add|modify)
+# e.g., symbol-contract-xxx
+contract: ⸢rev•contract⸥
 # e.g., system:deskops
 tags: ⸢rev•tags⸥
 ---
@@ -46,6 +49,13 @@ _Describe what proves this target is done._
     )
     rationale: str = Field(description="Why this target must be touched.")
     acceptance: str = Field(description="What proves this target is done.")
+    contract: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Refs to the SymbolContractDoc this target contains. Required before "
+            "the task enters execution when change_kind is add or modify."
+        ),
+    )
     tags: list[str] = Field(
         default_factory=list,
         description="Semantic tags placed at the end, using namespaced forms.",

@@ -14,8 +14,14 @@ class PlanDoc(OperationalArtifactDoc):
     __template__ = """---
 # plan-xxx
 id: ⸢rev•id⸥
+# Contención: refs a los PlanTargetDoc que este plan contiene
+# e.g., plan-target-xxx
 # e.g., system:deskops, workspace:desk
 tags: ⸢rev•tags⸥
+targets: ⸢rev•targets⸥
+# Contención: refs a los PlanIterationDoc que este plan contiene
+# e.g., plan-iteration-xxx
+iterations: ⸢rev•iterations⸥
 ---
 
 # ⸢rev•title⸥
@@ -60,4 +66,12 @@ _List what must not be decided alone._
     ambiguities: list[str] = Field(
         default_factory=list,
         description="Things that must not be decided alone.",
+    )
+    targets: list[str] = Field(
+        default_factory=list,
+        description="Refs to the PlanTargetDoc documents this plan contains (spec §PlanDoc contains.targets).",
+    )
+    iterations: list[str] = Field(
+        default_factory=list,
+        description="Refs to the PlanIterationDoc documents this plan contains (spec §PlanDoc contains.iterations).",
     )
