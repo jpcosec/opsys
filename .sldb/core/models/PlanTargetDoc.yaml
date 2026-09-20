@@ -1,0 +1,16 @@
+name: PlanTargetDoc
+model_ref: deskops.models:PlanTargetDoc
+path: deskops/models/plan_target.py
+documents_index: .sldb/core/documents/PlanTargetDoc.yaml
+sections_index: ''
+hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+documents_count: 0
+version: 1
+canonical: false
+family: null
+semantics:
+- representation.markdown
+- source.document.markdown
+- type.workflow.plan_target
+- workspace.desk.planning
+base_models: []

@@ -1,0 +1,17 @@
+name: TaskBindingDoc
+model_ref: deskops.models:TaskBindingDoc
+path: deskops/models/task_binding.py
+documents_index: .sldb/core/documents/TaskBindingDoc.yaml
+sections_index: ''
+hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+documents_count: 0
+version: 1
+canonical: false
+family: null
+semantics:
+- representation.markdown
+- source.document.markdown
+- type.workflow.task_binding
+- workspace.desk
+base_models:
+- PrimitiveDoc

@@ -200,5 +200,89 @@ models:
   - source.code.python
   - type.knowledge.code_symbol
   - workspace.knowledge.symbols
+- name: TaskIntentDoc
+  model_ref: deskops.models:TaskIntentDoc
+  path: deskops/models/task_intent.py
+  models_index: .sldb/core/models/TaskIntentDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task_intent
+  - workspace.desk
+- name: AcceptanceDoc
+  model_ref: deskops.models:AcceptanceDoc
+  path: deskops/models/acceptance.py
+  models_index: .sldb/core/models/AcceptanceDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.acceptance
+  - workspace.desk
+- name: TaskBindingDoc
+  model_ref: deskops.models:TaskBindingDoc
+  path: deskops/models/task_binding.py
+  models_index: .sldb/core/models/TaskBindingDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task_binding
+  - workspace.desk
+- name: PlanDoc
+  model_ref: deskops.models:PlanDoc
+  path: deskops/models/plan.py
+  models_index: .sldb/core/models/PlanDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.plan
+  - workspace.desk.planning
+- name: PlanTargetDoc
+  model_ref: deskops.models:PlanTargetDoc
+  path: deskops/models/plan_target.py
+  models_index: .sldb/core/models/PlanTargetDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.plan_target
+  - workspace.desk.planning
+- name: PlanIterationDoc
+  model_ref: deskops.models:PlanIterationDoc
+  path: deskops/models/plan_iteration.py
+  models_index: .sldb/core/models/PlanIterationDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.plan_iteration
+  - workspace.desk.planning
+- name: SymbolContractDoc
+  model_ref: deskops.models:SymbolContractDoc
+  path: deskops/models/symbol_contract.py
+  models_index: .sldb/core/models/SymbolContractDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.symbol_contract
+  - workspace.desk.planning
 predicates: []
-hash_a: 559c66ea33a97bd58268b3d61bce12a39b44da6b3910dda7051cdea833d6282c
+hash_a: d1bc9b51877c9c3258e0fdeb515b9a849f3a6cf663da90817f3c6bce8a39c7f0
