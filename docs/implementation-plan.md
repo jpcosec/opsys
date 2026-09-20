@@ -16,15 +16,59 @@ Declaración: `spec/world/deskops-world.yaml`.
 3. **El worker NO commitea.** Implementa, corre su gate, reporta. El
    coordinador revisa el diff y commitea.
 4. **Nunca `git add -A`.** Solo los archivos de la tarea.
-5. Baseline: **216 pass / 3 known-red**. Ninguna tarea sube el rojo.
+5. Baseline: **250 pass / 9 known-red** (medido en F3 T3.4 sobre `deskops-pron`).
+   Ninguna tarea sube el rojo. Los 9 rojos están en la tabla de abajo, con la
+   fase que los cierra: son consequence de F2 (modelos) y los cierra F4/F6.
 6. Todo gap de pron va a `desk/pron-gap-log.md`, no se parchea alrededor.
 
 ## Estado actual
 
-- F0 hecho: worktree, branch, baseline medido, 9 vistas spec2viz, world
-  declarado, seam `deskops/world.py` (commit `3c041ee`, alcance sucio).
-- Pendiente de limpieza: `3c041ee` arrastró migración del store y el
-  transcript de herdr.
+- **F0 hecho**: worktree, branch, baseline medido, 9 vistas spec2viz, world
+  declarado, seam `deskops/world.py`.
+- **F1 hecho** (`cd3db56`): plan viejo eliminado, `PythonSymbolDoc` registrado,
+  store y transcript de herdr saneados.
+- **F2 hecho** (`915ea13`, `a0d3f88`, `ece9f32`, `306f516`): `TaskDoc` partido en
+  núcleo + intent/acceptance/binding, planificación y contrato modelados,
+  modelos derivados de código, dormidos instanciados, absorbidos borrados.
+- **F3 hecho** (`eef7e47`, `fefa147`, `d014d9e`, `79c6bc4`): 23 relation types
+  declarados, condiciones derivadas, status derivado, bootstrap in-process.
+  - Gate F3, parte store: **cumplido**. `World.refresh()` no levanta error
+    después del bootstrap y `deskops.derived_status.tasks_in_status(world,
+    "planning")` responde con las tasks en planning.
+  - Gate F3, parte `pron say`: **no cumplido**, y no es de esta fase:
+    `pron say "which tasks are in planning?"` contesta `I don't have "in"`
+    porque la proyección operacional todavía no tiene vocabulario para un
+    status derivado. Eso es F4 T4.2 (lectura sobre `World.store`/`World.graph`)
+    y queda registrado en el gap-log.
+- **F4 sigue sin empezar**: `deskops/operations.py` (2.703 líneas) y sus
+  `advance_task` siguen siendo el runtime viejo.
+
+### Los 9 known-red
+
+| Test | Causa | Fase que lo cierra |
+| --- | --- | --- |
+| `test_cli.py::test_cli_help_uses_deskops_name` | superficie de verbos pedida distinta a la del parser | F6 T6.1 |
+| `test_cli.py::test_edit_task_updates_modeled_field_from_cli` | escribe `current_node`, campo que T2.6 borró | F4 T4.3 |
+| `test_cli.py::test_show_list_and_advance_task_uses_operational_runtime` | `Current node` / status lineales | F4 T4.4 |
+| `test_cli.py::test_advance_task_blocks_testing_and_closeout_without_required_evidence` | guardas del runtime viejo | F4 T4.4 |
+| `test_cli.py::test_advance_task_accepts_atom_reference_as_closeout_evidence` | evidencia del runtime viejo | F4 T4.5 |
+| `test_lifecycle_end_to_end.py::test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli` | ciclo completo sobre el runtime viejo | F4 T4.5 |
+| `test_promotion_nesting.py::...flattens_nested_structured_sections...` | promoción contra el `TaskDoc` viejo | F4 T4.3 |
+| `test_atom_folder_axis.py::test_reorganize_moves_flat_atoms_and_updates_store` | reorganización de átomos no actualiza el store | F6 T6.3 |
+| `test_atoms_cli.py::test_atoms_delete_force_removes_file_and_untracks_store` | delete de átomo no destrackea | F6 T6.3 |
+
+- Pendiente de limpieza histórica: `3c041ee` arrastró la migración del store y
+  el transcript de herdr (ya separado en F1).
+
+### Qué hay hoy en el store (medido 2026-09-20)
+
+- `TaskDoc` 1, `BoardDoc`/`PillDoc`/`RitualDoc`/`CrossroadDoc` 0, `AtomDoc` 92,
+  `RelationTypeDoc` 34, `PythonSymbolDoc` 0, `PlanDoc`/`SymbolContractDoc` 0.
+- Consecuencia: el status derivado de la task activa da `drawer` ("no BoardDoc
+  routes this task") porque el desk todavía no está migrado al store — eso es
+  F7 T7.1 — y los símbolos de código no están poblados (F5 T5.1). La derivación
+  es correcta para lo que hay; los saltos de status se prueban en
+  `tests/test_derived_status.py` sobre un store armado a mano.
 
 ---
 
@@ -64,13 +108,16 @@ Gate por tarea: `pytest tests/test_model_templates.py` + registro OK.
 
 ## F3 — El mundo (4 tareas)
 
-**T3.1 `RelationTypeDoc`** — las 23 relaciones del grafo declaradas y `init_relations`.
-**T3.2 Status derivado** — `status` de TaskDoc es una proyección del grafo, no una máquina: declarar `derived_status`/`derived_conditions`.
-**T3.3 Condiciones derivadas** — los predicados calculados sobre el grafo
-(`plan_targets_without_contract`, `contracts_declared`, `contracts_implemented`, `tests_from_contracts_passing`).
-**T3.4 Bootstrap del mundo** — `deskops init` construye todo lo anterior desde `spec/world/deskops-world.yaml`.
+**T3.1 `RelationTypeDoc`** — las 23 relaciones del grafo declaradas y `init_relations`. (hecho)
+**T3.2 Status derivado** — `deskops/derived_status.py`: la escalera del spec
+sobre las condiciones; `status` nunca se escribe. (hecho)
+**T3.3 Condiciones derivadas** — `deskops/derived_conditions.py`: los predicados
+calculados sobre los documentos y las aristas `contracts`/`evidences`/`verifies`. (hecho)
+**T3.4 Bootstrap del mundo** — `deskops init` construye todo lo anterior desde
+`spec/world/deskops-world.yaml`, in process. (hecho; commit `79c6bc4`)
 
-Gate: `World.refresh()` sin error; `pron say "which tasks are in planning?"` responde.
+Gate: `World.refresh()` sin error; el status derivado responde qué tasks están
+en planning (`pron say` queda para F4 T4.2, ver gap-log).
 
 ---
 
