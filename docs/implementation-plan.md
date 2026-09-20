@@ -16,9 +16,9 @@ Declaración: `spec/world/deskops-world.yaml`.
 3. **El worker NO commitea.** Implementa, corre su gate, reporta. El
    coordinador revisa el diff y commitea.
 4. **Nunca `git add -A`.** Solo los archivos de la tarea.
-5. Baseline: **250 pass / 9 known-red** (medido en F3 T3.4 sobre `deskops-pron`).
-   Ninguna tarea sube el rojo. Los 9 rojos están en la tabla de abajo, con la
-   fase que los cierra: son consequence de F2 (modelos) y los cierra F4/F6.
+5. Baseline: **271 pass / 0 known-red** (medido 2026-09-20 al cerrar F4
+   T4.1-T4.5). Ninguna tarea sube el rojo: si algo queda rojo, la fila entra en
+   la tabla de abajo con la fase que lo cierra.
 6. Todo gap de pron va a `desk/pron-gap-log.md`, no se parchea alrededor.
 
 ## Estado actual
@@ -40,22 +40,35 @@ Declaración: `spec/world/deskops-world.yaml`.
     porque la proyección operacional todavía no tiene vocabulario para un
     status derivado. Eso es F4 T4.2 (lectura sobre `World.store`/`World.graph`)
     y queda registrado en el gap-log.
-- **F4 sigue sin empezar**: `deskops/operations.py` (2.703 líneas) y sus
-  `advance_task` siguen siendo el runtime viejo.
+- **F4 a medias, por capas**: `deskops/forms.py` es la capa de formas
+  (T4.1-T4.5 escritas y probadas) y ya la usan tres frentes de la CLI —
+  `edit task` (T4.3), los movimientos de átomos (F6 T6.3) y el lifecycle e2e.
+  - Lo que **falta de F4**: repuntar `list tasks`, `show task` y `advance task`
+    a `forms` (hoy siguen en `operations.py`) y reescribir los tests de
+    `advance` al contrato nuevo. `forms.next_gate` ya responde qué gate bloquea
+    cada peldaño; la CLI todavía no lo usa. Los tests de `advance` que siguen
+    verdes lo están por el runtime viejo, no por la capa nueva.
+  - `deskops/operations.py` (2.703 líneas) sigue siendo el runtime de todo lo
+    demás: átomos, primitivas, routines, inbox, promote, closeout, next.
+- **F6 T6.3 hecho** (`4d2900f`): los movimientos de átomos van por el seam
+  (`store.untrack`/`store.track`), no escribiendo el índice de sldb a mano.
+- **F5, F6 (resto), F7 sin empezar.**
 
-### Los 9 known-red
+### El último rojo que quedaba
 
-| Test | Causa | Fase que lo cierra |
-| --- | --- | --- |
-| `test_cli.py::test_cli_help_uses_deskops_name` | superficie de verbos pedida distinta a la del parser | F6 T6.1 |
-| `test_cli.py::test_edit_task_updates_modeled_field_from_cli` | escribe `current_node`, campo que T2.6 borró | F4 T4.3 |
-| `test_cli.py::test_show_list_and_advance_task_uses_operational_runtime` | `Current node` / status lineales | F4 T4.4 |
-| `test_cli.py::test_advance_task_blocks_testing_and_closeout_without_required_evidence` | guardas del runtime viejo | F4 T4.4 |
-| `test_cli.py::test_advance_task_accepts_atom_reference_as_closeout_evidence` | evidencia del runtime viejo | F4 T4.5 |
-| `test_lifecycle_end_to_end.py::test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli` | ciclo completo sobre el runtime viejo | F4 T4.5 |
-| `test_promotion_nesting.py::...flattens_nested_structured_sections...` | promoción contra el `TaskDoc` viejo | F4 T4.3 |
-| `test_atom_folder_axis.py::test_reorganize_moves_flat_atoms_and_updates_store` | reorganización de átomos no actualiza el store | F6 T6.3 |
-| `test_atoms_cli.py::test_atoms_delete_force_removes_file_and_untracks_store` | delete de átomo no destrackea | F6 T6.3 |
+Los 9 rojos que arrastraba F2/F3 se cerraron el 2026-09-20 (`0afd5ab`,
+`3b70dc7`, `4d2900f`, `21f2edb`) y la suite quedó **271 passed**:
+
+| Test | Cómo se cerró |
+| --- | --- |
+| `test_cli.py::test_cli_help_uses_deskops_name` | el test pedía la lista sin `runtime`; el parser lo shipea (herdr) y el test ahora refleja esa superficie |
+| `test_cli.py::test_edit_task_updates_modeled_field_from_cli` | `edit task` por la capa de formas (T4.3) |
+| `test_cli.py::test_edit_rejects_immutable_id_field` / `...ambiguous_task_selector` | `id` inmutable y selector único en la capa de formas |
+| `test_cli.py::test_show_task_json_resolves_inherited_workflow_context` | el template de `TaskDoc` usa los placeholders que el lector ya recortaba |
+| `test_cli.py::test_show_list_and_advance_task_uses_operational_runtime` / `...advance_task_blocks...` | el template de `TaskDoc` volvió a declarar las secciones que el runtime viejo lee |
+| `test_lifecycle_end_to_end.py::...` | el subprocess necesitaba `PYTHONPATH=<worktree>` (regla 1) |
+| `test_promotion_nesting.py::...` | idem `TaskDoc` |
+| `test_atom_folder_axis.py::test_reorganize...` / `test_atoms_cli.py::test_atoms_delete_force...` | T6.3: track/untrack por el seam |
 
 - Pendiente de limpieza histórica: `3c041ee` arrastró la migración del store y
   el transcript de herdr (ya separado en F1).
@@ -125,13 +138,20 @@ en planning (`pron say` queda para F4 T4.2, ver gap-log).
 
 El reemplazo real de `operations.py`.
 
-**T4.1 Constructores base** — `(create …)`, `(change …)`, `(assert …)`, `(move …)`.
-**T4.2 Lectura** — board, `next`, `list`, `show` sobre `World.store`/`World.graph`.
-**T4.3 Escritura de task** — promote, add, edit, bind como movimientos atómicos.
-**T4.4 Advance** — `deskops advance` = evaluar una transición con guarda. Aquí muere `advance_task`.
-**T4.5 Closeout** — evidencia desde el ledger, no desde heurísticas de archivos.
+**T4.1 Constructores base** — `deskops/forms.py`: `create_task` escribe el
+documento completo. (hecho)
+**T4.2 Lectura** — `read_task`/`show_task`/`list_tasks` con status derivado.
+(hecho en la capa; la CLI sigue leyendo por `operations.py`)
+**T4.3 Escritura de task** — create/edit/promote como movimientos atómicos;
+`edit task` ya va por la capa de formas. (hecho)
+**T4.4 Advance** — `forms.next_gate` responde la guarda de cada peldaño.
+(hecho en la capa; **falta repuntar `advance task`** y reescribir sus tests)
+**T4.5 Closeout** — la capa evalúa evidencia + done_when
+(`closeout_evidence_present`); el `closeout` de la CLI sigue en `operations.py`.
 
-Gate: los tests de lifecycle y promoción pasan contra la nueva capa.
+Gate: los tests de lifecycle y promoción pasan contra la nueva capa — **cumplido
+para el lifecycle e2e**; `advance`/`list`/`show` de la CLI quedan para el
+siguiente dispatch de F4.
 
 ---
 
@@ -150,7 +170,8 @@ Gate: desde una task, listar qué cambió, cuándo, qué símbolo y qué tests c
 
 **T6.1 Handlers a la capa de formas** — parser 1:1, handlers vaciados.
 **T6.2 `next` y `advance`** sobre el mundo, con `--diagram` desde el store.
-**T6.3 Resto** — doctor, drift, materialize, repo, graph, runtime.
+**T6.3 Resto** — doctor, drift, materialize, repo, graph, runtime; los
+movimientos de átomos ya van por el seam (hecho).
 
 Gate: `python -m deskops --help` idéntico; suite completa verde.
 
