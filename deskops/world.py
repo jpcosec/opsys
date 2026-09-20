@@ -33,7 +33,15 @@ from sldb.runtime.validation import render_model_markdown
 # Exception 2: KGDB contract validation of the deskops snapshot artifact.
 from kgdb.contracts.io import GraphSnapshot
 
+# Exception 3: the static Python scan. The code world (CommitDoc/ChangeDoc/
+# TestCoverageDoc, and the PythonSymbolDoc documents they hang off) is derived
+# from sldb's scan; `sldb selfdoc python-sync` cannot write it here because it
+# requires AST-typed relation types (`contains`) that conflict with the document
+# graph vocabulary (gap-log).
+from sldb.selfdoc.python_source_scan import scan_source_facts
+
 __all__ = [
+    "scan_source_facts",
     "World",
     "Store",
     "Graph",
@@ -54,6 +62,16 @@ def get_world(root: str | Path = ".") -> World:
     """
     repo_root = Path(root).resolve()
     return World(repo_root, pythonpath=str(repo_root))
+
+
+def scan_python_facts(source_root: str | Path, package: str | None = None) -> list[dict]:
+    """The static facts of every Python file below `source_root` (seam for sldb's scan).
+
+    Read-only: `deskops.code` turns the facts into documents, the scan never
+    imports the code it reads.
+    """
+    root = Path(source_root).resolve()
+    return scan_source_facts(root, package)
 
 
 def ensure_store_root(root: str | Path = ".") -> Path:
