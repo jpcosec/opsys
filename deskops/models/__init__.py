@@ -3,8 +3,11 @@ from .atom import AtomDoc
 from .base import OperationalArtifactDoc
 from .base import PrimitiveDoc
 from .board import BoardDoc
+from .change import ChangeDoc
 from .checklist import ChecklistDoc
+from .commit import CommitDoc
 from .condition import ConditionDoc
+from .coverage_doc import TestCoverageDoc
 from .edge import EdgeDoc
 from .faq import FAQDoc
 from .hook import HookDoc
@@ -28,6 +31,8 @@ from .task_intent import TaskIntentDoc
 __all__ = [
     "AcceptanceDoc",
     "ChecklistDoc",
+    "ChangeDoc",
+    "CommitDoc",
     "ConditionDoc",
     "EdgeDoc",
     "AtomDoc",
@@ -52,4 +57,5 @@ __all__ = [
     "TaskBindingDoc",
     "TaskDoc",
     "TaskIntentDoc",
+    "TestCoverageDoc",
 ]

@@ -284,5 +284,41 @@ models:
   - source.document.markdown
   - type.workflow.symbol_contract
   - workspace.desk.planning
+- name: CommitDoc
+  model_ref: deskops.models:CommitDoc
+  path: deskops/models/commit.py
+  models_index: .sldb/core/models/CommitDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.code.commit
+  - workspace.desk.code
+- name: ChangeDoc
+  model_ref: deskops.models:ChangeDoc
+  path: deskops/models/change.py
+  models_index: .sldb/core/models/ChangeDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.code.change
+  - workspace.desk.code
+- name: TestCoverageDoc
+  model_ref: deskops.models:TestCoverageDoc
+  path: deskops/models/test_coverage.py
+  models_index: .sldb/core/models/TestCoverageDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.code.test_coverage
+  - workspace.desk.code
 predicates: []
-hash_a: d1bc9b51877c9c3258e0fdeb515b9a849f3a6cf663da90817f3c6bce8a39c7f0
+hash_a: 97ce068e75525b78fc60af34769997a75eb2421da95c8e58f698cf35b1d757af
