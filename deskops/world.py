@@ -54,3 +54,20 @@ def get_world(root: str | Path = ".") -> World:
     """
     repo_root = Path(root).resolve()
     return World(repo_root, pythonpath=str(repo_root))
+
+
+def ensure_store_root(root: str | Path = ".") -> Path:
+    """Create the `.sldb` store at `root` when it does not exist yet.
+
+    A pron World only opens an existing store, so bootstrap must create one
+    before `get_world` on a fresh repo (`deskops init`). Seam for
+    `sldb.api.init_store` / `sldb.store.layout.store_exists`; no-op when the
+    store is already there.
+    """
+    from sldb.api import init_store
+    from sldb.store.layout import store_exists
+
+    root_path = Path(root).resolve()
+    if not store_exists(root_path / ".sldb"):
+        init_store(root_path)
+    return root_path
