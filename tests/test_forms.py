@@ -143,3 +143,59 @@ def test_edit_adopts_an_authored_task_file_into_the_store(root: Path) -> None:
     assert view.payload["goal"] == "Edited goal."
     assert "Edited goal." in authored.read_text(encoding="utf-8")
     assert forms.read_task(root, "task-authored-by-hand").id == "task-authored-by-hand"
+
+
+def test_promote_task_routes_it_and_the_status_becomes_active(root: Path) -> None:
+    forms.create_task(root, title="Promoted", goal="g", scope="s")
+    board = root / "desk" / "tasks" / "Board.md"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    from deskops.models import BoardDoc
+    from deskops.world import render_model_markdown
+
+    board.write_text(
+        render_model_markdown(
+            BoardDoc,
+            {
+                "id": "board-001",
+                "title": "Desk Board",
+                "scope": "desk",
+                "purpose": "Route the active work.",
+                "tasks": [],
+                "pills": [],
+                "rituals": [],
+                "notes": "",
+                "tags": ["workspace:desk"],
+            },
+        ),
+        encoding="utf-8",
+    )
+
+    view = forms.promote_task(root, "task-promoted")
+
+    assert view.status == "active"
+    assert view.path == root / "desk" / "tasks" / "task-promoted.md"
+    assert "desk/tasks/task-promoted.md" in board.read_text(encoding="utf-8")
+
+
+def test_advance_reports_the_gate_that_blocks_the_next_rung(root: Path) -> None:
+    forms.create_task(root, title="Blocked walk", goal="g", scope="s")
+
+    view, gate = forms.advance_task(root, "task-blocked-walk")
+
+    assert view.status == "drawer"
+    assert gate.satisfied is False
+    assert "not routed by a board" in gate.message
+
+
+def test_advance_reports_the_gate_once_a_plan_is_declared(root: Path) -> None:
+    from derived_support import make_world, store_task_with_plan, target_payload, route
+
+    world = make_world(root)
+    store_task_with_plan(world, "task-walked", "plan-one", [target_payload("plan-target-one")])
+    route(world, "board-walked", "task-walked")
+
+    view, gate = forms.advance_task(root, "task-walked")
+
+    assert view.status == "planning"
+    assert gate.satisfied is False
+    assert "lack a complete contract" in gate.message

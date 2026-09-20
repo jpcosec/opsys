@@ -39,7 +39,8 @@ def make_world(tmp_path: Path):
     for name in DESKOPS_MODELS:
         world.store.register_model(f"deskops.models:{name}")
     for name, ref in EXTERNAL_MODELS.items():
-        assert world.store.register_model(ref), f"{name} did not register"
+        registered = world.store.register_model(ref)
+        assert registered or name in world.store.model_names(), f"{name} did not register"
     return world
 
 

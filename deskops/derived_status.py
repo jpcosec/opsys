@@ -36,6 +36,8 @@ from deskops.derived_conditions import condition_values_for
 from deskops.derived_conditions import refs_in
 from deskops.derived_conditions import split_ref
 from deskops.derived_conditions import task_slice
+from pathlib import Path
+
 from deskops.world import World
 
 # The ladder in code. `ladder()` checks it against the spec on every import site.
@@ -81,12 +83,19 @@ def ladder() -> tuple[str, ...]:
 
 
 def is_routed(world: World, task_id: str) -> bool:
-    """Whether any BoardDoc routes the task (its `tasks` list names the task)."""
+    """Whether any BoardDoc routes the task.
+
+    A board entry counts when it names the task as a document ref
+    (`TaskDoc:task-x`) or as a path (`desk/tasks/task-x.md`): the boards in
+    `desk/` route by path, the store-born ones by ref.
+    """
     task_name = split_ref(task_id if ":" in task_id else f"TaskDoc:{task_id}")[1]
     for doc in world.store.docs_of("BoardDoc"):
         payload = dict(doc.payload)
-        if any(split_ref(ref)[1] == task_name for ref in refs_in(payload, "tasks", "task")):
-            return True
+        for ref in refs_in(payload, "tasks", "task"):
+            text = str(ref).strip()
+            if split_ref(text)[1] == task_name or Path(text).stem == task_name:
+                return True
     return False
 
 

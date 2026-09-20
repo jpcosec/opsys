@@ -68,6 +68,27 @@ def world_model_refs(spec: dict[str, Any]) -> list[str]:
     return [EXTERNAL_MODEL_REFS.get(name, f"deskops.models:{name}") for name in names]
 
 
+# Roots whose world was already built in this process: bootstrap costs seconds
+# and a CLI run touches the same root many times.
+_READY_ROOTS: set[Path] = set()
+
+
+def ensure_world(root: str | Path = "."):
+    """The pron World at `root`, bootstrapped from the spec the first time this process asks.
+
+    The seam every caller uses when it needs a usable store but was not handed
+    one: `deskops init`, the forms layer, and the atom moves that must track or
+    untrack documents.
+    """
+    from deskops.world import get_world
+
+    root_path = ensure_store_root(root)
+    if root_path not in _READY_ROOTS:
+        bootstrap_world(root_path)
+        _READY_ROOTS.add(root_path)
+    return get_world(root_path)
+
+
 def read_world_spec() -> dict[str, Any]:
     return yaml.safe_load(WORLD_SPEC.read_text(encoding="utf-8")) or {}
 

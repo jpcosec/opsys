@@ -25,12 +25,13 @@ import re
 
 from deskops.derived_conditions import UnknownTaskError
 from deskops.derived_conditions import split_ref
+from deskops.derived_status import closeout_evidence_present
 from deskops.derived_status import derive_status
+from deskops.derived_status import is_routed
+from deskops.derived_conditions import task_slice
 from deskops.world import DocId
 from deskops.world import World
-from deskops.world import ensure_store_root
 from deskops.world import extract_model_data
-from deskops.world import get_world
 from deskops.world import render_model_markdown
 
 # Task fields the CLI may write, mapped to the model that declares them.
@@ -89,13 +90,9 @@ def world_for(root: str | Path = ".") -> World:
     world F3 T3.4 declares (`bootstrap_world`), so a first `add task` on a fresh
     desk works without a separate init step.
     """
-    from deskops.bootstrap import bootstrap_world
+    from deskops.bootstrap import ensure_world
 
-    root_path = ensure_store_root(root)
-    if root_path not in _READY_ROOTS:
-        bootstrap_world(root_path)
-        _READY_ROOTS.add(root_path)
-    return get_world(root_path)
+    return ensure_world(root)
 
 
 def doc_file(root: str | Path, doc) -> Path:
@@ -221,6 +218,142 @@ def find_task_file(root: str | Path, task_id: str) -> Path | None:
     return None
 
 
+def ensure_tracked(root: str | Path, task_id: str):
+    """The tracked TaskDoc for `task_id`, adopting an authored file if needed."""
+    world = world_for(root)
+    name = split_ref(task_id if ":" in task_id else f"TaskDoc:{task_id}")[1]
+    doc = world.store.doc(DocId.of("TaskDoc", name))
+    if doc is not None:
+        return world, name, doc
+    authored = find_task_file(root, name)
+    if authored is None:
+        raise FileNotFoundError(f"No task found for {task_id}")
+    world.store.track(DocId.of("TaskDoc", name), authored.relative_to(Path(root).resolve()))
+    doc = world.store.doc(DocId.of("TaskDoc", name))
+    if doc is None:
+        raise FileNotFoundError(f"No task found for {task_id}")
+    return world, name, doc
+
+
+@dataclass(frozen=True)
+class Gate:
+    """The condition the next rung of the ladder needs, and whether it holds."""
+
+    satisfied: bool
+    message: str
+
+
+def next_gate(root: str | Path, task_id: str) -> Gate:
+    """What the task needs to reach the next derived status, evaluated now.
+
+    This is what `deskops advance` answers: the ladder is derived, so there is
+    no state to move. Either the next rung's condition already holds (the task
+    advanced) or this is the gate that blocks it.
+    """
+    world = world_for(root)
+    _, name, _ = ensure_tracked(root, task_id)
+    ref = f"TaskDoc:{name}"
+    derivation = derive_status(world, ref)
+    status = derivation.status
+    slice_ = task_slice(world, ref)
+
+    if status == "drawer":
+        routed = is_routed(world, ref)
+        return Gate(routed, "Task is not routed by a board (promote it first).")
+    if status == "active":
+        declared = int(derivation.value_of("contracts_declared") or 0)
+        if slice_.targets or declared:
+            return Gate(True, "Plan targets are declared; the planning gate is met.")
+        return Gate(False, "No plan targets are declared for this task.")
+    if status == "planning":
+        gaps = int(derivation.value_of("plan_targets_without_contract") or 0)
+        open_targets = [
+            entry["target"]
+            for entry in derivation.conditions["plan_targets_without_contract"].detail["open_targets"]
+        ]
+        return Gate(
+            gaps == 0,
+            f"{gaps} plan target(s) with change_kind add|modify lack a complete contract: "
+            f"{', '.join(open_targets)}",
+        )
+    if status == "execution":
+        declared = int(derivation.value_of("contracts_declared") or 0)
+        implemented = int(derivation.value_of("contracts_implemented") or 0)
+        pending = [str(entry["contract"]) for entry in derivation.conditions["contracts_implemented"].detail["pending"]]
+        return Gate(
+            implemented >= declared,
+            f"{declared - implemented} of {declared} contracts are not implemented: {', '.join(pending)}",
+        )
+    if status == "testing":
+        proven = bool(derivation.value_of("tests_from_contracts_passing"))
+        uncovered = [
+            str(ref_)
+            for ref_ in derivation.conditions["tests_from_contracts_passing"].detail["uncovered_contracts"]
+        ]
+        if proven:
+            return Gate(True, "Contract tests are proven by a successful run.")
+        return Gate(
+            False,
+            "Contract tests are not proven: no TestCoverageDoc plus successful RunDoc for "
+            f"{', '.join(uncovered) or 'the declared contracts'}.",
+        )
+    if status == "closeout":
+        has_evidence = closeout_evidence_present(world, slice_)
+        return Gate(
+            has_evidence,
+            "Closeout evidence is missing: record evidence together with the done_when rules.",
+        )
+    return Gate(True, "Task is closed.")
+
+
+def promote_task(root: str | Path, task_id: str) -> TaskView:
+    """Route a drawer task: move it into `desk/tasks/` and list it on the board.
+
+    The move is two writes: the task document changes folder (and the store
+    tracks it where it now lives) and the active BoardDoc gains the entry that
+    makes the task routed, which is what takes it out of `drawer`.
+    """
+    root_path = Path(root).resolve()
+    world = world_for(root_path)
+    name = resolve_task_id(root_path, split_ref(task_id if ":" in task_id else f"TaskDoc:{task_id}")[1])
+    source = root_path / "desk" / "drawer" / "tasks" / f"{name}.md"
+    target = root_path / "desk" / "tasks" / f"{name}.md"
+    if source.exists() and not target.exists():
+        target.parent.mkdir(parents=True, exist_ok=True)
+        source.replace(target)
+        world.store.untrack(DocId.of("TaskDoc", name))
+    world.store.track(DocId.of("TaskDoc", name), target.relative_to(root_path))
+    _route_on_board(world, root_path, name)
+    return read_task(root_path, name)
+
+
+def _route_on_board(world: World, root: Path, task_name: str) -> None:
+    """Add the task path to the active board's `tasks` list, once."""
+    root = root.resolve()
+    board_path = root / "desk" / "tasks" / "Board.md"
+    if not board_path.exists():
+        return
+    model = world.store.model_type("BoardDoc")
+    payload = extract_model_data(model, board_path.read_text(encoding="utf-8"))
+    entry = f"desk/tasks/{task_name}.md"
+    tasks = [str(item) for item in payload.get("tasks") or []]
+    if entry in tasks or f"TaskDoc:{task_name}" in tasks:
+        return
+    tasks.append(entry)
+    payload["tasks"] = tasks
+    payload.setdefault("id", "board-001")
+    payload.setdefault("title", "Desk Board")
+    board_path.write_text(render_model_markdown(model, payload), encoding="utf-8")
+    if world.store.doc(DocId.of("BoardDoc", str(payload["id"]))) is None:
+        world.store.track(DocId.of("BoardDoc", str(payload["id"])), board_path.relative_to(root.resolve()))
+
+
+def advance_task(root: str | Path, task_id: str) -> tuple[TaskView, Gate]:
+    """Read the task, evaluate the next gate and return both."""
+    view = read_task(root, task_id)
+    return view, next_gate(root, task_id)
+
+
 def parse_field_value(field: str, raw: str) -> Any:
     """The value a CLI argument carries: a JSON list for list fields, else the text."""
     if field in LIST_FIELDS:
@@ -248,37 +381,10 @@ def edit_task_field(root: str | Path, task_id: str, field: str, raw_value: str) 
     name = split_ref(task_id if ":" in task_id else f"TaskDoc:{task_id}")[1]
     if world.store.doc(DocId.of("TaskDoc", name)) is None:
         name = resolve_task_id(root, name)
-    doc = world.store.doc(DocId.of("TaskDoc", name))
-    if doc is None:
-        # An authored task the store does not track yet: adopt it, then edit.
-        authored = find_task_file(root, name)
-        if authored is None:
-            raise FileNotFoundError(f"No task found for {task_id}")
-        document = authored
-        world.store.track(DocId.of("TaskDoc", name), document.relative_to(Path(root).resolve()))
-    else:
-        document = doc_file(root, doc)
+    world, name, doc = ensure_tracked(root, name)
+    document = doc_file(root, doc)
     model = world.store.model_type("TaskDoc")
     payload = extract_model_data(model, document.read_text(encoding="utf-8"))
     payload[field] = parse_field_value(field, raw_value)
     document.write_text(render_model_markdown(model, payload), encoding="utf-8")
-    missing = _missing_targets(world, payload)
-    if missing:
-        raise FormsError(f"Edit left unresolvable references: {', '.join(missing)}")
     return show_task(root, name)
-
-
-def _missing_targets(world: World, payload: dict[str, Any]) -> list[str]:
-    """Refs the edited document names that the store does not track."""
-    missing: list[str] = []
-    for field in ("depends_on", "pills", "references", "atoms", "plan", "acceptance"):
-        value = payload.get(field) or []
-        items = [value] if isinstance(value, str) else value
-        for ref in items:
-            text = str(ref).strip()
-            if not text or ":" not in text:
-                continue
-            model, name = split_ref(text)
-            if world.store.doc(DocId.of(model, name)) is None:
-                missing.append(text)
-    return missing
