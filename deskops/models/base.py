@@ -22,11 +22,3 @@ class OperationalArtifactDoc(PrimitiveDoc):
         default="",
         description="Primary routine identifier that makes the artifact actionable.",
     )
-    current_node: str = Field(
-        default="",
-        description="Current node in the operational routine or state machine.",
-    )
-    history: list[str] = Field(
-        default_factory=list,
-        description="Operational transition history for the artifact.",
-    )

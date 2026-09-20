@@ -3,7 +3,7 @@ from typing import Annotated
 
 from pydantic import Field
 
-from sldb import StructuredNLDoc
+from .base import PrimitiveDoc
 
 
 class AtomQuestion(StrEnum):
@@ -25,7 +25,7 @@ AtomTag = Annotated[
 ]
 
 
-class AtomDoc(StructuredNLDoc):
+class AtomDoc(PrimitiveDoc):
     __semantics__ = {
         "type": ["knowledge", "atom"],
         "workspace": ["desk", "atoms"],

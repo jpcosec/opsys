@@ -22,6 +22,8 @@ from sldb.runtime.validation import render_model_markdown
 ATOM_SAMPLE = {
     "title": "Deskops models are sldb documents",
     "id": "atom-deskops-models-are-sldb-documents",
+    "status": "",
+    "summary": "",
     "five_wh_one_plus": "what",
     "answer": "Deskops persists workflow artifacts as sldb StructuredNLDoc models.",
     "tags": ["system:deskops", "system:sldb", "topic:document-model"],

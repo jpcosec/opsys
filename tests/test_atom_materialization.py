@@ -18,6 +18,8 @@ from sldb.runtime.validation import extract_model_data, render_model_markdown
 ATOM_SAMPLE = {
     "title": "Deskops reads through sldb",
     "id": "atom-deskops-reads-through-sldb",
+    "status": "",
+    "summary": "",
     "five_wh_one_plus": "how",
     "answer": "Deskops extracts model payloads from structured markdown with sldb runtime validation.",
     "tags": ["system:deskops", "system:sldb", "topic:composition"],
