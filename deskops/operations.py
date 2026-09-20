@@ -2061,63 +2061,53 @@ class DeskopsOperations:
         return rewritten
 
     def _retarget_atom_documents(self, retargets: dict[str, str]) -> bool:
-        """Update tracked atom document paths in the .sldb store after moves."""
-        store_path = self.root / ".sldb"
-        try:
-            from sldb.store.io import load_documents_index
-            from sldb.store.io import load_models_index
-            from sldb.store.io import load_store_index
-            from sldb.store.layout import store_exists
-            from sldb.cli.commands.doc_helpers import save_untrack_indexes
-        except ImportError:
-            return False
-        if not store_exists(store_path):
-            return False
+        """Point the store at the new path of every atom a move relocated.
 
-        store_index = load_store_index(store_path)
-        model_entry = next((entry for entry in store_index.models if entry.name == AtomDoc.__name__), None)
-        if model_entry is None:
+        Goes through the seam (`deskops.world` -> pron), not through sldb's
+        index files: the documents index is sldb's to write, and hand-writing it
+        is what left the old paths behind.
+        """
+        world, DocId = self._world()
+        if world is None:
             return False
-
-        models_index = load_models_index(self.root / model_entry.models_index)
-        documents_index = load_documents_index(self.root / models_index.documents_index)
         changed = False
-        for entry in documents_index.documents:
-            new_path = retargets.get(entry.name)
-            if new_path is not None and entry.path != new_path:
-                entry.path = new_path
-                changed = True
-        if not changed:
-            return False
-        save_untrack_indexes(store_path, self.root, store_index, model_entry, models_index, documents_index, str(Path(__file__).resolve().parents[1]))
-        return True
+        for atom_id, new_path in retargets.items():
+            doc_id = DocId.of("AtomDoc", atom_id)
+            doc = world.store.doc(doc_id)
+            if doc is not None and str(doc.path) == new_path:
+                continue
+            # The file already moved, so the store cannot load the document
+            # anymore: untrack by id (a no-op when it was not tracked) and
+            # track it where it now lives.
+            try:
+                world.store.untrack(doc_id)
+            except Exception:  # noqa: BLE001 - untracked or already gone
+                pass
+            world.store.track(doc_id, Path(new_path))
+            changed = True
+        return changed
 
     def _untrack_atom_document(self, atom_id: str) -> bool:
-        store_path = self.root / ".sldb"
+        """Drop one atom document from the store through the seam."""
+        world, DocId = self._world()
+        if world is None:
+            return False
+        doc_id = DocId.of("AtomDoc", atom_id)
         try:
-            from sldb.store.io import load_documents_index
-            from sldb.store.io import load_models_index
-            from sldb.store.io import load_store_index
-            from sldb.store.layout import store_exists
-            from sldb.cli.commands.doc_helpers import save_untrack_indexes
-        except ImportError:
+            world.store.untrack(doc_id)
+        except Exception:  # noqa: BLE001 - not tracked in this store
             return False
-        if not store_exists(store_path):
-            return False
-
-        store_index = load_store_index(store_path)
-        model_entry = next((entry for entry in store_index.models if entry.name == AtomDoc.__name__), None)
-        if model_entry is None:
-            return False
-
-        models_index = load_models_index(self.root / model_entry.models_index)
-        documents_index = load_documents_index(self.root / models_index.documents_index)
-        tracked_doc = next((entry for entry in documents_index.documents if entry.name == atom_id or entry.path.endswith(f"/{atom_id}.md") or entry.path == f"desk/atoms/{atom_id}.md"), None)
-        if tracked_doc is None:
-            return False
-        documents_index.documents = [entry for entry in documents_index.documents if entry.name != tracked_doc.name]
-        save_untrack_indexes(store_path, self.root, store_index, model_entry, models_index, documents_index, str(Path(__file__).resolve().parents[1]))
         return True
+
+    def _world(self):
+        """The bootstrapped world of this desk, or (None, None) when unavailable."""
+        try:
+            from deskops.bootstrap import ensure_world
+            from deskops.world import DocId
+
+            return ensure_world(self.root), DocId
+        except Exception:  # noqa: BLE001 - the atom moves degrade to file-only
+            return None, None
 
     def _reference_points_to_test(self, reference: str) -> bool:
         candidates: list[str] = []
