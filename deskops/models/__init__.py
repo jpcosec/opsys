@@ -8,6 +8,7 @@ from .checklist import ChecklistDoc
 from .commit import CommitDoc
 from .condition import ConditionDoc
 from .coverage_doc import TestCoverageDoc
+from .crossroad import CrossroadDoc
 from .edge import EdgeDoc
 from .faq import FAQDoc
 from .hook import HookDoc
@@ -24,6 +25,7 @@ from .ritual import RitualDoc
 from .role import RoleDoc
 from .routine import RoutineDoc
 from .run import RunDoc
+from .runtime_profile import RuntimeProfileDoc
 from .step import StepDoc
 from .symbol_contract import SymbolContractDoc
 from .task import TaskDoc
@@ -36,6 +38,7 @@ __all__ = [
     "ChangeDoc",
     "CommitDoc",
     "ConditionDoc",
+    "CrossroadDoc",
     "EdgeDoc",
     "AtomDoc",
     "BoardDoc",
@@ -56,6 +59,7 @@ __all__ = [
     "RoleDoc",
     "RoutineDoc",
     "RunDoc",
+    "RuntimeProfileDoc",
     "StepDoc",
     "SymbolContractDoc",
     "TaskBindingDoc",
