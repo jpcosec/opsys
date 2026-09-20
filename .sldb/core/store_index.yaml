@@ -320,5 +320,29 @@ models:
   - source.document.markdown
   - type.code.test_coverage
   - workspace.desk.code
+- name: ProtoAtomDoc
+  model_ref: deskops.models:ProtoAtomDoc
+  path: deskops/models/proto_atom.py
+  models_index: .sldb/core/models/ProtoAtomDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.knowledge.proto_atom
+  - workspace.desk.atoms
+- name: RunDoc
+  model_ref: deskops.models:RunDoc
+  path: deskops/models/run.py
+  models_index: .sldb/core/models/RunDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.execution.run
+  - workspace.desk.runs
 predicates: []
-hash_a: 97ce068e75525b78fc60af34769997a75eb2421da95c8e58f698cf35b1d757af
+hash_a: 2e350bbce7a3c04202d14653de0e40427198ec4b2794c51e905a663038ec9d0c

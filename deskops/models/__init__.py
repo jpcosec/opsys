@@ -18,10 +18,12 @@ from .pill import PillDoc
 from .plan import PlanDoc
 from .plan_iteration import PlanIterationDoc
 from .plan_target import PlanTargetDoc
+from .proto_atom import ProtoAtomDoc
 from .repository import RepositoryDoc
 from .ritual import RitualDoc
 from .role import RoleDoc
 from .routine import RoutineDoc
+from .run import RunDoc
 from .step import StepDoc
 from .symbol_contract import SymbolContractDoc
 from .task import TaskDoc
@@ -48,10 +50,12 @@ __all__ = [
     "PlanIterationDoc",
     "PlanTargetDoc",
     "PrimitiveDoc",
+    "ProtoAtomDoc",
     "RepositoryDoc",
     "RitualDoc",
     "RoleDoc",
     "RoutineDoc",
+    "RunDoc",
     "StepDoc",
     "SymbolContractDoc",
     "TaskBindingDoc",

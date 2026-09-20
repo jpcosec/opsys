@@ -5,8 +5,12 @@ from .base import OperationalArtifactDoc
 
 class BoardDoc(OperationalArtifactDoc):
     __semantics__ = {"type": ["workflow", "board"], "workspace": ["desk"]}
-    __containment__ = {}
-    __references__ = ["tasks", "pills", "rituals"]
+    __containment__ = {
+        "tasks": ["TaskDoc"],
+        "pills": ["PillDoc"],
+        "rituals": ["RitualDoc"],
+    }
+    __references__ = []
     __compositions__ = {
         "task_summaries": {
             "source_field": "tasks",
