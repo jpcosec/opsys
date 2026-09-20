@@ -75,26 +75,40 @@ class OperationsCLI:
             return 0
 
         if args.command == "bind" and args.subject == "pill":
+            # F4 T4.3: the binding is a write of the task document through the
+            # forms layer; it names a pill that must exist.
             try:
-                record, pill_id, changed = operations.bind_pill_to_task(args.task, args.pill)
-            except (FileNotFoundError, ValueError) as exc:
+                view, pill_ref, changed = forms.bind_pill(root, args.task, args.pill)
+            except (forms.FormsError, UnknownTaskError, FileNotFoundError) as exc:
                 print(f"Error: {exc}")
                 return 1
             verb = "Bound" if changed else "Already bound"
-            print(f"{verb} pill {pill_id} to task {record.doc_id}")
-            print(f"Path: {record.path}")
+            print(f"{verb} pill {pill_ref} to task {view.id}")
+            print(f"Path: {view.path}")
             return 0
 
         if args.command == "next":
+            if getattr(args, "diagram", False):
+                # The diagram is the spec's projection, not the desk's state.
+                print(operations.render_next_action_diagram())
+                return 0
+            # F4 T4.2: what to do next is the derived status and the gate that
+            # blocks the next rung, per task (routed first, drawer last).
             try:
-                if getattr(args, "diagram", False):
-                    print(operations.render_next_action_diagram())
-                    return 0
-                report = operations.next_action_report(getattr(args, "task_id", None))
-            except (FileNotFoundError, ValueError) as exc:
+                plan = forms.next_actions(root, getattr(args, "task_id", None))
+            except (forms.FormsError, UnknownTaskError, FileNotFoundError) as exc:
                 print(f"Error: {exc}")
                 return 1
-            self._print_next_action_report(report)
+            if not plan:
+                print("No tasks found.")
+                return 0
+            for view, gate in plan:
+                print(f"Task: {view.id}")
+                print(f"Status: {view.status}")
+                if gate.satisfied:
+                    print("Message: the next gate is already met.")
+                else:
+                    print(f"Message: {gate.message}")
             return 0
 
         if args.command == "list" and args.subject == "tasks":

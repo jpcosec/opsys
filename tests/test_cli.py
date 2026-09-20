@@ -880,7 +880,7 @@ def test_add_task_uses_test_root_override_for_sandboxed_generation(tmp_path: Pat
     assert not (tmp_path / "desk" / "tasks" / "task-sandboxed-test-task.md").exists()
 
 
-def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Path, capsys) -> None:
+def test_next_task_reports_the_derived_status_and_its_gate_without_mutating(tmp_path: Path, capsys) -> None:
     created = main(
         [
             "add",
@@ -911,14 +911,21 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
 
     assert result == 0
     assert "Task: task-plan-next-action" in output.out
-    assert "Phase: execution" in output.out
-    assert "Required ritual:" in output.out
-    assert "desk/rituals/execution.md" in output.out
-    assert "Next actions:" in output.out
-    assert "Run a fresh-context subagent review." in output.out
-    assert "Sources:" in output.out
-    assert "spec/workflows/task_lifecycle.yaml" in output.out
+    assert "Status: drawer" in output.out
+    assert "Message: Task is not routed by a board" in output.out
     assert task_path.read_text(encoding="utf-8") == before
+
+
+def test_next_without_a_task_lists_the_routed_work_first(tmp_path: Path, capsys) -> None:
+    assert main(["add", "task", "--root", str(tmp_path), "--title", "Drawer work", "--goal", "g", "--scope", "s"]) == 0
+    capsys.readouterr()
+
+    result = main(["next", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "Task: task-drawer-work" in output.out
+    assert "Status: drawer" in output.out
 
 
 def test_next_diagram_renders_workflow_graph_from_spec(capsys) -> None:

@@ -541,6 +541,55 @@ def _route_on_board(world: World, root: Path, task_name: str) -> None:
         world.store.track(DocId.of("BoardDoc", str(payload["id"])), board_path.relative_to(root.resolve()))
 
 
+def bind_pill(root: str | Path, task_id: str, pill_selector: str) -> tuple[TaskView, str, bool]:
+    """Put one pill's path on the task's `pills` list, once.
+
+    Returns the task, the pill reference and whether the binding was new. The
+    pill document must exist: a binding that names nothing is a dangling edge.
+    """
+    root_path = Path(root).resolve()
+    world = world_for(root_path)
+    _, name, doc = ensure_tracked(root_path, task_id)
+    pill_id = resolve_pill_id(root_path, pill_selector)
+    pill_ref = f"desk/contexts/{pill_id}.md"
+    payload = dict(doc.payload)
+    pills = [str(item) for item in payload.get("pills") or []]
+    if pill_ref in pills:
+        return read_task(root_path, name), pill_ref, False
+    payload["pills"] = [*pills, pill_ref]
+    world.store.replace(DocId.of("TaskDoc", name), payload)
+    return read_task(root_path, name), pill_ref, True
+
+
+def resolve_pill_id(root: str | Path, selector: str) -> str:
+    """The pill id a CLI selector names: exact id, filename, stem or unique fragment."""
+    root_path = Path(root)
+    names = [path.stem for path in sorted((root_path / "desk" / "contexts").glob("pill-*.md"))]
+    if selector in names:
+        return selector
+    matches = [name for name in names if selector in name]
+    if not matches:
+        raise FileNotFoundError(f"No pill found for {selector}")
+    if len(matches) > 1:
+        raise FormsError(f"Ambiguous artifact.pill selector '{selector}'")
+    return matches[0]
+
+
+def next_actions(root: str | Path, task_id: str | None = None) -> list[tuple[TaskView, Gate]]:
+    """What the desk should do next: every task with its status and its gate.
+
+    Routed tasks come first (the ones the desk is working on), then the drawer.
+    """
+    views = list_tasks(root)
+    if task_id:
+        views = [view for view in views if view.id == split_ref(task_id)[1] or view.id == task_id]
+        if not views:
+            views = [read_task(root, task_id)]
+    order = {"drawer": 1}
+    views.sort(key=lambda view: (order.get(view.status, 0), view.id))
+    return [(view, next_gate(root, view.id)) for view in views]
+
+
 def advance_task(root: str | Path, task_id: str) -> tuple[TaskView, Gate]:
     """Read the task, evaluate the next gate and return both."""
     view = read_task(root, task_id)
