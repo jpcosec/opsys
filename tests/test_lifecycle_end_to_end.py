@@ -4,6 +4,10 @@ from pathlib import Path
 import subprocess
 import sys
 
+import pytest
+
+from deskops.operations import DeskopsOperations
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CLI = [sys.executable, "-m", "deskops"]
@@ -180,3 +184,52 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     assert "desk/tasks/Board.md" in committed_files
     assert "desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md" in committed_files
     assert "tests/test_lifecycle_smoke.py" in committed_files
+
+def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> None:
+    """A closeout that cannot commit must leave the desk exactly as it found it."""
+    root = _make_repo(tmp_path)
+
+    task_id = "task-fail-commit"
+    task_path = root / "desk" / "tasks" / f"{task_id}.md"
+    task_path.parent.mkdir(parents=True, exist_ok=True)
+    task_path.write_text(
+        "---\n"
+        f"id: {task_id}\n"
+        "status: active\n"
+        "current_node: closeout-ready\n"
+        "routine: ''\n"
+        "files: []\n"
+        "---\n\n# Fail task\n",
+        encoding="utf-8",
+    )
+    board_path = root / "desk" / "tasks" / "Board.md"
+    board_path.write_text(
+        "---\n"
+        "id: Board\n"
+        "scope: ''\n"
+        "tasks: ['desk/tasks/task-fail-commit.md']\n"
+        "pills: []\n"
+        "rituals: []\n"
+        "tags: []\n"
+        "---\n\n# Board\n",
+        encoding="utf-8",
+    )
+    _git(root, "add", "-A")
+    _git(root, "commit", "-m", "init task")
+    board_before = board_path.read_text(encoding="utf-8")
+
+    # A hook that rejects the commit stands in for any commit that cannot be made.
+    pre_commit = root / ".git" / "hooks" / "pre-commit"
+    pre_commit.write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
+    pre_commit.chmod(0o755)
+
+    operations = DeskopsOperations(root)
+    with pytest.raises(RuntimeError, match="Failed to commit task closure"):
+        operations._auto_commit_task_closure(
+            {"id": task_id, "routine": "", "files": []}, task_path
+        )
+
+    assert task_path.exists(), "the task bundle must survive a failed closure commit"
+    assert board_path.read_text(encoding="utf-8") == board_before, (
+        "the board must be left as it was when the commit fails"
+    )

@@ -1482,60 +1482,83 @@ class DeskopsOperations:
         routine_id = payload.get("routine", "")
         files = self._coerce_list(payload.get("files") or [])
 
-        # 1. Stage project files modified by the task.
+        self.logger.debug(f"Removing task {task_id} from Board.md")
+        board_path = self.desk_root / "tasks" / "Board.md"
+        board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
+        if board_before is not None:
+            board_payload = self._read_doc(board_path, BoardDoc)
+            task_ref = f"desk/tasks/{task_id}.md"
+            tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
+            board_payload["tasks"] = tasks
+            self._write_doc(board_path, BoardDoc, board_payload)
+
         for file in files:
             file_path = self.root / file
             if file_path.exists():
                 self.logger.debug(f"Staging file: {file}")
                 subprocess.run(["git", "add", str(file)], cwd=self.root, check=False)
 
-        # 2. Stage board changes before removing the task.
         subprocess.run(["git", "add", "desk/tasks/Board.md"], cwd=self.root, check=False)
 
-        # 3. Clean up and stage task removal.
+        paths_to_remove = []
         if task_path.exists():
-            subprocess.run(["git", "rm", "--ignore-unmatch", str(task_path.relative_to(self.root))], cwd=self.root, check=False)
-
+            paths_to_remove.append(task_path)
         if routine_id:
             routine_path = self._routine_path(routine_id)
             if routine_path.exists():
-                subprocess.run(["git", "rm", "--ignore-unmatch", str(routine_path.relative_to(self.root))], cwd=self.root, check=False)
+                paths_to_remove.append(routine_path)
 
-        self._remove_task_runtime_artifacts(task_id, routine_id)
-
-        subprocess.run(["git", "add", "-u", "desk/tasks/"], cwd=self.root, check=False)
-        subprocess.run(["git", "add", "-u", "desk/routines/"], cwd=self.root, check=False)
-        subprocess.run(["git", "add", "-u", "desk/primitives/"], cwd=self.root, check=False)
-
-        # 4. Commit using the standardized closeout subject used by the CLI closeout surface.
-        commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
-        self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
-        subprocess.run(["git", "commit", "-m", commit_msg], cwd=self.root, check=False)
-
-    def _remove_task_runtime_artifacts(self, task_id: str, routine_id: str) -> None:
-        self.logger.debug(f"Removing runtime artifacts for task {task_id}")
-        board_path = self.desk_root / "tasks" / "Board.md"
-        if board_path.exists():
-            board_payload = self._read_doc(board_path, BoardDoc)
-            task_ref = f"desk/tasks/{task_id}.md"
-            tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
-            board_payload["tasks"] = tasks
-            self._write_doc(board_path, BoardDoc, board_payload)
-        task_path = self.desk_root / "tasks" / f"{task_id}.md"
-        if task_path.exists():
-            task_path.unlink()
-        if routine_id:
-            routine_path = self._routine_path(routine_id)
-            if routine_path.exists():
-                routine_path.unlink()
-        
-        # Clean up task-specific primitives
         for directory in ["conditions", "checklists", "operators", "edges", "hooks"]:
             prim_dir = self.desk_root / "primitives" / directory
             if prim_dir.exists():
                 for prim_path in prim_dir.glob(f"*-{task_id}*.md"):
-                    self.logger.debug(f"Removing primitive {prim_path.name}")
-                    prim_path.unlink()
+                    paths_to_remove.append(prim_path)
+
+        for p in paths_to_remove:
+            subprocess.run(["git", "rm", "--cached", "--ignore-unmatch", str(p.relative_to(self.root))], cwd=self.root, check=False)
+
+        commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+        
+        # Check if HEAD is already the closeout commit for this task
+        head_subject = ""
+        result_log = subprocess.run(["git", "log", "-1", "--format=%s"], cwd=self.root, capture_output=True, text=True)
+        if result_log.returncode == 0:
+            head_subject = result_log.stdout.strip()
+            
+        if head_subject.startswith(f"closeout: {task_id}"):
+            self.logger.info(f"Amending closeout commit for {task_id}")
+            result = subprocess.run(["git", "commit", "--amend", "--no-edit"], cwd=self.root, capture_output=True, text=True)
+        else:
+            self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
+            result = subprocess.run(["git", "commit", "-m", commit_msg], cwd=self.root, capture_output=True, text=True)
+            
+        if result.returncode != 0:
+            # Nothing was committed, so put the desk back exactly as it was and
+            # leave the bundle in place.
+            if board_before is not None:
+                board_path.write_text(board_before, encoding="utf-8")
+            for p in paths_to_remove:
+                subprocess.run(["git", "restore", "--staged", str(p.relative_to(self.root))], cwd=self.root, check=False)
+            subprocess.run(["git", "restore", "--staged", "desk/tasks/Board.md"], cwd=self.root, check=False)
+            raise RuntimeError(
+                f"Failed to commit task closure for {task_id}. The bundle was not deleted "
+                f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
+            )
+
+        try:
+            from sldb.api.documents.untrack_document import untrack_document
+        except ImportError:
+            untrack_document = None
+
+        for p in paths_to_remove:
+            if untrack_document:
+                try:
+                    untrack_document(None, str(p.relative_to(self.root)), pythonpath=".")
+                except Exception as e:
+                    self.logger.warning(f"Failed to untrack {p}: {e}")
+            if p.exists():
+                self.logger.debug(f"Removing file {p.name}")
+                p.unlink()
 
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
         evidence = self._closeout_reference_evidence(payload)

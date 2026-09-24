@@ -1467,6 +1467,11 @@ def test_add_surfaces_reject_non_mapping_yaml(
 
 
 def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, capsys) -> None:
+    import subprocess
+    subprocess.run(['git', 'init', '-q'], cwd=tmp_path)
+    subprocess.run(['git', 'config', 'user.email', 'test@example.com'], cwd=tmp_path)
+    subprocess.run(['git', 'config', 'user.name', 'Test'], cwd=tmp_path)
+    subprocess.run(['git', 'commit', '--allow-empty', '-q', '-m', 'seed'], cwd=tmp_path)
     add_result = main(
         [
             "add",
@@ -1730,6 +1735,11 @@ def test_list_and_show_artifact_support_json_output(tmp_path: Path, capsys) -> N
 
 
 def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_path: Path, capsys) -> None:
+    import subprocess
+    subprocess.run(['git', 'init', '-q'], cwd=tmp_path)
+    subprocess.run(['git', 'config', 'user.email', 'test@example.com'], cwd=tmp_path)
+    subprocess.run(['git', 'config', 'user.name', 'Test'], cwd=tmp_path)
+    subprocess.run(['git', 'commit', '--allow-empty', '-q', '-m', 'seed'], cwd=tmp_path)
     add_result = main(
         [
             "add",
@@ -1830,6 +1840,11 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_
 
 
 def test_advance_task_accepts_atom_reference_as_closeout_evidence(tmp_path: Path, capsys) -> None:
+    import subprocess
+    subprocess.run(['git', 'init', '-q'], cwd=tmp_path)
+    subprocess.run(['git', 'config', 'user.email', 'test@example.com'], cwd=tmp_path)
+    subprocess.run(['git', 'config', 'user.name', 'Test'], cwd=tmp_path)
+    subprocess.run(['git', 'commit', '--allow-empty', '-q', '-m', 'seed'], cwd=tmp_path)
     add_atom = main([
         "add",
         "atom",
