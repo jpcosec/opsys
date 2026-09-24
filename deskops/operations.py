@@ -47,6 +47,7 @@ from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
+from deskops.doc_readability import unread_section_fields
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.specs import compile_task_bundle_spec
@@ -734,8 +735,10 @@ class DeskopsOperations:
         if not doc_id:
             raise ValueError(f"No {artifact_id} ID provided")
         model = ARTIFACT_MODELS[artifact_id]
-        directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
-        return self._read_doc(self._resolve_artifact_selector(artifact_id, directory, doc_id), model)
+        directories = [self.desk_root / ARTIFACT_PATHS[artifact_id]]
+        if artifact_id == "artifact.pill":
+            directories.append(self.desk_root / "drawer" / "pills")
+        return self._read_doc(self._resolve_artifact_selector_multi(artifact_id, directories, doc_id), model)
 
     def validate_atoms(self, selector: str | None = None) -> list[dict[str, Any]]:
         self.ensure_workspace()
@@ -1735,7 +1738,8 @@ class DeskopsOperations:
             raise ValueError(
                 "Atom create from pill only supports questions that map directly to pill sections: what, why, how, how_not, when, where."
             )
-        pill_path = self._resolve_artifact_selector("artifact.pill", self.desk_root / "contexts", pill_selector)
+        directories = [self.desk_root / "contexts", self.desk_root / "drawer" / "pills"]
+        pill_path = self._resolve_artifact_selector_multi("artifact.pill", directories, pill_selector)
         pill_payload = self._read_doc(pill_path, PillDoc)
         answer = str(pill_payload.get(source_field) or "").strip()
         if not answer:
@@ -2572,6 +2576,29 @@ class DeskopsOperations:
             raise FileNotFoundError(f"No file found for id '{doc_id}' in {directory}")
         return matches[0]
 
+    def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:
+        pattern = self._artifact_glob_pattern(artifact_id)
+        candidates = []
+        for d in directories:
+            if d.exists():
+                candidates.extend(sorted(d.rglob(pattern)))
+        
+        exact = [path for path in candidates if selector in {path.name, path.stem}]
+        if exact:
+            if len(exact) == 1:
+                return exact[0]
+            relative = ", ".join(str(p.relative_to(self.desk_root)) for p in exact)
+            raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {relative}")
+
+        prefix = [path for path in candidates if path.name.startswith(selector) or path.stem.startswith(selector)]
+        if not prefix:
+            dirs_str = ", ".join(str(d.relative_to(self.desk_root)) for d in directories)
+            raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}' in {dirs_str}")
+        if len(prefix) == 1:
+            return prefix[0]
+        relative = ", ".join(str(p.relative_to(self.desk_root)) for p in prefix)
+        raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {relative}")
+
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
         pattern = self._artifact_glob_pattern(artifact_id)
         candidates = sorted(directory.rglob(pattern))
@@ -2674,13 +2701,26 @@ class DeskopsOperations:
             raise ValueError(f"Unsupported edit subject: {subject}")
         artifact_id = artifact_subjects[subject]
         model = ARTIFACT_MODELS[artifact_id]
-        directory = self.desk_root / ARTIFACT_PATHS[artifact_id]
-        path = self._resolve_artifact_selector(artifact_id, directory, selector)
+        directories = [self.desk_root / ARTIFACT_PATHS[artifact_id]]
+        if artifact_id == "artifact.pill":
+            directories.append(self.desk_root / "drawer" / "pills")
+        path = self._resolve_artifact_selector_multi(artifact_id, directories, selector)
         return model, path, subject
 
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
+        rendered = render_model_markdown(model, payload) + "\n"
+        if path.exists():
+            lost = unread_section_fields(model, path.read_text(encoding="utf-8"), rendered)
+            if lost:
+                raise ValueError(
+                    f"Refusing to rewrite {path.name}: its model cannot read "
+                    f"{', '.join(lost)} from the current file, so writing this payload "
+                    "would erase that content. The document was not produced by the "
+                    "model's own renderer; rewrite it through sldb (or fix the model's "
+                    "template) before editing it here."
+                )
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(render_model_markdown(model, payload) + "\n", encoding="utf-8")
+        path.write_text(rendered, encoding="utf-8")
 
     def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         if path.exists():

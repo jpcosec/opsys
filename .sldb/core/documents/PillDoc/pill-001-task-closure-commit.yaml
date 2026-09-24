@@ -1,7 +1,7 @@
 name: pill-001-task-closure-commit
 path: desk/contexts/pill-001-task-closure-commit.md
-hash_c: 97042d84348863d5d5a544c4d63c05cd1bf7493af2501e821fac6c0322fa90e0
-hash_d: a7b8222ad6e9816f42124e8789f85bf80c7c802d51bc7fb634343d5452d78524
+hash_c: 67d4efe0d44239b6ea5ddaf306b560bb14b948c212edc95a36e58295fe789c04
+hash_d: 9d67d8fa9e1b395c499e8aa8d7d63611cdf04143c43930dda6652e6c6ca7b22a
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

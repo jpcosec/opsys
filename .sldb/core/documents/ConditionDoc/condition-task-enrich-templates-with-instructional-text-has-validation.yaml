@@ -1,7 +1,7 @@
 name: condition-task-enrich-templates-with-instructional-text-has-validation
 path: desk/primitives/conditions/condition-task-enrich-templates-with-instructional-text-has-validation.md
-hash_c: 1caf7c946bcc04f2b5f1a862fc48eef2aa6b7049676a7b863163fd2177b9966f
-hash_d: bdc52a086a3c7e159cbe5e29f051eac93f0796811033c1c6596ef6846ddfb9bf
+hash_c: 4c74dfb9ba7ac7b17d0a26e389563c2db3855ba0d9357abd0e790756bbd6b8b1
+hash_d: ac7fb475b5806f60a85b70608091f74b4eb0dcc73fe0910e5c00cd0b207446cd
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -1,7 +1,7 @@
 name: pill-materialization-contracts-declare-source-intent-and-target
 path: desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md
-hash_c: ff3db859f4ec5ef159d47c52f288b553bd9f29f6c286d2e2f649ed75c52b500a
-hash_d: 03bb45fa4f7009c2d1ed1743122fefe9da41ebcedc634d7c22d3b691035a80a9
+hash_c: ecacf04260386460011d78a97b521cecc66e461de3f2cea614baa2c1bbbcc470
+hash_d: 7990d08fc5a7364e4169f660ce23b532136b2180ac44d17254d82eb94ee3b54b
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

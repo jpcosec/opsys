@@ -1,7 +1,7 @@
 name: pill-012-create-operations-transactional-rollback
 path: desk/contexts/pill-012-create-operations-transactional-rollback.md
-hash_c: 121f7135fad0a0cd71d3bd99b2cc3114e4b321d8a704545b5ad545a8032d8298
-hash_d: a8ab01b3070b118d8a5cb4a6c5de13cdfdf0a57ffb203fb9a68b3963f195f844
+hash_c: 62e7179ece75cc5b8897fd59186a43576b1ec376dd9dfda48ef4d85066cb67ab
+hash_d: 3df7b0e0d574b5ebede15fce26c3e54396716d808144eec0347a7f28ae097945
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

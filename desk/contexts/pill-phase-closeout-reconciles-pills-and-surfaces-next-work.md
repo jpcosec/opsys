@@ -1,5 +1,7 @@
 ---
+# pill-xxx
 id: pill-phase-closeout-reconciles-pills-and-surfaces-next-work
+# e.g., language:python, library:pydantic
 tags:
 - system:deskops
 - workspace:desk
@@ -13,24 +15,36 @@ tags:
 
 ## What
 
+_Define the context or guardrail this pill carries._
+
 After all tasks in a dependency layer close, run one explicit phase closeout pass that checks integration behavior, reconciles the pill set, and captures newly discovered work before the next phase begins.
 
 ## Why
+
+_Explain why this context matters for safe execution._
 
 Task closeout proves each deliverable in isolation, but it does not by itself clean up overlapping pills, catch interaction regressions, or prepare the next execution layer. Without a phase pass, stale context and cross-task breakage accumulate between waves.
 
 ## When
 
+_Describe when an agent should apply this pill._
+
 Apply this pill whenever a board is executed through dependency layers and a full phase of non-overlapping tasks has finished task-level closeout.
 
 ## Where
+
+_Name the files, surfaces, or scope this pill applies to._
 
 Applies to `desk/rituals/phase.md`, `desk/tasks/Board.md`, board-level execution planning, pill audits, and end-of-phase validation.
 
 ## How
 
+_Describe the correct way to apply this guidance._
+
 Treat phase closeout as mandatory: run integration or end-to-end validation, fix regressions, classify pills as stale, redundant, durable, or still needed, promote durable knowledge into atoms and materializations, and draft or bind the pills needed for the next ready phase.
 
 ## How Not
+
+_Describe the shortcut or failure mode to avoid._
 
 Do not treat a stack of closed task commits as sufficient to start the next phase. Do not carry stale or overlapping pills forward just because each individual task passed its own tests.

@@ -1,7 +1,7 @@
 name: pill-011-self-reflection-noise-control
 path: desk/contexts/pill-011-self-reflection-noise-control.md
-hash_c: 0061bc0fb7a7c07a81111eeb61ef79c0aa7b74ac62f8997be8261a20410d4dc4
-hash_d: 5ad98588b81bdd9e8de85d7408d504cbb5f854aa7b07f447c7aa7890fdb286ef
+hash_c: cb69ce42ed94658120e6556682606dac2146670056132ae855855d1151cc03b5
+hash_d: d2e4126dd2e85e2589bf363ddd30bbb6b5c8bcaf8e995c6e730c1cfa823d9f78
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

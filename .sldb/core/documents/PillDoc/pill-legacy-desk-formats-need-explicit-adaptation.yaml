@@ -1,7 +1,7 @@
 name: pill-legacy-desk-formats-need-explicit-adaptation
 path: desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
-hash_c: 89d8eb0666ad922042b631fc6fa01d68cd4c11b3ab794d1e2dd56d1280ce373f
-hash_d: f65f84668762740f139ba5b3fd2b74099e6dffcfaa25bbe1a50ef9f4444cacc7
+hash_c: b2deb641a4dd628d932ecffaabc95777f33939c59f261bcacdd77dd96ce2d8fd
+hash_d: ead4bd7bf8cd64437064e130034b52838dc86ff29afdb678bff6a88cf0e9382e
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

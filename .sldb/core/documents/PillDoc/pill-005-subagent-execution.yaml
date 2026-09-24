@@ -1,7 +1,7 @@
 name: pill-005-subagent-execution
 path: desk/contexts/pill-005-subagent-execution.md
-hash_c: 514536f72da99189d580b64bc54d6ac443ebf0255c2aa0b196c938691a94263d
-hash_d: 018e726ecd2d73efd4ce357c2171fbcfb04f2ed93d95e900aef190df512a2702
+hash_c: 2e0ea89eababbd5cdc7aca4f0bf515b3e7b9f20c3cfcefcbf9b974449bc9bea7
+hash_d: 31ebb6f01f5d038b81e358e63f19cc2621e4d64227bcf1649ba39d90918c8774
 semantic_tags:
 - pill-type:pattern
 - representation.markdown

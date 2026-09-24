@@ -1,7 +1,7 @@
 name: condition-task-enrich-templates-with-instructional-text-has-closeout-evidence
 path: desk/primitives/conditions/condition-task-enrich-templates-with-instructional-text-has-closeout-evidence.md
-hash_c: 9a9cb01f1c68649a72b0ac8c7f61e4882594268a6931ba3f4497db45a3c66357
-hash_d: 7bddf4235b7ccaf729a906ce45fcfb53b3242ca555c3216ad83cc95a3182cdca
+hash_c: f041e16ef7a89458743dbf7d9bee92e75a0706b941ac01b38761d94b34baeca9
+hash_d: 9714ce7c118134674af23dbfad229328eece84b83336af8ddb11753349f5294e
 semantic_tags:
 - representation.markdown
 - source.document.markdown

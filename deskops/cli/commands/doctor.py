@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 
+from deskops.doc_readability import is_unreadable_by_model
 from deskops.workspace import desk_doc_unmodeled_reason
 from deskops.workspace import inspect_desk
 from deskops.workspace import modeled_desk_markdown_docs
@@ -73,6 +74,9 @@ class DoctorCLI:
             unmodeled_mds = unmodeled_desk_markdown_docs(root, desk_dir)
             tracked_mds = set(inspection.tracked_surface_docs)
 
+            tracked_mds: set[Path] = set()
+            tracked_model_docs: list[tuple[str | None, Path]] = []
+
             result = subprocess.run(
                 [sys.executable, "-m", "sldb", "stores", "check", "--store", str(root / ".sldb"), "--format", "json"],
                 capture_output=True,
@@ -92,6 +96,9 @@ class DoctorCLI:
                             tracked_path = (root / doc_path).resolve()
                             tracked_mds.add(tracked_path)
 
+                            if doc_path.startswith("desk/"):
+                                tracked_model_docs.append((model.get("name"), tracked_path))
+
                             if doc.get("note") not in ("ok", "benign_mutation") and doc_path.startswith("desk/"):
                                 invalid_docs.append(f"{doc_path} ({doc.get('note')})")
                 except json.JSONDecodeError:
@@ -101,6 +108,17 @@ class DoctorCLI:
                 findings.append(f"SLDB store check crashed (likely malformed documents): {result.stderr.strip().split(chr(10))[0]}")
 
             untracked = [p for p in modeled_mds if p not in tracked_mds]
+
+            unreadable_docs: list[str] = []
+            for model_name, doc_path in tracked_model_docs:
+                model = _resolve_deskops_model(model_name)
+                if model is None or not doc_path.exists():
+                    continue
+                fields = is_unreadable_by_model(model, doc_path.read_text(encoding="utf-8"))
+                if fields:
+                    unreadable_docs.append(
+                        f"{doc_path.relative_to(root)} ({model_name}: {', '.join(fields)})"
+                    )
 
             unmodeled_reasons = sorted(
                 {
@@ -125,6 +143,19 @@ class DoctorCLI:
             findings.append(finding)
             if repair:
                 findings.append("Manual repair required to track documents (use sldb docs track).")
+
+        if unreadable_docs:
+            findings.append(
+                "Documents whose model cannot read their own content: "
+                + ", ".join(unreadable_docs)
+                + ". The document states these fields, but extracting them yields nothing, "
+                "so any edit through the model renders them back empty and erases the content."
+            )
+            if repair:
+                findings.append(
+                    "Manual repair required: rebuild each document from its text through sldb so the "
+                    "renderer's fixed text is present, then retrack it."
+                )
 
         if invalid_docs:
             findings.append(f"Invalid desk documents: {', '.join(invalid_docs)}")
@@ -152,3 +183,13 @@ class DoctorCLI:
             return 1
 
         return 0
+
+
+def _resolve_deskops_model(name: str | None) -> type | None:
+    """The deskops model registered under `name`, or None when it is not ours."""
+    if not name:
+        return None
+    import deskops.models as models
+
+    candidate = getattr(models, name, None)
+    return candidate if isinstance(candidate, type) else None

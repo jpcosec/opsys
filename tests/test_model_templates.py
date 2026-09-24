@@ -314,3 +314,32 @@ This note predates target and ack metadata.
     assert note.target_project is None
     assert note.acknowledged_by is None
     assert note.acknowledged_at is None
+
+def test_pilldoc_lifecycle_roundtrip():
+    doc = PillDoc(
+        id="pill-abc",
+        title="Test Pill",
+        what="W",
+        why="Y",
+        when="W",
+        where="W",
+        how="H",
+        how_not="HN",
+        tags=["system:test"],
+        status="active",
+        summary="sum",
+        routine="rout",
+        current_node="cur",
+        history=["a", "b"]
+    )
+    from sldb.runtime.validation import render_model_markdown
+    from sldb.runtime.validation import Validator
+    rendered = render_model_markdown(PillDoc, doc.render_payload())
+    parsed = Validator(PillDoc).extract(rendered)
+    assert parsed["id"] == "pill-abc"
+    assert parsed["status"] == "active"
+    assert parsed["summary"] == "sum"
+    assert parsed["routine"] == "rout"
+    assert parsed["current_node"] == "cur"
+    assert parsed["history"] == ["a", "b"]
+    assert parsed["tags"] == ["system:test"]

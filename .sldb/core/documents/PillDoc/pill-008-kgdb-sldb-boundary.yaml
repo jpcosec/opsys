@@ -1,7 +1,7 @@
 name: pill-008-kgdb-sldb-boundary
 path: desk/contexts/pill-008-kgdb-sldb-boundary.md
-hash_c: 7258a16ace607035bfbac1c6456427996123ae3c6c17a7133978d1b83a41eaa2
-hash_d: 80f4983c000b1be8f147b00b06bc2e6505c3bb1eeb07f099ffd10941e5ae5746
+hash_c: bb1abf450d35dcce37aec52e8942a04f67cc14b75571a5d6eaa8284cdddb9ba0
+hash_d: 753b11483001e03c5b1938e36f7d77f25bbbe1a271966a97500321cf2ef33114
 semantic_tags:
 - pill-type:decision
 - representation.markdown

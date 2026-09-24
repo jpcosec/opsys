@@ -1,7 +1,7 @@
 name: step-document-the-cli
 path: desk/steps/step-document-the-cli.md
-hash_c: e9b981e7e4dda1c586566a99af3e922384389e961e616c0a95cd4a173229bd89
-hash_d: 0ea8bf020c3c1c03196a879f5fde52f005c08757883579d84ed11fb9d6948ee3
+hash_c: 65e459ed01dd5a56bf0bc30960a061c96297c7038504707d448ba66502f8384b
+hash_d: 58d1006ce15b8e4a0b597ef78c18b00d1b88ffd1d3cc9f212165c684463cbffc
 semantic_tags:
 - artifact:step
 - representation.markdown

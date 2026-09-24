@@ -131,6 +131,7 @@ def test_desk_install_scaffolds_expected_surface(tmp_path: Path, capsys) -> None
     expected_paths = [
         tmp_path / "desk" / "tasks" / "Board.md",
         tmp_path / "desk" / "contexts" / "pills.md",
+        tmp_path / "desk" / "rituals" / "phase.md",
         tmp_path / "desk" / "rituals" / "execution.md",
         tmp_path / "desk" / "rituals" / "testing.md",
         tmp_path / "desk" / "rituals" / "closeout.md",
@@ -144,8 +145,14 @@ def test_desk_install_scaffolds_expected_surface(tmp_path: Path, capsys) -> None
         assert path.exists()
 
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
-    assert "rituals:\n- desk/rituals/execution.md" in board_text
+    assert "desk/rituals/execution.md" in board_text
     assert "desk/contexts/pills.md" in board_text
+    # The board is rendered by its model, so the model can read it back and an
+    # update cannot blank the fields it declares.
+    from deskops.doc_readability import is_unreadable_by_model
+    from deskops.models import BoardDoc
+
+    assert is_unreadable_by_model(BoardDoc, board_text) == []
 
 
 def test_desk_install_is_idempotent(tmp_path: Path, capsys) -> None:
@@ -2464,3 +2471,35 @@ def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
     assert main(["doctor", "--root", str(root)]) == 1
     out, err = capsys.readouterr()
     assert "SLDB store check crashed (likely malformed documents)" in out
+
+def test_edit_pill_lifecycle_slots_including_drawer(tmp_path: Path, capsys) -> None:
+    from sldb.runtime.validation import render_model_markdown
+    from deskops.models.pill import PillDoc
+    
+    # 1. Create a pill in desk/contexts
+    ctx_path = tmp_path / "desk" / "contexts" / "pill-ctx-test.md"
+    ctx_path.parent.mkdir(parents=True, exist_ok=True)
+    doc_ctx = PillDoc(id="pill-ctx-test", title="Context Pill", what="A", why="A", when="A", where="A", how="A", how_not="A", tags=[])
+    ctx_path.write_text(render_model_markdown(PillDoc, doc_ctx.render_payload()))
+    
+    # 2. Create a pill in desk/drawer/pills
+    drw_path = tmp_path / "desk" / "drawer" / "pills" / "pill-drawer-test.md"
+    drw_path.parent.mkdir(parents=True, exist_ok=True)
+    doc_drw = PillDoc(id="pill-drawer-test", title="Drawer Pill", what="B", why="B", when="B", where="B", how="B", how_not="B", tags=[])
+    drw_path.write_text(render_model_markdown(PillDoc, doc_drw.render_payload()))
+    
+    from deskops.cli.main import main
+    
+    # Edit the context pill's status
+    assert main(["edit", "pill", "pill-ctx-test", "status", "active", "--root", str(tmp_path)]) == 0
+    
+    # Edit the drawer pill's summary
+    assert main(["edit", "pill", "pill-drawer-test", "summary", "A short summary", "--root", str(tmp_path)]) == 0
+    
+    # Verify persistence
+    from sldb.runtime.validation import Validator
+    parsed_ctx = Validator(PillDoc).extract(ctx_path.read_text())
+    assert parsed_ctx["status"] == "active"
+    
+    parsed_drw = Validator(PillDoc).extract(drw_path.read_text())
+    assert parsed_drw["summary"] == "A short summary"

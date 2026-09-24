@@ -1,7 +1,7 @@
 name: pill-list-surfaces-must-expose-malformed-docs
 path: desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
-hash_c: 5ed62280aa532e8de349ded8e886a8c8c34e89ac3ed2d1770df5358e7ce08c6c
-hash_d: 8446bac9fc147d58bfd9b88ae8d5f508d1684f7604e66284a062eea72f251470
+hash_c: dd93729e55461858b1cdff6029a13d5ab1eca3925cc546d0f5ac65cb0e81146d
+hash_d: 1899e62f3971199cb035b504539c14d78d061b3bb065364e4b999753e89ad567
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

@@ -298,30 +298,33 @@ def _write_or_patch_config(root: Path) -> str | None:
 
 
 def _board_template(name: str) -> str:
-    return f"""---
-id: board-001
-scope: desk
-tasks: []
-pills:
-- desk/contexts/pills.md
-rituals:
-- desk/rituals/execution.md
-- desk/rituals/testing.md
-- desk/rituals/closeout.md
-tags:
-- workspace:desk
----
+    """The scaffolded board, rendered by the model so it stays readable.
 
-# {name} Board
+    A hand-written board that lacks the model's fixed text extracts as empty for
+    purpose and notes, so the first update through the model would blank them.
+    """
+    from deskops.models import BoardDoc
+    from sldb.runtime.validation import render_model_markdown
 
-## Purpose
-
-Route the active execution set for {name}.
-
-## Notes
-
-Bootstrap complete. Add active task docs under `desk/tasks/` and route them here.
-"""
+    return render_model_markdown(
+        BoardDoc,
+        {
+            "id": "board-001",
+            "title": f"{name} Board",
+            "scope": "desk",
+            "purpose": f"Route the active execution set for {name}.",
+            "tasks": [],
+            "pills": ["desk/contexts/pills.md"],
+            "rituals": [
+                "desk/rituals/phase.md",
+                "desk/rituals/execution.md",
+                "desk/rituals/testing.md",
+                "desk/rituals/closeout.md",
+            ],
+            "notes": "Bootstrap complete. Add active task docs under `desk/tasks/` and route them here.",
+            "tags": ["workspace:desk"],
+        },
+    ) + "\n"
 
 
 def _pills_template(name: str) -> str:
