@@ -1,0 +1,13 @@
+name: atom-big-documents-need-explicit-modeling-strategy
+path: desk/atoms/knowledge-model/atom-big-documents-need-explicit-modeling-strategy.md
+hash_c: 10eae54f217dc3592de9e84f9f2f6d478f39735c2e2905adedec7cbc219caea5
+hash_d: 6a8640dbc8013187bfe3c9db8e2e0fdd62227e692211228d4159643d0e582246
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:sldb
+- topic:docs
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms

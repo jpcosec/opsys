@@ -1,0 +1,11 @@
+name: routine-task-add-desk-health-and-recovery-surface-deskops-slice
+path: desk/routines/routine-task-add-desk-health-and-recovery-surface-deskops-slice.md
+hash_c: 7d5f6f86a6848faebc74cc8b907344cd055218eb5c52bdfb3eb9470ffb7c6801
+hash_d: 65be73925c43d5cbf32d10f375bdf7ecf42dd1b67f6070a2819f15d10dafba85
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

@@ -1,8 +1,10 @@
 name: atom-subagent-runs-are-linked-to-session-logs-by-hash
 path: desk/atoms/atom-subagent-runs-are-linked-to-session-logs-by-hash.md
 hash_c: deacd5da7730b5a484ff9526fa024f035aec6f906fa02dd49dc6bd269ce61033
-hash_d: 15173c27270d555fe3f123921363ba12abe5052ff322e0049c302161383b9f38
+hash_d: e3c7a3cf7aa4c386e284d6ecfe71df382610f691036609f9ba73b7c561a6d64d
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:evidence
 - topic:provenance

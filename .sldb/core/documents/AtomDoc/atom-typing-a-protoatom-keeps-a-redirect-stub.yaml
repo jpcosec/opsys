@@ -1,8 +1,10 @@
 name: atom-typing-a-protoatom-keeps-a-redirect-stub
 path: desk/atoms/atom-typing-a-protoatom-keeps-a-redirect-stub.md
 hash_c: a2df83eeed1594980e363987c6edeec9adbba557dd964e17cd934e3d84abd4ab
-hash_d: 2339fd6eeba9b83ae1d47dcc142f2cc9e907db87f92011dc6958bf08b06780ce
+hash_d: 3bf489f4eb516e08bb353132f0b8a6d42b73f0887b7b857229f2511e805e14df
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - type.knowledge.atom

@@ -1,8 +1,10 @@
 name: atom-create-operations-should-rollback-on-failure
 path: desk/atoms/workflow-model/atom-create-operations-should-rollback-on-failure.md
 hash_c: c8ea28114220299642ba74fb437c951fd75d13cf8cb64bf25dd3c5913579d2cf
-hash_d: 4e04aab7b5b54abccddabe4f957051523309f015a64131c1d391a4d90baeac66
+hash_d: 5dc200bae96824b154e1dd4a397eae686b5a48f7b8ce22337e98c4458ee5d0a0
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:data-integrity
 - topic:operations

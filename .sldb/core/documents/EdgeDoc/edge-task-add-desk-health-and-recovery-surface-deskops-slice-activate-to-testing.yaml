@@ -1,0 +1,10 @@
+name: edge-task-add-desk-health-and-recovery-surface-deskops-slice-activate-to-testing
+path: desk/primitives/edges/edge-task-add-desk-health-and-recovery-surface-deskops-slice-activate-to-testing.md
+hash_c: a190255d9d8b1313cea484b333735fc8a92addcb03c06520784485c2b382b992
+hash_d: 8f007185d20613f9ae20b9099368537005a872f477975e52d2ac9937b81108fb
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

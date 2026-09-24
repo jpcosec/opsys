@@ -1,0 +1,14 @@
+name: pill-drift-checks-are-review-surfaces-not-mutators
+path: desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
+hash_c: f6ee0f0edcbf691d055a0e32e59a497d08781805310415ad644bf871202289bb
+hash_d: 74c57d83b46656f784b675cfe2091ea153acd612f9ffa5c0748d9423ab215c5a
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:drift
+- topic:review
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

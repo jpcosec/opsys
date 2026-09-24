@@ -1,0 +1,14 @@
+name: pill-project-local-config-carries-version-and-sandbox-policy
+path: desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+hash_c: 556072566f4e5ae941717d0a509f2e8e6e8d0fc211ea487868d09ee8af897b0a
+hash_d: e2781cc9c1ca88a6b67d3a6d839ce42133355cd241f3522147101051cf8685d9
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:config
+- topic:versioning
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

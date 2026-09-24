@@ -3,5 +3,7 @@ path: desk/roles/deskops-executor.md
 hash_c: 21b0d20fd88fdb55cd134ff1566a9f393bbd77697fd76f41b72605841d0628bb
 hash_d: 6cc55f38d868ca0992216e40ddaf32c0025ae200b2fdb58423140f80e52ae924
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - type.workflow.role
 - workspace.desk.roles

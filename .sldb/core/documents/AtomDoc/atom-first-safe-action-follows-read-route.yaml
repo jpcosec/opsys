@@ -1,8 +1,10 @@
 name: atom-first-safe-action-follows-read-route
 path: desk/atoms/workflow-model/atom-first-safe-action-follows-read-route.md
 hash_c: 48984842d6e77c51bc7fb74f3ff38721cdd5d95b6107cbb18288bb97f28da036
-hash_d: e611b9fdf6e3502f375c0c1892e513253846506eb2fc7a4cd37cf6c076174d77
+hash_d: 4d08d1ddc18e95d44725ee8e910a0d67c595873df5a2c88bb6e54a0b2ebe4422
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:onboarding
 - topic:workflow-model

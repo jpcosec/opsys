@@ -1,0 +1,13 @@
+name: atom-promotion-needs-explicit-criteria
+path: desk/atoms/knowledge-model/atom-promotion-needs-explicit-criteria.md
+hash_c: ac0a44385903ed9361af5b8658aecc1cf839647b8c054ddfee520b002b66251f
+hash_d: 42260bd491e5a33aedc8e560ab1d8ebfd489651ac6da91cc719ce3ed0371db71
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:drawer
+- topic:inbox
+- topic:knowledge-management
+- type.knowledge.atom
+- workspace.desk.atoms

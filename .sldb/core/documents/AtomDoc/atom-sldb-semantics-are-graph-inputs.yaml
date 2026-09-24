@@ -1,0 +1,13 @@
+name: atom-sldb-semantics-are-graph-inputs
+path: desk/atoms/knowledge-model/atom-sldb-semantics-are-graph-inputs.md
+hash_c: b162d752922017d64ac65b4ad22cb430973869fefb19dc1785388a1f3b2b5998
+hash_d: 1afdfe39abd639de5e7086049634e0b269ff3931a3aa1b31c9c4de25520cf694
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- system:sldb
+- topic:knowledge-graph
+- type.knowledge.atom
+- workspace.desk.atoms

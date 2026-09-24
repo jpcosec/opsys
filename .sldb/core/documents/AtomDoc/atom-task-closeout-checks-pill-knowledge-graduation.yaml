@@ -1,0 +1,14 @@
+name: atom-task-closeout-checks-pill-knowledge-graduation
+path: desk/atoms/workflow-model/atom-task-closeout-checks-pill-knowledge-graduation.md
+hash_c: 1557b4922fa1434cbb3f49beaf134217397d890754bee196b722a81d4b8f017c
+hash_d: dbe0d2d5596143b3692e3627b28a8948df359f282619a342b189e8e4530b3e9d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:closeout
+- topic:pills
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,11 @@
+name: condition-task-enrich-templates-with-instructional-text-ready-for-closeout
+path: desk/primitives/conditions/condition-task-enrich-templates-with-instructional-text-ready-for-closeout.md
+hash_c: c2d792239288e828f838b1bce6b528bee0bf3da4f85c59aa6e8955423609e6df
+hash_d: 28899320c32695c70e27177dcebb79e19b03a2fd6dc73108d534a091cef41545
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:templates
+- type.workflow.condition
+- workspace.desk.primitives

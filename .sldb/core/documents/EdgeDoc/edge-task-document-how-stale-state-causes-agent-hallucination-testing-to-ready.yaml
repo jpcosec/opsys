@@ -1,0 +1,10 @@
+name: edge-task-document-how-stale-state-causes-agent-hallucination-testing-to-ready
+path: desk/primitives/edges/edge-task-document-how-stale-state-causes-agent-hallucination-testing-to-ready.md
+hash_c: b2e388df053414694246bd1513bff736912723d55d96f28cf1781d08d3c02a1c
+hash_d: e90af39d0bdd26de1e7b603dc681a9920e8019d9bb5246b8674f3b2eb9f4c9cb
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

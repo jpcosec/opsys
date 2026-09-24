@@ -1,0 +1,10 @@
+name: condition-task-document-how-stale-state-causes-agent-hallucination-ready-for-closeout
+path: desk/primitives/conditions/condition-task-document-how-stale-state-causes-agent-hallucination-ready-for-closeout.md
+hash_c: b4847800dc114e6f70204b60f7097658921650888e8109caa5e15a3eb37f0c9e
+hash_d: 5ed90c96def98c445226e8bd2d4882ff544406e54e27802dadeb9baa8850ed5f
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

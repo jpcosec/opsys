@@ -1,0 +1,13 @@
+name: atom-used-source-artifacts-are-deleted
+path: desk/atoms/workflow-model/atom-used-source-artifacts-are-deleted.md
+hash_c: 09fa8f7304b35675f769fc6d63e0be33f992dcac8a0260329c1f4cd296fc166e
+hash_d: b824e924514db996c8a94031edf9225ab78375dc7d20dd63b6bd706ab6b8da31
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cleanup
+- topic:drawer
+- topic:inbox
+- type.knowledge.atom
+- workspace.desk.atoms

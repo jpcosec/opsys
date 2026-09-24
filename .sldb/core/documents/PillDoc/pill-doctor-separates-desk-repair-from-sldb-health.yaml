@@ -1,0 +1,14 @@
+name: pill-doctor-separates-desk-repair-from-sldb-health
+path: desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+hash_c: c03abd733308a9d552e10316f989289bb870dd760033a682f0f4b2ed7d843ccc
+hash_d: 75f1d36d41a3033e3bcf59dfca4201ffa7f1db96e149d36fc9c2b558b29289ee
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boundary
+- topic:health
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

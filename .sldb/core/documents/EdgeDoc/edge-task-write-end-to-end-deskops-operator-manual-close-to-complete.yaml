@@ -1,0 +1,10 @@
+name: edge-task-write-end-to-end-deskops-operator-manual-close-to-complete
+path: desk/primitives/edges/edge-task-write-end-to-end-deskops-operator-manual-close-to-complete.md
+hash_c: f29db2d762f6ed622d0585f4d22137a4a0e0f246132ec87cd65623f2c7ce1cca
+hash_d: 45db824732fe518b0cd4c70db89eeaa4e538f41c1b3bb2fc4f7613496ef43e7d
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

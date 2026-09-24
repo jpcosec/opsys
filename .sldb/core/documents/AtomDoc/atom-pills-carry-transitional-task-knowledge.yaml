@@ -1,0 +1,14 @@
+name: atom-pills-carry-transitional-task-knowledge
+path: desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md
+hash_c: 8a05ad5bc57d36229d603e4493fd53dfeaf2cae78946d72346b38114495c2521
+hash_d: f8f35136a083e2cf96259036bc171b29340f0b8c78cb74f36d04325456bdae6a
+semantic_tags:
+- pattern:task-to-atom-graduation
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:knowledge-flow
+- topic:pills
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

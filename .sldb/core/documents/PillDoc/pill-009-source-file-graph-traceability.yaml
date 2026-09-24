@@ -1,0 +1,14 @@
+name: pill-009-source-file-graph-traceability
+path: desk/contexts/pill-009-source-file-graph-traceability.md
+hash_c: ac0dd0999e71a30dd48b562dd8b7028be8a40520508574e2c92b3321350dac01
+hash_d: b2b560fd83c6147ab639c4e823200d2ae04c197624e59e3fec46f0e06d2f0f0c
+semantic_tags:
+- pill-type:model
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- topic:source-code
+- topic:traceability
+- type.workflow.pill
+- workspace.desk

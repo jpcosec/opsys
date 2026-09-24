@@ -1,0 +1,10 @@
+name: edge-task-make-list-behavior-data-integrity-safe-close-to-complete
+path: desk/primitives/edges/edge-task-make-list-behavior-data-integrity-safe-close-to-complete.md
+hash_c: 4e222fc63df29d7a98b257d44cd35aba0d5f65845e6b91fa044f7fb017d81aff
+hash_d: ff105030aa2ef58ad5778f8f92559f816ac293fe6736083024a64df93c015c2c
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

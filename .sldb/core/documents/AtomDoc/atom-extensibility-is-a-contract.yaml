@@ -1,0 +1,12 @@
+name: atom-extensibility-is-a-contract
+path: desk/atoms/knowledge-model/atom-extensibility-is-a-contract.md
+hash_c: 02a64eef68f616e291068640b336ac974a575f0e60e0297474ceac58071aaf66
+hash_d: cf59d4d9b91acb9f9bf8845c3b2f4c9776eebafc659b36646a133b91cf241f81
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:contracts
+- topic:extensibility
+- type.knowledge.atom
+- workspace.desk.atoms

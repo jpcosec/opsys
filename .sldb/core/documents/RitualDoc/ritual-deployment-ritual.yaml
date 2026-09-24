@@ -1,0 +1,11 @@
+name: ritual-deployment-ritual
+path: desk/rituals/ritual-deployment-ritual.md
+hash_c: fc3e4df4a8c10d6ba67d52db4c0e92d6ba0ac93344ad584a211c07ace06d963c
+hash_d: 0e6695fadbfe2c1b6536e9a277286e9eeeed8a36d7a1385a30f070ed04326a17
+semantic_tags:
+- artifact:ritual
+- representation.markdown
+- source.document.markdown
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk

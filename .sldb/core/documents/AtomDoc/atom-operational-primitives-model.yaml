@@ -1,9 +1,11 @@
 name: atom-operational-primitives-model
 path: desk/atoms/workflow-model/atom-operational-primitives-model.md
 hash_c: dede0f2298d0998e1c3408472a728290257119df611c31fdfbd226613f6bee5d
-hash_d: 305b9243a2ccbf1a0b094bbcbd544dcb52e7d1284db3775c55433892d9cc6a8d
+hash_d: 9f8624e16aa03e34f69015d04ab46c609659eafb5420db2cfe63a0a6152b12ab
 semantic_tags:
 - layer:runtime
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:routines
 - type.knowledge.atom

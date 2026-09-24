@@ -1,0 +1,10 @@
+name: condition-task-make-list-behavior-data-integrity-safe-has-implementation-path
+path: desk/primitives/conditions/condition-task-make-list-behavior-data-integrity-safe-has-implementation-path.md
+hash_c: e8bb84d2562be3abf6aa3a8d5102f7bd99d08a70af61e2e2cedef61acb3451ca
+hash_d: 52bafdf7995b8a994ef03eb3b5faaf50e54f1caac0a23cab01f8cd551af16150
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

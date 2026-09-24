@@ -1,0 +1,10 @@
+name: checklist-task-write-end-to-end-deskops-operator-manual-testing-ready
+path: desk/primitives/checklists/checklist-task-write-end-to-end-deskops-operator-manual-testing-ready.md
+hash_c: 084ff3b5a2419046e20dcd5f1d26b0a1abb5c8cca4f730ed6308667411499d04
+hash_d: ab153be31c5b6c3b0608d41575db9b88829b7fc275e8bb59b55c2a6f0d840a40
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

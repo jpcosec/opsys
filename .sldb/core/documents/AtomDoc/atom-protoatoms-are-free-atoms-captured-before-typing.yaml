@@ -1,8 +1,10 @@
 name: atom-protoatoms-are-free-atoms-captured-before-typing
 path: desk/atoms/atom-protoatoms-are-free-atoms-captured-before-typing.md
 hash_c: 9152d4f7638181d535162c8cc8a357114113bee5166b83b487dfe149ce3e7b7b
-hash_d: d8db4ee2457d06063a0a8312d0e445d30df08c1e2962ab2db8d9c2e6bbae1226
+hash_d: ce9e3eeb294ec3fcf1e861828c066fe6272da4ff8fd1802d91204604ceb5a1b5
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - type.knowledge.atom

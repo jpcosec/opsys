@@ -1,8 +1,10 @@
 name: atom-atoms-are-stable-documentation-core
 path: desk/atoms/workflow-model/atom-atoms-are-stable-documentation-core.md
 hash_c: 569968c22071cea53395abc5ba698119afdef07c086b0a4aab7b592b81c32ded
-hash_d: 3e821af85764d61a301fed9677a1ff175534e16ae6a64aa64386d525b47d24be
+hash_d: ac3c4518d73d565fec46ecde5e89962760646ec4d0370919d672abe689e50863
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - topic:documentation

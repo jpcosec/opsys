@@ -1,0 +1,10 @@
+name: condition-task-add-desk-health-and-recovery-surface-deskops-slice-has-validation
+path: desk/primitives/conditions/condition-task-add-desk-health-and-recovery-surface-deskops-slice-has-validation.md
+hash_c: 3f6b6353e0bb788633693e66218d9da2ef4afc00ae4a5e5d9ab1aced70599cf8
+hash_d: a319e55913ec576c9fc74d22e293e8952245aa79c549d0f066e663a6a527301b
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

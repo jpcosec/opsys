@@ -1,8 +1,10 @@
 name: atom-documents-point-to-atoms
 path: desk/atoms/workflow-model/atom-documents-point-to-atoms.md
 hash_c: e734816f3897151b391893d6021545aa89cacf9e334d1dc0af7a67e170a6c3b7
-hash_d: 47516fe5798d90b0ec81b603eaa72f0946078b15fd1f224263c6b1e03f935d85
+hash_d: e7c14948be0d53b3264f369e533ba575fa69e16787751c3aaac21ce36a0d9330
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - system:sldb
 - topic:atoms

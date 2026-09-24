@@ -1,8 +1,10 @@
 name: atom-sldb-is-read-write-edit-surface
 path: desk/atoms/workflow-model/atom-sldb-is-read-write-edit-surface.md
 hash_c: d1705e8a8d53e81452d51d340b64867bc1017261a4d55c241034af107bb3fb3b
-hash_d: caf8fcd2e6d5004da54efd0bc76b5aff4d5907681c35868db6a1554ef1bb1ebd
+hash_d: 858eda4a312f8b1cbc90d3626703810edf4958c3c445790662468051a6bad541
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:sldb
 - topic:editing
 - topic:structured-documents

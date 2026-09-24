@@ -1,8 +1,10 @@
 name: atom-ease-of-use-requires-progressive-disclosure
 path: desk/atoms/workflow-model/atom-ease-of-use-requires-progressive-disclosure.md
 hash_c: cad03ccf3390838bef9b385e7d2d9e8d6aff91c9e777964c6586fa86bfccdef9
-hash_d: df37a20297dc2e6069d811d590153e5a5cad51fc7dd813f5ce7ff45fbdb2c4e0
+hash_d: 440a3c31ee139a0ff5988aa5533189d2998353a1ca99ad2ab793f57435413e87
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:cli
 - topic:onboarding

@@ -1,8 +1,10 @@
 name: atom-code-changes-close-with-tests-and-commit
 path: desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md
 hash_c: 861b219ff788521f0bd6569b1a86e67f9916cd094544d14df30ae3fd694de4e2
-hash_d: 47d67a01483f8e6cbd6dad04d84267a9666444685b50f1aeaff4989886df838b
+hash_d: 300f17c968b20746e77fb7c1f27c40f3f91eae734412d9128d00ff90a6256ed6
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:closeout
 - topic:git

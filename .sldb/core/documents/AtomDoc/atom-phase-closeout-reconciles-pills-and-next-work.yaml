@@ -1,8 +1,10 @@
 name: atom-phase-closeout-reconciles-pills-and-next-work
 path: desk/atoms/workflow-model/atom-phase-closeout-reconciles-pills-and-next-work.md
 hash_c: 6e20cdb3d9643305698173fe6e180d078235651f2568a73a4b74c7bc2bf71a6f
-hash_d: 0dc32f3cfca184c71633df65b5b0d32075042e3ad843e55a0d8922363bf9eeb5
+hash_d: 65a69fddc8844dfb23596a84eaf2f63a36ceaea773dcfb32ca9e4c9419a6f858
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:closeout
 - topic:phases

@@ -1,0 +1,11 @@
+name: atom-deskops-architecture
+path: desk/atoms/atom-deskops-architecture.md
+hash_c: 98bc9c6c16f32a12bd725155c736a376d91e21c09546a17550330875f8f256f2
+hash_d: 93e5353149fee13dbc3d36462bcd6bf3d0b5b5823017c50e83539731f3c55145
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -3,5 +3,7 @@ path: desk/registry/repo-myrepo.md
 hash_c: ab8041e895cce64b4e31dce1f9fc5430284bf9f1e55a52c0e50c735b4cb19d9d
 hash_d: bc7c2d7db55ec5807097fbc6b1511600c37b619bd860aeb673657c9ebf6ed833
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - type.desk.repository
 - workspace.desk.registry

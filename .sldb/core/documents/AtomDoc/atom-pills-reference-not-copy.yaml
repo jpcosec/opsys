@@ -1,8 +1,10 @@
 name: atom-pills-reference-not-copy
 path: desk/atoms/workflow-model/atom-pills-reference-not-copy.md
 hash_c: 1f98cec7d3121933afffae4de58a869735dd7e545222aa84c6b3f157d8468a1c
-hash_d: 9ceb31b20f73efbd65504271237bedab67c24258506a3190ee8a80f7e774443b
+hash_d: 65a5e1c5d98822cac1551097c17dd24aee2700a4768cb227151fd9dbccef2aae
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:drift-control
 - topic:pills

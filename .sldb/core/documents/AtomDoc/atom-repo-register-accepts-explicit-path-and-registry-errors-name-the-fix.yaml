@@ -1,7 +1,9 @@
 name: atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix
 path: desk/atoms/atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix.md
 hash_c: 610b9f3f816e3396f325079ad085873f4a5c147d18b5759224325f1dae832840
-hash_d: 2985e76fb613893de014f6d5c1d32bfe6925bf0401a79c1f0b5623956aa9afa9
+hash_d: 2b8f64204db0d6efdea4ab1bcec96bbfd44ad9b901a999247f2500e408e7791e
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - type.knowledge.atom
 - workspace.desk.atoms

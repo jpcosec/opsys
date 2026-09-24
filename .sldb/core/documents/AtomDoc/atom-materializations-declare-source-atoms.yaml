@@ -1,0 +1,13 @@
+name: atom-materializations-declare-source-atoms
+path: desk/atoms/knowledge-model/atom-materializations-declare-source-atoms.md
+hash_c: 76460dcae965daedd67546d308bef880be907fc157145a3418ff3a559e6e4270
+hash_d: 7073054610fd9be1740c4219dc3e6d426df33f45382c9ffeb76d5c5f479506a0
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:materialization
+- topic:traceability
+- type.knowledge.atom
+- workspace.desk.atoms

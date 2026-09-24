@@ -1,8 +1,10 @@
 name: atom-atoms-answer-one-question
 path: desk/atoms/workflow-model/atom-atoms-answer-one-question.md
 hash_c: 55ec27b43c0cac3f4894699b3f82ec2fb734b96592bcef89e1553c15752a162c
-hash_d: 170980ac70bfb22bc6696eb1b6cf1851bbbeba28e8ae292d511406eb714b3754
+hash_d: b157e83515dc1c870e6f55e18506ec98fad8c0ae39f46cd717cde302bf375c75
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - type.knowledge.atom

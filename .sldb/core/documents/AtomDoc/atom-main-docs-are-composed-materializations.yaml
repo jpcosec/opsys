@@ -1,0 +1,13 @@
+name: atom-main-docs-are-composed-materializations
+path: desk/atoms/knowledge-model/atom-main-docs-are-composed-materializations.md
+hash_c: 9c64fa9f475b8645aecae8f193746566d4e7f07694fd98271caeeb5dce976271
+hash_d: abd5ae013603511276292ec437b6d021775f2cedd64b136cbaecd7b25e192804
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:docs
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms

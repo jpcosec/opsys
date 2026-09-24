@@ -1,0 +1,10 @@
+name: checklist-task-write-end-to-end-deskops-operator-manual-closeout-ready
+path: desk/primitives/checklists/checklist-task-write-end-to-end-deskops-operator-manual-closeout-ready.md
+hash_c: f940b2a96b2b5d2e8e0f50f1a2e4458504ed18b5693cfb978fcc14e57094a34a
+hash_d: d2a687371efe773bbbff0cc3ce523f346aef1865a0c0f39be961d2618816a29d
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

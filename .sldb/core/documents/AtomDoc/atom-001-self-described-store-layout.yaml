@@ -1,0 +1,12 @@
+name: atom-001-self-described-store-layout
+path: desk/atoms/atom-001-self-described-store-layout.md
+hash_c: 559d36507fd5f64935fdb30495d526d7c030eff8f8ce566a13e7551e580cbe21
+hash_d: a99e0956a6ab63f49fa111fbf8fcf4f72ec541cce9299742aa63be407d22bf10
+semantic_tags:
+- layer:runtime
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:store
+- type.knowledge.atom
+- workspace.desk.atoms

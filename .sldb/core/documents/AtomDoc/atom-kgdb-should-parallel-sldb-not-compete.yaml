@@ -1,0 +1,13 @@
+name: atom-kgdb-should-parallel-sldb-not-compete
+path: desk/atoms/knowledge-model/atom-kgdb-should-parallel-sldb-not-compete.md
+hash_c: 5414c4d7b36c76f9c22d5e585423d604ebadefb9c0651f9b08629809fe630e69
+hash_d: b76378f44814715bd9fc775d84a034ab792dca00798031ccc83e116982a80aca
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- system:sldb
+- topic:boundary
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,13 @@
+name: atom-raw-signals-need-distillation-before-formalization
+path: desk/atoms/knowledge-model/atom-raw-signals-need-distillation-before-formalization.md
+hash_c: 8e4c3a0a973aff2c1acc8250019d3704a9079cd5d434b91f1577ca86ee3b996f
+hash_d: e87b82673b0a94eab42175b6d6f8f343cc5729ed38c8d455a605892cd0c083c8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:knowledge-management
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

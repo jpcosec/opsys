@@ -5,6 +5,8 @@ hash_d: 6ed8a33e8cf8613b04923c87d0b1f7da08b451371eb86186d2040c43514bf270
 semantic_tags:
 - ci/cd
 - demo
+- representation.markdown
+- source.document.markdown
 - test
 - type.desk.repository
 - workspace.desk.registry

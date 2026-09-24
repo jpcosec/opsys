@@ -3,5 +3,7 @@ path: desk/registry/repo-stress-test-long-name.md
 hash_c: f923f43f5b40db48365d708273f532f2809e6ec5fef577548d8bbcf587db9f38
 hash_d: 1917c0fe5f8170ae78823744da7c451ac71b5d7356989eb793bdb60d1e641d6f
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - type.desk.repository
 - workspace.desk.registry

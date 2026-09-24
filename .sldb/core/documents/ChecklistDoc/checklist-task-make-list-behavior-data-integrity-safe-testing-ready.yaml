@@ -1,0 +1,10 @@
+name: checklist-task-make-list-behavior-data-integrity-safe-testing-ready
+path: desk/primitives/checklists/checklist-task-make-list-behavior-data-integrity-safe-testing-ready.md
+hash_c: 352e02f42597decd7af48f3dd500aacbe4c56f48b3d520357fbdf06b6fe68455
+hash_d: c09d1245351737487231d0acfe78f936511acd5ed6040f7a624240e0aff1a7db
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

@@ -1,8 +1,10 @@
 name: atom-cli-is-thin-over-primitives-and-sldb
 path: desk/atoms/workflow-model/atom-cli-is-thin-over-primitives-and-sldb.md
 hash_c: 4cec6b4dbdda5b13c2553ceccf05049bbb2c5964dd5c1a2c71784ce895499da8
-hash_d: 80307a6129c861df12f0d4e343ae8433808236468feb47d1c17bcdd22f0cd408
+hash_d: 7b36c603907c2bf4b95447e78443edf4c8c7677800c773286f95acfd768d1179
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - system:sldb
 - topic:cli

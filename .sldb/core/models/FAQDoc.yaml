@@ -1,0 +1,16 @@
+name: FAQDoc
+model_ref: deskops.models:FAQDoc
+path: deskops/models/faq.py
+documents_index: .sldb/core/documents/FAQDoc.yaml
+sections_index: .sldb/runtime/sections/FAQDoc.yaml
+hash_b: b899301c7df9ea4cfd60c423e1ef94781f331902460cec592bfa5feb6b704be9
+documents_count: 3
+version: 1
+canonical: false
+family: null
+semantics:
+- representation.markdown
+- source.document.markdown
+- type.documentation.faq
+- workspace.docs.faq
+base_models: []

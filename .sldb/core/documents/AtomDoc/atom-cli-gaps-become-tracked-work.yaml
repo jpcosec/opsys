@@ -1,8 +1,10 @@
 name: atom-cli-gaps-become-tracked-work
 path: desk/atoms/workflow-model/atom-cli-gaps-become-tracked-work.md
 hash_c: 30588ec59708caac0cd1c36e361cc74238238be52de2e98680bcb811a3910d18
-hash_d: 404829ae1643f72afb336bb4c88a2a820cdc223ab8da069b6eda3b59a62c9e5b
+hash_d: 7f0a79ea41db7469fa260b58c789487a56a89e7148b3a95a9790ba60007b739c
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:cli
 - topic:routing

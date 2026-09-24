@@ -1,0 +1,13 @@
+name: atom-closeout-verify-requires-tests-links-and-commit
+path: desk/atoms/workflow-model/atom-closeout-verify-requires-tests-links-and-commit.md
+hash_c: 9b6e5a5b3712a506b738e4fe4a62330213b20c4cf64b7d9fe4d20cacc7b9576c
+hash_d: f769728c0e6621179f8f3e11edd736e12fa467ac03fcee982b67144b25e67d9a
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:materialization
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

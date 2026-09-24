@@ -112,5 +112,53 @@ models:
   semantics:
   - type.knowledge.crossroad
   - workspace.desk.atoms
+- name: PillDoc
+  model_ref: deskops.models:PillDoc
+  path: deskops/models/pill.py
+  models_index: .sldb/core/models/PillDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.pill
+  - workspace.desk
+- name: FAQDoc
+  model_ref: deskops.models:FAQDoc
+  path: deskops/models/faq.py
+  models_index: .sldb/core/models/FAQDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.documentation.faq
+  - workspace.docs.faq
+- name: StepDoc
+  model_ref: deskops.models:StepDoc
+  path: deskops/models/step.py
+  models_index: .sldb/core/models/StepDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.step
+  - workspace.desk
+- name: RitualDoc
+  model_ref: deskops.models:RitualDoc
+  path: deskops/models/ritual.py
+  models_index: .sldb/core/models/RitualDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.ritual
+  - workspace.desk
 predicates: []
-hash_a: 7c4f38f0fcfc9cb4060294cbc62517c824fee47f897aaa0d97a7640c9e4c3dab
+hash_a: 20cdcfa8006531ee9e27732db96442461a95c460fd7dafa3c90e199b34f1cff7

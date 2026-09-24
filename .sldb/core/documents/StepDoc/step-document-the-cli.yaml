@@ -1,0 +1,11 @@
+name: step-document-the-cli
+path: desk/steps/step-document-the-cli.md
+hash_c: e9b981e7e4dda1c586566a99af3e922384389e961e616c0a95cd4a173229bd89
+hash_d: 0ea8bf020c3c1c03196a879f5fde52f005c08757883579d84ed11fb9d6948ee3
+semantic_tags:
+- artifact:step
+- representation.markdown
+- source.document.markdown
+- type.workflow.step
+- workspace.desk
+- workspace:desk

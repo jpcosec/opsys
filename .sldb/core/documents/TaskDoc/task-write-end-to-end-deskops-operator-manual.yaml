@@ -1,0 +1,12 @@
+name: task-write-end-to-end-deskops-operator-manual
+path: desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+hash_c: ecbabff5c965e335bca5985d65b119bfe657cb0d5094b44113b0286e015f6517
+hash_d: 8a160ca7fbc0c986050b02e67c8c0dc6a66ef4e5671e711f5abbe6e31988aa8c
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- source:drawer
+- type.workflow.task
+- workspace.desk
+- workspace:desk

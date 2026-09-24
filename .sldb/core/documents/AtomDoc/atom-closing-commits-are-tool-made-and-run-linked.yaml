@@ -1,8 +1,10 @@
 name: atom-closing-commits-are-tool-made-and-run-linked
 path: desk/atoms/atom-closing-commits-are-tool-made-and-run-linked.md
 hash_c: f6dac77b92dfb305c735152370c90b84bac46d4553cb63b19b25d08894de1426
-hash_d: b05ac0b2ff51c7d4eafeaf5754a83dc533ed4a13556411cfd25d16749ba71cff
+hash_d: 6bea83c349229c4ac101226dcc1f9bedc71ae4fe60669f55c8b2e2608815a0fc
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:closeout
 - topic:provenance

@@ -1,0 +1,14 @@
+name: pill-011-self-reflection-noise-control
+path: desk/contexts/pill-011-self-reflection-noise-control.md
+hash_c: 0061bc0fb7a7c07a81111eeb61ef79c0aa7b74ac62f8997be8261a20410d4dc4
+hash_d: 5ad98588b81bdd9e8de85d7408d504cbb5f854aa7b07f447c7aa7890fdb286ef
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:drift-control
+- topic:knowledge-graph
+- topic:self-reflection
+- type.workflow.pill
+- workspace.desk

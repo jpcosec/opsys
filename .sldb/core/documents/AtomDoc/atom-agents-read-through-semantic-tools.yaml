@@ -1,0 +1,13 @@
+name: atom-agents-read-through-semantic-tools
+path: desk/atoms/workflow-model/atom-agents-read-through-semantic-tools.md
+hash_c: 95cf1ec128beda54f421260d695d28cc2f09afb5640941759ad9755ccf390476
+hash_d: 49a36f4beac28b03a553c6ac959f777d3269ca649b74f6a9f4ec06b3c291a6a6
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:sldb
+- topic:agents
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

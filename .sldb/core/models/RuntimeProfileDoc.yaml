@@ -2,8 +2,8 @@ name: RuntimeProfileDoc
 model_ref: deskops.models:RuntimeProfileDoc
 path: deskops/models/runtime_profile.py
 documents_index: .sldb/core/documents/RuntimeProfileDoc.yaml
-sections_index: ''
-hash_b: cfd3ff972333551b1ea224f8e8511ddb19553dfafee3986d054ecb9497565ba6
+sections_index: .sldb/runtime/sections/RuntimeProfileDoc.yaml
+hash_b: b37b0f319d3a7d3a3ca607a41686ffad8f38b79692af7bffeabb8f3924b1b6ee
 documents_count: 2
 version: 1
 canonical: false

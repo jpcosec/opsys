@@ -1,0 +1,13 @@
+name: atom-implementation-feedback-refines-atoms
+path: desk/atoms/knowledge-model/atom-implementation-feedback-refines-atoms.md
+hash_c: aed69711d82e7f71dfba13b23644ae7518c5fb1daeeb9540dd58902f53d7a0fb
+hash_d: 97c880bcaf2b35b5105c832196421f28b23d5f50929740b635c539fa4002f5d6
+semantic_tags:
+- domain:knowledge-management
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:drift-control
+- type.knowledge.atom
+- workspace.desk.atoms

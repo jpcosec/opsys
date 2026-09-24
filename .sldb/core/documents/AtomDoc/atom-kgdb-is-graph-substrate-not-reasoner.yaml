@@ -1,0 +1,13 @@
+name: atom-kgdb-is-graph-substrate-not-reasoner
+path: desk/atoms/knowledge-model/atom-kgdb-is-graph-substrate-not-reasoner.md
+hash_c: e5042439ca6d4a3d31679540d1dc0c7cffa016a73c25a2383fe3fb8c85df640e
+hash_d: 230f2d52243e81e35bf45478f1a373e5f6938dd02b9831d07a8695630aed307d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- topic:boundary
+- topic:knowledge-graph
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,8 +1,10 @@
 name: atom-primitives-encode-operational-rules
 path: desk/atoms/workflow-model/atom-primitives-encode-operational-rules.md
 hash_c: 77e401a48eca84d4b7db700fd1eb5db83e086e67dc346135b73761eb312f4f2f
-hash_d: aa6000268e5f3a54e733efeb96300584fee791e6ef1fdda744969f15674eea22
+hash_d: 0ea5fb1e2fc5f961951729695d4e6cfd6354ef02a14825823b8d1e1a573baf23
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:primitives
 - topic:workflow

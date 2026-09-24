@@ -1,0 +1,10 @@
+name: condition-task-add-desk-health-and-recovery-surface-deskops-slice-has-closeout-evidence
+path: desk/primitives/conditions/condition-task-add-desk-health-and-recovery-surface-deskops-slice-has-closeout-evidence.md
+hash_c: 555196fafea985a6efc5687660e43ec4e134e00179384a0d9818adeb13251e7b
+hash_d: b0cf04e2a1b9908ce71037a72f6cc5ea1e8e5acaa8893cd1b0e2075064d51878
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

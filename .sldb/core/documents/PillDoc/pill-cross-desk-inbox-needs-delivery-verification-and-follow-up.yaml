@@ -1,0 +1,14 @@
+name: pill-cross-desk-inbox-needs-delivery-verification-and-follow-up
+path: desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md
+hash_c: 9683033fc48d829861cf0e7e77c37e3e55bb5a4b01dc89d05c8d5ea4447c42dc
+hash_d: c5702936f714565d8bcb7c1afb5c2dcb35be09dd58982966b43713a192ed364e
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cross-repo
+- topic:inbox
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

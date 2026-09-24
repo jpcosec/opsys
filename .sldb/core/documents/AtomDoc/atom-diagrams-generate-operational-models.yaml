@@ -1,8 +1,10 @@
 name: atom-diagrams-generate-operational-models
 path: desk/atoms/workflow-model/atom-diagrams-generate-operational-models.md
 hash_c: ecbfa01b894b86bfb7060f6a3671c078b2c90c1b85b141f5602aec4154501b16
-hash_d: 8cd3c1771d3dd154cfe74f23b6d8989ee02d07e114804d6da72fa662285b8379
+hash_d: d97b4569f9e5a4f84508aa06af804f8264a5b30bee273c5ec6efb04ef4355f26
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - topic:diagrams

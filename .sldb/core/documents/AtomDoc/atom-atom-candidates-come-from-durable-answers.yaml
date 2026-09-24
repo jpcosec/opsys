@@ -1,8 +1,10 @@
 name: atom-atom-candidates-come-from-durable-answers
 path: desk/atoms/workflow-model/atom-atom-candidates-come-from-durable-answers.md
 hash_c: 93e7735110e1c1e9c9d9e6a8e2e92c57fab1fa25122ef24fcd9df7d394be5fdf
-hash_d: cf759f05575f7d87cc9343b849013b9d0b8a860047f4cd9f8eb0e221ce82f304
+hash_d: d9cc012c07ebf607c42dd58aaee0ae29ac5f14cd58349e5549d2601535354d8f
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - topic:workflow-model

@@ -1,0 +1,11 @@
+name: routine-task-write-end-to-end-deskops-operator-manual
+path: desk/routines/routine-task-write-end-to-end-deskops-operator-manual.md
+hash_c: 8e8b7ec06e99cf876169b7ffb2d79bbe6dd33a2714fe3fb3d84b698383d864bf
+hash_d: b35600e2589534b67c810ff9db605091ad9f10ce3844794654e02d79aedb14c4
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

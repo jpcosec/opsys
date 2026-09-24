@@ -1,8 +1,10 @@
 name: atom-work-is-board-routed-to-preserve-intent
 path: desk/atoms/workflow-model/atom-work-is-board-routed-to-preserve-intent.md
 hash_c: 233aabd3eeec8786c887e5523e7e737672e41181b1ea734b1557eca6aa884585
-hash_d: e002b5e4a4e6e454e4297b625503d8071a0872d0dc0aa8224fcd982bcaeb2650
+hash_d: 6d83f9e1b165b2ab741efac4488ab729e52a9605ca242c6eda13088dc02ced7a
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:boards
 - topic:workflow-model

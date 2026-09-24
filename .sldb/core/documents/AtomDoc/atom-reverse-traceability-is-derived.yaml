@@ -1,0 +1,13 @@
+name: atom-reverse-traceability-is-derived
+path: desk/atoms/knowledge-model/atom-reverse-traceability-is-derived.md
+hash_c: 104efec61bafabd0e954e1b8202bce413c43e9032d9b177de4182c945b94958a
+hash_d: 84cb8e1cccfa273627aacbcf8db2aa19645184fffb726475a9c94ac6eba5b0df
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:indexes
+- topic:traceability
+- type.knowledge.atom
+- workspace.desk.atoms

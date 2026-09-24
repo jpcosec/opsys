@@ -3,5 +3,7 @@ path: desk/roles/deskops-tester.md
 hash_c: 88a657056f0bbec08c69c70cb2464ba7c6519c09e2312b0791e9234c34e05a10
 hash_d: cdd28974edc49077433756848081c44b2e7d2f5f849a133adee20fe2169563ec
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - type.workflow.role
 - workspace.desk.roles

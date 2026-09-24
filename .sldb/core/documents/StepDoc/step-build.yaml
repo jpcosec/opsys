@@ -1,0 +1,11 @@
+name: step-build
+path: desk/steps/step-build.md
+hash_c: 87e3e03b156894d7fb311dcc0d4e323aba7928961b8bb3348b89acf032fa4b22
+hash_d: 937ed400dc9ec19f7418e35ea0d38ddd73ea5e4197c82e66d599f4d614a27e73
+semantic_tags:
+- artifact:step
+- representation.markdown
+- source.document.markdown
+- type.workflow.step
+- workspace.desk
+- workspace:desk

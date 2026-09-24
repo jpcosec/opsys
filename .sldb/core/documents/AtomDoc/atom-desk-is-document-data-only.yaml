@@ -1,0 +1,13 @@
+name: atom-desk-is-document-data-only
+path: desk/atoms/workflow-model/atom-desk-is-document-data-only.md
+hash_c: 59e0d215871ed2bec196f362ce2e8bd4b057c5f00f5e6c337bc2d90ed4e5ab69
+hash_d: e64bb24630f7d861f1d0fc0904ba070832aac8979bd73ccbe810f49b529fb044
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:sldb
+- topic:boundary
+- type.knowledge.atom
+- workspace.desk.atoms
+- workspace:desk

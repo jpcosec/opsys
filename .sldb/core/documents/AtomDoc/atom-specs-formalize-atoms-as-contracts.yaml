@@ -1,0 +1,13 @@
+name: atom-specs-formalize-atoms-as-contracts
+path: desk/atoms/knowledge-model/atom-specs-formalize-atoms-as-contracts.md
+hash_c: 65cb68e03dfa87decd1fd507ff5007948b3b23ee176b622d844804735cfea4ea
+hash_d: d87cb2330087272513247ff5b5b51c67e26c3076d80bcf7d65e0e5a9a21d9796
+semantic_tags:
+- domain:knowledge-management
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:specs
+- type.knowledge.atom
+- workspace.desk.atoms

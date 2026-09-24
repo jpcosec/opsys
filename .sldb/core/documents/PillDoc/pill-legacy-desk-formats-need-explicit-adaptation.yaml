@@ -1,0 +1,14 @@
+name: pill-legacy-desk-formats-need-explicit-adaptation
+path: desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+hash_c: 89d8eb0666ad922042b631fc6fa01d68cd4c11b3ab794d1e2dd56d1280ce373f
+hash_d: f65f84668762740f139ba5b3fd2b74099e6dffcfaa25bbe1a50ef9f4444cacc7
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:legacy
+- topic:migration
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

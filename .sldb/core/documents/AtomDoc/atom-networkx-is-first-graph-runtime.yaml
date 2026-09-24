@@ -1,0 +1,13 @@
+name: atom-networkx-is-first-graph-runtime
+path: desk/atoms/knowledge-model/atom-networkx-is-first-graph-runtime.md
+hash_c: acd5e9b6b58e4a5214397ef24f3570491c1c05d7a53d3f97294ad0a14b08b62e
+hash_d: c0bcd7fd5566509dfa035bd3d2e29bf9337f09aee040c4cb98f679723f9a7617
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- topic:implementation
+- topic:knowledge-graph
+- type.knowledge.atom
+- workspace.desk.atoms

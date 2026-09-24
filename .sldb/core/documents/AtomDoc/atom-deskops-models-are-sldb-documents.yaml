@@ -1,8 +1,10 @@
 name: atom-deskops-models-are-sldb-documents
 path: desk/atoms/atom-deskops-models-are-sldb-documents.md
 hash_c: 6f2587cca9e6e686d2a874eba8deaa41b16eb086416d773bd56d296458fd7dc2
-hash_d: ebb06b0fd4e21f16d16e17df1f06d20d8faf531bd8852be641f99432b652033e
+hash_d: 11d7b190e5b2d78492e9e8a0da4c7632ee8030ee755d1976d72d29ca505fdf8e
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:atoms
 - type.knowledge.atom

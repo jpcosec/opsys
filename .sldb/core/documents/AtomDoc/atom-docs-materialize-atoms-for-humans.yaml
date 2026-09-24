@@ -1,0 +1,13 @@
+name: atom-docs-materialize-atoms-for-humans
+path: desk/atoms/knowledge-model/atom-docs-materialize-atoms-for-humans.md
+hash_c: 9d2870d40bf0466ae0f9d8741e22851f520114f0b4230098316110b01fcc14c9
+hash_d: 55b9f6fd697b42c48f6b976f2e455e85a0c09efb4591ae54142aa84d58b2eb76
+semantic_tags:
+- domain:knowledge-management
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:atoms
+- topic:docs
+- type.knowledge.atom
+- workspace.desk.atoms

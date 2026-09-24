@@ -1,0 +1,10 @@
+name: edge-task-make-list-behavior-data-integrity-safe-execution-to-activate
+path: desk/primitives/edges/edge-task-make-list-behavior-data-integrity-safe-execution-to-activate.md
+hash_c: 5eda4b35c007777d61972239cbcf58101bdb313eaef8469fad718205760d9788
+hash_d: 989016c85aee43b7f542533a1bdf7a5ff831d696b5adc9d402228a7e4d0d263b
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

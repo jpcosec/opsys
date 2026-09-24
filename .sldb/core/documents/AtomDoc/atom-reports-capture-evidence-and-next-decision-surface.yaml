@@ -1,8 +1,10 @@
 name: atom-reports-capture-evidence-and-next-decision-surface
 path: desk/atoms/workflow-model/atom-reports-capture-evidence-and-next-decision-surface.md
 hash_c: c4329e7d0faa396c596a602077a7614d4691d94341d32bfb4a2275839f3ae66b
-hash_d: 48a4990507a161c97b287c2247af17502f76c5b5f6ecbd6598270b9cf39e75df
+hash_d: 68ca9fb5e3d2fa110789452f567eec2b34ead2a3227c813a07e0847147768de2
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:evidence
 - topic:reports

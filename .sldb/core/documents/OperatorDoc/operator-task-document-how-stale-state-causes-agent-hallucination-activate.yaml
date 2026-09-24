@@ -1,0 +1,10 @@
+name: operator-task-document-how-stale-state-causes-agent-hallucination-activate
+path: desk/primitives/operators/operator-task-document-how-stale-state-causes-agent-hallucination-activate.md
+hash_c: 4db45d30c35fc81249a497485d5ce97acce704e8dba63f3de4fb70478f12b3c6
+hash_d: 03f2175c17313e2f70693ad1ed99bea81fb518f0c558474df6f5f02d31f9354d
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

@@ -1,0 +1,13 @@
+name: atom-drift-checks-compare-atoms-materializations-implementation
+path: desk/atoms/knowledge-model/atom-drift-checks-compare-atoms-materializations-implementation.md
+hash_c: f7b2f024e384f37a23b90ea3ace838f06cd33f8d5d5546d23de55328ad070479
+hash_d: 9149b693b748d93b79f90392187c5bc5a8ca8d8adcec31a475c1d86691fb7e4b
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:drift-control
+- topic:materialization
+- topic:validation
+- type.knowledge.atom
+- workspace.desk.atoms

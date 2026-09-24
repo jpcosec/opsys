@@ -1,0 +1,14 @@
+name: pill-010-graph-runtime-output-policy
+path: desk/contexts/pill-010-graph-runtime-output-policy.md
+hash_c: 225d8525d12cb2f3dd9c3ca68e66c593aea5efd95bcd834fc2b318b1aa93076f
+hash_d: 351c4991e3c3217e6fa074e6160d06668128c09c81934ae05f0c78cc08b4b4fd
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:kgdb
+- topic:drift-control
+- topic:runtime
+- type.workflow.pill
+- workspace.desk

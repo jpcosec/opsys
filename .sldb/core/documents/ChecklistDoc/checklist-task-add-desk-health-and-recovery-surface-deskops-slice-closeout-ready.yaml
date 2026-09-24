@@ -1,0 +1,10 @@
+name: checklist-task-add-desk-health-and-recovery-surface-deskops-slice-closeout-ready
+path: desk/primitives/checklists/checklist-task-add-desk-health-and-recovery-surface-deskops-slice-closeout-ready.md
+hash_c: 777cc1c5ea3fe8c4e20c441fe6b1ba9c3270e26838b82af7928f6b862a6dc9f9
+hash_d: 08b1696b2bdbe109ece3b253aa97ede1767639e5f1f1057c729ce5bf0db24ff2
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

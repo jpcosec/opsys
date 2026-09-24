@@ -3,5 +3,7 @@ path: desk/roles/deskops-supervisor.md
 hash_c: 402d5edca83372e3863bd7b423eb54df5f6ec649d841fe9846772943c9a7b5ff
 hash_d: 0c54b8e79215e7159f7df78d1b11fcfedd904cf84d6c73021f6ceba0d8292a86
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - type.workflow.role
 - workspace.desk.roles

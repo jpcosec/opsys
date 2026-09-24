@@ -1,8 +1,10 @@
 name: atom-closeout-validates-knowledge-surfaces
 path: desk/atoms/workflow-model/atom-closeout-validates-knowledge-surfaces.md
 hash_c: 7b99d358c78662d54c3e418280fe8cbf1754d6ed11e086f4c9067700bf3a177c
-hash_d: b7cffb1a08e9fb52eb08c20406b632a4ab6eb0efb3904a7fbc1aa8a0e1c71f9f
+hash_d: 65bb9dbd4a99bd36f7279feb49ca1592f5054a5f5667fca9492dfb9304f5f827
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:closeout
 - topic:drift-control

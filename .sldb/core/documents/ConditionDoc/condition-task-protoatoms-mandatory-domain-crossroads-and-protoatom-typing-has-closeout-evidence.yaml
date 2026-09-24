@@ -4,5 +4,7 @@ hash_c: c7afbfe495a55cbd3aa4a9b7679a87a8c2c7c9b033c7f735baf0ddef1144322b
 hash_d: adafc91f5bf6f4921a21903be310e2e50b21bf9a3d8507d1a16228269125d0ee
 semantic_tags:
 - primitive:condition
+- representation.markdown
+- source.document.markdown
 - type.workflow.condition
 - workspace.desk.primitives

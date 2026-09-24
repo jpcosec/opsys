@@ -1,0 +1,14 @@
+name: pill-real-cli-surfaces-prove-operator-contracts
+path: desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+hash_c: c3395f3315f6bb48c14085545a9141dac32390433aafb2909ae4684cbd576291
+hash_d: 362ddd19e1adec85d1a9aa2e8a3ff7e1c2a84fb2b7f18b44e3a2e238b4430be5
+semantic_tags:
+- pill-type:pattern
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:validation
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

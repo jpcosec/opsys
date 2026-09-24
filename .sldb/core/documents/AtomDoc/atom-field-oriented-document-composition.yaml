@@ -1,0 +1,12 @@
+name: atom-field-oriented-document-composition
+path: desk/atoms/workflow-model/atom-field-oriented-document-composition.md
+hash_c: f0f846a273110b8fe715040e96a0ed6db105a6247ac83a6d924f8c0af115a434
+hash_d: 328300da1a944cedb840cd2479adeabac2cfcdf6738e3b817328b1d67e958e63
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:composition
+- topic:fields
+- type.knowledge.atom
+- workspace.desk.atoms

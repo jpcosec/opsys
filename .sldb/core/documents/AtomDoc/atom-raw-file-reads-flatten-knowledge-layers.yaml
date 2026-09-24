@@ -1,8 +1,10 @@
 name: atom-raw-file-reads-flatten-knowledge-layers
 path: desk/atoms/workflow-model/atom-raw-file-reads-flatten-knowledge-layers.md
 hash_c: 2d17949e9bfa1d5242c4fc0d6a6c048ad1889d877881a48af6edefe8100e0869
-hash_d: 58049e958a85e3a2dc6cc4ea897e3a27e94903d03b8e25f7c6a39685dd72ab3e
+hash_d: d829bc159bfddb2ab394f7ce1c23a02dddede9c5057ec779a45160c8632af717
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:agents
 - topic:knowledge-management

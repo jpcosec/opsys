@@ -1,8 +1,10 @@
 name: atom-pills-are-reusable-across-tasks
 path: desk/atoms/workflow-model/atom-pills-are-reusable-across-tasks.md
 hash_c: 19baf3c37dbfe2971d717923e05d8d95d86a14fd7be5a274e6b3bb37aaae2870
-hash_d: 163d4c1361e3ec2556b0b4e5ee41377ab7a0d6ad08be6c819acc336f15872132
+hash_d: a64b87378b641c94abfe7fc702aeabc5c6ca40e17ec9c01d0ed900846986fc73
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:phases
 - topic:pills

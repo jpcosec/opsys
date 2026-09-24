@@ -1,0 +1,10 @@
+name: condition-task-write-end-to-end-deskops-operator-manual-has-implementation-path
+path: desk/primitives/conditions/condition-task-write-end-to-end-deskops-operator-manual-has-implementation-path.md
+hash_c: fe131c0024aa118b8afdb25e876ba9a9c61796c5b328c794065dfd2955961e6f
+hash_d: a6de11fe7a4df52e75c60df51f5fd51a8b3fecd0f4ba96ff868d3fa63449bdce
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,15 @@
+name: pill-cli-gaps-become-tracked-work
+path: desk/contexts/pill-cli-gaps-become-tracked-work.md
+hash_c: 34e392b7f801f3d27ecbb1cf08cd062185ed849f03e9c4021b8c7e5da3d13d9f
+hash_d: 34eab93e612dbd7f81790ec1c1d61c7592c1493449bd5ec1851935e6d2986a40
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:routing
+- topic:tasks
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

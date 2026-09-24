@@ -1,0 +1,10 @@
+name: operator-task-make-list-behavior-data-integrity-safe-close
+path: desk/primitives/operators/operator-task-make-list-behavior-data-integrity-safe-close.md
+hash_c: 115abeb36903f35ae077e31760f59d92faa6db8a86b9a4317eecc480989e1be2
+hash_d: a272e08f3752854d9e887c0fffcd3b72256614999ab1119607973284110521b3
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

@@ -2,8 +2,8 @@ name: CrossroadDoc
 model_ref: deskops.models:CrossroadDoc
 path: deskops/models/crossroad.py
 documents_index: .sldb/core/documents/CrossroadDoc.yaml
-sections_index: ''
-hash_b: 50672251e32da7498702e290f836b613f115017402947c4bda636b1c91485787
+sections_index: .sldb/runtime/sections/CrossroadDoc.yaml
+hash_b: d713037e9b917aa8eaad2066240ed3b1f9dbcefd9224bddb54d5dc2628cbd568
 documents_count: 1
 version: 1
 canonical: false

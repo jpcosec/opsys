@@ -1,0 +1,9 @@
+name: faq-how-to-deploy
+path: desk/faq/faq-how-to-deploy.md
+hash_c: 050cb05f2bbd015187c66fbbf81aacdaec8898dd480a165c251424cf2956e5f5
+hash_d: 16e51690bacc9442a3d2023320a6719ced1cbff968083baaf235a6e6c3665ebd
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.documentation.faq
+- workspace.docs.faq

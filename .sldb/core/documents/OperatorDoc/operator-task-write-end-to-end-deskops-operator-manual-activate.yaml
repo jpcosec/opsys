@@ -1,0 +1,10 @@
+name: operator-task-write-end-to-end-deskops-operator-manual-activate
+path: desk/primitives/operators/operator-task-write-end-to-end-deskops-operator-manual-activate.md
+hash_c: 9a35c985770855e277a6e591215420aa4b57ad5e9660e05e02a11b4533d4c3e0
+hash_d: d120293e974e334de5c18c692ce11865787d4280ea80bb6affa5d91675579ee3
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

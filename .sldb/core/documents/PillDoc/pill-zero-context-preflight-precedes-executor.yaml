@@ -1,0 +1,15 @@
+name: pill-zero-context-preflight-precedes-executor
+path: desk/contexts/pill-zero-context-preflight-precedes-executor.md
+hash_c: dcce39a568514f83a58419a071c486e9f6b29afd503076363a31d377c3d692de
+hash_d: 7f3e840f2ff5321f04d5b3c2988b5c8aa2e3024981297140b3c103b4d64ab530
+semantic_tags:
+- pill-type:guardrail
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:execution
+- topic:preflight
+- topic:subagents
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

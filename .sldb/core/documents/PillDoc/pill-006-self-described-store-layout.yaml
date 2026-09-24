@@ -1,0 +1,15 @@
+name: pill-006-self-described-store-layout
+path: desk/contexts/pill-006-self-described-store-layout.md
+hash_c: f86baf8854afdb9a1f483f751b8bc75fd1f775134fb47af70cc10f48480eb8f6
+hash_d: d8f9415f6e429f9901ae0bacfbf936df0889163fc5ee920a5aa2c8da12213833
+semantic_tags:
+- pill-type:index
+- representation.markdown
+- source-atom:atom-001
+- source.document.markdown
+- system:sldb
+- topic:atoms
+- topic:store
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

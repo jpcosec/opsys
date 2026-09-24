@@ -1,8 +1,10 @@
 name: atom-spec-driven-artifact-architecture
 path: desk/atoms/workflow-model/atom-spec-driven-artifact-architecture.md
 hash_c: 17c135a55794395642282f4a32c1ee79cbd1ce11279113daa8b84fbdc102ca7d
-hash_d: 424e75a09943e061d0cbc80a354dbab3647f1c2b24dad3ec9dc8b924d61804fb
+hash_d: 0819b8b421a2340b7be121c319600cf1712ee42a63f0158a6a29ff09217232a4
 semantic_tags:
+- representation.markdown
+- source.document.markdown
 - system:deskops
 - topic:artifacts
 - topic:specs
