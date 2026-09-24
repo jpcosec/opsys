@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings.md
 - desk/tasks/task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity.md
 # List of pill-xxx paths
 pills:
@@ -48,5 +47,4 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Report knowledge drift: stale atoms, missing materializations and unrouted findings [ready_for_testing] - A drift command that reports, from the desk and the graph: atoms whose declared targets or materializations no longer resolve, documents that point at atoms with no inbound trace, and graph findings that no atom or issue covers.
 - Make cross-repo inbox delivery work from a canonical identity [ready_for_testing] - One identity path usable for both questions, and cross-repo delivery that either reaches the target or fails with the reason, with the sender able to see that the target acknowledged or closed the note.
