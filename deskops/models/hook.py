@@ -4,6 +4,7 @@ from .base import PrimitiveDoc
 
 
 class HookDoc(PrimitiveDoc):
+    __references__ = ["target", "condition_ref"]
     __semantics__ = {"type": ["workflow", "hook"], "workspace": ["desk", "primitives"]}
     __template__ = """---
 # hook-xxx

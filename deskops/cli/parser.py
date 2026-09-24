@@ -71,6 +71,31 @@ def _add_runtime_commands(
         command = s.add_parser(name, help=help_text)
         command.add_argument("--root", default=".", help="DeskOps repository root.")
         command.add_argument("--herdr", default="herdr", help="Herdr executable.")
+    supervise = s.add_parser(
+        "supervise",
+        help="Block on one agent's Herdr lifecycle and report blocked/done settles without advancing the desk.",
+    )
+    supervise.add_argument("agent", help="Herdr agent name or pane id to supervise, e.g. deskops-executor.")
+    supervise.add_argument("--root", default=".", help="DeskOps repository root.")
+    supervise.add_argument("--herdr", default="herdr", help="Herdr executable.")
+    supervise.add_argument(
+        "--max-iterations",
+        type=int,
+        default=None,
+        help="Stop after this many settle events instead of running forever (mainly for testing).",
+    )
+    supervise.add_argument(
+        "--read-lines",
+        type=int,
+        default=200,
+        help="Terminal lines to capture from the agent on a blocked or done settle.",
+    )
+    supervise.add_argument(
+        "--timeout-ms",
+        type=int,
+        default=None,
+        help="Give up waiting after this many milliseconds per settle attempt (default: wait indefinitely).",
+    )
 
 def _add_atoms_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
@@ -231,6 +256,46 @@ def _add_atoms_commands(
     )
 
 
+    crossroad_cmd = s.add_parser(
+        "crossroad",
+        help="Write the crossroad of a domain path: the mandatory parent that describes what hangs below it.",
+    )
+    crossroad_cmd.add_argument("path", help="Domain path such as pizzeria.carta; its parent path needs a crossroad first.")
+    crossroad_cmd.add_argument("--title", required=True, help="Short title of the domain area.")
+    crossroad_cmd.add_argument("--content", required=True, help="Written description of what hangs below this path.")
+    crossroad_cmd.add_argument("--root", default=".", help="Target repository root.")
+
+    proto_cmd = s.add_parser("proto", help="Create a protoatom: a free atom with a title, content and tags.")
+    proto_cmd.add_argument("doc_id", help="New protoatom id, conventionally proto-<slug>.")
+    proto_cmd.add_argument("--title", required=True, help="Short title of the free knowledge unit.")
+    proto_cmd.add_argument("--content", default="", help="Free markdown content.")
+    proto_cmd.add_argument(
+        "--tag",
+        action="extend",
+        nargs="+",
+        default=[],
+        help="Atom tag; a single domain:<path> tag places the protoatom in the domain tree.",
+    )
+    proto_cmd.add_argument("--root", default=".", help="Target repository root.")
+
+    type_cmd = s.add_parser(
+        "type",
+        help="Type a protoatom into another sldb model, keeping the protoatom as a redirect stub.",
+    )
+    type_cmd.add_argument("doc_id", help="Protoatom selector: id or filename.")
+    type_cmd.add_argument("--model", required=True, help="Target sldb model name, such as AtomDoc or TaskDoc.")
+    type_cmd.add_argument("--id", dest="new_id", help="Id of the typed document; defaults to <model>-<slug>.")
+    type_cmd.add_argument(
+        "--content-field",
+        help="Target field that receives the protoatom content; defaults to 'content' when the model has it.",
+    )
+    type_cmd.add_argument("--data", help="Inline JSON with the remaining fields the target model requires.")
+    type_cmd.add_argument("--root", default=".", help="Target repository root.")
+
+    tree_cmd = s.add_parser("tree", help="Show the domain tree: crossroads and the documents hanging from them.")
+    tree_cmd.add_argument("--root", default=".", help="Target repository root.")
+    _add_output_format_argument(tree_cmd)
+
 def _add_graph_commands(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
 ) -> None:
@@ -295,12 +360,11 @@ def _add_promote_commands(
 ) -> None:
     p = subparsers.add_parser(
         "promote",
-        help="Promote inbox and drawer items through desk workflow surfaces.",
+        help="Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=f"""
 Examples:
   deskops promote inbox-to-drawer-task 20260614-unclear --root .
-  deskops promote drawer-task-to-active-task task-write-guide --root .
 
 {SELECTOR_HELP}
 """.strip(),
@@ -314,16 +378,6 @@ Examples:
     inbox.add_argument("selector", help="Inbox filename, stem, or unique slug fragment")
     inbox.add_argument("--root", default=".", help="Target repository root")
     inbox.add_argument("--title", help="Override the drawer task title")
-
-    drawer = s.add_parser(
-        "drawer-task-to-active-task",
-        help="Promote one drawer task candidate into an active task bundle.",
-    )
-    drawer.add_argument("selector", help="Drawer task filename, stem, or unique slug fragment")
-    drawer.add_argument("payload", nargs="?", help="Optional inline JSON payload to override task generation.")
-    drawer.add_argument("--from-yaml", help="Load an override payload from a YAML file.")
-    drawer.add_argument("--root", default=".", help="Target repository root")
-    drawer.add_argument("--title", help="Override the active task title")
 
 
 def _add_desk_commands(
@@ -448,6 +502,10 @@ Examples:
     )
     p.add_argument("--title", help="Short title for the note")
     p.add_argument(
+        "--root",
+        help="Repository root whose desk/ holds the inbox; the same --root every other subcommand takes",
+    )
+    p.add_argument(
         "--desk-root",
         help="Desk root directory override; defaults to the active project desk",
     )
@@ -512,6 +570,11 @@ Examples:
     task.add_argument("--scope", help="Task scope")
     task.add_argument("--implementation-path", help="Implementation path")
     task.add_argument("--done-when", help="Task completion rule")
+    task.add_argument(
+        "--from-drawer",
+        help="Drawer file this task is authored from (path, stem, or slug fragment). "
+        "Recorded in the task's from_drawer field; the drawer file is kept for manual cleanup.",
+    )
     task.add_argument(
         "--validation",
         action="extend",

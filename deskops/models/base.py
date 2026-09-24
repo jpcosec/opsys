@@ -4,6 +4,22 @@ from sldb import StructuredNLDoc
 
 
 class PrimitiveDoc(StructuredNLDoc):
+    __template__ = """---
+# primitive-xxx
+id: ⸢rev•id⸥
+# draft | active | archived
+status: ⸢rev•status⸥
+# e.g., system:deskops
+tags: ⸢rev•tags⸥
+---
+
+# ⸢rev•title⸥
+
+## Summary
+
+⸢rev•summary⸥
+""".strip()
+
     title: str = Field(description="Short primitive title.")
     id: str = Field(description="Stable primitive identifier.")
     status: str = Field(default="", description="Primitive lifecycle status.")

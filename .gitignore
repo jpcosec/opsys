@@ -10,3 +10,10 @@ __pycache__/
 .pi/
 desk/config.local.json
 .tmp/
+
+# Herdr-supervised run transcripts: commit only the digest (session_sha256 in
+# RunDoc/run.yaml) and result-summary.md, not the raw JSONL session. Decision
+# recorded in desk/drawer/questions/question-herdr-runtime-open-decisions.md
+# (decision 2): avoids permanently bloating the repo with hundreds of MB of
+# transcripts (measured median 206KB, p90 1.1MB, max 21MB per pi session).
+runs/subagents/*/session.jsonl

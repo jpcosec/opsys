@@ -61,6 +61,7 @@ def compile_task_bundle_spec(
         "inherits_from": _coerce_list(raw_payload.get("inherits_from") or []),
         "inherit_acceptance_context": bool(raw_payload.get("inherit_acceptance_context") or False),
         "atoms": _coerce_list(raw_payload.get("atoms") or []),
+        "from_drawer": str(raw_payload.get("from_drawer") or ""),
     }
     context["status"] = task_payload["status"]
 

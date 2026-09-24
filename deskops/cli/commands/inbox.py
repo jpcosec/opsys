@@ -119,6 +119,12 @@ class InboxCLI:
         if args.desk_root:
             return Path(args.desk_root).resolve()
 
+        # --root is the repository root, the flag every other subcommand takes;
+        # --desk-root points at the desk/ directory itself and wins when both
+        # are given, since it is the more specific of the two.
+        if getattr(args, "root", None):
+            return (Path(args.root).resolve() / "desk").resolve()
+
         if args.repo:
             return self._resolve_repo_desk(args.repo, args.store, args.pythonpath)
 

@@ -4,6 +4,7 @@ from .base import OperationalArtifactDoc
 
 
 class RitualDoc(OperationalArtifactDoc):
+    __containment__ = {"steps": ["StepDoc"]}
     __semantics__ = {"type": ["workflow", "ritual"], "workspace": ["desk"]}
     __compositions__ = {
         "step_details": {

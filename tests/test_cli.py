@@ -39,7 +39,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout}" in captured.out
+    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -56,7 +56,7 @@ def test_core_help_documents_examples_and_selectors(capsys) -> None:
     promote_output = " ".join(capsys.readouterr().out.split())
     assert promote_help == 0
     assert "inbox-to-drawer-task" in promote_output
-    assert "drawer-task-to-active-task" in promote_output
+    assert "drawer-task-to-active-task" not in promote_output
 
     show_help = main(["show", "task", "--help"])
     show_output = " ".join(capsys.readouterr().out.split())
@@ -624,92 +624,6 @@ def test_promote_inbox_to_drawer_task_creates_candidate(tmp_path: Path, capsys) 
     assert "Make promotion explicit." in text
     assert "desk/inbox/20260613-000000-suggestion-need-cli-promotion.md" in text
     assert not note.exists()
-
-
-def test_promote_drawer_task_to_active_task_creates_bundle(tmp_path: Path, capsys) -> None:
-    drawer_dir = tmp_path / "desk" / "drawer" / "tasks"
-    drawer_dir.mkdir(parents=True)
-    source = drawer_dir / "task-promote-demo.md"
-    source.write_text(
-        "# Promote Demo\n\n"
-        "ID: task-promote-demo\nStatus: deferred\n\n"
-        "## Goal\n\nMake promotion runnable.\n\n"
-        "## Scope\n\nPromotion CLI only.\n",
-        encoding="utf-8",
-    )
-
-    result = main([
-        "promote",
-        "drawer-task-to-active-task",
-        "promote-demo",
-        "--root",
-        str(tmp_path),
-    ])
-
-    captured = capsys.readouterr()
-    active_task = tmp_path / "desk" / "tasks" / "task-promote-demo.md"
-    assert result == 0
-    assert "Created active task bundle task-promote-demo" in captured.out
-    assert active_task.exists()
-    assert (tmp_path / "desk" / "routines" / "routine-task-promote-demo.md").exists()
-    board = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
-    assert "desk/tasks/task-promote-demo.md" in board
-    assert not source.exists()
-
-
-def test_promote_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, capsys) -> None:
-    from sldb.cli.main import main as sldb_main
-
-    assert main(["init", str(tmp_path)]) == 0
-    capsys.readouterr()
-
-    drawer_dir = tmp_path / "desk" / "drawer" / "tasks"
-    drawer_dir.mkdir(parents=True, exist_ok=True)
-    source = drawer_dir / "task-promote-track-demo.md"
-    source.write_text(
-        "# Promote Track Demo\n\n"
-        "ID: task-promote-track-demo\nStatus: deferred\n\n"
-        "## Goal\n\nTrack promoted docs.\n\n"
-        "## Scope\n\nPromotion CLI only.\n",
-        encoding="utf-8",
-    )
-
-    promoted = main(
-        [
-            "promote",
-            "drawer-task-to-active-task",
-            "promote-track-demo",
-            "--root",
-            str(tmp_path),
-        ]
-    )
-    promote_out = capsys.readouterr()
-    assert promoted == 0
-    assert "Created active task bundle task-promote-track-demo" in promote_out.out
-
-    for doc_id, model_name in [
-        ("task-promote-track-demo", "TaskDoc"),
-        ("routine-task-promote-track-demo", "RoutineDoc"),
-        ("checklist-task-promote-track-demo-execution-ready", "ChecklistDoc"),
-        ("condition-task-promote-track-demo-has-validation", "ConditionDoc"),
-        ("operator-task-promote-track-demo-activate", "OperatorDoc"),
-        ("edge-task-promote-track-demo-execution-to-activate", "EdgeDoc"),
-    ]:
-        shown = sldb_main(
-            [
-                "docs",
-                "show",
-                doc_id,
-                "--store",
-                str(tmp_path / ".sldb"),
-                "--pythonpath",
-                str(ROOT),
-            ]
-        )
-        sldb_out = capsys.readouterr()
-        assert shown == 0
-        assert f'"name": "{doc_id}"' in sldb_out.out
-        assert f'"model": "{model_name}"' in sldb_out.out
 
 
 def test_promote_rejects_ambiguous_inbox_selector(tmp_path: Path, capsys) -> None:

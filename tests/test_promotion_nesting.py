@@ -55,52 +55,6 @@ def test_inbox_promotion_keeps_structured_sections_flat_in_drawer(tmp_path: Path
 
 
 
-def test_drawer_promotion_flattens_nested_structured_sections_into_active_task_fields(tmp_path: Path) -> None:
-    assert main(["desk", "install", str(tmp_path)]) == 0
-
-    drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-nested-drawer.md"
-    drawer_task.parent.mkdir(parents=True, exist_ok=True)
-    drawer_task.write_text(
-        "# Nested Drawer\n\n"
-        "ID: task-nested-drawer\n"
-        "Status: deferred\n"
-        "Priority: medium\n\n"
-        "## Goal\n\n"
-        "Promote authored sections without nesting.\n\n"
-        "## Scope\n\n"
-        "Keep this body in scope.\n\n"
-        "## Implementation Path\n\n"
-        "Use the promote normalization path.\n\n"
-        "## Validation\n\n"
-        "- pytest tests/test_promotion_nesting.py -q\n\n"
-        "## Done When\n\n"
-        "Every active task field is flat.\n",
-        encoding="utf-8",
-    )
-
-    assert main(["promote", "drawer-task-to-active-task", "nested-drawer", "--root", str(tmp_path)]) == 0
-
-    active_task = tmp_path / "desk" / "tasks" / "task-nested-drawer.md"
-    text = active_task.read_text(encoding="utf-8")
-    operations = DeskopsOperations(tmp_path)
-    task, _statuses = operations.show_task("task-nested-drawer")
-
-    assert task is not None
-    assert task.goal == "Promote authored sections without nesting."
-    assert task.scope == "Keep this body in scope."
-    assert task.implementation_path == "Use the promote normalization path."
-    assert task.validation == ["pytest tests/test_promotion_nesting.py -q"]
-    assert task.done_when == "Every active task field is flat."
-    assert text.count("## Goal") == 1
-    assert text.count("## Scope") == 1
-    assert text.count("## Implementation Path") == 1
-    assert text.count("## Validation") == 1
-    assert text.count("## Done When") == 1
-    assert "## Validation" not in _section(text, "Scope")
-    assert "## Done When" not in _section(text, "Implementation Path")
-
-
-
 def test_advance_task_reads_nested_task_sections_from_first_occurrence(tmp_path: Path) -> None:
     operations = DeskopsOperations(tmp_path)
     operations.ensure_workspace()

@@ -4,6 +4,7 @@ import argparse
 from pathlib import Path
 
 from deskops.materializers.roles import drift_check_role_docs
+from deskops.materializers.runtime_profiles import drift_check_runtime_bindings
 
 
 class DriftCLI:
@@ -14,6 +15,7 @@ class DriftCLI:
         root = Path(args.root).resolve()
         out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
         findings = drift_check_role_docs(root, out_dir)
+        findings += drift_check_runtime_bindings(root)
         if not findings:
             print("No role-agent drift found.")
             return 0

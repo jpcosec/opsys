@@ -109,7 +109,7 @@ deskops list tasks --root .
 deskops list atoms --root .
 deskops show task <task-id> --root .
 deskops show atom <atom-id> --root .
-deskops promote drawer-task-to-active-task <task-selector>
+deskops add task --root . --from-drawer <drawer-selector> --title <title> --goal <goal> --scope <scope> --validation <check>
 deskops bind pill <pill-selector> --task <task-id> --root .
 deskops advance task <task-id> --root .
 deskops graph build --root .

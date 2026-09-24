@@ -20,6 +20,8 @@ MODEL_REFS = {
     "RoleDoc": "deskops.models:RoleDoc",
     "StepDoc": "deskops.models:StepDoc",
     "AtomDoc": "deskops.models:AtomDoc",
+    "ProtoAtomDoc": "deskops.models:ProtoAtomDoc",
+    "CrossroadDoc": "deskops.models:CrossroadDoc",
     "FAQDoc": "deskops.models:FAQDoc",
     "RoutineDoc": "deskops.models:RoutineDoc",
     "ConditionDoc": "deskops.models:ConditionDoc",

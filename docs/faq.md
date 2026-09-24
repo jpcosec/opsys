@@ -100,13 +100,18 @@ deskops show repository repo-deskops
 
 Walks a task through its routine: evaluates current checklists, checks edge conditions, and transitions to the next node via the matching operator.
 
-**Promote workflow items** — `deskops promote <promotion> <selector>`
+**Promote inbox notes** — `deskops promote inbox-to-drawer-task <selector>`
 
-Moves project-addressed messages and deferred drawer work through explicit steps without silently deleting the source artifact:
+Moves a project-addressed message into the drawer as a loose, deferred candidate, and removes it from the inbox and from the store:
 
 ```
 deskops promote inbox-to-drawer-task <inbox-note-selector>
-deskops promote drawer-task-to-active-task <drawer-task-selector>
+```
+
+There is no promotion from the drawer to an active task. The drawer holds loosely shaped material; an active task is a compiled bundle (task, routine, conditions, checklists, operators, edges) routed by the board. A drawer item becomes active work only when someone authors the task explicitly. `--from-drawer` records the drawer file in the task's own `from_drawer` field, which later edits to `references` cannot overwrite; the drawer file itself is kept and cleaned up by hand:
+
+```
+deskops add task --root . --from-drawer <drawer-selector> --title "..." --goal "..." --scope "..." --validation "..."
 ```
 
 ### Generated CLI surface

@@ -17,10 +17,20 @@ class OperationsCLI:
 
         if args.command == "add" and args.subject == "task":
             payload = operations.parse_task_input(args)
+            drawer_source = None
+            if getattr(args, "from_drawer", None):
+                try:
+                    drawer_source = operations.resolve_drawer_source(args.from_drawer)
+                except (FileNotFoundError, ValueError) as exc:
+                    print(f"Error: {exc}")
+                    return 1
+                payload = operations.attach_drawer_source(payload, drawer_source)
             bundle = operations.create_task_bundle(payload)
             print(f"Created task bundle {bundle.task_id}")
             print(f"Task: {bundle.task_path}")
             print(f"Routine: {bundle.routine_path}")
+            if drawer_source is not None:
+                print(f"From drawer: {drawer_source} (kept; remove it by hand once the task supersedes it)")
             return 0
 
         artifact_subjects = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
@@ -164,6 +174,8 @@ class OperationsCLI:
                 for item in task.inherits_from:
                     print(f"- {item}")
             print(f"Routine: {task.routine}")
+            if task.from_drawer:
+                print(f"From drawer: {task.from_drawer}")
             if task.effective_pills:
                 print("Effective pills:")
                 for item in task.effective_pills:

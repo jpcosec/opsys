@@ -4,6 +4,7 @@ from .base import OperationalArtifactDoc
 
 
 class BoardDoc(OperationalArtifactDoc):
+    __containment__ = {"tasks": ["TaskDoc"], "pills": ["PillDoc"], "rituals": ["RitualDoc"]}
     __semantics__ = {"type": ["workflow", "board"], "workspace": ["desk"]}
     __compositions__ = {
         "task_summaries": {

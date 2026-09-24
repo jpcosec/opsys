@@ -1,0 +1,10 @@
+id: field.from_drawer
+title: From Drawer Field
+type: field
+version: "0.1"
+
+data:
+  key: from_drawer
+  value_type: string
+  required: false
+  default: ""

@@ -80,13 +80,26 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     assert drawer_task.exists()
     assert not inbox_note.exists()
 
-    second_promote = _cli(root, "promote", "drawer-task-to-active-task", "lifecycle-e2e", "--root", str(root))
+    # There is no direct drawer -> task promotion: the task is authored
+    # explicitly from the loose drawer candidate, every structured field
+    # written by hand. --validation takes nargs="+", so it goes last.
+    _cli(
+        root, "add", "task", "--root", str(root),
+        "--title", "Lifecycle E2E",
+        "--why", "Prove the real CLI lifecycle end to end.",
+        "--goal", "Close a task authored from a drawer candidate.",
+        "--scope", "The lifecycle CLI only.",
+        "--implementation-path", "Author the task, advance it, close it out.",
+        "--done-when", "The task closes with a commit.",
+        "--from-drawer", "lifecycle-e2e",
+        "--validation", "pytest tests/test_lifecycle_smoke.py",
+    )
     active_task = root / "desk" / "tasks" / "task-lifecycle-e2e.md"
     routine = root / "desk" / "routines" / "routine-task-lifecycle-e2e.md"
-    assert "Created active task bundle task-lifecycle-e2e" in second_promote.stdout
     assert active_task.exists()
     assert routine.exists()
-    assert not drawer_task.exists()
+    assert "desk/drawer/tasks/task-lifecycle-e2e.md" in active_task.read_text(encoding="utf-8")
+    assert drawer_task.exists(), "the drawer candidate is kept for manual cleanup"
 
     board_text = (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-lifecycle-e2e.md" in board_text
@@ -125,6 +138,9 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
         str(root),
     )
     assert "Updated task task-lifecycle-e2e field references" in edit_references.stdout
+    assert "desk/drawer/tasks/task-lifecycle-e2e.md" in active_task.read_text(encoding="utf-8"), (
+        "from_drawer must survive replacing references"
+    )
 
     edit_files = _cli(
         root,

@@ -1,32 +1,30 @@
 from __future__ import annotations
 
 from pathlib import Path
-import json
 import re
 from typing import Any
 
 import yaml
 
-from deskops.operations import DeskopsOperations
 from deskops.operations import parse_task_sections
-from deskops.operations import parse_validation_section
 
 
 class PromoteCLI:
-    """Promote inbox and drawer items into the next workflow surface."""
+    """Promote inbox notes into loose drawer candidates.
+
+    There is deliberately no drawer -> active task promotion. The drawer holds
+    disorganized, loosely shaped material; an active task is a compiled bundle
+    (TaskDoc, routine, conditions, checklists, operators, edges, board route).
+    Converting one into the other mechanically meant filling every required
+    field with generic placeholders, producing a task that looked structured
+    but was not. A drawer item becomes active work only when someone authors
+    the task explicitly with `deskops add task`.
+    """
 
     def run(self, args: Any) -> int:
         root = Path(args.root).resolve()
         if args.promote_command == "inbox-to-drawer-task":
             return self._inbox_to_drawer_task(root, args.selector, args.title)
-        if args.promote_command == "drawer-task-to-active-task":
-            return self._drawer_task_to_active_task(
-                root,
-                args.selector,
-                args.title,
-                getattr(args, "payload", None),
-                getattr(args, "from_yaml", None),
-            )
         return 1
 
     def _inbox_to_drawer_task(self, root: Path, selector: str, title_override: str | None) -> int:
@@ -58,68 +56,37 @@ class PromoteCLI:
             ),
             encoding="utf-8",
         )
+        # Untrack before deleting: the note is a tracked InboxNoteDoc, so
+        # unlinking the file alone leaves an orphan entry in the store and
+        # `deskops status` reports it as an invalid missing document. Untrack
+        # first so a store failure cannot destroy the source file.
+        untrack_message = self._untrack_note(root, source)
         source.unlink(missing_ok=True)
         print(f"Created drawer task candidate {task_id}")
+        if untrack_message:
+            print(untrack_message)
         print(f"Deleted source file {source}")
         print(f"Path: {target}")
         return 0
 
-    def _drawer_task_to_active_task(
-        self,
-        root: Path,
-        selector: str,
-        title_override: str | None,
-        payload_override: str | None = None,
-        from_yaml: str | None = None,
-    ) -> int:
-        source = self._resolve_unique(root / "desk" / "drawer" / "tasks", selector)
-        if source is None:
-            print(f"No drawer task found for {selector}")
-            return 1
-        if isinstance(source, list):
-            print(f"Ambiguous drawer task selector {selector}: {', '.join(path.stem for path in source)}")
-            return 1
+    def _untrack_note(self, root: Path, source: Path) -> str | None:
+        """Drop the promoted note from the sldb store, best effort.
 
-        candidate = self._read_markdown(source)
-        title = (title_override or candidate["title"] or source.stem).strip()
-        task_id = f"task-{self._slug(title)}"
-        target = root / "desk" / "tasks" / f"{task_id}.md"
-        if target.exists():
-            print(f"Active task already exists: {target}")
-            return 1
+        Returns a human-readable line describing what happened, or None when
+        there is nothing to say. Never raises: a promotion must not be left
+        half-done because the store was unavailable."""
+        store_path = root / ".sldb"
+        if not store_path.exists():
+            return None
+        try:
+            from types import SimpleNamespace
 
-        operations = DeskopsOperations(root)
+            from sldb.cli.commands.doc import DocCLI
 
-        override_data = {}
-        if from_yaml:
-            override_data = yaml.safe_load(Path(from_yaml).read_text(encoding="utf-8")) or {}
-        elif payload_override:
-            override_data = json.loads(payload_override)
-
-        candidate_body = self._strip_leading_metadata(candidate["body"])
-        parsed = parse_task_sections(candidate_body)
-        parsed_fields = parsed["fields"]
-
-        task_payload = {
-            "id": override_data.get("id", task_id),
-            "title": override_data.get("title", title),
-            "status": override_data.get("status", "active"),
-            "why": override_data.get("why") or parsed_fields.get("why") or "Not provided.",
-            "goal": override_data.get("goal") or parsed_fields.get("goal") or f"Promote deferred work from {source.name}.",
-            "scope": override_data.get("scope") or parsed_fields.get("scope") or (candidate_body if not parsed["has_task_sections"] else parsed["preamble"]) or "",
-            "implementation_path": override_data.get("implementation_path") or parsed_fields.get("implementation_path") or f"Promoted from {source.relative_to(root)}.",
-            "validation": override_data.get("validation") or parse_validation_section(parsed_fields.get("validation", "")) or ["pytest"],
-            "done_when": override_data.get("done_when") or parsed_fields.get("done_when") or "Promoted work is completed, validated, and closed with a commit.",
-            "references": override_data.get("references", [str(source.relative_to(root))]),
-            "tags": override_data.get("tags", ["workspace:desk", "artifact:task", "source:drawer"]),
-        }
-
-        bundle = operations.create_task_bundle(task_payload)
-        source.unlink(missing_ok=True)
-        print(f"Created active task bundle {bundle.task_id}")
-        print(f"Deleted source file {source}")
-        print(f"Task: {bundle.task_path}")
-        return 0
+            DocCLI().untrack(SimpleNamespace(store=str(store_path), pythonpath=None, doc=source.stem))
+            return None
+        except Exception as exc:  # noqa: BLE001 - store problems must not abort the promotion
+            return f"Warning: could not untrack '{source.stem}' from the store: {exc}"
 
     def _resolve_unique(self, directory: Path, selector: str) -> Path | list[Path] | None:
         if not directory.exists():
@@ -194,9 +161,6 @@ class PromoteCLI:
             "",
         ])
         return "\n".join(lines)
-
-    def _strip_leading_metadata(self, body: str) -> str:
-        return re.sub(r"^(?:[A-Za-z][A-Za-z ]*:\s.*\n)+\s*", "", body, count=1)
 
     def _slug(self, text: str) -> str:
         slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")

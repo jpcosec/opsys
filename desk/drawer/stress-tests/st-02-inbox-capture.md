@@ -20,8 +20,8 @@ deskops inbox --show <selector>
 # 5. Promover a trabajo diferido
 deskops promote inbox-to-drawer-task <selector>
 
-# 6. Promover trabajo diferido a tarea activa
-deskops promote drawer-task-to-active-task <selector>
+# 6. Autorar la tarea activa a partir del item del drawer (no hay promocion directa)
+deskops add task --root . --from-drawer <selector> --title <titulo> --goal <objetivo> --scope <alcance> --validation <check>
 ```
 
 ## Puntos de estrés

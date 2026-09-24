@@ -12,6 +12,7 @@ This board routes deferred work only.
 - `desk/drawer/features/executor.md` — agent role model: executor (imported from paper_IEEE)
 - `desk/drawer/features/workflow-execution-engine.md` — automated workflow engine with hooks, state machines, condition evaluators, and gated execution pipeline
 - `desk/drawer/features/feature-adhoc-subagent-launcher-tmux-multi-cli.md` — ad-hoc subagent launcher via tmux + codex/agy/pi, with context injection, monitoring, and persisted run output
+- `desk/drawer/features/feature-herdr-supervised-execution-runtime.md` — supervised execution over Herdr: RoleDoc-driven agent launch, per-kind RuntimeProfileDoc, `deskops runtime supervise`. Implemented in the working tree (uncommitted, 273 tests passing); decision 3 (retarget the tmux launcher below onto Herdr) is still open. See the 2026-09-10 handoff under Notes.
 
 ## Tasks
 
@@ -118,3 +119,8 @@ Promote work from `desk/drawer/` into the active surfaces of `desk/` before impl
 The current deferred board has been atomized at the guardrail level: config/version policy, horizontal desk identity, cross-desk inbox delivery, list integrity, machine-readable output contracts, materialization contracts, atom lifecycle provenance, drift review, desk health boundaries, CLI grammar, closeout knowledge gates, and manual sequencing now each have explicit pills.
 
 All currently routed drawer tasks have been promoted into active desk task bundles. New repo-local work should enter the drawer first before the next promotion wave.
+
+Open issues from the 2026-09-10 session:
+
+- `desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md` — what that session left uncommitted and what is still open. Start here.
+- `desk/drawer/issues/issue-deskops-init-spawns-one-process-per-model.md` — `deskops init` spends ~8.5 s starting ~20 Python subprocesses; ~60 s of the test suite.

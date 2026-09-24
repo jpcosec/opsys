@@ -1,9 +1,11 @@
-from pydantic import Field, model_validator
+from pydantic import Field, model_serializer, model_validator
 
 from .base import OperationalArtifactDoc
 
 
 class TaskDoc(OperationalArtifactDoc):
+    __containment__ = {"checklists": ["ChecklistDoc"], "pills": ["PillDoc"], "atoms": ["AtomDoc"]}
+    __references__ = ["references", "depends_on", "inherits_from", "from_drawer"]
     model_config = {"extra": "allow"}
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
     
@@ -123,3 +125,21 @@ _Name the observable condition that makes the task complete._
         default_factory=list,
         description="Workflow or knowledge atoms explicitly bound to the task.",
     )
+    from_drawer: str = Field(
+        default="",
+        description="Repo-relative path of the desk/drawer/ file this task was authored from; empty when it was not.",
+    )
+
+    @model_serializer(mode="wrap")
+    def _omit_unset_from_drawer(self, handler):
+        """Serialize from_drawer only when it is set.
+
+        TaskDoc is tracked by every desk on the machine (123 tasks across 13
+        stores). A field that always serialized would change the hash of every
+        one of them and put each store in FAIL until migrated. Omitting it when
+        empty keeps existing tasks byte-identical, so no store needs migrating.
+        """
+        data = handler(self)
+        if not data.get("from_drawer"):
+            data.pop("from_drawer", None)
+        return data

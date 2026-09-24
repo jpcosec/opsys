@@ -33,7 +33,9 @@ class CLI:
 
         self._apply_test_root_override(args)
 
-        if hasattr(args, "root"):
+        # An optional --root (inbox) leaves the attribute present but None;
+        # only validate it when a value was actually supplied.
+        if getattr(args, "root", None) is not None:
             root_path = Path(args.root).resolve()
             if not root_path.exists() or not root_path.is_dir():
                 import sys

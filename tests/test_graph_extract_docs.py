@@ -71,3 +71,32 @@ type: artifact
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+def test_extract_doc_nodes_includes_runtime_profiles_and_runs(tmp_path: Path) -> None:
+    write(tmp_path / "desk/runtimes/runtime-pi.md", """---
+id: runtime-pi
+status: active
+kind: pi
+binary: pi
+---
+
+# Pi Runtime
+""")
+    write(tmp_path / "desk/runs/run-example.md", """---
+id: run-example
+task_id: task-example
+role_id: role-deskops-executor
+kind: pi
+---
+
+# Example run
+""")
+
+    nodes = extract_doc_nodes(tmp_path)
+    by_id = {node.id: node for node in nodes}
+
+    assert by_id["runtime_profile:runtime-pi"].kind == "runtime_profile"
+    assert by_id["runtime_profile:runtime-pi"].identity == "runtime-pi"
+    assert by_id["run:run-example"].kind == "run"
+    assert by_id["run:run-example"].identity == "run-example"

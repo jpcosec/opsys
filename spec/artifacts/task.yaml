@@ -22,6 +22,7 @@ data:
     - field.current_node
     - field.history
     - field.depends_on
+    - field.from_drawer
   operational:
     conditions:
       - primitive.task.has_implementation_path

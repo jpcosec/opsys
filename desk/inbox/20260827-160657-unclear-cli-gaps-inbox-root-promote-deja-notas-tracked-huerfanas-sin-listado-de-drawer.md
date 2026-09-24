@@ -2,7 +2,7 @@
 kind: unclear
 sender_project: gemini_test
 created_at: 2026-08-27T16:06:57
-status: open
+status: closed
 ---
 
 # CLI gaps: inbox --root, promote deja notas tracked huerfanas, sin listado de drawer

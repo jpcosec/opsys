@@ -2,7 +2,7 @@
 kind: unclear
 sender_project: gemini_test
 created_at: 2026-08-27T16:48:46
-status: open
+status: closed
 ---
 
 # edit/extractor corre secciones vacias y advance --to no toca status
