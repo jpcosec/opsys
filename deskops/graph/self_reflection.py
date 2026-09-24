@@ -416,3 +416,46 @@ def _is_excluded_source_path(path: str) -> bool:
     if any(path.startswith(prefix) for prefix in EXCLUDED_SOURCE_PREFIXES):
         return True
     return any(path.endswith(suffix) for suffix in EXCLUDED_SOURCE_SUFFIXES)
+
+
+def drift_check_knowledge_surfaces(root: Path) -> list[str]:
+    from deskops.graph.checks import find_missing_graph_references, read_graph_snapshot
+    from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+    
+    graph_path = root / DEFAULT_SNAPSHOT_PATH
+    try:
+        snapshot = read_graph_snapshot(graph_path)
+    except Exception:
+        snapshot = {"nodes": [], "edges": []}
+        
+    missing = find_missing_graph_references(root, graph_path if graph_path.exists() else None)
+    
+    report: list[str] = []
+    
+    # 1. an atom whose declared targets or materializations no longer resolve
+    for finding in missing:
+        if finding.source_id.startswith("atom:"):
+            loc = f"{finding.provenance_path}#{finding.provenance_locator}" if finding.provenance_path else finding.source_id
+            report.append(f"stale-atom: {loc} declares target {finding.target_id} which no longer resolves")
+            
+    # 2a. a document that points at atoms with no inbound trace (dangling reference)
+    for finding in missing:
+        if finding.target_id.startswith("atom:") and not finding.source_id.startswith("atom:"):
+            loc = f"{finding.provenance_path}#{finding.provenance_locator}" if finding.provenance_path else finding.source_id
+            report.append(f"dangling-atom-reference: {loc} points at missing {finding.target_id}")
+
+    # 3. a graph finding that no atom and no issue covers
+    covering_sources = set()
+    for edge in _snapshot_edges(snapshot):
+        if edge["source"].startswith("atom:") or edge["source"].startswith("issue:"):
+            covering_sources.add(edge["target"])
+            
+    for finding in missing:
+        if finding.source_id.startswith("atom:") or finding.source_id.startswith("issue:"):
+            continue
+        if finding.source_id in covering_sources:
+            continue
+        loc = f"{finding.provenance_path}#{finding.provenance_locator}" if finding.provenance_path else finding.source_id
+        report.append(f"unrouted-finding: {loc} (missing {finding.target_id}) is not covered by any atom or issue")
+
+    return report

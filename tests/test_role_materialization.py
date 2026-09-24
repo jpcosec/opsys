@@ -76,13 +76,13 @@ def test_materialize_renders_role_docs_to_out_dir_and_drift_checks(tmp_path: Pat
     clean = main(["drift", "check", "--root", str(tmp_path), "--out", str(out_dir)])
     clean_out = capsys.readouterr()
     assert clean == 0
-    assert "No role-agent drift found." in clean_out.out
+    assert "No drift found." in clean_out.out
 
     output_path.write_text(output_path.read_text(encoding="utf-8") + "\n# drift\n", encoding="utf-8")
     drifted = main(["drift", "check", "--root", str(tmp_path), "--out", str(out_dir)])
     drifted_out = capsys.readouterr()
     assert drifted == 1
-    assert "Role-agent drift findings:" in drifted_out.out
+    assert "Drift findings:" in drifted_out.out
     assert str(output_path) in drifted_out.out
 
 def test_extract_doc_nodes_includes_role_docs(tmp_path: Path) -> None:

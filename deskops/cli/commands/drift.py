@@ -16,10 +16,14 @@ class DriftCLI:
         out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
         findings = drift_check_role_docs(root, out_dir)
         findings += drift_check_runtime_bindings(root)
+        
+        from deskops.graph.self_reflection import drift_check_knowledge_surfaces
+        findings += drift_check_knowledge_surfaces(root)
+        
         if not findings:
-            print("No role-agent drift found.")
+            print("No drift found.")
             return 0
-        print("Role-agent drift findings:")
+        print("Drift findings:")
         for finding in findings:
             print(f"- {finding}")
         return 1

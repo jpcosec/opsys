@@ -49,7 +49,7 @@ The drift surface and a routine doc describing when to run it. Starts as a revie
 
 _Outline the expected implementation route or affected surface._
 
-deskops/cli/commands/drift.py exists and already reports some of this; extend it and deskops/graph/self_reflection.py rather than adding a parallel command. desk/drawer/issues/issue-drift-checks-are-review-surfaces-not-mutators.md's atom is the rule: report, never repair. Add the routine under desk/routines/ if the workflow needs one.
+deskops/cli/commands/drift.py exists and already reports some of this; extend it and deskops/graph/self_reflection.py rather than adding a parallel command. desk/atoms/atom-drift-checks-are-review-surfaces-not-mutators.md is the rule: report, never repair. Add the routine under desk/routines/ if the workflow needs one.
 
 ## Validation
 

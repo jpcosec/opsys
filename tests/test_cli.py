@@ -2553,3 +2553,37 @@ def test_empty_selector_guard_holds_at_the_resolution_layer(tmp_path: Path, caps
     operations = DeskopsOperations(tmp_path)
     with pytest.raises(ValueError, match="Empty or whitespace-only"):
         operations._resolve_artifact_selector_multi("artifact.task", [tmp_path / "desk" / "tasks"], "")
+
+
+def test_drift_check_reports_knowledge_surface_findings(tmp_path: Path, capsys) -> None:
+    """Drift includes knowledge surfaces, and reports without repairing."""
+    from deskops.cli.main import main
+
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    # A document that declares a target nothing resolves.
+    (tmp_path / "desk" / "drawer" / "issues").mkdir(parents=True, exist_ok=True)
+    (tmp_path / "desk" / "drawer" / "issues" / "issue-dangling.md").write_text(
+        "# Dangling\n\n## Related Atoms\n\n- atom-that-does-not-exist\n", encoding="utf-8"
+    )
+    before = (tmp_path / "desk" / "drawer" / "issues" / "issue-dangling.md").read_text(encoding="utf-8")
+
+    assert main(["drift", "check", "--root", str(tmp_path)]) == 1
+    out, _err = capsys.readouterr()
+
+    assert "Drift findings:" in out
+    assert "atom-that-does-not-exist" in out
+    # Review surface: the desk is untouched.
+    assert (tmp_path / "desk" / "drawer" / "issues" / "issue-dangling.md").read_text(encoding="utf-8") == before
+
+
+def test_drift_check_is_quiet_on_a_fresh_desk(tmp_path: Path, capsys) -> None:
+    from deskops.cli.main import main
+
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    assert main(["drift", "check", "--root", str(tmp_path)]) == 0
+    out, _err = capsys.readouterr()
+    assert "No drift found." in out

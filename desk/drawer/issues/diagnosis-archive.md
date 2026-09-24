@@ -43,7 +43,7 @@ description: Architectural diagnosis summary for the current deskops workflow.
 
 The current workflow still treats too many structured workflow surfaces as Markdown files to read directly instead of as structured documents to query, compose, and render through SLDB. That weakens the intended architecture where deskops should sit on top of SLDB and expose workflow operations over compositions rather than raw file reads.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
@@ -78,7 +78,7 @@ description: Observed problem in how deskops consumes workflow surfaces.
 
 Deskops still relies too often on direct file-shaped surfaces such as task Markdown, atom Markdown, and materialized docs instead of consistently routing those reads through SLDB-backed queries and compositions. This keeps deskops too close to document storage and too far from the structured domain layer it is meant to provide.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
@@ -113,7 +113,7 @@ description: Observed problem in the current hook layer.
 
 Deskops already models hooks as workflow artifacts, but it does not yet expose a general runtime that resolves events, evaluates hook conditions, and dispatches hook targets consistently. As a result, some automatic behavior exists only as specialized code paths instead of as reusable hook-driven workflow automation.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-wire-closeout-to-knowledge-gates.md`
@@ -148,7 +148,7 @@ description: Observed problem in the current reading path for atoms.
 
 When an atom is consumed primarily by opening its `.md` file, the operational reading path bypasses SLDB's document model, field access, and composition capabilities. That makes the materialized file behave like the primary interface instead of a projection over structured knowledge.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-add-drift-check-review-loop.md`
@@ -182,7 +182,7 @@ description: Observed problem in the current task execution model.
 
 Current tasks usually capture goal, scope, files, and validation, but they do not yet consistently decompose execution into concrete edit-oriented actions such as replacing a pattern, introducing a method from an existing example, or applying a named refactor to a specific surface. That leaves too much semantic improvisation to the executor lane.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
@@ -217,7 +217,7 @@ description: Symptom connecting document growth with architectural underuse of S
 
 When structured knowledge is not easy to recover through queries and compositions, projects tend to add more explanatory docs, diagrams, summaries, and operational prompts to compensate. Some of the current documentation pressure likely comes from this missing semantic access path rather than from an intrinsic need for more prose.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
 - `desk/tasks/task-add-drift-check-review-loop.md`
@@ -253,7 +253,7 @@ description: Symptom explaining why the current reading path feels heavy.
 
 Frontmatter is valuable as structured metadata for indexing, validation, and field access, but it becomes reading noise when the operational path repeatedly consumes whole Markdown files instead of retrieving only the needed fields or a composed view. This symptom indicates the structured layer is not acting as the primary interface.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
@@ -288,7 +288,7 @@ description: Expected model for reading workflow knowledge.
 
 Deskops should treat SLDB as the primary read/query/compose layer for structured workflow knowledge. Reading an atom, task, or materialization should usually mean resolving a structured document and asking SLDB for the appropriate composition or field view, not opening the materialized Markdown file as the default operational path.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-add-json-output-for-modeled-documents.md`
@@ -323,7 +323,7 @@ description: Expected model for docs and rendered workflow surfaces.
 
 Materialized docs, diagrams, and similar rendered surfaces should primarily act as human-facing projections over structured knowledge. They should not be the default operational input path for deskops when a structured query or composition can provide the needed information more precisely.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-add-drift-check-review-loop.md`
@@ -358,7 +358,7 @@ description: Expected model for making tasks more executable.
 
 A task should not stop at human-readable intent. Deskops should be able to compile a task into an execution composition that includes the exact surfaces to touch, relevant patterns or examples, intended edits, validation targets, and anti-patterns. That would reduce executor improvisation and make subagent lanes more deterministic.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
@@ -393,7 +393,7 @@ description: Main architectural gap between current and target workflow behavior
 
 The main gap is that deskops has not yet fully turned SLDB queries and compositions into its normal operational interface. Until that happens, agents and humans will keep falling back to direct file reads, and the intended separation between structured source, composition, and materialization will remain incomplete.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
@@ -428,7 +428,7 @@ description: Workline for turning modeled hooks into reusable runtime automation
 
 Deskops should move from merely modeling hooks to running them through a general event-driven mechanism. A minimal runtime should resolve hook documents for an event, evaluate conditions, support dry-run visibility, persist evidence, and dispatch targets such as closeout automation or executor-lane launch.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-wire-closeout-to-knowledge-gates.md`
@@ -463,7 +463,7 @@ description: Workline for making tasks more executable by subagents.
 
 The task model should gain a field or composition layer for execution plans that describe concrete edit actions. These plans can name target files, replacement patterns, insertion points, donor examples, refactor shapes, and validation obligations so the executor lane receives a bounded operational recipe rather than only a semantic goal.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
@@ -498,7 +498,7 @@ description: Workline for making deskops consume SLDB compositions directly.
 
 Deskops should expose first-class compose operations for structured workflow artifacts such as atoms, tasks, and materializations. These operations should resolve documents through SLDB and return fit-for-purpose views such as minimal field bundles, execution bundles, review bundles, or human-facing composed summaries.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-add-json-output-for-modeled-documents.md`
@@ -533,7 +533,7 @@ description: Priority use case for hook-driven workflow automation.
 
 When a task satisfies execution-ready conditions, deskops should be able to compose the bounded execution bundle, create the run evidence directory, and dispatch the executor lane automatically or in a reviewable dry-run mode. This use case would prove that hooks can drive real workflow automation rather than remain passive documentation artifacts.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-wire-closeout-to-knowledge-gates.md`
@@ -568,7 +568,7 @@ description: Priority use case for the compose/query path.
 
 A common workflow should allow deskops to retrieve just the relevant structured answer or a composed view of an atom without forcing the operator to read raw frontmatter and the whole materialized file. This use case is a direct test of whether deskops is really mounted over SLDB rather than merely coexisting beside it.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-add-json-output-for-modeled-documents.md`
@@ -602,7 +602,7 @@ description: Risk to control when activating automatic hooks.
 
 Hook automation should not become an invisible side-effect machine. If hooks begin dispatching executors or creating commits automatically, deskops must also provide clear event logs, dry-run inspection, condition visibility, and evidence capture so operators can understand why automation fired and what it changed.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-wire-closeout-to-knowledge-gates.md`
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
@@ -636,7 +636,7 @@ description: Risk to control when making tasks more execution-oriented.
 
 Task atomization should reduce improvisation, not destroy coherent deliverables. If execution plans become too granular or too rigid, the workflow may fragment one meaningful change into excessive micro-actions that are expensive to author, review, and maintain.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
@@ -671,7 +671,7 @@ description: Advancement criterion for this diagnosis line.
 
 This diagnosis line starts to resolve when deskops can serve common reads of atoms, tasks, and materializations through SLDB-backed queries and compositions by default, while raw Markdown reads become an exception instead of the main operational habit.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
 - `desk/tasks/task-add-json-output-for-modeled-documents.md`
@@ -712,7 +712,7 @@ The stale board and task state accumulated because deskops currently lets severa
 
 This is not only a documentation inconsistency. It is a workflow failure mode that sits directly between desk health and recovery, drift review, task lifecycle execution, and the eventual operator manual/routing contract. Until those tasks define one authoritative routing and cleanup model, the repo can keep recreating dirty worktrees and stale board state even after individual fixes land.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md`
 - `desk/tasks/task-add-drift-check-review-loop.md`
@@ -754,7 +754,7 @@ description: Diagnosis of why desk recovery and migration work keeps appearing.
 
 Desk state remains fragile because the project still depends on conventions that can drift across modeled docs, runtime files, legacy layouts, and version expectations. Without a stronger workspace contract and explicit recovery surface, deskops cannot reliably distinguish healthy desks, fresh desks, stale desks, and incompatible desks.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md`
 - `desk/tasks/task-add-per-project-desk-config-and-version-contract.md`
@@ -789,7 +789,7 @@ description: Summary diagnosis for workspace health, recovery, and migration con
 
 The active board already treats desk health, recovery, legacy migration, and per-project version/config contracts as important work, but the diagnosis tree does not yet capture them as a first-class architectural problem family. That leaves a gap between implementation pressure and explicit understanding of why workspace state remains fragile.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md`
 - `desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md`
@@ -824,7 +824,7 @@ description: Summary diagnosis for horizontal desk identity and inbox transport 
 
 The active board already treats cross-repo identity resolution and inbox delivery as core workflow concerns, but the current diagnosis tree does not isolate them as their own architectural problem family. This hides how much multi-repo workflow reliability depends on canonical identity and verifiable transport behavior.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md`
 - `desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md`
@@ -858,7 +858,7 @@ description: Diagnosis of why cross-desk workflow remains unreliable.
 
 Cross-desk workflow remains unreliable when desk identity can be inferred ambiguously and inbox delivery behaves like a write-only drop rather than a verifiable transport. Canonical identity and explicit delivery semantics are prerequisites for treating multi-repo workflow as an operational surface instead of a best-effort convention.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md`
 - `desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md`
@@ -892,7 +892,7 @@ description: Summary diagnosis for CLI grammar and machine-readable output gaps.
 
 The active board already treats command grammar and JSON output as active work, which shows the current CLI surface is not yet fully aligned with spoken workflow language or machine-composable usage. The diagnosis tree should capture this as its own problem family rather than only as a side effect of other architectural concerns.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-design-operational-cli-grammar.md`
 - `desk/tasks/task-add-json-output-for-modeled-documents.md`
@@ -926,7 +926,7 @@ description: Diagnosis of why CLI simplification and output shaping remain activ
 
 The current CLI still reflects internal artifact and implementation structure more directly than an operator-facing workflow language should. That makes both human use and machine composition harder than necessary, and it increases the amount of explanatory documentation needed around command behavior.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-design-operational-cli-grammar.md`
 - `desk/tasks/task-add-json-output-for-modeled-documents.md`
@@ -961,7 +961,7 @@ description: Summary diagnosis for atom lifecycle mutation and provenance concer
 
 The active board already treats atom lifecycle operations, closeout knowledge gates, and pill graduation as first-class work, but the diagnosis tree does not yet isolate durable-knowledge mutation as its own problem family. That leaves atom evolution pressure under-described even though it strongly shapes closeout and workflow trustworthiness.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-atom-lifecycle-operations.md`
 - `desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md`
@@ -996,7 +996,7 @@ description: Diagnosis of why atom lifecycle and knowledge closeout still need d
 
 Durable knowledge mutation needs safer provenance contracts because atoms are not static notes: they are created, split, merged, linked to materializations, and updated from workflow discoveries. Without stronger mutation and provenance rules, closeout cannot reliably prove that durable knowledge changed safely rather than merely changed somehow.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-define-atom-lifecycle-operations.md`
 - `desk/tasks/task-wire-closeout-to-knowledge-gates.md`
@@ -1031,7 +1031,7 @@ description: Summary diagnosis for drift as a first-class workflow problem.
 
 The active board already treats drift review as explicit work, but the current diagnosis tree only mentions drift as a symptom of weak semantic access. Drift should be diagnosed as its own first-class workflow problem because it spans atoms, materializations, graphs, tests, diagrams, and implementation surfaces at once.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-add-drift-check-review-loop.md`
 - `desk/tasks/task-wire-closeout-to-knowledge-gates.md`
@@ -1065,7 +1065,7 @@ description: Diagnosis of why drift deserves direct workflow treatment.
 
 Multi-surface drift is a core workflow failure mode because deskops intentionally spreads truth across structured knowledge, materializations, operational docs, tests, graphs, and implementation. If those surfaces evolve out of sync, the workflow starts lying about itself even when each individual file still looks locally reasonable.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-add-drift-check-review-loop.md`
 - `desk/tasks/task-write-end-to-end-deskops-operator-manual.md`
@@ -1100,7 +1100,7 @@ description: Diagnosis of why deskops has been mutating beyond its original work
 
 Deskops has been mutating beyond a workflow-document layer because it has had to absorb two missing capabilities at once: a stronger composition layer over structured knowledge and a stronger runtime layer for execution orchestration. As those missing layers failed to crystallize elsewhere, deskops became the place where knowledge operations, composition pressure, and workflow runtime concerns converged.
 
-#### Related Tasks
+#### Related tasks (as of 2026-08, not live references)
 
 - `desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md`
 - `desk/tasks/task-define-materialization-contract-slice-deskops-surface.md`
