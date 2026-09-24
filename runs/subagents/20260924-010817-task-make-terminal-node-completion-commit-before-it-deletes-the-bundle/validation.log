@@ -1,0 +1,29 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/workflow-model/atom-create-operations-should-rollback-on-failure.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "5f9b872"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_lifecycle_end_to_end.py",
+        "tests/test_cli.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-make-terminal-node-completion-commit-before-it-deletes-the-bundle"
+}

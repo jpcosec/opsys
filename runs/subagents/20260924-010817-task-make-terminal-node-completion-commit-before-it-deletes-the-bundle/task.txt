@@ -1,0 +1,10 @@
+Task: task-make-terminal-node-completion-commit-before-it-deletes-the-bundle
+Title: Make terminal-node completion commit before it deletes the bundle
+Status: active
+Current node: checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-testing-ready
+Task type: bugfix
+Routine: routine-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle
+Checklist status:
+- checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-execution-ready: complete
+- checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-testing-ready: complete
+- checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-closeout-ready: pending

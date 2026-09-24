@@ -1,0 +1,1 @@
+Error: No artifact.task file found for selector '010817-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle' in /home/jp/proyectos/hum-ecosystem/tools/deskops/desk/tasks

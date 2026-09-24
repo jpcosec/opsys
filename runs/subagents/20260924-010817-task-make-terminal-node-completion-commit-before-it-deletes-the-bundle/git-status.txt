@@ -1,0 +1,5 @@
+## main...origin/main [ahead 19]
+?? runs/subagents/20260924-010817-task-derive-declared-graph-edges-from-model-containment-and-references/
+?? runs/subagents/20260924-010817-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model/
+?? runs/subagents/20260924-010817-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write/
+?? runs/subagents/20260924-010817-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle/
