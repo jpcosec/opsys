@@ -11,8 +11,7 @@ from sldb.runtime.validation import render_model_markdown
 
 from deskops.cli.main import main
 from deskops.identity import load_repository_registry
-from deskops.identity import resolve_canonical_project_identity
-from deskops.identity import resolve_registered_desk
+from deskops.identity import EcosystemIdentity
 from deskops.models import RepositoryDoc
 
 
@@ -55,7 +54,7 @@ def test_resolve_registered_desk_reports_actionable_missing_registry_message(
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
 
     with pytest.raises(SLDBStoreError, match="Supported path: run 'deskops repo register <name> --path <abs>'"):
-        resolve_registered_desk("deskops", str(store_path))
+        EcosystemIdentity(str(store_path)).how_do_i_find_another("deskops")
 
 
 
@@ -74,7 +73,7 @@ def test_resolve_canonical_project_identity_reports_actionable_unregistered_root
 
     expected = f"Supported path: run 'deskops repo register <name> --path {repo_root.resolve()}'"
     with pytest.raises(SLDBStoreError, match=re.escape(expected)):
-        resolve_canonical_project_identity(repo_root, str(store_path))
+        EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root, require_registry_match=True)
 
 
 

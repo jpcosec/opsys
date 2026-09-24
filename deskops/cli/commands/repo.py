@@ -12,8 +12,7 @@ from sldb.store.layout import project_root
 from sldb.store.ops import track_document
 from sldb.store.resolver import find_local_store
 
-from deskops.identity import load_repository_registry
-from deskops.identity import resolve_canonical_project_identity
+from deskops.identity import load_repository_registry, EcosystemIdentity
 
 
 class RepoCLI:
@@ -132,7 +131,7 @@ class RepoCLI:
 
     def whoami(self, args: Any) -> int:
         try:
-            project_id = resolve_canonical_project_identity(Path(args.root), args.store)
+            project_id = EcosystemIdentity(args.store).what_repository_am_i_in(Path(args.root), require_registry_match=True)
         except SLDBStoreError as e:
             print(f"Error: {e}")
             return 1

@@ -73,7 +73,7 @@ def resolve_registered_repo(
 ) -> RegisteredRepository:
     matches = [entry for entry in entries if entry.id == repo_id]
     if not matches:
-        raise SLDBStoreError(_missing_repository_message(repo_id, registry_dir=registry_dir))
+        raise SLDBStoreError(_missing_repository_message(repo_id, entries, registry_dir=registry_dir))
     if len(matches) > 1:
         raise SLDBStoreError(_duplicate_id_message(repo_id, matches))
     return matches[0]
@@ -100,74 +100,58 @@ def resolve_registered_repo_by_root(
     return matches[0]
 
 
-def resolve_registered_desk(repo_id: str, store_arg: str | None) -> Path:
-    _store_path, ecosystem_root = resolve_store_context(store_arg)
-    registry_desk_root = ecosystem_root / "desk"
-    entries = load_repository_registry(registry_desk_root, ecosystem_root)
-    entry = resolve_registered_repo(entries, repo_id, registry_dir=registry_desk_root / "registry")
-    if entry.desk_root is None:
-        raise SLDBStoreError(f"Repository id '{repo_id}' has no registered root path.")
-    return entry.desk_root.resolve()
+class EcosystemIdentity:
+    """Canonical resolution path answering 'what repository am I in right now' and 'how do I find another'."""
+    def __init__(self, store_arg: str | None) -> None:
+        self.store_path, self.ecosystem_root = resolve_store_context(store_arg)
+        self.registry_desk_root = self.ecosystem_root / "desk"
+        self.registry_dir = self.registry_desk_root / "registry"
+        self.entries = load_repository_registry(self.registry_desk_root, self.ecosystem_root)
 
+    def what_repository_am_i_in(self, repo_root: Path, *, require_registry_match: bool) -> str | None:
+        repo_root = repo_root.resolve()
+        desk_root = repo_root / "desk"
+        config_identity = UNKNOWN_PROJECT_IDENTITY
+        if desk_root.exists():
+            config = DeskConfig.load(desk_root)
+            config_identity = (config.project_identity or UNKNOWN_PROJECT_IDENTITY).strip() or UNKNOWN_PROJECT_IDENTITY
 
-def resolve_canonical_project_identity(repo_root: Path, store_arg: str | None) -> str:
-    repo_root = repo_root.resolve()
-    desk_root = repo_root / "desk"
-    config = DeskConfig.load(desk_root)
-    config_identity = (config.project_identity or UNKNOWN_PROJECT_IDENTITY).strip() or UNKNOWN_PROJECT_IDENTITY
-    if config_identity == UNKNOWN_PROJECT_IDENTITY:
-        raise SLDBStoreError(
-            "Desk config project_identity is not established (found 'unknown-project')."
-        )
+        entry_by_root = resolve_registered_repo_by_root(self.entries, repo_root)
 
-    _store_path, ecosystem_root = resolve_store_context(store_arg)
-    registry_desk_root = ecosystem_root / "desk"
-    entries = load_repository_registry(registry_desk_root, ecosystem_root)
-    if not entries:
-        # A desk that keeps no repository registry is its own authority for its
-        # identity: config.json declares it and there is nothing to contradict.
-        # Without this, every repo-local desk fails its own inbox and next
-        # commands with "Repository id '<name>' not found in registry".
-        return config_identity
-    repo_by_id = resolve_registered_repo(
-        entries,
-        config_identity,
-        registry_dir=registry_desk_root / "registry",
-    )
-    repo_by_root = resolve_registered_repo_by_root(entries, repo_root)
-    if repo_by_root is None:
-        raise SLDBStoreError(
-            _unregistered_current_repo_message(repo_root, registry_dir=registry_desk_root / "registry")
-        )
-    if repo_by_id.id != repo_by_root.id:
-        raise SLDBStoreError(
-            "Desk config project_identity "
-            f"'{config_identity}' disagrees with registry root match '{repo_by_root.id}' for '{repo_root}'."
-        )
-    return config_identity
+        if not self.entries:
+            if require_registry_match and config_identity == UNKNOWN_PROJECT_IDENTITY:
+                raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
+            return config_identity if config_identity != UNKNOWN_PROJECT_IDENTITY else None
 
-
-def infer_sender_project_identity(sender_root: Path, store_arg: str | None) -> str | None:
-    _store_path, ecosystem_root = resolve_store_context(store_arg)
-    entries = load_repository_registry(ecosystem_root / "desk", ecosystem_root)
-    entry = resolve_registered_repo_by_root(entries, sender_root.resolve())
-    if entry is None:
-        if entries:
-            return None
-        # No registry to consult: fall back to the sender's own declared
-        # identity rather than treating the note as coming from nowhere.
-        config_identity = DeskConfig.load(sender_root / "desk").project_identity.strip()
-        return config_identity or None
-
-    desk_root = entry.desk_root
-    if desk_root is not None and desk_root.exists():
-        config_identity = DeskConfig.load(desk_root).project_identity.strip() or UNKNOWN_PROJECT_IDENTITY
-        if config_identity != UNKNOWN_PROJECT_IDENTITY and config_identity != entry.id:
-            raise SLDBStoreError(
-                "Desk config project_identity "
-                f"'{config_identity}' disagrees with registry id '{entry.id}' for '{entry.repo_root}'."
+        if require_registry_match:
+            if config_identity == UNKNOWN_PROJECT_IDENTITY:
+                raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
+            repo_by_id = resolve_registered_repo(
+                self.entries, config_identity, registry_dir=self.registry_dir
             )
-    return entry.id
+            if entry_by_root is None:
+                raise SLDBStoreError(
+                    _unregistered_current_repo_message(repo_root, registry_dir=self.registry_dir)
+                )
+            if repo_by_id.id != entry_by_root.id:
+                raise SLDBStoreError(
+                    f"Desk config project_identity '{config_identity}' disagrees with registry root match '{entry_by_root.id}' for '{repo_root}'."
+                )
+            return config_identity
+        else:
+            if entry_by_root is None:
+                return None
+            if config_identity != UNKNOWN_PROJECT_IDENTITY and config_identity != entry_by_root.id:
+                raise SLDBStoreError(
+                    f"Desk config project_identity '{config_identity}' disagrees with registry id '{entry_by_root.id}' for '{entry_by_root.repo_root}'."
+                )
+            return entry_by_root.id
+
+    def how_do_i_find_another(self, repo_id: str) -> Path:
+        entry = resolve_registered_repo(self.entries, repo_id, registry_dir=self.registry_dir)
+        if entry.desk_root is None:
+            raise SLDBStoreError(f"Repository id '{repo_id}' has no registered root path.")
+        return entry.desk_root.resolve()
 
 
 def _raise_on_duplicate_ids(entries: list[RegisteredRepository]) -> None:
@@ -196,10 +180,11 @@ def _duplicate_id_message(repo_id: str, matches: list[RegisteredRepository]) -> 
     return f"Duplicate repository id '{repo_id}' in registry: {locations}."
 
 
-def _missing_repository_message(repo_id: str, *, registry_dir: Path | None) -> str:
+def _missing_repository_message(repo_id: str, entries: list[RegisteredRepository], *, registry_dir: Path | None) -> str:
     registry_hint = f" at '{registry_dir}'" if registry_dir is not None else ""
+    found = ", ".join(sorted(e.id for e in entries)) if entries else "none"
     return (
-        f"Repository id '{repo_id}' not found in registry{registry_hint}. "
+        f"Repository id '{repo_id}' not found in registry{registry_hint} (found: {found}). "
         "Supported path: run 'deskops repo register <name> --path <abs>' "
         "or add an entry to the ecosystem registry."
     )

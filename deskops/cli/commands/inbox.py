@@ -17,9 +17,9 @@ from sldb.store.layout import project_root
 from sldb.store.ops import track_document
 from sldb.store.resolver import find_local_store
 
-from deskops.identity import infer_sender_project_identity
-from deskops.identity import resolve_canonical_project_identity
-from deskops.identity import resolve_registered_desk
+from deskops.identity import EcosystemIdentity
+
+
 from deskops.models import InboxNoteDoc
 
 
@@ -116,17 +116,14 @@ class InboxCLI:
         return self._print_ack_result(result, args.format)
 
     def _desk_root(self, args: Any) -> Path:
-        if args.desk_root:
+        if getattr(args, "desk_root", None):
             return Path(args.desk_root).resolve()
 
-        # --root is the repository root, the flag every other subcommand takes;
-        # --desk-root points at the desk/ directory itself and wins when both
-        # are given, since it is the more specific of the two.
+        if getattr(args, "repo", None):
+            return self._resolve_repo_desk(args.repo, args.store, args.pythonpath)
+
         if getattr(args, "root", None):
             return (Path(args.root).resolve() / "desk").resolve()
-
-        if args.repo:
-            return self._resolve_repo_desk(args.repo, args.store, args.pythonpath)
 
         if args.store:
             return (project_root(Path(args.store).resolve()) / "desk").resolve()
@@ -139,12 +136,12 @@ class InboxCLI:
 
     def _resolve_target(self, args: Any) -> tuple[str, Path]:
         desk_root = self._desk_root(args)
-        target_project = resolve_canonical_project_identity(desk_root.parent, args.store)
+        target_project = EcosystemIdentity(args.store).what_repository_am_i_in(desk_root.parent, require_registry_match=True)
         return target_project, desk_root
 
     def _resolve_repo_desk(self, repo_name: str, store_arg: str | None, pythonpath: str | None) -> Path:
         _ = pythonpath
-        return resolve_registered_desk(repo_name, store_arg)
+        return EcosystemIdentity(store_arg).how_do_i_find_another(repo_name)
 
     def _store_context_safe(self, store_arg: str | None) -> tuple[Path, Path]:
         if store_arg:
@@ -269,12 +266,13 @@ class InboxCLI:
         return slug or "note"
 
     def _sender_project(self, args: Any) -> str:
+        ecosystem = EcosystemIdentity(args.store)
         if getattr(args, "sender", None):
-            sender_desk = resolve_registered_desk(args.sender, args.store)
-            return resolve_canonical_project_identity(sender_desk.parent, args.store)
+            sender_desk = ecosystem.how_do_i_find_another(args.sender)
+            return ecosystem.what_repository_am_i_in(sender_desk.parent, require_registry_match=True)
 
         sender_root = Path.cwd().resolve()
-        sender_project = infer_sender_project_identity(sender_root, args.store)
+        sender_project = ecosystem.what_repository_am_i_in(sender_root, require_registry_match=False)
         if sender_project is None:
             raise SLDBStoreError(
                 f"Unable to resolve sender identity for '{sender_root}'. Use --sender or register the repository canonically."
