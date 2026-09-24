@@ -9,7 +9,10 @@ routine: routine-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store
 current_node: checklist-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-testing-ready
 history:
 - operator-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-activate
-references: []
+references:
+- tests/test_desk_sync.py
+- bba5a47
+- desk/atoms/atom-desk-health-delegates-store-diagnostics-to-sldb.md
 depends_on: []
 pills: []
 files: []

@@ -1,0 +1,10 @@
+Task: task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store
+Title: Add deskops desk update to reconcile a desk and its store
+Status: active
+Current node: checklist-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-testing-ready
+Task type: feature
+Routine: routine-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store
+Checklist status:
+- checklist-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-execution-ready: complete
+- checklist-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-testing-ready: complete
+- checklist-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-closeout-ready: pending

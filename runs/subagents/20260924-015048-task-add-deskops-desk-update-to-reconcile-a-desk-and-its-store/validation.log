@@ -1,0 +1,28 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/atom-desk-health-delegates-store-diagnostics-to-sldb.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "bba5a47"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_desk_sync.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store"
+}
