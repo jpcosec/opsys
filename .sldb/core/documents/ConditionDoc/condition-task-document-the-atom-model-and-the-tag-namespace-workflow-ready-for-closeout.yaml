@@ -1,0 +1,10 @@
+name: condition-task-document-the-atom-model-and-the-tag-namespace-workflow-ready-for-closeout
+path: desk/primitives/conditions/condition-task-document-the-atom-model-and-the-tag-namespace-workflow-ready-for-closeout.md
+hash_c: abe61bb55bcd69335d806720b5f8d262ae14b9f6cb859f4e1c11be619378abda
+hash_d: 4fed09c8b7e643993a48a3f37de6f528b99467f724cf0c8c60a18f25bcaadf00
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

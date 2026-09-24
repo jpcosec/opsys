@@ -1,0 +1,10 @@
+name: checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-closeout-ready
+path: desk/primitives/checklists/checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-closeout-ready.md
+hash_c: be74477678e48b84a6a853aa95cd77b15263018a50b9b5b5acdca271094d6b63
+hash_d: 31a77d9d6bd3bcdfa009f442090bfdb629db295a5e73a2736e9e155e79b4c1d2
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

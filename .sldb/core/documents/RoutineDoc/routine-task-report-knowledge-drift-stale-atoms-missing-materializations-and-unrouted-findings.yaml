@@ -1,0 +1,11 @@
+name: routine-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings
+path: desk/routines/routine-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings.md
+hash_c: f7b5d413818da4a8503965a6632dd8c752b2a9a0c54d057020ca62a4c615632c
+hash_d: 2d6c6bffc22bbfe41ba91fe1229aa0f3a5e1b91d053928b61e346cdbd10e3c02
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

@@ -1,0 +1,13 @@
+name: atom-deskops-should-read-through-sldb-compositions
+path: desk/atoms/atom-deskops-should-read-through-sldb-compositions.md
+hash_c: 6bb591ee551ea4de1fe325e7e29158d8391ade1f207d8a2bcf5c8514e90a933a
+hash_d: 719848ee9aaaf54d995fa5c96f934c88940e2f47a626b2f8a3e39527746d0f49
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- system:sldb
+- topic:composition
+- topic:diagnosis
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,10 @@
+name: condition-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-ready-for-closeout
+path: desk/primitives/conditions/condition-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-ready-for-closeout.md
+hash_c: b1969ae97d67aaaa6ef9dcca5bd681584d4a6d3ccebe7587eed0fcf8da495f82
+hash_d: 4f25f80f5962bcb0f792070380f2a2e9abcbe5948c374397352041705875354e
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,10 @@
+name: edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-ready-to-closeout
+path: desk/primitives/edges/edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-ready-to-closeout.md
+hash_c: a69e08f1b456c9fd4dcb4e4512e5ca04e0c7c0f163744c74be97c01f01614466
+hash_d: 2d46d05c297cb14be92c48176b8542b4ec6b8af802483e8dfa86a933206863f9
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

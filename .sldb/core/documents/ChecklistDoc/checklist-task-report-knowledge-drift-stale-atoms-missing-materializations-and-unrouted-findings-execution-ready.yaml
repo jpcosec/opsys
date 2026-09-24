@@ -1,0 +1,10 @@
+name: checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-execution-ready
+path: desk/primitives/checklists/checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-execution-ready.md
+hash_c: 98a8d6a49f4f02816c50dfe5b8b1e8ecbc472ee24ff0258551f2140a405ffda4
+hash_d: 40644876bce272afe9aa439e17779eacfeb2e7b6a90a16b0bef0985123abc92d
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

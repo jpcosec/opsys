@@ -1,0 +1,10 @@
+name: operator-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-activate
+path: desk/primitives/operators/operator-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-activate.md
+hash_c: 96aca27e9431aa2dfbce8e7b4b90b578b843942c498de1b5429ac53532e17778
+hash_d: 531b7189f92abeba5b5d16e07b509ce3f2b8f9cfe4f086c45c66e4aea96d7497
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

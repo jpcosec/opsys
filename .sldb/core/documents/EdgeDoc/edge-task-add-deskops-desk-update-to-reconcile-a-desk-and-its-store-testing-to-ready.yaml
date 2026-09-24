@@ -1,0 +1,10 @@
+name: edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-testing-to-ready
+path: desk/primitives/edges/edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-testing-to-ready.md
+hash_c: 86948bc1e615f7d1e4ad097b374e6448c7e401ebc3ffed23f669dca022996eab
+hash_d: 62495b6b46de17dcab187d93397c0cccfe27ff27df9c5d4aed62daead94aff83
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

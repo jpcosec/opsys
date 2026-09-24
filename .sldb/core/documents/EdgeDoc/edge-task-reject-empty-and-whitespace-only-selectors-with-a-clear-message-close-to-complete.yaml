@@ -1,0 +1,10 @@
+name: edge-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-close-to-complete
+path: desk/primitives/edges/edge-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-close-to-complete.md
+hash_c: 444239b4917412af283b9b289ec50557fc6e11b10e28f1b66ecb67f44a5a2034
+hash_d: 49af7cb42585abd0e1739d2e50e3cf7efe100e5fb7e1e9816466db4f564d1249
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

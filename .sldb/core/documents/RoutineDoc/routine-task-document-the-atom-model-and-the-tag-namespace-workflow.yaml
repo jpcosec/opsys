@@ -1,0 +1,11 @@
+name: routine-task-document-the-atom-model-and-the-tag-namespace-workflow
+path: desk/routines/routine-task-document-the-atom-model-and-the-tag-namespace-workflow.md
+hash_c: c049594cbdfb2bb08a86a4b6104ef8668a2c8b0bbab367a886b5589f011c6514
+hash_d: 691945f8eaf0ea268936e305dcb90fcc0eae7a1e02296b6c6ffeaaa19dc9e538
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

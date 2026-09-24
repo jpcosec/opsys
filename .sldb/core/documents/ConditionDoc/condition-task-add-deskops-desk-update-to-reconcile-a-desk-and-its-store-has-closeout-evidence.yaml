@@ -1,0 +1,10 @@
+name: condition-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-has-closeout-evidence
+path: desk/primitives/conditions/condition-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-has-closeout-evidence.md
+hash_c: 01563f6acf8835cea7d9e1b144c1333540102ac0d019103c08f14092cfa1be53
+hash_d: befc481588518580836d8832e8214e6c598e0d94f2b8d2d512389088d1a66139
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

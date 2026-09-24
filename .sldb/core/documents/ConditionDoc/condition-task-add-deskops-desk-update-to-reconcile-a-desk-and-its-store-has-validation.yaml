@@ -1,0 +1,10 @@
+name: condition-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-has-validation
+path: desk/primitives/conditions/condition-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-has-validation.md
+hash_c: f46a20009475dd7b1f9771b38db57c637bcffc5e0e394c81d68a619e52931427
+hash_d: 105bd408b7520df5b1b07628fd2664626fd7b4ddc6d2a2686d18d4f5d0656b1e
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

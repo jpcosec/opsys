@@ -1,0 +1,12 @@
+name: atom-materializations-are-projections-not-read-surfaces
+path: desk/atoms/atom-materializations-are-projections-not-read-surfaces.md
+hash_c: fb4e1654f50d0595f0fcf97d5df1cb1a9ce1f0dfe0df21477c12e12fe7323aab
+hash_d: 929c7010d37ff8b1379916b48c3ea15517b615167108cf6aebdb4699c49a4ea6
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:diagnosis
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms

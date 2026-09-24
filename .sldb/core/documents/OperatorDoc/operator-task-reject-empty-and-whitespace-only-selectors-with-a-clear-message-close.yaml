@@ -1,0 +1,10 @@
+name: operator-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-close
+path: desk/primitives/operators/operator-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-close.md
+hash_c: c4050663f6989348b2664a2cb0945188909a3f64dc875a4e3cb8344fb3b93a94
+hash_d: 99dc947a2fbcb8bbd16dc05916dabf58e8b2dffc669c5120f8251e9b64a86e73
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

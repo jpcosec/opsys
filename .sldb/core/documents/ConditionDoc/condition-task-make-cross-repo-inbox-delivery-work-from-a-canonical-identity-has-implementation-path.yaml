@@ -1,0 +1,10 @@
+name: condition-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-has-implementation-path
+path: desk/primitives/conditions/condition-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-has-implementation-path.md
+hash_c: 928899fe60d24e339276769b0fc842709f6bda8f265c31c15a7b358a2ecd45e4
+hash_d: 925b9365868911ae16dbf56fc9cf34accb5f18ad4970385ca947904927e913e8
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

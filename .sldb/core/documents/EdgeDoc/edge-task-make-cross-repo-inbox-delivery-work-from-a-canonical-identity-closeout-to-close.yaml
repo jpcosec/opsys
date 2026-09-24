@@ -1,0 +1,10 @@
+name: edge-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-closeout-to-close
+path: desk/primitives/edges/edge-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-closeout-to-close.md
+hash_c: 796a3e1815f17838e106555aca238e8fd2f6091fc1eb5689802f915dc0abcf00
+hash_d: 10862b2b06f30ab4c58b471a2e1d50f0e3e7896bff862c47a47c199677fbdb14
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

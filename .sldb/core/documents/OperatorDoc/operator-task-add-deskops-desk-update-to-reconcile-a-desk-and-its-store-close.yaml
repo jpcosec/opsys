@@ -1,0 +1,10 @@
+name: operator-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-close
+path: desk/primitives/operators/operator-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-close.md
+hash_c: c20d64fab2a83dd649640d28c924c81d215c7f9a2e3295a5c1ac8d02a48b54b4
+hash_d: 0d679115707c10e5f26152e7612f1b82cbd16a9f1f62cc22aefca48f2e103205
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

@@ -1,0 +1,11 @@
+name: routine-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity
+path: desk/routines/routine-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity.md
+hash_c: d32b550174fd27858ea3decf5842d3d8ab01d80065cb436fbcf2110b80513ed9
+hash_d: 79dfa15c3023d90203861c4c39e5114c97c9249c739b0db9065969b61b295e72
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

@@ -1,0 +1,12 @@
+name: atom-do-not-atomize-a-coherent-deliverable-into-disconnected-tasks
+path: desk/atoms/atom-do-not-atomize-a-coherent-deliverable-into-disconnected-tasks.md
+hash_c: 19408c3461513541089cb7116bad880576a4b7b97a7a4c9b9bbd345647322042
+hash_d: bc456148a073cb6e92aba8567a012f14782c9af69be4f0f6afc370b4b882c7a4
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:diagnosis
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,10 @@
+name: condition-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-has-validation
+path: desk/primitives/conditions/condition-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-has-validation.md
+hash_c: 3564873fe955f6b69f17813e5fa17baf59c14fa1d3df331bb04d63d4be7fe4d1
+hash_d: cd3c39ce589a535b7e181cc4aac6fd8d347b9600c16f34ef4f78ee5a357a2345
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

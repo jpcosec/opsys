@@ -1,0 +1,10 @@
+name: condition-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-has-validation
+path: desk/primitives/conditions/condition-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-has-validation.md
+hash_c: 9848443ae28e93be1a1caae4d445f0e19938d2394f090132768f270f37ab51d5
+hash_d: 6a0a1331005f8a1d334f2bc3a1326391dea70e042e765af6b7e89d534c9f7f34
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,10 @@
+name: edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-close-to-complete
+path: desk/primitives/edges/edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-close-to-complete.md
+hash_c: 65fb7ebad78ad1ef389283b672cd50f85a911e3434aeaf6aafc7f3770f50104e
+hash_d: b58d44bf0450dc4f30e6279fa54cea92b6195df3fd7f709cd70a517bde8e3bdf
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

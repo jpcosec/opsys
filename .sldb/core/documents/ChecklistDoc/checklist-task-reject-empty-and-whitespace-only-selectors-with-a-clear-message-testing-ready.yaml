@@ -1,0 +1,10 @@
+name: checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-testing-ready
+path: desk/primitives/checklists/checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-testing-ready.md
+hash_c: 68d751a0e3836130e7c46c699a89a07b6683026536774ee3505656edb35bac0c
+hash_d: 9469740e2f3bb58f1a6b590b6f6dead58fbc11cab301f1bfa85c6e9df37b3ba7
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

@@ -1,0 +1,12 @@
+name: atom-multi-surface-drift-is-a-core-workflow-failure-mode
+path: desk/atoms/atom-multi-surface-drift-is-a-core-workflow-failure-mode.md
+hash_c: 737ab35c968439476ba665295f56cd136e7c026a234272c713236dca1c1f539c
+hash_d: 51e29a2b25811f6fb884ef9bdb60ec64b802de8c68b66e28481edd831b77436d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:diagnosis
+- topic:drift
+- type.knowledge.atom
+- workspace.desk.atoms

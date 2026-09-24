@@ -1,0 +1,10 @@
+name: condition-task-document-the-atom-model-and-the-tag-namespace-workflow-pill-knowledge-graduated
+path: desk/primitives/conditions/condition-task-document-the-atom-model-and-the-tag-namespace-workflow-pill-knowledge-graduated.md
+hash_c: 7f1bde61b3ece00c0c4e25001aefef81fd3808fe1fb337e21780c67cb6c69c65
+hash_d: 056f44c340877ccaad9547f0af9945d5bc65aa353db64bc0ee53af9e93d05d80
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -3,8 +3,8 @@ model_ref: deskops.models:EdgeDoc
 path: deskops/models/edge.py
 documents_index: .sldb/core/documents/EdgeDoc.yaml
 sections_index: .sldb/runtime/sections/EdgeDoc.yaml
-hash_b: 3e92d8eee8a1bb573a7eb8dc258aabdee8745ba8be4fa7f8292c944c7fdf782c
-documents_count: 24
+hash_b: 360390988d72b72f214b253a842d7cbca15dbb5622a0003738c0ae5ae8f4d153
+documents_count: 54
 version: 1
 canonical: false
 family: null

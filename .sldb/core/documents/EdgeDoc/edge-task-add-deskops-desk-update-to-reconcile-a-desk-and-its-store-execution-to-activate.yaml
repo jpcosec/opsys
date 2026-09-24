@@ -1,0 +1,10 @@
+name: edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-execution-to-activate
+path: desk/primitives/edges/edge-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store-execution-to-activate.md
+hash_c: e726398a2261bfafbaf09736d4e0a1e7a84fdca667e39c6ae9a8827308d8a389
+hash_d: 2a8a2e608a1d914f66ac84f72d8d8107b2cacbe1e45f6d53ea215f64461baf90
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

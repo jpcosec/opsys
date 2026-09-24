@@ -1,0 +1,10 @@
+name: operator-task-document-the-atom-model-and-the-tag-namespace-workflow-activate
+path: desk/primitives/operators/operator-task-document-the-atom-model-and-the-tag-namespace-workflow-activate.md
+hash_c: 63998a1c33d0c202c30d79bf363e49b1ef211307ea956c327acc89717d206d0e
+hash_d: 5c143d8261d9e802e6a7be53db3872930a68778b96c39aac18332f38e44452dc
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

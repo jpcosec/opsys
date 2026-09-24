@@ -1,0 +1,11 @@
+name: routine-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store
+path: desk/routines/routine-task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store.md
+hash_c: f099c3afba80bc43e0e3d43993fcd7e07bfa413c0882c4fc940067d10a7f2008
+hash_d: 00d24b3932d6222af60420eb08223dc0b570d7b8993bf0d708def520af5593cc
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

@@ -1,0 +1,11 @@
+name: task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store
+path: desk/tasks/task-add-deskops-desk-update-to-reconcile-a-desk-and-its-store.md
+hash_c: 403ef3f6a22b7d3037d0591a3584b19bf666da0954f2d8ebda9b6c0e20ffbf44
+hash_d: f04eb74ec61dbbee59fd0827e759242cd233a58d4c967dbcb19f1da63a04f50f
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk

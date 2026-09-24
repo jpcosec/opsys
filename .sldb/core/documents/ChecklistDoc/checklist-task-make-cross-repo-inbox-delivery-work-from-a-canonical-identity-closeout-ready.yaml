@@ -1,0 +1,10 @@
+name: checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-closeout-ready
+path: desk/primitives/checklists/checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-closeout-ready.md
+hash_c: cfc4955ccb21bbc5f79ff8d89331eb377fe076172b6ef00de98a728a42faa253
+hash_d: 0515db43f80646701e56808cd8201f1c22c75c7478d5793d564f9311a7260f5e
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

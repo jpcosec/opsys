@@ -1,0 +1,10 @@
+name: operator-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-close
+path: desk/primitives/operators/operator-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-close.md
+hash_c: 36bc7d55b7f533dfd8c95e4de1eabab4122620474d54d6b76d31344c3f428bb3
+hash_d: 68c52091d3c5eb7f32af8fb8893f9135832eef2ce5ba265afa775e5421df234a
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

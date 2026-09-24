@@ -1,0 +1,10 @@
+name: condition-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-pill-knowledge-graduated
+path: desk/primitives/conditions/condition-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-pill-knowledge-graduated.md
+hash_c: d6a731c7277a1ccdc3752d1420a2dc310c043efc8bd0299855c904eb028317dd
+hash_d: e7441af2e6e4401e357633c5837e25a9cbacb271c5d1d6ef5def69b2f2e4edfd
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

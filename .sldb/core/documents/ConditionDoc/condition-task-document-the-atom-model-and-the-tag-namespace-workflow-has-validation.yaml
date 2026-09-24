@@ -1,0 +1,10 @@
+name: condition-task-document-the-atom-model-and-the-tag-namespace-workflow-has-validation
+path: desk/primitives/conditions/condition-task-document-the-atom-model-and-the-tag-namespace-workflow-has-validation.md
+hash_c: 5768bfad04bacd7227d909b9d543ebc0da694ee984db22c304f31af19841699b
+hash_d: b45485be710185f4b80e036cb478b434a6e4d38dcbd2b28a8d470e926d17ec0c
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

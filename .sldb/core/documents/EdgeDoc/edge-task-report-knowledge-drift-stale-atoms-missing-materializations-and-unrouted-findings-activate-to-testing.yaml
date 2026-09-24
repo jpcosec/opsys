@@ -1,0 +1,10 @@
+name: edge-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-activate-to-testing
+path: desk/primitives/edges/edge-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-activate-to-testing.md
+hash_c: d35e3e2daf48bb2bd23ab2f803fc655e240d03daaa4bc97a5cabf8690bbb48a8
+hash_d: fac4922bf3d33a8e7d1b995d82dec0dc7c223e98d15380c00e403221694bd738
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

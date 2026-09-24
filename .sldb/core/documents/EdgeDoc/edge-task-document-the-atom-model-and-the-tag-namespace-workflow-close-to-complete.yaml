@@ -1,0 +1,10 @@
+name: edge-task-document-the-atom-model-and-the-tag-namespace-workflow-close-to-complete
+path: desk/primitives/edges/edge-task-document-the-atom-model-and-the-tag-namespace-workflow-close-to-complete.md
+hash_c: b2286f0f3328f2e3d6736d22f32cb0edb2a99463b2ce8a0144425cd758b1101a
+hash_d: 5d583fe8deaf2b8e5ff996f41290f014197d163c34a9e50b56840abe37908b4b
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

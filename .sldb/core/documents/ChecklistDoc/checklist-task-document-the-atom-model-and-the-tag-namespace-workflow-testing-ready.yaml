@@ -1,0 +1,10 @@
+name: checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-testing-ready
+path: desk/primitives/checklists/checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-testing-ready.md
+hash_c: 08393179b750d9bd7e3c7afad70135a0682854ffe80033116127a32fd1daeb98
+hash_d: 2b9dd6b5a00e432b36e0a010125e4843f00069a1dbd6b5fad5f52ca4d5156b54
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

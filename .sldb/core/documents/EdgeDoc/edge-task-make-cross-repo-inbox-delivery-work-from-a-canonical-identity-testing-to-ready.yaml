@@ -1,0 +1,10 @@
+name: edge-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-testing-to-ready
+path: desk/primitives/edges/edge-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-testing-to-ready.md
+hash_c: c1a7df3f2a026a8a0a7cc7dbf4c1b10d243dd261dab6f5933beefaef956f5814
+hash_d: bf22cf2853ab60133f7303f3e5b2df6c43306320beb628321d123acb3e8545fb
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives
