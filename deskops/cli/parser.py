@@ -395,6 +395,13 @@ def _add_desk_commands(
     )
     migrate.add_argument("--root", default=".", help="Target repository root.")
 
+    update = s.add_parser(
+        "update",
+        help="Report and repair divergence between the current desk, its models, and its store.",
+    )
+    update.add_argument("--root", default=".", help="Target repository root.")
+    update.add_argument("--apply", action="store_true", help="Apply repairs (dry run by default).")
+
 
 def _add_about_command(
     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
