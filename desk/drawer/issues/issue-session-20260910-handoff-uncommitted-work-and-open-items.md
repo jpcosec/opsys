@@ -6,7 +6,13 @@ handoff
 
 ## Status
 
+resolved
+
 open — nothing below is committed
+
+## Resolution
+
+Every item is closed: the uncommitted work is committed (store layout, Herdr runtime, the CLI fixes, the registry dedup), the extractor regression lives in sldb with its own tests, `deskops init` is fast, the registry no longer blocks inbox writes, the mindmap regression is fixed by reading declared containment and references as edges (47a5816), the two open inbox notes are closed, decision 3 is decided and its task was deleted with the pron worktree, and the untracked documents are tracked. The one finding left is the sldb-side reference to tests/test_section_body_extraction.py, reported to sldb's inbox.
 
 ## Problem
 

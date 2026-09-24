@@ -13,3 +13,13 @@ Use it for:
 Items in this folder are not active work. A human should either promote each item into a durable drawer/desk surface or delete it intentionally.
 
 Do not leave reviewed items here after the decision is made.
+
+## Review: 2026-09-24
+
+Thirteen test fixtures were deleted. The eight real notes were folded into the
+surfaces they belonged to and removed: two merged into their matching issues
+(`issue-implement-task-scoped-subagent-lanes`,
+`issue-formalize-inter-project-inbox-communication`), four whose knowledge
+already lived in atoms were deleted, and the three historical workflow
+snapshots were merged into
+`desk/logbook/log-2026-06-21-workflow-baseline-before-roles-refactor.md`.

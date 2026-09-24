@@ -1,7 +1,7 @@
 ---
 title: Monolithic API Anti-Pattern in SLDB UI
 date: 2026-08-13
-status: open
+status: closed (routed)
 ---
 
 # Issue: Monolithic API Anti-Pattern in SLDB UI
@@ -29,3 +29,7 @@ This document records the critical errors and architectural anti-patterns commit
 5. **Misrepresenting the SLDB Store:**
    Treated a legacy Node.js filesystem scanner (`api/tree.js`) as if it was the SLDB "Store". The Store in SLDB is a tracked database/registry (`.sldb/`), not a raw `fs.readdir` output.
    **What to do instead:** The Store UI surface must query the SLDB engine (e.g., via `sldb find` or `sldb models list`) to show only actively tracked documents and their indexing states, ignoring untracked physical files.
+
+## Resolution
+
+This describes an SLDB viewer API surface, not deskops. It belongs to sldb and spec2viz. Kept as a pointer; nothing to do here.

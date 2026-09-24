@@ -6,7 +6,11 @@ performance bug
 
 ## Status
 
-open
+resolved
+
+## Resolution
+
+Bootstrap now drives sldb in process (init_store, load_store_index, ModelCLI().add) with the subprocess path kept as the fallback for a bootstrap before install. Measured: `deskops init` 12.27s -> 1.28s on a fresh directory, and the six tests named here went from 9.6-12.5s each to 1-4s, taking the suite from 114s to 60s. Commit 3e863fe.
 
 ## Problem
 

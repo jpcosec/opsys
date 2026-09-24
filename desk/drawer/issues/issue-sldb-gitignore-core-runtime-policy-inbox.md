@@ -1,5 +1,9 @@
 # sldb gitignore core/runtime policy belongs in sldb inbox
 
+## Status
+
+closed (routed)
+
 ## Issue
 
 The `.sldb` gitignore policy is being linted locally in deskops, but the rule belongs at the `sldb` layer.
@@ -27,3 +31,7 @@ Deskops currently has `tests/test_gitignore_policy.py` as a local guard for this
 - system:deskops
 - topic:gitignore-policy
 - topic:core-runtime-split
+
+## Resolution
+
+The gitignore policy for the .sldb core/runtime split is sldb's to decide. The note was sent to sldb's inbox; nothing to do here.

@@ -6,7 +6,11 @@ bug
 
 ## Status
 
-open
+resolved
+
+## Resolution
+
+Root cause was the registry, not the algorithm: fourteen of the fifteen RepositoryDocs in desk/registry pointed at this same root ('.', '..', '/tmp', '/etc'), so 'first match wins' had nothing canonical to pick. The registry now holds one real repository document (f3a6d5d), and a desk with no registry at all resolves its own identity from desk/config.json instead of failing (6f6d9bb). Verified by writing notes cross-repo with sender_project resolved to deskops.
 
 ## Problem
 
