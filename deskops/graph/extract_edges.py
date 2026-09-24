@@ -18,7 +18,10 @@ ALLOWED_ATOM_ROLES = {"references", "documents", "specifies", "constrains", "val
 DEFAULT_ROLE = "references"
 
 SECTION_HEADING_RE = re.compile(r"^(#{2,6})\s+(.+?)\s*$")
-TASK_OR_ISSUE_RE = re.compile(r"\b(?P<kind>task|issue)-[a-z0-9][a-z0-9-]*\b")
+# A slug like `atom-pills-carry-transitional-task-knowledge` contains
+# `task-knowledge`, which is part of an atom name, not a task reference; a real
+# reference starts at a boundary that is not another word character or hyphen.
+TASK_OR_ISSUE_RE = re.compile(r"(?<![\w-])(?P<kind>task|issue)-[a-z0-9][a-z0-9-]*\b")
 SOURCE_PATH_RE = re.compile(
     r"(?<![\w/.-])(?P<path>(?:deskops|desk|tests|spec|docs)/[A-Za-z0-9_./-]+\.(?:py|yaml|yml|md|toml|json|mmd))(?![\w/.-])"
 )
@@ -65,6 +68,8 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
     source_nodes = extract_source_file_nodes(project_root)
     nodes_by_path = {node.path: node for node in [*doc_nodes, *source_nodes]}
     existing_ids = {node.id for node in [*doc_nodes, *source_nodes]}
+    ids_by_name = {node.id.split(":", 1)[-1]: node.id for node in [*doc_nodes, *source_nodes]}
+    known_ids = existing_ids | set(ids_by_name)
 
     edges: list[DeclaredGraphEdge] = []
     missing_targets: list[MissingGraphTarget] = []
@@ -78,7 +83,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
         text = path.read_text(encoding="utf-8")
         relative_path = source_node.path
 
-        declarations = [*_frontmatter_declarations(text), *_atom_declarations(text), *_section_declarations(text)]
+        declarations = [*_frontmatter_declarations(text, source_node.kind, nodes_by_path, ids_by_name), *_atom_declarations(text), *_section_declarations(text)]
         if source_node.kind == "diagram":
             declarations.extend(_diagram_source_declarations(text))
         if source_node.kind in {"task", "issue"}:
@@ -135,7 +140,12 @@ class _Declaration:
     locator: str
 
 
-def _frontmatter_declarations(text: str) -> list[_Declaration]:
+def _frontmatter_declarations(
+    text: str,
+    kind: str | None = None,
+    nodes_by_path: dict[str, Any] | None = None,
+    ids_by_name: dict[str, str] | None = None,
+) -> list[_Declaration]:
     if not text.startswith("---\n"):
         return []
     try:
@@ -143,10 +153,83 @@ def _frontmatter_declarations(text: str) -> list[_Declaration]:
         block, _body = rest.split("\n---", 1)
     except ValueError:
         return []
-    loaded = yaml.safe_load(block)
+    
+    try:
+        loaded = yaml.safe_load(block)
+    except yaml.YAMLError:
+        return []
+
     if not isinstance(loaded, dict):
         return []
-    return _declarations_from_mapping(loaded, "frontmatter")
+
+    declarations = _declarations_from_mapping(loaded, "frontmatter")
+
+    if kind:
+        model = _model_for_kind(kind)
+        if model:
+            declared_fields = [
+                *getattr(model, "__containment__", {}).keys(),
+                *getattr(model, "__references__", []),
+            ]
+            for field_name in declared_fields:
+                if field_name not in loaded:
+                    continue
+                value = loaded[field_name]
+                items = value if isinstance(value, list) else [value]
+                for item in items:
+                    if not isinstance(item, str) or not item.strip():
+                        continue
+                    reference = _declared_reference_id(
+                        item, nodes_by_path or {}, ids_by_name or {}
+                    )
+                    if reference is not None:
+                        declarations.append(_Declaration(reference, field_name, "frontmatter"))
+                    elif _looks_like_reference(item, nodes_by_path or {}, ids_by_name or {}):
+                        declarations.append(_Declaration(item.strip(), field_name, "frontmatter"))
+
+    return declarations
+
+
+def _looks_like_reference(value: str, nodes_by_path: dict[str, Any], ids_by_name: dict[str, str]) -> bool:
+    """Whether a declared value is meant to name a document.
+
+    Declared containment and reference fields also hold prose (`steps` on a
+    ritual) or workflow node names (`complete` on an edge). Those are not
+    document references and must not be reported as unresolved targets.
+    """
+    candidate = value.strip()
+    if "/" in candidate or ":" in candidate:
+        return True
+    return Path(candidate).stem in ids_by_name or candidate in nodes_by_path
+
+
+def _declared_reference_id(
+    value: str, nodes_by_path: dict[str, Any], ids_by_name: dict[str, str]
+) -> str | None:
+    """Resolve one declared value to a node id, using the existing schemes only."""
+    candidate = value.strip()
+    if candidate in ids_by_name:
+        return ids_by_name[candidate]
+    node = nodes_by_path.get(candidate.removeprefix("./"))
+    if node is not None:
+        return node.id
+    stem = Path(candidate).stem
+    if stem in ids_by_name:
+        return ids_by_name[stem]
+    if ":" in candidate:
+        return candidate
+    return None
+def _model_for_kind(kind: str) -> Any | None:
+    from deskops import models
+    normalized = kind.removeprefix("drawer_")
+    for name in models.__all__:
+        cls = getattr(models, name)
+        semantics = getattr(cls, "__semantics__", None)
+        if semantics and "type" in semantics:
+            if semantics["type"][-1] == normalized:
+                return cls
+    return None
+
 
 
 def _atom_declarations(text: str) -> list[_Declaration]:

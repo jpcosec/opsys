@@ -4,7 +4,13 @@ from .base import OperationalArtifactDoc
 
 
 class TaskDoc(OperationalArtifactDoc):
-    __containment__ = {"checklists": ["ChecklistDoc"], "pills": ["PillDoc"], "atoms": ["AtomDoc"]}
+    __containment__ = {
+        "routine": ["RoutineDoc"],
+        "current_node": ["ChecklistDoc", "StepDoc"],
+        "checklists": ["ChecklistDoc"],
+        "pills": ["PillDoc"],
+        "atoms": ["AtomDoc"],
+    }
     __references__ = ["references", "depends_on", "inherits_from", "from_drawer"]
     model_config = {"extra": "allow"}
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}

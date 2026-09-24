@@ -50,6 +50,7 @@ type: artifact
         "diagram:docs/diagrams/codebase/codebase-knowledge-surfaces.md",
         "diagram:docs/diagrams/codebase/codebase-knowledge-surfaces.mmd",
         "spec:spec/artifacts/atom.yaml",
+        "board:desk/tasks/Board.md",
     }
     assert by_id["atom:atom-documents-point-to-atoms"].kind == "atom"
     assert by_id["atom:atom-documents-point-to-atoms"].path == "desk/atoms/workflow/atom-documents-point-to-atoms.md"
