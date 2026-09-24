@@ -1,0 +1,10 @@
+name: pill-template-instructional-text
+path: desk/contexts/pill-template-instructional-text.md
+hash_c: 17a0cac9b406d0bd566f5041a20517ef5d019aeb92531f2ff5d8e8006203c4a9
+hash_d: e33768c1aa2302b9244c8b7b62fe5e037ea367df4e36cf4486e014dc6f912cc1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

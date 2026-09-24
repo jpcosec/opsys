@@ -11,7 +11,8 @@ steps:
   and validation targets explicit.
 - 1. Atomize the work into one coherent deliverable.
 - 1. Audit code, docs, tests, and git state before changing anything.
-- 1. Run a zero-context preflight comprehension gate: give one fresh subagent only the
+- >-
+  1. Run a zero-context preflight comprehension gate: give one fresh subagent only the
   TaskDoc and require it to restate the intended work step by step plus every ambiguity
   it sees, then store that reformulation at `runs/subagents/<run-dir>/preflight.md`.
 - 1. Pass the preflight only when that reformulation reproduces the task intent closely
@@ -33,8 +34,7 @@ steps:
 - 1. Keep scope tight and avoid unrelated fixes.
 - 1. Prepare validation before calling the work complete.
 - 1. Exit execution only by opening a handoff to testing that names the intended contract,
-  relevant tests, and pill guardrails that must be proven.
----
+  relevant tests, and pill guardrails that must be proven.---
 
 # Execution ritual for active desk tasks
 

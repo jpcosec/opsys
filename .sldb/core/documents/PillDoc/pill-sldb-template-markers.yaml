@@ -1,0 +1,10 @@
+name: pill-sldb-template-markers
+path: desk/contexts/pill-sldb-template-markers.md
+hash_c: a5a83c2fabd81e1c50cd48a578951acecf5972c508ed4ef112520b2dbfeee3e0
+hash_d: bcf52f54d07cf9636dd6de6ce83386596636ed3bd6ee683863ad29a9bfd1e260
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.pill
+- workspace.desk
+- workspace:desk

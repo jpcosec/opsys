@@ -4,7 +4,6 @@ from pathlib import Path
 from typing import Any
 
 from deskops.workspace import ensure_target_directory
-from deskops.workspace import migrate_desk
 from deskops.workspace import scaffold_desk
 
 
@@ -42,28 +41,31 @@ class DeskCLI:
             print(error)
             return 1
 
-        result = migrate_desk(target_path)
+        # F7 T7.1: the migration adopts every authored desk document into the
+        # world; the workspace scaffolder's report stays for the file layout.
+        from deskops.migrate import migrate_desk as migrate_world
+        from deskops.workspace import migrate_desk as migrate_workspace
+
+        workspace = migrate_workspace(target_path)
         print(f"Desk migration report for {target_path}:")
-
         print("Adopted:")
-        if result.adopted:
-            for item in result.adopted:
-                print(f"- {item}")
-        else:
-            print("- none")
-
+        for item in workspace.adopted or ["none"]:
+            print(f"- {item}")
         print("Preserved:")
-        if result.preserved:
-            for item in result.preserved:
-                print(f"- {item}")
-        else:
-            print("- none")
-
+        for item in workspace.preserved or ["none"]:
+            print(f"- {item}")
         print("Still manual:")
-        if result.still_manual:
-            for item in result.still_manual:
-                print(f"- {item}")
-        else:
-            print("- none")
+        for item in workspace.still_manual or ["none"]:
+            print(f"- {item}")
 
+        report = migrate_world(target_path)
+        print(f"World: {report.summary()}")
+        for item in report.tracked[:20]:
+            print(f"- tracked {item}")
+        if len(report.tracked) > 20:
+            print(f"- ... and {len(report.tracked) - 20} more")
+        for failure in report.failures:
+            print(f"- refused {failure.path} ({failure.model}): {failure.reason}")
+        for item in report.unmodeled:
+            print(f"- unmodeled {item}")
         return 0

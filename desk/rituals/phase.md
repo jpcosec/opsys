@@ -7,16 +7,17 @@ tags:
 - topic:phases
 steps:
 - 1. Identify the ready dependency layer of tasks whose prerequisites are satisfied and whose planned changes do not overlap operationally.
-- 1. Confirm each task has a fresh execution context bundle: the task doc, board-routed instructions, bound pills, linked atoms, linked files, and validation targets.
+- >-
+  1. Confirm each task has a fresh execution context bundle: the task doc, board-routed instructions, bound pills, linked atoms, linked files, and validation targets.
 - 1. Run the execution ritual for each task in the phase before implementation begins.
 - 1. Execute phase tasks in parallel when the environment supports it, or in isolated fresh contexts when parallelism is unavailable.
 - 1. Require each task to close with its own targeted validation and atomic task commit before considering the phase complete.
 - 1. When all phase tasks are closed, run shared integration or end-to-end validation for the combined layer.
 - 1. Fix interaction regressions uncovered by the phase-level validation before phase closeout.
-- 1. Reconcile the pill set touched by the phase: retire stale pills, merge or delete redundant pills, and promote durable residue into atoms and materializations.
+- >-
+  1. Reconcile the pill set touched by the phase: retire stale pills, merge or delete redundant pills, and promote durable residue into atoms and materializations.
 - 1. Capture newly discovered tasks, dependencies, or next-phase pills before advancing.
-- 1. Create one descriptive phase-closing commit for the integration and reconciliation pass.
----
+- 1. Create one descriptive phase-closing commit for the integration and reconciliation pass.---
 
 # Phase ritual for dependency-layer execution
 
