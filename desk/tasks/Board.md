@@ -8,7 +8,6 @@ tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing.md
 - desk/tasks/task-derive-declared-graph-edges-from-model-containment-and-references.md
-- desk/tasks/task-give-pilldoc-the-lifecycle-slots-its-commands-already-write.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -51,4 +50,3 @@ _Generated from the task references above._
 
 - Protoatoms, mandatory domain crossroads and protoatom typing [draft] - Add ProtoAtomDoc and CrossroadDoc, enforce that every domain path prefix has a written crossroad, and add an explicit operation that types a protoatom into another sldb model while keeping a redirect stub.
 - Derive declared graph edges from model containment and references [ready_for_testing] - extract_declared_edges consumes each model's __containment__ and __references__ to emit edges for the declared fields, so a task's routine, checklists, pills and atoms and a board's tasks appear as edges in the snapshot.
-- Give PillDoc the lifecycle slots its commands already write [ready_for_testing] - PillDoc carries the lifecycle fields the pill commands read and write, so editing them persists and round-trips, and edit pill resolves pills in the drawer as well.
