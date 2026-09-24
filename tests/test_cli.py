@@ -2381,6 +2381,27 @@ def test_add_list_and_show_step_from_specs(tmp_path: Path, capsys) -> None:
     assert "Step: step-validate-draft" in show_out.out
     assert "action: Run validation" in show_out.out
 
+def test_fresh_init_scaffolds_every_ritual_the_doctor_requires(tmp_path: Path, capsys) -> None:
+    """A freshly initialised desk must not report missing structure.
+
+    The doctor requires desk/rituals/phase.md, so the scaffold has to write it;
+    otherwise every new repository starts one finding away from healthy.
+    """
+    from deskops.cli.main import main
+
+    root = tmp_path / "project"
+    root.mkdir()
+
+    assert main(["init", str(root)]) == 0
+    capsys.readouterr()
+
+    assert (root / "desk" / "rituals" / "phase.md").exists()
+
+    assert main(["doctor", "--root", str(root)]) == 0
+    out, _err = capsys.readouterr()
+    assert "Missing desk structure" not in out
+
+
 def test_doctor_reports_untracked_documents_and_missing_structure(tmp_path: Path, capsys) -> None:
     from deskops.cli.main import main
     import subprocess

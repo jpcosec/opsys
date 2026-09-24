@@ -208,6 +208,11 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
         created_paths,
     )
     _write_if_missing(
+        desk_dir / "rituals" / "phase.md",
+        _phase_template(target_path.name),
+        created_paths,
+    )
+    _write_if_missing(
         desk_dir / "rituals" / "execution.md",
         _execution_template(target_path.name),
         created_paths,
@@ -334,6 +339,25 @@ Pills are reusable context documents for the {name} desk routine.
 
 - Keep active task-to-pill binding in task docs.
 - Add temporary context here only when it affects execution safety or scope.
+"""
+
+
+def _phase_template(name: str) -> str:
+    return f"""---
+id: ritual-phase
+steps: []
+tags:
+- workspace:desk
+---
+
+# Phase ritual for dependency-layer execution
+
+Run one horizontal layer of {name} tasks whose prerequisites are satisfied and whose
+planned changes do not overlap, then close the layer with integration validation,
+pill reconciliation, and next-phase preparation.
+
+Each task in the phase still closes with its own validation and its own commit;
+the phase adds the pass that only makes sense once those tasks are integrated.
 """
 
 
