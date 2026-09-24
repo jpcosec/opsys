@@ -10,9 +10,7 @@ created_at: '2026-09-07T12:59:20'
 # open | closed
 status: open
 # project identity that acknowledged the note
-acknowledged_by: ⸢rev•acknowledged_by⸥
 # ISO 8601 timestamp, set when acknowledged
-acknowledged_at: ⸢rev•acknowledged_at⸥
 ---
 
 # Terminal node complete borra el task bundle sin commit previo ni limpieza de store
