@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-document-the-atom-model-and-the-tag-namespace-workflow.md
 - desk/tasks/task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings.md
 - desk/tasks/task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity.md
 # List of pill-xxx paths
@@ -49,6 +48,5 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Document the atom model and the tag namespace workflow [ready_for_testing] - A durable doc, materializing the atoms that already carry these rules, that explains creating an atom, choosing the 5WH1+ question, how namespaces select the atom's folder, and how to add a namespace when existing ones do not cover the knowledge.
 - Report knowledge drift: stale atoms, missing materializations and unrouted findings [ready_for_testing] - A drift command that reports, from the desk and the graph: atoms whose declared targets or materializations no longer resolve, documents that point at atoms with no inbound trace, and graph findings that no atom or issue covers.
 - Make cross-repo inbox delivery work from a canonical identity [ready_for_testing] - One identity path usable for both questions, and cross-repo delivery that either reaches the target or fails with the reason, with the sender able to see that the target acknowledged or closed the note.
