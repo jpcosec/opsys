@@ -1,0 +1,10 @@
+Task: task-derive-declared-graph-edges-from-model-containment-and-references
+Title: Derive declared graph edges from model containment and references
+Status: active
+Current node: checklist-task-derive-declared-graph-edges-from-model-containment-and-references-testing-ready
+Task type: implementation
+Routine: routine-task-derive-declared-graph-edges-from-model-containment-and-references
+Checklist status:
+- checklist-task-derive-declared-graph-edges-from-model-containment-and-references-execution-ready: complete
+- checklist-task-derive-declared-graph-edges-from-model-containment-and-references-testing-ready: complete
+- checklist-task-derive-declared-graph-edges-from-model-containment-and-references-closeout-ready: pending

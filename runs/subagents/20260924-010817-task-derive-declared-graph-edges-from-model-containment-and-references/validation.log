@@ -1,0 +1,29 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/knowledge-model/atom-sldb-semantics-are-graph-inputs.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "47a5816"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_graph_declared_edges.py",
+        "tests/test_graph_extract_docs.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-derive-declared-graph-edges-from-model-containment-and-references"
+}

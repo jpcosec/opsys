@@ -1,0 +1,1 @@
+Error: No artifact.task file found for selector '010817-task-derive-declared-graph-edges-from-model-containment-and-references' in /home/jp/proyectos/hum-ecosystem/tools/deskops/desk/tasks
