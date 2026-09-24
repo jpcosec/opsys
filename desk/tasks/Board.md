@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Make cross-repo inbox delivery work from a canonical identity [ready_for_testing] - One identity path usable for both questions, and cross-repo delivery that either reaches the target or fails with the reason, with the sender able to see that the target acknowledged or closed the note.
