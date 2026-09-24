@@ -291,6 +291,7 @@ class Task(OperationalArtifact):
     inherits_from: list[str] = field(default_factory=list)
     inherit_acceptance_context: bool = False
     atoms: list[str] = field(default_factory=list)
+    from_drawer: str = ""
     effective_references: list[str] = field(default_factory=list)
     effective_pills: list[str] = field(default_factory=list)
     effective_tags: list[str] = field(default_factory=list)

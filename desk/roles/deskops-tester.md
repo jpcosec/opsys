@@ -1,7 +1,24 @@
 ---
 id: role-deskops-tester
 name: deskops-tester
-description: Use when acting as the tester for one bounded deskops task in this repository. Recover board and task state, verify the execution handoff, translate task and pill guardrails into concrete checks, run the smallest relevant validation first, and hand off to closeout without changing routing or implementation scope.
+description: Use when acting as the tester for one bounded deskops task in this repository.
+  Recover board and task state, verify the execution handoff, translate task and pill
+  guardrails into concrete checks, run the smallest relevant validation first, and
+  hand off to closeout without changing routing or implementation scope.
+kind: pi
+model: openrouter/nvidia/nemotron-3-super-120b-a12b:free
+fallback_models:
+- openrouter/openai/gpt-oss-20b:free
+tools:
+- read
+- grep
+- find
+- ls
+- bash
+system_prompt_mode: replace
+inherit_project_context: true
+inherit_skills: true
+default_context: fresh
 ---
 
 # Workflow Tester

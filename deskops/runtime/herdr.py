@@ -20,6 +20,22 @@ class HerdrError(RuntimeError):
     """A Herdr command failed or returned an unusable response."""
 
 
+class _Unset:
+    """Sentinel distinguishing an omitted timeout from an explicit None.
+
+    ``timeout=None`` means "no client-side limit, block until the process
+    exits or Herdr's own --timeout governs it". Omitting the argument means
+    "use HerdrClient's configured default". A plain ``None`` default value
+    cannot distinguish these two cases.
+    """
+
+    def __repr__(self) -> str:
+        return "<unset>"
+
+
+_UNSET: Any = _Unset()
+
+
 @dataclass(frozen=True, slots=True)
 class ProcessSpec:
     id: str
@@ -88,15 +104,16 @@ class HerdrClient:
         self.runner = runner
         self.timeout = timeout
 
-    def call(self, *args: str, timeout: float | None = None) -> dict[str, Any]:
+    def call(self, *args: str, timeout: float | None | object = _UNSET) -> dict[str, Any]:
         command = [self.executable, *args]
+        effective_timeout = self.timeout if timeout is _UNSET else timeout
         try:
             result = self.runner(
                 command,
                 capture_output=True,
                 text=True,
                 check=False,
-                timeout=timeout or self.timeout,
+                timeout=effective_timeout,
             )
         except FileNotFoundError as exc:
             raise HerdrError(f"Herdr executable not found: {self.executable}") from exc
@@ -113,16 +130,17 @@ class HerdrClient:
             raise HerdrError(f"Herdr returned an invalid response for {shlex.join(command)}")
         return payload
 
-    def call_text(self, *args: str, timeout: float | None = None) -> str:
+    def call_text(self, *args: str, timeout: float | None | object = _UNSET) -> str:
         """Run a Herdr command whose successful response is terminal text."""
         command = [self.executable, *args]
+        effective_timeout = self.timeout if timeout is _UNSET else timeout
         try:
             result = self.runner(
                 command,
                 capture_output=True,
                 text=True,
                 check=False,
-                timeout=timeout or self.timeout,
+                timeout=effective_timeout,
             )
         except FileNotFoundError as exc:
             raise HerdrError(f"Herdr executable not found: {self.executable}") from exc
@@ -194,7 +212,34 @@ class HerdrProvider:
         args = ["agent", "prompt", agent_id, message]
         if wait:
             args.extend(["--wait", "--timeout", "120000"])
-        return self.client.call(*args, timeout=130.0 if wait else None)
+            return self.client.call(*args, timeout=130.0)
+        return self.client.call(*args)
+
+    def wait(self, agent_id: str, *, until: tuple[str, ...] = (), timeout_ms: int | None = None) -> dict[str, Any]:
+        args = ["agent", "wait", agent_id]
+        for state in until:
+            args.extend(["--until", state])
+        if timeout_ms is not None:
+            args.extend(["--timeout", str(timeout_ms)])
+        try:
+            response = self.client.call(*args, timeout=None)
+        except HerdrError as exc:
+            if "timeout" in str(exc).lower() or "timed out" in str(exc).lower():
+                return {"agent": {"agent_status": "timeout"}, "type": "agent_info"}
+            raise
+        return self._result(response)
+
+    def read(self, agent_id: str, *, source: str = "recent-unwrapped", lines: int = 200) -> str:
+        args = ["agent", "read", agent_id, "--source", source, "--lines", str(lines)]
+        return self.client.call_text(*args, timeout=None)
+
+    def notify(self, title: str, *, body: str = "", sound: str = "request") -> dict[str, Any]:
+        args = ["notification", "show", title]
+        if body:
+            args.extend(["--body", body])
+        if sound:
+            args.extend(["--sound", sound])
+        return self.client.call(*args)
 
     def status(self, workspace: WorkspaceHandle) -> dict[str, Any]:
         return self.client.call("workspace", "get", workspace.workspace_id)

@@ -4,8 +4,9 @@ from pathlib import Path
 from typing import Any
 
 from deskops.config import DeskConfig
-from deskops.runtime.herdr import HerdrClient
+from deskops.runtime.herdr import HerdrClient, HerdrProvider
 from deskops.runtime.initializer import ensure_herdr_server, initialize_desk
+from deskops.runtime.supervise import SuperviseOutcome, run_supervise_loop
 
 
 class RuntimeCLI:
@@ -13,6 +14,8 @@ class RuntimeCLI:
         root = Path(args.root).resolve()
         executable = getattr(args, "herdr", "herdr")
         try:
+            if args.runtime_command == "supervise":
+                return self._supervise(args, executable)
             if args.runtime_command == "init":
                 ensure_herdr_server(executable)
                 info, handle = initialize_desk(root, agents=args.agents, executable=executable)
@@ -52,3 +55,48 @@ class RuntimeCLI:
             print(f"Error: {exc}")
             return 1
         return 1
+
+    def _supervise(self, args: Any, executable: str) -> int:
+        """Block on one agent, reporting blocked/done settles as they happen.
+
+        Never answers a blocked agent's prompt (only notifies and reports —
+        a human decides) and never advances desk state on done (only
+        captures and reports). Both are the explicit anti-patterns this
+        command exists to avoid; see
+        desk/roles/deskops-supervisor.md and
+        desk/drawer/features/feature-herdr-supervised-execution-runtime.md.
+        """
+        provider = HerdrProvider(HerdrClient(executable))
+        agent_id = args.agent
+        max_iterations = getattr(args, "max_iterations", None)
+        read_lines = getattr(args, "read_lines", 200)
+
+        def on_blocked(outcome: SuperviseOutcome) -> None:
+            excerpt_tail = "\n".join(outcome.excerpt.strip().splitlines()[-20:])
+            print(f"[blocked] {outcome.agent_id} is waiting on input. Recent output:\n{excerpt_tail}")
+            try:
+                provider.notify(
+                    f"{outcome.agent_id} blocked",
+                    body="Waiting on input; not answering automatically.",
+                )
+            except Exception as exc:  # noqa: BLE001 - notification failure must not crash supervision
+                print(f"(notification failed: {exc})")
+
+        def on_done(outcome: SuperviseOutcome) -> None:
+            excerpt_tail = "\n".join(outcome.excerpt.strip().splitlines()[-20:])
+            print(f"[done] {outcome.agent_id} settled. Recent output:\n{excerpt_tail}")
+            print(f"[done] {outcome.agent_id} did not advance any task; review and run `deskops advance` yourself.")
+
+        outcomes = run_supervise_loop(
+            provider,
+            agent_id,
+            max_iterations=max_iterations,
+            read_lines=read_lines,
+            timeout_ms=getattr(args, "timeout_ms", None),
+            on_blocked=on_blocked,
+            on_done=on_done,
+        )
+        if outcomes and outcomes[-1].status in {"timeout", "unknown"}:
+            print(f"[{outcomes[-1].status}] stopped supervising {agent_id}.")
+            return 1
+        return 0

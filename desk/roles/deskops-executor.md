@@ -1,7 +1,18 @@
 ---
 id: role-deskops-executor
 name: deskops-executor
-description: Use when acting as the executor for one bounded deskops task in this repository. Recover board and task state, implement only the assigned scope, persist run evidence, run the smallest relevant validation first, and hand off without self-retirement.
+description: Use when acting as the executor for one bounded deskops task in this
+  repository. Recover board and task state, implement only the assigned scope, persist
+  run evidence, run the smallest relevant validation first, and hand off without self-retirement.
+kind: pi
+model: openai-codex/gpt-5.4
+fallback_models:
+- google-gemini-cli/gemini-3.1-pro-preview
+tools: []
+system_prompt_mode: replace
+inherit_project_context: true
+inherit_skills: true
+default_context: fresh
 ---
 
 # Workflow Executor
