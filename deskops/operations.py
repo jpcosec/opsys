@@ -2744,6 +2744,70 @@ class DeskopsOperations:
                 )
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(rendered, encoding="utf-8")
+        if self._write_through_store(path, model, payload):
+            return
+        return
+
+    def _write_through_store(self, path: Path, model: type[Any], payload: dict[str, Any]) -> bool:
+        """Write a tracked document through sldb so its stored hashes move with it.
+
+        Writing the text directly leaves the store entry describing the previous
+        content, which the next `sldb stores check` reports as a data mutation.
+        """
+        if not self._document_is_tracked(path, model):
+            return False
+        try:
+            from sldb.api.documents.track_document_file import track_document_file
+            from sldb.api.documents.untrack_document import untrack_document
+            from sldb.store.layout import store_exists
+        except ImportError:
+            return False
+        store_path = self.root / ".sldb"
+        if not store_exists(store_path):
+            return False
+        pythonpath = str(Path(__file__).resolve().parents[1])
+        try:
+            untrack_document(store_path, path.stem, pythonpath)
+            track_document_file(
+                store_path,
+                model.__name__,
+                path,
+                name=path.stem,
+                pythonpath=pythonpath,
+                force=True,
+            )
+        except Exception as exc:
+            self.logger.debug(f"Store write-through failed for {path.name}, writing directly: {exc}")
+            return False
+        return True
+
+    def _document_is_tracked(self, path: Path, model: type[Any]) -> bool:
+        try:
+            from sldb.store.io import load_documents_index, load_models_index, load_store_index
+            from sldb.store.layout import store_exists
+        except ImportError:
+            return False
+        store_path = self.root / ".sldb"
+        if not store_exists(store_path):
+            return False
+        try:
+            store_index = load_store_index(store_path)
+            entry = next((item for item in store_index.models if item.name == model.__name__), None)
+            if entry is None:
+                return False
+            models_index = load_models_index(self.root / entry.models_index)
+            documents_index = load_documents_index(self.root / models_index.documents_index)
+        except Exception:
+            return False
+        try:
+            absolute = path if path.is_absolute() else (self.root / path)
+            relative = str(absolute.resolve().relative_to(self.root.resolve()))
+        except ValueError:
+            return False
+        return any(
+            document.path == relative or document.name == path.stem
+            for document in documents_index.documents
+        )
 
     def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         if path.exists():

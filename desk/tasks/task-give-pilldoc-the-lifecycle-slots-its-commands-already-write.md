@@ -1,14 +1,15 @@
 ---
 id: task-give-pilldoc-the-lifecycle-slots-its-commands-already-write
-status: active
+status: ready_for_testing
 summary: ''
 tags:
 - workspace:desk
 - artifact:task
 routine: routine-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write
-current_node: checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-testing-ready
+current_node: checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-closeout-ready
 history:
 - operator-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-activate
+- operator-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-ready-for-testing
 references:
 - tests/test_doc_readability.py
 - tests/test_model_templates.py
@@ -26,7 +27,7 @@ inherits_from: []
 inherit_acceptance_context: false
 atoms:
 - atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
-closeout_evidence_verified: false
+closeout_evidence_verified: true
 pill_graduation_verified: true
 ---
 

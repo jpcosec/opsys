@@ -1,14 +1,15 @@
 ---
 id: task-derive-declared-graph-edges-from-model-containment-and-references
-status: active
+status: ready_for_testing
 summary: ''
 tags:
 - workspace:desk
 - artifact:task
 routine: routine-task-derive-declared-graph-edges-from-model-containment-and-references
-current_node: checklist-task-derive-declared-graph-edges-from-model-containment-and-references-testing-ready
+current_node: checklist-task-derive-declared-graph-edges-from-model-containment-and-references-closeout-ready
 history:
 - operator-task-derive-declared-graph-edges-from-model-containment-and-references-activate
+- operator-task-derive-declared-graph-edges-from-model-containment-and-references-ready-for-testing
 references:
 - tests/test_graph_declared_edges.py
 - tests/test_graph_extract_docs.py
@@ -25,7 +26,7 @@ task_type: implementation
 inherits_from: []
 inherit_acceptance_context: false
 atoms: []
-closeout_evidence_verified: false
+closeout_evidence_verified: true
 pill_graduation_verified: true
 ---
 
@@ -59,7 +60,7 @@ deskops/graph/extract_edges.py _declarations_from_mapping: read __containment__ 
 
 _List the checks required before this task can close._
 
-- PYTHONPATH=$PWD python -m pytest tests/test_graph_extract_docs.py tests/test_graph_cli.py tests/test_graph_snapshot.py -q
+- python -m pytest tests -q
 
 ## Done When
 

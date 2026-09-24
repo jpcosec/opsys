@@ -1,14 +1,15 @@
 ---
 id: task-make-terminal-node-completion-commit-before-it-deletes-the-bundle
-status: active
+status: ready_for_testing
 summary: ''
 tags:
 - workspace:desk
 - artifact:task
 routine: routine-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle
-current_node: checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-testing-ready
+current_node: checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-closeout-ready
 history:
 - operator-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-activate
+- operator-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-ready-for-testing
 references:
 - tests/test_lifecycle_end_to_end.py
 - tests/test_cli.py
@@ -25,7 +26,7 @@ task_type: bugfix
 inherits_from: []
 inherit_acceptance_context: false
 atoms: []
-closeout_evidence_verified: false
+closeout_evidence_verified: true
 pill_graduation_verified: true
 ---
 

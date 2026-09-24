@@ -1,7 +1,7 @@
 name: task-make-terminal-node-completion-commit-before-it-deletes-the-bundle
 path: desk/tasks/task-make-terminal-node-completion-commit-before-it-deletes-the-bundle.md
-hash_c: 86740b9ba8900d3c5dfb7dff9a75e120634c6f3a092f6d5adb0152d71e457403
-hash_d: 42694126584157ec3dae53d60756bcbb52db07cf82ad993b47f062a9a0d684d3
+hash_c: 45b326326943a17aa47250eb2f2b351f9c97e9b1843e356ce219ddb52c401cae
+hash_d: 40d568fc68ace138fbee1914a01e395cbfdc491be0f5e89fdeed57ef4f0c9afc
 semantic_tags:
 - artifact:task
 - representation.markdown
