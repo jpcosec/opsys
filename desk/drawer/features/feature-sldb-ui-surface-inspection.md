@@ -1,3 +1,6 @@
+> **Routed elsewhere.** This describes an SLDB/spec2viz surface, not a deskops one.
+> Kept as a pointer during the 2026-09-24 drawer review.
+
 # Feature: SLDB UI Surface Inspection
 
 ## Kind

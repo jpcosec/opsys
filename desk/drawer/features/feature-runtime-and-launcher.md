@@ -1,10 +1,97 @@
-# Herdr supervised-execution runtime
+# Agent runtime and launcher
 
-## Kind
+Merged on 2026-09-24 from the three documents that described the same question: how a desk task reaches an agent and how that run is supervised. The launcher was tmux, then Herdr became the runtime; the semantic execution adapter is the deferred outside-the-repo variant. Herdr is implemented (`deskops runtime supervise`, RoleDoc-driven launch, RuntimeProfileDoc); the tmux launcher is the drawer task
+`task-adhoc-subagent-launcher-tmux-multi-cli`, whose decision 3 retargets it onto Herdr.
+
+
+---
+
+## Ad-hoc subagent launcher (tmux + codex/agy/pi)
+
+### Kind
 
 feature
 
-## Status
+### Status
+
+drawer / deferred — needs promotion to an active task (or a small task phase) before implementation.
+
+### Problem
+
+Deskops can *describe* task-scoped subagent work (it generates `runs/subagents/<id>/` evidence: `brief.md`, `board.txt`, `task.txt`, `next.txt`, `graph.txt`) and it can *close out* a run (`deskops closeout commit --run-dir ...`). But it cannot **launch** an agent. Today launching is done by hand from an outside harness (the parent assistant's `subagent` tool), so:
+
+- There is no deskops-native way to start a bounded agent against a task.
+- Runs are not monitorable from deskops (no live status, no attach).
+- The context bundle deskops already knows how to assemble is not actually fed to the launched agent — the operator re-passes it manually.
+- Output is captured ad-hoc; there is no uniform "inspect this run later" surface beyond what closeout expects.
+
+### Desired Outcome
+
+A deskops command that launches an ad-hoc, bounded subagent for a task using an external agent CLI (`codex`, `agy`, or `pi`), inside a `tmux` session, with:
+
+1. **Context injection** — reuse the existing bundle builder so the agent starts with `brief.md` + task doc + board + bound pills + linked atoms + linked files + `next` state, instead of a cold prompt.
+2. **Monitoring** — list running launches, show live status, and attach to the tmux pane.
+3. **Persisted output** — stream the agent's stdout/stderr to `runs/subagents/<id>/console.log` (append-only) so a finished or crashed run is inspectable after the fact, alongside the existing evidence files.
+4. **Clean handoff to closeout** — the run dir it produces is directly consumable by `deskops closeout commit`.
+
+### Proposed CLI surface
+
+```
+deskops launch <task-selector> --agent {codex|agy|pi} [--model ...] [--role executor] [--root .]
+deskops launch list                 # running + recent launches with status
+deskops launch status <run-id>      # tmux alive?, last N console lines, evidence files present
+deskops launch attach <run-id>      # tmux attach-session to watch live
+deskops launch stop <run-id>        # kill tmux session, mark run stopped
+```
+
+### Design notes (grounding in what already exists)
+
+- **Run dir contract already exists**: `runs/subagents/<timestamp>-<task-id>/` with `brief.md`, `board.txt`, `task.txt`, `next.txt`, `graph.txt`, `result-summary.md`, `validation.log`, `session.txt`, `run.yaml`. `deskops closeout commit` already validates `board.txt/task.txt/git-status.txt/result-summary.md`. Reuse this exactly; add only `console.log` and a `launch.yaml` (agent, model, tmux session name, pid, started_at, status).
+- **Bundle builder**: the logic that currently writes `brief.md`/`board.txt`/`task.txt`/`next.txt` lives near `deskops/cli/commands/closeout.py` + `parser.py`. Extract it into a reusable `deskops/launch/context.py` so both launch and closeout share one bundle contract (avoid a second divergent copy).
+- **Headless invocation per CLI** (verified available on this machine):
+  - `codex exec "<prompt>"` (non-interactive; alias `codex e`)
+  - `agy -p "<prompt>"` / `agy --print` (single prompt, non-interactive; `--print-timeout`, `--output-format stream-json`)
+  - `pi -p "<prompt>"` / `pi --print` (non-interactive; `--append-system-prompt <file>`, `--system-prompt`)
+- **tmux pattern**: `tmux new-session -d -s deskops-<run-id> '<agent-cmd> 2>&1 | tee runs/subagents/<run-id>/console.log'`. Status = `tmux has-session -t deskops-<run-id>`. Attach = `tmux attach -t ...`. Stop = `tmux kill-session -t ...`.
+- **Context feed mechanism differs per CLI**: pi takes `--append-system-prompt <brief-file>`; codex/agy take the prompt as an argument or stdin. The launcher must adapt the bundle into the right injection channel per agent, but assemble the bundle once.
+
+### Scope boundaries (to keep one coherent task)
+
+- IN: single-task launch, run dir + console.log, list/status/attach/stop, context injection from the existing bundle, one adapter per CLI.
+- OUT (defer to follow-up drawer tasks): parallel fan-out / phase-level launch, auto-closeout after run, cross-repo launches, retry/resume, resource quotas, non-tmux backends.
+
+### Open questions / ambiguities (resolve before implementation)
+
+1. **Permissions posture**: codex/agy/pi each have their own auto-approve flags (`agy --dangerously-skip-permissions`). Does launch default to sandboxed/interactive-approval, or auto-approve? This is a safety decision.
+2. **tmux dependency**: hard-require tmux, or fall back to a detached background process + logfile when tmux is absent?
+3. **Prompt/system-prompt shape per agent**: exact injection channel (arg vs stdin vs `--append-system-prompt` file) must be pinned per CLI.
+4. **Run id / session naming**: reuse the `<timestamp>-<task-id>` scheme; confirm tmux session-name length/charset limits (task ids are long — may need a short hash).
+5. **Role prompts**: should launch pull the RoleDoc materializations (executor/tester/supervisor) that now exist under `desk/roles/` and prepend them to the brief?
+6. **Completion signal**: how does launch know a run finished vs stalled? (tmux session exit vs presence of `result-summary.md` vs a sentinel line.)
+7. **Concurrency/registry**: where is the list of active launches tracked — scan tmux sessions prefixed `deskops-`, or a `runs/subagents/launches.jsonl` index (mirroring `index.jsonl`)?
+
+### Related surfaces
+
+- `deskops/cli/commands/closeout.py` — run-dir contract + evidence trailers.
+- `runs/subagents/index.jsonl` — existing run index; launch index could mirror it.
+- `desk/roles/` (RoleDoc materializations) — executor/tester/supervisor role prompts.
+- Pills: subagent-execution, task-scoped subagent lanes, real-cli-surfaces-prove-operator-contracts.
+
+### Related atoms (candidates to capture at implementation)
+
+- Launching is a deskops workflow surface; the bundle contract is the single source of context for both launch and closeout.
+- Ad-hoc agent runs must persist inspectable output (console.log) independent of the agent's own session storage.
+
+
+---
+
+## Herdr supervised-execution runtime
+
+### Kind
+
+feature
+
+### Status
 
 Implemented and merged into working tree, uncommitted. `question-herdr-runtime-open-decisions.md` is resolved; all four decisions were carried through:
 
@@ -21,7 +108,7 @@ Verification run this session: `sldb stores check` PASS, `deskops drift check` c
 
 One incidental finding worth carrying forward: registering a document model with zero tracked documents (`sldb models add` on `RunDoc`, which decision 4 requires stay empty) leaves `hash_b: ''` in `.sldb/core/models/<Name>.yaml` instead of the hash of an empty documents index, and `sldb stores check` then FAILs until `sldb models update <Name>` is run once. Worth reporting upstream to sldb; not something to route around here.
 
-## Problem
+### Problem
 
 Deskops already models supervision. `desk/roles/deskops-supervisor.md` defines duties, hard boundaries (allowlist `read, grep, find, ls, bash`, no `edit`/`write`), dispatch rules and a closeout checklist. But it supervises **forensically**: it dispatches a lane, the lane writes files under `runs/subagents/<run-dir>/`, and the supervisor reads them afterwards. It never observes anything live, and it cannot learn that a lane is sitting on an approval prompt.
 
@@ -37,7 +124,7 @@ The durable trace already exists and is half-wired:
 
 Separately, `deskops/materializers/roles.py:23-59` holds a hardcoded `ROLE_AGENT_SPECS` table that has already drifted from the documents it materializes (see question doc, decision 1).
 
-## Desired Outcome
+### Desired Outcome
 
 Herdr owns live control; deskops owns the durable trace. Nothing hardcoded — not the role, not the runtime, not the flag mapping.
 
@@ -46,17 +133,17 @@ Herdr owns live control; deskops owns the durable trace. Nothing hardcoded — n
 - Every supervised run pins its transcript where closeout already expects it, so `run_id` and `session_sha256` stop being null.
 - A supervisor process blocks on agent lifecycle state at zero cost and escalates to a human on `blocked` — it never answers an approval dialog itself.
 
-## Scope boundary
+### Scope boundary
 
 This document covers the deskops side only: models, materializers, adapter, CLI and store migration. The workstation side — the `desk/runtime.yaml` layout contract that nothing reads, `herdr/init_opsys.py` duplicating `deskops/runtime/initializer.py`, and Herdr's own lack of trace and log rotation — is tracked in the setup repo at `desk/drawer/herdr-runtime-contract-gaps.md`.
 
-## Relationship to the tmux launcher feature
+### Relationship to the tmux launcher feature
 
 `feature-adhoc-subagent-launcher-tmux-multi-cli.md` and its ready-to-promote drawer task cover substantially this same ground, over tmux + `codex`/`agy`/`pi`. Its already-resolved operator principles (context compiled via sldb from tracked RoleDocs, minimal bundle per profile, one launch = one task = one run dir, everything persisted to disk) apply unchanged here and should be inherited, not restated.
 
 The difference is transport. Herdr provides agent detection and lifecycle states that tmux cannot, is already installed and running, and already reports session identity. Recommendation is to retarget the existing task rather than build a second launcher; that is decision 3 in the question doc.
 
-## Proposed CLI surface
+### Proposed CLI surface
 
 ```
 deskops runtime supervise [--root .] [--herdr herdr]
@@ -68,9 +155,9 @@ Registered alongside the existing `runtime init|status|attach|stop`. Loop:
 2. On `blocked`: capture `read(...)`, raise `herdr notification show ... --sound request`, record a note. **Do not answer the dialog.** Herdr's own skill requires inspecting and asking the human; an auto-approving supervisor is the mechanism by which an unattended agent does something destructive.
 3. On `done`: capture evidence into the run dir, digest the session, write the run record, evaluate the role's closeout checklist, and **report**. Does not run `deskops advance` — the desk does not change state unobserved.
 
-## Design notes (grounding in what already exists)
+### Design notes (grounding in what already exists)
 
-### Blocker to clear first
+#### Blocker to clear first
 
 `deskops/runtime/herdr.py:100`, and the same line in `call_text`:
 
@@ -80,7 +167,7 @@ timeout=timeout or self.timeout,
 
 With `self.timeout = 30.0`, a caller **cannot** disable the limit: `timeout=None` falls through the `or` back to 30s. `HerdrProvider.send(wait=False)` already suffers this. An `agent wait --until blocked` can legitimately block for hours and would die at 30 seconds with a misleading `HerdrError: ... timed out`. Needs a sentinel distinguishing "omitted" from "no limit". Nothing else works until this is fixed.
 
-### Adapter additions
+#### Adapter additions
 
 `wait(agent_id, *, until=(), timeout_ms=None)` returns the settled `agent_status`. `agent wait` returns JSON shaped exactly like `agent get` — `{"result": {"agent": {...}, "type": "agent_info"}}` (verified) — so `_result()` is reused as-is.
 
@@ -88,7 +175,7 @@ With `self.timeout = 30.0`, a caller **cannot** disable the limit: `timeout=None
 
 While in the file: `send`/`status`/`attach`/`stop` on `HerdrProvider` are currently dead code — `cli/commands/runtime.py` bypasses the provider and talks to the client directly. Wire them up.
 
-### RoleDoc becomes the single source of truth
+#### RoleDoc becomes the single source of truth
 
 Replace the catch-all `⸢rev,dict•frontmatter⸥` with explicit per-field frontmatter markers, following `deskops/models/pill.py:8-13`. Three concrete reasons:
 
@@ -100,7 +187,7 @@ New fields: `kind`, `model`, `fallback_models`, `tools`, `system_prompt_mode`, `
 
 Verified sldb details: lists and bools round-trip fine with a plain `⸢rev•field⸥` in frontmatter — the `,list` trait is only for body bullets (`ChecklistDoc.items`); precedent is `RoutineDoc.decomposition`. No new field may default to `None`: when a value is `None` and the marker is not `optrev`/`render`, the renderer leaves the literal marker unresolved in the output. Defaults must be `""`, `[]`, `True`/`False`.
 
-### RuntimeProfileDoc — one document per kind
+#### RuntimeProfileDoc — one document per kind
 
 Lives in `desk/runtimes/`, extends `PrimitiveDoc`. Declares `kind`, `binary`, and a deliberately closed vocabulary: `model_flag`, `fallback_models_flag` + `fallback_models_join`, `tools_flag` + `tools_join`, `system_prompt_flag` + `system_prompt_delivery`, `session_flag`, `extra_args`, `unsupported_role_fields`. Join modes are `comma`/`space`/`repeat`; delivery is `inline`/`file`. No conditionals, no expression language.
 
@@ -110,25 +197,25 @@ Do **not** reach for the `table[col,col]` marker trait. It exists in sldb but ha
 
 A pure `build_agent_spec_args(role_doc, profile, *, session_path, system_prompt_path)` in a new `deskops/materializers/runtime_profiles.py` does the translation — dict in, tuple out, no filesystem, no subprocess, trivially testable. `AgentSpec.args` already forwards after `--` to `herdr agent start` (`herdr.py:184-189`), so no structural change is needed.
 
-### RunDoc
+#### RunDoc
 
 Extends `StructuredNLDoc` directly, not `PrimitiveDoc`: the latter's `status` means document lifecycle (`draft|active|archived`) and would collide with a run's `outcome`. Fields: `id`, `task_id`, `role_id`, `kind`, `run_dir`, `herdr_pane_id`, `session_path`, `session_sha256`, `started_at`, `ended_at`, `outcome`, `commit_sha`, `tags`, plus `title`/`summary` in the body. `__references__ = ["task_id", "role_id"]`; `kind` stays out of it, being a short join key rather than a document id.
 
 Phasing is decision 4 in the question doc.
 
-### Launching from documents
+#### Launching from documents
 
 `deskops/runtime/initializer.py:38-42` currently hardcodes `AgentSpec("executor", kind="pi")` and `AgentSpec("tester", kind="pi")`. These become specs built from each RoleDoc plus its profile. The supervisor, which has a RoleDoc but is never started today, comes up like the others. The session path is injected here.
 
-### Drift check gains real teeth
+#### Drift check gains real teeth
 
 `deskops drift check` only calls `drift_check_role_docs`. Once that renders from the document, it detects the supervisor discrepancy for the first time. Add two checks: every `RoleDoc.kind` must resolve to a tracked `RuntimeProfileDoc.kind`; and a role setting `tools`/`fallback_models` against a profile with an empty corresponding flag, not listed in `unsupported_role_fields`, is silent capability loss and should be reported.
 
-### Graph
+#### Graph
 
 `deskops/graph/extract_docs.py` needs globs for `desk/runtimes` (kind `runtime_profile`) and `desk/runs` (kind `run`), both added to the `_identity_for` set that uses the `id` field as identity.
 
-### Store migration order
+#### Store migration order
 
 `resolve_model_ref` imports live on every invocation, so editing `role.py` takes effect immediately — there is no schema recompile step, and only the two new models need `sldb models add`.
 
@@ -136,7 +223,7 @@ Migrate the three tracked role documents with `sldb docs update` **before** touc
 
 Order matters: `sldb models update` does **not** validate round-trip, and on an extraction exception it silently sets `hash_d = ""` and persists that as the new baseline. Running it against an un-migrated role file would "succeed" while rebaselining a broken hash. `sldb docs update` does validate (`validate_model_input_roundtrip`, raising `SLDBValidationError`) and is the safe path for content migration.
 
-## Verification
+### Verification
 
 - Unit, with no live Herdr: extend the `fake_runner` seam in `tests/test_herdr_runtime.py` for `agent wait` (JSON) and `agent read` (plain text), plus a case proving `timeout=None` no longer collapses to 30s.
 - `build_agent_spec_args`: `comma` vs `repeat` joins, `inline` vs `file` delivery, absent flag omitted, `extra_args` appended last.
@@ -147,6 +234,110 @@ Order matters: `sldb models update` does **not** validate round-trip, and on an 
 - Note `tests/test_cli.py:42` already fails on HEAD, unrelated to this work: commit `529e990` added the `runtime` subcommand without updating the expected list. Fix it in passing or the suite never goes green.
 - End to end: `deskops runtime init --agents`, `deskops runtime supervise` in a pane, force an approval prompt — notification arrives, note recorded, task does **not** advance. Then let it finish and confirm `index.jsonl` finally carries non-null `run_id` and `session_sha256`.
 
-## Suggested sequencing
+### Suggested sequencing
 
 The adapter work (timeout sentinel, `wait`, `read`) touches no models and can be exercised by hand against a throwaway agent before committing to the model migration, which touches the store and needs the documents migrated in the right order.
+
+
+---
+
+---
+id: feature-semantic-execution-adapter
+status: draft
+created: 2026-06-17
+tags:
+- topic:semantic-execution
+- topic:agents
+- topic:band-ai
+- topic:adapter
+- topic:proposal
+---
+
+## Semantic Execution Adapter
+
+### Propósito
+
+Definir una integración futura entre `deskops` y ejecutores semánticos externos, con Band.ai como primer adaptador posible, sin acoplar el core de `deskops` a Band.ai.
+
+`deskops` conserva la máquina de estados local, las rutinas deterministas, la validación y el cierre. El adaptador externo consume eventos, coordina subagentes limpios y devuelve resultados estructurados que `deskops` debe validar antes de avanzar estado.
+
+### Fuentes
+
+Fuentes externas:
+
+- `http://docs.band.ai/welcome` — conceptos core de identidades temporales y salas de contexto.
+- `http://docs.band.ai/api/introduction` — diseño del cliente/adaptador externo.
+
+Fuentes internas:
+
+- `docs/diagrams/process/llm-tasks-vs-automatic-routines.md` — límites entre trabajo semántico delegado y rutinas deterministas locales.
+- `docs/diagrams/tasks/task-accumulation-initialization-resolution.md` — ciclo del subagente limpio y revisión de ambigüedad antes de tocar código.
+- `docs/diagrams/tasks/task-board-phases.md` — fases y paralelismo entre tareas que no se pisan.
+- `desk/rituals/closeout.md` — cierre con validación, limpieza y commit atómico.
+
+### Arquitectura Propuesta
+
+```mermaid
+flowchart TB
+    subgraph Core ["Deskops Core (Máquina de Estados Local)"]
+        direction TB
+        State["desk/tasks/Board.md\n(Estado Activo)"]
+        CLI["deskops CLI\n(show, advance)"]
+        EventSpec["spec/events/semantic_execution.yaml\n(Contrato de Evento)"]
+        Hooks["Generic Hook\n(Emite payload JSON)"]
+
+        State -->|Requiere semantica| Hooks
+        Hooks -.->|Emite| EventSpec
+    end
+
+    subgraph Adapter ["Adaptador Externo (ej. deskops-band)"]
+        direction TB
+        Listener["Event Listener\n(Lee stdout o Webhook)"]
+        Bridge["Band.ai Client"]
+
+        Listener --> Bridge
+    end
+
+    subgraph External ["Entorno de Ejecución (Cloud / Local)"]
+        direction TB
+        Room["Sala Contextual en Band.ai"]
+        Worker["Clean Subagent (Efímero)"]
+        Sandbox["Workspace Aislado\n(Worktree / Branch)"]
+
+        Bridge -->|Inicia| Room
+        Room -->|Asigna| Worker
+        Worker -->|Opera en| Sandbox
+    end
+
+    Sandbox -->|1. Mutacion de codigo| Sandbox
+    Sandbox -->|2. Usa sldb/deskops para workflow| CLI
+    Sandbox -->|3. Retorna resultado estructurado| CLI
+    CLI -->|Rutinas automaticas| State
+
+    classDef core fill:#0D1117,stroke:#58A6FF,stroke-width:2px,color:#c9d1d9;
+    classDef adapter fill:#238636,stroke:#fff,stroke-width:2px,color:#fff;
+    classDef ext fill:#4A154B,stroke:#fff,stroke-width:2px,color:#fff;
+
+    class Core,State,CLI,EventSpec,Hooks core;
+    class Adapter,Listener,Bridge adapter;
+    class External,Room,Worker,Sandbox ext;
+```
+
+### Funcionamiento
+
+1. `deskops` llega a una fase que requiere juicio semántico, como revisión de ambigüedad, edición de código o triage de fallos.
+2. Un hook genérico local emite un payload JSON definido por `spec/events/semantic_execution.yaml`.
+3. Un adaptador externo, por ejemplo `deskops-band`, consume el payload y llama a la API de Band.ai.
+4. Band.ai asigna la ejecución a un subagente limpio en una sala contextual.
+5. El subagente trabaja en un sandbox aislado, como `git worktree` o rama separada, para evitar colisiones de concurrencia.
+6. El subagente usa `deskops` y `sldb` para operaciones workflow/documentales, no ediciones directas sobre `desk/` o `.sldb/` cuando exista CLI propietaria.
+7. El adaptador retorna un resultado estructurado.
+8. `deskops` retoma control, ejecuta rutinas deterministas locales, valida, y solo entonces permite avanzar estado o cerrar con commit atómico.
+
+### Restricciones
+
+- Band.ai no entra como dependencia del core de `deskops`.
+- El contrato debe ser genérico para permitir otros adaptadores.
+- Las rutinas deterministas, tests, closeout y commits siguen siendo locales.
+- La ejecución paralela requiere aislamiento de worktree/rama y ownership explícito antes de habilitar mutación concurrente.
+- El primer slice implementable debería ser contrato de evento local y superficies JSON de lectura, no integración Band.ai directa.

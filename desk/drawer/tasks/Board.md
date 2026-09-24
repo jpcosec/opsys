@@ -2,23 +2,29 @@
 
 This board routes deferred work only.
 
-## Features
+## Layout
 
-- `desk/drawer/use-cases/` — 15 use-case narratives covering all CLI surfaces
-- `desk/drawer/stress-tests/` — 15 UX stress-tests derived from use-cases
-- `desk/drawer/features/semantic-execution-adapter.md` — deferred adapter architecture for semantic execution via external agent platforms
-- `desk/drawer/features/router.md` — agent role model: router (imported from paper_IEEE)
-- `desk/drawer/features/supervisor.md` — agent role model: supervisor (imported from paper_IEEE)
-- `desk/drawer/features/executor.md` — agent role model: executor (imported from paper_IEEE)
-- `desk/drawer/features/workflow-execution-engine.md` — automated workflow engine with hooks, state machines, condition evaluators, and gated execution pipeline
-- `desk/drawer/features/feature-adhoc-subagent-launcher-tmux-multi-cli.md` — ad-hoc subagent launcher via tmux + codex/agy/pi, with context injection, monitoring, and persisted run output
-- `desk/drawer/features/feature-herdr-supervised-execution-runtime.md` — supervised execution over Herdr: RoleDoc-driven agent launch, per-kind RuntimeProfileDoc, `deskops runtime supervise`. Implemented in the working tree (uncommitted, 273 tests passing); decision 3 (retarget the tmux launcher below onto Herdr) is still open. See the 2026-09-10 handoff under Notes.
+- `use-cases/` — 15 use-case narratives covering the CLI surfaces
+- `stress-tests/` — 15 scripted UX tests, with every finding archived in
+  `stress-tests/findings-archive.md`; what is left to fix is tracked in
+  `issues/issue-stress-test-fix-backlog.md`
+- `issues/` — 24 issues: open work, plus closed and routed entries kept for the record
+- `questions/` — decisions that block implementation, with their status
+- `features/` — six deferred design documents:
+  - `workflow-execution-engine.md` — hooks, state machines, condition evaluators, gated pipeline
+  - `feature-runtime-and-launcher.md` — how a task reaches an agent: tmux launcher, Herdr runtime, semantic execution adapter
+  - `feature-agent-role-models.md` — the router/supervisor/executor models, now mostly RoleDocs
+  - `feature-materialization-pipeline.md` — documents from atoms, artifacts for agents
+  - `master-plan-deskops-knowledge-decouple-and-execution-runtime.md` — annotated: written against kgdb, which is gone
+  - `feature-sldb-ui-surface-inspection.md` — routed elsewhere (sldb/spec2viz)
+- `attention/` — empty; reviewed on 2026-09-24
+- `rituals/` — the drawer triage and knowledge distillation passes
+
 
 ## Tasks
 
 Deferred task backlog:
 
-- `task-make-role-prompts-sldb-tracked-roledocs-with-pi-agent-materialization` — roles as sldb-tracked RoleDocs; pi agents as materializations (atom-anchored)
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
 
 Promoted to active desk tasks:
@@ -120,7 +126,8 @@ The current deferred board has been atomized at the guardrail level: config/vers
 
 All currently routed drawer tasks have been promoted into active desk task bundles. New repo-local work should enter the drawer first before the next promotion wave.
 
-Open issues from the 2026-09-10 session:
-
-- `desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md` — what that session left uncommitted and what is still open. Start here.
-- `desk/drawer/issues/issue-deskops-init-spawns-one-process-per-model.md` — `deskops init` spends ~8.5 s starting ~20 Python subprocesses; ~60 s of the test suite.
+Reviewed 2026-09-24: the issue set was folded from 40 files to 24, the attention
+pile was emptied, and the stress-test findings were archived into one file. See
+the review notes in `attention/README.md` and the commit history for the merge
+map. `issue-session-20260910-handoff-uncommitted-work-and-open-items.md` and
+`issue-deskops-init-spawns-one-process-per-model.md` are both resolved.

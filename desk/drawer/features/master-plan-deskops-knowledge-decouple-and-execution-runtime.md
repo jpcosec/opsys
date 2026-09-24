@@ -45,3 +45,22 @@ active — executing directly (god-agent mode) until the launcher exists.
 ## Execution mode
 
 God-agent: implemented directly by the operator assistant, phase by phase, atomic commits, suite green in both repos per phase. Cross-repo coordination via inbox where needed.
+
+---
+
+## Review: 2026-09-24
+
+This plan was written when `kgdb` was a separate graph substrate. That is no
+longer true: the graph contracts live in sldb, and deskops already derives its
+snapshot without a kgdb-owned ingest layer. Phase 3 as written ("KGDB live
+execution graph") therefore has no subject.
+
+Phase 1 (deskops keeps zero atoms, knowledge owns them) is still the open
+question it was, and it is the only part of this plan with a live consequence
+for this repository. Phases 2, 4, 5 and 6 overlap with issues that already
+exist: typed operations with `issue-make-deskops-easy-to-use`, model policy with
+none, the context compiler with `issue-implement-task-scoped-subagent-lanes`, and
+doctrine reconciliation with `issue-add-knowledge-drift-check-routine`.
+
+Treat this file as history unless the atoms-to-knowledge split is picked up
+again.

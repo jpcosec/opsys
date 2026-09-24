@@ -1,3 +1,429 @@
+# Materialization pipeline
+
+Merged on 2026-09-24 from the document materialization pipeline and the pi artifact materialization runtime: one describes how a document is composed from atoms, the other how an artifact is emitted for an agent. The contract they share is scoped by `desk/drawer/issues/issue-define-materialization-contract.md`.
+
+
+---
+
+---
+id: feature-doc-materialization-pipeline
+status: draft
+created: 2026-06-14
+tags:
+- topic:documentation
+- topic:materialization
+- topic:atoms
+- topic:spec
+- topic:proposal
+---
+
+## Documentación Auto-generada desde Atoms + Specs
+
+### Propósito
+
+Generar documentación en lenguaje usuario (`docs/`) automáticamente a partir
+de atoms de conocimiento + specs de sitio, siguiendo el patrón de progressive
+disclosure de Crawl4AI.
+
+El escritor escribe atoms. El sistema compone la documentación.
+
+---
+
+### Arquitectura
+
+```
+spec/docs/
+  site.yaml                ← árbol de navegación global
+  pages/
+    quickstart.yaml        ← espec de cada página
+    core-concepts.yaml
+    ...
+
+atoms/
+  atom-desk.md
+  atom-tasks.md
+  atom-rituals.md
+  ...
+
+deskops/materializers/
+  __init__.py
+  atoms.py                 ← ya existe
+  docs.py                  ← NUEVO: orquesta páginas desde atoms
+  page_renderer.py         ← NUEVO: renderiza una página con template
+
+docs/                      ← output generado (no editar a mano)
+  README.md
+  user-guide.md
+  core-concepts/
+    desk.md
+    tasks.md
+    ...
+```
+
+---
+
+### 1. Site Spec (`spec/docs/site.yaml`)
+
+Define la arquitectura de navegación completa.
+
+```yaml
+## spec/docs/site.yaml
+site:
+  title: deskops User Guide
+  tagline: Workflow-domain layer for the hum-ecosystem
+
+  navigation:
+    - id: quickstart
+      title: Quick Start
+      path: quickstart.md
+    - id: core-concepts
+      title: Core Concepts
+      path: core-concepts/index.md
+      children:
+        - id: concept-desk
+          title: What is a Desk?
+          path: core-concepts/desk.md
+        - id: concept-tasks
+          title: Tasks & Boards
+          path: core-concepts/tasks.md
+        - id: concept-pills
+          title: Pills & Context
+          path: core-concepts/pills.md
+        - id: concept-rituals
+          title: Rituals & Routines
+          path: core-concepts/rituals.md
+        - id: concept-atoms
+          title: Atoms & Knowledge
+          path: core-concepts/atoms.md
+    - id: workflow-guides
+      title: Workflow Guides
+      path: workflow-guides/index.md
+      children:
+        - id: wf-execution
+          title: How to Execute a Task
+          path: workflow-guides/execution.md
+        - id: wf-testing
+          title: How to Test a Task
+          path: workflow-guides/testing.md
+        - id: wf-closeout
+          title: How to Close a Task
+          path: workflow-guides/closeout.md
+    - id: reference
+      title: CLI Reference
+      path: reference/cli.md
+```
+
+### 2. Page Spec (`spec/docs/pages/*.yaml`)
+
+Cada archivo define una página: su template, secciones, y cómo resolver
+cada sección desde atoms.
+
+#### 2.1 Page Spec — Quick Start
+
+```yaml
+## spec/docs/pages/quickstart.yaml
+page:
+  id: quickstart
+  template: tutorial            # ver sección 4
+  title: Quick Start
+  tagline: Your first desk task in 5 minutes
+  what_youll_learn:
+    - Create your first task
+    - Advance it through its routine
+    - Test and close it
+
+  sections:
+    - id: introduction
+      title: What is deskops?
+      type: atom_bullets
+      bind:
+        atom_tag: "system:deskops"
+        five_wh: "what"             # usa el campo Answer del atom
+
+    - id: first-task
+      title: Your First Task
+      type: code_tutorial
+      bind:
+        atom_tag: "topic:tasks AND topic:create"
+        five_wh: "how"
+      code_example: |
+        deskops add task \
+          --title "My first task" \
+          --goal "Learn the workflow" \
+          --scope "deskops only"
+      annotations:
+        - "`add task` creates a task bundle with routine, conditions, and checklists"
+        - "The `--scope` flag defines what's inside/outside the task"
+      callout:
+        type: tip
+        text: "Run `deskops add task --help` to see all available flags"
+
+    - id: advance-task
+      title: Advance the Task
+      type: code_tutorial
+      bind:
+        atom_tag: "topic:routines AND topic:advance"
+        five_wh: "how"
+      code_example: |
+        deskops advance task task-my-first-task
+      annotations:
+        - "Advance walks the task through its routine state machine"
+        - "Each step checks conditions and moves to the next node"
+      callout:
+        type: important
+        text: "Tasks start in draft. You must advance to reach active."
+
+    - id: next-steps
+      title: Next Steps
+      type: next_steps
+      links:
+        - text: Core Concepts — What is a Desk?
+          ref: core-concepts/desk.md
+        - text: Workflow Guide — How to Execute a Task
+          ref: workflow-guides/execution.md
+```
+
+#### 2.2 Page Spec — Core Concept
+
+```yaml
+## spec/docs/pages/core-concepts/tasks.yaml
+page:
+  id: concept-tasks
+  template: concept
+  title: Tasks & Boards
+  tagline: How work is tracked and routed
+
+  sections:
+    - id: what-is-a-task
+      title: What is a Task?
+      type: atom_single
+      bind:
+        atom_id: atom-tasks
+        fields: [answer, tags, see_also]
+
+    - id: task-lifecycle
+      title: Task Lifecycle
+      type: diagram
+      bind:
+        atom_tag: "topic:tasks AND topic:lifecycle"
+        five_wh: "how"
+      mermaid: |
+        graph LR
+          Draft --> Active --> Testing --> Closed --> Complete
+
+    - id: boards
+      title: Boards
+      type: atom_single
+      bind:
+        atom_id: atom-boards
+        fields: [answer]
+
+    - id: related
+      title: Related
+      type: atom_list
+      bind:
+        atom_tag: "topic:tasks"
+        exclude: "atom_id:atom-tasks OR atom_id:atom-boards"
+      max_items: 5
+```
+
+#### 2.3 Page Spec — Workflow Guide (Ritual)
+
+```yaml
+## spec/docs/pages/workflow-guides/execution.yaml
+page:
+  id: wf-execution
+  template: how-to
+  title: How to Execute a Task
+  tagline: The execution ritual, step by step
+
+  sections:
+    - id: overview
+      title: What You'll Do
+      type: atom_bullets
+      bind:
+        atom_id: atom-execution-ritual
+        fields: [purpose, trigger, preconditions]
+
+    - id: step-by-step
+      title: Step by Step
+      type: ritual_steps
+      bind:
+        atom_tag: "topic:execution-ritual AND topic:steps"
+      ritual_ref: desk/rituals/execution.md
+
+    - id: validation
+      title: How to Validate
+      type: checklist
+      bind:
+        atom_tag: "topic:execution-ritual AND topic:validation"
+
+    - id: failure-modes
+      title: What Can Go Wrong
+      type: atom_bullets
+      bind:
+        atom_tag: "topic:execution-ritual AND topic:failure-modes"
+
+    - id: next-steps
+      title: Next Steps
+      type: next_steps
+      links:
+        - text: How to Test a Task
+          ref: workflow-guides/testing.md
+```
+
+### 3. Templates (`deskops/materializers/page_renderer.py`)
+
+Cada template define cómo se renderiza una página completa.
+
+#### Templates identificados
+
+| Template | Para qué | Secciones típicas |
+|---|---|---|
+| `tutorial` | Primeros pasos numerados | intro, code_tutorial × N, next_steps |
+| `concept` | Explicación de un concepto | atom_single, diagram, atom_list, related |
+| `how-to` | Guía paso a paso de un ritual | atom_bullets, ritual_steps, checklist, failure_modes |
+| `reference` | Referencia técnica (CLI, API) | atom_list, code_block, table |
+| `landing` | Página índice de una categoría | atom_list con summaries |
+
+#### Composición de secciones
+
+Cada sección tiene un `type` que define cómo se renderiza:
+
+| Section type | Renderiza |
+|---|---|
+| `atom_single` | Un atom específico (por id) con campos seleccionados |
+| `atom_bullets` | Lista de atoms (por tag) como bullets, cada uno con Answer |
+| `atom_list` | Lista de atoms con título + link |
+| `code_tutorial` | Bloque de código + annotations inline + callout opcional |
+| `diagram` | Mermaid block, resuelto desde atom o literal |
+| `ritual_steps` | Pasos de un ritual renderizados como lista numerada |
+| `checklist` | Items de validación renderizados como checklist |
+| `next_steps` | Lista de links a páginas siguientes |
+| `table` | Tabla renderizada desde fields de atoms |
+
+### 4. Materializer (`deskops/materializers/docs.py`)
+
+#### Algoritmo
+
+```python
+def materialize_docs(site_spec_path, atom_store, output_dir):
+    # 1. Load site spec
+    site = load_yaml(site_spec_path)
+
+    # 2. Load all page specs
+    pages = [load_page_spec(p) for p in site.navigation]
+
+    # 3. For each page:
+    for page_spec in pages:
+        # 3a. Resolve atoms for each section
+        for section in page_spec.sections:
+            atoms = query_atoms(atom_store, section.bind)
+            section.resolved_atoms = atoms
+
+        # 3b. Select template
+        renderer = get_template(page_spec.template)
+
+        # 3c. Render page
+        output = renderer.render(page_spec)
+
+        # 3d. Write to docs/
+        write_page(output_dir, page_spec.path, output)
+
+    # 4. Generate index / sidebar
+    generate_index(site, output_dir)
+```
+
+#### Queries de atoms
+
+El `bind` en cada sección soporta:
+
+```yaml
+bind:
+  atom_id: atom-tasks              # atom específico
+  atom_tag: "topic:tasks"          # por tag (soporta AND, OR, NOT)
+  five_wh: "what"                  # filtro por tipo de pregunta
+  fields: [answer, tags]           # qué campos incluir
+  exclude: "atom_id:atom-tasks"    # excluir atoms específicos
+  max_items: 5                     # límite
+```
+
+### 5. Comando CLI
+
+```bash
+## Generar docs completa
+deskops materialize docs
+
+## Sobre escribir docs/ existente
+deskops materialize docs --force
+
+## Solo páginas específicas
+deskops materialize docs --pages quickstart,concept-tasks
+
+## Modo watch (regenera en cada cambio de atom o spec)
+deskops materialize docs --watch
+```
+
+### 6. Pipeline completo
+
+```
+[Escribo atom]             → atoms/atom-tasks.md
+[Escribo spec de página]   → spec/docs/pages/concept-tasks.yaml
+[Ejecuto materialize]      → deskops materialize docs
+[Output]                   → docs/core-concepts/tasks.md ← generado
+                              docs/_sidebar.md ← generado
+                              docs/README.md ← generado
+```
+
+El resultado es que **la documentación se auto-genera** a partir de:
+
+1. **Atoms** → el conocimiento puro (5WH1+)
+2. **Site spec** → la arquitectura de navegación
+3. **Page specs** → qué atoms van en cada sección y cómo se renderizan
+4. **Templates** → cómo se ve cada tipo de página (crawl4ai-style)
+
+El escritor solo toca atoms y specs. El materializador compone el docs site.
+
+---
+
+### 7. Lo que hay que construir
+
+#### 7.1 Specs nuevos
+
+- [ ] `spec/docs/site.yaml` — arquitectura de navegación
+- [ ] `spec/docs/pages/` — specs de página por concepto
+- [ ] Registrar `DocSiteSpec` y `DocPageSpec` como modelos sldb
+
+#### 7.2 Materializers nuevos
+
+- [ ] `deskops/materializers/docs.py` — orquestador principal
+- [ ] `deskops/materializers/page_renderer.py` — templates + section renderers
+- [ ] `deskops/materializers/site_index.py` — generación de sidebar + index
+
+#### 7.3 CLI
+
+- [ ] `deskops materialize` — comando nuevo
+- [ ] `deskops materialize docs` — subcomando
+- [ ] Soporte `--watch`, `--pages`, `--force`
+
+#### 7.4 Queries
+
+- [ ] Extender sistema de queries de atoms para soportar bind DSL
+- [ ] Resolución por `atom_id`, `atom_tag`, `five_wh`, `fields`
+
+---
+
+### 8. Open Questions
+
+- ¿Los templates deberían ser spec YAML o código Python? (Python da flexibilidad para render, YAML permite cambiar sin deploy)
+- ¿El sidebar se genera del site spec o se escribe a mano?
+- ¿Los docs generados se versionan en git o se reconstruyen siempre?
+- ¿Cómo se maneja la internacionalización? (atoms en ES + EN → docs en ambos idiomas)
+- ¿Los rituales actuales en `desk/rituals/` deberían tener una versión atomizada para que el materializador los consuma?
+
+
+---
+
 ---
 id: feature-pi-artifact-materialization-runtime
 status: draft
@@ -12,9 +438,9 @@ tags:
 - topic:proposal
 ---
 
-# Pi artifact materialization runtime
+## Pi artifact materialization runtime
 
-## Purpose
+### Purpose
 
 Define a deskops-native plan for reusing existing desk artifacts as the source of truth for Pi runtime behavior.
 
@@ -32,7 +458,7 @@ This feature should preserve the current deskops boundary:
 - sldb owns structured document operations
 - Pi owns execution personas and orchestration materializations only
 
-## Why
+### Why
 
 The repository already contains a substantial workflow model in `desk/`:
 
@@ -52,7 +478,7 @@ Without a derivation layer, there are three risks:
 
 This proposal addresses those risks by making Pi a projection/runtime for deskops rather than a competing source of truth.
 
-## Core thesis
+### Core thesis
 
 Deskops should treat Pi artifacts the same way it treats other human/runtime projections:
 
@@ -66,9 +492,9 @@ The direction of derivation matters:
 - **good**: desk artifact -> generated or synchronized Pi runtime artifact
 - **bad**: hand-maintained Pi artifact that silently diverges from desk meaning
 
-## Source artifacts to reuse
+### Source artifacts to reuse
 
-### Roles / agent-role documents
+#### Roles / agent-role documents
 
 Candidate sources:
 
@@ -81,7 +507,7 @@ Candidate sources:
 
 These already encode role boundaries, responsibilities, and anti-patterns. They should inform Pi custom agent personas.
 
-### Rituals
+#### Rituals
 
 Primary sources:
 
@@ -92,7 +518,7 @@ Primary sources:
 
 These define the gate sequence that runtime chains should respect.
 
-### Routines
+#### Routines
 
 Primary sources:
 
@@ -100,7 +526,7 @@ Primary sources:
 
 These provide the more operational decomposition that can drive executable sequencing and hooks.
 
-### Pills
+#### Pills
 
 Primary sources:
 
@@ -109,7 +535,7 @@ Primary sources:
 
 These should become injected constraints and validation guardrails inside agent tasks.
 
-### Atoms
+#### Atoms
 
 Primary sources:
 
@@ -118,7 +544,7 @@ Primary sources:
 
 These should be used as durable grounding context for the agents/chains that need stable rules, especially around boundaries and lifecycle rules.
 
-## Non-goals
+### Non-goals
 
 - Do not move workflow truth out of `desk/` into `.pi/`.
 - Do not make Pi chains authoritative for task routing or closeout semantics.
@@ -127,7 +553,7 @@ These should be used as durable grounding context for the agents/chains that nee
 - Do not let generated Pi artifacts become hand-edited without a reconciliation path.
 - Do not weaken the deskops/sldb boundary by letting Pi bypass structured document operations.
 
-## Target mapping
+### Target mapping
 
 | Deskops source | Pi runtime materialization | Notes |
 |---|---|---|
@@ -141,7 +567,7 @@ These should be used as durable grounding context for the agents/chains that nee
 | atom | durable grounding context | selected, not bulk-injected |
 | test target / validation target | chain validation step inputs | should remain explicit and bounded |
 
-## Deliverable shape
+### Deliverable shape
 
 The long-term deliverable is a reproducible projection layer with these surfaces:
 
@@ -165,15 +591,15 @@ The long-term deliverable is a reproducible projection layer with these surfaces
    - identify when generated Pi artifacts diverge from source desk artifacts
    - fail review or warn before stale runtime instructions remain in use
 
-## Detailed plan
+### Detailed plan
 
-## Phase 1 - Inventory and canonical mapping
+### Phase 1 - Inventory and canonical mapping
 
-### Objective
+#### Objective
 
 Make the source-to-target mapping explicit before building anything.
 
-### Steps
+#### Steps
 
 1. Inventory every desk artifact family that has runtime implications:
    - rituals
@@ -206,24 +632,24 @@ n   - routines
    - project-local Pi artifacts derived from deskops win over builtins
    - user-scoped Pi overrides are advisory but must not silently invalidate deskops role invariants
 
-### Outputs
+#### Outputs
 
 - one mapping spec in drawer
 - one inventory table of candidate source artifacts
 - one naming/precedence convention
 
-### Open questions
+#### Open questions
 
 - should projection read directly from markdown docs, from SLDB model payloads, or from both?
 - which sources are mature enough to be materialized now versus later?
 
-## Phase 2 - Role materialization into agent system prompts
+### Phase 2 - Role materialization into agent system prompts
 
-### Objective
+#### Objective
 
 Turn existing role definitions into deterministic Pi personas.
 
-### Steps
+#### Steps
 
 1. Identify the canonical role source for each runtime role:
    - supervisor
@@ -270,24 +696,24 @@ Turn existing role definitions into deterministic Pi personas.
    - does it overfit to one task shape?
    - does it keep deterministic work out of the role when not needed?
 
-### Outputs
+#### Outputs
 
 - first-pass role prompt schema
 - minimal custom agent set
 - review checklist for role prompts
 
-### Risks
+#### Risks
 
 - prompt drift from the desk role source
 - repeated prose copied across prompts without synchronization
 
-## Phase 3 - Ritual and routine materialization into chains
+### Phase 3 - Ritual and routine materialization into chains
 
-### Objective
+#### Objective
 
 Translate desk execution semantics into reusable Pi chains without moving authority away from `desk/`.
 
-### Steps
+#### Steps
 
 1. Identify the smallest useful chain slices:
    - execution preflight
@@ -337,24 +763,24 @@ Translate desk execution semantics into reusable Pi chains without moving author
    - hooks remain the better home for deterministic trigger semantics if/when modeled locally
    - avoid making Pi chains emulate a full local event engine if deskops should own that logic
 
-### Outputs
+#### Outputs
 
 - initial chain catalog
 - per-chain input/output contract
 - explicit chain-vs-hook boundary note
 
-### Risks
+#### Risks
 
 - chains becoming hidden workflow logic instead of visible materializations
 - over-encoding deterministic deskops steps into Pi prompts
 
-## Phase 4 - Task bundle assembly and context injection
+### Phase 4 - Task bundle assembly and context injection
 
-### Objective
+#### Objective
 
 Make clean subagent launches consume the exact deskops bundle they need.
 
-### Steps
+#### Steps
 
 1. Define a task bundle schema assembled from desk artifacts:
    - board snapshot
@@ -391,25 +817,25 @@ Make clean subagent launches consume the exact deskops bundle they need.
 
 6. Ensure subagents do not need to rediscover the codebase broadly when the task has already declared scope.
 
-### Outputs
+#### Outputs
 
 - task bundle schema
 - pill-to-runtime translation rules
 - atom selection rules
 - proposal for a bundle-emitting command if needed
 
-### Risks
+#### Risks
 
 - overstuffed bundles that recreate large-context problems
 - under-specified bundles that force agents to roam again
 
-## Phase 5 - Drift detection and synchronization
+### Phase 5 - Drift detection and synchronization
 
-### Objective
+#### Objective
 
 Prevent desk/Pi divergence.
 
-### Steps
+#### Steps
 
 1. Decide synchronization mode for each Pi artifact type:
    - generated on demand
@@ -436,28 +862,28 @@ Prevent desk/Pi divergence.
    - warn only at first
    - later fail if committed derived artifacts are stale
 
-### Outputs
+#### Outputs
 
 - provenance metadata convention
 - drift-check spec
 - CLI/reporting proposal
 
-### Risks
+#### Risks
 
 - stale runtime prompts surviving after desk ritual changes
 - generated artifacts edited manually without rebase path
 
-## Phase 6 - Minimal runnable slice
+### Phase 6 - Minimal runnable slice
 
-### Objective
+#### Objective
 
 Ship one small end-to-end example proving the architecture.
 
-### Candidate slice
+#### Candidate slice
 
 Use the execution ritual and executor role as the first projection pair.
 
-### Steps
+#### Steps
 
 1. Create one deskops executor custom agent from current role sources.
 2. Create one `task-preflight` or `execution-preflight` chain from `desk/rituals/execution.md`.
@@ -469,20 +895,20 @@ Use the execution ritual and executor role as the first projection pair.
 5. Record what parts had to be improvised because source artifacts were not yet structured enough.
 6. Convert those gaps into explicit drawer issues or active tasks.
 
-### Success criteria
+#### Success criteria
 
 - one real deskops task can be launched through the materialized Pi runtime with less ad hoc prompting
 - the role/persona is more stable than with generic builtin agents
 - the chain reflects the ritual gates instead of bypassing them
 - no deskops truth had to move into `.pi/` manually
 
-## Phase 7 - Extend to testing and supervisor flows
+### Phase 7 - Extend to testing and supervisor flows
 
-### Objective
+#### Objective
 
 Broaden from the first runnable slice to a coherent runtime set.
 
-### Steps
+#### Steps
 
 1. Materialize tester role and testing handoff chain.
 2. Materialize supervisor role and task-dispatch chain.
@@ -492,25 +918,25 @@ Broaden from the first runnable slice to a coherent runtime set.
    - deskops local hook/routine engine
    - or a hybrid where Pi only handles semantic review portions
 
-### Outputs
+#### Outputs
 
 - coherent minimal runtime suite for supervisor/executor/tester
 - explicit note on which lifecycle parts remain local-only
 
-## Phase 8 - Align with workflow engine and semantic adapter proposals
+### Phase 8 - Align with workflow engine and semantic adapter proposals
 
-### Objective
+#### Objective
 
 Make sure this Pi projection plan complements, rather than conflicts with, other deferred architecture work.
 
-### Relevant drawer items
+#### Relevant drawer items
 
 - `desk/drawer/features/workflow-execution-engine.md`
 - `desk/drawer/features/semantic-execution-adapter.md`
 - `desk/drawer/issues/issue-implement-task-scoped-subagent-lanes.md`
 - `desk/drawer/issues/issue-inject-files-and-atoms-into-subagent-task-context.md`
 
-### Alignment tasks
+#### Alignment tasks
 
 1. Compare this proposal with the workflow engine proposal:
    - identify which transitions should stay deterministic and local
@@ -526,12 +952,12 @@ Make sure this Pi projection plan complements, rather than conflicts with, other
 
 4. Ensure task-scoped run artifact conventions stay compatible with existing `runs/subagents/` expectations.
 
-### Outputs
+#### Outputs
 
 - compatibility note against existing drawer proposals
 - list of conflicts, overlaps, and merge opportunities
 
-## Decision points
+### Decision points
 
 Before implementation, these decisions need explicit answers:
 
@@ -557,7 +983,7 @@ Before implementation, these decisions need explicit answers:
 5. **Prompt/source synchronization**
    - how role/systemPrompt drift is detected and repaired
 
-## Suggested first implementation tasks
+### Suggested first implementation tasks
 
 The proposal is too broad for one task. A safe atomized follow-up sequence would be:
 
@@ -569,49 +995,49 @@ The proposal is too broad for one task. A safe atomized follow-up sequence would
 6. run a drift check review between source ritual and chain
 7. decide chain/hook boundary for later automation
 
-## Validation strategy
+### Validation strategy
 
-### Documentation/projection validation
+#### Documentation/projection validation
 
 - compare generated agent prompts against source role documents
 - compare generated chains against ritual/routine steps
 - review for missing gate semantics or duplicated logic
 
-### Runtime validation
+#### Runtime validation
 
 - launch one real preflight chain against a bounded task
 - verify the subagent receives the intended bundle
 - confirm evidence artifacts are produced
 - confirm the role does not violate its boundaries
 
-### Drift validation
+#### Drift validation
 
 - mutate a ritual source and confirm drift is reported
 - mutate a generated Pi artifact and confirm provenance mismatch is reported
 
-## Risks and failure modes
+### Risks and failure modes
 
-### 1. Parallel truth systems
+#### 1. Parallel truth systems
 
 If `.pi/agents` and `.pi/chains` become manually curated without provenance, deskops will gain a shadow workflow model.
 
-### 2. Prompt overgeneration
+#### 2. Prompt overgeneration
 
 If role prompts absorb too much ritual detail, prompts become bloated and fragile instead of stable personas.
 
-### 3. Loss of deterministic boundaries
+#### 3. Loss of deterministic boundaries
 
 If chains start performing work that belongs in deskops local automation, Pi becomes a replacement for the workflow engine rather than a semantic runtime.
 
-### 4. Weak source structure
+#### 4. Weak source structure
 
 Some existing desk artifacts may be rich conceptually but not structured enough yet for reliable prompt/chain generation.
 
-### 5. Bundle overload
+#### 5. Bundle overload
 
 Injecting too many pills/atoms/files into every run could defeat the clean-subagent goal.
 
-## Heuristics for success
+### Heuristics for success
 
 This direction is working if, after the first slices:
 
@@ -621,7 +1047,7 @@ This direction is working if, after the first slices:
 - runtime drift becomes visible instead of implicit
 - adding a new role or ritual mostly means editing desk artifacts, not rewriting Pi config by hand
 
-## Recommended next document(s)
+### Recommended next document(s)
 
 After this plan, the next drawer docs should likely be:
 
@@ -630,7 +1056,7 @@ After this plan, the next drawer docs should likely be:
 3. `task-bundle-schema.md` — exact context payload for clean subagents
 4. `chain-hook-boundary.md` — semantic runtime vs deterministic local automation
 
-## Summary
+### Summary
 
 The right Pi adoption path for deskops is not to invent new workflow semantics in Pi. It is to materialize existing deskops artifacts into Pi-native runtime surfaces.
 

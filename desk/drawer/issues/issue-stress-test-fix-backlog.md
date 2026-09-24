@@ -1,3 +1,43 @@
+# Stress-test fix backlog
+
+## Kind
+
+backlog
+
+## Status
+
+open
+
+## Where this comes from
+
+Six read-only UX rounds ran the CLI against 15 anchored use cases
+(`desk/drawer/use-cases/`) and wrote 27 finding files. The roadmap that came out
+of them was never turned into tracked work, so it sat in the drawer as prose.
+The findings are archived verbatim in
+`desk/drawer/stress-tests/findings-archive.md`, and the reproducible test scripts
+stay in `desk/drawer/stress-tests/st-*.md`.
+
+## Re-verification (2026-09-24)
+
+Phase 0 was re-run against the current CLI. Seven of its eight items are already
+fixed:
+
+| Item | State |
+| --- | --- |
+| `list --root <nonexistent>` silently exits 0 | fixed — reports the invalid directory |
+| duplicate error message in `advance task` | fixed — one message, on stderr |
+| whitespace-only title accepted | fixed — refuses after stripping |
+| `add task` with no args shows a Pydantic traceback | fixed — names the missing field |
+| `inbox --list --format json` crashes on datetime | fixed — valid JSON |
+| errors printed to stdout instead of stderr | fixed |
+| `--faq-path <nonexistent>` falls back silently | obsolete — the flag no longer exists |
+| `show <type> ""` | **still broken** — see `issue-empty-selector-validation-error.md` |
+
+The rest of the roadmap below is not re-verified; treat it as a candidate list,
+not as a confirmed bug list.
+
+---
+
 # Deskops — Prioritized Fix Roadmap
 
 ## Fase 0: Quick Wins (1-2 hrs c/u, sin dependencias)
