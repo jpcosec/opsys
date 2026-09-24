@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Protoatoms, mandatory domain crossroads and protoatom typing [draft] - Add ProtoAtomDoc and CrossroadDoc, enforce that every domain path prefix has a written crossroad, and add an explicit operation that types a protoatom into another sldb model while keeping a redirect stub.

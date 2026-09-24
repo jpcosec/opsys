@@ -1,0 +1,14 @@
+Task: task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing
+Title: Protoatoms, mandatory domain crossroads and protoatom typing
+Status: active
+Current node: checklist-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-execution-ready
+Task type: implementation
+Routine: routine-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing
+Effective atoms:
+- atom-protoatoms-are-free-atoms-captured-before-typing
+- atom-domain-crossroads-are-mandatory-parents
+- atom-typing-a-protoatom-keeps-a-redirect-stub
+Checklist status:
+- checklist-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-execution-ready: complete
+- checklist-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-testing-ready: complete
+- checklist-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-closeout-ready: pending
