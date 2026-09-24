@@ -14,17 +14,17 @@ class InboxNoteDoc(StructuredNLDoc):
 # unclear | suggestion
 kind: ⸢rev•kind⸥
 # e.g., other_repo
-sender_project: ⸢rev•sender_project⸥
+sender_project: ⸢optrev•sender_project⸥
 # e.g., target_repo
-target_project: ⸢rev•target_project⸥
+target_project: ⸢optrev•target_project⸥
 # ISO 8601 timestamp
 created_at: ⸢rev•created_at⸥
 # open | closed
 status: ⸢rev•status⸥
 # project identity that acknowledged the note
-acknowledged_by: ⸢rev•acknowledged_by⸥
+acknowledged_by: ⸢optrev•acknowledged_by⸥
 # ISO 8601 timestamp, set when acknowledged
-acknowledged_at: ⸢rev•acknowledged_at⸥
+acknowledged_at: ⸢optrev•acknowledged_at⸥
 ---
 
 # ⸢rev•title⸥

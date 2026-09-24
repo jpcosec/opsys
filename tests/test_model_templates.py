@@ -15,6 +15,8 @@ from deskops.models import PillDoc
 from deskops.models import RepositoryDoc
 from deskops.models import RitualDoc
 from deskops.models import RoutineDoc
+from deskops.models import RunDoc
+from deskops.models import RuntimeProfileDoc
 from deskops.models import StepDoc
 from deskops.models import TaskDoc
 from sldb.runtime.validation import extract_model_data
@@ -224,6 +226,49 @@ MODEL_PAYLOADS = [
             "atoms": ["desk/atoms/atom-deskops.md"],
         },
     ),
+    (
+        RuntimeProfileDoc,
+        {
+            "id": "runtime-template-test",
+            "title": "Template Runtime",
+            "status": "active",
+            "kind": "pi",
+            "binary": "pi",
+            "model_flag": "--model",
+            "fallback_models_flag": "",
+            "fallback_models_join": "comma",
+            "tools_flag": "--tools",
+            "tools_join": "comma",
+            "system_prompt_flag": "--append-system-prompt",
+            "system_prompt_delivery": "inline",
+            "session_flag": "--session",
+            "extra_args": [],
+            "unsupported_role_fields": ["fallback_models"],
+            "tags": ["system:deskops"],
+            "summary": "Template runtime profile for round-trip validation.",
+            "notes": "No special requirements.",
+        },
+    ),
+    (
+        RunDoc,
+        {
+            "id": "run-template-test",
+            "title": "Template Run",
+            "summary": "Template run for round-trip validation.",
+            "task_id": "task-template-test",
+            "role_id": "role-deskops-executor",
+            "kind": "pi",
+            "run_dir": "runs/subagents/20260101-template",
+            "herdr_pane_id": "w1:p1",
+            "session_path": "runs/subagents/20260101-template/session.jsonl",
+            "session_sha256": "0" * 64,
+            "started_at": "2026-01-01T00:00:00Z",
+            "ended_at": "2026-01-01T00:05:00Z",
+            "outcome": "success",
+            "commit_sha": "deadbeef",
+            "tags": ["system:deskops"],
+        },
+    ),
 ]
 
 
@@ -233,7 +278,9 @@ def test_model_templates_roundtrip_with_instructional_text(model, payload) -> No
     rendered = render_model_markdown(model, payload)
     extracted = extract_model_data(model, rendered)
 
-    assert extracted == expected
+    # Optional fields left unset leave no trace in the render, so they come back
+    # absent from the extraction; the model applies their defaults.
+    assert model(**extracted).model_dump() == expected
     assert "_." not in rendered
     assert "_" in rendered
     assert "Describe" in rendered or "List" in rendered or "Answer" in rendered or "Generated" in rendered or "Write" in rendered or "Summarize" in rendered
@@ -260,8 +307,10 @@ This note predates target and ack metadata.
     valid, details = validate_model_input_roundtrip(InboxNoteDoc, legacy_note)
     extracted = extract_model_data(InboxNoteDoc, legacy_note)
 
+    note = InboxNoteDoc(**extracted)
+
     assert valid, details
-    assert extracted["sender_project"] == "legacy-project"
-    assert extracted["target_project"] is None
-    assert extracted["acknowledged_by"] is None
-    assert extracted["acknowledged_at"] is None
+    assert note.sender_project == "legacy-project"
+    assert note.target_project is None
+    assert note.acknowledged_by is None
+    assert note.acknowledged_at is None

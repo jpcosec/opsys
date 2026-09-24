@@ -422,6 +422,9 @@ class DeskopsOperations:
                 list(compiled.artifact_payload.get("tags") or []),
                 default_registry_path(self.root),
             )
+            from deskops.domain_tree import require_domain_parents
+
+            require_domain_parents(self.desk_root / "atoms", list(compiled.artifact_payload.get("tags") or []))
             path = self._atom_doc_path(
                 compiled.artifact_payload["id"],
                 list(compiled.artifact_payload.get("tags") or []),
@@ -522,6 +525,51 @@ class DeskopsOperations:
             except Exception as e:
                 print(f"Warning: Failed to load task {path}: {e}", file=sys.stderr)
         return tasks
+
+    DRAWER_INDEX_FILES = {"README.md", "Board.md"}
+
+    def resolve_drawer_source(self, selector: str) -> Path:
+        """The desk/drawer/ file a task is being authored from.
+
+        Accepts a path (relative to the repo root, or absolute) or a stem /
+        unique slug fragment searched across every drawer subfolder, since the
+        drawer holds features, issues and questions, not only task candidates.
+        The file must live under desk/drawer/.
+        """
+        drawer_root = (self.desk_root / "drawer").resolve()
+        candidate = Path(selector)
+        if not candidate.is_absolute():
+            candidate = self.desk_root.parent / candidate
+        if candidate.is_file():
+            resolved = candidate.resolve()
+            if drawer_root not in resolved.parents:
+                raise ValueError(f"--from-drawer must point inside desk/drawer/: {selector}")
+            return resolved
+        if not drawer_root.exists():
+            raise FileNotFoundError(f"No drawer found at {drawer_root}")
+        files = sorted(
+            path for path in drawer_root.rglob("*.md")
+            if path.is_file() and path.name not in self.DRAWER_INDEX_FILES
+        )
+        exact = [path for path in files if selector in {path.name, path.stem}]
+        matches = exact or [path for path in files if selector.lower() in path.stem.lower()]
+        if not matches:
+            raise FileNotFoundError(f"No drawer file matches '{selector}'")
+        if len(matches) > 1:
+            listing = ", ".join(str(path.relative_to(drawer_root)) for path in matches)
+            raise ValueError(f"Ambiguous drawer selector '{selector}': {listing}")
+        return matches[0].resolve()
+
+    def attach_drawer_source(self, payload: dict[str, Any], drawer_file: Path) -> dict[str, Any]:
+        """Record where an authored task came from, without copying or deleting it.
+
+        Stored in the task's own from_drawer field, not in references:
+        `deskops edit task <id> references ...` replaces that whole list (the
+        closeout step does exactly that), which would silently drop the origin.
+        One field, one fact -- no parallel tag that could drift from it.
+        Cleanup of the drawer file is left to a human."""
+        relative = drawer_file.resolve().relative_to(self.desk_root.parent.resolve()).as_posix()
+        return {**payload, "from_drawer": relative}
 
     def list_repo_task_routes(self) -> list[RepoTaskRoute]:
         routes: list[RepoTaskRoute] = []
@@ -731,6 +779,9 @@ class DeskopsOperations:
         graph_path: str | None = None,
     ) -> AtomCreateResult:
         self.ensure_workspace()
+        from deskops.domain_tree import require_domain_parents
+
+        require_domain_parents(self.desk_root / "atoms", list(tags or []))
         source_flags = [flag for flag in (from_pill, from_graph, from_diagram) if flag]
         if len(source_flags) != 1:
             raise ValueError("Atom create requires exactly one source: --from-pill, --from-graph, or --from-diagram.")
@@ -957,6 +1008,13 @@ class DeskopsOperations:
                 payload["status"] = target_node
             else:
                 payload["current_node"] = target_node
+                # Reaching the terminal node closes the task. The gated path
+                # pairs current_node == "complete" with status == "closed"
+                # (see the auto-commit check below); a forced transition that
+                # moved only current_node left the two disagreeing, so the
+                # task looked terminal but never read as closed.
+                if target_node == "complete":
+                    payload["status"] = "closed"
             self._write_doc(task_path, TaskDoc, payload)
             advanced_task = self._hydrate_task(payload)
             self.logger.info(f"Advanced task {task_id} manually to {target_node}")
@@ -1132,6 +1190,7 @@ class DeskopsOperations:
             "inherits_from": self._coerce_list(payload.get("inherits_from") or []),
             "inherit_acceptance_context": bool(payload.get("inherit_acceptance_context") or False),
             "atoms": self._coerce_list(payload.get("atoms") or []),
+            "from_drawer": str(payload.get("from_drawer") or ""),
         }
 
     def _normalize_primitive_payload(self, kind: str, payload: dict[str, Any]) -> dict[str, Any]:
@@ -1650,6 +1709,8 @@ class DeskopsOperations:
         return sorted(
             path for path in atoms_dir.rglob("*.md")
             if path.name != "tag-namespaces.yaml"
+            # Crossroads and protoatoms have their own models: see deskops.domain_tree.
+            and not path.name.startswith(("crossroad-", "proto-"))
         )
 
     def _build_atom_from_pill(
@@ -2061,62 +2122,54 @@ class DeskopsOperations:
         return rewritten
 
     def _retarget_atom_documents(self, retargets: dict[str, str]) -> bool:
-        """Update tracked atom document paths in the .sldb store after moves."""
+        """Update tracked atom document paths in the .sldb store after moves.
+
+        Retracking through SLDB's own track/untrack API keeps every derived index
+        (semantic shards, sections, hashes, journal) consistent; editing the raw
+        index files leaves the derived layers stale.
+        """
         store_path = self.root / ".sldb"
         try:
-            from sldb.store.io import load_documents_index
-            from sldb.store.io import load_models_index
-            from sldb.store.io import load_store_index
+            from sldb.api.documents.track_document_file import track_document_file
+            from sldb.api.documents.untrack_document import untrack_document
             from sldb.store.layout import store_exists
-            from sldb.cli.commands.doc_helpers import save_untrack_indexes
         except ImportError:
             return False
         if not store_exists(store_path):
             return False
 
-        store_index = load_store_index(store_path)
-        model_entry = next((entry for entry in store_index.models if entry.name == AtomDoc.__name__), None)
-        if model_entry is None:
-            return False
-
-        models_index = load_models_index(self.root / model_entry.models_index)
-        documents_index = load_documents_index(self.root / models_index.documents_index)
+        pythonpath = str(Path(__file__).resolve().parents[1])
         changed = False
-        for entry in documents_index.documents:
-            new_path = retargets.get(entry.name)
-            if new_path is not None and entry.path != new_path:
-                entry.path = new_path
-                changed = True
-        if not changed:
-            return False
-        save_untrack_indexes(store_path, self.root, store_index, model_entry, models_index, documents_index, str(Path(__file__).resolve().parents[1]))
-        return True
+        for atom_id, new_path in retargets.items():
+            try:
+                untrack_document(store_path, atom_id, pythonpath)
+                track_document_file(
+                    store_path,
+                    AtomDoc.__name__,
+                    self.root / new_path,
+                    name=atom_id,
+                    pythonpath=pythonpath,
+                    force=True,
+                )
+            except Exception:
+                continue
+            changed = True
+        return changed
 
     def _untrack_atom_document(self, atom_id: str) -> bool:
         store_path = self.root / ".sldb"
         try:
-            from sldb.store.io import load_documents_index
-            from sldb.store.io import load_models_index
-            from sldb.store.io import load_store_index
+            from sldb.api.documents.untrack_document import untrack_document
             from sldb.store.layout import store_exists
-            from sldb.cli.commands.doc_helpers import save_untrack_indexes
         except ImportError:
             return False
         if not store_exists(store_path):
             return False
 
-        store_index = load_store_index(store_path)
-        model_entry = next((entry for entry in store_index.models if entry.name == AtomDoc.__name__), None)
-        if model_entry is None:
+        try:
+            untrack_document(store_path, atom_id, str(Path(__file__).resolve().parents[1]))
+        except Exception:
             return False
-
-        models_index = load_models_index(self.root / model_entry.models_index)
-        documents_index = load_documents_index(self.root / models_index.documents_index)
-        tracked_doc = next((entry for entry in documents_index.documents if entry.name == atom_id or entry.path.endswith(f"/{atom_id}.md") or entry.path == f"desk/atoms/{atom_id}.md"), None)
-        if tracked_doc is None:
-            return False
-        documents_index.documents = [entry for entry in documents_index.documents if entry.name != tracked_doc.name]
-        save_untrack_indexes(store_path, self.root, store_index, model_entry, models_index, documents_index, str(Path(__file__).resolve().parents[1]))
         return True
 
     def _reference_points_to_test(self, reference: str) -> bool:
@@ -2457,6 +2510,7 @@ class DeskopsOperations:
             inherits_from=list(payload.get("inherits_from") or []),
             inherit_acceptance_context=bool(payload.get("inherit_acceptance_context") or False),
             atoms=list(payload.get("atoms") or []),
+            from_drawer=payload.get("from_drawer") or "",
             effective_references=list(payload.get("effective_references") or payload.get("references") or []),
             effective_pills=list(payload.get("effective_pills") or payload.get("pills") or []),
             effective_tags=list(payload.get("effective_tags") or payload.get("tags") or []),
