@@ -9,7 +9,11 @@ routine: routine-task-derive-declared-graph-edges-from-model-containment-and-ref
 current_node: checklist-task-derive-declared-graph-edges-from-model-containment-and-references-testing-ready
 history:
 - operator-task-derive-declared-graph-edges-from-model-containment-and-references-activate
-references: []
+references:
+- tests/test_graph_declared_edges.py
+- tests/test_graph_extract_docs.py
+- 47a5816
+- desk/atoms/knowledge-model/atom-sldb-semantics-are-graph-inputs.md
 depends_on: []
 pills: []
 files: []

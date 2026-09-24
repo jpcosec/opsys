@@ -9,7 +9,11 @@ routine: routine-task-make-terminal-node-completion-commit-before-it-deletes-the
 current_node: checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-testing-ready
 history:
 - operator-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-activate
-references: []
+references:
+- tests/test_lifecycle_end_to_end.py
+- tests/test_cli.py
+- 5f9b872
+- desk/atoms/workflow-model/atom-create-operations-should-rollback-on-failure.md
 depends_on: []
 pills: []
 files: []

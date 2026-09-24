@@ -9,7 +9,10 @@ routine: routine-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subp
 current_node: checklist-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-testing-ready
 history:
 - operator-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-activate
-references: []
+references:
+- tests/test_cli.py
+- 3e863fe
+- desk/atoms/atom-deskops-imports-sldb-cli-helpers-from-their-current-modules.md
 depends_on: []
 pills: []
 files: []

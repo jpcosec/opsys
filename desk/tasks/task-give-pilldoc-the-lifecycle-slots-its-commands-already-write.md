@@ -9,7 +9,11 @@ routine: routine-task-give-pilldoc-the-lifecycle-slots-its-commands-already-writ
 current_node: checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-testing-ready
 history:
 - operator-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-activate
-references: []
+references:
+- tests/test_doc_readability.py
+- tests/test_model_templates.py
+- 120b296
+- desk/atoms/atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md
 depends_on: []
 pills: []
 files: []
@@ -20,7 +24,8 @@ checklists:
 task_type: implementation
 inherits_from: []
 inherit_acceptance_context: false
-atoms: []
+atoms:
+- atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
 closeout_evidence_verified: false
 pill_graduation_verified: true
 ---
