@@ -136,7 +136,8 @@ TASK_SECTION_PLACEHOLDERS = {
 def slugify(text: str) -> str:
     lowered = "".join(ch.lower() if ch.isalnum() else "-" for ch in text)
     parts = [part for part in lowered.split("-") if part]
-    return "-".join(parts) or "item"
+    slug = "-".join(parts) or "item"
+    return slug[:100].rstrip("-")
 
 
 def strip_markdown_frontmatter(text: str) -> str:
@@ -2600,6 +2601,9 @@ class DeskopsOperations:
         return matches[0]
 
     def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:
+        if not selector or not str(selector).strip():
+            raise ValueError(f"Empty or whitespace-only selector provided for {artifact_id}")
+
         pattern = self._artifact_glob_pattern(artifact_id)
         candidates = []
         for d in directories:
@@ -2623,6 +2627,9 @@ class DeskopsOperations:
         raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {relative}")
 
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
+        if not selector or not str(selector).strip():
+            raise ValueError(f"Empty or whitespace-only selector provided for {artifact_id}")
+
         pattern = self._artifact_glob_pattern(artifact_id)
         candidates = sorted(directory.rglob(pattern))
         exact = [path for path in candidates if selector in {path.name, path.stem}]

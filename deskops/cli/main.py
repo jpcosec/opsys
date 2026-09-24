@@ -18,6 +18,35 @@ from deskops.workspace import ensure_target_directory
 from deskops.workspace import scaffold_desk
 
 
+def _validate_selectors(args: Any) -> None:
+    cmd_parts = ["deskops", args.command]
+    subject = getattr(args, "subject", None)
+    if subject:
+        cmd_parts.append(subject)
+    elif getattr(args, "atoms_command", None):
+        cmd_parts.append(getattr(args, "atoms_command"))
+    elif getattr(args, "promote_command", None):
+        cmd_parts.append(getattr(args, "promote_command"))
+
+    cmd_str = " ".join(cmd_parts)
+
+    selector_fields = {
+        "selector": "selector",
+        "doc_id": "selector",
+        "task_id": "task selector",
+        "routine_id": "routine selector",
+        "primitive_id": "primitive selector",
+        "pill": "pill selector",
+        "task": "task selector",
+    }
+    
+    for field, label in selector_fields.items():
+        if hasattr(args, field):
+            val = getattr(args, field)
+            if val is not None and isinstance(val, str):
+                if not val.strip():
+                    raise ValueError(f"{cmd_str}: {label} cannot be empty or whitespace-only")
+
 class CLI:
     """Main CLI dispatcher for deskops."""
 
@@ -30,6 +59,8 @@ class CLI:
             if isinstance(exc.code, int):
                 return exc.code
             return 0 if exc.code is None else 1
+
+        _validate_selectors(args)
 
         self._apply_test_root_override(args)
 

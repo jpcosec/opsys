@@ -209,9 +209,19 @@ class OperationsCLI:
             print("Decomposition:")
             for node in routine.decomposition:
                 print(f"- {node}")
-            print("Edges:")
-            for edge in routine.edges:
-                print(f"- {edge.id}: {edge.source} -> {edge.target}")
+            
+            # Print edge IDs from the payload directly to avoid missing-edge issues,
+            # while keeping JSON fully hydrated via the runtime object.
+            try:
+                from deskops.models import RoutineDoc
+                path = operations._resolve_glob(operations.desk_root / "routines", args.routine_id)
+                raw_payload = operations._read_doc(path, RoutineDoc)
+                print("Edges:")
+                for edge_id in raw_payload.get('edges', []):
+                    print(f"- {edge_id}")
+            except (FileNotFoundError, ValueError):
+                pass
+                
             return 0
 
         show_artifacts = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}

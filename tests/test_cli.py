@@ -2518,3 +2518,38 @@ def test_edit_pill_lifecycle_slots_including_drawer(tmp_path: Path, capsys) -> N
     
     parsed_drw = Validator(PillDoc).extract(drw_path.read_text())
     assert parsed_drw["summary"] == "A short summary"
+
+
+def test_empty_selector_is_rejected_before_any_lookup(tmp_path: Path, capsys) -> None:
+    """An unset shell variable must not resolve to an unrelated document.
+
+    Before this, `show task ""` fell through to the lookup and reported a
+    Pydantic error about the board's missing status field: a document the user
+    never named.
+    """
+    from deskops.cli.main import main
+
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    for argv in (
+        ["show", "task", "", "--root", str(tmp_path)],
+        ["show", "task", "   ", "--root", str(tmp_path)],
+        ["edit", "task", "", "status", "closed", "--root", str(tmp_path)],
+    ):
+        assert main(argv) != 0, argv
+        out, err = capsys.readouterr()
+        assert "cannot be empty" in (out + err), argv
+        assert "validation error" not in (out + err).lower(), argv
+
+
+def test_empty_selector_guard_holds_at_the_resolution_layer(tmp_path: Path, capsys) -> None:
+    """The CLI guard is the first line; the resolver refuses too."""
+    from deskops.operations import DeskopsOperations
+
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    operations = DeskopsOperations(tmp_path)
+    with pytest.raises(ValueError, match="Empty or whitespace-only"):
+        operations._resolve_artifact_selector_multi("artifact.task", [tmp_path / "desk" / "tasks"], "")
