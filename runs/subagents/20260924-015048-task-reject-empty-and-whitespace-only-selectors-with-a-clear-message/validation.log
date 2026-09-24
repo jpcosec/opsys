@@ -1,0 +1,28 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/workflow-model/atom-reports-carry-minimal-reproduction-evidence.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "d42a3e3"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_cli.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-reject-empty-and-whitespace-only-selectors-with-a-clear-message"
+}

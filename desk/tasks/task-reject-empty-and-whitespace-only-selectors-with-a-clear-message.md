@@ -9,7 +9,10 @@ routine: routine-task-reject-empty-and-whitespace-only-selectors-with-a-clear-me
 current_node: checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-testing-ready
 history:
 - operator-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-activate
-references: []
+references:
+- tests/test_cli.py
+- d42a3e3
+- desk/atoms/workflow-model/atom-reports-carry-minimal-reproduction-evidence.md
 depends_on: []
 pills: []
 files: []

@@ -1,0 +1,10 @@
+## main...origin/main [ahead 41]
+ M .sldb/core/documents/TaskDoc/task-reject-empty-and-whitespace-only-selectors-with-a-clear-message.yaml
+ M .sldb/core/documents/TaskDoc/task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-reject-empty-and-whitespace-only-selectors-with-a-clear-message.md
+ M desk/tasks/task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings.md
+?? runs/subagents/20260924-015027-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings/
+?? runs/subagents/20260924-015040-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message/
+?? runs/subagents/20260924-015048-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message/
