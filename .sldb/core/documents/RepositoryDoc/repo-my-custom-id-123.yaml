@@ -1,9 +1,0 @@
-name: repo-my-custom-id-123
-path: desk/registry/repo-my-custom-id-123.md
-hash_c: a8547ebe11e20b26c49b79717c397b8882e1bc8154f432eb96c9ad5487ef1cff
-hash_d: 37d19f1d9b1ccc34d3eb85a88f1758da98e98a76c4150ab753acfa6b708a8f6a
-semantic_tags:
-- representation.markdown
-- source.document.markdown
-- type.desk.repository
-- workspace.desk.registry

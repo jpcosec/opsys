@@ -1,9 +1,0 @@
-name: repo-tmp-repo
-path: desk/registry/repo-tmp-repo.md
-hash_c: f6dc98f792a8f69f2d6a89f152a9ed39d91a542b690ff1f78c94eecd485e1aed
-hash_d: 346ea841eb3e844106ca74c50491ba9391a64bb1de34fcd97dbffb12561ada38
-semantic_tags:
-- representation.markdown
-- source.document.markdown
-- type.desk.repository
-- workspace.desk.registry

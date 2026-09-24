@@ -1,0 +1,18 @@
+name: BoardDoc
+model_ref: deskops.models:BoardDoc
+path: deskops/models/board.py
+documents_index: .sldb/core/documents/BoardDoc.yaml
+sections_index: .sldb/runtime/sections/BoardDoc.yaml
+hash_b: ebf5495389551f0d8d0b36212a270b2bdfb0ebced1323911f8da0f4a7fcb1a06
+documents_count: 1
+version: 1
+canonical: false
+family: null
+semantics:
+- representation.markdown
+- source.document.markdown
+- type.workflow.board
+- workspace.desk
+base_models:
+- OperationalArtifactDoc
+- PrimitiveDoc

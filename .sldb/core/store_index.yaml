@@ -160,5 +160,53 @@ models:
   - source.document.markdown
   - type.workflow.ritual
   - workspace.desk
+- name: InboxNoteDoc
+  model_ref: deskops.models:InboxNoteDoc
+  path: deskops/models/inbox.py
+  models_index: .sldb/core/models/InboxNoteDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.desk.inbox-note
+  - workspace.desk.inbox
+- name: BoardDoc
+  model_ref: deskops.models:BoardDoc
+  path: deskops/models/board.py
+  models_index: .sldb/core/models/BoardDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.board
+  - workspace.desk
+- name: HookDoc
+  model_ref: deskops.models:HookDoc
+  path: deskops/models/hook.py
+  models_index: .sldb/core/models/HookDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.hook
+  - workspace.desk.primitives
+- name: MaterializationContractDoc
+  model_ref: deskops.models:MaterializationContractDoc
+  path: deskops/models/materialization.py
+  models_index: .sldb/core/models/MaterializationContractDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.knowledge.materialization_contract
+  - workspace.desk.materializations
 predicates: []
-hash_a: 20cdcfa8006531ee9e27732db96442461a95c460fd7dafa3c90e199b34f1cff7
+hash_a: bb68af97db643566bbe21cb500feffde099427deb15a94812524eb8b6e24ebb0
