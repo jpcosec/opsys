@@ -1,0 +1,10 @@
+name: atom-clean-subagent-ambiguity-review
+path: desk/atoms/workflow-model/atom-clean-subagent-ambiguity-review.md
+hash_c: 573f0abd0450ded351dc5c2f382d09af9ff5d5e92ee439406631b518fc9cdfe1
+hash_d: e292c790c9c8c6d1570c0188c706efba5b247d5df00a1a8bc7bc3977eb629f70
+semantic_tags:
+- system:deskops
+- topic:subagents
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

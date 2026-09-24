@@ -1,0 +1,7 @@
+name: repo-deskops-dir
+path: desk/registry/repo-deskops-dir.md
+hash_c: b0cafcc52e6bf28cef7cae1169430c6cf028317d77a058d91e3d76f2cf4a5619
+hash_d: 36e043aa9df9cd58060ebc4005285341b8b51fd93ab20162dc441c700947f523
+semantic_tags:
+- type.desk.repository
+- workspace.desk.registry

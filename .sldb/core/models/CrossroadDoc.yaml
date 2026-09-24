@@ -1,0 +1,14 @@
+name: CrossroadDoc
+model_ref: deskops.models:CrossroadDoc
+path: deskops/models/crossroad.py
+documents_index: .sldb/core/documents/CrossroadDoc.yaml
+sections_index: ''
+hash_b: 50672251e32da7498702e290f836b613f115017402947c4bda636b1c91485787
+documents_count: 1
+version: 1
+canonical: false
+family: null
+semantics:
+- type.knowledge.crossroad
+- workspace.desk.atoms
+base_models: []

@@ -1,0 +1,10 @@
+name: atom-automatic-routines-vs-llm-tasks
+path: desk/atoms/workflow-model/atom-automatic-routines-vs-llm-tasks.md
+hash_c: 9812e2de129fd87dbbd1e8c7c8088cf553fa0a7b59411a4f87f57f39ceedfbff
+hash_d: af7e1f0cb872ff455af918a6c2667114c677166ed99a1c2fc494481b7c451c62
+semantic_tags:
+- system:deskops
+- topic:hooks
+- topic:routines
+- type.knowledge.atom
+- workspace.desk.atoms

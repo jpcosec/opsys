@@ -72,5 +72,45 @@ models:
   canonical: false
   family: null
   semantics: []
+- name: RuntimeProfileDoc
+  model_ref: deskops.models:RuntimeProfileDoc
+  path: deskops/models/runtime_profile.py
+  models_index: .sldb/core/models/RuntimeProfileDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - type.workflow.runtime_profile
+  - workspace.desk.runtimes
+- name: RunDoc
+  model_ref: deskops.models:RunDoc
+  path: deskops/models/run.py
+  models_index: .sldb/core/models/RunDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - type.workflow.run
+  - workspace.desk.runs
+- name: ProtoAtomDoc
+  model_ref: deskops.models:ProtoAtomDoc
+  path: deskops/models/protoatom.py
+  models_index: .sldb/core/models/ProtoAtomDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - type.knowledge.protoatom
+  - workspace.desk.atoms
+- name: CrossroadDoc
+  model_ref: deskops.models:CrossroadDoc
+  path: deskops/models/crossroad.py
+  models_index: .sldb/core/models/CrossroadDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - type.knowledge.crossroad
+  - workspace.desk.atoms
 predicates: []
-hash_a: 1e5b5f6340c19acb4ce0aba544aecf7c7e4b69418280532bfda75449598889db
+hash_a: 7c4f38f0fcfc9cb4060294cbc62517c824fee47f897aaa0d97a7640c9e4c3dab

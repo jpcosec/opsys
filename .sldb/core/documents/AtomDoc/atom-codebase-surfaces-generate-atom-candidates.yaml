@@ -1,0 +1,10 @@
+name: atom-codebase-surfaces-generate-atom-candidates
+path: desk/atoms/workflow-model/atom-codebase-surfaces-generate-atom-candidates.md
+hash_c: 639c9db1cd1c6aee03b31bdddaabbcca98e171b3ce5f29e31ad4e3dc901fb41d
+hash_d: 27aefe7ac59cbd52ec93fd832b91a9641e044d5c5e9f46d42834230cc03f2e65
+semantic_tags:
+- system:deskops
+- topic:atoms
+- topic:codebase
+- type.knowledge.atom
+- workspace.desk.atoms

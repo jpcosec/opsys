@@ -1,0 +1,13 @@
+name: RunDoc
+model_ref: deskops.models:RunDoc
+path: deskops/models/run.py
+documents_index: .sldb/core/documents/RunDoc.yaml
+sections_index: ''
+hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+version: 1
+canonical: false
+family: null
+semantics:
+- type.workflow.run
+- workspace.desk.runs
+base_models: []

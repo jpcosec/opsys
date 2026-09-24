@@ -1,0 +1,11 @@
+name: atom-reports-carry-minimal-reproduction-evidence
+path: desk/atoms/workflow-model/atom-reports-carry-minimal-reproduction-evidence.md
+hash_c: cb1cb46082f053b6d4136d7e6edb406f0d7208e564ae7f8c7304e1992e305a59
+hash_d: 05c5925bf64c88b54dd3f9489c44ab0e19d34bdf1dd7a9c303ae8f3b1d686b56
+semantic_tags:
+- system:deskops
+- topic:evidence
+- topic:reports
+- topic:testing
+- type.knowledge.atom
+- workspace.desk.atoms

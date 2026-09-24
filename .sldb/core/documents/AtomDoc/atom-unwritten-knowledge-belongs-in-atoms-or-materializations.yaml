@@ -1,0 +1,11 @@
+name: atom-unwritten-knowledge-belongs-in-atoms-or-materializations
+path: desk/atoms/workflow-model/atom-unwritten-knowledge-belongs-in-atoms-or-materializations.md
+hash_c: 33d428acab45cf82c7322111dae189a1009164e8af9585542bf849799e69195e
+hash_d: 7c032d146ce14214268353af1d9b07e07d4b061eae2b03926bc2fba0e6e5d5f8
+semantic_tags:
+- system:deskops
+- system:sldb
+- topic:atoms
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms

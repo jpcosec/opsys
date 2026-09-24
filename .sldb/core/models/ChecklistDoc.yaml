@@ -3,7 +3,8 @@ model_ref: deskops.models:ChecklistDoc
 path: deskops/models/checklist.py
 documents_index: .sldb/core/documents/ChecklistDoc.yaml
 sections_index: ''
-hash_b: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+hash_b: b3d3f7cb6097c24a2b58683e50af4d1c71e33555a1d4d2d2fdf2463e042e0c63
+documents_count: 3
 version: 1
 canonical: false
 family: null

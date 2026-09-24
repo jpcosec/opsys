@@ -1,0 +1,11 @@
+name: atom-phases-are-dependency-layers-of-tasks
+path: desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md
+hash_c: a06815f310fcd4e076001691ce74de837b43030f6ab89af6efdbea18ad81d391
+hash_d: f2f8c2a3e4ac55099ba4cb4ed51027bb54c2aaeac73ae2be7c48141019210c54
+semantic_tags:
+- system:deskops
+- topic:dependencies
+- topic:phases
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

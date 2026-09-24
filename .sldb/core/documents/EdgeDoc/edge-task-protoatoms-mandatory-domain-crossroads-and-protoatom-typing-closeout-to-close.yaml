@@ -1,0 +1,8 @@
+name: edge-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-closeout-to-close
+path: desk/primitives/edges/edge-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-closeout-to-close.md
+hash_c: 032385174c4932140d94930788f8f3a99cff27a9a806f60e7ff93b80a5e17610
+hash_d: d47cb7548ea65512ec27cd6547f2722616fd1c9a955b9d783eebdbc2047072ec
+semantic_tags:
+- primitive:edge
+- type.workflow.edge
+- workspace.desk.primitives

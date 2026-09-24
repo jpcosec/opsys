@@ -1,0 +1,10 @@
+name: atom-clean-agents-start-from-minimum-workflow-set
+path: desk/atoms/workflow-model/atom-clean-agents-start-from-minimum-workflow-set.md
+hash_c: 759ad9bcabd5ec792d2e0b7f7eb8a4292c599103bf56bc3943b3632ee143b4a4
+hash_d: ab2671823dd023c294ae90bc644b3903ab9b8275f87ebd225cdb9f708d11d2d1
+semantic_tags:
+- system:deskops
+- topic:agents
+- topic:workflow-model
+- type.knowledge.atom
+- workspace.desk.atoms

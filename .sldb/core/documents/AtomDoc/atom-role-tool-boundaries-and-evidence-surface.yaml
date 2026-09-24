@@ -1,0 +1,10 @@
+name: atom-role-tool-boundaries-and-evidence-surface
+path: desk/atoms/atom-role-tool-boundaries-and-evidence-surface.md
+hash_c: 0afb7af50f4ac932cd2eea0d12f7d26145741aa834288dbfb90df90a4db051a7
+hash_d: 45b3397c51451b122b5cfbfd551b111e101a466e4083f6a64ef999d2132dfaed
+semantic_tags:
+- system:deskops
+- topic:boundaries
+- topic:roles
+- type.knowledge.atom
+- workspace.desk.atoms

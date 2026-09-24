@@ -1,0 +1,11 @@
+name: atom-clean-code-reduces-knowledge-drift
+path: desk/atoms/workflow-model/atom-clean-code-reduces-knowledge-drift.md
+hash_c: 6435e14ca77d9781ebd4a2b5147efc0143d4eaa7be75575259977fddb205c6b1
+hash_d: e615c8fe21f1ca1d6eeb25a0391d65fcfb98afc5d9f79b9441b3b25cd3fe2556
+semantic_tags:
+- system:deskops
+- topic:code-quality
+- topic:drift-control
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms

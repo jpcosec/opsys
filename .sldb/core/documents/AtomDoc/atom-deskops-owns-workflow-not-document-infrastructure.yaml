@@ -1,0 +1,11 @@
+name: atom-deskops-owns-workflow-not-document-infrastructure
+path: desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md
+hash_c: e63b91ea5314587d601636f795acd1bad031a38f0f69bf0b687c21d005f2d98a
+hash_d: 883c83999c3c371999ec3e5294519be085a2344c57bdfcea0f19a392dda2ab03
+semantic_tags:
+- system:deskops
+- system:sldb
+- system:spec2viz
+- topic:boundary
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,7 @@
+name: repo-parent-path-test
+path: desk/registry/repo-parent-path-test.md
+hash_c: 4e246187805dc694b5e313a446ff07dceac1edd69392d0aec77915a11a5987ca
+hash_d: 987f7ebba2fd04447cbd980a63a212b084989362c6b5b56651b3593f01eaaeca
+semantic_tags:
+- type.desk.repository
+- workspace.desk.registry

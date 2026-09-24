@@ -1,0 +1,7 @@
+name: repo-my-repo
+path: desk/registry/repo-my-repo.md
+hash_c: 33cadf28d92c99e58315b4cad33c258777549764e2766a42be47a0d4a85abe79
+hash_d: 0cf93b3f2b19ee1ecc39a33243d3376fdf4012ba2ad5780332028440179f41fb
+semantic_tags:
+- type.desk.repository
+- workspace.desk.registry

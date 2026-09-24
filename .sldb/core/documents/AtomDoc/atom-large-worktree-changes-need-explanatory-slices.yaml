@@ -1,0 +1,11 @@
+name: atom-large-worktree-changes-need-explanatory-slices
+path: desk/atoms/workflow-model/atom-large-worktree-changes-need-explanatory-slices.md
+hash_c: 8cc450527a8a839f74ea405f7597691a8741dd440491aabba59b3d3418ab9660
+hash_d: 64cee708425b64088e50ed08b81dfc405e6cc98f7a49f5de035ef6bd13815498
+semantic_tags:
+- system:deskops
+- topic:closeout
+- topic:git
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

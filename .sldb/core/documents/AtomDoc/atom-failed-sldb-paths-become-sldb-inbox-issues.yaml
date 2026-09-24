@@ -1,0 +1,11 @@
+name: atom-failed-sldb-paths-become-sldb-inbox-issues
+path: desk/atoms/workflow-model/atom-failed-sldb-paths-become-sldb-inbox-issues.md
+hash_c: 8bfd4fc521747e0068d1f31d21a6ce185fafe42fd1cbf3216d413a905a60c6f6
+hash_d: 05306fdcb0884943eee5a038bf01ece0e4a8ddb208bdd11a3426025b39d7df4d
+semantic_tags:
+- system:deskops
+- system:sldb
+- topic:inbox
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

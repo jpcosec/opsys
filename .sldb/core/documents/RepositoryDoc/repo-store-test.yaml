@@ -1,0 +1,7 @@
+name: repo-store-test
+path: desk/registry/repo-store-test.md
+hash_c: 0a83cd1748e9bdcab1ee5be6a6f912b3d792d59a9d21a72fcb9da73011be5dbc
+hash_d: 4fb5afcf7c2d1f3253f3208f22921bb599d92d78faa07daf5af77450aba16d96
+semantic_tags:
+- type.desk.repository
+- workspace.desk.registry

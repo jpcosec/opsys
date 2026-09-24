@@ -1,0 +1,10 @@
+name: atom-self-generating-spec-derived-cli
+path: desk/atoms/workflow-model/atom-self-generating-spec-derived-cli.md
+hash_c: 00fdd2214e3d1f7d0aa179c6f08e136f24fccf3bf3d08a9e37304cee96bf307a
+hash_d: 979a99b4019391d67db3005cc9a5b95dbb14f895c2c4449fcb39a42f28d3c0c3
+semantic_tags:
+- layer:cli
+- system:deskops
+- topic:specs
+- type.knowledge.atom
+- workspace.desk.atoms

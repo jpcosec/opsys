@@ -1,0 +1,8 @@
+name: condition-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-has-implementation-path
+path: desk/primitives/conditions/condition-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-has-implementation-path.md
+hash_c: 7c4e7ff99e5faf54dbe896d2855fa2b6291abc1bb0c9914d1459ca61da044374
+hash_d: f8ceef2f985977f231e9271b0f8e7b9be588320e793e8bd680988798a0244b34
+semantic_tags:
+- primitive:condition
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,10 @@
+name: atom-inbox-is-coordination-intake
+path: desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md
+hash_c: 1a9dd7b688aadbc40a1f9bae6abf119dec0923f5ff16703e2596853ad8f78ac4
+hash_d: dd87333d4b5f40d4c2723cec0e15dbf43c328ffbd031295d05ddf67135bf0752
+semantic_tags:
+- system:deskops
+- topic:coordination
+- topic:inbox
+- type.knowledge.atom
+- workspace.desk.atoms

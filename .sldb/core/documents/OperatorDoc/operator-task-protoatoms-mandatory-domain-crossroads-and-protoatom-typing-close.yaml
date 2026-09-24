@@ -1,0 +1,8 @@
+name: operator-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-close
+path: desk/primitives/operators/operator-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-close.md
+hash_c: 6df57276346b099171de4fb21f1330088fb807cfd15b03ca0b12729b083daee4
+hash_d: 15c129ce65ea73a9975073f63d80d9254bcba8c5898c9fb7727f73177c09c3dc
+semantic_tags:
+- primitive:operator
+- type.workflow.operator
+- workspace.desk.primitives

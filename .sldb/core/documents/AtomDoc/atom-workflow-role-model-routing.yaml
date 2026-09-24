@@ -1,0 +1,10 @@
+name: atom-workflow-role-model-routing
+path: desk/atoms/atom-workflow-role-model-routing.md
+hash_c: efb6baf8acaf637505ceff19c2f3ae3e6c56a11ec74440125a1ade1f75db8cac
+hash_d: 666b9babbeb3c619e604bde99a0083a4407ea6e3282c39e1744e42b773880c84
+semantic_tags:
+- system:deskops
+- topic:model-routing
+- topic:roles
+- type.knowledge.atom
+- workspace.desk.atoms

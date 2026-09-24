@@ -1,0 +1,10 @@
+name: atom-real-cli-surfaces-prove-workflow-behavior
+path: desk/atoms/workflow-model/atom-real-cli-surfaces-prove-workflow-behavior.md
+hash_c: 8aa7056442808e8ee96b6f95884f2632ade06f85206618b3f9d1c700eae024ab
+hash_d: f777dba3d32489159d5a229d5866a22c88fe079fca2c8a9f81a2fb020c605104
+semantic_tags:
+- system:deskops
+- topic:cli
+- topic:validation
+- type.knowledge.atom
+- workspace.desk.atoms

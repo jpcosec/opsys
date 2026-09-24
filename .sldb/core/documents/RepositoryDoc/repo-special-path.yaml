@@ -1,0 +1,7 @@
+name: repo-special-path
+path: desk/registry/repo-special-path.md
+hash_c: ab8599c4bfce55ff0d7e7047b23b05b8480aa116e248dbc6af7ef23382f92d9c
+hash_d: 9e081a097121ee0dbc42da1795096f44c3635161050d1d03fe35b5190f99922f
+semantic_tags:
+- type.desk.repository
+- workspace.desk.registry

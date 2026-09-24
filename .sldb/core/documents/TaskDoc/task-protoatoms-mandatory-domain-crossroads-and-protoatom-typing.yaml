@@ -1,0 +1,9 @@
+name: task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing
+path: desk/tasks/task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing.md
+hash_c: 9d78a3e6ec8f97a870b6330fced4f81355db728f950345213adf343949c0ba1e
+hash_d: 632e6c3f13d5745573079d74f2080c51be3ce147904a3ebab2089f97999ad185
+semantic_tags:
+- artifact:task
+- type.workflow.task
+- workspace.desk
+- workspace:desk

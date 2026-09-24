@@ -1,0 +1,10 @@
+name: atom-agents-read-by-decision-need
+path: desk/atoms/workflow-model/atom-agents-read-by-decision-need.md
+hash_c: ce391480ea0b053f6e68c29bcbba2e20c6863a569d1a34849af1b311e2c5b38c
+hash_d: 856ab4eee888fde63395871b41ad3d5993920c50a68f448b81beaf2b4794d007
+semantic_tags:
+- system:deskops
+- topic:agents
+- topic:workflow-model
+- type.knowledge.atom
+- workspace.desk.atoms

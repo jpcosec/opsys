@@ -1,0 +1,7 @@
+name: atom-doctor-separates-unmodeled-desk-surfaces-from-broken-tracking
+path: desk/atoms/atom-doctor-separates-unmodeled-desk-surfaces-from-broken-tracking.md
+hash_c: 665aba51f48831523e587bf04d620d9e8cb9b61424d7f0d09a2ca22168c30d2a
+hash_d: 62bfb5aaabb6f901d185923b3073667e3e55a5191b01a119636e09aa0782a351
+semantic_tags:
+- type.knowledge.atom
+- workspace.desk.atoms

@@ -1,0 +1,8 @@
+name: edge-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-execution-to-activate
+path: desk/primitives/edges/edge-task-protoatoms-mandatory-domain-crossroads-and-protoatom-typing-execution-to-activate.md
+hash_c: 007a4792eb27d23de1a0512525b4b33d7ea9de63372908657936e8b3b7d6162b
+hash_d: 5672b34edabad17a5631d05e4a67c0009600e33b5d4b7df168bc1e2409cde39e
+semantic_tags:
+- primitive:edge
+- type.workflow.edge
+- workspace.desk.primitives

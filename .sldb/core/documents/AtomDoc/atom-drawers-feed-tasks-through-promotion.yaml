@@ -1,0 +1,11 @@
+name: atom-drawers-feed-tasks-through-promotion
+path: desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md
+hash_c: ecebb906b4645747a0379b98ec3c53252ffb89fdf6d32bb8c6e44c438b2b38b9
+hash_d: 2d1662192c825e0d538d2df5ade8ce38183783cb2f03e34aabd34709ce81e7d9
+semantic_tags:
+- system:deskops
+- topic:drawer
+- topic:promotion
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

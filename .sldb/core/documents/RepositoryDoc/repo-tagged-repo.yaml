@@ -1,0 +1,10 @@
+name: repo-tagged-repo
+path: desk/registry/repo-tagged-repo.md
+hash_c: 16a45285203bbd74a386fd0cd27ec0946d38ed6975c2cb827f9c2b9d5e0aae00
+hash_d: 6ed8a33e8cf8613b04923c87d0b1f7da08b451371eb86186d2040c43514bf270
+semantic_tags:
+- ci/cd
+- demo
+- test
+- type.desk.repository
+- workspace.desk.registry

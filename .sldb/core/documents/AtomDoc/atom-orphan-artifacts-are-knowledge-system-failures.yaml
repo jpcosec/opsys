@@ -1,0 +1,11 @@
+name: atom-orphan-artifacts-are-knowledge-system-failures
+path: desk/atoms/workflow-model/atom-orphan-artifacts-are-knowledge-system-failures.md
+hash_c: db16539a28824d8a9e7d5a4fd5bb71122c5d23e3dd99b412a3b3c9dcb5fedd46
+hash_d: 6d48581f17015f811b37fec2370aa9863f8cc3b168bbbb2444efde4468572e83
+semantic_tags:
+- system:deskops
+- topic:drift-control
+- topic:knowledge-graph
+- topic:traceability
+- type.knowledge.atom
+- workspace.desk.atoms

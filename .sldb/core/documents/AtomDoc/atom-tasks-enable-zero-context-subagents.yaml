@@ -1,0 +1,11 @@
+name: atom-tasks-enable-zero-context-subagents
+path: desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md
+hash_c: 1a6b53f75156ba35cb394896fe525197ca42f6cf8ff3f716415d192dd11d76e5
+hash_d: e5959e4b10d330a68c456320182360152fe1a81b2fdd51fd24974ac0962d73f2
+semantic_tags:
+- system:deskops
+- topic:pills
+- topic:subagents
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms

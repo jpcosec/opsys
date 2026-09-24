@@ -1,0 +1,8 @@
+name: runtime-claude
+path: desk/runtimes/runtime-claude.md
+hash_c: 192b325cc4fc77c4780be38518c7747e0eb46aa73466008aa073d0a56059c069
+hash_d: 9a343ed9885cad3beed8b936c129b2b5470750f777e313a43f95906dc2e38f49
+semantic_tags:
+- system:deskops
+- type.workflow.runtime_profile
+- workspace.desk.runtimes

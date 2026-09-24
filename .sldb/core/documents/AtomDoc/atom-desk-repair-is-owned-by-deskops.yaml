@@ -1,0 +1,11 @@
+name: atom-desk-repair-is-owned-by-deskops
+path: desk/atoms/atom-desk-repair-is-owned-by-deskops.md
+hash_c: c45dfc651ea66a16d24383af35666a07bf6a0593448604223f5249607787ca4a
+hash_d: f35a9997bbb8931217ac40e9f21ccc897703629bb1c41a20e7f6f691bcef8b15
+semantic_tags:
+- system:deskops
+- topic:boundary
+- topic:ownership
+- topic:workspace-health
+- type.knowledge.atom
+- workspace.desk.atoms

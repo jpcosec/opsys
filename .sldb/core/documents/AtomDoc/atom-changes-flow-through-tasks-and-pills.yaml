@@ -1,0 +1,11 @@
+name: atom-changes-flow-through-tasks-and-pills
+path: desk/atoms/workflow-model/atom-changes-flow-through-tasks-and-pills.md
+hash_c: 883d6c5bebf94271d1e7b2fa8fd050484a3ab3f5f527aa88a986cdb02654b6d6
+hash_d: 9a26fd5795a53d4e0da3e9c67233bebfdc572c6083979d6f9e18ac2bed8be201
+semantic_tags:
+- system:deskops
+- topic:pills
+- topic:tasks
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
