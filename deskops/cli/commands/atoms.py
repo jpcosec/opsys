@@ -1,11 +1,13 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
 from deskops.atom_tags import add_namespace
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import ensure_default_namespaces
+from deskops.domain_tree import DomainTree
 from deskops.operations import DeskopsOperations
 
 
@@ -36,6 +38,8 @@ class AtomsCLI:
         if args.atoms_command == "validate":
             try:
                 results = operations.validate_atoms(args.doc_id if not getattr(args, "all", False) else None)
+                if getattr(args, "all", False):
+                    results = _with_domain_checks(results, DomainTree(root).check())
             except (FileNotFoundError, ValueError) as exc:
                 print(f"Error: {exc}")
                 return 1
@@ -165,6 +169,9 @@ class AtomsCLI:
                     print(f"{payload['id']} | {label}")
             return 0
 
+        if args.atoms_command in {"crossroad", "proto", "type", "tree"}:
+            return self._run_domain_tree(args, root)
+
         if args.atoms_command == "show":
             args.command = "show"
             args.subject = "atom"
@@ -172,3 +179,72 @@ class AtomsCLI:
             return OperationsCLI().run(args)
 
         return 1
+
+    def _run_domain_tree(self, args: Any, root: Path) -> int:
+        tree = DomainTree(root)
+        try:
+            if args.atoms_command == "crossroad":
+                created = tree.create_crossroad(args.path, title=args.title, content=args.content)
+                print(f"Created crossroad {created.doc_id}")
+                print(f"Path: {created.path}")
+                return 0
+            if args.atoms_command == "proto":
+                created = tree.create_protoatom(
+                    args.doc_id, title=args.title, content=args.content, tags=list(args.tag or [])
+                )
+                print(f"Created protoatom {created.doc_id}")
+                print(f"Path: {created.path}")
+                return 0
+            if args.atoms_command == "type":
+                typed = tree.type_protoatom(
+                    args.doc_id,
+                    model_name=args.model,
+                    doc_id=args.new_id,
+                    content_field=args.content_field,
+                    data=json.loads(args.data) if args.data else {},
+                )
+                print(f"Typed protoatom {typed.protoatom_id} as {typed.model} {typed.doc_id}")
+                print(f"Path: {typed.path}")
+                print(f"Protoatom kept as redirect stub: {typed.protoatom_path}")
+                return 0
+            report = tree.tree()
+        except (FileNotFoundError, FileExistsError, ValueError, RuntimeError) as exc:
+            print(f"Error: {exc}")
+            return 1
+        if getattr(args, "format", "text") == "json":
+            print(json.dumps(report, indent=2, default=str))
+            return 0
+        _print_tree(report)
+        return 0
+
+
+def _with_domain_checks(results: list[dict[str, Any]], domain: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Add domain-tree errors to atom records and append crossroad and protoatom records."""
+    merged = [dict(record, errors=list(record["errors"])) for record in results]
+    by_path = {record["path"]: record for record in merged}
+    for record in domain:
+        if record["path"] in by_path:
+            by_path[record["path"]]["errors"].extend(record["errors"])
+        else:
+            merged.append(record)
+    return merged
+
+
+def _print_tree(report: dict[str, Any]) -> None:
+    def walk(node: dict[str, Any], depth: int) -> None:
+        pad = "  " * depth
+        print(f"{pad}{node['path']} — {node['title']}")
+        for item in node["items"]:
+            target = f" -> {item['typed_as']}" if item.get("typed_as") else ""
+            print(f"{pad}  · {item['id']}  {item['title']}{target}")
+        for child in node["children"]:
+            walk(child, depth + 1)
+
+    for node in report["roots"]:
+        walk(node, 0)
+    if report["orphans"]:
+        print("Without a written crossroad:")
+        for item in report["orphans"]:
+            print(f"  · {item['id']} (domain:{item['domain']})")
+    if report["unplaced"]:
+        print(f"Without a domain tag: {len(report['unplaced'])} document(s)")
