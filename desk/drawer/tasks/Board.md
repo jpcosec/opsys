@@ -8,7 +8,9 @@ This board routes deferred work only.
 - `stress-tests/` — 15 scripted UX tests, with every finding archived in
   `stress-tests/findings-archive.md`; what is left to fix is tracked in
   `issues/issue-stress-test-fix-backlog.md`
-- `issues/` — 24 issues: open work, plus closed and routed entries kept for the record
+- `issues/` — 25 files: open work, closed and routed entries kept for the record, and
+  `diagnosis-archive.md`, the 2026-08 architectural diagnosis whose durable part is
+  now six atoms
 - `questions/` — decisions that block implementation, with their status
 - `features/` — six deferred design documents:
   - `workflow-execution-engine.md` — hooks, state machines, condition evaluators, gated pipeline
