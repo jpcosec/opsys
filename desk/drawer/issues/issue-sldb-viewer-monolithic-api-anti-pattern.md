@@ -6,6 +6,10 @@ status: closed (routed)
 
 # Issue: Monolithic API Anti-Pattern in SLDB UI
 
+## Status
+
+closed (routed)
+
 This document records the critical errors and architectural anti-patterns committed during the initial implementation of the SLDB UI MVP (sldb-viewer), so we know exactly what **not to do**.
 
 ## Critical Mistakes Made
