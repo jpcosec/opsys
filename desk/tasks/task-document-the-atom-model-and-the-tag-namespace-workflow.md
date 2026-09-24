@@ -9,7 +9,10 @@ routine: routine-task-document-the-atom-model-and-the-tag-namespace-workflow
 current_node: checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-testing-ready
 history:
 - operator-task-document-the-atom-model-and-the-tag-namespace-workflow-activate
-references: []
+references:
+- docs/atoms.md
+- a0afaea
+- desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md
 depends_on: []
 pills: []
 files: []

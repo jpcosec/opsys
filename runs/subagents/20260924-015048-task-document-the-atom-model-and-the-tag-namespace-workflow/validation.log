@@ -1,0 +1,36 @@
+{
+  "findings": [
+    {
+      "code": "missing_tests_evidence",
+      "message": "No resolvable test evidence reference found."
+    }
+  ],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "a0afaea"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [],
+      "findings": [
+        {
+          "code": "missing_tests_evidence",
+          "message": "No resolvable test evidence reference found."
+        }
+      ],
+      "ok": false
+    }
+  },
+  "ok": false,
+  "task_id": "task-document-the-atom-model-and-the-tag-namespace-workflow"
+}

@@ -1,0 +1,10 @@
+Task: task-document-the-atom-model-and-the-tag-namespace-workflow
+Title: Document the atom model and the tag namespace workflow
+Status: active
+Current node: checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-testing-ready
+Task type: docs
+Routine: routine-task-document-the-atom-model-and-the-tag-namespace-workflow
+Checklist status:
+- checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-execution-ready: complete
+- checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-testing-ready: complete
+- checklist-task-document-the-atom-model-and-the-tag-namespace-workflow-closeout-ready: pending
