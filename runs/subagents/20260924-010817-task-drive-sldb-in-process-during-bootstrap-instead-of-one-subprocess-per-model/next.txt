@@ -1,0 +1,1 @@
+Error: No artifact.task file found for selector '010817-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model' in /home/jp/proyectos/hum-ecosystem/tools/deskops/desk/tasks

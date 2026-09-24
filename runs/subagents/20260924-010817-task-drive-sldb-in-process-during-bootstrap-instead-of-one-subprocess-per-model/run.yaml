@@ -1,0 +1,7 @@
+outcome: closed
+run_dir: runs/subagents/20260924-010817-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model
+run_id: 20260924-010817
+session: null
+session_sha256: null
+task: task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model
+task_id: task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model

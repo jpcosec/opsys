@@ -1,0 +1,4 @@
+Missing graph references:
+- missing_declared_target: issue:handoff-2026-09-10-session-uncommitted-work-and-open-items -> test_file:tests/test_section_body_extraction.py
+  provenance: desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md:line:30:source-file-reference
+  reason: declared target was not found among extracted graph nodes

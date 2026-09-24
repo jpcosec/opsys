@@ -1,0 +1,10 @@
+Task: task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model
+Title: Drive sldb in process during bootstrap instead of one subprocess per model
+Status: active
+Current node: checklist-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-testing-ready
+Task type: performance
+Routine: routine-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model
+Checklist status:
+- checklist-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-execution-ready: complete
+- checklist-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-testing-ready: complete
+- checklist-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-closeout-ready: pending
