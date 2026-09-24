@@ -1,0 +1,10 @@
+Task: task-reject-empty-and-whitespace-only-selectors-with-a-clear-message
+Title: Reject empty and whitespace-only selectors with a clear message
+Status: active
+Current node: checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-testing-ready
+Task type: bugfix
+Routine: routine-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message
+Checklist status:
+- checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-execution-ready: complete
+- checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-testing-ready: complete
+- checklist-task-reject-empty-and-whitespace-only-selectors-with-a-clear-message-closeout-ready: pending
