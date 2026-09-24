@@ -8,10 +8,8 @@ from sldb.core.exceptions import SLDBStoreError
 from sldb.runtime.validation import render_model_markdown
 
 from deskops.cli.main import main
-from deskops.identity import infer_sender_project_identity
+from deskops.identity import EcosystemIdentity
 from deskops.identity import load_repository_registry
-from deskops.identity import resolve_canonical_project_identity
-from deskops.identity import resolve_registered_desk
 from deskops.models import RepositoryDoc
 
 
@@ -48,8 +46,8 @@ def test_repo_identity_resolver_returns_single_registered_match(tmp_path: Path, 
     store_path = tmp_path / ".sldb"
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
 
-    assert resolve_registered_desk("sender-repo", str(store_path)) == (repo_root / "desk").resolve()
-    assert infer_sender_project_identity(repo_root / "subdir", str(store_path)) == "sender-repo"
+    assert EcosystemIdentity(str(store_path)).how_do_i_find_another("sender-repo") == (repo_root / "desk").resolve()
+    assert EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root / "subdir", require_registry_match=False) == "sender-repo"
 
 
 def test_repo_identity_resolver_fails_on_duplicate_id(tmp_path: Path) -> None:
@@ -106,8 +104,8 @@ def test_repo_local_desk_without_a_registry_is_its_own_authority(
     store_path.mkdir(parents=True, exist_ok=True)
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, repo_root))
 
-    assert resolve_canonical_project_identity(repo_root, str(store_path)) == "repo-local"
-    assert infer_sender_project_identity(repo_root, str(store_path)) == "repo-local"
+    assert EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root, require_registry_match=True) == "repo-local"
+    assert EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root, require_registry_match=False) == "repo-local"
 
 
 def test_a_registry_that_lacks_the_repo_still_fails(
@@ -125,4 +123,4 @@ def test_a_registry_that_lacks_the_repo_still_fails(
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
 
     with pytest.raises(SLDBStoreError, match="not found in registry"):
-        resolve_canonical_project_identity(repo_root, str(store_path))
+        EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root, require_registry_match=True)

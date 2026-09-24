@@ -144,6 +144,7 @@ class DeskCLI:
                 unregistered_models.append(model_name)
 
         invalid_docs: list[str] = []
+        missing_docs: list[str] = []
         tracked_mds: set[Path] = set()
         result = subprocess.run(
             [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_dir), "--format", "json"],
@@ -164,6 +165,8 @@ class DeskCLI:
                         
                         if doc.get("note") not in ("ok",):
                             invalid_docs.append(f"{doc_path} ({doc.get('note')})")
+                            if doc.get("note") == "missing":
+                                missing_docs.append(doc.get("name") or Path(doc_path).stem)
             except json.JSONDecodeError:
                 pass
 
@@ -238,6 +241,21 @@ class DeskCLI:
                         print(f"Could not guess model for {p.relative_to(root)}.")
             except ImportError:
                 print("Failed to import sldb API for tracking documents.")
+
+        if missing_docs:
+            # A tracked document whose file is gone must be untracked, not
+            # re-indexed: the store would keep describing something that is not there.
+            try:
+                from sldb.api.documents.untrack_document import untrack_document
+                pythonpath = str(Path(__file__).resolve().parents[2])
+                for name in missing_docs:
+                    try:
+                        untrack_document(store_dir, name, pythonpath)
+                        print(f"Untracked {name}: its file is gone.")
+                    except Exception as e:
+                        print(f"Failed to untrack {name}: {e}")
+            except ImportError:
+                print("Failed to import sldb API for untracking documents.")
 
         if invalid_docs:
             try:

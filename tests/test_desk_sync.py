@@ -56,3 +56,33 @@ def test_desk_update_command(tmp_path: Path):
     # Ensure it's clean now
     assert cli.run(["desk", "update", "--root", str(tmp_path)]) == 0
 
+
+
+def test_desk_update_untracks_a_document_whose_file_is_gone(tmp_path: Path) -> None:
+    """A deleted file must be untracked, not re-indexed.
+
+    `git rm` on a tracked document leaves the store describing something that is
+    not there, and neither 'stores update' nor an index rebuild clears it.
+    """
+    from deskops.cli.main import main
+    from sldb.store.diagnostics import diagnose_store
+    from sldb.api.model_registry.model_reference import resolve_model_ref
+
+    assert main(["init", str(tmp_path)]) == 0
+    assert main(
+        ["add", "atom", "--root", str(tmp_path), "--title", "Gone soon",
+         "--five-wh-one-plus", "what", "--answer", "Answered."]
+    ) == 0
+
+    atom = tmp_path / "desk" / "atoms" / "atom-gone-soon.md"
+    assert atom.exists()
+    atom.unlink()
+
+    assert main(["desk", "update", "--root", str(tmp_path)]) != 0
+    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+
+    diagnosis = diagnose_store(
+        tmp_path / ".sldb", resolve_model_ref, project_root=tmp_path, pythonpath=str(tmp_path)
+    )
+    notes = [doc.note.value for model in diagnosis.models for doc in model.documents]
+    assert "missing" not in notes
