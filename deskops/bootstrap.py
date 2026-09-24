@@ -8,6 +8,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from types import SimpleNamespace
 
 
 MODEL_REFS = {
@@ -75,7 +76,7 @@ class SLDBBootstrap:
         if not global_store.exists():
             print(f"Initializing global store at {global_store}...")
             try:
-                self.run_sldb(["stores", "init", "--path", str(Path.home())])
+                self._init_store(Path.home())
             except RuntimeError as exc:
                 print(f"Error: {exc}")
                 return 1
@@ -91,7 +92,7 @@ class SLDBBootstrap:
                 continue
             print(f"Registering {model_name} in {global_store}...")
             try:
-                self.run_sldb(["models", "add", model_ref, "--store", str(global_store)])
+                self._add_model(model_ref, global_store)
             except RuntimeError as exc:
                 print(f"Error: {exc}")
                 return 1
@@ -106,7 +107,7 @@ class SLDBBootstrap:
         else:
             print(f"Initializing local store at {local_store}...")
             try:
-                self.run_sldb(["stores", "init", "--path", str(target_path)])
+                self._init_store(target_path)
             except RuntimeError as exc:
                 print(f"Error: {exc}")
                 return 1
@@ -122,7 +123,7 @@ class SLDBBootstrap:
                 continue
             print(f"Registering {model_name} in {local_store}...")
             try:
-                self.run_sldb(["models", "add", model_ref, "--store", str(local_store)])
+                self._add_model(model_ref, local_store)
             except RuntimeError as exc:
                 print(f"Error: {exc}")
                 return 1
@@ -132,7 +133,43 @@ class SLDBBootstrap:
     def run_sldb(self, args: list[str], *, capture_output: bool = False) -> subprocess.CompletedProcess[str]:
         return self._run([sys.executable, "-m", "sldb", *args], capture_output=capture_output)
 
+    def _init_store(self, target_path: Path) -> None:
+        if self._sldb_importable():
+            from sldb.api.stores.init_store import init_store
+            try:
+                init_store(path=target_path)
+            except Exception as exc:
+                raise RuntimeError(str(exc))
+        else:
+            self.run_sldb(["stores", "init", "--path", str(target_path)])
+
+    def _add_model(self, model_ref: str, store_path: Path) -> None:
+        if self._sldb_importable():
+            from sldb.cli.commands.model import ModelCLI
+            try:
+                args = SimpleNamespace(
+                    model=model_ref,
+                    store=str(store_path),
+                    pythonpath=self.default_pythonpath(),
+                    canonical=False
+                )
+                ret = ModelCLI().add(args)
+                if ret != 0:
+                    raise RuntimeError(f"Failed to add model {model_ref}")
+            except Exception as exc:
+                raise RuntimeError(str(exc))
+        else:
+            self.run_sldb(["models", "add", model_ref, "--store", str(store_path)])
+
     def _registered_model_names(self, store_path: Path) -> set[str]:
+        if self._sldb_importable():
+            from sldb.store.io import load_store_index
+            try:
+                idx = load_store_index(store_path)
+                return {m.name for m in idx.models}
+            except Exception as exc:
+                raise RuntimeError(str(exc))
+
         result = self.run_sldb(
             ["models", "list", "--store", str(store_path), "--format", "json"],
             capture_output=True,
