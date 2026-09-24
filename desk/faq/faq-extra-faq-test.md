@@ -1,3 +1,0 @@
-# Extra FAQ Test
-
-Test
