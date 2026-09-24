@@ -1,0 +1,28 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/atom-drift-checks-are-review-surfaces-not-mutators.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "b18e950"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_cli.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings"
+}

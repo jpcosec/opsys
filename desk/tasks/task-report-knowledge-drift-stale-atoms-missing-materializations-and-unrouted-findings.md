@@ -9,7 +9,10 @@ routine: routine-task-report-knowledge-drift-stale-atoms-missing-materialization
 current_node: checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-testing-ready
 history:
 - operator-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-activate
-references: []
+references:
+- tests/test_cli.py
+- b18e950
+- desk/atoms/atom-drift-checks-are-review-surfaces-not-mutators.md
 depends_on: []
 pills: []
 files: []

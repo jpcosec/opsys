@@ -1,0 +1,10 @@
+Task: task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings
+Title: Report knowledge drift: stale atoms, missing materializations and unrouted findings
+Status: active
+Current node: checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-testing-ready
+Task type: feature
+Routine: routine-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings
+Checklist status:
+- checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-execution-ready: complete
+- checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-testing-ready: complete
+- checklist-task-report-knowledge-drift-stale-atoms-missing-materializations-and-unrouted-findings-closeout-ready: pending
