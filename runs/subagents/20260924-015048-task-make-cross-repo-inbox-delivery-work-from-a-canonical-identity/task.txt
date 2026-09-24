@@ -1,0 +1,10 @@
+Task: task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity
+Title: Make cross-repo inbox delivery work from a canonical identity
+Status: active
+Current node: checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-testing-ready
+Task type: feature
+Routine: routine-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity
+Checklist status:
+- checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-execution-ready: complete
+- checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-testing-ready: complete
+- checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-closeout-ready: pending

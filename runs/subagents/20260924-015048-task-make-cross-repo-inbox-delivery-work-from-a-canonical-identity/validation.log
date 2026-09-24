@@ -1,0 +1,28 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "9899f8f"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_repo_identity.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity"
+}

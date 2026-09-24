@@ -9,7 +9,10 @@ routine: routine-task-make-cross-repo-inbox-delivery-work-from-a-canonical-ident
 current_node: checklist-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-testing-ready
 history:
 - operator-task-make-cross-repo-inbox-delivery-work-from-a-canonical-identity-activate
-references: []
+references:
+- tests/test_repo_identity.py
+- 9899f8f
+- desk/atoms/atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable.md
 depends_on: []
 pills: []
 files: []
