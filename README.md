@@ -23,6 +23,7 @@ Understanding `deskops` requires understanding `sldb` first: `sldb` owns structu
 
 Durable guides currently include:
 
+- `docs/atoms.md`
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
 - `docs/quickstart.md`

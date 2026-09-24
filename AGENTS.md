@@ -82,6 +82,7 @@ deskops graph missing
 
 - `README.md`
 - `docs/faq.md`
+- `docs/atoms.md`
 - `docs/workflow-policy-reference.md`
 - `docs/how-to-test-ux-cli.md`
 - `.pi/skills/use-deskops/SKILL.md`
