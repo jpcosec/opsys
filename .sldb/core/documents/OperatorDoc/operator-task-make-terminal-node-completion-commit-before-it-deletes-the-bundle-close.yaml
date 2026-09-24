@@ -1,0 +1,10 @@
+name: operator-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-close
+path: desk/primitives/operators/operator-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-close.md
+hash_c: 4bb04fb8311bc5653f401838b427e359d255ef93fe8b712507071fe3f0a7459d
+hash_d: 255052527aac952f70214e3733023484ae20b17be42c853c6af098eb6c3266b3
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

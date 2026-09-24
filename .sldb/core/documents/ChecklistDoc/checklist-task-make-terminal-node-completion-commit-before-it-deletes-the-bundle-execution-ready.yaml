@@ -1,0 +1,10 @@
+name: checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-execution-ready
+path: desk/primitives/checklists/checklist-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-execution-ready.md
+hash_c: 107cc474df064f63f93d7bca3b15eabc61c552dc31754397dafa09027ca2a196
+hash_d: 9298ca6edb52b7ba693e81edd647d05bf5f274cd709b68216096f8ae54036e60
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

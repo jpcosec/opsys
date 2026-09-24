@@ -1,0 +1,11 @@
+name: task-derive-declared-graph-edges-from-model-containment-and-references
+path: desk/tasks/task-derive-declared-graph-edges-from-model-containment-and-references.md
+hash_c: 84f779277b61edc517619f454e674dfbfeb3b4ae35586276101eac2a53670b0e
+hash_d: 64b7db17dc39e49b6dc386c73afda91479e9e59e96dd3b65e114242515d6f67d
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk

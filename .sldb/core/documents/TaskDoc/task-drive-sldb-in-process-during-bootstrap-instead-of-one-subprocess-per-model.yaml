@@ -1,0 +1,11 @@
+name: task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model
+path: desk/tasks/task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model.md
+hash_c: 189dc094df4d7a0716239df30b3f001e2014bed4e65e9d7686e0998e13355618
+hash_d: e22154057ffc949454c854e5fb4f2697e9b2a5aade5608d13e563f35e7d7ec55
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk

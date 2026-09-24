@@ -1,0 +1,10 @@
+name: edge-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-close-to-complete
+path: desk/primitives/edges/edge-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-close-to-complete.md
+hash_c: 2ca4cf7ba057ab37f40678bffcbc39a1ef1e055626a6ed25e577247dd08edd0f
+hash_d: 0a883639a518cc9669f51aff7860a7331b8ca436e2a503715568c92e84da419e
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

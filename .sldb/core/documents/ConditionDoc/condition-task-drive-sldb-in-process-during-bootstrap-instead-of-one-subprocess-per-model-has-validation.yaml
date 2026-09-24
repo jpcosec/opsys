@@ -1,0 +1,10 @@
+name: condition-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-has-validation
+path: desk/primitives/conditions/condition-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-has-validation.md
+hash_c: 62103a04ae25fee2bd2d682f3b4f4bf158babd037d635acdc2d7fef9731b2e71
+hash_d: 8e1f67d1d9b2d6a842cdfcef307c7212cebc64cd15bbf0f55acfe62eaabe550e
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

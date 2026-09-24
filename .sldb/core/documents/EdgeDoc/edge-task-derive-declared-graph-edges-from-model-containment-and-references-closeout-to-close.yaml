@@ -1,0 +1,10 @@
+name: edge-task-derive-declared-graph-edges-from-model-containment-and-references-closeout-to-close
+path: desk/primitives/edges/edge-task-derive-declared-graph-edges-from-model-containment-and-references-closeout-to-close.md
+hash_c: 771c7ded86fca308b2cddbfff096d5e2333a294d5a418e0af6b87d31e795b1eb
+hash_d: 7a9f502d5a295e71df12f8824bfec7ae0516bb3e2bceac5bef63c32841ae0fe9
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

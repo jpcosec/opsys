@@ -1,0 +1,10 @@
+name: checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-testing-ready
+path: desk/primitives/checklists/checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-testing-ready.md
+hash_c: b6b8cd458d28146a1556931b50ed2af461ae956449d0f4497acd04797b437fd3
+hash_d: 4f98346a99fa8c44a250b70a461d4619d4a8449483ee5f4c7bc5e78487374ccc
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

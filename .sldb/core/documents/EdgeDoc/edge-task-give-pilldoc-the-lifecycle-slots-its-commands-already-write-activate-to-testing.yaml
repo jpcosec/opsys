@@ -1,0 +1,10 @@
+name: edge-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-activate-to-testing
+path: desk/primitives/edges/edge-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-activate-to-testing.md
+hash_c: beb0b52ea43eb744ac2e1f2b0b6d1167571e9becc31e9677c923ee72c8dcc06a
+hash_d: 4df90361c7cc8f437ae4bc207602b1d57d4b218fa4491ffc841a50dced535fb0
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

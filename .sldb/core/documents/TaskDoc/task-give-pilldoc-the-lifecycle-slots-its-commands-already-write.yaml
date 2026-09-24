@@ -1,0 +1,11 @@
+name: task-give-pilldoc-the-lifecycle-slots-its-commands-already-write
+path: desk/tasks/task-give-pilldoc-the-lifecycle-slots-its-commands-already-write.md
+hash_c: e976089a1d0fbf8b59d2db836b03bd21e9ba2bca50db0d59cd1bf2ef14aabb02
+hash_d: e1fa93208cde9f2aaba76f8ea1052f1d982cff531942d9860137699e60ec3223
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk

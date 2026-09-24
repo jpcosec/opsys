@@ -1,0 +1,10 @@
+name: operator-task-derive-declared-graph-edges-from-model-containment-and-references-ready-for-testing
+path: desk/primitives/operators/operator-task-derive-declared-graph-edges-from-model-containment-and-references-ready-for-testing.md
+hash_c: 418370f9b37510424acf46483831668f30197a804a520ed04b4ea9010a71a6a5
+hash_d: 4f40207c3e2d155f7fbfb3bb1b23f7b71520230111b6f9868095bb1a0e576191
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

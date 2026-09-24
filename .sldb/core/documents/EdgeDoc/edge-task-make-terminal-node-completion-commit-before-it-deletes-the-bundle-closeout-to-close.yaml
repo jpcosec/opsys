@@ -1,0 +1,10 @@
+name: edge-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-closeout-to-close
+path: desk/primitives/edges/edge-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-closeout-to-close.md
+hash_c: ea5d666a00621144c5f57ed77d77aba8c579af02016d529ba5281a643f8d868e
+hash_d: b8dfe658651bdb0dd05781dfd04da33b1c0cf2b60404785581022d5758dcd698
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

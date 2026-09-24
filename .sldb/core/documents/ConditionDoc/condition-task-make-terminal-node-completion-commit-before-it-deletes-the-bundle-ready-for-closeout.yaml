@@ -1,0 +1,10 @@
+name: condition-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-ready-for-closeout
+path: desk/primitives/conditions/condition-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-ready-for-closeout.md
+hash_c: ffc48d372c33933dd17dd3ea6da3c7700a12acab0d6500e046586dcc6728a417
+hash_d: 88dc2e90be778dd203af00a5bcb9534dda4136251cda8a9205b3b8342fad2cfd
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

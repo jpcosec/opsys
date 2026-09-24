@@ -1,0 +1,10 @@
+name: condition-task-derive-declared-graph-edges-from-model-containment-and-references-pill-knowledge-graduated
+path: desk/primitives/conditions/condition-task-derive-declared-graph-edges-from-model-containment-and-references-pill-knowledge-graduated.md
+hash_c: db59ada66c4a987e8f4dc449875e6786aed9931deef3f5a2e10e1d4c60de72ce
+hash_d: 549fe72414053baefadb1301bb9094d54e5a99225878f276b71f8f4d8d45e919
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

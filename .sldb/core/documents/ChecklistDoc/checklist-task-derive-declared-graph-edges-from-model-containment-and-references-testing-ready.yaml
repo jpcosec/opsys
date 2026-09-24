@@ -1,0 +1,10 @@
+name: checklist-task-derive-declared-graph-edges-from-model-containment-and-references-testing-ready
+path: desk/primitives/checklists/checklist-task-derive-declared-graph-edges-from-model-containment-and-references-testing-ready.md
+hash_c: 42014fe6f63d57b42bdbf2ac67ffc723d04081ac700c04a9be324b28516b0be8
+hash_d: a6532d0996eecb74640d2da1e7bf8ee40c3a198230b9e30e7d5e56edd2e55da7
+semantic_tags:
+- primitive:checklist
+- representation.markdown
+- source.document.markdown
+- type.workflow.checklist
+- workspace.desk.primitives

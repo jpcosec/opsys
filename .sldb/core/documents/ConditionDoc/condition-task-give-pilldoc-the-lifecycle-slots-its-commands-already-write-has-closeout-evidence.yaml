@@ -1,0 +1,10 @@
+name: condition-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-has-closeout-evidence
+path: desk/primitives/conditions/condition-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-has-closeout-evidence.md
+hash_c: 41492279607a23918a00de8e147bbd70ba41f9d8b7db2989bfff650083aaef91
+hash_d: 099d7ec77747217a70174505037726c1421cf366e67b5441905b9781d13a290e
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

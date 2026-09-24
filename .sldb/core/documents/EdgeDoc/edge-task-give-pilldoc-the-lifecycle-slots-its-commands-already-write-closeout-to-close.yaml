@@ -1,0 +1,10 @@
+name: edge-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-closeout-to-close
+path: desk/primitives/edges/edge-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-closeout-to-close.md
+hash_c: c4ddf659a40ad305bfadca29982499dfda4392c4f48326ad82a9340f1fa27320
+hash_d: ee8cabc9553b3b9b94f476b9bfb450760d404471b4defb8678c0b061279b67a8
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

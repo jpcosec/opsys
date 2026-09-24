@@ -1,7 +1,7 @@
 name: Board
 path: desk/tasks/Board.md
-hash_c: 882f04afd47c1bb93d162447d843fb504585bd559151d10ed89a2dc80b0b644b
-hash_d: 6a7618629382df981c236143737565500272ef62a7b28a4e783673b8668481d4
+hash_c: 303f9bb164a850654211c891abaa5e56cc01137a5234680701d7dbf00b45bdb0
+hash_d: 40ee941201142707a4245148ad5acc0cc064311cd06e449a56deecd0a5a244cb
 semantic_tags:
 - representation.markdown
 - source.document.markdown

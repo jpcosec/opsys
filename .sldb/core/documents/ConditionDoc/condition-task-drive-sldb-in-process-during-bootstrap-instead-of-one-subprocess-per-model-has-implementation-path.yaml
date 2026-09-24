@@ -1,0 +1,10 @@
+name: condition-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-has-implementation-path
+path: desk/primitives/conditions/condition-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-has-implementation-path.md
+hash_c: 55cd1c27e373d491d27826591b3be21b634acd9c9d9fb1a65406b71ecfd323c8
+hash_d: 21f42eadae6c92f8a9567e8ea5439ad5640c497f5866bb39c5bf96b7451507ad
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

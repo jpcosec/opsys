@@ -1,0 +1,10 @@
+name: operator-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-close
+path: desk/primitives/operators/operator-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-close.md
+hash_c: 9e99dc52ce36cb80e67c2456c60d081aa68b6f97f49bbe7f91c358ad74ac1bce
+hash_d: a310c27864c0e403a26b1d8e39db8cc28bed2e176f9fa113ebb6f11c0708ecfd
+semantic_tags:
+- primitive:operator
+- representation.markdown
+- source.document.markdown
+- type.workflow.operator
+- workspace.desk.primitives

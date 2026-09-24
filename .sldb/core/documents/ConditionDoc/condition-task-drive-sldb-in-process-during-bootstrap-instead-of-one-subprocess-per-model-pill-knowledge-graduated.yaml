@@ -1,0 +1,10 @@
+name: condition-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-pill-knowledge-graduated
+path: desk/primitives/conditions/condition-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-pill-knowledge-graduated.md
+hash_c: 1066ce86d1bf14a0119d1b1234219b6a345ae3d7484509320901d142bd62f6cd
+hash_d: 3b9d8ff0ca1922bfe737e68a8f565187fcb227dff0d483156913158c96fbf20f
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives

@@ -1,0 +1,11 @@
+name: routine-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model
+path: desk/routines/routine-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model.md
+hash_c: 990be729495f16fdd602907fc8f867e4391d82e046acbb8dfbec7e94a5098894
+hash_d: 026429e7b1f70ee53b0fc83e95a06c227d9f0f5f140f040a2ca652f769bcc8af
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

@@ -1,0 +1,10 @@
+name: edge-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-activate-to-testing
+path: desk/primitives/edges/edge-task-drive-sldb-in-process-during-bootstrap-instead-of-one-subprocess-per-model-activate-to-testing.md
+hash_c: c2bbe0426d6df0d721e17d55050af9e8d8fd2c1e05b7991ea07b51aac238c876
+hash_d: 949883038218b31d89dcf60ddd5c23ac29009cdec987136bb3ea19fb17995bb8
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

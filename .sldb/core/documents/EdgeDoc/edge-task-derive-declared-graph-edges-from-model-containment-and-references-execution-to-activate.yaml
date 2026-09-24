@@ -1,0 +1,10 @@
+name: edge-task-derive-declared-graph-edges-from-model-containment-and-references-execution-to-activate
+path: desk/primitives/edges/edge-task-derive-declared-graph-edges-from-model-containment-and-references-execution-to-activate.md
+hash_c: 6ebee4825391d5dea4fefbe2ed7257056881a573d7265ab4c812f4036d3dd67a
+hash_d: 5e32ac5f3850b680bd66ae5d999567e336dfe9f29b40b6d00189ee58b65fb7bb
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

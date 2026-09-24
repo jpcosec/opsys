@@ -1,0 +1,11 @@
+name: routine-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write
+path: desk/routines/routine-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write.md
+hash_c: 2c9db03a8b5d5bc0491e6f40d51ed82b59bbeabbbcd9dc0c5cd0ea3b47995552
+hash_d: 4ccae1cca3787be478370660e550cc4bc405c4faeb42406d4d17f8104d3d1051
+semantic_tags:
+- primitive:routine
+- representation.markdown
+- source.document.markdown
+- type.workflow.routine
+- workspace.desk.routines
+- workspace:desk

@@ -1,0 +1,10 @@
+name: edge-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-testing-to-ready
+path: desk/primitives/edges/edge-task-make-terminal-node-completion-commit-before-it-deletes-the-bundle-testing-to-ready.md
+hash_c: 66560e029d067729fa2df9efe2228a0ae88a2dd8951c7bc545e8bcccb40bdc70
+hash_d: ef84d154f54b37021233414ea3f1e43bda0b49b769b3b59dfe76726e7f13c255
+semantic_tags:
+- primitive:edge
+- representation.markdown
+- source.document.markdown
+- type.workflow.edge
+- workspace.desk.primitives

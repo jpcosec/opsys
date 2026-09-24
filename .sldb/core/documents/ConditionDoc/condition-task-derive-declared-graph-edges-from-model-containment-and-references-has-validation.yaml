@@ -1,0 +1,10 @@
+name: condition-task-derive-declared-graph-edges-from-model-containment-and-references-has-validation
+path: desk/primitives/conditions/condition-task-derive-declared-graph-edges-from-model-containment-and-references-has-validation.md
+hash_c: 021ccd77f4a977c0c71f19e26706fc8ef593278315bfa9de0c8fd6342f4cdc77
+hash_d: becabccb67012de287e1d07f52234e105d85b36268198e3db8b57da752e664f9
+semantic_tags:
+- primitive:condition
+- representation.markdown
+- source.document.markdown
+- type.workflow.condition
+- workspace.desk.primitives
