@@ -1,34 +1,41 @@
 # Two hand-written pills do not fit PillDoc
 
-## What
+## Kind
 
-`desk/contexts/pill-sldb-template-markers.md` and
-`desk/contexts/pill-template-instructional-text.md` are the only desk documents
-left untracked after the store repair. They were written by hand as free-form
-notes, not through `deskops add pill`:
+issue
 
-- no YAML frontmatter; the identifier sits in the body as `ID: pill-...`
-- duplicated sections (`## Goal` appears twice in both files)
-- sections that PillDoc does not declare, in an order the template does not use
+## Status
 
-So extraction finds no `id` and tracking fails with a PillDoc validation error.
+resolved
 
-## Why it matters
+## What happened
 
-Both carry real knowledge worth keeping: how SLDB template markers behave
-(`rev`, `optrev`, `render`, fixed text around markers) and how instructional
-text in templates should be written. That content is currently invisible to
-`sldb find`, the graph, and any pill binding.
+`desk/contexts/pill-sldb-template-markers` and
+`desk/contexts/pill-template-instructional-text` (both deleted) were free-form notes rather
+than modelled pills: no frontmatter, the identifier in the body as `ID: ...`,
+duplicated `## Goal` sections, and a section order PillDoc's template does not
+use. Tracking them failed, so their knowledge was invisible to `sldb find`, the
+graph and pill binding.
 
-## Options
+Investigating them surfaced the larger defect: **every** pill in the desk
+extracted as empty, because extraction anchors on the fixed text a template
+renders and none of these documents carry it. Any edit re-rendered those empty
+values and blanked the document.
 
-1. Rewrite both as proper PillDoc documents, moving the body into the declared
-   sections and dropping the duplicates.
-2. Decide they are documentation rather than pills, and move them under `docs/`
-   as a materialization of the relevant atoms.
+## Resolution
 
-Option 2 looks closer to what they actually are: neither reads like a
-task-scoped guardrail, and both describe stable SLDB behavior.
+- The two notes were documentation about stable SLDB behaviour, not
+  task-scoped guardrails, so they became atoms and a materialization:
+  `desk/atoms/atom-sldb-template-markers-declare-where-each-field-lives.md`,
+  `atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md`,
+  `atom-instructional-text-makes-a-template-self-sufficient.md`,
+  `atom-templates-are-defined-as-model-strings.md`,
+  `atom-do-not-use-instructional-text-as-model-documentation.md`, and
+  `docs/sldb-templates.md`.
+- The 34 documents in that state (29 pills, 4 conditions, 1 step) were rebuilt
+  from their own text through their models, so they now read back.
+- `deskops` refuses a rewrite that would drop content the document still shows,
+  and the doctor reports the condition, so the next one cannot sit unnoticed.
 
 ## Tags
 

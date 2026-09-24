@@ -1,0 +1,11 @@
+name: atom-templates-are-defined-as-model-strings
+path: desk/atoms/atom-templates-are-defined-as-model-strings.md
+hash_c: b8805ffdf0694a5c560148e024f9ccdde7aebb6e78b167cef1a891630d4e07d4
+hash_d: 49bd8de098fde0c92abba009e904a5621c27dca34c25682d6c55fce71ac40fc3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:templates
+- type.knowledge.atom
+- workspace.desk.atoms

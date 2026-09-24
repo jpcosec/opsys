@@ -10,6 +10,7 @@ from sldb.runtime.validation import render_model_markdown
 from deskops.cli.main import main
 from deskops.identity import infer_sender_project_identity
 from deskops.identity import load_repository_registry
+from deskops.identity import resolve_canonical_project_identity
 from deskops.identity import resolve_registered_desk
 from deskops.models import RepositoryDoc
 
@@ -87,3 +88,41 @@ def test_repo_whoami_prints_canonical_identity(tmp_path: Path, monkeypatch: pyte
     captured = capsys.readouterr()
     assert result == 0
     assert captured.out.strip() == "deskops-child"
+
+
+def test_repo_local_desk_without_a_registry_is_its_own_authority(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A desk that keeps no registry must still resolve its own identity.
+
+    Without this, `deskops inbox --ack` and `deskops next` inside such a repo
+    fail with "Repository id '<name>' not found in registry", which makes inbox
+    triage impossible from the repository the note is addressed to.
+    """
+    repo_root = tmp_path / "repo-local"
+    _write_config(repo_root, "repo-local")
+
+    store_path = repo_root / ".sldb"
+    store_path.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, repo_root))
+
+    assert resolve_canonical_project_identity(repo_root, str(store_path)) == "repo-local"
+    assert infer_sender_project_identity(repo_root, str(store_path)) == "repo-local"
+
+
+def test_a_registry_that_lacks_the_repo_still_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """The fallback is only for a missing registry, not for a disagreement."""
+    registry_dir = tmp_path / "desk" / "registry"
+    registry_dir.mkdir(parents=True)
+    _write_repo_doc(registry_dir, repo_id="someone-else", repo_path="someone-else")
+
+    repo_root = tmp_path / "repo-local"
+    _write_config(repo_root, "repo-local")
+    store_path = repo_root / ".sldb"
+    store_path.mkdir(parents=True, exist_ok=True)
+    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
+
+    with pytest.raises(SLDBStoreError, match="not found in registry"):
+        resolve_canonical_project_identity(repo_root, str(store_path))

@@ -1,0 +1,11 @@
+name: atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
+path: desk/atoms/atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md
+hash_c: 52c8cb7d666a39e256425bd840447e7bc5fadc36da5c13c1564edde6db26e4a1
+hash_d: ed30692dae41181a148d4bf358819f9e26213a5cf83024b0e9bf6b61082c7b92
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:templates
+- type.knowledge.atom
+- workspace.desk.atoms

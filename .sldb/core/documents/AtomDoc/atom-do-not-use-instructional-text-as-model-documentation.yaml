@@ -1,0 +1,12 @@
+name: atom-do-not-use-instructional-text-as-model-documentation
+path: desk/atoms/atom-do-not-use-instructional-text-as-model-documentation.md
+hash_c: 07d36446957991d25f436c43e395e92539aaa9dd9a42445b2a8ae16ffe36eef7
+hash_d: d18274f4d97f63f0f61c236c4ead791ce41cc742b5c179e7dfc07bdd63736146
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:documentation
+- topic:templates
+- type.knowledge.atom
+- workspace.desk.atoms

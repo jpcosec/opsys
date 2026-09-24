@@ -1,0 +1,11 @@
+name: atom-sldb-template-markers-declare-where-each-field-lives
+path: desk/atoms/atom-sldb-template-markers-declare-where-each-field-lives.md
+hash_c: 25ce106f704583b342709aeea138a58e3f051a995a2759301e7f12e7ccfe639d
+hash_d: 21b438f9a1750f1439399cc3b242d51a42a1b6028eec24aa5e186a8398a49af5
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:templates
+- type.knowledge.atom
+- workspace.desk.atoms

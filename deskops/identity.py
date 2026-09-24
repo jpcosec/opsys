@@ -123,6 +123,12 @@ def resolve_canonical_project_identity(repo_root: Path, store_arg: str | None) -
     _store_path, ecosystem_root = resolve_store_context(store_arg)
     registry_desk_root = ecosystem_root / "desk"
     entries = load_repository_registry(registry_desk_root, ecosystem_root)
+    if not entries:
+        # A desk that keeps no repository registry is its own authority for its
+        # identity: config.json declares it and there is nothing to contradict.
+        # Without this, every repo-local desk fails its own inbox and next
+        # commands with "Repository id '<name>' not found in registry".
+        return config_identity
     repo_by_id = resolve_registered_repo(
         entries,
         config_identity,
@@ -146,7 +152,12 @@ def infer_sender_project_identity(sender_root: Path, store_arg: str | None) -> s
     entries = load_repository_registry(ecosystem_root / "desk", ecosystem_root)
     entry = resolve_registered_repo_by_root(entries, sender_root.resolve())
     if entry is None:
-        return None
+        if entries:
+            return None
+        # No registry to consult: fall back to the sender's own declared
+        # identity rather than treating the note as coming from nowhere.
+        config_identity = DeskConfig.load(sender_root / "desk").project_identity.strip()
+        return config_identity or None
 
     desk_root = entry.desk_root
     if desk_root is not None and desk_root.exists():

@@ -1,0 +1,12 @@
+name: atom-instructional-text-makes-a-template-self-sufficient
+path: desk/atoms/atom-instructional-text-makes-a-template-self-sufficient.md
+hash_c: ee2786b04d37c98e6860f8c2a7fb460663a47d8ba03891ecb0e2f00954e941e2
+hash_d: d7840c1d6bac44dfecfabd3ce43f0edc7c017ad25880fd4b908e358b89317d63
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:documentation
+- topic:templates
+- type.knowledge.atom
+- workspace.desk.atoms
