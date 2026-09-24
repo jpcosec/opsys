@@ -1,0 +1,12 @@
+Task: task-give-pilldoc-the-lifecycle-slots-its-commands-already-write
+Title: Give PillDoc the lifecycle slots its commands already write
+Status: active
+Current node: checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-testing-ready
+Task type: implementation
+Routine: routine-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write
+Effective atoms:
+- atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
+Checklist status:
+- checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-execution-ready: complete
+- checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-testing-ready: complete
+- checklist-task-give-pilldoc-the-lifecycle-slots-its-commands-already-write-closeout-ready: pending

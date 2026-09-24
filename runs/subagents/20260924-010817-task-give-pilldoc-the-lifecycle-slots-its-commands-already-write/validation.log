@@ -1,0 +1,29 @@
+{
+  "findings": [],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "120b296"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_doc_readability.py",
+        "tests/test_model_templates.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "ok": true,
+  "task_id": "task-give-pilldoc-the-lifecycle-slots-its-commands-already-write"
+}
