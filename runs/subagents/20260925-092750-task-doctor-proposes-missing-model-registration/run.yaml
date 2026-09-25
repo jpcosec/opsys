@@ -1,0 +1,10 @@
+run_dir: runs/subagents/20260925-092750-task-doctor-proposes-missing-model-registration
+run_id: run-doctor-model-registration-01
+session: null
+session_sha256: null
+task_id: task-doctor-proposes-missing-model-registration
+touched:
+- deskops/cli/commands/doctor.py
+- tests/test_doctor_model_registration.py
+- desk/tasks/Board.md
+- desk/drawer/tasks/Board.md

@@ -1,0 +1,11 @@
+Task: task-doctor-proposes-missing-model-registration
+Title: Doctor proposes fixes for missing model registration
+Status: active
+Current node: 
+Task type: 
+Routine: 
+Effective pills:
+- desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+Checklist status:

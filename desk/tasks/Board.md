@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-doctor-proposes-missing-model-registration
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
