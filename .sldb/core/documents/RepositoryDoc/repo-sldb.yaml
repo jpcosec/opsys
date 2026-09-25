@@ -1,0 +1,9 @@
+name: repo-sldb
+path: desk/registry/repo-sldb.md
+hash_c: c018312c274021cc7ae3d0ccb0c1e907f8965a949f71560aae2a1633970eb929
+hash_d: bd56008ca03634581ab08c1c6c985b2deff07e435f2b05b75e32ea07a4956439
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry

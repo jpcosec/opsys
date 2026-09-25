@@ -1,0 +1,9 @@
+name: 20260925-102838-suggestion-volatile-ledger-models-still-fold-into-hash-b-and-hash-a-so-a-read-only-audit-dirties-versioned-files
+path: /home/jp/proyectos/hum-ecosystem/tools/sldb/desk/inbox/20260925-102838-suggestion-volatile-ledger-models-still-fold-into-hash-b-and-hash-a-so-a-read-only-audit-dirties-versioned-files.md
+hash_c: cc6466a56db652db5da94ecb61160c10c0eacf0c17b00968b798ee5f113abee8
+hash_d: ce961c913027b85088ac0f66813826ecd1957c6fb02528c5f774bd0cdace86df
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
