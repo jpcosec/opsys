@@ -6,6 +6,7 @@ from pathlib import Path
 import subprocess
 import sys
 
+from deskops.bootstrap import MODEL_REFS, SLDBBootstrap
 from deskops.doc_readability import is_unreadable_by_model
 from deskops.workspace import desk_doc_unmodeled_reason
 from deskops.workspace import inspect_desk
@@ -54,6 +55,8 @@ class DoctorCLI:
         untracked: list[Path] = []
         invalid_docs: list[str] = []
         unmodeled_reasons: list[str] = []
+        unregistered_models: list[str] = []
+        store_index_unreadable = False
 
         if desk_dir.exists():
             ignored_modeled_names = {
@@ -106,6 +109,16 @@ class DoctorCLI:
 
             if result.returncode != 0 and not result.stdout:
                 findings.append(f"SLDB store check crashed (likely malformed documents): {result.stderr.strip().split(chr(10))[0]}")
+
+            store_dir = root / ".sldb"
+            if store_dir.exists():
+                try:
+                    registered_models = SLDBBootstrap()._registered_model_names(store_dir)
+                    unregistered_models = sorted(
+                        name for name in MODEL_REFS if name not in registered_models
+                    )
+                except Exception:
+                    store_index_unreadable = True
 
             untracked = [p for p in modeled_mds if p not in tracked_mds]
 
@@ -161,6 +174,25 @@ class DoctorCLI:
             findings.append(f"Invalid desk documents: {', '.join(invalid_docs)}")
             if repair:
                 findings.append("Manual repair required for invalid documents (check syntax or run sldb stores update).")
+
+        if store_index_unreadable:
+            findings.append("Could not read the local .sldb store index; unregistered-model check skipped.")
+
+        if unregistered_models:
+            findings.append(
+                "Unregistered models: "
+                + ", ".join(unregistered_models)
+                + ". Run `deskops desk update --apply` to register missing models and repair tracking."
+            )
+            if repair:
+                try:
+                    registered_ok = SLDBBootstrap().init_local_store(root) == 0
+                except Exception:
+                    registered_ok = False
+                if registered_ok:
+                    fixed.append("Registered missing models.")
+                else:
+                    findings.append("Manual repair required for unregistered models (run deskops desk update --apply).")
 
         if not findings:
             print("Desk is healthy. No issues found.")
