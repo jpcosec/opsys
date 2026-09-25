@@ -28,7 +28,6 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
-- `task-doctor-proposes-missing-model-registration` — doctor should detect unregistered `MODEL_REFS` in the local store and propose the existing repair path (`deskops desk update --apply`)
 
 Promoted to active desk tasks:
 
@@ -39,6 +38,7 @@ Promoted to active desk tasks:
 - `task-add-artifact-edit-command`
 - `task-unblock-advance-implementation-path`
 - `task-formalize-pill-taxonomy`
+- `task-doctor-proposes-missing-model-registration`
 - `task-consume-repo-local-desk-tasks`
 - `task-add-next-action-workflow-state-command`
 - `task-add-desk-health-and-recovery-surface-deskops-slice`

@@ -35,9 +35,11 @@ The detection already exists in `deskops desk update` (dry run reports `Unregist
 
 - Reuse `SLDBBootstrap._registered_model_names` and `MODEL_REFS`; do not re-implement store inspection inside doctor.
 - Proposals must name runnable commands (real CLI surfaces prove operator contracts).
-- Doctor stays read-only by default; no automatic registration without an explicit repair flag path already owned by `deskops desk update`.
+- Default doctor mode stays read-only: it reports the finding and proposes `deskops desk update --apply` as the repair path.
+- `doctor --repair` performs the repair by calling the same `SLDBBootstrap.init_local_store` code path `deskops desk update --apply` uses (additive, idempotent, non-destructive); it does not register through new doctor-local logic.
+- Run the unregistered-models check only when the local store index loads successfully; if the index cannot be read, skip the finding because the existing store-check-crash finding already covers the unknown state.
+- Unregistered models are only checked when `.sldb` exists, matching the guard used by `deskops desk update`.
 
 ## Open Ambiguities
 
-- Whether doctor should propose `deskops desk update --apply` wholesale (covers models + tracking + hashes) or a narrower per-model registration command.
-- Whether the same finding should also fire when `sldb stores check` crashes on a malformed store, since registration state is then unknown.
+None. The two former ambiguities are resolved in Resolved Decisions.
