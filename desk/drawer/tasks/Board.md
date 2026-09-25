@@ -28,6 +28,7 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
+- `task-doctor-crashes-on-deskless-roots` — doctor raises UnboundLocalError on roots without `desk/`; initialize finding variables on every code path (found during cold review of task-doctor-proposes-missing-model-registration)
 
 Promoted to active desk tasks:
 
