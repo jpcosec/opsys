@@ -1,15 +1,21 @@
 ---
 id: task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
-status: draft
+status: ready_for_testing
 summary: Sync .pi skills with the removed promote drawer-task-to-active-task; document
   add task --from-drawer; add a skill/CLI drift guard test.
 tags:
 - workspace:desk
 - artifact:task
 routine: routine-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
-current_node: checklist-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-execution-ready
-history: []
-references: []
+current_node: checklist-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-closeout-ready
+history:
+- operator-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-activate
+- operator-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-ready-for-testing
+references:
+- desk/atoms/atom-git-ignored-skill-trees-need-tracked-drift-guards.md
+- tests/test_skill_cli_drift.py
+- issue:issue-skill-surfaces-lack-graph-provenance-links
+- 40dedb963ded4f046854fcf35f0505484264f547
 depends_on: []
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -36,6 +42,8 @@ atoms:
 - desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md
 - desk/atoms/workflow-model/atom-cli-gaps-become-tracked-work.md
 from_drawer: desk/drawer/tasks/task-sync-pi-skills-with-promote-removal.md
+closeout_evidence_verified: false
+pill_graduation_verified: false
 ---
 
 # Sync .pi/skills with the deliberate removal of promote drawer-task-to-active-task
