@@ -1,0 +1,24 @@
+Task: task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
+Title: Sync .pi/skills with the deliberate removal of promote drawer-task-to-active-task
+Status: ready_for_testing
+Current node: checklist-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-closeout-ready
+Task type: implementation
+Routine: routine-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
+From drawer: desk/drawer/tasks/task-sync-pi-skills-with-promote-removal.md
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-zero-context-preflight-precedes-executor.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+Effective atoms:
+- desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md
+- desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md
+- desk/atoms/workflow-model/atom-cli-gaps-become-tracked-work.md
+Checklist status:
+- checklist-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-execution-ready: complete
+- checklist-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-testing-ready: complete
+- checklist-task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task-closeout-ready: pending

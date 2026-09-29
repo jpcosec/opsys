@@ -209,4 +209,4 @@ models:
   - type.knowledge.materialization_contract
   - workspace.desk.materializations
 predicates: []
-store_hash: b8ea8341efae3d7ce1f710f42399dd0cc794056d5e6a3dd0bb70dca9fcbe6847
+store_hash: c9a2f909a804f46ecbd79c72ab55a07b726280e6ebcc05afbea1f7163bcfa566

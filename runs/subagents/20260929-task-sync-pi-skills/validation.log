@@ -1,0 +1,243 @@
+# Validation log — task-sync-pi-skills (Executor run)
+Date: 2026-09-29T06:30:32-03:00
+Scope: TaskDoc implementation-path changes + TaskDoc Validation list
+
+══════════════════════════════════════════════════════════════════
+## 1. Full test suite: python -m pytest
+══════════════════════════════════════════════════════════════════
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0
+rootdir: /home/jp/proyectos/hum-ecosystem/tools/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collected 298 items
+
+tests/test_atom_folder_axis.py .............                             [  4%]
+tests/test_atom_materialization.py ..                                    [  5%]
+tests/test_atom_tags.py .....                                            [  6%]
+tests/test_atoms_cli.py ....                                             [  8%]
+tests/test_atoms_create_from_source.py ...                               [  9%]
+tests/test_atoms_merge.py ....                                           [ 10%]
+tests/test_atoms_split.py ...                                            [ 11%]
+tests/test_cli.py ...................................................... [ 29%]
+.............................                                            [ 39%]
+tests/test_closeout.py .......                                           [ 41%]
+tests/test_composition.py ...                                            [ 42%]
+tests/test_config.py .....                                               [ 44%]
+tests/test_desk_sync.py ..                                               [ 44%]
+tests/test_doc_readability.py ....                                       [ 46%]
+tests/test_doctor_model_registration.py ....                             [ 47%]
+tests/test_doctor_unmodeled_surfaces.py ...                              [ 48%]
+tests/test_domain_tree.py .....                                          [ 50%]
+tests/test_gitignore_policy.py .                                         [ 50%]
+tests/test_graph_checks.py ....                                          [ 52%]
+tests/test_graph_cli.py .................                                [ 57%]
+tests/test_graph_declared_edges.py ...                                   [ 58%]
+tests/test_graph_extract_coverage.py .                                   [ 59%]
+tests/test_graph_extract_docs.py ..                                      [ 59%]
+tests/test_graph_extract_edges.py ...                                    [ 60%]
+tests/test_graph_extract_sources.py ..                                   [ 61%]
+tests/test_graph_self_reflection.py ..                                   [ 62%]
+tests/test_graph_snapshot.py ...                                         [ 63%]
+tests/test_herdr_runtime.py ........                                     [ 65%]
+tests/test_inbox_promote_cli_gaps.py ...................                 [ 72%]
+tests/test_lifecycle_end_to_end.py ..                                    [ 72%]
+tests/test_materialization_contract.py .....                             [ 74%]
+tests/test_model_templates.py ...................                        [ 80%]
+tests/test_operational.py ..............                                 [ 85%]
+tests/test_promotion_nesting.py ..                                       [ 86%]
+tests/test_registry_robustness.py ...                                    [ 87%]
+tests/test_repo_identity.py ......                                       [ 89%]
+tests/test_role_materialization.py ......                                [ 91%]
+tests/test_runtime_initializer.py ...                                    [ 92%]
+tests/test_runtime_profiles.py ...........                               [ 95%]
+tests/test_skill_cli_drift.py ..                                         [ 96%]
+tests/test_specs.py ...                                                  [ 97%]
+tests/test_supervise.py .......                                          [100%]
+
+======================== 298 passed in 68.95s (0:01:08) ========================
+pytest-exit=0
+
+══════════════════════════════════════════════════════════════════
+## 2. grep -rn drawer-task-to-active-task .pi/skills .agents/skills .opencode/skills  (expect no hits)
+══════════════════════════════════════════════════════════════════
+token-grep-exit=1 (1 = no hits, expected)
+
+══════════════════════════════════════════════════════════════════
+## 3. grep -c from-drawer on both use-deskops copies (expect >= 1 each)
+══════════════════════════════════════════════════════════════════
+-- .pi/skills/use-deskops/SKILL.md --
+1
+-- .opencode/skills/use-deskops/SKILL.md --
+1
+
+══════════════════════════════════════════════════════════════════
+## 4. New guard test: python -m pytest tests/test_skill_cli_drift.py tests/test_inbox_promote_cli_gaps.py -v
+══════════════════════════════════════════════════════════════════
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- /home/jp/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /home/jp/proyectos/hum-ecosystem/tools/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 21 items
+
+tests/test_skill_cli_drift.py::test_no_skill_document_contains_the_removed_promotion_command PASSED [  4%]
+tests/test_skill_cli_drift.py::test_use_deskops_copies_document_the_from_drawer_authoring_path PASSED [  9%]
+tests/test_inbox_promote_cli_gaps.py::test_inbox_accepts_root_like_every_other_subcommand PASSED [ 14%]
+tests/test_inbox_promote_cli_gaps.py::test_inbox_desk_root_wins_over_root PASSED [ 19%]
+tests/test_inbox_promote_cli_gaps.py::test_inbox_to_drawer_keeps_the_note_body_loose PASSED [ 23%]
+tests/test_inbox_promote_cli_gaps.py::test_inbox_to_drawer_rejects_task_structure_flags PASSED [ 28%]
+tests/test_inbox_promote_cli_gaps.py::test_drawer_to_active_task_promotion_no_longer_exists PASSED [ 33%]
+tests/test_inbox_promote_cli_gaps.py::test_list_tasks_does_not_surface_drawer_items PASSED [ 38%]
+tests/test_inbox_promote_cli_gaps.py::test_promote_untracks_the_note_from_the_store PASSED [ 42%]
+tests/test_inbox_promote_cli_gaps.py::test_promote_still_succeeds_without_a_store PASSED [ 47%]
+tests/test_inbox_promote_cli_gaps.py::test_forced_advance_to_complete_also_closes_status PASSED [ 52%]
+tests/test_inbox_promote_cli_gaps.py::test_forced_advance_to_a_normal_node_leaves_status_alone PASSED [ 57%]
+tests/test_inbox_promote_cli_gaps.py::test_forced_advance_to_a_status_value_still_sets_status PASSED [ 61%]
+tests/test_inbox_promote_cli_gaps.py::test_add_task_from_drawer_records_source_and_keeps_the_file PASSED [ 66%]
+tests/test_inbox_promote_cli_gaps.py::test_add_task_from_drawer_resolves_any_drawer_subfolder PASSED [ 71%]
+tests/test_inbox_promote_cli_gaps.py::test_add_task_from_drawer_rejects_an_unknown_selector PASSED [ 76%]
+tests/test_inbox_promote_cli_gaps.py::test_add_task_from_drawer_rejects_an_ambiguous_selector PASSED [ 80%]
+tests/test_inbox_promote_cli_gaps.py::test_add_task_from_drawer_rejects_paths_outside_the_drawer PASSED [ 85%]
+tests/test_inbox_promote_cli_gaps.py::test_from_drawer_survives_replacing_references PASSED [ 90%]
+tests/test_inbox_promote_cli_gaps.py::test_tasks_not_from_the_drawer_do_not_carry_the_field PASSED [ 95%]
+tests/test_inbox_promote_cli_gaps.py::test_show_task_reports_the_drawer_origin PASSED [100%]
+
+============================== 21 passed in 3.92s ==============================
+guard-tests-exit=0
+
+══════════════════════════════════════════════════════════════════
+## 5. Sandbox proof of the documented operator path (pill-real-cli-surfaces-prove-operator-contracts)
+══════════════════════════════════════════════════════════════════
+Sandbox root: .tmp/deskops-cli-test (disposable, gitignored)
+
+$ rm -rf .tmp/deskops-cli-test && mkdir -p .tmp/deskops-cli-test
+
+$ python -m deskops desk install .tmp/deskops-cli-test
+Scaffolding local desk at /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk...
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/tasks
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/contexts
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/atoms
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/roles
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/inbox
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/drawer
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/routines
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/conditions
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/operators
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/checklists
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/hooks
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/primitives/edges
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/config.json
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/tasks/Board.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/contexts/pills.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/phase.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/execution.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/testing.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/rituals/closeout.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/drawer/README.md
+Wrote /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/atoms/tag-namespaces.yaml
+Scaffold complete.
+Register the repo separately with 'deskops repo register ...' when you are ready.
+
+$ mkdir -p .tmp/deskops-cli-test/desk/drawer/tasks
+$ cat > .tmp/deskops-cli-test/desk/drawer/tasks/task-sandbox-loose-idea.md <<'EOF'
+# Sandbox loose idea
+
+Unstructured drawer notes: prove the documented operator path authors a real task bundle.
+EOF
+
+── seeded drawer file exists ──
+task-sandbox-loose-idea.md
+
+── documented command, exact form from the skill doc (--root . --from-drawer <sel> --title --goal --scope --validation) ──
+$ python -m deskops add task --root .tmp/deskops-cli-test --from-drawer sandbox-loose-idea --title "Sandbox drawer proof" --goal "Prove the documented drawer authoring path" --scope "Disposable sandbox desk only" --validation pytest
+Created task bundle task-sandbox-drawer-proof
+Task: /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/tasks/task-sandbox-drawer-proof.md
+Routine: /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/routines/routine-task-sandbox-drawer-proof.md
+From drawer: /home/jp/proyectos/hum-ecosystem/tools/deskops/.tmp/deskops-cli-test/desk/drawer/tasks/task-sandbox-loose-idea.md (kept; remove it by hand once the task supersedes it)
+add-exit=0
+
+── authored active-task bundle (real field values expected) ──
+---
+id: task-sandbox-drawer-proof
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+routine: routine-task-sandbox-drawer-proof
+current_node: checklist-task-sandbox-drawer-proof-execution-ready
+history: []
+references: []
+depends_on: []
+pills: []
+files: []
+checklists:
+- checklist-task-sandbox-drawer-proof-execution-ready
+- checklist-task-sandbox-drawer-proof-testing-ready
+- checklist-task-sandbox-drawer-proof-closeout-ready
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-sandbox-loose-idea.md
+---
+
+# Sandbox drawer proof
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Not provided.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+Prove the documented drawer authoring path
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+Disposable sandbox desk only
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+
+
+## Validation
+
+_List the checks required before this task can close._
+
+- pytest
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+── drawer file kept for manual cleanup (must still exist) ──
+task-sandbox-loose-idea.md
+
+── deskops show task reports the drawer origin ──
+Task: task-sandbox-drawer-proof
+Title: Sandbox drawer proof
+Status: draft
+Current node: checklist-task-sandbox-drawer-proof-execution-ready
+Task type: 
+Routine: routine-task-sandbox-drawer-proof
+From drawer: desk/drawer/tasks/task-sandbox-loose-idea.md
+Checklist status:
+- checklist-task-sandbox-drawer-proof-execution-ready: complete
+- checklist-task-sandbox-drawer-proof-testing-ready: complete
+- checklist-task-sandbox-drawer-proof-closeout-ready: pending
+show-exit=0
+
+── SANDBOX PROOF RESULT: bundle authored with real title/goal/scope/validation/from_drawer; drawer file kept; exit 0 ──

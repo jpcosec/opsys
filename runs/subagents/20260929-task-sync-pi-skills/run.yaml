@@ -1,0 +1,10 @@
+note: .pi skill fixes are gitignored by repo design (.gitignore .pi/); they live on
+  disk and are proven by tests/test_skill_cli_drift.py
+run_dir: runs/subagents/20260929-task-sync-pi-skills
+run_id: 20260929-task-sync-pi-skills
+session: null
+session_sha256: null
+task_id: task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
+touched:
+- tests/test_skill_cli_drift.py
+- desk/tasks/Board.md

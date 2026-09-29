@@ -1,0 +1,10 @@
+## main...origin/main [ahead 8]
+?? desk/atoms/atom-git-ignored-skill-trees-need-tracked-drift-guards.md
+?? runs/subagents/20260929-task-sync-pi-skills/board.txt
+?? runs/subagents/20260929-task-sync-pi-skills/git-status.txt
+?? runs/subagents/20260929-task-sync-pi-skills/graph.txt
+?? runs/subagents/20260929-task-sync-pi-skills/next.txt
+?? runs/subagents/20260929-task-sync-pi-skills/result-summary.md
+?? runs/subagents/20260929-task-sync-pi-skills/task.txt
+?? runs/subagents/20260929-task-sync-pi-skills/tester-evidence.md
+?? runs/subagents/20260929-task-sync-pi-skills/validation.log

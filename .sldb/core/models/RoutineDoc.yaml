@@ -3,10 +3,10 @@ model_ref: deskops.models:RoutineDoc
 path: deskops/models/routine.py
 documents_index: .sldb/core/documents/RoutineDoc.yaml
 sections_index: .sldb/runtime/sections/RoutineDoc.yaml
-model_hash: 9ffefba9900a76a96987601f324aedb9e9a7e749d165f214a8c15d564b7a50a0
-roster_hash: e5df7fe406f61f8ebe3ac8a7e1d9857d87a92cc3976f77f8725921dfd50b74f1
+model_hash: 03e2110375a84835fe47d93cca06744f8fedcd709e22ff0b5cdbbe4bdcbd5768
+roster_hash: eb41f887823f5669e57d12b786372db10f95a4a6684afd72441e583fa7cb5a06
 contract_hash: f42ea8d4252442ff638117dee8363c72903ce3bbccad28d96653bb69b9c72ae6
-documents_count: 3
+documents_count: 2
 version: 1
 canonical: false
 family: null
