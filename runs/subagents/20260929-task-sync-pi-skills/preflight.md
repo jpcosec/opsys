@@ -24,3 +24,13 @@ Result: PASS with findings — restatement reproduced intent; ambiguities resolv
 8. No commit instruction → RESOLVED: the Executor does not commit; closure goes through the closeout ritual (`deskops closeout verify` + `deskops closeout commit`) by the supervisor.
 9. Line anchors may drift → RESOLVED: locate stale text by content, not line number.
 10. Unverifiable references under document-only review → RESOLVED: Executor verifies `git show --stat d35726a` and the existing guard test before editing.
+
+## Preflight re-run (after cold-review resolutions)
+
+Agent: delegate, fresh context, TaskDoc-only. Result: PASS after resolving 5 reported ambiguities in the TaskDoc:
+
+1. Literal-token conflict (documenting the removal vs guard) → paraphrase the removal WITHOUT the literal token, matching the .opencode copy; token forbidden everywhere.
+2. from-drawer assertion scope → exactly the two use-deskops copies (.pi, .opencode).
+3. Guard strength → test asserts token absence + from-drawer presence only; full-flag-form is an editing rule.
+4. Bullet formatting → adapt bullet marker, keep command string verbatim.
+5. Selector grammar precedence → real CLI grammar wins; sandbox proof validates the exact documented command.
