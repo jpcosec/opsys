@@ -6,6 +6,8 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
+- desk/tasks/task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +47,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- Sync .pi/skills with the deliberate removal of promote drawer-task-to-active-task [draft] - Every tracked agent-facing skill documents drawer-to-active promotion via deskops add task --from-drawer only, with a regression test asserting the removed command appears in no tracked skill.

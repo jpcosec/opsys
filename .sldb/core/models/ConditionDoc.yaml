@@ -3,10 +3,10 @@ model_ref: deskops.models:ConditionDoc
 path: deskops/models/condition.py
 documents_index: .sldb/core/documents/ConditionDoc.yaml
 sections_index: .sldb/runtime/sections/ConditionDoc.yaml
-model_hash: 2ea1f5323aec69169e4aaec07d6497b46e94c18ece9dac0edd5be64295195519
-roster_hash: 7c59c365e3779a766d810784b31cb87509c8e9e68d373d8b35d4ea924c68a6f7
+model_hash: 5a1a58188edd48fb3fd2a1f4ea54dc45251e6d6da9ce0df0e056232e72076eb7
+roster_hash: 1d51d8af6386f9f49b8d827e770a954618aceeab91f4bd7d3f9fdb80025f32e5
 contract_hash: 82e1557b368afb2e2163ec99cbf9c90493570a6d8ea65e7c397427b175f7f257
-documents_count: 19
+documents_count: 24
 version: 1
 canonical: false
 family: null

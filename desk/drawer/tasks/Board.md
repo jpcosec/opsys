@@ -32,6 +32,7 @@ Deferred task backlog:
 
 Promoted to active desk tasks:
 
+- `task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task`
 - `task-improve-cli-help-progressive-disclosure`
 - `task-write-human-quickstart-guide`
 - `task-unify-repository-registration-surface`
