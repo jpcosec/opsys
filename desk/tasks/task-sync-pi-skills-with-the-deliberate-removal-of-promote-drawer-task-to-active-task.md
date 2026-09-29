@@ -15,7 +15,7 @@ references:
 - desk/atoms/atom-git-ignored-skill-trees-need-tracked-drift-guards.md
 - tests/test_skill_cli_drift.py
 - issue:issue-skill-surfaces-lack-graph-provenance-links
-- 40dedb963ded4f046854fcf35f0505484264f547
+- 2290fad2862366fee6e974bc436c21d23a4fc6f2
 depends_on: []
 pills:
 - desk/contexts/pill-001-task-closure-commit.md

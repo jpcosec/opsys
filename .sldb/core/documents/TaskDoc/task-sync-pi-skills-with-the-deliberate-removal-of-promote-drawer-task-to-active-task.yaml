@@ -1,7 +1,7 @@
 name: task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task
 path: desk/tasks/task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task.md
-source_hash: cfaa79bf0f1c24587dd5e312cbc6ceaeacd05b6d57a1fa6062cfcfba6d18543d
-content_hash: d7bd5defa4b5819cf4437a7fb967a53bbc57d3185007cff89880e1fb60e62038
+source_hash: 490e556bccd5162831d95bfc892043ddefa3c2dd91016dd05d3b2aadef5b29e7
+content_hash: 249f7cecec1a28b13feb7f3eb00e4a576383983e51dd66d4c9bd23f268e572c8
 field_hashes:
   title: e482457976840f7b62159534cda7371b5aab92708dd6b3124211fe73ef49a048
   id: bd4ee084b6ad4cf0d8c0fa01825f8909ab90440cde0ed19ef13890c93da4dbc3
@@ -14,7 +14,7 @@ field_hashes:
   why: db39cee06e3c00ed0f49640527759f39af9ced38981807ebd81fc8592e8a487a
   goal: 57e3d32c20c09a430e8f295368bc8f454c88130c5923f730672ff643cc4babf2
   scope: cf728ec6af010c8fb732daae73002676594dc65bc3401607f64fd61273dc5002
-  references: e331ba7c11f25b25dc11b72f6107ed378c259a36177c141a83f3528b22d8ec08
+  references: 06ab9a49803cbed68332323607a91c6a29b9759e42e90324c9a72a2dedb65956
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 7fd9a51dbd2638e7f36dee2ddef3ec763e9e0120a1d8982b5e19d0b56b630289
   files: 5e14e5f450e42ae82452ca210f72b6fbc960935cd63c7c52795a28b7c309199d
