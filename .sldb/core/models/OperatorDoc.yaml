@@ -3,7 +3,9 @@ model_ref: deskops.models:OperatorDoc
 path: deskops/models/operator.py
 documents_index: .sldb/core/documents/OperatorDoc.yaml
 sections_index: .sldb/runtime/sections/OperatorDoc.yaml
-hash_b: 3335ee0eb841d3aa4a62f429c9221f285cbf840e3f599dd63b4900b73d56e60b
+model_hash: 9c28e35e1c087731725da5b8f2de366ca434de45ddbabd402b68d602d2d68275
+roster_hash: 3335ee0eb841d3aa4a62f429c9221f285cbf840e3f599dd63b4900b73d56e60b
+contract_hash: a1e3cb584748243b4dd6a5abc052ea044221c2f0f0ca44b04ead69c6156912d4
 documents_count: 12
 version: 1
 canonical: false
