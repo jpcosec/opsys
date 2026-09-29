@@ -53,7 +53,7 @@ Every tracked agent-facing skill documents drawer-to-active promotion via deskop
 
 _State what is in scope and what is out of scope._
 
-Two skill docs (.pi/skills/use-deskops/SKILL.md line 125, .pi/skills/deskops-task-lifecycle/SKILL.md Paso 2) plus one new guard test (tests/test_skill_cli_drift.py). No CLI or deskops/ code changes. Historical mentions in runs/, desk/inbox/, desk/drawer/issues/ stay untouched. Do not harmonize other .pi vs .opencode divergences.
+Two skill docs (.pi/skills/use-deskops/SKILL.md and .pi/skills/deskops-task-lifecycle/SKILL.md; locate stale text by content, not line number) plus one guard test (tests/test_skill_cli_drift.py). No CLI or deskops/ code changes. Historical mentions in runs/, desk/inbox/, desk/drawer/issues/ stay untouched. Do not harmonize other .pi vs .opencode divergences. The Executor does not commit; closure runs through deskops closeout verify and deskops closeout commit.
 
 ## Implementation Path
 
@@ -66,11 +66,11 @@ _Outline the expected implementation route or affected surface._
 _List the checks required before this task can close._
 
 - pytest
-- grep -rn drawer-task-to-active-task .pi .agents || true (expect no hits)
-- grep -c from-drawer .pi/skills/use-deskops/SKILL.md (expect >= 1)
+- grep -rn drawer-task-to-active-task .pi/skills .agents/skills .opencode/skills (expect no hits)
+- grep -c from-drawer .pi/skills/use-deskops/SKILL.md and .opencode/skills/use-deskops/SKILL.md (expect >= 1 each)
 
 ## Done When
 
 _Name the observable condition that makes the task complete._
 
-grep -rn drawer-task-to-active-task .pi .agents returns nothing in skills, the new guard test passes, and the full pytest suite is green.
+grep -rn drawer-task-to-active-task .pi/skills .agents/skills .opencode/skills returns nothing, the new guard test passes, and the full pytest suite is green.
