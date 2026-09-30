@@ -47,4 +47,4 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Sync .pi/skills with the deliberate removal of promote drawer-task-to-active-task [draft] - Every tracked agent-facing skill documents drawer-to-active promotion via deskops add task --from-drawer only, with a regression test asserting the removed command appears in no tracked skill.
+- probe [draft] - g
