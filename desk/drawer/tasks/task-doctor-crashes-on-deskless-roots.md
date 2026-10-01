@@ -21,6 +21,8 @@ tags:
 
 ## Rationale
 
+_Explain why this task exists or the business driver behind it._
+
 Discovered during cold review of `task-doctor-proposes-missing-model-registration`.
 Reproduced on an empty root: `python -m deskops doctor --root /tmp/empty` exits with
 `Unexpected: cannot access local variable 'unreadable_docs' where it is not associated
@@ -29,6 +31,8 @@ inside `if desk_dir.exists():` but is read in the findings section outside that 
 The same block also carries a dead `tracked_mds` assignment that is immediately shadowed.
 
 ## Goal
+
+_Describe the concrete result this task must produce._
 
 `deskops doctor` on a root without `desk/` reports the missing-desk-structure finding
 and exits cleanly instead of crashing. Initialize `unreadable_docs` (and remove the dead

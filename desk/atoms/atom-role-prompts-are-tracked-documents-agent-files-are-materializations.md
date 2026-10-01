@@ -19,6 +19,4 @@ provenance: docs/agent-system-prompts/
 
 ## Answer
 
-_Answer the selected 5WH1+ question as one stable knowledge unit._
-
 Workflow role prompts (supervisor, executor, tester) must not be maintained as hand-edited copies in agent config directories such as ~/.pi/agent/agents/. The canonical role definition is an sldb-tracked document under the desk surface; installed agent files are regenerated materializations. Hand copies drift and silently lose content, as happened when the installed deskops-supervisor agent lost the role-lock check, dispatch guidance, evidence expectations, and closeout checklist sections.

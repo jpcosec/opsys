@@ -1,7 +1,14 @@
 name: atom-role-prompts-are-tracked-documents-agent-files-are-materializations
 path: desk/atoms/atom-role-prompts-are-tracked-documents-agent-files-are-materializations.md
-hash_c: f1effad9fa43ac5e67a4da506eb4d3b3a3f482ce844202e5a9de9a5e8f713965
-hash_d: 257d3dee2921dff70fdab5f915a807219e87ee6e7fd5875e2b8f300d98143638
+source_hash: be3096182a7361033188a9a6a8dd4a1a67753be936519ad016c4cf1a19cb8a2e
+content_hash: 6b39aa81390eb0c1fd4484b57660c671669650fd923efe055b87cc08eea68025
+field_hashes:
+  id: 50e077411fe221201b0a89c42357b87a764dae75fb42db134615c275254dc8ea
+  title: db7bbbe351be4cf27f34bda411247296cde86be30518a2de8ecd551044a4abf2
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: 7e3573771d4f66f2c3b4d6887601b6babdd4934198f99634a63fab1159a26d1c
+  tags: 050ab86183f9425b4e37e1b4e39e7ae94f4e1c22e2dbb9700a2f7c79cc7b226a
+  provenance: 1f717caf05f1abeaa8ae30bb90d2772412f31fe45d90b32ef51d0cbc8024c327
 semantic_tags:
 - representation.markdown
 - source.document.markdown

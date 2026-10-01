@@ -19,6 +19,4 @@ provenance: null
 
 ## Answer
 
-_Answer the selected 5WH1+ question as one stable knowledge unit._
-
 A task closing commit must never depend on agent discretion. It is created by 'deskops closeout commit --task <id> --run-dir <runs/subagents/dir>', which refuses to run without the required evidence files, writes run.yaml (run_id, session, session_sha256) into the commit, embeds Task-Id/Run-Dir/Run-Id/Session-Sha256 git trailers, and appends the resulting commit hash to runs/subagents/index.jsonl. Commit-to-run linkage travels in the immutable commit message; run-to-commit linkage lives in the append-only index. Do not handcraft closing commits with plain git commit, and do not treat a green test run as closeout without the linked commit.

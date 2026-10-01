@@ -22,13 +22,19 @@ steps:
 
 ## Purpose
 
+_Explain why this ritual exists._
+
 Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual.
 
 ## Trigger
 
+_State when this ritual should start._
+
 Start when the implementation work for a task is complete.
 
 ## Preconditions
+
+_List the conditions that must hold before running the ritual._
 
 - Relevant tests pass.
 - Bound pill obligations were checked during testing.
@@ -39,6 +45,8 @@ Start when the implementation work for a task is complete.
 - The closing change is ready to commit.
 
 ## Validation
+
+_List the checks that prove the ritual was performed correctly._
 
 - The task is gone from desk/tasks.
 - The board no longer routes the task.
@@ -53,6 +61,8 @@ Start when the implementation work for a task is complete.
 
 ## Failure Modes
 
+_List common mistakes this ritual prevents._
+
 - Deleting the task before the closing commit exists.
 - Leaving a stale tracked document in the store.
 - Calling a task closed while tests still fail.
@@ -61,6 +71,8 @@ Start when the implementation work for a task is complete.
 - Treating board cleanup or task deletion as equivalent to the final commit gate.
 
 ## Completion
+
+_Describe what completion looks like._
 
 The task has left the active workspace and its closure is recorded by its own git commit. If it was the last open task in the current phase, the board must still pass through phase closeout before the next phase begins.
 

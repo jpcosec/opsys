@@ -1,7 +1,13 @@
 name: atom-closing-commits-are-tool-made-and-run-linked
 path: desk/atoms/atom-closing-commits-are-tool-made-and-run-linked.md
-hash_c: f6dac77b92dfb305c735152370c90b84bac46d4553cb63b19b25d08894de1426
-hash_d: 6bea83c349229c4ac101226dcc1f9bedc71ae4fe60669f55c8b2e2608815a0fc
+source_hash: 002d860ed77e123d22cdcb7bdbffbca6bd277b3e81bd8078ac36247803e25292
+content_hash: 69203586aa1b0892a93006a9828b82e3296102f2d8534dc16fea3c13a8d45f38
+field_hashes:
+  id: c64c0cf5bd11e6214ab148407812a737f7181e72f00aa30f5ba59ec90499e4cd
+  title: 6071f93516b13941270e9823252dfd93bd4a245cf3fb7ba83c1965620dd00c5a
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: ec4b147efb264bcb07c37fb827281d8500b42c224651ff251b0f812c8a07b0f5
+  tags: e2498998cb254fe879ceab0256e4917922b19681ca81edcbfd9ac3af1c0bc0cf
 semantic_tags:
 - representation.markdown
 - source.document.markdown

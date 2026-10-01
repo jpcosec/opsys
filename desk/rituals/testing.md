@@ -23,13 +23,19 @@ steps:
 
 ## Purpose
 
+_Explain why this ritual exists._
+
 Verify the intended task behavior with the right test scope before a task can close, while leaving shared integration or end-to-end proof for phase closeout.
 
 ## Trigger
 
+_State when this ritual should start._
+
 Run after implementation changes and before closeout.
 
 ## Preconditions
+
+_List the conditions that must hold before running the ritual._
 
 - The intended behavior is clear.
 - Relevant tests or test locations are known.
@@ -37,6 +43,8 @@ Run after implementation changes and before closeout.
 - The execution-to-testing handoff gate is explicit.
 
 ## Validation
+
+_List the checks that prove the ritual was performed correctly._
 
 - The intended behavior is covered.
 - Bound pill guardrails are covered directly by tests or by an explicit validation step.
@@ -46,6 +54,8 @@ Run after implementation changes and before closeout.
 
 ## Failure Modes
 
+_List common mistakes this ritual prevents._
+
 - Treating stale tests as truth.
 - Skipping tests to move faster.
 - Closing with failing relevant tests.
@@ -53,6 +63,8 @@ Run after implementation changes and before closeout.
 - Letting work skip from execution to closeout without a testing gate.
 
 ## Completion
+
+_Describe what completion looks like._
 
 The task has trustworthy test evidence and can proceed to closeout, with any broader cross-task validation obligations handed forward to the phase ritual.
 

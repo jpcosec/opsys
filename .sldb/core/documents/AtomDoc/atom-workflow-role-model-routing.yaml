@@ -1,7 +1,13 @@
 name: atom-workflow-role-model-routing
 path: desk/atoms/atom-workflow-role-model-routing.md
-hash_c: efb6baf8acaf637505ceff19c2f3ae3e6c56a11ec74440125a1ade1f75db8cac
-hash_d: d6be521e709173353d0495e6c29bf70b9c96538758992992ae1ded5016454b83
+source_hash: b7d9d93b6c9126b4d85fd2b1d6d2e3dfc2b765f9d7e448e5bc1cf06d39746e6d
+content_hash: 786a7907514061d243570328b8cecb89d6430ae019bf9dc0396be5af713f6dbe
+field_hashes:
+  id: 6e4e2719edd0f03b125e0c232641b8a0b204cb304f7318a2525bcd4f1e811baa
+  title: cb4452195a62deb577b19bcc0da5013a6583952ceb6d29a2a5e4db23436fdd46
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 24fde0dfdc2845183e918c125d3cf2edb4da98ea221305ef13cfc76670056a30
+  tags: a6c0127dade5c566159cdd261b3da1b6e9e41e5fa5a1780efd23d8c0e147d3a4
 semantic_tags:
 - representation.markdown
 - source.document.markdown
