@@ -8,7 +8,9 @@ This board routes deferred work only.
 - `stress-tests/` — 15 scripted UX tests, with every finding archived in
   `stress-tests/findings-archive.md`; what is left to fix is tracked in
   `issues/issue-stress-test-fix-backlog.md`
-- `issues/` — 25 files: open work, closed and routed entries kept for the record, and
+- `issues/` — 28 files: open work, closed and routed entries kept for the record, and
+  `issue-ecosystem-desk-sweep-remaining-repos.md`, the 2026-09-30 sweep that raised
+  healthy desks from 6 to 30 of 39 and lists the 9 still pending and why, and
   `diagnosis-archive.md`, the 2026-08 architectural diagnosis whose durable part is
   now six atoms
 - `questions/` — decisions that block implementation, with their status
