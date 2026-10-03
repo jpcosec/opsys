@@ -2593,40 +2593,72 @@ def test_runtime_workers_text_and_json_formats(capsys, monkeypatch) -> None:
     import deskops.cli.commands.runtime as runtime_module
     from deskops.cli.commands.runtime import RuntimeCLI
 
+    agents = [
+        {
+            "pane_id": "w-1:p-1",
+            "agent": "pi",
+            "name": "executor",
+            "agent_status": "idle",
+            "cwd": "/tmp/work",
+            "workspace_id": "w-1",
+            "tab_id": "t-1",
+            "terminal_title_stripped": "deskops executor",
+            "state_change_seq": 7,
+            "focused": True,
+        },
+        {
+            "pane_id": "w-2:p-3",
+            "agent": "codex",
+            "agent_status": "blocked",
+            "cwd": "/tmp/other",
+            "workspace_id": "w-2",
+            "tab_id": "t-2",
+            "terminal_title_stripped": None,
+            "state_change_seq": 3,
+            "focused": False,
+        },
+        {
+            "pane_id": "w-99:p-9",
+            "agent": "claude",
+            "name": "stray",
+            "agent_status": "working",
+            "cwd": "/tmp/stray",
+            "workspace_id": "w-99",
+            "tab_id": "t-99",
+            "terminal_title_stripped": None,
+            "state_change_seq": 1,
+            "focused": False,
+        },
+    ]
+    workspaces = [
+        {
+            "workspace_id": "w-1",
+            "label": "sldb",
+            "number": 2,
+            "agent_status": "active",
+            "pane_count": 1,
+            "focused": True,
+        },
+        {
+            "workspace_id": "w-2",
+            "label": "setup",
+            "number": 1,
+            "agent_status": "active",
+            "pane_count": 1,
+            "focused": False,
+        },
+    ]
+
     class FakeHerdrClient:
         def __init__(self, executable: str) -> None:
             self.executable = executable
 
         def call(self, *args: str):
-            return {
-                "result": {
-                    "agents": [
-                        {
-                            "pane_id": "w-1:p-1",
-                            "agent": "pi",
-                            "name": "executor",
-                            "agent_status": "idle",
-                            "cwd": "/tmp/work",
-                            "workspace_id": "w-1",
-                            "tab_id": "t-1",
-                            "terminal_title_stripped": "deskops executor",
-                            "state_change_seq": 7,
-                            "focused": True,
-                        },
-                        {
-                            "pane_id": "w-2:p-3",
-                            "agent": "codex",
-                            "agent_status": "blocked",
-                            "cwd": "/tmp/other",
-                            "workspace_id": "w-2",
-                            "tab_id": "t-2",
-                            "terminal_title_stripped": None,
-                            "state_change_seq": 3,
-                            "focused": False,
-                        },
-                    ]
-                }
-            }
+            if args[0:2] == ("workspace", "list"):
+                return {"result": {"workspaces": workspaces}}
+            if args[0:2] == ("agent", "list"):
+                return {"result": {"agents": agents}}
+            raise AssertionError(f"unexpected herdr call: {args}")
 
     monkeypatch.setattr(runtime_module, "HerdrClient", FakeHerdrClient)
     cli = RuntimeCLI()
@@ -2634,8 +2666,12 @@ def test_runtime_workers_text_and_json_formats(capsys, monkeypatch) -> None:
     assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="text")) == 0
     lines = capsys.readouterr().out.strip().splitlines()
     assert lines == [
-        "w-1:p-1 | pi | executor | idle | /tmp/work",
-        "w-2:p-3 | codex |  | blocked | /tmp/other",
+        "w-2  setup  (1 workers)",
+        "  w-2:p-3 | codex | - | blocked | /tmp/other",
+        "w-1  sldb  (1 workers)",
+        "  w-1:p-1 | pi | executor | idle | /tmp/work",
+        "-  -  (1 workers)",
+        "  w-99:p-9 | claude | stray | working | /tmp/stray",
     ]
 
     assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="json")) == 0
@@ -2654,6 +2690,13 @@ def test_runtime_workers_text_and_json_formats(capsys, monkeypatch) -> None:
     assert payload["workers"][1]["name"] is None
     assert "name" in payload["workers"][1]
     assert payload["workers"][1]["title"] is None
+    assert [space["workspace"] for space in payload["spaces"]] == ["w-2", "w-1", None]
+    assert [space["label"] for space in payload["spaces"]] == ["setup", "sldb", None]
+    assert [space["number"] for space in payload["spaces"]] == [1, 2, None]
+    assert payload["spaces"][0]["workers"] == [payload["workers"][1]]
+    assert payload["spaces"][1]["workers"] == [payload["workers"][0]]
+    assert payload["spaces"][2]["status"] is None
+    assert payload["spaces"][2]["workers"] == [payload["workers"][2]]
 
 
 def test_runtime_workers_empty_fleet_prints_notice(capsys, monkeypatch) -> None:
@@ -2665,7 +2708,11 @@ def test_runtime_workers_empty_fleet_prints_notice(capsys, monkeypatch) -> None:
             self.executable = executable
 
         def call(self, *args: str):
-            return {"result": {"agents": []}}
+            if args[0:2] == ("workspace", "list"):
+                return {"result": {"workspaces": []}}
+            if args[0:2] == ("agent", "list"):
+                return {"result": {"agents": []}}
+            raise AssertionError(f"unexpected herdr call: {args}")
 
     monkeypatch.setattr(runtime_module, "HerdrClient", FakeHerdrClient)
     cli = RuntimeCLI()
@@ -2674,7 +2721,7 @@ def test_runtime_workers_empty_fleet_prints_notice(capsys, monkeypatch) -> None:
     assert capsys.readouterr().out.strip() == "No live Herdr agents."
 
     assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="json")) == 0
-    assert json.loads(capsys.readouterr().out) == {"workers": []}
+    assert json.loads(capsys.readouterr().out) == {"workers": [], "spaces": []}
 
 
 def test_runtime_workers_herdr_failure_prints_error_and_returns_one(capsys, monkeypatch) -> None:
