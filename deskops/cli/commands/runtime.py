@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -16,6 +17,8 @@ class RuntimeCLI:
         try:
             if args.runtime_command == "supervise":
                 return self._supervise(args, executable)
+            if args.runtime_command == "workers":
+                return self._workers(args, executable)
             if args.runtime_command == "init":
                 ensure_herdr_server(executable)
                 info, handle = initialize_desk(root, agents=args.agents, executable=executable)
@@ -99,4 +102,39 @@ class RuntimeCLI:
         if outcomes and outcomes[-1].status in {"timeout", "unknown"}:
             print(f"[{outcomes[-1].status}] stopped supervising {agent_id}.")
             return 1
+        return 0
+
+    def _workers(self, args: Any, executable: str) -> int:
+        """List live Herdr agents machine-wide; no desk identity required."""
+        agents = HerdrProvider(HerdrClient(executable)).list_agents()
+        if getattr(args, "format", "text") == "json":
+            print(
+                json.dumps(
+                    {
+                        "workers": [
+                            {
+                                "pane": agent.get("pane_id"),
+                                "kind": agent.get("agent"),
+                                "name": agent.get("name"),
+                                "status": agent.get("agent_status"),
+                                "cwd": agent.get("cwd"),
+                                "title": agent.get("terminal_title_stripped"),
+                                "workspace": agent.get("workspace_id"),
+                                "seq": agent.get("state_change_seq"),
+                                "focused": agent.get("focused"),
+                            }
+                            for agent in agents
+                        ]
+                    },
+                    indent=2,
+                )
+            )
+            return 0
+        if not agents:
+            print("No live Herdr agents.")
+            return 0
+        for agent in agents:
+            print(
+                f"{agent.get('pane_id', '')} | {agent.get('agent', '')} | {agent.get('name') or ''} | {agent.get('agent_status', '')} | {agent.get('cwd') or ''}"
+            )
         return 0

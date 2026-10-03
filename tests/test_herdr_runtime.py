@@ -4,9 +4,12 @@ import json
 from pathlib import Path
 import subprocess
 
+import pytest
+
 from deskops.runtime.herdr import AgentSpec
 from deskops.runtime.herdr import ExecutionPlan
 from deskops.runtime.herdr import HerdrClient
+from deskops.runtime.herdr import HerdrError
 from deskops.runtime.herdr import HerdrProvider
 from deskops.runtime.herdr import LayoutPaneSpec
 from deskops.runtime.herdr import ProcessSpec
@@ -171,3 +174,71 @@ def test_notify_sends_notification_show_with_body_and_sound() -> None:
 
     assert calls[0] == ["herdr", "notification", "show", "executor blocked", "--body", "waiting on input", "--sound", "request"]
     assert result["result"]["shown"] is True
+
+
+def test_list_agents_returns_raw_agents_unchanged() -> None:
+    calls: list[list[str]] = []
+    agents = [
+        {
+            "pane_id": "w-1:p-1",
+            "agent": "pi",
+            "name": "executor",
+            "agent_status": "idle",
+            "cwd": "/tmp/work",
+            "workspace_id": "w-1",
+            "tab_id": "t-1",
+            "terminal_title_stripped": "deskops executor",
+            "state_change_seq": 7,
+            "focused": True,
+        }
+    ]
+
+    def fake_runner(command, **kwargs):
+        calls.append(command)
+        payload = {"result": {"agents": agents}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    result = HerdrProvider(HerdrClient(runner=fake_runner)).list_agents()
+
+    assert calls[0] == ["herdr", "agent", "list"]
+    assert result == agents
+
+
+def test_list_agents_accepts_agent_without_optional_name() -> None:
+    def fake_runner(command, **kwargs):
+        payload = {"result": {"agents": [{"pane_id": "w-1:p-1", "agent": "codex", "agent_status": "blocked"}]}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    result = HerdrProvider(HerdrClient(runner=fake_runner)).list_agents()
+
+    assert result == [{"pane_id": "w-1:p-1", "agent": "codex", "agent_status": "blocked"}]
+
+
+def test_list_agents_returns_empty_list_for_empty_fleet() -> None:
+    def fake_runner(command, **kwargs):
+        payload = {"result": {"agents": []}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    result = HerdrProvider(HerdrClient(runner=fake_runner)).list_agents()
+
+    assert result == []
+
+
+def test_list_agents_raises_when_agents_key_is_missing() -> None:
+    """Regression: herdr dropping result.agents is a contract change, not an empty fleet."""
+
+    def fake_runner(command, **kwargs):
+        payload = {"result": {}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    with pytest.raises(HerdrError):
+        HerdrProvider(HerdrClient(runner=fake_runner)).list_agents()
+
+
+def test_list_agents_raises_when_agents_is_not_a_list() -> None:
+    def fake_runner(command, **kwargs):
+        payload = {"result": {"agents": {"agent": "pi"}}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    with pytest.raises(HerdrError):
+        HerdrProvider(HerdrClient(runner=fake_runner)).list_agents()
