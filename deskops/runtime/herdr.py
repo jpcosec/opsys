@@ -250,6 +250,20 @@ class HerdrProvider:
     def stop(self, workspace: WorkspaceHandle) -> dict[str, Any]:
         return self.client.call("workspace", "close", workspace.workspace_id)
 
+    def list_agents(self) -> list[dict[str, Any]]:
+        """Return every live Herdr agent on this machine, raw from Herdr.
+
+        Machine-wide inventory, not scoped to any desk identity. A missing
+        ``agents`` key is a Herdr contract change, not an empty fleet, so it
+        raises rather than silently degrading to ``[]``.
+        """
+        response = self.client.call("agent", "list")
+        result = self._result(response)
+        agents = result.get("agents")
+        if not isinstance(agents, list):
+            raise HerdrError("Herdr response is missing result.agents list")
+        return agents
+
     @staticmethod
     def _result(response: dict[str, Any]) -> dict[str, Any]:
         result = response.get("result")

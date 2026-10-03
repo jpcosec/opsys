@@ -71,6 +71,15 @@ def _add_runtime_commands(
         command = s.add_parser(name, help=help_text)
         command.add_argument("--root", default=".", help="DeskOps repository root.")
         command.add_argument("--herdr", default="herdr", help="Herdr executable.")
+    workers = s.add_parser("workers", help="List live Herdr agents across all workspaces on this machine.")
+    workers.add_argument("--root", default=".", help="DeskOps repository root.")
+    workers.add_argument("--herdr", default="herdr", help="Herdr executable.")
+    workers.add_argument(
+        "--format",
+        choices=("text", "json"),
+        default="text",
+        help="Output format.",
+    )
     supervise = s.add_parser(
         "supervise",
         help="Block on one agent's Herdr lifecycle and report blocked/done settles without advancing the desk.",

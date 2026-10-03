@@ -2587,3 +2587,110 @@ def test_drift_check_is_quiet_on_a_fresh_desk(tmp_path: Path, capsys) -> None:
     assert main(["drift", "check", "--root", str(tmp_path)]) == 0
     out, _err = capsys.readouterr()
     assert "No drift found." in out
+
+
+def test_runtime_workers_text_and_json_formats(capsys, monkeypatch) -> None:
+    import deskops.cli.commands.runtime as runtime_module
+    from deskops.cli.commands.runtime import RuntimeCLI
+
+    class FakeHerdrClient:
+        def __init__(self, executable: str) -> None:
+            self.executable = executable
+
+        def call(self, *args: str):
+            return {
+                "result": {
+                    "agents": [
+                        {
+                            "pane_id": "w-1:p-1",
+                            "agent": "pi",
+                            "name": "executor",
+                            "agent_status": "idle",
+                            "cwd": "/tmp/work",
+                            "workspace_id": "w-1",
+                            "tab_id": "t-1",
+                            "terminal_title_stripped": "deskops executor",
+                            "state_change_seq": 7,
+                            "focused": True,
+                        },
+                        {
+                            "pane_id": "w-2:p-3",
+                            "agent": "codex",
+                            "agent_status": "blocked",
+                            "cwd": "/tmp/other",
+                            "workspace_id": "w-2",
+                            "tab_id": "t-2",
+                            "terminal_title_stripped": None,
+                            "state_change_seq": 3,
+                            "focused": False,
+                        },
+                    ]
+                }
+            }
+
+    monkeypatch.setattr(runtime_module, "HerdrClient", FakeHerdrClient)
+    cli = RuntimeCLI()
+
+    assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="text")) == 0
+    lines = capsys.readouterr().out.strip().splitlines()
+    assert lines == [
+        "w-1:p-1 | pi | executor | idle | /tmp/work",
+        "w-2:p-3 | codex |  | blocked | /tmp/other",
+    ]
+
+    assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="json")) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["workers"][0] == {
+        "pane": "w-1:p-1",
+        "kind": "pi",
+        "name": "executor",
+        "status": "idle",
+        "cwd": "/tmp/work",
+        "title": "deskops executor",
+        "workspace": "w-1",
+        "seq": 7,
+        "focused": True,
+    }
+    assert payload["workers"][1]["name"] is None
+    assert "name" in payload["workers"][1]
+    assert payload["workers"][1]["title"] is None
+
+
+def test_runtime_workers_empty_fleet_prints_notice(capsys, monkeypatch) -> None:
+    import deskops.cli.commands.runtime as runtime_module
+    from deskops.cli.commands.runtime import RuntimeCLI
+
+    class FakeHerdrClient:
+        def __init__(self, executable: str) -> None:
+            self.executable = executable
+
+        def call(self, *args: str):
+            return {"result": {"agents": []}}
+
+    monkeypatch.setattr(runtime_module, "HerdrClient", FakeHerdrClient)
+    cli = RuntimeCLI()
+
+    assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="text")) == 0
+    assert capsys.readouterr().out.strip() == "No live Herdr agents."
+
+    assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="json")) == 0
+    assert json.loads(capsys.readouterr().out) == {"workers": []}
+
+
+def test_runtime_workers_herdr_failure_prints_error_and_returns_one(capsys, monkeypatch) -> None:
+    import deskops.cli.commands.runtime as runtime_module
+    from deskops.cli.commands.runtime import RuntimeCLI
+    from deskops.runtime.herdr import HerdrError
+
+    class FailingHerdrClient:
+        def __init__(self, executable: str) -> None:
+            self.executable = executable
+
+        def call(self, *args: str):
+            raise HerdrError("herdr agent list: boom")
+
+    monkeypatch.setattr(runtime_module, "HerdrClient", FailingHerdrClient)
+    cli = RuntimeCLI()
+
+    assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="text")) == 1
+    assert capsys.readouterr().out.strip() == "Error: herdr agent list: boom"
