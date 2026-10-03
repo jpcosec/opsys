@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 from deskops.config import DeskConfig
+from deskops.runtime.grouping import group_agents_by_workspace
 from deskops.runtime.herdr import HerdrClient, HerdrProvider
 from deskops.runtime.initializer import ensure_herdr_server, initialize_desk
 from deskops.runtime.supervise import SuperviseOutcome, run_supervise_loop
@@ -105,26 +106,31 @@ class RuntimeCLI:
         return 0
 
     def _workers(self, args: Any, executable: str) -> int:
-        """List live Herdr agents machine-wide; no desk identity required."""
-        agents = HerdrProvider(HerdrClient(executable)).list_agents()
+        """List live Herdr agents machine-wide, grouped by workspace.
+
+        Joins ``herdr agent list`` with ``herdr workspace list`` so each
+        space shows its readable label and Herdr's own ordering by workspace
+        number. Agents whose workspace is unknown to Herdr are kept in a
+        trailing group rather than dropped.
+        """
+        provider = HerdrProvider(HerdrClient(executable))
+        agents = provider.list_agents()
+        spaces = group_agents_by_workspace(agents, provider.list_workspaces())
         if getattr(args, "format", "text") == "json":
             print(
                 json.dumps(
                     {
-                        "workers": [
+                        "workers": [self._project_agent(agent) for agent in agents],
+                        "spaces": [
                             {
-                                "pane": agent.get("pane_id"),
-                                "kind": agent.get("agent"),
-                                "name": agent.get("name"),
-                                "status": agent.get("agent_status"),
-                                "cwd": agent.get("cwd"),
-                                "title": agent.get("terminal_title_stripped"),
-                                "workspace": agent.get("workspace_id"),
-                                "seq": agent.get("state_change_seq"),
-                                "focused": agent.get("focused"),
+                                "workspace": space["workspace"],
+                                "label": space["label"],
+                                "number": space["number"],
+                                "status": space["status"],
+                                "workers": [self._project_agent(agent) for agent in space["workers"]],
                             }
-                            for agent in agents
-                        ]
+                            for space in spaces
+                        ],
                     },
                     indent=2,
                 )
@@ -133,8 +139,27 @@ class RuntimeCLI:
         if not agents:
             print("No live Herdr agents.")
             return 0
-        for agent in agents:
+        for space in spaces:
             print(
-                f"{agent.get('pane_id', '')} | {agent.get('agent', '')} | {agent.get('name') or ''} | {agent.get('agent_status', '')} | {agent.get('cwd') or ''}"
+                f"{space['workspace'] or '-'}  {space['label'] or '-'}  ({len(space['workers'])} workers)"
             )
+            for agent in space["workers"]:
+                print(
+                    f"  {agent.get('pane_id', '')} | {agent.get('agent', '')} | {agent.get('name') or '-'} | {agent.get('agent_status', '')} | {agent.get('cwd') or ''}"
+                )
         return 0
+
+    @staticmethod
+    def _project_agent(agent: dict[str, Any]) -> dict[str, Any]:
+        """Project one raw Herdr agent onto the stable public worker shape."""
+        return {
+            "pane": agent.get("pane_id"),
+            "kind": agent.get("agent"),
+            "name": agent.get("name"),
+            "status": agent.get("agent_status"),
+            "cwd": agent.get("cwd"),
+            "title": agent.get("terminal_title_stripped"),
+            "workspace": agent.get("workspace_id"),
+            "seq": agent.get("state_change_seq"),
+            "focused": agent.get("focused"),
+        }

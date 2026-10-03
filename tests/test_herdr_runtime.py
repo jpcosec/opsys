@@ -242,3 +242,65 @@ def test_list_agents_raises_when_agents_is_not_a_list() -> None:
 
     with pytest.raises(HerdrError):
         HerdrProvider(HerdrClient(runner=fake_runner)).list_agents()
+
+
+def test_list_workspaces_returns_raw_workspaces_unchanged() -> None:
+    calls: list[list[str]] = []
+    workspaces = [
+        {
+            "workspace_id": "w-1",
+            "label": "sldb",
+            "number": 2,
+            "agent_status": "active",
+            "pane_count": 3,
+            "focused": True,
+        },
+        {
+            "workspace_id": "w-2",
+            "label": "setup",
+            "number": 1,
+            "agent_status": "active",
+            "pane_count": 1,
+            "focused": False,
+        },
+    ]
+
+    def fake_runner(command, **kwargs):
+        calls.append(command)
+        payload = {"result": {"workspaces": workspaces}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    result = HerdrProvider(HerdrClient(runner=fake_runner)).list_workspaces()
+
+    assert calls[0] == ["herdr", "workspace", "list"]
+    assert result == workspaces
+
+
+def test_list_workspaces_returns_empty_list_for_no_workspaces() -> None:
+    def fake_runner(command, **kwargs):
+        payload = {"result": {"workspaces": []}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    result = HerdrProvider(HerdrClient(runner=fake_runner)).list_workspaces()
+
+    assert result == []
+
+
+def test_list_workspaces_raises_when_workspaces_key_is_missing() -> None:
+    """Regression: herdr dropping result.workspaces is a contract change, not an empty rig."""
+
+    def fake_runner(command, **kwargs):
+        payload = {"result": {}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    with pytest.raises(HerdrError):
+        HerdrProvider(HerdrClient(runner=fake_runner)).list_workspaces()
+
+
+def test_list_workspaces_raises_when_workspaces_is_not_a_list() -> None:
+    def fake_runner(command, **kwargs):
+        payload = {"result": {"workspaces": {"workspace_id": "w-1"}}}
+        return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
+
+    with pytest.raises(HerdrError):
+        HerdrProvider(HerdrClient(runner=fake_runner)).list_workspaces()
