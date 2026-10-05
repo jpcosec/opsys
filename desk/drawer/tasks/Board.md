@@ -31,6 +31,7 @@ Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
 - `task-doctor-crashes-on-deskless-roots` — doctor raises UnboundLocalError on roots without `desk/`; initialize finding variables on every code path (found during cold review of task-doctor-proposes-missing-model-registration)
+- `task-rename-inbox-cli-to-message-transport-verbs` — `deskops message send|list|read|ack` becomes the canonical cross-desk transport; `inbox` stays as a deprecated alias (extracted from abandoned `iso-lab/deskops` commit `f857d72`)
 
 Promoted to active desk tasks:
 
