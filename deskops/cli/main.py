@@ -64,8 +64,8 @@ class CLI:
 
         self._apply_test_root_override(args)
 
-        # An optional --root (inbox) leaves the attribute present but None;
-        # only validate it when a value was actually supplied.
+        # An optional --root (message/inbox) leaves the attribute present but
+        # None; only validate it when a value was actually supplied.
         if getattr(args, "root", None) is not None:
             root_path = Path(args.root).resolve()
             if not root_path.exists() or not root_path.is_dir():
@@ -140,10 +140,10 @@ class CLI:
 
         self._apply_default_pythonpath(args, bootstrap)
 
-        if args.command == "inbox":
-            from deskops.cli.commands.inbox import InboxCLI
+        if args.command in {"message", "inbox"}:
+            from deskops.cli.commands.message import MessageCLI
 
-            return InboxCLI().run(args)
+            return MessageCLI().run(args)
         if args.command == "repo":
             from deskops.cli.commands.repo import RepoCLI
 
@@ -186,7 +186,7 @@ class CLI:
             return
         if getattr(args, "root", None) != ".":
             return
-        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "inbox", "repo", "graph", "materialize", "drift"}:
+        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "message", "inbox", "repo", "graph", "materialize", "drift"}:
             return
             
         from deskops.config import DeskConfig

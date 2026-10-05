@@ -25,24 +25,50 @@ from deskops.identity import EcosystemIdentity
 from deskops.models import InboxNoteDoc
 
 
-class InboxCLI:
-    """Log messages arriving to a project inbox."""
+class MessageCLI:
+    """Send, list, read, or acknowledge cross-desk messages.
+
+    Canonical surface is `deskops message {send|list|read|ack}`. The legacy
+    `deskops inbox` flag grammar routes through `_run_legacy` for backward
+    compatibility.
+    """
 
     def run(self, args: Any) -> int:
         try:
-            if args.list:
-                return self._list_notes(args)
-            if args.show:
-                return self._show_note(args)
-            if args.ack:
-                return self._ack_note(args)
-            if not args.message:
-                print("Provide a message or use --list/--show/--ack.")
-                return 1
-            return self._deliver_note(args)
+            if getattr(args, "message_command", None) is not None:
+                return self._run_message_command(args)
+            return self._run_legacy(args)
         except (SLDBStoreError, SLDBValidationError, ValueError) as exc:
             print(f"Error: {exc}")
             return 1
+
+    def _run_message_command(self, args: Any) -> int:
+        subcmd = args.message_command
+        if subcmd == "send":
+            args.message = args.body
+            return self._deliver_note(args)
+        if subcmd == "list":
+            return self._list_notes(args)
+        if subcmd == "read":
+            args.show = args.selector
+            return self._show_note(args)
+        if subcmd == "ack":
+            args.ack = args.selector
+            return self._ack_note(args)
+        print(f"Unknown message command: {subcmd}")
+        return 1
+
+    def _run_legacy(self, args: Any) -> int:
+        if getattr(args, "list", False):
+            return self._list_notes(args)
+        if getattr(args, "show", None):
+            return self._show_note(args)
+        if getattr(args, "ack", None):
+            return self._ack_note(args)
+        if not getattr(args, "message", None):
+            print("Provide a message or use send/list/read/ack.")
+            return 1
+        return self._deliver_note(args)
 
     def _deliver_note(self, args: Any) -> int:
         target_project, desk_root = self._resolve_target(args)
@@ -68,7 +94,7 @@ class InboxCLI:
         # reach the target's inbox.
         valid, details = validate_model_input_roundtrip(InboxNoteDoc, rendered)
         if not valid:
-            raise SLDBValidationError("Inbox note failed validation", details)
+            raise SLDBValidationError("Message failed validation", details)
 
         path.write_text(rendered, encoding="utf-8")
 
@@ -100,7 +126,7 @@ class InboxCLI:
     def _show_note(self, args: Any) -> int:
         note = self._resolve_note(self._desk_root(args), args.show)
         if note is None:
-            print(f"Unknown inbox note: {args.show}")
+            print(f"Unknown message: {args.show}")
             return 1
         payload = self._note_detail(note)
         return self._print(payload, args.format)
@@ -109,12 +135,12 @@ class InboxCLI:
         target_project, desk_root = self._resolve_target(args)
         note = self._resolve_note(desk_root, args.ack)
         if note is None:
-            print(f"Unknown inbox note: {args.ack}")
+            print(f"Unknown message: {args.ack}")
             return 1
 
         payload = extract_model_data(InboxNoteDoc, note.read_text(encoding="utf-8"))
         if payload.get("status") == "closed":
-            raise ValueError(f"Inbox note '{note.stem}' is already acknowledged.")
+            raise ValueError(f"Message '{note.stem}' is already acknowledged.")
 
         acknowledged_at = datetime.now().isoformat(timespec="seconds")
         payload["status"] = "closed"
@@ -231,7 +257,7 @@ class InboxCLI:
         else:
             if key == "notes":
                 if not payload:
-                    print("No inbox notes.")
+                    print("No messages.")
                     return 0
                 for item in payload:
                     print(
@@ -260,7 +286,7 @@ class InboxCLI:
         if fmt in {"json", "yaml"}:
             return self._print(payload, fmt)
         print(
-            "Delivered inbox note "
+            "Delivered message "
             f"from {payload['sender_project']} to {payload['target_project']} at {payload['path']}"
         )
         if payload.get("tracked_name"):
@@ -284,7 +310,7 @@ class InboxCLI:
         return 0
 
     def _derive_title(self, message: str) -> str:
-        first = message.strip().splitlines()[0] if message.strip() else "Inbox note"
+        first = message.strip().splitlines()[0] if message.strip() else "Message"
         return first[:72]
 
     def _slug(self, text: str) -> str:
@@ -312,7 +338,7 @@ class InboxCLI:
         rendered = path.read_text(encoding="utf-8")
         valid, details = validate_model_input_roundtrip(model_type, rendered)
         if not valid:
-            raise SLDBValidationError("Inbox note failed validation", details)
+            raise SLDBValidationError("Message failed validation", details)
 
         note_name = path.stem
         track_document(

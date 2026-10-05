@@ -28,13 +28,13 @@ An inbox message between desks is operationally weak if the sender identity is a
 
 _Describe when an agent should apply this pill._
 
-Apply this pill whenever a task changes `deskops inbox`, repo-targeted desk delivery, inbox synchronization, or horizontal desk coordination flows.
+Apply this pill whenever a task changes `deskops message`, `deskops inbox`, repo-targeted desk delivery, inbox synchronization, or horizontal desk coordination flows.
 
 ## Where
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Applies to `deskops/cli/commands/inbox.py`, repo registry resolution, future desk update/sync flows, and any design for cross-desk replies or acknowledgements.
+Applies to `deskops/cli/commands/message.py`, the deprecated `deskops inbox` alias, repo registry resolution, future desk update/sync flows, and any design for cross-desk replies or acknowledgements.
 
 ## How
 

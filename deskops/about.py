@@ -8,7 +8,7 @@ Workflow-domain CLI built on top of sldb.
 What it manages:
 - repo-local desk workspaces
 - global and local sldb bootstrap flows
-- workflow models such as tasks, boards, pills, rituals, inbox notes, and repository registrations
+- workflow models such as tasks, boards, pills, rituals, messages, and repository registrations
 
 First-use commands:
 - deskops bootstrap
@@ -16,7 +16,7 @@ First-use commands:
 
 Useful commands:
 - deskops faq
-- deskops inbox
+- deskops message send
 - deskops promote
 - deskops repo register
 """

@@ -38,6 +38,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_bootstrap_command(subparsers)
     _add_init_command(subparsers)
     _add_inbox_commands(subparsers)
+    _add_message_commands(subparsers)
     _add_promote_commands(subparsers)
     _add_add_commands(subparsers)
     _add_edit_commands(subparsers)
@@ -496,9 +497,11 @@ def _add_inbox_commands(
 ) -> None:
     p = subparsers.add_parser(
         "inbox",
-        help="Log, list, or show messages arriving to a project inbox.",
+        help="Deprecated alias for `deskops message`; use message send/list/read/ack.",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog="""
+Deprecated: use `deskops message send|list|read|ack`.
+
 Examples:
   deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
   deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
@@ -546,6 +549,87 @@ Examples:
     p.add_argument("--ack", help="Acknowledge one inbox note by filename, stem, or slug fragment")
     p.add_argument("--limit", type=int, default=20, help="Limit listed notes")
     p.add_argument("--format", choices=("text", "json", "yaml"), default="text")
+
+
+def _add_message_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser(
+        "message",
+        help="Send, list, read, or acknowledge cross-desk messages.",
+        formatter_class=argparse.RawTextHelpFormatter,
+        epilog="""
+Examples:
+  deskops message send "Need follow-up" --to sibling-repo --title "Follow-up"
+  deskops message list --root .
+  deskops message read 20260614-cli-help --root .
+  deskops message ack 20260614-cli-help --root .
+
+read/ack selector: filename, stem, or unique slug fragment.
+""".strip(),
+    )
+    s = p.add_subparsers(dest="message_command", required=True)
+
+    def _add_target_args(
+        parser: argparse.ArgumentParser, *, root: bool, repo: bool = True
+    ) -> None:
+        if root:
+            parser.add_argument(
+                "--root",
+                default=".",
+                help="Repository root whose desk/ holds the inbox",
+            )
+        parser.add_argument(
+            "--desk-root",
+            help="Desk root directory override; defaults to the active project desk",
+        )
+        parser.add_argument(
+            "--store",
+            help="Store path used to resolve the target project root for the default desk",
+        )
+        if repo:
+            parser.add_argument(
+                "--repo",
+                help="Target a registered repository name in the ecosystem",
+            )
+        parser.add_argument(
+            "--pythonpath",
+            help="Project path used when auto-tracking messages through the registered model",
+        )
+        parser.add_argument("--format", choices=("text", "json", "yaml"), default="text")
+
+    send = s.add_parser("send", help="Send a message to a project desk.")
+    send.add_argument("body", help="Message body")
+    send.add_argument("--title", help="Short title for the message")
+    send.add_argument(
+        "--kind",
+        choices=("unclear", "suggestion"),
+        default="suggestion",
+        help="Type of message to send",
+    )
+    send.add_argument(
+        "--to",
+        dest="repo",
+        help="Target a registered repository name in the ecosystem",
+    )
+    send.add_argument(
+        "--from",
+        dest="sender",
+        help="Override the resolved sender identity with a registered project id",
+    )
+    _add_target_args(send, root=True, repo=False)
+
+    lst = s.add_parser("list", help="List received messages.")
+    _add_target_args(lst, root=True)
+    lst.add_argument("--limit", type=int, default=20, help="Limit listed messages")
+
+    read = s.add_parser("read", help="Read one received message.")
+    read.add_argument("selector", help="Message filename, stem, or unique slug fragment")
+    _add_target_args(read, root=True)
+
+    ack = s.add_parser("ack", help="Acknowledge one received message.")
+    ack.add_argument("selector", help="Message filename, stem, or unique slug fragment")
+    _add_target_args(ack, root=True)
 
 
 def _add_faq_commands(

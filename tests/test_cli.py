@@ -39,7 +39,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,doctor,status,faq,bootstrap,init,inbox,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
+    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "Use docs/quickstart.md" in captured.out
@@ -384,10 +384,10 @@ def test_add_atom_does_not_create_orphan_field_instances(tmp_path: Path, capsys)
     assert not list((tmp_path / "desk" / "fields").glob("field-instance-*.md"))
 
 
-def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> None:
+def test_message_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> None:
     called = {"sldb": 0, "machine": 0}
 
-    class FakeInboxCLI:
+    class FakeMessageCLI:
         def run(self, args: SimpleNamespace) -> int:
             assert args.pythonpath == str(ROOT)
             called["sldb"] += 1
@@ -401,11 +401,11 @@ def test_inbox_uses_local_pythonpath_without_global_bootstrap(monkeypatch) -> No
         called["machine"] += 1
         return 0
 
-    monkeypatch.setattr("deskops.cli.commands.inbox.InboxCLI", FakeInboxCLI)
+    monkeypatch.setattr("deskops.cli.commands.message.MessageCLI", FakeMessageCLI)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", fake_sldb_available)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_machine_ready", fake_machine_ready)
 
-    assert CLI().run(["inbox", "--list"]) == 0
+    assert CLI().run(["message", "list"]) == 0
     assert called["machine"] == 0
     assert called["sldb"] == 2
 
@@ -450,16 +450,16 @@ def _setup_inbox_identity_env(tmp_path: Path, monkeypatch) -> tuple[Path, Path, 
 
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
-    monkeypatch.setattr("deskops.cli.commands.inbox.get_store_context", lambda _arg: (store_path, tmp_path))
+    monkeypatch.setattr("deskops.cli.commands.message.get_store_context", lambda _arg: (store_path, tmp_path))
     monkeypatch.setattr(
-        "deskops.cli.commands.inbox.registered_model",
+        "deskops.cli.commands.message.registered_model",
         lambda store, name, pythonpath: (InboxNoteDoc, object(), "idx"),
     )
 
     def fake_track_document(store_path_arg, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
         tracked.append(note_name)
 
-    monkeypatch.setattr("deskops.cli.commands.inbox.track_document", fake_track_document)
+    monkeypatch.setattr("deskops.cli.commands.message.track_document", fake_track_document)
     return sender_repo, target_repo, store_path
 
 
@@ -500,7 +500,7 @@ def test_inbox_delivery_returns_verification_result_json(tmp_path: Path, monkeyp
 
 
 def test_inbox_resolves_sender_project_from_repo_store(tmp_path: Path, monkeypatch) -> None:
-    from deskops.cli.commands.inbox import InboxCLI
+    from deskops.cli.commands.message import MessageCLI
 
     sender_repo, _target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
     sender_subdir = sender_repo / "subdir"
@@ -509,7 +509,7 @@ def test_inbox_resolves_sender_project_from_repo_store(tmp_path: Path, monkeypat
 
     args = SimpleNamespace(store=str(store_path), pythonpath=None, sender=None)
 
-    assert InboxCLI()._sender_project(args) == "sender-repo"
+    assert MessageCLI()._sender_project(args) == "sender-repo"
 
 
 

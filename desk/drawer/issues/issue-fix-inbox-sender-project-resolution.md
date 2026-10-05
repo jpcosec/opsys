@@ -20,7 +20,7 @@ In this repo, several local repository docs under `desk/registry/` point to `pat
 
 ## Evidence
 
-- Source logic: `deskops/cli/commands/inbox.py`, `_sender_project()`
+- Source logic: `deskops/cli/commands/message.py`, `_sender_project()`
 - The current algorithm scans tracked `RepositoryDoc` payloads and returns the first doc whose `path` contains the current working directory.
 - Multiple docs in `desk/registry/` currently resolve to the same root (`path: .`), including `myrepo`, `my-repo`, `described-repo`, `deskops`, and others.
 - Reproduced from `/home/jp/proyectos/hum-ecosystem/tools/deskops` while targeting `../sldb/desk` via `deskops inbox ... --desk-root ../sldb/desk`.

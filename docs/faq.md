@@ -39,7 +39,7 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` defin
 - `deskops bootstrap` — machine-level sldb and global-store setup
 - `deskops init` — initialize a repo-local `.sldb/` plus `desk/`
 - `deskops faq` — first-use help (this document)
-- `deskops inbox` — write and browse desk inbox notes
+- `deskops message` — send, list, read, and acknowledge cross-desk messages (`deskops inbox` is a deprecated alias)
 - `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
 - `deskops bind pill` — bind a context pill to an active task through the modeled task surface
 - `deskops graph` — build graph snapshots, inspect neighbors, check missing references, and write review-only reflection reports
@@ -182,7 +182,7 @@ This command ensures `sldb` is available, creates a local `.sldb/` store if it d
 Not for every command.
 
 - `deskops faq` does not require a store.
-- `deskops inbox` can write directly into a repo-local `desk/inbox/` without a store if you pass `--desk-root` or run it from the target project.
+- `deskops message` can write directly into a repo-local `desk/inbox/` without a store if you pass `--desk-root` or run it from the target project.
 - `deskops bootstrap` creates or repairs the global `~/.sldb` store and registers the deskops models there.
 - `deskops repo register` and any auto-tracking behavior depend on a resolvable `sldb` store.
 
@@ -198,18 +198,20 @@ Durable knowledge should eventually land in code, tests, docs, or git history ra
 
 ## How do I log an unclear point or suggestion?
 
-Use `deskops inbox`.
+Use `deskops message send`.
 
 Examples:
 
 ```bash
-deskops inbox "The install flow still leaves a partial scaffold when registration fails" --kind unclear
-deskops inbox "Add explicit install examples to the README" --kind suggestion --title "README install examples"
-deskops inbox --list
-deskops inbox --show readme-install-examples
+deskops message send "The install flow still leaves a partial scaffold when registration fails" --kind unclear
+deskops message send "Add explicit install examples to the README" --kind suggestion --title "README install examples"
+deskops message list
+deskops message read readme-install-examples
 ```
 
 Use `--kind unclear` for unresolved confusion and `--kind suggestion` for proposed improvements.
+
+The older `deskops inbox` flag grammar still works as a deprecated alias.
 
 ## How do I target another repo's desk?
 
@@ -217,9 +219,9 @@ There are three main targeting modes:
 
 - run inside the target repo so the default local `desk/` is used
 - pass `--desk-root` with an explicit desk path
-- pass `--repo` to resolve a repository through the ecosystem registry, optionally with `--store`
+- pass `--to` (or `--repo`) to resolve a repository through the ecosystem registry, optionally with `--store`
 
-If you use `--repo`, the target repository must already be registered and discoverable from the chosen store context.
+If you use `--to`/`--repo`, the target repository must already be registered and discoverable from the chosen store context.
 
 ## How do I route sibling repo tasks without copying them?
 

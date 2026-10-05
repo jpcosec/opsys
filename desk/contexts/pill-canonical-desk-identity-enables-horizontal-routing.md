@@ -34,7 +34,7 @@ Apply this pill whenever a task changes repo registration, sender inference, des
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Applies to `deskops/cli/commands/inbox.py`, repo registration flows, per-project config design, and any command that resolves another repo's desk.
+Applies to `deskops/cli/commands/message.py`, repo registration flows, per-project config design, and any command that resolves another repo's desk.
 
 ## How
 

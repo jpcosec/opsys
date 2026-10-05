@@ -190,7 +190,7 @@ Current commands:
 - `deskops bootstrap`
 - `deskops init`
 - `deskops faq`
-- `deskops inbox`
+- `deskops message` (cross-desk send/list/read/ack; `deskops inbox` is a deprecated alias)
 - `deskops bind pill`
 - `deskops repo register`
 - `deskops desk install`
