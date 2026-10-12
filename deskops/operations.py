@@ -47,7 +47,7 @@ from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
-from deskops.doc_readability import unread_section_fields
+from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.specs import compile_task_bundle_spec
@@ -244,6 +244,24 @@ def _ensure_mapping_payload(payload: Any, label: str) -> dict[str, Any]:
         kind = type(payload).__name__
         raise ValueError(f"{label} must be a mapping/object, got {kind}")
     return dict(payload)
+
+
+def _parse_field_value(model: type[Any], field_name: str, raw_value: str) -> Any:
+    """Parse `edit` input as JSON/YAML, but keep text fields as the literal text.
+
+    Free text such as `Fuente: a.md:3, b` is a YAML mapping error (or a dict), not
+    what the user meant for a `str` field, so those fall back to the raw string.
+    """
+    annotation = model.model_fields[field_name].annotation
+    try:
+        value = parse_data_value(raw_value)
+    except Exception:
+        if annotation is str:
+            return raw_value
+        raise
+    if annotation is str and not isinstance(value, str):
+        return raw_value
+    return value
 
 
 @dataclass(slots=True)
@@ -465,7 +483,7 @@ class DeskopsOperations:
         if field_name == "id":
             raise ValueError("Cannot edit immutable field 'id'")
         payload = self._read_doc(path, model)
-        payload[field_name] = parse_data_value(raw_value)
+        payload[field_name] = _parse_field_value(model, field_name, raw_value)
         self._write_doc(path, model, payload)
         return DocumentRecord(kind=kind, doc_id=str(payload.get("id", path.stem)), path=path)
 
@@ -2740,7 +2758,11 @@ class DeskopsOperations:
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         rendered = render_model_markdown(model, payload) + "\n"
         if path.exists():
-            lost = unread_section_fields(model, path.read_text(encoding="utf-8"), rendered)
+            existing = path.read_text(encoding="utf-8")
+            # A short new value is not proof the model cannot read the file: only
+            # refuse when the current text really extracts empty for that field.
+            unreadable = set(is_unreadable_by_model(model, existing))
+            lost = [field for field in unread_section_fields(model, existing, rendered) if field in unreadable]
             if lost:
                 raise ValueError(
                     f"Refusing to rewrite {path.name}: its model cannot read "

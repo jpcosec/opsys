@@ -81,3 +81,29 @@ def test_editing_an_unreadable_pill_refuses_instead_of_erasing_it(tmp_path: Path
 
     assert "Refusing to rewrite" in out
     assert pill.read_text(encoding="utf-8") == before
+
+
+def _atom_root(tmp_path: Path, capsys) -> Path:
+    assert main(["init", str(tmp_path)]) == 0
+    assert main(["atoms", "add-namespace", "tipo", "--root", str(tmp_path), "--meaning", "m",
+                 "--use-when", "u", "--do-not-use-when", "d", "--example", "tipo:x"]) == 0
+    assert main(["add", "atom", "--root", str(tmp_path), "--title", "Etapa", "--five-wh-one-plus", "what",
+                 "--tags", "tipo:etapa", "--provenance", "src/x.py",
+                 "--answer", "Responde: algo [escribe:: [[atom-t]]] Detalle: specs/x.md."]) == 0
+    capsys.readouterr()
+    return tmp_path
+
+
+def test_edit_to_a_short_value_on_a_readable_document_is_allowed(tmp_path: Path, capsys) -> None:
+    """A document written by `add` is readable; a short new value must not look like erasure."""
+    root = _atom_root(tmp_path, capsys)
+    assert main(["edit", "atom", "atom-etapa", "answer", "corto", "--root", str(root)]) == 0
+    assert "corto" in (root / "desk" / "atoms" / "atom-etapa.md").read_text(encoding="utf-8")
+
+
+def test_edit_text_field_keeps_yaml_looking_text_literal(tmp_path: Path, capsys) -> None:
+    """`Fuente: a.md:3, b` is prose for a str field, not a YAML mapping."""
+    root = _atom_root(tmp_path, capsys)
+    text = "Fuente: TABLERO.md:323-328, otra cosa"
+    assert main(["edit", "atom", "atom-etapa", "answer", text, "--root", str(root)]) == 0
+    assert text in (root / "desk" / "atoms" / "atom-etapa.md").read_text(encoding="utf-8")
