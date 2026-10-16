@@ -1,0 +1,16 @@
+{"n":1,"class":"repo_fact","answer":"Suffixes are the 17 ids built at deskops/operations.py:1300-1485 (5 condition, 3 checklist, 3 operator, 6 edge), e.g. has-validation, testing-ready, close, execution-to-activate."}
+{"n":2,"class":"repo_fact","answer":"Routine path is desk/routines/routine-<id>.md (operations.py:2606-2607); refs live in fields 'decomposition' (node ids) and 'edges' (edge ids) plus 'terminal_nodes' (operations.py:1283-1285, 2439-2450)."}
+{"n":3,"class":"repo_fact","answer":"Kinds = dirs conditions, checklists, operators, edges, hooks (operations.py:1530); id prefixes condition-, checklist-, operator-, edge-, hook- (operations.py:1300-1485)."}
+{"n":4,"class":"repo_fact","answer":"Trailer exists: this function writes 'Task-Id: {task_id}' (operations.py:1539) and deskops closeout commit writes it too (closeout.py:93). If absent, --format valueonly is empty, so no amend."}
+{"n":5,"class":"noise","answer":"No scope gap: the Task-Id trailer is already written by _auto_commit_task_closure (operations.py:1539) and by closeout commit (closeout.py:93); the fix introduces nothing new."}
+{"n":6,"class":"noise","answer":"Assertion style is the test author's call; existing test already shows the pattern (assert path exists + git show --name-only), tests/test_lifecycle_end_to_end.py:160-185."}
+{"n":7,"class":"repo_fact","answer":"Pattern is in tests/test_lifecycle_end_to_end.py:36-46: _make_repo(tmp_path), then _cli(root,'desk','install',str(root)), add task, advance task. Tests use tmp_path, not the real desk/."}
+{"n":8,"class":"repo_fact","answer":"Verified accurate: def _auto_commit_task_closure at operations.py:1499, glob at 1533, amend startswith check at 1547."}
+{"n":9,"class":"repo_fact","answer":"Count is verifiable: bundle creates exactly 17 primitives (5 conditions + 3 checklists + 3 operators + 6 edges), operations.py:1300-1485."}
+{"n":10,"class":"noise","answer":"Under the stated exact-match rule a no-suffix stem is simply not owned and left untouched; the bundle never creates such ids."}
+{"n":11,"class":"noise","answer":"Trigger is the existing routine_id/_routine_path().exists() check (operations.py:1525-1528); the fallback (known suffix set) is already stated in the task."}
+{"n":12,"class":"repo_fact","answer":"Reusable helpers exist: _git, _cli, _write, _make_repo at tests/test_lifecycle_end_to_end.py:16-46; existing tests already drive the real CLI via subprocess."}
+{"n":13,"class":"noise","answer":"Task explicitly asks for two tests (one per behavior) in Step 3; naming/ordering is the author's choice and is not a blocking decision."}
+{"n":14,"class":"noise","answer":"Tests already exercise the real CLI (python -m deskops via _cli, test_lifecycle_end_to_end.py:22-26), satisfying pill-real-cli-surfaces-prove-operator-contracts."}
+{"n":15,"class":"task_defect","answer":"'Open Ambiguities: None' is wrong while several real gaps exist (suffix set, routine refs, trailer semantics). Fix: replace with the concrete open items, or resolve and note the resolved set."}
+{"n":16,"class":"noise","answer":"Fully specified: amend iff the Task-Id trailer equals task_id exactly; subject is deliberately ignored, so no subject/trailer mismatch case remains."}

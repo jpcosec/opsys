@@ -1,0 +1,11 @@
+{"n":1,"class":"noise","answer":"Any unique /tmp path works; nothing depends on the name. Using /tmp (outside the repo) is deliberate to avoid the repo's sldb registry (inventory finding S7)."}
+{"n":2,"class":"repo_fact","answer":"`sldb edges show <Model:name> [--to] --store .sldb --pythonpath .` (../sldb/src/sldb/cli/commands/edges.py:27-30; parsers/edges.py:19-24), after `sldb edges rebuild`; Python: `sldb.api.edges_from/edges_to`."}
+{"n":3,"class":"repo_fact","answer":"Flag form: `deskops add task --root . --title ... --depends-on task-nope` (deskops/cli/parser.py:686, action=extend nargs='+'); inline JSON/--from-yaml accepted too (parser.py:664-665). No depends_on existence check at add (deskops/operations.py:1194-1206)."}
+{"n":4,"class":"noise","answer":"Task already says 'paste commands and output'; gates only grep the heading (`^## Reproduction`), so no format is mandated beyond a transcript."}
+{"n":5,"class":"noise","answer":"Done When requires the coordinator to accept/change-with-agreed-signature/reject, so concrete signatures are needed; Implementation Path already gives an example signature."}
+{"n":6,"class":"noise","answer":"The grep only needs the heading; Done When requires the reply content. A placeholder heading can exist during execution but cannot satisfy Done When."}
+{"n":7,"class":"noise","answer":"Already stated: Scope and Resolved Decisions assign reply-pasting to the supervisor; the executor stops after writing the reproduction and proposal."}
+{"n":8,"class":"repo_fact","answer":"runs/planning is NOT gitignored; only runs/subagents/*/session.jsonl is excluded (.gitignore:19). No gate requires tracking; validation is only test -f."}
+{"n":9,"class":"repo_fact","answer":"Prerequisites must be satisfied before the phase runs (desk/rituals/phase.md steps: 'ready dependency layer of tasks whose prerequisites are satisfied'). depends_on is not programmatically gated anywhere."}
+{"n":10,"class":"repo_fact","answer":"Not stale: resolve.py:20-30 is exactly resolve_edges; _ids_in def is declared_references.py:67 (range 66-74 covers the function). Both citations still accurate."}
+{"n":11,"class":"noise","answer":"Pill requires delivery verification plus follow-up; the task supplies both via the supervisor paste and the required ## Response, so it is not a write-only drop. Scope's 'no sldb inbox write' stands."}

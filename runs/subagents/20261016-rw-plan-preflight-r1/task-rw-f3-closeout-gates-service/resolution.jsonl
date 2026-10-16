@@ -1,0 +1,17 @@
+{"n":1,"class":"noise","answer":"Drawer work is deferred backlog and must be promoted before implementation; depends_on gating is covered by board/pill-007. AGENTS.md:16,45-46."}
+{"n":2,"class":"repo_fact","answer":"Set: _has_verified_task_closeout_evidence (operations.py:1582), _closeout_reference_evidence (:1625), _closeout_link_gate (:1641), _reference_points_to_atom (:1705), _reference_points_to_routed_follow_up (:1724), _reference_points_to_existing_route (:1740), _reference_points_to_test (:2221), _reference_points_to_commit (:2242), _build_closeout_graph_context (:2258)."}
+{"n":3,"class":"noise","answer":"'Keep wrappers' implies same names/signatures; all gate helpers return bool or dict (no exceptions/error messages raised), so behavior is evident from operations.py:1625-2258."}
+{"n":4,"class":"task_defect","answer":"Ambiguous abbreviations unspecified. Fix: resolve candidate via `git rev-parse --verify <sha>^{commit}` (fails on ambiguous) then `git merge-base --is-ancestor <full-sha> HEAD`; treat ambiguity as rejection."}
+{"n":5,"class":"noise","answer":"Already stated: goal requires a hash that 'is an ancestor of HEAD', so a valid non-ancestor full hash is rejected."}
+{"n":6,"class":"repo_fact","answer":"Existing gate already rejects on git-absent (FileNotFoundError->False) and non-repo/no-HEAD (nonzero rev-parse): operations.py:2242-2256."}
+{"n":7,"class":"noise","answer":"Ancestry check rejects non-commit objects; a tag/blob sha is not an ancestor of HEAD, so it fails regardless of the hex regex."}
+{"n":8,"class":"noise","answer":"'path under tests/' means prefix tests/, so nested paths like tests/unit/test_x.py are accepted."}
+{"n":9,"class":"task_defect","answer":"Spec omits suffix rule. Fix: state requirement that the resolved path has .py suffix and lives under tests/ (or a node id whose path part does), matching current _reference_points_to_test: operations.py:2221-2240."}
+{"n":10,"class":"task_defect","answer":"'optionally ::node' leaves validation depth unset; current code strips ::node and checks only path existence (operations.py:2236-2239), so tests/test_x.py::NotARealTest passes. Fix: state node ids are not validated, or validate via pytest --collect-only."}
+{"n":11,"class":"task_defect","answer":"Absolute paths, '..', symlinks, case unset. Fix: require the resolved path be inside <root>/tests; reject absolute and '..'-escaping paths."}
+{"n":12,"class":"repo_fact","answer":"Current semantics: each reference is tested by independent matchers (operations.py:1625-1638), each gate passes with >=1 matching ref, and verify_task_closeout ANDs tests+link+commit (:1608-1623)."}
+{"n":13,"class":"repo_fact","answer":"Existing helper _make_repo builds a temp git repo with one commit (tests/test_closeout.py:25-34); a non-ancestor hash is obtained by adding a second commit."}
+{"n":14,"class":"repo_fact","answer":"tests/test_lifecycle_end_to_end.py exists (present in tests/ listing)."}
+{"n":15,"class":"noise","answer":"Done When is a qualitative acceptance statement; missing explicit non-git/HEAD checks is documentation nit, not an execution blocker."}
+{"n":16,"class":"noise","answer":"Project minimum validation is pytest (AGENTS.md); no coverage/lint gate is required by repo policy."}
+{"n":17,"class":"repo_fact","answer":"_build_closeout_graph_context has a single call site, operations.py:1649 (definition :2258); no external callers found."}

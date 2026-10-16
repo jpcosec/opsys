@@ -1,0 +1,16 @@
+{"n":1,"class":"repo_fact","answer":"desk/drawer/tasks/task-rw-f1-output-golden-files.md:3 status:deferred; AGENTS.md:16,46: drawer = deferred backlog, promote and commit before implementation. Proceed only after promotion to desk/tasks/."}
+{"n":2,"class":"noise","answer":"Sections are not empty: real content follows each italic prompt (Rationale 'Other tools read...'; Goal 'Tests compare...'; Scope 'In scope...'). Only leftover template lines."}
+{"n":3,"class":"noise","answer":"Stale field only; gaps are already enumerated in the preflight and AGENTS.md:44 requires resolving them first. No extra execution risk."}
+{"n":4,"class":"noise","answer":"tests/fixtures/ exists (tests/fixtures/knowledge_graph/); goldens dir is tests/fixtures/golden/ per files:. Fixture-desk subdir name is an implementer choice."}
+{"n":5,"class":"repo_fact","answer":"build_graph_snapshot reads plain Markdown docs with no .sldb store (tests/test_graph_snapshot.py:19-34); tests write valid frontmatter fixtures (tests/test_closeout.py:60-110). Shape is implementer-mirrored."}
+{"n":6,"class":"task_defect","answer":"Impl says compare only golden/*.json, but closeout trailers are commit-message lines, not JSON, and no golden names/count given. Fix: enumerate goldens and store trailers as e.g. golden/closeout_trailers.json."}
+{"n":7,"class":"repo_fact","answer":"Pattern exists: tests/test_closeout.py:30-40 _make_repo runs git init, git config user.name/email, seed commit under tmp_path. Commit hash output is then volatile and must be normalized."}
+{"n":8,"class":"repo_fact","answer":"graph build writes .sldb/runtime/graphs/deskops.kg.json + deskops.nx.json (snapshot.py:19,37; main.py:252); index.jsonl from closeout commit (test_closeout.py:156); self_reflection_findings.json needs `graph reflect` (self_reflection.py:15; main.py:311), absent from the path."}
+{"n":9,"class":"repo_fact","answer":"graph build --root DIR [--output P] (parser.py:315-320); graph reflect --root DIR (parser.py:332-334); closeout commit --root DIR --task ID --run-dir DIR [--paths ...] (parser.py:1087-1091)."}
+{"n":10,"class":"noise","answer":"Task already names normalize targets (timestamps, absolute paths, hashes); placeholder tokens, JSON key ordering, and JSONL ordering are implementer-level choices."}
+{"n":11,"class":"noise","answer":"Implementer-level: add pytest_addoption in a new tests/conftest.py (none exists today). Exact flag name, create-missing, and CI policy are not owner decisions."}
+{"n":12,"class":"noise","answer":"Implementer-level test-design choice (mutate writer key, or pair the golden test with a deliberately wrong input); no owner decision required."}
+{"n":13,"class":"noise","answer":"Schema is already asserted outside this task: tests/test_graph_snapshot.py:39 checks metadata.schema == deskops_kgdb_graph_snapshot_v1."}
+{"n":14,"class":"noise","answer":"Implementer-level: semantic JSON equality is implied by 'normalize volatile fields'; byte-exact is not viable after normalization."}
+{"n":15,"class":"noise","answer":"Implementer-level: failing on a missing golden is the sane default for a golden test; no owner decision required."}
+{"n":16,"class":"repo_fact","answer":"pyproject.toml:6 requires-python>=3.10; tests shell out to git via subprocess (tests/test_closeout.py:20-24). OS is not pinned anywhere in the repo."}

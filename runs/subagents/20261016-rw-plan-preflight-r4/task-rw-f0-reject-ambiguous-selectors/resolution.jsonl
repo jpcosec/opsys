@@ -1,0 +1,11 @@
+{"n":1,"class":"task_defect","severity":"minor","answer":"tests/test_operational.py has no _make_repo/_cli harness (it imports DeskopsOperations only, lines 7-8). Task omits import-vs-duplicate. Fix: say to import _cli/_make_repo from tests/test_lifecycle_end_to_end.py:22,36, or move the tests there."}
+{"n":2,"class":"repo_fact","answer":"tests/test_operational.py is in-process style: imports DeskopsOperations (lines 7-8), no subprocess/capsys. Resolved Decisions already make subprocess the default unless the task says 'in-process'."}
+{"n":3,"class":"noise","answer":"Task already requires stderr to name both stems; full-string vs substring assertion is a test-style detail."}
+{"n":4,"class":"repo_fact","answer":"advance prints 'Task: {task.id}' at deskops/cli/commands/operations.py:285, so 'Task: task-foo' exists today."}
+{"n":5,"class":"repo_fact","answer":"--to optional (cli/parser.py:1062); exit 0 unless result.blocked (cli/commands/operations.py:289). Fresh entrypoint checklist has empty condition_refs (spec/primitives/task_execution_ready.yaml:15) -> is_complete True (runtime/primitives.py:101-102) -> blocked=False -> exit 0."}
+{"n":6,"class":"repo_fact","answer":"Exact-file check returns before glob (operations.py:2613-2615) and explicit id overrides slug (specs/compiler.py:37), so task-foo.md and task-foo-bar.md coexist without collision."}
+{"n":7,"class":"noise","answer":"Scope already limits to _resolve_glob + two CLI tests; the global behavior change to other callers is intended."}
+{"n":8,"class":"repo_fact","answer":"matches is sorted at capture (operations.py:2616), so stem order is deterministic."}
+{"n":9,"class":"repo_fact","answer":"No normalization needed: operations.py:2616 already sorts matches before the length check."}
+{"n":10,"class":"noise","answer":"Task states exits 1 with stderr; asserting the ValueError-vs-argparse source is a test-style detail."}
+{"n":11,"class":"noise","answer":"'pytest tests green' is the standard closure gate; no baseline required."}

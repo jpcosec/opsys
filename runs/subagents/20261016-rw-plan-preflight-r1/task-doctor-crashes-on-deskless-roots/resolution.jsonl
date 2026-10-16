@@ -1,0 +1,11 @@
+{"n":1,"class":"repo_fact","answer":"Literal is \"Missing desk structure: desk/\" for an empty root: missing_desk_files=[\"desk/\"] set at doctor.py:31, f-string built at doctor.py:41."}
+{"n":2,"class":"repo_fact","answer":"Without --repair a desk-less root has findings, so it returns 1 (doctor.py:213-215); with --repair it returns 0 (doctor.py:217). The task's \"0 or 1\" is looser than the deterministic no-repair value 1."}
+{"n":3,"class":"repo_fact","answer":"It is typed: `unreadable_docs: list[str] = []` at doctor.py:125, inside the `if desk_dir.exists():` block."}
+{"n":4,"class":"repo_fact","answer":"doctor.py:78 `tracked_mds = set(inspection.tracked_surface_docs)` is the dead one, immediately shadowed by the typed re-init at doctor.py:80. The task's 78/80 line numbers are accurate."}
+{"n":5,"class":"repo_fact","answer":"Both forms work: deskops/__main__.py enables `python -m deskops` and pyproject.toml:12 defines the `deskops` script. Existing tests call in-process `main([...])` (tests/test_doctor_unmodeled_surfaces.py:99)."}
+{"n":6,"class":"noise","answer":"Scope says one regression test on the non---repair path; --repair behavior is only described in Resolved Decisions, so no extra test is required."}
+{"n":7,"class":"repo_fact","answer":"Convention: tmp_path fixture, in-process `main([...])` + capsys (tests/test_doctor_unmodeled_surfaces.py:92-100), and monkeypatch of subprocess.run (lines 32-51)."}
+{"n":8,"class":"repo_fact","answer":"pyproject.toml sets [tool.pytest.ini_options] pythonpath=[\".\"], so pytest run from repo root imports deskops without an install."}
+{"n":9,"class":"repo_fact","answer":"All three pills exist under desk/contexts/ and were read. pill-real-cli-surfaces-prove-operator-contracts requires >=1 real CLI-level validation; none add other gates."}
+{"n":10,"class":"repo_fact","answer":"Yes: AGENTS.md:56 states \"Every closed task ends with its own atomic commit.\""}
+{"n":11,"class":"repo_fact","answer":"main.py:385-392 catches all exceptions and raises SystemExit(\"Unexpected: ...\"), so a crash surfaces as SystemExit/exit 1; the text only reaches stderr via subprocess, not in-process capsys."}

@@ -1,0 +1,12 @@
+I have enough evidence. Output:
+
+```json
+{"n":1,"class":"repo_fact","answer":"Exact text is `Missing desk structure: desk/` on an absent root: doctor.py:31 appends `\"desk/\"` to missing_desk_files, doctor.py:41 renders `f\"Missing desk structure: {', '.join(missing_desk_files)}\"`. Assert `\"Missing desk structure: desk/\"` in stdout (capsys or subprocess)."}
+{"n":2,"class":"noise","answer":"No real contradiction. Line 80 (`tracked_mds: set[Path] = set()`) overwrites line 78, so line 78 (`tracked_mds = set(inspection.tracked_surface_docs)`) is the shadowed/dead one. Step 2 quotes that exact line text, so delete line 78. Scope and Implementation Path agree."}
+{"n":3,"class":"repo_fact","answer":"All cited lines verified: doctor.py:78 `tracked_mds = set(inspection.tracked_surface_docs)`; :80 `tracked_mds: set[Path] = set()`; :213-215 `if not repair:` / print run-with-repair / `return 1`. Not stale."}
+{"n":4,"class":"noise","answer":"Location is explicit and valid. Sibling doctor tests exist in both tests/test_doctor_unmodeled_surfaces.py and tests/test_doctor_model_registration.py; adding the regression test to the named file is a made decision, not a risk."}
+{"n":5,"class":"repo_fact","answer":"Established style is in-process `from deskops.cli.main import main` + `main([\"doctor\",\"--root\",str(root)])` with capsys (tests/test_doctor_unmodeled_surfaces.py:5,99,113; test_doctor_model_registration.py:5,29). Use that, not subprocess."}
+{"n":6,"class":"repo_fact","answer":"Pills exist at desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md, pill-real-cli-surfaces-prove-operator-contracts.md, pill-cli-gaps-become-tracked-work.md, each with When/Where/How/How Not sections (e.g. pill-doctor...:29-43)."}
+{"n":7,"class":"repo_fact","answer":"On a truly absent root only the missing-desk-structure finding is emitted: the `if desk_dir.exists():` block is skipped and untracked/invalid_docs/unmodeled_reasons/unregistered_models/store_index_unreadable are pre-initialized empty (doctor.py:55-59). No competing findings."}
+{"n":8,"class":"repo_fact","answer":"Crash path emits exactly `Unexpected: ` (capital U) via main.py:392 `raise SystemExit(f\"Unexpected: {exc}\")`, printed to stderr. A case-sensitive substring check for `\"Unexpected:\"` in stderr is correct and sufficient."}
+```

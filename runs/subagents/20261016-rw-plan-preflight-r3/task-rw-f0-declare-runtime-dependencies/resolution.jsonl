@@ -1,0 +1,12 @@
+{"n":1,"class":"repo_fact","answer":"Key is `[project] dependencies` (pyproject.toml:7-10). Only extra group is `[project.optional-dependencies] dev = [\"pytest>=8.0\"]` (pyproject.toml:19-22); task Scope already limits edits to `dependencies`."}
+{"n":2,"class":"task_defect","answer":"Installed kgdb came from git, not PyPI: kgdb-0.1.0.dist-info/direct_url.json = https://github.com/jpcosec/kgdb.git@1247139. `pip download kgdb==0.1.0` is unverified/likely wrong. Fix: use `pip install \"git+https://github.com/jpcosec/kgdb.git@1247139\"` as <kgdb source>."}
+{"n":3,"class":"task_defect","answer":"Premise false: an installable kgdb 0.1.0 source exists (git URL in #2), so 'no installable kgdb artifact' should not trigger. Fix: define failure as pip non-zero exit only, and require the exact command+error recorded in closeout."}
+{"n":4,"class":"repo_fact","answer":"All in range for local 3.13: deskops requires-python>=3.10 (pyproject.toml:6), sldb ../sldb/pyproject.toml:5 >=3.10, kgdb METADATA Requires-Python>=3.10. `python -m venv` from 3.13 is fine."}
+{"n":5,"class":"noise","answer":"Task command already specifies non-editable `pip install ../sldb <kgdb source> .`; install mode is stated."}
+{"n":6,"class":"repo_fact","answer":"tests/ exists (50+ test_*.py, incl. test_cli.py) and pyproject.toml:28-29 defines [tool.pytest.ini_options] pythonpath=[\".\"]; `pytest tests` is meaningful (imports sldb)."}
+{"n":7,"class":"repo_fact","answer":"sldb source version is 0.1.4 (../sldb/pyproject.toml:3) with a setuptools build-system, so it is installable; ../sldb/CHANGELOG.md:5 confirms 0.1.4 is the `fields update` fix."}
+{"n":8,"class":"noise","answer":"`kgdb>=0.1.0` matches the installed 0.1.0 (kgdb-0.1.0.dist-info); `==0.1.0` is just pinning the known-good fetch. No conflict."}
+{"n":9,"class":"repo_fact","answer":"True: sldb is installed editable (site-packages/__editable__.sldb-0.1.0.pth) and kgdb 0.1.0 dist-info is present, so `python -m deskops --help` runs without exercising the new declarations."}
+{"n":10,"class":"repo_fact","answer":"Both citations correct: deskops/graph/snapshot.py:119 `from kgdb.contracts.io import GraphSnapshot`; deskops/cli/main.py:249 `from kgdb.graph import load_graph`."}
+{"n":11,"class":"noise","answer":"Done When already states the skip path: '...import check succeeds (or the missing kgdb source is reported)'."}
+{"n":12,"class":"repo_fact","answer":"File exists: runs/planning/deskops-rewrite-inventory.md; its F0b lists 'declarar `sldb`/`kgdb` en `pyproject.toml` (0,1 d)'."}

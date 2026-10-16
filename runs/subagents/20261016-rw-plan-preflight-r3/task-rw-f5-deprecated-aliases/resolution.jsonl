@@ -1,0 +1,10 @@
+{"n":1,"class":"owner_decision","answer":"Already the task's listed Open Ambiguity; task is status: blocked (desk/drawer/tasks/task-rw-f5-deprecated-aliases.md:3) pending the owner's per-duplicate alias/removal choice."}
+{"n":2,"class":"noise","answer":"Pairings are stated in the Rationale: inbox->message, status->doctor, atoms list->list atoms, atoms show->show atom (task Rationale; gen.py:1126-1128)."}
+{"n":3,"class":"owner_decision","answer":"Same listed ambiguity: 'per duplicate' already allows any mix. Closing with either outcome is valid once the owner records the per-name decision."}
+{"n":4,"class":"task_defect","answer":"Validation greps all of `desk`, but Scope only updates docs/skills/README/desk-atoms, so recommends remain in desk/drawer/use-cases/uc-01:9 and desk/drawer/stress-tests/st-01:17,st-12:17. Fix: scope desk/drawer or narrow the grep."}
+{"n":5,"class":"repo_fact","answer":"desk/drawer/tasks/task-rw-f5-output-renderer.md:3 is `status: blocked`, not closed; the dependency is unsatisfied, so this task's blocked status is correct (F5 DAG ordering)."}
+{"n":6,"class":"task_defect","answer":"Scope cites wrong lines: test_cli.py:44 is the `add task` assert (alias list is :42); test_message_cli.py:33 is the help call (deprecation assert is :35). files: also omit parser.py and those tests."}
+{"n":7,"class":"noise","answer":"Template ``Deprecated: use `deskops <canonical>` `` is given and canonical paths are fixed by the rationale; existing inbox precedent at parser.py:500,503."}
+{"n":8,"class":"noise","answer":"'run the canonical command' routes through the same handler, so exit codes follow; asserting only stdout/stderr equality is a test-detail choice."}
+{"n":9,"class":"noise","answer":"Removal is defined as argparse `invalid choice`, i.e. the name is not registered, so it cannot appear in --help; already implied by Scope."}
+{"n":10,"class":"task_defect","answer":"Scope says deprecation notes 'stay' globally; for a removed name its note is stale. Fix: state removed-name references/notes are rewritten to the canonical replacement or deleted, kept only for surviving aliases."}

@@ -1,0 +1,8 @@
+{"n":1,"class":"repo_fact","answer":"tools/repopackage exists (runs/planning/deskops-rewrite-inventory.md:85 calls it untracked) and has tests/conftest.py plus its own pyproject.toml:36-37 testpaths. A root run uses deskops' config, so testpaths=[\"tests\"] stops collecting it; no conftest.py/pytest.ini at deskops root."}
+{"n":2,"class":"repo_fact","answer":"pyproject.toml:28-30 [tool.pytest.ini_options] holds only pythonpath and asyncio_default_fixture_loop_scope; no testpaths key present."}
+{"n":3,"class":"repo_fact","answer":"No pytest.ini, tox.ini, or setup.cfg exist at the repo root; pyproject.toml is the only config source. tools/repopackage/pyproject.toml:36 has its own, but it does not apply to a root run."}
+{"n":4,"class":"noise","answer":"With testpaths both invocations collect the identical node set, so passed/skipped counts match automatically; green = exit 0."}
+{"n":5,"class":"repo_fact","answer":"Dependency is not closed: desk/drawer/tasks/task-rw-f0-declare-runtime-dependencies.md:2 is status: deferred and still listed in desk/drawer/tasks/Board.md:49. Both tasks edit pyproject.toml, so depends_on serializes them."}
+{"n":6,"class":"noise","answer":"Already stated: task Resolved Decisions says the supervisor promotes this drawer task to desk/tasks/ and commits promotion before dispatch (also AGENTS.md promotion gate)."}
+{"n":7,"class":"noise","answer":"Not reachable: tests/ contains ~45 test_*.py files; collection errors exit nonzero, so green is well defined."}
+{"n":8,"class":"noise","answer":"TOML key order is semantically irrelevant; task already specifies adding testpaths into the existing table at pyproject.toml:28-30."}

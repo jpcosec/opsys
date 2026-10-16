@@ -1,0 +1,14 @@
+{"n":1,"class":"owner_decision","answer":"Exactly the task's Open Ambiguity: delete extract_coverage.py or keep it as opt-in `deskops graph coverage`. Only the owner can pick; until it is recorded under Resolved Decisions the task stays blocked."}
+{"n":2,"class":"noise","answer":"Already stated in Scope: 'with the delete option the supervisor may drop that dependency'. The supervisor edits depends_on at promotion; not executor-facing."}
+{"n":3,"class":"repo_fact","answer":"tests/fixtures/golden/graph_snapshot.kg.json and graph_snapshot.nx.json, defined by task-rw-f1-output-golden-files (Impl Path step 3; runs/planning/rewrite-plan/gen.py:497), an F1 ancestor."}
+{"n":4,"class":"repo_fact","answer":"Repo convention is default 'text': _add_output_format_argument sets choices=('text','json'), default='text' (deskops/cli/parser.py:906-912)."}
+{"n":5,"class":"task_defect","severity":"minor","answer":"No delimiter/order specified and no repo convention for a per-match text line. Executor picks (e.g. tab or ' | ') and notes it in closeout."}
+{"n":6,"class":"repo_fact","answer":"Existing extractor serializes score as round(best.score, 2) (deskops/graph/extract_coverage.py:642); follow that. No renormalization."}
+{"n":7,"class":"repo_fact","answer":"facet = one of FACETS what/why/when/who/where/how (extract_coverage.py:14); basis = match_basis in {title, alias, tag, semantics-token} (:683,:689,:695,:700)."}
+{"n":8,"class":"repo_fact","answer":"All graph subcommands use --root default '.' ('Target repository root.'): parser.py:316 build, :322 neighbors, :327 missing, :331 reflect."}
+{"n":9,"class":"task_defect","severity":"minor","answer":"'always exits 0' covers zero matches but not a missing/non-dir root or parse failure. Sibling graph commands error and exit 1 (deskops/cli/main.py:231-233). Decide: 0 only for empty report."}
+{"n":10,"class":"noise","answer":"Task explicitly says drop the cutoff. After removing the 0.65 and 0.60 branches the lowest surviving score is alias overlap 0.70 and the test is '< 0.70', so it is dead; no replacement filter."}
+{"n":11,"class":"repo_fact","answer":"pill-010 says nothing about output format. It requires generated graph output to be ignored runtime state (.sldb/runtime/) and only small golden fixtures versioned for tests."}
+{"n":12,"class":"task_defect","severity":"minor","answer":"Done When names no check. Fix: after `deskops graph build --root .`, assert no node in .sldb/runtime/graphs/deskops.kg.json has source.provenance.extractor == 'desk_kgdb_coverage_v1'."}
+{"n":13,"class":"noise","answer":"Not a contradiction: Scope states the supervisor records the choice under Resolved Decisions and lifts blocked when promoting; the executor reads that section before starting."}
+{"n":14,"class":"noise","answer":"Standard practice: run `pytest tests` once before changes to capture the baseline; closeout compares against it. No task defect."}

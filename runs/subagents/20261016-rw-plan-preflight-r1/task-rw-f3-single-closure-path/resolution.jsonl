@@ -1,0 +1,20 @@
+{"n":1,"class":"task_defect","answer":"Real blocker: status: blocked (task line 3) and scope says don't start until the decision is recorded, but it is absent. Only the owner can pick A/B/C. Fix: record the issue-2 decision in the doc, then set status to deferred/active."}
+{"n":2,"class":"task_defect","answer":"Owner decision issue-2 (A/B/C) is not recorded. Fix: owner records A, B, or C in this task doc; each implies different CLI flags, artifacts, and doc/atom edits."}
+{"n":3,"class":"task_defect","answer":"Task says 'recorded here' but names no field/section. Fix: add a `## Decision` section or a `decision:` frontmatter field to hold the A/B/C choice."}
+{"n":4,"class":"repo_fact","answer":"Not closed: desk/drawer/tasks/task-rw-f3-atoms-service.md:3 status: deferred (it depends on task-rw-f3-tasks-service). Dependency unmet."}
+{"n":5,"class":"repo_fact","answer":"Neither exists yet. closeout_gates planned at deskops/services/closeout_gates.py (task-rw-f3-closeout-gates-service.md:11); doc_io at deskops/doc_io.py (task-rw-f2-transactional-doc-io.md:11). deskops/services/ is absent."}
+{"n":6,"class":"repo_fact","answer":"Executor role doc is desk/roles/deskops-executor.md (id: role-deskops-executor, desk/roles/deskops-executor.md:2)."}
+{"n":7,"class":"repo_fact","answer":"Likely target: desk/atoms/atom-closing-commits-are-tool-made-and-run-linked.md. Several topic:closeout atoms exist, so 'the closeout atom' is not unique."}
+{"n":8,"class":"repo_fact","answer":"advance_task is deskops/operations.py:1019. CLI dispatch is deskops/cli/commands/operations.py:277, which is NOT in the task `files` list (it lists only deskops/operations.py)."}
+{"n":9,"class":"repo_fact","answer":"'bundle' = task doc + routine + generated primitives (operations.py:1522-1534; tests/test_lifecycle_end_to_end.py:232), not a subagent run-dir. Preflight's run-dir reading is wrong."}
+{"n":10,"class":"task_defect","answer":"'same closure result' undefined. Fix: specify exit 0, task removed from Board and desk/tasks, primitives/run artifacts deleted, exactly one git commit."}
+{"n":11,"class":"task_defect","answer":"'docs describe the one path' is not checkable. Fix: require desk/rituals/closeout.md to name the single entry point and drop the other two."}
+{"n":12,"class":"task_defect","answer":"Current syntax is `advance task <id> --to complete` (cli/commands/operations.py:277). Whether it stays or deprecates is part of A/B/C (option C). Fix: decide with issue-2."}
+{"n":13,"class":"task_defect","answer":"The dir exists (runs/subagents/20260901-manual-task-fix-sldb-deskops-cli-drift-breaking-11-tests/; index.jsonl:11 run_id null). Removal/retention is unrecorded. Fix: state keep or remove."}
+{"n":14,"class":"repo_fact","answer":"Two existing formats: advance uses `closeout: <id>` + Task-Id (operations.py:1539); closeout commit adds Run-Dir/Run-Id/Session-Sha256 (closeout.py:92-98). Single path must pick one."}
+{"n":15,"class":"repo_fact","answer":"Both exist: tests/test_closeout.py (131-306: commit/verify) and tests/test_lifecycle_end_to_end.py:48-238 (advance lifecycle). They assert current 3-path behavior, so rewiring breaks them; task is silent."}
+{"n":16,"class":"repo_fact","answer":"references: [] confirmed (task line 4), but the S1 evidence trail exists at runs/planning/deskops-rewrite-inventory.md:65."}
+{"n":17,"class":"repo_fact","answer":"File exists: runs/planning/deskops-rewrite-inventory.md; S1 at :65, F3f at :158-159, owner decision at :181."}
+{"n":18,"class":"task_defect","answer":"No fallback if option B's snapshot scope exceeds the file list. Fix: add an out-of-scope note and route snapshot generation to a separate task if it lands beyond closure.py."}
+{"n":19,"class":"task_defect","answer":"Whether closeout commit still needs a run-dir is exactly the A/B/C choice (option A introduces --no-run). Fix: resolve in the issue-2 record; not independently answerable."}
+{"n":20,"class":"repo_fact","answer":"Yes: AGENTS.md:55 requires CLI/UX mutation testing in a sandbox desk (e.g. .tmp/deskops-cli-test). Task Validation lists only pytest."}
