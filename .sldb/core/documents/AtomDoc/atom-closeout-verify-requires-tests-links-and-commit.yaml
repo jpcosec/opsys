@@ -1,7 +1,13 @@
 name: atom-closeout-verify-requires-tests-links-and-commit
 path: desk/atoms/workflow-model/atom-closeout-verify-requires-tests-links-and-commit.md
-hash_c: 9b6e5a5b3712a506b738e4fe4a62330213b20c4cf64b7d9fe4d20cacc7b9576c
-hash_d: f769728c0e6621179f8f3e11edd736e12fa467ac03fcee982b67144b25e67d9a
+source_hash: 9b6e5a5b3712a506b738e4fe4a62330213b20c4cf64b7d9fe4d20cacc7b9576c
+content_hash: f769728c0e6621179f8f3e11edd736e12fa467ac03fcee982b67144b25e67d9a
+field_hashes:
+  id: 2cc55a0060139884f02930b1cb5afad1c070787918bcc470c8301b04b9e2c7c7
+  title: 8e5109472f2b3cdaf090424d5df47fda30563d8687597c75feac0d4b8d527313
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 398a2ef991cc2e856cb2189c721f5c1e75e63569221cfe4f444f0d7af125804e
+  tags: c0283e13a1dcdb4ff96cc46dc4615caac2e1c079f115cab7f2ab1c700af0fc4b
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -1,7 +1,13 @@
 name: atom-automatic-routines-vs-llm-tasks
 path: desk/atoms/workflow-model/atom-automatic-routines-vs-llm-tasks.md
-hash_c: 9812e2de129fd87dbbd1e8c7c8088cf553fa0a7b59411a4f87f57f39ceedfbff
-hash_d: 15cc9af43de0898051d76e5c56219e41c967ad2692839a9785e28e07d5ac60cc
+source_hash: 9812e2de129fd87dbbd1e8c7c8088cf553fa0a7b59411a4f87f57f39ceedfbff
+content_hash: 15cc9af43de0898051d76e5c56219e41c967ad2692839a9785e28e07d5ac60cc
+field_hashes:
+  id: 0c49c3b3883d7cd0d092df061e94050ef4f9c84c7b67b2d5f31a04fbdb4b31d0
+  title: fba43e6b915f25848791e48929adb2aa63a60a036380086a37f4070410f41a59
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: fbc69bd66f8b47a511dd88a7ef70f919e8c730c5115eab0156fedaa36a552eac
+  tags: c9e3acdcb42262e7c7edf94dbe21736eb7866b199549f7db413b7098d366c2bf
 semantic_tags:
 - representation.markdown
 - source.document.markdown

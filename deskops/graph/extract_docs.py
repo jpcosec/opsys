@@ -107,12 +107,7 @@ def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
     candidates.extend((path, "board") for path in _glob(root / "desk" / "tasks", "Board.md"))
     candidates.extend((path, "drawer_board") for path in _glob(root / "desk" / "drawer" / "tasks", "Board.md"))
     candidates.extend((path, "ritual") for path in _glob(root / "desk" / "rituals", "*.md"))
-    candidates.extend((path, "routine") for path in _glob(root / "desk" / "routines", "*.md"))
     candidates.extend((path, "step") for path in _glob(root / "desk" / "steps", "*.md"))
-    candidates.extend((path, "checklist") for path in _glob(root / "desk" / "primitives" / "checklists", "*.md"))
-    candidates.extend((path, "condition") for path in _glob(root / "desk" / "primitives" / "conditions", "*.md"))
-    candidates.extend((path, "operator") for path in _glob(root / "desk" / "primitives" / "operators", "*.md"))
-    candidates.extend((path, "edge") for path in _glob(root / "desk" / "primitives" / "edges", "*.md"))
     return candidates
 
 
@@ -187,7 +182,7 @@ def _identity_for(
     label: str,
     path: Path,
 ) -> str:
-    if kind in {"atom", "materialization", "pill", "role", "runtime_profile", "run", "task", "board", "ritual", "routine", "checklist", "step", "condition", "operator", "edge", "crossroad"} and document_id:
+    if kind in {"atom", "materialization", "pill", "role", "runtime_profile", "run", "task", "board", "ritual", "step", "crossroad"} and document_id:
         return document_id
     if kind == "issue":
         return document_id or _slugify(label) or path.stem

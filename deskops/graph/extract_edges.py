@@ -207,6 +207,10 @@ def _looks_like_reference(value: str, nodes_by_path: dict[str, Any], ids_by_name
     document references and must not be reported as unresolved targets.
     """
     candidate = value.strip()
+    if any(ch.isspace() for ch in candidate):
+        # Document ids and repo paths never hold whitespace; a value that does is prose,
+        # even when it quotes a path or a `key: value` (ritual steps often do).
+        return False
     if "/" in candidate or ":" in candidate:
         return True
     return Path(candidate).stem in ids_by_name or candidate in nodes_by_path
@@ -217,6 +221,8 @@ def _declared_reference_id(
 ) -> str | None:
     """Resolve one declared value to a node id, using the existing schemes only."""
     candidate = value.strip()
+    if any(ch.isspace() for ch in candidate):
+        return None  # prose, not a reference (see _looks_like_reference)
     if candidate in ids_by_name:
         return ids_by_name[candidate]
     node = nodes_by_path.get(candidate.removeprefix("./"))

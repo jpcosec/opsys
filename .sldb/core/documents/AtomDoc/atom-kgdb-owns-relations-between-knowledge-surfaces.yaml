@@ -1,7 +1,13 @@
 name: atom-kgdb-owns-relations-between-knowledge-surfaces
 path: desk/atoms/workflow-model/atom-kgdb-owns-relations-between-knowledge-surfaces.md
-hash_c: 6fd9f8958f1849cb2193c64ee0e7ce8dccefedf733300af3a61c4d58c2c838d7
-hash_d: fe0ccfb83f2bf007940795e94c22b0859d94d423570ad9ec2aa10a0d36a93a78
+source_hash: 6fd9f8958f1849cb2193c64ee0e7ce8dccefedf733300af3a61c4d58c2c838d7
+content_hash: fe0ccfb83f2bf007940795e94c22b0859d94d423570ad9ec2aa10a0d36a93a78
+field_hashes:
+  id: e79c4fcb303d4f6c1199d65f1e53e1ed6b784175cd7bd522ba4d64d7976b3314
+  title: 85c28f76f848c70f6dd170baf607016f0ea44ceb76db3d2d53b58cb008f147da
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 8be7f2e8b4f1ad2fa34a9686a9173c7e64692ae8007991d42fc3d8cdfd04371c
+  tags: edcf8bbdf3ca3a2e42cdafb51367748978e7d0044863e350c1ef991dd85a71ba
 semantic_tags:
 - representation.markdown
 - source.document.markdown

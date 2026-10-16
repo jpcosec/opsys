@@ -1,7 +1,13 @@
 name: atom-agents-read-by-decision-need
 path: desk/atoms/workflow-model/atom-agents-read-by-decision-need.md
-hash_c: ce391480ea0b053f6e68c29bcbba2e20c6863a569d1a34849af1b311e2c5b38c
-hash_d: 4077c62eba9806d89ee066895176e03878114f4a1314aa656a66c774bd484ba3
+source_hash: ce391480ea0b053f6e68c29bcbba2e20c6863a569d1a34849af1b311e2c5b38c
+content_hash: 4077c62eba9806d89ee066895176e03878114f4a1314aa656a66c774bd484ba3
+field_hashes:
+  id: cd8fef785cdd96b5da85ef97990d10b8a7ede30a3faca9931427ae7920e1d8e0
+  title: db7bb3acae39cf4ce2cb2b273056aefee52348f34509e1acfde1724f74b7c47f
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 32e8fa6cfc99867e5a3a55999e2624ace1cdb4c006b0dab9a83eebc99590f46b
+  tags: 79609714053fcc29495891ec255f7d595dfd4064472f00baf1e83b0f98073788
 semantic_tags:
 - representation.markdown
 - source.document.markdown

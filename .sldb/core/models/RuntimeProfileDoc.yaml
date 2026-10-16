@@ -3,9 +3,9 @@ model_ref: deskops.models:RuntimeProfileDoc
 path: deskops/models/runtime_profile.py
 documents_index: .sldb/core/documents/RuntimeProfileDoc.yaml
 sections_index: .sldb/runtime/sections/RuntimeProfileDoc.yaml
-model_hash: c27fdf5ddb5187e4021575f1a09fb9be5aaab1391aac08f72cbf78d16973729c
+model_hash: 82b4968a5cb9ea7a2dd187bd2e79b2b7ac94ce66bf898e97e579319a1a266c89
 roster_hash: b37b0f319d3a7d3a3ca607a41686ffad8f38b79692af7bffeabb8f3924b1b6ee
-contract_hash: 14bd58418871aa69e2881da4241d510e873401d34fb27d1567ae16303c32e6ee
+contract_hash: f4661520a0e3fd50c4115ad314b6aaf3d9d33f70cfde125ea444232532370934
 documents_count: 2
 version: 1
 canonical: false

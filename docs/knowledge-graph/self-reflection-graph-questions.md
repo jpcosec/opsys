@@ -83,7 +83,7 @@ Later automation may create:
 
 ID: `unlinked-source-files`
 
-This asks whether implementation source files exist as `source_file` nodes but have no graph relationship to atoms, tasks, issues, specs, docs, commands, primitives, tests, or configuration surfaces.
+This asks whether implementation source files exist as `source_file` nodes but have no graph relationship to atoms, tasks, issues, specs, docs, commands, rituals, tests, or configuration surfaces.
 
 Graph pattern:
 

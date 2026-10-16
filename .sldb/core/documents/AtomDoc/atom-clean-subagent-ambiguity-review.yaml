@@ -1,7 +1,13 @@
 name: atom-clean-subagent-ambiguity-review
 path: desk/atoms/workflow-model/atom-clean-subagent-ambiguity-review.md
-hash_c: 573f0abd0450ded351dc5c2f382d09af9ff5d5e92ee439406631b518fc9cdfe1
-hash_d: d1ff6863cfc397100cfddee3b424c0ef288ca1bc5b6ec2f00fe3f5c3f2b9969e
+source_hash: 573f0abd0450ded351dc5c2f382d09af9ff5d5e92ee439406631b518fc9cdfe1
+content_hash: d1ff6863cfc397100cfddee3b424c0ef288ca1bc5b6ec2f00fe3f5c3f2b9969e
+field_hashes:
+  id: 823e9b71faf24a28545b49cfba19e0a62e98e05f8a45e855daebc04fd8d23058
+  title: 10399d4f338cda4674840d5be4161be6032776fd2ba6db90ef8fa80fceb90567
+  five_wh_one_plus: 6d924791a1798656302bd4b9716a494a0c5f7f55ad9ceebf629dfb2317e86078
+  answer: 8c94571d6c02f6b91c024453ac3074ec408edafc2d46305af9dd6d772282a43e
+  tags: 1335ef802489bc7613875de84977f53cbabad1521217dff90498d4e8bcfb30a2
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -1,7 +1,14 @@
 name: repo-deskops
 path: desk/registry/repo-deskops.md
-hash_c: c8ecdad160838d0b067fd9c704c9a6c174ab48ebf5f30c4084d4c97a1905c686
-hash_d: 02ce109cc1db66ec964b28b3142227d143dd82be35a085d0e25698c06214740b
+source_hash: c8ecdad160838d0b067fd9c704c9a6c174ab48ebf5f30c4084d4c97a1905c686
+content_hash: 02ce109cc1db66ec964b28b3142227d143dd82be35a085d0e25698c06214740b
+field_hashes:
+  name: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  id: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  path: 7299b59de0b5dad3b622afc3bdf57544e505249c77a6d4254bd14b1fc9a4ade8
+  status: db0fb2bf5ebc424454c3e11b5ee8bfb43af24a52e561aa49e94143831dc6fd93
+  description: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown
 - source.document.markdown

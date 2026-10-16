@@ -1,7 +1,17 @@
 name: pill-machine-readable-cli-output-needs-stable-contract
 path: desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md
-hash_c: 2feeb224f2ba4ec65fb70b20897bb8b6eb4a840c141de92f22d2efd4423e382d
-hash_d: 22d9c21784f529ffcff311a4260fd2f152900a970f8e3a11cbfa1a2007f445f0
+source_hash: 2feeb224f2ba4ec65fb70b20897bb8b6eb4a840c141de92f22d2efd4423e382d
+content_hash: 22d9c21784f529ffcff311a4260fd2f152900a970f8e3a11cbfa1a2007f445f0
+field_hashes:
+  title: 96806e15d62e980a3edc7d186760b0aa8d718edcb77e3503eaae5403424e5373
+  id: 84cd5f5dfe15a0ff8b50a3e05f97b96f22d8751b3a51f42a777fb0e9591219ed
+  tags: d84b41b0f49503242e1728c849ac56744b4e7e88a14a587d928dbc4db4bede57
+  what: af803e3a6913928fdb9f078474de3dd134ebfebf4766ac3eed8147014bad01fd
+  why: 42be84a7e6771ff39e65d001ca1b29c36e389d29aa57f925e892002826af1990
+  when: 5240bad7fb7406722880ffec1449609c91e597b59c4c757c596bc6277e61cd0e
+  where: 4e4435f4b4a5e9a674da7b9fa98978a86a22687a4f9e19d451774bed16fa3db3
+  how: 8b1ca90687000310aaa450be60b2287d78714022ac9dcead5a865cf8592bf9d2
+  how_not: 71df2b2716b9462b85187cc8ba7cbc3ba146ae21fd2bddf750b896ee65544b19
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

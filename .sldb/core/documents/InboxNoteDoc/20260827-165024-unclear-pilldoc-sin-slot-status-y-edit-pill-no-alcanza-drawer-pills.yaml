@@ -1,7 +1,17 @@
 name: 20260827-165024-unclear-pilldoc-sin-slot-status-y-edit-pill-no-alcanza-drawer-pills
 path: desk/inbox/20260827-165024-unclear-pilldoc-sin-slot-status-y-edit-pill-no-alcanza-drawer-pills.md
-hash_c: 487bf0bd4ee1c13f83ddf4c79fe6b694fbf810bc4a9961657ed84dca18b06b94
-hash_d: 169d1aad9b82f8aa155dbd90f52aee5b37341a49811faba0be88a4549d3c74df
+source_hash: 487bf0bd4ee1c13f83ddf4c79fe6b694fbf810bc4a9961657ed84dca18b06b94
+content_hash: 169d1aad9b82f8aa155dbd90f52aee5b37341a49811faba0be88a4549d3c74df
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: 2d616531e5860ccb5d1f5ccc0419dac8756a6ff60d427e80ac52725280ba9507
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: d2a2bf54ee884bfa5eebcff4f134eacbd1a5f6d0dd7c9081e16c104543d8c23a
+  status: 02e31f51aa8b1b6a622c4f7c30fab328d711cad4c9da74b9965ada8aa15d9df2
+  acknowledged_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  acknowledged_at: d7bacf16dfd811d8ed4989bfb0f0110aae48844bdde7cd903b9246f08d7b8b54
+  title: 26dc569bdcee30f3fb99342e17b15ccb7926627cbd209f5e87e03b2043eb292f
+  body: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -1,7 +1,13 @@
 name: atom-hook-automation-can-be-powerful-but-opaque
 path: desk/atoms/atom-hook-automation-can-be-powerful-but-opaque.md
-hash_c: 2cabe513dff81f73f6961bb9e2c6a656d5adb48192cb3728609ffaec5daea0ef
-hash_d: 1de87fafd5567738538cc2fd1d72765bc23e6011071044d4e8e6d0d4f96238fa
+source_hash: 2cabe513dff81f73f6961bb9e2c6a656d5adb48192cb3728609ffaec5daea0ef
+content_hash: 1de87fafd5567738538cc2fd1d72765bc23e6011071044d4e8e6d0d4f96238fa
+field_hashes:
+  id: d94588787253ff3aae663b31d8bfa01a0702b79586084223c88a0eab4d6b4e98
+  title: dc074adfc31b53f940d13de566aca003df6c5c41f57d6e25077037bb425f0f8a
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: a2412d22ac7e14a31704abffa350b2bcddca88bc9191d6ea93b700b327d72ac9
+  tags: 03f248bebab9d61148e8e23d7a79285d1009d814f67da59472dfeef88e554171
 semantic_tags:
 - representation.markdown
 - source.document.markdown

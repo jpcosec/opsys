@@ -1,7 +1,13 @@
 name: atom-inbox-is-coordination-intake
 path: desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md
-hash_c: 1a9dd7b688aadbc40a1f9bae6abf119dec0923f5ff16703e2596853ad8f78ac4
-hash_d: bf5015300fa9905274b2bad9763ef8272f7c19d096f7794611dd54f6606122fb
+source_hash: 1a9dd7b688aadbc40a1f9bae6abf119dec0923f5ff16703e2596853ad8f78ac4
+content_hash: bf5015300fa9905274b2bad9763ef8272f7c19d096f7794611dd54f6606122fb
+field_hashes:
+  id: 1e246c55645715465d51735c9a7348676ccd4252bbcf1dd4083f4ea2192b3fbd
+  title: e67bff79f1eb57fda2cd32f5577326088632acd8849230e2ad1b471d02f87358
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 104573ce6654bda1e44935bfc61a698c5f58c725501302780f91ec0336b39ed9
+  tags: 9cd4be7aa8cad5a4e38f210ec26f6198f7873744cab945f459e1bcb807e4794d
 semantic_tags:
 - representation.markdown
 - source.document.markdown

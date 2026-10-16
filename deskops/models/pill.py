@@ -10,7 +10,6 @@ class PillDoc(OperationalArtifactDoc):
 id: ⸢rev•id⸥
 status: ⸢optrev•status⸥
 summary: ⸢optrev•summary⸥
-routine: ⸢optrev•routine⸥
 current_node: ⸢optrev•current_node⸥
 history: ⸢optrev,list•history⸥
 # e.g., language:python, library:pydantic
@@ -63,7 +62,6 @@ _Describe the shortcut or failure mode to avoid._
     id: str = Field(description="Stable pill identifier.")
     status: str | None = Field(default=None, description="Pill lifecycle status.")
     summary: str | None = Field(default=None, description="Short semantic summary for the pill.")
-    routine: str | None = Field(default=None, description="Primary routine identifier that makes the pill actionable.")
     current_node: str | None = Field(default=None, description="Current node in the operational routine.")
     history: list[str] | None = Field(default=None, description="Operational transition history.")
     what: str = Field(description="What the pill defines or clarifies.")

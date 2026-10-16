@@ -1,7 +1,13 @@
 name: atom-routine-based-task-execution
 path: desk/atoms/workflow-model/atom-routine-based-task-execution.md
-hash_c: d68b37c08f93e20817f20017266f54924c55facc3de0fe7b56f9c88f82343a0b
-hash_d: e55bab29c1203f8763c9e574baab93c690ff14c76fa75717167414a462085eb5
+source_hash: fce6ff29a98d3e8e82ac3ea618b3883593c454da38a806dab856383826f7c8dd
+content_hash: 2b4b92066a2a0a514203d52ab6bf8ca6e28e1d7c44851ca206d63fb1490ee778
+field_hashes:
+  id: abbe819476e3dfe0d154cdebb9920e12d8180beff9acc14039a8eb19d6e57d4f
+  title: 8fc3c0ae3ff520943848d4a22b0f3258d0b858e3cc9eb1fb669fa0a3d188d911
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: d8b050727de0bd7934d557b99e34aec1253fef24c2b46905d47eafdb61d3a461
+  tags: a77f9ee4cc46ae860503f48bb24416f8515d6d5568bc7587636ce6c825fa0343
 semantic_tags:
 - representation.markdown
 - source.document.markdown

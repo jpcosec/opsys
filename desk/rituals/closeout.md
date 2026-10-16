@@ -1,21 +1,33 @@
 ---
+# ritual-xxx
 id: ritual-closeout
-tags:
-- system:sldb
-- workspace:desk
-- topic:rituals
-- topic:closeout
+# List of step-xxx paths
 steps:
 - 1. Confirm the incoming handoff includes passing evidence for the contract, validations,
   and bound pills.
 - 1. Invalidate or fix stale tests if they no longer prove the intended behavior.
 - 1. Run the required validation commands and confirm they pass.
+- 1. Run `deskops closeout verify --task <id>` and require all reported gates to pass
+  before the tool-made commit.
 - 1. Confirm the task satisfied each bound pill and that no matching board-routed
   pill was missed during execution.
+- 1. If the task bound pills, check whether the task `references` list already points
+  to an atom that captures any durable residue; tasks with no bound pills pass this
+  check trivially.
+- 1. If verify reports a changed file with no live atom/materialization link, route
+  that gap into an explicit follow-up reference before closing.
+- 1. If verify reports a rendered artifact with a sibling source but no declared `source_atoms`
+  or `provenance`, fix the artifact metadata before closing.
 - 1. Remove stale context docs that are no longer needed.
 - 1. Untrack the task document from the local store if it is tracked.
 - 1. Delete the resolved task file and remove it from the board.
 - 1. Create one atomic closing commit for the task as the mandatory final gate.
+# e.g., layer:workflow, system:sldb
+tags:
+- system:sldb
+- workspace:desk
+- topic:rituals
+- topic:closeout
 ---
 
 # Closeout ritual for tracked desk tasks
@@ -76,18 +88,6 @@ _Describe what completion looks like._
 
 The task has left the active workspace and its closure is recorded by its own git commit. If it was the last open task in the current phase, the board must still pass through phase closeout before the next phase begins.
 
-## Steps
+## Step Details
 
-- Confirm the incoming handoff includes passing evidence for the contract, validations, and bound pills.
-- Invalidate or fix stale tests if they no longer prove the intended behavior.
-- Run the required validation commands and confirm they pass.
-- Run `deskops closeout verify --task <id>` and require all reported gates to pass before the tool-made commit.
-- Confirm the task satisfied each bound pill and that no matching board-routed pill was missed during execution.
-- If the task bound pills, check whether the task `references` list already points to an atom that captures any durable residue; tasks with no bound pills pass this check trivially.
-- If verify reports a changed file with no live atom/materialization link, route that gap into an explicit follow-up reference before closing.
-- If verify reports a rendered artifact with a sibling source but no declared `source_atoms` or `provenance`, fix the artifact metadata before closing.
-- Remove stale context docs that are no longer needed.
-- Untrack the task document from the local store if it is tracked.
-- Delete the resolved task file and remove it from the board.
-- Create one atomic closing commit for the task as the mandatory final gate.
-
+_Generated from the step references above._

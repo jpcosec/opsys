@@ -1,7 +1,13 @@
 name: atom-reverse-traceability-is-derived
 path: desk/atoms/knowledge-model/atom-reverse-traceability-is-derived.md
-hash_c: 104efec61bafabd0e954e1b8202bce413c43e9032d9b177de4182c945b94958a
-hash_d: 84cb8e1cccfa273627aacbcf8db2aa19645184fffb726475a9c94ac6eba5b0df
+source_hash: 104efec61bafabd0e954e1b8202bce413c43e9032d9b177de4182c945b94958a
+content_hash: 84cb8e1cccfa273627aacbcf8db2aa19645184fffb726475a9c94ac6eba5b0df
+field_hashes:
+  id: 3ff13b15b5bc97ddda4e265175b16bbc0bf4e07af620025b8a7af1d4d81f65f1
+  title: 095bbdb4e52f8ecd76aa499388dad3915f8cef148a901f3af0036fa561eaab89
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: a37d249030b343270666fb724c513216991538d4007685e72ebba0e10dfe31a6
+  tags: 77b3543dc637e0ff34818f775a02a3f992ef3920361790a9a0683fd7c276d95f
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -97,7 +97,7 @@ flowchart TB
 - `Issues`: loosely structured problem detections under `drawers/issues`.
 - `Inbox`: cross-project coordination surface for requirements, questions, and bugs from external projects.
 - `Boards`: indexes for folders. For `tasks`, a board acts as routing structure, stack, or heap for ordering active work.
-- `Rituals`: current textual descriptions of operating process. They should eventually be decomposed into routines and hooks.
+- `Rituals`: current textual descriptions of operating process. The lifecycle rituals are also the states of the task lifecycle graph in sldb; stable obligations can become transition conditions.
 - `Routines`: target representation for stateful ways of working.
 - `Hooks`: target representation for process fragments that run before or around specific operations.
 

@@ -4,17 +4,11 @@ import pytest
 
 from deskops.models import AtomDoc
 from deskops.models import BoardDoc
-from deskops.models import ChecklistDoc
-from deskops.models import ConditionDoc
-from deskops.models import EdgeDoc
 from deskops.models import FAQDoc
-from deskops.models import HookDoc
 from deskops.models import InboxNoteDoc
-from deskops.models import OperatorDoc
 from deskops.models import PillDoc
 from deskops.models import RepositoryDoc
 from deskops.models import RitualDoc
-from deskops.models import RoutineDoc
 from deskops.models import RunDoc
 from deskops.models import RuntimeProfileDoc
 from deskops.models import StepDoc
@@ -50,62 +44,10 @@ MODEL_PAYLOADS = [
         },
     ),
     (
-        ChecklistDoc,
-        {
-            "id": "checklist-template-test",
-            "title": "Template Checklist",
-            "status": "active",
-            "summary": "Checks template behavior.",
-            "items": ["Render", "Extract"],
-            "condition_refs": ["condition-template-test"],
-            "mode": "all",
-            "tags": ["topic:templates"],
-        },
-    ),
-    (
-        ConditionDoc,
-        {
-            "id": "condition-template-test",
-            "title": "Template Condition",
-            "status": "active",
-            "summary": "Checks a field value.",
-            "subject": "status",
-            "predicate": "equals",
-            "expected": "active",
-            "tags": ["topic:templates"],
-        },
-    ),
-    (
-        EdgeDoc,
-        {
-            "id": "edge-template-test",
-            "title": "Template Edge",
-            "status": "active",
-            "summary": "Connects two nodes.",
-            "source": "node-a",
-            "target": "node-b",
-            "condition_ref": "condition-template-test",
-            "tags": ["topic:templates"],
-        },
-    ),
-    (
         FAQDoc,
         {
             "title": "Template FAQ",
             "body": "How does it work?\n\nIt roundtrips fixed text safely.",
-        },
-    ),
-    (
-        HookDoc,
-        {
-            "id": "hook-template-test",
-            "title": "Template Hook",
-            "status": "active",
-            "summary": "Invokes an operator.",
-            "event": "task.closed",
-            "target": "operator-template-test",
-            "condition_ref": "condition-template-test",
-            "tags": ["topic:templates"],
         },
     ),
     (
@@ -120,19 +62,6 @@ MODEL_PAYLOADS = [
             "acknowledged_at": None,
             "title": "Template Inbox Note",
             "body": "Capture enough evidence to triage this note.",
-        },
-    ),
-    (
-        OperatorDoc,
-        {
-            "id": "operator-template-test",
-            "title": "Template Operator",
-            "status": "active",
-            "summary": "Sets the task status.",
-            "action": "set_field",
-            "target": "status",
-            "value": "closed",
-            "tags": ["topic:templates"],
         },
     ),
     (
@@ -176,20 +105,6 @@ MODEL_PAYLOADS = [
         },
     ),
     (
-        RoutineDoc,
-        {
-            "id": "routine-template-test",
-            "title": "Template Routine",
-            "status": "active",
-            "summary": "Coordinates template checks.",
-            "entrypoint": "checklist-template-test",
-            "decomposition": ["checklist-template-test"],
-            "edges": ["edge-template-test"],
-            "terminal_nodes": ["done"],
-            "tags": ["topic:templates"],
-        },
-    ),
-    (
         StepDoc,
         {
             "id": "step-template-test",
@@ -212,9 +127,7 @@ MODEL_PAYLOADS = [
             "depends_on": [],
             "pills": ["pill-template-test"],
             "files": ["deskops/models/task.py"],
-            "routine": "routine-template-test",
-            "checklists": ["checklist-template-test"],
-            "current_node": "checklist-template-test",
+            "current_node": "ritual-testing",
             "history": [],
             "implementation_path": "Edit the task template.",
             "validation": ["pytest tests/test_model_templates.py"],
@@ -328,7 +241,6 @@ def test_pilldoc_lifecycle_roundtrip():
         tags=["system:test"],
         status="active",
         summary="sum",
-        routine="rout",
         current_node="cur",
         history=["a", "b"]
     )
@@ -339,7 +251,6 @@ def test_pilldoc_lifecycle_roundtrip():
     assert parsed["id"] == "pill-abc"
     assert parsed["status"] == "active"
     assert parsed["summary"] == "sum"
-    assert parsed["routine"] == "rout"
     assert parsed["current_node"] == "cur"
     assert parsed["history"] == ["a", "b"]
     assert parsed["tags"] == ["system:test"]

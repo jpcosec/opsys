@@ -1,7 +1,17 @@
 name: pill-legacy-desk-formats-need-explicit-adaptation
 path: desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
-hash_c: b2deb641a4dd628d932ecffaabc95777f33939c59f261bcacdd77dd96ce2d8fd
-hash_d: ead4bd7bf8cd64437064e130034b52838dc86ff29afdb678bff6a88cf0e9382e
+source_hash: b2deb641a4dd628d932ecffaabc95777f33939c59f261bcacdd77dd96ce2d8fd
+content_hash: ead4bd7bf8cd64437064e130034b52838dc86ff29afdb678bff6a88cf0e9382e
+field_hashes:
+  title: 7065097ca54e07399f937d7b35038e052d033b013cef537b8bd4eeb594a16925
+  id: 01e31e198f888613c2dbfa1d1b408eb451f6c87bc5ddb5986cd7d79dc0165673
+  tags: f8b4f1cad9d30b49a7a1d653f2974e54d0ae45bd775d07a3b330b37631877088
+  what: 334b6a068c1950bc7b9532df359b77e23a9d1f21c1cbc7d52a05b57835ca7382
+  why: be1860a201d2484a55f1a2e89124649851243b9580eb3667fcec2dd85fc003e3
+  when: 9642935cabdd63641d27bf1c4a846343e654579d1d39c2ead95f505773168f27
+  where: 7f883fded22642365b56538db1f514c5bfc8f05e570f8614bc76b156047e1000
+  how: 6ef853ad62eefd2874466f93f5b6aeaa8670fe01dd899c082045c6655a642a29
+  how_not: ccb35b5667a3a8dab77e1494fc4495342fa085dc0da0120b9b9ddb0a33d0e1ec
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

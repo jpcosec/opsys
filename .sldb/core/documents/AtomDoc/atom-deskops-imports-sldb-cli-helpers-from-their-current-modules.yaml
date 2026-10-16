@@ -1,7 +1,13 @@
 name: atom-deskops-imports-sldb-cli-helpers-from-their-current-modules
 path: desk/atoms/atom-deskops-imports-sldb-cli-helpers-from-their-current-modules.md
-hash_c: 408a3840329b2763730a4c6374a1e0634e66b16faa8ce90a38fbd493eb9c5e31
-hash_d: f473dae93f00ef223eb5cbcdc5407acb0351bcb01634494ac2fe8c9507929a3b
+source_hash: 408a3840329b2763730a4c6374a1e0634e66b16faa8ce90a38fbd493eb9c5e31
+content_hash: f473dae93f00ef223eb5cbcdc5407acb0351bcb01634494ac2fe8c9507929a3b
+field_hashes:
+  id: 675fa8b27b36fbb5675007cb75194511552a2a845cacb531c3e2c5738941d0d0
+  title: ed950f9f5f71ea1411052074cf22beac04930360217a2c5ef8f513ada4e71c36
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 1907d18e2c6c6fadb8daf624b354fd240cd81ab819fb80b426d309f541c23f63
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown
 - source.document.markdown

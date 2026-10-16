@@ -30,7 +30,7 @@ Node kinds are lower-case strings stored as `kind`. The first vocabulary uses fi
 | `doc` | Durable human-facing Markdown document that is not a spec, diagram, task, issue, atom, or ritual. | Repository-relative path. |
 | `diagram` | Rendered or source diagram document, including Mermaid-backed diagram docs. | Repository-relative path. |
 | `spec` | Contract/specification artifact under `spec/` or docs that explicitly define expected structure or behavior. | Repository-relative path plus spec id when present. |
-| `primitive` | Operational primitive or runtime behavior unit exposed by deskops. | Repository-relative path plus primitive name when available. |
+| `ritual` | Process/state document under `desk/rituals/`, including the task-lifecycle states. | Ritual `ID` field. |
 | `sldb_model` | SLDB model or document schema used as graph input. | Model name or repository-relative `.sldb` path. |
 | `cli_command` | User-facing deskops command surface. | Command token path, for example `deskops atoms check-tags`. |
 | `source_file` | Implementation source file that is not primarily a test or config file. | Repository-relative path. |
@@ -51,7 +51,7 @@ Path identities are normalized before prefixing:
 - Remove redundant `.` path segments.
 - Do not add a trailing slash.
 
-Identifier stability follows the identity source. Nodes backed by explicit ids remain stable across file moves as long as the explicit id remains unchanged. Path-backed nodes intentionally change id when the project-root-relative path changes; a future graph migration or equivalence edge may record continuity, but this vocabulary does not create aliases. Command-token ids change when the user-facing command path changes. Primitive ids change when the primitive's declared name changes, or when a path-only primitive moves and has no declared name.
+Identifier stability follows the identity source. Nodes backed by explicit ids remain stable across file moves as long as the explicit id remains unchanged. Path-backed nodes intentionally change id when the project-root-relative path changes; a future graph migration or equivalence edge may record continuity, but this vocabulary does not create aliases. Command-token ids change when the user-facing command path changes. Ritual ids change when the ritual's declared `ID` changes.
 
 | Kind | Identifier format | Example |
 |---|---|---|
@@ -61,14 +61,14 @@ Identifier stability follows the identity source. Nodes backed by explicit ids r
 | `doc` | `doc:<project-relative-path>` for durable Markdown docs that are not a more specific kind. | `doc:docs/knowledge-graph/desk-source-graph-vocabulary.md` |
 | `diagram` | `diagram:<project-relative-path>` for diagram source or rendered diagram docs. | `diagram:docs/diagrams/codebase/codebase-knowledge-surfaces.mmd` |
 | `spec` | `spec:<project-relative-path>` plus `#<spec-id>` only when the file carries multiple explicit specs. | `spec:spec/artifacts/atom.yaml` |
-| `primitive` | `primitive:<project-relative-path>#<primitive-name>` when the primitive has a declared name; otherwise `primitive:<project-relative-path>`. | `primitive:deskops/runtime/primitives.py#materialize_atom` |
+| `ritual` | `ritual:<ritual-id>` from the ritual `ID` field. | `ritual:ritual-execution` |
 | `sldb_model` | `sldb_model:<model-name>` for declared SLDB models; use `sldb_model:<project-relative-path>` only when no model name exists. | `sldb_model:AtomDoc` |
 | `cli_command` | `cli_command:<space-separated-command-token-path>` using the user-facing command path. | `cli_command:deskops atoms check-tags` |
 | `source_file` | `source_file:<project-relative-path>` for implementation source files that are not primarily tests or config. | `source_file:deskops/operations.py` |
 | `test_file` | `test_file:<project-relative-path>` for test source files. | `test_file:tests/test_atom_materialization.py` |
 | `config_file` | `config_file:<project-relative-path>` for configuration, registry, or policy files. | `config_file:desk/atoms/tag-namespaces.yaml` |
 
-Symbol-level ids are out of scope. The `#<primitive-name>` suffix is allowed only for named operational primitives because `primitive` is already a node kind in this vocabulary; it does not authorize general function, class, method, or variable nodes.
+Symbol-level ids are out of scope: no node kind allows a `#` suffix, and ids do not authorize general function, class, method, or variable nodes.
 
 ## Edge Roles
 
@@ -100,8 +100,8 @@ Do not emit duplicate inverse edges for convenience. KGDB traversal should answe
 | `validates` | Validation | Validation evidence -> claim, atom, task, source file, or behavior it validates. | `test_file` | `atom` | Test marker, explicit validation metadata, or task validation list. | Test name or assertion text that names the target. | yes |
 | `tests` | Validation | Test file -> source file, command, or behavior under test. | `test_file` | `source_file` | Test import, fixture target, or explicit test metadata. | Test filename matching source filename. | no |
 | `violates` | Validation | Conflicting artifact -> claim, atom, spec, or policy it violates. | `issue` | `spec` | Explicit issue, finding, diagnostic, or check result naming the violated target. | Content scan that detects likely conflict language. | no |
-| `invokes` | Operation | Caller, task, doc, or command -> command or primitive it invokes. | `task` | `cli_command` | Task instruction, CLI registry, script call, or command documentation. | Content scan for command-shaped text. | yes |
-| `defines` | Operation | Defining artifact -> model, primitive, command, schema, tag namespace, or vocabulary item it defines. | `config_file` | `sldb_model` | Schema file, registry, model file, or vocabulary document. | Path convention under a known definition directory. | yes |
+| `invokes` | Operation | Caller, task, doc, or command -> command it invokes. | `task` | `cli_command` | Task instruction, CLI registry, script call, or command documentation. | Content scan for command-shaped text. | yes |
+| `defines` | Operation | Defining artifact -> model, ritual, command, schema, tag namespace, or vocabulary item it defines. | `config_file` | `sldb_model` | Schema file, registry, model file, or vocabulary document. | Path convention under a known definition directory. | yes |
 | `routes` | Operation | Board/index/workflow surface -> task or issue it routes. | `doc` | `task` | Board row, index entry, or routing metadata. | Path convention inside an active task directory. | yes |
 | `configures` | Operation | Config file or setting surface -> runtime/source/command surface it configures. | `config_file` | `cli_command` | Config key, registry entry, or documented setting target. | Content scan that associates a setting with a target name. | no |
 

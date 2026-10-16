@@ -1,7 +1,13 @@
 name: atom-git-history-is-the-past
 path: desk/atoms/workflow-model/atom-git-history-is-the-past.md
-hash_c: b29f670404907217c123ade4225703c963e9904c68476a51023854e3f5e799ea
-hash_d: 4a4a77c86162f9921e60d1790925bbfbb0306bf0f9d13c1cc148c26cdb0cc416
+source_hash: b29f670404907217c123ade4225703c963e9904c68476a51023854e3f5e799ea
+content_hash: 4a4a77c86162f9921e60d1790925bbfbb0306bf0f9d13c1cc148c26cdb0cc416
+field_hashes:
+  id: 52991b0d61d049daa0d80895d4c5ec6d3b5cecd35cbb98b132984b872273af8e
+  title: d60124194fce44cc95cfe457d7775a229661db953a1064541c286df407f5af35
+  five_wh_one_plus: 43f94244d00ce4813a89d3c0d15e1842fe2cfd95ce9fe3b063dda9e7983e0063
+  answer: fa23afc243d592d828f027f259b3f2ec3a1dba868a928391d016ef3dbe7818d9
+  tags: 36f93d2066bf13c4fc9ef5e6e3f36917b47a608deafeb294be75d6a66a45169d
 semantic_tags:
 - representation.markdown
 - source.document.markdown

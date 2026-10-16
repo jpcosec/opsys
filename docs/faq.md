@@ -56,7 +56,7 @@ Supported artifact types:
 
 | Subject | Description | Key flags |
 |---|---|---|
-| `task` | Actionable task bundle with routine | `--title`, `--goal`, `--scope` |
+| `task` | Actionable task, walked through the desk's lifecycle graph | `--title`, `--goal`, `--scope` |
 | `pill` | Reusable context document | `--title`, `--what`, `--why` |
 | `ritual` | Repeatable procedure template | `--title`, `--purpose`, `--steps` |
 | `board` | Task coordination surface | `--title`, `--scope`, `--purpose` |
@@ -65,12 +65,6 @@ Supported artifact types:
 | `inbox-note` | Incoming project message | `--kind`, `--title`, `--body` |
 | `faq-doc` | FAQ entry | (spec-defined flags) |
 | `step` | Procedure step | `--title`, `--action`, `--outcome` |
-| `condition` | Primitive: predicate guard | `--title`, `--subject`, `--predicate` |
-| `operator` | Primitive: state transition | `--title`, `--action`, `--target` |
-| `checklist` | Primitive: completion items | `--title`, `--items`, `--mode` |
-| `hook` | Primitive: side-effect trigger | `--title`, `--event`, `--target-ref` |
-| `edge` | Primitive: routine graph edge | `--title`, `--source`, `--target-node` |
-| `routine` | Primitive: procedure graph | `--title`, `--entrypoint`, `--decomposition` |
 
 **List artifacts** — `deskops list <artifacts>`
 
@@ -82,7 +76,6 @@ deskops list atoms
 deskops list pills
 deskops list inbox-notes
 deskops list repositories
-deskops list conditions
 ...
 ```
 
@@ -98,7 +91,7 @@ deskops show repository repo-deskops
 
 **Advance tasks** — `deskops advance task <task-id>`
 
-Walks a task through its routine: evaluates current checklists, checks edge conditions, and transitions to the next node via the matching operator.
+Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
 
 **Promote inbox notes** — `deskops promote inbox-to-drawer-task <selector>`
 
@@ -108,7 +101,7 @@ Moves a project-addressed message into the drawer as a loose, deferred candidate
 deskops promote inbox-to-drawer-task <inbox-note-selector>
 ```
 
-There is no promotion from the drawer to an active task. The drawer holds loosely shaped material; an active task is a compiled bundle (task, routine, conditions, checklists, operators, edges) routed by the board. A drawer item becomes active work only when someone authors the task explicitly. `--from-drawer` records the drawer file in the task's own `from_drawer` field, which later edits to `references` cannot overwrite; the drawer file itself is kept and cleaned up by hand:
+There is no promotion from the drawer to an active task. The drawer holds loosely shaped material; an active task is a fully authored task document routed by the board. A drawer item becomes active work only when someone authors the task explicitly. `--from-drawer` records the drawer file in the task's own `from_drawer` field, which later edits to `references` cannot overwrite; the drawer file itself is kept and cleaned up by hand:
 
 ```
 deskops add task --root . --from-drawer <drawer-selector> --title "..." --goal "..." --scope "..." --validation "..."

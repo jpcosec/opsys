@@ -1,7 +1,13 @@
 name: atom-drawers-feed-tasks-through-promotion
 path: desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md
-hash_c: ecebb906b4645747a0379b98ec3c53252ffb89fdf6d32bb8c6e44c438b2b38b9
-hash_d: ad82757440f017cd74190f88165c155305133d49671068250779b2be7288a61b
+source_hash: ecebb906b4645747a0379b98ec3c53252ffb89fdf6d32bb8c6e44c438b2b38b9
+content_hash: ad82757440f017cd74190f88165c155305133d49671068250779b2be7288a61b
+field_hashes:
+  id: 63a40389fa955de4240aab56c849032897e336ecfbc550a3a26b014e2885c672
+  title: 5e7597ced0b6ce66c8be2e3169363c9b07b1c9f691e5d3d99e45317edc415976
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 085e5205e48b739426ebffeaa4a83276b6099649238d92179f8b1271196ce9b7
+  tags: f168e89c97aa7495d48fbb57e22ba1fe72efc5890e9d532d97ea0efa03cab026
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -3,9 +3,9 @@ model_ref: deskops.models:CrossroadDoc
 path: deskops/models/crossroad.py
 documents_index: .sldb/core/documents/CrossroadDoc.yaml
 sections_index: .sldb/runtime/sections/CrossroadDoc.yaml
-model_hash: ae1adb4f64ba55a7d9233c11b80ecde4ed1c58e35bc3ba9aadf7b1357d179a72
+model_hash: ba29f386ac77dd0337746088fa7ff695f737d6eae02441aadb7c36b22b1967a6
 roster_hash: d713037e9b917aa8eaad2066240ed3b1f9dbcefd9224bddb54d5dc2628cbd568
-contract_hash: ad32f99770aeaa6d7839bb83cd72feea42e7f81789d5dcb6e7f94e0ebc9acca5
+contract_hash: f1cb8901cf0b6375518de54bbd527963dd396e071243e9d8e2f15f9142ab971d
 documents_count: 1
 version: 1
 canonical: false

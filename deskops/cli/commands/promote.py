@@ -13,8 +13,8 @@ class PromoteCLI:
     """Promote inbox notes into loose drawer candidates.
 
     There is deliberately no drawer -> active task promotion. The drawer holds
-    disorganized, loosely shaped material; an active task is a compiled bundle
-    (TaskDoc, routine, conditions, checklists, operators, edges, board route).
+    disorganized, loosely shaped material; an active task is a fully authored
+    TaskDoc routed on the board and walked through the desk's lifecycle graph.
     Converting one into the other mechanically meant filling every required
     field with generic placeholders, producing a task that looked structured
     but was not. A drawer item becomes active work only when someone authors

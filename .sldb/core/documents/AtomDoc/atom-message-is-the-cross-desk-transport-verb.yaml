@@ -8,4 +8,13 @@ field_hashes:
   five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
   answer: 703ae0798a3f14abc44712228b73c6eb0142de18fd7efe5044d197e92c01d3eb
   tags: cd3dfe234f9538a4f5e8cfa2e8df073d32cd855bc890766a46b355abb00a0e5a
-semantic_tags: []
+semantic_tags:
+- layer:cli
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cross-repo
+- topic:usability
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms

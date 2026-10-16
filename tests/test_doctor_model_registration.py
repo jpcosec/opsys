@@ -24,11 +24,11 @@ def _mock_registered_missing(monkeypatch, missing: str) -> None:
 def test_doctor_reports_unregistered_models_with_proposal(tmp_path: Path, monkeypatch, capsys) -> None:
     root = tmp_path / "project"
     _init_repo(root, capsys)
-    _mock_registered_missing(monkeypatch, "RoutineDoc")
+    _mock_registered_missing(monkeypatch, "StepDoc")
 
     assert main(["doctor", "--root", str(root)]) == 1
     out, _ = capsys.readouterr()
-    assert "Unregistered models: RoutineDoc" in out
+    assert "Unregistered models: StepDoc" in out
     assert "deskops desk update --apply" in out
     assert "Run with --repair to attempt automatic fixes." in out
 
@@ -65,12 +65,12 @@ def test_doctor_skips_model_check_without_store(tmp_path: Path, capsys) -> None:
 def test_doctor_repair_registers_missing_models_idempotently(tmp_path: Path, monkeypatch, capsys) -> None:
     root = tmp_path / "project"
     _init_repo(root, capsys)
-    _mock_registered_missing(monkeypatch, "RoutineDoc")
+    _mock_registered_missing(monkeypatch, "StepDoc")
 
     assert main(["doctor", "--root", str(root), "--repair"]) == 0
     out, _ = capsys.readouterr()
     assert "Registered missing models." in out
-    assert "Unregistered models: RoutineDoc" in out
+    assert "Unregistered models: StepDoc" in out
 
     assert main(["doctor", "--root", str(root), "--repair"]) == 0
     out, _ = capsys.readouterr()

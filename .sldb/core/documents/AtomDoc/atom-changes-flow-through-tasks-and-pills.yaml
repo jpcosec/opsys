@@ -1,7 +1,13 @@
 name: atom-changes-flow-through-tasks-and-pills
 path: desk/atoms/workflow-model/atom-changes-flow-through-tasks-and-pills.md
-hash_c: 883d6c5bebf94271d1e7b2fa8fd050484a3ab3f5f527aa88a986cdb02654b6d6
-hash_d: cb9034164624ef5128fe7faba0f1828a3ca8120b18336e88f3ef16cabbac96da
+source_hash: 883d6c5bebf94271d1e7b2fa8fd050484a3ab3f5f527aa88a986cdb02654b6d6
+content_hash: cb9034164624ef5128fe7faba0f1828a3ca8120b18336e88f3ef16cabbac96da
+field_hashes:
+  id: 0eebc092d046b27bfb106a9b963db103098d1116fc3b2ca864da69252f05eead
+  title: 86d279dc5819955b63f69d46fd91f1da7bbe7369fde3fde1aa0e44eabf5cbb77
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: b3b56899b6a5995f5208dfc26802d74d67f99f09a4d7ded8294ea2104c239131
+  tags: 4e7474255d96d291fb77a6df69f955f34828cd4d4e13ef92e46fad4f98c78268
 semantic_tags:
 - representation.markdown
 - source.document.markdown

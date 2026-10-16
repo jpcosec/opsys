@@ -28,7 +28,6 @@ class OperationsCLI:
             bundle = operations.create_task_bundle(payload)
             print(f"Created task bundle {bundle.task_id}")
             print(f"Task: {bundle.task_path}")
-            print(f"Routine: {bundle.routine_path}")
             if drawer_source is not None:
                 print(f"From drawer: {drawer_source} (kept; remove it by hand once the task supersedes it)")
             return 0
@@ -42,20 +41,6 @@ class OperationsCLI:
             print(f"Path: {record.path}")
             if args.subject == "repository":
                 print("Note: this is a local repository artifact. Use 'deskops repo register' for canonical ecosystem registration.")
-            return 0
-
-        if args.command == "add" and args.subject in {"condition", "operator", "checklist", "hook", "edge"}:
-            payload = operations.parse_primitive_input(args.subject, args)
-            record = operations.create_primitive(args.subject, payload)
-            print(f"Created {record.kind} {record.doc_id}")
-            print(f"Path: {record.path}")
-            return 0
-
-        if args.command == "add" and args.subject == "routine":
-            payload = operations.parse_routine_input(args)
-            record = operations.create_routine(payload)
-            print(f"Created routine {record.doc_id}")
-            print(f"Path: {record.path}")
             return 0
 
         if args.command == "edit":
@@ -106,15 +91,6 @@ class OperationsCLI:
                 print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
             return 0
 
-        if args.command == "list" and args.subject == "routines":
-            routines = operations.list_routines()
-            if args.format == "json":
-                self._print_json({"routines": self._normalize(routines)})
-                return 0
-            for routine in routines:
-                print(f"{routine.id} | {routine.status} | {routine.entrypoint}")
-            return 0
-
         list_artifacts = {meta["list_subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if args.command == "list" and args.subject == "atoms":
             try:
@@ -144,24 +120,14 @@ class OperationsCLI:
                 print(f"{payload['id']} | {label}")
             return 0
 
-        if args.command == "list" and args.subject in {"conditions", "operators", "checklists", "hooks", "edges"}:
-            kind = args.subject[:-1]
-            payloads = operations.list_primitives(kind)
-            if args.format == "json":
-                self._print_json({args.subject: self._normalize(payloads)})
-                return 0
-            for payload in payloads:
-                print(f"{payload['id']} | {payload['status']} | {payload['title']}")
-            return 0
-
         if args.command == "show" and args.subject == "task":
-            task, statuses = operations.show_task(args.task_id)
+            task, gates = operations.show_task(args.task_id)
             if task is None:
                 print(f"No task found for {args.task_id}")
                 return 1
             if args.format == "json":
                 payload = self._normalize(task)
-                payload["checklist_statuses"] = self._normalize(statuses)
+                payload["lifecycle_gates"] = self._normalize(gates)
                 self._print_json(payload)
                 return 0
             print(f"Task: {task.id}")
@@ -173,7 +139,6 @@ class OperationsCLI:
                 print("Inherits from:")
                 for item in task.inherits_from:
                     print(f"- {item}")
-            print(f"Routine: {task.routine}")
             if task.from_drawer:
                 print(f"From drawer: {task.from_drawer}")
             if task.effective_pills:
@@ -189,39 +154,12 @@ class OperationsCLI:
                 for item in task.effective_validation:
                     print(f"- {item}")
                 print(f"Effective done when: {task.effective_done_when}")
-            print("Checklist status:")
-            for checklist_id, complete in statuses.items():
-                print(f"- {checklist_id}: {'complete' if complete else 'pending'}")
-            return 0
-
-        if args.command == "show" and args.subject == "routine":
-            routine = operations.show_routine(args.routine_id)
-            if routine is None:
-                print(f"No routine found for {args.routine_id}")
-                return 1
-            if args.format == "json":
-                self._print_json(self._normalize(routine))
-                return 0
-            print(f"Routine: {routine.id}")
-            print(f"Title: {routine.title}")
-            print(f"Status: {routine.status}")
-            print(f"Entrypoint: {routine.entrypoint}")
-            print("Decomposition:")
-            for node in routine.decomposition:
-                print(f"- {node}")
-            
-            # Print edge IDs from the payload directly to avoid missing-edge issues,
-            # while keeping JSON fully hydrated via the runtime object.
-            try:
-                from deskops.models import RoutineDoc
-                path = operations._resolve_glob(operations.desk_root / "routines", args.routine_id)
-                raw_payload = operations._read_doc(path, RoutineDoc)
-                print("Edges:")
-                for edge_id in raw_payload.get('edges', []):
-                    print(f"- {edge_id}")
-            except (FileNotFoundError, ValueError):
-                pass
-                
+            if gates:
+                print("Lifecycle gates:")
+                for gate in gates:
+                    state = "open" if gate["holds"] else "closed"
+                    condition = gate["condition"] or "(none)"
+                    print(f"- {gate['relation_type']} -> {gate['target']}: {state} [{condition}]")
             return 0
 
         show_artifacts = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
@@ -239,7 +177,7 @@ class OperationsCLI:
             label = payload.get("title") or payload.get("name") or payload["id"]
             print(f"Title: {label}")
             for key, value in payload.items():
-                if key in {"id", "title", "routine", "current_node", "history", "tags"}:
+                if key in {"id", "title", "current_node", "history", "tags"}:
                     continue
                 if isinstance(value, list):
                     print(f"{key}: {', '.join(str(item) for item in value)}")
@@ -247,40 +185,16 @@ class OperationsCLI:
                     print(f"{key}: {value}")
             return 0
 
-        if args.command == "show" and args.subject in {"condition", "operator", "checklist", "hook", "edge"}:
-            payload = operations.show_primitive(args.subject, args.primitive_id)
-            if args.format == "json":
-                self._print_json(self._normalize(payload))
-                return 0
-            print(f"{args.subject.capitalize()}: {payload['id']}")
-            print(f"Title: {payload['title']}")
-            print(f"Status: {payload['status']}")
-            if args.subject == "condition":
-                print(f"Subject: {payload['subject']}")
-                print(f"Predicate: {payload['predicate']}")
-            elif args.subject == "operator":
-                print(f"Action: {payload['action']}")
-                print(f"Target: {payload['target']}")
-            elif args.subject == "checklist":
-                print(f"Mode: {payload['mode']}")
-                print("Items:")
-                for item in payload.get('items', []):
-                    print(f"- {item}")
-            elif args.subject == "hook":
-                print(f"Event: {payload['event']}")
-                print(f"Target: {payload['target']}")
-            elif args.subject == "edge":
-                print(f"Source: {payload['source']}")
-                print(f"Target: {payload['target']}")
-            return 0
-
         if args.command == "advance" and args.subject == "task":
-            task, result = operations.advance_task(args.task_id, target_node=getattr(args, "to", None))
+            from deskops.lifecycle import LifecycleGraphMissing
+
+            try:
+                task, result = operations.advance_task(args.task_id, target_node=getattr(args, "to", None))
+            except LifecycleGraphMissing as exc:
+                print(f"Error: {exc}", file=sys.stderr)
+                return 1
             if task is None:
                 print(f"No task found for {args.task_id}", file=sys.stderr)
-                return 1
-            if result is None:
-                print(f"Task {task.id} has no routine — cannot advance", file=sys.stderr)
                 return 1
             print(f"Task: {task.id}")
             print(f"Status: {task.status}")

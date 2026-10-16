@@ -34,7 +34,7 @@ Apply this pill whenever a task changes `deskops list`, document loading, direct
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Applies to list surfaces for tasks, routines, artifacts, and primitives, plus malformed frontmatter and invalid model payload handling.
+Applies to list surfaces for tasks, pills, rituals, atoms, and other artifacts, plus malformed frontmatter and invalid model payload handling.
 
 ## How
 

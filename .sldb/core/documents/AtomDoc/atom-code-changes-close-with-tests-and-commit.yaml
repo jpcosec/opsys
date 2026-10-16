@@ -1,7 +1,13 @@
 name: atom-code-changes-close-with-tests-and-commit
 path: desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md
-hash_c: 861b219ff788521f0bd6569b1a86e67f9916cd094544d14df30ae3fd694de4e2
-hash_d: 300f17c968b20746e77fb7c1f27c40f3f91eae734412d9128d00ff90a6256ed6
+source_hash: 861b219ff788521f0bd6569b1a86e67f9916cd094544d14df30ae3fd694de4e2
+content_hash: 300f17c968b20746e77fb7c1f27c40f3f91eae734412d9128d00ff90a6256ed6
+field_hashes:
+  id: 169f0082c123ad926bfc5a02763f03d0015b6f6e819d2029f0db0a83c8c49cc0
+  title: 32e45407ccd0d8d92d6c51bb71871b224fc8a1ef1e94a47acb1c20ab15828aeb
+  five_wh_one_plus: 6d924791a1798656302bd4b9716a494a0c5f7f55ad9ceebf629dfb2317e86078
+  answer: 226c178932e9e3c9017728232ede0895177d37a980fcb4ddaef2cbf4a74369ee
+  tags: 16778f1d6333ed6c433eb4461e63a27e26a7bdff88995ff75e841385e49f7a90
 semantic_tags:
 - representation.markdown
 - source.document.markdown

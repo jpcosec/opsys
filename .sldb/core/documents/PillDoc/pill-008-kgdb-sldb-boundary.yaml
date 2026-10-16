@@ -1,7 +1,17 @@
 name: pill-008-kgdb-sldb-boundary
 path: desk/contexts/pill-008-kgdb-sldb-boundary.md
-hash_c: bb1abf450d35dcce37aec52e8942a04f67cc14b75571a5d6eaa8284cdddb9ba0
-hash_d: 753b11483001e03c5b1938e36f7d77f25bbbe1a271966a97500321cf2ef33114
+source_hash: bb1abf450d35dcce37aec52e8942a04f67cc14b75571a5d6eaa8284cdddb9ba0
+content_hash: 753b11483001e03c5b1938e36f7d77f25bbbe1a271966a97500321cf2ef33114
+field_hashes:
+  title: eb0650d9171a6edd51da2a5c73f35ff8e0fa2669a9c8609b1bae5e2805a827fa
+  id: 4b84b4855b8c60616cd9fef452bc482fc667db176d9bfe96af5e458351ac3f04
+  tags: de089d7ba2014b8bd93896a8e20eabe14f3394ae50e0feeabbb7b16502041ea5
+  what: eb9125cdea8476b0ac7f0178d2bce00209cd4988b380ebdd729229d728c36209
+  why: 4fa596568320861b6d2fde2dc4c5e883a512c4203de0b98ca9e7c1ad516315b0
+  when: b58ed02bc81dedd0025729ffc2ed913df09b972f64eab47525bf8104603eb084
+  where: 1781608ce7e1f38ecff28c0b97011cf811f18ae934c9695944cff2e6d28d7341
+  how: b1eba184b0f5d43d97659fc4b5ba539eac9ee69a8eb0b8a69af22c2f39957441
+  how_not: 0b4bf32d2073ab02470223dc34979b3089dba6da107df6a2caf89a8fd9736e45
 semantic_tags:
 - pill-type:decision
 - representation.markdown

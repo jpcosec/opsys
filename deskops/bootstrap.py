@@ -24,11 +24,6 @@ MODEL_REFS = {
     "ProtoAtomDoc": "deskops.models:ProtoAtomDoc",
     "CrossroadDoc": "deskops.models:CrossroadDoc",
     "FAQDoc": "deskops.models:FAQDoc",
-    "RoutineDoc": "deskops.models:RoutineDoc",
-    "ConditionDoc": "deskops.models:ConditionDoc",
-    "ChecklistDoc": "deskops.models:ChecklistDoc",
-    "OperatorDoc": "deskops.models:OperatorDoc",
-    "EdgeDoc": "deskops.models:EdgeDoc",
 }
 
 

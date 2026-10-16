@@ -1,7 +1,13 @@
 name: atom-closeout-validates-knowledge-surfaces
 path: desk/atoms/workflow-model/atom-closeout-validates-knowledge-surfaces.md
-hash_c: 7b99d358c78662d54c3e418280fe8cbf1754d6ed11e086f4c9067700bf3a177c
-hash_d: 65bb9dbd4a99bd36f7279feb49ca1592f5054a5f5667fca9492dfb9304f5f827
+source_hash: 7b99d358c78662d54c3e418280fe8cbf1754d6ed11e086f4c9067700bf3a177c
+content_hash: 65bb9dbd4a99bd36f7279feb49ca1592f5054a5f5667fca9492dfb9304f5f827
+field_hashes:
+  id: 321acac2e11c8ac506cbd3ab2d60bc8e8f54eee55619d773a152704394c94e52
+  title: 38da72e0d991f0a47bff7aeda3b6d5c90ac40dbc9ff8ccdff0c56e276cfc4201
+  five_wh_one_plus: 6d924791a1798656302bd4b9716a494a0c5f7f55ad9ceebf629dfb2317e86078
+  answer: d02b835012198ac0e454c3fe18a01dfae171e4232972e5b588258bd13c040baa
+  tags: 146877ba04dbe710b8cb8d7471a51c3028dcb0d6573f5f15340c9be240fdcb8c
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Extensibility should be treated as a first-class contract: new models, fields, primitives, CLI commands, diagrams, and materialization types must have declared extension points, validation rules, and compatibility expectations.
+Extensibility should be treated as a first-class contract: new models, fields, lifecycle transitions, CLI commands, diagrams, and materialization types must have declared extension points, validation rules, and compatibility expectations.

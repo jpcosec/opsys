@@ -13,12 +13,7 @@ pills:
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 - desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
-routine: routine-task-write-end-to-end-deskops-operator-manual
-checklists:
-- checklist-task-write-end-to-end-deskops-operator-manual-execution-ready
-- checklist-task-write-end-to-end-deskops-operator-manual-testing-ready
-- checklist-task-write-end-to-end-deskops-operator-manual-closeout-ready
-current_node: checklist-task-write-end-to-end-deskops-operator-manual-execution-ready
+current_node: ritual-execution
 history: []
 tags:
 - workspace:desk

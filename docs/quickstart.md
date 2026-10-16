@@ -17,7 +17,7 @@ In this guide you will install deskops, initialize a repo, create one task, adva
 
 `deskops` manages repo-local workflow documents under `desk/`.
 
-A desk task lives in `desk/tasks/`. A task can have a routine, generated checklists, validation commands, and closeout steps. SLDB provides the modeled document layer underneath, but you do not need to understand SLDB to complete this first workflow.
+A desk task lives in `desk/tasks/`. A task has validation commands and moves through the desk's lifecycle (execution, testing, closeout), which lives in the desk's sldb graph. SLDB provides the modeled document layer underneath, but you do not need to understand SLDB to complete this first workflow.
 
 For deeper context, read `README.md` and `docs/faq.md` after this guide.
 
@@ -80,8 +80,6 @@ deskops add task \
 This creates:
 
 - `desk/tasks/task-try-deskops-quickstart.md`
-- a routine under `desk/routines/`
-- primitive checklists, conditions, operators, and edges under `desk/primitives/`
 - a board entry in `desk/tasks/Board.md`
 
 Check the task:
@@ -93,7 +91,7 @@ deskops show task task-try-deskops-quickstart
 
 ## Advance The Task
 
-Advance the task through its routine:
+Advance the task through the lifecycle:
 
 ```bash
 deskops advance task task-try-deskops-quickstart
@@ -105,7 +103,7 @@ Then inspect the result:
 deskops show task task-try-deskops-quickstart
 ```
 
-The first advance moves the task into active execution. Later advances move it toward testing and closeout when the generated checklist conditions pass.
+The first advance moves the task into active execution. Later advances move it toward testing and closeout when the conditions of the lifecycle transitions hold (`deskops show task` lists them).
 
 ## Test
 

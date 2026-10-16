@@ -1,7 +1,13 @@
 name: atom-self-reflection-is-a-feedback-loop
 path: desk/atoms/knowledge-model/atom-self-reflection-is-a-feedback-loop.md
-hash_c: 600d88343001ee1877ce5acfdaf26f7b01079c5170747bccb92cf034b15303d3
-hash_d: cfdbecb1fd56b0e93f89fc94bb21c67f00bdb82f9a7303a083581716c526feba
+source_hash: 600d88343001ee1877ce5acfdaf26f7b01079c5170747bccb92cf034b15303d3
+content_hash: cfdbecb1fd56b0e93f89fc94bb21c67f00bdb82f9a7303a083581716c526feba
+field_hashes:
+  id: 28127e433a1baba44189cb23598186527e86266feacf51cc2ab2f83ff98b034b
+  title: bd61e999196597c0d8d31444ea2ba8b3f15712cb9f6adf547f70db7b5b7971d7
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 5771ed16b872f71b1483bb4a88c31974093370c75a0b95e7c988dc9f13b59a32
+  tags: 8dc06312c2f3fe58a952cae5049bd6b9aee821427744f58716275a2d396af409
 semantic_tags:
 - representation.markdown
 - source.document.markdown

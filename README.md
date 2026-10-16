@@ -51,7 +51,7 @@ Parallel opencode copies also exist under `.opencode/skills/`.
 `deskops` owns workflow-domain surfaces:
 
 - active tasks and boards
-- rituals, routines, gates, hooks, and primitives
+- rituals, the task lifecycle graph (rituals as states, sldb relations as gated transitions), and gates
 - transient pills and inbox notes
 - durable atoms and materializers
 - drawer triage for deferred work

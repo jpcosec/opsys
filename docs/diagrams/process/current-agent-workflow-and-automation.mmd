@@ -26,8 +26,8 @@ flowchart TB
         rituals["desk/rituals/*.md\nexecution/testing/closeout gates"]
         pills["desk/contexts/*.md\nboard + task pills"]
         atoms["desk/atoms/**/*.md\ndurable knowledge"]
-        specs["spec/workflows/*.yaml\nspec/primitives/*.yaml\nspec/artifacts/*.yaml"]
-        runtime["desk/routines/*.md\ndesk/primitives/{conditions,checklists,operators,edges,hooks}/*.md"]
+        specs["spec/workflows/*.yaml\nspec/artifacts/*.yaml\nspec/fields/*.yaml"]
+        runtime["desk/lifecycle/*.md\nRelationDoc transitions between rituals\n(tracked in .sldb)"]
         code["deskops/*.py\nCLI/runtime implementation"]
         tests["tests/*.py\nvalidation surfaces"]
         runs["runs/subagents/*\nexecution/testing evidence"]
@@ -36,15 +36,15 @@ flowchart TB
 
     subgraph AutomaticToday["Automation that exists today"]
         auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
-        auto_bundle["deskops add task / create_task_bundle\nauto-creates task + routine + conditions + checklists + operators + edges\nand appends the task to Board.md"]
+        auto_bundle["deskops add task / create_task_bundle\nwrites one task doc at ritual-execution\nand appends the task to Board.md"]
         auto_next["deskops next\nreads Board + task + spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
-        auto_advance["deskops advance task\nevaluates conditions/checklists/operators\nand advances current_node/status deterministically"]
-        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove task/routine/primitives from desk\nunroute from Board.md\ngit add/rm + git commit"]
+        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status"]
+        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove the task doc from desk\nunroute from Board.md\ngit add/rm + git commit"]
     end
 
     subgraph NotAutomaticYet["Things modeled but not generally auto-fired yet"]
-        hook_docs["desk/primitives/hooks/*.md\nmodeled hook documents exist"]
-        no_hook_engine["No generic hook dispatcher currently scans hook docs\nand fires them by event as a runtime engine"]
+        hook_docs["No hook documents\n(HookDoc was retired with the primitives)"]
+        no_hook_engine["No event-driven dispatcher\nonly the lifecycle transitions are automatic"]
         rituals_still_manual["Ritual obligations are still mostly enforced\nby agent behavior + deskops commands\nnot by a full automatic hook system"]
     end
 
@@ -86,13 +86,11 @@ flowchart TB
     implement --> validate --> handoff --> close_gate
 
     auto_bundle --> tasks
-    auto_bundle --> runtime
     auto_bundle --> board
     auto_next --> rituals
     auto_next --> pills
     auto_advance --> tasks
     auto_close --> tasks
-    auto_close --> runtime
     auto_close --> board
     auto_close --> git
 

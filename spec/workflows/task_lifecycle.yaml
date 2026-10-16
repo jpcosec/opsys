@@ -1,16 +1,48 @@
 id: workflow.task_lifecycle
-version: "0.1"
+version: "0.2"
 source_files:
   implements:
+    - deskops/lifecycle.py
     - deskops/workflow/next_actions.py
   exposes:
     - deskops/cli/parser.py
     - deskops/cli/main.py
   validates:
     - tests/test_cli.py
+    - tests/test_lifecycle_graph.py
+# The lifecycle lives in the sldb graph of each desk: every state is a tracked RitualDoc,
+# every transition is a RelationDoc between two rituals whose `condition` is an sldb
+# `--where` predicate on the task. `deskops init` and `deskops desk update --apply` write
+# those documents into desk/lifecycle/ from the `transitions` below; `deskops advance`
+# reads them back from the graph. `sets_status` is the status a task takes when the
+# transition fires; a `terminal` transition closes the task (current_node: complete).
+entry_node: ritual-execution
+transitions:
+  - relation_type: task_activates
+    title: Task activates
+    description: The task passes its execution gate and enters active work, under the testing ritual.
+    source: ritual-execution
+    target: ritual-testing
+    condition: ""
+    sets_status: active
+  - relation_type: task_hands_to_closeout
+    title: Task hands to closeout
+    description: The task has validation to prove and moves to the closeout ritual.
+    source: ritual-testing
+    target: ritual-closeout
+    condition: nonempty(validation)
+    sets_status: ready_for_testing
+  - relation_type: task_completes
+    title: Task completes
+    description: The task is ready for closeout and its references verify durable evidence; it closes.
+    source: ritual-closeout
+    target: ritual-closeout
+    condition: status = "ready_for_testing" and has(closeout_evidence_verified)
+    sets_status: closed
+    terminal: true
 states:
   - id: execution_gate
-    current_node_suffix: -execution-ready
+    current_node: ritual-execution
     phase: execution
     ritual: desk/rituals/execution.md
     purpose: Confirm initialization gate before implementation.
@@ -22,7 +54,7 @@ states:
     advance_when:
       - Execution gate obligations are recorded or satisfied.
   - id: testing_gate
-    current_node_suffix: -testing-ready
+    current_node: ritual-testing
     phase: testing
     ritual: desk/rituals/testing.md
     purpose: Prove the implementation contract and bound pill guardrails.
@@ -33,7 +65,7 @@ states:
     advance_when:
       - Relevant tests pass and the testing-to-closeout handoff is explicit.
   - id: closeout_gate
-    current_node_suffix: -closeout-ready
+    current_node: ritual-closeout
     phase: closeout
     ritual: desk/rituals/closeout.md
     purpose: Close only after evidence, cleanup, and atomic commit.

@@ -34,8 +34,6 @@ def _validate_selectors(args: Any) -> None:
         "selector": "selector",
         "doc_id": "selector",
         "task_id": "task selector",
-        "routine_id": "routine selector",
-        "primitive_id": "primitive selector",
         "pill": "pill selector",
         "task": "task selector",
     }
@@ -178,6 +176,10 @@ class CLI:
                 print(f"Wrote {path}")
         else:
             print(f"Desk already exists at {target_path / 'desk'}.")
+        from deskops.lifecycle import ensure_lifecycle_graph
+
+        for change in ensure_lifecycle_graph(target_path):
+            print(f"Lifecycle graph: {change}")
         print("Initialization complete.")
         return 0
 

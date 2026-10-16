@@ -11,4 +11,4 @@ tags:
 
 ## Answer
 
-LLM work drifts because language agents make mistakes and lose implicit context. Deskops reduces that drift by splitting work into small persisted units, making routines explicit, and using git plus structured documents to make every change auditable.
+LLM work drifts because language agents make mistakes and lose implicit context. Deskops reduces that drift by splitting work into small persisted units, making the lifecycle graph explicit, and using git plus structured documents to make every change auditable.

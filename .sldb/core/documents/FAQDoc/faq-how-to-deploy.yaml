@@ -1,7 +1,10 @@
 name: faq-how-to-deploy
 path: desk/faq/faq-how-to-deploy.md
-hash_c: 050cb05f2bbd015187c66fbbf81aacdaec8898dd480a165c251424cf2956e5f5
-hash_d: 16e51690bacc9442a3d2023320a6719ced1cbff968083baaf235a6e6c3665ebd
+source_hash: 050cb05f2bbd015187c66fbbf81aacdaec8898dd480a165c251424cf2956e5f5
+content_hash: 16e51690bacc9442a3d2023320a6719ced1cbff968083baaf235a6e6c3665ebd
+field_hashes:
+  title: b071e6b16297e97b4a22f615f4f8bfffa9c0c7f35148de1a629dc0049f34e74e
+  body: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
 semantic_tags:
 - representation.markdown
 - source.document.markdown

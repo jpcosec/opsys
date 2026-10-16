@@ -1,7 +1,13 @@
 name: atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix
 path: desk/atoms/atom-repo-register-accepts-explicit-path-and-registry-errors-name-the-fix.md
-hash_c: 610b9f3f816e3396f325079ad085873f4a5c147d18b5759224325f1dae832840
-hash_d: 2b8f64204db0d6efdea4ab1bcec96bbfd44ad9b901a999247f2500e408e7791e
+source_hash: 610b9f3f816e3396f325079ad085873f4a5c147d18b5759224325f1dae832840
+content_hash: 2b8f64204db0d6efdea4ab1bcec96bbfd44ad9b901a999247f2500e408e7791e
+field_hashes:
+  id: 079c3d51d8d2032af6176a6185c5c5f83b4dc771ed643644cde6c9c885fc74ed
+  title: 4a152e178be04e681e054e4239c69cced6c71458b561fda465e6e56ef983a5c8
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 6eac7f8464b13049e8100a7a881f3cc210a465f6d964cca2825f15921025abff
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown
 - source.document.markdown

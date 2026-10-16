@@ -19,7 +19,7 @@ If the active board does not route a task, do not treat fixture-looking files in
 
 Load the global surface skill that matches the work before changing files. Workflow roles such as supervisor, executor, and tester are system-prompt concerns, not repo-local skills:
 
-- `use-deskops` for `desk/` surfaces, tasks, drawer work, pills, rituals, primitives, routines, repo registry, and workflow operations.
+- `use-deskops` for `desk/` surfaces, tasks, drawer work, pills, rituals, the lifecycle graph, repo registry, and workflow operations.
 - `use-sldb` for `StructuredNLDoc` models, reversible Markdown markers, `.sldb` stores, document tracking, model registration, rendering, extraction, or field operations. The authoritative global Pi skill lives in the sibling `../sldb/.pi/skills/use-sldb/`.
 - `use-kgdb` for graph contracts, graph snapshots, nodes, edges, provenance, `deskops graph build`, `deskops graph missing`, or graph runtime validation.
 - `use-spec2viz` for diagram specs, Mermaid/projection outputs, and generated diagram surfaces under `docs/diagrams/`.
@@ -30,7 +30,7 @@ For Pi in this repo, prefer the project skills under `.pi/skills/`.
 ## Core Boundaries
 
 - `deskops/` contains Python implementation code.
-- `desk/` contains workflow document data: tasks, pills, rituals, atoms, inbox notes, drawer items, routines, and primitives.
+- `desk/` contains workflow document data: tasks, pills, rituals, atoms, inbox notes, drawer items, and the lifecycle graph (`desk/lifecycle/`).
 - SLDB owns structured Markdown infrastructure, model contracts, reversible templates, stores, field queries, and safe document edits.
 - KGDB owns graph contracts and graph runtime validation.
 - Spec2viz owns structured diagram sources and generated diagram projections.

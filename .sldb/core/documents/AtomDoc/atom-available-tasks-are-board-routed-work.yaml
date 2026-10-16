@@ -1,7 +1,13 @@
 name: atom-available-tasks-are-board-routed-work
 path: desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md
-hash_c: c4d8174ba3c8057d97f2f547aa3e6a6865c53074833b200a8d3c77af128f754c
-hash_d: be2df01adacb0675af5f8c5aba53bf6988f9556f1a008f0ba247a0a255fc391f
+source_hash: c4d8174ba3c8057d97f2f547aa3e6a6865c53074833b200a8d3c77af128f754c
+content_hash: be2df01adacb0675af5f8c5aba53bf6988f9556f1a008f0ba247a0a255fc391f
+field_hashes:
+  id: 77190c0f9c53052c69ac94db36fe5eecf2bfca2bb4a58cc9acb613a24ae7f7af
+  title: 96731a23b6b1aac1a67aa834153c3e644816245277c08a70540f8f49175616de
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: aa8a3c044980bdccb9850135756aafe771d721964c552e85a468045cb979b2ac
+  tags: 11cdfd7444c758cc5c552ce8ea962f3a877d817c910727bf988ed8b4bd43a8c4
 semantic_tags:
 - representation.markdown
 - source.document.markdown

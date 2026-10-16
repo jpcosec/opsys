@@ -1,7 +1,13 @@
 name: atom-rendered-diagrams-are-projections
 path: desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md
-hash_c: 2acf702c86686411d866492bddb63aaa7fbb5e23443bc4f31f9d27bb7e95e1b2
-hash_d: 8e525a9ad4b83f2fcc6e6e21e40ac75e987c194d52517e93654bfeec58fe2cdf
+source_hash: 2acf702c86686411d866492bddb63aaa7fbb5e23443bc4f31f9d27bb7e95e1b2
+content_hash: 8e525a9ad4b83f2fcc6e6e21e40ac75e987c194d52517e93654bfeec58fe2cdf
+field_hashes:
+  id: fdf474dd513efefe2938a79ffa7b8ab6691b39e72923d2d0ebfa2324f62012ea
+  title: f8b3eec559b9f9ec142ff1054ddb0d9770025f22633bce4b68b66415780704b8
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: 593b8dd941a8afce50b3dea333339b5fc94e9ba5fd54ec4779a3301fde1c4ba1
+  tags: c9d2ab0211feb3f2b1a7def43275634fbc3054fd6c29afb37ba169da63d43a1d
 semantic_tags:
 - representation.markdown
 - source.document.markdown

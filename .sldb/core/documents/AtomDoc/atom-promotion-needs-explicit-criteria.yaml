@@ -1,7 +1,13 @@
 name: atom-promotion-needs-explicit-criteria
 path: desk/atoms/knowledge-model/atom-promotion-needs-explicit-criteria.md
-hash_c: ac0a44385903ed9361af5b8658aecc1cf839647b8c054ddfee520b002b66251f
-hash_d: 42260bd491e5a33aedc8e560ab1d8ebfd489651ac6da91cc719ce3ed0371db71
+source_hash: ac0a44385903ed9361af5b8658aecc1cf839647b8c054ddfee520b002b66251f
+content_hash: 42260bd491e5a33aedc8e560ab1d8ebfd489651ac6da91cc719ce3ed0371db71
+field_hashes:
+  id: 1181491d432a4d473fb2c25763248d9ab385128ed5d542228589dc126079a125
+  title: 0dbd64cbcb564a2cab23a5d182b2851477e6f8718abcb7e4906339543f792b66
+  five_wh_one_plus: 1566d618b9ad05f5d6636ef68875b058a3311f288ab671709bb72d36b5dd1a5c
+  answer: 0caf2f1032d0df8e00f1b643b2e49ad1dae21df0a7175caffd9b017362a250b9
+  tags: 5c8c19a97d68b31ccf6e306c4bd348ea87a2680a3c7f455d43357d3b1709a9a7
 semantic_tags:
 - representation.markdown
 - source.document.markdown

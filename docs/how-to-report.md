@@ -75,13 +75,13 @@ Increase urgency when the issue:
 
 ## Opsys Fit
 
-In `deskops`, a report should be reusable across tools and repos and should later fit stateful operational handling such as tasks, routines, checklists, and conditional hooks.
+In `deskops`, a report should be reusable across tools and repos and should later fit stateful operational handling such as inbox notes, tasks, pills, and atoms.
 
 That means the structure should survive beyond one command surface and should remain useful when promoted into a richer workflow object.
 
-## Related Workflow Primitives
+## Related Workflow Surfaces
 
-- a routine can consume the report as an input
+- a task can consume the report as an input
 - a ritual can trigger from repeated reports on the same surface
-- a checklist can verify the evidence set before closure
-- a hook can fire when a report matches a known class of regression
+- a pill can capture the guardrail the report's evidence must satisfy before closure
+- a lifecycle transition can gate when a report matches a known class of regression

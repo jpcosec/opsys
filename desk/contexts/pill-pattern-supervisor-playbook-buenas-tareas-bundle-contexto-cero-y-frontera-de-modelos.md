@@ -34,7 +34,7 @@ Siempre que una sesión actúe como supervisor: al redactar o revisar una tarea,
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Aplica a cualquier repo gobernado por deskops. Artefactos de desk en desk/ (tasks, contexts, atoms, rituals, primitives); modelos del producto en el store del producto (p. ej. knowledge/ en un runtime conversacional, con sus propios modelos SLDB y su propio ciclo de indexado). Referencias operativas: skill deskops-task-lifecycle, pill-005 (subagent execution), pill-001 (closeout commit), pill-007 (phase-gated flow).
+Aplica a cualquier repo gobernado por deskops. Artefactos de desk en desk/ (tasks, contexts, atoms, rituals); modelos del producto en el store del producto (p. ej. knowledge/ en un runtime conversacional, con sus propios modelos SLDB y su propio ciclo de indexado). Referencias operativas: skill deskops-task-lifecycle, pill-005 (subagent execution), pill-001 (closeout commit), pill-007 (phase-gated flow).
 
 ## How
 

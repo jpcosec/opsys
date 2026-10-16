@@ -1,7 +1,13 @@
 name: atom-atom-references-carry-roles
 path: desk/atoms/knowledge-model/atom-atom-references-carry-roles.md
-hash_c: d7d5cca453b2170832bc8305efbc498cc005610886d05e49fdf9877b8e33bd9f
-hash_d: e00031bf3692975f6d6b3b17a2ca616465ad3e0b01e30d2b02014e246395b14a
+source_hash: d7d5cca453b2170832bc8305efbc498cc005610886d05e49fdf9877b8e33bd9f
+content_hash: e00031bf3692975f6d6b3b17a2ca616465ad3e0b01e30d2b02014e246395b14a
+field_hashes:
+  id: fbb0e919b31219dc9acef49fa564cda990d37289ae6f218690c3acd2ebfbc421
+  title: 2b402f2ce49e450f52a8a2c7ad3b8a4f1b0f528d47cf4cdb47c6a8691db7797f
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 5321fd3092b88d359072c779842fcdf950603df98a491d9cc0e05ee8a94dded8
+  tags: 9274c89ce8e1c7388fa859f1eaac3f07572c4ecf3b65abfa98648376d3461302
 semantic_tags:
 - representation.markdown
 - source.document.markdown

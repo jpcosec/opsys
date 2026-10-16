@@ -7,9 +7,7 @@ from .base import OperationalArtifactDoc
 
 class TaskDoc(OperationalArtifactDoc):
     __containment__ = {
-        "routine": ["RoutineDoc"],
-        "current_node": ["ChecklistDoc", "StepDoc"],
-        "checklists": ["ChecklistDoc"],
+        "current_node": ["RitualDoc"],
         "pills": ["PillDoc"],
         "atoms": ["AtomDoc"],
     }
@@ -100,10 +98,6 @@ _Name the observable condition that makes the task complete._
     files: list[str] = Field(
         default_factory=list,
         description="Files or paths expected to change during the task.",
-    )
-    checklists: list[str] = Field(
-        default_factory=list,
-        description="Checklist identifiers that verify the task's operational routine.",
     )
     implementation_path: str = Field(
         description="Suggested implementation path for completing the task."
