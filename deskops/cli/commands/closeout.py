@@ -12,12 +12,13 @@ from deskops.operations import DeskopsOperations
 
 
 class CloseoutCLI:
-    """Tool-made closing commits linked to run evidence.
+    """Tool-made closing commits, linked to run evidence or marked manual.
 
-    The closing commit is created here, not by agent discretion. The commit
-    message carries immutable trailers linking it to the run evidence
-    directory, and an append-only index records the commit hash back to the
-    run.
+    The closing commit is created here, not by agent discretion. With
+    --run-dir the commit message carries immutable trailers linking it to the
+    run evidence directory; with --no-run it carries Closeout-Mode: manual and
+    the stated reason instead. Either way an append-only index records the
+    commit hash.
     """
 
     REQUIRED_EVIDENCE = ["board.txt", "task.txt", "git-status.txt", "result-summary.md"]
@@ -38,6 +39,82 @@ class CloseoutCLI:
         return 0 if report["ok"] else 1
 
     def _commit(self, args: Any) -> int:
+        run_dir_arg = getattr(args, "run_dir", None)
+        no_run = bool(getattr(args, "no_run", False))
+        reason = getattr(args, "reason", None)
+        if run_dir_arg and no_run:
+            print("Pass either --run-dir or --no-run, not both.")
+            return 1
+        if not run_dir_arg and not no_run:
+            print(
+                "Closing a task needs one of two routes: --run-dir <runs/subagents/dir> to link the "
+                "commit to a subagent run, or --no-run --reason \"<why>\" to close it manually."
+            )
+            return 1
+        if no_run:
+            return self._commit_manual(args, reason)
+        if reason is not None:
+            print("--reason applies only to --no-run; a --run-dir closeout takes its evidence from the run.")
+            return 1
+        return self._commit_with_run(args)
+
+    def _commit_manual(self, args: Any, reason: str | None) -> int:
+        root = Path(args.root).resolve()
+        task_id = args.task
+        reason = " ".join((reason or "").split())
+        if not reason:
+            print("--no-run needs a non-empty --reason saying why the task closes without a subagent run.")
+            return 1
+        run_only = [flag for flag, attr in (("--run-id", "run_id"), ("--session", "session")) if getattr(args, attr, None)]
+        if run_only:
+            print(f"{', '.join(run_only)} applies only to --run-dir; a --no-run closeout has no run to record.")
+            return 1
+
+        staged = self._git(root, "diff", "--cached", "--name-only").split()
+        paths = getattr(args, "paths", None)
+        if paths:
+            self._git(root, "add", "--", *paths)
+        elif not staged:
+            print("Nothing staged and no paths given. Pass --paths.")
+            return 1
+
+        subject = getattr(args, "message", None) or f"closeout: {task_id}"
+        trailers = [f"Task-Id: {task_id}", "Closeout-Mode: manual", f"Closeout-Reason: {reason}"]
+        message = subject + "\n\n" + "\n".join(trailers) + "\n"
+
+        result = subprocess.run(
+            ["git", "commit", "-m", message],
+            cwd=root,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            print(result.stderr.strip() or result.stdout.strip())
+            return 1
+
+        commit = self._git(root, "rev-parse", "HEAD")
+        index_path = root / "runs" / "subagents" / "index.jsonl"
+        index_path.parent.mkdir(parents=True, exist_ok=True)
+        with index_path.open("a", encoding="utf-8") as handle:
+            handle.write(
+                json.dumps(
+                    {
+                        "task_id": task_id,
+                        "run_id": None,
+                        "run_dir": None,
+                        "commit": commit,
+                        "session_sha256": None,
+                        "mode": "manual",
+                    }
+                )
+                + "\n"
+            )
+
+        print(f"Closing commit {commit[:12]} made manually (no run): {reason}")
+        print(f"Index: {index_path}")
+        return 0
+
+    def _commit_with_run(self, args: Any) -> int:
         root = Path(args.root).resolve()
         run_dir = Path(args.run_dir)
         if not run_dir.is_absolute():

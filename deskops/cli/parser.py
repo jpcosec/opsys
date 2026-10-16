@@ -1070,7 +1070,7 @@ def _add_closeout_command(
 
     commit = s.add_parser(
         "commit",
-        help="Create the tool-made closing commit linked to a run evidence directory.",
+        help="Create the tool-made closing commit, linked to a run evidence directory or marked manual.",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog="""
 Example:
@@ -1079,18 +1079,31 @@ Example:
     --run-id 6046eaef --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \\
     --paths deskops/foo.py tests/test_foo.py
 
-The commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256 trailers and the
-commit hash is recorded back into runs/subagents/index.jsonl. The commit is made
-by this command, not by agent discretion.
+Without a subagent run, close the task manually and say why:
+  deskops closeout commit --root . --task task-fix-thing \\
+    --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \\
+    --paths deskops/foo.py tests/test_foo.py
+
+With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
+trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
+Either way the commit hash is recorded back into runs/subagents/index.jsonl. The
+commit is made by this command, not by agent discretion.
 """.strip(),
     )
     commit.add_argument("--root", default=".", help="Target repository root.")
-    commit.add_argument("--run-dir", required=True, help="Run evidence dir under runs/subagents/.")
+    closing_route = commit.add_mutually_exclusive_group()
+    closing_route.add_argument("--run-dir", help="Run evidence dir under runs/subagents/.")
+    closing_route.add_argument(
+        "--no-run",
+        action="store_true",
+        help="Close without a subagent run; requires --reason. Use instead of --run-dir.",
+    )
+    commit.add_argument("--reason", help="Why the task closes without a run; required with --no-run.")
     commit.add_argument("--task", required=True, help="Task id being closed.")
     commit.add_argument("-m", "--message", help="Commit message subject.")
     commit.add_argument("--paths", nargs="*", default=None, help="Paths to stage; defaults to run.yaml touched paths, else staged index.")
-    commit.add_argument("--run-id", help="Subagent run id to record in run.yaml.")
-    commit.add_argument("--session", help="Child session.jsonl path to hash into run.yaml.")
+    commit.add_argument("--run-id", help="Subagent run id to record in run.yaml (--run-dir only).")
+    commit.add_argument("--session", help="Child session.jsonl path to hash into run.yaml (--run-dir only).")
 
     verify = s.add_parser(
         "verify",

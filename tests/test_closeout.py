@@ -202,6 +202,134 @@ def test_closeout_commit_uses_staged_index_without_paths(tmp_path: Path) -> None
     assert "closeout: task-x" in _git(root, "log", "-1", "--format=%B")
 
 
+def _closeout_main(root: Path, *argv: str) -> int:
+    return main(["closeout", "commit", "--root", str(root), "--task", "task-x", *argv])
+
+
+def test_closeout_commit_no_run_makes_a_manual_commit(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    root = _make_repo(tmp_path)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+
+    rc = _closeout_main(root, "--no-run", "--reason", "Fixed by the supervisor; no subagent ran", "--paths", "feature.py")
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message.splitlines()[0] == "closeout: task-x"
+    assert "Task-Id: task-x" in message
+    assert "Closeout-Mode: manual" in message
+    assert "Closeout-Reason: Fixed by the supervisor; no subagent ran" in message
+    assert "Run-Dir:" not in message
+    trailers = _git(root, "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)")
+    assert trailers == "manual", "Closeout-Mode must parse as a git trailer"
+
+    commit = _git(root, "rev-parse", "HEAD")
+    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert entry == {
+        "task_id": "task-x",
+        "run_id": None,
+        "run_dir": None,
+        "commit": commit,
+        "session_sha256": None,
+        "mode": "manual",
+    }
+    assert _git(root, "show", "--name-only", "--format=", "HEAD").split() == ["feature.py"]
+
+
+@pytest.mark.parametrize("reason", [None, "", "   "])
+def test_closeout_commit_no_run_requires_a_reason(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], reason: str | None
+) -> None:
+    root = _make_repo(tmp_path)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+    head = _git(root, "rev-parse", "HEAD")
+
+    extra = [] if reason is None else ["--reason", reason]
+    rc = _closeout_main(root, "--no-run", *extra, "--paths", "feature.py")
+
+    assert rc == 1
+    assert "--no-run needs a non-empty --reason" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
+
+
+def test_closeout_commit_rejects_run_dir_and_no_run_together(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _make_run_dir(root)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = _closeout_main(
+        root, "--run-dir", "runs/subagents/20260729-120000-task-x",
+        "--no-run", "--reason", "r", "--paths", "feature.py",
+    )
+    assert rc == 2
+    assert "argument --no-run: not allowed with argument --run-dir" in capsys.readouterr().err
+
+    # Direct callers that bypass argparse get the same refusal.
+    rc = CloseoutCLI().run(_args(root, no_run=True, reason="r", paths=["feature.py"]))
+    assert rc == 1
+    assert "either --run-dir or --no-run, not both" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+
+
+def test_closeout_commit_without_a_route_names_both_routes(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = _closeout_main(root, "--paths", "feature.py")
+
+    assert rc == 1
+    out = capsys.readouterr().out
+    assert "--run-dir" in out and "--no-run --reason" in out
+    assert _git(root, "rev-parse", "HEAD") == head
+
+
+@pytest.mark.parametrize(
+    ("argv", "message"),
+    [
+        (["--no-run", "--reason", "r", "--run-id", "6046eaef"], "--run-id applies only to --run-dir"),
+        (["--run-dir", "runs/subagents/20260729-120000-task-x", "--reason", "r"], "--reason applies only to --no-run"),
+    ],
+)
+def test_closeout_commit_rejects_flags_from_the_other_route(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], argv: list[str], message: str
+) -> None:
+    root = _make_repo(tmp_path)
+    _make_run_dir(root)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = _closeout_main(root, *argv, "--paths", "feature.py")
+
+    assert rc == 1
+    assert message in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+
+
+def test_closeout_commit_run_dir_through_main_is_unchanged(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path)
+    _make_run_dir(root)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+
+    rc = _closeout_main(root, "--run-dir", "runs/subagents/20260729-120000-task-x", "--paths", "feature.py")
+
+    assert rc == 0
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message == (
+        "closeout: task-x\n\n"
+        "Task-Id: task-x\n"
+        "Run-Dir: runs/subagents/20260729-120000-task-x"
+    )
+    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert set(entry) == {"task_id", "run_id", "run_dir", "commit", "session_sha256"}
+    assert entry["run_dir"] == "runs/subagents/20260729-120000-task-x"
+
+
 def test_closeout_verify_passes_with_complete_evidence(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     root = _make_repo(tmp_path)
     commit = _git(root, "rev-parse", "HEAD")

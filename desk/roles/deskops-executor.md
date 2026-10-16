@@ -96,7 +96,7 @@ If the change touches tracked structured docs or models, also use `.opencode/ski
 - `result-summary.md` with `run_id`, child `session` path, and `session_sha256`
 - `validation.log` when applicable
 
-Closeout commits are made only via `deskops closeout commit --task <id> --run-dir <dir>`; never handcraft them with plain `git commit`.
+Closeout commits are made only via `deskops closeout commit`, never handcrafted with plain `git commit`: use `--task <id> --run-dir <dir>` when a subagent run produced the evidence, or `--task <id> --no-run --reason "<why>"` when the task closes without a subagent run (the commit then carries `Closeout-Mode: manual`). Do not fabricate a run dir for work no subagent did.
 
 ## Anti-patterns
 
