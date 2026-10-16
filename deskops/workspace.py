@@ -20,8 +20,6 @@ _MODELED_DESK_TOP_LEVEL_DIRS = {
     "registry",
     "steps",
     "faq",
-    "routines",
-    "primitives",
 }
 
 
@@ -176,12 +174,6 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
         "roles",
         "inbox",
         "drawer",
-        "routines",
-        "primitives/conditions",
-        "primitives/operators",
-        "primitives/checklists",
-        "primitives/hooks",
-        "primitives/edges",
     ]
 
     desk_dir.mkdir(parents=True, exist_ok=True)

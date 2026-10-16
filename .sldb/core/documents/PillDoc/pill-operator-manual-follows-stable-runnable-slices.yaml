@@ -1,7 +1,17 @@
 name: pill-operator-manual-follows-stable-runnable-slices
 path: desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md
-hash_c: 1ff8798b632fe9dece36f225b237e85401b1c578b97b2eaea55834ea3df0c380
-hash_d: 1910a6cdb09446ab008070646b7941fffa312dd73dd4026a4ec93c99f8c6d926
+source_hash: 1ff8798b632fe9dece36f225b237e85401b1c578b97b2eaea55834ea3df0c380
+content_hash: 1910a6cdb09446ab008070646b7941fffa312dd73dd4026a4ec93c99f8c6d926
+field_hashes:
+  title: 8a9bb29fe16bb423b1f0c2d54fe2170803a068957f9c564dd44fa5236eba294c
+  id: 0b4adcf56bea524f7734011e84fa08b7348615aae3fe68cbe8554eb2311ab532
+  tags: 8c3f877f32892ce74a8f66520ab55be072c665e90d8d88ede849c9d3d71ad41d
+  what: e2109d8e6dd54d22cf14f6b84457fe01dcaf4a9d7e80c7d5be1283a7c5d19f1f
+  why: 32240cbbb12c062f3eaa055e74bd8ea0e2ec61d8f6e0a61dc0d125dedb765f97
+  when: 092f315aebd43d73297db18097c7ad4aad1c49fcde02609a1b6925ad82a6bfd7
+  where: 32cae546746db144110a5a3e206c7101d6c4dc70b8b14b00c94a3d1ef6b7e816
+  how: 0948ffac8b39677aa1c3497b2ee7f2f4aff6c3f10b78cb9ee7b2a3318bdbb5a8
+  how_not: 02113605f035bfccec4f1251188197917103a8c44dc174b12bfd21562980889e
 semantic_tags:
 - pill-type:pattern
 - representation.markdown

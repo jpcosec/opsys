@@ -1,7 +1,13 @@
 name: atom-self-generating-spec-derived-cli
 path: desk/atoms/workflow-model/atom-self-generating-spec-derived-cli.md
-hash_c: 00fdd2214e3d1f7d0aa179c6f08e136f24fccf3bf3d08a9e37304cee96bf307a
-hash_d: 03dad6e743f6e1a07ed8feecd70d86bb527ef18a1c1d3f7dec927078783addc8
+source_hash: 00fdd2214e3d1f7d0aa179c6f08e136f24fccf3bf3d08a9e37304cee96bf307a
+content_hash: 03dad6e743f6e1a07ed8feecd70d86bb527ef18a1c1d3f7dec927078783addc8
+field_hashes:
+  id: 02f92064dc4d7bb2e0977966bbbe8c98055e2a6f938d54f9520e6c0d68341fc1
+  title: 982951e2b23d4c1e9a025a7433164cfbb1c515a2c348f8ffc8407255a781f5ad
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 10ff9bc1c499c4276b5f753dc5110135c086c6a5364ae30b8d4d57ed465d0a4b
+  tags: 44684aaccfce10c53ebb26dcc5ae66f771114a56b8f021ff764984d668352b94
 semantic_tags:
 - layer:cli
 - representation.markdown

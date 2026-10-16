@@ -68,7 +68,7 @@ def test_core_help_documents_examples_and_selectors(capsys) -> None:
     advance_output = " ".join(capsys.readouterr().out.split())
     assert advance_help == 0
     assert "deskops advance task task-fix-thing" in advance_output
-    assert "execution, testing, and closeout gates" in advance_output
+    assert "lifecycle transition" in advance_output
 
 
 def test_generated_artifact_help_uses_model_descriptions(capsys) -> None:
@@ -310,6 +310,7 @@ def test_init_bootstraps_local_store_and_desk(tmp_path: Path, monkeypatch, capsy
 
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_machine_ready", fake_machine_ready)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.init_local_store", fake_init_local_store)
+    monkeypatch.setattr("deskops.lifecycle.ensure_lifecycle_graph", lambda root: [])
 
     result = main(["init", str(tmp_path)])
 
@@ -674,21 +675,8 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
     assert result == 0
     assert "Created task bundle task-ship-semantic-cli" in captured.out
     assert (tmp_path / "desk" / "tasks" / "task-ship-semantic-cli.md").exists()
-    assert (tmp_path / "desk" / "routines" / "routine-task-ship-semantic-cli.md").exists()
-    assert (
-        tmp_path
-        / "desk"
-        / "primitives"
-        / "checklists"
-        / "checklist-task-ship-semantic-cli-execution-ready.md"
-    ).exists()
-    assert (
-        tmp_path
-        / "desk"
-        / "primitives"
-        / "operators"
-        / "operator-task-ship-semantic-cli-activate.md"
-    ).exists()
+    assert not (tmp_path / "desk" / "routines").exists(), "the lifecycle is the desk's graph, not per-task routines"
+    assert not (tmp_path / "desk" / "primitives").exists()
     task_text = (tmp_path / "desk" / "tasks" / "task-ship-semantic-cli.md").read_text(
         encoding="utf-8"
     )
@@ -729,11 +717,9 @@ def test_add_task_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, ca
 
     for doc_id, model_name in [
         ("task-track-bundle", "TaskDoc"),
-        ("routine-task-track-bundle", "RoutineDoc"),
-        ("checklist-task-track-bundle-execution-ready", "ChecklistDoc"),
-        ("condition-task-track-bundle-has-validation", "ConditionDoc"),
-        ("operator-task-track-bundle-activate", "OperatorDoc"),
-        ("edge-task-track-bundle-execution-to-activate", "EdgeDoc"),
+        ("ritual-execution", "RitualDoc"),
+        ("execution-task_activates", "RelationDoc"),
+        ("type-task_activates", "RelationTypeDoc"),
     ]:
         shown = sldb_main(
             [
@@ -830,8 +816,9 @@ def test_next_diagram_renders_workflow_graph_from_spec(capsys) -> None:
 
     assert result == 0
     assert "flowchart TD" in output.out
-    assert "execution_gate --> testing_gate" in output.out
-    assert "testing_gate --> closeout_gate" in output.out
+    assert 'execution_gate -->|"task_activates"| testing_gate' in output.out
+    assert 'testing_gate -->|"task_hands_to_closeout: nonempty(validation)"| closeout_gate' in output.out
+    assert "closeout_gate -->|" in output.out and "| complete" in output.out
 
 
 def test_list_tasks_warns_on_malformed_artifact(tmp_path: Path, capsys) -> None:
@@ -1418,25 +1405,9 @@ def test_add_task_reports_invalid_json_without_creating_artifacts(tmp_path: Path
     assert not list((tmp_path / "desk" / "tasks").glob("task-*.md"))
 
 
-def test_add_routine_rejects_non_mapping_yaml_without_creating_artifacts(tmp_path: Path, capsys) -> None:
-    payload = tmp_path / "routine.yaml"
-    payload.write_text("- not\n- a\n- mapping\n", encoding="utf-8")
-
-    result = main(["add", "routine", "--from-yaml", str(payload), "--root", str(tmp_path)])
-
-    captured = capsys.readouterr()
-    assert result == 1
-    assert "must be a mapping/object, got list" in captured.err
-    assert not list((tmp_path / "desk" / "routines").glob("routine-*.md"))
-
-
 @pytest.mark.parametrize(
     ("args", "created_glob"),
     [
-        (
-            ["add", "condition", "--from-yaml"],
-            "desk/primitives/conditions/*.md",
-        ),
         (
             [
                 "add", "pill",
@@ -1466,7 +1437,8 @@ def test_add_surfaces_reject_non_mapping_yaml(
     assert not list(tmp_path.glob(created_glob))
 
 
-def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, capsys) -> None:
+def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Path, capsys) -> None:
+    tmp_path = lifecycle_desk
     import subprocess
     subprocess.run(['git', 'init', '-q'], cwd=tmp_path)
     subprocess.run(['git', 'config', 'user.email', 'test@example.com'], cwd=tmp_path)
@@ -1494,36 +1466,39 @@ def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, cap
     )
     capsys.readouterr()
     assert add_result == 0
+    # The task is committed before work starts, as the desk workflow requires.
+    subprocess.run(['git', 'add', '-A'], cwd=tmp_path, check=True)
+    subprocess.run(['git', 'commit', '-q', '-m', 'add task'], cwd=tmp_path, check=True)
 
     list_result = main(["list", "tasks", "--root", str(tmp_path)])
     listed = capsys.readouterr()
     assert list_result == 0
-    assert "task-advance-task-runtime | draft | checklist-task-advance-task-runtime-execution-ready" in listed.out
+    assert "task-advance-task-runtime | draft | ritual-execution" in listed.out
 
     show_result = main(["show", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
     shown = capsys.readouterr()
     assert show_result == 0
     assert "Status: draft" in shown.out
-    assert "Current node: checklist-task-advance-task-runtime-execution-ready" in shown.out
+    assert "Current node: ritual-execution" in shown.out
 
     first_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
     first = capsys.readouterr()
     assert first_advance == 0
     assert "Status: active" in first.out
-    assert "Current node: checklist-task-advance-task-runtime-testing-ready" in first.out
+    assert "Current node: ritual-testing" in first.out
 
     second_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
     second = capsys.readouterr()
     assert second_advance == 0
     assert "Status: ready_for_testing" in second.out
-    assert "Current node: checklist-task-advance-task-runtime-closeout-ready" in second.out
+    assert "Current node: ritual-closeout" in second.out
 
     blocked_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
     blocked = capsys.readouterr()
     assert blocked_advance == 1
     assert "Status: ready_for_testing" in blocked.out
-    assert "Current node: checklist-task-advance-task-runtime-closeout-ready" in blocked.out
-    assert "Message: Checklist checklist-task-advance-task-runtime-closeout-ready is not complete." in blocked.out
+    assert "Current node: ritual-closeout" in blocked.out
+    assert "Message: Gate ritual-closeout is not complete" in blocked.out
 
     runtime_test = tmp_path / "tests" / "test_runtime.py"
     runtime_test.parent.mkdir(parents=True, exist_ok=True)
@@ -1547,13 +1522,13 @@ def test_show_list_and_advance_task_uses_operational_runtime(tmp_path: Path, cap
     assert "Status: closed" in third.out
     assert "Current node: complete" in third.out
     assert not (tmp_path / "desk" / "tasks" / "task-advance-task-runtime.md").exists()
-    assert not (tmp_path / "desk" / "routines" / "routine-task-advance-task-runtime.md").exists()
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-advance-task-runtime.md" not in board_text
 
 
 
-def test_list_and_show_task_support_json_output(tmp_path: Path, capsys) -> None:
+def test_list_and_show_task_support_json_output(lifecycle_desk: Path, capsys) -> None:
+    tmp_path = lifecycle_desk
     add_result = main(
         [
             "add",
@@ -1590,105 +1565,9 @@ def test_list_and_show_task_support_json_output(tmp_path: Path, capsys) -> None:
     assert shown == 0
     show_payload = json.loads(show_out.out)
     assert show_payload["id"] == "task-json-task-output"
-    assert show_payload["routine"] == "routine-task-json-task-output"
-    assert isinstance(
-        show_payload["checklist_statuses"]["checklist-task-json-task-output-execution-ready"],
-        bool,
-    )
-
-
-
-def test_list_and_show_routine_support_json_output(tmp_path: Path, capsys) -> None:
-    add_result = main(
-        [
-            "add",
-            "task",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "JSON routine output",
-            "--goal",
-            "Expose routine data through the CLI.",
-            "--scope",
-            "Routine list/show surfaces only.",
-            "--implementation-path",
-            "Serialize the modeled routine payload.",
-            "--done-when",
-            "The CLI returns parseable routine JSON.",
-            "--validation",
-            "pytest",
-        ]
-    )
-    capsys.readouterr()
-    assert add_result == 0
-
-    listed = main(["list", "routines", "--root", str(tmp_path), "--format", "json"])
-    list_out = capsys.readouterr()
-    assert listed == 0
-    list_payload = json.loads(list_out.out)
-    assert list_payload["routines"][0]["id"] == "routine-task-json-routine-output"
-    assert list_payload["routines"][0]["entrypoint"] == "checklist-task-json-routine-output-execution-ready"
-
-    shown = main(
-        ["show", "routine", "routine-task-json-routine-output", "--root", str(tmp_path), "--format", "json"]
-    )
-    show_out = capsys.readouterr()
-    assert shown == 0
-    show_payload = json.loads(show_out.out)
-    assert show_payload["id"] == "routine-task-json-routine-output"
-    assert show_payload["edges"][0]["source"] == "checklist-task-json-routine-output-execution-ready"
-    assert show_payload["edges"][0]["target"] == "operator-task-json-routine-output-activate"
-
-
-
-def test_list_and_show_primitive_support_json_output(tmp_path: Path, capsys) -> None:
-    created = main(
-        [
-            "add",
-            "condition",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "JSON condition output",
-            "--subject",
-            "goal",
-            "--predicate",
-            "truthy",
-            "--summary",
-            "Expose primitive data through the CLI.",
-        ]
-    )
-    capsys.readouterr()
-    assert created == 0
-
-    listed = main(["list", "conditions", "--root", str(tmp_path), "--format", "json"])
-    list_out = capsys.readouterr()
-    assert listed == 0
-    list_payload = json.loads(list_out.out)
-    assert list_payload["conditions"][0]["id"] == "condition-json-condition-output"
-    assert list_payload["conditions"][0]["status"] == "active"
-    assert list_payload["conditions"][0]["summary"] == "Expose primitive data through the CLI."
-    assert "primitive:condition" in list_payload["conditions"][0]["tags"]
-    assert list_payload["conditions"][0]["subject"] == "goal"
-    assert list_payload["conditions"][0]["predicate"] == "truthy"
-    assert list_payload["conditions"][0]["expected"] == ""
-
-    shown = main(
-        [
-            "show",
-            "condition",
-            "condition-json-condition-output",
-            "--root",
-            str(tmp_path),
-            "--format",
-            "json",
-        ]
-    )
-    show_out = capsys.readouterr()
-    assert shown == 0
-    show_payload = json.loads(show_out.out)
-    assert show_payload["id"] == "condition-json-condition-output"
-    assert show_payload["predicate"] == "truthy"
+    assert "routine" not in show_payload
+    assert show_payload["current_node"] == "ritual-execution"
+    assert [gate["relation_type"] for gate in show_payload["lifecycle_gates"]] == ["task_activates"]
 
 
 
@@ -1734,7 +1613,8 @@ def test_list_and_show_artifact_support_json_output(tmp_path: Path, capsys) -> N
 
 
 
-def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_path: Path, capsys) -> None:
+def test_advance_task_blocks_testing_and_closeout_without_required_evidence(lifecycle_desk: Path, capsys) -> None:
+    tmp_path = lifecycle_desk
     import subprocess
     subprocess.run(['git', 'init', '-q'], cwd=tmp_path)
     subprocess.run(['git', 'config', 'user.email', 'test@example.com'], cwd=tmp_path)
@@ -1765,14 +1645,14 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_
     first = capsys.readouterr()
     assert first_advance == 0
     assert "Status: active" in first.out
-    assert "Current node: checklist-task-advance-blocked-task-testing-ready" in first.out
+    assert "Current node: ritual-testing" in first.out
 
     blocked_testing = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
     blocked_testing_out = capsys.readouterr()
     assert blocked_testing == 1
     assert "Status: active" in blocked_testing_out.out
-    assert "Current node: checklist-task-advance-blocked-task-testing-ready" in blocked_testing_out.out
-    assert "Message: Checklist checklist-task-advance-blocked-task-testing-ready is not complete." in blocked_testing_out.out
+    assert "Current node: ritual-testing" in blocked_testing_out.out
+    assert "Message: Gate ritual-testing is not complete" in blocked_testing_out.out
 
     blocked_test = tmp_path / "tests" / "test_blocked.py"
     blocked_test.parent.mkdir(parents=True, exist_ok=True)
@@ -1794,14 +1674,14 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_
     move_to_closeout_out = capsys.readouterr()
     assert move_to_closeout == 0
     assert "Status: ready_for_testing" in move_to_closeout_out.out
-    assert "Current node: checklist-task-advance-blocked-task-closeout-ready" in move_to_closeout_out.out
+    assert "Current node: ritual-closeout" in move_to_closeout_out.out
 
     blocked_closeout = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
     blocked_closeout_out = capsys.readouterr()
     assert blocked_closeout == 1
     assert "Status: ready_for_testing" in blocked_closeout_out.out
-    assert "Current node: checklist-task-advance-blocked-task-closeout-ready" in blocked_closeout_out.out
-    assert "Message: Checklist checklist-task-advance-blocked-task-closeout-ready is not complete." in blocked_closeout_out.out
+    assert "Current node: ritual-closeout" in blocked_closeout_out.out
+    assert "Message: Gate ritual-closeout is not complete" in blocked_closeout_out.out
 
     add_invalid_evidence = main([
         "edit",
@@ -1818,7 +1698,7 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_
     still_blocked = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
     still_blocked_out = capsys.readouterr()
     assert still_blocked == 1
-    assert "Message: Checklist checklist-task-advance-blocked-task-closeout-ready is not complete." in still_blocked_out.out
+    assert "Message: Gate ritual-closeout is not complete" in still_blocked_out.out
 
     add_evidence = main([
         "edit",
@@ -1839,7 +1719,8 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(tmp_
     assert "Current node: complete" in close_out.out
 
 
-def test_advance_task_accepts_atom_reference_as_closeout_evidence(tmp_path: Path, capsys) -> None:
+def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk: Path, capsys) -> None:
+    tmp_path = lifecycle_desk
     import subprocess
     subprocess.run(['git', 'init', '-q'], cwd=tmp_path)
     subprocess.run(['git', 'config', 'user.email', 'test@example.com'], cwd=tmp_path)
@@ -1903,7 +1784,8 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(tmp_path: Path
 
 
 
-def test_advance_task_allows_empty_implementation_path(tmp_path: Path, capsys) -> None:
+def test_advance_task_allows_empty_implementation_path(lifecycle_desk: Path, capsys) -> None:
+    tmp_path = lifecycle_desk
     add_result = main(
         [
             "add",
@@ -1930,153 +1812,7 @@ def test_advance_task_allows_empty_implementation_path(tmp_path: Path, capsys) -
 
     assert first_advance == 0
     assert "Status: active" in first.out
-    assert "Current node: checklist-task-advance-without-path-testing-ready" in first.out
-
-
-def test_add_and_show_condition_as_first_class_primitive(tmp_path: Path, capsys) -> None:
-    result = main(
-        [
-            "add",
-            "condition",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Has goal",
-            "--subject",
-            "goal",
-            "--predicate",
-            "truthy",
-            "--summary",
-            "Goal must exist before activation.",
-        ]
-    )
-
-    created = capsys.readouterr()
-    assert result == 0
-    assert "Created condition" in created.out
-    assert (tmp_path / "desk" / "primitives" / "conditions" / "condition-has-goal.md").exists()
-
-    show = main(["show", "condition", "condition-has-goal", "--root", str(tmp_path)])
-    shown = capsys.readouterr()
-    assert show == 0
-    assert "Condition: condition-has-goal" in shown.out
-    assert "Predicate: truthy" in shown.out
-
-
-def test_add_list_and_show_routine_from_yaml(tmp_path: Path, capsys) -> None:
-    routine_yaml = tmp_path / "routine.yaml"
-    routine_yaml.write_text(
-        """
-title: Release routine
-summary: Release workflow.
-entrypoint: checklist-release-ready
-decomposition:
-  - checklist-release-ready
-  - operator-release
-edges:
-  - edge-release-ready-to-operator
-terminal_nodes:
-  - complete
-""".strip()
-        + "\n",
-        encoding="utf-8",
-    )
-
-    create_condition = main(
-        [
-            "add",
-            "condition",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Release approved",
-            "--subject",
-            "approved",
-            "--predicate",
-            "truthy",
-        ]
-    )
-    capsys.readouterr()
-    assert create_condition == 0
-
-    create_checklist = main(
-        [
-            "add",
-            "checklist",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Release ready",
-            "--item",
-            "Approval exists",
-            "--condition-ref",
-            "condition-release-approved",
-        ]
-    )
-    capsys.readouterr()
-    assert create_checklist == 0
-
-    create_operator = main(
-        [
-            "add",
-            "operator",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Release",
-            "--action",
-            "set_field",
-            "--target",
-            "status",
-            "--value",
-            "released",
-        ]
-    )
-    capsys.readouterr()
-    assert create_operator == 0
-
-    create_edge = main(
-        [
-            "add",
-            "edge",
-            "--root",
-            str(tmp_path),
-            "--title",
-            "Release ready to operator",
-            "--source",
-            "checklist-release-ready",
-            "--target-node",
-            "operator-release",
-        ]
-    )
-    capsys.readouterr()
-    assert create_edge == 0
-
-    create_routine = main(
-        [
-            "add",
-            "routine",
-            "--root",
-            str(tmp_path),
-            "--from-yaml",
-            str(routine_yaml),
-        ]
-    )
-    created = capsys.readouterr()
-    assert create_routine == 0
-    assert "Created routine routine-release-routine" in created.out
-
-    listed = main(["list", "routines", "--root", str(tmp_path)])
-    list_output = capsys.readouterr()
-    assert listed == 0
-    assert "routine-release-routine | active | checklist-release-ready" in list_output.out
-
-    shown = main(["show", "routine", "routine-release-routine", "--root", str(tmp_path)])
-    show_output = capsys.readouterr()
-    assert shown == 0
-    assert "Routine: routine-release-routine" in show_output.out
-    assert "Entrypoint: checklist-release-ready" in show_output.out
-    assert "edge-release-ready-to-operator" in show_output.out
+    assert "Current node: ritual-testing" in first.out
 
 
 def test_add_list_and_show_pill_from_specs(tmp_path: Path, capsys) -> None:

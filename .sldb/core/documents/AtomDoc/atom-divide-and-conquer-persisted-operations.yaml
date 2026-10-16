@@ -1,7 +1,13 @@
 name: atom-divide-and-conquer-persisted-operations
 path: desk/atoms/workflow-model/atom-divide-and-conquer-persisted-operations.md
-hash_c: 950fa5ada4453778c1b27ebb54d5a3150a66e424d0ea59d7d4b6b00d1b2e729c
-hash_d: d2a9e195b01a6f70b04788648b2479f422733df80825c9a94cd606f4edb76fd6
+source_hash: 3d75814f6c41811515a2b77ad476bfde90da9c21214ea442e7ca1beb0d2e7fa9
+content_hash: ae13ab4da7a72629ca083e17171a4106ca2d5b328a917612131fbb433e5697b8
+field_hashes:
+  id: aab2aa60d8698c9e0d838190141a97a828ffc6184eb9776c1a3624057e7cf9f8
+  title: 366a44c046465d46b3af311f5d0edf94e941a27203af5f3c066091fa6feea750
+  five_wh_one_plus: 1566d618b9ad05f5d6636ef68875b058a3311f288ab671709bb72d36b5dd1a5c
+  answer: 3abdcc41660b775da27a07f9c54677ae0f8e1eaa223e0e967bad7e02c2fcef26
+  tags: 24c91cf1fb9d1be4efe3235181d83e724c31a2946079f42916f5e2c5172704ee
 semantic_tags:
 - representation.markdown
 - source.document.markdown

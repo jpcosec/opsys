@@ -1,7 +1,13 @@
 name: atom-spec-to-visualization-pipeline
 path: desk/atoms/workflow-model/atom-spec-to-visualization-pipeline.md
-hash_c: b74fce2a8a645230dfcdf122e048ee89a487ea47c167a106881365418bcbf0aa
-hash_d: d8e607aa3de0ac85b3098996d641c9e4e0b36562e288f91de5dbb32f33e82a12
+source_hash: e081e045dcb63729b417b6385d0a53ae60d277ccb66e9eeb0d51e8670c703fbc
+content_hash: 3ac3f9916bfc750fdb1fed646c3f33147a3a93cbcbdc675d3d3ffebb16b53f54
+field_hashes:
+  id: f7a4ade7e0c5beef836eae14c18d718a8a73b8c33f47d504a3f27fb77bc53b06
+  title: 07f1bc082c49f97e8a7ab410dfe498b62853db2f45d52cbd79b54fe904a414b1
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: a1ada7c19fe68e2ceded490766ebd3e141c26a9374ba369983c2d31064593eeb
+  tags: 8eee401e9b8e51329ff71765a7e5c211e7a8f57672e8237605edde05a93bfa35
 semantic_tags:
 - representation.markdown
 - source.document.markdown

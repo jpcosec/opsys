@@ -1,7 +1,13 @@
 name: atom-deskops-should-read-through-sldb-compositions
 path: desk/atoms/atom-deskops-should-read-through-sldb-compositions.md
-hash_c: 6bb591ee551ea4de1fe325e7e29158d8391ade1f207d8a2bcf5c8514e90a933a
-hash_d: 719848ee9aaaf54d995fa5c96f934c88940e2f47a626b2f8a3e39527746d0f49
+source_hash: 6bb591ee551ea4de1fe325e7e29158d8391ade1f207d8a2bcf5c8514e90a933a
+content_hash: 719848ee9aaaf54d995fa5c96f934c88940e2f47a626b2f8a3e39527746d0f49
+field_hashes:
+  id: e8543e4e317d2c7704e75e8ae979ab0b56a2dcc4df89869b0793359d7560de2d
+  title: 9785fd04a6c0c0e2f165bccc1e7779da35fc07ac44993cea0fbab6db1873789b
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: a88750dda34aa2994d3a3d5b89719a03c128349e42b09785753b78289ca08962
+  tags: e01bbe75dc417ddc977678bad6117cb075879753186990250e16155d96b22cb6
 semantic_tags:
 - representation.markdown
 - source.document.markdown

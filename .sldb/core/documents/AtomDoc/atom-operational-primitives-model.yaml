@@ -1,7 +1,13 @@
 name: atom-operational-primitives-model
 path: desk/atoms/workflow-model/atom-operational-primitives-model.md
-hash_c: dede0f2298d0998e1c3408472a728290257119df611c31fdfbd226613f6bee5d
-hash_d: 9f8624e16aa03e34f69015d04ab46c609659eafb5420db2cfe63a0a6152b12ab
+source_hash: dfb2fbba968f365d047e436ac31cc3e66ff6c0eee0466dae90fea990e4eb3264
+content_hash: e2afd50aff2f5b2c65eb29da8b0fa3f6acc144f6958b47b0a3ae7bd67a850065
+field_hashes:
+  id: 28450f5ab87115a65892762f63bafe3710c0659aa33d3477b132b3dd382e18c2
+  title: 8d935eb519f4cb847c518e2fa3acc1a307bee5abf2a0aebb409c6ed7045824bc
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 41e320cb701d8c6776338adcbe9f51569c8a8b3de81d8fd390398606ac9d12ae
+  tags: 83194423cce012af05b2dc88137ccaab568bfe702021901c8ff53bac34d859b2
 semantic_tags:
 - layer:runtime
 - representation.markdown

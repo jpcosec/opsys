@@ -1,7 +1,17 @@
 name: pill-pattern-supervisor-playbook-buenas-tareas-bundle-contexto-cero-y-frontera-de-modelos
 path: desk/contexts/pill-pattern-supervisor-playbook-buenas-tareas-bundle-contexto-cero-y-frontera-de-modelos.md
-hash_c: 7e61860c29b98a78f4dbd4ae2cfa6024308b03e7a83d5e7865b6979fd78c9eed
-hash_d: f2dc118aa8a267b22d355339a20a4b9442fc6cd84ce2d2066ec357dc3ff73fd2
+source_hash: 87962fe471e6a54eea59a761ba01121aca06b5999c904ef8a60d914ada748126
+content_hash: fdd8ec9cdd7c19c78df5f47e787514ec9cd2280c8d9185b4752c05a293040c6b
+field_hashes:
+  title: 35acd4e70cad115010f80a71d1617bc77b666c893747db726bfd90fe50fecccf
+  id: aa8ac7a947a120566dbb221ac785aeeeab3baae4a605198508392a75b4722328
+  tags: f8b4fc12669a1b45325580f7f61a11d7bbb000601be5fc89c8c9ec122665926f
+  what: 476e2bc3bd639c049c479c03358c7645364494d65e1917f390d79d7654f12fac
+  why: 2b1ca9bbc5e22f4e32ebc7d5eb000147c287e01b6c5ec16113d86744e74d4b2c
+  when: 191ff0fb4de900584aa2d7c759d9f13423de15cb0b5971e6fa2cf044773519e6
+  where: 4317aacfd5948f2b98143ad17eccfe4de9b26327b77ef41f64a4582b5231af64
+  how: 14f0253a52a4cc7dd0ddf648de0c631445b52b04cc0752da8ced7b7539c60547
+  how_not: 14907006613af081102c84bd46b15a4b4dfa549b902c0c019949a8bfb7d2a78d
 semantic_tags:
 - pill-type:pattern
 - representation.markdown

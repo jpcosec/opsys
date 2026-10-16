@@ -19,7 +19,7 @@ Desk health measures whether a desk workspace contains the expected structure, t
 `deskops/cli/commands/doctor.py` checks:
 - Missing or malformed `desk/` directory structure
 - Untracked modeled documents in `desk/`
-- Invalid task/pill/atom/routine documents (malformed YAML frontmatter)
+- Invalid task/pill/atom/ritual documents (malformed YAML frontmatter)
 - Stale graph runtime files (`.sldb/runtime/`)
 
 ## Related Atoms

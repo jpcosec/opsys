@@ -1,10 +1,7 @@
 ---
+# ritual-xxx
 id: ritual-testing
-tags:
-- system:sldb
-- workspace:desk
-- topic:rituals
-- topic:testing
+# List of step-xxx paths
 steps:
 - 1. Confirm the incoming handoff names the intended contract, touched surfaces, and
   pill guardrails to prove.
@@ -17,6 +14,12 @@ steps:
 - 1. Do not proceed to closeout while relevant tests fail.
 - 1. Exit testing only by opening a closeout handoff that confirms passing evidence
   for the contract and the bound pills.
+# e.g., layer:workflow, system:sldb
+tags:
+- system:sldb
+- workspace:desk
+- topic:rituals
+- topic:testing
 ---
 
 # Testing ritual for desk task closure
@@ -68,14 +71,6 @@ _Describe what completion looks like._
 
 The task has trustworthy test evidence and can proceed to closeout, with any broader cross-task validation obligations handed forward to the phase ritual.
 
-## Steps
+## Step Details
 
-- Confirm the incoming handoff names the intended contract, touched surfaces, and pill guardrails to prove.
-- Check whether existing tests are stale or encode obsolete behavior.
-- Translate the bound pills into concrete assertions, especially the failure cases implied by `how_not`.
-- Add or update tests for the intended contract.
-- Run the smallest relevant test scope first.
-- Run broader validation when the task changes shared behavior.
-- Do not proceed to closeout while relevant tests fail.
-- Exit testing only by opening a closeout handoff that confirms passing evidence for the contract and the bound pills.
-
+_Generated from the step references above._

@@ -17,7 +17,7 @@ It intentionally distinguishes:
 - what Pi auto-discovers
 - what the repo asks agents to load on demand
 - what deskops automates today
-- what is only modeled as future hook/routine architecture
+- what is still enforced by agent behavior rather than code
 
 ```mermaid
 flowchart TB
@@ -48,8 +48,8 @@ flowchart TB
         rituals["desk/rituals/*.md\nexecution/testing/closeout gates"]
         pills["desk/contexts/*.md\nboard + task pills"]
         atoms["desk/atoms/**/*.md\ndurable knowledge"]
-        specs["spec/workflows/*.yaml\nspec/primitives/*.yaml\nspec/artifacts/*.yaml"]
-        runtime["desk/routines/*.md\ndesk/primitives/{conditions,checklists,operators,edges,hooks}/*.md"]
+        specs["spec/workflows/*.yaml\nspec/artifacts/*.yaml\nspec/fields/*.yaml"]
+        runtime["desk/lifecycle/*.md\nRelationDoc transitions between rituals\n(tracked in .sldb)"]
         code["deskops/*.py\nCLI/runtime implementation"]
         tests["tests/*.py\nvalidation surfaces"]
         runs["runs/subagents/*\nexecution/testing evidence"]
@@ -58,15 +58,15 @@ flowchart TB
 
     subgraph AutomaticToday["Automation that exists today"]
         auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
-        auto_bundle["deskops add task / create_task_bundle\nauto-creates task + routine + conditions + checklists + operators + edges\nand appends the task to Board.md"]
+        auto_bundle["deskops add task / create_task_bundle\nwrites one task doc at ritual-execution\nand appends the task to Board.md"]
         auto_next["deskops next\nreads Board + task + spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
-        auto_advance["deskops advance task\nevaluates conditions/checklists/operators\nand advances current_node/status deterministically"]
-        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove task/routine/primitives from desk\nunroute from Board.md\ngit add/rm + git commit"]
+        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status"]
+        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove the task doc from desk\nunroute from Board.md\ngit add/rm + git commit"]
     end
 
     subgraph NotAutomaticYet["Things modeled but not generally auto-fired yet"]
-        hook_docs["desk/primitives/hooks/*.md\nmodeled hook documents exist"]
-        no_hook_engine["No generic hook dispatcher currently scans hook docs\nand fires them by event as a runtime engine"]
+        hook_docs["No hook documents\n(HookDoc was retired with the primitives)"]
+        no_hook_engine["No event-driven dispatcher\nonly the lifecycle transitions are automatic"]
         rituals_still_manual["Ritual obligations are still mostly enforced\nby agent behavior + deskops commands\nnot by a full automatic hook system"]
     end
 
@@ -108,13 +108,11 @@ flowchart TB
     implement --> validate --> handoff --> close_gate
 
     auto_bundle --> tasks
-    auto_bundle --> runtime
     auto_bundle --> board
     auto_next --> rituals
     auto_next --> pills
     auto_advance --> tasks
     auto_close --> tasks
-    auto_close --> runtime
     auto_close --> board
     auto_close --> git
 
@@ -232,13 +230,10 @@ Implemented by `create_task_bundle()`.
 
 Automatically creates and writes:
 
-- task doc
-- routine doc
-- task-specific conditions
-- task-specific checklists
-- task-specific operators
-- task-specific edges
+- the task doc, at the lifecycle entry node `ritual-execution`
 - board update adding the task to `desk/tasks/Board.md`
+
+Nothing else is written per task: the lifecycle is the desk's sldb graph under `desk/lifecycle/`, written once by `deskops init` or `deskops desk update --apply`.
 
 ### `deskops next`
 
@@ -253,14 +248,14 @@ Automatically:
 
 ### `deskops advance task`
 
-Implemented by `advance_task()` plus routine/condition/checklist/operator evaluation.
+Implemented by `advance_task()` plus `deskops/lifecycle.py`.
 
 Automatically:
 
-- evaluates deterministic conditions
-- checks checklist completion
-- applies operators
-- updates task status/current node
+- reads the transitions leaving the task's `current_node` from the sldb edge index
+- evaluates each transition's `--where` condition with sldb (`where_matches`)
+- fires the first one that holds: sets the status it declares and the next ritual (or `complete`)
+- reports the blocked gate when none holds
 
 ### automatic closeout side effect inside `advance_task()`
 
@@ -275,21 +270,12 @@ That is the closest thing to a currently active automatic closeout hook in the r
 
 ## 6. Hooks: current truth
 
-There **are** hook documents as workflow artifacts under:
-
-- `desk/primitives/hooks/`
-
-But there is **not yet** a generic hook runtime that:
-
-- watches events
-- resolves matching hook docs
-- checks conditions
-- dispatches targets automatically
+Hook documents were retired together with the other per-task primitives. There is no event-driven hook runtime; the only automatic workflow rules are the lifecycle transitions and their conditions in the sldb graph.
 
 So the current workflow should be described as:
 
-- **partly automated by specific deskops code paths**
-- **not yet automated by a general hook engine**
+- **partly automated by the lifecycle graph and specific deskops code paths**
+- **ritual obligations beyond the transition conditions are still enforced by agent behavior**
 
 ## Practical interpretation
 
@@ -298,4 +284,4 @@ Today the workflow is a hybrid:
 - **Pi** auto-discovers skills
 - **agents** still have to choose/load the right skill and follow repo rituals
 - **deskops** automates several deterministic task-lifecycle operations
-- **hook docs** exist as modeled workflow artifacts, but most ritual enforcement is still behavioral/manual rather than event-driven runtime automation
+- **the lifecycle graph** automates task transitions; most other ritual enforcement is still behavioral/manual

@@ -1,7 +1,13 @@
 name: atom-networkx-is-first-graph-runtime
 path: desk/atoms/knowledge-model/atom-networkx-is-first-graph-runtime.md
-hash_c: acd5e9b6b58e4a5214397ef24f3570491c1c05d7a53d3f97294ad0a14b08b62e
-hash_d: c0bcd7fd5566509dfa035bd3d2e29bf9337f09aee040c4cb98f679723f9a7617
+source_hash: acd5e9b6b58e4a5214397ef24f3570491c1c05d7a53d3f97294ad0a14b08b62e
+content_hash: c0bcd7fd5566509dfa035bd3d2e29bf9337f09aee040c4cb98f679723f9a7617
+field_hashes:
+  id: 8134c94cabc98de7368c70ec332e781fd2781aeff5045e4eb4a6d374447f43bc
+  title: 1418bf7a8c6924d3af91412398c1ac1e0a1931ff4ad880ee12d0f7307467797d
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 312810fd0fd445ebd2940647b62e6fbe8e568d5cffa3f1e613f4af1b6eb60b0c
+  tags: d4ee4f4e98c0f291cd8e3ead2d139c3e2a298e31d4e88cd4adb39f9bdb7c5384
 semantic_tags:
 - representation.markdown
 - source.document.markdown

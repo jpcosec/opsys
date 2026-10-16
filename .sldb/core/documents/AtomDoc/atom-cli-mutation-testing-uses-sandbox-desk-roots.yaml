@@ -1,7 +1,13 @@
 name: atom-cli-mutation-testing-uses-sandbox-desk-roots
 path: desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md
-hash_c: 90d09b0738e0a0f41b878d2ef806e9285430c9a9d4a2c471b639ca384a060569
-hash_d: b4fcef5621f07899bc159536dea0e6d769e0b2ad4e15dd0b82d5c981857bf015
+source_hash: 8423ba19e7de4c5105c4ff7ee725075bfa2da9184950da26496bf004fc7fe734
+content_hash: be3977d7dcccad46421a078d17c3a61a5f86f8c155dd2345e3273af4921fd3c5
+field_hashes:
+  id: 43f53f135eaaf12985c3da037ee43843912ebbf83130e449d5cd29f2692595c5
+  title: 0c8c702ab35ff358e7a542e39b7572a7a6a786b8be820cccd5eba90d1a40744c
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 2eb749554b214bf7a00577d1260bc799dcf0f9db22ed03b2198400d5be3efa64
+  tags: 6817d876fcca6eebf4699d6a53e86ac016430d38edc16700ad8c38781e189664
 semantic_tags:
 - representation.markdown
 - source.document.markdown

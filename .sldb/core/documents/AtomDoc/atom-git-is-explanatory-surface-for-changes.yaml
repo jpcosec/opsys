@@ -1,7 +1,13 @@
 name: atom-git-is-explanatory-surface-for-changes
 path: desk/atoms/workflow-model/atom-git-is-explanatory-surface-for-changes.md
-hash_c: f7b12df306a5cbc7209873db69d574de72cb4c95658da239302890186359bca8
-hash_d: 6635ff250d1c9b14ac6c073fc49e236d6b3c852f40de1df82b6dcc2fae4bcf73
+source_hash: f7b12df306a5cbc7209873db69d574de72cb4c95658da239302890186359bca8
+content_hash: 6635ff250d1c9b14ac6c073fc49e236d6b3c852f40de1df82b6dcc2fae4bcf73
+field_hashes:
+  id: cf8a9459981a30a519e117534e3e84b9c100ddee65fee8f4e44e18e31ec766b0
+  title: a830b51818839a119a0b3257b8c74c127a660f03f5b255e07b321c7ac5a3171f
+  five_wh_one_plus: 1566d618b9ad05f5d6636ef68875b058a3311f288ab671709bb72d36b5dd1a5c
+  answer: 38a6729a3f63a8601be5b30ddfcbfc6c2d2e90efbc6c5984bcd2db8254050d32
+  tags: 374ea8aa3a6cba00b514954708c95100db1de228039daee3aae9cfaa8d1d82e8
 semantic_tags:
 - representation.markdown
 - source.document.markdown

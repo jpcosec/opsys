@@ -1,7 +1,13 @@
 name: atom-repo-artifacts-need-atom-traceability
 path: desk/atoms/workflow-model/atom-repo-artifacts-need-atom-traceability.md
-hash_c: d67b05e4a2de02698b01286c04e6c1cab7bbb9d33ff045065deb2bfd304742f8
-hash_d: 25e29158c021f2bcd7c275abd852c92aedde1c5a1301f5bdb1ca355465b9f7fd
+source_hash: d67b05e4a2de02698b01286c04e6c1cab7bbb9d33ff045065deb2bfd304742f8
+content_hash: 25e29158c021f2bcd7c275abd852c92aedde1c5a1301f5bdb1ca355465b9f7fd
+field_hashes:
+  id: 957101392e86baffe6ac6f866a013b37405c2863a1e20fa8077ef8dc091d3c81
+  title: 79ffb59b81bea74697b28f11e18cbd8d83ffd1e665c026c88879e126ebf2296f
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: e7bb3bed81142f8cdcf159e6bc58bea6e4acbb73c75a5f12a0a4bf0770847c42
+  tags: c5cf8c717f624d6770d1b47f71a5cd2f4f94713b1eca25d7da736ffa14c0b47c
 semantic_tags:
 - representation.markdown
 - source.document.markdown

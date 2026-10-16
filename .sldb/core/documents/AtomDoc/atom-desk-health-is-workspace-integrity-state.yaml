@@ -1,7 +1,13 @@
 name: atom-desk-health-is-workspace-integrity-state
 path: desk/atoms/atom-desk-health-is-workspace-integrity-state.md
-hash_c: e27d2298496a4ea4931c89728e66e53cab928b30f8fd6c823c8b83d55ed2ad85
-hash_d: 65e88b5b32a321cfb1d3428d9fa83cbce8cce7b62559dbcf7c5a2bfed4a34e17
+source_hash: b59b1f7b8dcaefd23eb6f4471bffc7d26ea9a37c20a7e08bb7343966b0be688a
+content_hash: 958b7b64da9e9b2bd591d4d56fa2835f3f86e74cc5fd3c5404c4f97040dbfde6
+field_hashes:
+  id: d6a050dfacfa2b7ba4639e0c08d9ebe0a16d2414bee70bfb37b3e41e281f03d4
+  title: 3d4bfcf6ec5025ecbb47658789d7ec53837d8c5267adb7ab18a106bf6a93948a
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 2030cca56ceb685f1d0576abf5596505f9da44105a725f841841125be8326279
+  tags: da689e6d6181717e44ea665328309c28b7fa3aa91823f1919225bac21c3a861c
 semantic_tags:
 - representation.markdown
 - source.document.markdown

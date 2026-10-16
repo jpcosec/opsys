@@ -1,7 +1,13 @@
 name: atom-pills-reference-not-copy
 path: desk/atoms/workflow-model/atom-pills-reference-not-copy.md
-hash_c: 1f98cec7d3121933afffae4de58a869735dd7e545222aa84c6b3f157d8468a1c
-hash_d: 65a5e1c5d98822cac1551097c17dd24aee2700a4768cb227151fd9dbccef2aae
+source_hash: 1f98cec7d3121933afffae4de58a869735dd7e545222aa84c6b3f157d8468a1c
+content_hash: 65a5e1c5d98822cac1551097c17dd24aee2700a4768cb227151fd9dbccef2aae
+field_hashes:
+  id: 31b15e4dc4090aecaf2203a75fb7f34afbf6d0cc25f5a782b319b4e2f9d04560
+  title: d3c56104ee0d6c2beac706f7bfe7fff443272b1bed06cd49b3f84bf447f9abcf
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: d357c6af1566e73148df1b2ec05a636986b62a4ac19f712f0147b677d7551fa6
+  tags: 758579abded93e93c2e61c6c220e94774fbdb3907b4b719a0ce3c34c2293eaae
 semantic_tags:
 - representation.markdown
 - source.document.markdown

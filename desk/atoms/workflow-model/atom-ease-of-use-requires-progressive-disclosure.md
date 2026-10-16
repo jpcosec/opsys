@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-Deskops becomes easy to use when newcomers can start from a small command set and clear happy paths, then discover models, primitives, SLDB details, atom traceability, and advanced materialization concepts only when needed.
+Deskops becomes easy to use when newcomers can start from a small command set and clear happy paths, then discover models, the lifecycle graph, SLDB details, atom traceability, and advanced materialization concepts only when needed.

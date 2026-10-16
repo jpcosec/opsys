@@ -1,7 +1,13 @@
 name: atom-desk-health-delegates-store-diagnostics-to-sldb
 path: desk/atoms/atom-desk-health-delegates-store-diagnostics-to-sldb.md
-hash_c: 0638aac4f4a4a6c66af5cb212cfafffae64c928310f503e3721a746bfa0b465c
-hash_d: 7acf2e3c712e305ca315248e19b2cbb4813d9825c11cb1094b6e47bc4c5872cc
+source_hash: b8c13dd1095b274e4c826518fa4dd301bda1b33dfff11c8cf4528f6ca50f3237
+content_hash: 3ee65a5bf746f6db0f510e465f213bebb0caf76bccebefbf0a63b3eed7f4c3d3
+field_hashes:
+  id: 870b7fedc6b0e5c1862877c3f3a8f160aa1aea92b59b25d8bf18d7be257b4bbd
+  title: d0c1d21707662e71134936da5c28a6ed85d0816e37fd1611dc2ef7162badd605
+  five_wh_one_plus: 1566d618b9ad05f5d6636ef68875b058a3311f288ab671709bb72d36b5dd1a5c
+  answer: 585346630c9782b4ba83f18c409578e47d00d821e06742ebb35a7f53b618777f
+  tags: b24ab61fead7c24f62f3cc90d59ba66648424c0a1e48d9c48c5b0eadbdca2cd6
 semantic_tags:
 - representation.markdown
 - source.document.markdown

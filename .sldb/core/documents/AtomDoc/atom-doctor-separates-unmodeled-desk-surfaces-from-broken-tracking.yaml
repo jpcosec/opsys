@@ -1,7 +1,13 @@
 name: atom-doctor-separates-unmodeled-desk-surfaces-from-broken-tracking
 path: desk/atoms/atom-doctor-separates-unmodeled-desk-surfaces-from-broken-tracking.md
-hash_c: 665aba51f48831523e587bf04d620d9e8cb9b61424d7f0d09a2ca22168c30d2a
-hash_d: 7dd257115a447aa2dad75adc08948c74c93ea3b84c4437d92e515f2d9a37dd88
+source_hash: 665aba51f48831523e587bf04d620d9e8cb9b61424d7f0d09a2ca22168c30d2a
+content_hash: 7dd257115a447aa2dad75adc08948c74c93ea3b84c4437d92e515f2d9a37dd88
+field_hashes:
+  id: 9c3689ee52f7d08d82ed7c17adcc9c143698705e51ef930c17291d8abf30b2fc
+  title: 3c53e60e34a5e42bc120f49039ce015f6bff49f8c327257e8e4899ff084324b5
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 973e8a7d38f1e8ce03c98bdb1ad7ceb4899be39e141d72ee77a88878cc8bba75
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown
 - source.document.markdown

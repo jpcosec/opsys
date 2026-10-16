@@ -1,7 +1,13 @@
 name: atom-spec-fields-compile-into-model-fields
 path: desk/atoms/workflow-model/atom-spec-fields-compile-into-model-fields.md
-hash_c: accab4e0051872c7486135864a70b71737ec29101a5d4789e264b5e04c75a891
-hash_d: c967097282b407e209cb45cbf02b501f54139c05a3cd344b9c45a2d37b5a5956
+source_hash: accab4e0051872c7486135864a70b71737ec29101a5d4789e264b5e04c75a891
+content_hash: c967097282b407e209cb45cbf02b501f54139c05a3cd344b9c45a2d37b5a5956
+field_hashes:
+  id: 026769f45a9cdffdf79ce1d1098335695a17821e5bcf7d3291980689a7fdd504
+  title: 9af5c47da133ac6fd2a84230fb66b58cb4e14548c7e99a302052f47d9054742c
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: c04bff7492ee6f601f9312c367b47bc5bf0e9bdb4f69c07a33e116e8d808ac18
+  tags: f19593b2de38602ca66fc0d35c2153d9860fa35edde3f759e0c4709c65ff89d9
 semantic_tags:
 - representation.markdown
 - source.document.markdown

@@ -34,15 +34,11 @@ tags: ⸢rev•tags⸥
 
 
 class OperationalArtifactDoc(PrimitiveDoc):
-    routine: str = Field(
-        default="",
-        description="Primary routine identifier that makes the artifact actionable.",
-    )
     current_node: str = Field(
         default="",
-        description="Current node in the operational routine or state machine.",
+        description="Current node of the artifact in its lifecycle graph (a ritual id, or 'complete').",
     )
     history: list[str] = Field(
         default_factory=list,
-        description="Operational transition history for the artifact.",
+        description="Lifecycle transitions the artifact went through, by relation type.",
     )

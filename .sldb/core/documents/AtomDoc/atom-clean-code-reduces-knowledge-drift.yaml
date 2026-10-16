@@ -1,7 +1,13 @@
 name: atom-clean-code-reduces-knowledge-drift
 path: desk/atoms/workflow-model/atom-clean-code-reduces-knowledge-drift.md
-hash_c: 6435e14ca77d9781ebd4a2b5147efc0143d4eaa7be75575259977fddb205c6b1
-hash_d: 322966abe2cb859652c734ebc827db80cb7a864c4e3d14f275f4f0a5f543787d
+source_hash: 6435e14ca77d9781ebd4a2b5147efc0143d4eaa7be75575259977fddb205c6b1
+content_hash: 322966abe2cb859652c734ebc827db80cb7a864c4e3d14f275f4f0a5f543787d
+field_hashes:
+  id: 04346cd21fc7f4f6b787da4e1c7063f38f9360c95b0ff21c4d28ec5661175c5e
+  title: 1fa2dc7014633b61909c514e5af0d3a5d5493b536fd57fbf4d9ff6e6f2ae6d9c
+  five_wh_one_plus: 1566d618b9ad05f5d6636ef68875b058a3311f288ab671709bb72d36b5dd1a5c
+  answer: 89bec1062aa16da19e3b22b01e84a787574443b0641dfffbc9f8e00a3e0c7a89
+  tags: 6540ca0374de2f8b42485be0273ccdda946c258a7f71824c4124264e44636a7b
 semantic_tags:
 - representation.markdown
 - source.document.markdown

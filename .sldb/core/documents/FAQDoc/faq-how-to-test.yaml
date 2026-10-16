@@ -1,7 +1,10 @@
 name: faq-how-to-test
 path: desk/faq/faq-how-to-test.md
-hash_c: aa8a834be59e0094c9fd197b52879e43347d84f342b0eb77f96dce24374a6067
-hash_d: cc8dbd29acd061b708c0aa5ca09f91148fb7d8eac34be619564c3b57f0c1f6e9
+source_hash: aa8a834be59e0094c9fd197b52879e43347d84f342b0eb77f96dce24374a6067
+content_hash: cc8dbd29acd061b708c0aa5ca09f91148fb7d8eac34be619564c3b57f0c1f6e9
+field_hashes:
+  title: 48e8fae6db7d975b370146e4cd7eb33bcb95b1041639c775995287b22c14ac1b
+  body: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
 semantic_tags:
 - representation.markdown
 - source.document.markdown

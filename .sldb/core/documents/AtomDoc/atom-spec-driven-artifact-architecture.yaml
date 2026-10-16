@@ -1,7 +1,13 @@
 name: atom-spec-driven-artifact-architecture
 path: desk/atoms/workflow-model/atom-spec-driven-artifact-architecture.md
-hash_c: 17c135a55794395642282f4a32c1ee79cbd1ce11279113daa8b84fbdc102ca7d
-hash_d: 0819b8b421a2340b7be121c319600cf1712ee42a63f0158a6a29ff09217232a4
+source_hash: 9de0fa1c74ce85a618dc69b22c4e7534ee749219e527d0ae7da82795d3eb34cb
+content_hash: 39e908d6aa1434bdb4d046cdbd3fb377e3719be439a3230e2d4d17ac211dc82f
+field_hashes:
+  id: bb96a8e83a81179356ee136a25d02ea835458417c437e8c6c84877fc3a857c3c
+  title: 813ecddf11f9316b9a54afa09ed91a10edf41dd40b0ce19de760de960770a105
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: f5b6cfd05ebc2c42672f015b988ce3ad26cbd3c9692837c29a766bc757307592
+  tags: d16ae3c92b31770adc365225c49d94a836ee99028680407fa1c892b19305cc3f
 semantic_tags:
 - representation.markdown
 - source.document.markdown

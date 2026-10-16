@@ -22,23 +22,29 @@ def match_workflow_state(spec: dict[str, Any], current_node: str) -> dict[str, A
             continue
         if state.get("current_node") == node:
             return state
-        suffix = state.get("current_node_suffix")
-        if suffix and node.endswith(str(suffix)):
-            return state
     if not node:
         return _first_state(spec)
     raise ValueError(f"No workflow state in {spec.get('_path')} matches current node '{current_node}'")
 
 
 def render_workflow_mermaid(spec: dict[str, Any]) -> str:
+    """Mermaid of the lifecycle graph: one node per state, one arrow per transition,
+    labelled with its relation type and condition."""
     states = [state for state in spec.get("states") or [] if isinstance(state, dict)]
+    by_node = {str(state.get("current_node")): str(state["id"]) for state in states}
     lines = ["flowchart TD"]
     for state in states:
         state_id = str(state["id"])
         label = str(state.get("phase") or state_id).replace('"', "'")
         lines.append(f'    {state_id}["{label}"]')
-    for source, target in zip(states, states[1:]):
-        lines.append(f"    {source['id']} --> {target['id']}")
+    for transition in spec.get("transitions") or []:
+        source = by_node.get(str(transition["source"]), str(transition["source"]))
+        target_node = "complete" if transition.get("terminal") else str(transition["target"])
+        target = by_node.get(target_node, target_node)
+        label = str(transition["relation_type"])
+        if transition.get("condition"):
+            label += f": {transition['condition']}"
+        lines.append(f'    {source} -->|"{label.replace(chr(34), chr(39))}"| {target}')
     return "\n".join(lines)
 
 

@@ -1,7 +1,17 @@
 name: pill-cli-gaps-become-tracked-work
 path: desk/contexts/pill-cli-gaps-become-tracked-work.md
-hash_c: e24a9143653b5c64b074bd11e7cd0214148a97af74e9b99faca22b3d79e21a74
-hash_d: aa4b2cf0c3652691f5fbd31189cde0673a3753abe51c5962f87082bbdc112e56
+source_hash: e24a9143653b5c64b074bd11e7cd0214148a97af74e9b99faca22b3d79e21a74
+content_hash: aa4b2cf0c3652691f5fbd31189cde0673a3753abe51c5962f87082bbdc112e56
+field_hashes:
+  title: a053e0cc226049a653c49b507c6689a5410eb3073158b30fcf9a8b289450d266
+  id: ddde0c720a35e7fbc4f88e02bc5a8e8af25ca3843a3f79d1e65e4dfd5bc4ca62
+  tags: 5c30d051ab4e80de3e4c55d441d0655d84a4eb4b10c12f1a3fbf35434a64aebc
+  what: 3e982306c691f9709f6ac1d7ed331f6e9c671ec0ad7378db9a7e8b3a37681367
+  why: ccf907a1adcd82108acf46f271d992537496866c27c2857c7e8c50778cd903ee
+  when: 380d1040c20ede87f11f9ba40450cabacbf1630c253d4458203a2534575fc27e
+  where: a3ecd3c217c43fa9aea9dc5b47b88b1ccc06b34332144320c2b325924ecc3543
+  how: a605632fb40412b722b9fac96b465ce0ed6c1e9c63859bb8abc38a2d816d6047
+  how_not: cfa161ac06230df9bf1899575c3b024b7b7a9b2ced3bfb0afea1f5449ad36159
 semantic_tags:
 - pill-type:guardrail
 - representation.markdown

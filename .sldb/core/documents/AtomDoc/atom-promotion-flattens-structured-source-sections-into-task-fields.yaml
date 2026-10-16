@@ -1,7 +1,13 @@
 name: atom-promotion-flattens-structured-source-sections-into-task-fields
 path: desk/atoms/atom-promotion-flattens-structured-source-sections-into-task-fields.md
-hash_c: 9b0b8877bbd9de674db4527c0161b9e971567cb76aceb115f12c722f3d97d714
-hash_d: dd2ae5dac6c4593e7d5a5b482cb6134a2ab5880dfd97ed9e4547459b417f6774
+source_hash: 9b0b8877bbd9de674db4527c0161b9e971567cb76aceb115f12c722f3d97d714
+content_hash: dd2ae5dac6c4593e7d5a5b482cb6134a2ab5880dfd97ed9e4547459b417f6774
+field_hashes:
+  id: 60b569330401ec4d05f64dc49fcb9008dbfd8639641a8adb0c29f3e13458c35d
+  title: 674c6ca054a29f86ed6877bd0156ca2629e330e9f3b24b658361bf0e7b01232b
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 8fa96db941200c31d191e608962e601f473d5925415a2e201c0addd1193f7f05
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown
 - source.document.markdown

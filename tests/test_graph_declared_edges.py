@@ -22,9 +22,7 @@ def write(path: Path, text: str) -> None:
 TASK = """---
 id: task-do-the-thing
 status: active
-routine: routine-task-do-the-thing
-checklists:
-- checklist-task-do-the-thing-execution-ready
+current_node: ritual-execution
 pills:
 - desk/contexts/pill-guardrail.md
 atoms:
@@ -43,12 +41,8 @@ from_drawer: desk/drawer/tasks/task-do-the-thing.md
 def _build_desk(root: Path) -> None:
     write(root / "desk/tasks/task-do-the-thing.md", TASK)
     write(
-        root / "desk/routines/routine-task-do-the-thing.md",
-        "---\nid: routine-task-do-the-thing\n---\n\n# Routine\n",
-    )
-    write(
-        root / "desk/primitives/checklists/checklist-task-do-the-thing-execution-ready.md",
-        "---\nid: checklist-task-do-the-thing-execution-ready\n---\n\n# Checklist\n",
+        root / "desk/rituals/execution.md",
+        "---\nid: ritual-execution\n---\n\n# Execution\n",
     )
     write(
         root / "desk/contexts/pill-guardrail.md",
@@ -78,11 +72,7 @@ def test_declared_containment_becomes_edges_with_the_field_as_role(tmp_path: Pat
         if edge.source_id == "task:task-do-the-thing"
     }
 
-    assert ("routine", "routine:routine-task-do-the-thing") in task_edges
-    assert (
-        "checklists",
-        "checklist:checklist-task-do-the-thing-execution-ready",
-    ) in task_edges
+    assert ("current_node", "ritual:ritual-execution") in task_edges, "a task's lifecycle node is a ritual"
     assert ("pills", "pill:pill-guardrail") in task_edges
     assert ("atoms", "atom:atom-do-the-thing") in task_edges
     assert ("references", "task:task-something-else") in task_edges
@@ -109,6 +99,8 @@ def test_a_declared_field_holding_prose_is_not_an_unresolved_reference(tmp_path:
         "id: ritual-phase\n"
         "steps:\n"
         "- Identify the ready dependency layer of tasks whose prerequisites are satisfied.\n"
+        "- '1. Store the reformulation at `runs/subagents/<run-dir>/preflight.md`.'\n"
+        "- '1. Run a gate: give one fresh subagent only the TaskDoc.'\n"
         "---\n\n# Phase\n",
     )
     write(

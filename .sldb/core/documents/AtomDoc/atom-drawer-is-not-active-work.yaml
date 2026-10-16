@@ -1,7 +1,13 @@
 name: atom-drawer-is-not-active-work
 path: desk/atoms/workflow-model/atom-drawer-is-not-active-work.md
-hash_c: fe957e965c08b10f22cbf48463b0e7b4dcb595615dbb3d3bd0e8636ecffbf5ae
-hash_d: b1e8e85c1b6626f35d9b8ce1d5e6d6a6db05a4715f3af5881bfba5b745501417
+source_hash: fe957e965c08b10f22cbf48463b0e7b4dcb595615dbb3d3bd0e8636ecffbf5ae
+content_hash: b1e8e85c1b6626f35d9b8ce1d5e6d6a6db05a4715f3af5881bfba5b745501417
+field_hashes:
+  id: 26cfe65b0a0957cbd921445535085edb4df4044bfd025e9c6c22884f16cafc32
+  title: 960ed3f066b8ead0329c69878eb322e18a9a367965841e103b64d5685f58e471
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: ffae71d41b3bb89ff4986f0c973f9dc83193de174165f3d0034319f2ef26dcc1
+  tags: 90935dd3116085bfba819744c8f6f66c13eea041c9c3a34bbb8ba95d90dfaf41
 semantic_tags:
 - representation.markdown
 - source.document.markdown

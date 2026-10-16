@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-The project knowledge graph should connect desk artifacts such as atoms, tasks, docs, specs, diagrams, issues, rituals, and primitives with source files such as modules, tests, CLI entrypoints, model definitions, fixtures, and configuration files.
+The project knowledge graph should connect desk artifacts such as atoms, tasks, docs, specs, diagrams, issues, and rituals with source files such as modules, tests, CLI entrypoints, model definitions, fixtures, and configuration files.

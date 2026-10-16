@@ -1,7 +1,13 @@
 name: atom-001-self-described-store-layout
 path: desk/atoms/atom-001-self-described-store-layout.md
-hash_c: 559d36507fd5f64935fdb30495d526d7c030eff8f8ce566a13e7551e580cbe21
-hash_d: a99e0956a6ab63f49fa111fbf8fcf4f72ec541cce9299742aa63be407d22bf10
+source_hash: 559d36507fd5f64935fdb30495d526d7c030eff8f8ce566a13e7551e580cbe21
+content_hash: a99e0956a6ab63f49fa111fbf8fcf4f72ec541cce9299742aa63be407d22bf10
+field_hashes:
+  id: f3971b8500a00d2cad20ec1e384916916cb0788cb5c711c691b64232f52f7d20
+  title: 07e42c65977eedb2822b892de8604096991f93926fd1ce8611f8ae941a19f436
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 3ae7a307075a7e818f9ed300f3cce03e8d5d40ccc887a86b3805d9297f422cbc
+  tags: 8fb9c1138d013e58b04dc3401614311d0b9779260e702fa2c7eec69a7ee576bb
 semantic_tags:
 - layer:runtime
 - representation.markdown

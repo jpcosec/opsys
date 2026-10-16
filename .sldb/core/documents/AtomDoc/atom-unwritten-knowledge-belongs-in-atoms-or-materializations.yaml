@@ -1,7 +1,13 @@
 name: atom-unwritten-knowledge-belongs-in-atoms-or-materializations
 path: desk/atoms/workflow-model/atom-unwritten-knowledge-belongs-in-atoms-or-materializations.md
-hash_c: 33d428acab45cf82c7322111dae189a1009164e8af9585542bf849799e69195e
-hash_d: 0c6adecf6230a628f88f85b969e95aacf3d51481365aa2107c7c65310ece9123
+source_hash: 33d428acab45cf82c7322111dae189a1009164e8af9585542bf849799e69195e
+content_hash: 0c6adecf6230a628f88f85b969e95aacf3d51481365aa2107c7c65310ece9123
+field_hashes:
+  id: c1f13082f9e1aff17325846b6cfa5b3c0ba42b63b3de5d05d12a43cec3f0908d
+  title: 414a863a87f8d547b91607318318537ac62c70c0d2fa4711635722f497271bd3
+  five_wh_one_plus: 43f94244d00ce4813a89d3c0d15e1842fe2cfd95ce9fe3b063dda9e7983e0063
+  answer: 62beb51ea16d694e57a69c79b4704a59e71745989429685afa42ed59c6ae038b
+  tags: ef13a8868098ed0aee407264d0bdb49152f50eefd09a6a07ff3c6ad1927cd8eb
 semantic_tags:
 - representation.markdown
 - source.document.markdown

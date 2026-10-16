@@ -34,7 +34,7 @@ Apply this pill whenever a create operation is written, reviewed, or refactored.
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Applies to `deskops/operations.py` create methods: `create_artifact`, `create_primitive`, `create_routine`, `create_task_bundle`, and any future create that writes durable artifacts.
+Applies to `deskops/operations.py` create methods: `create_artifact`, `create_task_bundle`, and any future create that writes durable artifacts.
 
 ## How
 

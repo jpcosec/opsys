@@ -5,14 +5,15 @@ flowchart TB
         docs["Modeled Markdown docs\nextract/render/validate"]
         fields["Fields and sections\nread/write/edit/query"]
         semantic["Semantic indexes\nfind/navigation/trace"]
+        edgeidx["Edge index and relations\nRelationDoc, edges_from,\nwhere_matches"]
     end
 
     subgraph deskops[Deskops workflow domain]
-        specs["spec/ artifacts and fields\ncompiler vocabulary"]
-        primitives["Primitives\nstate checks, transitions, gates"]
+        specs["spec/ artifacts, fields, lifecycle\ncompiler vocabulary"]
+        lifecycle["Lifecycle\nwrites the ritual graph,\nfires transitions"]
         materializers["Materializers\natom/task/doc projections"]
         cli["deskops CLI\ncommands from workflow nouns"]
-        surfaces["desk/ surfaces\ntasks, atoms, rituals, inbox, drawer"]
+        surfaces["desk/ surfaces\ntasks, atoms, rituals, lifecycle, inbox, drawer"]
     end
 
     subgraph outputs[Human and machine outputs]
@@ -23,17 +24,19 @@ flowchart TB
     end
 
     specs -->|compile to| models
-    specs -->|define legal operations for| primitives
+    specs -->|declare transitions and effects for| lifecycle
     models -->|render/extract/validate| docs
     docs -->|tracked by| store
     fields -->|operate on| docs
     semantic -->|indexes| store
+    edgeidx -->|indexes relations of| store
 
-    cli -->|invokes| primitives
+    cli -->|invokes| lifecycle
     cli -->|creates/updates| surfaces
     cli -->|delegates modeled document work to| docs
     cli -->|delegates field operations to| fields
-    primitives -->|mutate/check| surfaces
+    lifecycle -->|reads transitions and evaluates conditions through| edgeidx
+    lifecycle -->|moves tasks in| surfaces
     materializers -->|project from| surfaces
     materializers -->|write modeled docs through| docs
 

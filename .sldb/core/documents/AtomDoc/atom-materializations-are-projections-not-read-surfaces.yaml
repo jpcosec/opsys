@@ -1,7 +1,13 @@
 name: atom-materializations-are-projections-not-read-surfaces
 path: desk/atoms/atom-materializations-are-projections-not-read-surfaces.md
-hash_c: fb4e1654f50d0595f0fcf97d5df1cb1a9ce1f0dfe0df21477c12e12fe7323aab
-hash_d: 929c7010d37ff8b1379916b48c3ea15517b615167108cf6aebdb4699c49a4ea6
+source_hash: fb4e1654f50d0595f0fcf97d5df1cb1a9ce1f0dfe0df21477c12e12fe7323aab
+content_hash: 929c7010d37ff8b1379916b48c3ea15517b615167108cf6aebdb4699c49a4ea6
+field_hashes:
+  id: 9357213769bbc173a52ab61b581d6d44f995e41fee1fb56b8ff09bf35e398a4b
+  title: 7c7aa138fa7313d7793ac30171f91ba94e0dce68a7c25aa0b2debd6e43decd1a
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: cd78ee4e89dc956974304449932e9bfff6aafb999bc3b00936d3e8097536c2c2
+  tags: f4daf3ae92a6a5e581025b38a6b85a970ba82884f8f3b6d27ce6fd4b87822fa5
 semantic_tags:
 - representation.markdown
 - source.document.markdown

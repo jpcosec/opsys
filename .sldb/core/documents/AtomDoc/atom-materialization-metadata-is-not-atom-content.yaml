@@ -1,7 +1,13 @@
 name: atom-materialization-metadata-is-not-atom-content
 path: desk/atoms/knowledge-model/atom-materialization-metadata-is-not-atom-content.md
-hash_c: 97744c5800953e6bd72e7ec507c7904bed5c3cb517270b1ea1b1907c5118af1c
-hash_d: eaab961e55b3eb126ae1a0c7a37372da874f9b52c2b15a844f92b04839204f8f
+source_hash: 97744c5800953e6bd72e7ec507c7904bed5c3cb517270b1ea1b1907c5118af1c
+content_hash: eaab961e55b3eb126ae1a0c7a37372da874f9b52c2b15a844f92b04839204f8f
+field_hashes:
+  id: d9eea30acf527ca0ee77224e78376c23985a95719958ffa64f37f777ceead766
+  title: b2f38f2aa08ba5bfb3e9a2b562e7aa1ee0f12dfcd5c3085fb51a687ac143ee01
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: 43142b9e0504e2b50592518a0263bf2a8d9ca67e5110b1ee0be4354aaebac44e
+  tags: 5c7cef601d5efe79bc70d5440c6bef4e39e92a78cc1bb2d3f0bee02749f27acf
 semantic_tags:
 - representation.markdown
 - source.document.markdown

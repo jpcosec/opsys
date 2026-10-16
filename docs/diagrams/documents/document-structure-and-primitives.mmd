@@ -10,18 +10,16 @@ flowchart TB
         nodrift["No unnecessary copied prose\nless drift"]
     end
 
-    subgraph Actions["Primitives add action"]
-        primitive["Primitive\naction over sldb data"]
-        checklist["Checklist\nexplicit gate / completeness"]
-        condition["Condition\nreads payload state"]
-        operator["Operator\nmutates payload state"]
-        edge["Edge\nroutes progression"]
-        hook["Hook\nruns around operation"]
+    subgraph Graph["The sldb graph adds action"]
+        states["States\nrituals: execution, testing, closeout"]
+        transition["Transition\nRelationDoc between rituals\ntyped by a RelationTypeDoc verb"]
+        condition["Condition\nsldb --where predicate on the task"]
+        effect["Effect\nstatus the transition sets\n(spec/workflows/task_lifecycle.yaml)"]
     end
 
     subgraph Example["Example"]
         board["Board\nindexes tasks"]
-        indexed["Indexed task set"]
+        task["Task\ncurrent_node = a ritual"]
     end
 
     structured --> fields
@@ -29,17 +27,15 @@ flowchart TB
     compose --> nodrift
     loose -->|can later be structured| structured
 
-    structured --> primitive
-    primitive --> checklist
-    primitive --> condition
-    primitive --> operator
-    primitive --> edge
-    primitive --> hook
+    structured -->|tracked in the store, nodes of| states
+    states --> transition
+    transition -->|guarded by| condition
+    transition -->|declares| effect
 
-    board -->|uses primitives to act on data| checklist
-    checklist --> indexed
-    condition --> indexed
-    edge --> indexed
+    board -->|routes| task
+    task -->|sits in| states
+    condition -->|reads| task
+    effect -->|updates| task
 
     classDef docs fill:#e7f2ff,stroke:#2a6099,color:#111;
     classDef fields fill:#e9f8ee,stroke:#2f7a44,color:#111;
@@ -47,5 +43,5 @@ flowchart TB
     classDef example fill:#fff3d9,stroke:#a66a00,color:#111;
     class structured,loose docs;
     class fields,compose,nodrift fields;
-    class primitive,checklist,condition,operator,edge,hook action;
-    class board,indexed example;
+    class states,transition,condition,effect action;
+    class board,task example;

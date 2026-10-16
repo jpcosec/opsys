@@ -10,7 +10,7 @@ Deskops is the workflow-domain layer for repository-local operational knowledge 
 Use this global skill when the task involves:
 
 - `desk/` workflow surfaces.
-- Tasks, boards, drawer work, inbox notes, pills, rituals, routines, primitives, atoms, or repository registry docs.
+- Tasks, boards, drawer work, inbox notes, pills, rituals, the lifecycle graph, atoms, or repository registry docs.
 - Desk discovery, graph checks, task advancement, promotion, closeout, or workflow automation.
 - Understanding how this repo's CLI maps to the project knowledge model.
 
@@ -22,7 +22,7 @@ It owns:
 
 - active and deferred workflow surfaces under `desk/`
 - task routing through `desk/tasks/Board.md`
-- rituals, pills, atoms, routines, and primitives
+- rituals, pills, atoms, and the lifecycle graph (`desk/lifecycle/`)
 - repo-local workflow commands such as `deskops add`, `deskops list`, `deskops show`, `deskops promote`, `deskops advance task`, and `deskops graph`
 - operational rules for intake, promotion, execution, testing, closeout, and phase gates
 

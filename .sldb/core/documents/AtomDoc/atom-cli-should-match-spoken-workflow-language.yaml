@@ -1,7 +1,13 @@
 name: atom-cli-should-match-spoken-workflow-language
 path: desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md
-hash_c: 1c8b834d5d5cd8c7acab10344917593f811b53761a951587b6431f57155eeb0e
-hash_d: bd41bd8e20b8386d5d7172b6a0f84fd436977320169550c37d7557faf1c836e3
+source_hash: 1c8b834d5d5cd8c7acab10344917593f811b53761a951587b6431f57155eeb0e
+content_hash: bd41bd8e20b8386d5d7172b6a0f84fd436977320169550c37d7557faf1c836e3
+field_hashes:
+  id: 80b567628e7d254d70a4302bb931731874286488226b7e06bef978960bff5d9c
+  title: 64b3264a9f587a2482eaadb11a25221e44b65409a30caf23df4e235e92bb62f4
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: a78f1198cec7b16fe3fe54f893b12fee512d976a48f77390cd4ea03cb865a721
+  tags: f21b9afd56dfe73b0018a40de66f0abb2679703e301767178f1905ee4dddfabd
 semantic_tags:
 - layer:cli
 - representation.markdown

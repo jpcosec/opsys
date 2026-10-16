@@ -1,7 +1,13 @@
 name: atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
 path: desk/atoms/atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md
-hash_c: 52c8cb7d666a39e256425bd840447e7bc5fadc36da5c13c1564edde6db26e4a1
-hash_d: ed30692dae41181a148d4bf358819f9e26213a5cf83024b0e9bf6b61082c7b92
+source_hash: 52c8cb7d666a39e256425bd840447e7bc5fadc36da5c13c1564edde6db26e4a1
+content_hash: ed30692dae41181a148d4bf358819f9e26213a5cf83024b0e9bf6b61082c7b92
+field_hashes:
+  id: 6cb7da37c62454411a86b4b0dd2219ae2b9f79a90f06fa2777d2570d3ab2c1af
+  title: d1486c3bd424e1cf49b363493573bf46f1c87d6432ad265f27dcd3ec34bceca6
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 4f19db156861d17bae588a0ef6592df68aef6d6981a946cd810de087e4987bb6
+  tags: 8b8810ef7c6153628ce6c39870800efb69ca9167d0a588378be249d01535e946
 semantic_tags:
 - representation.markdown
 - source.document.markdown

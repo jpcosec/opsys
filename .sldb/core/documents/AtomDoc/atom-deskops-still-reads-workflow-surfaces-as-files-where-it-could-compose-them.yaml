@@ -1,7 +1,13 @@
 name: atom-deskops-still-reads-workflow-surfaces-as-files-where-it-could-compose-them
 path: desk/atoms/atom-deskops-still-reads-workflow-surfaces-as-files-where-it-could-compose-them.md
-hash_c: 81ca2ae699cd8f471b1dec2c350ba5569e87d39e91d584971100a6510474fd89
-hash_d: c56d082bae3c855fbfbfba1511bca7705c1f65d4571459a66820dfcbf31144aa
+source_hash: 81ca2ae699cd8f471b1dec2c350ba5569e87d39e91d584971100a6510474fd89
+content_hash: c56d082bae3c855fbfbfba1511bca7705c1f65d4571459a66820dfcbf31144aa
+field_hashes:
+  id: 68c2a280de02a441eea1f07529f0c62f7c8ff3437ca78e754327b4bfdd69baf4
+  title: a8334fee5c7454fa5e201575e6cc3e733d20ca085201e19de29264989ba86a9c
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 2e3113cfbc41b2a3272338cc0b24cce9dffad05de409b6fcf57af875134cc29e
+  tags: e01bbe75dc417ddc977678bad6117cb075879753186990250e16155d96b22cb6
 semantic_tags:
 - representation.markdown
 - source.document.markdown

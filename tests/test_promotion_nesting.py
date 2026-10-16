@@ -55,7 +55,8 @@ def test_inbox_promotion_keeps_structured_sections_flat_in_drawer(tmp_path: Path
 
 
 
-def test_advance_task_reads_nested_task_sections_from_first_occurrence(tmp_path: Path) -> None:
+def test_advance_task_reads_nested_task_sections_from_first_occurrence(lifecycle_desk: Path) -> None:
+    tmp_path = lifecycle_desk
     operations = DeskopsOperations(tmp_path)
     operations.ensure_workspace()
 
@@ -81,13 +82,11 @@ def test_advance_task_reads_nested_task_sections_from_first_occurrence(tmp_path:
         "depends_on": [],
         "pills": [],
         "files": [],
-        "checklists": [],
         "tags": ["workspace:desk", "artifact:task"],
         "task_type": "",
         "inherits_from": [],
         "inherit_acceptance_context": False,
         "atoms": [],
-        "routine": "",
         "current_node": "",
         "history": [],
     }
@@ -96,7 +95,7 @@ def test_advance_task_reads_nested_task_sections_from_first_occurrence(tmp_path:
 
     task, result = operations.advance_task("task-nested-active")
 
-    assert result is None
+    assert result is not None and result.progressed
     assert task is not None
     assert task.scope == "Keep this intro in scope."
     assert task.implementation_path == "Nested implementation path."

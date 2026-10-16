@@ -11,7 +11,6 @@ import yaml
 class SpecRegistry:
     root: Path
     fields: dict[str, dict[str, Any]]
-    primitives: dict[str, dict[str, Any]]
     artifacts: dict[str, dict[str, Any]]
 
     @classmethod
@@ -20,7 +19,6 @@ class SpecRegistry:
         return cls(
             root=root,
             fields=_load_spec_dir(root / "fields"),
-            primitives=_load_spec_dir(root / "primitives"),
             artifacts=_load_spec_dir(root / "artifacts"),
         )
 

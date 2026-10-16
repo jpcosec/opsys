@@ -48,8 +48,8 @@ def _make_repo(tmp_path: Path) -> Path:
 def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path) -> None:
     root = _make_repo(tmp_path)
 
-    install = _cli(root, "desk", "install", str(root))
-    assert "Scaffold complete." in install.stdout
+    install = _cli(root, "init", str(root))
+    assert "Initialization complete." in install.stdout
 
     _cli(
         root,
@@ -99,9 +99,9 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
         "--validation", "pytest tests/test_lifecycle_smoke.py",
     )
     active_task = root / "desk" / "tasks" / "task-lifecycle-e2e.md"
-    routine = root / "desk" / "routines" / "routine-task-lifecycle-e2e.md"
     assert active_task.exists()
-    assert routine.exists()
+    assert not (root / "desk" / "routines").exists(), "a task writes no routine"
+    assert not (root / "desk" / "primitives").exists(), "a task writes no primitives"
     assert "desk/drawer/tasks/task-lifecycle-e2e.md" in active_task.read_text(encoding="utf-8")
     assert drawer_task.exists(), "the drawer candidate is kept for manual cleanup"
 
@@ -110,16 +110,16 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
 
     first_advance = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
     assert "Status: active" in first_advance.stdout
-    assert "Current node: checklist-task-lifecycle-e2e-testing-ready" in first_advance.stdout
+    assert "Current node: ritual-testing" in first_advance.stdout
 
     second_advance = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
     assert "Status: ready_for_testing" in second_advance.stdout
-    assert "Current node: checklist-task-lifecycle-e2e-closeout-ready" in second_advance.stdout
+    assert "Current node: ritual-closeout" in second_advance.stdout
 
     blocked_closeout = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root), check=False)
     assert blocked_closeout.returncode == 1
     assert "Status: ready_for_testing" in blocked_closeout.stdout
-    assert "Current node: checklist-task-lifecycle-e2e-closeout-ready" in blocked_closeout.stdout
+    assert "Current node: ritual-closeout" in blocked_closeout.stdout
     assert "is not complete" in blocked_closeout.stdout
 
     _write(root, "tests/test_lifecycle_smoke.py", "def test_lifecycle_smoke():\n    assert True\n")
@@ -163,15 +163,6 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     assert "Current node: complete" in closed.stdout
 
     assert not active_task.exists()
-    assert not routine.exists()
-    primitive_dirs = [
-        root / "desk" / "primitives" / "conditions",
-        root / "desk" / "primitives" / "operators",
-        root / "desk" / "primitives" / "checklists",
-        root / "desk" / "primitives" / "edges",
-        root / "desk" / "primitives" / "hooks",
-    ]
-    assert all(not list(directory.glob("*task-lifecycle-e2e*.md")) for directory in primitive_dirs)
 
     final_board_text = (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-lifecycle-e2e.md" not in final_board_text
@@ -238,7 +229,7 @@ def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> N
 def test_deleting_the_drawer_entry_leaves_the_task_valid(tmp_path: Path) -> None:
     """from_drawer records provenance; it is not a live reference that must resolve."""
     root = _make_repo(tmp_path)
-    _cli(root, "desk", "install", str(root))
+    _cli(root, "init", str(root))
     _write(
         root,
         "desk/inbox/20260901-000000-suggestion-drawer-provenance.md",

@@ -1,7 +1,13 @@
 name: atom-documents-point-to-atoms
 path: desk/atoms/workflow-model/atom-documents-point-to-atoms.md
-hash_c: e734816f3897151b391893d6021545aa89cacf9e334d1dc0af7a67e170a6c3b7
-hash_d: e7c14948be0d53b3264f369e533ba575fa69e16787751c3aaac21ce36a0d9330
+source_hash: e734816f3897151b391893d6021545aa89cacf9e334d1dc0af7a67e170a6c3b7
+content_hash: e7c14948be0d53b3264f369e533ba575fa69e16787751c3aaac21ce36a0d9330
+field_hashes:
+  id: 181b16881735273477cefa4fb9f714dfa38af49736093679c491f557c4a6a4dc
+  title: 2737003b4b5e0cc537b74c5f7a6702cc670148006bfab3e612d655ac17016236
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: d2dd43902235376ee953faa6f8bc04fbe42730ffb1301e97ed79bb3396611284
+  tags: fdda11e43f3d594abf789096c763037985012342815245f7951ed0cf12948ae3
 semantic_tags:
 - representation.markdown
 - source.document.markdown

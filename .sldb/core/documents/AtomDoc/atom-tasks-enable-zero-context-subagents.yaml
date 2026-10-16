@@ -1,7 +1,13 @@
 name: atom-tasks-enable-zero-context-subagents
 path: desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md
-hash_c: 1a6b53f75156ba35cb394896fe525197ca42f6cf8ff3f716415d192dd11d76e5
-hash_d: ffe53ff17918fb3928ec3cdf71335f4053532e5d0a451586e07d37eb162391cf
+source_hash: 1a6b53f75156ba35cb394896fe525197ca42f6cf8ff3f716415d192dd11d76e5
+content_hash: ffe53ff17918fb3928ec3cdf71335f4053532e5d0a451586e07d37eb162391cf
+field_hashes:
+  id: e34fc1af859ceb6790cbf58b3d3629cd2adc35071d1dc2caa8a39cd1fa8f4bba
+  title: d4b7f1b5c05d5c8c8e6106f518dfd9eea570b11c264b73ac0410ce84b19e28d4
+  five_wh_one_plus: 1566d618b9ad05f5d6636ef68875b058a3311f288ab671709bb72d36b5dd1a5c
+  answer: f81184229a9999be0257711e914b0f0b39cb8fa6060c1b51eb29761b48d323be
+  tags: ba5464ec66bc63ee69ab62edaec342d18ec417911a75736fdaaf5515aee0be39
 semantic_tags:
 - representation.markdown
 - source.document.markdown

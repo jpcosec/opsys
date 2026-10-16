@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-The documented desk task lifecycle must remain runnable through the real CLI from intake promotion to gated closeout on a disposable git-backed desk, so workflow docs, routines, and automation stay aligned.
+The documented desk task lifecycle must remain runnable through the real CLI from intake promotion to gated closeout on a disposable git-backed desk, so workflow docs, the lifecycle graph, and automation stay aligned.

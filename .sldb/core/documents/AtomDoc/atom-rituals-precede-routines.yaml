@@ -1,7 +1,13 @@
 name: atom-rituals-precede-routines
 path: desk/atoms/workflow-model/atom-rituals-precede-routines.md
-hash_c: 55bbdd49f46015181cfa0d94ad61045f6a1e7a997785bf6d965cec237715489c
-hash_d: 9dbb856fa468c96a07730c650b5b425f54a9da57c0540309bd45b6c7d514b6d2
+source_hash: c1193b456f38d17e66c8ba45dcce303084cbca0e7619599f7085a500229365c7
+content_hash: 19d6f0c51e7a96c401e3335522555e4706520bb41dccabc81135c255f9f979a0
+field_hashes:
+  id: da170c8ba4891173b44b511e3f5f622c045273a0d3e94e6365067c67b061254c
+  title: 50efec8485df6506132ab71944bcd14e8955dcb7a47dfdaedcbe5d30211ca095
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 379c77c27282760aa617ec0efd9635cab71b5e85d1e5f5423ad3f5406af38155
+  tags: 3fa5c5edae69b579985eb76a662eee4923375b129c6d3b62e97b0c4959bf7c9f
 semantic_tags:
 - representation.markdown
 - source.document.markdown

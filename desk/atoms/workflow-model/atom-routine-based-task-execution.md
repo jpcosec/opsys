@@ -1,6 +1,6 @@
 ---
 id: atom-routine-based-task-execution
-title: Routine-based task execution
+title: Lifecycle-graph task execution
 five_wh_one_plus: how
 tags:
 - system:deskops
@@ -8,8 +8,8 @@ tags:
 - topic:routines
 ---
 
-# Routine-based task execution
+# Lifecycle-graph task execution
 
 ## Answer
 
-Tasks advance through routines: directed graphs of checklists, operators, conditions, and edges that gate progress and mutate task state through explicit lifecycle nodes.
+Tasks advance through the desk's lifecycle graph: the states are rituals and the transitions are typed sldb RelationDoc edges whose `--where` conditions gate progress and mutate task state as the task moves between nodes.

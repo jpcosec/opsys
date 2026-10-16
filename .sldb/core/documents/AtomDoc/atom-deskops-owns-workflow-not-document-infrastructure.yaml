@@ -1,7 +1,13 @@
 name: atom-deskops-owns-workflow-not-document-infrastructure
 path: desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md
-hash_c: e63b91ea5314587d601636f795acd1bad031a38f0f69bf0b687c21d005f2d98a
-hash_d: e796d50beb3e7821817d03a026bb8a3146e101f8357a1a6dd2831d73fc5fe031
+source_hash: e63b91ea5314587d601636f795acd1bad031a38f0f69bf0b687c21d005f2d98a
+content_hash: e796d50beb3e7821817d03a026bb8a3146e101f8357a1a6dd2831d73fc5fe031
+field_hashes:
+  id: 5305da1322686a6e1445600a229fedeae6cea42a38eed2a188325898c0a7be84
+  title: 8d3a180270e8e1454f40a8353f378ca5eca1d1737a48718a74bf76a9a3ff3db0
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: b9320b27d41485dc0ca5fae9b706291ab46ddfb5dd45c38bed188c25977cbb59
+  tags: 1b9785ab0ba4049905f728f7f749ad2ee421b523f6754e2d3feb504f5751db59
 semantic_tags:
 - representation.markdown
 - source.document.markdown

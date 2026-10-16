@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Deskops generates Mermaid diagrams from artifact specs so structure diagrams and routine diagrams derive from the same YAML definitions that drive artifact compilation.
+Deskops generates Mermaid diagrams from artifact specs so structure diagrams and lifecycle diagrams derive from the same YAML definitions that drive artifact compilation.

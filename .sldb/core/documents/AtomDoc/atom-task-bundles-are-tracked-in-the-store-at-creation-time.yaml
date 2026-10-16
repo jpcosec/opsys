@@ -1,7 +1,13 @@
 name: atom-task-bundles-are-tracked-in-the-store-at-creation-time
 path: desk/atoms/atom-task-bundles-are-tracked-in-the-store-at-creation-time.md
-hash_c: 82983c3e2c7247d38b06e5eafa3642e39f30538a5aa48046befdfc62c317330e
-hash_d: a5da5c3efc8f1a2b0154737e64ce609f48a7e47aed5c1711d62e55816b8f1967
+source_hash: d1a6ec498008287d14c22cdfb08056d78b7d05569064cc9c586952e804005243
+content_hash: e3170351e2d0bb97c2d4980e12c58b42c45c64371c299457a6d7d007b0c7118d
+field_hashes:
+  id: 64697f9b5d7f24f4e66b3b1b50f9b3e000ffe7a990cd033362c131b73a84fb39
+  title: 06f38eaa94b3c32c8d39064562980c1049beaeb8771ddbd22382d8f3ce8a239f
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: c1a0db2312ffaefb50140a9d2a375cf84fef9cd42a2e90a52ce9a453c3469de1
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown
 - source.document.markdown

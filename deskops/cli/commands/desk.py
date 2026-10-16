@@ -39,14 +39,8 @@ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
         return models.StepDoc
     if len(parts) == 2 and parts[0] == "faq":
         return models.FAQDoc
-    if len(parts) == 2 and parts[0] == "routines":
-        return models.RoutineDoc
-    if len(parts) == 3 and parts[0] == "primitives":
-        if parts[1] == "conditions": return models.ConditionDoc
-        if parts[1] == "operators": return models.OperatorDoc
-        if parts[1] == "checklists": return models.ChecklistDoc
-        if parts[1] == "hooks": return models.HookDoc
-        if parts[1] == "edges": return models.EdgeDoc
+    if len(parts) == 2 and parts[0] == "lifecycle":
+        return None  # written and tracked by deskops.lifecycle.ensure_lifecycle_graph
     return None
 
 class DeskCLI:
@@ -74,6 +68,13 @@ class DeskCLI:
         for path in result.created_paths:
             print(f"Wrote {path}")
 
+        if (target_path / ".sldb").exists():
+            from deskops.lifecycle import ensure_lifecycle_graph
+
+            for change in ensure_lifecycle_graph(target_path):
+                print(f"Lifecycle graph: {change}")
+        else:
+            print("No .sldb store yet: run 'deskops init' to create it and the lifecycle graph that 'deskops advance' reads.")
         print("Scaffold complete.")
         print("Register the repo separately with 'deskops repo register ...' when you are ready.")
         return 0
@@ -117,6 +118,24 @@ class DeskCLI:
 
         desk_dir = root / "desk"
         store_dir = root / ".sldb"
+
+        from deskops.lifecycle_migration import inspect_legacy_lifecycle
+        from deskops.lifecycle_migration import migrate_legacy_lifecycle
+
+        legacy = inspect_legacy_lifecycle(root) if desk_dir.exists() else None
+        legacy_pending = bool(legacy and (legacy.needs_migration or legacy.registered_legacy_models))
+        if legacy_pending and apply:
+            from deskops.lifecycle_migration import LegacyMigrationBlocked
+
+            print("Migrating the task lifecycle to the desk's sldb graph...")
+            try:
+                for change in migrate_legacy_lifecycle(root):
+                    print(f"- {change}")
+            except LegacyMigrationBlocked as exc:
+                print(f"Error: {exc}")
+                return 1
+            legacy_pending = False
+
         inspection = inspect_desk(root)
 
         missing_desk_files: list[str] = []
@@ -189,11 +208,19 @@ class DeskCLI:
             }
             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
 
-        if not missing_desk_files and not unregistered_models and not untracked_docs and not invalid_docs:
+        if not legacy_pending and not missing_desk_files and not unregistered_models and not untracked_docs and not invalid_docs:
             print("Desk is up to date.")
             return 0
 
         print("Desk divergence report:")
+        if legacy_pending and legacy is not None:
+            print(
+                "- Legacy task lifecycle: "
+                f"{len(legacy.primitive_docs)} routine/primitive documents to delete, "
+                f"{len(legacy.tasks_to_rewrite)} tasks to rewrite, "
+                f"lifecycle graph {'missing' if legacy.graph_missing else 'present'}, "
+                f"retired models still registered: {', '.join(legacy.registered_legacy_models) or 'none'}"
+            )
         if missing_desk_files:
             print(f"- Missing desk structure: {', '.join(missing_desk_files)}")
         if unregistered_models:

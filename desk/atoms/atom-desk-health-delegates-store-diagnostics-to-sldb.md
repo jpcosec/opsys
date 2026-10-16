@@ -17,7 +17,7 @@ Desk health deliberately separates desk workspace repair from SLDB store health.
 
 ## Boundary Rationale
 
-- **Desk** owns workflow artifacts: tasks, boards, pills, rituals, atoms, routines, primitives
+- **Desk** owns workflow artifacts: tasks, boards, pills, rituals, atoms, and lifecycle documents
 - **SLDB** owns document infrastructure: models, templates, fields, store indexes, validation
 
 Mixing these concerns into one health command creates ambiguity about ownership and repair responsibility.

@@ -11,9 +11,9 @@ Diagram groups:
 - `workflow/` - overall deskops workflow model and generic knowledge materialization model.
 - `tasks/` - task accumulation, initialization, board phases, execution, and resolution.
 - `atoms/` - atoms and context pills workflows.
-- `codebase/` - codebase knowledge surfaces, document relation maps, and SLDB/primitives/docs/CLI component diagrams.
-- `documents/` - structured documents, less structured documents, and primitives.
+- `codebase/` - codebase knowledge surfaces, document relation maps, and SLDB/lifecycle/docs/CLI component diagrams.
+- `documents/` - structured documents, less structured documents, and the lifecycle graph.
 - `intake/` - inbox, drawers, features, and issues.
-- `process/` - rituals, routines, hooks, gates, and the current agent workflow/automation map.
+- `process/` - rituals as lifecycle states, gated transitions, and the current agent workflow/automation map.
 
 Each diagram is stored as both `.md` and `.mmd` when available.
