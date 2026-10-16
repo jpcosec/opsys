@@ -232,11 +232,11 @@ class CLI:
             print(f"Error: graph root is not a directory: {root}")
             return 1
 
-        try:
-            from deskops.graph.snapshot import GraphSnapshotCapabilityError
-            from deskops.graph.snapshot import networkx_path_for_snapshot
-            from deskops.graph.snapshot import write_graph_snapshot
+        from deskops.graph.snapshot import GraphSnapshotCapabilityError
+        from deskops.graph.snapshot import networkx_path_for_snapshot
+        from deskops.graph.snapshot import write_graph_snapshot
 
+        try:
             requested_output = Path(args.output) if args.output else None
             if requested_output is not None and not requested_output.is_absolute():
                 requested_output = root / requested_output
@@ -260,14 +260,13 @@ class CLI:
 
     def _graph_neighbors(self, args: Any) -> int:
         root = Path(args.root).resolve()
+        from deskops.graph.snapshot import GraphSnapshotReadError
         from deskops.graph.snapshot import default_snapshot_read_path
+        from deskops.graph.snapshot import read_graph_neighbors
 
         graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
 
         try:
-            from deskops.graph.snapshot import GraphSnapshotReadError
-            from deskops.graph.snapshot import read_graph_neighbors
-
             neighbors = read_graph_neighbors(graph_path, args.id)
         except GraphSnapshotReadError as exc:
             print(f"Error: {exc}")
@@ -282,11 +281,13 @@ class CLI:
             print(f"Error: graph root is not a directory: {root}")
             return 1
 
+        # Imported outside the try: a failing import must surface as itself,
+        # not as an unbound name in the except clause.
+        from deskops.graph.checks import GraphMissingCheckError
+        from deskops.graph.checks import find_missing_graph_references
+
         graph_path = Path(args.graph).resolve() if args.graph else None
         try:
-            from deskops.graph.checks import GraphMissingCheckError
-            from deskops.graph.checks import find_missing_graph_references
-
             findings = find_missing_graph_references(root, graph_path)
         except GraphMissingCheckError as exc:
             print(f"Error: {exc}")
@@ -316,12 +317,12 @@ class CLI:
         from deskops.graph.snapshot import default_snapshot_read_path
 
         graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
-        try:
-            from deskops.graph.checks import GraphMissingCheckError
-            from deskops.graph.checks import read_graph_snapshot
-            from deskops.graph.self_reflection import build_self_reflection_report
-            from deskops.graph.self_reflection import write_self_reflection_report
+        from deskops.graph.checks import GraphMissingCheckError
+        from deskops.graph.checks import read_graph_snapshot
+        from deskops.graph.self_reflection import build_self_reflection_report
+        from deskops.graph.self_reflection import write_self_reflection_report
 
+        try:
             snapshot = read_graph_snapshot(graph_path)
             report = build_self_reflection_report(snapshot)
             output_path = write_self_reflection_report(root, report)

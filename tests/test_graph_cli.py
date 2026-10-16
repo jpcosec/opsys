@@ -310,3 +310,24 @@ def test_graph_reflect_falls_back_to_legacy_runtime_graph(tmp_path: Path, capsys
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")
+
+
+def test_graph_missing_surfaces_an_import_failure_instead_of_masking_it(tmp_path: Path, monkeypatch, capsys) -> None:
+    import builtins
+
+    real_import = builtins.__import__
+
+    def failing_import(name, *args, **kwargs):
+        if name == "deskops.graph.checks":
+            raise SyntaxError("broken module")
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", failing_import)
+    try:
+        main(["graph", "missing", "--root", str(tmp_path)])
+    except BaseException as exc:  # the CLI reports unexpected errors as SystemExit
+        message = str(exc)
+    else:
+        message = capsys.readouterr().out
+    assert "GraphMissingCheckError" not in message
+    assert "broken module" in message

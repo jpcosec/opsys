@@ -697,7 +697,7 @@ def _best_basis_for_match(signal: _MatchSignal, atom: _AtomRecord) -> _ScoredBas
     atom_union_tokens = sorted({*title_tokens, *[token for alias in atom.aliases for token in _normalize_tokens(alias)], *[token for _label, text in _iter_tag_texts(atom.tags) for token in _normalize_tokens(text)]})
     semantics_score = _score_semantics_token(element_tokens, atom_union_tokens)
     if semantics_score is not None:
-        candidates.append((_ScoredBasis(semantics_score, "semantics-token", f'{signal.element_source}="{signal.element_text}" matched atom.token-union="{' '.join(atom_union_tokens)}"'), 3, atom.atom_id))
+        candidates.append((_ScoredBasis(semantics_score, "semantics-token", f'{signal.element_source}="{signal.element_text}" matched atom.token-union="{" ".join(atom_union_tokens)}"'), 3, atom.atom_id))
 
     if not candidates:
         return None
