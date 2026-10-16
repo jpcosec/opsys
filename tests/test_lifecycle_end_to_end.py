@@ -233,3 +233,34 @@ def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> N
     assert board_path.read_text(encoding="utf-8") == board_before, (
         "the board must be left as it was when the commit fails"
     )
+
+
+def test_deleting_the_drawer_entry_leaves_the_task_valid(tmp_path: Path) -> None:
+    """from_drawer records provenance; it is not a live reference that must resolve."""
+    root = _make_repo(tmp_path)
+    _cli(root, "desk", "install", str(root))
+    _write(
+        root,
+        "desk/inbox/20260901-000000-suggestion-drawer-provenance.md",
+        "---\nkind: suggestion\nsender_project: sibling\ncreated_at: 2026-09-01T00:00:00\nstatus: open\n---\n\n"
+        "# Drawer provenance\n\nA task authored from this entry must outlive it.\n",
+    )
+    _cli(root, "promote", "inbox-to-drawer-task", "drawer-provenance", "--root", str(root))
+    drawer_entry = root / "desk" / "drawer" / "tasks" / "task-drawer-provenance.md"
+    _cli(
+        root, "add", "task", "--root", str(root),
+        "--title", "Drawer provenance",
+        "--why", "w", "--goal", "g", "--scope", "s",
+        "--implementation-path", "i", "--done-when", "d",
+        "--from-drawer", "drawer-provenance",
+        "--validation", "pytest",
+    )
+    assert _cli(root, "graph", "missing", "--root", str(root)).returncode == 0
+
+    drawer_entry.unlink()
+
+    missing = _cli(root, "graph", "missing", "--root", str(root), check=False)
+    assert missing.returncode == 0, missing.stdout
+    assert "task-drawer-provenance.md" not in missing.stdout
+    shown = _cli(root, "show", "task", "task-drawer-provenance", "--root", str(root))
+    assert "From drawer: desk/drawer/tasks/task-drawer-provenance.md" in shown.stdout

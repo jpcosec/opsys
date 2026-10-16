@@ -25,6 +25,10 @@ TASK_OR_ISSUE_RE = re.compile(r"(?<![\w-])(?P<kind>task|issue)-[a-z0-9][a-z0-9-]
 SOURCE_PATH_RE = re.compile(
     r"(?<![\w/.-])(?P<path>(?:deskops|desk|tests|spec|docs)/[A-Za-z0-9_./-]+\.(?:py|yaml|yml|md|toml|json|mmd))(?![\w/.-])"
 )
+# Declared fields that record where a document came from. They link to the
+# source while it exists; once it is deleted the provenance stays recorded as
+# text and is not a reference that must resolve.
+PROVENANCE_FIELDS = {"from_drawer"}
 YAML_FENCE_RE = re.compile(r"```ya?ml\s*\n(?P<body>.*?)\n```", re.MULTILINE | re.DOTALL)
 
 
@@ -179,6 +183,11 @@ def _frontmatter_declarations(
                 for item in items:
                     if not isinstance(item, str) or not item.strip():
                         continue
+                    if field_name in PROVENANCE_FIELDS:
+                        node = (nodes_by_path or {}).get(item.strip().removeprefix("./"))
+                        if node is not None:
+                            declarations.append(_Declaration(node.id, field_name, "frontmatter"))
+                        continue
                     reference = _declared_reference_id(
                         item, nodes_by_path or {}, ids_by_name or {}
                     )
@@ -328,7 +337,13 @@ def _diagram_source_declarations(text: str) -> list[_Declaration]:
 
 def _explicit_source_file_declarations(text: str) -> list[_Declaration]:
     declarations: list[_Declaration] = []
+    in_frontmatter = False
     for index, line in enumerate(text.splitlines(), start=1):
+        if line == "---" and (index == 1 or in_frontmatter):
+            in_frontmatter = index == 1
+            continue
+        if in_frontmatter and line.split(":", 1)[0] in PROVENANCE_FIELDS:
+            continue
         for path in _paths_in_line(line):
             declarations.append(_Declaration(path, DEFAULT_ROLE, f"line:{index}:source-file-reference"))
     return declarations

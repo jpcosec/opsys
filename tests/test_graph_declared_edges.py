@@ -126,3 +126,19 @@ def test_a_declared_field_holding_prose_is_not_an_unresolved_reference(tmp_path:
     assert all(
         "prerequisites" not in edge.target_id for edge in extraction.edges
     )
+
+
+def test_from_drawer_is_provenance_not_a_reference_that_must_resolve(tmp_path: Path) -> None:
+    _build_desk(tmp_path)
+    write(tmp_path / "desk/drawer/tasks/task-do-the-thing.md", "---\nid: task-do-the-thing\n---\n\n# Drawer\n")
+
+    present = extract_declared_edges(tmp_path)
+    assert any(
+        edge.source_id == "task:task-do-the-thing" and edge.role == "from_drawer"
+        for edge in present.edges
+    ), "a drawer entry that still exists is linked as provenance"
+
+    (tmp_path / "desk/drawer/tasks/task-do-the-thing.md").unlink()
+
+    deleted = extract_declared_edges(tmp_path)
+    assert [m for m in deleted.missing_targets if "drawer" in m.target_id] == []
