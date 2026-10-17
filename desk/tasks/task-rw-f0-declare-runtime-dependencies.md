@@ -1,6 +1,12 @@
 ---
 id: task-rw-f0-declare-runtime-dependencies
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -8,13 +14,10 @@ pills:
 files:
 - pyproject.toml
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:packaging
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f0-declare-runtime-dependencies.md
 ---
 
 # pyproject declares kgdb as a dependency

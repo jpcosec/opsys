@@ -30,7 +30,6 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
-- `task-doctor-crashes-on-deskless-roots` — doctor raises UnboundLocalError on roots without `desk/`; initialize finding variables on every code path (found during cold review of task-doctor-proposes-missing-model-registration)
 
 ### Deskops rewrite plan (2026-10-16)
 
@@ -39,18 +38,9 @@ Every node of the DAG in `runs/planning/deskops-rewrite-inventory.md`, one defer
 wait on an owner decision named in their `## Open Ambiguities`. Tasks that edit
 `deskops/operations.py` run in series.
 
-F0:
+F0 (the other nine F0 tasks were promoted to `desk/tasks/` on 2026-10-17):
 
-- `task-doctor-crashes-on-deskless-roots` — Doctor no longer crashes on roots without `desk/` (finding X1)
-- `task-rw-f0-closeout-amends-only-its-own-commit` — Closeout amends HEAD only when HEAD is the same task's closeout
-- `task-rw-f0-reject-ambiguous-selectors` — Prefix selectors fail on ambiguity instead of picking the first match
-- `task-rw-f0-merge-retarget-whole-tokens` — Atom merge rewrites only whole `atom:<id>` tokens in referrers
-- `task-rw-f0-closeout-commit-pathspec` — The advance closeout commit contains only the closing task's paths
-- `task-rw-f0-declare-runtime-dependencies` — pyproject declares kgdb as a dependency
-- `task-rw-f0-graph-skips-vendored-trees` — `graph build` ignores tools/, .tmp/ and .venv/
-- `task-rw-f0-pytest-collects-only-tests` — Bare `pytest` collects only the tests/ directory
 - `task-rw-f0-graph-missing-ignores-archived-records` — `graph missing` stops failing on paths quoted in archived drawer records (**blocked**)
-- `task-rw-f0-payload-from-drawer-resolves` — `from_drawer` given in a YAML or JSON payload is resolved like the flag
 
 F1:
 

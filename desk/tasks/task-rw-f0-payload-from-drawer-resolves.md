@@ -1,6 +1,12 @@
 ---
 id: task-rw-f0-payload-from-drawer-resolves
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -10,14 +16,10 @@ files:
 - deskops/cli/commands/operations.py
 - tests/test_add_task_from_drawer.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:drawer
-- topic:cli
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f0-payload-from-drawer-resolves.md
 ---
 
 # `from_drawer` given in a YAML or JSON payload is resolved like the flag

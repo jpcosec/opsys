@@ -1,6 +1,12 @@
 ---
 id: task-rw-f0-graph-skips-vendored-trees
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -12,13 +18,10 @@ files:
 - tests/test_graph_extract_coverage.py
 - tests/test_graph_extract_sources.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:graph
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f0-graph-skips-vendored-trees.md
 ---
 
 # `graph build` ignores tools/, .tmp/ and .venv/

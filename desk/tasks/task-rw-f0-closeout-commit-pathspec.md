@@ -1,6 +1,12 @@
 ---
 id: task-rw-f0-closeout-commit-pathspec
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f0-merge-retarget-whole-tokens
@@ -10,14 +16,10 @@ files:
 - deskops/operations.py
 - tests/test_lifecycle_end_to_end.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:closeout
-- topic:git
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f0-closeout-commit-pathspec.md
 ---
 
 # The advance closeout commit contains only the closing task's paths

@@ -1,6 +1,12 @@
 ---
 id: task-rw-f0-reject-ambiguous-selectors
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f0-closeout-amends-only-its-own-commit
@@ -11,14 +17,10 @@ files:
 - deskops/operations.py
 - tests/test_operational.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:selectors
-- topic:data-loss
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f0-reject-ambiguous-selectors.md
 ---
 
 # Prefix selectors fail on ambiguity instead of picking the first match

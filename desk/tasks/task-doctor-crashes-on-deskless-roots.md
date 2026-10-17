@@ -1,6 +1,12 @@
 ---
 id: task-doctor-crashes-on-deskless-roots
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -10,14 +16,11 @@ pills:
 files:
 - deskops/cli/commands/doctor.py
 - tests/test_doctor_unmodeled_surfaces.py
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:health
-- topic:cli
+task_type: implementation
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-doctor-crashes-on-deskless-roots.md
 ---
 
 # Doctor crashes with UnboundLocalError on desk-less roots
