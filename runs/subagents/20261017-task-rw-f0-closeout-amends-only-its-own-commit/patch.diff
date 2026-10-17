@@ -1,0 +1,116 @@
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 780b488..f5f76d8 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -1114,13 +1114,21 @@ class DeskopsOperations:
+ 
+         commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+         
+-        # Check if HEAD is already the closeout commit for this task
+-        head_subject = ""
+-        result_log = subprocess.run(["git", "log", "-1", "--format=%s"], cwd=self.root, capture_output=True, text=True)
++        # Check if HEAD is already the closeout commit for this task. The
++        # subject alone is not proof of ownership: `closeout: task-foo` also
++        # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
++        # trailer that every closeout commit carries.
++        head_task_id = ""
++        result_log = subprocess.run(
++            ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
++            cwd=self.root,
++            capture_output=True,
++            text=True,
++        )
+         if result_log.returncode == 0:
+-            head_subject = result_log.stdout.strip()
++            head_task_id = result_log.stdout.strip()
+             
+-        if head_subject.startswith(f"closeout: {task_id}"):
++        if head_task_id == task_id:
+             self.logger.info(f"Amending closeout commit for {task_id}")
+             result = subprocess.run(["git", "commit", "--amend", "--no-edit"], cwd=self.root, capture_output=True, text=True)
+         else:
+diff --git a/tests/test_lifecycle_end_to_end.py b/tests/test_lifecycle_end_to_end.py
+index dc8c65f..4147b89 100644
+--- a/tests/test_lifecycle_end_to_end.py
++++ b/tests/test_lifecycle_end_to_end.py
+@@ -176,6 +176,80 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
+     assert "desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md" in committed_files
+     assert "tests/test_lifecycle_smoke.py" in committed_files
+ 
++def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
++    """A closeout amends HEAD only when HEAD's Task-Id trailer is its own."""
++    root = _make_repo(tmp_path)
++    _cli(root, "init", str(root))
++    _cli(
++        root,
++        "add",
++        "atom",
++        "--root",
++        str(root),
++        "--title",
++        "Closeout amend ownership evidence",
++        "--five-wh-one-plus",
++        "what",
++        "--answer",
++        "A closeout never amends another task's closeout commit.",
++    )
++    _cli(
++        root,
++        "add",
++        "task",
++        "--root",
++        str(root),
++        '{"id": "task-foo", "title": "Foo", "goal": "g", "scope": "s", '
++        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"]}',
++    )
++    _cli(root, "advance", "task", "task-foo", "--root", str(root))
++    _cli(root, "advance", "task", "task-foo", "--root", str(root))
++
++    _write(root, "tests/test_amend_owner_smoke.py", "def test_smoke():\n    assert True\n")
++    seed_commit = _git(root, "rev-parse", "HEAD")
++    _cli(
++        root,
++        "edit",
++        "task",
++        "task-foo",
++        "references",
++        '["desk/atoms/atom-closeout-amend-ownership-evidence.md", '
++        '"pytest tests/test_amend_owner_smoke.py::test_smoke", '
++        f'"{seed_commit}"]',
++        "--root",
++        str(root),
++    )
++    _cli(
++        root,
++        "edit",
++        "task",
++        "task-foo",
++        "files",
++        '["desk/atoms/atom-closeout-amend-ownership-evidence.md", "tests/test_amend_owner_smoke.py"]',
++        "--root",
++        str(root),
++    )
++
++    _git(
++        root,
++        "commit",
++        "--allow-empty",
++        "-q",
++        "-m",
++        "closeout: task-foo-bar\n\nTask-Id: task-foo-bar",
++    )
++    other_closeout = _git(root, "rev-parse", "HEAD")
++
++    _cli(root, "advance", "task", "task-foo", "--root", str(root))
++
++    assert _git(root, "rev-parse", "HEAD~1") == other_closeout, (
++        "closing task-foo must not amend another task's closeout commit"
++    )
++    closing_message = _git(root, "log", "-1", "--format=%B")
++    assert "closeout: task-foo" in closing_message
++    assert "Task-Id: task-foo" in closing_message
++
++
+ def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> None:
+     """A closeout that cannot commit must leave the desk exactly as it found it."""
+     root = _make_repo(tmp_path)

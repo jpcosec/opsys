@@ -1,0 +1,3 @@
+ M deskops/operations.py
+ M tests/test_lifecycle_end_to_end.py
+?? runs/subagents/20261017-task-rw-f0-closeout-amends-only-its-own-commit/

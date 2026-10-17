@@ -1114,13 +1114,21 @@ class DeskopsOperations:
 
         commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
         
-        # Check if HEAD is already the closeout commit for this task
-        head_subject = ""
-        result_log = subprocess.run(["git", "log", "-1", "--format=%s"], cwd=self.root, capture_output=True, text=True)
+        # Check if HEAD is already the closeout commit for this task. The
+        # subject alone is not proof of ownership: `closeout: task-foo` also
+        # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
+        # trailer that every closeout commit carries.
+        head_task_id = ""
+        result_log = subprocess.run(
+            ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
+            cwd=self.root,
+            capture_output=True,
+            text=True,
+        )
         if result_log.returncode == 0:
-            head_subject = result_log.stdout.strip()
+            head_task_id = result_log.stdout.strip()
             
-        if head_subject.startswith(f"closeout: {task_id}"):
+        if head_task_id == task_id:
             self.logger.info(f"Amending closeout commit for {task_id}")
             result = subprocess.run(["git", "commit", "--amend", "--no-edit"], cwd=self.root, capture_output=True, text=True)
         else:

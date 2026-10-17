@@ -1,0 +1,11 @@
+Task: task-rw-f0-closeout-amends-only-its-own-commit
+Title: Closeout amends HEAD only when HEAD is the same task's closeout
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-closeout-amends-only-its-own-commit.md
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
