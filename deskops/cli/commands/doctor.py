@@ -54,6 +54,7 @@ class DoctorCLI:
 
         untracked: list[Path] = []
         invalid_docs: list[str] = []
+        unreadable_docs: list[str] = []
         unmodeled_reasons: list[str] = []
         unregistered_models: list[str] = []
         store_index_unreadable = False
@@ -75,7 +76,6 @@ class DoctorCLI:
                 if path.name not in ignored_modeled_names
             }
             unmodeled_mds = unmodeled_desk_markdown_docs(root, desk_dir)
-            tracked_mds = set(inspection.tracked_surface_docs)
 
             tracked_mds: set[Path] = set()
             tracked_model_docs: list[tuple[str | None, Path]] = []
@@ -122,7 +122,6 @@ class DoctorCLI:
 
             untracked = [p for p in modeled_mds if p not in tracked_mds]
 
-            unreadable_docs: list[str] = []
             for model_name, doc_path in tracked_model_docs:
                 model = _resolve_deskops_model(model_name)
                 if model is None or not doc_path.exists():

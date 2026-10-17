@@ -1,0 +1,7 @@
+4 passed in 7.46s
+336 passed, 3 skipped in 146.30s (0:02:26)
+Doctor Findings:
+- Missing desk structure: desk/
+
+Run with --repair to attempt automatic fixes.
+exit=1

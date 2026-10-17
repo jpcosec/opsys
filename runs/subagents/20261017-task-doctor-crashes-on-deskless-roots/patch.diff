@@ -1,0 +1,71 @@
+diff --git a/deskops/cli/commands/doctor.py b/deskops/cli/commands/doctor.py
+index 37fbc28..61cb146 100644
+--- a/deskops/cli/commands/doctor.py
++++ b/deskops/cli/commands/doctor.py
+@@ -54,6 +54,7 @@ class DoctorCLI:
+ 
+         untracked: list[Path] = []
+         invalid_docs: list[str] = []
++        unreadable_docs: list[str] = []
+         unmodeled_reasons: list[str] = []
+         unregistered_models: list[str] = []
+         store_index_unreadable = False
+@@ -75,7 +76,6 @@ class DoctorCLI:
+                 if path.name not in ignored_modeled_names
+             }
+             unmodeled_mds = unmodeled_desk_markdown_docs(root, desk_dir)
+-            tracked_mds = set(inspection.tracked_surface_docs)
+ 
+             tracked_mds: set[Path] = set()
+             tracked_model_docs: list[tuple[str | None, Path]] = []
+@@ -122,7 +122,6 @@ class DoctorCLI:
+ 
+             untracked = [p for p in modeled_mds if p not in tracked_mds]
+ 
+-            unreadable_docs: list[str] = []
+             for model_name, doc_path in tracked_model_docs:
+                 model = _resolve_deskops_model(model_name)
+                 if model is None or not doc_path.exists():
+diff --git a/tests/test_doctor_unmodeled_surfaces.py b/tests/test_doctor_unmodeled_surfaces.py
+index 5a0831a..0a74296 100644
+--- a/tests/test_doctor_unmodeled_surfaces.py
++++ b/tests/test_doctor_unmodeled_surfaces.py
+@@ -1,7 +1,10 @@
+ from __future__ import annotations
+ 
+ import json
++import os
+ from pathlib import Path
++import subprocess
++import sys
+ 
+ from deskops.cli.main import main
+ from deskops.workspace import desk_doc_is_modeled_by_sldb
+@@ -63,6 +66,27 @@ def _prepare_current_modeled_surfaces(root: Path) -> list[str]:
+     ]
+ 
+ 
++def test_doctor_reports_missing_desk_without_crashing_on_deskless_root(tmp_path: Path) -> None:
++    root = tmp_path / "empty"
++    root.mkdir()
++    env = dict(os.environ)
++    repo_root = str(Path(__file__).resolve().parents[1])
++    env["PYTHONPATH"] = repo_root + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
++
++    result = subprocess.run(
++        [sys.executable, "-m", "deskops", "doctor", "--root", str(root)],
++        capture_output=True,
++        text=True,
++        env=env,
++        check=False,
++    )
++
++    assert result.returncode == 1
++    assert "Missing desk structure: desk/" in result.stdout
++    assert "Unexpected:" not in result.stdout
++    assert "Unexpected:" not in result.stderr
++
++
+ def test_workspace_classifies_unmodeled_and_modeled_desk_docs(tmp_path: Path) -> None:
+     root = tmp_path / "project"
+     desk_dir = root / "desk"

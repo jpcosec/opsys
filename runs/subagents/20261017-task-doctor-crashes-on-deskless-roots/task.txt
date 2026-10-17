@@ -1,0 +1,12 @@
+Task: task-doctor-crashes-on-deskless-roots
+Title: Doctor crashes with UnboundLocalError on desk-less roots
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-doctor-crashes-on-deskless-roots.md
+Effective pills:
+- desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

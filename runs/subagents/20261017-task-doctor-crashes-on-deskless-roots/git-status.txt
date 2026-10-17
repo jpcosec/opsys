@@ -1,0 +1,3 @@
+ M deskops/cli/commands/doctor.py
+ M tests/test_doctor_unmodeled_surfaces.py
+?? runs/subagents/20261017-task-doctor-crashes-on-deskless-roots/

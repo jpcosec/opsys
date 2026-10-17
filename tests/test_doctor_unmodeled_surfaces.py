@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
+import subprocess
+import sys
 
 from deskops.cli.main import main
 from deskops.workspace import desk_doc_is_modeled_by_sldb
@@ -61,6 +64,27 @@ def _prepare_current_modeled_surfaces(root: Path) -> list[str]:
         "desk/rituals/closeout.md",
         "desk/rituals/phase.md",
     ]
+
+
+def test_doctor_reports_missing_desk_without_crashing_on_deskless_root(tmp_path: Path) -> None:
+    root = tmp_path / "empty"
+    root.mkdir()
+    env = dict(os.environ)
+    repo_root = str(Path(__file__).resolve().parents[1])
+    env["PYTHONPATH"] = repo_root + (os.pathsep + env["PYTHONPATH"] if env.get("PYTHONPATH") else "")
+
+    result = subprocess.run(
+        [sys.executable, "-m", "deskops", "doctor", "--root", str(root)],
+        capture_output=True,
+        text=True,
+        env=env,
+        check=False,
+    )
+
+    assert result.returncode == 1
+    assert "Missing desk structure: desk/" in result.stdout
+    assert "Unexpected:" not in result.stdout
+    assert "Unexpected:" not in result.stderr
 
 
 def test_workspace_classifies_unmodeled_and_modeled_desk_docs(tmp_path: Path) -> None:
