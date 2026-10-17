@@ -250,6 +250,158 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
     assert "Task-Id: task-foo" in closing_message
 
 
+def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> None:
+    """A closeout commit never sweeps in unrelated staged changes."""
+    root = _make_repo(tmp_path)
+    _cli(root, "init", str(root))
+    _cli(
+        root,
+        "add",
+        "atom",
+        "--root",
+        str(root),
+        "--title",
+        "Closeout commit pathspec evidence",
+        "--five-wh-one-plus",
+        "what",
+        "--answer",
+        "A closeout commit contains only the closing task's paths.",
+    )
+    atom = "desk/atoms/atom-closeout-commit-pathspec-evidence.md"
+    test_file = "tests/test_pathspec_smoke.py"
+
+    _cli(
+        root,
+        "add",
+        "task",
+        "--root",
+        str(root),
+        '{"id": "task-pathspec-commit", "title": "Pathspec commit", "goal": "g", "scope": "s", '
+        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"]}',
+    )
+    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
+    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
+
+    _write(root, test_file, "def test_smoke():\n    assert True\n")
+    seed_commit = _git(root, "rev-parse", "HEAD")
+    _cli(
+        root,
+        "edit",
+        "task",
+        "task-pathspec-commit",
+        "references",
+        f'["{atom}", "pytest {test_file}::test_smoke", "{seed_commit}"]',
+        "--root",
+        str(root),
+    )
+    _cli(
+        root,
+        "edit",
+        "task",
+        "task-pathspec-commit",
+        "files",
+        f'["{atom}", "{test_file}"]',
+        "--root",
+        str(root),
+    )
+
+    # Track the task bundle so the closeout records its deletion; the atom and
+    # the test stay untracked so the commit also has to pick up new files.
+    task_a = root / "desk" / "tasks" / "task-pathspec-commit.md"
+    _git(root, "add", task_a.relative_to(root).as_posix())
+    _git(root, "commit", "-q", "-m", "track task")
+
+    _write(root, "unrelated.txt", "unrelated\n")
+    _git(root, "add", "unrelated.txt")
+
+    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
+    assert not task_a.exists()
+
+    staged = _git(root, "diff", "--cached", "--name-only").split()
+    assert "unrelated.txt" in staged, "unrelated staged work must stay staged"
+    committed = _git(root, "show", "--name-only", "--format=", "HEAD").split()
+    assert "unrelated.txt" not in committed, "unrelated staged work must stay out of the closeout"
+    assert "desk/tasks/Board.md" in committed
+    assert atom in committed
+    assert test_file in committed
+    status = _git(root, "show", "--name-status", "--format=", "HEAD")
+    assert f"D\tdesk/tasks/task-pathspec-commit.md" in status
+
+    # The amend branch must also be limited to the task's paths.
+    _cli(
+        root,
+        "add",
+        "atom",
+        "--root",
+        str(root),
+        "--title",
+        "Closeout amend pathspec evidence",
+        "--five-wh-one-plus",
+        "what",
+        "--answer",
+        "An amended closeout commit contains only the closing task's paths.",
+    )
+    amend_atom = "desk/atoms/atom-closeout-amend-pathspec-evidence.md"
+    amend_test = "tests/test_pathspec_amend_smoke.py"
+    _cli(
+        root,
+        "add",
+        "task",
+        "--root",
+        str(root),
+        '{"id": "task-pathspec-amend", "title": "Pathspec amend", "goal": "g", "scope": "s", '
+        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"]}',
+    )
+    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
+    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
+    _write(root, amend_test, "def test_smoke():\n    assert True\n")
+    seed_commit = _git(root, "rev-parse", "HEAD")
+    _cli(
+        root,
+        "edit",
+        "task",
+        "task-pathspec-amend",
+        "references",
+        f'["{amend_atom}", "pytest {amend_test}::test_smoke", "{seed_commit}"]',
+        "--root",
+        str(root),
+    )
+    _cli(
+        root,
+        "edit",
+        "task",
+        "task-pathspec-amend",
+        "files",
+        f'["{amend_atom}", "{amend_test}"]',
+        "--root",
+        str(root),
+    )
+    task_b = root / "desk" / "tasks" / "task-pathspec-amend.md"
+    _git(root, "add", task_b.relative_to(root).as_posix(), "desk/tasks/Board.md")
+    _git(root, "commit", "-q", "-m", "track amend task")
+    _git(root, "commit", "--allow-empty", "-q", "-m", "closeout: task-pathspec-amend\n\nTask-Id: task-pathspec-amend")
+    fake_closeout = _git(root, "rev-parse", "HEAD")
+
+    _write(root, "unrelated-amend.txt", "unrelated\n")
+    _git(root, "add", "unrelated-amend.txt")
+
+    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
+    assert not task_b.exists()
+
+    assert _git(root, "rev-parse", "HEAD~1") == _git(root, "rev-parse", f"{fake_closeout}~1"), (
+        "the amend branch must amend the existing closeout commit"
+    )
+    staged = _git(root, "diff", "--cached", "--name-only").split()
+    assert "unrelated-amend.txt" in staged
+    committed = _git(root, "show", "--name-only", "--format=", "HEAD").split()
+    assert "unrelated-amend.txt" not in committed
+    assert "desk/tasks/Board.md" in committed
+    assert amend_atom in committed
+    assert amend_test in committed
+    status = _git(root, "show", "--name-status", "--format=", "HEAD")
+    assert f"D\tdesk/tasks/task-pathspec-amend.md" in status
+
+
 def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> None:
     """A closeout that cannot commit must leave the desk exactly as it found it."""
     root = _make_repo(tmp_path)

@@ -1086,6 +1086,8 @@ class DeskopsOperations:
     def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
         task_id = payload.get("id", "unknown-task")
         files = self._coerce_list(payload.get("files") or [])
+        task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
+        board_rel = "desk/tasks/Board.md"
 
         self.logger.debug(f"Removing task {task_id} from Board.md")
         board_path = self.desk_root / "tasks" / "Board.md"
@@ -1097,20 +1099,69 @@ class DeskopsOperations:
             board_payload["tasks"] = tasks
             self._write_doc(board_path, BoardDoc, board_payload)
 
-        for file in files:
-            file_path = self.root / file
-            if file_path.exists():
-                self.logger.debug(f"Staging file: {file}")
-                subprocess.run(["git", "add", str(file)], cwd=self.root, check=False)
+        task_before = task_path.read_bytes() if task_path.exists() else None
 
-        subprocess.run(["git", "add", "desk/tasks/Board.md"], cwd=self.root, check=False)
+        commit_paths: list[str] = []
+        seen_paths: set[str] = set()
+
+        def add_commit_path(path: str) -> None:
+            if path not in seen_paths:
+                seen_paths.add(path)
+                commit_paths.append(path)
+
+        # Only stage (and later commit) listed files that actually changed;
+        # whatever the operator staged for other work must stay untouched.
+        for file in files:
+            status = subprocess.run(
+                ["git", "status", "--porcelain", "--", file],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            if status.returncode != 0 or not status.stdout.strip():
+                continue
+            self.logger.debug(f"Staging file: {file}")
+            subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
+            add_commit_path(file)
+
+        if board_before is not None:
+            subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
+            add_commit_path(board_rel)
+
+        def restore_index() -> None:
+            for path in commit_paths:
+                subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
+            subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
+            if task_before is not None:
+                task_path.write_bytes(task_before)
+            if board_before is not None:
+                board_path.write_text(board_before, encoding="utf-8")
 
         paths_to_remove = []
-        if task_path.exists():
+        if task_before is not None:
             paths_to_remove.append(task_path)
-
-        for p in paths_to_remove:
-            subprocess.run(["git", "rm", "--cached", "--ignore-unmatch", str(p.relative_to(self.root))], cwd=self.root, check=False)
+            tracked = subprocess.run(
+                ["git", "ls-files", "--error-unmatch", "--", task_rel],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            ).returncode == 0
+            if tracked:
+                # A pathspec commit records the working tree, so the gone task
+                # file must already be removed from both disk and the index.
+                # The bundle carries uncommitted lifecycle edits at closeout,
+                # so force the removal; its bytes are restored on failure.
+                removed = subprocess.run(
+                    ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
+                )
+                if removed.returncode != 0:
+                    restore_index()
+                    raise RuntimeError(
+                        f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
+                        f"deleted and the desk was left unchanged. Git output: "
+                        f"{removed.stderr or removed.stdout}"
+                    )
+                add_commit_path(task_rel)
 
         commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
         
@@ -1130,19 +1181,25 @@ class DeskopsOperations:
             
         if head_task_id == task_id:
             self.logger.info(f"Amending closeout commit for {task_id}")
-            result = subprocess.run(["git", "commit", "--amend", "--no-edit"], cwd=self.root, capture_output=True, text=True)
+            result = subprocess.run(
+                ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
         else:
             self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
-            result = subprocess.run(["git", "commit", "-m", commit_msg], cwd=self.root, capture_output=True, text=True)
+            result = subprocess.run(
+                ["git", "commit", "-m", commit_msg, "--", *commit_paths],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
             
         if result.returncode != 0:
             # Nothing was committed, so put the desk back exactly as it was and
             # leave the bundle in place.
-            if board_before is not None:
-                board_path.write_text(board_before, encoding="utf-8")
-            for p in paths_to_remove:
-                subprocess.run(["git", "restore", "--staged", str(p.relative_to(self.root))], cwd=self.root, check=False)
-            subprocess.run(["git", "restore", "--staged", "desk/tasks/Board.md"], cwd=self.root, check=False)
+            restore_index()
             raise RuntimeError(
                 f"Failed to commit task closure for {task_id}. The bundle was not deleted "
                 f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"

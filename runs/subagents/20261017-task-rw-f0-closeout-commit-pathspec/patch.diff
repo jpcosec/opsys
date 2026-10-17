@@ -1,0 +1,288 @@
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 7a31c4d..a9574a7 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -1086,6 +1086,8 @@ class DeskopsOperations:
+     def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
+         task_id = payload.get("id", "unknown-task")
+         files = self._coerce_list(payload.get("files") or [])
++        task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
++        board_rel = "desk/tasks/Board.md"
+ 
+         self.logger.debug(f"Removing task {task_id} from Board.md")
+         board_path = self.desk_root / "tasks" / "Board.md"
+@@ -1097,20 +1099,69 @@ class DeskopsOperations:
+             board_payload["tasks"] = tasks
+             self._write_doc(board_path, BoardDoc, board_payload)
+ 
++        task_before = task_path.read_bytes() if task_path.exists() else None
++
++        commit_paths: list[str] = []
++        seen_paths: set[str] = set()
++
++        def add_commit_path(path: str) -> None:
++            if path not in seen_paths:
++                seen_paths.add(path)
++                commit_paths.append(path)
++
++        # Only stage (and later commit) listed files that actually changed;
++        # whatever the operator staged for other work must stay untouched.
+         for file in files:
+-            file_path = self.root / file
+-            if file_path.exists():
+-                self.logger.debug(f"Staging file: {file}")
+-                subprocess.run(["git", "add", str(file)], cwd=self.root, check=False)
++            status = subprocess.run(
++                ["git", "status", "--porcelain", "--", file],
++                cwd=self.root,
++                capture_output=True,
++                text=True,
++            )
++            if status.returncode != 0 or not status.stdout.strip():
++                continue
++            self.logger.debug(f"Staging file: {file}")
++            subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
++            add_commit_path(file)
+ 
+-        subprocess.run(["git", "add", "desk/tasks/Board.md"], cwd=self.root, check=False)
++        if board_before is not None:
++            subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
++            add_commit_path(board_rel)
++
++        def restore_index() -> None:
++            for path in commit_paths:
++                subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
++            subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
++            if task_before is not None:
++                task_path.write_bytes(task_before)
++            if board_before is not None:
++                board_path.write_text(board_before, encoding="utf-8")
+ 
+         paths_to_remove = []
+-        if task_path.exists():
++        if task_before is not None:
+             paths_to_remove.append(task_path)
+-
+-        for p in paths_to_remove:
+-            subprocess.run(["git", "rm", "--cached", "--ignore-unmatch", str(p.relative_to(self.root))], cwd=self.root, check=False)
++            tracked = subprocess.run(
++                ["git", "ls-files", "--error-unmatch", "--", task_rel],
++                cwd=self.root,
++                capture_output=True,
++                text=True,
++            ).returncode == 0
++            if tracked:
++                # A pathspec commit records the working tree, so the gone task
++                # file must already be removed from both disk and the index.
++                # The bundle carries uncommitted lifecycle edits at closeout,
++                # so force the removal; its bytes are restored on failure.
++                removed = subprocess.run(
++                    ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
++                )
++                if removed.returncode != 0:
++                    restore_index()
++                    raise RuntimeError(
++                        f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
++                        f"deleted and the desk was left unchanged. Git output: "
++                        f"{removed.stderr or removed.stdout}"
++                    )
++                add_commit_path(task_rel)
+ 
+         commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+         
+@@ -1130,19 +1181,25 @@ class DeskopsOperations:
+             
+         if head_task_id == task_id:
+             self.logger.info(f"Amending closeout commit for {task_id}")
+-            result = subprocess.run(["git", "commit", "--amend", "--no-edit"], cwd=self.root, capture_output=True, text=True)
++            result = subprocess.run(
++                ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
++                cwd=self.root,
++                capture_output=True,
++                text=True,
++            )
+         else:
+             self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
+-            result = subprocess.run(["git", "commit", "-m", commit_msg], cwd=self.root, capture_output=True, text=True)
++            result = subprocess.run(
++                ["git", "commit", "-m", commit_msg, "--", *commit_paths],
++                cwd=self.root,
++                capture_output=True,
++                text=True,
++            )
+             
+         if result.returncode != 0:
+             # Nothing was committed, so put the desk back exactly as it was and
+             # leave the bundle in place.
+-            if board_before is not None:
+-                board_path.write_text(board_before, encoding="utf-8")
+-            for p in paths_to_remove:
+-                subprocess.run(["git", "restore", "--staged", str(p.relative_to(self.root))], cwd=self.root, check=False)
+-            subprocess.run(["git", "restore", "--staged", "desk/tasks/Board.md"], cwd=self.root, check=False)
++            restore_index()
+             raise RuntimeError(
+                 f"Failed to commit task closure for {task_id}. The bundle was not deleted "
+                 f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
+diff --git a/tests/test_lifecycle_end_to_end.py b/tests/test_lifecycle_end_to_end.py
+index 4147b89..f57166f 100644
+--- a/tests/test_lifecycle_end_to_end.py
++++ b/tests/test_lifecycle_end_to_end.py
+@@ -250,6 +250,158 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
+     assert "Task-Id: task-foo" in closing_message
+ 
+ 
++def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> None:
++    """A closeout commit never sweeps in unrelated staged changes."""
++    root = _make_repo(tmp_path)
++    _cli(root, "init", str(root))
++    _cli(
++        root,
++        "add",
++        "atom",
++        "--root",
++        str(root),
++        "--title",
++        "Closeout commit pathspec evidence",
++        "--five-wh-one-plus",
++        "what",
++        "--answer",
++        "A closeout commit contains only the closing task's paths.",
++    )
++    atom = "desk/atoms/atom-closeout-commit-pathspec-evidence.md"
++    test_file = "tests/test_pathspec_smoke.py"
++
++    _cli(
++        root,
++        "add",
++        "task",
++        "--root",
++        str(root),
++        '{"id": "task-pathspec-commit", "title": "Pathspec commit", "goal": "g", "scope": "s", '
++        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"]}',
++    )
++    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
++    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
++
++    _write(root, test_file, "def test_smoke():\n    assert True\n")
++    seed_commit = _git(root, "rev-parse", "HEAD")
++    _cli(
++        root,
++        "edit",
++        "task",
++        "task-pathspec-commit",
++        "references",
++        f'["{atom}", "pytest {test_file}::test_smoke", "{seed_commit}"]',
++        "--root",
++        str(root),
++    )
++    _cli(
++        root,
++        "edit",
++        "task",
++        "task-pathspec-commit",
++        "files",
++        f'["{atom}", "{test_file}"]',
++        "--root",
++        str(root),
++    )
++
++    # Track the task bundle so the closeout records its deletion; the atom and
++    # the test stay untracked so the commit also has to pick up new files.
++    task_a = root / "desk" / "tasks" / "task-pathspec-commit.md"
++    _git(root, "add", task_a.relative_to(root).as_posix())
++    _git(root, "commit", "-q", "-m", "track task")
++
++    _write(root, "unrelated.txt", "unrelated\n")
++    _git(root, "add", "unrelated.txt")
++
++    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
++    assert not task_a.exists()
++
++    staged = _git(root, "diff", "--cached", "--name-only").split()
++    assert "unrelated.txt" in staged, "unrelated staged work must stay staged"
++    committed = _git(root, "show", "--name-only", "--format=", "HEAD").split()
++    assert "unrelated.txt" not in committed, "unrelated staged work must stay out of the closeout"
++    assert "desk/tasks/Board.md" in committed
++    assert atom in committed
++    assert test_file in committed
++    status = _git(root, "show", "--name-status", "--format=", "HEAD")
++    assert f"D\tdesk/tasks/task-pathspec-commit.md" in status
++
++    # The amend branch must also be limited to the task's paths.
++    _cli(
++        root,
++        "add",
++        "atom",
++        "--root",
++        str(root),
++        "--title",
++        "Closeout amend pathspec evidence",
++        "--five-wh-one-plus",
++        "what",
++        "--answer",
++        "An amended closeout commit contains only the closing task's paths.",
++    )
++    amend_atom = "desk/atoms/atom-closeout-amend-pathspec-evidence.md"
++    amend_test = "tests/test_pathspec_amend_smoke.py"
++    _cli(
++        root,
++        "add",
++        "task",
++        "--root",
++        str(root),
++        '{"id": "task-pathspec-amend", "title": "Pathspec amend", "goal": "g", "scope": "s", '
++        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"]}',
++    )
++    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
++    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
++    _write(root, amend_test, "def test_smoke():\n    assert True\n")
++    seed_commit = _git(root, "rev-parse", "HEAD")
++    _cli(
++        root,
++        "edit",
++        "task",
++        "task-pathspec-amend",
++        "references",
++        f'["{amend_atom}", "pytest {amend_test}::test_smoke", "{seed_commit}"]',
++        "--root",
++        str(root),
++    )
++    _cli(
++        root,
++        "edit",
++        "task",
++        "task-pathspec-amend",
++        "files",
++        f'["{amend_atom}", "{amend_test}"]',
++        "--root",
++        str(root),
++    )
++    task_b = root / "desk" / "tasks" / "task-pathspec-amend.md"
++    _git(root, "add", task_b.relative_to(root).as_posix(), "desk/tasks/Board.md")
++    _git(root, "commit", "-q", "-m", "track amend task")
++    _git(root, "commit", "--allow-empty", "-q", "-m", "closeout: task-pathspec-amend\n\nTask-Id: task-pathspec-amend")
++    fake_closeout = _git(root, "rev-parse", "HEAD")
++
++    _write(root, "unrelated-amend.txt", "unrelated\n")
++    _git(root, "add", "unrelated-amend.txt")
++
++    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
++    assert not task_b.exists()
++
++    assert _git(root, "rev-parse", "HEAD~1") == _git(root, "rev-parse", f"{fake_closeout}~1"), (
++        "the amend branch must amend the existing closeout commit"
++    )
++    staged = _git(root, "diff", "--cached", "--name-only").split()
++    assert "unrelated-amend.txt" in staged
++    committed = _git(root, "show", "--name-only", "--format=", "HEAD").split()
++    assert "unrelated-amend.txt" not in committed
++    assert "desk/tasks/Board.md" in committed
++    assert amend_atom in committed
++    assert amend_test in committed
++    status = _git(root, "show", "--name-status", "--format=", "HEAD")
++    assert f"D\tdesk/tasks/task-pathspec-amend.md" in status
++
++
+ def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> None:
+     """A closeout that cannot commit must leave the desk exactly as it found it."""
+     root = _make_repo(tmp_path)

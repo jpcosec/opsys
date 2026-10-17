@@ -1,0 +1,10 @@
+Task: task-rw-f0-closeout-commit-pathspec
+Title: The advance closeout commit contains only the closing task's paths
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-closeout-commit-pathspec.md
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
