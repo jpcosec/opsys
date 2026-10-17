@@ -31,7 +31,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-Inventory finding S10, in deskops/models/task.py: TaskDoc sets `extra: allow`; the `frontmatter` field (`exclude=True`) is repopulated by `render_payload` from a hand-kept body-field list, the only deskops model using the dict-frontmatter template marker; `from_drawer` sits in `__references__` although it is provenance; and the `_omit_unset_from_drawer` docstring claims that omitting an empty `from_drawer` kept the contract hash stable, which is false (the field itself is hashed).
+Inventory finding S10, in deskops/models/task.py (afdec7f already dropped `routine` and `checklists` and pointed `current_node` at RitualDoc): TaskDoc sets `extra: allow`; the `frontmatter` field (`exclude=True`) is repopulated by `render_payload` from a hand-kept body-field list, the only deskops model using the dict-frontmatter template marker; `from_drawer` sits in `__references__` although it is provenance; and the `_omit_unset_from_drawer` docstring claims that omitting an empty `from_drawer` kept the contract hash stable, which is false (the field itself is hashed).
 
 Plan: phase F6 of `runs/planning/deskops-rewrite-inventory.md`.
 

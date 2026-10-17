@@ -52,7 +52,7 @@ _Outline the expected implementation route or affected surface._
 1. Implement closure.py on closeout_gates and doc_io, with both routes.
 2. Point `closeout commit` at it; its existing tests in tests/test_closeout.py pass unmodified. tests/test_lifecycle_end_to_end.py may change only where the decision changes what `advance` does.
 3. Rewire `advance` and `advance --to complete` per the decision.
-4. 'Same closure result' means: exit 0, task file and its primitives gone, task removed from desk/tasks/Board.md, one new commit with the route's trailers, one new index line.
+4. 'Same closure result' means: exit 0, task file gone, task removed from desk/tasks/Board.md, one new commit with the route's trailers, one new index line.
 
 ## Validation
 

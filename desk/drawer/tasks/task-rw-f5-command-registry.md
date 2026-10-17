@@ -32,7 +32,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-deskops/cli/parser.py is about 1,100 lines of hand-built argparse in which shared arguments (`--root`, selectors, `--format`) are redefined per command.
+deskops/cli/parser.py is about 1,000 lines of hand-built argparse in which shared arguments (`--root`, selectors, `--format`) are redefined per command.
 
 Plan: phase F5 of `runs/planning/deskops-rewrite-inventory.md`.
 
@@ -46,13 +46,13 @@ deskops/cli/registry.py declares every command once (path, help, args, handler, 
 
 _State what is in scope and what is out of scope._
 
-In scope: parser and dispatch. `--format` is two shared argument groups, not one: `text|json` (`_add_output_format_argument`, parser.py:906-912, and runtime workers) and `text|json|yaml` (inbox, message, faq); each command keeps its variant. Do not edit tests/test_cli*.py, tests/test_output_goldens.py, tests/conftest.py or anything under tests/fixtures/golden/, and do not run `--update-golden`. Out of scope: renaming commands or flags.
+In scope: parser and dispatch. `--format` is two shared argument groups, not one: `text|json` (`_add_output_format_argument`, parser.py:839-845, and runtime workers) and `text|json|yaml` (inbox, message, faq); each command keeps its variant. Do not edit tests/test_cli*.py, tests/test_output_goldens.py, tests/conftest.py or anything under tests/fixtures/golden/, and do not run `--update-golden`. Out of scope: renaming commands or flags.
 
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
 
-1. Define the registry types as frozen dataclasses: `Arg(flags: tuple[str, ...], kwargs: dict, group: str | None = None)` (args sharing a `group` go into one mutually exclusive group, as at parser.py:161, 185 and 1094) and `Command(path: tuple[str, ...], help: str, args: tuple[Arg, ...], handler: str, mutates: bool, epilog: str | None = None)`, where `handler` is a dotted `module:Class` path such as `deskops.cli.commands.runtime:RuntimeCLI`; commands generated from data today (the loops at parser.py:782, 847, 950 and 1024, including the model-generated args) become factory functions that return `Command`s.
+1. Define the registry types as frozen dataclasses: `Arg(flags: tuple[str, ...], kwargs: dict, group: str | None = None, group_required: bool = False)` (args sharing a `group` go into one mutually exclusive group; required at parser.py:161 and 185, optional at 988) and `Command(path: tuple[str, ...], help: str, args: tuple[Arg, ...], handler: str, mutates: bool, epilog: str | None = None)`, where `handler` is a dotted `module:Class` path such as `deskops.cli.commands.runtime:RuntimeCLI`; commands generated from data today (the loops at parser.py:715, 780, 874 and 918, including the model-generated args) become factory functions that return `Command`s.
 2. Port commands group by group; after each group run the F1 contract tests and the `help/` goldens.
 3. Delete the per-command builder functions from parser.py; the walker's own `add_parser` call is the only one left.
 4. Add tests/test_command_registry.py asserting that the set of command paths declared in the registry equals the set of command paths that have a file in tests/fixtures/golden/help/ (written from the old parser by task-rw-f1-output-golden-files), so a dropped or extra command fails.

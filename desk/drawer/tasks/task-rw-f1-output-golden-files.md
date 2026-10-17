@@ -3,7 +3,7 @@ id: task-rw-f1-output-golden-files
 status: deferred
 references: []
 depends_on:
-- task-rw-f0-close-only-own-primitives
+- task-rw-f0-closeout-amends-only-its-own-commit
 - task-rw-f0-reject-ambiguous-selectors
 - task-rw-f0-merge-retarget-whole-tokens
 - task-rw-f0-closeout-commit-pathspec
@@ -78,9 +78,9 @@ The golden tests pass, and fail when a key is renamed in the snapshot writer (ch
 
 ## Resolved Decisions
 
-- CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one seed commit), run `python -m deskops desk install <root>` to scaffold `desk/`, and drive the real CLI, by default with `subprocess.run([sys.executable, '-m', 'deskops', ...], cwd=root)` (helpers `_make_repo` and `_cli` in tests/test_lifecycle_end_to_end.py); a task that says 'in-process' calls `deskops.cli.main.main([...])` with `capsys` instead. Files created in the sandbox are untracked until the test commits them. Never mutate the repo's own `desk/`.
+- CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one empty seed commit), run `python -m deskops init <root>` (creates the store, the desk and the lifecycle graph that `advance` reads; the `lifecycle_desk` fixture in tests/conftest.py gives the same thing faster), and drive the real CLI, by default with `subprocess.run([sys.executable, '-m', 'deskops', ...], cwd=root)` (helpers `_make_repo` and `_cli` in tests/test_lifecycle_end_to_end.py); a task that says 'in-process' calls `deskops.cli.main.main([...])` with `capsys` instead. Files created in the sandbox are untracked until the test commits them. Never mutate the repo's own `desk/`.
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
-- tests/conftest.py does not exist yet; create it with only the `--update-golden` option.
+- tests/conftest.py already exists (the lifecycle_desk fixtures); add a `pytest_addoption` for `--update-golden` to it and keep the normalization helpers in tests/test_output_goldens.py.
 
 ## Open Ambiguities
 

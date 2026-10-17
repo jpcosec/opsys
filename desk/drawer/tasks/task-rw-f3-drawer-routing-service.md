@@ -29,7 +29,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-deskops/operations.py mixes 15 domains. Its drawer members are `DRAWER_INDEX_FILES` (549), `resolve_drawer_source` (551) and `attach_drawer_source` (583); inbox-to-drawer promotion lives in deskops/cli/commands/promote.py (`PromoteCLI`).
+deskops/operations.py mixes many domains. Its drawer members are `DRAWER_INDEX_FILES` (491), `resolve_drawer_source` (493) and `attach_drawer_source` (525); inbox-to-drawer promotion lives in deskops/cli/commands/promote.py (`PromoteCLI`).
 
 Plan: phase F3 of `runs/planning/deskops-rewrite-inventory.md`.
 
@@ -64,7 +64,7 @@ _List the checks required before this task can close._
 
 _Name the observable condition that makes the task complete._
 
-`def resolve_drawer_source` in deskops/operations.py is a one-line wrapper, `grep -n DrawerService deskops/cli/commands/promote.py` matches, and the named tests pass unmodified.
+`def resolve_drawer_source` in deskops/operations.py is a one-line wrapper, `grep -n 'DrawerService(' deskops/cli/commands/promote.py` matches inside `PromoteCLI.run`, and the named tests pass unmodified.
 
 ## Resolved Decisions
 

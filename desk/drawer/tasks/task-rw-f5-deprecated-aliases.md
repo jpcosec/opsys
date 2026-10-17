@@ -36,7 +36,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-`inbox` duplicates `message`, `status` overlaps `doctor`, and `atoms list/show` duplicate `list atoms`/`show atom`.
+`inbox` duplicates `message`, `status` overlaps `doctor` (both run DoctorCLI, deskops/cli/main.py:80), and `atoms list/show` duplicate `list atoms`/`show atom`. The canonical side is `message`, `doctor` and `list atoms`/`show atom`.
 
 Plan: phase F5 of `runs/planning/deskops-rewrite-inventory.md`.
 

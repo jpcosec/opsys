@@ -3,7 +3,7 @@ id: task-rw-f3-closeout-gates-service
 status: deferred
 references: []
 depends_on:
-- task-rw-f3-primitives-service-and-dead-code
+- task-rw-f3-drawer-routing-service
 pills:
 - desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
 - desk/contexts/pill-001-task-closure-commit.md
@@ -28,7 +28,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-Inventory finding X6. The commit gate `_reference_points_to_commit` (deskops/operations.py:2243) accepts anything `git rev-parse --verify <ref>^{commit}` resolves, so `HEAD` or `main` pass; the tests gate `_reference_points_to_test` (2221-2240) strips `::node` and accepts any existing `.py` path. `references: ["HEAD", "deskops/x.py"]` passes closeout.
+Inventory finding X6. The commit gate `_reference_points_to_commit` (deskops/operations.py:1818) accepts anything `git rev-parse --verify <ref>^{commit}` resolves, so `HEAD` or `main` pass; the tests gate `_reference_points_to_test` (1797-1816) strips `::node` and accepts any existing `.py` path. `references: ["HEAD", "deskops/x.py"]` passes closeout.
 
 Plan: phase F3 of `runs/planning/deskops-rewrite-inventory.md`.
 

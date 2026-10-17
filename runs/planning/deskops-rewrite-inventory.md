@@ -34,6 +34,14 @@ independiente de la decisión.
   - Issue 2, closeout sin corrida: el dueño eligió la opción A. Está en 819a8b8 como
     `deskops closeout commit --no-run --reason <texto>`, con los trailers `Closeout-Mode: manual` y
     `Closeout-Reason`, y una entrada en el índice con `run_dir: null` y `mode: manual`.
+  - Las primitivas se retiraron: el ciclo de vida de las tasks vive en el grafo de sldb (afdec7f,
+    mergeado en 56f49d5). Los estados son los rituales execution, testing y closeout; las
+    transiciones son `RelationDoc` con condición `--where` en `desk/lifecycle/`; se borraron los
+    modelos Condition, Checklist, Operator, Edge, Hook y Routine, las 17 primitivas por task y su
+    runtime. `deskops desk update --apply` migra los desks existentes. Con esto desaparece D1, la
+    task de D1+D2 queda reducida a D2 (`task-rw-f0-closeout-amends-only-its-own-commit`) y
+    F3b (servicio de primitivas y código muerto) deja de existir. Requiere
+    `structuredLanguageDB>=0.1.9`.
 - **sldb 0.1.4** arregla `sldb fields update`, que dejaba el registro del documento con el hash
   viejo (era la caché de shards).
 - **El plan está en el desk**: cada nodo del DAG es una task diferida en `desk/drawer/tasks/`
@@ -67,7 +75,7 @@ independiente de la decisión.
 
 | id | dónde | qué pasa | verif |
 |---|---|---|---|
-| D1 | `operations.py:1533` | El cierre borra primitivas con el glob `*-{task_id}*.md`. Cerrar `task-foo` borra, des-trackea y commitea las 17 primitivas de `task-foo-bar`, que queda sin rutina ni checklists. | **E** |
+| D1 | `operations.py:1533` | **Resuelto en afdec7f** (ya no hay primitivas por task). El cierre borraba primitivas con el glob `*-{task_id}*.md`. Cerrar `task-foo` borra, des-trackea y commitea las 17 primitivas de `task-foo-bar`, que queda sin rutina ni checklists. | **E** |
 | D2 | `operations.py:1547` | El amend se decide con `startswith("closeout: {task_id}")`. Si HEAD es `closeout: task-foo-bar`, cerrar `task-foo` hace `--amend` sobre el commit de la otra task. | L |
 | D3 | `operations.py:1552` | El commit de cierre no lleva pathspec: arrastra cualquier cambio staged ajeno. `git add`/`rm --cached` van con `check=False`. | L |
 | D4 | `operations.py:2162` | `_rewrite_inbound_atom_references` (solo la llama `merge_atom`) valida la coincidencia exacta por línea, pero después hace `replace` global: fusionar `atom-foo` corrompe `atom:atom-foo-bar`. `split_atom` no reescribe. | L |
@@ -101,7 +109,7 @@ independiente de la decisión.
 | S9 | `bootstrap.py:14-32` | `MODEL_REFS` registra 17 modelos y el store del repo tiene 21: un `deskops init` nuevo no registra HookDoc, MaterializationContractDoc, RunDoc ni RuntimeProfileDoc. `ensure_sldb_available` puede correr `pip install -e ../sldb` desde `list`/`show`/`add`. | P |
 | S10 | `models/task.py` | `extra: allow`; el campo `frontmatter` con `exclude=True` lo repuebla `render_payload` con una lista de campos de cuerpo mantenida a mano. El serializer de `from_drawer` mantiene los docs byte-idénticos, pero **no evitó** el cambio del hash del contrato (el campo existe, así que se hashea). El comentario lo afirma mal. | L |
 | S11 | `specs/compiler.py:44-62` | Hardcodea los 16 campos de TaskDoc y reimplementa el defaulting de Pydantic (`default_factory=dict` → `[]`). | P |
-| S12 | código muerto | `_default_*_payloads` (190 líneas), `PRIMITIVE_DIRS`, `_setup_logging` duplicado (el primero se recursaría si se usara), `specs/mermaid.py` y `materializers/atoms.py` (solo los usan tests), `RunDoc` sin escritor, ledger `self_reflection_decisions.json` sin escritor. | L |
+| S12 | código muerto | **En parte resuelto en afdec7f** (`_default_*_payloads` y `PRIMITIVE_DIRS` se fueron con las primitivas). Queda: `_setup_logging` duplicado (el primero se recursaría si se usara), `specs/mermaid.py` y `materializers/atoms.py` (solo los usan tests), `RunDoc` sin escritor, ledger `self_reflection_decisions.json` sin escritor. | L |
 | S13 | `graph/extract_coverage.py` (907 líneas) | Scoring difuso con umbrales mágicos, con ramas inalcanzables bajo el corte de 0,70, y estampa `confidence="high"` a todo. **Ninguna gate depende de él** (solo el snapshot). | P |
 
 ## Contrato a preservar (congelar antes de reescribir)
@@ -177,10 +185,10 @@ que van en serie, de la más corta a la más larga:
   público, con una transacción que cubre archivo + store (resuelve D6, D7 y S6).
   2-2,5 d.
 
-**F3. Servicios de dominio (~6 d).** Cada uno sale de `operations.py` sobre F2; en
+**F3. Servicios de dominio (~5,5 d).** Cada uno sale de `operations.py` sobre F2; en
 serie por overlap; `operations.py` queda como fachada que re-exporta.
-- F3a `drawer_routing.py` (0,5 d) → F3b `primitives_service.py` + borrar el código
-  muerto (0,5 d) → F3c `closeout_gates.py`, con gates reales para commit y tests
+- F3a `drawer_routing.py` (0,5 d) → (F3b, servicio de primitivas, ya no aplica: afdec7f) →
+  F3c `closeout_gates.py`, con gates reales para commit y tests
   (X6; 1 d) → F3d `tasks_service.py`, sacando el parser regex de S3 (1,5 d) →
   F3e `atoms_service.py` (1,5 d).
 - F3f `closure.py`: **un solo camino de cierre** (S1). El issue 2 está resuelto (opción A,
@@ -201,7 +209,7 @@ Sacar `from_drawer` de `__references__`, quitar `extra: allow` y el hack del
 frontmatter de TaskDoc, y arreglar `MODEL_REFS`. Incluye un script que corre
 `sldb models update` / `deskops desk update --apply` en los 24 stores.
 
-**Total aproximado: ~22 días de agente**, de los cuales F0 (2 d) da valor
+**Total aproximado: ~21 días de agente** (después de afdec7f), de los cuales F0 (2 d) da valor
 inmediato por sí sola.
 
 ## Decisiones pendientes del dueño

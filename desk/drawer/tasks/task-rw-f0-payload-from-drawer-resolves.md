@@ -26,7 +26,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-Found by the plan rehearsal (2026-10-16). `deskops add task --from-drawer <selector>` resolves the selector to a repo-relative drawer path in `OperationsCLI.run` (deskops/cli/commands/operations.py:21-27, through `DeskopsOperations.resolve_drawer_source` and `attach_drawer_source`, operations.py:551 and 583). The same key inside `--from-yaml` or an inline JSON payload skips that step: deskops/specs/compiler.py:64 copies the raw string, so the task records `from_drawer: rw-f0-x` instead of `desk/drawer/tasks/task-rw-f0-x.md`, and a missing or ambiguous selector is accepted silently.
+Found by the plan rehearsal (2026-10-16). `deskops add task --from-drawer <selector>` resolves the selector to a repo-relative drawer path in `OperationsCLI.run` (deskops/cli/commands/operations.py:21-27, through `DeskopsOperations.resolve_drawer_source` and `attach_drawer_source`, operations.py:493 and 525; the resolver already raises ValueError on an ambiguous selector, operations.py:520-522). The same key inside `--from-yaml` or an inline JSON payload skips that step: deskops/specs/compiler.py:57 copies the raw string, so the task records `from_drawer: rw-f0-x` instead of `desk/drawer/tasks/task-rw-f0-x.md`, and a missing or ambiguous selector is accepted silently.
 
 Plan: phase F0 of `runs/planning/deskops-rewrite-inventory.md`.
 
@@ -64,7 +64,7 @@ Both new tests pass and `pytest tests` is green.
 
 ## Resolved Decisions
 
-- CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one seed commit), run `python -m deskops desk install <root>` to scaffold `desk/`, and drive the real CLI, by default with `subprocess.run([sys.executable, '-m', 'deskops', ...], cwd=root)` (helpers `_make_repo` and `_cli` in tests/test_lifecycle_end_to_end.py); a task that says 'in-process' calls `deskops.cli.main.main([...])` with `capsys` instead. Files created in the sandbox are untracked until the test commits them. Never mutate the repo's own `desk/`.
+- CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one empty seed commit), run `python -m deskops init <root>` (creates the store, the desk and the lifecycle graph that `advance` reads; the `lifecycle_desk` fixture in tests/conftest.py gives the same thing faster), and drive the real CLI, by default with `subprocess.run([sys.executable, '-m', 'deskops', ...], cwd=root)` (helpers `_make_repo` and `_cli` in tests/test_lifecycle_end_to_end.py); a task that says 'in-process' calls `deskops.cli.main.main([...])` with `capsys` instead. Files created in the sandbox are untracked until the test commits them. Never mutate the repo's own `desk/`.
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
 
 ## Open Ambiguities

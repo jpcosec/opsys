@@ -26,7 +26,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-Inventory finding D4. `DeskopsOperations._rewrite_inbound_atom_references` (deskops/operations.py:2130), called only by `merge_atom` (line 980), checks that a line holds the exact token `atom:<id>`, then runs `original_text.replace(needle, replacement)` on the whole file (line 2162). Merging `atom-foo` into another atom therefore also rewrites every `atom:atom-foo-bar` in the same file. `split_atom` only reads inbound references (its `_find_inbound_atom_references` call is at line 879) and is not affected. The finder (`_find_inbound_atom_references`, line 2109) has no token boundary, so it may list a line such as `xatom:atom-foo` that the bounded rewrite then leaves alone; that is acceptable (the report lists a candidate, the rewrite stays exact).
+Inventory finding D4. `DeskopsOperations._rewrite_inbound_atom_references` (deskops/operations.py:1706), called only by `merge_atom` (line 924), checks that a line holds the exact token `atom:<id>`, then runs `original_text.replace(needle, replacement)` on the whole file (line 1738). Merging `atom-foo` into another atom therefore also rewrites every `atom:atom-foo-bar` in the same file. `split_atom` only reads inbound references (its `_find_inbound_atom_references` call is at line 823) and is not affected. The finder (`_find_inbound_atom_references`, line 1685) has no token boundary, so it may list a line such as `xatom:atom-foo` that the bounded rewrite then leaves alone; that is acceptable (the report lists a candidate, the rewrite stays exact).
 
 Plan: phase F0 of `runs/planning/deskops-rewrite-inventory.md`.
 

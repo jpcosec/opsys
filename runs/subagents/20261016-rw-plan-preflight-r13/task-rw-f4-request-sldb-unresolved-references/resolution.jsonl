@@ -1,0 +1,15 @@
+{"n":1,"class":"noise","answer":"Throwaway /tmp dir is executor discretion; use `mktemp -d`. No cleanup contract is needed for a scratch repro."}
+{"n":2,"class":"repo_fact","answer":"deskops/cli/parser.py:663-692: `deskops add task --root <dir> --title T --depends-on <id> [...]`. id is derived and status defaults; there is no --id/--status flag."}
+{"n":3,"class":"repo_fact","answer":"`sldb edges rebuild --store .sldb` then `sldb edges show <Model:name> --store .sldb` (cli/parsers/edges.py:15-24,28). `deskops init .` creates a local .sldb/ (README init). Python API: sldb.api.edges.load_edge_index."}
+{"n":4,"class":"repo_fact","answer":"All three deps are status:deferred in desk/drawer/tasks (…-model-contract-snapshot.md:3, -cli-contract-tests.md:3, -output-golden-files.md:3); prerequisites unmet. AGENTS.md:16,46 require promotion+commit before implementation."}
+{"n":5,"class":"repo_fact","answer":"Both pills exist and are readable: desk/contexts/pill-008-kgdb-sldb-boundary.md and desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md."}
+{"n":6,"class":"repo_fact","answer":"Not promoted: doc is desk/drawer/tasks/task-rw-f4-request-sldb-unresolved-references.md; desk/tasks/Board.md does not route it (only desk/drawer/tasks/Board.md:78 lists it). Promotion is a supervisor step."}
+{"n":7,"class":"repo_fact","answer":"deskops.graph.checks.find_missing_graph_references (deskops/graph/checks.py:32), called by CLI _graph_missing (deskops/cli/main.py:280,293)."}
+{"n":8,"class":"noise","answer":"Inventing the exact model-contract syntax is the deliverable of `## Proposed API`; the task already gives the `__containment__` analogy. The coordinator decides the final shape."}
+{"n":9,"class":"noise","answer":"Record shape is part of the proposal being written; `list[{source, field, target}]` reads as a list of dicts. No pre-existing contract constrains it."}
+{"n":10,"class":"noise","answer":"source/field/target semantics are defined by the proposal itself (edge source doc, declaring field, missing target id); no repo contract constrains them yet."}
+{"n":11,"class":"noise","answer":"Validation greps `^## Response`, so the executor creates the header and the supervisor pastes the body. Already implied by Validation plus Scope."}
+{"n":12,"class":"noise","answer":"By design: executor stops after reproduction/proposal; the supervisor pastes the reply and closes, so Done When is evaluated at closeout (Resolved Decisions)."}
+{"n":13,"class":"repo_fact","answer":"README Install: `pip install -e .[dev]`; `deskops bootstrap` installs/repairs sldb from the sibling `../sldb` when missing, so the throwaway repo uses the installed local sibling."}
+{"n":14,"class":"repo_fact","answer":"TaskDoc exists: deskops/models/task.py:8, registered as \"TaskDoc\":\"deskops.models:TaskDoc\" (bootstrap.py:16; models/__init__.py:17)."}
+{"n":15,"class":"repo_fact","answer":"Paths are relative to the deskops repo root (cwd; runs/planning/ exists there), where the file is authored. Run the Validation commands from that root."}

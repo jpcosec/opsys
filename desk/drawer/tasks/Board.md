@@ -42,11 +42,11 @@ wait on an owner decision named in their `## Open Ambiguities`. Tasks that edit
 F0:
 
 - `task-doctor-crashes-on-deskless-roots` — Doctor no longer crashes on roots without `desk/` (finding X1)
-- `task-rw-f0-close-only-own-primitives` — Closeout deletes and amends only the closing task's own artifacts
+- `task-rw-f0-closeout-amends-only-its-own-commit` — Closeout amends HEAD only when HEAD is the same task's closeout
 - `task-rw-f0-reject-ambiguous-selectors` — Prefix selectors fail on ambiguity instead of picking the first match
 - `task-rw-f0-merge-retarget-whole-tokens` — Atom merge rewrites only whole `atom:<id>` tokens in referrers
 - `task-rw-f0-closeout-commit-pathspec` — The advance closeout commit contains only the closing task's paths
-- `task-rw-f0-declare-runtime-dependencies` — pyproject declares sldb and kgdb as dependencies
+- `task-rw-f0-declare-runtime-dependencies` — pyproject declares kgdb as a dependency
 - `task-rw-f0-graph-skips-vendored-trees` — `graph build` ignores tools/, .tmp/ and .venv/
 - `task-rw-f0-pytest-collects-only-tests` — Bare `pytest` collects only the tests/ directory
 - `task-rw-f0-graph-missing-ignores-archived-records` — `graph missing` stops failing on paths quoted in archived drawer records (**blocked**)
@@ -68,7 +68,6 @@ F3:
 
 - `task-rw-f3-drawer-routing-service` — Drawer lookup moves to its own service
 - `task-rw-f3-drawer-entry-removal-verb` — A CLI verb removes a drawer entry (**blocked**)
-- `task-rw-f3-primitives-service-and-dead-code` — Primitive helpers move to a service; dead code is deleted
 - `task-rw-f3-closeout-gates-service` — Closeout gates move to a service and verify real evidence
 - `task-rw-f3-tasks-service` — Task lifecycle moves to a service and reads TaskDoc only through sldb
 - `task-rw-f3-atoms-service` — Atom operations move to a service; merge and split roll back fully

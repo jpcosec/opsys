@@ -1,0 +1,9 @@
+{"n":1,"class":"repo_fact","answer":"`deskops advance task task-foo` triggers it: advance_task calls _auto_commit_task_closure when status=='closed' and current_node==COMPLETE (deskops/operations.py:982-984). `deskops closeout commit` uses CloseoutCLI and never calls it (deskops/cli/commands/closeout.py:81,169)."}
+{"n":2,"class":"repo_fact","answer":"Not needed on the advance path. `closeout commit` requires exactly one of --run-dir or --no-run --reason (deskops/cli/commands/closeout.py:44-52); advance needs neither."}
+{"n":3,"class":"repo_fact","answer":"Closeout needs status='ready_for_testing' and has(closeout_evidence_verified) (desk/lifecycle/closeout-task_completes.md:5); testing->closeout needs nonempty(validation). No clean-worktree check, but a commit needs a staged change."}
+{"n":4,"class":"repo_fact","answer":"No other guard: the sole branch is `if head_subject.startswith(f\"closeout: {task_id}\")` (deskops/operations.py:1123); there is no run-dir or other condition."}
+{"n":5,"class":"noise","answer":"Scope already says one regression test; no positive-path test is required."}
+{"n":6,"class":"noise","answer":"Generic environment concern; no git version is pinned in the repo."}
+{"n":7,"class":"noise","answer":"Implementation path and Resolved Decisions already permit raw git; the `_git` helper (tests/test_lifecycle_end_to_end.py:16) commits fixtures directly."}
+{"n":8,"class":"noise","answer":"Assertion form is an executor detail within stated intent, e.g. compare `git rev-parse HEAD~1` to the fixture commit."}
+{"n":9,"class":"repo_fact","answer":"All cited lines are currently accurate: def at deskops/operations.py:1086, commit_msg at 1115, startswith at 1123. Locating by symbol is still safer."}

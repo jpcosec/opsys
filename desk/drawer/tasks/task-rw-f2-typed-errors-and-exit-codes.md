@@ -31,7 +31,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-Inventory findings X2 and X3. `deskops.cli.main.main` (deskops/cli/main.py:370-392) maps a few built-in exceptions to exit 1, classifies others by `exc.__class__.__name__`, and turns everything else into `SystemExit("Unexpected: ...")` with no traceback; that hid both the doctor crash and the Governance CI SyntaxError. deskops/cli/commands/desk.py:149-171 ignores a failing `stores check` and prints 'Desk is up to date.' with exit 0.
+Inventory findings X2 and X3. `deskops.cli.main.main` (deskops/cli/main.py:373-394) maps a few built-in exceptions to exit 1, classifies others by `exc.__class__.__name__`, and turns everything else into `SystemExit("Unexpected: ...")` with no traceback; that hid both the doctor crash and the Governance CI SyntaxError. deskops/cli/commands/desk.py:149-171 ignores a failing `stores check` and prints 'Desk is up to date.' with exit 0.
 
 Plan: phase F2 of `runs/planning/deskops-rewrite-inventory.md`.
 
@@ -45,7 +45,7 @@ deskops raises typed errors from one module; the CLI maps them to exit codes 0 o
 
 _State what is in scope and what is out of scope._
 
-In scope: new deskops/errors.py, the handler in cli/main.py, a global `--debug` flag added to the root parser in `build_parser` (deskops/cli/parser.py:25) that also sets logging to DEBUG, and the `desk update` swallow. `--debug` is a root-only option parsed by argparse; `CLI.run` stores it on the CLI instance and `main()` (which handles exceptions outside `CLI.run`) reads it from that instance. Logging is unchanged (already DEBUG to a file); only delete the first `_setup_logging` definition (operations.py:350, dead and self-recursive) and keep the second (362). Typed errors print their message and exit with their code, with no traceback, with or without `--debug`, on stderr as today's exit-1 mappings do. `<type>` in the unexpected-error line is `type(exc).__name__`; with `--debug` the traceback prints first, then that line. `UsageError` replaces the hand-written `return 2` at cli/main.py:153 and :227 and cli/commands/drift.py:14; the handler prints the same text to the same stream those sites use today (stdout). Existing exit-1 mappings (FileNotFoundError, KeyError, ValueError, pydantic ValidationError, SLDBStoreError) stay exit 1. Out of scope: the JSON error envelope (task-rw-f5-output-renderer).
+In scope: new deskops/errors.py, the handler in cli/main.py, a global `--debug` flag added to the root parser in `build_parser` (deskops/cli/parser.py:25) that also sets logging to DEBUG, and the `desk update` swallow. `--debug` is a root-only option parsed by argparse; `CLI.run` stores it on the CLI instance and `main()` (which handles exceptions outside `CLI.run`) reads it from that instance. Logging is unchanged (already DEBUG to a file); only delete the first `_setup_logging` definition (operations.py:322, dead and self-recursive) and keep the second (334). Typed errors print their message and exit with their code, with no traceback, with or without `--debug`, on stderr as today's exit-1 mappings do. `<type>` in the unexpected-error line is `type(exc).__name__`; with `--debug` the traceback prints first, then that line. `UsageError` replaces the hand-written `return 2` at cli/main.py:150-151 and :228-229 and cli/commands/drift.py:14; the handler prints the same text to the same stream those sites use today (stdout). Existing exit-1 mappings (FileNotFoundError, KeyError, ValueError, pydantic ValidationError, SLDBStoreError) stay exit 1. Out of scope: the JSON error envelope (task-rw-f5-output-renderer).
 
 ## Implementation Path
 
@@ -54,7 +54,7 @@ _Outline the expected implementation route or affected surface._
 1. errors.py: `DeskopsError(Exception)` with `exit_code`, subclasses `DomainError` (1), `UsageError` (2), `DeskopsEnvironmentError` (3).
 2. main.py: `isinstance` checks instead of class-name strings (import pydantic's ValidationError and sldb's SLDBStoreError); unexpected exceptions exit 3 as described.
 3. desk.py: a failing `stores check` or unparseable JSON raises `DeskopsEnvironmentError`.
-4. Tests in tests/test_cli.py: an injected unexpected exception exits 3 and prints the one-line message without `--debug`, and exits 3 and prints a traceback with `--debug`; `desk update` with a broken store exits 3. List every exit code that changes in the closeout.
+4. Tests in tests/test_cli.py: an injected unexpected exception exits 3 and prints the one-line message without `--debug`, and exits 3 and prints a traceback with `--debug`; `desk update` whose `stores check` prints no parseable JSON (sldb missing, or output that is not JSON; a non-zero exit with JSON is a normal divergence report, see tests/test_desk_sync.py) exits 3. List every exit code that changes in the closeout.
 
 ## Validation
 

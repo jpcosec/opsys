@@ -1,0 +1,12 @@
+```json
+{"n":1,"class":"repo_fact","answer":"Not a flag: the \"inline JSON payload\" is the positional arg `payload` (deskops/cli/parser.py:664), so the command is `python -m deskops add task '<json>' --root <root>`."}
+{"n":2,"class":"repo_fact","answer":"Yes, a dict: `parse_task_input` returns `dict[str, Any]` (deskops/operations.py:991-996, JSON via `_load_json_mapping`), so `payload.get('from_drawer')` is valid in `OperationsCLI.run`."}
+{"n":3,"class":"task_defect","severity":"blocking","answer":"resolve_drawer_source already raises ValueError on >1 match (operations.py:520-522), so no new ambiguity code; fix goes in cli/commands/operations.py. Task citations are wrong: resolve/attach are at 493/525, not 551/583; compiler.py from_drawer is :57, not :64."}
+{"n":4,"class":"repo_fact","answer":"resolve_drawer_source: exact match on file name or stem first, else case-insensitive substring of the stem; >1 match raises ValueError (deskops/operations.py:516-522). 'Share a fragment' = a substring of both stems that is neither exact name/stem."}
+{"n":5,"class":"noise","answer":"Task step 1 plus existing code already fix the order: parse_task_input at cli/commands/operations.py:19, resolve/attach 21-27, create_task_bundle 28; resolution sits between parse and create."}
+{"n":6,"class":"repo_fact","answer":"`deskops show task <id>` prints `From drawer: <repo-relative path>` (cli/commands/operations.py:142-143), the existing assertion pattern (tests/test_lifecycle_end_to_end.py:255); no front-matter parsing needed."}
+{"n":7,"class":"repo_fact","answer":"On resolve/attach failure the branch returns at cli/commands/operations.py:26 before create_task_bundle (line 28); only that call writes, so assert exit 1 and no new file under desk/tasks/."}
+{"n":8,"class":"repo_fact","answer":"Format is `Error: {exc}` (cli/commands/operations.py:25); text comes from resolve_drawer_source: \"No drawer file matches '...'\" (operations.py:519), \"Ambiguous drawer selector '...'\" (522), plus 508/511."}
+{"n":9,"class":"repo_fact","answer":"No CLI creates arbitrary drawer files. Tests write them directly via `_write` (tests/test_lifecycle_end_to_end.py:29-34) or write an inbox note then run `deskops promote inbox-to-drawer-task` (lines 229-242)."}
+{"n":10,"class":"noise","answer":"Not a contradiction: every drawer task carries status: deferred (desk/drawer/tasks/*.md:3); Resolved Decisions state the supervisor promotes to desk/tasks/ before dispatch, which activates it."}
+```

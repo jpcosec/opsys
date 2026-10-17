@@ -58,7 +58,7 @@ Edges declared by model fields come from sldb's public edge index (per the API a
 
 _State what is in scope and what is out of scope._
 
-In scope: extract_edges.py, extract_docs.py, snapshot.py, the closeout graph context in deskops/services/closeout_gates.py, and the graph tests listed below, which may be updated for the id change. Edges sldb cannot provide stay local: diagram `source:` edges (`_diagram_source_declarations`), section-declared atom refs (`_section_declarations`), YAML-fenced atom declarations in bodies (`_atom_declarations`, extract_edges.py:244), the per-line path scanner, and frontmatter fields of models that declare no `__references__`/`__containment__` (today MaterializationContractDoc's `source_atoms` and `target_identity`, read by `_declarations_from_mapping`, pinned by tests/test_materialization_contract.py:163), and the frontmatter edges of documents the store does not track (drawer tasks and any other untracked desk document; .sldb/core/documents/ holds only tracked ones), which keep the local extraction. Out of scope: the coverage extractor. Other code and fixtures that hard-code old ids are updated in this task: deskops/graph/self_reflection.py:164,173,450, deskops/operations.py:1728,2287 (or their moved copies), deskops/cli/parser.py:323, tests/fixtures/knowledge_graph/static_desk_source_graph.json and tests/test_graph_extract_docs.py:48-53.
+In scope: extract_edges.py, extract_docs.py, snapshot.py, the closeout graph context in deskops/services/closeout_gates.py, and the graph tests listed below, which may be updated for the id change. Edges sldb cannot provide stay local: diagram `source:` edges (`_diagram_source_declarations`), section-declared atom refs (`_section_declarations`), YAML-fenced atom declarations in bodies (`_atom_declarations`, extract_edges.py:244), the per-line path scanner, and frontmatter fields of models that declare no `__references__`/`__containment__` (today MaterializationContractDoc's `source_atoms` and `target_identity`, read by `_declarations_from_mapping`, pinned by tests/test_materialization_contract.py:163), and the frontmatter edges of documents the store does not track (drawer tasks and any other untracked desk document; .sldb/core/documents/ holds only tracked ones), which keep the local extraction. Out of scope: the coverage extractor. Other code and fixtures that hard-code old ids are updated in this task: deskops/graph/self_reflection.py:164,173,450, deskops/operations.py:1304,1863 (or their moved copies), deskops/cli/parser.py:323, tests/fixtures/knowledge_graph/static_desk_source_graph.json and tests/test_graph_extract_docs.py:48-53.
 
 ## Implementation Path
 
@@ -81,7 +81,7 @@ _List the checks required before this task can close._
 
 _Name the observable condition that makes the task complete._
 
-extract_edges.py no longer parses frontmatter reference fields, the dangling-reference set matches the baseline modulo the id mapping, and `pytest tests` is green.
+extract_edges.py no longer parses the declared reference fields of store-tracked documents (the local cases listed in Scope remain), the dangling-reference set matches the baseline modulo the id mapping, and `pytest tests` is green.
 
 ## Resolved Decisions
 

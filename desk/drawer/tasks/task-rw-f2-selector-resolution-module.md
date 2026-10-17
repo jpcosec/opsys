@@ -29,7 +29,7 @@ tags:
 
 _Explain why this task exists or the business driver behind it._
 
-Four methods in deskops/operations.py resolve selectors: `_resolve_glob` (2612), `_resolve_artifact_selector_multi` (2621), `_resolve_artifact_selector` (2647) and `_one_artifact_match` (2738). After task-rw-f0-reject-ambiguous-selectors they share one rule (exact name or stem first, then a unique prefix, else an ambiguity error), but each keeps its own copy and message.
+Four methods in deskops/operations.py resolve selectors: `_resolve_glob` (2077), `_resolve_artifact_selector_multi` (2086), `_resolve_artifact_selector` (2112) and `_one_artifact_match` (2203). After task-rw-f0-reject-ambiguous-selectors they share one rule (exact name or stem first, then a unique prefix, else an ambiguity error), but each keeps its own copy and message.
 
 Plan: phase F2 of `runs/planning/deskops-rewrite-inventory.md`.
 
@@ -49,7 +49,7 @@ In scope: selector resolution only (desk layout constants such as `ARTIFACT_PATH
 
 _Outline the expected implementation route or affected surface._
 
-1. deskops/desk_paths.py: `resolve_selector(desk_root: Path, directories: list[Path], selector: str, pattern: str, what: str, recursive: bool) -> Path`; `recursive` keeps each caller's current search (`_resolve_glob` uses `glob`, the artifact selectors use `rglob`); `what` is the artifact id for the artifact selectors and the directory kind (task, routine, edge, operator, checklist, condition) for `_resolve_glob` callers; with two tiers: (1) a file whose `name` or `stem` equals the selector; (2) a unique file whose name or stem starts with it; zero matches raise `FileNotFoundError` and more than one raise `ValueError`, with the messages above. Update any existing test that asserts the old wording, and list each one in the closeout.
+1. deskops/desk_paths.py: `resolve_selector(desk_root: Path, directories: list[Path], selector: str, pattern: str, what: str, recursive: bool) -> Path`; `recursive` keeps each caller's current search (`_resolve_glob` uses `glob`, the artifact selectors use `rglob`); `what` is the artifact id for the artifact selectors and the directory kind (`task`, the only one its callers use today) for `_resolve_glob` callers; with two tiers: (1) a file whose `name` or `stem` equals the selector; (2) a unique file whose name or stem starts with it; zero matches raise `FileNotFoundError` and more than one raise `ValueError`, with the messages above. Update any existing test that asserts the old wording, and list each one in the closeout.
 2. Make the four methods delegate.
 3. tests/test_desk_paths.py covers both tiers, zero matches and ambiguity.
 

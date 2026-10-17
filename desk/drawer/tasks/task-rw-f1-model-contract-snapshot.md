@@ -3,7 +3,7 @@ id: task-rw-f1-model-contract-snapshot
 status: deferred
 references: []
 depends_on:
-- task-rw-f0-close-only-own-primitives
+- task-rw-f0-closeout-amends-only-its-own-commit
 - task-rw-f0-reject-ambiguous-selectors
 - task-rw-f0-merge-retarget-whole-tokens
 - task-rw-f0-closeout-commit-pathspec
@@ -55,7 +55,7 @@ In scope: one test module and its fixture. Out of scope: changing any model (F6)
 
 _Outline the expected implementation route or affected surface._
 
-1. The model set is `deskops.bootstrap.MODEL_REFS` (a dict name -> `module:Class`) united with the model names listed in `.sldb/core/store_index.yaml`; import each `deskops.models:<Class>`.
+1. The model set is `deskops.bootstrap.MODEL_REFS` (a dict name -> `module:Class`) united with the model names listed in `.sldb/core/store_index.yaml`; import each class from its `model_ref` (the MODEL_REFS value, or the store index's `model_ref`; RelationTypeDoc and RelationDoc are `sldb.models.*` classes registered by the lifecycle graph and are snapshotted too).
 2. Fixture tests/fixtures/model_contract_hashes.json is a flat JSON object `{"<ModelName>": "<sha256 hex>"}` with sorted keys.
 3. tests/test_model_contract_snapshot.py asserts the fixture's key set equals the discovered set (listing missing and extra names) and each hash matches (listing changed names). The failure message says a change requires a store migration (task-rw-f6-migrate-tracking-stores) and prints the new hashes so the fixture can be updated deliberately.
 4. Generate the fixture once from the current code.

@@ -20,7 +20,7 @@ P = "desk/contexts/"
 
 OPS = "deskops/operations.py"
 F0_DONE = [
-    "task-rw-f0-close-only-own-primitives",
+    "task-rw-f0-closeout-amends-only-its-own-commit",
     "task-rw-f0-reject-ambiguous-selectors",
     "task-rw-f0-merge-retarget-whole-tokens",
     "task-rw-f0-closeout-commit-pathspec",
@@ -38,8 +38,9 @@ F1_DONE = [
 
 # Facts shared by many tasks, stated once so a zero-context executor does not guess.
 SANDBOX_FACT = (
-    "CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one seed commit), run "
-    "`python -m deskops desk install <root>` to scaffold `desk/`, and drive the real CLI, by default with "
+    "CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one empty seed commit), run "
+    "`python -m deskops init <root>` (creates the store, the desk and the lifecycle graph that `advance` reads; "
+    "the `lifecycle_desk` fixture in tests/conftest.py gives the same thing faster), and drive the real CLI, by default with "
     "`subprocess.run([sys.executable, '-m', 'deskops', ...], cwd=root)` (helpers `_make_repo` and `_cli` in "
     "tests/test_lifecycle_end_to_end.py); a task that says 'in-process' calls `deskops.cli.main.main([...])` with "
     "`capsys` instead. Files created in the sandbox are untracked until the test commits them. Never mutate the "
@@ -52,74 +53,57 @@ COMMIT_FACT = (
     "`pytest tests` green in addition to the task's own Done When."
 )
 FIXTURE_TASKS_FACT = (
-    "Create fixture tasks through the CLI so each gets its routine and primitives, e.g. "
+    "Create fixture tasks through the CLI so each is tracked and routed on the Board, e.g. "
     "`deskops add task --root <root> '{\"id\": \"task-foo\", \"title\": \"Foo\", \"goal\": \"g\", \"scope\": \"s\", "
     "\"implementation_path\": \"i\", \"done_when\": \"d\", \"validation\": [\"pytest\"]}'`; an explicit `id` "
-    "overrides the title slug (deskops/specs/compiler.py:37). A raw file write leaves the task without a routine, and "
-    "`advance` then exits 1."
+    "overrides the title slug (deskops/specs/compiler.py:36). The task starts at the lifecycle node `ritual-execution`."
 )
 F1_CLI_TESTS = "tests/test_cli_contract.py (created by task-rw-f1-cli-contract-tests)"
 
 TASKS: list[dict] = [
     # ---------------- F0: data-loss hotfixes ----------------
     dict(
-        id="task-rw-f0-close-only-own-primitives",
-        title="Closeout deletes and amends only the closing task's own artifacts",
+        id="task-rw-f0-closeout-amends-only-its-own-commit",
+        title="Closeout amends HEAD only when HEAD is the same task's closeout",
         phase="F0",
         why=(
-            "Inventory findings D1 and D2. `DeskopsOperations._auto_commit_task_closure` (deskops/operations.py:1499) "
-            "collects primitives with the glob `*-{task_id}*.md` (line 1533) over conditions, checklists, operators, "
-            "edges and hooks. Closing `task-foo` therefore deletes, untracks and commits away the 17 primitives of "
-            "`task-foo-bar` (reproduced in a sandbox). The amend check at line 1547 uses "
-            "`head_subject.startswith(f\"closeout: {task_id}\")`, so if HEAD is `closeout: task-foo-bar`, closing "
-            "`task-foo` amends the other task's commit."
+            "Inventory finding D2. `DeskopsOperations._auto_commit_task_closure` (deskops/operations.py:1086) decides "
+            "whether to amend with `head_subject.startswith(f\"closeout: {task_id}\")` (line 1123), so if HEAD is "
+            "`closeout: task-foo-bar`, closing `task-foo` amends the other task's commit. (Finding D1, the primitive "
+            "glob that deleted another task's files, disappeared with the per-task primitives in afdec7f.)"
         ),
-        goal=(
-            "Closing a task removes exactly the primitives its own bundle created (plus hooks that target them) and "
-            "amends HEAD only when HEAD is that same task's closeout commit."
-        ),
+        goal="Closing a task amends HEAD only when HEAD's `Task-Id` trailer is exactly that task's id; otherwise it makes a new commit.",
         scope=(
-            "In scope: the primitive-selection loop and the amend decision inside `_auto_commit_task_closure`, and two "
-            "regression tests. Out of scope: the commit pathspec (task-rw-f0-closeout-commit-pathspec), untrack and "
-            "rollback transactions (task-rw-f2-transactional-doc-io), and how primitive ids are generated."
+            "In scope: the amend decision in `_auto_commit_task_closure` and one regression test. Out of scope: the "
+            "commit pathspec (task-rw-f0-closeout-commit-pathspec) and untrack/rollback transactions "
+            "(task-rw-f2-transactional-doc-io)."
         ),
         implementation_path=(
-            "1. Compute the exact id set the bundle created: call "
-            "`compile_task_bundle_spec(self.spec_registry, {...})` (deskops/specs/compiler.py:30) with the task's id and "
-            "its stored title/goal/scope/implementation_path/done_when, and collect `routine_payload['id']` plus the "
-            "`id` of every item in `condition_payloads`, `checklist_payloads`, `operator_payloads` and `edge_payloads`. "
-            "For any task this is the routine plus these 17 primitives: "
-            "condition-<id>-{has-implementation-path,has-validation,has-closeout-evidence,pill-knowledge-graduated,ready-for-closeout}, "
-            "checklist-<id>-{execution-ready,testing-ready,closeout-ready}, operator-<id>-{activate,ready-for-testing,close}, "
-            "edge-<id>-{execution-to-activate,activate-to-testing,testing-to-ready,ready-to-closeout,closeout-to-close,close-to-complete}.\n"
-            "2. Delete a file under desk/primitives/{conditions,checklists,operators,edges}/ only when its stem is in that "
-            "set. Delete a file under desk/primitives/hooks/ only when its `target` field is in that set. Remove the glob.\n"
-            "3. Decide the amend from the trailer: amend only when "
+            "1. Decide the amend from the trailer: amend only when "
             "`git log -1 --format=%(trailers:key=Task-Id,valueonly)` (stripped) equals `task_id`. The closeout commit "
-            "message already carries `Task-Id: <id>` (operations.py:1539); a HEAD without that trailer never amends.\n"
-            "4. Add two tests to tests/test_lifecycle_end_to_end.py: (a) create `task-foo` and `task-foo-bar`, commit "
-            "everything (`git add -A && git commit`), close `task-foo`, then assert each of the 17 `task-foo-bar` "
-            "primitive files exists and is listed by `git ls-files desk/primitives`; (b) make HEAD a commit whose subject is `closeout: task-foo-bar` with trailer "
-            "`Task-Id: task-foo-bar`, close `task-foo`, assert HEAD~1 is that commit (a new commit was created)."
+            "message already carries `Task-Id: <id>` (operations.py:1115); a HEAD without that trailer never amends.\n"
+            "2. Test in tests/test_lifecycle_end_to_end.py: make HEAD a commit whose subject is `closeout: task-foo-bar` "
+            "with trailer `Task-Id: task-foo-bar`, then close `task-foo` through the CLI and assert HEAD~1 is that commit "
+            "(a new commit was created)."
         ),
         resolved=[SANDBOX_FACT, FIXTURE_TASKS_FACT, COMMIT_FACT],
         validation=["pytest tests/test_lifecycle_end_to_end.py", "pytest tests"],
-        done_when="Both new tests fail on the current code and pass after the fix, and `pytest tests` is green.",
+        done_when="The new test fails on the current code and passes after the fix, and `pytest tests` is green.",
         files=[OPS, "tests/test_lifecycle_end_to_end.py"],
         pills=[P + "pill-001-task-closure-commit.md", P + "pill-real-cli-surfaces-prove-operator-contracts.md"],
         depends_on=[],
-        topics=["closeout", "data-loss"],
+        topics=["closeout", "git"],
     ),
     dict(
         id="task-rw-f0-reject-ambiguous-selectors",
         title="Prefix selectors fail on ambiguity instead of picking the first match",
         phase="F0",
         why=(
-            "Inventory finding D5. `DeskopsOperations._resolve_glob` (deskops/operations.py:2612-2619) returns "
+            "Inventory finding D5. `DeskopsOperations._resolve_glob` (deskops/operations.py:2077-2084) returns "
             "`matches[0]` of `{doc_id}*.md` when no exact file exists, so `advance task task-foo` can advance "
-            "`task-foo-bar`, and `inherits_from` can inherit from the wrong parent. Its callers are at lines 1015, 1021, "
-            "2388, 2436, 2454, 2492, 2511 and 2527. The other resolver, `_resolve_artifact_selector` (2647), already "
-            "refuses ambiguity through `_one_artifact_match` (2738)."
+            "`task-foo-bar`, and `inherits_from` can inherit from the wrong parent. Its callers are at lines 674, 955 and 1964 (all "
+            "resolve tasks). The other resolver, `_resolve_artifact_selector` (2112), already refuses ambiguity "
+            "through `_one_artifact_match` (2203)."
         ),
         goal=(
             "`_resolve_glob` raises on more than one prefix match, naming every candidate, while an exact file name and a "
@@ -134,7 +118,7 @@ TASKS: list[dict] = [
             "`ValueError(f\"Ambiguous id '{doc_id}' in {directory}: {', '.join(p.stem for p in matches)}\")`, the same "
             "shape as `_one_artifact_match`.\n"
             "2. `deskops.cli.main.main` already maps `ValueError` to `Invalid value: ...` on stderr and exit 1 "
-            "(deskops/cli/main.py:382-384); no CLI change.\n"
+            "(deskops/cli/main.py, `main`); no CLI change.\n"
             "3. Tests in tests/test_operational.py, importing `_make_repo` and `_cli` from "
             "tests/test_lifecycle_end_to_end.py (that module has the sandbox harness; test_operational.py does not): (a) with `task-foo-bar` and `task-foo-baz` only, "
             "`deskops advance task task-foo` exits 1, stderr names both stems, and both task files' text is unchanged "
@@ -146,7 +130,7 @@ TASKS: list[dict] = [
         done_when="Both new tests pass and `pytest tests` is green.",
         files=[OPS, "tests/test_operational.py"],
         pills=[P + "pill-real-cli-surfaces-prove-operator-contracts.md", P + "pill-list-surfaces-must-expose-malformed-docs.md"],
-        depends_on=["task-rw-f0-close-only-own-primitives"],
+        depends_on=["task-rw-f0-closeout-amends-only-its-own-commit"],
         topics=["selectors", "data-loss"],
     ),
     dict(
@@ -154,12 +138,12 @@ TASKS: list[dict] = [
         title="Atom merge rewrites only whole `atom:<id>` tokens in referrers",
         phase="F0",
         why=(
-            "Inventory finding D4. `DeskopsOperations._rewrite_inbound_atom_references` (deskops/operations.py:2130), "
-            "called only by `merge_atom` (line 980), checks that a line holds the exact token `atom:<id>`, then runs "
-            "`original_text.replace(needle, replacement)` on the whole file (line 2162). Merging `atom-foo` into another "
+            "Inventory finding D4. `DeskopsOperations._rewrite_inbound_atom_references` (deskops/operations.py:1706), "
+            "called only by `merge_atom` (line 924), checks that a line holds the exact token `atom:<id>`, then runs "
+            "`original_text.replace(needle, replacement)` on the whole file (line 1738). Merging `atom-foo` into another "
             "atom therefore also rewrites every `atom:atom-foo-bar` in the same file. `split_atom` only reads inbound "
-            "references (its `_find_inbound_atom_references` call is at line 879) and is not affected. The finder "
-            "(`_find_inbound_atom_references`, line 2109) has no token boundary, so it may list a line such as "
+            "references (its `_find_inbound_atom_references` call is at line 823) and is not affected. The finder "
+            "(`_find_inbound_atom_references`, line 1685) has no token boundary, so it may list a line such as "
             "`xatom:atom-foo` that the bounded rewrite then leaves alone; that is acceptable (the report lists a "
             "candidate, the rewrite stays exact)."
         ),
@@ -189,31 +173,33 @@ TASKS: list[dict] = [
         phase="F0",
         why=(
             "Inventory finding D3. The commit `_auto_commit_task_closure` makes when `deskops advance` closes a task "
-            "(deskops/operations.py:1549-1552) runs `git commit -m` without a pathspec, so anything the operator had "
-            "staged for other work is swept into `closeout: <task>`. Its `git rm --cached` calls (line 1537) use "
+            "(deskops/operations.py:1125-1128) runs `git commit -m` without a pathspec, so anything the operator had "
+            "staged for other work is swept into `closeout: <task>`. Its `git rm --cached` calls (line 1113) use "
             "`check=False` and ignore failures."
         ),
         goal=(
-            "That commit includes exactly the removed bundle paths, `desk/tasks/Board.md`, and those entries of the task's "
+            "That commit includes exactly the removed task file, `desk/tasks/Board.md`, and those entries of the task's "
             "`files` list that have any change, new files included (`git status --porcelain -- <path>` prints "
             "something), with their working-tree content; unchanged listed paths are skipped; unrelated staged changes "
             "stay staged and out of the commit."
         ),
         scope=(
             "In scope: the staging and commit calls in `_auto_commit_task_closure`, and one test. Out of scope: the amend "
-            "rule (task-rw-f0-close-only-own-primitives) and `deskops closeout commit` (deskops/cli/commands/closeout.py)."
+            "rule (task-rw-f0-closeout-amends-only-its-own-commit) and `deskops closeout commit` (deskops/cli/commands/closeout.py)."
         ),
         implementation_path=(
-            "1. Build the path list: removed bundle paths, `desk/tasks/Board.md`, and each `files` entry for which "
+            "1. Build the path list: the removed task file, `desk/tasks/Board.md`, and each `files` entry for which "
             "`git status --porcelain -- <path>` prints something. Today the closeout `git add`s every listed file "
-            "(operations.py:1518); keep that `git add -A -- <path>` for those paths only. The existing lifecycle test "
+            "(operations.py:1104); keep that `git add -A -- <path>` for those paths only. The existing lifecycle test "
             "lists an untracked atom and test file and expects them in the commit; that must keep passing.\n"
-            "2. Commit with `git commit -m <msg> -- <paths>` (and `git commit --amend --no-edit -- <paths>` when amending). "
-            "Run `git rm --cached` with a checked return code; on failure take the existing failure branch "
-            "(restore the Board, unstage, raise `RuntimeError` with git's stderr).\n"
+            "2. A pathspec commit records the working tree, so the task file must already be deleted when it runs: keep "
+            "its bytes in memory, `git rm -- <task path>` (checked; this deletes it from disk and the index) instead of "
+            "`git rm --cached`, then commit with `git commit -m <msg> -- <paths>` (or `git commit --amend --no-edit -- "
+            "<paths>`). On any failure restore the task file from memory, the Board, and the index (`git restore "
+            "--staged`), and raise `RuntimeError` with git's stderr. The later untrack/unlink step then only untracks.\n"
             "3. Test in tests/test_lifecycle_end_to_end.py: stage an unrelated file, close a task through the CLI, assert "
             "the unrelated file is still staged (`git diff --cached --name-only`) and absent from "
-            "`git show --name-only --format= HEAD`."
+            "`git show --name-only --format= HEAD`, and that HEAD's diff deletes the task file."
         ),
         resolved=[SANDBOX_FACT, FIXTURE_TASKS_FACT, COMMIT_FACT],
         validation=["pytest tests/test_lifecycle_end_to_end.py", "pytest tests"],
@@ -225,24 +211,23 @@ TASKS: list[dict] = [
     ),
     dict(
         id="task-rw-f0-declare-runtime-dependencies",
-        title="pyproject declares sldb and kgdb as dependencies",
+        title="pyproject declares kgdb as a dependency",
         phase="F0",
         why=(
-            "deskops imports `sldb` throughout and `kgdb` in deskops/graph/snapshot.py:119 and deskops/cli/main.py:249, "
+            "deskops imports `sldb` throughout and `kgdb` in deskops/graph/snapshot.py:119 and deskops/cli/main.py:251, "
             "but pyproject.toml lists only pydantic and PyYAML, so a clean install of deskops cannot import itself."
         ),
-        goal="pyproject.toml declares sldb (distribution name `structuredLanguageDB`) and `kgdb` with lower-bound versions, and a fresh venv that installs the sibling sldb checkout, kgdb and deskops imports the CLI.",
+        goal="pyproject.toml declares `kgdb` with a lower-bound version next to the existing `structuredLanguageDB>=0.1.9`, and a fresh venv that installs the sibling sldb checkout, kgdb and deskops imports the CLI.",
         scope=(
             "In scope: the `dependencies` list in pyproject.toml. Out of scope: publishing, upper bounds, and "
             "`ensure_sldb_available` in deskops/bootstrap.py."
         ),
         implementation_path=(
-            "1. Add `\"structuredLanguageDB>=0.1.4\"` and `\"kgdb>=0.1.0\"` to `dependencies`. The import name is `sldb` "
-            "but its distribution is `structuredLanguageDB` (../sldb/pyproject.toml:2); 0.1.4 is the release that fixed "
-            "`sldb fields update`; kgdb 0.1.0 is the installed version. In this machine's main environment the "
-            "metadata still says structuredLanguageDB 0.1.3 (plus a stale `sldb 0.1.0` editable entry) although "
-            "`import sldb` loads ../sldb/src at 0.1.4, so `pip install -e .` there may need `pip install -e ../sldb` "
-            "first; the throwaway venv below is the check that counts.\n"
+            "1. `dependencies` already holds `\"structuredLanguageDB>=0.1.9\"` (pyproject.toml:10, added by afdec7f); add "
+            "`\"kgdb>=0.1.0\"` (the installed version) after it and change nothing else. In this machine's main "
+            "environment the sldb metadata still says structuredLanguageDB 0.1.3 although `import sldb` loads ../sldb/src "
+            "at 0.1.9, so `pip install -e .` there may need `pip install -e ../sldb` first; the throwaway venv below is "
+            "the check that counts.\n"
             "2. Verify in a throwaway venv under /tmp: `python -m venv /tmp/deskops-venv && /tmp/deskops-venv/bin/pip install "
             "../sldb <kgdb source> . && /tmp/deskops-venv/bin/python -c 'import deskops.cli.main'`. There is no sibling "
             "kgdb checkout; the installed kgdb 0.1.0 came from git (its dist-info `direct_url.json` records "
@@ -252,7 +237,7 @@ TASKS: list[dict] = [
         ),
         resolved=[COMMIT_FACT],
         validation=["python -m deskops --help", "pytest tests"],
-        done_when="pyproject.toml declares both packages and the throwaway-venv import check succeeds (or the missing kgdb source is reported).",
+        done_when="pyproject.toml declares kgdb, and the throwaway-venv import check succeeds (or the pip error is recorded).",
         files=["pyproject.toml"],
         pills=[P + "pill-008-kgdb-sldb-boundary.md"],
         depends_on=[],
@@ -318,38 +303,41 @@ TASKS: list[dict] = [
         title="`graph missing` stops failing on paths quoted in archived drawer records",
         phase="F0",
         why=(
-            "`deskops graph missing --root .` exits 1 on the repo desk at HEAD with 99 findings, all "
+            "`deskops graph missing --root .` exits 1 on the repo desk (main at 56f49d5) with 102 findings, all "
             "`missing_declared_target` from the per-line path scanner (`source-file-reference` provenance) in "
-            "deskops/graph/extract_edges.py: 96 come from desk/drawer/issues/diagnosis-archive.md (title line says "
+            "deskops/graph/extract_edges.py: 98 come from desk/drawer/issues/diagnosis-archive.md (title line says "
             "'archived 2026-09-24'; no frontmatter) and 3 from "
             "desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md (a `## Status` section "
-            "says 'resolved'; no frontmatter). They quote task and test paths that were closed or deleted long ago. "
-            "Today every finding prints and any finding exits 1 (deskops/cli/main.py:297-309). While this gate is red on "
+            "says 'resolved'; no frontmatter). The last one comes from "
+            "desk/drawer/issues/issue-refactor-primitives-to-ast-driven-task-nodes.md, which quotes "
+            "deskops/runtime/primitives.py, deleted when afdec7f moved the lifecycle into the sldb graph; that issue "
+            "is resolved by afdec7f and becomes a record too. They quote task and test paths that were closed or deleted. "
+            "Today every finding prints and any finding exits 1 (`_graph_missing`, deskops/cli/main.py:280). While this gate is red on "
             "the real desk, no task can use it as validation."
         ),
         goal=(
             "`deskops graph missing --root .` exits 0 on the repo desk while a live issue with a dangling path still "
             "exits 1. With option A or C every document carrying the record marker is handled by one general rule (no "
-            "per-file allowlist); with option B the two files no longer contain path-shaped references."
+            "per-file allowlist); with option B the three files no longer contain path-shaped references."
         ),
         scope=(
             "Blocked on the owner's choice (see Open Ambiguities). The record marker is checked on every extracted "
             "document, not only under desk/drawer/. With option C the output and exit code of `_graph_missing` in "
             "deskops/cli/main.py are in scope. Out of scope: other finding kinds and the sldb-backed graph rewrite "
-            "(task-rw-f4-graph-on-sldb-edge-index). The 99 HEAD findings are all from the two files named in "
+            "(task-rw-f4-graph-on-sldb-edge-index). The 102 findings are all from the three files named in "
             "Rationale (checked 2026-10-16 with `deskops graph missing --root .` and grouping by provenance); if new "
             "non-record findings appear before this task runs, list them in the closeout and do not hide them."
         ),
         implementation_path=(
-            "Option A or C: (1) mark both files with the chosen record marker; (2) the path scanner in extract_edges.py "
+            "Option A or C: (1) mark all three files with the chosen record marker; (2) the path scanner in extract_edges.py "
             "tags each edge from a record document with `record: true` in its metadata (option A instead drops those "
             "edges there); `find_missing_graph_references` (deskops/graph/checks.py) copies the flag onto "
             "`GraphMissingFinding` as a new `record: bool | None = None` field, set to True only for record findings, so "
             "`to_dict` (which drops None) keeps today's dicts for live findings (tests/test_graph_checks.py:25,64); "
-            "(3) option C only: `_graph_missing` (deskops/cli/main.py:297-309) prints record findings under a separate "
+            "(3) option C only: `_graph_missing` (`_graph_missing`, deskops/cli/main.py:280) prints record findings under a separate "
             "`Informational (archived records):` heading after the failing ones, does not count them, exits 1 iff at "
             "least one non-record finding exists, and ends with `N missing, M informational`. "
-            "Option B: rewrite each quoted path in the two files as plain text (for example drop the directory part or "
+            "Option B: rewrite each quoted path in the three files as plain text (for example drop the directory part or "
             "wrap it so it no longer matches the scanner), with no code change. "
             "Tests (all options), in tests/test_graph_declared_edges.py with a `tmp_path` desk: a live issue under "
             "desk/drawer/issues/ with a dangling path still yields a finding and exit 1 (the scanner only reads `task` "
@@ -360,12 +348,13 @@ TASKS: list[dict] = [
         validation=["pytest tests/test_graph_declared_edges.py tests/test_graph_cli.py tests/test_graph_checks.py", "deskops graph missing --root .", "pytest tests"],
         done_when="`deskops graph missing --root .` exits 0 on the repo desk (with option C it may print informational record findings), the new tests for the chosen option pass, and `pytest tests` is green.",
         files=["deskops/graph/extract_edges.py", "deskops/graph/checks.py", "deskops/cli/main.py", "tests/test_graph_declared_edges.py", "desk/drawer/issues/diagnosis-archive.md",
-               "desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md"],
+               "desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md",
+               "desk/drawer/issues/issue-refactor-primitives-to-ast-driven-task-nodes.md"],
         pills=[P + "pill-009-source-file-graph-traceability.md", P + "pill-010-graph-runtime-output-policy.md"],
         depends_on=[],
         topics=["graph", "gates"],
         ambiguities=[
-            "Owner decision, handling: A) skip record documents in the path scanner; B) edit the two files so the quoted "
+            "Owner decision, handling: A) skip record documents in the path scanner; B) edit the three files so the quoted "
             "paths stop looking like references (loses verbatim history); C) report record findings as informational "
             "with exit 0 (recommended; semantics in Implementation Path).",
             "Owner decision, marker: a `record: true` frontmatter key (recommended; both files need frontmatter added), "
@@ -380,8 +369,9 @@ TASKS: list[dict] = [
         why=(
             "Found by the plan rehearsal (2026-10-16). `deskops add task --from-drawer <selector>` resolves the selector "
             "to a repo-relative drawer path in `OperationsCLI.run` (deskops/cli/commands/operations.py:21-27, through "
-            "`DeskopsOperations.resolve_drawer_source` and `attach_drawer_source`, operations.py:551 and 583). The same "
-            "key inside `--from-yaml` or an inline JSON payload skips that step: deskops/specs/compiler.py:64 copies the "
+            "`DeskopsOperations.resolve_drawer_source` and `attach_drawer_source`, operations.py:493 and 525; the "
+            "resolver already raises ValueError on an ambiguous selector, operations.py:520-522). The same "
+            "key inside `--from-yaml` or an inline JSON payload skips that step: deskops/specs/compiler.py:57 copies the "
             "raw string, so the task records `from_drawer: rw-f0-x` instead of `desk/drawer/tasks/task-rw-f0-x.md`, and "
             "a missing or ambiguous selector is accepted silently."
         ),
@@ -434,7 +424,9 @@ TASKS: list[dict] = [
         ),
         implementation_path=(
             "1. The model set is `deskops.bootstrap.MODEL_REFS` (a dict name -> `module:Class`) united with the model "
-            "names listed in `.sldb/core/store_index.yaml`; import each `deskops.models:<Class>`.\n"
+            "names listed in `.sldb/core/store_index.yaml`; import each class from its `model_ref` (the MODEL_REFS value, "
+            "or the store index's `model_ref`; RelationTypeDoc and RelationDoc are `sldb.models.*` classes registered by "
+            "the lifecycle graph and are snapshotted too).\n"
             "2. Fixture tests/fixtures/model_contract_hashes.json is a flat JSON object `{\"<ModelName>\": \"<sha256 hex>\"}` "
             "with sorted keys.\n"
             "3. tests/test_model_contract_snapshot.py asserts the fixture's key set equals the discovered set (listing "
@@ -457,11 +449,11 @@ TASKS: list[dict] = [
         phase="F1",
         why=(
             "The rewrite must not change the CLI. These subcommands have no test through `main` today (checked "
-            "2026-10-16 by grepping tests/): `add hook`, `add faq-doc`, `atoms list`, `atoms show`, and `runtime "
+            "2026-10-16 by grepping tests/): `add faq-doc`, `atoms list`, `atoms show`, and `runtime "
             "init|status|attach|stop|supervise` (deskops/cli/parser.py:67-89). Already covered and out of this task: "
-            "`add board|ritual|step|operator|checklist|edge` (tests/test_cli.py:2002-2377), `closeout commit` "
-            "(tests/test_closeout.py), `bind pill` (tests/test_cli.py:1137), `atoms type` (tests/test_domain_tree.py:104) "
-            "and `runtime workers` (tests/test_cli.py:2666)."
+            "`add board|ritual|step` (tests/test_cli.py), `closeout commit` "
+            "(tests/test_closeout.py), `bind pill` (tests/test_cli.py:1124), `atoms type` (tests/test_domain_tree.py:104) "
+            "and `runtime workers` (tests/test_cli.py:2402)."
         ),
         goal=(
             "Each listed subcommand has one in-process test that calls `deskops.cli.main.main([...])` inside a sandbox "
@@ -474,15 +466,16 @@ TASKS: list[dict] = [
             "client the way tests/test_herdr_runtime.py does."
         ),
         implementation_path=(
-            "1. tests/test_cli_contract.py with a fixture that builds a sandbox repo and runs `desk install`.\n"
+            "1. tests/test_cli_contract.py using the `lifecycle_desk` fixture from tests/conftest.py (a sandbox repo as "
+            "`deskops init` leaves it).\n"
             "2. One test per subcommand listed in Rationale, calling `main([...])` with `--root <sandbox>`, capturing "
             "stdout/stderr via `capsys`.\n"
-            "3. These tests call `main` in-process (like tests/test_cli.py:1137), not through a subprocess; the "
+            "3. These tests call `main` in-process (like tests/test_cli.py:1124), not through a subprocess; the "
             "sandbox repo is still built as described in Resolved Decisions."
         ),
         resolved=[SANDBOX_FACT, COMMIT_FACT],
         validation=["pytest tests/test_cli_contract.py", "pytest tests"],
-        done_when="Each of the 9 uncovered subcommands named in Rationale has its own test (a strict xfail tied to a new drawer task counts), and `pytest tests` is green.",
+        done_when="Each of the 8 uncovered subcommands named in Rationale has its own test (a strict xfail tied to a new drawer task counts), and `pytest tests` is green.",
         files=["tests/test_cli_contract.py"],
         pills=[P + "pill-real-cli-surfaces-prove-operator-contracts.md", P + "pill-machine-readable-cli-output-needs-stable-contract.md"],
         depends_on=list(F0_DONE),
@@ -512,7 +505,7 @@ TASKS: list[dict] = [
             "path reachable from `deskops --help`.\n"
             "4. tests/test_output_goldens.py compares; `--update-golden` (registered in tests/conftest.py) rewrites them."
         ),
-        resolved=[SANDBOX_FACT, COMMIT_FACT, "tests/conftest.py does not exist yet; create it with only the `--update-golden` option."],
+        resolved=[SANDBOX_FACT, COMMIT_FACT, "tests/conftest.py already exists (the lifecycle_desk fixtures); add a `pytest_addoption` for `--update-golden` to it and keep the normalization helpers in tests/test_output_goldens.py."],
         validation=["pytest tests/test_output_goldens.py", "pytest tests"],
         done_when="The golden tests pass, and fail when a key is renamed in the snapshot writer (check by hand, then revert).",
         files=["tests/test_output_goldens.py", "tests/fixtures/golden/", "tests/fixtures/golden_desk/", "tests/conftest.py"],
@@ -526,9 +519,9 @@ TASKS: list[dict] = [
         title="One module resolves every desk selector",
         phase="F2",
         why=(
-            "Four methods in deskops/operations.py resolve selectors: `_resolve_glob` (2612), "
-            "`_resolve_artifact_selector_multi` (2621), `_resolve_artifact_selector` (2647) and `_one_artifact_match` "
-            "(2738). After task-rw-f0-reject-ambiguous-selectors they share one rule (exact name or stem first, then a "
+            "Four methods in deskops/operations.py resolve selectors: `_resolve_glob` (2077), "
+            "`_resolve_artifact_selector_multi` (2086), `_resolve_artifact_selector` (2112) and `_one_artifact_match` "
+            "(2203). After task-rw-f0-reject-ambiguous-selectors they share one rule (exact name or stem first, then a "
             "unique prefix, else an ambiguity error), but each keeps its own copy and message."
         ),
         goal="A new `deskops/desk_paths.py` implements that rule once; the four methods become one-line delegations to it.",
@@ -542,7 +535,7 @@ TASKS: list[dict] = [
             "1. deskops/desk_paths.py: `resolve_selector(desk_root: Path, directories: list[Path], selector: str, pattern: str, "
             "what: str, recursive: bool) -> Path`; `recursive` keeps each caller's current search (`_resolve_glob` uses "
             "`glob`, the artifact selectors use `rglob`); `what` is the artifact id for the artifact selectors and the "
-            "directory kind (task, routine, edge, operator, checklist, condition) for `_resolve_glob` callers; "
+            "directory kind (`task`, the only one its callers use today) for `_resolve_glob` callers; "
             "with two tiers: (1) a file whose `name` or `stem` equals the selector; (2) a unique file whose name or stem "
             "starts with it; zero matches raise `FileNotFoundError` and more than one raise `ValueError`, with the messages "
             "above. Update any existing test that asserts the old wording, and list each one in the closeout.\n"
@@ -562,7 +555,7 @@ TASKS: list[dict] = [
         title="Typed errors, a fixed exit-code table, and no swallowed tracebacks",
         phase="F2",
         why=(
-            "Inventory findings X2 and X3. `deskops.cli.main.main` (deskops/cli/main.py:370-392) maps a few built-in "
+            "Inventory findings X2 and X3. `deskops.cli.main.main` (deskops/cli/main.py:373-394) maps a few built-in "
             "exceptions to exit 1, classifies others by `exc.__class__.__name__`, and turns everything else into "
             "`SystemExit(\"Unexpected: ...\")` with no traceback; that hid both the doctor crash and the Governance CI "
             "SyntaxError. deskops/cli/commands/desk.py:149-171 ignores a failing `stores check` and prints "
@@ -579,11 +572,11 @@ TASKS: list[dict] = [
             "parser in `build_parser` (deskops/cli/parser.py:25) that also sets logging to DEBUG, and the `desk update` "
             "swallow. `--debug` is a root-only option parsed by argparse; `CLI.run` stores it on the CLI instance and "
             "`main()` (which handles exceptions outside `CLI.run`) reads it from that instance. Logging is unchanged "
-            "(already DEBUG to a file); only delete the first `_setup_logging` definition (operations.py:350, dead and "
-            "self-recursive) and keep the second (362). Typed errors print their message and exit with their code, with "
+            "(already DEBUG to a file); only delete the first `_setup_logging` definition (operations.py:322, dead and "
+            "self-recursive) and keep the second (334). Typed errors print their message and exit with their code, with "
             "no traceback, with or without `--debug`, on stderr as today's exit-1 mappings do. `<type>` in the "
             "unexpected-error line is `type(exc).__name__`; with `--debug` the traceback prints first, then that line. `UsageError` replaces the hand-written `return 2` at "
-            "cli/main.py:153 and :227 and cli/commands/drift.py:14; the handler prints the same text to the same stream "
+            "cli/main.py:150-151 and :228-229 and cli/commands/drift.py:14; the handler prints the same text to the same stream "
             "those sites use today (stdout). Existing exit-1 mappings (FileNotFoundError, KeyError, ValueError, pydantic ValidationError, "
             "SLDBStoreError) stay exit 1. Out of scope: the JSON error envelope (task-rw-f5-output-renderer)."
         ),
@@ -594,7 +587,9 @@ TASKS: list[dict] = [
             "sldb's SLDBStoreError); unexpected exceptions exit 3 as described.\n"
             "3. desk.py: a failing `stores check` or unparseable JSON raises `DeskopsEnvironmentError`.\n"
             "4. Tests in tests/test_cli.py: an injected unexpected exception exits 3 and prints the one-line message "
-            "without `--debug`, and exits 3 and prints a traceback with `--debug`; `desk update` with a broken store "
+            "without `--debug`, and exits 3 and prints a traceback with `--debug`; `desk update` whose `stores check` "
+            "prints no parseable JSON (sldb missing, or output that is not JSON; a non-zero exit with JSON is a normal "
+            "divergence report, see tests/test_desk_sync.py) "
             "exits 3. List every exit code that changes in the closeout."
         ),
         resolved=[COMMIT_FACT],
@@ -614,7 +609,7 @@ TASKS: list[dict] = [
             "`sldb.cli.commands.model.ModelCLI().add(SimpleNamespace)`, `DocCLI().untrack`, `sldb.store.ops.track_document` "
             "with 9 positional args, `sldb.store.io.*`). In `_auto_commit_task_closure` the untrack runs after the "
             "closeout commit and before each file's unlink, and a failure only logs a warning, so the file is deleted "
-            "anyway (operations.py:1567-1580, with `store=None` and `pythonpath='.'`). The "
+            "anyway (operations.py:1143-1156, with `store=None` and `pythonpath='.'`). The "
             "`create_task_bundle` rollback does not untrack, the `merge_atom` rollback does not restore rewritten "
             "referrers, and `_write_doc` untracks then tracks in two steps under `except Exception`."
         ),
@@ -643,19 +638,22 @@ TASKS: list[dict] = [
             "4. tests/test_doc_io.py injects a failure at each step (monkeypatch the sldb call to raise) and asserts file "
             "bytes and `sldb stores check` are as before; an import-scan test over the `deskops/` package only (tests "
             "may keep importing sldb internals) fails if any module other than doc_io imports a write-side sldb module: "
-            "anything under `sldb.cli`, `sldb.store.ops`, or a module under `sldb.api.documents` whose name starts with "
+            "`sldb.cli.commands` (the CLI command classes, e.g. ModelCLI, DocCLI), `sldb.store.ops`, or a module (file) "
+            "under `sldb.api.documents` whose name starts with "
             "`create_`, `delete_`, `update_`, `track_` or `untrack_`; and fails if doc_io imports a name outside "
             "`sldb.api` that is not in `PRIVATE_SLDB_IMPORTS`. Read-side imports (for example "
             "`sldb.store.io.load_store_index`, `sldb.store.resolver.find_local_store`, `sldb.store.layout`, "
-            "`sldb.runtime.validation`, `sldb.core.exceptions`, `sldb.StructuredNLDoc`) stay allowed everywhere.\n"
+            "`sldb.runtime.validation`, `sldb.core.exceptions`, `sldb.StructuredNLDoc`, and the read helpers "
+            "`sldb.cli.model_utils`, `sldb.cli.store_context` and `sldb.cli.utils` used by identity.py, repo.py, message.py "
+            "and operations.py) stay allowed everywhere.\n"
             "5. doc_io also offers plain helpers for one-off writes outside a transaction: `track(root, path, model)`, "
             "`untrack(root, path)`, `register_model(root, model_ref)` (wrapping `sldb.api.add_model`) and "
             "`is_tracked(root, path)`. An inner `with DocTransaction(root)` finds the outer one through a "
             "module-level stack keyed by root; only the outermost exit commits or rolls back; rollback restores store "
             "entries first, then file bytes, and if restoring fails it logs that and re-raises the original error.\n"
-            "6. Store writes in operations.py beyond the four functions also move: `delete_atom` (775, via "
-            "`_untrack_atom_document`, 2205) and `reorganize_atoms` (663, via `_retarget_atom_documents`, 2170). "
-            "Writes outside operations.py also move: deskops/cli/commands/desk.py:223,249,262, "
+            "6. Store writes in operations.py beyond the four functions also move: `delete_atom` (719, via "
+            "`_untrack_atom_document`, 1781) and `reorganize_atoms` (605, via `_retarget_atom_documents`, 1746). "
+            "Writes outside operations.py also move: deskops/cli/commands/desk.py:256,280,291, "
             "deskops/cli/commands/repo.py:117, deskops/cli/commands/message.py:344, deskops/cli/commands/promote.py:86, "
             "deskops/bootstrap.py:138 and 156."
         ),
@@ -676,8 +674,8 @@ TASKS: list[dict] = [
         title="Drawer lookup moves to its own service",
         phase="F3",
         why=(
-            "deskops/operations.py mixes 15 domains. Its drawer members are `DRAWER_INDEX_FILES` (549), "
-            "`resolve_drawer_source` (551) and `attach_drawer_source` (583); inbox-to-drawer promotion lives in "
+            "deskops/operations.py mixes many domains. Its drawer members are `DRAWER_INDEX_FILES` (491), "
+            "`resolve_drawer_source` (493) and `attach_drawer_source` (525); inbox-to-drawer promotion lives in "
             "deskops/cli/commands/promote.py (`PromoteCLI`)."
         ),
         goal="`deskops/services/drawer.py` owns drawer lookup and promotion logic; `DeskopsOperations` and `PromoteCLI` delegate to it.",
@@ -697,7 +695,7 @@ TASKS: list[dict] = [
         ),
         resolved=[COMMIT_FACT, f"The F1 CLI contract tests are {F1_CLI_TESTS}."],
         validation=["pytest tests/test_inbox_promote_cli_gaps.py tests/test_promotion_nesting.py tests/test_cli_contract.py", "pytest tests"],
-        done_when="`def resolve_drawer_source` in deskops/operations.py is a one-line wrapper, `grep -n DrawerService deskops/cli/commands/promote.py` matches, and the named tests pass unmodified.",
+        done_when="`def resolve_drawer_source` in deskops/operations.py is a one-line wrapper, `grep -n 'DrawerService(' deskops/cli/commands/promote.py` matches inside `PromoteCLI.run`, and the named tests pass unmodified.",
         files=["deskops/services/__init__.py", "deskops/services/drawer.py", OPS, "deskops/cli/commands/promote.py"],
         pills=[P + "pill-cli-gaps-become-tracked-work.md", P + "pill-operational-cli-grammar-follows-spoken-workflow.md"],
         depends_on=["task-rw-f2-transactional-doc-io"],
@@ -734,51 +732,13 @@ TASKS: list[dict] = [
         status="blocked",
     ),
     dict(
-        id="task-rw-f3-primitives-service-and-dead-code",
-        title="Primitive helpers move to a service; dead code is deleted",
-        phase="F3",
-        why=(
-            "Inventory finding S12. In deskops/operations.py the `_default_*_payloads` methods (lines 1296-1487) have no "
-            "callers, `PRIMITIVE_DIRS` is unused, and `_setup_logging` is defined twice. The primitive helpers are "
-            "`PRIMITIVE_KINDS` (68), `create_primitive` (462), `list_primitives` (729), `show_primitive` (1012), "
-            "`parse_primitive_input` (1115), `_normalize_primitive_payload` (1218) and `_primitive_path` (2609)."
-        ),
-        goal=(
-            "`deskops/services/primitives.py` (`PrimitivesService(root)`, which carries root and desk_root itself) holds "
-            "those helpers as methods with the same parameters (they are instance methods today, so only `self` "
-            "changes; `PRIMITIVE_KINDS` is a module-level dict and moves as a module constant of the service); collaborators they call (`ensure_workspace`, `_write_new_doc`, `_read_doc`, `_resolve_glob`, "
-            "`_coerce_list`) are reached through `deskops.doc_io`, `deskops.desk_paths` or a shared helper module, "
-            "`DeskopsOperations` keeps one-line wrappers so callers (deskops/cli/commands/operations.py and "
-            "tests/test_operational.py) keep working, and the dead code above is deleted."
-        ),
-        scope=(
-            "In scope: the move and the three deletions, each proven dead with grep first. `deskops/specs/mermaid.py` and "
-            "`deskops/materializers/atoms.py` are re-exported public modules used only by tests; they stay (removing "
-            "public API is not part of this task). Out of scope: `RunDoc` and the self-reflection ledger."
-        ),
-        implementation_path=(
-            "1. For each dead item, record `grep -rn '<name>' deskops tests` output in the closeout as proof.\n"
-            "2. Delete the items; keep the `_setup_logging` definition that the entrypoint calls.\n"
-            "3. Move the helpers into the service (follow the pattern set by task-rw-f3-drawer-routing-service). "
-            "tests/test_operational.py:37 monkeypatches `operations._write_doc` to test rollback; point that patch at "
-            "the doc_io function the service now uses, keeping what the test asserts."
-        ),
-        resolved=[COMMIT_FACT],
-        validation=["pytest tests", "python -m deskops next --diagram"],
-        done_when="deskops/services/primitives.py exists, `grep -n '_default_.*_payloads\\|PRIMITIVE_DIRS' deskops` is empty, `_setup_logging` is defined once, and `pytest tests` is green.",
-        files=["deskops/services/primitives.py", OPS, "tests/test_operational.py"],
-        pills=[P + "pill-real-cli-surfaces-prove-operator-contracts.md"],
-        depends_on=["task-rw-f3-drawer-routing-service"],
-        topics=["refactor", "dead-code"],
-    ),
-    dict(
         id="task-rw-f3-closeout-gates-service",
         title="Closeout gates move to a service and verify real evidence",
         phase="F3",
         why=(
-            "Inventory finding X6. The commit gate `_reference_points_to_commit` (deskops/operations.py:2243) accepts "
+            "Inventory finding X6. The commit gate `_reference_points_to_commit` (deskops/operations.py:1818) accepts "
             "anything `git rev-parse --verify <ref>^{commit}` resolves, so `HEAD` or `main` pass; the tests gate "
-            "`_reference_points_to_test` (2221-2240) strips `::node` and accepts any existing `.py` path. "
+            "`_reference_points_to_test` (1797-1816) strips `::node` and accepts any existing `.py` path. "
             "`references: [\"HEAD\", \"deskops/x.py\"]` passes closeout."
         ),
         goal=(
@@ -808,7 +768,7 @@ TASKS: list[dict] = [
         done_when="The new gate tests pass, the lifecycle test still closes its task, and `pytest tests` is green.",
         files=["deskops/services/closeout_gates.py", OPS, "tests/test_closeout.py"],
         pills=[P + "pill-closeout-knowledge-gates-require-traceable-evidence.md", P + "pill-001-task-closure-commit.md"],
-        depends_on=["task-rw-f3-primitives-service-and-dead-code"],
+        depends_on=["task-rw-f3-drawer-routing-service"],
         topics=["closeout", "gates"],
     ),
     dict(
@@ -816,10 +776,10 @@ TASKS: list[dict] = [
         title="Task lifecycle moves to a service and reads TaskDoc only through sldb",
         phase="F3",
         why=(
-            "Inventory finding S3: for TaskDoc only, `_read_doc` (deskops/operations.py:2904-2910) overlays the regex "
-            "parser `parse_task_sections` (154-208) on `extract_model_data`, and the regex wins when they disagree. "
+            "Inventory finding S3: for TaskDoc only, `_read_doc` (deskops/operations.py:2366-2377) overlays the regex "
+            "parser `parse_task_sections` (127-181) on `extract_model_data`, and the regex wins when they disagree. "
             "`parse_task_sections` is also used by deskops/cli/commands/promote.py:47 to read free-form inbox notes, "
-            "which are not TaskDocs. CLI argument parsing (`parse_*_input`, 1068-1183) also lives in operations.py."
+            "which are not TaskDocs. CLI argument parsing (`parse_task_input` and `parse_artifact_input`, 991-1037) also lives in operations.py."
         ),
         goal=(
             "`deskops/services/tasks.py` owns create/advance/next for tasks; `_read_doc` reads TaskDoc only through "
@@ -830,10 +790,11 @@ TASKS: list[dict] = [
             "In scope: the move, removing the overlay, moving the parsers, and editing TaskDoc files under desk/tasks/ "
             "and desk/drawer/tasks/ when step 1 finds a divergence. Service methods keep today's signatures "
             "(`create_task_bundle(payload) -> TaskBundle`, `advance_task(task_id, target_node=None)`, the `next` report "
-            "function) and CLI output for create, advance and next stays as pinned by the F1 contract tests. "
+            "function) and CLI output for create, advance and next stays as pinned by the existing tests "
+            "(tests/test_cli.py:650 add task, 1440 show/list/advance, 772 next). "
             "operations.py keeps no re-export of the moved parsers. Out of scope: the closure path "
             "(task-rw-f3-single-closure-path), changing how `list tasks` reports unreadable documents (today a stderr "
-            "warning naming the file, operations.py:544-546), and TaskDoc contract changes (F6)."
+            "warning naming the file, operations.py:485-488), and TaskDoc contract changes (F6)."
         ),
         implementation_path=(
             "1. New tests/test_taskdoc_read_without_overlay.py compares overlay output with `extract_model_data` for "
@@ -841,7 +802,7 @@ TASKS: list[dict] = [
             "divergence by fixing the document, not by keeping the overlay. A document that `extract_model_data` "
             "cannot parse at all is listed by the test as a failure, never skipped.\n"
             "2. Remove the overlay branch from `_read_doc`; move `parse_task_sections` into "
-            "deskops/cli/commands/promote.py as a private helper; delete `parse_validation_section` (operations.py:211), "
+            "deskops/cli/commands/promote.py as a private helper; delete `parse_validation_section` (operations.py:184), "
             "whose only caller is the overlay. Keep the new test as a regression guard that `_read_doc(TaskDoc)` equals "
             "`extract_model_data` for every TaskDoc.\n"
             "3. Move lifecycle methods into the service and `parse_*_input`, with the helpers only they use "
@@ -917,7 +878,7 @@ TASKS: list[dict] = [
             "2. Point `closeout commit` at it; its existing tests in tests/test_closeout.py pass unmodified. "
             "tests/test_lifecycle_end_to_end.py may change only where the decision changes what `advance` does.\n"
             "3. Rewire `advance` and `advance --to complete` per the decision.\n"
-            "4. 'Same closure result' means: exit 0, task file and its primitives gone, task removed from "
+            "4. 'Same closure result' means: exit 0, task file gone, task removed from "
             "desk/tasks/Board.md, one new commit with the route's trailers, one new index line."
         ),
         resolved=[COMMIT_FACT],
@@ -1013,7 +974,7 @@ TASKS: list[dict] = [
             "and the frontmatter edges of documents the store does not track (drawer tasks and any other untracked desk "
             "document; .sldb/core/documents/ holds only tracked ones), which keep the local extraction. Out of scope: the "
             "coverage extractor. Other code and fixtures that hard-code old ids are updated in this task: "
-            "deskops/graph/self_reflection.py:164,173,450, deskops/operations.py:1728,2287 (or their moved copies), "
+            "deskops/graph/self_reflection.py:164,173,450, deskops/operations.py:1304,1863 (or their moved copies), "
             "deskops/cli/parser.py:323, tests/fixtures/knowledge_graph/static_desk_source_graph.json and "
             "tests/test_graph_extract_docs.py:48-53."
         ),
@@ -1031,7 +992,7 @@ TASKS: list[dict] = [
         ),
         resolved=[COMMIT_FACT],
         validation=["pytest tests/test_graph_cli.py tests/test_graph_declared_edges.py tests/test_graph_extract_edges.py", "deskops graph missing --root .", "pytest tests"],
-        done_when="extract_edges.py no longer parses frontmatter reference fields, the dangling-reference set matches the baseline modulo the id mapping, and `pytest tests` is green.",
+        done_when="extract_edges.py no longer parses the declared reference fields of store-tracked documents (the local cases listed in Scope remain), the dangling-reference set matches the baseline modulo the id mapping, and `pytest tests` is green.",
         files=["deskops/graph/extract_edges.py", "deskops/graph/extract_docs.py", "deskops/graph/snapshot.py", "deskops/services/closeout_gates.py",
                "tests/test_graph_cli.py", "tests/test_graph_declared_edges.py", "tests/test_graph_extract_edges.py", "runs/planning/graph-missing-baseline.txt",
                "tests/fixtures/golden/graph_snapshot.kg.json", "runs/planning/graph-id-mapping.md", "deskops/graph/self_reflection.py",
@@ -1129,7 +1090,7 @@ TASKS: list[dict] = [
         id="task-rw-f5-command-registry",
         title="The CLI is built from a declarative command registry",
         phase="F5",
-        why="deskops/cli/parser.py is about 1,100 lines of hand-built argparse in which shared arguments (`--root`, selectors, `--format`) are redefined per command.",
+        why="deskops/cli/parser.py is about 1,000 lines of hand-built argparse in which shared arguments (`--root`, selectors, `--format`) are redefined per command.",
         goal=(
             "deskops/cli/registry.py declares every command once (path, help, args, handler, `mutates: bool`); shared "
             "args are defined once; parser.py only walks the registry; every command's `--help` text stays "
@@ -1137,18 +1098,18 @@ TASKS: list[dict] = [
         ),
         scope=(
             "In scope: parser and dispatch. `--format` is two shared argument groups, not one: `text|json` "
-            "(`_add_output_format_argument`, parser.py:906-912, and runtime workers) and `text|json|yaml` (inbox, "
+            "(`_add_output_format_argument`, parser.py:839-845, and runtime workers) and `text|json|yaml` (inbox, "
             "message, faq); each command keeps its variant. Do not edit tests/test_cli*.py, tests/test_output_goldens.py, "
             "tests/conftest.py or anything under tests/fixtures/golden/, and do not run `--update-golden`. Out of scope: "
             "renaming commands or flags."
         ),
         implementation_path=(
             "1. Define the registry types as frozen dataclasses: `Arg(flags: tuple[str, ...], kwargs: dict, "
-            "group: str | None = None)` (args sharing a `group` go into one mutually exclusive group, as at "
-            "parser.py:161, 185 and 1094) and `Command(path: tuple[str, ...], help: str, args: tuple[Arg, ...], "
+            "group: str | None = None, group_required: bool = False)` (args sharing a `group` go into one mutually "
+            "exclusive group; required at parser.py:161 and 185, optional at 988) and `Command(path: tuple[str, ...], help: str, args: tuple[Arg, ...], "
             "handler: str, mutates: bool, epilog: str | None = None)`, where `handler` is a dotted "
             "`module:Class` path such as `deskops.cli.commands.runtime:RuntimeCLI`; commands generated from data "
-            "today (the loops at parser.py:782, 847, 950 and 1024, including the model-generated args) become "
+            "today (the loops at parser.py:715, 780, 874 and 918, including the model-generated args) become "
             "factory functions that return `Command`s.\n2. Port commands group by group; after each group run the F1 contract tests "
             "and the `help/` goldens.\n3. Delete the per-command builder functions from parser.py; the walker's own "
             "`add_parser` call is the only one left.\n4. Add tests/test_command_registry.py asserting that the set of command paths declared in "
@@ -1248,7 +1209,7 @@ TASKS: list[dict] = [
         id="task-rw-f5-deprecated-aliases",
         title="Duplicate commands become warned aliases or are removed",
         phase="F5",
-        why="`inbox` duplicates `message`, `status` overlaps `doctor`, and `atoms list/show` duplicate `list atoms`/`show atom`.",
+        why="`inbox` duplicates `message`, `status` overlaps `doctor` (both run DoctorCLI, deskops/cli/main.py:80), and `atoms list/show` duplicate `list atoms`/`show atom`. The canonical side is `message`, `doctor` and `list atoms`/`show atom`.",
         goal="The owner's choice is applied to each duplicate.",
         scope=(
             "Blocked on the owner decision. Alias behavior: before any output, print "
@@ -1291,14 +1252,15 @@ TASKS: list[dict] = [
         title="Bootstrap registers every deskops model, and only bootstrap/init install sldb",
         phase="F6",
         why=(
-            "Inventory finding S9: `MODEL_REFS` in deskops/bootstrap.py:14-32 lists 17 models while the repo store has 21, "
-            "so a fresh `deskops init` does not register HookDoc, MaterializationContractDoc, RunDoc or RuntimeProfileDoc. "
+            "Inventory finding S9: `MODEL_REFS` in deskops/bootstrap.py lists 12 models while the repo store registers 15 "
+            "deskops models (plus sldb's RelationTypeDoc and RelationDoc, registered by the lifecycle graph), so a fresh "
+            "`deskops init` does not register MaterializationContractDoc, RunDoc or RuntimeProfileDoc. "
             "`ensure_sldb_available` (bootstrap.py:36-62) can run `pip install -e ../sldb` from `list`, `show` or `add`."
         ),
         goal=(
             "`MODEL_REFS` stays a `dict[name, 'deskops.models:<Class>']`, built from every `StructuredNLDoc` subclass in "
             "`deskops.models.__all__` except the base classes `PrimitiveDoc` and `OperationalArtifactDoc`; a fresh init "
-            "registers the same 21 models as the repo store; only `bootstrap` and `init` may install sldb; other commands "
+            "registers the same 15 deskops models as the repo store; only `bootstrap` and `init` may install sldb; other commands "
             "print the existing 'Error: sldb is not installed...' message and exit 1."
         ),
         scope="In scope: bootstrap.py, its callers' install flag, and two tests (A and B below) in tests/test_doctor_model_registration.py. Out of scope: model contract changes. Importers rely on the dict shape (deskops/cli/commands/desk.py:142, doctor.py:118, domain_tree.py:249-250, tests/test_doctor_model_registration.py:17).",
@@ -1306,7 +1268,8 @@ TASKS: list[dict] = [
             "1. Build MODEL_REFS as described.\n2. Add an `allow_install` parameter to `ensure_sldb_available`, true only "
             "from bootstrap and init.\n3. Test A: `deskops init` in a `tmp_path` repo, then assert "
             "`<tmp>/.sldb/core/store_index.yaml` exists and its model-name set equals the set derived from "
-            "`deskops.models.__all__` minus the two bases (no hard-coded count).\n4. Test B (in-process, so monkeypatch works): monkeypatch sldb as not "
+            "`deskops.models.__all__` minus the two bases, plus `RelationTypeDoc` and `RelationDoc` that the lifecycle "
+            "graph registers during init (no hard-coded count).\n4. Test B (in-process, so monkeypatch works): monkeypatch sldb as not "
             "importable and spy on the install runner; `deskops list tasks` prints the error, exits 1, and the spy "
             "was not called."
         ),
@@ -1323,7 +1286,8 @@ TASKS: list[dict] = [
         title="TaskDoc contract cleanup",
         phase="F6",
         why=(
-            "Inventory finding S10, in deskops/models/task.py: TaskDoc sets `extra: allow`; the `frontmatter` field "
+            "Inventory finding S10, in deskops/models/task.py (afdec7f already dropped `routine` and `checklists` and "
+            "pointed `current_node` at RitualDoc): TaskDoc sets `extra: allow`; the `frontmatter` field "
             "(`exclude=True`) is repopulated by `render_payload` from a hand-kept body-field list, the only deskops model "
             "using the dict-frontmatter template marker; `from_drawer` sits in `__references__` although it is "
             "provenance; and the `_omit_unset_from_drawer` docstring claims that omitting an empty `from_drawer` kept "
