@@ -1,0 +1,31 @@
+id: stuck-task-gate
+notes: Diagnosis from the CLI and the agent skill; the task cannot leave testing until it has validation.
+intent: |
+  This repo already uses deskops. The task `task-ship-notes` seems stuck: advancing it does not move
+  it past testing. Find out why, fix what the task is missing (its validation should be the repo's
+  test command, `pytest`), and get it to the closeout stage. Do not close or complete it.
+docs: [.opencode/skills/use-deskops/SKILL.md]
+setup:
+  - git init -q
+  - mkdir -p tests && printf 'def test_ok():\n    assert True\n' > tests/test_ok.py
+  - deskops init . >/dev/null
+  - deskops add task --root . --title "Ship notes" --goal "Ship release notes" --scope "notes only" >/dev/null
+  - deskops advance task task-ship-notes --root . >/dev/null
+  - git add -A && git commit -qm "initial"
+reference:
+  - deskops next task-ship-notes --root .
+  - deskops edit task task-ship-notes validation '["pytest"]' --root .
+  - deskops advance task task-ship-notes --root .
+checks:
+  - name: the task is at the closeout stage
+    run: |-
+      deskops show task task-ship-notes --root . | grep -q 'Current node: ritual-closeout'
+  - name: the task is still open (not completed)
+    run: |-
+      test -f desk/tasks/task-ship-notes.md
+  - name: its validation is pytest
+    run: |-
+      grep -A2 -i '^## validation' desk/tasks/task-ship-notes.md | grep -q pytest || grep -q 'pytest' desk/tasks/task-ship-notes.md
+  - name: the local store passes sldb stores check
+    run: |-
+      sldb stores check --store .sldb

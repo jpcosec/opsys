@@ -1,0 +1,132 @@
+{
+  "scenario": "stuck-task-gate",
+  "model": "deepseek/deepseek-flash",
+  "sandbox": "/tmp/deskops-e2e-5k1xq2wn/repo",
+  "verdict": {
+    "works": true,
+    "docs_ok": true,
+    "pass": true
+  },
+  "metrics": {
+    "cost_usd": 0.0065,
+    "seconds": 49.3,
+    "stopped": "",
+    "tool_calls": 20,
+    "failed_commands": 1,
+    "help_probes": 4,
+    "source_reads": 0
+  },
+  "checks": [
+    {
+      "name": "the task is at the closeout stage",
+      "run": "deskops show task task-ship-notes --root . | grep -q 'Current node: ritual-closeout'",
+      "ok": true,
+      "output": ""
+    },
+    {
+      "name": "the task is still open (not completed)",
+      "run": "test -f desk/tasks/task-ship-notes.md",
+      "ok": true,
+      "output": ""
+    },
+    {
+      "name": "its validation is pytest",
+      "run": "grep -A2 -i '^## validation' desk/tasks/task-ship-notes.md | grep -q pytest || grep -q 'pytest' desk/tasks/task-ship-notes.md",
+      "ok": true,
+      "output": ""
+    },
+    {
+      "name": "the local store passes sldb stores check",
+      "run": "sldb stores check --store .sldb",
+      "ok": true,
+      "output": "PASS: store integrity — 24 documents in 14 models\n"
+    }
+  ],
+  "source_reads": [],
+  "agent_report": {
+    "completed": true,
+    "summary": "task-ship-notes was blocked by the empty validation field failing the nonempty(validation) gate; I set validation to [pytest] and advanced it to ritual-closeout without completing it.",
+    "steps": [
+      {
+        "goal": "Diagnose why task-ship-notes will not advance past testing",
+        "command": "deskops next task-ship-notes --root . ; deskops show task task-ship-notes --root .",
+        "doc": "desk/lifecycle/testing-task_hands_to_closeout.md (condition nonempty(validation))",
+        "worked": true
+      },
+      {
+        "goal": "Set the task validation to the repo test command",
+        "command": "deskops edit task task-ship-notes validation '[pytest]' --root .",
+        "doc": "help (deskops edit task --help)",
+        "worked": true
+      },
+      {
+        "goal": "Advance the task to the closeout stage",
+        "command": "deskops advance task task-ship-notes --root .",
+        "doc": "use-deskops SKILL.md, CLI surface",
+        "worked": true
+      }
+    ],
+    "friction": [
+      {
+        "doc": "use-deskops/SKILL.md",
+        "section": "Mandatory read route",
+        "problem": "The mandatory route names AGENTS.md, README.md, and docs/faq.md, but none exist in the repo; docs/quickstart.md referenced by `deskops --help` is also absent.",
+        "kind": "missing discovery surface",
+        "severity": "major",
+        "how_resolved": "Read the desk/ artifacts directly and used `deskops faq` for equivalent content."
+      },
+      {
+        "doc": "CLI help",
+        "section": "deskops edit task --help",
+        "problem": "Help does not list valid field names or how to express list-valued fields; the value is only described as 'parsed like an SLDB field value'. `validation pytest` failed, requiring bracket syntax `[pytest]`.",
+        "kind": "misleading help",
+        "severity": "minor",
+        "how_resolved": "Used the type error message to guess `[pytest]`."
+      },
+      {
+        "doc": "desk/tasks/task-ship-notes.md / state output",
+        "section": "Status vs Current node",
+        "problem": "After advancing, the task reports Status: ready_for_testing while Current node: ritual-closeout, which reads as inconsistent until you see the closeout gate requires that status.",
+        "kind": "naming mismatch",
+        "severity": "minor",
+        "how_resolved": "Confirmed intended via the closeout gate condition in `deskops show task`."
+      },
+      {
+        "doc": ".sldb/core/models/TaskDoc.yaml",
+        "section": "model_hash / roster_hash / model path",
+        "problem": "Editing one document field rewrote the model hash/roster hash, and model_ref path points to an absolute location outside the repo.",
+        "kind": "hidden state dependency",
+        "severity": "minor",
+        "how_resolved": "Not resolved; left as runtime bookkeeping."
+      }
+    ]
+  },
+  "commands": [
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && ls -la && echo \"---BRANCH---\" && git status --short --branch",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops --help 2>&1 | head -80",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && ls -R desk 2>&1 | head -120",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && ls docs 2>&1; echo \"---\"; cat .deskops.log",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && echo \"=== Board.md ===\" && cat desk/tasks/Board.md && echo \"=== task-ship-notes.md ===\" && cat desk/tasks/task-ship-notes.md",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && for f in desk/lifecycle/*.md; do echo \"=== $f ===\"; cat \"$f\"; done",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops edit --help 2>&1; echo \"=== next help ===\"; deskops next --help 2>&1",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops show task task-ship-notes --root . 2>&1; echo \"=== NEXT ===\"; deskops next task-ship-notes --root . 2>&1",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops edit task --help 2>&1",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && cat desk/rituals/testing.md; echo \"=== EXEC ===\"; cat desk/rituals/execution.md; echo \"=== CLOSEOUT ===\"; cat desk/rituals/closeout.md",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops edit task task-ship-notes validation pytest --root . 2>&1",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops edit task task-ship-notes validation '[pytest]' --root . 2>&1",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops next task-ship-notes --root . 2>&1; echo \"=== ADVANCE ===\"; deskops advance task task-ship-notes --root . 2>&1",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops show task task-ship-notes --root . 2>&1; echo \"=== FILE ===\"; sed -n '1,40p' desk/tasks/task-ship-notes.md; echo \"=== git ===\"; git status --short",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && git diff .sldb/core/models/TaskDoc.yaml | head -40; echo \"=== validation field in doc ===\"; grep -n -A4 \"validation\" .sldb/core/documents/TaskDoc/task-ship-notes.yaml",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops add task --help 2>&1 | sed -n '1,60p'",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops faq 2>&1 | head -40",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops faq how-do-i-validate-changes-in-this-repo 2>&1; echo \"==== Q8 ====\"; deskops faq what-is-the-desk-directory-for 2>&1 | head -30",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && find . -path ./.git -prune -o -name '*.md' -print 2>/dev/null | grep -vi desk/tasks; echo \"=== sldb dir ===\"; ls -R sldb | head; echo \"=== tests ===\"; ls tests",
+    "cd /tmp/deskops-e2e-5k1xq2wn/repo && git diff desk/tasks/task-ship-notes.md; echo \"=== advance again? dry check via next ===\"; deskops show task task-ship-notes --root . 2>&1 | tail -6"
+  ],
+  "failed": [
+    {
+      "command": "cd /tmp/deskops-e2e-5k1xq2wn/repo && deskops edit task task-ship-notes validation pytest --root . 2>&1",
+      "output": "Error: 1 validation error for TaskDoc\nvalidation\n  Input should be a valid list [type=list_type, input_value='pytest', input_type=str]\n    For further information visit https://errors.pydantic.dev/2.13/v/list_type\n\n\nCommand exited with code 1"
+    }
+  ]
+}

@@ -20,3 +20,6 @@ runs/subagents/*/session.jsonl
 
 # checkout of another project (wikipu-ecosystem/repopackage); not part of deskops
 /tools/
+
+# agent e2e runs: summaries and results are versioned, raw event streams are not
+runs/e2e/**/events.jsonl

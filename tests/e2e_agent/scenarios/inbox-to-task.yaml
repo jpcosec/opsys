@@ -1,0 +1,28 @@
+id: inbox-to-task
+notes: Triage across the inbox and the drawer, then authoring a task, from the agent skill only.
+intent: |
+  This repo already uses deskops. Another project left a note in this desk's inbox asking for a
+  documented release process. It is not urgent: defer it to the drawer first, the way deskops
+  expects deferred work to be kept. Then decide to do it now and turn it into a real deskops task
+  (validation: `pytest`). Leave the task open.
+docs: [.opencode/skills/use-deskops/SKILL.md]
+setup:
+  - git init -q
+  - mkdir -p tests && printf 'def test_ok():\n    assert True\n' > tests/test_ok.py
+  - deskops init . >/dev/null
+  - deskops add inbox-note --root . --title "Document the release process" --kind suggestion --sender-project other-project --target-project repo --created-at 2026-10-16T12:00:00 --status open --body "Please document how this repo cuts a release." >/dev/null
+  - git add -A && git commit -qm "initial"
+reference:
+  - deskops inbox list --root . || deskops list inbox-notes --root .
+  - deskops promote inbox-to-drawer-task document-the-release-process --root .
+  - deskops add task --root . --title "Document the release process" --goal "Write down how releases are made" --scope "docs only" --validation pytest
+checks:
+  - name: the note was deferred into the drawer
+    run: |-
+      grep -rqi 'release process' desk/drawer
+  - name: an open task about the release process exists
+    run: |-
+      grep -lqi 'release process' desk/tasks/task-*.md
+  - name: the local store passes sldb stores check
+    run: |-
+      sldb stores check --store .sldb

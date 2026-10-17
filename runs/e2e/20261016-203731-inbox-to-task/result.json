@@ -1,0 +1,142 @@
+{
+  "scenario": "inbox-to-task",
+  "model": "deepseek/deepseek-flash",
+  "sandbox": "/tmp/deskops-e2e-aw0tsp_y/repo",
+  "verdict": {
+    "works": true,
+    "docs_ok": true,
+    "pass": true
+  },
+  "metrics": {
+    "cost_usd": 0.0077,
+    "seconds": 58.5,
+    "stopped": "",
+    "tool_calls": 21,
+    "failed_commands": 0,
+    "help_probes": 5,
+    "source_reads": 0
+  },
+  "checks": [
+    {
+      "name": "the note was deferred into the drawer",
+      "run": "grep -rqi 'release process' desk/drawer",
+      "ok": true,
+      "output": ""
+    },
+    {
+      "name": "an open task about the release process exists",
+      "run": "grep -lqi 'release process' desk/tasks/task-*.md",
+      "ok": true,
+      "output": ""
+    },
+    {
+      "name": "the local store passes sldb stores check",
+      "run": "sldb stores check --store .sldb",
+      "ok": true,
+      "output": "PASS: store integrity — 24 documents in 14 models\n"
+    }
+  ],
+  "source_reads": [],
+  "agent_report": {
+    "completed": true,
+    "summary": "Promoted the inbox note 'Document the release process' into a drawer candidate, then authored it as the open task task-document-the-release-process (validation: pytest, from_drawer recorded, routed on Board.md).",
+    "steps": [
+      {
+        "goal": "Discover deskops commands and first-use flow",
+        "command": "deskops --help",
+        "doc": "help",
+        "worked": true
+      },
+      {
+        "goal": "Recover repo state from artifacts/CLI",
+        "command": "deskops status --root . ; deskops list inbox-notes --root . ; deskops list tasks --root .",
+        "doc": "SKILL.md mandatory read route / help",
+        "worked": true
+      },
+      {
+        "goal": "Defer the inbox note to the drawer",
+        "command": "deskops promote inbox-to-drawer-task document-the-release-process --root .",
+        "doc": "help",
+        "worked": true
+      },
+      {
+        "goal": "Turn the drawer candidate into a real open task with pytest validation",
+        "command": "deskops add task --root . --from-drawer task-document-the-release-process --title \"Document the release process\" --goal \"...\" --scope \"...\" --validation pytest",
+        "doc": "help",
+        "worked": true
+      },
+      {
+        "goal": "Verify the task is open and routed, graph is clean",
+        "command": "deskops show task task-document-the-release-process --root . ; deskops list tasks --root . ; deskops graph missing --root .",
+        "doc": "help",
+        "worked": true
+      }
+    ],
+    "friction": [
+      {
+        "doc": ".opencode/skills/use-deskops/SKILL.md",
+        "section": "Mandatory read route",
+        "problem": "The required first-read files AGENTS.md, README.md and docs/faq.md do not exist in this repo, so the prescribed state-recovery route cannot be followed literally.",
+        "kind": "missing discovery surface",
+        "severity": "minor",
+        "how_resolved": "Used CLI help (deskops --help, faq, per-command --help) and the files under desk/ instead."
+      },
+      {
+        "doc": "CLI output (deskops promote inbox-to-drawer-task)",
+        "section": "promote output",
+        "problem": "Promotion printed \"Warning: could not untrack 'inbox-note-document-the-release-process' from the store: Doc 'inbox-note-document-the-release-process' not found', even though the inbox note file existed; the note was never tracked in the .sldb store.",
+        "kind": "hidden state dependency",
+        "severity": "minor",
+        "how_resolved": "Ignored the warning; promotion still succeeded and the source file was deleted."
+      },
+      {
+        "doc": "deskops promote --help",
+        "section": "inbox-to-drawer-task",
+        "problem": "Help says it promotes an inbox note into a drawer candidate but does not state that the source inbox note file is deleted as a side effect.",
+        "kind": "misleading help",
+        "severity": "minor",
+        "how_resolved": "Observed actual behavior (source file deleted) and proceeded."
+      },
+      {
+        "doc": "deskops list --help",
+        "section": "subcommands",
+        "problem": "There is no CLI surface to list or inspect deferred drawer candidates (no 'list drawer(s)'/'drawer' subcommand), so drawer work can only be discovered by reading the filesystem.",
+        "kind": "missing discovery surface",
+        "severity": "minor",
+        "how_resolved": "Inspected desk/drawer/tasks/ directly."
+      },
+      {
+        "doc": "task instruction vs CLI",
+        "section": "deskops add task output",
+        "problem": "The requested end state 'leave the task open' has no literal 'open' status; the CLI creates the task as 'draft' and the drawer file is kept for manual cleanup by design.",
+        "kind": "naming mismatch",
+        "severity": "minor",
+        "how_resolved": "Left the task at non-closed status 'draft' and kept the drawer file (CLI default) rather than guessing a cleanup policy."
+      }
+    ]
+  },
+  "commands": [
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && ls -la && git status --short --branch",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && ls -R desk 2>/dev/null | head -100",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && for f in AGENTS.md README.md docs/faq.md; do echo \"=== $f ===\"; cat \"$f\" 2>/dev/null || echo \"(missing)\"; done",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"=== inbox note ===\"; cat desk/inbox/inbox-note-document-the-release-process.md; echo; echo \"=== Board ===\"; cat desk/tasks/Board.md; echo; echo \"=== drawer README ===\"; cat desk/drawer/README.md",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"=== config.json ===\"; cat desk/config.json; echo; for f in desk/rituals/phase.md desk/rituals/execution.md desk/rituals/testing.md desk/rituals/closeout.md; do echo \"=== $f ===\"; cat \"$f\"; echo; done",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"=== contexts/pills.md ===\"; cat desk/contexts/pills.md; echo; echo \"=== atoms ===\"; cat desk/atoms/tag-namespaces.yaml; echo; echo \"=== lifecycle ===\"; for f in desk/lifecycle/*; do echo \"--- $f ---\"; cat \"$f\"; done",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && deskops --help 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && deskops faq 2>&1 | head -200",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && deskops faq --help 2>&1; echo \"===\"; deskops about 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && for id in how-do-i-log-an-unclear-point-or-suggestion what-does-deskops-init-do what-should-i-run-first-in-a-repo; do echo \"### $id\"; deskops faq \"$id\" 2>&1; echo; done",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && for c in message promote add list show; do echo \"########## $c ##########\"; deskops $c --help 2>&1; echo; done",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"### promote inbox-to-drawer-task\"; deskops promote inbox-to-drawer-task --help 2>&1; echo; echo \"### add task\"; deskops add task --help 2>&1; echo; echo \"### add inbox-note\"; deskops add inbox-note --help 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"### message list\"; deskops message list --help 2>&1; echo; echo \"### message ack\"; deskops message ack --help 2>&1; echo; echo \"### message read\"; deskops message read --help 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"### status\"; deskops status --root . 2>&1; echo; echo \"### inbox-notes\"; deskops list inbox-notes --root . 2>&1; echo; echo \"### tasks\"; deskops list tasks --root . 2>&1; echo; echo \"### graph missing\"; deskops graph missing --root . 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && deskops show board Board --root . 2>&1; echo; echo \"### faq: what is desk dir\"; deskops faq what-is-the-desk-directory-for 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && deskops promote inbox-to-drawer-task document-the-release-process --root . 2>&1; echo \"EXIT=$?\"",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && cat desk/drawer/tasks/task-document-the-release-process.md; echo \"===\"; ls -R desk/drawer; echo \"===\"; deskops list inbox-notes --root .",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && deskops add task --root . \\\n  --from-drawer task-document-the-release-process \\\n  --title \"Document the release process\" \\\n  --goal \"Document how this repo cuts a release so contributors have a repeatable, written release process.\" \\\n  --scope \"Author release-process documentation for this repo; do not change release tooling.\" \\\n  --validation pytest 2>&1; echo \"EXIT=$?\"",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && cat desk/tasks/task-document-the-release-process.md; echo \"=== show task ===\"; deskops show task task-document-the-release-process --root . 2>&1; echo \"=== next ===\"; deskops next task-document-the-release-process --root . 2>&1; echo \"=== list tasks ===\"; deskops list tasks --root . 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"=== Board ===\"; cat desk/tasks/Board.md; echo \"=== git status ===\"; git status --short; echo \"=== graph missing ===\"; deskops graph missing --root . 2>&1",
+    "cd /tmp/deskops-e2e-aw0tsp_y/repo && echo \"### status\"; deskops status --root . 2>&1; echo; echo \"### show task (status)\"; deskops show task task-document-the-release-process --root . 2>&1 | head -6; echo; echo \"### list inbox-notes\"; deskops list inbox-notes --root . 2>&1; echo \"(empty = none)\"; echo; echo \"### drawer file present?\"; ls desk/drawer/tasks/"
+  ],
+  "failed": []
+}

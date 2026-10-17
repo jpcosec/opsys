@@ -1,0 +1,39 @@
+id: first-task-to-closeout
+notes: The quickstart path, from an empty repo to a closed task, with the docs a newcomer reads first.
+intent: |
+  This repo does not use deskops yet. Set it up, then track one small piece of work with a deskops
+  task: add a CHANGELOG.md file whose only line is "- Started using deskops.". Do the work, run the
+  task's validation (the repo's tests run with `pytest`), and close the task the way deskops
+  expects, so that it is no longer open when you finish.
+docs: [README.md, docs/quickstart.md]
+setup:
+  - git init -q
+  - mkdir -p tests && printf 'def test_ok():\n    assert True\n' > tests/test_ok.py
+  - git add -A && git commit -qm "initial"
+reference:
+  - deskops init .
+  - deskops add task --root . --title "Add changelog" --goal "Start a changelog" --scope "CHANGELOG.md only" --implementation-path CHANGELOG.md --done-when "CHANGELOG.md exists" --validation pytest
+  - deskops advance task task-add-changelog --root .
+  - printf -- '- Started using deskops.\n' > CHANGELOG.md
+  - pytest -q
+  - deskops advance task task-add-changelog --root .
+  - deskops edit task task-add-changelog references '["tests/test_ok.py"]' --root .
+  - |-
+    git add -A && git commit -qm "docs: start changelog"
+  - deskops advance task task-add-changelog --root .
+checks:
+  - name: CHANGELOG.md is committed with the requested line
+    run: |-
+      git ls-files --error-unmatch CHANGELOG.md && grep -qx -- '- Started using deskops.' CHANGELOG.md
+  - name: a deskops closeout commit exists
+    run: |-
+      git log --format=%s | grep -q '^closeout: task-'
+  - name: no task is left open in desk/tasks
+    run: |-
+      test -d desk/tasks && ! ls desk/tasks/task-*.md 2>/dev/null | grep -q .
+  - name: the local store passes sldb stores check
+    run: |-
+      sldb stores check --store .sldb
+  - name: the edge index passes sldb edges check
+    run: |-
+      sldb edges check --store .sldb
