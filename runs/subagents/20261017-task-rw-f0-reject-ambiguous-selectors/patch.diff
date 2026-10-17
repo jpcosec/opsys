@@ -1,0 +1,81 @@
+diff --git a/deskops/operations.py b/deskops/operations.py
+index f5f76d8..e67d9bd 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -2089,6 +2089,10 @@ class DeskopsOperations:
+         matches = sorted(directory.glob(f"{doc_id}*.md"))
+         if not matches:
+             raise FileNotFoundError(f"No file found for id '{doc_id}' in {directory}")
++        if len(matches) > 1:
++            raise ValueError(
++                f"Ambiguous id '{doc_id}' in {directory}: {', '.join(p.stem for p in matches)}"
++            )
+         return matches[0]
+ 
+     def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:
+diff --git a/tests/test_operational.py b/tests/test_operational.py
+index bc8071b..d28193a 100644
+--- a/tests/test_operational.py
++++ b/tests/test_operational.py
+@@ -1,11 +1,13 @@
+ from __future__ import annotations
+ 
++import json
+ from pathlib import Path
+ 
+ import pytest
+ 
+ from deskops.models.task import TaskDoc
+ from deskops.operations import DeskopsOperations
++from tests.test_lifecycle_end_to_end import _cli, _make_repo
+ 
+ 
+ def test_create_artifact_rolls_back_file_when_tracking_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+@@ -150,3 +152,47 @@ def test_advance_task_does_not_persist_computed_gate_facts(lifecycle_desk: Path)
+     text = (lifecycle_desk / "desk" / "tasks" / "task-no-leaked-facts.md").read_text(encoding="utf-8")
+     assert "closeout_evidence_verified" not in text
+     assert "pill_graduation_verified" not in text
++
++
++def _seed_task(root: Path, task_id: str, title: str) -> None:
++    payload = {
++        "id": task_id,
++        "title": title,
++        "goal": "g",
++        "scope": "s",
++        "implementation_path": "i",
++        "done_when": "d",
++        "validation": ["pytest"],
++    }
++    _cli(root, "add", "task", "--root", str(root), json.dumps(payload))
++
++
++def test_advance_task_prefix_selector_rejects_ambiguity(tmp_path: Path) -> None:
++    root = _make_repo(tmp_path)
++    _cli(root, "init", str(root))
++    _seed_task(root, "task-foo-bar", "Foo Bar")
++    _seed_task(root, "task-foo-baz", "Foo Baz")
++    bar = root / "desk" / "tasks" / "task-foo-bar.md"
++    baz = root / "desk" / "tasks" / "task-foo-baz.md"
++    before = (bar.read_text(encoding="utf-8"), baz.read_text(encoding="utf-8"))
++
++    result = _cli(root, "advance", "task", "task-foo", check=False)
++
++    assert result.returncode == 1
++    assert "task-foo-bar" in result.stderr
++    assert "task-foo-baz" in result.stderr
++    assert (bar.read_text(encoding="utf-8"), baz.read_text(encoding="utf-8")) == before
++
++
++def test_advance_task_exact_selector_wins_over_prefix(tmp_path: Path) -> None:
++    root = _make_repo(tmp_path)
++    _cli(root, "init", str(root))
++    _seed_task(root, "task-foo", "Foo")
++    _seed_task(root, "task-foo-bar", "Foo Bar")
++    bar = root / "desk" / "tasks" / "task-foo-bar.md"
++    before = bar.read_text(encoding="utf-8")
++
++    result = _cli(root, "advance", "task", "task-foo")
++
++    assert "Task: task-foo" in result.stdout
++    assert bar.read_text(encoding="utf-8") == before

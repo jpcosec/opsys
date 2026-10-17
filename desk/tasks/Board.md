@@ -7,7 +7,6 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f0-pytest-collects-only-tests.md
-- desk/tasks/task-rw-f0-reject-ambiguous-selectors.md
 - desk/tasks/task-rw-f0-merge-retarget-whole-tokens.md
 - desk/tasks/task-rw-f0-closeout-commit-pathspec.md
 # List of pill-xxx paths
@@ -51,6 +50,5 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - Bare `pytest` collects only the tests/ directory [draft] - Running `pytest` with no arguments from the repo root collects only `tests/`.
-- Prefix selectors fail on ambiguity instead of picking the first match [draft] - `_resolve_glob` raises on more than one prefix match, naming every candidate, while an exact file name and a single prefix match keep resolving as today.
 - Atom merge rewrites only whole `atom:<id>` tokens in referrers [draft] - `merge_atom` rewrites only exact `atom:<source id>` tokens in referrer files.
 - The advance closeout commit contains only the closing task's paths [draft] - That commit includes exactly the removed task file, `desk/tasks/Board.md`, and those entries of the task's `files` list that have any change, new files included (`git status --porcelain -- <path>` prints something), with their working-tree content; unchanged listed paths are skipped; unrelated staged changes stay staged and out of the commit.

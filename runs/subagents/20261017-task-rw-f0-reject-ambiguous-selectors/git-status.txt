@@ -1,0 +1,3 @@
+ M deskops/operations.py
+ M tests/test_operational.py
+?? runs/subagents/20261017-task-rw-f0-reject-ambiguous-selectors/

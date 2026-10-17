@@ -2089,6 +2089,10 @@ class DeskopsOperations:
         matches = sorted(directory.glob(f"{doc_id}*.md"))
         if not matches:
             raise FileNotFoundError(f"No file found for id '{doc_id}' in {directory}")
+        if len(matches) > 1:
+            raise ValueError(
+                f"Ambiguous id '{doc_id}' in {directory}: {', '.join(p.stem for p in matches)}"
+            )
         return matches[0]
 
     def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:

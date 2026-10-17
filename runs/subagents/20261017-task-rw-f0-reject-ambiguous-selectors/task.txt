@@ -1,0 +1,11 @@
+Task: task-rw-f0-reject-ambiguous-selectors
+Title: Prefix selectors fail on ambiguity instead of picking the first match
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-reject-ambiguous-selectors.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
