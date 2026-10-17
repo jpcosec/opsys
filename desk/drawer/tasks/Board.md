@@ -30,6 +30,7 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
+- `task-lifecycle-graph-checks-rituals-are-readable` — `desk update --apply` tracks old-style rituals RitualDoc cannot read (reported from the graph_ui migration, 2026-10-17); owner decides error vs re-render
 
 ### Deskops rewrite plan (2026-10-16)
 
@@ -38,7 +39,7 @@ Every node of the DAG in `runs/planning/deskops-rewrite-inventory.md`, one defer
 wait on an owner decision named in their `## Open Ambiguities`. Tasks that edit
 `deskops/operations.py` run in series.
 
-F0 (the other nine F0 tasks were promoted to `desk/tasks/` on 2026-10-17):
+F0 (the other nine F0 tasks were promoted on 2026-10-17 and closed the same day, closeout commits 8121c5e..e353b15):
 
 - `task-rw-f0-graph-missing-ignores-archived-records` — `graph missing` stops failing on paths quoted in archived drawer records (**blocked**)
 
