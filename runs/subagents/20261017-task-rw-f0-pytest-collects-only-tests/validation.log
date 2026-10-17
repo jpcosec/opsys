@@ -1,0 +1,4 @@
+== pytest (bare)
+344 passed, 3 skipped in 161.57s (0:02:41)
+== pytest tests
+344 passed, 3 skipped in 147.80s (0:02:27)

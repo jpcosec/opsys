@@ -1,0 +1,10 @@
+Task: task-rw-f0-pytest-collects-only-tests
+Title: Bare `pytest` collects only the tests/ directory
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-pytest-collects-only-tests.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
