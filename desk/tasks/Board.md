@@ -7,7 +7,6 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f0-pytest-collects-only-tests.md
-- desk/tasks/task-rw-f0-graph-skips-vendored-trees.md
 - desk/tasks/task-rw-f0-payload-from-drawer-resolves.md
 - desk/tasks/task-rw-f0-reject-ambiguous-selectors.md
 - desk/tasks/task-rw-f0-merge-retarget-whole-tokens.md
@@ -53,7 +52,6 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - Bare `pytest` collects only the tests/ directory [draft] - Running `pytest` with no arguments from the repo root collects only `tests/`.
-- `graph build` ignores tools/, .tmp/ and .venv/ [draft] - After `deskops graph build --root .`, no node in the snapshot has a path under `tools/` or `.tmp/` (`.venv/` stays excluded).
 - `from_drawer` given in a YAML or JSON payload is resolved like the flag [draft] - A `from_drawer` value from the flag, a YAML payload or an inline JSON payload is resolved and stored as the same repo-relative drawer path; an unknown or ambiguous selector fails with exit 1 and creates nothing.
 - Prefix selectors fail on ambiguity instead of picking the first match [draft] - `_resolve_glob` raises on more than one prefix match, naming every candidate, while an exact file name and a single prefix match keep resolving as today.
 - Atom merge rewrites only whole `atom:<id>` tokens in referrers [draft] - `merge_atom` rewrites only exact `atom:<source id>` tokens in referrer files.

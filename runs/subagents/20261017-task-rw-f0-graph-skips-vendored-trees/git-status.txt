@@ -1,0 +1,5 @@
+ M deskops/graph/extract_coverage.py
+ M deskops/graph/extract_sources.py
+ M tests/test_graph_extract_coverage.py
+ M tests/test_graph_extract_sources.py
+?? runs/subagents/20261017-task-rw-f0-graph-skips-vendored-trees/

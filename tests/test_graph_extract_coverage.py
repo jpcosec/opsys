@@ -87,6 +87,20 @@ stateDiagram-v2
     assert not any(edge for edge in covers if edge["atom_id"] == "runtime" and edge["facet"] == "why")
 
 
+def test_extract_coverage_graph_skips_atoms_under_vendored_tools_and_tmp_trees(tmp_path: Path) -> None:
+    write_atom(tmp_path / "desk/atoms/atom-local.md", "local", "Local", "what")
+    write_atom(tmp_path / "tools/x/desk/atoms/atom-vendored.md", "vendored", "Vendored", "what")
+    write_atom(tmp_path / ".tmp/scratch/desk/atoms/atom-scratch.md", "scratch", "Scratch", "what")
+
+    result = extract_coverage_graph(tmp_path)
+    ids = {node.id for node in result.nodes}
+
+    assert "atom:local" in ids
+    assert "atom:vendored" not in ids
+    assert "atom:scratch" not in ids
+    assert not any((node.path or "").startswith(("tools/", ".tmp/")) for node in result.nodes)
+
+
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")

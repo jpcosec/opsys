@@ -1,0 +1,78 @@
+diff --git a/deskops/graph/extract_coverage.py b/deskops/graph/extract_coverage.py
+index df97191..4ed81c6 100644
+--- a/deskops/graph/extract_coverage.py
++++ b/deskops/graph/extract_coverage.py
+@@ -24,7 +24,7 @@ HTML_MERMAID_RE = re.compile(
+ )
+ HTML_TAG_RE = re.compile(r"<[^>]+>")
+ ATOM_ALIAS_KEYS = ("aliases", "alias")
+-EXCLUDED_PATH_PARTS = {".git", ".sldb", "node_modules", "__pycache__", "runs", "source_docs", "gian-repo"}
++EXCLUDED_PATH_PARTS = {".git", ".sldb", ".tmp", "node_modules", "__pycache__", "runs", "source_docs", "gian-repo", "tools"}
+ EXCLUDED_PATH_PREFIXES = ("docs/diagram-catalog",)
+ COMPONENT_EDGE_PATTERNS = (
+     re.compile(r"^(?P<left>.+?)\s*-->\|(?P<label>[^|]+)\|\s*(?P<right>.+?)\s*$"),
+diff --git a/deskops/graph/extract_sources.py b/deskops/graph/extract_sources.py
+index 00f0ea8..78fcb63 100644
+--- a/deskops/graph/extract_sources.py
++++ b/deskops/graph/extract_sources.py
+@@ -17,11 +17,13 @@ EXCLUDED_DIRS = {
+     ".mypy_cache",
+     ".pytest_cache",
+     ".ruff_cache",
++    ".tmp",
+     ".venv",
+     "__pycache__",
+     "build",
+     "dist",
+     "node_modules",
++    "tools",
+     "venv",
+ }
+ EXCLUDED_SUFFIXES = {".pyc", ".pyo"}
+diff --git a/tests/test_graph_extract_coverage.py b/tests/test_graph_extract_coverage.py
+index 0a724f1..7e85aa8 100644
+--- a/tests/test_graph_extract_coverage.py
++++ b/tests/test_graph_extract_coverage.py
+@@ -87,6 +87,20 @@ stateDiagram-v2
+     assert not any(edge for edge in covers if edge["atom_id"] == "runtime" and edge["facet"] == "why")
+ 
+ 
++def test_extract_coverage_graph_skips_atoms_under_vendored_tools_and_tmp_trees(tmp_path: Path) -> None:
++    write_atom(tmp_path / "desk/atoms/atom-local.md", "local", "Local", "what")
++    write_atom(tmp_path / "tools/x/desk/atoms/atom-vendored.md", "vendored", "Vendored", "what")
++    write_atom(tmp_path / ".tmp/scratch/desk/atoms/atom-scratch.md", "scratch", "Scratch", "what")
++
++    result = extract_coverage_graph(tmp_path)
++    ids = {node.id for node in result.nodes}
++
++    assert "atom:local" in ids
++    assert "atom:vendored" not in ids
++    assert "atom:scratch" not in ids
++    assert not any((node.path or "").startswith(("tools/", ".tmp/")) for node in result.nodes)
++
++
+ def write(path: Path, content: str) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+     path.write_text(content, encoding="utf-8")
+diff --git a/tests/test_graph_extract_sources.py b/tests/test_graph_extract_sources.py
+index 3adbe3f..389129e 100644
+--- a/tests/test_graph_extract_sources.py
++++ b/tests/test_graph_extract_sources.py
+@@ -56,6 +56,17 @@ def test_extract_source_file_nodes_excludes_generated_runtime_outputs_by_default
+     assert [node.id for node in nodes] == ["source_file:deskops/operations.py"]
+ 
+ 
++def test_extract_source_file_nodes_skips_vendored_tools_and_tmp_trees(tmp_path: Path) -> None:
++    write(tmp_path / "deskops/operations.py", "# source\n")
++    write(tmp_path / "tools/x/deskops/impl.py", "# vendored source\n")
++    write(tmp_path / "tools/x/pyproject.toml", "[project]\nname = \"vendored\"\n")
++    write(tmp_path / ".tmp/scratch/deskops/impl.py", "# scratch source\n")
++
++    nodes = extract_source_file_nodes(tmp_path)
++
++    assert [node.id for node in nodes] == ["source_file:deskops/operations.py"]
++
++
+ def write(path: Path, content: str) -> None:
+     path.parent.mkdir(parents=True, exist_ok=True)
+     path.write_text(content, encoding="utf-8")

@@ -17,11 +17,13 @@ EXCLUDED_DIRS = {
     ".mypy_cache",
     ".pytest_cache",
     ".ruff_cache",
+    ".tmp",
     ".venv",
     "__pycache__",
     "build",
     "dist",
     "node_modules",
+    "tools",
     "venv",
 }
 EXCLUDED_SUFFIXES = {".pyc", ".pyo"}

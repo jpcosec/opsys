@@ -56,6 +56,17 @@ def test_extract_source_file_nodes_excludes_generated_runtime_outputs_by_default
     assert [node.id for node in nodes] == ["source_file:deskops/operations.py"]
 
 
+def test_extract_source_file_nodes_skips_vendored_tools_and_tmp_trees(tmp_path: Path) -> None:
+    write(tmp_path / "deskops/operations.py", "# source\n")
+    write(tmp_path / "tools/x/deskops/impl.py", "# vendored source\n")
+    write(tmp_path / "tools/x/pyproject.toml", "[project]\nname = \"vendored\"\n")
+    write(tmp_path / ".tmp/scratch/deskops/impl.py", "# scratch source\n")
+
+    nodes = extract_source_file_nodes(tmp_path)
+
+    assert [node.id for node in nodes] == ["source_file:deskops/operations.py"]
+
+
 def write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(content, encoding="utf-8")

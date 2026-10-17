@@ -1,0 +1,4 @@
+5 passed in 0.14s
+Graph snapshot written: /home/jp/proyectos/SLDB_1/deskops/.sldb/runtime/graphs/deskops.kg.json
+snapshot nodes: 539; under tools/ or .tmp/: 0
+339 passed, 3 skipped in 173.15s (0:02:53)

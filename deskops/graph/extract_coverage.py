@@ -24,7 +24,7 @@ HTML_MERMAID_RE = re.compile(
 )
 HTML_TAG_RE = re.compile(r"<[^>]+>")
 ATOM_ALIAS_KEYS = ("aliases", "alias")
-EXCLUDED_PATH_PARTS = {".git", ".sldb", "node_modules", "__pycache__", "runs", "source_docs", "gian-repo"}
+EXCLUDED_PATH_PARTS = {".git", ".sldb", ".tmp", "node_modules", "__pycache__", "runs", "source_docs", "gian-repo", "tools"}
 EXCLUDED_PATH_PREFIXES = ("docs/diagram-catalog",)
 COMPONENT_EDGE_PATTERNS = (
     re.compile(r"^(?P<left>.+?)\s*-->\|(?P<label>[^|]+)\|\s*(?P<right>.+?)\s*$"),
