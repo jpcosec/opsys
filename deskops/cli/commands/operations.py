@@ -17,10 +17,14 @@ class OperationsCLI:
 
         if args.command == "add" and args.subject == "task":
             payload = operations.parse_task_input(args)
+            drawer_selector = getattr(args, "from_drawer", None)
+            if not drawer_selector:
+                raw_drawer = payload.get("from_drawer")
+                drawer_selector = str(raw_drawer) if raw_drawer else None
             drawer_source = None
-            if getattr(args, "from_drawer", None):
+            if drawer_selector:
                 try:
-                    drawer_source = operations.resolve_drawer_source(args.from_drawer)
+                    drawer_source = operations.resolve_drawer_source(drawer_selector)
                 except (FileNotFoundError, ValueError) as exc:
                     print(f"Error: {exc}")
                     return 1

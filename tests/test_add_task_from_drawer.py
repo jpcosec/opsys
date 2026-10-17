@@ -1,0 +1,95 @@
+from __future__ import annotations
+
+import json
+from pathlib import Path
+import re
+import subprocess
+import sys
+
+CLI = [sys.executable, "-m", "deskops"]
+
+
+def _cli(root: Path, *argv: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run([*CLI, *argv], cwd=root, capture_output=True, text=True)
+
+
+def _write(root: Path, relative_path: str, content: str) -> Path:
+    path = root / relative_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(content, encoding="utf-8")
+    return path
+
+
+def _from_drawer(task_path: Path) -> str:
+    match = re.search(r"^from_drawer: (.+)$", task_path.read_text(encoding="utf-8"), re.MULTILINE)
+    assert match, f"no from_drawer field in {task_path}"
+    return match.group(1).strip()
+
+
+def test_payload_and_flag_resolve_the_same_drawer_path(lifecycle_desk: Path) -> None:
+    root = lifecycle_desk
+    _write(root, "desk/drawer/tasks/task-rw-f0-x.md", "# Drawer candidate\n")
+
+    flag = _cli(
+        root, "add", "task",
+        "--title", "Flag drawer",
+        "--from-drawer", "rw-f0-x",
+    )
+    assert flag.returncode == 0, flag.stderr or flag.stdout
+
+    yaml_payload = _write(
+        root,
+        "yaml-payload.yml",
+        "title: YAML drawer\n"
+        "id: task-yaml-drawer\n"
+        "from_drawer: rw-f0-x\n",
+    )
+    yaml_arg = _cli(root, "add", "task", "--from-yaml", str(yaml_payload))
+    assert yaml_arg.returncode == 0, yaml_arg.stderr or yaml_arg.stdout
+
+    inline = _cli(
+        root, "add", "task",
+        json.dumps({"title": "JSON drawer", "id": "task-json-drawer", "from_drawer": "rw-f0-x"}),
+    )
+    assert inline.returncode == 0, inline.stderr or inline.stdout
+
+    expected = "desk/drawer/tasks/task-rw-f0-x.md"
+    paths = [
+        root / "desk" / "tasks" / "task-flag-drawer.md",
+        root / "desk" / "tasks" / "task-yaml-drawer.md",
+        root / "desk" / "tasks" / "task-json-drawer.md",
+    ]
+    assert [_from_drawer(path) for path in paths] == [expected, expected, expected]
+
+
+def test_unknown_drawer_selector_in_json_payload_fails(lifecycle_desk: Path) -> None:
+    root = lifecycle_desk
+    _write(root, "desk/drawer/tasks/task-rw-f0-x.md", "# Drawer candidate\n")
+    before = sorted(path.name for path in (root / "desk" / "tasks").glob("*.md"))
+
+    result = _cli(
+        root, "add", "task",
+        json.dumps({"title": "Unknown drawer", "id": "task-unknown-drawer", "from_drawer": "no-such-stem"}),
+    )
+
+    assert result.returncode == 1
+    assert "Error:" in result.stdout
+    after = sorted(path.name for path in (root / "desk" / "tasks").glob("*.md"))
+    assert after == before
+
+
+def test_ambiguous_drawer_selector_in_json_payload_fails(lifecycle_desk: Path) -> None:
+    root = lifecycle_desk
+    _write(root, "desk/drawer/tasks/task-rw-f0-x.md", "# Drawer candidate X\n")
+    _write(root, "desk/drawer/tasks/task-rw-f0-y.md", "# Drawer candidate Y\n")
+    before = sorted(path.name for path in (root / "desk" / "tasks").glob("*.md"))
+
+    result = _cli(
+        root, "add", "task",
+        json.dumps({"title": "Ambiguous drawer", "id": "task-ambiguous-drawer", "from_drawer": "rw-f0"}),
+    )
+
+    assert result.returncode == 1
+    assert "Ambiguous drawer selector" in result.stdout
+    after = sorted(path.name for path in (root / "desk" / "tasks").glob("*.md"))
+    assert after == before

@@ -1,0 +1,11 @@
+Task: task-rw-f0-payload-from-drawer-resolves
+Title: `from_drawer` given in a YAML or JSON payload is resolved like the flag
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-payload-from-drawer-resolves.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

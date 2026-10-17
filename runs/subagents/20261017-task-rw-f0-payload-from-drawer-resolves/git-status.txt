@@ -1,0 +1,3 @@
+ M deskops/cli/commands/operations.py
+?? runs/subagents/20261017-task-rw-f0-payload-from-drawer-resolves/
+?? tests/test_add_task_from_drawer.py
