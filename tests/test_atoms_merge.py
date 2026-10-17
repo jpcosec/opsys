@@ -228,3 +228,44 @@ def test_atoms_merge_dedupes_source_answer_when_target_already_contains_it(tmp_p
     assert target_text.count("Prefer explicit redirects during knowledge refactors.") == 1
     assert "### Merged from atom:atom-source-guidance" not in target_text
     assert "Inbound references rewritten: 0" in captured.out
+
+
+def test_atoms_merge_rewrites_only_whole_atom_tokens(tmp_path: Path, capsys) -> None:
+    _install_sandbox(tmp_path)
+    _write_atoms(tmp_path)
+
+    ref_path = tmp_path / "desk" / "tasks" / "task-ref.md"
+    ref_path.write_text(
+        "# Ref\n\n"
+        "Whole token atom:atom-source-guidance here.\n"
+        "Longer token atom:atom-source-guidance-bar must stay.\n"
+        "Suffixed token atom:atom-source-guidance.extended must stay.\n"
+        "Prefixed token xatom:atom-source-guidance must stay.\n",
+        encoding="utf-8",
+    )
+
+    result = main(
+        [
+            "atoms",
+            "merge",
+            "atom-source-guidance",
+            "--into",
+            "atom-target-guidance",
+            "--root",
+            str(tmp_path),
+        ]
+    )
+    captured = capsys.readouterr()
+
+    assert result == 0
+    assert "Inbound references rewritten: 1" in captured.out
+    assert "desk/tasks/task-ref.md:3" in captured.out
+    assert "desk/tasks/task-ref.md:4" not in captured.out
+    assert "desk/tasks/task-ref.md:5" not in captured.out
+    assert "desk/tasks/task-ref.md:6" not in captured.out
+
+    task_text = ref_path.read_text(encoding="utf-8")
+    assert "Whole token atom:atom-target-guidance here." in task_text
+    assert "Longer token atom:atom-source-guidance-bar must stay." in task_text
+    assert "Suffixed token atom:atom-source-guidance.extended must stay." in task_text
+    assert "Prefixed token xatom:atom-source-guidance must stay." in task_text

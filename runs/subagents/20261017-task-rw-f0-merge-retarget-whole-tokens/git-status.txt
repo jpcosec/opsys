@@ -1,0 +1,4 @@
+ M deskops/operations.py
+ M tests/test_atoms_merge.py
+?? desk/drawer/tasks/task-lifecycle-graph-checks-rituals-are-readable.md
+?? runs/subagents/20261017-task-rw-f0-merge-retarget-whole-tokens/

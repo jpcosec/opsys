@@ -1735,19 +1735,21 @@ class DeskopsOperations:
                 continue
             if needle not in original_text:
                 continue
-            lines = original_text.splitlines()
-            matched_lines = [
-                line_number
-                for line_number, line in enumerate(lines, start=1)
-                if needle in line and any(reference == needle for reference in re.findall(r"atom:[a-zA-Z0-9_.-]+", line))
-            ]
-            if not matched_lines:
-                continue
-            updated_text = original_text.replace(needle, replacement)
+            pattern = re.compile(rf"(?<![A-Za-z0-9_.-]){re.escape(needle)}(?![A-Za-z0-9_.-])")
+            updated_text = pattern.sub(replacement, original_text)
             if updated_text == original_text:
                 continue
+            changed_lines = [
+                line_number
+                for line_number, (before, after) in enumerate(
+                    zip(original_text.splitlines(), updated_text.splitlines()), start=1
+                )
+                if before != after
+            ]
+            if not changed_lines:
+                continue
             path.write_text(updated_text, encoding="utf-8")
-            for line_number in matched_lines:
+            for line_number in changed_lines:
                 rewritten.append(f"{path.relative_to(self.root)}:{line_number}")
         return rewritten
 

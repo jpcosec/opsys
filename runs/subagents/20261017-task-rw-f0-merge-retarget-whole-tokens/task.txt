@@ -1,0 +1,10 @@
+Task: task-rw-f0-merge-retarget-whole-tokens
+Title: Atom merge rewrites only whole `atom:<id>` tokens in referrers
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-merge-retarget-whole-tokens.md
+Effective pills:
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

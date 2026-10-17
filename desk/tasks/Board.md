@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f0-merge-retarget-whole-tokens.md
 - desk/tasks/task-rw-f0-closeout-commit-pathspec.md
 # List of pill-xxx paths
 pills:
@@ -48,5 +47,4 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Atom merge rewrites only whole `atom:<id>` tokens in referrers [draft] - `merge_atom` rewrites only exact `atom:<source id>` tokens in referrer files.
 - The advance closeout commit contains only the closing task's paths [draft] - That commit includes exactly the removed task file, `desk/tasks/Board.md`, and those entries of the task's `files` list that have any change, new files included (`git status --porcelain -- <path>` prints something), with their working-tree content; unchanged listed paths are skipped; unrelated staged changes stay staged and out of the commit.
