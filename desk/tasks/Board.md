@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f0-declare-runtime-dependencies.md
 - desk/tasks/task-rw-f0-pytest-collects-only-tests.md
 - desk/tasks/task-rw-f0-graph-skips-vendored-trees.md
 - desk/tasks/task-rw-f0-payload-from-drawer-resolves.md
@@ -53,7 +52,6 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- pyproject declares kgdb as a dependency [draft] - pyproject.toml declares `kgdb` with a lower-bound version next to the existing `structuredLanguageDB>=0.1.9`, and a fresh venv that installs the sibling sldb checkout, kgdb and deskops imports the CLI.
 - Bare `pytest` collects only the tests/ directory [draft] - Running `pytest` with no arguments from the repo root collects only `tests/`.
 - `graph build` ignores tools/, .tmp/ and .venv/ [draft] - After `deskops graph build --root .`, no node in the snapshot has a path under `tools/` or `.tmp/` (`.venv/` stays excluded).
 - `from_drawer` given in a YAML or JSON payload is resolved like the flag [draft] - A `from_drawer` value from the flag, a YAML payload or an inline JSON payload is resolved and stored as the same repo-relative drawer path; an unknown or ambiguous selector fails with exit 1 and creates nothing.

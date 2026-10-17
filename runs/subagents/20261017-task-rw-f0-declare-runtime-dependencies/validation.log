@@ -1,0 +1,3 @@
+deskops --help exit=0
+throwaway venv: see result-summary.md (pip resolution of kgdb fails: kgdb 0.1.0 requires dist 'sldb'; --no-deps install imports OK)
+337 passed, 3 skipped in 184.95s (0:03:04)

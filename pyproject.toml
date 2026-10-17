@@ -8,6 +8,7 @@ dependencies = [
     "pydantic>=2.0",
     "PyYAML>=6.0",
     "structuredLanguageDB>=0.1.9",
+    "kgdb>=0.1.0",
 ]
 
 [project.scripts]

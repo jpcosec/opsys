@@ -1,0 +1,10 @@
+Task: task-rw-f0-declare-runtime-dependencies
+Title: pyproject declares kgdb as a dependency
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f0-declare-runtime-dependencies.md
+Effective pills:
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

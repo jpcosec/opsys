@@ -1,0 +1,12 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 4298052..051b99c 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -8,6 +8,7 @@ dependencies = [
+     "pydantic>=2.0",
+     "PyYAML>=6.0",
+     "structuredLanguageDB>=0.1.9",
++    "kgdb>=0.1.0",
+ ]
+ 
+ [project.scripts]
