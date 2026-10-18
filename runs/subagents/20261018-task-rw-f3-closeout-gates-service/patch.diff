@@ -1,0 +1,336 @@
+diff --git a/deskops/operations.py b/deskops/operations.py
+index db66d3a..d9ec21f 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -49,6 +49,7 @@ from deskops.workflow.next_actions import match_workflow_state
+ from deskops.workflow.next_actions import render_workflow_mermaid
+ 
+ if TYPE_CHECKING:
++    from deskops.services.closeout_gates import CloseoutGatesService
+     from deskops.services.drawer import DrawerService
+ 
+ 
+@@ -324,6 +325,7 @@ class DeskopsOperations:
+         self.spec_root = Path(__file__).resolve().parents[1] / "spec"
+         self._spec_registry: SpecRegistry | None = None
+         self._drawer: DrawerService | None = None
++        self._closeout_gates: CloseoutGatesService | None = None
+         self._setup_logging()
+ 
+     def _setup_logging(self) -> None:
+@@ -471,6 +473,13 @@ class DeskopsOperations:
+                 print(f"Warning: Failed to load task {path}: {e}", file=sys.stderr)
+         return tasks
+ 
++    @property
++    def closeout_gates(self) -> "CloseoutGatesService":
++        if self._closeout_gates is None:
++            from deskops.services.closeout_gates import CloseoutGatesService
++            self._closeout_gates = CloseoutGatesService(self.root)
++        return self._closeout_gates
++
+     @property
+     def drawer(self) -> "DrawerService":
+         if self._drawer is None:
+@@ -1205,20 +1214,11 @@ class DeskopsOperations:
+         return report
+ 
+     def _closeout_reference_evidence(self, payload: dict[str, Any]) -> dict[str, list[str]]:
+-        evidence = {"tests": [], "atom": [], "commit": [], "follow_up": []}
+-        for reference in self._coerce_list(payload.get("references") or []):
+-            ref = str(reference).strip()
+-            if not ref:
+-                continue
+-            if self._reference_points_to_test(ref):
+-                evidence["tests"].append(ref)
+-            if self._reference_points_to_atom(ref):
+-                evidence["atom"].append(ref)
+-            if self._reference_points_to_commit(ref):
+-                evidence["commit"].append(ref)
+-            if self._reference_points_to_routed_follow_up(ref):
+-                evidence["follow_up"].append(ref)
+-        return evidence
++        return self.closeout_gates.closeout_reference_evidence(
++            payload,
++            points_to_atom=self._reference_points_to_atom,
++            points_to_routed_follow_up=self._reference_points_to_routed_follow_up,
++        )
+ 
+     def _closeout_link_gate(
+         self,
+@@ -1785,61 +1785,13 @@ class DeskopsOperations:
+         return True
+ 
+     def _reference_points_to_test(self, reference: str) -> bool:
+-        candidates: list[str] = []
+-        stripped = reference.strip()
+-        if stripped.startswith("pytest "):
+-            for token in stripped.split()[1:]:
+-                token = token.strip("\"'")
+-                if token.startswith("-"):
+-                    continue
+-                if ".py" in token:
+-                    candidates.append(token)
+-        elif ".py" in stripped:
+-            candidates.append(stripped)
+-        for candidate in candidates:
+-            path_text = candidate.split("::", 1)[0]
+-            path = Path(path_text)
+-            if not path.is_absolute():
+-                path = self.root / path
+-            if path.suffix == ".py" and path.exists():
+-                return True
+-        return False
++        return self.closeout_gates.reference_points_to_test(reference)
+ 
+     def _reference_points_to_commit(self, reference: str) -> bool:
+-        candidate = reference.strip()
+-        if not candidate or " " in candidate:
+-            return False
+-        try:
+-            result = subprocess.run(
+-                ["git", "rev-parse", "--verify", f"{candidate}^{{commit}}"],
+-                cwd=self.root,
+-                capture_output=True,
+-                text=True,
+-                check=False,
+-            )
+-        except FileNotFoundError:
+-            return False
+-        return result.returncode == 0
++        return self.closeout_gates.reference_points_to_commit(reference)
+ 
+     def _build_closeout_graph_context(self) -> dict[str, Any]:
+-        from deskops.graph.extract_docs import extract_doc_nodes
+-        from deskops.graph.extract_edges import extract_declared_edges
+-        from deskops.graph.extract_sources import extract_source_file_nodes
+-
+-        doc_nodes = extract_doc_nodes(self.root)
+-        source_nodes = extract_source_file_nodes(self.root)
+-        by_path = {node.path: node.id for node in [*doc_nodes, *source_nodes]}
+-        extraction = extract_declared_edges(self.root)
+-        invalid_materializations = {
+-            missing.source_id
+-            for missing in extraction.missing_targets
+-            if missing.source_id.startswith("materialization:")
+-        }
+-        return {
+-            "node_ids_by_path": by_path,
+-            "edges": extraction.edges,
+-            "invalid_materializations": invalid_materializations,
+-        }
++        return self.closeout_gates.build_closeout_graph_context()
+ 
+     def _changed_file_link_evidence(self, relative_path: str, graph_context: dict[str, Any]) -> list[str]:
+         evidence: list[str] = []
+diff --git a/deskops/services/closeout_gates.py b/deskops/services/closeout_gates.py
+new file mode 100644
+index 0000000..19a991a
+--- /dev/null
++++ b/deskops/services/closeout_gates.py
+@@ -0,0 +1,136 @@
++"""Closeout evidence gates.
++
++Closeout verification accepts only real evidence: a lowercase commit id naming
++a commit in HEAD's history, and a Python test file inside the repository's
++``tests/`` directory. A front-matter string that merely looks like evidence is
++not evidence.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++import re
++import subprocess
++from typing import Any
++from typing import Callable
++
++
++COMMIT_ID_PATTERN = re.compile(r"[0-9a-f]{7,40}")
++
++
++class CloseoutGatesService:
++    def __init__(self, root: Path) -> None:
++        self.root = root.resolve()
++
++    def closeout_reference_evidence(
++        self,
++        payload: dict[str, Any],
++        *,
++        points_to_atom: Callable[[str], bool],
++        points_to_routed_follow_up: Callable[[str], bool],
++    ) -> dict[str, list[str]]:
++        evidence = {"tests": [], "atom": [], "commit": [], "follow_up": []}
++        references = payload.get("references") or []
++        if not isinstance(references, list):
++            references = [references]
++        for reference in references:
++            ref = str(reference).strip()
++            if not ref:
++                continue
++            if self.reference_points_to_test(ref):
++                evidence["tests"].append(ref)
++            if points_to_atom(ref):
++                evidence["atom"].append(ref)
++            if self.reference_points_to_commit(ref):
++                evidence["commit"].append(ref)
++            if points_to_routed_follow_up(ref):
++                evidence["follow_up"].append(ref)
++        return evidence
++
++    def reference_points_to_test(self, reference: str) -> bool:
++        """True only for an existing .py file under <root>/tests/.
++
++        Accepts an optional ``::node`` suffix (the node is not validated) and
++        the ``pytest <path>`` form. Absolute paths and paths that escape
++        ``tests/`` through ``..`` are not evidence.
++        """
++        tests_root = (self.root / "tests").resolve()
++        for candidate in self._test_path_candidates(reference):
++            path_text = candidate.split("::", 1)[0]
++            path = Path(path_text)
++            if path.is_absolute():
++                continue
++            resolved = (self.root / path).resolve()
++            if resolved.suffix != ".py" or not resolved.is_file():
++                continue
++            if resolved.is_relative_to(tests_root):
++                return True
++        return False
++
++    def reference_points_to_commit(self, reference: str) -> bool:
++        """True only for a lowercase hex id resolving to HEAD or an ancestor.
++
++        The pattern rejects symbolic names such as ``HEAD`` or ``main``; an
++        ambiguous abbreviation fails ``rev-parse --verify``; an unrelated or
++        descendant commit fails the ancestor check.
++        """
++        candidate = reference.strip()
++        if not COMMIT_ID_PATTERN.fullmatch(candidate):
++            return False
++        try:
++            resolved = subprocess.run(
++                ["git", "rev-parse", "--verify", f"{candidate}^{{commit}}"],
++                cwd=self.root,
++                capture_output=True,
++                text=True,
++                check=False,
++            )
++            if resolved.returncode != 0:
++                return False
++            full_sha = resolved.stdout.strip()
++            if not full_sha:
++                return False
++            ancestor = subprocess.run(
++                ["git", "merge-base", "--is-ancestor", full_sha, "HEAD"],
++                cwd=self.root,
++                capture_output=True,
++                text=True,
++                check=False,
++            )
++        except FileNotFoundError:
++            return False
++        return ancestor.returncode == 0
++
++    def build_closeout_graph_context(self) -> dict[str, Any]:
++        from deskops.graph.extract_docs import extract_doc_nodes
++        from deskops.graph.extract_edges import extract_declared_edges
++        from deskops.graph.extract_sources import extract_source_file_nodes
++
++        doc_nodes = extract_doc_nodes(self.root)
++        source_nodes = extract_source_file_nodes(self.root)
++        by_path = {node.path: node.id for node in [*doc_nodes, *source_nodes]}
++        extraction = extract_declared_edges(self.root)
++        invalid_materializations = {
++            missing.source_id
++            for missing in extraction.missing_targets
++            if missing.source_id.startswith("materialization:")
++        }
++        return {
++            "node_ids_by_path": by_path,
++            "edges": extraction.edges,
++            "invalid_materializations": invalid_materializations,
++        }
++
++    def _test_path_candidates(self, reference: str) -> list[str]:
++        candidates: list[str] = []
++        stripped = reference.strip()
++        if stripped.startswith("pytest "):
++            for token in stripped.split()[1:]:
++                token = token.strip("\"'")
++                if token.startswith("-"):
++                    continue
++                if ".py" in token:
++                    candidates.append(token)
++        elif ".py" in stripped:
++            candidates.append(stripped)
++        return candidates
+diff --git a/tests/test_closeout.py b/tests/test_closeout.py
+index 7df8109..86e8a4a 100644
+--- a/tests/test_closeout.py
++++ b/tests/test_closeout.py
+@@ -356,6 +356,64 @@ def test_closeout_verify_passes_with_complete_evidence(tmp_path: Path, capsys: p
+     assert report["gates"]["commit"]["ok"] is True
+ 
+ 
++def test_closeout_verify_rejects_loose_commit_and_test_references(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    ancestor = _git(root, "rev-parse", "HEAD")
++    _git(root, "commit", "--allow-empty", "-q", "-m", "later")
++    _write_atom(root)
++    _write(root / "deskops" / "x.py", "x = 1\n")
++    _write(root / "tests" / "test_x.py", "def test_y():\n    assert True\n")
++    _write_task(
++        root,
++        references=[
++            "HEAD",
++            "main",
++            "deskops/x.py",
++            str(root / "tests" / "test_x.py"),
++            "tests/../deskops/x.py",
++            ancestor,
++        ],
++        files=["desk/atoms/atom-evidence.md"],
++    )
++
++    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
++    out = capsys.readouterr()
++
++    assert rc == 1
++    report = json.loads(out.out)
++    assert report["gates"]["tests"]["evidence"] == []
++    assert report["gates"]["commit"]["evidence"] == [ancestor]
++
++
++def test_closeout_verify_accepts_ancestor_commit_and_test_node(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    ancestor = _git(root, "rev-parse", "HEAD")
++    _git(root, "commit", "--allow-empty", "-q", "-m", "later")
++    _write_atom(root)
++    _write(root / "tests" / "test_x.py", "def test_y():\n    assert True\n")
++    _write_task(
++        root,
++        references=[
++            "pytest tests/test_x.py::test_y",
++            ancestor,
++        ],
++        files=["desk/atoms/atom-evidence.md"],
++    )
++
++    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
++    out = capsys.readouterr()
++
++    assert rc == 0
++    report = json.loads(out.out)
++    assert report["gates"]["tests"]["evidence"] == ["pytest tests/test_x.py::test_y"]
++    assert report["gates"]["commit"]["evidence"] == [ancestor]
++    assert report["ok"] is True
++
++
+ def test_closeout_verify_fails_non_zero_when_required_gate_is_missing(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+     root = _make_repo(tmp_path)
+     _write_atom(root)

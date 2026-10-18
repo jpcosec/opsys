@@ -356,6 +356,64 @@ def test_closeout_verify_passes_with_complete_evidence(tmp_path: Path, capsys: p
     assert report["gates"]["commit"]["ok"] is True
 
 
+def test_closeout_verify_rejects_loose_commit_and_test_references(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    ancestor = _git(root, "rev-parse", "HEAD")
+    _git(root, "commit", "--allow-empty", "-q", "-m", "later")
+    _write_atom(root)
+    _write(root / "deskops" / "x.py", "x = 1\n")
+    _write(root / "tests" / "test_x.py", "def test_y():\n    assert True\n")
+    _write_task(
+        root,
+        references=[
+            "HEAD",
+            "main",
+            "deskops/x.py",
+            str(root / "tests" / "test_x.py"),
+            "tests/../deskops/x.py",
+            ancestor,
+        ],
+        files=["desk/atoms/atom-evidence.md"],
+    )
+
+    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
+    out = capsys.readouterr()
+
+    assert rc == 1
+    report = json.loads(out.out)
+    assert report["gates"]["tests"]["evidence"] == []
+    assert report["gates"]["commit"]["evidence"] == [ancestor]
+
+
+def test_closeout_verify_accepts_ancestor_commit_and_test_node(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    ancestor = _git(root, "rev-parse", "HEAD")
+    _git(root, "commit", "--allow-empty", "-q", "-m", "later")
+    _write_atom(root)
+    _write(root / "tests" / "test_x.py", "def test_y():\n    assert True\n")
+    _write_task(
+        root,
+        references=[
+            "pytest tests/test_x.py::test_y",
+            ancestor,
+        ],
+        files=["desk/atoms/atom-evidence.md"],
+    )
+
+    rc = main(["closeout", "verify", "--root", str(root), "--task", "task-x"])
+    out = capsys.readouterr()
+
+    assert rc == 0
+    report = json.loads(out.out)
+    assert report["gates"]["tests"]["evidence"] == ["pytest tests/test_x.py::test_y"]
+    assert report["gates"]["commit"]["evidence"] == [ancestor]
+    assert report["ok"] is True
+
+
 def test_closeout_verify_fails_non_zero_when_required_gate_is_missing(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     root = _make_repo(tmp_path)
     _write_atom(root)

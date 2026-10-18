@@ -1,0 +1,4 @@
+ M deskops/operations.py
+ M tests/test_closeout.py
+?? deskops/services/closeout_gates.py
+?? runs/subagents/20261018-task-rw-f3-closeout-gates-service/

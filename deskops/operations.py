@@ -49,6 +49,7 @@ from deskops.workflow.next_actions import match_workflow_state
 from deskops.workflow.next_actions import render_workflow_mermaid
 
 if TYPE_CHECKING:
+    from deskops.services.closeout_gates import CloseoutGatesService
     from deskops.services.drawer import DrawerService
 
 
@@ -324,6 +325,7 @@ class DeskopsOperations:
         self.spec_root = Path(__file__).resolve().parents[1] / "spec"
         self._spec_registry: SpecRegistry | None = None
         self._drawer: DrawerService | None = None
+        self._closeout_gates: CloseoutGatesService | None = None
         self._setup_logging()
 
     def _setup_logging(self) -> None:
@@ -470,6 +472,13 @@ class DeskopsOperations:
             except Exception as e:
                 print(f"Warning: Failed to load task {path}: {e}", file=sys.stderr)
         return tasks
+
+    @property
+    def closeout_gates(self) -> "CloseoutGatesService":
+        if self._closeout_gates is None:
+            from deskops.services.closeout_gates import CloseoutGatesService
+            self._closeout_gates = CloseoutGatesService(self.root)
+        return self._closeout_gates
 
     @property
     def drawer(self) -> "DrawerService":
@@ -1205,20 +1214,11 @@ class DeskopsOperations:
         return report
 
     def _closeout_reference_evidence(self, payload: dict[str, Any]) -> dict[str, list[str]]:
-        evidence = {"tests": [], "atom": [], "commit": [], "follow_up": []}
-        for reference in self._coerce_list(payload.get("references") or []):
-            ref = str(reference).strip()
-            if not ref:
-                continue
-            if self._reference_points_to_test(ref):
-                evidence["tests"].append(ref)
-            if self._reference_points_to_atom(ref):
-                evidence["atom"].append(ref)
-            if self._reference_points_to_commit(ref):
-                evidence["commit"].append(ref)
-            if self._reference_points_to_routed_follow_up(ref):
-                evidence["follow_up"].append(ref)
-        return evidence
+        return self.closeout_gates.closeout_reference_evidence(
+            payload,
+            points_to_atom=self._reference_points_to_atom,
+            points_to_routed_follow_up=self._reference_points_to_routed_follow_up,
+        )
 
     def _closeout_link_gate(
         self,
@@ -1785,61 +1785,13 @@ class DeskopsOperations:
         return True
 
     def _reference_points_to_test(self, reference: str) -> bool:
-        candidates: list[str] = []
-        stripped = reference.strip()
-        if stripped.startswith("pytest "):
-            for token in stripped.split()[1:]:
-                token = token.strip("\"'")
-                if token.startswith("-"):
-                    continue
-                if ".py" in token:
-                    candidates.append(token)
-        elif ".py" in stripped:
-            candidates.append(stripped)
-        for candidate in candidates:
-            path_text = candidate.split("::", 1)[0]
-            path = Path(path_text)
-            if not path.is_absolute():
-                path = self.root / path
-            if path.suffix == ".py" and path.exists():
-                return True
-        return False
+        return self.closeout_gates.reference_points_to_test(reference)
 
     def _reference_points_to_commit(self, reference: str) -> bool:
-        candidate = reference.strip()
-        if not candidate or " " in candidate:
-            return False
-        try:
-            result = subprocess.run(
-                ["git", "rev-parse", "--verify", f"{candidate}^{{commit}}"],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-                check=False,
-            )
-        except FileNotFoundError:
-            return False
-        return result.returncode == 0
+        return self.closeout_gates.reference_points_to_commit(reference)
 
     def _build_closeout_graph_context(self) -> dict[str, Any]:
-        from deskops.graph.extract_docs import extract_doc_nodes
-        from deskops.graph.extract_edges import extract_declared_edges
-        from deskops.graph.extract_sources import extract_source_file_nodes
-
-        doc_nodes = extract_doc_nodes(self.root)
-        source_nodes = extract_source_file_nodes(self.root)
-        by_path = {node.path: node.id for node in [*doc_nodes, *source_nodes]}
-        extraction = extract_declared_edges(self.root)
-        invalid_materializations = {
-            missing.source_id
-            for missing in extraction.missing_targets
-            if missing.source_id.startswith("materialization:")
-        }
-        return {
-            "node_ids_by_path": by_path,
-            "edges": extraction.edges,
-            "invalid_materializations": invalid_materializations,
-        }
+        return self.closeout_gates.build_closeout_graph_context()
 
     def _changed_file_link_evidence(self, relative_path: str, graph_context: dict[str, Any]) -> list[str]:
         evidence: list[str] = []

@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f3-closeout-gates-service.md
 - desk/tasks/task-rw-f3-drawer-entry-removal-verb.md
 # List of pill-xxx paths
 pills:
@@ -48,5 +47,4 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Closeout gates move to a service and verify real evidence [draft] - `deskops/services/closeout_gates.py` owns the gates and the closeout graph context; the commit gate accepts only a 7-40 character lowercase hex id that resolves to a commit that is HEAD or an ancestor of it (existing tests pass HEAD's own hash, tests/test_closeout.py:335 and tests/test_lifecycle_end_to_end.py:126); the tests gate accepts only a `.py` path inside `<root>/tests/` (optionally followed by `::node`, whose node part is not validated) that exists.
 - A CLI verb removes a drawer entry [draft] - The approved verb removes one drawer file, untracks it if tracked, and deletes every Board.md bullet that starts with ``- `<its stem>` ``.
