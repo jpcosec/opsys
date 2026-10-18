@@ -155,9 +155,10 @@ def test_closeout_commit_links_commit_to_run(tmp_path: Path) -> None:
     commit = _git(root, "rev-parse", "HEAD")
     index = (root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").strip()
     entry = json.loads(index.splitlines()[-1])
-    assert entry["commit"] == commit
+    assert entry["commit"] is None
     assert entry["run_id"] == "6046eaef"
     assert entry["task_id"] == "task-x"
+    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == commit
 
     manifest = yaml.safe_load((run_dir / "run.yaml").read_text(encoding="utf-8"))
     assert manifest["run_id"] == "6046eaef"
@@ -228,11 +229,15 @@ def test_closeout_commit_no_run_makes_a_manual_commit(tmp_path: Path, capsys: py
         "task_id": "task-x",
         "run_id": None,
         "run_dir": None,
-        "commit": commit,
+        "commit": None,
         "session_sha256": None,
         "mode": "manual",
     }
-    assert _git(root, "show", "--name-only", "--format=", "HEAD").split() == ["feature.py"]
+    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == commit
+    assert _git(root, "show", "--name-only", "--format=", "HEAD").split() == [
+        "feature.py",
+        "runs/subagents/index.jsonl",
+    ]
 
 
 @pytest.mark.parametrize("reason", [None, "", "   "])
@@ -328,6 +333,30 @@ def test_closeout_commit_run_dir_through_main_is_unchanged(tmp_path: Path) -> No
     entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
     assert set(entry) == {"task_id", "run_id", "run_dir", "commit", "session_sha256"}
     assert entry["run_dir"] == "runs/subagents/20260729-120000-task-x"
+    assert entry["commit"] is None
+
+
+@pytest.mark.parametrize("route", ["run-dir", "no-run"])
+def test_closeout_commit_leaves_the_working_tree_clean(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], route: str
+) -> None:
+    root = _make_repo(tmp_path)
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+
+    if route == "run-dir":
+        _make_run_dir(root)
+        rc = _closeout_main(root, "--run-dir", "runs/subagents/20260729-120000-task-x", "--paths", "feature.py")
+    else:
+        rc = _closeout_main(root, "--no-run", "--reason", "no subagent ran", "--paths", "feature.py")
+
+    assert rc == 0, capsys.readouterr().out
+    assert _git(root, "status", "--porcelain") == ""
+    assert _git(root, "ls-files", "runs/subagents/index.jsonl") == "runs/subagents/index.jsonl"
+    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert entry["task_id"] == "task-x"
+    assert entry["commit"] is None
+    head = _git(root, "rev-parse", "HEAD")
+    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == head
 
 
 def test_closeout_verify_passes_with_complete_evidence(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:

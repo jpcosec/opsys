@@ -15,7 +15,8 @@ class CloseoutCLI:
     discretion. With --run-dir the commit message carries immutable trailers
     linking it to the run evidence directory; with --no-run it carries
     Closeout-Mode: manual and the stated reason instead. Either way an
-    append-only index records the commit hash.
+    append-only index records the task and run, committed together with the
+    closing commit; the commit hash is resolved from its Task-Id trailer.
     """
 
     def run(self, args: Any) -> int:

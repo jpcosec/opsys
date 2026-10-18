@@ -42,6 +42,18 @@ class ClosureOutcome:
 
 
 class ClosureService:
+    """Build the closing commit and its run-index entry as one clean unit.
+
+    ``runs/subagents/index.jsonl`` records ``task_id``, ``run_dir`` and the
+    route fields, but not the closing commit hash: the index line is written
+    after the commit exists and folded into that same commit with one
+    ``git commit --amend --no-edit``, which changes the hash. ``commit`` is
+    therefore always null in new entries. Readers resolve the closing commit
+    with ``git log -1 --grep 'Task-Id: <task_id>'``, using the trailer every
+    closing commit already carries. The amend is limited to the index path so
+    the working tree is clean when the command returns.
+    """
+
     REQUIRED_EVIDENCE = ["board.txt", "task.txt", "git-status.txt", "result-summary.md"]
 
     def __init__(self, root: Path, operations: "DeskopsOperations | None" = None) -> None:
@@ -313,10 +325,23 @@ class ClosureService:
         messages: list[str] = []
         if index_entry:
             index_path = self.root / "runs" / "subagents" / "index.jsonl"
+            index_rel = index_path.relative_to(self.root).as_posix()
             index_path.parent.mkdir(parents=True, exist_ok=True)
-            entry = {**index_entry, "commit": commit}
+            index_before = index_path.read_bytes() if index_path.exists() else None
+            entry = {**index_entry, "commit": None}
             with index_path.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(entry) + "\n")
+            try:
+                self._git("add", "--", index_rel)
+                self._git("commit", "--amend", "--no-edit", "--", index_rel)
+            except Exception:
+                if index_before is None:
+                    index_path.unlink(missing_ok=True)
+                else:
+                    index_path.write_bytes(index_before)
+                self._git("restore", "--staged", "--", index_rel, check=False)
+                raise
+            commit = self._git("rev-parse", "HEAD")
             messages.append(f"Index: {index_path}")
         if success_line:
             messages.insert(0, success_line.format(commit=commit[:12]))

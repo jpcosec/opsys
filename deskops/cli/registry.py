@@ -1232,8 +1232,10 @@ Without a subagent run, close the task manually and say why:
 
 With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
 trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
-Either way the commit hash is recorded back into runs/subagents/index.jsonl. The
-commit is made by this command, not by agent discretion.
+Either way an index entry is recorded back into runs/subagents/index.jsonl
+and committed with the closing commit; it names the task and run, and the
+commit hash is resolved from the commit's Task-Id trailer. The commit is made
+by this command, not by agent discretion.
 """.strip(),
             raw_text=True,
         ),

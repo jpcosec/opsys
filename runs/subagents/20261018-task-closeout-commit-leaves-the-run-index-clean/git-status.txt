@@ -1,0 +1,11 @@
+ M .sldb/core/documents/TaskDoc/task-closeout-commit-leaves-the-run-index-clean.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-closeout-commit-leaves-the-run-index-clean.md
+ M deskops/cli/commands/closeout.py
+ M deskops/cli/registry.py
+ M deskops/services/closure.py
+ M tests/fixtures/golden/help/deskops_closeout_commit.txt
+ M tests/test_closeout.py
+?? runs/subagents/20261018-task-closeout-commit-leaves-the-run-index-clean/
+?? tests/test_extension_points.py
