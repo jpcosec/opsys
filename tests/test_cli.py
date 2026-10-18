@@ -807,7 +807,7 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
     assert "Next actions:" in output.out
     assert "Run a fresh-context subagent review." in output.out
     assert "Sources:" in output.out
-    assert "spec/workflows/task_lifecycle.yaml" in output.out
+    assert "deskops/spec/workflows/task_lifecycle.yaml" in output.out
     assert task_path.read_text(encoding="utf-8") == before
 
 

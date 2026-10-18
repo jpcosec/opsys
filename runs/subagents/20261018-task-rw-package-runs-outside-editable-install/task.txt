@@ -1,0 +1,10 @@
+Task: task-rw-package-runs-outside-editable-install
+Title: deskops works from a regular (non-editable) install
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-package-runs-outside-editable-install.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

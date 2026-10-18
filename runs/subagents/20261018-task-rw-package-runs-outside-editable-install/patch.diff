@@ -1,0 +1,1139 @@
+diff --git a/README.md b/README.md
+index 0320da5..b9a597f 100644
+--- a/README.md
++++ b/README.md
+@@ -62,7 +62,7 @@ Use `sldb` as the preferred write/edit path for modeled Markdown: `sldb docs cre
+ 
+ If that SLDB path does not work, capture the failure in the sibling `sldb` repo's inbox with the failing command, expected behavior, actual behavior, and relevant model/document references. Do not silently bypass SLDB or reimplement the missing field/document behavior inside `deskops` before the SLDB issue is recorded.
+ 
+-`spec/fields/` may define artifact schema vocabulary for the deskops compiler, but `desk/fields/` should not become a human-facing workflow surface or duplicate SLDB's field model.
++`deskops/spec/fields/` may define artifact schema vocabulary for the deskops compiler, but `desk/fields/` should not become a human-facing workflow surface or duplicate SLDB's field model.
+ 
+ Model changes should use SLDB's model workflow where possible:
+ 
+diff --git a/deskops/bootstrap.py b/deskops/bootstrap.py
+index af2fe52..623257c 100644
+--- a/deskops/bootstrap.py
++++ b/deskops/bootstrap.py
+@@ -14,6 +14,7 @@ from sldb import StructuredNLDoc
+ 
+ from deskops import doc_io
+ from deskops import models as deskops_models
++from deskops.paths import package_pythonpath
+ 
+ 
+ DESKOPS_STORE_LINK = "deskops"
+@@ -81,7 +82,7 @@ class SLDBBootstrap:
+         return self.ensure_global_store_and_models()
+ 
+     def default_pythonpath(self) -> str:
+-        return str(self._package_root())
++        return package_pythonpath()
+ 
+     def ensure_global_store_and_models(self) -> int:
+         global_store = Path.home() / ".sldb"
+@@ -118,32 +119,37 @@ class SLDBBootstrap:
+         """Link the deskops owner store and inherit the model set from it.
+ 
+         A model registered here as a copy of the deskops class is converted in place by
+-        `inherit_model`, keeping its documents and signed contract.
++        `inherit_model`, keeping its documents and signed contract. A regular (non-editable)
++        install ships no owner store, so the models are registered directly from the
++        installed package instead.
+         """
+         try:
+             owner = self._deskops_owner_store()
+-            link_state = self._ensure_owner_link(store_path, owner)
+-            if link_state is None:
+-                # The name is already taken by another checkout. sldb cannot replace a
+-                # link, so leave this store as it is instead of inheriting from it.
+-                print(
+-                    f"Skipping model registration in {store_path}: '{DESKOPS_STORE_LINK}' is linked elsewhere."
+-                )
+-                return 0
+-            if link_state:
+-                print(f"Linked {owner} as {DESKOPS_STORE_LINK} in {store_path}.")
+-
+-            entries = self._registered_model_entries(store_path)
+-            for model_name, model_ref in MODEL_REFS.items():
+-                entry = entries.get(model_name)
+-                if entry is not None:
+-                    origin = getattr(entry, "origin", None)
+-                    if origin == DESKOPS_STORE_LINK:
+-                        continue
+-                    if origin or getattr(entry, "model_ref", None) != model_ref:
+-                        continue
+-                print(f"Inheriting {model_name} in {store_path}...")
+-                self._inherit_model(model_name, store_path)
++            if owner is None:
++                self._register_models_directly(store_path)
++            else:
++                link_state = self._ensure_owner_link(store_path, owner)
++                if link_state is None:
++                    # The name is already taken by another checkout. sldb cannot replace a
++                    # link, so leave this store as it is instead of inheriting from it.
++                    print(
++                        f"Skipping model registration in {store_path}: '{DESKOPS_STORE_LINK}' is linked elsewhere."
++                    )
++                    return 0
++                if link_state:
++                    print(f"Linked {owner} as {DESKOPS_STORE_LINK} in {store_path}.")
++
++                entries = self._registered_model_entries(store_path)
++                for model_name, model_ref in MODEL_REFS.items():
++                    entry = entries.get(model_name)
++                    if entry is not None:
++                        origin = getattr(entry, "origin", None)
++                        if origin == DESKOPS_STORE_LINK:
++                            continue
++                        if origin or getattr(entry, "model_ref", None) != model_ref:
++                            continue
++                    print(f"Inheriting {model_name} in {store_path}...")
++                    self._inherit_model(model_name, store_path)
+ 
+             self._init_relations(store_path)
+             self._update_store_indexes(store_path)
+@@ -153,13 +159,39 @@ class SLDBBootstrap:
+ 
+         return 0
+ 
+-    def _deskops_owner_store(self) -> Path:
+-        owner = self._package_root() / ".sldb"
+-        if not owner.exists():
+-            raise RuntimeError(
+-                f"deskops owner store not found at {owner}; the deskops models must be registered in the deskops repo's .sldb"
+-            )
+-        return owner
++    def _register_models_directly(self, store_path: Path) -> None:
++        """Register the deskops models as copies when no owner store is installed."""
++        owner = Path(package_pythonpath()) / ".sldb"
++        print(
++            f"No deskops owner store at {owner}; registering the models directly from the installed package."
++        )
++        entries = self._registered_model_entries(store_path)
++        for model_name, model_ref in MODEL_REFS.items():
++            if model_name in entries:
++                continue
++            print(f"Registering {model_name} in {store_path}...")
++            self._register_model(model_ref, store_path)
++
++    def _register_model(self, model_ref: str, store_path: Path) -> None:
++        if self._sldb_importable():
++            try:
++                doc_io.register_model(store_path.parent, model_ref, pythonpath=package_pythonpath())
++            except Exception as exc:
++                raise RuntimeError(str(exc))
++        else:
++            self.run_sldb([
++                "models",
++                "add",
++                model_ref,
++                "--store",
++                str(store_path),
++                "--pythonpath",
++                package_pythonpath(),
++            ])
++
++    def _deskops_owner_store(self) -> Path | None:
++        owner = Path(package_pythonpath()) / ".sldb"
++        return owner if owner.exists() else None
+ 
+     def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool | None:
+         """Link `owner` as `deskops` unless the store already links that name.
+@@ -317,7 +349,7 @@ class SLDBBootstrap:
+         if env_path:
+             candidates.append(Path(env_path).expanduser())
+ 
+-        package_root = self._package_root()
++        package_root = Path(package_pythonpath())
+         repo_root = package_root.parent
+         candidates.append(repo_root.parent / "sldb")
+         candidates.append(Path.cwd().resolve().parent / "sldb")
+@@ -332,9 +364,6 @@ class SLDBBootstrap:
+                 return resolved
+         return None
+ 
+-    def _package_root(self) -> Path:
+-        return Path(__file__).resolve().parents[1]
+-
+     def _run(self, command: list[str], *, capture_output: bool = False) -> subprocess.CompletedProcess[str]:
+         result = subprocess.run(
+             command,
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index 9b4b2b2..1726e26 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -14,6 +14,7 @@ from deskops.workspace import modeled_desk_markdown_docs
+ from deskops.workspace import scaffold_desk
+ from deskops.bootstrap import SLDBBootstrap, MODEL_REFS
+ from deskops.errors import DeskopsEnvironmentError
++from deskops.paths import package_pythonpath
+ import deskops.models as models
+ 
+ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
+@@ -161,12 +162,16 @@ class DeskCLI:
+ 
+         unregistered_models: list[str] = []
+         copied_models: list[str] = []
++        # A non-editable install has no owner store to inherit from; its directly
++        # registered models are the expected state, not copies to convert.
++        owner_store = bootstrap._deskops_owner_store()
+         for model_name, model_ref in MODEL_REFS.items():
+             entry = registered_entries.get(model_name)
+             if entry is None:
+                 unregistered_models.append(model_name)
+             elif (
+-                not getattr(entry, "origin", None)
++                owner_store is not None
++                and not getattr(entry, "origin", None)
+                 and getattr(entry, "model_ref", None) == model_ref
+             ):
+                 copied_models.append(model_name)
+@@ -272,7 +277,7 @@ class DeskCLI:
+             print("Registered missing models and converted copied deskops models.")
+ 
+         if untracked_docs:
+-            pythonpath = str(Path(__file__).resolve().parents[2])
++            pythonpath = package_pythonpath()
+             for p in untracked_docs:
+                 model = guess_model_for_path(desk_dir, p)
+                 if model:
+@@ -293,7 +298,7 @@ class DeskCLI:
+         if missing_docs:
+             # A tracked document whose file is gone must be untracked, not
+             # re-indexed: the store would keep describing something that is not there.
+-            pythonpath = str(Path(__file__).resolve().parents[2])
++            pythonpath = package_pythonpath()
+             for name in missing_docs:
+                 try:
+                     doc_io.untrack(root, name, pythonpath=pythonpath)
+@@ -302,7 +307,7 @@ class DeskCLI:
+                     print(f"Failed to untrack {name}: {e}")
+ 
+         if invalid_docs:
+-            pythonpath = str(Path(__file__).resolve().parents[2])
++            pythonpath = package_pythonpath()
+             doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
+             print("Updated store derived indexes.")
+ 
+diff --git a/deskops/cli/commands/faq.py b/deskops/cli/commands/faq.py
+index 75a9d88..6f58bd8 100644
+--- a/deskops/cli/commands/faq.py
++++ b/deskops/cli/commands/faq.py
+@@ -7,6 +7,7 @@ from typing import Any
+ 
+ from deskops.cli.render import render
+ from deskops.cli.render import render_error
++from deskops.paths import data_path
+ 
+ 
+ @dataclass
+@@ -26,7 +27,7 @@ class FAQCLI:
+             if args.faq_path != "docs/faq.md":
+                 import sys
+                 print(f"Warning: FAQ path {args.faq_path} not found. Falling back to default.", file=sys.stderr)
+-            repo_faq = Path(__file__).resolve().parents[3] / "docs" / "faq.md"
++            repo_faq = data_path("data", "faq.md")
+             if repo_faq.exists():
+                 faq_path = repo_faq
+ 
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 6840a1b..23139a3 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -7,7 +7,9 @@ import sys
+ import traceback
+ from typing import Any
+ 
+-PACKAGE_ROOT = Path(__file__).resolve().parents[2]
++from deskops.paths import package_pythonpath
++
++PACKAGE_ROOT = Path(package_pythonpath())
+ if str(PACKAGE_ROOT) in sys.path:
+     sys.path.remove(str(PACKAGE_ROOT))
+ sys.path.insert(0, str(PACKAGE_ROOT))
+diff --git a/deskops/data/faq.md b/deskops/data/faq.md
+new file mode 100644
+index 0000000..5be81c3
+--- /dev/null
++++ b/deskops/data/faq.md
+@@ -0,0 +1,287 @@
++# deskops FAQ
++
++This guide is a human-facing materialization of these atoms:
++
++- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
++- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
++- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
++- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
++- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
++- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
++
++This FAQ is the first-use orientation layer for `deskops`.
++
++`deskops` is the workflow-domain layer that sits on top of `sldb`. It owns the operational workspace surfaces in `desk/`, including tasks, pills, rituals, inbox notes, deferred drawer work, and the repo registry helpers.
++
++## How do I run the CLI correctly?
++
++Use the installed console script `deskops ...`.
++
++You can also run the module form `python -m deskops ...` from this repo checkout.
++
++Do not run `bash deskops ...`. `deskops` is a CLI entrypoint, not a shell script.
++
++Examples:
++
++```bash
++deskops --help
++deskops faq
++python -m deskops --help
++```
++
++## What does this repo provide today?
++
++deskops provides a spec-driven artifact pipeline: YAML specs under `deskops/spec/` define every artifact model, fields, and operational behavior. The compiler turns specs into sldb docs at runtime. The CLI is partially derived from specs.
++
++### Core CLI commands
++
++- `deskops about` — short overview and first-use orientation
++- `deskops bootstrap` — machine-level sldb and global-store setup
++- `deskops init` — initialize a repo-local `.sldb/` plus `desk/`
++- `deskops faq` — first-use help (this document)
++- `deskops message` — send, list, read, and acknowledge cross-desk messages (`deskops inbox` is a deprecated alias)
++- `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
++- `deskops bind pill` — bind a context pill to an active task through the modeled task surface
++- `deskops graph` — build graph snapshots, inspect neighbors, check missing references, and write review-only reflection reports
++- `deskops repo register` — canonical repository registration in the ecosystem desk registry, tracked through SLDB
++- `deskops desk install` — scaffold a desk surface in a target repository
++
++### Spec-driven artifact commands
++
++**Add artifacts** — `deskops add <artifact> [--flags...]`
++
++Creates structured artifact docs from spec templates. Spec fields populate the artifact model's own fields; they do not create separate desk field-instance documents.
++
++Supported artifact types:
++
++| Subject | Description | Key flags |
++|---|---|---|
++| `task` | Actionable task, walked through the desk's lifecycle graph | `--title`, `--goal`, `--scope` |
++| `pill` | Reusable context document | `--title`, `--what`, `--why` |
++| `ritual` | Repeatable procedure template | `--title`, `--purpose`, `--steps` |
++| `board` | Task coordination surface | `--title`, `--scope`, `--purpose` |
++| `atom` | Durable architectural concept | `--title`, `--five-wh-one-plus`, `--answer` |
++| `repository` | Local repository artifact doc; not canonical ecosystem registration | `--name`, `--path`, `--status` |
++| `inbox-note` | Incoming project message | `--kind`, `--title`, `--body` |
++| `faq-doc` | FAQ entry | (spec-defined flags) |
++| `step` | Procedure step | `--title`, `--action`, `--outcome` |
++
++**List artifacts** — `deskops list <artifacts>`
++
++Lists all docs of a given type:
++
++```
++deskops list tasks
++deskops list atoms
++deskops list pills
++deskops list inbox-notes
++deskops list repositories
++...
++```
++
++**Show artifacts** — `deskops show <artifact> <doc-id>`
++
++Displays one artifact doc with its model fields:
++
++```
++deskops show atom atom-001
++deskops show task task-021
++deskops show repository repo-deskops
++```
++
++**Advance tasks** — `deskops advance task <task-id>`
++
++Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
++
++**Promote inbox notes** — `deskops promote inbox-to-drawer-task <selector>`
++
++Moves a project-addressed message into the drawer as a loose, deferred candidate, and removes it from the inbox and from the store:
++
++```
++deskops promote inbox-to-drawer-task <inbox-note-selector>
++```
++
++There is no promotion from the drawer to an active task. The drawer holds loosely shaped material; an active task is a fully authored task document routed by the board. A drawer item becomes active work only when someone authors the task explicitly. `--from-drawer` records the drawer file in the task's own `from_drawer` field, which later edits to `references` cannot overwrite; the drawer file itself is kept and cleaned up by hand:
++
++```
++deskops add task --root . --from-drawer <drawer-selector> --title "..." --goal "..." --scope "..." --validation "..."
++```
++
++### Generated CLI surface
++
++The `add`, `list`, and `show` subcommands for spec-driven artifacts (atoms, pills, rituals, boards, repositories, inbox-notes, faq-docs, steps) are automatically generated from the artifact registry. When a new artifact type is added to `ARTIFACT_SUBJECTS` in `deskops/operations.py`, subcommands and `--flag` generation follow automatically.
++
++For repository registration, prefer `deskops repo register`. It is the canonical ecosystem registration path because it anchors the repository document in the configured SLDB store. `deskops add repository` only creates a local `desk/registry/repo-*.md` artifact through the generic spec-driven add path.
++
++The models under `deskops.models` and the materializers under `deskops.materializers` are also importable from Python.
++
++Durable workflow guidance lives under `docs/`, including:
++
++- `docs/how-to-report.md`
++- `docs/how-to-test-ux-cli.md`
++- `docs/quickstart.md`
++- `docs/faq.md` (this file)
++
++## What is the relationship between `deskops` and `sldb`?
++
++`sldb` is the infrastructure layer.
++
++`deskops` is the workflow-domain layer built on top of that infrastructure. It depends on `sldb` for structured document contracts, validation, store resolution, and tracked-document operations.
++
++## How do I install it for local use?
++
++Install `deskops` from this repo checkout.
++
++```bash
++pip install -e .[dev]
++```
++
++If `sldb` is not already installed, keep the sibling checkout at `../sldb` and run:
++
++```bash
++deskops bootstrap
++```
++
++That bootstrap flow installs or repairs `sldb`, creates `~/.sldb` when needed, and registers the deskops model set there.
++
++If you only need the runtime package instead of the dev extras, `pip install -e .` is enough.
++
++## Do I need `--root .` when I am already in the repo?
++
++Usually no.
++
++When you run `deskops` from the target repo root, the local desk is the implied default. Prefer the shorter local form in human-facing examples:
++
++```bash
++deskops list tasks
++deskops show task task-fix-thing
++deskops advance task task-fix-thing
++```
++
++Use `--root` when you are intentionally overriding the local default, for example in cross-repo commands, sandbox tests, scripts, or unusual working-directory setups.
++
++## What should I run first in a repo?
++
++Use `deskops init` from the target repo root.
++
++```bash
++deskops init .
++```
++
++This command ensures `sldb` is available, creates a local `.sldb/` store if it does not already exist, and scaffolds `desk/` if needed.
++
++## Is a store required?
++
++Not for every command.
++
++- `deskops faq` does not require a store.
++- `deskops message` can write directly into a repo-local `desk/inbox/` without a store if you pass `--desk-root` or run it from the target project.
++- `deskops bootstrap` creates or repairs the global `~/.sldb` store and registers the deskops models there.
++- `deskops repo register` and any auto-tracking behavior depend on a resolvable `sldb` store.
++
++If no store is available, commands that depend on registry lookup or tracked-document registration will fail until you provide `--store` or run them from the right project context.
++
++## What is the `desk/` directory for?
++
++`desk/` is the operational workspace for the repo.
++
++It holds active execution surfaces such as task docs, context pills, rituals, inbox notes, and deferred drawer work that should not become permanent documentation by default.
++
++Durable knowledge should eventually land in code, tests, docs, or git history rather than staying only in `desk/`.
++
++## How do I log an unclear point or suggestion?
++
++Use `deskops message send`.
++
++Examples:
++
++```bash
++deskops message send "The install flow still leaves a partial scaffold when registration fails" --kind unclear
++deskops message send "Add explicit install examples to the README" --kind suggestion --title "README install examples"
++deskops message list
++deskops message read readme-install-examples
++```
++
++Use `--kind unclear` for unresolved confusion and `--kind suggestion` for proposed improvements.
++
++The older `deskops inbox` flag grammar still works as a deprecated alias.
++
++## How do I target another repo's desk?
++
++There are three main targeting modes:
++
++- run inside the target repo so the default local `desk/` is used
++- pass `--desk-root` with an explicit desk path
++- pass `--to` (or `--repo`) to resolve a repository through the ecosystem registry, optionally with `--store`
++
++If you use `--to`/`--repo`, the target repository must already be registered and discoverable from the chosen store context.
++
++## How do I route sibling repo tasks without copying them?
++
++Register sibling repositories as local repository artifacts, then ask `list tasks` to include repo-routed boards:
++
++```bash
++deskops add repository --name "SLDB" --path ../sldb --description "Structured document infrastructure."
++deskops list tasks --include-repos
++```
++
++`--include-repos` reads `desk/registry/repo-*.md`, resolves each registered repository path, opens that repo's `desk/tasks/Board.md`, and lists only the task files routed by that board. It does not copy sibling task files into the current repo and it does not require those task files to be tracked in SLDB.
++
++This keeps the boundary clear: `deskops` is the current implementation of the broader `opsys` workflow layer, while SLDB remains the modeled Markdown/store layer. Cross-repo mutation, advancement, and closeout are intentionally separate future workflow decisions.
++
++## What does `repo register` do?
++
++It writes a repository registration document into the ecosystem desk registry and tracks it through `sldb` when the `RepositoryDoc` model is registered.
++
++This command is for cross-repo discovery inside the workflow ecosystem, not for generic package publishing.
++
++## What does `desk install` do right now?
++
++It scaffolds a minimal repo-local `desk/` surface in a target repository.
++
++The scaffold creates local `tasks/`, `contexts/`, `rituals/`, `inbox/`, and `drawer/` directories plus starter files for the board, pills, rituals, and drawer README.
++
++It does not auto-register the repository in an ecosystem registry. If you want cross-repo registry discovery, run `deskops repo register ...` as a separate step once the target repo is ready.
++
++## What does `deskops bootstrap` do?
++
++It is the machine-level first-use repair command.
++
++When `sldb` is missing, it installs or repairs it from the sibling `../sldb` checkout. It then initializes the global `~/.sldb` store if needed and registers the deskops model set there.
++
++## What does `deskops init` do?
++
++It is the repo-level first-use command.
++
++It runs the bootstrap preflight, creates a local `.sldb/` store in the target repo if one does not already exist, and scaffolds `desk/` if it is missing.
++
++## How do I organize atoms into folders by a tag namespace?
++
++Set `atom_folder_axis` in `desk/config.json` to one registered tag namespace, for example:
++
++```json
++{ "atom_folder_axis": "object" }
++```
++
++Behavior (see `desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md`):
++
++- `deskops add atom` with one `object:<value>` tag lands in `desk/atoms/<value>/`; dot-notation nests (`object:mepu.licitaciones` → `desk/atoms/mepu/licitaciones/`).
++- Atoms without an axis tag, and desks without the config, stay flat (fully backwards compatible).
++- Multiple axis values on one atom are rejected with an explicit error.
++- `deskops list atoms --axis-value <value>` filters by the axis value; the axis value is shown in list output.
++- `deskops atoms reorganize [--dry-run]` idempotently moves existing atoms into their axis folders and retargets tracked paths in the `.sldb` store.
++
++## How do I validate changes in this repo?
++
++Run the test suite from the repo root.
++
++```bash
++pytest
++```
++
++For CLI work, also run the relevant command directly, for example:
++
++```bash
++python -m deskops --help
++deskops faq
++```
+diff --git a/deskops/doc_io.py b/deskops/doc_io.py
+index 6e0ccfa..6f782cc 100644
+--- a/deskops/doc_io.py
++++ b/deskops/doc_io.py
+@@ -19,6 +19,7 @@ import logging
+ from pathlib import Path
+ from typing import Any
+ 
++from deskops.paths import package_pythonpath
+ from sldb.api import (
+     add_model,
+     doc_status,
+@@ -42,9 +43,6 @@ PRIVATE_SLDB_IMPORTS: tuple[str, ...] = (
+     "sldb.runtime.validation",  # render_model_markdown has no sldb.api re-export
+ )
+ 
+-_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+-
+-
+ def _store(root: Path) -> Path:
+     return root / ".sldb"
+ 
+@@ -54,7 +52,7 @@ def _has_store(root: Path) -> bool:
+ 
+ 
+ def _pythonpath(pythonpath: str | None) -> str:
+-    return pythonpath or str(_PACKAGE_ROOT)
++    return pythonpath or package_pythonpath()
+ 
+ 
+ def _model_name(model: Any) -> str:
+diff --git a/deskops/lifecycle.py b/deskops/lifecycle.py
+index 24c1024..97e707d 100644
+--- a/deskops/lifecycle.py
++++ b/deskops/lifecycle.py
+@@ -4,7 +4,7 @@ States are the desk's tracked rituals (``RitualDoc:ritual-execution`` and its si
+ Transitions are sldb ``RelationDoc`` edges between those rituals, typed by a
+ ``RelationTypeDoc`` whose name is the verb (``task_activates``), with a ``condition``
+ written as an sldb ``--where`` predicate over the task. deskops writes those documents
+-once per desk from ``spec/workflows/task_lifecycle.yaml`` and reads the transitions back
++once per desk from ``deskops/spec/workflows/task_lifecycle.yaml`` and reads the transitions back
+ from the graph with ``sldb.api.edges.edges_from``; there are no per-task primitives.
+ 
+ What the graph does not carry is the effect of a transition: the status it sets and
+@@ -22,8 +22,10 @@ import yaml
+ from sldb.runtime.validation import render_model_markdown
+ 
+ from deskops import doc_io
++from deskops.paths import data_path
++from deskops.paths import package_pythonpath
+ 
+-SPEC_PATH = Path(__file__).resolve().parents[1] / "spec" / "workflows" / "task_lifecycle.yaml"
++SPEC_PATH = data_path("spec", "workflows", "task_lifecycle.yaml")
+ LIFECYCLE_DIR = Path("desk") / "lifecycle"
+ COMPLETE = "complete"
+ RELATION_TYPE_MODEL = "RelationTypeDoc"
+@@ -111,7 +113,7 @@ def _store(root: Path) -> Path:
+ 
+ 
+ def _pythonpath() -> str:
+-    return str(Path(__file__).resolve().parents[1])
++    return package_pythonpath()
+ 
+ 
+ def ritual_export_id(ritual_id: str) -> str:
+diff --git a/deskops/lifecycle_migration.py b/deskops/lifecycle_migration.py
+index d386be2..6515909 100644
+--- a/deskops/lifecycle_migration.py
++++ b/deskops/lifecycle_migration.py
+@@ -23,6 +23,7 @@ import yaml
+ 
+ from deskops import doc_io
+ from deskops import lifecycle
++from deskops.paths import package_pythonpath
+ 
+ LEGACY_MODELS = ("RoutineDoc", "ConditionDoc", "ChecklistDoc", "OperatorDoc", "EdgeDoc", "HookDoc")
+ LEGACY_DIRS = (Path("desk") / "routines", Path("desk") / "primitives")
+@@ -135,7 +136,7 @@ def migrate_legacy_lifecycle(root: Path) -> list[str]:
+     # The store lets go first: each retired model is unregistered together with its tracked
+     # documents (sldb never imports the deleted class). Files are deleted only after that
+     # succeeded, so a refusal leaves every file in place and a rerun picks up from there.
+-    pythonpath = str(Path(__file__).resolve().parents[1])
++    pythonpath = package_pythonpath()
+     if store.exists():
+         for name in legacy_registered_models(root):
+             try:
+diff --git a/deskops/operations.py b/deskops/operations.py
+index ad944a5..a094812 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -39,6 +39,7 @@ from deskops.atom_tags import validate_atom_tag_namespaces
+ from deskops.config import DeskConfig
+ from deskops.desk_paths import resolve_selector
+ from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
++from deskops.paths import data_path
+ from deskops.specs import compile_artifact_spec
+ from deskops.specs import SpecRegistry
+ from deskops.workspace import scaffold_desk
+@@ -194,7 +195,7 @@ class DeskopsOperations:
+     def __init__(self, root: Path) -> None:
+         self.root = root.resolve()
+         self.desk_root = self.root / "desk"
+-        self.spec_root = Path(__file__).resolve().parents[1] / "spec"
++        self.spec_root = data_path("spec")
+         self._spec_registry: SpecRegistry | None = None
+         self._drawer: DrawerService | None = None
+         self._tasks: TasksService | None = None
+diff --git a/deskops/paths.py b/deskops/paths.py
+new file mode 100644
+index 0000000..a41b0ba
+--- /dev/null
++++ b/deskops/paths.py
+@@ -0,0 +1,25 @@
++"""Locations of the deskops package and its packaged runtime data.
++
++``package_pythonpath()`` is the directory that contains the ``deskops`` package.
++It is the value sldb needs for model resolution and is valid both from an
++editable checkout and from a regular (non-editable) install. ``data_path``
++resolves files shipped as package data, which live next to this module in both
++layouts.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++
++PACKAGE_DIR = Path(__file__).resolve().parent
++
++
++def package_pythonpath() -> str:
++    """The directory containing the ``deskops`` package."""
++    return str(PACKAGE_DIR.parent)
++
++
++def data_path(*parts: str) -> Path:
++    """A path inside the installed package, used for packaged runtime data."""
++    return PACKAGE_DIR.joinpath(*parts)
+diff --git a/deskops/services/atoms.py b/deskops/services/atoms.py
+index 022e30a..a9f7fe8 100644
+--- a/deskops/services/atoms.py
++++ b/deskops/services/atoms.py
+@@ -30,6 +30,7 @@ from deskops.operations import AtomSplitResult
+ from deskops.operations import AtomValidationRecord
+ from deskops.operations import DocumentRecord
+ from deskops.operations import slugify
++from deskops.paths import package_pythonpath
+ 
+ if TYPE_CHECKING:
+     from deskops.operations import DeskopsOperations
+@@ -815,7 +816,7 @@ class AtomsService:
+         if not (self.root / ".sldb").is_dir():
+             return False
+ 
+-        pythonpath = str(Path(__file__).resolve().parents[1])
++        pythonpath = package_pythonpath()
+         changed = False
+         for atom_id, new_path in retargets.items():
+             try:
+@@ -830,7 +831,7 @@ class AtomsService:
+         if not (self.root / ".sldb").is_dir():
+             return False
+         try:
+-            doc_io.untrack(self.root, atom_id, pythonpath=str(Path(__file__).resolve().parents[1]))
++            doc_io.untrack(self.root, atom_id, pythonpath=package_pythonpath())
+         except Exception:
+             return False
+         return True
+diff --git a/deskops/services/tasks.py b/deskops/services/tasks.py
+index 9662c82..5b9f594 100644
+--- a/deskops/services/tasks.py
++++ b/deskops/services/tasks.py
+@@ -117,7 +117,7 @@ class TasksService:
+             "sources": {
+                 "task": str(task_path.relative_to(self.root)),
+                 "board": str(board_path.relative_to(self.root)),
+-                "workflow": "spec/workflows/task_lifecycle.yaml",
++                "workflow": "deskops/spec/workflows/task_lifecycle.yaml",
+             },
+         }
+ 
+diff --git a/spec/artifacts/atom.yaml b/deskops/spec/artifacts/atom.yaml
+similarity index 100%
+rename from spec/artifacts/atom.yaml
+rename to deskops/spec/artifacts/atom.yaml
+diff --git a/spec/artifacts/board.yaml b/deskops/spec/artifacts/board.yaml
+similarity index 100%
+rename from spec/artifacts/board.yaml
+rename to deskops/spec/artifacts/board.yaml
+diff --git a/spec/artifacts/faq.yaml b/deskops/spec/artifacts/faq.yaml
+similarity index 100%
+rename from spec/artifacts/faq.yaml
+rename to deskops/spec/artifacts/faq.yaml
+diff --git a/spec/artifacts/inbox_note.yaml b/deskops/spec/artifacts/inbox_note.yaml
+similarity index 100%
+rename from spec/artifacts/inbox_note.yaml
+rename to deskops/spec/artifacts/inbox_note.yaml
+diff --git a/spec/artifacts/materialization.yaml b/deskops/spec/artifacts/materialization.yaml
+similarity index 100%
+rename from spec/artifacts/materialization.yaml
+rename to deskops/spec/artifacts/materialization.yaml
+diff --git a/spec/artifacts/pill.yaml b/deskops/spec/artifacts/pill.yaml
+similarity index 100%
+rename from spec/artifacts/pill.yaml
+rename to deskops/spec/artifacts/pill.yaml
+diff --git a/spec/artifacts/repository.yaml b/deskops/spec/artifacts/repository.yaml
+similarity index 100%
+rename from spec/artifacts/repository.yaml
+rename to deskops/spec/artifacts/repository.yaml
+diff --git a/spec/artifacts/ritual.yaml b/deskops/spec/artifacts/ritual.yaml
+similarity index 100%
+rename from spec/artifacts/ritual.yaml
+rename to deskops/spec/artifacts/ritual.yaml
+diff --git a/spec/artifacts/step.yaml b/deskops/spec/artifacts/step.yaml
+similarity index 100%
+rename from spec/artifacts/step.yaml
+rename to deskops/spec/artifacts/step.yaml
+diff --git a/spec/artifacts/task.yaml b/deskops/spec/artifacts/task.yaml
+similarity index 100%
+rename from spec/artifacts/task.yaml
+rename to deskops/spec/artifacts/task.yaml
+diff --git a/spec/fields/action.yaml b/deskops/spec/fields/action.yaml
+similarity index 100%
+rename from spec/fields/action.yaml
+rename to deskops/spec/fields/action.yaml
+diff --git a/spec/fields/answer.yaml b/deskops/spec/fields/answer.yaml
+similarity index 100%
+rename from spec/fields/answer.yaml
+rename to deskops/spec/fields/answer.yaml
+diff --git a/spec/fields/body.yaml b/deskops/spec/fields/body.yaml
+similarity index 100%
+rename from spec/fields/body.yaml
+rename to deskops/spec/fields/body.yaml
+diff --git a/spec/fields/category.yaml b/deskops/spec/fields/category.yaml
+similarity index 100%
+rename from spec/fields/category.yaml
+rename to deskops/spec/fields/category.yaml
+diff --git a/spec/fields/completion.yaml b/deskops/spec/fields/completion.yaml
+similarity index 100%
+rename from spec/fields/completion.yaml
+rename to deskops/spec/fields/completion.yaml
+diff --git a/spec/fields/created_at.yaml b/deskops/spec/fields/created_at.yaml
+similarity index 100%
+rename from spec/fields/created_at.yaml
+rename to deskops/spec/fields/created_at.yaml
+diff --git a/spec/fields/current_node.yaml b/deskops/spec/fields/current_node.yaml
+similarity index 100%
+rename from spec/fields/current_node.yaml
+rename to deskops/spec/fields/current_node.yaml
+diff --git a/spec/fields/depends_on.yaml b/deskops/spec/fields/depends_on.yaml
+similarity index 100%
+rename from spec/fields/depends_on.yaml
+rename to deskops/spec/fields/depends_on.yaml
+diff --git a/spec/fields/description.yaml b/deskops/spec/fields/description.yaml
+similarity index 100%
+rename from spec/fields/description.yaml
+rename to deskops/spec/fields/description.yaml
+diff --git a/spec/fields/distinct_from_pills.yaml b/deskops/spec/fields/distinct_from_pills.yaml
+similarity index 100%
+rename from spec/fields/distinct_from_pills.yaml
+rename to deskops/spec/fields/distinct_from_pills.yaml
+diff --git a/spec/fields/done_when.yaml b/deskops/spec/fields/done_when.yaml
+similarity index 100%
+rename from spec/fields/done_when.yaml
+rename to deskops/spec/fields/done_when.yaml
+diff --git a/spec/fields/failure_modes.yaml b/deskops/spec/fields/failure_modes.yaml
+similarity index 100%
+rename from spec/fields/failure_modes.yaml
+rename to deskops/spec/fields/failure_modes.yaml
+diff --git a/spec/fields/five_wh_one_plus.yaml b/deskops/spec/fields/five_wh_one_plus.yaml
+similarity index 100%
+rename from spec/fields/five_wh_one_plus.yaml
+rename to deskops/spec/fields/five_wh_one_plus.yaml
+diff --git a/spec/fields/for_whom.yaml b/deskops/spec/fields/for_whom.yaml
+similarity index 100%
+rename from spec/fields/for_whom.yaml
+rename to deskops/spec/fields/for_whom.yaml
+diff --git a/spec/fields/from_drawer.yaml b/deskops/spec/fields/from_drawer.yaml
+similarity index 100%
+rename from spec/fields/from_drawer.yaml
+rename to deskops/spec/fields/from_drawer.yaml
+diff --git a/spec/fields/goal.yaml b/deskops/spec/fields/goal.yaml
+similarity index 100%
+rename from spec/fields/goal.yaml
+rename to deskops/spec/fields/goal.yaml
+diff --git a/spec/fields/history.yaml b/deskops/spec/fields/history.yaml
+similarity index 100%
+rename from spec/fields/history.yaml
+rename to deskops/spec/fields/history.yaml
+diff --git a/spec/fields/how.yaml b/deskops/spec/fields/how.yaml
+similarity index 100%
+rename from spec/fields/how.yaml
+rename to deskops/spec/fields/how.yaml
+diff --git a/spec/fields/how_not.yaml b/deskops/spec/fields/how_not.yaml
+similarity index 100%
+rename from spec/fields/how_not.yaml
+rename to deskops/spec/fields/how_not.yaml
+diff --git a/spec/fields/implementation_path.yaml b/deskops/spec/fields/implementation_path.yaml
+similarity index 100%
+rename from spec/fields/implementation_path.yaml
+rename to deskops/spec/fields/implementation_path.yaml
+diff --git a/spec/fields/intent.yaml b/deskops/spec/fields/intent.yaml
+similarity index 100%
+rename from spec/fields/intent.yaml
+rename to deskops/spec/fields/intent.yaml
+diff --git a/spec/fields/kind.yaml b/deskops/spec/fields/kind.yaml
+similarity index 100%
+rename from spec/fields/kind.yaml
+rename to deskops/spec/fields/kind.yaml
+diff --git a/spec/fields/materializes_into.yaml b/deskops/spec/fields/materializes_into.yaml
+similarity index 100%
+rename from spec/fields/materializes_into.yaml
+rename to deskops/spec/fields/materializes_into.yaml
+diff --git a/spec/fields/name.yaml b/deskops/spec/fields/name.yaml
+similarity index 100%
+rename from spec/fields/name.yaml
+rename to deskops/spec/fields/name.yaml
+diff --git a/spec/fields/notes.yaml b/deskops/spec/fields/notes.yaml
+similarity index 100%
+rename from spec/fields/notes.yaml
+rename to deskops/spec/fields/notes.yaml
+diff --git a/spec/fields/outcome.yaml b/deskops/spec/fields/outcome.yaml
+similarity index 100%
+rename from spec/fields/outcome.yaml
+rename to deskops/spec/fields/outcome.yaml
+diff --git a/spec/fields/path.yaml b/deskops/spec/fields/path.yaml
+similarity index 100%
+rename from spec/fields/path.yaml
+rename to deskops/spec/fields/path.yaml
+diff --git a/spec/fields/pills.yaml b/deskops/spec/fields/pills.yaml
+similarity index 100%
+rename from spec/fields/pills.yaml
+rename to deskops/spec/fields/pills.yaml
+diff --git a/spec/fields/preconditions.yaml b/deskops/spec/fields/preconditions.yaml
+similarity index 100%
+rename from spec/fields/preconditions.yaml
+rename to deskops/spec/fields/preconditions.yaml
+diff --git a/spec/fields/provenance.yaml b/deskops/spec/fields/provenance.yaml
+similarity index 100%
+rename from spec/fields/provenance.yaml
+rename to deskops/spec/fields/provenance.yaml
+diff --git a/spec/fields/purpose.yaml b/deskops/spec/fields/purpose.yaml
+similarity index 100%
+rename from spec/fields/purpose.yaml
+rename to deskops/spec/fields/purpose.yaml
+diff --git a/spec/fields/related_atoms.yaml b/deskops/spec/fields/related_atoms.yaml
+similarity index 100%
+rename from spec/fields/related_atoms.yaml
+rename to deskops/spec/fields/related_atoms.yaml
+diff --git a/spec/fields/rituals.yaml b/deskops/spec/fields/rituals.yaml
+similarity index 100%
+rename from spec/fields/rituals.yaml
+rename to deskops/spec/fields/rituals.yaml
+diff --git a/spec/fields/scope.yaml b/deskops/spec/fields/scope.yaml
+similarity index 100%
+rename from spec/fields/scope.yaml
+rename to deskops/spec/fields/scope.yaml
+diff --git a/spec/fields/sender_project.yaml b/deskops/spec/fields/sender_project.yaml
+similarity index 100%
+rename from spec/fields/sender_project.yaml
+rename to deskops/spec/fields/sender_project.yaml
+diff --git a/spec/fields/source_atoms.yaml b/deskops/spec/fields/source_atoms.yaml
+similarity index 100%
+rename from spec/fields/source_atoms.yaml
+rename to deskops/spec/fields/source_atoms.yaml
+diff --git a/spec/fields/stabilized_in.yaml b/deskops/spec/fields/stabilized_in.yaml
+similarity index 100%
+rename from spec/fields/stabilized_in.yaml
+rename to deskops/spec/fields/stabilized_in.yaml
+diff --git a/spec/fields/status.yaml b/deskops/spec/fields/status.yaml
+similarity index 100%
+rename from spec/fields/status.yaml
+rename to deskops/spec/fields/status.yaml
+diff --git a/spec/fields/steps.yaml b/deskops/spec/fields/steps.yaml
+similarity index 100%
+rename from spec/fields/steps.yaml
+rename to deskops/spec/fields/steps.yaml
+diff --git a/spec/fields/target_identity.yaml b/deskops/spec/fields/target_identity.yaml
+similarity index 100%
+rename from spec/fields/target_identity.yaml
+rename to deskops/spec/fields/target_identity.yaml
+diff --git a/spec/fields/target_kind.yaml b/deskops/spec/fields/target_kind.yaml
+similarity index 100%
+rename from spec/fields/target_kind.yaml
+rename to deskops/spec/fields/target_kind.yaml
+diff --git a/spec/fields/tasks.yaml b/deskops/spec/fields/tasks.yaml
+similarity index 100%
+rename from spec/fields/tasks.yaml
+rename to deskops/spec/fields/tasks.yaml
+diff --git a/spec/fields/title.yaml b/deskops/spec/fields/title.yaml
+similarity index 100%
+rename from spec/fields/title.yaml
+rename to deskops/spec/fields/title.yaml
+diff --git a/spec/fields/trigger.yaml b/deskops/spec/fields/trigger.yaml
+similarity index 100%
+rename from spec/fields/trigger.yaml
+rename to deskops/spec/fields/trigger.yaml
+diff --git a/spec/fields/validation.yaml b/deskops/spec/fields/validation.yaml
+similarity index 100%
+rename from spec/fields/validation.yaml
+rename to deskops/spec/fields/validation.yaml
+diff --git a/spec/fields/what.yaml b/deskops/spec/fields/what.yaml
+similarity index 100%
+rename from spec/fields/what.yaml
+rename to deskops/spec/fields/what.yaml
+diff --git a/spec/fields/when.yaml b/deskops/spec/fields/when.yaml
+similarity index 100%
+rename from spec/fields/when.yaml
+rename to deskops/spec/fields/when.yaml
+diff --git a/spec/fields/where.yaml b/deskops/spec/fields/where.yaml
+similarity index 100%
+rename from spec/fields/where.yaml
+rename to deskops/spec/fields/where.yaml
+diff --git a/spec/fields/why.yaml b/deskops/spec/fields/why.yaml
+similarity index 100%
+rename from spec/fields/why.yaml
+rename to deskops/spec/fields/why.yaml
+diff --git a/spec/workflows/task_lifecycle.yaml b/deskops/spec/workflows/task_lifecycle.yaml
+similarity index 100%
+rename from spec/workflows/task_lifecycle.yaml
+rename to deskops/spec/workflows/task_lifecycle.yaml
+diff --git a/docs/faq.md b/docs/faq.md
+index 1b6bd8d..5be81c3 100644
+--- a/docs/faq.md
++++ b/docs/faq.md
+@@ -31,7 +31,7 @@ python -m deskops --help
+ 
+ ## What does this repo provide today?
+ 
+-deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` define every artifact model, fields, and operational behavior. The compiler turns specs into sldb docs at runtime. The CLI is partially derived from specs.
++deskops provides a spec-driven artifact pipeline: YAML specs under `deskops/spec/` define every artifact model, fields, and operational behavior. The compiler turns specs into sldb docs at runtime. The CLI is partially derived from specs.
+ 
+ ### Core CLI commands
+ 
+diff --git a/pyproject.toml b/pyproject.toml
+index dc77461..433060a 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -26,6 +26,9 @@ dev = [
+ where = ["."]
+ include = ["deskops*"]
+ 
++[tool.setuptools.package-data]
++deskops = ["spec/**/*.yaml", "data/faq.md"]
++
+ [tool.pytest.ini_options]
+ pythonpath = ["."]
+ asyncio_default_fixture_loop_scope = "function"
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index d5db5b1..7d9768b 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -807,7 +807,7 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
+     assert "Next actions:" in output.out
+     assert "Run a fresh-context subagent review." in output.out
+     assert "Sources:" in output.out
+-    assert "spec/workflows/task_lifecycle.yaml" in output.out
++    assert "deskops/spec/workflows/task_lifecycle.yaml" in output.out
+     assert task_path.read_text(encoding="utf-8") == before
+ 
+ 
+diff --git a/tests/test_materialization_contract.py b/tests/test_materialization_contract.py
+index 6dd0a9c..2cdebda 100644
+--- a/tests/test_materialization_contract.py
++++ b/tests/test_materialization_contract.py
+@@ -14,6 +14,7 @@ from deskops.cli.main import main
+ from deskops.graph.checks import find_missing_graph_references
+ from deskops.models import MaterializationContractDoc
+ from deskops.operations import DeskopsOperations
++from deskops.paths import data_path
+ from deskops.specs.loader import SpecRegistry
+ from sldb.runtime.validation import extract_model_data
+ from sldb.runtime.validation import render_model_markdown
+@@ -44,7 +45,7 @@ def test_materialization_contract_doc_roundtrips() -> None:
+ 
+ 
+ def test_materialization_contract_spec_and_workspace_scaffold(tmp_path: Path) -> None:
+-    registry = SpecRegistry.load(ROOT / "spec")
++    registry = SpecRegistry.load(data_path("spec"))
+ 
+     assert "artifact.materialization" in registry.artifacts
+     assert "field.source_atoms" in registry.fields
+diff --git a/tests/test_packaging.py b/tests/test_packaging.py
+new file mode 100644
+index 0000000..a57a9c5
+--- /dev/null
++++ b/tests/test_packaging.py
+@@ -0,0 +1,62 @@
++from __future__ import annotations
++
++from pathlib import Path
++
++from deskops import paths
++from deskops.bootstrap import MODEL_REFS
++from deskops.bootstrap import SLDBBootstrap
++from deskops.specs.loader import SpecRegistry
++
++
++def test_package_pythonpath_is_the_directory_containing_deskops() -> None:
++    package_parent = Path(paths.package_pythonpath())
++
++    assert (package_parent / "deskops" / "paths.py").is_file()
++    assert SLDBBootstrap().default_pythonpath() == paths.package_pythonpath()
++
++
++def test_runtime_specs_and_faq_ship_inside_the_package() -> None:
++    assert paths.data_path("spec", "workflows", "task_lifecycle.yaml").is_file()
++    assert paths.data_path("data", "faq.md").is_file()
++    registry = SpecRegistry.load(paths.data_path("spec"))
++    assert "artifact.task" in registry.artifacts
++    assert "field.goal" in registry.fields
++
++
++def test_packaged_faq_matches_the_human_copy() -> None:
++    repo_faq = Path(__file__).resolve().parents[1] / "docs" / "faq.md"
++
++    assert paths.data_path("data", "faq.md").read_text(encoding="utf-8") == repo_faq.read_text(encoding="utf-8")
++
++
++def test_register_models_falls_back_when_no_owner_store_is_installed(
++    tmp_path: Path, monkeypatch, capsys
++) -> None:
++    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: None)
++    root = tmp_path / "repo"
++    root.mkdir()
++
++    assert SLDBBootstrap().init_local_store(root) == 0
++
++    from sldb.store.io import load_store_index
++
++    entries = {entry.name: entry for entry in load_store_index(root / ".sldb").models}
++    for name, model_ref in MODEL_REFS.items():
++        assert entries[name].origin is None
++        assert entries[name].model_ref == model_ref
++    assert "registering the models directly" in capsys.readouterr().out
++
++
++def test_desk_update_is_clean_with_directly_registered_models(
++    tmp_path: Path, monkeypatch, capsys
++) -> None:
++    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: None)
++    from deskops.cli.main import main
++
++    root = tmp_path / "repo"
++    root.mkdir()
++    assert main(["init", str(root)]) == 0
++    capsys.readouterr()
++
++    assert main(["desk", "update", "--root", str(root)]) == 0
++    assert "Desk is up to date." in capsys.readouterr().out
+diff --git a/tests/test_specs.py b/tests/test_specs.py
+index 522b091..528341c 100644
+--- a/tests/test_specs.py
++++ b/tests/test_specs.py
+@@ -2,16 +2,18 @@ from __future__ import annotations
+ 
+ from pathlib import Path
+ 
++from deskops.paths import data_path
+ from deskops.specs.compiler import compile_task_spec
+ from deskops.specs.loader import SpecRegistry
+ from deskops.specs.mermaid import render_artifact_structure_mermaid
+ 
+ 
+ ROOT = Path(__file__).resolve().parents[1]
++SPEC_ROOT = data_path("spec")
+ 
+ 
+ def test_spec_registry_loads_fields_and_artifacts() -> None:
+-    registry = SpecRegistry.load(ROOT / "spec")
++    registry = SpecRegistry.load(SPEC_ROOT)
+ 
+     assert "field.goal" in registry.fields
+     assert "field.validation" in registry.fields
+@@ -31,7 +33,7 @@ def test_spec_registry_loads_fields_and_artifacts() -> None:
+ 
+ 
+ def test_task_spec_compiler_builds_only_the_task_at_the_lifecycle_entry() -> None:
+-    registry = SpecRegistry.load(ROOT / "spec")
++    registry = SpecRegistry.load(SPEC_ROOT)
+     compiled = compile_task_spec(
+         registry,
+         {
+@@ -59,7 +61,7 @@ def test_task_spec_compiler_builds_only_the_task_at_the_lifecycle_entry() -> Non
+ 
+ 
+ def test_mermaid_views_render_from_task_specs() -> None:
+-    registry = SpecRegistry.load(ROOT / "spec")
++    registry = SpecRegistry.load(SPEC_ROOT)
+     structure = render_artifact_structure_mermaid(registry, "artifact.task")
+ 
+     assert "artifact.task[Task Artifact]" in structure

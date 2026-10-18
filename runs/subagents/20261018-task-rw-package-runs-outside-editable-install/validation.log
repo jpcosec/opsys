@@ -1,0 +1,4 @@
+443 passed, 3 skipped in 477.62s (0:07:57)
+grep Path(__file__): deskops/paths.py 
+worker wheel smoke (fresh venv, sldb from ../sldb, no PYTHONPATH): init/add task/advance/desk update/faq all exit 0
+supervisor: updated spec/ -> deskops/spec/ paths in 2 atoms and the workflow diagrams; stores update PASS

@@ -30,6 +30,7 @@ from deskops.operations import AtomSplitResult
 from deskops.operations import AtomValidationRecord
 from deskops.operations import DocumentRecord
 from deskops.operations import slugify
+from deskops.paths import package_pythonpath
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
@@ -815,7 +816,7 @@ class AtomsService:
         if not (self.root / ".sldb").is_dir():
             return False
 
-        pythonpath = str(Path(__file__).resolve().parents[1])
+        pythonpath = package_pythonpath()
         changed = False
         for atom_id, new_path in retargets.items():
             try:
@@ -830,7 +831,7 @@ class AtomsService:
         if not (self.root / ".sldb").is_dir():
             return False
         try:
-            doc_io.untrack(self.root, atom_id, pythonpath=str(Path(__file__).resolve().parents[1]))
+            doc_io.untrack(self.root, atom_id, pythonpath=package_pythonpath())
         except Exception:
             return False
         return True

@@ -19,6 +19,7 @@ import logging
 from pathlib import Path
 from typing import Any
 
+from deskops.paths import package_pythonpath
 from sldb.api import (
     add_model,
     doc_status,
@@ -42,9 +43,6 @@ PRIVATE_SLDB_IMPORTS: tuple[str, ...] = (
     "sldb.runtime.validation",  # render_model_markdown has no sldb.api re-export
 )
 
-_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
-
-
 def _store(root: Path) -> Path:
     return root / ".sldb"
 
@@ -54,7 +52,7 @@ def _has_store(root: Path) -> bool:
 
 
 def _pythonpath(pythonpath: str | None) -> str:
-    return pythonpath or str(_PACKAGE_ROOT)
+    return pythonpath or package_pythonpath()
 
 
 def _model_name(model: Any) -> str:

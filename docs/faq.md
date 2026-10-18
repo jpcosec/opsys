@@ -31,7 +31,7 @@ python -m deskops --help
 
 ## What does this repo provide today?
 
-deskops provides a spec-driven artifact pipeline: YAML specs under `spec/` define every artifact model, fields, and operational behavior. The compiler turns specs into sldb docs at runtime. The CLI is partially derived from specs.
+deskops provides a spec-driven artifact pipeline: YAML specs under `deskops/spec/` define every artifact model, fields, and operational behavior. The compiler turns specs into sldb docs at runtime. The CLI is partially derived from specs.
 
 ### Core CLI commands
 

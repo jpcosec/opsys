@@ -23,6 +23,7 @@ import yaml
 
 from deskops import doc_io
 from deskops import lifecycle
+from deskops.paths import package_pythonpath
 
 LEGACY_MODELS = ("RoutineDoc", "ConditionDoc", "ChecklistDoc", "OperatorDoc", "EdgeDoc", "HookDoc")
 LEGACY_DIRS = (Path("desk") / "routines", Path("desk") / "primitives")
@@ -135,7 +136,7 @@ def migrate_legacy_lifecycle(root: Path) -> list[str]:
     # The store lets go first: each retired model is unregistered together with its tracked
     # documents (sldb never imports the deleted class). Files are deleted only after that
     # succeeded, so a refusal leaves every file in place and a rerun picks up from there.
-    pythonpath = str(Path(__file__).resolve().parents[1])
+    pythonpath = package_pythonpath()
     if store.exists():
         for name in legacy_registered_models(root):
             try:

@@ -7,7 +7,9 @@ import sys
 import traceback
 from typing import Any
 
-PACKAGE_ROOT = Path(__file__).resolve().parents[2]
+from deskops.paths import package_pythonpath
+
+PACKAGE_ROOT = Path(package_pythonpath())
 if str(PACKAGE_ROOT) in sys.path:
     sys.path.remove(str(PACKAGE_ROOT))
 sys.path.insert(0, str(PACKAGE_ROOT))

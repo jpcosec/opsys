@@ -117,7 +117,7 @@ class TasksService:
             "sources": {
                 "task": str(task_path.relative_to(self.root)),
                 "board": str(board_path.relative_to(self.root)),
-                "workflow": "spec/workflows/task_lifecycle.yaml",
+                "workflow": "deskops/spec/workflows/task_lifecycle.yaml",
             },
         }
 

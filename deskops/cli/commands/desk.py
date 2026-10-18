@@ -14,6 +14,7 @@ from deskops.workspace import modeled_desk_markdown_docs
 from deskops.workspace import scaffold_desk
 from deskops.bootstrap import SLDBBootstrap, MODEL_REFS
 from deskops.errors import DeskopsEnvironmentError
+from deskops.paths import package_pythonpath
 import deskops.models as models
 
 def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
@@ -161,12 +162,16 @@ class DeskCLI:
 
         unregistered_models: list[str] = []
         copied_models: list[str] = []
+        # A non-editable install has no owner store to inherit from; its directly
+        # registered models are the expected state, not copies to convert.
+        owner_store = bootstrap._deskops_owner_store()
         for model_name, model_ref in MODEL_REFS.items():
             entry = registered_entries.get(model_name)
             if entry is None:
                 unregistered_models.append(model_name)
             elif (
-                not getattr(entry, "origin", None)
+                owner_store is not None
+                and not getattr(entry, "origin", None)
                 and getattr(entry, "model_ref", None) == model_ref
             ):
                 copied_models.append(model_name)
@@ -272,7 +277,7 @@ class DeskCLI:
             print("Registered missing models and converted copied deskops models.")
 
         if untracked_docs:
-            pythonpath = str(Path(__file__).resolve().parents[2])
+            pythonpath = package_pythonpath()
             for p in untracked_docs:
                 model = guess_model_for_path(desk_dir, p)
                 if model:
@@ -293,7 +298,7 @@ class DeskCLI:
         if missing_docs:
             # A tracked document whose file is gone must be untracked, not
             # re-indexed: the store would keep describing something that is not there.
-            pythonpath = str(Path(__file__).resolve().parents[2])
+            pythonpath = package_pythonpath()
             for name in missing_docs:
                 try:
                     doc_io.untrack(root, name, pythonpath=pythonpath)
@@ -302,7 +307,7 @@ class DeskCLI:
                     print(f"Failed to untrack {name}: {e}")
 
         if invalid_docs:
-            pythonpath = str(Path(__file__).resolve().parents[2])
+            pythonpath = package_pythonpath()
             doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
             print("Updated store derived indexes.")
 

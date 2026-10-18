@@ -48,7 +48,7 @@ flowchart TB
         rituals["desk/rituals/*.md\nexecution/testing/closeout gates"]
         pills["desk/contexts/*.md\nboard + task pills"]
         atoms["desk/atoms/**/*.md\ndurable knowledge"]
-        specs["spec/workflows/*.yaml\nspec/artifacts/*.yaml\nspec/fields/*.yaml"]
+        specs["deskops/spec/workflows/*.yaml\nspec/artifacts/*.yaml\nspec/fields/*.yaml"]
         runtime["desk/lifecycle/*.md\nRelationDoc transitions between rituals\n(tracked in .sldb)"]
         code["deskops/*.py\nCLI/runtime implementation"]
         tests["tests/*.py\nvalidation surfaces"]
@@ -59,7 +59,7 @@ flowchart TB
     subgraph AutomaticToday["Automation that exists today"]
         auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
         auto_bundle["deskops add task / create_task_bundle\nwrites one task doc at ritual-execution\nand appends the task to Board.md"]
-        auto_next["deskops next\nreads Board + task + spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
+        auto_next["deskops next\nreads Board + task + deskops/spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
         auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status"]
         auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove the task doc from desk\nunroute from Board.md\ngit add/rm + git commit"]
     end
@@ -237,7 +237,7 @@ Nothing else is written per task: the lifecycle is the desk's sldb graph under `
 
 ### `deskops next`
 
-Implemented by `next_action_report()` plus `spec/workflows/task_lifecycle.yaml`.
+Implemented by `next_action_report()` plus `deskops/spec/workflows/task_lifecycle.yaml`.
 
 Automatically:
 

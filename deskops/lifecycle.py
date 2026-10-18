@@ -4,7 +4,7 @@ States are the desk's tracked rituals (``RitualDoc:ritual-execution`` and its si
 Transitions are sldb ``RelationDoc`` edges between those rituals, typed by a
 ``RelationTypeDoc`` whose name is the verb (``task_activates``), with a ``condition``
 written as an sldb ``--where`` predicate over the task. deskops writes those documents
-once per desk from ``spec/workflows/task_lifecycle.yaml`` and reads the transitions back
+once per desk from ``deskops/spec/workflows/task_lifecycle.yaml`` and reads the transitions back
 from the graph with ``sldb.api.edges.edges_from``; there are no per-task primitives.
 
 What the graph does not carry is the effect of a transition: the status it sets and
@@ -22,8 +22,10 @@ import yaml
 from sldb.runtime.validation import render_model_markdown
 
 from deskops import doc_io
+from deskops.paths import data_path
+from deskops.paths import package_pythonpath
 
-SPEC_PATH = Path(__file__).resolve().parents[1] / "spec" / "workflows" / "task_lifecycle.yaml"
+SPEC_PATH = data_path("spec", "workflows", "task_lifecycle.yaml")
 LIFECYCLE_DIR = Path("desk") / "lifecycle"
 COMPLETE = "complete"
 RELATION_TYPE_MODEL = "RelationTypeDoc"
@@ -111,7 +113,7 @@ def _store(root: Path) -> Path:
 
 
 def _pythonpath() -> str:
-    return str(Path(__file__).resolve().parents[1])
+    return package_pythonpath()
 
 
 def ritual_export_id(ritual_id: str) -> str:

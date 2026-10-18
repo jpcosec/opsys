@@ -39,6 +39,7 @@ from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
 from deskops.desk_paths import resolve_selector
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
+from deskops.paths import data_path
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.workspace import scaffold_desk
@@ -194,7 +195,7 @@ class DeskopsOperations:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
         self.desk_root = self.root / "desk"
-        self.spec_root = Path(__file__).resolve().parents[1] / "spec"
+        self.spec_root = data_path("spec")
         self._spec_registry: SpecRegistry | None = None
         self._drawer: DrawerService | None = None
         self._tasks: TasksService | None = None

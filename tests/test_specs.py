@@ -2,16 +2,18 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from deskops.paths import data_path
 from deskops.specs.compiler import compile_task_spec
 from deskops.specs.loader import SpecRegistry
 from deskops.specs.mermaid import render_artifact_structure_mermaid
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SPEC_ROOT = data_path("spec")
 
 
 def test_spec_registry_loads_fields_and_artifacts() -> None:
-    registry = SpecRegistry.load(ROOT / "spec")
+    registry = SpecRegistry.load(SPEC_ROOT)
 
     assert "field.goal" in registry.fields
     assert "field.validation" in registry.fields
@@ -31,7 +33,7 @@ def test_spec_registry_loads_fields_and_artifacts() -> None:
 
 
 def test_task_spec_compiler_builds_only_the_task_at_the_lifecycle_entry() -> None:
-    registry = SpecRegistry.load(ROOT / "spec")
+    registry = SpecRegistry.load(SPEC_ROOT)
     compiled = compile_task_spec(
         registry,
         {
@@ -59,7 +61,7 @@ def test_task_spec_compiler_builds_only_the_task_at_the_lifecycle_entry() -> Non
 
 
 def test_mermaid_views_render_from_task_specs() -> None:
-    registry = SpecRegistry.load(ROOT / "spec")
+    registry = SpecRegistry.load(SPEC_ROOT)
     structure = render_artifact_structure_mermaid(registry, "artifact.task")
 
     assert "artifact.task[Task Artifact]" in structure

@@ -14,6 +14,7 @@ from deskops.cli.main import main
 from deskops.graph.checks import find_missing_graph_references
 from deskops.models import MaterializationContractDoc
 from deskops.operations import DeskopsOperations
+from deskops.paths import data_path
 from deskops.specs.loader import SpecRegistry
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
@@ -44,7 +45,7 @@ def test_materialization_contract_doc_roundtrips() -> None:
 
 
 def test_materialization_contract_spec_and_workspace_scaffold(tmp_path: Path) -> None:
-    registry = SpecRegistry.load(ROOT / "spec")
+    registry = SpecRegistry.load(data_path("spec"))
 
     assert "artifact.materialization" in registry.artifacts
     assert "field.source_atoms" in registry.fields

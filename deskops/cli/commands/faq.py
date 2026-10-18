@@ -7,6 +7,7 @@ from typing import Any
 
 from deskops.cli.render import render
 from deskops.cli.render import render_error
+from deskops.paths import data_path
 
 
 @dataclass
@@ -26,7 +27,7 @@ class FAQCLI:
             if args.faq_path != "docs/faq.md":
                 import sys
                 print(f"Warning: FAQ path {args.faq_path} not found. Falling back to default.", file=sys.stderr)
-            repo_faq = Path(__file__).resolve().parents[3] / "docs" / "faq.md"
+            repo_faq = data_path("data", "faq.md")
             if repo_faq.exists():
                 faq_path = repo_faq
 

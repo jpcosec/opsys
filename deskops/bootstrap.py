@@ -14,6 +14,7 @@ from sldb import StructuredNLDoc
 
 from deskops import doc_io
 from deskops import models as deskops_models
+from deskops.paths import package_pythonpath
 
 
 DESKOPS_STORE_LINK = "deskops"
@@ -81,7 +82,7 @@ class SLDBBootstrap:
         return self.ensure_global_store_and_models()
 
     def default_pythonpath(self) -> str:
-        return str(self._package_root())
+        return package_pythonpath()
 
     def ensure_global_store_and_models(self) -> int:
         global_store = Path.home() / ".sldb"
@@ -118,32 +119,37 @@ class SLDBBootstrap:
         """Link the deskops owner store and inherit the model set from it.
 
         A model registered here as a copy of the deskops class is converted in place by
-        `inherit_model`, keeping its documents and signed contract.
+        `inherit_model`, keeping its documents and signed contract. A regular (non-editable)
+        install ships no owner store, so the models are registered directly from the
+        installed package instead.
         """
         try:
             owner = self._deskops_owner_store()
-            link_state = self._ensure_owner_link(store_path, owner)
-            if link_state is None:
-                # The name is already taken by another checkout. sldb cannot replace a
-                # link, so leave this store as it is instead of inheriting from it.
-                print(
-                    f"Skipping model registration in {store_path}: '{DESKOPS_STORE_LINK}' is linked elsewhere."
-                )
-                return 0
-            if link_state:
-                print(f"Linked {owner} as {DESKOPS_STORE_LINK} in {store_path}.")
+            if owner is None:
+                self._register_models_directly(store_path)
+            else:
+                link_state = self._ensure_owner_link(store_path, owner)
+                if link_state is None:
+                    # The name is already taken by another checkout. sldb cannot replace a
+                    # link, so leave this store as it is instead of inheriting from it.
+                    print(
+                        f"Skipping model registration in {store_path}: '{DESKOPS_STORE_LINK}' is linked elsewhere."
+                    )
+                    return 0
+                if link_state:
+                    print(f"Linked {owner} as {DESKOPS_STORE_LINK} in {store_path}.")
 
-            entries = self._registered_model_entries(store_path)
-            for model_name, model_ref in MODEL_REFS.items():
-                entry = entries.get(model_name)
-                if entry is not None:
-                    origin = getattr(entry, "origin", None)
-                    if origin == DESKOPS_STORE_LINK:
-                        continue
-                    if origin or getattr(entry, "model_ref", None) != model_ref:
-                        continue
-                print(f"Inheriting {model_name} in {store_path}...")
-                self._inherit_model(model_name, store_path)
+                entries = self._registered_model_entries(store_path)
+                for model_name, model_ref in MODEL_REFS.items():
+                    entry = entries.get(model_name)
+                    if entry is not None:
+                        origin = getattr(entry, "origin", None)
+                        if origin == DESKOPS_STORE_LINK:
+                            continue
+                        if origin or getattr(entry, "model_ref", None) != model_ref:
+                            continue
+                    print(f"Inheriting {model_name} in {store_path}...")
+                    self._inherit_model(model_name, store_path)
 
             self._init_relations(store_path)
             self._update_store_indexes(store_path)
@@ -153,13 +159,39 @@ class SLDBBootstrap:
 
         return 0
 
-    def _deskops_owner_store(self) -> Path:
-        owner = self._package_root() / ".sldb"
-        if not owner.exists():
-            raise RuntimeError(
-                f"deskops owner store not found at {owner}; the deskops models must be registered in the deskops repo's .sldb"
-            )
-        return owner
+    def _register_models_directly(self, store_path: Path) -> None:
+        """Register the deskops models as copies when no owner store is installed."""
+        owner = Path(package_pythonpath()) / ".sldb"
+        print(
+            f"No deskops owner store at {owner}; registering the models directly from the installed package."
+        )
+        entries = self._registered_model_entries(store_path)
+        for model_name, model_ref in MODEL_REFS.items():
+            if model_name in entries:
+                continue
+            print(f"Registering {model_name} in {store_path}...")
+            self._register_model(model_ref, store_path)
+
+    def _register_model(self, model_ref: str, store_path: Path) -> None:
+        if self._sldb_importable():
+            try:
+                doc_io.register_model(store_path.parent, model_ref, pythonpath=package_pythonpath())
+            except Exception as exc:
+                raise RuntimeError(str(exc))
+        else:
+            self.run_sldb([
+                "models",
+                "add",
+                model_ref,
+                "--store",
+                str(store_path),
+                "--pythonpath",
+                package_pythonpath(),
+            ])
+
+    def _deskops_owner_store(self) -> Path | None:
+        owner = Path(package_pythonpath()) / ".sldb"
+        return owner if owner.exists() else None
 
     def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool | None:
         """Link `owner` as `deskops` unless the store already links that name.
@@ -317,7 +349,7 @@ class SLDBBootstrap:
         if env_path:
             candidates.append(Path(env_path).expanduser())
 
-        package_root = self._package_root()
+        package_root = Path(package_pythonpath())
         repo_root = package_root.parent
         candidates.append(repo_root.parent / "sldb")
         candidates.append(Path.cwd().resolve().parent / "sldb")
@@ -331,9 +363,6 @@ class SLDBBootstrap:
             if (resolved / "pyproject.toml").exists() and (resolved / "src" / "sldb").exists():
                 return resolved
         return None
-
-    def _package_root(self) -> Path:
-        return Path(__file__).resolve().parents[1]
 
     def _run(self, command: list[str], *, capture_output: bool = False) -> subprocess.CompletedProcess[str]:
         result = subprocess.run(

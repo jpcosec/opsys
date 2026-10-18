@@ -27,7 +27,7 @@ flowchart TB
         states["States\nrituals: execution, testing, closeout"]
         transition["Transition\nRelationDoc between rituals\ntyped by a RelationTypeDoc verb"]
         condition["Condition\nsldb --where predicate on the task"]
-        effect["Effect\nstatus the transition sets\n(spec/workflows/task_lifecycle.yaml)"]
+        effect["Effect\nstatus the transition sets\n(deskops/spec/workflows/task_lifecycle.yaml)"]
     end
 
     subgraph Example["Example"]
