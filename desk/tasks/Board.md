@@ -6,6 +6,12 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-rw-f0-graph-missing-ignores-archived-records.md
+- desk/tasks/task-lifecycle-graph-checks-rituals-are-readable.md
+- desk/tasks/task-rw-ci-tests-workflow-and-changelog.md
+- desk/tasks/task-rw-f1-cli-contract-tests.md
+- desk/tasks/task-rw-f1-model-contract-snapshot.md
+- desk/tasks/task-rw-f1-output-golden-files.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +51,10 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- `graph missing` stops failing on paths quoted in archived drawer records [draft] - `deskops graph missing --root .` exits 0 on the repo desk while a live issue with a dangling path still exits 1. With option A or C every document carrying the record marker is handled by one general rule (no per-file allowlist); with option B the three files no longer contain path-shaped references.
+- The lifecycle graph tracks a ritual only if RitualDoc can read it [draft] - `ensure_lifecycle_graph`, and therefore `deskops init` and `deskops desk update --apply`, never leaves a lifecycle ritual tracked when RitualDoc cannot round-trip its file. It either stops with `LifecycleGraphMissing` naming the file and the missing sections, before tracking anything, or re-renders the ritual through the model.
+- CI runs pytest on every push, and the repo has a CHANGELOG [draft] - A GitHub Actions workflow runs `pytest tests` on push and pull request to main, and CHANGELOG.md records the changes since the last tag.
+- Every CLI surface without a test gets one through main(argv) [draft] - Each listed subcommand has one in-process test that calls `deskops.cli.main.main([...])` inside a sandbox repo and asserts the exit code and one stable line of output.
+- A test pins the sldb contract hash of every deskops model [draft] - A test fails, naming the model, whenever a deskops model's contract hash differs from a committed snapshot, or when a model is added to or removed from the registered set.
+- Golden files pin the graph snapshot, run index, closeout trailers and --help text [draft] - Tests compare those outputs, produced from a fixed fixture desk, against committed golden files with volatile values normalized.

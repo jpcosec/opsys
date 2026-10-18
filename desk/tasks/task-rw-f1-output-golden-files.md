@@ -1,6 +1,12 @@
 ---
 id: task-rw-f1-output-golden-files
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f0-closeout-amends-only-its-own-commit
@@ -21,15 +27,10 @@ files:
 - tests/fixtures/golden_desk/
 - tests/conftest.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f1
-- topic:contract
-- topic:graph
-- topic:testing
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f1-output-golden-files.md
 ---
 
 # Golden files pin the graph snapshot, run index, closeout trailers and --help text

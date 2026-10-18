@@ -1,6 +1,12 @@
 ---
 id: task-lifecycle-graph-checks-rituals-are-readable
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -10,12 +16,10 @@ files:
 - deskops/lifecycle.py
 - tests/test_lifecycle_graph.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- topic:lifecycle
-- topic:migration
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-lifecycle-graph-checks-rituals-are-readable.md
 ---
 
 # The lifecycle graph tracks a ritual only if RitualDoc can read it

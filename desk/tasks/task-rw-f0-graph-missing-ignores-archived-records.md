@@ -1,6 +1,12 @@
 ---
 id: task-rw-f0-graph-missing-ignores-archived-records
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -15,14 +21,10 @@ files:
 - desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md
 - desk/drawer/issues/issue-refactor-primitives-to-ast-driven-task-nodes.md
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f0
-- topic:graph
-- topic:gates
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f0-graph-missing-ignores-archived-records.md
 ---
 
 # `graph missing` stops failing on paths quoted in archived drawer records

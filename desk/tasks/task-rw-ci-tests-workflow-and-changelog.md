@@ -1,6 +1,12 @@
 ---
 id: task-rw-ci-tests-workflow-and-changelog
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -9,13 +15,10 @@ files:
 - .github/workflows/tests.yml
 - CHANGELOG.md
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- topic:packaging
-- topic:ci
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-ci-tests-workflow-and-changelog.md
 ---
 
 # CI runs pytest on every push, and the repo has a CHANGELOG

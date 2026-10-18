@@ -1,6 +1,12 @@
 ---
 id: task-rw-f1-model-contract-snapshot
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f0-closeout-amends-only-its-own-commit
@@ -19,14 +25,10 @@ files:
 - tests/test_model_contract_snapshot.py
 - tests/fixtures/model_contract_hashes.json
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f1
-- topic:contract
-- topic:testing
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f1-model-contract-snapshot.md
 ---
 
 # A test pins the sldb contract hash of every deskops model

@@ -1,6 +1,12 @@
 ---
 id: task-rw-f1-cli-contract-tests
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f0-closeout-amends-only-its-own-commit
@@ -18,15 +24,10 @@ pills:
 files:
 - tests/test_cli_contract.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f1
-- topic:contract
-- topic:cli
-- topic:testing
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f1-cli-contract-tests.md
 ---
 
 # Every CLI surface without a test gets one through main(argv)
