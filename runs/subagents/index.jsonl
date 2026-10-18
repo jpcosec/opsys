@@ -45,3 +45,4 @@
 {"task_id": "task-issue-close-verb", "run_id": null, "run_dir": "runs/subagents/20261018-task-issue-close-verb", "session_sha256": null, "commit": "419cd2cebd87411e1ab0831cd7373ce0fd2f0f64"}
 {"task_id": "task-rename-deskops-faqdoc", "run_id": null, "run_dir": "runs/subagents/20261018-task-rename-deskops-faqdoc", "session_sha256": null, "commit": "c46874929d3c8ead6a4ce7df4277c10ac70c6dd7"}
 {"task_id": "task-docs-teach-closeout-commit-as-the-only-close", "run_id": null, "run_dir": "runs/subagents/20261018-task-docs-teach-closeout-commit-as-the-only-close", "session_sha256": null, "commit": "097c75256e91003a07aae299cf70380d587dbe2e"}
+{"task_id": "task-desk-update-skips-copied-check-in-the-owner-store", "run_id": null, "run_dir": "runs/subagents/20261018-task-desk-update-skips-copied-check-in-the-owner-store", "session_sha256": null, "commit": "7f5fef7750cd2faaf1d1ac87b3b57c8e7bb0c67f"}
