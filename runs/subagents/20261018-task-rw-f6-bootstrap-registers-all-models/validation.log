@@ -1,0 +1,4 @@
+6 passed in 18.95s
+MODEL_REFS 15
+412 passed, 3 skipped in 394.32s (0:06:34)
+note: the suite writes to the real ~/.sldb (tests/ do not isolate HOME); captured as task-tests-never-touch-the-real-global-store

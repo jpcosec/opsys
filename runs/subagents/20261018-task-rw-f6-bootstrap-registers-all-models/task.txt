@@ -1,0 +1,11 @@
+Task: task-rw-f6-bootstrap-registers-all-models
+Title: Bootstrap registers every deskops model, and only bootstrap/init install sldb
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f6-bootstrap-registers-all-models.md
+Effective pills:
+- desk/contexts/pill-006-self-described-store-layout.md
+- desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

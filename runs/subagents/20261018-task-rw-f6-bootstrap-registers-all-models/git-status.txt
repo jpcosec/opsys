@@ -1,0 +1,3 @@
+ M deskops/bootstrap.py
+ M tests/test_doctor_model_registration.py
+?? runs/subagents/20261018-task-rw-f6-bootstrap-registers-all-models/

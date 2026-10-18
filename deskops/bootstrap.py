@@ -10,58 +10,71 @@ import subprocess
 import sys
 from typing import Any
 
+from sldb import StructuredNLDoc
+
 from deskops import doc_io
+from deskops import models as deskops_models
 
 
 DESKOPS_STORE_LINK = "deskops"
 
+#: Base classes that are never registered as models in a store.
+BASE_MODEL_NAMES = frozenset({"PrimitiveDoc", "OperationalArtifactDoc"})
+
+#: Every deskops model is inherited from the owner store by name and model ref.
 MODEL_REFS = {
-    "BoardDoc": "deskops.models:BoardDoc",
-    "TaskDoc": "deskops.models:TaskDoc",
-    "PillDoc": "deskops.models:PillDoc",
-    "RitualDoc": "deskops.models:RitualDoc",
-    "InboxNoteDoc": "deskops.models:InboxNoteDoc",
-    "RepositoryDoc": "deskops.models:RepositoryDoc",
-    "RoleDoc": "deskops.models:RoleDoc",
-    "StepDoc": "deskops.models:StepDoc",
-    "AtomDoc": "deskops.models:AtomDoc",
-    "ProtoAtomDoc": "deskops.models:ProtoAtomDoc",
-    "CrossroadDoc": "deskops.models:CrossroadDoc",
-    "FAQDoc": "deskops.models:FAQDoc",
+    name: f"deskops.models:{name}"
+    for name in deskops_models.__all__
+    if name not in BASE_MODEL_NAMES
+    and isinstance(getattr(deskops_models, name, None), type)
+    and issubclass(getattr(deskops_models, name), StructuredNLDoc)
 }
 
 
 class SLDBBootstrap:
-    def ensure_sldb_available(self) -> int:
-        if not self._sldb_importable():
-            install_path = self._resolve_sldb_checkout()
-            if install_path is None:
-                print("Error: sldb is not installed and no sibling checkout was found.")
-                print(
-                    "Set DESKOPS_SLDB_PATH or keep the sibling checkout at ../sldb before running deskops init."
-                )
-                return 1
-            print(f"Installing sldb from {install_path}...")
-            try:
-                self._run([
-                    sys.executable,
-                    "-m",
-                    "pip",
-                    "install",
-                    "-e",
-                    str(install_path),
-                ])
-            except RuntimeError as exc:
-                print(f"Error: {exc}")
-                return 1
-            importlib.invalidate_caches()
-        elif shutil.which("sldb") is None:
-            print("sldb is importable but no shell entrypoint was found; using python -m sldb.")
+    def ensure_sldb_available(self, *, allow_install: bool = False) -> int:
+        """Check that sldb is importable.
+
+        Only ``deskops bootstrap`` and ``deskops init`` may install it; every other
+        command fails with the install hint instead of running pip behind the user's back.
+        """
+        if self._sldb_importable():
+            if shutil.which("sldb") is None:
+                print("sldb is importable but no shell entrypoint was found; using python -m sldb.")
+            return 0
+
+        if not allow_install:
+            print(
+                "Error: sldb is not installed. Run 'deskops bootstrap' or 'deskops init' to install it."
+            )
+            return 1
+
+        install_path = self._resolve_sldb_checkout()
+        if install_path is None:
+            print("Error: sldb is not installed and no sibling checkout was found.")
+            print(
+                "Set DESKOPS_SLDB_PATH or keep the sibling checkout at ../sldb before running deskops init."
+            )
+            return 1
+        print(f"Installing sldb from {install_path}...")
+        try:
+            self._run([
+                sys.executable,
+                "-m",
+                "pip",
+                "install",
+                "-e",
+                str(install_path),
+            ])
+        except RuntimeError as exc:
+            print(f"Error: {exc}")
+            return 1
+        importlib.invalidate_caches()
 
         return 0
 
     def ensure_machine_ready(self) -> int:
-        ready = self.ensure_sldb_available()
+        ready = self.ensure_sldb_available(allow_install=True)
         if ready != 0:
             return ready
 
@@ -109,7 +122,15 @@ class SLDBBootstrap:
         """
         try:
             owner = self._deskops_owner_store()
-            if self._ensure_owner_link(store_path, owner):
+            link_state = self._ensure_owner_link(store_path, owner)
+            if link_state is None:
+                # The name is already taken by another checkout. sldb cannot replace a
+                # link, so leave this store as it is instead of inheriting from it.
+                print(
+                    f"Skipping model registration in {store_path}: '{DESKOPS_STORE_LINK}' is linked elsewhere."
+                )
+                return 0
+            if link_state:
                 print(f"Linked {owner} as {DESKOPS_STORE_LINK} in {store_path}.")
 
             entries = self._registered_model_entries(store_path)
@@ -140,15 +161,30 @@ class SLDBBootstrap:
             )
         return owner
 
-    def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool:
-        """Link `owner` as `deskops` unless the store already has that link."""
+    def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool | None:
+        """Link `owner` as `deskops` unless the store already links that name.
+
+        Returns True when the link was added, False when it already points at `owner`,
+        and None when the name is linked to a different (stale) store.
+        """
         if self._sldb_importable():
             from sldb.store.io import load_store_index
 
             try:
                 idx = load_store_index(store_path)
-                if any(link.name == DESKOPS_STORE_LINK for link in idx.stores):
-                    return False
+                existing = next(
+                    (link for link in idx.stores if link.name == DESKOPS_STORE_LINK),
+                    None,
+                )
+                if existing is not None:
+                    target = (store_path.parent / existing.path).resolve()
+                    if target == owner.resolve():
+                        return False
+                    print(
+                        f"Warning: {store_path} already links '{DESKOPS_STORE_LINK}' to {target}, "
+                        f"not to {owner}."
+                    )
+                    return None
                 doc_io.link_store_alias(store_path.parent, owner, DESKOPS_STORE_LINK)
             except Exception as exc:
                 raise RuntimeError(str(exc))
