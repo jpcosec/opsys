@@ -8,6 +8,7 @@ tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f3-single-closure-path.md
 - desk/tasks/task-rw-f5-output-renderer.md
+- desk/tasks/task-rw-f6-migrate-tracking-stores.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -50,3 +51,4 @@ _Generated from the task references above._
 
 - One closure service behind every way of closing a task [draft] - `deskops/services/closure.py` performs every closure: gates (closeout_gates), Board update, bundle removal, exactly one commit with the route's trailers, and the index entry. `closeout commit` (both routes) uses it with its CLI unchanged.
 - One renderer for text, json and yaml output with an error envelope [draft] - Handlers return data; deskops/cli/render.py prints it as text, json or yaml; with `--format json` an error prints `{"ok": false, "error": {"code": <exit code>, "type": "<class name from deskops/errors.py, e.g. DomainError>", "message": "..."}}` and exits with that code. argparse usage errors keep argparse's stderr text and exit 2 and are never wrapped, because they happen before `--format` is known.
+- Migrate every store that tracks deskops models [draft] - scripts/migrate_desk_stores.py migrates every discovered store and logs per-store before/after `sldb stores check` results; every store passes afterwards.

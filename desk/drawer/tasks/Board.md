@@ -60,7 +60,6 @@ F5:
 
 F6:
 
-- `task-rw-f6-migrate-tracking-stores` — Migrate every store that tracks deskops models
 
 Promoted to active desk tasks:
 
