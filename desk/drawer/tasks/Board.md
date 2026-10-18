@@ -50,7 +50,6 @@ F2:
 
 F3:
 
-- `task-rw-f3-drawer-routing-service` — Drawer lookup moves to its own service
 - `task-rw-f3-drawer-entry-removal-verb` — A CLI verb removes a drawer entry
 - `task-rw-f3-closeout-gates-service` — Closeout gates move to a service and verify real evidence
 - `task-rw-f3-tasks-service` — Task lifecycle moves to a service and reads TaskDoc only through sldb

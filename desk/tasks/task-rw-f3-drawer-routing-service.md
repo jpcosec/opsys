@@ -1,6 +1,12 @@
 ---
 id: task-rw-f3-drawer-routing-service
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f2-transactional-doc-io
@@ -13,14 +19,10 @@ files:
 - deskops/operations.py
 - deskops/cli/commands/promote.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f3
-- topic:refactor
-- topic:drawer
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f3-drawer-routing-service.md
 ---
 
 # Drawer lookup moves to its own service

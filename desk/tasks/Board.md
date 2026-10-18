@@ -6,6 +6,7 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-rw-f3-drawer-routing-service.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +46,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- Drawer lookup moves to its own service [draft] - `deskops/services/drawer.py` owns drawer lookup and promotion logic; `DeskopsOperations` and `PromoteCLI` delegate to it.
