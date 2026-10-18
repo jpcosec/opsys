@@ -3,13 +3,16 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from sldb.api.graph.snapshot import GraphSnapshot
 
 from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
 from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
+from deskops.graph.snapshot import GraphSnapshotReadError
 from deskops.graph.snapshot import build_graph_snapshot
 from deskops.graph.snapshot import default_snapshot_read_path
 from deskops.graph.snapshot import networkx_path_for_snapshot
+from deskops.graph.snapshot import read_graph_snapshot
 from deskops.graph.snapshot import write_graph_snapshot
 
 
@@ -108,3 +111,88 @@ tags: []
 Existing knowledge.
 """,
     )
+
+
+def test_read_graph_snapshot_flattens_nested_edges() -> None:
+    path = Path(__file__).parent / "fixtures/golden/graph_snapshot.kg.json"
+
+    snapshot = read_graph_snapshot(path)
+
+    atom = next(node for node in snapshot.nodes if node.id == "atom:atom-golden-one")
+    assert atom.kind == "atom"
+    assert atom.path == "desk/atoms/atom-golden-one.md"
+    assert isinstance(atom.identity, dict)
+    assert atom.identity["node_id"] == "atom:atom-golden-one"
+    assert atom.label == "Golden atom one"
+
+    edge = next(edge for edge in snapshot.edges if edge.source == "atom:atom-golden-one")
+    assert edge.target == "facet:what"
+    assert edge.role == "answers"
+    assert edge.provenance_path == "desk/atoms/atom-golden-one.md"
+    assert edge.provenance_locator == "frontmatter:five_wh_one_plus"
+    assert edge.extractor == "desk_kgdb_coverage_v1"
+
+
+def test_read_graph_snapshot_accepts_top_level_edges_and_id_identity(tmp_path: Path) -> None:
+    snapshot = {
+        "nodes": [{"identity": {"node_id": "task:source", "node_type": "task"}, "semantics": {"title": "Source"}}],
+        "edges": [{"source": "task:source", "target": "atom:missing", "role": "references"}],
+    }
+    path = _write(tmp_path, json.dumps(snapshot))
+
+    result = read_graph_snapshot(path)
+
+    assert [(node.id, node.kind, node.label) for node in result.nodes] == [("task:source", "task", "Source")]
+    assert [(edge.source, edge.target, edge.role) for edge in result.edges] == [
+        ("task:source", "atom:missing", "references")
+    ]
+
+
+def test_read_graph_snapshot_rejects_missing_file(tmp_path: Path) -> None:
+    path = tmp_path / "missing.json"
+
+    with pytest.raises(GraphSnapshotReadError, match="graph snapshot not found"):
+        read_graph_snapshot(path)
+
+
+def test_read_graph_snapshot_rejects_invalid_json(tmp_path: Path) -> None:
+    path = _write(tmp_path, "{not json")
+
+    with pytest.raises(GraphSnapshotReadError, match="not valid JSON"):
+        read_graph_snapshot(path)
+
+
+def test_read_graph_snapshot_rejects_missing_key(tmp_path: Path) -> None:
+    path = _write(tmp_path, json.dumps({"version": "1.0"}))
+
+    with pytest.raises(GraphSnapshotReadError, match="missing the nodes list"):
+        read_graph_snapshot(path)
+
+    path = _write(tmp_path, json.dumps({"nodes": [{"kind": "atom"}]}))
+
+    with pytest.raises(GraphSnapshotReadError, match="missing its id"):
+        read_graph_snapshot(path)
+
+
+def test_read_graph_snapshot_rejects_malformed_shape(tmp_path: Path) -> None:
+    path = _write(tmp_path, json.dumps({"nodes": {}}))
+
+    with pytest.raises(GraphSnapshotReadError, match="missing the nodes list"):
+        read_graph_snapshot(path)
+
+    path = _write(tmp_path, json.dumps({"nodes": ["node"]}))
+
+    with pytest.raises(GraphSnapshotReadError, match="non-object node"):
+        read_graph_snapshot(path)
+
+    path = _write(tmp_path, json.dumps({"nodes": [{"id": "task:source", "edges": {}}]}))
+
+    with pytest.raises(GraphSnapshotReadError, match="node edges must be a list"):
+        read_graph_snapshot(path)
+
+
+def _write(path: Path, content: str) -> Path:
+    path.mkdir(parents=True, exist_ok=True)
+    target = path / "snapshot.json"
+    target.write_text(content, encoding="utf-8")
+    return target

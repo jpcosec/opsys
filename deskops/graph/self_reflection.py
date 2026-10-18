@@ -8,6 +8,8 @@ from typing import Any
 
 from deskops.graph.checks import GraphMissingFinding
 from deskops.graph.checks import find_missing_snapshot_targets
+from deskops.graph.snapshot import GraphSnapshot
+from deskops.graph.snapshot import Node
 
 
 REPORT_SCHEMA = "deskops_self_reflection_report_v2"
@@ -77,7 +79,7 @@ class SelfReflectionFinding:
 
 
 def build_self_reflection_report(
-    snapshot: dict[str, Any],
+    snapshot: GraphSnapshot,
     missing_findings: list[GraphMissingFinding] | None = None,
 ) -> dict[str, Any]:
     """Return review-only self-reflection findings for a graph snapshot."""
@@ -154,7 +156,7 @@ def _read_existing_decisions(path: Path) -> dict[str, Any]:
 
 
 def _missing_atom_reference_findings(
-    snapshot: dict[str, Any],
+    snapshot: GraphSnapshot,
     missing_findings: list[GraphMissingFinding],
 ) -> list[SelfReflectionFinding]:
     findings = [_missing_atom_finding_from_snapshot(edge) for edge in _missing_atom_edges(snapshot)]
@@ -166,7 +168,7 @@ def _missing_atom_reference_findings(
     return findings
 
 
-def _missing_atom_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
+def _missing_atom_edges(snapshot: GraphSnapshot) -> list[dict[str, str]]:
     return [
         edge
         for edge in _snapshot_missing_targets(snapshot)
@@ -175,7 +177,7 @@ def _missing_atom_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
     ]
 
 
-def _snapshot_missing_targets(snapshot: dict[str, Any]) -> list[GraphMissingFinding]:
+def _snapshot_missing_targets(snapshot: GraphSnapshot) -> list[GraphMissingFinding]:
     return find_missing_snapshot_targets(snapshot)
 
 
@@ -225,16 +227,16 @@ def _missing_atom_finding_from_check(finding: GraphMissingFinding) -> SelfReflec
 
 
 def _dangling_generated_artifact_findings(
-    snapshot: dict[str, Any],
+    snapshot: GraphSnapshot,
     missing_findings: list[GraphMissingFinding],
 ) -> list[SelfReflectionFinding]:
     findings: list[SelfReflectionFinding] = []
-    nodes = _snapshot_nodes(snapshot)
-    node_ids = {node["id"] for node in nodes}
+    nodes = snapshot.nodes
+    node_ids = {node.id for node in nodes}
     linked_pairs = {
-        (edge["source"], edge["target"])
-        for edge in _snapshot_edges(snapshot)
-        if edge.get("role") in {"references", "generated_from", "materializes", "renders", "source_for"}
+        (edge.source, edge.target)
+        for edge in snapshot.edges
+        if edge.role in {"references", "generated_from", "materializes", "renders", "source_for"}
     }
 
     for finding in [*_snapshot_missing_targets(snapshot), *missing_findings]:
@@ -264,19 +266,19 @@ def _dangling_generated_artifact_findings(
         )
 
     for node in nodes:
-        if node.get("kind") != "diagram":
+        if node.kind != "diagram":
             continue
-        path = str(node.get("path") or node.get("identity") or _path_from_node_id(node["id"]))
+        path = _node_path(node)
         if not (path.startswith("docs/diagrams/") and path.endswith(".md")):
             continue
         source_id = f"diagram:{path[:-3]}.mmd"
-        if source_id not in node_ids or (node["id"], source_id) in linked_pairs:
+        if source_id not in node_ids or (node.id, source_id) in linked_pairs:
             continue
         findings.append(
             SelfReflectionFinding(
                 question_id="dangling-generated-artifacts",
                 kind="dangling_generated_artifact",
-                source_id=node["id"],
+                source_id=node.id,
                 target_id=source_id,
                 role="source_for",
                 provenance_path=path,
@@ -284,106 +286,59 @@ def _dangling_generated_artifact_findings(
                 confidence="medium",
                 reason="rendered diagram has a sibling Mermaid source file but no declared graph edge linking them",
                 later_action="issue_candidate",
-                dedupe_key=_dedupe_key("dangling-generated-artifacts", node["id"], source_id, "source_for"),
+                dedupe_key=_dedupe_key("dangling-generated-artifacts", node.id, source_id, "source_for"),
                 promotion_targets=["task", "question"],
             )
         )
     return findings
 
 
-def _unlinked_source_file_findings(snapshot: dict[str, Any]) -> list[SelfReflectionFinding]:
-    nodes = _snapshot_nodes(snapshot)
+def _unlinked_source_file_findings(snapshot: GraphSnapshot) -> list[SelfReflectionFinding]:
+    nodes = snapshot.nodes
     linked_source_ids = _linked_source_ids(snapshot)
     findings: list[SelfReflectionFinding] = []
     for node in nodes:
-        if node.get("kind") != "source_file" or node["id"] in linked_source_ids:
+        if node.kind != "source_file" or node.id in linked_source_ids:
             continue
-        path = str(node.get("path") or node.get("identity") or _path_from_node_id(node["id"]))
+        path = _node_path(node)
         if _is_excluded_source_path(path):
             continue
         findings.append(
             SelfReflectionFinding(
                 question_id="unlinked-source-files",
                 kind="unlinked_source_file",
-                source_id=node["id"],
+                source_id=node.id,
                 target_id=None,
                 role=None,
                 provenance_path=path,
-                provenance_locator=f"node:{node['id']}",
+                provenance_locator=f"node:{node.id}",
                 confidence="medium",
                 reason="source file has no graph edge connecting it to a desk knowledge surface",
                 later_action="issue_candidate",
-                dedupe_key=f"unlinked-source-files:{node['id']}",
+                dedupe_key=f"unlinked-source-files:{node.id}",
                 promotion_targets=["task", "question"],
             )
         )
     return findings
 
 
-def _linked_source_ids(snapshot: dict[str, Any]) -> set[str]:
+def _linked_source_ids(snapshot: GraphSnapshot) -> set[str]:
     linked: set[str] = set()
-    for edge in _snapshot_edges(snapshot):
-        if edge.get("role") not in SOURCE_LINK_ROLES:
+    for edge in snapshot.edges:
+        if edge.role not in SOURCE_LINK_ROLES:
             continue
-        for key in ("source", "target"):
-            node_id = edge[key]
+        for node_id in (edge.source, edge.target):
             if node_id.startswith("source_file:"):
                 linked.add(node_id)
     return linked
 
 
-def _snapshot_nodes(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
-    nodes: list[dict[str, Any]] = []
-    for node in snapshot.get("nodes", []):
-        if "id" in node:
-            nodes.append(node)
-            continue
-        identity = node.get("identity", {})
-        node_id = identity.get("node_id")
-        if not isinstance(node_id, str):
-            continue
-        semantics = node.get("semantics", {})
-        nodes.append(
-            {
-                "id": node_id,
-                "kind": identity.get("node_type"),
-                "identity": semantics.get("identity") or _path_from_node_id(node_id),
-                "path": semantics.get("path"),
-            }
-        )
-    return nodes
-
-
-def _snapshot_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
-    if "edges" in snapshot:
-        return [
-            {
-                "source": edge["source"],
-                "target": edge["target"],
-                "role": str(edge.get("role") or edge.get("relation_type") or "related"),
-            }
-            for edge in snapshot.get("edges", [])
-        ]
-
-    edges: list[dict[str, str]] = []
-    for node in snapshot.get("nodes", []):
-        identity = node.get("identity", {})
-        source_id = identity.get("node_id")
-        if not isinstance(source_id, str):
-            continue
-        for edge in node.get("edges", []):
-            target_id = edge.get("target_id")
-            if not isinstance(target_id, str):
-                continue
-            metadata = edge.get("metadata", {})
-            edges.append(
-                {
-                    "source": source_id,
-                    "target": target_id,
-                    "role": str(edge.get("relation_type") or metadata.get("role") or "related"),
-                }
-            )
-    return edges
+def _node_path(node: Node) -> str:
+    if node.path:
+        return str(node.path)
+    if isinstance(node.identity, str) and node.identity:
+        return node.identity
+    return _path_from_node_id(node.id)
 
 
 def _group_duplicate_findings(findings: list[SelfReflectionFinding]) -> list[SelfReflectionFinding]:
@@ -419,14 +374,16 @@ def _is_excluded_source_path(path: str) -> bool:
 
 
 def drift_check_knowledge_surfaces(root: Path) -> list[str]:
-    from deskops.graph.checks import find_missing_graph_references, read_graph_snapshot
+    from deskops.graph.checks import find_missing_graph_references
     from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+    from deskops.graph.snapshot import GraphSnapshot
+    from deskops.graph.snapshot import read_graph_snapshot
     
     graph_path = root / DEFAULT_SNAPSHOT_PATH
     try:
         snapshot = read_graph_snapshot(graph_path)
     except Exception:
-        snapshot = {"nodes": [], "edges": []}
+        snapshot = GraphSnapshot()
         
     missing = find_missing_graph_references(root, graph_path if graph_path.exists() else None)
     
@@ -446,9 +403,9 @@ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
 
     # 3. a graph finding that no atom and no issue covers
     covering_sources = set()
-    for edge in _snapshot_edges(snapshot):
-        if edge["source"].startswith("atom:") or edge["source"].startswith("issue:"):
-            covering_sources.add(edge["target"])
+    for edge in snapshot.edges:
+        if edge.source.startswith("atom:") or edge.source.startswith("issue:"):
+            covering_sources.add(edge.target)
             
     for finding in missing:
         if finding.source_id.startswith("atom:") or finding.source_id.startswith("issue:"):

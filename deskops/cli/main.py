@@ -338,11 +338,12 @@ class CLI:
             print(f"Error: graph root is not a directory: {root}")
             return 1
 
+        from deskops.graph.snapshot import GraphSnapshotReadError
         from deskops.graph.snapshot import default_snapshot_read_path
+        from deskops.graph.snapshot import read_graph_snapshot
 
         graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
         from deskops.graph.checks import GraphMissingCheckError
-        from deskops.graph.checks import read_graph_snapshot
         from deskops.graph.self_reflection import build_self_reflection_report
         from deskops.graph.self_reflection import write_self_reflection_report
 
@@ -350,7 +351,7 @@ class CLI:
             snapshot = read_graph_snapshot(graph_path)
             report = build_self_reflection_report(snapshot)
             output_path = write_self_reflection_report(root, report)
-        except GraphMissingCheckError as exc:
+        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
             print(f"Error: {exc}")
             return 1
 

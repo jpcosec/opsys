@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -30,6 +31,31 @@ class GraphSnapshotReadError(RuntimeError):
     """Raised when an existing graph snapshot cannot satisfy a read query."""
 
 
+@dataclass(frozen=True)
+class Node:
+    id: str
+    kind: str | None = None
+    path: str | None = None
+    identity: dict[str, Any] | str | None = None
+    label: str | None = None
+
+
+@dataclass(frozen=True)
+class Edge:
+    source: str
+    target: str
+    role: str = "related"
+    provenance_path: str | None = None
+    provenance_locator: str | None = None
+    extractor: str | None = None
+
+
+@dataclass(frozen=True)
+class GraphSnapshot:
+    nodes: list[Node] = field(default_factory=list)
+    edges: list[Edge] = field(default_factory=list)
+
+
 def networkx_path_for_snapshot(snapshot_path: Path) -> Path:
     """Return the sibling NetworkX path for a GraphSnapshot destination."""
     without_json = snapshot_path.with_suffix("")
@@ -47,17 +73,54 @@ def default_snapshot_read_path(root: Path) -> Path:
     return legacy if legacy.exists() else preferred
 
 
+def read_graph_snapshot(path: Path) -> GraphSnapshot:
+    """Read a graph snapshot from disk into nodes and flat edges."""
+    if not path.exists() or not path.is_file():
+        raise GraphSnapshotReadError(f"graph snapshot not found: {path}")
+
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
+        raise GraphSnapshotReadError(f"graph snapshot is not valid JSON: {path}") from exc
+
+    if not isinstance(payload, dict):
+        raise GraphSnapshotReadError(f"graph snapshot must be a JSON object: {path}")
+
+    raw_nodes = payload.get("nodes")
+    if not isinstance(raw_nodes, list):
+        raise GraphSnapshotReadError(f"graph snapshot is missing the nodes list: {path}")
+
+    nodes: list[Node] = []
+    nested_edges: list[Edge] = []
+    for raw_node in raw_nodes:
+        if not isinstance(raw_node, dict):
+            raise GraphSnapshotReadError(f"graph snapshot contains a non-object node: {path}")
+        node = _read_node(raw_node, path)
+        nodes.append(node)
+        nested_edges.extend(_read_nested_edges(raw_node, node.id, path))
+
+    if "edges" in payload:
+        raw_edges = payload["edges"]
+        if not isinstance(raw_edges, list):
+            raise GraphSnapshotReadError(f"graph snapshot edges must be a list: {path}")
+        edges = [_read_top_level_edge(raw_edge, path) for raw_edge in raw_edges]
+    else:
+        edges = nested_edges
+
+    return GraphSnapshot(nodes=nodes, edges=edges)
+
+
 def read_graph_neighbors(snapshot_path: Path, node_id: str) -> dict[str, Any]:
     """Return incoming and outgoing neighbors for one node from a graph snapshot."""
-    if not snapshot_path.exists() or not snapshot_path.is_file():
-        raise GraphSnapshotReadError(f"graph snapshot not found: {snapshot_path}")
-
-    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
-    nodes = _snapshot_nodes_by_id(snapshot)
+    snapshot = read_graph_snapshot(snapshot_path)
+    nodes = _neighbor_nodes(snapshot.nodes)
     if node_id not in nodes:
         raise GraphSnapshotReadError(f"graph node not found: {node_id}")
 
-    edges = _snapshot_edges(snapshot)
+    edges = [
+        {"source": edge.source, "target": edge.target, "role": edge.role}
+        for edge in snapshot.edges
+    ]
     return {
         "node": nodes[node_id],
         "incoming": [edge for edge in edges if edge["target"] == node_id],
@@ -101,6 +164,126 @@ def build_graph_snapshot(root: Path) -> dict[str, Any]:
     }
 
 
+def _read_node(raw_node: dict[str, Any], path: Path) -> Node:
+    identity = raw_node.get("identity")
+    semantics = raw_node.get("semantics")
+    if not isinstance(semantics, dict):
+        semantics = {}
+
+    node_id = raw_node.get("id")
+    if not isinstance(node_id, str) and isinstance(identity, dict):
+        node_id = identity.get("node_id")
+    if not isinstance(node_id, str) or not node_id:
+        raise GraphSnapshotReadError(f"graph snapshot node is missing its id: {path}")
+
+    kind = raw_node.get("kind")
+    if not isinstance(kind, str) and isinstance(identity, dict):
+        kind = identity.get("node_type")
+
+    node_path = raw_node.get("path")
+    if not isinstance(node_path, str):
+        node_path = semantics.get("path") if isinstance(semantics.get("path"), str) else None
+
+    label = (
+        semantics.get("title")
+        or raw_node.get("label")
+        or semantics.get("label")
+        or node_id
+    )
+    return Node(
+        id=node_id,
+        kind=kind if isinstance(kind, str) else None,
+        path=node_path,
+        identity=identity if isinstance(identity, (dict, str)) else None,
+        label=str(label),
+    )
+
+
+def _read_nested_edges(raw_node: dict[str, Any], source_id: str, path: Path) -> list[Edge]:
+    raw_edges = raw_node.get("edges")
+    if raw_edges is None:
+        return []
+    if not isinstance(raw_edges, list):
+        raise GraphSnapshotReadError(f"graph snapshot node edges must be a list: {path}")
+
+    edges: list[Edge] = []
+    for raw_edge in raw_edges:
+        if not isinstance(raw_edge, dict):
+            raise GraphSnapshotReadError(f"graph snapshot contains a non-object edge: {path}")
+        metadata = raw_edge.get("metadata")
+        metadata = metadata if isinstance(metadata, dict) else {}
+        target = raw_edge.get("target")
+        if not isinstance(target, str):
+            target = raw_edge.get("target_id")
+        if not isinstance(target, str) or not target:
+            raise GraphSnapshotReadError(f"graph snapshot edge is missing its target: {path}")
+        role = raw_edge.get("relation_type") or metadata.get("role") or "related"
+        edges.append(
+            Edge(
+                source=source_id,
+                target=target,
+                role=str(role),
+                **_edge_provenance(raw_edge, metadata, metadata_wins=False),
+            )
+        )
+    return edges
+
+
+def _read_top_level_edge(raw_edge: Any, path: Path) -> Edge:
+    if not isinstance(raw_edge, dict):
+        raise GraphSnapshotReadError(f"graph snapshot contains a non-object edge: {path}")
+    metadata = raw_edge.get("metadata")
+    metadata = metadata if isinstance(metadata, dict) else {}
+
+    source = raw_edge.get("source")
+    if not isinstance(source, str):
+        source = raw_edge.get("source_id")
+    if not isinstance(source, str) or not source:
+        raise GraphSnapshotReadError(f"graph snapshot edge is missing its source: {path}")
+
+    target = raw_edge.get("target")
+    if not isinstance(target, str):
+        target = raw_edge.get("target_id")
+    if not isinstance(target, str) or not target:
+        raise GraphSnapshotReadError(f"graph snapshot edge is missing its target: {path}")
+
+    role = raw_edge.get("role") or raw_edge.get("relation_type") or metadata.get("role") or "related"
+    return Edge(
+        source=source,
+        target=target,
+        role=str(role),
+        **_edge_provenance(raw_edge, metadata, metadata_wins=True),
+    )
+
+
+def _edge_provenance(
+    raw_edge: dict[str, Any],
+    metadata: dict[str, Any],
+    *,
+    metadata_wins: bool,
+) -> dict[str, str | None]:
+    values: dict[str, str | None] = {}
+    for key in ("provenance_path", "provenance_locator", "extractor"):
+        direct = raw_edge.get(key)
+        meta = metadata.get(key)
+        direct = direct if isinstance(direct, str) else None
+        meta = meta if isinstance(meta, str) else None
+        values[key] = (meta if meta is not None else direct) if metadata_wins else (direct if direct is not None else meta)
+    return values
+
+
+def _neighbor_nodes(nodes: list[Node]) -> dict[str, dict[str, Any]]:
+    by_id: dict[str, dict[str, Any]] = {}
+    for node in nodes:
+        item: dict[str, Any] = {"id": node.id, "kind": node.kind, "label": node.label}
+        if node.identity is not None:
+            item["identity"] = node.identity
+        if node.path is not None:
+            item["path"] = node.path
+        by_id[node.id] = item
+    return by_id
+
+
 def write_graph_snapshot(
     root: Path,
     output_path: Path | None = None,
@@ -123,55 +306,6 @@ def _validate_graph_snapshot(snapshot: dict[str, Any]) -> None:
         ) from exc
 
     GraphSnapshot.model_validate(snapshot)
-
-
-def _snapshot_nodes_by_id(snapshot: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    nodes: dict[str, dict[str, Any]] = {}
-    for node in snapshot.get("nodes", []):
-        if "id" in node:
-            nodes[node["id"]] = node
-            continue
-
-        identity = node.get("identity", {})
-        node_id = identity.get("node_id")
-        if node_id:
-            semantics = node.get("semantics", {})
-            nodes[node_id] = {
-                "id": node_id,
-                "kind": identity.get("node_type"),
-                "label": semantics.get("title") or semantics.get("label") or node_id,
-                **semantics,
-            }
-    return nodes
-
-
-def _snapshot_edges(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
-    if "edges" in snapshot:
-        return [
-            {
-                "source": edge["source"],
-                "target": edge["target"],
-                "role": edge.get("role") or edge.get("relation_type") or "related",
-            }
-            for edge in snapshot.get("edges", [])
-        ]
-
-    edges: list[dict[str, Any]] = []
-    for node in snapshot.get("nodes", []):
-        identity = node.get("identity", {})
-        source_id = identity.get("node_id")
-        if not source_id:
-            continue
-
-        for edge in node.get("edges", []):
-            edges.append(
-                {
-                    "source": source_id,
-                    "target": edge["target_id"],
-                    "role": edge.get("relation_type") or "related",
-                }
-            )
-    return edges
 
 
 def _merge_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:

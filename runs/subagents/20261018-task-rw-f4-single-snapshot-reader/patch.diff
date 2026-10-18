@@ -1,0 +1,917 @@
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index ae410cd..b5fa6fc 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -338,11 +338,12 @@ class CLI:
+             print(f"Error: graph root is not a directory: {root}")
+             return 1
+ 
++        from deskops.graph.snapshot import GraphSnapshotReadError
+         from deskops.graph.snapshot import default_snapshot_read_path
++        from deskops.graph.snapshot import read_graph_snapshot
+ 
+         graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
+         from deskops.graph.checks import GraphMissingCheckError
+-        from deskops.graph.checks import read_graph_snapshot
+         from deskops.graph.self_reflection import build_self_reflection_report
+         from deskops.graph.self_reflection import write_self_reflection_report
+ 
+@@ -350,7 +351,7 @@ class CLI:
+             snapshot = read_graph_snapshot(graph_path)
+             report = build_self_reflection_report(snapshot)
+             output_path = write_self_reflection_report(root, report)
+-        except GraphMissingCheckError as exc:
++        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
+             print(f"Error: {exc}")
+             return 1
+ 
+diff --git a/deskops/graph/checks.py b/deskops/graph/checks.py
+index 61920bb..c28bc7c 100644
+--- a/deskops/graph/checks.py
++++ b/deskops/graph/checks.py
+@@ -1,6 +1,5 @@
+ from __future__ import annotations
+ 
+-import json
+ from dataclasses import asdict
+ from dataclasses import dataclass
+ from pathlib import Path
+@@ -8,6 +7,9 @@ from typing import Any
+ 
+ from deskops.graph.extract_edges import MissingGraphTarget
+ from deskops.graph.extract_edges import extract_declared_edges
++from deskops.graph.snapshot import GraphSnapshot
++from deskops.graph.snapshot import GraphSnapshotReadError
++from deskops.graph.snapshot import read_graph_snapshot
+ 
+ 
+ class GraphMissingCheckError(RuntimeError):
+@@ -34,37 +36,35 @@ def find_missing_graph_references(root: Path, graph_path: Path | None = None) ->
+     """Return missing graph references from declared source refs and optional snapshot edges."""
+     findings = [_finding_from_missing_target(missing) for missing in extract_declared_edges(root).missing_targets]
+     if graph_path is not None:
+-        findings.extend(find_missing_snapshot_targets(read_graph_snapshot(graph_path)))
++        try:
++            snapshot = read_graph_snapshot(graph_path)
++        except GraphSnapshotReadError as exc:
++            raise GraphMissingCheckError(str(exc)) from exc
++        findings.extend(find_missing_snapshot_targets(snapshot))
+     return sorted(findings, key=lambda finding: (finding.kind, finding.source_id, finding.target_id))
+ 
+ 
+-def read_graph_snapshot(snapshot_path: Path) -> dict[str, Any]:
+-    if not snapshot_path.exists() or not snapshot_path.is_file():
+-        raise GraphMissingCheckError(f"graph snapshot not found: {snapshot_path}")
+-    return json.loads(snapshot_path.read_text(encoding="utf-8"))
+-
+-
+-def find_missing_snapshot_targets(snapshot: dict[str, Any]) -> list[GraphMissingFinding]:
++def find_missing_snapshot_targets(snapshot: GraphSnapshot) -> list[GraphMissingFinding]:
+     """Return edges whose target id is absent from a simple or KGDB-style graph snapshot."""
+-    node_ids = _snapshot_node_ids(snapshot)
++    node_ids = {node.id for node in snapshot.nodes}
+     findings: list[GraphMissingFinding] = []
+     seen: set[tuple[str, str, str | None]] = set()
+-    for edge in _snapshot_edges(snapshot):
+-        if edge["target_id"] in node_ids:
++    for edge in snapshot.edges:
++        if edge.target in node_ids:
+             continue
+-        key = (edge["source_id"], edge["target_id"], edge.get("role"))
++        key = (edge.source, edge.target, edge.role)
+         if key in seen:
+             continue
+         seen.add(key)
+         findings.append(
+             GraphMissingFinding(
+                 kind="missing_edge_target",
+-                source_id=edge["source_id"],
+-                target_id=edge["target_id"],
+-                role=edge.get("role"),
+-                provenance_path=edge.get("provenance_path"),
+-                provenance_locator=edge.get("provenance_locator"),
+-                extractor=edge.get("extractor"),
++                source_id=edge.source,
++                target_id=edge.target,
++                role=edge.role,
++                provenance_path=edge.provenance_path,
++                provenance_locator=edge.provenance_locator,
++                extractor=edge.extractor,
+                 reason="edge target was not found among graph nodes",
+             )
+         )
+@@ -83,60 +83,3 @@ def _finding_from_missing_target(missing: MissingGraphTarget) -> GraphMissingFin
+         reason=missing.reason,
+         record=missing.record,
+     )
+-
+-
+-def _snapshot_node_ids(snapshot: dict[str, Any]) -> set[str]:
+-    node_ids: set[str] = set()
+-    for node in snapshot.get("nodes", []):
+-        if isinstance(node.get("id"), str):
+-            node_ids.add(node["id"])
+-            continue
+-        identity = node.get("identity")
+-        if isinstance(identity, dict) and isinstance(identity.get("node_id"), str):
+-            node_ids.add(identity["node_id"])
+-    return node_ids
+-
+-
+-def _snapshot_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
+-    if "edges" in snapshot:
+-        return [_simple_snapshot_edge(edge) for edge in snapshot.get("edges", [])]
+-
+-    edges: list[dict[str, str]] = []
+-    for node in snapshot.get("nodes", []):
+-        identity = node.get("identity", {})
+-        source_id = identity.get("node_id")
+-        if not isinstance(source_id, str):
+-            continue
+-        for edge in node.get("edges", []):
+-            target_id = edge.get("target_id")
+-            if not isinstance(target_id, str):
+-                continue
+-            metadata = edge.get("metadata", {})
+-            edges.append(
+-                {
+-                    "source_id": source_id,
+-                    "target_id": target_id,
+-                    "role": str(edge.get("relation_type") or metadata.get("role") or "related"),
+-                    **_edge_metadata(metadata),
+-                }
+-            )
+-    return edges
+-
+-
+-def _simple_snapshot_edge(edge: dict[str, Any]) -> dict[str, str]:
+-    metadata = edge.get("metadata", {})
+-    return {
+-        "source_id": edge["source"],
+-        "target_id": edge["target"],
+-        "role": str(edge.get("role") or edge.get("relation_type") or metadata.get("role") or "related"),
+-        **_edge_metadata(edge),
+-        **_edge_metadata(metadata),
+-    }
+-
+-
+-def _edge_metadata(edge: dict[str, Any]) -> dict[str, str]:
+-    return {
+-        key: value
+-        for key in ("provenance_path", "provenance_locator", "extractor")
+-        if isinstance((value := edge.get(key)), str)
+-    }
+diff --git a/deskops/graph/self_reflection.py b/deskops/graph/self_reflection.py
+index 705d43a..d10fb42 100644
+--- a/deskops/graph/self_reflection.py
++++ b/deskops/graph/self_reflection.py
+@@ -8,6 +8,8 @@ from typing import Any
+ 
+ from deskops.graph.checks import GraphMissingFinding
+ from deskops.graph.checks import find_missing_snapshot_targets
++from deskops.graph.snapshot import GraphSnapshot
++from deskops.graph.snapshot import Node
+ 
+ 
+ REPORT_SCHEMA = "deskops_self_reflection_report_v2"
+@@ -77,7 +79,7 @@ class SelfReflectionFinding:
+ 
+ 
+ def build_self_reflection_report(
+-    snapshot: dict[str, Any],
++    snapshot: GraphSnapshot,
+     missing_findings: list[GraphMissingFinding] | None = None,
+ ) -> dict[str, Any]:
+     """Return review-only self-reflection findings for a graph snapshot."""
+@@ -154,7 +156,7 @@ def _read_existing_decisions(path: Path) -> dict[str, Any]:
+ 
+ 
+ def _missing_atom_reference_findings(
+-    snapshot: dict[str, Any],
++    snapshot: GraphSnapshot,
+     missing_findings: list[GraphMissingFinding],
+ ) -> list[SelfReflectionFinding]:
+     findings = [_missing_atom_finding_from_snapshot(edge) for edge in _missing_atom_edges(snapshot)]
+@@ -166,7 +168,7 @@ def _missing_atom_reference_findings(
+     return findings
+ 
+ 
+-def _missing_atom_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
++def _missing_atom_edges(snapshot: GraphSnapshot) -> list[dict[str, str]]:
+     return [
+         edge
+         for edge in _snapshot_missing_targets(snapshot)
+@@ -175,7 +177,7 @@ def _missing_atom_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
+     ]
+ 
+ 
+-def _snapshot_missing_targets(snapshot: dict[str, Any]) -> list[GraphMissingFinding]:
++def _snapshot_missing_targets(snapshot: GraphSnapshot) -> list[GraphMissingFinding]:
+     return find_missing_snapshot_targets(snapshot)
+ 
+ 
+@@ -225,16 +227,16 @@ def _missing_atom_finding_from_check(finding: GraphMissingFinding) -> SelfReflec
+ 
+ 
+ def _dangling_generated_artifact_findings(
+-    snapshot: dict[str, Any],
++    snapshot: GraphSnapshot,
+     missing_findings: list[GraphMissingFinding],
+ ) -> list[SelfReflectionFinding]:
+     findings: list[SelfReflectionFinding] = []
+-    nodes = _snapshot_nodes(snapshot)
+-    node_ids = {node["id"] for node in nodes}
++    nodes = snapshot.nodes
++    node_ids = {node.id for node in nodes}
+     linked_pairs = {
+-        (edge["source"], edge["target"])
+-        for edge in _snapshot_edges(snapshot)
+-        if edge.get("role") in {"references", "generated_from", "materializes", "renders", "source_for"}
++        (edge.source, edge.target)
++        for edge in snapshot.edges
++        if edge.role in {"references", "generated_from", "materializes", "renders", "source_for"}
+     }
+ 
+     for finding in [*_snapshot_missing_targets(snapshot), *missing_findings]:
+@@ -264,19 +266,19 @@ def _dangling_generated_artifact_findings(
+         )
+ 
+     for node in nodes:
+-        if node.get("kind") != "diagram":
++        if node.kind != "diagram":
+             continue
+-        path = str(node.get("path") or node.get("identity") or _path_from_node_id(node["id"]))
++        path = _node_path(node)
+         if not (path.startswith("docs/diagrams/") and path.endswith(".md")):
+             continue
+         source_id = f"diagram:{path[:-3]}.mmd"
+-        if source_id not in node_ids or (node["id"], source_id) in linked_pairs:
++        if source_id not in node_ids or (node.id, source_id) in linked_pairs:
+             continue
+         findings.append(
+             SelfReflectionFinding(
+                 question_id="dangling-generated-artifacts",
+                 kind="dangling_generated_artifact",
+-                source_id=node["id"],
++                source_id=node.id,
+                 target_id=source_id,
+                 role="source_for",
+                 provenance_path=path,
+@@ -284,106 +286,59 @@ def _dangling_generated_artifact_findings(
+                 confidence="medium",
+                 reason="rendered diagram has a sibling Mermaid source file but no declared graph edge linking them",
+                 later_action="issue_candidate",
+-                dedupe_key=_dedupe_key("dangling-generated-artifacts", node["id"], source_id, "source_for"),
++                dedupe_key=_dedupe_key("dangling-generated-artifacts", node.id, source_id, "source_for"),
+                 promotion_targets=["task", "question"],
+             )
+         )
+     return findings
+ 
+ 
+-def _unlinked_source_file_findings(snapshot: dict[str, Any]) -> list[SelfReflectionFinding]:
+-    nodes = _snapshot_nodes(snapshot)
++def _unlinked_source_file_findings(snapshot: GraphSnapshot) -> list[SelfReflectionFinding]:
++    nodes = snapshot.nodes
+     linked_source_ids = _linked_source_ids(snapshot)
+     findings: list[SelfReflectionFinding] = []
+     for node in nodes:
+-        if node.get("kind") != "source_file" or node["id"] in linked_source_ids:
++        if node.kind != "source_file" or node.id in linked_source_ids:
+             continue
+-        path = str(node.get("path") or node.get("identity") or _path_from_node_id(node["id"]))
++        path = _node_path(node)
+         if _is_excluded_source_path(path):
+             continue
+         findings.append(
+             SelfReflectionFinding(
+                 question_id="unlinked-source-files",
+                 kind="unlinked_source_file",
+-                source_id=node["id"],
++                source_id=node.id,
+                 target_id=None,
+                 role=None,
+                 provenance_path=path,
+-                provenance_locator=f"node:{node['id']}",
++                provenance_locator=f"node:{node.id}",
+                 confidence="medium",
+                 reason="source file has no graph edge connecting it to a desk knowledge surface",
+                 later_action="issue_candidate",
+-                dedupe_key=f"unlinked-source-files:{node['id']}",
++                dedupe_key=f"unlinked-source-files:{node.id}",
+                 promotion_targets=["task", "question"],
+             )
+         )
+     return findings
+ 
+ 
+-def _linked_source_ids(snapshot: dict[str, Any]) -> set[str]:
++def _linked_source_ids(snapshot: GraphSnapshot) -> set[str]:
+     linked: set[str] = set()
+-    for edge in _snapshot_edges(snapshot):
+-        if edge.get("role") not in SOURCE_LINK_ROLES:
++    for edge in snapshot.edges:
++        if edge.role not in SOURCE_LINK_ROLES:
+             continue
+-        for key in ("source", "target"):
+-            node_id = edge[key]
++        for node_id in (edge.source, edge.target):
+             if node_id.startswith("source_file:"):
+                 linked.add(node_id)
+     return linked
+ 
+ 
+-def _snapshot_nodes(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
+-    nodes: list[dict[str, Any]] = []
+-    for node in snapshot.get("nodes", []):
+-        if "id" in node:
+-            nodes.append(node)
+-            continue
+-        identity = node.get("identity", {})
+-        node_id = identity.get("node_id")
+-        if not isinstance(node_id, str):
+-            continue
+-        semantics = node.get("semantics", {})
+-        nodes.append(
+-            {
+-                "id": node_id,
+-                "kind": identity.get("node_type"),
+-                "identity": semantics.get("identity") or _path_from_node_id(node_id),
+-                "path": semantics.get("path"),
+-            }
+-        )
+-    return nodes
+-
+-
+-def _snapshot_edges(snapshot: dict[str, Any]) -> list[dict[str, str]]:
+-    if "edges" in snapshot:
+-        return [
+-            {
+-                "source": edge["source"],
+-                "target": edge["target"],
+-                "role": str(edge.get("role") or edge.get("relation_type") or "related"),
+-            }
+-            for edge in snapshot.get("edges", [])
+-        ]
+-
+-    edges: list[dict[str, str]] = []
+-    for node in snapshot.get("nodes", []):
+-        identity = node.get("identity", {})
+-        source_id = identity.get("node_id")
+-        if not isinstance(source_id, str):
+-            continue
+-        for edge in node.get("edges", []):
+-            target_id = edge.get("target_id")
+-            if not isinstance(target_id, str):
+-                continue
+-            metadata = edge.get("metadata", {})
+-            edges.append(
+-                {
+-                    "source": source_id,
+-                    "target": target_id,
+-                    "role": str(edge.get("relation_type") or metadata.get("role") or "related"),
+-                }
+-            )
+-    return edges
++def _node_path(node: Node) -> str:
++    if node.path:
++        return str(node.path)
++    if isinstance(node.identity, str) and node.identity:
++        return node.identity
++    return _path_from_node_id(node.id)
+ 
+ 
+ def _group_duplicate_findings(findings: list[SelfReflectionFinding]) -> list[SelfReflectionFinding]:
+@@ -419,14 +374,16 @@ def _is_excluded_source_path(path: str) -> bool:
+ 
+ 
+ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
+-    from deskops.graph.checks import find_missing_graph_references, read_graph_snapshot
++    from deskops.graph.checks import find_missing_graph_references
+     from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
++    from deskops.graph.snapshot import GraphSnapshot
++    from deskops.graph.snapshot import read_graph_snapshot
+     
+     graph_path = root / DEFAULT_SNAPSHOT_PATH
+     try:
+         snapshot = read_graph_snapshot(graph_path)
+     except Exception:
+-        snapshot = {"nodes": [], "edges": []}
++        snapshot = GraphSnapshot()
+         
+     missing = find_missing_graph_references(root, graph_path if graph_path.exists() else None)
+     
+@@ -446,9 +403,9 @@ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
+ 
+     # 3. a graph finding that no atom and no issue covers
+     covering_sources = set()
+-    for edge in _snapshot_edges(snapshot):
+-        if edge["source"].startswith("atom:") or edge["source"].startswith("issue:"):
+-            covering_sources.add(edge["target"])
++    for edge in snapshot.edges:
++        if edge.source.startswith("atom:") or edge.source.startswith("issue:"):
++            covering_sources.add(edge.target)
+             
+     for finding in missing:
+         if finding.source_id.startswith("atom:") or finding.source_id.startswith("issue:"):
+diff --git a/deskops/graph/snapshot.py b/deskops/graph/snapshot.py
+index f7107e3..ed74c8f 100644
+--- a/deskops/graph/snapshot.py
++++ b/deskops/graph/snapshot.py
+@@ -1,6 +1,7 @@
+ from __future__ import annotations
+ 
+ import json
++from dataclasses import dataclass, field
+ from pathlib import Path
+ from typing import Any
+ 
+@@ -30,6 +31,31 @@ class GraphSnapshotReadError(RuntimeError):
+     """Raised when an existing graph snapshot cannot satisfy a read query."""
+ 
+ 
++@dataclass(frozen=True)
++class Node:
++    id: str
++    kind: str | None = None
++    path: str | None = None
++    identity: dict[str, Any] | str | None = None
++    label: str | None = None
++
++
++@dataclass(frozen=True)
++class Edge:
++    source: str
++    target: str
++    role: str = "related"
++    provenance_path: str | None = None
++    provenance_locator: str | None = None
++    extractor: str | None = None
++
++
++@dataclass(frozen=True)
++class GraphSnapshot:
++    nodes: list[Node] = field(default_factory=list)
++    edges: list[Edge] = field(default_factory=list)
++
++
+ def networkx_path_for_snapshot(snapshot_path: Path) -> Path:
+     """Return the sibling NetworkX path for a GraphSnapshot destination."""
+     without_json = snapshot_path.with_suffix("")
+@@ -47,17 +73,54 @@ def default_snapshot_read_path(root: Path) -> Path:
+     return legacy if legacy.exists() else preferred
+ 
+ 
++def read_graph_snapshot(path: Path) -> GraphSnapshot:
++    """Read a graph snapshot from disk into nodes and flat edges."""
++    if not path.exists() or not path.is_file():
++        raise GraphSnapshotReadError(f"graph snapshot not found: {path}")
++
++    try:
++        payload = json.loads(path.read_text(encoding="utf-8"))
++    except (json.JSONDecodeError, UnicodeDecodeError) as exc:
++        raise GraphSnapshotReadError(f"graph snapshot is not valid JSON: {path}") from exc
++
++    if not isinstance(payload, dict):
++        raise GraphSnapshotReadError(f"graph snapshot must be a JSON object: {path}")
++
++    raw_nodes = payload.get("nodes")
++    if not isinstance(raw_nodes, list):
++        raise GraphSnapshotReadError(f"graph snapshot is missing the nodes list: {path}")
++
++    nodes: list[Node] = []
++    nested_edges: list[Edge] = []
++    for raw_node in raw_nodes:
++        if not isinstance(raw_node, dict):
++            raise GraphSnapshotReadError(f"graph snapshot contains a non-object node: {path}")
++        node = _read_node(raw_node, path)
++        nodes.append(node)
++        nested_edges.extend(_read_nested_edges(raw_node, node.id, path))
++
++    if "edges" in payload:
++        raw_edges = payload["edges"]
++        if not isinstance(raw_edges, list):
++            raise GraphSnapshotReadError(f"graph snapshot edges must be a list: {path}")
++        edges = [_read_top_level_edge(raw_edge, path) for raw_edge in raw_edges]
++    else:
++        edges = nested_edges
++
++    return GraphSnapshot(nodes=nodes, edges=edges)
++
++
+ def read_graph_neighbors(snapshot_path: Path, node_id: str) -> dict[str, Any]:
+     """Return incoming and outgoing neighbors for one node from a graph snapshot."""
+-    if not snapshot_path.exists() or not snapshot_path.is_file():
+-        raise GraphSnapshotReadError(f"graph snapshot not found: {snapshot_path}")
+-
+-    snapshot = json.loads(snapshot_path.read_text(encoding="utf-8"))
+-    nodes = _snapshot_nodes_by_id(snapshot)
++    snapshot = read_graph_snapshot(snapshot_path)
++    nodes = _neighbor_nodes(snapshot.nodes)
+     if node_id not in nodes:
+         raise GraphSnapshotReadError(f"graph node not found: {node_id}")
+ 
+-    edges = _snapshot_edges(snapshot)
++    edges = [
++        {"source": edge.source, "target": edge.target, "role": edge.role}
++        for edge in snapshot.edges
++    ]
+     return {
+         "node": nodes[node_id],
+         "incoming": [edge for edge in edges if edge["target"] == node_id],
+@@ -101,6 +164,126 @@ def build_graph_snapshot(root: Path) -> dict[str, Any]:
+     }
+ 
+ 
++def _read_node(raw_node: dict[str, Any], path: Path) -> Node:
++    identity = raw_node.get("identity")
++    semantics = raw_node.get("semantics")
++    if not isinstance(semantics, dict):
++        semantics = {}
++
++    node_id = raw_node.get("id")
++    if not isinstance(node_id, str) and isinstance(identity, dict):
++        node_id = identity.get("node_id")
++    if not isinstance(node_id, str) or not node_id:
++        raise GraphSnapshotReadError(f"graph snapshot node is missing its id: {path}")
++
++    kind = raw_node.get("kind")
++    if not isinstance(kind, str) and isinstance(identity, dict):
++        kind = identity.get("node_type")
++
++    node_path = raw_node.get("path")
++    if not isinstance(node_path, str):
++        node_path = semantics.get("path") if isinstance(semantics.get("path"), str) else None
++
++    label = (
++        semantics.get("title")
++        or raw_node.get("label")
++        or semantics.get("label")
++        or node_id
++    )
++    return Node(
++        id=node_id,
++        kind=kind if isinstance(kind, str) else None,
++        path=node_path,
++        identity=identity if isinstance(identity, (dict, str)) else None,
++        label=str(label),
++    )
++
++
++def _read_nested_edges(raw_node: dict[str, Any], source_id: str, path: Path) -> list[Edge]:
++    raw_edges = raw_node.get("edges")
++    if raw_edges is None:
++        return []
++    if not isinstance(raw_edges, list):
++        raise GraphSnapshotReadError(f"graph snapshot node edges must be a list: {path}")
++
++    edges: list[Edge] = []
++    for raw_edge in raw_edges:
++        if not isinstance(raw_edge, dict):
++            raise GraphSnapshotReadError(f"graph snapshot contains a non-object edge: {path}")
++        metadata = raw_edge.get("metadata")
++        metadata = metadata if isinstance(metadata, dict) else {}
++        target = raw_edge.get("target")
++        if not isinstance(target, str):
++            target = raw_edge.get("target_id")
++        if not isinstance(target, str) or not target:
++            raise GraphSnapshotReadError(f"graph snapshot edge is missing its target: {path}")
++        role = raw_edge.get("relation_type") or metadata.get("role") or "related"
++        edges.append(
++            Edge(
++                source=source_id,
++                target=target,
++                role=str(role),
++                **_edge_provenance(raw_edge, metadata, metadata_wins=False),
++            )
++        )
++    return edges
++
++
++def _read_top_level_edge(raw_edge: Any, path: Path) -> Edge:
++    if not isinstance(raw_edge, dict):
++        raise GraphSnapshotReadError(f"graph snapshot contains a non-object edge: {path}")
++    metadata = raw_edge.get("metadata")
++    metadata = metadata if isinstance(metadata, dict) else {}
++
++    source = raw_edge.get("source")
++    if not isinstance(source, str):
++        source = raw_edge.get("source_id")
++    if not isinstance(source, str) or not source:
++        raise GraphSnapshotReadError(f"graph snapshot edge is missing its source: {path}")
++
++    target = raw_edge.get("target")
++    if not isinstance(target, str):
++        target = raw_edge.get("target_id")
++    if not isinstance(target, str) or not target:
++        raise GraphSnapshotReadError(f"graph snapshot edge is missing its target: {path}")
++
++    role = raw_edge.get("role") or raw_edge.get("relation_type") or metadata.get("role") or "related"
++    return Edge(
++        source=source,
++        target=target,
++        role=str(role),
++        **_edge_provenance(raw_edge, metadata, metadata_wins=True),
++    )
++
++
++def _edge_provenance(
++    raw_edge: dict[str, Any],
++    metadata: dict[str, Any],
++    *,
++    metadata_wins: bool,
++) -> dict[str, str | None]:
++    values: dict[str, str | None] = {}
++    for key in ("provenance_path", "provenance_locator", "extractor"):
++        direct = raw_edge.get(key)
++        meta = metadata.get(key)
++        direct = direct if isinstance(direct, str) else None
++        meta = meta if isinstance(meta, str) else None
++        values[key] = (meta if meta is not None else direct) if metadata_wins else (direct if direct is not None else meta)
++    return values
++
++
++def _neighbor_nodes(nodes: list[Node]) -> dict[str, dict[str, Any]]:
++    by_id: dict[str, dict[str, Any]] = {}
++    for node in nodes:
++        item: dict[str, Any] = {"id": node.id, "kind": node.kind, "label": node.label}
++        if node.identity is not None:
++            item["identity"] = node.identity
++        if node.path is not None:
++            item["path"] = node.path
++        by_id[node.id] = item
++    return by_id
++
++
+ def write_graph_snapshot(
+     root: Path,
+     output_path: Path | None = None,
+@@ -125,55 +308,6 @@ def _validate_graph_snapshot(snapshot: dict[str, Any]) -> None:
+     GraphSnapshot.model_validate(snapshot)
+ 
+ 
+-def _snapshot_nodes_by_id(snapshot: dict[str, Any]) -> dict[str, dict[str, Any]]:
+-    nodes: dict[str, dict[str, Any]] = {}
+-    for node in snapshot.get("nodes", []):
+-        if "id" in node:
+-            nodes[node["id"]] = node
+-            continue
+-
+-        identity = node.get("identity", {})
+-        node_id = identity.get("node_id")
+-        if node_id:
+-            semantics = node.get("semantics", {})
+-            nodes[node_id] = {
+-                "id": node_id,
+-                "kind": identity.get("node_type"),
+-                "label": semantics.get("title") or semantics.get("label") or node_id,
+-                **semantics,
+-            }
+-    return nodes
+-
+-
+-def _snapshot_edges(snapshot: dict[str, Any]) -> list[dict[str, Any]]:
+-    if "edges" in snapshot:
+-        return [
+-            {
+-                "source": edge["source"],
+-                "target": edge["target"],
+-                "role": edge.get("role") or edge.get("relation_type") or "related",
+-            }
+-            for edge in snapshot.get("edges", [])
+-        ]
+-
+-    edges: list[dict[str, Any]] = []
+-    for node in snapshot.get("nodes", []):
+-        identity = node.get("identity", {})
+-        source_id = identity.get("node_id")
+-        if not source_id:
+-            continue
+-
+-        for edge in node.get("edges", []):
+-            edges.append(
+-                {
+-                    "source": source_id,
+-                    "target": edge["target_id"],
+-                    "role": edge.get("relation_type") or "related",
+-                }
+-            )
+-    return edges
+-
+-
+ def _merge_nodes(nodes: list[dict[str, Any]]) -> dict[str, dict[str, Any]]:
+     merged: dict[str, dict[str, Any]] = {}
+     for node in nodes:
+diff --git a/tests/test_graph_checks.py b/tests/test_graph_checks.py
+index 1241027..2e9b4b2 100644
+--- a/tests/test_graph_checks.py
++++ b/tests/test_graph_checks.py
+@@ -4,21 +4,24 @@ from pathlib import Path
+ 
+ from deskops.graph.checks import find_missing_graph_references
+ from deskops.graph.checks import find_missing_snapshot_targets
++from deskops.graph.snapshot import Edge
++from deskops.graph.snapshot import GraphSnapshot
++from deskops.graph.snapshot import Node
+ 
+ 
+ def test_find_missing_snapshot_targets_reports_dangling_edge() -> None:
+-    snapshot = {
+-        "nodes": [{"id": "task:source", "kind": "task", "label": "Source"}],
+-        "edges": [
+-            {
+-                "source": "task:source",
+-                "target": "atom:missing",
+-                "role": "references",
+-                "provenance_path": "desk/tasks/source.md",
+-                "provenance_locator": "Related Atoms",
+-            }
++    snapshot = GraphSnapshot(
++        nodes=[Node(id="task:source", kind="task", label="Source")],
++        edges=[
++            Edge(
++                source="task:source",
++                target="atom:missing",
++                role="references",
++                provenance_path="desk/tasks/source.md",
++                provenance_locator="Related Atoms",
++            )
+         ],
+-    }
++    )
+ 
+     findings = find_missing_snapshot_targets(snapshot)
+ 
+@@ -36,13 +39,13 @@ def test_find_missing_snapshot_targets_reports_dangling_edge() -> None:
+ 
+ 
+ def test_find_missing_snapshot_targets_accepts_clean_graph_fixture() -> None:
+-    snapshot = {
+-        "nodes": [
+-            {"id": "task:source", "kind": "task", "label": "Source"},
+-            {"id": "atom:target", "kind": "atom", "label": "Target"},
++    snapshot = GraphSnapshot(
++        nodes=[
++            Node(id="task:source", kind="task", label="Source"),
++            Node(id="atom:target", kind="atom", label="Target"),
+         ],
+-        "edges": [{"source": "task:source", "target": "atom:target", "role": "references"}],
+-    }
++        edges=[Edge(source="task:source", target="atom:target", role="references")],
++    )
+ 
+     assert find_missing_snapshot_targets(snapshot) == []
+ 
+diff --git a/tests/test_graph_self_reflection.py b/tests/test_graph_self_reflection.py
+index 909db70..87900f7 100644
+--- a/tests/test_graph_self_reflection.py
++++ b/tests/test_graph_self_reflection.py
+@@ -8,6 +8,7 @@ from deskops.graph.self_reflection import DEFAULT_DECISIONS_PATH
+ from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
+ from deskops.graph.self_reflection import build_self_reflection_report
+ from deskops.graph.self_reflection import write_self_reflection_report
++from deskops.graph.snapshot import read_graph_snapshot
+ 
+ 
+ FIXTURE_GRAPH = Path(__file__).parent / "fixtures/knowledge_graph/static_desk_source_graph.json"
+@@ -50,7 +51,9 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
+         }
+     )
+ 
+-    report = build_self_reflection_report(snapshot)
++    graph_path = tmp_path / "graph.json"
++    graph_path.write_text(json.dumps(snapshot), encoding="utf-8")
++    report = build_self_reflection_report(read_graph_snapshot(graph_path))
+     report_path = write_self_reflection_report(tmp_path, report)
+     decisions_path = tmp_path / DEFAULT_DECISIONS_PATH
+ 
+@@ -130,7 +133,7 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
+     ]
+ 
+ 
+-def test_self_reflection_report_suppresses_duplicate_findings() -> None:
++def test_self_reflection_report_suppresses_duplicate_findings(tmp_path: Path) -> None:
+     snapshot = {
+         "nodes": [{"id": "task:source", "kind": "task", "label": "Source"}],
+         "edges": [
+@@ -162,7 +165,9 @@ def test_self_reflection_report_suppresses_duplicate_findings() -> None:
+         )
+     ]
+ 
+-    report = build_self_reflection_report(snapshot, missing_findings)
++    graph_path = tmp_path / "graph.json"
++    graph_path.write_text(json.dumps(snapshot), encoding="utf-8")
++    report = build_self_reflection_report(read_graph_snapshot(graph_path), missing_findings)
+ 
+     assert report["summary"] == {"finding_count": 1, "suppressed_duplicate_count": 1}
+     assert report["findings"][0]["dedupe_key"] == "missing-atom-references:task:source:atom:missing:references"
+diff --git a/tests/test_graph_snapshot.py b/tests/test_graph_snapshot.py
+index 5394493..ea5db58 100644
+--- a/tests/test_graph_snapshot.py
++++ b/tests/test_graph_snapshot.py
+@@ -3,13 +3,16 @@ from __future__ import annotations
+ import json
+ from pathlib import Path
+ 
++import pytest
+ from sldb.api.graph.snapshot import GraphSnapshot
+ 
+ from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+ from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
++from deskops.graph.snapshot import GraphSnapshotReadError
+ from deskops.graph.snapshot import build_graph_snapshot
+ from deskops.graph.snapshot import default_snapshot_read_path
+ from deskops.graph.snapshot import networkx_path_for_snapshot
++from deskops.graph.snapshot import read_graph_snapshot
+ from deskops.graph.snapshot import write_graph_snapshot
+ 
+ 
+@@ -108,3 +111,88 @@ tags: []
+ Existing knowledge.
+ """,
+     )
++
++
++def test_read_graph_snapshot_flattens_nested_edges() -> None:
++    path = Path(__file__).parent / "fixtures/golden/graph_snapshot.kg.json"
++
++    snapshot = read_graph_snapshot(path)
++
++    atom = next(node for node in snapshot.nodes if node.id == "atom:atom-golden-one")
++    assert atom.kind == "atom"
++    assert atom.path == "desk/atoms/atom-golden-one.md"
++    assert isinstance(atom.identity, dict)
++    assert atom.identity["node_id"] == "atom:atom-golden-one"
++    assert atom.label == "Golden atom one"
++
++    edge = next(edge for edge in snapshot.edges if edge.source == "atom:atom-golden-one")
++    assert edge.target == "facet:what"
++    assert edge.role == "answers"
++    assert edge.provenance_path == "desk/atoms/atom-golden-one.md"
++    assert edge.provenance_locator == "frontmatter:five_wh_one_plus"
++    assert edge.extractor == "desk_kgdb_coverage_v1"
++
++
++def test_read_graph_snapshot_accepts_top_level_edges_and_id_identity(tmp_path: Path) -> None:
++    snapshot = {
++        "nodes": [{"identity": {"node_id": "task:source", "node_type": "task"}, "semantics": {"title": "Source"}}],
++        "edges": [{"source": "task:source", "target": "atom:missing", "role": "references"}],
++    }
++    path = _write(tmp_path, json.dumps(snapshot))
++
++    result = read_graph_snapshot(path)
++
++    assert [(node.id, node.kind, node.label) for node in result.nodes] == [("task:source", "task", "Source")]
++    assert [(edge.source, edge.target, edge.role) for edge in result.edges] == [
++        ("task:source", "atom:missing", "references")
++    ]
++
++
++def test_read_graph_snapshot_rejects_missing_file(tmp_path: Path) -> None:
++    path = tmp_path / "missing.json"
++
++    with pytest.raises(GraphSnapshotReadError, match="graph snapshot not found"):
++        read_graph_snapshot(path)
++
++
++def test_read_graph_snapshot_rejects_invalid_json(tmp_path: Path) -> None:
++    path = _write(tmp_path, "{not json")
++
++    with pytest.raises(GraphSnapshotReadError, match="not valid JSON"):
++        read_graph_snapshot(path)
++
++
++def test_read_graph_snapshot_rejects_missing_key(tmp_path: Path) -> None:
++    path = _write(tmp_path, json.dumps({"version": "1.0"}))
++
++    with pytest.raises(GraphSnapshotReadError, match="missing the nodes list"):
++        read_graph_snapshot(path)
++
++    path = _write(tmp_path, json.dumps({"nodes": [{"kind": "atom"}]}))
++
++    with pytest.raises(GraphSnapshotReadError, match="missing its id"):
++        read_graph_snapshot(path)
++
++
++def test_read_graph_snapshot_rejects_malformed_shape(tmp_path: Path) -> None:
++    path = _write(tmp_path, json.dumps({"nodes": {}}))
++
++    with pytest.raises(GraphSnapshotReadError, match="missing the nodes list"):
++        read_graph_snapshot(path)
++
++    path = _write(tmp_path, json.dumps({"nodes": ["node"]}))
++
++    with pytest.raises(GraphSnapshotReadError, match="non-object node"):
++        read_graph_snapshot(path)
++
++    path = _write(tmp_path, json.dumps({"nodes": [{"id": "task:source", "edges": {}}]}))
++
++    with pytest.raises(GraphSnapshotReadError, match="node edges must be a list"):
++        read_graph_snapshot(path)
++
++
++def _write(path: Path, content: str) -> Path:
++    path.mkdir(parents=True, exist_ok=True)
++    target = path / "snapshot.json"
++    target.write_text(content, encoding="utf-8")
++    return target

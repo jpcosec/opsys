@@ -4,21 +4,24 @@ from pathlib import Path
 
 from deskops.graph.checks import find_missing_graph_references
 from deskops.graph.checks import find_missing_snapshot_targets
+from deskops.graph.snapshot import Edge
+from deskops.graph.snapshot import GraphSnapshot
+from deskops.graph.snapshot import Node
 
 
 def test_find_missing_snapshot_targets_reports_dangling_edge() -> None:
-    snapshot = {
-        "nodes": [{"id": "task:source", "kind": "task", "label": "Source"}],
-        "edges": [
-            {
-                "source": "task:source",
-                "target": "atom:missing",
-                "role": "references",
-                "provenance_path": "desk/tasks/source.md",
-                "provenance_locator": "Related Atoms",
-            }
+    snapshot = GraphSnapshot(
+        nodes=[Node(id="task:source", kind="task", label="Source")],
+        edges=[
+            Edge(
+                source="task:source",
+                target="atom:missing",
+                role="references",
+                provenance_path="desk/tasks/source.md",
+                provenance_locator="Related Atoms",
+            )
         ],
-    }
+    )
 
     findings = find_missing_snapshot_targets(snapshot)
 
@@ -36,13 +39,13 @@ def test_find_missing_snapshot_targets_reports_dangling_edge() -> None:
 
 
 def test_find_missing_snapshot_targets_accepts_clean_graph_fixture() -> None:
-    snapshot = {
-        "nodes": [
-            {"id": "task:source", "kind": "task", "label": "Source"},
-            {"id": "atom:target", "kind": "atom", "label": "Target"},
+    snapshot = GraphSnapshot(
+        nodes=[
+            Node(id="task:source", kind="task", label="Source"),
+            Node(id="atom:target", kind="atom", label="Target"),
         ],
-        "edges": [{"source": "task:source", "target": "atom:target", "role": "references"}],
-    }
+        edges=[Edge(source="task:source", target="atom:target", role="references")],
+    )
 
     assert find_missing_snapshot_targets(snapshot) == []
 

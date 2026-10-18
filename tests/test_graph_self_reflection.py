@@ -8,6 +8,7 @@ from deskops.graph.self_reflection import DEFAULT_DECISIONS_PATH
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.self_reflection import build_self_reflection_report
 from deskops.graph.self_reflection import write_self_reflection_report
+from deskops.graph.snapshot import read_graph_snapshot
 
 
 FIXTURE_GRAPH = Path(__file__).parent / "fixtures/knowledge_graph/static_desk_source_graph.json"
@@ -50,7 +51,9 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
         }
     )
 
-    report = build_self_reflection_report(snapshot)
+    graph_path = tmp_path / "graph.json"
+    graph_path.write_text(json.dumps(snapshot), encoding="utf-8")
+    report = build_self_reflection_report(read_graph_snapshot(graph_path))
     report_path = write_self_reflection_report(tmp_path, report)
     decisions_path = tmp_path / DEFAULT_DECISIONS_PATH
 
@@ -130,7 +133,7 @@ def test_self_reflection_report_generates_findings_and_writes_runtime_report(tmp
     ]
 
 
-def test_self_reflection_report_suppresses_duplicate_findings() -> None:
+def test_self_reflection_report_suppresses_duplicate_findings(tmp_path: Path) -> None:
     snapshot = {
         "nodes": [{"id": "task:source", "kind": "task", "label": "Source"}],
         "edges": [
@@ -162,7 +165,9 @@ def test_self_reflection_report_suppresses_duplicate_findings() -> None:
         )
     ]
 
-    report = build_self_reflection_report(snapshot, missing_findings)
+    graph_path = tmp_path / "graph.json"
+    graph_path.write_text(json.dumps(snapshot), encoding="utf-8")
+    report = build_self_reflection_report(read_graph_snapshot(graph_path), missing_findings)
 
     assert report["summary"] == {"finding_count": 1, "suppressed_duplicate_count": 1}
     assert report["findings"][0]["dedupe_key"] == "missing-atom-references:task:source:atom:missing:references"

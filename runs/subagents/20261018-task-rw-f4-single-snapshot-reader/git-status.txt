@@ -1,0 +1,8 @@
+ M deskops/cli/main.py
+ M deskops/graph/checks.py
+ M deskops/graph/self_reflection.py
+ M deskops/graph/snapshot.py
+ M tests/test_graph_checks.py
+ M tests/test_graph_self_reflection.py
+ M tests/test_graph_snapshot.py
+?? runs/subagents/20261018-task-rw-f4-single-snapshot-reader/
