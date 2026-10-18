@@ -129,7 +129,7 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
         '"pytest tests/test_lifecycle_smoke.py::test_lifecycle_smoke", '
         f'"{seed_commit}"]'
     )
-    files = '["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md", "tests/test_lifecycle_smoke.py"]'
+    files = '["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md"]'
 
     edit_references = _cli(
         root,
@@ -158,9 +158,22 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     )
     assert "Updated task task-lifecycle-e2e field files" in edit_files.stdout
 
-    closed = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
-    assert "Status: closed" in closed.stdout
-    assert "Current node: complete" in closed.stdout
+    closed = _cli(
+        root,
+        "closeout",
+        "commit",
+        "--root",
+        str(root),
+        "--task",
+        "task-lifecycle-e2e",
+        "--no-run",
+        "--reason",
+        "Lifecycle smoke test closes without a subagent run",
+        "--paths",
+        "desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md",
+        "tests/test_lifecycle_smoke.py",
+    )
+    assert "Closing commit " in closed.stdout
 
     assert not active_task.exists()
 
@@ -225,7 +238,7 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
         "task",
         "task-foo",
         "files",
-        '["desk/atoms/atom-closeout-amend-ownership-evidence.md", "tests/test_amend_owner_smoke.py"]',
+        '["desk/atoms/atom-closeout-amend-ownership-evidence.md"]',
         "--root",
         str(root),
     )
@@ -240,7 +253,21 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
     )
     other_closeout = _git(root, "rev-parse", "HEAD")
 
-    _cli(root, "advance", "task", "task-foo", "--root", str(root))
+    _cli(
+        root,
+        "closeout",
+        "commit",
+        "--root",
+        str(root),
+        "--task",
+        "task-foo",
+        "--no-run",
+        "--reason",
+        "Amend ownership smoke test",
+        "--paths",
+        "desk/atoms/atom-closeout-amend-ownership-evidence.md",
+        "tests/test_amend_owner_smoke.py",
+    )
 
     assert _git(root, "rev-parse", "HEAD~1") == other_closeout, (
         "closing task-foo must not amend another task's closeout commit"
@@ -300,7 +327,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
         "task",
         "task-pathspec-commit",
         "files",
-        f'["{atom}", "{test_file}"]',
+        f'["{atom}"]',
         "--root",
         str(root),
     )
@@ -314,7 +341,21 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
     _write(root, "unrelated.txt", "unrelated\n")
     _git(root, "add", "unrelated.txt")
 
-    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
+    _cli(
+        root,
+        "closeout",
+        "commit",
+        "--root",
+        str(root),
+        "--task",
+        "task-pathspec-commit",
+        "--no-run",
+        "--reason",
+        "Pathspec smoke test",
+        "--paths",
+        atom,
+        test_file,
+    )
     assert not task_a.exists()
 
     staged = _git(root, "diff", "--cached", "--name-only").split()
@@ -372,7 +413,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
         "task",
         "task-pathspec-amend",
         "files",
-        f'["{amend_atom}", "{amend_test}"]',
+        f'["{amend_atom}"]',
         "--root",
         str(root),
     )
@@ -385,7 +426,21 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
     _write(root, "unrelated-amend.txt", "unrelated\n")
     _git(root, "add", "unrelated-amend.txt")
 
-    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
+    _cli(
+        root,
+        "closeout",
+        "commit",
+        "--root",
+        str(root),
+        "--task",
+        "task-pathspec-amend",
+        "--no-run",
+        "--reason",
+        "Amend pathspec smoke test",
+        "--paths",
+        amend_atom,
+        amend_test,
+    )
     assert not task_b.exists()
 
     assert _git(root, "rev-parse", "HEAD~1") == _git(root, "rev-parse", f"{fake_closeout}~1"), (

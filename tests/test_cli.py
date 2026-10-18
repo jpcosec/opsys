@@ -1504,24 +1504,44 @@ def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Pat
     runtime_test = tmp_path / "tests" / "test_runtime.py"
     runtime_test.parent.mkdir(parents=True, exist_ok=True)
     runtime_test.write_text("def test_runtime():\n    assert True\n", encoding="utf-8")
+    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
+    capsys.readouterr()
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=True
+    ).stdout.strip()
 
     evidence_edit = main([
         "edit",
         "task",
         "task-advance-task-runtime",
         "references",
-        '["pytest tests/test_runtime.py::test_runtime"]',
+        f'["desk/atoms/atom-trackable-atom.md", "pytest tests/test_runtime.py::test_runtime", "{commit}"]',
         "--root",
         str(tmp_path),
     ])
     capsys.readouterr()
     assert evidence_edit == 0
+    files_edit = main([
+        "edit",
+        "task",
+        "task-advance-task-runtime",
+        "files",
+        '["desk/atoms/atom-trackable-atom.md"]',
+        "--root",
+        str(tmp_path),
+    ])
+    capsys.readouterr()
+    assert files_edit == 0
 
-    third_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
-    third = capsys.readouterr()
-    assert third_advance == 0
-    assert "Status: closed" in third.out
-    assert "Current node: complete" in third.out
+    closed = main([
+        "closeout", "commit", "--root", str(tmp_path),
+        "--task", "task-advance-task-runtime",
+        "--no-run", "--reason", "Runtime smoke test",
+        "--paths", "desk/atoms/atom-trackable-atom.md", "tests/test_runtime.py",
+    ])
+    close_out = capsys.readouterr()
+    assert closed == 0
+    assert "Closing commit " in close_out.out
     assert not (tmp_path / "desk" / "tasks" / "task-advance-task-runtime.md").exists()
     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-advance-task-runtime.md" not in board_text
@@ -1713,11 +1733,52 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
     capsys.readouterr()
     assert add_evidence == 0
 
-    close_result = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
+    # Evidence now clears the lifecycle gate, but `advance` still refuses to
+    # close: the only closing entry point is `closeout commit`.
+    close_attempt = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
+    close_attempt_out = capsys.readouterr()
+    assert close_attempt == 1
+    assert "deskops closeout commit" in close_attempt_out.out
+    assert (tmp_path / "desk" / "tasks" / "task-advance-blocked-task.md").exists()
+
+    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
+    capsys.readouterr()
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=True
+    ).stdout.strip()
+    full_evidence = main([
+        "edit",
+        "task",
+        "task-advance-blocked-task",
+        "references",
+        f'["desk/atoms/atom-trackable-atom.md", "pytest tests/test_blocked.py::test_blocked", "{commit}"]',
+        "--root",
+        str(tmp_path),
+    ])
+    capsys.readouterr()
+    assert full_evidence == 0
+    files_edit = main([
+        "edit",
+        "task",
+        "task-advance-blocked-task",
+        "files",
+        '["desk/atoms/atom-trackable-atom.md"]',
+        "--root",
+        str(tmp_path),
+    ])
+    capsys.readouterr()
+    assert files_edit == 0
+
+    closed = main([
+        "closeout", "commit", "--root", str(tmp_path),
+        "--task", "task-advance-blocked-task",
+        "--no-run", "--reason", "Blocked gate smoke test",
+        "--paths", "desk/atoms/atom-trackable-atom.md", "tests/test_blocked.py",
+    ])
     close_out = capsys.readouterr()
-    assert close_result == 0
-    assert "Status: closed" in close_out.out
-    assert "Current node: complete" in close_out.out
+    assert closed == 0
+    assert "Closing commit " in close_out.out
+    assert not (tmp_path / "desk" / "tasks" / "task-advance-blocked-task.md").exists()
 
 
 def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk: Path, capsys) -> None:
@@ -1777,11 +1838,52 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk
     capsys.readouterr()
     assert set_atom_reference == 0
 
-    close_result = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
+    # The atom reference clears the lifecycle gate (not "Gate ... not
+    # complete"), but closing itself belongs to `closeout commit`.
+    close_attempt = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
+    close_attempt_out = capsys.readouterr()
+    assert close_attempt == 1
+    assert "deskops closeout commit" in close_attempt_out.out
+    assert "Gate ritual-closeout is not complete" not in close_attempt_out.out
+
+    atom_test = tmp_path / "tests" / "test_atom_evidence.py"
+    atom_test.parent.mkdir(parents=True, exist_ok=True)
+    atom_test.write_text("def test_atom_evidence():\n    assert True\n", encoding="utf-8")
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=True
+    ).stdout.strip()
+    full_evidence = main([
+        "edit",
+        "task",
+        "task-advance-with-atom-evidence",
+        "references",
+        f'["desk/atoms/atom-trackable-atom.md", "pytest tests/test_atom_evidence.py::test_atom_evidence", "{commit}"]',
+        "--root",
+        str(tmp_path),
+    ])
+    capsys.readouterr()
+    assert full_evidence == 0
+    files_edit = main([
+        "edit",
+        "task",
+        "task-advance-with-atom-evidence",
+        "files",
+        '["desk/atoms/atom-trackable-atom.md"]',
+        "--root",
+        str(tmp_path),
+    ])
+    capsys.readouterr()
+    assert files_edit == 0
+
+    close_result = main([
+        "closeout", "commit", "--root", str(tmp_path),
+        "--task", "task-advance-with-atom-evidence",
+        "--no-run", "--reason", "Atom evidence smoke test",
+        "--paths", "desk/atoms/atom-trackable-atom.md", "tests/test_atom_evidence.py",
+    ])
     close_out = capsys.readouterr()
     assert close_result == 0
-    assert "Status: closed" in close_out.out
-    assert "Current node: complete" in close_out.out
+    assert "Closing commit " in close_out.out
 
 
 

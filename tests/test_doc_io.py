@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
 from deskops import doc_io
 from deskops.models import AtomDoc
 from deskops.operations import DeskopsOperations
+from deskops.services.closure import ClosureService
 
 WRITE_MODULE_PREFIXES = ("create_", "delete_", "update_", "track_", "untrack_")
 
@@ -219,9 +220,29 @@ def test_closeout_commit_includes_the_store_delta_it_causes(lifecycle_desk: Path
     _git(root, "add", "-A")
     _git(root, "commit", "-q", "-m", "task")
 
+    atom_path = _atom(operations, "Closeout store delta evidence")
+    atom_rel = atom_path.relative_to(root).as_posix()
+    commit = _git(root, "rev-parse", "HEAD").stdout.strip()
+    operations.edit_artifact_field(
+        "task",
+        task_id,
+        "references",
+        f'["{atom_rel}", "pytest tests/test_evidence.py::test_evidence", "{commit}"]',
+    )
+    operations.edit_artifact_field("task", task_id, "files", f'["{atom_rel}"]')
+
     operations.advance_task(task_id)
     operations.advance_task(task_id)
-    operations.advance_task(task_id)
+    refused, result = operations.advance_task(task_id)
+    assert result is not None and result.blocked
+    assert refused is not None and refused.current_node == "ritual-closeout"
+
+    outcome = ClosureService(root, operations).close_manual(
+        task_id,
+        reason="Store delta smoke test",
+        paths=[atom_rel, "tests/test_evidence.py"],
+    )
+    assert outcome.exit_code == 0, outcome.messages
 
     status = _git(root, "status", "--porcelain", "--", ".sldb")
     assert status.stdout == ""

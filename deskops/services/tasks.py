@@ -10,7 +10,6 @@ bound to instead of duplicating them.
 from __future__ import annotations
 
 from pathlib import Path
-import subprocess
 from typing import Any
 from typing import TYPE_CHECKING
 
@@ -129,179 +128,51 @@ class TasksService:
         payload = self._read_doc(task_path, TaskDoc)
 
         if target_node:
+            # Closing is the closeout command's job. A forced transition to the
+            # terminal node must not leave a half-closed task behind.
+            if target_node == lifecycle.COMPLETE:
+                return self._hydrate_task(payload), self._closure_required(task_id, payload)
             if target_node in ["draft", "open", "in_progress", "blocked", "closed"]:
                 payload["status"] = target_node
             else:
                 payload["current_node"] = target_node
-                # Reaching the terminal node closes the task. The gated path
-                # pairs current_node == "complete" with status == "closed"
-                # (see the auto-commit check below); a forced transition that
-                # moved only current_node left the two disagreeing, so the
-                # task looked terminal but never read as closed.
-                if target_node == lifecycle.COMPLETE:
-                    payload["status"] = "closed"
             self._write_doc(task_path, TaskDoc, payload)
             advanced_task = self._hydrate_task(payload)
             self.logger.info(f"Advanced task {task_id} manually to {target_node}")
             return advanced_task, TransitionResult(target_node, payload.get("status", ""), True, False, f"Forced transition to {target_node}.")
 
+        current_node = str(payload.get("current_node") or "")
+        current_status = str(payload.get("status") or "")
         self._add_closeout_facts(payload)
         result = lifecycle.advance(self.root, payload)
         for key in ("closeout_evidence_verified", "pill_graduation_verified"):
             payload.pop(key, None)
+        if result.progressed and payload.get("current_node") == lifecycle.COMPLETE:
+            # The lifecycle graph would close the task. Do not persist it; the
+            # only closing entry point is `deskops closeout commit`.
+            self.logger.info(f"Task {task_id} reached the closure gate; deferring to closeout commit.")
+            restored = {**payload, "current_node": current_node, "status": current_status}
+            return self._hydrate_task(restored), self._closure_required(task_id, restored)
         advanced_task = self._hydrate_task(payload)
-        if payload.get("status") == "closed" and payload.get("current_node") == lifecycle.COMPLETE:
-            self.logger.info(f"Task {task_id} is complete. Performing auto-commit and cleanup.")
-            self._auto_commit_task_closure(payload, task_path)
-            return advanced_task, result
         if result.progressed:
             self._write_doc(task_path, TaskDoc, payload)
         self.logger.info(f"Advanced task {task_id} to node {payload.get('current_node')}")
         return advanced_task, result
 
+    @staticmethod
+    def _closure_required(task_id: str, payload: dict[str, Any]) -> TransitionResult:
+        node = str(payload.get("current_node") or "")
+        status = str(payload.get("status") or "")
+        message = (
+            f"Task {task_id} closes with 'deskops closeout commit --task {task_id} "
+            f"--run-dir <runs/subagents/dir>' or 'deskops closeout commit --task {task_id} "
+            f"--no-run --reason <why>'."
+        )
+        return TransitionResult(node, status, False, True, message)
+
     def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
-        task_id = payload.get("id", "unknown-task")
-        files = self._coerce_list(payload.get("files") or [])
-        task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
-        board_rel = "desk/tasks/Board.md"
-        sldb_rel = ".sldb"
-
-        with doc_io.DocTransaction(self.root) as transaction:
-            self.logger.debug(f"Removing task {task_id} from Board.md")
-            board_path = self.desk_root / "tasks" / "Board.md"
-            board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
-            if board_before is not None:
-                board_payload = self._read_doc(board_path, BoardDoc)
-                task_ref = f"desk/tasks/{task_id}.md"
-                tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
-                board_payload["tasks"] = tasks
-                self._write_doc(board_path, BoardDoc, board_payload)
-
-            task_before = task_path.read_bytes() if task_path.exists() else None
-
-            # Untrack before anything is staged: the .sldb delta this causes must be
-            # part of the closeout commit, and a failure must abort the closeout.
-            if task_before is not None:
-                transaction.untrack(task_path)
-
-            commit_paths: list[str] = []
-            seen_paths: set[str] = set()
-
-            def add_commit_path(path: str) -> None:
-                if path not in seen_paths:
-                    seen_paths.add(path)
-                    commit_paths.append(path)
-
-            # Only stage (and later commit) listed files that actually changed;
-            # whatever the operator staged for other work must stay untouched.
-            for file in files:
-                status = subprocess.run(
-                    ["git", "status", "--porcelain", "--", file],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                )
-                if status.returncode != 0 or not status.stdout.strip():
-                    continue
-                self.logger.debug(f"Staging file: {file}")
-                subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
-                add_commit_path(file)
-
-            if board_before is not None:
-                subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
-                add_commit_path(board_rel)
-
-            sldb_status = subprocess.run(
-                ["git", "status", "--porcelain", "--", sldb_rel],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            )
-            if sldb_status.returncode == 0 and sldb_status.stdout.strip():
-                subprocess.run(["git", "add", "-A", "--", sldb_rel], cwd=self.root, check=False)
-                add_commit_path(sldb_rel)
-
-            def restore_index() -> None:
-                for path in commit_paths:
-                    subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
-                subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
-                if task_before is not None:
-                    task_path.write_bytes(task_before)
-                if board_before is not None:
-                    board_path.write_text(board_before, encoding="utf-8")
-
-            paths_to_remove = []
-            if task_before is not None:
-                paths_to_remove.append(task_path)
-                tracked = subprocess.run(
-                    ["git", "ls-files", "--error-unmatch", "--", task_rel],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                ).returncode == 0
-                if tracked:
-                    # A pathspec commit records the working tree, so the gone task
-                    # file must already be removed from both disk and the index.
-                    # The bundle carries uncommitted lifecycle edits at closeout,
-                    # so force the removal; its bytes are restored on failure.
-                    removed = subprocess.run(
-                        ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
-                    )
-                    if removed.returncode != 0:
-                        restore_index()
-                        raise RuntimeError(
-                            f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
-                            f"deleted and the desk was left unchanged. Git output: "
-                            f"{removed.stderr or removed.stdout}"
-                        )
-                    add_commit_path(task_rel)
-
-            commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
-
-            # Check if HEAD is already the closeout commit for this task. The
-            # subject alone is not proof of ownership: `closeout: task-foo` also
-            # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
-            # trailer that every closeout commit carries.
-            head_task_id = ""
-            result_log = subprocess.run(
-                ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            )
-            if result_log.returncode == 0:
-                head_task_id = result_log.stdout.strip()
-
-            if head_task_id == task_id:
-                self.logger.info(f"Amending closeout commit for {task_id}")
-                result = subprocess.run(
-                    ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                )
-            else:
-                self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
-                result = subprocess.run(
-                    ["git", "commit", "-m", commit_msg, "--", *commit_paths],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                )
-
-            if result.returncode != 0:
-                # Nothing was committed, so put the desk back exactly as it was and
-                # leave the bundle in place.
-                restore_index()
-                raise RuntimeError(
-                    f"Failed to commit task closure for {task_id}. The bundle was not deleted "
-                    f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
-                )
-
-            for p in paths_to_remove:
-                if p.exists():
-                    self.logger.debug(f"Removing file {p.name}")
-                    p.unlink()
+        # Compatibility hook: closure logic lives in ClosureService.
+        self._ops.closure.close_auto(payload, task_path)
 
     def _task_path(self, task_id: str) -> Path:
         return self.desk_root / "tasks" / f"{task_id}.md"

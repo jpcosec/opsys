@@ -16,11 +16,15 @@ reference:
   - deskops advance task task-add-changelog --root .
   - printf -- '- Started using deskops.\n' > CHANGELOG.md
   - pytest -q
-  - deskops advance task task-add-changelog --root .
-  - deskops edit task task-add-changelog references '["tests/test_ok.py"]' --root .
   - |-
     git add -A && git commit -qm "docs: start changelog"
   - deskops advance task task-add-changelog --root .
+  - deskops add atom --root . --title "Changelog closeout evidence" --five-wh-one-plus what --answer "The changelog task closed through the closeout command."
+  - |-
+    commit=$(git rev-parse HEAD)
+    deskops edit task task-add-changelog references "[\"desk/atoms/atom-changelog-closeout-evidence.md\", \"pytest tests/test_ok.py::test_ok\", \"$commit\"]" --root .
+  - deskops edit task task-add-changelog files '["desk/atoms/atom-changelog-closeout-evidence.md"]' --root .
+  - deskops closeout commit --root . --task task-add-changelog --no-run --reason "Quickstart closes without a subagent run" --paths desk/atoms/atom-changelog-closeout-evidence.md CHANGELOG.md
 checks:
   - name: CHANGELOG.md is committed with the requested line
     run: |-

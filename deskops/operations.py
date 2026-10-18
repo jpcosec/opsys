@@ -48,6 +48,7 @@ from deskops.workflow.next_actions import render_workflow_mermaid
 
 if TYPE_CHECKING:
     from deskops.services.atoms import AtomsService
+    from deskops.services.closeout import ClosureService
     from deskops.services.closeout_gates import CloseoutGatesService
     from deskops.services.drawer import DrawerService
     from deskops.services.tasks import TasksService
@@ -200,6 +201,7 @@ class DeskopsOperations:
         self._drawer: DrawerService | None = None
         self._tasks: TasksService | None = None
         self._closeout_gates: CloseoutGatesService | None = None
+        self._closure: ClosureService | None = None
         self._atoms: AtomsService | None = None
         self._setup_logging()
 
@@ -310,6 +312,14 @@ class DeskopsOperations:
             from deskops.services.closeout_gates import CloseoutGatesService
             self._closeout_gates = CloseoutGatesService(self.root)
         return self._closeout_gates
+
+    @property
+    def closure(self) -> "ClosureService":
+        if self._closure is None:
+            from deskops.services.closure import ClosureService
+
+            self._closure = ClosureService(self.root, self)
+        return self._closure
 
     @property
     def drawer(self) -> "DrawerService":

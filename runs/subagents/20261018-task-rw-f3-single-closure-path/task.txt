@@ -1,0 +1,12 @@
+Task: task-rw-f3-single-closure-path
+Title: One closure service behind every way of closing a task
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f3-single-closure-path.md
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

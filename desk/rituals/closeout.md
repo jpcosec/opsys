@@ -21,7 +21,7 @@ steps:
 - 1. Remove stale context docs that are no longer needed.
 - 1. Untrack the task document from the local store if it is tracked.
 - 1. Delete the resolved task file and remove it from the board.
-- 1. Create one atomic closing commit for the task as the mandatory final gate.
+- 1. Close the task with `deskops closeout commit` as the one entry point and the mandatory final gate.
 # e.g., layer:workflow, system:sldb
 tags:
 - system:sldb
@@ -36,7 +36,7 @@ tags:
 
 _Explain why this ritual exists._
 
-Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual.
+Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual. `deskops closeout commit` is the one closure entry point: it runs the closeout gates, removes the task from the Board, removes the bundle, makes exactly one commit with the route's trailers, and records the index entry. `deskops advance` does not close tasks.
 
 ## Trigger
 
@@ -68,7 +68,7 @@ _List the checks that prove the ritual was performed correctly._
 - Verify reports resolvable test evidence, changed-file atom/materialization coverage (or a routed follow-up when coverage is not live yet), and commit evidence.
 - Changed generated artifacts with a sibling source declare `source_atoms` or `provenance` so the source relation is explicit.
 - The local store stays consistent after untracking.
-- A dedicated closing commit exists in git.
+- `deskops closeout commit` made exactly one closing commit, with the route's trailers, and recorded its index entry.
 - The task was not treated as closed before the final commit gate.
 
 ## Failure Modes

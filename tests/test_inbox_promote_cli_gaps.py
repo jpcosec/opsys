@@ -181,19 +181,19 @@ def _make_task(tmp_path: Path, task_id: str) -> DeskopsOperations:
     return operations
 
 
-def test_forced_advance_to_complete_also_closes_status(tmp_path: Path) -> None:
-    """Regression: `advance --to complete` moved current_node only, leaving
-    status at 'active'. The gated path pairs current_node == 'complete' with
-    status == 'closed', so the forced path left the two disagreeing and the
-    task read as terminal but never as closed."""
+def test_forced_advance_to_complete_refuses_and_points_at_closeout(tmp_path: Path) -> None:
+    """Only `deskops closeout commit` closes a task. A forced transition to
+    the terminal node must leave the task untouched and say where to close."""
     _install_desk(tmp_path)
     operations = _make_task(tmp_path, "task-forced-complete")
 
     task, result = operations.advance_task("task-forced-complete", target_node="complete")
 
     assert result is not None
-    assert task.current_node == "complete"
-    assert task.status == "closed"
+    assert result.blocked
+    assert "deskops closeout commit" in result.message
+    assert task.current_node == "ritual-execution"
+    assert task.status == "active"
 
 
 def test_forced_advance_to_a_normal_node_leaves_status_alone(tmp_path: Path) -> None:

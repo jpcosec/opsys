@@ -1,0 +1,1299 @@
+diff --git a/desk/rituals/closeout.md b/desk/rituals/closeout.md
+index 077378a..1fa88ea 100644
+--- a/desk/rituals/closeout.md
++++ b/desk/rituals/closeout.md
+@@ -21,7 +21,7 @@ steps:
+ - 1. Remove stale context docs that are no longer needed.
+ - 1. Untrack the task document from the local store if it is tracked.
+ - 1. Delete the resolved task file and remove it from the board.
+-- 1. Create one atomic closing commit for the task as the mandatory final gate.
++- 1. Close the task with `deskops closeout commit` as the one entry point and the mandatory final gate.
+ # e.g., layer:workflow, system:sldb
+ tags:
+ - system:sldb
+@@ -36,7 +36,7 @@ tags:
+ 
+ _Explain why this ritual exists._
+ 
+-Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual.
++Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual. `deskops closeout commit` is the one closure entry point: it runs the closeout gates, removes the task from the Board, removes the bundle, makes exactly one commit with the route's trailers, and records the index entry. `deskops advance` does not close tasks.
+ 
+ ## Trigger
+ 
+@@ -68,7 +68,7 @@ _List the checks that prove the ritual was performed correctly._
+ - Verify reports resolvable test evidence, changed-file atom/materialization coverage (or a routed follow-up when coverage is not live yet), and commit evidence.
+ - Changed generated artifacts with a sibling source declare `source_atoms` or `provenance` so the source relation is explicit.
+ - The local store stays consistent after untracking.
+-- A dedicated closing commit exists in git.
++- `deskops closeout commit` made exactly one closing commit, with the route's trailers, and recorded its index entry.
+ - The task was not treated as closed before the final commit gate.
+ 
+ ## Failure Modes
+diff --git a/deskops/cli/commands/closeout.py b/deskops/cli/commands/closeout.py
+index d983405..cf20fd8 100644
+--- a/deskops/cli/commands/closeout.py
++++ b/deskops/cli/commands/closeout.py
+@@ -1,28 +1,23 @@
+ from __future__ import annotations
+ 
+-import hashlib
+ import json
+ from pathlib import Path
+-import subprocess
+ from typing import Any
+ 
+-import yaml
+-
+ from deskops.operations import DeskopsOperations
++from deskops.services.closure import ClosureService
+ 
+ 
+ class CloseoutCLI:
+     """Tool-made closing commits, linked to run evidence or marked manual.
+ 
+-    The closing commit is created here, not by agent discretion. With
+-    --run-dir the commit message carries immutable trailers linking it to the
+-    run evidence directory; with --no-run it carries Closeout-Mode: manual and
+-    the stated reason instead. Either way an append-only index records the
+-    commit hash.
++    The closing commit is created by ``ClosureService``, not by agent
++    discretion. With --run-dir the commit message carries immutable trailers
++    linking it to the run evidence directory; with --no-run it carries
++    Closeout-Mode: manual and the stated reason instead. Either way an
++    append-only index records the commit hash.
+     """
+ 
+-    REQUIRED_EVIDENCE = ["board.txt", "task.txt", "git-status.txt", "result-summary.md"]
+-
+     def run(self, args: Any) -> int:
+         command = getattr(args, "closeout_command", None)
+         if command == "commit":
+@@ -60,162 +55,36 @@ class CloseoutCLI:
+ 
+     def _commit_manual(self, args: Any, reason: str | None) -> int:
+         root = Path(args.root).resolve()
+-        task_id = args.task
+-        reason = " ".join((reason or "").split())
+-        if not reason:
+-            print("--no-run needs a non-empty --reason saying why the task closes without a subagent run.")
+-            return 1
+         run_only = [flag for flag, attr in (("--run-id", "run_id"), ("--session", "session")) if getattr(args, attr, None)]
+         if run_only:
+             print(f"{', '.join(run_only)} applies only to --run-dir; a --no-run closeout has no run to record.")
+             return 1
+-
+-        staged = self._git(root, "diff", "--cached", "--name-only").split()
+-        paths = getattr(args, "paths", None)
+-        if paths:
+-            self._git(root, "add", "--", *paths)
+-        elif not staged:
+-            print("Nothing staged and no paths given. Pass --paths.")
++        if not " ".join((reason or "").split()):
++            print("--no-run needs a non-empty --reason saying why the task closes without a subagent run.")
+             return 1
+ 
+-        subject = getattr(args, "message", None) or f"closeout: {task_id}"
+-        trailers = [f"Task-Id: {task_id}", "Closeout-Mode: manual", f"Closeout-Reason: {reason}"]
+-        message = subject + "\n\n" + "\n".join(trailers) + "\n"
+-
+-        result = subprocess.run(
+-            ["git", "commit", "-m", message],
+-            cwd=root,
+-            capture_output=True,
+-            text=True,
++        service = ClosureService(root, DeskopsOperations(root))
++        outcome = service.close_manual(
++            args.task,
++            reason=reason or "",
++            paths=getattr(args, "paths", None),
++            message=getattr(args, "message", None),
+         )
+-        if result.returncode != 0:
+-            print(result.stderr.strip() or result.stdout.strip())
+-            return 1
+-
+-        commit = self._git(root, "rev-parse", "HEAD")
+-        index_path = root / "runs" / "subagents" / "index.jsonl"
+-        index_path.parent.mkdir(parents=True, exist_ok=True)
+-        with index_path.open("a", encoding="utf-8") as handle:
+-            handle.write(
+-                json.dumps(
+-                    {
+-                        "task_id": task_id,
+-                        "run_id": None,
+-                        "run_dir": None,
+-                        "commit": commit,
+-                        "session_sha256": None,
+-                        "mode": "manual",
+-                    }
+-                )
+-                + "\n"
+-            )
+-
+-        print(f"Closing commit {commit[:12]} made manually (no run): {reason}")
+-        print(f"Index: {index_path}")
+-        return 0
++        for message in outcome.messages:
++            print(message)
++        return outcome.exit_code
+ 
+     def _commit_with_run(self, args: Any) -> int:
+         root = Path(args.root).resolve()
+-        run_dir = Path(args.run_dir)
+-        if not run_dir.is_absolute():
+-            run_dir = (root / run_dir).resolve()
+-        task_id = args.task
+-
+-        if not self._is_under(run_dir, root / "runs" / "subagents"):
+-            print(f"Run dir must live under runs/subagents/: {run_dir}")
+-            return 1
+-        if not run_dir.is_dir():
+-            print(f"Run dir not found: {run_dir}")
+-            return 1
+-
+-        missing = [name for name in self.REQUIRED_EVIDENCE if not (run_dir / name).exists()]
+-        if missing:
+-            print(f"Missing required evidence in {run_dir}: {', '.join(missing)}")
+-            return 1
+-
+-        manifest_path = run_dir / "run.yaml"
+-        manifest: dict[str, Any] = {}
+-        if manifest_path.exists():
+-            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
+-
+-        run_id = getattr(args, "run_id", None) or manifest.get("run_id")
+-        session = getattr(args, "session", None) or manifest.get("session")
+-        session_sha256 = manifest.get("session_sha256")
+-        session_path = Path(session) if session else None
+-        if session_path and session_path.is_file():
+-            session_sha256 = hashlib.sha256(session_path.read_bytes()).hexdigest()
+-
+-        rel_run_dir = run_dir.relative_to(root).as_posix()
+-        manifest.update(
+-            {
+-                "task_id": task_id,
+-                "run_dir": rel_run_dir,
+-                "run_id": run_id,
+-                "session": session,
+-                "session_sha256": session_sha256,
+-            }
++        service = ClosureService(root, DeskopsOperations(root))
++        outcome = service.close_with_run(
++            args.task,
++            run_dir=args.run_dir,
++            paths=getattr(args, "paths", None),
++            run_id=getattr(args, "run_id", None),
++            session=getattr(args, "session", None),
++            message=getattr(args, "message", None),
+         )
+-        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=True), encoding="utf-8")
+-
+-        staged = self._git(root, "diff", "--cached", "--name-only").split()
+-        paths = getattr(args, "paths", None) or manifest.get("touched")
+-        if paths:
+-            self._git(root, "add", "--", *paths)
+-        elif not staged:
+-            print("Nothing staged and no paths given. Pass --paths or record 'touched' in run.yaml.")
+-            return 1
+-        self._git(root, "add", "--", rel_run_dir)
+-
+-        subject = getattr(args, "message", None) or f"closeout: {task_id}"
+-        trailers = [f"Task-Id: {task_id}", f"Run-Dir: {rel_run_dir}"]
+-        if run_id:
+-            trailers.append(f"Run-Id: {run_id}")
+-        if session_sha256:
+-            trailers.append(f"Session-Sha256: {session_sha256}")
+-        message = subject + "\n\n" + "\n".join(trailers) + "\n"
+-
+-        result = subprocess.run(
+-            ["git", "commit", "-m", message],
+-            cwd=root,
+-            capture_output=True,
+-            text=True,
+-        )
+-        if result.returncode != 0:
+-            print(result.stderr.strip() or result.stdout.strip())
+-            return 1
+-
+-        commit = self._git(root, "rev-parse", "HEAD")
+-        index_path = root / "runs" / "subagents" / "index.jsonl"
+-        index_path.parent.mkdir(parents=True, exist_ok=True)
+-        with index_path.open("a", encoding="utf-8") as handle:
+-            handle.write(
+-                json.dumps(
+-                    {
+-                        "task_id": task_id,
+-                        "run_id": run_id,
+-                        "run_dir": rel_run_dir,
+-                        "commit": commit,
+-                        "session_sha256": session_sha256,
+-                    }
+-                )
+-                + "\n"
+-            )
+-
+-        print(f"Closing commit {commit[:12]} linked to run {rel_run_dir}")
+-        print(f"Index: {index_path}")
+-        return 0
+-
+-    @staticmethod
+-    def _is_under(path: Path, parent: Path) -> bool:
+-        try:
+-            path.relative_to(parent.resolve())
+-            return True
+-        except ValueError:
+-            return False
+-
+-    @staticmethod
+-    def _git(root: Path, *argv: str) -> str:
+-        result = subprocess.run(["git", *argv], cwd=root, capture_output=True, text=True)
+-        if result.returncode != 0:
+-            raise SystemExit(f"git {' '.join(argv)} failed: {result.stderr.strip()}")
+-        return result.stdout.strip()
++        for message in outcome.messages:
++            print(message)
++        return outcome.exit_code
+diff --git a/deskops/operations.py b/deskops/operations.py
+index ad944a5..c92ab67 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -47,6 +47,7 @@ from deskops.workflow.next_actions import render_workflow_mermaid
+ 
+ if TYPE_CHECKING:
+     from deskops.services.atoms import AtomsService
++    from deskops.services.closeout import ClosureService
+     from deskops.services.closeout_gates import CloseoutGatesService
+     from deskops.services.drawer import DrawerService
+     from deskops.services.tasks import TasksService
+@@ -199,6 +200,7 @@ class DeskopsOperations:
+         self._drawer: DrawerService | None = None
+         self._tasks: TasksService | None = None
+         self._closeout_gates: CloseoutGatesService | None = None
++        self._closure: ClosureService | None = None
+         self._atoms: AtomsService | None = None
+         self._setup_logging()
+ 
+@@ -310,6 +312,14 @@ class DeskopsOperations:
+             self._closeout_gates = CloseoutGatesService(self.root)
+         return self._closeout_gates
+ 
++    @property
++    def closure(self) -> "ClosureService":
++        if self._closure is None:
++            from deskops.services.closure import ClosureService
++
++            self._closure = ClosureService(self.root, self)
++        return self._closure
++
+     @property
+     def drawer(self) -> "DrawerService":
+         if self._drawer is None:
+diff --git a/deskops/services/closure.py b/deskops/services/closure.py
+new file mode 100644
+index 0000000..3504cd8
+--- /dev/null
++++ b/deskops/services/closure.py
+@@ -0,0 +1,387 @@
++"""One closure path for task bundles.
++
++Every way of closing a task ends here: ``deskops closeout commit`` (run-linked
++and manual routes) and the legacy ``_auto_commit_task_closure`` hook. The
++service owns the whole closure: closeout gates for a board-routed task, Board
++update, store untracking, bundle removal, exactly one closing commit carrying
++the route's trailers, and the append-only index entry.
++
++``advance`` no longer closes: it refuses at the closeout node and points here.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from dataclasses import field
++import hashlib
++import json
++from pathlib import Path
++import subprocess
++from typing import Any
++from typing import TYPE_CHECKING
++
++import yaml
++
++from deskops import doc_io
++from deskops.models import BoardDoc
++
++if TYPE_CHECKING:
++    from deskops.operations import DeskopsOperations
++
++
++class ClosureCommitError(RuntimeError):
++    """The closing commit could not be made; the desk was restored."""
++
++
++@dataclass
++class ClosureOutcome:
++    """What one closure did, ready for the CLI to print."""
++
++    exit_code: int
++    messages: list[str] = field(default_factory=list)
++
++
++class ClosureService:
++    REQUIRED_EVIDENCE = ["board.txt", "task.txt", "git-status.txt", "result-summary.md"]
++
++    def __init__(self, root: Path, operations: "DeskopsOperations | None" = None) -> None:
++        if operations is None:
++            from deskops.operations import DeskopsOperations
++
++            operations = DeskopsOperations(root)
++        self._ops = operations
++        self.root = operations.root
++        self.desk_root = operations.desk_root
++
++    # ---------------------------------------------------------------- routes
++    def close_manual(
++        self,
++        task_id: str,
++        *,
++        reason: str,
++        paths: list[str] | None = None,
++        message: str | None = None,
++    ) -> ClosureOutcome:
++        reason = " ".join((reason or "").split())
++        if not reason:
++            return ClosureOutcome(
++                1,
++                ["--no-run needs a non-empty --reason saying why the task closes without a subagent run."],
++            )
++        subject = message or f"closeout: {task_id}"
++        trailers = [f"Task-Id: {task_id}", "Closeout-Mode: manual", f"Closeout-Reason: {reason}"]
++        return self._close(
++            task_id,
++            route="manual",
++            subject=subject,
++            trailers=trailers,
++            paths=list(paths or []),
++            explicit_paths=paths is not None,
++            index_entry={
++                "task_id": task_id,
++                "run_id": None,
++                "run_dir": None,
++                "session_sha256": None,
++                "mode": "manual",
++            },
++            success_line=f"Closing commit {{commit}} made manually (no run): {reason}",
++        )
++
++    def close_with_run(
++        self,
++        task_id: str,
++        *,
++        run_dir: str | Path,
++        paths: list[str] | None = None,
++        run_id: str | None = None,
++        session: str | None = None,
++        message: str | None = None,
++    ) -> ClosureOutcome:
++        root = self.root
++        resolved_run_dir = Path(run_dir)
++        if not resolved_run_dir.is_absolute():
++            resolved_run_dir = (root / resolved_run_dir).resolve()
++
++        if not self._is_under(resolved_run_dir, root / "runs" / "subagents"):
++            return ClosureOutcome(1, [f"Run dir must live under runs/subagents/: {resolved_run_dir}"])
++        if not resolved_run_dir.is_dir():
++            return ClosureOutcome(1, [f"Run dir not found: {resolved_run_dir}"])
++
++        missing = [name for name in self.REQUIRED_EVIDENCE if not (resolved_run_dir / name).exists()]
++        if missing:
++            return ClosureOutcome(
++                1,
++                [f"Missing required evidence in {resolved_run_dir}: {', '.join(missing)}"],
++            )
++
++        manifest_path = resolved_run_dir / "run.yaml"
++        manifest: dict[str, Any] = {}
++        if manifest_path.exists():
++            manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8")) or {}
++
++        run_id = run_id or manifest.get("run_id")
++        session = session or manifest.get("session")
++        session_sha256 = manifest.get("session_sha256")
++        session_path = Path(str(session)) if session else None
++        if session_path and session_path.is_file():
++            session_sha256 = hashlib.sha256(session_path.read_bytes()).hexdigest()
++
++        rel_run_dir = resolved_run_dir.relative_to(root).as_posix()
++        manifest.update(
++            {
++                "task_id": task_id,
++                "run_dir": rel_run_dir,
++                "run_id": run_id,
++                "session": session,
++                "session_sha256": session_sha256,
++            }
++        )
++        manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=True), encoding="utf-8")
++
++        staged_paths = list(paths) if paths is not None else list(manifest.get("touched") or [])
++        trailers = [f"Task-Id: {task_id}", f"Run-Dir: {rel_run_dir}"]
++        if run_id:
++            trailers.append(f"Run-Id: {run_id}")
++        if session_sha256:
++            trailers.append(f"Session-Sha256: {session_sha256}")
++
++        return self._close(
++            task_id,
++            route="run",
++            subject=message or f"closeout: {task_id}",
++            trailers=trailers,
++            paths=staged_paths,
++            explicit_paths=True,
++            extra_stage_paths=[rel_run_dir],
++            index_entry={
++                "task_id": task_id,
++                "run_id": run_id,
++                "run_dir": rel_run_dir,
++                "session_sha256": session_sha256,
++            },
++            success_line=f"Closing commit {{commit}} linked to run {rel_run_dir}",
++        )
++
++    def close_auto(self, payload: dict[str, Any], task_path: Path) -> None:
++        """Legacy hook used by ``DeskopsOperations._auto_commit_task_closure``."""
++        task_id = payload.get("id", "unknown-task")
++        files = [str(item) for item in payload.get("files") or []]
++        try:
++            self._close(
++                task_id,
++                route="legacy",
++                subject=f"closeout: {task_id}",
++                trailers=[f"Task-Id: {task_id}"],
++                paths=files,
++                explicit_paths=True,
++                task_path=task_path,
++                run_gates=False,
++                index_entry={},
++                success_line="",
++            )
++        except ClosureCommitError as exc:
++            raise RuntimeError(
++                f"Failed to commit task closure for {task_id}. The bundle was not deleted "
++                f"and the desk was left unchanged. Git output: {exc}"
++            ) from exc
++
++    # ---------------------------------------------------------------- internals
++    def _close(
++        self,
++        task_id: str,
++        *,
++        route: str,
++        subject: str,
++        trailers: list[str],
++        paths: list[str],
++        explicit_paths: bool,
++        index_entry: dict[str, Any],
++        success_line: str,
++        task_path: Path | None = None,
++        extra_stage_paths: list[str] | None = None,
++        run_gates: bool = True,
++    ) -> ClosureOutcome:
++        task_path = task_path or self._task_path(task_id)
++        task_rel = self._relative(task_path)
++        board_path = self.desk_root / "tasks" / "Board.md"
++        board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
++        routed = self._board_routes(board_path, task_id, task_path) if board_before is not None else False
++
++        if run_gates and task_path.exists() and routed:
++            gate_outcome = self._gate_outcome(task_id)
++            if gate_outcome is not None:
++                return gate_outcome
++
++        staged_before = self._git("diff", "--cached", "--name-only", check=False)
++        if explicit_paths:
++            for path in paths:
++                self._git("add", "-A", "--", path, check=False)
++            for path in extra_stage_paths or []:
++                self._git("add", "-A", "--", path, check=False)
++        elif not staged_before:
++            if route == "manual":
++                return ClosureOutcome(1, ["Nothing staged and no paths given. Pass --paths."])
++            return ClosureOutcome(
++                1,
++                ["Nothing staged and no paths given. Pass --paths or record 'touched' in run.yaml."],
++            )
++
++        commit_paths: list[str] = []
++        if explicit_paths:
++            commit_paths.extend(paths)
++            commit_paths.extend(extra_stage_paths or [])
++
++        def add_commit_path(path: str) -> None:
++            if path not in commit_paths:
++                commit_paths.append(path)
++
++        task_bytes = task_path.read_bytes() if task_path.exists() else None
++        paths_to_remove: list[Path] = []
++
++        try:
++            with doc_io.DocTransaction(self.root) as transaction:
++                if routed and board_before is not None:
++                    board_payload = self._ops._read_doc(board_path, BoardDoc)
++                    references = [
++                        str(item)
++                        for item in board_payload.get("tasks") or []
++                        if not self._board_reference_matches(str(item), task_id, task_rel)
++                    ]
++                    board_payload["tasks"] = references
++                    self._ops._write_doc(board_path, BoardDoc, board_payload)
++                    self._git("add", "--", "desk/tasks/Board.md", check=False)
++                    add_commit_path("desk/tasks/Board.md")
++
++                if task_bytes is not None:
++                    transaction.untrack(task_path)
++
++                sldb_status = self._git("status", "--porcelain", "--", ".sldb", check=False)
++                if sldb_status:
++                    self._git("add", "-A", "--", ".sldb", check=False)
++                    add_commit_path(".sldb")
++
++                if task_bytes is not None:
++                    tracked = self._git(
++                        "ls-files", "--error-unmatch", "--", task_rel, check=False
++                    )
++                    if tracked:
++                        removed = subprocess.run(
++                            ["git", "rm", "-f", "--", task_rel],
++                            cwd=self.root,
++                            capture_output=True,
++                            text=True,
++                        )
++                        if removed.returncode != 0:
++                            raise ClosureCommitError(
++                                removed.stderr.strip() or removed.stdout.strip() or f"git rm failed for {task_rel}"
++                            )
++                        add_commit_path(task_rel)
++                    else:
++                        paths_to_remove.append(task_path)
++
++                message = subject + "\n\n" + "\n".join(trailers) + "\n"
++
++                head_task_id = self._git(
++                    "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)", check=False
++                )
++                pathspec = list(dict.fromkeys(commit_paths)) if explicit_paths else None
++                if head_task_id == task_id:
++                    argv = ["commit", "--amend", "--no-edit"]
++                else:
++                    argv = ["commit", "-m", message]
++                if pathspec:
++                    argv.extend(["--", *pathspec])
++
++                result = subprocess.run(["git", *argv], cwd=self.root, capture_output=True, text=True)
++                if result.returncode != 0:
++                    raise ClosureCommitError(result.stderr.strip() or result.stdout.strip())
++
++            # The commit exists; only now remove an untracked bundle from disk.
++            for path in paths_to_remove:
++                if path.exists():
++                    path.unlink()
++        except Exception:
++            self._restore_index(commit_paths, task_rel)
++            if task_bytes is not None:
++                task_path.parent.mkdir(parents=True, exist_ok=True)
++                task_path.write_bytes(task_bytes)
++            if board_before is not None:
++                board_path.write_text(board_before, encoding="utf-8")
++            raise
++
++        commit = self._git("rev-parse", "HEAD")
++        messages: list[str] = []
++        if index_entry:
++            index_path = self.root / "runs" / "subagents" / "index.jsonl"
++            index_path.parent.mkdir(parents=True, exist_ok=True)
++            entry = {**index_entry, "commit": commit}
++            with index_path.open("a", encoding="utf-8") as handle:
++                handle.write(json.dumps(entry) + "\n")
++            messages.append(f"Index: {index_path}")
++        if success_line:
++            messages.insert(0, success_line.format(commit=commit[:12]))
++        return ClosureOutcome(0, messages)
++
++    def _gate_outcome(self, task_id: str) -> ClosureOutcome | None:
++        try:
++            report = self._ops.verify_task_closeout(task_id)
++        except Exception as exc:  # noqa: BLE001 - a gate that cannot run blocks closure
++            return ClosureOutcome(1, [f"Closeout verify failed for {task_id}; the closing commit was not made.", f"- {exc}"])
++        if report.get("ok"):
++            return None
++        messages = [f"Closeout verify failed for {task_id}; the closing commit was not made."]
++        for finding in report.get("findings") or []:
++            code = finding.get("code", "finding")
++            detail = finding.get("message") or finding.get("path") or ""
++            messages.append(f"- {code}: {detail}")
++        messages.append(f"Run 'deskops closeout verify --task {task_id}' for the full report.")
++        return ClosureOutcome(1, messages)
++
++    def _task_path(self, task_id: str) -> Path:
++        try:
++            return self._ops._resolve_glob(self.desk_root / "tasks", task_id)
++        except FileNotFoundError:
++            return self.desk_root / "tasks" / f"{task_id}.md"
++
++    def _board_routes(self, board_path: Path, task_id: str, task_path: Path) -> bool:
++        try:
++            payload = self._ops._read_doc(board_path, BoardDoc)
++        except Exception:
++            return False
++        task_rel = self._relative(task_path)
++        return any(
++            self._board_reference_matches(str(item), task_id, task_rel)
++            for item in payload.get("tasks") or []
++        )
++
++    @staticmethod
++    def _board_reference_matches(reference: str, task_id: str, task_rel: str) -> bool:
++        return reference in {
++            task_rel,
++            f"desk/tasks/{task_id}",
++            f"desk/tasks/{task_id}.md",
++        }
++
++    def _restore_index(self, commit_paths: list[str], task_rel: str) -> None:
++        for path in dict.fromkeys([*commit_paths, task_rel]):
++            self._git("restore", "--staged", "--", path, check=False)
++
++    def _relative(self, path: Path) -> str:
++        try:
++            return path.relative_to(self.root).as_posix()
++        except ValueError:
++            return path.as_posix()
++
++    @staticmethod
++    def _is_under(path: Path, parent: Path) -> bool:
++        try:
++            path.relative_to(parent.resolve())
++            return True
++        except ValueError:
++            return False
++
++    def _git(self, *argv: str, check: bool = True) -> str:
++        result = subprocess.run(["git", *argv], cwd=self.root, capture_output=True, text=True)
++        if check and result.returncode != 0:
++            raise ClosureCommitError(f"git {' '.join(argv)} failed: {result.stderr.strip()}")
++        return result.stdout.strip()
+diff --git a/deskops/services/tasks.py b/deskops/services/tasks.py
+index 9662c82..17584aa 100644
+--- a/deskops/services/tasks.py
++++ b/deskops/services/tasks.py
+@@ -10,7 +10,6 @@ bound to instead of duplicating them.
+ from __future__ import annotations
+ 
+ from pathlib import Path
+-import subprocess
+ from typing import Any
+ from typing import TYPE_CHECKING
+ 
+@@ -129,179 +128,51 @@ class TasksService:
+         payload = self._read_doc(task_path, TaskDoc)
+ 
+         if target_node:
++            # Closing is the closeout command's job. A forced transition to the
++            # terminal node must not leave a half-closed task behind.
++            if target_node == lifecycle.COMPLETE:
++                return self._hydrate_task(payload), self._closure_required(task_id, payload)
+             if target_node in ["draft", "open", "in_progress", "blocked", "closed"]:
+                 payload["status"] = target_node
+             else:
+                 payload["current_node"] = target_node
+-                # Reaching the terminal node closes the task. The gated path
+-                # pairs current_node == "complete" with status == "closed"
+-                # (see the auto-commit check below); a forced transition that
+-                # moved only current_node left the two disagreeing, so the
+-                # task looked terminal but never read as closed.
+-                if target_node == lifecycle.COMPLETE:
+-                    payload["status"] = "closed"
+             self._write_doc(task_path, TaskDoc, payload)
+             advanced_task = self._hydrate_task(payload)
+             self.logger.info(f"Advanced task {task_id} manually to {target_node}")
+             return advanced_task, TransitionResult(target_node, payload.get("status", ""), True, False, f"Forced transition to {target_node}.")
+ 
++        current_node = str(payload.get("current_node") or "")
++        current_status = str(payload.get("status") or "")
+         self._add_closeout_facts(payload)
+         result = lifecycle.advance(self.root, payload)
+         for key in ("closeout_evidence_verified", "pill_graduation_verified"):
+             payload.pop(key, None)
++        if result.progressed and payload.get("current_node") == lifecycle.COMPLETE:
++            # The lifecycle graph would close the task. Do not persist it; the
++            # only closing entry point is `deskops closeout commit`.
++            self.logger.info(f"Task {task_id} reached the closure gate; deferring to closeout commit.")
++            restored = {**payload, "current_node": current_node, "status": current_status}
++            return self._hydrate_task(restored), self._closure_required(task_id, restored)
+         advanced_task = self._hydrate_task(payload)
+-        if payload.get("status") == "closed" and payload.get("current_node") == lifecycle.COMPLETE:
+-            self.logger.info(f"Task {task_id} is complete. Performing auto-commit and cleanup.")
+-            self._auto_commit_task_closure(payload, task_path)
+-            return advanced_task, result
+         if result.progressed:
+             self._write_doc(task_path, TaskDoc, payload)
+         self.logger.info(f"Advanced task {task_id} to node {payload.get('current_node')}")
+         return advanced_task, result
+ 
+-    def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
+-        task_id = payload.get("id", "unknown-task")
+-        files = self._coerce_list(payload.get("files") or [])
+-        task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
+-        board_rel = "desk/tasks/Board.md"
+-        sldb_rel = ".sldb"
+-
+-        with doc_io.DocTransaction(self.root) as transaction:
+-            self.logger.debug(f"Removing task {task_id} from Board.md")
+-            board_path = self.desk_root / "tasks" / "Board.md"
+-            board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
+-            if board_before is not None:
+-                board_payload = self._read_doc(board_path, BoardDoc)
+-                task_ref = f"desk/tasks/{task_id}.md"
+-                tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
+-                board_payload["tasks"] = tasks
+-                self._write_doc(board_path, BoardDoc, board_payload)
+-
+-            task_before = task_path.read_bytes() if task_path.exists() else None
+-
+-            # Untrack before anything is staged: the .sldb delta this causes must be
+-            # part of the closeout commit, and a failure must abort the closeout.
+-            if task_before is not None:
+-                transaction.untrack(task_path)
+-
+-            commit_paths: list[str] = []
+-            seen_paths: set[str] = set()
+-
+-            def add_commit_path(path: str) -> None:
+-                if path not in seen_paths:
+-                    seen_paths.add(path)
+-                    commit_paths.append(path)
+-
+-            # Only stage (and later commit) listed files that actually changed;
+-            # whatever the operator staged for other work must stay untouched.
+-            for file in files:
+-                status = subprocess.run(
+-                    ["git", "status", "--porcelain", "--", file],
+-                    cwd=self.root,
+-                    capture_output=True,
+-                    text=True,
+-                )
+-                if status.returncode != 0 or not status.stdout.strip():
+-                    continue
+-                self.logger.debug(f"Staging file: {file}")
+-                subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
+-                add_commit_path(file)
+-
+-            if board_before is not None:
+-                subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
+-                add_commit_path(board_rel)
+-
+-            sldb_status = subprocess.run(
+-                ["git", "status", "--porcelain", "--", sldb_rel],
+-                cwd=self.root,
+-                capture_output=True,
+-                text=True,
+-            )
+-            if sldb_status.returncode == 0 and sldb_status.stdout.strip():
+-                subprocess.run(["git", "add", "-A", "--", sldb_rel], cwd=self.root, check=False)
+-                add_commit_path(sldb_rel)
++    @staticmethod
++    def _closure_required(task_id: str, payload: dict[str, Any]) -> TransitionResult:
++        node = str(payload.get("current_node") or "")
++        status = str(payload.get("status") or "")
++        message = (
++            f"Task {task_id} closes with 'deskops closeout commit --task {task_id} "
++            f"--run-dir <runs/subagents/dir>' or 'deskops closeout commit --task {task_id} "
++            f"--no-run --reason <why>'."
++        )
++        return TransitionResult(node, status, False, True, message)
+ 
+-            def restore_index() -> None:
+-                for path in commit_paths:
+-                    subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
+-                subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
+-                if task_before is not None:
+-                    task_path.write_bytes(task_before)
+-                if board_before is not None:
+-                    board_path.write_text(board_before, encoding="utf-8")
+-
+-            paths_to_remove = []
+-            if task_before is not None:
+-                paths_to_remove.append(task_path)
+-                tracked = subprocess.run(
+-                    ["git", "ls-files", "--error-unmatch", "--", task_rel],
+-                    cwd=self.root,
+-                    capture_output=True,
+-                    text=True,
+-                ).returncode == 0
+-                if tracked:
+-                    # A pathspec commit records the working tree, so the gone task
+-                    # file must already be removed from both disk and the index.
+-                    # The bundle carries uncommitted lifecycle edits at closeout,
+-                    # so force the removal; its bytes are restored on failure.
+-                    removed = subprocess.run(
+-                        ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
+-                    )
+-                    if removed.returncode != 0:
+-                        restore_index()
+-                        raise RuntimeError(
+-                            f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
+-                            f"deleted and the desk was left unchanged. Git output: "
+-                            f"{removed.stderr or removed.stdout}"
+-                        )
+-                    add_commit_path(task_rel)
+-
+-            commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+-
+-            # Check if HEAD is already the closeout commit for this task. The
+-            # subject alone is not proof of ownership: `closeout: task-foo` also
+-            # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
+-            # trailer that every closeout commit carries.
+-            head_task_id = ""
+-            result_log = subprocess.run(
+-                ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
+-                cwd=self.root,
+-                capture_output=True,
+-                text=True,
+-            )
+-            if result_log.returncode == 0:
+-                head_task_id = result_log.stdout.strip()
+-
+-            if head_task_id == task_id:
+-                self.logger.info(f"Amending closeout commit for {task_id}")
+-                result = subprocess.run(
+-                    ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
+-                    cwd=self.root,
+-                    capture_output=True,
+-                    text=True,
+-                )
+-            else:
+-                self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
+-                result = subprocess.run(
+-                    ["git", "commit", "-m", commit_msg, "--", *commit_paths],
+-                    cwd=self.root,
+-                    capture_output=True,
+-                    text=True,
+-                )
+-
+-            if result.returncode != 0:
+-                # Nothing was committed, so put the desk back exactly as it was and
+-                # leave the bundle in place.
+-                restore_index()
+-                raise RuntimeError(
+-                    f"Failed to commit task closure for {task_id}. The bundle was not deleted "
+-                    f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
+-                )
+-
+-            for p in paths_to_remove:
+-                if p.exists():
+-                    self.logger.debug(f"Removing file {p.name}")
+-                    p.unlink()
++    def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
++        # Compatibility hook: closure logic lives in ClosureService.
++        self._ops.closure.close_auto(payload, task_path)
+ 
+     def _task_path(self, task_id: str) -> Path:
+         return self.desk_root / "tasks" / f"{task_id}.md"
+diff --git a/tests/e2e_agent/scenarios/first-task-to-closeout.yaml b/tests/e2e_agent/scenarios/first-task-to-closeout.yaml
+index 255b176..98be663 100644
+--- a/tests/e2e_agent/scenarios/first-task-to-closeout.yaml
++++ b/tests/e2e_agent/scenarios/first-task-to-closeout.yaml
+@@ -16,11 +16,15 @@ reference:
+   - deskops advance task task-add-changelog --root .
+   - printf -- '- Started using deskops.\n' > CHANGELOG.md
+   - pytest -q
+-  - deskops advance task task-add-changelog --root .
+-  - deskops edit task task-add-changelog references '["tests/test_ok.py"]' --root .
+   - |-
+     git add -A && git commit -qm "docs: start changelog"
+   - deskops advance task task-add-changelog --root .
++  - deskops add atom --root . --title "Changelog closeout evidence" --five-wh-one-plus what --answer "The changelog task closed through the closeout command."
++  - |-
++    commit=$(git rev-parse HEAD)
++    deskops edit task task-add-changelog references "[\"desk/atoms/atom-changelog-closeout-evidence.md\", \"pytest tests/test_ok.py::test_ok\", \"$commit\"]" --root .
++  - deskops edit task task-add-changelog files '["desk/atoms/atom-changelog-closeout-evidence.md"]' --root .
++  - deskops closeout commit --root . --task task-add-changelog --no-run --reason "Quickstart closes without a subagent run" --paths desk/atoms/atom-changelog-closeout-evidence.md CHANGELOG.md
+ checks:
+   - name: CHANGELOG.md is committed with the requested line
+     run: |-
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index a4567fa..fed49c3 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -1504,24 +1504,44 @@ def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Pat
+     runtime_test = tmp_path / "tests" / "test_runtime.py"
+     runtime_test.parent.mkdir(parents=True, exist_ok=True)
+     runtime_test.write_text("def test_runtime():\n    assert True\n", encoding="utf-8")
++    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
++    capsys.readouterr()
++    commit = subprocess.run(
++        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=True
++    ).stdout.strip()
+ 
+     evidence_edit = main([
+         "edit",
+         "task",
+         "task-advance-task-runtime",
+         "references",
+-        '["pytest tests/test_runtime.py::test_runtime"]',
++        f'["desk/atoms/atom-trackable-atom.md", "pytest tests/test_runtime.py::test_runtime", "{commit}"]',
+         "--root",
+         str(tmp_path),
+     ])
+     capsys.readouterr()
+     assert evidence_edit == 0
++    files_edit = main([
++        "edit",
++        "task",
++        "task-advance-task-runtime",
++        "files",
++        '["desk/atoms/atom-trackable-atom.md"]',
++        "--root",
++        str(tmp_path),
++    ])
++    capsys.readouterr()
++    assert files_edit == 0
+ 
+-    third_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
+-    third = capsys.readouterr()
+-    assert third_advance == 0
+-    assert "Status: closed" in third.out
+-    assert "Current node: complete" in third.out
++    closed = main([
++        "closeout", "commit", "--root", str(tmp_path),
++        "--task", "task-advance-task-runtime",
++        "--no-run", "--reason", "Runtime smoke test",
++        "--paths", "desk/atoms/atom-trackable-atom.md", "tests/test_runtime.py",
++    ])
++    close_out = capsys.readouterr()
++    assert closed == 0
++    assert "Closing commit " in close_out.out
+     assert not (tmp_path / "desk" / "tasks" / "task-advance-task-runtime.md").exists()
+     board_text = (tmp_path / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+     assert "desk/tasks/task-advance-task-runtime.md" not in board_text
+@@ -1713,11 +1733,52 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
+     capsys.readouterr()
+     assert add_evidence == 0
+ 
+-    close_result = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
++    # Evidence now clears the lifecycle gate, but `advance` still refuses to
++    # close: the only closing entry point is `closeout commit`.
++    close_attempt = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
++    close_attempt_out = capsys.readouterr()
++    assert close_attempt == 1
++    assert "deskops closeout commit" in close_attempt_out.out
++    assert (tmp_path / "desk" / "tasks" / "task-advance-blocked-task.md").exists()
++
++    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
++    capsys.readouterr()
++    commit = subprocess.run(
++        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=True
++    ).stdout.strip()
++    full_evidence = main([
++        "edit",
++        "task",
++        "task-advance-blocked-task",
++        "references",
++        f'["desk/atoms/atom-trackable-atom.md", "pytest tests/test_blocked.py::test_blocked", "{commit}"]',
++        "--root",
++        str(tmp_path),
++    ])
++    capsys.readouterr()
++    assert full_evidence == 0
++    files_edit = main([
++        "edit",
++        "task",
++        "task-advance-blocked-task",
++        "files",
++        '["desk/atoms/atom-trackable-atom.md"]',
++        "--root",
++        str(tmp_path),
++    ])
++    capsys.readouterr()
++    assert files_edit == 0
++
++    closed = main([
++        "closeout", "commit", "--root", str(tmp_path),
++        "--task", "task-advance-blocked-task",
++        "--no-run", "--reason", "Blocked gate smoke test",
++        "--paths", "desk/atoms/atom-trackable-atom.md", "tests/test_blocked.py",
++    ])
+     close_out = capsys.readouterr()
+-    assert close_result == 0
+-    assert "Status: closed" in close_out.out
+-    assert "Current node: complete" in close_out.out
++    assert closed == 0
++    assert "Closing commit " in close_out.out
++    assert not (tmp_path / "desk" / "tasks" / "task-advance-blocked-task.md").exists()
+ 
+ 
+ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk: Path, capsys) -> None:
+@@ -1777,11 +1838,52 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk
+     capsys.readouterr()
+     assert set_atom_reference == 0
+ 
+-    close_result = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
++    # The atom reference clears the lifecycle gate (not "Gate ... not
++    # complete"), but closing itself belongs to `closeout commit`.
++    close_attempt = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
++    close_attempt_out = capsys.readouterr()
++    assert close_attempt == 1
++    assert "deskops closeout commit" in close_attempt_out.out
++    assert "Gate ritual-closeout is not complete" not in close_attempt_out.out
++
++    atom_test = tmp_path / "tests" / "test_atom_evidence.py"
++    atom_test.parent.mkdir(parents=True, exist_ok=True)
++    atom_test.write_text("def test_atom_evidence():\n    assert True\n", encoding="utf-8")
++    commit = subprocess.run(
++        ["git", "rev-parse", "HEAD"], cwd=tmp_path, capture_output=True, text=True, check=True
++    ).stdout.strip()
++    full_evidence = main([
++        "edit",
++        "task",
++        "task-advance-with-atom-evidence",
++        "references",
++        f'["desk/atoms/atom-trackable-atom.md", "pytest tests/test_atom_evidence.py::test_atom_evidence", "{commit}"]',
++        "--root",
++        str(tmp_path),
++    ])
++    capsys.readouterr()
++    assert full_evidence == 0
++    files_edit = main([
++        "edit",
++        "task",
++        "task-advance-with-atom-evidence",
++        "files",
++        '["desk/atoms/atom-trackable-atom.md"]',
++        "--root",
++        str(tmp_path),
++    ])
++    capsys.readouterr()
++    assert files_edit == 0
++
++    close_result = main([
++        "closeout", "commit", "--root", str(tmp_path),
++        "--task", "task-advance-with-atom-evidence",
++        "--no-run", "--reason", "Atom evidence smoke test",
++        "--paths", "desk/atoms/atom-trackable-atom.md", "tests/test_atom_evidence.py",
++    ])
+     close_out = capsys.readouterr()
+     assert close_result == 0
+-    assert "Status: closed" in close_out.out
+-    assert "Current node: complete" in close_out.out
++    assert "Closing commit " in close_out.out
+ 
+ 
+ 
+diff --git a/tests/test_doc_io.py b/tests/test_doc_io.py
+index 54c6f90..fba0849 100644
+--- a/tests/test_doc_io.py
++++ b/tests/test_doc_io.py
+@@ -14,6 +14,7 @@ if str(ROOT) not in sys.path:
+ from deskops import doc_io
+ from deskops.models import AtomDoc
+ from deskops.operations import DeskopsOperations
++from deskops.services.closure import ClosureService
+ 
+ WRITE_MODULE_PREFIXES = ("create_", "delete_", "update_", "track_", "untrack_")
+ 
+@@ -219,9 +220,29 @@ def test_closeout_commit_includes_the_store_delta_it_causes(lifecycle_desk: Path
+     _git(root, "add", "-A")
+     _git(root, "commit", "-q", "-m", "task")
+ 
++    atom_path = _atom(operations, "Closeout store delta evidence")
++    atom_rel = atom_path.relative_to(root).as_posix()
++    commit = _git(root, "rev-parse", "HEAD").stdout.strip()
++    operations.edit_artifact_field(
++        "task",
++        task_id,
++        "references",
++        f'["{atom_rel}", "pytest tests/test_evidence.py::test_evidence", "{commit}"]',
++    )
++    operations.edit_artifact_field("task", task_id, "files", f'["{atom_rel}"]')
++
+     operations.advance_task(task_id)
+     operations.advance_task(task_id)
+-    operations.advance_task(task_id)
++    refused, result = operations.advance_task(task_id)
++    assert result is not None and result.blocked
++    assert refused is not None and refused.current_node == "ritual-closeout"
++
++    outcome = ClosureService(root, operations).close_manual(
++        task_id,
++        reason="Store delta smoke test",
++        paths=[atom_rel, "tests/test_evidence.py"],
++    )
++    assert outcome.exit_code == 0, outcome.messages
+ 
+     status = _git(root, "status", "--porcelain", "--", ".sldb")
+     assert status.stdout == ""
+diff --git a/tests/test_inbox_promote_cli_gaps.py b/tests/test_inbox_promote_cli_gaps.py
+index f309630..1c80b7e 100644
+--- a/tests/test_inbox_promote_cli_gaps.py
++++ b/tests/test_inbox_promote_cli_gaps.py
+@@ -181,19 +181,19 @@ def _make_task(tmp_path: Path, task_id: str) -> DeskopsOperations:
+     return operations
+ 
+ 
+-def test_forced_advance_to_complete_also_closes_status(tmp_path: Path) -> None:
+-    """Regression: `advance --to complete` moved current_node only, leaving
+-    status at 'active'. The gated path pairs current_node == 'complete' with
+-    status == 'closed', so the forced path left the two disagreeing and the
+-    task read as terminal but never as closed."""
++def test_forced_advance_to_complete_refuses_and_points_at_closeout(tmp_path: Path) -> None:
++    """Only `deskops closeout commit` closes a task. A forced transition to
++    the terminal node must leave the task untouched and say where to close."""
+     _install_desk(tmp_path)
+     operations = _make_task(tmp_path, "task-forced-complete")
+ 
+     task, result = operations.advance_task("task-forced-complete", target_node="complete")
+ 
+     assert result is not None
+-    assert task.current_node == "complete"
+-    assert task.status == "closed"
++    assert result.blocked
++    assert "deskops closeout commit" in result.message
++    assert task.current_node == "ritual-execution"
++    assert task.status == "active"
+ 
+ 
+ def test_forced_advance_to_a_normal_node_leaves_status_alone(tmp_path: Path) -> None:
+diff --git a/tests/test_lifecycle_end_to_end.py b/tests/test_lifecycle_end_to_end.py
+index f57166f..085ec24 100644
+--- a/tests/test_lifecycle_end_to_end.py
++++ b/tests/test_lifecycle_end_to_end.py
+@@ -129,7 +129,7 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
+         '"pytest tests/test_lifecycle_smoke.py::test_lifecycle_smoke", '
+         f'"{seed_commit}"]'
+     )
+-    files = '["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md", "tests/test_lifecycle_smoke.py"]'
++    files = '["desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md"]'
+ 
+     edit_references = _cli(
+         root,
+@@ -158,9 +158,22 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
+     )
+     assert "Updated task task-lifecycle-e2e field files" in edit_files.stdout
+ 
+-    closed = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
+-    assert "Status: closed" in closed.stdout
+-    assert "Current node: complete" in closed.stdout
++    closed = _cli(
++        root,
++        "closeout",
++        "commit",
++        "--root",
++        str(root),
++        "--task",
++        "task-lifecycle-e2e",
++        "--no-run",
++        "--reason",
++        "Lifecycle smoke test closes without a subagent run",
++        "--paths",
++        "desk/atoms/atom-lifecycle-cli-end-to-end-evidence.md",
++        "tests/test_lifecycle_smoke.py",
++    )
++    assert "Closing commit " in closed.stdout
+ 
+     assert not active_task.exists()
+ 
+@@ -225,7 +238,7 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
+         "task",
+         "task-foo",
+         "files",
+-        '["desk/atoms/atom-closeout-amend-ownership-evidence.md", "tests/test_amend_owner_smoke.py"]',
++        '["desk/atoms/atom-closeout-amend-ownership-evidence.md"]',
+         "--root",
+         str(root),
+     )
+@@ -240,7 +253,21 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
+     )
+     other_closeout = _git(root, "rev-parse", "HEAD")
+ 
+-    _cli(root, "advance", "task", "task-foo", "--root", str(root))
++    _cli(
++        root,
++        "closeout",
++        "commit",
++        "--root",
++        str(root),
++        "--task",
++        "task-foo",
++        "--no-run",
++        "--reason",
++        "Amend ownership smoke test",
++        "--paths",
++        "desk/atoms/atom-closeout-amend-ownership-evidence.md",
++        "tests/test_amend_owner_smoke.py",
++    )
+ 
+     assert _git(root, "rev-parse", "HEAD~1") == other_closeout, (
+         "closing task-foo must not amend another task's closeout commit"
+@@ -300,7 +327,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) ->
+         "task",
+         "task-pathspec-commit",
+         "files",
+-        f'["{atom}", "{test_file}"]',
++        f'["{atom}"]',
+         "--root",
+         str(root),
+     )
+@@ -314,7 +341,21 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) ->
+     _write(root, "unrelated.txt", "unrelated\n")
+     _git(root, "add", "unrelated.txt")
+ 
+-    _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
++    _cli(
++        root,
++        "closeout",
++        "commit",
++        "--root",
++        str(root),
++        "--task",
++        "task-pathspec-commit",
++        "--no-run",
++        "--reason",
++        "Pathspec smoke test",
++        "--paths",
++        atom,
++        test_file,
++    )
+     assert not task_a.exists()
+ 
+     staged = _git(root, "diff", "--cached", "--name-only").split()
+@@ -372,7 +413,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) ->
+         "task",
+         "task-pathspec-amend",
+         "files",
+-        f'["{amend_atom}", "{amend_test}"]',
++        f'["{amend_atom}"]',
+         "--root",
+         str(root),
+     )
+@@ -385,7 +426,21 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) ->
+     _write(root, "unrelated-amend.txt", "unrelated\n")
+     _git(root, "add", "unrelated-amend.txt")
+ 
+-    _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
++    _cli(
++        root,
++        "closeout",
++        "commit",
++        "--root",
++        str(root),
++        "--task",
++        "task-pathspec-amend",
++        "--no-run",
++        "--reason",
++        "Amend pathspec smoke test",
++        "--paths",
++        amend_atom,
++        amend_test,
++    )
+     assert not task_b.exists()
+ 
+     assert _git(root, "rev-parse", "HEAD~1") == _git(root, "rev-parse", f"{fake_closeout}~1"), (

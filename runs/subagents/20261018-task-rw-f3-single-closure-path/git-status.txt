@@ -1,0 +1,15 @@
+ M .sldb/core/documents/TaskDoc/task-rw-f3-single-closure-path.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/rituals/closeout.md
+ M desk/tasks/task-rw-f3-single-closure-path.md
+ M deskops/cli/commands/closeout.py
+ M deskops/operations.py
+ M deskops/services/tasks.py
+ M tests/e2e_agent/scenarios/first-task-to-closeout.yaml
+ M tests/test_cli.py
+ M tests/test_doc_io.py
+ M tests/test_inbox_promote_cli_gaps.py
+ M tests/test_lifecycle_end_to_end.py
+?? deskops/services/closure.py
+?? runs/subagents/20261018-task-rw-f3-single-closure-path/
