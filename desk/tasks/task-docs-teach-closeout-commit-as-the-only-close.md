@@ -8,8 +8,7 @@ tags:
 current_node: ritual-execution
 history: []
 references: []
-depends_on:
-- task-rw-f3-single-closure-path
+depends_on: []
 pills:
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files:

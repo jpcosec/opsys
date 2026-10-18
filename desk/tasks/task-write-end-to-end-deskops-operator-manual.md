@@ -1,24 +1,24 @@
 ---
 id: task-write-end-to-end-deskops-operator-manual
 status: deferred
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:drawer
+current_node: ritual-execution
+history: []
 references: []
-depends_on:
-- task-make-task-lifecycle-runnable-from-intake-to-closeout
-- task-wire-closeout-to-knowledge-gates
-- task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout
-- task-make-cross-desk-inbox-delivery-verifiable-and-actionable
-- task-detect-and-migrate-legacy-desk-workspaces
+depends_on: []
 pills:
 - desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 - desk/contexts/pill-cli-gaps-become-tracked-work.md
 files: []
-current_node: ritual-execution
-history: []
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
 ---
 
 # Write end-to-end deskops operator manual

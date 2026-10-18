@@ -1,7 +1,7 @@
 name: task-write-end-to-end-deskops-operator-manual
 path: desk/tasks/task-write-end-to-end-deskops-operator-manual.md
-source_hash: fc6ddb6fc872a3750e86e88422df447cba648eb4c47dd391a95adc564843b47c
-content_hash: 51e15ef97298c3ac13353c4aef6fae91911315cbe7b2d5188b7d89c8491d21d4
+source_hash: 34c28cab422b0ebf464ee3dc67e0f753391cf6c3f0d7c7b0dddc50b4df682522
+content_hash: dbe9cfc0293a3535f6300bc3f66b9c91eb40f183bf24d56cd8cb57d3b58b5792
 field_hashes:
   title: bd7a402585e77b30aee715ca6b5b5c52d6eca299046327b461e0f5f2fe6473e0
   id: cd0310eaceebc7dcf675f1007ac900111c20b048b7afe2b429b95dafb8a61d7d
@@ -14,7 +14,7 @@ field_hashes:
   goal: 1a6ad0c5126c97258762dc06abda7b7e37491acf83ffcb870aa60019ddcda65e
   scope: c988d11e3cfd9ca771048f80af0a2e3cbc4b53804f5e7f78f2b13c6dfb12bb23
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  depends_on: 747064dd57f128ff152a596ddb944e8612405aa27697df421303c81eb890e01c
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: afc8ac9b3b0ff0ec6a2c5c3537910fd51d18c5a1b67624fa9517e3e20fae7446
   files: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   implementation_path: 375d20b7480208b248113f032330ecbd4e6c009ec621f6a83538003fb3698e44
