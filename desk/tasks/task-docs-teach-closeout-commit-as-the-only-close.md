@@ -1,6 +1,12 @@
 ---
 id: task-docs-teach-closeout-commit-as-the-only-close
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f3-single-closure-path
@@ -14,12 +20,10 @@ files:
 - docs/diagrams/process/current-agent-workflow-and-automation.md
 - docs/diagrams/process/current-agent-workflow-and-automation.mmd
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- topic:docs
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-docs-teach-closeout-commit-as-the-only-close.md
 ---
 
 # Docs and skills teach `closeout commit` as the only way to close a task
