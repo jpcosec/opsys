@@ -1,0 +1,7 @@
+usage: deskops graph missing [-h] [--root ROOT] [--graph GRAPH]
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    Target repository root.
+  --graph GRAPH  Optional graph snapshot path to check for missing edge
+                 targets.

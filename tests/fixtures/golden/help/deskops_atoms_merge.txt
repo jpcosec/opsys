@@ -1,0 +1,19 @@
+usage: deskops atoms merge [-h] --into TARGET_ATOM_ID [--root ROOT] [--force]
+                           doc_id
+
+positional arguments:
+  doc_id                Source atom selector. Selectors accept an exact id,
+                        filename, stem, or unique slug fragment where
+                        supported.
+
+options:
+  -h, --help            show this help message and exit
+  --into TARGET_ATOM_ID
+                        Existing target atom selector that absorbs the source
+                        atom.
+  --root ROOT           Target repository root.
+  --force               Proceed when merge semantics are ambiguous, such as
+                        conflicting five_wh_one_plus values. Inbound
+                        atom:<source> references are rewritten to
+                        atom:<target>, and the source atom is kept as a
+                        redirect stub for traceability.

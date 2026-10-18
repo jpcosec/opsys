@@ -1,0 +1,14 @@
+usage: deskops bind pill [-h] [--root ROOT] task pill
+
+positional arguments:
+  task         Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+  pill         Pill selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+
+Example:
+  deskops bind pill task-fix-thing pill-phase-gate --root .
+
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

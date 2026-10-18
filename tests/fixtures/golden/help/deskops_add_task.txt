@@ -1,0 +1,51 @@
+usage: deskops add task [-h] [--from-yaml FROM_YAML] [--root ROOT]
+                        [--title TITLE] [--why WHY] [--goal GOAL]
+                        [--scope SCOPE]
+                        [--implementation-path IMPLEMENTATION_PATH]
+                        [--done-when DONE_WHEN] [--from-drawer FROM_DRAWER]
+                        [--validation VALIDATION [VALIDATION ...]]
+                        [--depends-on DEPENDS_ON [DEPENDS_ON ...]]
+                        [--task-type TASK_TYPE]
+                        [--inherits-from INHERITS_FROM [INHERITS_FROM ...]]
+                        [--atom ATOM [ATOM ...]]
+                        [--inherit-acceptance-context]
+                        [payload]
+
+positional arguments:
+  payload               Inline JSON payload for the task.
+
+options:
+  -h, --help            show this help message and exit
+  --from-yaml FROM_YAML
+                        Load the task payload from a YAML file.
+  --root ROOT           Target repository root.
+  --title TITLE         Task title
+  --why WHY             Rationale or business driver
+  --goal GOAL           Task goal
+  --scope SCOPE         Task scope
+  --implementation-path IMPLEMENTATION_PATH
+                        Implementation path
+  --done-when DONE_WHEN
+                        Task completion rule
+  --from-drawer FROM_DRAWER
+                        Drawer file this task is authored from (path, stem, or
+                        slug fragment). Recorded in the task's from_drawer
+                        field; the drawer file is kept for manual cleanup.
+  --validation VALIDATION [VALIDATION ...]
+                        Validation command or assertion; repeat or space-
+                        separate as needed.
+  --depends-on DEPENDS_ON [DEPENDS_ON ...]
+                        Task identifiers that must complete first; repeat or
+                        space-separate as needed.
+  --task-type TASK_TYPE
+                        Workflow task type such as design, implementation,
+                        test, reflection, or closeout.
+  --inherits-from INHERITS_FROM [INHERITS_FROM ...]
+                        Task identifiers that provide inherited workflow
+                        context; repeat or space-separate as needed.
+  --atom ATOM [ATOM ...]
+                        Workflow or knowledge atom refs bound to the task;
+                        repeat or space-separate as needed.
+  --inherit-acceptance-context
+                        Inherit validation and done-when context from tasks
+                        listed in --inherits-from.

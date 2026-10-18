@@ -1,0 +1,6 @@
+usage: deskops desk update [-h] [--root ROOT] [--apply]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --apply      Apply repairs (dry run by default).

@@ -1,0 +1,10 @@
+usage: deskops atoms validate [-h] [--all] [--root ROOT] [doc_id]
+
+positional arguments:
+  doc_id       Atom selector. Selectors accept an exact id, filename, stem, or
+               unique slug fragment where supported.
+
+options:
+  -h, --help   show this help message and exit
+  --all        Validate all atoms under desk/atoms/.
+  --root ROOT  Target repository root.

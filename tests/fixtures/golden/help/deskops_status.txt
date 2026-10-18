@@ -1,0 +1,5 @@
+usage: deskops status [-h] [--root ROOT]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.

@@ -1,0 +1,14 @@
+usage: deskops graph [-h] {build,neighbors,missing,reflect} ...
+
+positional arguments:
+  {build,neighbors,missing,reflect}
+    build               Build the KGDB graph snapshot runtime artifact.
+    neighbors           Show incoming and outgoing neighbors for one graph
+                        node.
+    missing             Report missing graph targets and dangling declared
+                        references.
+    reflect             Write review-only self-reflection findings for a graph
+                        snapshot.
+
+options:
+  -h, --help            show this help message and exit

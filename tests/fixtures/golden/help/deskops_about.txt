@@ -1,0 +1,4 @@
+usage: deskops about [-h]
+
+options:
+  -h, --help  show this help message and exit

@@ -1,0 +1,4 @@
+usage: deskops bootstrap [-h]
+
+options:
+  -h, --help  show this help message and exit

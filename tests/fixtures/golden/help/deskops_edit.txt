@@ -1,0 +1,25 @@
+usage: deskops edit [-h]
+                    {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step} ...
+
+positional arguments:
+  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
+    task                Edit one task field.
+    pill                Edit one pill field.
+    ritual              Edit one ritual field.
+    board               Edit one board field.
+    atom                Edit one atom field.
+    materialization     Edit one materialization field.
+    repository          Edit one repository field.
+    inbox-note          Edit one inbox-note field.
+    faq-doc             Edit one faq-doc field.
+    step                Edit one step field.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops edit task task-fix-thing goal "Updated goal" --root .
+  deskops edit pill pill-keep-layers-clean how-not "Do not bypass the guardrail." --root .
+
+Values are parsed with SLDB's field-value parser and the document is re-rendered through its model.
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

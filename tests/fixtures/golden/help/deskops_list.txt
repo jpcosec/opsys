@@ -1,0 +1,23 @@
+usage: deskops list [-h]
+                    {tasks,pills,rituals,boards,atoms,materializations,repositories,inbox-notes,faq-docs,steps} ...
+
+positional arguments:
+  {tasks,pills,rituals,boards,atoms,materializations,repositories,inbox-notes,faq-docs,steps}
+    tasks               List actionable tasks.
+    pills               List pills.
+    rituals             List rituals.
+    boards              List boards.
+    atoms               List atoms.
+    materializations    List materializations.
+    repositories        List repositories.
+    inbox-notes         List inbox-notes.
+    faq-docs            List faq-docs.
+    steps               List steps.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops list tasks --root .
+  deskops list pills --root .
+  deskops list atoms --root .

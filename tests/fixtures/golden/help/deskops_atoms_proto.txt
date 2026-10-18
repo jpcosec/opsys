@@ -1,0 +1,14 @@
+usage: deskops atoms proto [-h] --title TITLE [--content CONTENT]
+                           [--tag TAG [TAG ...]] [--root ROOT]
+                           doc_id
+
+positional arguments:
+  doc_id               New protoatom id, conventionally proto-<slug>.
+
+options:
+  -h, --help           show this help message and exit
+  --title TITLE        Short title of the free knowledge unit.
+  --content CONTENT    Free markdown content.
+  --tag TAG [TAG ...]  Atom tag; a single domain:<path> tag places the
+                       protoatom in the domain tree.
+  --root ROOT          Target repository root.

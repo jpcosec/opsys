@@ -9,6 +9,15 @@ from pathlib import Path
 import pytest
 
 
+def pytest_addoption(parser: pytest.Parser) -> None:
+    parser.addoption(
+        "--update-golden",
+        action="store_true",
+        default=False,
+        help="Rewrite the committed golden output fixtures from the current behavior.",
+    )
+
+
 def _git(root: Path, *argv: str) -> None:
     subprocess.run(["git", *argv], cwd=root, check=True, capture_output=True, text=True)
 

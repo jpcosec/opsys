@@ -1,0 +1,14 @@
+usage: deskops advance [-h] {task} ...
+
+positional arguments:
+  {task}
+    task      Advance one actionable task through the desk's lifecycle graph.
+
+options:
+  -h, --help  show this help message and exit
+
+Example:
+  deskops advance task task-fix-thing --root .
+
+Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

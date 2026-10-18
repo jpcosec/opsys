@@ -1,0 +1,13 @@
+usage: deskops atoms crossroad [-h] --title TITLE --content CONTENT
+                               [--root ROOT]
+                               path
+
+positional arguments:
+  path               Domain path such as pizzeria.carta; its parent path needs
+                     a crossroad first.
+
+options:
+  -h, --help         show this help message and exit
+  --title TITLE      Short title of the domain area.
+  --content CONTENT  Written description of what hangs below this path.
+  --root ROOT        Target repository root.

@@ -1,0 +1,9 @@
+usage: deskops list tasks [-h] [--root ROOT] [--include-repos]
+                          [--format {text,json}]
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --include-repos       Also list tasks routed by registered sibling
+                        repositories' desk/tasks/Board.md files.
+  --format {text,json}  Output format.

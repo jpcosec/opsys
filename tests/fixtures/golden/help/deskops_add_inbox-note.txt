@@ -1,0 +1,35 @@
+usage: deskops add inbox-note [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                              --kind {unclear,suggestion}
+                              [--sender-project SENDER_PROJECT]
+                              [--target-project TARGET_PROJECT]
+                              --created-at CREATED_AT --status {open,closed}
+                              [--acknowledged-by ACKNOWLEDGED_BY]
+                              [--acknowledged-at ACKNOWLEDGED_AT]
+                              [--title TITLE] --body BODY
+
+Create a inbox-note artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the inbox-note payload from a YAML file.
+  --kind {unclear,suggestion}
+                        Inbox note type indicating unresolved confusion or an improvement proposal.
+  --sender-project SENDER_PROJECT
+                        Project that sent the inbox message, resolved from the repo registry when possible.
+  --target-project TARGET_PROJECT
+                        Project the inbox note targets, resolved from the shared desk identity contract.
+  --created-at CREATED_AT
+                        Timestamp for when the inbox note was created.
+  --status {open,closed}
+                        Whether the inbox note is still open or already handled.
+  --acknowledged-by ACKNOWLEDGED_BY
+                        Project identity that acknowledged and closed the inbox note.
+  --acknowledged-at ACKNOWLEDGED_AT
+                        Timestamp for when the inbox note was acknowledged and closed.
+  --title TITLE         Inbox note title shown as the H1 heading.
+  --body BODY           Markdown body describing the question or suggestion in detail.
+
+Example:
+  deskops add inbox-note --root . --title "Example"

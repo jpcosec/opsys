@@ -1,0 +1,6 @@
+usage: deskops materialize [-h] [--root ROOT] [--out OUT]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --out OUT    Output directory override; defaults to ~/.pi/agent/agents.

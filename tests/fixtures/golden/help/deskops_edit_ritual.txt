@@ -1,0 +1,12 @@
+usage: deskops edit ritual [-h] [--root ROOT] selector field value
+
+positional arguments:
+  selector     Ritual selector. Selectors accept an exact id, filename, stem,
+               or unique slug fragment where supported.
+  field        Model field name to update; hyphens are accepted for
+               underscores.
+  value        New field value, parsed like an SLDB field value.
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.

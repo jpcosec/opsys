@@ -1,0 +1,15 @@
+usage: deskops runtime [-h] {init,status,attach,stop,workers,supervise} ...
+
+positional arguments:
+  {init,status,attach,stop,workers,supervise}
+    init                Initialize or reuse this desk's Herdr Space.
+    status              Show this desk's Herdr Space.
+    attach              Focus this desk's Herdr Space.
+    stop                Close this desk's Herdr Space.
+    workers             List live Herdr agents across all workspaces on this
+                        machine.
+    supervise           Block on one agent's Herdr lifecycle and report
+                        blocked/done settles without advancing the desk.
+
+options:
+  -h, --help            show this help message and exit

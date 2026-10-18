@@ -1,0 +1,25 @@
+usage: deskops add pill [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                        [--title TITLE] [--summary SUMMARY]
+                        [--tags TAGS [TAGS ...]] --what WHAT --why WHY
+                        --when WHEN --where WHERE --how HOW --how-not HOW_NOT
+
+Create a pill artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the pill payload from a YAML file.
+  --title TITLE         Pill title, including semantic prefix when useful, such as 'ADR:' or 'Pattern:'.
+  --summary SUMMARY     Short semantic summary for the pill.
+  --tags TAGS [TAGS ...]
+                        Semantic tags placed at the end, using namespaced forms such as 'language:python' or 'library:pydantic'.
+  --what WHAT           What the pill defines or clarifies.
+  --why WHY             Why this context matters for implementation or refactoring.
+  --when WHEN           When this pill should be applied.
+  --where WHERE         Where this pill applies, either as general scope or as references to existing code or docs.
+  --how HOW             How to apply the guidance in practice.
+  --how-not HOW_NOT     How not to apply the guidance or what to avoid.
+
+Example:
+  deskops add pill --root . --title "Example"

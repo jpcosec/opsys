@@ -1,0 +1,14 @@
+usage: deskops show task [-h] [--root ROOT] [--format {text,json}] task_id
+
+positional arguments:
+  task_id               Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json}  Output format.
+
+Example:
+  deskops show task task-fix-thing --root .
+
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

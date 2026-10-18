@@ -1,0 +1,18 @@
+usage: deskops atoms type [-h] --model MODEL [--id NEW_ID]
+                          [--content-field CONTENT_FIELD] [--data DATA]
+                          [--root ROOT]
+                          doc_id
+
+positional arguments:
+  doc_id                Protoatom selector: id or filename.
+
+options:
+  -h, --help            show this help message and exit
+  --model MODEL         Target sldb model name, such as AtomDoc or TaskDoc.
+  --id NEW_ID           Id of the typed document; defaults to <model>-<slug>.
+  --content-field CONTENT_FIELD
+                        Target field that receives the protoatom content;
+                        defaults to 'content' when the model has it.
+  --data DATA           Inline JSON with the remaining fields the target model
+                        requires.
+  --root ROOT           Target repository root.

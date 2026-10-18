@@ -1,0 +1,6 @@
+usage: deskops doctor [-h] [--root ROOT] [--repair]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --repair     Attempt non-destructive repairs.

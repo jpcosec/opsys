@@ -1,0 +1,44 @@
+usage: deskops [-h]
+               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
+
+deskops: Workflow-domain layer for the hum-ecosystem.
+
+positional arguments:
+  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+    about               Print a short overview of deskops and its first-use commands.
+    doctor              Detect and repair common broken desk states safely.
+    status              Show current workspace and workflow status.
+    faq                 Browse the first-use FAQ by question.
+    bootstrap           Install or repair sldb and register deskops models in the global store.
+    init                Initialize a local .sldb store and scaffold desk/ if needed.
+    inbox               Deprecated alias for `deskops message`; use message send/list/read/ack.
+    message             Send, list, read, or acknowledge cross-desk messages.
+    promote             Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.
+    add                 Create desk workflow artifacts from modeled templates.
+    edit                Update one field on a modeled desk artifact.
+    bind                Bind workflow context artifacts to tasks.
+    next                Show the next valid workflow action for a task without mutating it.
+    list                List desk workflow artifacts.
+    show                Show one desk workflow artifact by selector.
+    advance             Advance an operational artifact through the desk's lifecycle graph.
+    repo                Repository registration and discovery.
+    desk                Desk workspace management.
+    atoms               Atom model and namespace management.
+    graph               Build and inspect deskops KGDB graph runtime outputs.
+    materialize         Render tracked desk role prompts into installed pi-agent files.
+    drift               Check for role-agent drift between tracked role docs and installed agent files.
+    closeout            Workflow closeout operations.
+    runtime             Manage the live Herdr runtime for this DeskOps desk.
+
+options:
+  -h, --help            show this help message and exit
+
+Typical flow:
+  deskops bootstrap
+  deskops init .
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+  deskops list tasks --root .
+  deskops show task task-fix-thing --root .
+  deskops advance task task-fix-thing --root .
+
+Use docs/quickstart.md for the first full walkthrough.

@@ -1,0 +1,6 @@
+usage: deskops drift check [-h] [--root ROOT] [--out OUT]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --out OUT    Agent directory override; defaults to ~/.pi/agent/agents.

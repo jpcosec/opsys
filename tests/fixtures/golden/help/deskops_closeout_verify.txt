@@ -1,0 +1,6 @@
+usage: deskops closeout verify [-h] [--root ROOT] --task TASK
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --task TASK  Task id being verified.

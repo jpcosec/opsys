@@ -1,0 +1,15 @@
+usage: deskops add faq-doc [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                           [--title TITLE] --body BODY
+
+Create a faq-doc artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the faq-doc payload from a YAML file.
+  --title TITLE         Primary H1 heading for the FAQ document.
+  --body BODY           Full FAQ body after the H1, including questions, answers, command examples, and cross-references to atom docs.
+
+Example:
+  deskops add faq-doc --root . --title "Example"

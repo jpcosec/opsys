@@ -1,0 +1,6 @@
+usage: deskops graph reflect [-h] [--root ROOT] [--graph GRAPH]
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    Target repository root.
+  --graph GRAPH  Graph snapshot path; defaults to the root runtime snapshot.

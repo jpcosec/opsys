@@ -1,0 +1,22 @@
+usage: deskops message ack [-h] [--root ROOT] [--desk-root DESK_ROOT]
+                           [--store STORE] [--repo REPO]
+                           [--pythonpath PYTHONPATH]
+                           [--format {text,json,yaml}]
+                           selector
+
+positional arguments:
+  selector              Message filename, stem, or unique slug fragment
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Repository root whose desk/ holds the inbox
+  --desk-root DESK_ROOT
+                        Desk root directory override; defaults to the active
+                        project desk
+  --store STORE         Store path used to resolve the target project root for
+                        the default desk
+  --repo REPO           Target a registered repository name in the ecosystem
+  --pythonpath PYTHONPATH
+                        Project path used when auto-tracking messages through
+                        the registered model
+  --format {text,json,yaml}

@@ -1,0 +1,719 @@
+{
+  "directed": true,
+  "graph": {},
+  "links": [
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_kgdb_coverage_v1",
+        "facet": "what",
+        "provenance_locator": "frontmatter:five_wh_one_plus",
+        "provenance_path": "desk/atoms/atom-golden-one.md",
+        "role": "answers",
+        "source_kind": "coverage_materialization"
+      },
+      "relation": "answers",
+      "source": "atom:atom-golden-one",
+      "target": "facet:what"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_kgdb_coverage_v1",
+        "facet": "how",
+        "provenance_locator": "frontmatter:five_wh_one_plus",
+        "provenance_path": "desk/atoms/atom-golden-two.md",
+        "role": "answers",
+        "source_kind": "coverage_materialization"
+      },
+      "relation": "answers",
+      "source": "atom:atom-golden-two",
+      "target": "facet:how"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "line:43:related atoms",
+        "provenance_path": "desk/tasks/task-golden-alpha.md",
+        "role": "references",
+        "source_kind": "declared"
+      },
+      "relation": "references",
+      "source": "task:task-golden-alpha",
+      "target": "atom:atom-golden-one"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "frontmatter",
+        "provenance_path": "desk/tasks/task-golden-alpha.md",
+        "role": "pills",
+        "source_kind": "declared"
+      },
+      "relation": "pills",
+      "source": "task:task-golden-alpha",
+      "target": "pill:pill-golden-rule"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "line:13:source-file-reference",
+        "provenance_path": "desk/tasks/task-golden-alpha.md",
+        "role": "references",
+        "source_kind": "declared"
+      },
+      "relation": "references",
+      "source": "task:task-golden-alpha",
+      "target": "pill:pill-golden-rule"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "frontmatter",
+        "provenance_path": "desk/tasks/task-golden-beta.md",
+        "role": "references",
+        "source_kind": "declared"
+      },
+      "relation": "references",
+      "source": "task:task-golden-beta",
+      "target": "atom:atom-golden-two"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "frontmatter",
+        "provenance_path": "desk/tasks/task-golden-beta.md",
+        "role": "pills",
+        "source_kind": "declared"
+      },
+      "relation": "pills",
+      "source": "task:task-golden-beta",
+      "target": "pill:pill-golden-rule"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "line:15:source-file-reference",
+        "provenance_path": "desk/tasks/task-golden-beta.md",
+        "role": "references",
+        "source_kind": "declared"
+      },
+      "relation": "references",
+      "source": "task:task-golden-beta",
+      "target": "pill:pill-golden-rule"
+    },
+    {
+      "metadata": {
+        "confidence": "high",
+        "extractor": "desk_declared_edges_v1",
+        "provenance_locator": "frontmatter",
+        "provenance_path": "desk/tasks/task-golden-beta.md",
+        "role": "depends_on",
+        "source_kind": "declared"
+      },
+      "relation": "depends_on",
+      "source": "task:task-golden-beta",
+      "target": "task:task-golden-alpha"
+    }
+  ],
+  "multigraph": false,
+  "nodes": [
+    {
+      "id": "atom:atom-golden-one",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_kgdb_coverage_v1",
+              "facet": "what",
+              "provenance_locator": "frontmatter:five_wh_one_plus",
+              "provenance_path": "desk/atoms/atom-golden-one.md",
+              "role": "answers",
+              "source_kind": "coverage_materialization"
+            },
+            "relation_type": "answers",
+            "target_id": "facet:what"
+          }
+        ],
+        "git": null,
+        "identity": {
+          "node_id": "atom:atom-golden-one",
+          "node_type": "atom"
+        },
+        "io_ports": [],
+        "semantics": {
+          "aliases": [
+            "Golden atom one",
+            "system:deskops",
+            "deskops",
+            "topic:golden",
+            "golden"
+          ],
+          "atom_id": "atom-golden-one",
+          "document_id": "atom-golden-one",
+          "five_wh_one_plus": [
+            "what"
+          ],
+          "identity": "atom-golden-one",
+          "label": "Golden atom one",
+          "path": "desk/atoms/atom-golden-one.md",
+          "tags": [
+            "system:deskops",
+            "topic:golden"
+          ],
+          "title": "Golden atom one"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_doc_nodes_v1",
+              "path": "desk/atoms/atom-golden-one.md",
+              "source_kind": "file_metadata"
+            },
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": "desk/atoms/atom-golden-one.md",
+              "source_kind": "atom_frontmatter"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "atom"
+    },
+    {
+      "id": "atom:atom-golden-two",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_kgdb_coverage_v1",
+              "facet": "how",
+              "provenance_locator": "frontmatter:five_wh_one_plus",
+              "provenance_path": "desk/atoms/atom-golden-two.md",
+              "role": "answers",
+              "source_kind": "coverage_materialization"
+            },
+            "relation_type": "answers",
+            "target_id": "facet:how"
+          }
+        ],
+        "git": null,
+        "identity": {
+          "node_id": "atom:atom-golden-two",
+          "node_type": "atom"
+        },
+        "io_ports": [],
+        "semantics": {
+          "aliases": [
+            "Golden atom two",
+            "system:deskops",
+            "deskops",
+            "topic:golden",
+            "golden"
+          ],
+          "atom_id": "atom-golden-two",
+          "document_id": "atom-golden-two",
+          "five_wh_one_plus": [
+            "how"
+          ],
+          "identity": "atom-golden-two",
+          "label": "Golden atom two",
+          "path": "desk/atoms/atom-golden-two.md",
+          "tags": [
+            "system:deskops",
+            "topic:golden"
+          ],
+          "title": "Golden atom two"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_doc_nodes_v1",
+              "path": "desk/atoms/atom-golden-two.md",
+              "source_kind": "file_metadata"
+            },
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": "desk/atoms/atom-golden-two.md",
+              "source_kind": "atom_frontmatter"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "atom"
+    },
+    {
+      "id": "drawer_task:desk/drawer/tasks/task-golden-drawer.md",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "drawer_task:desk/drawer/tasks/task-golden-drawer.md",
+          "node_type": "drawer_task"
+        },
+        "io_ports": [],
+        "semantics": {
+          "document_id": "task-golden-drawer",
+          "identity": "desk/drawer/tasks/task-golden-drawer.md",
+          "label": "Golden drawer task",
+          "path": "desk/drawer/tasks/task-golden-drawer.md"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_doc_nodes_v1",
+              "path": "desk/drawer/tasks/task-golden-drawer.md",
+              "source_kind": "file_metadata"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "drawer_task"
+    },
+    {
+      "id": "facet:how",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "facet:how",
+          "node_type": "facet"
+        },
+        "io_ports": [],
+        "semantics": {
+          "description": "W5H1 facet how",
+          "facet": "how",
+          "source_field": "atom.five_wh_one_plus"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": ".",
+              "source_kind": "coverage_facet"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "facet"
+    },
+    {
+      "id": "facet:what",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "facet:what",
+          "node_type": "facet"
+        },
+        "io_ports": [],
+        "semantics": {
+          "description": "W5H1 facet what",
+          "facet": "what",
+          "source_field": "atom.five_wh_one_plus"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": ".",
+              "source_kind": "coverage_facet"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "facet"
+    },
+    {
+      "id": "facet:when",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "facet:when",
+          "node_type": "facet"
+        },
+        "io_ports": [],
+        "semantics": {
+          "description": "W5H1 facet when",
+          "facet": "when",
+          "source_field": "atom.five_wh_one_plus"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": ".",
+              "source_kind": "coverage_facet"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "facet"
+    },
+    {
+      "id": "facet:where",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "facet:where",
+          "node_type": "facet"
+        },
+        "io_ports": [],
+        "semantics": {
+          "description": "W5H1 facet where",
+          "facet": "where",
+          "source_field": "atom.five_wh_one_plus"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": ".",
+              "source_kind": "coverage_facet"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "facet"
+    },
+    {
+      "id": "facet:who",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "facet:who",
+          "node_type": "facet"
+        },
+        "io_ports": [],
+        "semantics": {
+          "description": "W5H1 facet who",
+          "facet": "who",
+          "source_field": "atom.five_wh_one_plus"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": ".",
+              "source_kind": "coverage_facet"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "facet"
+    },
+    {
+      "id": "facet:why",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "facet:why",
+          "node_type": "facet"
+        },
+        "io_ports": [],
+        "semantics": {
+          "description": "W5H1 facet why",
+          "facet": "why",
+          "source_field": "atom.five_wh_one_plus"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_kgdb_coverage_v1",
+              "path": ".",
+              "source_kind": "coverage_facet"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "facet"
+    },
+    {
+      "id": "pill:pill-golden-rule",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "pill:pill-golden-rule",
+          "node_type": "pill"
+        },
+        "io_ports": [],
+        "semantics": {
+          "document_id": "pill-golden-rule",
+          "identity": "pill-golden-rule",
+          "label": "Guardrail: golden outputs stay stable",
+          "path": "desk/contexts/pill-golden-rule.md"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_doc_nodes_v1",
+              "path": "desk/contexts/pill-golden-rule.md",
+              "source_kind": "file_metadata"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "pill"
+    },
+    {
+      "id": "source_file:deskops/golden_sample.py",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [],
+        "git": null,
+        "identity": {
+          "node_id": "source_file:deskops/golden_sample.py",
+          "node_type": "source_file"
+        },
+        "io_ports": [],
+        "semantics": {
+          "file_kind": "source",
+          "identity": "deskops/golden_sample.py",
+          "path": "deskops/golden_sample.py"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_source_file_nodes_v1",
+              "path": "deskops/golden_sample.py",
+              "source_kind": "path_rule"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "source_file"
+    },
+    {
+      "id": "task:task-golden-alpha",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "line:43:related atoms",
+              "provenance_path": "desk/tasks/task-golden-alpha.md",
+              "role": "references",
+              "source_kind": "declared"
+            },
+            "relation_type": "references",
+            "target_id": "atom:atom-golden-one"
+          },
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "frontmatter",
+              "provenance_path": "desk/tasks/task-golden-alpha.md",
+              "role": "pills",
+              "source_kind": "declared"
+            },
+            "relation_type": "pills",
+            "target_id": "pill:pill-golden-rule"
+          },
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "line:13:source-file-reference",
+              "provenance_path": "desk/tasks/task-golden-alpha.md",
+              "role": "references",
+              "source_kind": "declared"
+            },
+            "relation_type": "references",
+            "target_id": "pill:pill-golden-rule"
+          }
+        ],
+        "git": null,
+        "identity": {
+          "node_id": "task:task-golden-alpha",
+          "node_type": "task"
+        },
+        "io_ports": [],
+        "semantics": {
+          "document_id": "task-golden-alpha",
+          "identity": "task-golden-alpha",
+          "label": "Golden alpha task",
+          "path": "desk/tasks/task-golden-alpha.md"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_doc_nodes_v1",
+              "path": "desk/tasks/task-golden-alpha.md",
+              "source_kind": "file_metadata"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "task"
+    },
+    {
+      "id": "task:task-golden-beta",
+      "schema": {
+        "adr": null,
+        "ast": null,
+        "compliance": null,
+        "edges": [
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "frontmatter",
+              "provenance_path": "desk/tasks/task-golden-beta.md",
+              "role": "references",
+              "source_kind": "declared"
+            },
+            "relation_type": "references",
+            "target_id": "atom:atom-golden-two"
+          },
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "frontmatter",
+              "provenance_path": "desk/tasks/task-golden-beta.md",
+              "role": "pills",
+              "source_kind": "declared"
+            },
+            "relation_type": "pills",
+            "target_id": "pill:pill-golden-rule"
+          },
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "line:15:source-file-reference",
+              "provenance_path": "desk/tasks/task-golden-beta.md",
+              "role": "references",
+              "source_kind": "declared"
+            },
+            "relation_type": "references",
+            "target_id": "pill:pill-golden-rule"
+          },
+          {
+            "metadata": {
+              "confidence": "high",
+              "extractor": "desk_declared_edges_v1",
+              "provenance_locator": "frontmatter",
+              "provenance_path": "desk/tasks/task-golden-beta.md",
+              "role": "depends_on",
+              "source_kind": "declared"
+            },
+            "relation_type": "depends_on",
+            "target_id": "task:task-golden-alpha"
+          }
+        ],
+        "git": null,
+        "identity": {
+          "node_id": "task:task-golden-beta",
+          "node_type": "task"
+        },
+        "io_ports": [],
+        "semantics": {
+          "document_id": "task-golden-beta",
+          "identity": "task-golden-beta",
+          "label": "Golden beta task",
+          "path": "desk/tasks/task-golden-beta.md"
+        },
+        "source": {
+          "extractor": "deskops_kgdb_snapshot_v1",
+          "provenance": [
+            {
+              "extractor": "desk_doc_nodes_v1",
+              "path": "desk/tasks/task-golden-beta.md",
+              "source_kind": "file_metadata"
+            }
+          ]
+        },
+        "test_map": null
+      },
+      "status": "unknown",
+      "type": "task"
+    }
+  ]
+}

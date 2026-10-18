@@ -1,0 +1,11 @@
+Task: task-rw-f1-output-golden-files
+Title: Golden files pin the graph snapshot, run index, closeout trailers and --help text
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f1-output-golden-files.md
+Effective pills:
+- desk/contexts/pill-010-graph-runtime-output-policy.md
+- desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

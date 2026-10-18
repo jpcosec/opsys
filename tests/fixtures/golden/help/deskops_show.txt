@@ -1,0 +1,24 @@
+usage: deskops show [-h]
+                    {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step} ...
+
+positional arguments:
+  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
+    task                Show one actionable task by selector.
+    pill                Show one pill by selector.
+    ritual              Show one ritual by selector.
+    board               Show one board by selector.
+    atom                Show one atom by selector.
+    materialization     Show one materialization by selector.
+    repository          Show one repository by selector.
+    inbox-note          Show one inbox-note by selector.
+    faq-doc             Show one faq-doc by selector.
+    step                Show one step by selector.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops show task task-fix-thing --root .
+  deskops show pill pill-keep-layers-clean --root .
+
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

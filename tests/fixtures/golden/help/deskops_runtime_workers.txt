@@ -1,0 +1,8 @@
+usage: deskops runtime workers [-h] [--root ROOT] [--herdr HERDR]
+                               [--format {text,json}]
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           DeskOps repository root.
+  --herdr HERDR         Herdr executable.
+  --format {text,json}  Output format.

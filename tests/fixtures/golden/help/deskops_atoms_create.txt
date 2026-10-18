@@ -1,0 +1,29 @@
+usage: deskops atoms create [-h]
+                            --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
+                            [--title TITLE] [--tag TAG [TAG ...]]
+                            (--from-pill PILL_ID |
+                            --from-graph SOURCE_ID->TARGET_ID |
+                            --from-diagram SPEC_PATH) [--graph GRAPH]
+                            [--root ROOT]
+                            doc_id
+
+positional arguments:
+  doc_id                New atom id to create, conventionally atom-<slug>.
+
+options:
+  -h, --help            show this help message and exit
+  --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
+                        The single 5WH1+ question this atom answers.
+  --title TITLE         Optional title override for the created atom.
+  --tag TAG [TAG ...]   Atom tag to add; repeat or space-separate as needed.
+  --from-pill PILL_ID   Create the atom from one pill field chosen by --five-
+                        wh-one-plus.
+  --from-graph SOURCE_ID->TARGET_ID
+                        Create the atom from one missing graph finding
+                        resolved by source and target ids.
+  --from-diagram SPEC_PATH
+                        Create the atom from one diagram source file such as
+                        docs/diagrams/example/source.mmd.
+  --graph GRAPH         Optional graph snapshot path consulted in addition to
+                        declared-edge findings when resolving --from-graph.
+  --root ROOT           Target repository root.

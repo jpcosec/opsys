@@ -1,0 +1,19 @@
+usage: deskops message [-h] {send,list,read,ack} ...
+
+positional arguments:
+  {send,list,read,ack}
+    send                Send a message to a project desk.
+    list                List received messages.
+    read                Read one received message.
+    ack                 Acknowledge one received message.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops message send "Need follow-up" --to sibling-repo --title "Follow-up"
+  deskops message list --root .
+  deskops message read 20260614-cli-help --root .
+  deskops message ack 20260614-cli-help --root .
+
+read/ack selector: filename, stem, or unique slug fragment.

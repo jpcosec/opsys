@@ -1,0 +1,10 @@
+usage: deskops promote inbox-to-drawer-task [-h] [--root ROOT] [--title TITLE]
+                                            selector
+
+positional arguments:
+  selector       Inbox filename, stem, or unique slug fragment
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    Target repository root
+  --title TITLE  Override the drawer task title

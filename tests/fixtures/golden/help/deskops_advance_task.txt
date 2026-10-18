@@ -1,0 +1,15 @@
+usage: deskops advance task [-h] [--to TO] [--root ROOT] task_id
+
+positional arguments:
+  task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+
+options:
+  -h, --help   show this help message and exit
+  --to TO      Optional target node or status for a manual override.
+  --root ROOT  Target repository root.
+
+Example:
+  deskops advance task task-fix-thing --root .
+
+Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

@@ -1,0 +1,8 @@
+usage: deskops drift [-h] {check} ...
+
+positional arguments:
+  {check}
+    check     Compare rendered role-agent output to installed files.
+
+options:
+  -h, --help  show this help message and exit

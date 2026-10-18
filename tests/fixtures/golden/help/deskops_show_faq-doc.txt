@@ -1,0 +1,11 @@
+usage: deskops show faq-doc [-h] [--root ROOT] [--format {text,json}] doc_id
+
+positional arguments:
+  doc_id                Faq-doc selector. Selectors accept an exact id,
+                        filename, stem, or unique slug fragment where
+                        supported.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json}  Output format.

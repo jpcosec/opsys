@@ -1,0 +1,39 @@
+usage: deskops inbox [-h] [--kind {unclear,suggestion}] [--title TITLE]
+                     [--root ROOT] [--desk-root DESK_ROOT] [--store STORE]
+                     [--repo REPO] [--sender SENDER] [--pythonpath PYTHONPATH]
+                     [--list] [--show SHOW] [--ack ACK] [--limit LIMIT]
+                     [--format {text,json,yaml}]
+                     [message]
+
+positional arguments:
+  message               Inbox note body
+
+options:
+  -h, --help            show this help message and exit
+  --kind {unclear,suggestion}
+                        Type of inbox message to write
+  --title TITLE         Short title for the note
+  --root ROOT           Repository root whose desk/ holds the inbox; the same --root every other subcommand takes
+  --desk-root DESK_ROOT
+                        Desk root directory override; defaults to the active project desk
+  --store STORE         Store path used to resolve the target project root for the default desk
+  --repo REPO           Target a registered repository name in the ecosystem
+  --sender SENDER       Override the resolved sender identity with a registered project id
+  --pythonpath PYTHONPATH
+                        Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model
+  --list                List desk inbox notes
+  --show SHOW           Show one inbox note by filename, stem, or slug fragment
+  --ack ACK             Acknowledge one inbox note by filename, stem, or slug fragment
+  --limit LIMIT         Limit listed notes
+  --format {text,json,yaml}
+
+Deprecated: use `deskops message send|list|read|ack`.
+
+Examples:
+  deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
+  deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
+  deskops inbox --list --root .
+  deskops inbox --show 20260614-cli-help --root .
+  deskops inbox --ack 20260614-cli-help --root .
+
+--show/--ack selector: filename, stem, or slug fragment.

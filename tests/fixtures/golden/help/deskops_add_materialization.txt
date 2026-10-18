@@ -1,0 +1,34 @@
+usage: deskops add materialization [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                                   [--title TITLE]
+                                   [--source-atoms SOURCE_ATOMS [SOURCE_ATOMS ...]]
+                                   --target-kind TARGET_KIND
+                                   --target-identity TARGET_IDENTITY
+                                   --intent INTENT
+                                   [--validation VALIDATION [VALIDATION ...]]
+                                   [--tags TAGS [TAGS ...]]
+                                   [--provenance PROVENANCE]
+
+Create a materialization artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the materialization payload from a YAML file.
+  --title TITLE         Short, descriptive title for the materialization contract.
+  --source-atoms SOURCE_ATOMS [SOURCE_ATOMS ...]
+                        Source atom identifiers that this materialization contract derives from.
+  --target-kind TARGET_KIND
+                        Kind of artifact or surface targeted by this materialization contract.
+  --target-identity TARGET_IDENTITY
+                        Stable target node id or path that this materialization contract must resolve to.
+  --intent INTENT       Human-readable intent describing how the target materializes the source atoms.
+  --validation VALIDATION [VALIDATION ...]
+                        Validation commands or checks expected for this materialization contract.
+  --tags TAGS [TAGS ...]
+                        Namespaced semantic tags for retrieval and grouping, each in the form namespace:value.
+  --provenance PROVENANCE
+                        Optional URL or path to the authoritative source for this materialization contract.
+
+Example:
+  deskops add materialization --root . --title "Example"

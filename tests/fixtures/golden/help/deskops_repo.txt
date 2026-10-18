@@ -1,0 +1,11 @@
+usage: deskops repo [-h] {register,whoami} ...
+
+positional arguments:
+  {register,whoami}
+    register         Canonically register a repository in the ecosystem
+                     registry and track it in SLDB.
+    whoami           Print the canonical project identity for the current
+                     repository.
+
+options:
+  -h, --help         show this help message and exit

@@ -1,0 +1,28 @@
+usage: deskops message send [-h] [--title TITLE] [--kind {unclear,suggestion}]
+                            [--to REPO] [--from SENDER] [--root ROOT]
+                            [--desk-root DESK_ROOT] [--store STORE]
+                            [--pythonpath PYTHONPATH]
+                            [--format {text,json,yaml}]
+                            body
+
+positional arguments:
+  body                  Message body
+
+options:
+  -h, --help            show this help message and exit
+  --title TITLE         Short title for the message
+  --kind {unclear,suggestion}
+                        Type of message to send
+  --to REPO             Target a registered repository name in the ecosystem
+  --from SENDER         Override the resolved sender identity with a
+                        registered project id
+  --root ROOT           Repository root whose desk/ holds the inbox
+  --desk-root DESK_ROOT
+                        Desk root directory override; defaults to the active
+                        project desk
+  --store STORE         Store path used to resolve the target project root for
+                        the default desk
+  --pythonpath PYTHONPATH
+                        Project path used when auto-tracking messages through
+                        the registered model
+  --format {text,json,yaml}

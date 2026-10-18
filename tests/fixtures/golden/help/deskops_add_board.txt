@@ -1,0 +1,30 @@
+usage: deskops add board [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                         [--title TITLE] [--summary SUMMARY]
+                         [--tags TAGS [TAGS ...]] --scope SCOPE
+                         --purpose PURPOSE [--tasks TASKS [TASKS ...]]
+                         [--pills PILLS [PILLS ...]]
+                         [--rituals RITUALS [RITUALS ...]] [--notes NOTES]
+
+Create a board artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the board payload from a YAML file.
+  --title TITLE         Board title for one active routing surface.
+  --summary SUMMARY     Short semantic summary for the primitive.
+  --tags TAGS [TAGS ...]
+                        Semantic tags placed at the end, using namespaced forms such as 'system:sldb' or 'workspace:desk'.
+  --scope SCOPE         What area or workspace this board routes.
+  --purpose PURPOSE     Why this board exists and what it indexes.
+  --tasks TASKS [TASKS ...]
+                        Active task document references routed by this board.
+  --pills PILLS [PILLS ...]
+                        Active pill document references routed by this board.
+  --rituals RITUALS [RITUALS ...]
+                        Ritual document references relevant to this board.
+  --notes NOTES         Short operational notes about the current routed set.
+
+Example:
+  deskops add board --root . --title "Example"

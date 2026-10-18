@@ -1,0 +1,33 @@
+usage: deskops closeout commit [-h] [--root ROOT] [--run-dir RUN_DIR |
+                               --no-run] [--reason REASON] --task TASK
+                               [-m MESSAGE] [--paths [PATHS ...]]
+                               [--run-id RUN_ID] [--session SESSION]
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --run-dir RUN_DIR     Run evidence dir under runs/subagents/.
+  --no-run              Close without a subagent run; requires --reason. Use instead of --run-dir.
+  --reason REASON       Why the task closes without a run; required with --no-run.
+  --task TASK           Task id being closed.
+  -m, --message MESSAGE
+                        Commit message subject.
+  --paths [PATHS ...]   Paths to stage; defaults to run.yaml touched paths, else staged index.
+  --run-id RUN_ID       Subagent run id to record in run.yaml (--run-dir only).
+  --session SESSION     Child session.jsonl path to hash into run.yaml (--run-dir only).
+
+Example:
+  deskops closeout commit --root . --task task-fix-thing \
+    --run-dir runs/subagents/20260729-120000-task-fix-thing \
+    --run-id 6046eaef --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \
+    --paths deskops/foo.py tests/test_foo.py
+
+Without a subagent run, close the task manually and say why:
+  deskops closeout commit --root . --task task-fix-thing \
+    --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \
+    --paths deskops/foo.py tests/test_foo.py
+
+With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
+trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
+Either way the commit hash is recorded back into runs/subagents/index.jsonl. The
+commit is made by this command, not by agent discretion.

@@ -1,0 +1,24 @@
+usage: deskops add atom [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                        [--title TITLE]
+                        --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
+                        --answer ANSWER [--tags TAGS [TAGS ...]]
+                        [--provenance PROVENANCE]
+
+Create a atom artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the atom payload from a YAML file.
+  --title TITLE         Short, descriptive title for the atomic knowledge unit.
+  --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
+                        The single 5WH1+ question this atom answers: one of what, why, how, how_not, when, where, for_whom.
+  --answer ANSWER       The curated raw answer to the selected 5WH1+ question, written as one stable knowledge unit.
+  --tags TAGS [TAGS ...]
+                        Namespaced semantic tags used for retrieval and grouping, each in the form namespace:value (e.g. system:deskops, topic:templates). Tags do not encode lifecycle, relations, evidence, or materialization.
+  --provenance PROVENANCE
+                        Optional URL or path to the authoritative source of this atom's knowledge. Used for traceability and provenance tracking.
+
+Example:
+  deskops add atom --root . --title "Example"

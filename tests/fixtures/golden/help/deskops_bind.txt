@@ -1,0 +1,14 @@
+usage: deskops bind [-h] {pill} ...
+
+positional arguments:
+  {pill}
+    pill      Bind one pill to one task.
+
+options:
+  -h, --help  show this help message and exit
+
+Examples:
+  deskops bind pill task-fix-thing pill-phase-gate --root .
+
+This updates the task's modeled `pills` list through the deskops artifact layer.
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

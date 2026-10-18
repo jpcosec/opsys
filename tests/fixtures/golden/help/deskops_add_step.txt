@@ -1,0 +1,19 @@
+usage: deskops add step [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                        [--title TITLE] --action ACTION --outcome OUTCOME
+                        [--tags TAGS [TAGS ...]]
+
+Create a step artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the step payload from a YAML file.
+  --title TITLE         Short step title.
+  --action ACTION       What the step should do.
+  --outcome OUTCOME     What the step should produce or confirm.
+  --tags TAGS [TAGS ...]
+                        Semantic tags placed at the end, using namespaced forms such as 'topic:testing' or 'workspace:desk'.
+
+Example:
+  deskops add step --root . --title "Example"

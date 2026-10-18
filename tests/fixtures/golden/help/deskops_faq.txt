@@ -1,0 +1,11 @@
+usage: deskops faq [-h] [--format {text,json,yaml}] [--faq-path FAQ_PATH]
+                   [question]
+
+positional arguments:
+  question              Question index, slug, or text fragment. Omit to list
+                        available questions.
+
+options:
+  -h, --help            show this help message and exit
+  --format {text,json,yaml}
+  --faq-path FAQ_PATH   FAQ markdown path

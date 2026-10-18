@@ -1,0 +1,20 @@
+usage: deskops atoms add-namespace [-h] [--root ROOT] --meaning MEANING
+                                   --use-when USE_WHEN
+                                   --do-not-use-when DO_NOT_USE_WHEN
+                                   [--example EXAMPLE [EXAMPLE ...]]
+                                   namespace
+
+positional arguments:
+  namespace             Namespace name, such as pattern.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --meaning MEANING     What this namespace means.
+  --use-when USE_WHEN   When to use this namespace.
+  --do-not-use-when DO_NOT_USE_WHEN
+                        When an existing namespace should be preferred
+                        instead.
+  --example EXAMPLE [EXAMPLE ...]
+                        Example tag using the namespace; repeat or space-
+                        separate as needed.

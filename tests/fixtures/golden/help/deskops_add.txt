@@ -1,0 +1,22 @@
+usage: deskops add [-h]
+                   {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step} ...
+
+positional arguments:
+  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
+    task                Create an actionable task bundle.
+    pill                Create a pill artifact.
+    ritual              Create a ritual artifact.
+    board               Create a board artifact.
+    atom                Create a atom artifact.
+    materialization     Create a materialization artifact.
+    repository          Create a local repository artifact doc; use 'deskops repo register' for canonical ecosystem registration.
+    inbox-note          Create a inbox-note artifact.
+    faq-doc             Create a faq-doc artifact.
+    step                Create a step artifact.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..."

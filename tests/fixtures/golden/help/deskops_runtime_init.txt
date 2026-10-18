@@ -1,0 +1,7 @@
+usage: deskops runtime init [-h] [--root ROOT] [--agents] [--herdr HERDR]
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    DeskOps repository root.
+  --agents       Start executor and tester Pi agents.
+  --herdr HERDR  Herdr executable.

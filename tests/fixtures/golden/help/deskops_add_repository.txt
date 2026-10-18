@@ -1,0 +1,22 @@
+usage: deskops add repository [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                              --name NAME [--path PATH] [--status STATUS]
+                              --description DESCRIPTION
+                              [--tags TAGS [TAGS ...]]
+
+Create a local repository artifact doc; use 'deskops repo register' for canonical ecosystem registration.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the repository payload from a YAML file.
+  --name NAME           Short human-readable name of the repository.
+  --path PATH           Relative path to the repository root from the ecosystem root.
+  --status STATUS       Current status of the repository (e.g., active, maintenance, archived).
+  --description DESCRIPTION
+                        Markdown description of the repository's purpose and scope.
+  --tags TAGS [TAGS ...]
+                        Semantic tags for categorization (e.g., type:tool, layer:infra).
+
+Example:
+  deskops add repository --root . --title "Example"

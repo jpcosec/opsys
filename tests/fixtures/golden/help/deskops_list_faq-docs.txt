@@ -1,0 +1,6 @@
+usage: deskops list faq-docs [-h] [--root ROOT] [--format {text,json}]
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json}  Output format.

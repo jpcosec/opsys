@@ -1,0 +1,6 @@
+usage: deskops atoms reorganize [-h] [--root ROOT] [--dry-run]
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --dry-run    Report planned moves without changing files.

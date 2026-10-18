@@ -1,0 +1,14 @@
+usage: deskops promote [-h] {inbox-to-drawer-task} ...
+
+positional arguments:
+  {inbox-to-drawer-task}
+    inbox-to-drawer-task
+                        Promote one inbox note into a deferred drawer task candidate.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops promote inbox-to-drawer-task 20260614-unclear --root .
+
+Selectors accept an exact id, filename, stem, or unique slug fragment where supported.

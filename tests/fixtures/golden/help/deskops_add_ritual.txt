@@ -1,0 +1,36 @@
+usage: deskops add ritual [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                          [--title TITLE] [--summary SUMMARY]
+                          [--tags TAGS [TAGS ...]] --purpose PURPOSE
+                          --trigger TRIGGER
+                          [--preconditions PRECONDITIONS [PRECONDITIONS ...]]
+                          [--steps STEPS [STEPS ...]]
+                          [--validation VALIDATION [VALIDATION ...]]
+                          [--failure-modes FAILURE_MODES [FAILURE_MODES ...]]
+                          --completion COMPLETION
+
+Create a ritual artifact.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --from-yaml FROM_YAML
+                        Load the ritual payload from a YAML file.
+  --title TITLE         Short ritual title.
+  --summary SUMMARY     Short semantic summary for the primitive.
+  --tags TAGS [TAGS ...]
+                        Semantic tags placed at the end, using namespaced forms such as 'layer:workflow' or 'system:sldb'.
+  --purpose PURPOSE     Why the ritual exists.
+  --trigger TRIGGER     When the ritual should be started.
+  --preconditions PRECONDITIONS [PRECONDITIONS ...]
+                        Conditions that must hold before running the ritual.
+  --steps STEPS [STEPS ...]
+                        Ordered steps to execute as part of the ritual.
+  --validation VALIDATION [VALIDATION ...]
+                        Checks that confirm the ritual was performed correctly.
+  --failure-modes FAILURE_MODES [FAILURE_MODES ...]
+                        Common mistakes, drifts, or anti-patterns to avoid.
+  --completion COMPLETION
+                        What indicates that the ritual has been completed.
+
+Example:
+  deskops add ritual --root . --title "Example"

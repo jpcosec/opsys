@@ -1,0 +1,6 @@
+usage: deskops runtime status [-h] [--root ROOT] [--herdr HERDR]
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    DeskOps repository root.
+  --herdr HERDR  Herdr executable.

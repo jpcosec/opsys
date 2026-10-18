@@ -1,0 +1,19 @@
+[
+  {
+    "route": "run-dir",
+    "trailers": {
+      "Run-Dir": "runs/subagents/golden-run",
+      "Run-Id": "run-golden-001",
+      "Session-Sha256": "1111111111111111111111111111111111111111111111111111111111111111",
+      "Task-Id": "task-golden-alpha"
+    }
+  },
+  {
+    "route": "no-run",
+    "trailers": {
+      "Closeout-Mode": "manual",
+      "Closeout-Reason": "golden manual closeout",
+      "Task-Id": "task-golden-beta"
+    }
+  }
+]

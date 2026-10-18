@@ -1,0 +1,7 @@
+usage: deskops graph build [-h] [--root ROOT] [--output OUTPUT]
+
+options:
+  -h, --help       show this help message and exit
+  --root ROOT      Target repository root.
+  --output OUTPUT  GraphSnapshot destination; relative paths are resolved from
+                   --root.

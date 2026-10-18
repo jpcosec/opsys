@@ -1,0 +1,45 @@
+{
+  "findings": [
+    {
+      "confidence": "medium",
+      "dedupe_key": "unlinked-source-files:source_file:deskops/golden_sample.py",
+      "duplicate_count": 0,
+      "kind": "unlinked_source_file",
+      "later_action": "issue_candidate",
+      "promotion_targets": [
+        "task",
+        "question"
+      ],
+      "provenance_locator": "node:source_file:deskops/golden_sample.py",
+      "provenance_path": "deskops/golden_sample.py",
+      "question_id": "unlinked-source-files",
+      "reason": "source file has no graph edge connecting it to a desk knowledge surface",
+      "role": null,
+      "source_id": "source_file:deskops/golden_sample.py",
+      "target_id": null
+    }
+  ],
+  "mutation_policy": "review_only_no_source_artifact_mutation",
+  "review_loop": {
+    "decision_storage": {
+      "allowed_statuses": [
+        "pending",
+        "accepted",
+        "rejected"
+      ],
+      "runtime_output_path": ".sldb/runtime/self_reflection_decisions.json",
+      "schema": "deskops_self_reflection_decisions_v1"
+    },
+    "promotion_paths": {
+      "atom": "accepted finding -> update or create an atom when the durable knowledge gap is understood",
+      "question": "accepted finding -> route a desk question when owner intent or source of truth is unclear",
+      "task": "accepted finding -> create or promote a desk task when remediation work is clear"
+    }
+  },
+  "runtime_only": true,
+  "schema": "deskops_self_reflection_report_v2",
+  "summary": {
+    "finding_count": 1,
+    "suppressed_duplicate_count": 0
+  }
+}

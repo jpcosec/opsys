@@ -1,0 +1,23 @@
+usage: deskops atoms split [-h] --into NEW_ATOM_ID [NEW_ATOM_ID ...]
+                           [--section NEW_ATOM_ID:SECTION_HEADING]
+                           [--root ROOT] [--force]
+                           doc_id
+
+positional arguments:
+  doc_id                Atom selector. Selectors accept an exact id, filename,
+                        stem, or unique slug fragment where supported.
+
+options:
+  -h, --help            show this help message and exit
+  --into NEW_ATOM_ID [NEW_ATOM_ID ...]
+                        New atom ids to create from the source atom. Provide
+                        at least two.
+  --section NEW_ATOM_ID:SECTION_HEADING
+                        Assign a created atom id to a specific markdown
+                        heading inside the source atom answer. Repeat once per
+                        target. When omitted, sections are assigned to --into
+                        ids in order.
+  --root ROOT           Target repository root.
+  --force               Proceed even when inbound atom:<id> references exist.
+                        The original atom is kept as a redirect stub;
+                        referrers are not rewritten automatically.

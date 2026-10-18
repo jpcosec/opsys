@@ -1,0 +1,13 @@
+usage: deskops next [-h] [--root ROOT] [--diagram] [task_id]
+
+positional arguments:
+  task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.
+  --diagram    Render the workflow state machine as Mermaid from its source spec.
+
+Examples:
+  deskops next task-fix-thing --root .
+  deskops next --diagram

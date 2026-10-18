@@ -1,0 +1,24 @@
+usage: deskops repo register [-h] [--path PATH_OPTION] [--id ID]
+                             [--description DESCRIPTION] [--tags TAGS]
+                             [--store STORE] [--pythonpath PYTHONPATH]
+                             name [path]
+
+Canonically register a repository in the ecosystem registry and track it in
+SLDB.
+
+positional arguments:
+  name                  Human-readable name
+  path                  Repository root path (relative to ecosystem root or
+                        absolute)
+
+options:
+  -h, --help            show this help message and exit
+  --path PATH_OPTION    Repository root path (relative to ecosystem root or
+                        absolute)
+  --id ID               Stable unique ID, defaults to slugified name
+  --description DESCRIPTION
+                        Markdown description
+  --tags TAGS           Comma-separated tags
+  --store STORE         Store path to anchor the registry
+  --pythonpath PYTHONPATH
+                        Python path for model resolution

@@ -1,0 +1,10 @@
+usage: deskops graph neighbors [-h] [--root ROOT] [--graph GRAPH] id
+
+positional arguments:
+  id             Graph node id to inspect, formatted as type:id (e.g.
+                 atom:atom-name, task:task-name, issue:issue-name).
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    Target repository root.
+  --graph GRAPH  Graph snapshot path; defaults to the root runtime snapshot.

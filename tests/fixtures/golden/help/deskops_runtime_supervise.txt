@@ -1,0 +1,23 @@
+usage: deskops runtime supervise [-h] [--root ROOT] [--herdr HERDR]
+                                 [--max-iterations MAX_ITERATIONS]
+                                 [--read-lines READ_LINES]
+                                 [--timeout-ms TIMEOUT_MS]
+                                 agent
+
+positional arguments:
+  agent                 Herdr agent name or pane id to supervise, e.g.
+                        deskops-executor.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           DeskOps repository root.
+  --herdr HERDR         Herdr executable.
+  --max-iterations MAX_ITERATIONS
+                        Stop after this many settle events instead of running
+                        forever (mainly for testing).
+  --read-lines READ_LINES
+                        Terminal lines to capture from the agent on a blocked
+                        or done settle.
+  --timeout-ms TIMEOUT_MS
+                        Give up waiting after this many milliseconds per
+                        settle attempt (default: wait indefinitely).

@@ -1,0 +1,2 @@
+{"commit": "<sha>", "run_dir": "runs/subagents/golden-run", "run_id": "run-golden-001", "session_sha256": 1111111111111111111111111111111111111111111111111111111111111111, "task_id": "task-golden-alpha"}
+{"commit": "<sha>", "mode": "manual", "run_dir": null, "run_id": null, "session_sha256": null, "task_id": "task-golden-beta"}
