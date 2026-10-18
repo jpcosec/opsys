@@ -14,6 +14,7 @@ from deskops.cli.main import main
 from deskops.doc_readability import is_unreadable_by_model
 from deskops.doc_readability import unread_section_fields
 from deskops.models import PillDoc
+from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
 HAND_WRITTEN_PILL = """---
@@ -31,6 +32,10 @@ Self-reflection must produce high-signal atoms instead of bulk guesses.
 ## Why
 
 Noise makes the knowledge base harder to trust.
+
+## Where
+
+Desk reflection commands.
 """
 
 PILL_PAYLOAD = {
@@ -48,9 +53,12 @@ PILL_PAYLOAD = {
 
 def test_unreadable_fields_are_detected_for_a_hand_written_document() -> None:
     fields = is_unreadable_by_model(PillDoc, HAND_WRITTEN_PILL)
+    extracted = extract_model_data(PillDoc, HAND_WRITTEN_PILL)
 
-    assert "what" in fields
-    assert "why" in fields
+    # sldb anchors headings by position (d31180e4): with `## When` missing, the
+    # `## Where` text lands in `when` and `where` extracts empty.
+    assert fields == ["where"]
+    assert not extracted.get("where")
 
 
 def test_a_rendered_document_reports_no_unreadable_fields() -> None:

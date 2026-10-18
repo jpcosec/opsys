@@ -75,14 +75,16 @@ def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_pa
     )
     old_style = current.split("## Step Details")[0].rstrip() + "\n"
     ritual.write_text(old_style, encoding="utf-8")
-    assert is_unreadable_by_model(RitualDoc, old_style), "the old-style ritual is the failure case"
 
     changes = lifecycle.ensure_lifecycle_graph(root)
 
-    assert any("re-rendered desk/rituals/execution.md" in change for change in changes)
+    # Since sldb d31180e4 a document that ends before its template keeps its last
+    # section, so the old style may track as is; either way it must end up readable
+    # and tracked, and it is never archived.
     text = ritual.read_text(encoding="utf-8")
-    assert "## Step Details" in text
     assert is_unreadable_by_model(RitualDoc, text) == []
+    assert not any("archived" in change for change in changes)
+    assert any("tracked desk/rituals/execution.md" in change for change in changes)
     assert main(["doctor", "--root", str(root)]) == 0
 
 

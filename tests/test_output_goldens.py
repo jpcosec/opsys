@@ -110,7 +110,28 @@ def _check_golden(relative_path: str, actual: str, request: pytest.FixtureReques
         path.write_text(actual, encoding="utf-8")
         return
     assert path.exists(), f"missing golden {path}; run pytest --update-golden"
-    assert actual == path.read_text(encoding="utf-8"), f"golden mismatch: {relative_path}"
+    expected = path.read_text(encoding="utf-8")
+    if relative_path.startswith("help/"):
+        # argparse wraps the usage block differently across Python versions
+        # (3.12 vs 3.13); its words, not its line breaks, are the contract.
+        actual, expected = _unwrap_usage(actual), _unwrap_usage(expected)
+    assert actual == expected, f"golden mismatch: {relative_path}"
+
+
+_SHORT_OPTION_METAVAR_RE = re.compile(r"(?m)^(\s+-\w) (\S+), (--[\w-]+) \2$")
+
+
+def _unwrap_usage(text: str) -> str:
+    """Collapse the leading `usage:` block into one line and use 3.13 option spelling.
+
+    3.12 lists a short option with its metavar (`-m MESSAGE, --message MESSAGE`);
+    3.13 lists it once (`-m, --message MESSAGE`).
+    """
+    text = _SHORT_OPTION_METAVAR_RE.sub(r"\1, \3 \2", text)
+    if not text.startswith("usage:"):
+        return text
+    usage, sep, rest = text.partition("\n\n")
+    return " ".join(usage.split()) + sep + rest
 
 
 def _make_fixture_repo(destination: Path) -> Path:

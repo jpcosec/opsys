@@ -1,0 +1,3912 @@
+diff --git a/tests/conftest.py b/tests/conftest.py
+index bbb595c..ee412a5 100644
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -9,6 +9,15 @@ from pathlib import Path
+ import pytest
+ 
+ 
++def pytest_addoption(parser: pytest.Parser) -> None:
++    parser.addoption(
++        "--update-golden",
++        action="store_true",
++        default=False,
++        help="Rewrite the committed golden output fixtures from the current behavior.",
++    )
++
++
+ def _git(root: Path, *argv: str) -> None:
+     subprocess.run(["git", *argv], cwd=root, check=True, capture_output=True, text=True)
+ 
+diff --git a/tests/fixtures/golden/closeout_trailers.json b/tests/fixtures/golden/closeout_trailers.json
+new file mode 100644
+index 0000000..5082a87
+--- /dev/null
++++ b/tests/fixtures/golden/closeout_trailers.json
+@@ -0,0 +1,19 @@
++[
++  {
++    "route": "run-dir",
++    "trailers": {
++      "Run-Dir": "runs/subagents/golden-run",
++      "Run-Id": "run-golden-001",
++      "Session-Sha256": "1111111111111111111111111111111111111111111111111111111111111111",
++      "Task-Id": "task-golden-alpha"
++    }
++  },
++  {
++    "route": "no-run",
++    "trailers": {
++      "Closeout-Mode": "manual",
++      "Closeout-Reason": "golden manual closeout",
++      "Task-Id": "task-golden-beta"
++    }
++  }
++]
+diff --git a/tests/fixtures/golden/graph_snapshot.kg.json b/tests/fixtures/golden/graph_snapshot.kg.json
+new file mode 100644
+index 0000000..d310120
+--- /dev/null
++++ b/tests/fixtures/golden/graph_snapshot.kg.json
+@@ -0,0 +1,466 @@
++{
++  "metadata": {
++    "edge_count": 9,
++    "extractor": "deskops_kgdb_snapshot_v1",
++    "node_count": 13,
++    "runtime_output_path": ".sldb/runtime/graphs/deskops.kg.json",
++    "schema": "deskops_kgdb_graph_snapshot_v1",
++    "source_extractors": [
++      "desk_doc_nodes_v1",
++      "desk_source_file_nodes_v1",
++      "desk_declared_edges_v1",
++      "desk_kgdb_coverage_v1"
++    ]
++  },
++  "nodes": [
++    {
++      "edges": [
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_kgdb_coverage_v1",
++            "facet": "what",
++            "provenance_locator": "frontmatter:five_wh_one_plus",
++            "provenance_path": "desk/atoms/atom-golden-one.md",
++            "role": "answers",
++            "source_kind": "coverage_materialization"
++          },
++          "relation_type": "answers",
++          "target_id": "facet:what"
++        }
++      ],
++      "identity": {
++        "node_id": "atom:atom-golden-one",
++        "node_type": "atom"
++      },
++      "semantics": {
++        "aliases": [
++          "Golden atom one",
++          "system:deskops",
++          "deskops",
++          "topic:golden",
++          "golden"
++        ],
++        "atom_id": "atom-golden-one",
++        "document_id": "atom-golden-one",
++        "five_wh_one_plus": [
++          "what"
++        ],
++        "identity": "atom-golden-one",
++        "label": "Golden atom one",
++        "path": "desk/atoms/atom-golden-one.md",
++        "tags": [
++          "system:deskops",
++          "topic:golden"
++        ],
++        "title": "Golden atom one"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_doc_nodes_v1",
++            "path": "desk/atoms/atom-golden-one.md",
++            "source_kind": "file_metadata"
++          },
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": "desk/atoms/atom-golden-one.md",
++            "source_kind": "atom_frontmatter"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_kgdb_coverage_v1",
++            "facet": "how",
++            "provenance_locator": "frontmatter:five_wh_one_plus",
++            "provenance_path": "desk/atoms/atom-golden-two.md",
++            "role": "answers",
++            "source_kind": "coverage_materialization"
++          },
++          "relation_type": "answers",
++          "target_id": "facet:how"
++        }
++      ],
++      "identity": {
++        "node_id": "atom:atom-golden-two",
++        "node_type": "atom"
++      },
++      "semantics": {
++        "aliases": [
++          "Golden atom two",
++          "system:deskops",
++          "deskops",
++          "topic:golden",
++          "golden"
++        ],
++        "atom_id": "atom-golden-two",
++        "document_id": "atom-golden-two",
++        "five_wh_one_plus": [
++          "how"
++        ],
++        "identity": "atom-golden-two",
++        "label": "Golden atom two",
++        "path": "desk/atoms/atom-golden-two.md",
++        "tags": [
++          "system:deskops",
++          "topic:golden"
++        ],
++        "title": "Golden atom two"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_doc_nodes_v1",
++            "path": "desk/atoms/atom-golden-two.md",
++            "source_kind": "file_metadata"
++          },
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": "desk/atoms/atom-golden-two.md",
++            "source_kind": "atom_frontmatter"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "drawer_task:desk/drawer/tasks/task-golden-drawer.md",
++        "node_type": "drawer_task"
++      },
++      "semantics": {
++        "document_id": "task-golden-drawer",
++        "identity": "desk/drawer/tasks/task-golden-drawer.md",
++        "label": "Golden drawer task",
++        "path": "desk/drawer/tasks/task-golden-drawer.md"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_doc_nodes_v1",
++            "path": "desk/drawer/tasks/task-golden-drawer.md",
++            "source_kind": "file_metadata"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "facet:how",
++        "node_type": "facet"
++      },
++      "semantics": {
++        "description": "W5H1 facet how",
++        "facet": "how",
++        "source_field": "atom.five_wh_one_plus"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": ".",
++            "source_kind": "coverage_facet"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "facet:what",
++        "node_type": "facet"
++      },
++      "semantics": {
++        "description": "W5H1 facet what",
++        "facet": "what",
++        "source_field": "atom.five_wh_one_plus"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": ".",
++            "source_kind": "coverage_facet"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "facet:when",
++        "node_type": "facet"
++      },
++      "semantics": {
++        "description": "W5H1 facet when",
++        "facet": "when",
++        "source_field": "atom.five_wh_one_plus"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": ".",
++            "source_kind": "coverage_facet"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "facet:where",
++        "node_type": "facet"
++      },
++      "semantics": {
++        "description": "W5H1 facet where",
++        "facet": "where",
++        "source_field": "atom.five_wh_one_plus"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": ".",
++            "source_kind": "coverage_facet"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "facet:who",
++        "node_type": "facet"
++      },
++      "semantics": {
++        "description": "W5H1 facet who",
++        "facet": "who",
++        "source_field": "atom.five_wh_one_plus"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": ".",
++            "source_kind": "coverage_facet"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "facet:why",
++        "node_type": "facet"
++      },
++      "semantics": {
++        "description": "W5H1 facet why",
++        "facet": "why",
++        "source_field": "atom.five_wh_one_plus"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_kgdb_coverage_v1",
++            "path": ".",
++            "source_kind": "coverage_facet"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "pill:pill-golden-rule",
++        "node_type": "pill"
++      },
++      "semantics": {
++        "document_id": "pill-golden-rule",
++        "identity": "pill-golden-rule",
++        "label": "Guardrail: golden outputs stay stable",
++        "path": "desk/contexts/pill-golden-rule.md"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_doc_nodes_v1",
++            "path": "desk/contexts/pill-golden-rule.md",
++            "source_kind": "file_metadata"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [],
++      "identity": {
++        "node_id": "source_file:deskops/golden_sample.py",
++        "node_type": "source_file"
++      },
++      "semantics": {
++        "file_kind": "source",
++        "identity": "deskops/golden_sample.py",
++        "path": "deskops/golden_sample.py"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_source_file_nodes_v1",
++            "path": "deskops/golden_sample.py",
++            "source_kind": "path_rule"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "line:43:related atoms",
++            "provenance_path": "desk/tasks/task-golden-alpha.md",
++            "role": "references",
++            "source_kind": "declared"
++          },
++          "relation_type": "references",
++          "target_id": "atom:atom-golden-one"
++        },
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "frontmatter",
++            "provenance_path": "desk/tasks/task-golden-alpha.md",
++            "role": "pills",
++            "source_kind": "declared"
++          },
++          "relation_type": "pills",
++          "target_id": "pill:pill-golden-rule"
++        },
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "line:13:source-file-reference",
++            "provenance_path": "desk/tasks/task-golden-alpha.md",
++            "role": "references",
++            "source_kind": "declared"
++          },
++          "relation_type": "references",
++          "target_id": "pill:pill-golden-rule"
++        }
++      ],
++      "identity": {
++        "node_id": "task:task-golden-alpha",
++        "node_type": "task"
++      },
++      "semantics": {
++        "document_id": "task-golden-alpha",
++        "identity": "task-golden-alpha",
++        "label": "Golden alpha task",
++        "path": "desk/tasks/task-golden-alpha.md"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_doc_nodes_v1",
++            "path": "desk/tasks/task-golden-alpha.md",
++            "source_kind": "file_metadata"
++          }
++        ]
++      }
++    },
++    {
++      "edges": [
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "frontmatter",
++            "provenance_path": "desk/tasks/task-golden-beta.md",
++            "role": "references",
++            "source_kind": "declared"
++          },
++          "relation_type": "references",
++          "target_id": "atom:atom-golden-two"
++        },
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "frontmatter",
++            "provenance_path": "desk/tasks/task-golden-beta.md",
++            "role": "pills",
++            "source_kind": "declared"
++          },
++          "relation_type": "pills",
++          "target_id": "pill:pill-golden-rule"
++        },
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "line:15:source-file-reference",
++            "provenance_path": "desk/tasks/task-golden-beta.md",
++            "role": "references",
++            "source_kind": "declared"
++          },
++          "relation_type": "references",
++          "target_id": "pill:pill-golden-rule"
++        },
++        {
++          "metadata": {
++            "confidence": "high",
++            "extractor": "desk_declared_edges_v1",
++            "provenance_locator": "frontmatter",
++            "provenance_path": "desk/tasks/task-golden-beta.md",
++            "role": "depends_on",
++            "source_kind": "declared"
++          },
++          "relation_type": "depends_on",
++          "target_id": "task:task-golden-alpha"
++        }
++      ],
++      "identity": {
++        "node_id": "task:task-golden-beta",
++        "node_type": "task"
++      },
++      "semantics": {
++        "document_id": "task-golden-beta",
++        "identity": "task-golden-beta",
++        "label": "Golden beta task",
++        "path": "desk/tasks/task-golden-beta.md"
++      },
++      "source": {
++        "extractor": "deskops_kgdb_snapshot_v1",
++        "provenance": [
++          {
++            "extractor": "desk_doc_nodes_v1",
++            "path": "desk/tasks/task-golden-beta.md",
++            "source_kind": "file_metadata"
++          }
++        ]
++      }
++    }
++  ],
++  "version": "1.0"
++}
+diff --git a/tests/fixtures/golden/graph_snapshot.nx.json b/tests/fixtures/golden/graph_snapshot.nx.json
+new file mode 100644
+index 0000000..99306fa
+--- /dev/null
++++ b/tests/fixtures/golden/graph_snapshot.nx.json
+@@ -0,0 +1,650 @@
++{
++  "directed": true,
++  "graph": {},
++  "links": [
++    {
++      "key": "answers",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_kgdb_coverage_v1",
++        "facet": "what",
++        "provenance_locator": "frontmatter:five_wh_one_plus",
++        "provenance_path": "desk/atoms/atom-golden-one.md",
++        "role": "answers",
++        "source_kind": "coverage_materialization"
++      },
++      "relation": "answers",
++      "source": "atom:atom-golden-one",
++      "target": "facet:what"
++    },
++    {
++      "key": "answers",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_kgdb_coverage_v1",
++        "facet": "how",
++        "provenance_locator": "frontmatter:five_wh_one_plus",
++        "provenance_path": "desk/atoms/atom-golden-two.md",
++        "role": "answers",
++        "source_kind": "coverage_materialization"
++      },
++      "relation": "answers",
++      "source": "atom:atom-golden-two",
++      "target": "facet:how"
++    },
++    {
++      "key": "references",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "line:43:related atoms",
++        "provenance_path": "desk/tasks/task-golden-alpha.md",
++        "role": "references",
++        "source_kind": "declared"
++      },
++      "relation": "references",
++      "source": "task:task-golden-alpha",
++      "target": "atom:atom-golden-one"
++    },
++    {
++      "key": "pills",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "frontmatter",
++        "provenance_path": "desk/tasks/task-golden-alpha.md",
++        "role": "pills",
++        "source_kind": "declared"
++      },
++      "relation": "pills",
++      "source": "task:task-golden-alpha",
++      "target": "pill:pill-golden-rule"
++    },
++    {
++      "key": "references",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "line:13:source-file-reference",
++        "provenance_path": "desk/tasks/task-golden-alpha.md",
++        "role": "references",
++        "source_kind": "declared"
++      },
++      "relation": "references",
++      "source": "task:task-golden-alpha",
++      "target": "pill:pill-golden-rule"
++    },
++    {
++      "key": "references",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "frontmatter",
++        "provenance_path": "desk/tasks/task-golden-beta.md",
++        "role": "references",
++        "source_kind": "declared"
++      },
++      "relation": "references",
++      "source": "task:task-golden-beta",
++      "target": "atom:atom-golden-two"
++    },
++    {
++      "key": "pills",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "frontmatter",
++        "provenance_path": "desk/tasks/task-golden-beta.md",
++        "role": "pills",
++        "source_kind": "declared"
++      },
++      "relation": "pills",
++      "source": "task:task-golden-beta",
++      "target": "pill:pill-golden-rule"
++    },
++    {
++      "key": "references",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "line:15:source-file-reference",
++        "provenance_path": "desk/tasks/task-golden-beta.md",
++        "role": "references",
++        "source_kind": "declared"
++      },
++      "relation": "references",
++      "source": "task:task-golden-beta",
++      "target": "pill:pill-golden-rule"
++    },
++    {
++      "key": "depends_on",
++      "metadata": {
++        "confidence": "high",
++        "extractor": "desk_declared_edges_v1",
++        "provenance_locator": "frontmatter",
++        "provenance_path": "desk/tasks/task-golden-beta.md",
++        "role": "depends_on",
++        "source_kind": "declared"
++      },
++      "relation": "depends_on",
++      "source": "task:task-golden-beta",
++      "target": "task:task-golden-alpha"
++    }
++  ],
++  "multigraph": true,
++  "nodes": [
++    {
++      "id": "atom:atom-golden-one",
++      "schema": {
++        "edges": [
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_kgdb_coverage_v1",
++              "facet": "what",
++              "provenance_locator": "frontmatter:five_wh_one_plus",
++              "provenance_path": "desk/atoms/atom-golden-one.md",
++              "role": "answers",
++              "source_kind": "coverage_materialization"
++            },
++            "relation_type": "answers",
++            "target_id": "facet:what"
++          }
++        ],
++        "identity": {
++          "node_id": "atom:atom-golden-one",
++          "node_type": "atom"
++        },
++        "semantics": {
++          "aliases": [
++            "Golden atom one",
++            "system:deskops",
++            "deskops",
++            "topic:golden",
++            "golden"
++          ],
++          "atom_id": "atom-golden-one",
++          "document_id": "atom-golden-one",
++          "five_wh_one_plus": [
++            "what"
++          ],
++          "identity": "atom-golden-one",
++          "label": "Golden atom one",
++          "path": "desk/atoms/atom-golden-one.md",
++          "tags": [
++            "system:deskops",
++            "topic:golden"
++          ],
++          "title": "Golden atom one"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_doc_nodes_v1",
++              "path": "desk/atoms/atom-golden-one.md",
++              "source_kind": "file_metadata"
++            },
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": "desk/atoms/atom-golden-one.md",
++              "source_kind": "atom_frontmatter"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "atom"
++    },
++    {
++      "id": "facet:what",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "facet:what",
++          "node_type": "facet"
++        },
++        "semantics": {
++          "description": "W5H1 facet what",
++          "facet": "what",
++          "source_field": "atom.five_wh_one_plus"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": ".",
++              "source_kind": "coverage_facet"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "facet"
++    },
++    {
++      "id": "atom:atom-golden-two",
++      "schema": {
++        "edges": [
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_kgdb_coverage_v1",
++              "facet": "how",
++              "provenance_locator": "frontmatter:five_wh_one_plus",
++              "provenance_path": "desk/atoms/atom-golden-two.md",
++              "role": "answers",
++              "source_kind": "coverage_materialization"
++            },
++            "relation_type": "answers",
++            "target_id": "facet:how"
++          }
++        ],
++        "identity": {
++          "node_id": "atom:atom-golden-two",
++          "node_type": "atom"
++        },
++        "semantics": {
++          "aliases": [
++            "Golden atom two",
++            "system:deskops",
++            "deskops",
++            "topic:golden",
++            "golden"
++          ],
++          "atom_id": "atom-golden-two",
++          "document_id": "atom-golden-two",
++          "five_wh_one_plus": [
++            "how"
++          ],
++          "identity": "atom-golden-two",
++          "label": "Golden atom two",
++          "path": "desk/atoms/atom-golden-two.md",
++          "tags": [
++            "system:deskops",
++            "topic:golden"
++          ],
++          "title": "Golden atom two"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_doc_nodes_v1",
++              "path": "desk/atoms/atom-golden-two.md",
++              "source_kind": "file_metadata"
++            },
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": "desk/atoms/atom-golden-two.md",
++              "source_kind": "atom_frontmatter"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "atom"
++    },
++    {
++      "id": "facet:how",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "facet:how",
++          "node_type": "facet"
++        },
++        "semantics": {
++          "description": "W5H1 facet how",
++          "facet": "how",
++          "source_field": "atom.five_wh_one_plus"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": ".",
++              "source_kind": "coverage_facet"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "facet"
++    },
++    {
++      "id": "drawer_task:desk/drawer/tasks/task-golden-drawer.md",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "drawer_task:desk/drawer/tasks/task-golden-drawer.md",
++          "node_type": "drawer_task"
++        },
++        "semantics": {
++          "document_id": "task-golden-drawer",
++          "identity": "desk/drawer/tasks/task-golden-drawer.md",
++          "label": "Golden drawer task",
++          "path": "desk/drawer/tasks/task-golden-drawer.md"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_doc_nodes_v1",
++              "path": "desk/drawer/tasks/task-golden-drawer.md",
++              "source_kind": "file_metadata"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "drawer_task"
++    },
++    {
++      "id": "facet:when",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "facet:when",
++          "node_type": "facet"
++        },
++        "semantics": {
++          "description": "W5H1 facet when",
++          "facet": "when",
++          "source_field": "atom.five_wh_one_plus"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": ".",
++              "source_kind": "coverage_facet"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "facet"
++    },
++    {
++      "id": "facet:where",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "facet:where",
++          "node_type": "facet"
++        },
++        "semantics": {
++          "description": "W5H1 facet where",
++          "facet": "where",
++          "source_field": "atom.five_wh_one_plus"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": ".",
++              "source_kind": "coverage_facet"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "facet"
++    },
++    {
++      "id": "facet:who",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "facet:who",
++          "node_type": "facet"
++        },
++        "semantics": {
++          "description": "W5H1 facet who",
++          "facet": "who",
++          "source_field": "atom.five_wh_one_plus"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": ".",
++              "source_kind": "coverage_facet"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "facet"
++    },
++    {
++      "id": "facet:why",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "facet:why",
++          "node_type": "facet"
++        },
++        "semantics": {
++          "description": "W5H1 facet why",
++          "facet": "why",
++          "source_field": "atom.five_wh_one_plus"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_kgdb_coverage_v1",
++              "path": ".",
++              "source_kind": "coverage_facet"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "facet"
++    },
++    {
++      "id": "pill:pill-golden-rule",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "pill:pill-golden-rule",
++          "node_type": "pill"
++        },
++        "semantics": {
++          "document_id": "pill-golden-rule",
++          "identity": "pill-golden-rule",
++          "label": "Guardrail: golden outputs stay stable",
++          "path": "desk/contexts/pill-golden-rule.md"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_doc_nodes_v1",
++              "path": "desk/contexts/pill-golden-rule.md",
++              "source_kind": "file_metadata"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "pill"
++    },
++    {
++      "id": "source_file:deskops/golden_sample.py",
++      "schema": {
++        "edges": [],
++        "identity": {
++          "node_id": "source_file:deskops/golden_sample.py",
++          "node_type": "source_file"
++        },
++        "semantics": {
++          "file_kind": "source",
++          "identity": "deskops/golden_sample.py",
++          "path": "deskops/golden_sample.py"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_source_file_nodes_v1",
++              "path": "deskops/golden_sample.py",
++              "source_kind": "path_rule"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "source_file"
++    },
++    {
++      "id": "task:task-golden-alpha",
++      "schema": {
++        "edges": [
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "line:43:related atoms",
++              "provenance_path": "desk/tasks/task-golden-alpha.md",
++              "role": "references",
++              "source_kind": "declared"
++            },
++            "relation_type": "references",
++            "target_id": "atom:atom-golden-one"
++          },
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "frontmatter",
++              "provenance_path": "desk/tasks/task-golden-alpha.md",
++              "role": "pills",
++              "source_kind": "declared"
++            },
++            "relation_type": "pills",
++            "target_id": "pill:pill-golden-rule"
++          },
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "line:13:source-file-reference",
++              "provenance_path": "desk/tasks/task-golden-alpha.md",
++              "role": "references",
++              "source_kind": "declared"
++            },
++            "relation_type": "references",
++            "target_id": "pill:pill-golden-rule"
++          }
++        ],
++        "identity": {
++          "node_id": "task:task-golden-alpha",
++          "node_type": "task"
++        },
++        "semantics": {
++          "document_id": "task-golden-alpha",
++          "identity": "task-golden-alpha",
++          "label": "Golden alpha task",
++          "path": "desk/tasks/task-golden-alpha.md"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_doc_nodes_v1",
++              "path": "desk/tasks/task-golden-alpha.md",
++              "source_kind": "file_metadata"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "task"
++    },
++    {
++      "id": "task:task-golden-beta",
++      "schema": {
++        "edges": [
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "frontmatter",
++              "provenance_path": "desk/tasks/task-golden-beta.md",
++              "role": "references",
++              "source_kind": "declared"
++            },
++            "relation_type": "references",
++            "target_id": "atom:atom-golden-two"
++          },
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "frontmatter",
++              "provenance_path": "desk/tasks/task-golden-beta.md",
++              "role": "pills",
++              "source_kind": "declared"
++            },
++            "relation_type": "pills",
++            "target_id": "pill:pill-golden-rule"
++          },
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "line:15:source-file-reference",
++              "provenance_path": "desk/tasks/task-golden-beta.md",
++              "role": "references",
++              "source_kind": "declared"
++            },
++            "relation_type": "references",
++            "target_id": "pill:pill-golden-rule"
++          },
++          {
++            "metadata": {
++              "confidence": "high",
++              "extractor": "desk_declared_edges_v1",
++              "provenance_locator": "frontmatter",
++              "provenance_path": "desk/tasks/task-golden-beta.md",
++              "role": "depends_on",
++              "source_kind": "declared"
++            },
++            "relation_type": "depends_on",
++            "target_id": "task:task-golden-alpha"
++          }
++        ],
++        "identity": {
++          "node_id": "task:task-golden-beta",
++          "node_type": "task"
++        },
++        "semantics": {
++          "document_id": "task-golden-beta",
++          "identity": "task-golden-beta",
++          "label": "Golden beta task",
++          "path": "desk/tasks/task-golden-beta.md"
++        },
++        "source": {
++          "extractor": "deskops_kgdb_snapshot_v1",
++          "provenance": [
++            {
++              "extractor": "desk_doc_nodes_v1",
++              "path": "desk/tasks/task-golden-beta.md",
++              "source_kind": "file_metadata"
++            }
++          ]
++        }
++      },
++      "status": "unknown",
++      "type": "task"
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/help/deskops.txt b/tests/fixtures/golden/help/deskops.txt
+new file mode 100644
+index 0000000..57c83ea
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops.txt
+@@ -0,0 +1,44 @@
++usage: deskops [-h]
++               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
++
++deskops: Workflow-domain layer for the hum-ecosystem.
++
++positional arguments:
++  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
++    about               Print a short overview of deskops and its first-use commands.
++    doctor              Detect and repair common broken desk states safely.
++    status              Show current workspace and workflow status.
++    faq                 Browse the first-use FAQ by question.
++    bootstrap           Install or repair sldb and register deskops models in the global store.
++    init                Initialize a local .sldb store and scaffold desk/ if needed.
++    inbox               Deprecated alias for `deskops message`; use message send/list/read/ack.
++    message             Send, list, read, or acknowledge cross-desk messages.
++    promote             Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.
++    add                 Create desk workflow artifacts from modeled templates.
++    edit                Update one field on a modeled desk artifact.
++    bind                Bind workflow context artifacts to tasks.
++    next                Show the next valid workflow action for a task without mutating it.
++    list                List desk workflow artifacts.
++    show                Show one desk workflow artifact by selector.
++    advance             Advance an operational artifact through the desk's lifecycle graph.
++    repo                Repository registration and discovery.
++    desk                Desk workspace management.
++    atoms               Atom model and namespace management.
++    graph               Build and inspect deskops KGDB graph runtime outputs.
++    materialize         Render tracked desk role prompts into installed pi-agent files.
++    drift               Check for role-agent drift between tracked role docs and installed agent files.
++    closeout            Workflow closeout operations.
++    runtime             Manage the live Herdr runtime for this DeskOps desk.
++
++options:
++  -h, --help            show this help message and exit
++
++Typical flow:
++  deskops bootstrap
++  deskops init .
++  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
++  deskops list tasks --root .
++  deskops show task task-fix-thing --root .
++  deskops advance task task-fix-thing --root .
++
++Use docs/quickstart.md for the first full walkthrough.
+diff --git a/tests/fixtures/golden/help/deskops_about.txt b/tests/fixtures/golden/help/deskops_about.txt
+new file mode 100644
+index 0000000..d70b313
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_about.txt
+@@ -0,0 +1,4 @@
++usage: deskops about [-h]
++
++options:
++  -h, --help  show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_add.txt b/tests/fixtures/golden/help/deskops_add.txt
+new file mode 100644
+index 0000000..35e1e4c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add.txt
+@@ -0,0 +1,22 @@
++usage: deskops add [-h]
++                   {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step} ...
++
++positional arguments:
++  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
++    task                Create an actionable task bundle.
++    pill                Create a pill artifact.
++    ritual              Create a ritual artifact.
++    board               Create a board artifact.
++    atom                Create a atom artifact.
++    materialization     Create a materialization artifact.
++    repository          Create a local repository artifact doc; use 'deskops repo register' for canonical ecosystem registration.
++    inbox-note          Create a inbox-note artifact.
++    faq-doc             Create a faq-doc artifact.
++    step                Create a step artifact.
++
++options:
++  -h, --help            show this help message and exit
++
++Examples:
++  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
++  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..."
+diff --git a/tests/fixtures/golden/help/deskops_add_atom.txt b/tests/fixtures/golden/help/deskops_add_atom.txt
+new file mode 100644
+index 0000000..61f8110
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_atom.txt
+@@ -0,0 +1,24 @@
++usage: deskops add atom [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                        [--title TITLE]
++                        --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
++                        --answer ANSWER [--tags TAGS [TAGS ...]]
++                        [--provenance PROVENANCE]
++
++Create a atom artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the atom payload from a YAML file.
++  --title TITLE         Short, descriptive title for the atomic knowledge unit.
++  --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
++                        The single 5WH1+ question this atom answers: one of what, why, how, how_not, when, where, for_whom.
++  --answer ANSWER       The curated raw answer to the selected 5WH1+ question, written as one stable knowledge unit.
++  --tags TAGS [TAGS ...]
++                        Namespaced semantic tags used for retrieval and grouping, each in the form namespace:value (e.g. system:deskops, topic:templates). Tags do not encode lifecycle, relations, evidence, or materialization.
++  --provenance PROVENANCE
++                        Optional URL or path to the authoritative source of this atom's knowledge. Used for traceability and provenance tracking.
++
++Example:
++  deskops add atom --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_board.txt b/tests/fixtures/golden/help/deskops_add_board.txt
+new file mode 100644
+index 0000000..3d273eb
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_board.txt
+@@ -0,0 +1,30 @@
++usage: deskops add board [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                         [--title TITLE] [--summary SUMMARY]
++                         [--tags TAGS [TAGS ...]] --scope SCOPE
++                         --purpose PURPOSE [--tasks TASKS [TASKS ...]]
++                         [--pills PILLS [PILLS ...]]
++                         [--rituals RITUALS [RITUALS ...]] [--notes NOTES]
++
++Create a board artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the board payload from a YAML file.
++  --title TITLE         Board title for one active routing surface.
++  --summary SUMMARY     Short semantic summary for the primitive.
++  --tags TAGS [TAGS ...]
++                        Semantic tags placed at the end, using namespaced forms such as 'system:sldb' or 'workspace:desk'.
++  --scope SCOPE         What area or workspace this board routes.
++  --purpose PURPOSE     Why this board exists and what it indexes.
++  --tasks TASKS [TASKS ...]
++                        Active task document references routed by this board.
++  --pills PILLS [PILLS ...]
++                        Active pill document references routed by this board.
++  --rituals RITUALS [RITUALS ...]
++                        Ritual document references relevant to this board.
++  --notes NOTES         Short operational notes about the current routed set.
++
++Example:
++  deskops add board --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_faq-doc.txt b/tests/fixtures/golden/help/deskops_add_faq-doc.txt
+new file mode 100644
+index 0000000..19247cc
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_faq-doc.txt
+@@ -0,0 +1,15 @@
++usage: deskops add faq-doc [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                           [--title TITLE] --body BODY
++
++Create a faq-doc artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the faq-doc payload from a YAML file.
++  --title TITLE         Primary H1 heading for the FAQ document.
++  --body BODY           Full FAQ body after the H1, including questions, answers, command examples, and cross-references to atom docs.
++
++Example:
++  deskops add faq-doc --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_inbox-note.txt b/tests/fixtures/golden/help/deskops_add_inbox-note.txt
+new file mode 100644
+index 0000000..ede53f2
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_inbox-note.txt
+@@ -0,0 +1,35 @@
++usage: deskops add inbox-note [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                              --kind {unclear,suggestion}
++                              [--sender-project SENDER_PROJECT]
++                              [--target-project TARGET_PROJECT]
++                              --created-at CREATED_AT --status {open,closed}
++                              [--acknowledged-by ACKNOWLEDGED_BY]
++                              [--acknowledged-at ACKNOWLEDGED_AT]
++                              [--title TITLE] --body BODY
++
++Create a inbox-note artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the inbox-note payload from a YAML file.
++  --kind {unclear,suggestion}
++                        Inbox note type indicating unresolved confusion or an improvement proposal.
++  --sender-project SENDER_PROJECT
++                        Project that sent the inbox message, resolved from the repo registry when possible.
++  --target-project TARGET_PROJECT
++                        Project the inbox note targets, resolved from the shared desk identity contract.
++  --created-at CREATED_AT
++                        Timestamp for when the inbox note was created.
++  --status {open,closed}
++                        Whether the inbox note is still open or already handled.
++  --acknowledged-by ACKNOWLEDGED_BY
++                        Project identity that acknowledged and closed the inbox note.
++  --acknowledged-at ACKNOWLEDGED_AT
++                        Timestamp for when the inbox note was acknowledged and closed.
++  --title TITLE         Inbox note title shown as the H1 heading.
++  --body BODY           Markdown body describing the question or suggestion in detail.
++
++Example:
++  deskops add inbox-note --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_materialization.txt b/tests/fixtures/golden/help/deskops_add_materialization.txt
+new file mode 100644
+index 0000000..20d774e
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_materialization.txt
+@@ -0,0 +1,34 @@
++usage: deskops add materialization [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                                   [--title TITLE]
++                                   [--source-atoms SOURCE_ATOMS [SOURCE_ATOMS ...]]
++                                   --target-kind TARGET_KIND
++                                   --target-identity TARGET_IDENTITY
++                                   --intent INTENT
++                                   [--validation VALIDATION [VALIDATION ...]]
++                                   [--tags TAGS [TAGS ...]]
++                                   [--provenance PROVENANCE]
++
++Create a materialization artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the materialization payload from a YAML file.
++  --title TITLE         Short, descriptive title for the materialization contract.
++  --source-atoms SOURCE_ATOMS [SOURCE_ATOMS ...]
++                        Source atom identifiers that this materialization contract derives from.
++  --target-kind TARGET_KIND
++                        Kind of artifact or surface targeted by this materialization contract.
++  --target-identity TARGET_IDENTITY
++                        Stable target node id or path that this materialization contract must resolve to.
++  --intent INTENT       Human-readable intent describing how the target materializes the source atoms.
++  --validation VALIDATION [VALIDATION ...]
++                        Validation commands or checks expected for this materialization contract.
++  --tags TAGS [TAGS ...]
++                        Namespaced semantic tags for retrieval and grouping, each in the form namespace:value.
++  --provenance PROVENANCE
++                        Optional URL or path to the authoritative source for this materialization contract.
++
++Example:
++  deskops add materialization --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_pill.txt b/tests/fixtures/golden/help/deskops_add_pill.txt
+new file mode 100644
+index 0000000..635b358
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_pill.txt
+@@ -0,0 +1,25 @@
++usage: deskops add pill [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                        [--title TITLE] [--summary SUMMARY]
++                        [--tags TAGS [TAGS ...]] --what WHAT --why WHY
++                        --when WHEN --where WHERE --how HOW --how-not HOW_NOT
++
++Create a pill artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the pill payload from a YAML file.
++  --title TITLE         Pill title, including semantic prefix when useful, such as 'ADR:' or 'Pattern:'.
++  --summary SUMMARY     Short semantic summary for the pill.
++  --tags TAGS [TAGS ...]
++                        Semantic tags placed at the end, using namespaced forms such as 'language:python' or 'library:pydantic'.
++  --what WHAT           What the pill defines or clarifies.
++  --why WHY             Why this context matters for implementation or refactoring.
++  --when WHEN           When this pill should be applied.
++  --where WHERE         Where this pill applies, either as general scope or as references to existing code or docs.
++  --how HOW             How to apply the guidance in practice.
++  --how-not HOW_NOT     How not to apply the guidance or what to avoid.
++
++Example:
++  deskops add pill --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_repository.txt b/tests/fixtures/golden/help/deskops_add_repository.txt
+new file mode 100644
+index 0000000..5f8014b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_repository.txt
+@@ -0,0 +1,22 @@
++usage: deskops add repository [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                              --name NAME [--path PATH] [--status STATUS]
++                              --description DESCRIPTION
++                              [--tags TAGS [TAGS ...]]
++
++Create a local repository artifact doc; use 'deskops repo register' for canonical ecosystem registration.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the repository payload from a YAML file.
++  --name NAME           Short human-readable name of the repository.
++  --path PATH           Relative path to the repository root from the ecosystem root.
++  --status STATUS       Current status of the repository (e.g., active, maintenance, archived).
++  --description DESCRIPTION
++                        Markdown description of the repository's purpose and scope.
++  --tags TAGS [TAGS ...]
++                        Semantic tags for categorization (e.g., type:tool, layer:infra).
++
++Example:
++  deskops add repository --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_ritual.txt b/tests/fixtures/golden/help/deskops_add_ritual.txt
+new file mode 100644
+index 0000000..53dbb4b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_ritual.txt
+@@ -0,0 +1,36 @@
++usage: deskops add ritual [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                          [--title TITLE] [--summary SUMMARY]
++                          [--tags TAGS [TAGS ...]] --purpose PURPOSE
++                          --trigger TRIGGER
++                          [--preconditions PRECONDITIONS [PRECONDITIONS ...]]
++                          [--steps STEPS [STEPS ...]]
++                          [--validation VALIDATION [VALIDATION ...]]
++                          [--failure-modes FAILURE_MODES [FAILURE_MODES ...]]
++                          --completion COMPLETION
++
++Create a ritual artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the ritual payload from a YAML file.
++  --title TITLE         Short ritual title.
++  --summary SUMMARY     Short semantic summary for the primitive.
++  --tags TAGS [TAGS ...]
++                        Semantic tags placed at the end, using namespaced forms such as 'layer:workflow' or 'system:sldb'.
++  --purpose PURPOSE     Why the ritual exists.
++  --trigger TRIGGER     When the ritual should be started.
++  --preconditions PRECONDITIONS [PRECONDITIONS ...]
++                        Conditions that must hold before running the ritual.
++  --steps STEPS [STEPS ...]
++                        Ordered steps to execute as part of the ritual.
++  --validation VALIDATION [VALIDATION ...]
++                        Checks that confirm the ritual was performed correctly.
++  --failure-modes FAILURE_MODES [FAILURE_MODES ...]
++                        Common mistakes, drifts, or anti-patterns to avoid.
++  --completion COMPLETION
++                        What indicates that the ritual has been completed.
++
++Example:
++  deskops add ritual --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_step.txt b/tests/fixtures/golden/help/deskops_add_step.txt
+new file mode 100644
+index 0000000..04c4138
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_step.txt
+@@ -0,0 +1,19 @@
++usage: deskops add step [-h] [--root ROOT] [--from-yaml FROM_YAML]
++                        [--title TITLE] --action ACTION --outcome OUTCOME
++                        [--tags TAGS [TAGS ...]]
++
++Create a step artifact.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --from-yaml FROM_YAML
++                        Load the step payload from a YAML file.
++  --title TITLE         Short step title.
++  --action ACTION       What the step should do.
++  --outcome OUTCOME     What the step should produce or confirm.
++  --tags TAGS [TAGS ...]
++                        Semantic tags placed at the end, using namespaced forms such as 'topic:testing' or 'workspace:desk'.
++
++Example:
++  deskops add step --root . --title "Example"
+diff --git a/tests/fixtures/golden/help/deskops_add_task.txt b/tests/fixtures/golden/help/deskops_add_task.txt
+new file mode 100644
+index 0000000..c6c51b4
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_add_task.txt
+@@ -0,0 +1,51 @@
++usage: deskops add task [-h] [--from-yaml FROM_YAML] [--root ROOT]
++                        [--title TITLE] [--why WHY] [--goal GOAL]
++                        [--scope SCOPE]
++                        [--implementation-path IMPLEMENTATION_PATH]
++                        [--done-when DONE_WHEN] [--from-drawer FROM_DRAWER]
++                        [--validation VALIDATION [VALIDATION ...]]
++                        [--depends-on DEPENDS_ON [DEPENDS_ON ...]]
++                        [--task-type TASK_TYPE]
++                        [--inherits-from INHERITS_FROM [INHERITS_FROM ...]]
++                        [--atom ATOM [ATOM ...]]
++                        [--inherit-acceptance-context]
++                        [payload]
++
++positional arguments:
++  payload               Inline JSON payload for the task.
++
++options:
++  -h, --help            show this help message and exit
++  --from-yaml FROM_YAML
++                        Load the task payload from a YAML file.
++  --root ROOT           Target repository root.
++  --title TITLE         Task title
++  --why WHY             Rationale or business driver
++  --goal GOAL           Task goal
++  --scope SCOPE         Task scope
++  --implementation-path IMPLEMENTATION_PATH
++                        Implementation path
++  --done-when DONE_WHEN
++                        Task completion rule
++  --from-drawer FROM_DRAWER
++                        Drawer file this task is authored from (path, stem, or
++                        slug fragment). Recorded in the task's from_drawer
++                        field; the drawer file is kept for manual cleanup.
++  --validation VALIDATION [VALIDATION ...]
++                        Validation command or assertion; repeat or space-
++                        separate as needed.
++  --depends-on DEPENDS_ON [DEPENDS_ON ...]
++                        Task identifiers that must complete first; repeat or
++                        space-separate as needed.
++  --task-type TASK_TYPE
++                        Workflow task type such as design, implementation,
++                        test, reflection, or closeout.
++  --inherits-from INHERITS_FROM [INHERITS_FROM ...]
++                        Task identifiers that provide inherited workflow
++                        context; repeat or space-separate as needed.
++  --atom ATOM [ATOM ...]
++                        Workflow or knowledge atom refs bound to the task;
++                        repeat or space-separate as needed.
++  --inherit-acceptance-context
++                        Inherit validation and done-when context from tasks
++                        listed in --inherits-from.
+diff --git a/tests/fixtures/golden/help/deskops_advance.txt b/tests/fixtures/golden/help/deskops_advance.txt
+new file mode 100644
+index 0000000..4c62827
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_advance.txt
+@@ -0,0 +1,14 @@
++usage: deskops advance [-h] {task} ...
++
++positional arguments:
++  {task}
++    task      Advance one actionable task through the desk's lifecycle graph.
++
++options:
++  -h, --help  show this help message and exit
++
++Example:
++  deskops advance task task-fix-thing --root .
++
++Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_advance_task.txt b/tests/fixtures/golden/help/deskops_advance_task.txt
+new file mode 100644
+index 0000000..8bf6882
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_advance_task.txt
+@@ -0,0 +1,15 @@
++usage: deskops advance task [-h] [--to TO] [--root ROOT] task_id
++
++positional arguments:
++  task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
++
++options:
++  -h, --help   show this help message and exit
++  --to TO      Optional target node or status for a manual override.
++  --root ROOT  Target repository root.
++
++Example:
++  deskops advance task task-fix-thing --root .
++
++Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_atoms.txt b/tests/fixtures/golden/help/deskops_atoms.txt
+new file mode 100644
+index 0000000..1c7f19b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms.txt
+@@ -0,0 +1,31 @@
++usage: deskops atoms [-h]
++                     {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree} ...
++
++positional arguments:
++  {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree}
++    add-namespace       Add an extensible atom tag namespace to
++                        desk/atoms/tag-namespaces.yaml.
++    list                List all atoms.
++    reorganize          Move atoms into folders derived from the configured
++                        atom_folder_axis tag namespace. Idempotent.
++    show                Show an atom.
++    validate            Validate one atom or all atoms for lifecycle safety
++                        checks.
++    create              Create one atom from a pill, graph finding, or diagram
++                        source while preserving exact provenance.
++    delete              Delete one atom after checking inbound references.
++    split               Split one atom into new atoms while keeping the
++                        original as a redirect stub.
++    merge               Merge one source atom into an existing target atom
++                        while rewriting inbound references.
++    crossroad           Write the crossroad of a domain path: the mandatory
++                        parent that describes what hangs below it.
++    proto               Create a protoatom: a free atom with a title, content
++                        and tags.
++    type                Type a protoatom into another sldb model, keeping the
++                        protoatom as a redirect stub.
++    tree                Show the domain tree: crossroads and the documents
++                        hanging from them.
++
++options:
++  -h, --help            show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_atoms_add-namespace.txt b/tests/fixtures/golden/help/deskops_atoms_add-namespace.txt
+new file mode 100644
+index 0000000..11f9649
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_add-namespace.txt
+@@ -0,0 +1,20 @@
++usage: deskops atoms add-namespace [-h] [--root ROOT] --meaning MEANING
++                                   --use-when USE_WHEN
++                                   --do-not-use-when DO_NOT_USE_WHEN
++                                   [--example EXAMPLE [EXAMPLE ...]]
++                                   namespace
++
++positional arguments:
++  namespace             Namespace name, such as pattern.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --meaning MEANING     What this namespace means.
++  --use-when USE_WHEN   When to use this namespace.
++  --do-not-use-when DO_NOT_USE_WHEN
++                        When an existing namespace should be preferred
++                        instead.
++  --example EXAMPLE [EXAMPLE ...]
++                        Example tag using the namespace; repeat or space-
++                        separate as needed.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_create.txt b/tests/fixtures/golden/help/deskops_atoms_create.txt
+new file mode 100644
+index 0000000..ff76e3a
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_create.txt
+@@ -0,0 +1,29 @@
++usage: deskops atoms create [-h]
++                            --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
++                            [--title TITLE] [--tag TAG [TAG ...]]
++                            (--from-pill PILL_ID |
++                            --from-graph SOURCE_ID->TARGET_ID |
++                            --from-diagram SPEC_PATH) [--graph GRAPH]
++                            [--root ROOT]
++                            doc_id
++
++positional arguments:
++  doc_id                New atom id to create, conventionally atom-<slug>.
++
++options:
++  -h, --help            show this help message and exit
++  --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
++                        The single 5WH1+ question this atom answers.
++  --title TITLE         Optional title override for the created atom.
++  --tag TAG [TAG ...]   Atom tag to add; repeat or space-separate as needed.
++  --from-pill PILL_ID   Create the atom from one pill field chosen by --five-
++                        wh-one-plus.
++  --from-graph SOURCE_ID->TARGET_ID
++                        Create the atom from one missing graph finding
++                        resolved by source and target ids.
++  --from-diagram SPEC_PATH
++                        Create the atom from one diagram source file such as
++                        docs/diagrams/example/source.mmd.
++  --graph GRAPH         Optional graph snapshot path consulted in addition to
++                        declared-edge findings when resolving --from-graph.
++  --root ROOT           Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_crossroad.txt b/tests/fixtures/golden/help/deskops_atoms_crossroad.txt
+new file mode 100644
+index 0000000..c28be96
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_crossroad.txt
+@@ -0,0 +1,13 @@
++usage: deskops atoms crossroad [-h] --title TITLE --content CONTENT
++                               [--root ROOT]
++                               path
++
++positional arguments:
++  path               Domain path such as pizzeria.carta; its parent path needs
++                     a crossroad first.
++
++options:
++  -h, --help         show this help message and exit
++  --title TITLE      Short title of the domain area.
++  --content CONTENT  Written description of what hangs below this path.
++  --root ROOT        Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_delete.txt b/tests/fixtures/golden/help/deskops_atoms_delete.txt
+new file mode 100644
+index 0000000..381d83c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_delete.txt
+@@ -0,0 +1,10 @@
++usage: deskops atoms delete [-h] [--root ROOT] [--force] doc_id
++
++positional arguments:
++  doc_id       Atom selector. Selectors accept an exact id, filename, stem, or
++               unique slug fragment where supported.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --force      Delete even when inbound atom:<id> references are present.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_list.txt b/tests/fixtures/golden/help/deskops_atoms_list.txt
+new file mode 100644
+index 0000000..ea48300
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_list.txt
+@@ -0,0 +1,10 @@
++usage: deskops atoms list [-h] [--root ROOT] [--axis-value AXIS_VALUE]
++                          [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --axis-value AXIS_VALUE
++                        Filter atoms by the configured atom_folder_axis
++                        namespace value (e.g. licitaciones).
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_merge.txt b/tests/fixtures/golden/help/deskops_atoms_merge.txt
+new file mode 100644
+index 0000000..62d806e
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_merge.txt
+@@ -0,0 +1,19 @@
++usage: deskops atoms merge [-h] --into TARGET_ATOM_ID [--root ROOT] [--force]
++                           doc_id
++
++positional arguments:
++  doc_id                Source atom selector. Selectors accept an exact id,
++                        filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --into TARGET_ATOM_ID
++                        Existing target atom selector that absorbs the source
++                        atom.
++  --root ROOT           Target repository root.
++  --force               Proceed when merge semantics are ambiguous, such as
++                        conflicting five_wh_one_plus values. Inbound
++                        atom:<source> references are rewritten to
++                        atom:<target>, and the source atom is kept as a
++                        redirect stub for traceability.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_proto.txt b/tests/fixtures/golden/help/deskops_atoms_proto.txt
+new file mode 100644
+index 0000000..aaa887c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_proto.txt
+@@ -0,0 +1,14 @@
++usage: deskops atoms proto [-h] --title TITLE [--content CONTENT]
++                           [--tag TAG [TAG ...]] [--root ROOT]
++                           doc_id
++
++positional arguments:
++  doc_id               New protoatom id, conventionally proto-<slug>.
++
++options:
++  -h, --help           show this help message and exit
++  --title TITLE        Short title of the free knowledge unit.
++  --content CONTENT    Free markdown content.
++  --tag TAG [TAG ...]  Atom tag; a single domain:<path> tag places the
++                       protoatom in the domain tree.
++  --root ROOT          Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_reorganize.txt b/tests/fixtures/golden/help/deskops_atoms_reorganize.txt
+new file mode 100644
+index 0000000..5922c9e
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_reorganize.txt
+@@ -0,0 +1,6 @@
++usage: deskops atoms reorganize [-h] [--root ROOT] [--dry-run]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --dry-run    Report planned moves without changing files.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_show.txt b/tests/fixtures/golden/help/deskops_atoms_show.txt
+new file mode 100644
+index 0000000..a96a12c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_show.txt
+@@ -0,0 +1,10 @@
++usage: deskops atoms show [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Atom selector. Selectors accept an exact id, filename,
++                        stem, or unique slug fragment where supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_split.txt b/tests/fixtures/golden/help/deskops_atoms_split.txt
+new file mode 100644
+index 0000000..46c2a62
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_split.txt
+@@ -0,0 +1,23 @@
++usage: deskops atoms split [-h] --into NEW_ATOM_ID [NEW_ATOM_ID ...]
++                           [--section NEW_ATOM_ID:SECTION_HEADING]
++                           [--root ROOT] [--force]
++                           doc_id
++
++positional arguments:
++  doc_id                Atom selector. Selectors accept an exact id, filename,
++                        stem, or unique slug fragment where supported.
++
++options:
++  -h, --help            show this help message and exit
++  --into NEW_ATOM_ID [NEW_ATOM_ID ...]
++                        New atom ids to create from the source atom. Provide
++                        at least two.
++  --section NEW_ATOM_ID:SECTION_HEADING
++                        Assign a created atom id to a specific markdown
++                        heading inside the source atom answer. Repeat once per
++                        target. When omitted, sections are assigned to --into
++                        ids in order.
++  --root ROOT           Target repository root.
++  --force               Proceed even when inbound atom:<id> references exist.
++                        The original atom is kept as a redirect stub;
++                        referrers are not rewritten automatically.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_tree.txt b/tests/fixtures/golden/help/deskops_atoms_tree.txt
+new file mode 100644
+index 0000000..aa7cf57
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_tree.txt
+@@ -0,0 +1,6 @@
++usage: deskops atoms tree [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_type.txt b/tests/fixtures/golden/help/deskops_atoms_type.txt
+new file mode 100644
+index 0000000..e3f42a1
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_type.txt
+@@ -0,0 +1,18 @@
++usage: deskops atoms type [-h] --model MODEL [--id NEW_ID]
++                          [--content-field CONTENT_FIELD] [--data DATA]
++                          [--root ROOT]
++                          doc_id
++
++positional arguments:
++  doc_id                Protoatom selector: id or filename.
++
++options:
++  -h, --help            show this help message and exit
++  --model MODEL         Target sldb model name, such as AtomDoc or TaskDoc.
++  --id NEW_ID           Id of the typed document; defaults to <model>-<slug>.
++  --content-field CONTENT_FIELD
++                        Target field that receives the protoatom content;
++                        defaults to 'content' when the model has it.
++  --data DATA           Inline JSON with the remaining fields the target model
++                        requires.
++  --root ROOT           Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_atoms_validate.txt b/tests/fixtures/golden/help/deskops_atoms_validate.txt
+new file mode 100644
+index 0000000..63627e9
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_atoms_validate.txt
+@@ -0,0 +1,10 @@
++usage: deskops atoms validate [-h] [--all] [--root ROOT] [doc_id]
++
++positional arguments:
++  doc_id       Atom selector. Selectors accept an exact id, filename, stem, or
++               unique slug fragment where supported.
++
++options:
++  -h, --help   show this help message and exit
++  --all        Validate all atoms under desk/atoms/.
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_bind.txt b/tests/fixtures/golden/help/deskops_bind.txt
+new file mode 100644
+index 0000000..c00e464
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_bind.txt
+@@ -0,0 +1,14 @@
++usage: deskops bind [-h] {pill} ...
++
++positional arguments:
++  {pill}
++    pill      Bind one pill to one task.
++
++options:
++  -h, --help  show this help message and exit
++
++Examples:
++  deskops bind pill task-fix-thing pill-phase-gate --root .
++
++This updates the task's modeled `pills` list through the deskops artifact layer.
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_bind_pill.txt b/tests/fixtures/golden/help/deskops_bind_pill.txt
+new file mode 100644
+index 0000000..dbedae1
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_bind_pill.txt
+@@ -0,0 +1,14 @@
++usage: deskops bind pill [-h] [--root ROOT] task pill
++
++positional arguments:
++  task         Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
++  pill         Pill selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++
++Example:
++  deskops bind pill task-fix-thing pill-phase-gate --root .
++
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_bootstrap.txt b/tests/fixtures/golden/help/deskops_bootstrap.txt
+new file mode 100644
+index 0000000..3f9efbe
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_bootstrap.txt
+@@ -0,0 +1,4 @@
++usage: deskops bootstrap [-h]
++
++options:
++  -h, --help  show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_closeout.txt b/tests/fixtures/golden/help/deskops_closeout.txt
+new file mode 100644
+index 0000000..2446689
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_closeout.txt
+@@ -0,0 +1,11 @@
++usage: deskops closeout [-h] {commit,verify} ...
++
++positional arguments:
++  {commit,verify}
++    commit         Create the tool-made closing commit, linked to a run
++                   evidence directory or marked manual.
++    verify         Strictly verify closeout evidence gates for one task and
++                   print a structured report.
++
++options:
++  -h, --help       show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_closeout_commit.txt b/tests/fixtures/golden/help/deskops_closeout_commit.txt
+new file mode 100644
+index 0000000..86dd4d8
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_closeout_commit.txt
+@@ -0,0 +1,33 @@
++usage: deskops closeout commit [-h] [--root ROOT] [--run-dir RUN_DIR |
++                               --no-run] [--reason REASON] --task TASK
++                               [-m MESSAGE] [--paths [PATHS ...]]
++                               [--run-id RUN_ID] [--session SESSION]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --run-dir RUN_DIR     Run evidence dir under runs/subagents/.
++  --no-run              Close without a subagent run; requires --reason. Use instead of --run-dir.
++  --reason REASON       Why the task closes without a run; required with --no-run.
++  --task TASK           Task id being closed.
++  -m, --message MESSAGE
++                        Commit message subject.
++  --paths [PATHS ...]   Paths to stage; defaults to run.yaml touched paths, else staged index.
++  --run-id RUN_ID       Subagent run id to record in run.yaml (--run-dir only).
++  --session SESSION     Child session.jsonl path to hash into run.yaml (--run-dir only).
++
++Example:
++  deskops closeout commit --root . --task task-fix-thing \
++    --run-dir runs/subagents/20260729-120000-task-fix-thing \
++    --run-id 6046eaef --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \
++    --paths deskops/foo.py tests/test_foo.py
++
++Without a subagent run, close the task manually and say why:
++  deskops closeout commit --root . --task task-fix-thing \
++    --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \
++    --paths deskops/foo.py tests/test_foo.py
++
++With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
++trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
++Either way the commit hash is recorded back into runs/subagents/index.jsonl. The
++commit is made by this command, not by agent discretion.
+diff --git a/tests/fixtures/golden/help/deskops_closeout_verify.txt b/tests/fixtures/golden/help/deskops_closeout_verify.txt
+new file mode 100644
+index 0000000..5327ae6
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_closeout_verify.txt
+@@ -0,0 +1,6 @@
++usage: deskops closeout verify [-h] [--root ROOT] --task TASK
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --task TASK  Task id being verified.
+diff --git a/tests/fixtures/golden/help/deskops_desk.txt b/tests/fixtures/golden/help/deskops_desk.txt
+new file mode 100644
+index 0000000..5959c93
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_desk.txt
+@@ -0,0 +1,12 @@
++usage: deskops desk [-h] {install,migrate,update} ...
++
++positional arguments:
++  {install,migrate,update}
++    install             Scaffold a minimal local desk/ surface in a repo.
++    migrate             Adopt a legacy or partial desk into the current non-
++                        destructive workspace contract.
++    update              Report and repair divergence between the current desk,
++                        its models, and its store.
++
++options:
++  -h, --help            show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_desk_install.txt b/tests/fixtures/golden/help/deskops_desk_install.txt
+new file mode 100644
+index 0000000..e62148c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_desk_install.txt
+@@ -0,0 +1,7 @@
++usage: deskops desk install [-h] path
++
++positional arguments:
++  path        Target repository path
++
++options:
++  -h, --help  show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_desk_migrate.txt b/tests/fixtures/golden/help/deskops_desk_migrate.txt
+new file mode 100644
+index 0000000..e2b2cf3
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_desk_migrate.txt
+@@ -0,0 +1,5 @@
++usage: deskops desk migrate [-h] [--root ROOT]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_desk_update.txt b/tests/fixtures/golden/help/deskops_desk_update.txt
+new file mode 100644
+index 0000000..633eb35
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_desk_update.txt
+@@ -0,0 +1,6 @@
++usage: deskops desk update [-h] [--root ROOT] [--apply]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --apply      Apply repairs (dry run by default).
+diff --git a/tests/fixtures/golden/help/deskops_doctor.txt b/tests/fixtures/golden/help/deskops_doctor.txt
+new file mode 100644
+index 0000000..7d94657
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_doctor.txt
+@@ -0,0 +1,6 @@
++usage: deskops doctor [-h] [--root ROOT] [--repair]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --repair     Attempt non-destructive repairs.
+diff --git a/tests/fixtures/golden/help/deskops_drift.txt b/tests/fixtures/golden/help/deskops_drift.txt
+new file mode 100644
+index 0000000..0d8230a
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_drift.txt
+@@ -0,0 +1,8 @@
++usage: deskops drift [-h] {check} ...
++
++positional arguments:
++  {check}
++    check     Compare rendered role-agent output to installed files.
++
++options:
++  -h, --help  show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_drift_check.txt b/tests/fixtures/golden/help/deskops_drift_check.txt
+new file mode 100644
+index 0000000..209a5b6
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_drift_check.txt
+@@ -0,0 +1,6 @@
++usage: deskops drift check [-h] [--root ROOT] [--out OUT]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --out OUT    Agent directory override; defaults to ~/.pi/agent/agents.
+diff --git a/tests/fixtures/golden/help/deskops_edit.txt b/tests/fixtures/golden/help/deskops_edit.txt
+new file mode 100644
+index 0000000..dfc247e
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit.txt
+@@ -0,0 +1,25 @@
++usage: deskops edit [-h]
++                    {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step} ...
++
++positional arguments:
++  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
++    task                Edit one task field.
++    pill                Edit one pill field.
++    ritual              Edit one ritual field.
++    board               Edit one board field.
++    atom                Edit one atom field.
++    materialization     Edit one materialization field.
++    repository          Edit one repository field.
++    inbox-note          Edit one inbox-note field.
++    faq-doc             Edit one faq-doc field.
++    step                Edit one step field.
++
++options:
++  -h, --help            show this help message and exit
++
++Examples:
++  deskops edit task task-fix-thing goal "Updated goal" --root .
++  deskops edit pill pill-keep-layers-clean how-not "Do not bypass the guardrail." --root .
++
++Values are parsed with SLDB's field-value parser and the document is re-rendered through its model.
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_edit_atom.txt b/tests/fixtures/golden/help/deskops_edit_atom.txt
+new file mode 100644
+index 0000000..063bc47
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_atom.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit atom [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Atom selector. Selectors accept an exact id, filename, stem, or
++               unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_board.txt b/tests/fixtures/golden/help/deskops_edit_board.txt
+new file mode 100644
+index 0000000..6e711ce
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_board.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit board [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Board selector. Selectors accept an exact id, filename, stem,
++               or unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_faq-doc.txt b/tests/fixtures/golden/help/deskops_edit_faq-doc.txt
+new file mode 100644
+index 0000000..59d7e7c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_faq-doc.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit faq-doc [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Faq-doc selector. Selectors accept an exact id, filename, stem,
++               or unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_inbox-note.txt b/tests/fixtures/golden/help/deskops_edit_inbox-note.txt
+new file mode 100644
+index 0000000..ad87e07
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_inbox-note.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit inbox-note [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Inbox-note selector. Selectors accept an exact id, filename,
++               stem, or unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_materialization.txt b/tests/fixtures/golden/help/deskops_edit_materialization.txt
+new file mode 100644
+index 0000000..4fcc6cd
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_materialization.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit materialization [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Materialization selector. Selectors accept an exact id,
++               filename, stem, or unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_pill.txt b/tests/fixtures/golden/help/deskops_edit_pill.txt
+new file mode 100644
+index 0000000..ccd0884
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_pill.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit pill [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Pill selector. Selectors accept an exact id, filename, stem, or
++               unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_repository.txt b/tests/fixtures/golden/help/deskops_edit_repository.txt
+new file mode 100644
+index 0000000..bec1f9f
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_repository.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit repository [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Repository selector. Selectors accept an exact id, filename,
++               stem, or unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_ritual.txt b/tests/fixtures/golden/help/deskops_edit_ritual.txt
+new file mode 100644
+index 0000000..c008ca3
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_ritual.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit ritual [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Ritual selector. Selectors accept an exact id, filename, stem,
++               or unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_step.txt b/tests/fixtures/golden/help/deskops_edit_step.txt
+new file mode 100644
+index 0000000..bf92504
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_step.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit step [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Step selector. Selectors accept an exact id, filename, stem, or
++               unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_edit_task.txt b/tests/fixtures/golden/help/deskops_edit_task.txt
+new file mode 100644
+index 0000000..31e6142
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_edit_task.txt
+@@ -0,0 +1,12 @@
++usage: deskops edit task [-h] [--root ROOT] selector field value
++
++positional arguments:
++  selector     Task selector. Selectors accept an exact id, filename, stem, or
++               unique slug fragment where supported.
++  field        Model field name to update; hyphens are accepted for
++               underscores.
++  value        New field value, parsed like an SLDB field value.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/help/deskops_faq.txt b/tests/fixtures/golden/help/deskops_faq.txt
+new file mode 100644
+index 0000000..2e98dae
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_faq.txt
+@@ -0,0 +1,11 @@
++usage: deskops faq [-h] [--format {text,json,yaml}] [--faq-path FAQ_PATH]
++                   [question]
++
++positional arguments:
++  question              Question index, slug, or text fragment. Omit to list
++                        available questions.
++
++options:
++  -h, --help            show this help message and exit
++  --format {text,json,yaml}
++  --faq-path FAQ_PATH   FAQ markdown path
+diff --git a/tests/fixtures/golden/help/deskops_graph.txt b/tests/fixtures/golden/help/deskops_graph.txt
+new file mode 100644
+index 0000000..0bddbee
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_graph.txt
+@@ -0,0 +1,14 @@
++usage: deskops graph [-h] {build,neighbors,missing,reflect} ...
++
++positional arguments:
++  {build,neighbors,missing,reflect}
++    build               Build the KGDB graph snapshot runtime artifact.
++    neighbors           Show incoming and outgoing neighbors for one graph
++                        node.
++    missing             Report missing graph targets and dangling declared
++                        references.
++    reflect             Write review-only self-reflection findings for a graph
++                        snapshot.
++
++options:
++  -h, --help            show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_graph_build.txt b/tests/fixtures/golden/help/deskops_graph_build.txt
+new file mode 100644
+index 0000000..85a0351
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_graph_build.txt
+@@ -0,0 +1,7 @@
++usage: deskops graph build [-h] [--root ROOT] [--output OUTPUT]
++
++options:
++  -h, --help       show this help message and exit
++  --root ROOT      Target repository root.
++  --output OUTPUT  GraphSnapshot destination; relative paths are resolved from
++                   --root.
+diff --git a/tests/fixtures/golden/help/deskops_graph_missing.txt b/tests/fixtures/golden/help/deskops_graph_missing.txt
+new file mode 100644
+index 0000000..4d5dd1c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_graph_missing.txt
+@@ -0,0 +1,7 @@
++usage: deskops graph missing [-h] [--root ROOT] [--graph GRAPH]
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Target repository root.
++  --graph GRAPH  Optional graph snapshot path to check for missing edge
++                 targets.
+diff --git a/tests/fixtures/golden/help/deskops_graph_neighbors.txt b/tests/fixtures/golden/help/deskops_graph_neighbors.txt
+new file mode 100644
+index 0000000..4848e75
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_graph_neighbors.txt
+@@ -0,0 +1,10 @@
++usage: deskops graph neighbors [-h] [--root ROOT] [--graph GRAPH] id
++
++positional arguments:
++  id             Graph node id to inspect, formatted as type:id (e.g.
++                 atom:atom-name, task:task-name, issue:issue-name).
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Target repository root.
++  --graph GRAPH  Graph snapshot path; defaults to the root runtime snapshot.
+diff --git a/tests/fixtures/golden/help/deskops_graph_reflect.txt b/tests/fixtures/golden/help/deskops_graph_reflect.txt
+new file mode 100644
+index 0000000..827e8ef
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_graph_reflect.txt
+@@ -0,0 +1,6 @@
++usage: deskops graph reflect [-h] [--root ROOT] [--graph GRAPH]
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Target repository root.
++  --graph GRAPH  Graph snapshot path; defaults to the root runtime snapshot.
+diff --git a/tests/fixtures/golden/help/deskops_inbox.txt b/tests/fixtures/golden/help/deskops_inbox.txt
+new file mode 100644
+index 0000000..55da0ac
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_inbox.txt
+@@ -0,0 +1,39 @@
++usage: deskops inbox [-h] [--kind {unclear,suggestion}] [--title TITLE]
++                     [--root ROOT] [--desk-root DESK_ROOT] [--store STORE]
++                     [--repo REPO] [--sender SENDER] [--pythonpath PYTHONPATH]
++                     [--list] [--show SHOW] [--ack ACK] [--limit LIMIT]
++                     [--format {text,json,yaml}]
++                     [message]
++
++positional arguments:
++  message               Inbox note body
++
++options:
++  -h, --help            show this help message and exit
++  --kind {unclear,suggestion}
++                        Type of inbox message to write
++  --title TITLE         Short title for the note
++  --root ROOT           Repository root whose desk/ holds the inbox; the same --root every other subcommand takes
++  --desk-root DESK_ROOT
++                        Desk root directory override; defaults to the active project desk
++  --store STORE         Store path used to resolve the target project root for the default desk
++  --repo REPO           Target a registered repository name in the ecosystem
++  --sender SENDER       Override the resolved sender identity with a registered project id
++  --pythonpath PYTHONPATH
++                        Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model
++  --list                List desk inbox notes
++  --show SHOW           Show one inbox note by filename, stem, or slug fragment
++  --ack ACK             Acknowledge one inbox note by filename, stem, or slug fragment
++  --limit LIMIT         Limit listed notes
++  --format {text,json,yaml}
++
++Deprecated: use `deskops message send|list|read|ack`.
++
++Examples:
++  deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
++  deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
++  deskops inbox --list --root .
++  deskops inbox --show 20260614-cli-help --root .
++  deskops inbox --ack 20260614-cli-help --root .
++
++--show/--ack selector: filename, stem, or slug fragment.
+diff --git a/tests/fixtures/golden/help/deskops_init.txt b/tests/fixtures/golden/help/deskops_init.txt
+new file mode 100644
+index 0000000..7494308
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_init.txt
+@@ -0,0 +1,7 @@
++usage: deskops init [-h] [path]
++
++positional arguments:
++  path        Target repository path
++
++options:
++  -h, --help  show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_list.txt b/tests/fixtures/golden/help/deskops_list.txt
+new file mode 100644
+index 0000000..69f6160
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list.txt
+@@ -0,0 +1,23 @@
++usage: deskops list [-h]
++                    {tasks,pills,rituals,boards,atoms,materializations,repositories,inbox-notes,faq-docs,steps} ...
++
++positional arguments:
++  {tasks,pills,rituals,boards,atoms,materializations,repositories,inbox-notes,faq-docs,steps}
++    tasks               List actionable tasks.
++    pills               List pills.
++    rituals             List rituals.
++    boards              List boards.
++    atoms               List atoms.
++    materializations    List materializations.
++    repositories        List repositories.
++    inbox-notes         List inbox-notes.
++    faq-docs            List faq-docs.
++    steps               List steps.
++
++options:
++  -h, --help            show this help message and exit
++
++Examples:
++  deskops list tasks --root .
++  deskops list pills --root .
++  deskops list atoms --root .
+diff --git a/tests/fixtures/golden/help/deskops_list_atoms.txt b/tests/fixtures/golden/help/deskops_list_atoms.txt
+new file mode 100644
+index 0000000..6ba8838
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_atoms.txt
+@@ -0,0 +1,10 @@
++usage: deskops list atoms [-h] [--root ROOT] [--axis-value AXIS_VALUE]
++                          [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --axis-value AXIS_VALUE
++                        Filter atoms by the configured atom_folder_axis
++                        namespace value (e.g. licitaciones).
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_boards.txt b/tests/fixtures/golden/help/deskops_list_boards.txt
+new file mode 100644
+index 0000000..9e29a89
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_boards.txt
+@@ -0,0 +1,6 @@
++usage: deskops list boards [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_faq-docs.txt b/tests/fixtures/golden/help/deskops_list_faq-docs.txt
+new file mode 100644
+index 0000000..8d64bbb
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_faq-docs.txt
+@@ -0,0 +1,6 @@
++usage: deskops list faq-docs [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_inbox-notes.txt b/tests/fixtures/golden/help/deskops_list_inbox-notes.txt
+new file mode 100644
+index 0000000..afb8797
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_inbox-notes.txt
+@@ -0,0 +1,6 @@
++usage: deskops list inbox-notes [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_materializations.txt b/tests/fixtures/golden/help/deskops_list_materializations.txt
+new file mode 100644
+index 0000000..a34aade
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_materializations.txt
+@@ -0,0 +1,6 @@
++usage: deskops list materializations [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_pills.txt b/tests/fixtures/golden/help/deskops_list_pills.txt
+new file mode 100644
+index 0000000..54d8aa9
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_pills.txt
+@@ -0,0 +1,6 @@
++usage: deskops list pills [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_repositories.txt b/tests/fixtures/golden/help/deskops_list_repositories.txt
+new file mode 100644
+index 0000000..3e6031d
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_repositories.txt
+@@ -0,0 +1,6 @@
++usage: deskops list repositories [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_rituals.txt b/tests/fixtures/golden/help/deskops_list_rituals.txt
+new file mode 100644
+index 0000000..ba76207
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_rituals.txt
+@@ -0,0 +1,6 @@
++usage: deskops list rituals [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_steps.txt b/tests/fixtures/golden/help/deskops_list_steps.txt
+new file mode 100644
+index 0000000..6657ddc
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_steps.txt
+@@ -0,0 +1,6 @@
++usage: deskops list steps [-h] [--root ROOT] [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_list_tasks.txt b/tests/fixtures/golden/help/deskops_list_tasks.txt
+new file mode 100644
+index 0000000..a2aee9b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_list_tasks.txt
+@@ -0,0 +1,9 @@
++usage: deskops list tasks [-h] [--root ROOT] [--include-repos]
++                          [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --include-repos       Also list tasks routed by registered sibling
++                        repositories' desk/tasks/Board.md files.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_materialize.txt b/tests/fixtures/golden/help/deskops_materialize.txt
+new file mode 100644
+index 0000000..dd0037c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_materialize.txt
+@@ -0,0 +1,6 @@
++usage: deskops materialize [-h] [--root ROOT] [--out OUT]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --out OUT    Output directory override; defaults to ~/.pi/agent/agents.
+diff --git a/tests/fixtures/golden/help/deskops_message.txt b/tests/fixtures/golden/help/deskops_message.txt
+new file mode 100644
+index 0000000..8dd9bba
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_message.txt
+@@ -0,0 +1,19 @@
++usage: deskops message [-h] {send,list,read,ack} ...
++
++positional arguments:
++  {send,list,read,ack}
++    send                Send a message to a project desk.
++    list                List received messages.
++    read                Read one received message.
++    ack                 Acknowledge one received message.
++
++options:
++  -h, --help            show this help message and exit
++
++Examples:
++  deskops message send "Need follow-up" --to sibling-repo --title "Follow-up"
++  deskops message list --root .
++  deskops message read 20260614-cli-help --root .
++  deskops message ack 20260614-cli-help --root .
++
++read/ack selector: filename, stem, or unique slug fragment.
+diff --git a/tests/fixtures/golden/help/deskops_message_ack.txt b/tests/fixtures/golden/help/deskops_message_ack.txt
+new file mode 100644
+index 0000000..330be9b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_message_ack.txt
+@@ -0,0 +1,22 @@
++usage: deskops message ack [-h] [--root ROOT] [--desk-root DESK_ROOT]
++                           [--store STORE] [--repo REPO]
++                           [--pythonpath PYTHONPATH]
++                           [--format {text,json,yaml}]
++                           selector
++
++positional arguments:
++  selector              Message filename, stem, or unique slug fragment
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Repository root whose desk/ holds the inbox
++  --desk-root DESK_ROOT
++                        Desk root directory override; defaults to the active
++                        project desk
++  --store STORE         Store path used to resolve the target project root for
++                        the default desk
++  --repo REPO           Target a registered repository name in the ecosystem
++  --pythonpath PYTHONPATH
++                        Project path used when auto-tracking messages through
++                        the registered model
++  --format {text,json,yaml}
+diff --git a/tests/fixtures/golden/help/deskops_message_list.txt b/tests/fixtures/golden/help/deskops_message_list.txt
+new file mode 100644
+index 0000000..1fbc7d2
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_message_list.txt
+@@ -0,0 +1,19 @@
++usage: deskops message list [-h] [--root ROOT] [--desk-root DESK_ROOT]
++                            [--store STORE] [--repo REPO]
++                            [--pythonpath PYTHONPATH]
++                            [--format {text,json,yaml}] [--limit LIMIT]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Repository root whose desk/ holds the inbox
++  --desk-root DESK_ROOT
++                        Desk root directory override; defaults to the active
++                        project desk
++  --store STORE         Store path used to resolve the target project root for
++                        the default desk
++  --repo REPO           Target a registered repository name in the ecosystem
++  --pythonpath PYTHONPATH
++                        Project path used when auto-tracking messages through
++                        the registered model
++  --format {text,json,yaml}
++  --limit LIMIT         Limit listed messages
+diff --git a/tests/fixtures/golden/help/deskops_message_read.txt b/tests/fixtures/golden/help/deskops_message_read.txt
+new file mode 100644
+index 0000000..5493167
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_message_read.txt
+@@ -0,0 +1,22 @@
++usage: deskops message read [-h] [--root ROOT] [--desk-root DESK_ROOT]
++                            [--store STORE] [--repo REPO]
++                            [--pythonpath PYTHONPATH]
++                            [--format {text,json,yaml}]
++                            selector
++
++positional arguments:
++  selector              Message filename, stem, or unique slug fragment
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Repository root whose desk/ holds the inbox
++  --desk-root DESK_ROOT
++                        Desk root directory override; defaults to the active
++                        project desk
++  --store STORE         Store path used to resolve the target project root for
++                        the default desk
++  --repo REPO           Target a registered repository name in the ecosystem
++  --pythonpath PYTHONPATH
++                        Project path used when auto-tracking messages through
++                        the registered model
++  --format {text,json,yaml}
+diff --git a/tests/fixtures/golden/help/deskops_message_send.txt b/tests/fixtures/golden/help/deskops_message_send.txt
+new file mode 100644
+index 0000000..8c92dfb
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_message_send.txt
+@@ -0,0 +1,28 @@
++usage: deskops message send [-h] [--title TITLE] [--kind {unclear,suggestion}]
++                            [--to REPO] [--from SENDER] [--root ROOT]
++                            [--desk-root DESK_ROOT] [--store STORE]
++                            [--pythonpath PYTHONPATH]
++                            [--format {text,json,yaml}]
++                            body
++
++positional arguments:
++  body                  Message body
++
++options:
++  -h, --help            show this help message and exit
++  --title TITLE         Short title for the message
++  --kind {unclear,suggestion}
++                        Type of message to send
++  --to REPO             Target a registered repository name in the ecosystem
++  --from SENDER         Override the resolved sender identity with a
++                        registered project id
++  --root ROOT           Repository root whose desk/ holds the inbox
++  --desk-root DESK_ROOT
++                        Desk root directory override; defaults to the active
++                        project desk
++  --store STORE         Store path used to resolve the target project root for
++                        the default desk
++  --pythonpath PYTHONPATH
++                        Project path used when auto-tracking messages through
++                        the registered model
++  --format {text,json,yaml}
+diff --git a/tests/fixtures/golden/help/deskops_next.txt b/tests/fixtures/golden/help/deskops_next.txt
+new file mode 100644
+index 0000000..ad29eed
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_next.txt
+@@ -0,0 +1,13 @@
++usage: deskops next [-h] [--root ROOT] [--diagram] [task_id]
++
++positional arguments:
++  task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
++  --diagram    Render the workflow state machine as Mermaid from its source spec.
++
++Examples:
++  deskops next task-fix-thing --root .
++  deskops next --diagram
+diff --git a/tests/fixtures/golden/help/deskops_promote.txt b/tests/fixtures/golden/help/deskops_promote.txt
+new file mode 100644
+index 0000000..2115ec3
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_promote.txt
+@@ -0,0 +1,14 @@
++usage: deskops promote [-h] {inbox-to-drawer-task} ...
++
++positional arguments:
++  {inbox-to-drawer-task}
++    inbox-to-drawer-task
++                        Promote one inbox note into a deferred drawer task candidate.
++
++options:
++  -h, --help            show this help message and exit
++
++Examples:
++  deskops promote inbox-to-drawer-task 20260614-unclear --root .
++
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_promote_inbox-to-drawer-task.txt b/tests/fixtures/golden/help/deskops_promote_inbox-to-drawer-task.txt
+new file mode 100644
+index 0000000..1e4d696
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_promote_inbox-to-drawer-task.txt
+@@ -0,0 +1,10 @@
++usage: deskops promote inbox-to-drawer-task [-h] [--root ROOT] [--title TITLE]
++                                            selector
++
++positional arguments:
++  selector       Inbox filename, stem, or unique slug fragment
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Target repository root
++  --title TITLE  Override the drawer task title
+diff --git a/tests/fixtures/golden/help/deskops_repo.txt b/tests/fixtures/golden/help/deskops_repo.txt
+new file mode 100644
+index 0000000..905bbbb
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_repo.txt
+@@ -0,0 +1,11 @@
++usage: deskops repo [-h] {register,whoami} ...
++
++positional arguments:
++  {register,whoami}
++    register         Canonically register a repository in the ecosystem
++                     registry and track it in SLDB.
++    whoami           Print the canonical project identity for the current
++                     repository.
++
++options:
++  -h, --help         show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_repo_register.txt b/tests/fixtures/golden/help/deskops_repo_register.txt
+new file mode 100644
+index 0000000..823735c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_repo_register.txt
+@@ -0,0 +1,24 @@
++usage: deskops repo register [-h] [--path PATH_OPTION] [--id ID]
++                             [--description DESCRIPTION] [--tags TAGS]
++                             [--store STORE] [--pythonpath PYTHONPATH]
++                             name [path]
++
++Canonically register a repository in the ecosystem registry and track it in
++SLDB.
++
++positional arguments:
++  name                  Human-readable name
++  path                  Repository root path (relative to ecosystem root or
++                        absolute)
++
++options:
++  -h, --help            show this help message and exit
++  --path PATH_OPTION    Repository root path (relative to ecosystem root or
++                        absolute)
++  --id ID               Stable unique ID, defaults to slugified name
++  --description DESCRIPTION
++                        Markdown description
++  --tags TAGS           Comma-separated tags
++  --store STORE         Store path to anchor the registry
++  --pythonpath PYTHONPATH
++                        Python path for model resolution
+diff --git a/tests/fixtures/golden/help/deskops_repo_whoami.txt b/tests/fixtures/golden/help/deskops_repo_whoami.txt
+new file mode 100644
+index 0000000..78d5e8b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_repo_whoami.txt
+@@ -0,0 +1,8 @@
++usage: deskops repo whoami [-h] [--root ROOT] [--store STORE]
++
++Print the canonical project identity for the current repository.
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Repository root to identify
++  --store STORE  Store path to anchor the registry lookup
+diff --git a/tests/fixtures/golden/help/deskops_runtime.txt b/tests/fixtures/golden/help/deskops_runtime.txt
+new file mode 100644
+index 0000000..99cf7a1
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime.txt
+@@ -0,0 +1,15 @@
++usage: deskops runtime [-h] {init,status,attach,stop,workers,supervise} ...
++
++positional arguments:
++  {init,status,attach,stop,workers,supervise}
++    init                Initialize or reuse this desk's Herdr Space.
++    status              Show this desk's Herdr Space.
++    attach              Focus this desk's Herdr Space.
++    stop                Close this desk's Herdr Space.
++    workers             List live Herdr agents across all workspaces on this
++                        machine.
++    supervise           Block on one agent's Herdr lifecycle and report
++                        blocked/done settles without advancing the desk.
++
++options:
++  -h, --help            show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_runtime_attach.txt b/tests/fixtures/golden/help/deskops_runtime_attach.txt
+new file mode 100644
+index 0000000..9e7346a
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime_attach.txt
+@@ -0,0 +1,6 @@
++usage: deskops runtime attach [-h] [--root ROOT] [--herdr HERDR]
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    DeskOps repository root.
++  --herdr HERDR  Herdr executable.
+diff --git a/tests/fixtures/golden/help/deskops_runtime_init.txt b/tests/fixtures/golden/help/deskops_runtime_init.txt
+new file mode 100644
+index 0000000..a6c3fe5
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime_init.txt
+@@ -0,0 +1,7 @@
++usage: deskops runtime init [-h] [--root ROOT] [--agents] [--herdr HERDR]
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    DeskOps repository root.
++  --agents       Start executor and tester Pi agents.
++  --herdr HERDR  Herdr executable.
+diff --git a/tests/fixtures/golden/help/deskops_runtime_status.txt b/tests/fixtures/golden/help/deskops_runtime_status.txt
+new file mode 100644
+index 0000000..24aa02d
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime_status.txt
+@@ -0,0 +1,6 @@
++usage: deskops runtime status [-h] [--root ROOT] [--herdr HERDR]
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    DeskOps repository root.
++  --herdr HERDR  Herdr executable.
+diff --git a/tests/fixtures/golden/help/deskops_runtime_stop.txt b/tests/fixtures/golden/help/deskops_runtime_stop.txt
+new file mode 100644
+index 0000000..55712e3
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime_stop.txt
+@@ -0,0 +1,6 @@
++usage: deskops runtime stop [-h] [--root ROOT] [--herdr HERDR]
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    DeskOps repository root.
++  --herdr HERDR  Herdr executable.
+diff --git a/tests/fixtures/golden/help/deskops_runtime_supervise.txt b/tests/fixtures/golden/help/deskops_runtime_supervise.txt
+new file mode 100644
+index 0000000..05d4b78
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime_supervise.txt
+@@ -0,0 +1,23 @@
++usage: deskops runtime supervise [-h] [--root ROOT] [--herdr HERDR]
++                                 [--max-iterations MAX_ITERATIONS]
++                                 [--read-lines READ_LINES]
++                                 [--timeout-ms TIMEOUT_MS]
++                                 agent
++
++positional arguments:
++  agent                 Herdr agent name or pane id to supervise, e.g.
++                        deskops-executor.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           DeskOps repository root.
++  --herdr HERDR         Herdr executable.
++  --max-iterations MAX_ITERATIONS
++                        Stop after this many settle events instead of running
++                        forever (mainly for testing).
++  --read-lines READ_LINES
++                        Terminal lines to capture from the agent on a blocked
++                        or done settle.
++  --timeout-ms TIMEOUT_MS
++                        Give up waiting after this many milliseconds per
++                        settle attempt (default: wait indefinitely).
+diff --git a/tests/fixtures/golden/help/deskops_runtime_workers.txt b/tests/fixtures/golden/help/deskops_runtime_workers.txt
+new file mode 100644
+index 0000000..0a8800b
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_runtime_workers.txt
+@@ -0,0 +1,8 @@
++usage: deskops runtime workers [-h] [--root ROOT] [--herdr HERDR]
++                               [--format {text,json}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           DeskOps repository root.
++  --herdr HERDR         Herdr executable.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show.txt b/tests/fixtures/golden/help/deskops_show.txt
+new file mode 100644
+index 0000000..a8d9b98
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show.txt
+@@ -0,0 +1,24 @@
++usage: deskops show [-h]
++                    {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step} ...
++
++positional arguments:
++  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
++    task                Show one actionable task by selector.
++    pill                Show one pill by selector.
++    ritual              Show one ritual by selector.
++    board               Show one board by selector.
++    atom                Show one atom by selector.
++    materialization     Show one materialization by selector.
++    repository          Show one repository by selector.
++    inbox-note          Show one inbox-note by selector.
++    faq-doc             Show one faq-doc by selector.
++    step                Show one step by selector.
++
++options:
++  -h, --help            show this help message and exit
++
++Examples:
++  deskops show task task-fix-thing --root .
++  deskops show pill pill-keep-layers-clean --root .
++
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_show_atom.txt b/tests/fixtures/golden/help/deskops_show_atom.txt
+new file mode 100644
+index 0000000..accf123
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_atom.txt
+@@ -0,0 +1,10 @@
++usage: deskops show atom [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Atom selector. Selectors accept an exact id, filename,
++                        stem, or unique slug fragment where supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_board.txt b/tests/fixtures/golden/help/deskops_show_board.txt
+new file mode 100644
+index 0000000..055c979
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_board.txt
+@@ -0,0 +1,11 @@
++usage: deskops show board [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Board selector. Selectors accept an exact id,
++                        filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_faq-doc.txt b/tests/fixtures/golden/help/deskops_show_faq-doc.txt
+new file mode 100644
+index 0000000..7c1ce6a
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_faq-doc.txt
+@@ -0,0 +1,11 @@
++usage: deskops show faq-doc [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Faq-doc selector. Selectors accept an exact id,
++                        filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_inbox-note.txt b/tests/fixtures/golden/help/deskops_show_inbox-note.txt
+new file mode 100644
+index 0000000..35d66f3
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_inbox-note.txt
+@@ -0,0 +1,12 @@
++usage: deskops show inbox-note [-h] [--root ROOT] [--format {text,json}]
++                               doc_id
++
++positional arguments:
++  doc_id                Inbox-note selector. Selectors accept an exact id,
++                        filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_materialization.txt b/tests/fixtures/golden/help/deskops_show_materialization.txt
+new file mode 100644
+index 0000000..292ad3c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_materialization.txt
+@@ -0,0 +1,12 @@
++usage: deskops show materialization [-h] [--root ROOT] [--format {text,json}]
++                                    doc_id
++
++positional arguments:
++  doc_id                Materialization selector. Selectors accept an exact
++                        id, filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_pill.txt b/tests/fixtures/golden/help/deskops_show_pill.txt
+new file mode 100644
+index 0000000..bfc6091
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_pill.txt
+@@ -0,0 +1,10 @@
++usage: deskops show pill [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Pill selector. Selectors accept an exact id, filename,
++                        stem, or unique slug fragment where supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_repository.txt b/tests/fixtures/golden/help/deskops_show_repository.txt
+new file mode 100644
+index 0000000..ff858e7
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_repository.txt
+@@ -0,0 +1,12 @@
++usage: deskops show repository [-h] [--root ROOT] [--format {text,json}]
++                               doc_id
++
++positional arguments:
++  doc_id                Repository selector. Selectors accept an exact id,
++                        filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_ritual.txt b/tests/fixtures/golden/help/deskops_show_ritual.txt
+new file mode 100644
+index 0000000..4d9447c
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_ritual.txt
+@@ -0,0 +1,11 @@
++usage: deskops show ritual [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Ritual selector. Selectors accept an exact id,
++                        filename, stem, or unique slug fragment where
++                        supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_step.txt b/tests/fixtures/golden/help/deskops_show_step.txt
+new file mode 100644
+index 0000000..9781de5
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_step.txt
+@@ -0,0 +1,10 @@
++usage: deskops show step [-h] [--root ROOT] [--format {text,json}] doc_id
++
++positional arguments:
++  doc_id                Step selector. Selectors accept an exact id, filename,
++                        stem, or unique slug fragment where supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
+diff --git a/tests/fixtures/golden/help/deskops_show_task.txt b/tests/fixtures/golden/help/deskops_show_task.txt
+new file mode 100644
+index 0000000..2431502
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_show_task.txt
+@@ -0,0 +1,14 @@
++usage: deskops show task [-h] [--root ROOT] [--format {text,json}] task_id
++
++positional arguments:
++  task_id               Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --format {text,json}  Output format.
++
++Example:
++  deskops show task task-fix-thing --root .
++
++Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+diff --git a/tests/fixtures/golden/help/deskops_status.txt b/tests/fixtures/golden/help/deskops_status.txt
+new file mode 100644
+index 0000000..999fcca
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_status.txt
+@@ -0,0 +1,5 @@
++usage: deskops status [-h] [--root ROOT]
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root.
+diff --git a/tests/fixtures/golden/run_index.jsonl b/tests/fixtures/golden/run_index.jsonl
+new file mode 100644
+index 0000000..c88bf22
+--- /dev/null
++++ b/tests/fixtures/golden/run_index.jsonl
+@@ -0,0 +1,2 @@
++{"commit": "<sha>", "run_dir": "runs/subagents/golden-run", "run_id": "run-golden-001", "session_sha256": 1111111111111111111111111111111111111111111111111111111111111111, "task_id": "task-golden-alpha"}
++{"commit": "<sha>", "mode": "manual", "run_dir": null, "run_id": null, "session_sha256": null, "task_id": "task-golden-beta"}
+diff --git a/tests/fixtures/golden/self_reflection_findings.json b/tests/fixtures/golden/self_reflection_findings.json
+new file mode 100644
+index 0000000..81a605b
+--- /dev/null
++++ b/tests/fixtures/golden/self_reflection_findings.json
+@@ -0,0 +1,45 @@
++{
++  "findings": [
++    {
++      "confidence": "medium",
++      "dedupe_key": "unlinked-source-files:source_file:deskops/golden_sample.py",
++      "duplicate_count": 0,
++      "kind": "unlinked_source_file",
++      "later_action": "issue_candidate",
++      "promotion_targets": [
++        "task",
++        "question"
++      ],
++      "provenance_locator": "node:source_file:deskops/golden_sample.py",
++      "provenance_path": "deskops/golden_sample.py",
++      "question_id": "unlinked-source-files",
++      "reason": "source file has no graph edge connecting it to a desk knowledge surface",
++      "role": null,
++      "source_id": "source_file:deskops/golden_sample.py",
++      "target_id": null
++    }
++  ],
++  "mutation_policy": "review_only_no_source_artifact_mutation",
++  "review_loop": {
++    "decision_storage": {
++      "allowed_statuses": [
++        "pending",
++        "accepted",
++        "rejected"
++      ],
++      "runtime_output_path": ".sldb/runtime/self_reflection_decisions.json",
++      "schema": "deskops_self_reflection_decisions_v1"
++    },
++    "promotion_paths": {
++      "atom": "accepted finding -> update or create an atom when the durable knowledge gap is understood",
++      "question": "accepted finding -> route a desk question when owner intent or source of truth is unclear",
++      "task": "accepted finding -> create or promote a desk task when remediation work is clear"
++    }
++  },
++  "runtime_only": true,
++  "schema": "deskops_self_reflection_report_v2",
++  "summary": {
++    "finding_count": 1,
++    "suppressed_duplicate_count": 0
++  }
++}
+diff --git a/tests/fixtures/golden_desk/desk/atoms/atom-golden-one.md b/tests/fixtures/golden_desk/desk/atoms/atom-golden-one.md
+new file mode 100644
+index 0000000..3b18c99
+--- /dev/null
++++ b/tests/fixtures/golden_desk/desk/atoms/atom-golden-one.md
+@@ -0,0 +1,14 @@
++---
++id: atom-golden-one
++title: Golden atom one
++five_wh_one_plus: what
++tags:
++- system:deskops
++- topic:golden
++---
++
++# Golden atom one
++
++## Answer
++
++The first golden atom describes a stable output contract.
+diff --git a/tests/fixtures/golden_desk/desk/atoms/atom-golden-two.md b/tests/fixtures/golden_desk/desk/atoms/atom-golden-two.md
+new file mode 100644
+index 0000000..8ce58a0
+--- /dev/null
++++ b/tests/fixtures/golden_desk/desk/atoms/atom-golden-two.md
+@@ -0,0 +1,14 @@
++---
++id: atom-golden-two
++title: Golden atom two
++five_wh_one_plus: how
++tags:
++- system:deskops
++- topic:golden
++---
++
++# Golden atom two
++
++## Answer
++
++The second golden atom describes a stable output contract.
+diff --git a/tests/fixtures/golden_desk/desk/contexts/pill-golden-rule.md b/tests/fixtures/golden_desk/desk/contexts/pill-golden-rule.md
+new file mode 100644
+index 0000000..e89c441
+--- /dev/null
++++ b/tests/fixtures/golden_desk/desk/contexts/pill-golden-rule.md
+@@ -0,0 +1,33 @@
++---
++id: pill-golden-rule
++tags:
++- system:deskops
++- pill-type:guardrail
++- topic:golden
++---
++
++# Guardrail: golden outputs stay stable
++
++## What
++
++Golden files pin output contracts.
++
++## Why
++
++Stable outputs keep sibling tools working.
++
++## When
++
++Apply when serialized output changes.
++
++## Where
++
++Applies to tests/fixtures/golden/.
++
++## How
++
++Compare normalized output against committed files.
++
++## How Not
++
++Do not edit a golden to match a regression.
+diff --git a/tests/fixtures/golden_desk/desk/drawer/tasks/task-golden-drawer.md b/tests/fixtures/golden_desk/desk/drawer/tasks/task-golden-drawer.md
+new file mode 100644
+index 0000000..d6215a5
+--- /dev/null
++++ b/tests/fixtures/golden_desk/desk/drawer/tasks/task-golden-drawer.md
+@@ -0,0 +1,46 @@
++---
++id: task-golden-drawer
++status: deferred
++summary: ''
++tags:
++- workspace:desk
++- artifact:task
++---
++
++# Golden drawer task
++
++## Rationale
++
++_Explain why this task exists or the business driver behind it._
++
++Drawer task used by the golden output tests.
++
++## Goal
++
++_Describe the concrete result this task must produce._
++
++Drawer goal.
++
++## Scope
++
++_State what is in scope and what is out of scope._
++
++Drawer scope.
++
++## Implementation Path
++
++_Outline the expected implementation route or affected surface._
++
++Drawer path.
++
++## Validation
++
++_List the checks required before this task can close._
++
++- pytest tests/test_output_goldens.py
++
++## Done When
++
++_Name the observable condition that makes the task complete._
++
++Drawer done.
+diff --git a/tests/fixtures/golden_desk/desk/tasks/task-golden-alpha.md b/tests/fixtures/golden_desk/desk/tasks/task-golden-alpha.md
+new file mode 100644
+index 0000000..bf4f44a
+--- /dev/null
++++ b/tests/fixtures/golden_desk/desk/tasks/task-golden-alpha.md
+@@ -0,0 +1,61 @@
++---
++id: task-golden-alpha
++status: draft
++summary: ''
++tags:
++- workspace:desk
++- artifact:task
++current_node: ritual-execution
++history: []
++references: []
++depends_on: []
++pills:
++- desk/contexts/pill-golden-rule.md
++files: []
++task_type: implementation
++inherits_from: []
++inherit_acceptance_context: false
++atoms: []
++---
++
++# Golden alpha task
++
++## Rationale
++
++_Explain why this task exists or the business driver behind it._
++
++Alpha task used by the golden output tests.
++
++## Goal
++
++_Describe the concrete result this task must produce._
++
++Alpha goal.
++
++## Scope
++
++_State what is in scope and what is out of scope._
++
++Alpha scope.
++
++## Related Atoms
++
++- atom-golden-one
++
++## Implementation Path
++
++_Outline the expected implementation route or affected surface._
++
++Alpha path.
++
++## Validation
++
++_List the checks required before this task can close._
++
++- pytest tests/test_output_goldens.py
++
++## Done When
++
++_Name the observable condition that makes the task complete._
++
++Alpha done.
+diff --git a/tests/fixtures/golden_desk/desk/tasks/task-golden-beta.md b/tests/fixtures/golden_desk/desk/tasks/task-golden-beta.md
+new file mode 100644
+index 0000000..c2db00b
+--- /dev/null
++++ b/tests/fixtures/golden_desk/desk/tasks/task-golden-beta.md
+@@ -0,0 +1,59 @@
++---
++id: task-golden-beta
++status: draft
++summary: ''
++tags:
++- workspace:desk
++- artifact:task
++current_node: ritual-execution
++history: []
++references:
++- atom-golden-two
++depends_on:
++- task-golden-alpha
++pills:
++- desk/contexts/pill-golden-rule.md
++files: []
++task_type: implementation
++inherits_from: []
++inherit_acceptance_context: false
++atoms: []
++---
++
++# Golden beta task
++
++## Rationale
++
++_Explain why this task exists or the business driver behind it._
++
++Beta task used by the golden output tests.
++
++## Goal
++
++_Describe the concrete result this task must produce._
++
++Beta goal.
++
++## Scope
++
++_State what is in scope and what is out of scope._
++
++Beta scope.
++
++## Implementation Path
++
++_Outline the expected implementation route or affected surface._
++
++Beta path.
++
++## Validation
++
++_List the checks required before this task can close._
++
++- pytest tests/test_output_goldens.py
++
++## Done When
++
++_Name the observable condition that makes the task complete._
++
++Beta done.
+diff --git a/tests/fixtures/golden_desk/deskops/golden_sample.py b/tests/fixtures/golden_desk/deskops/golden_sample.py
+new file mode 100644
+index 0000000..82acb4d
+--- /dev/null
++++ b/tests/fixtures/golden_desk/deskops/golden_sample.py
+@@ -0,0 +1,2 @@
++def golden_sample() -> str:
++    return "golden"
+diff --git a/tests/test_output_goldens.py b/tests/test_output_goldens.py
+new file mode 100644
+index 0000000..1841f21
+--- /dev/null
++++ b/tests/test_output_goldens.py
+@@ -0,0 +1,299 @@
++"""Golden files pin the machine-readable outputs other tools depend on.
++
++The fixture desk is copied into a throwaway git repository. The real CLI then
++builds the graph snapshot, writes the self-reflection report, and makes one
++closeout commit per route (run-linked and manual). Volatile values (root paths,
++timestamps, commit hashes) are normalized before comparison.
++
++Run ``pytest tests/test_output_goldens.py --update-golden`` to rewrite the
++committed goldens after an intentional output change.
++"""
++
++from __future__ import annotations
++
++import json
++import os
++import re
++import shutil
++import subprocess
++import sys
++from pathlib import Path
++from typing import Any
++
++import pytest
++
++
++TESTS_DIR = Path(__file__).resolve().parent
++REPO_ROOT = TESTS_DIR.parent
++FIXTURE_DESK = TESTS_DIR / "fixtures" / "golden_desk"
++GOLDEN_DIR = TESTS_DIR / "fixtures" / "golden"
++
++GRAPH_SNAPSHOT = Path(".sldb/runtime/graphs/deskops.kg.json")
++GRAPH_NETWORKX = Path(".sldb/runtime/graphs/deskops.nx.json")
++SELF_REFLECTION = Path(".sldb/runtime/self_reflection_findings.json")
++
++RUN_DIR = "runs/subagents/golden-run"
++RUN_ID = "run-golden-001"
++SESSION_SHA256 = "1" * 64
++
++POSITIONAL_ARGUMENT_RE = re.compile(r"^    (?P<name>\S+)(?:\s{2,}|$)")
++ISO_TIMESTAMP_RE = re.compile(
++    r"\b\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:?\d{2})?\b"
++)
++COMMIT_SHA_RE = re.compile(r"\b[0-9a-f]{40}\b")
++TRAILER_RE = re.compile(r"^(?P<key>[A-Z][A-Za-z0-9-]+): (?P<value>.+)$")
++
++
++def _env() -> dict[str, str]:
++    env = dict(os.environ)
++    env["COLUMNS"] = "80"
++    existing = env.get("PYTHONPATH")
++    env["PYTHONPATH"] = str(REPO_ROOT) + (os.pathsep + existing if existing else "")
++    return env
++
++
++def _cli(cwd: Path, *argv: str) -> subprocess.CompletedProcess[str]:
++    result = subprocess.run(
++        [sys.executable, "-m", "deskops", *argv],
++        cwd=cwd,
++        env=_env(),
++        capture_output=True,
++        text=True,
++    )
++    assert result.returncode == 0, f"deskops {' '.join(argv)} failed:\n{result.stdout}\n{result.stderr}"
++    return result
++
++
++def _git(cwd: Path, *argv: str) -> str:
++    result = subprocess.run(
++        ["git", *argv], cwd=cwd, capture_output=True, text=True, check=True
++    )
++    return result.stdout.strip()
++
++
++def _normalize_text(text: str, root: Path) -> str:
++    text = text.replace(str(root), "<root>")
++    text = ISO_TIMESTAMP_RE.sub("<ts>", text)
++    text = COMMIT_SHA_RE.sub("<sha>", text)
++    return text
++
++
++def _normalize_json(value: Any, root: Path) -> Any:
++    if isinstance(value, dict):
++        return {
++            key: "<sha>" if key == "commit" else _normalize_json(item, root)
++            for key, item in value.items()
++        }
++    if isinstance(value, list):
++        return [_normalize_json(item, root) for item in value]
++    if isinstance(value, str):
++        return _normalize_text(value, root)
++    return value
++
++
++def _json_document(value: Any, root: Path) -> str:
++    return json.dumps(_normalize_json(value, root), indent=2, sort_keys=True) + "\n"
++
++
++def _check_golden(relative_path: str, actual: str, request: pytest.FixtureRequest) -> None:
++    path = GOLDEN_DIR / relative_path
++    update = request.config.getoption("--update-golden")
++    if not actual.endswith("\n"):
++        actual += "\n"
++    if update:
++        path.parent.mkdir(parents=True, exist_ok=True)
++        path.write_text(actual, encoding="utf-8")
++        return
++    assert path.exists(), f"missing golden {path}; run pytest --update-golden"
++    assert actual == path.read_text(encoding="utf-8"), f"golden mismatch: {relative_path}"
++
++
++def _make_fixture_repo(destination: Path) -> Path:
++    root = destination / "repo"
++    shutil.copytree(FIXTURE_DESK, root)
++    _git(root, "init", "-q")
++    _git(root, "config", "user.email", "test@example.com")
++    _git(root, "config", "user.name", "Test")
++    _git(root, "commit", "--allow-empty", "-q", "-m", "seed")
++    return root
++
++
++def _write_run_evidence(root: Path) -> Path:
++    run_dir = root / RUN_DIR
++    run_dir.mkdir(parents=True)
++    for name in ("board.txt", "task.txt", "git-status.txt", "result-summary.md"):
++        (run_dir / name).write_text(f"{name} evidence\n", encoding="utf-8")
++    (run_dir / "run.yaml").write_text(
++        "\n".join(
++            [
++                f"run_id: {RUN_ID}",
++                f"session_sha256: {SESSION_SHA256}",
++                "touched:",
++                f"- {RUN_DIR}",
++                "",
++            ]
++        ),
++        encoding="utf-8",
++    )
++    return run_dir
++
++
++def _trailers(root: Path) -> dict[str, str]:
++    message = _git(root, "log", "-1", "--format=%B")
++    trailers: dict[str, str] = {}
++    for line in message.splitlines():
++        match = TRAILER_RE.match(line)
++        if match:
++            trailers[match.group("key")] = match.group("value")
++    return trailers
++
++
++@pytest.fixture(scope="module")
++def golden_outputs(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Any]:
++    root = _make_fixture_repo(tmp_path_factory.mktemp("golden-output"))
++
++    _cli(root, "graph", "build", "--root", str(root))
++    _cli(root, "graph", "reflect", "--root", str(root))
++
++    snapshot = json.loads((root / GRAPH_SNAPSHOT).read_text(encoding="utf-8"))
++    networkx = json.loads((root / GRAPH_NETWORKX).read_text(encoding="utf-8"))
++    self_reflection = json.loads((root / SELF_REFLECTION).read_text(encoding="utf-8"))
++
++    _write_run_evidence(root)
++    _cli(
++        root,
++        "closeout",
++        "commit",
++        "--root",
++        str(root),
++        "--task",
++        "task-golden-alpha",
++        "--run-dir",
++        RUN_DIR,
++    )
++    run_trailers = _trailers(root)
++
++    note = root / "notes" / "golden-note.txt"
++    note.parent.mkdir(parents=True)
++    note.write_text("manual closeout note\n", encoding="utf-8")
++    _cli(
++        root,
++        "closeout",
++        "commit",
++        "--root",
++        str(root),
++        "--task",
++        "task-golden-beta",
++        "--no-run",
++        "--reason",
++        "golden manual closeout",
++        "--paths",
++        "notes/golden-note.txt",
++    )
++    no_run_trailers = _trailers(root)
++
++    return {
++        "root": root,
++        "graph_snapshot": snapshot,
++        "graph_networkx": networkx,
++        "self_reflection": self_reflection,
++        "closeout_trailers": [
++            {"route": "run-dir", "trailers": run_trailers},
++            {"route": "no-run", "trailers": no_run_trailers},
++        ],
++    }
++
++
++def test_graph_snapshot_golden(
++    golden_outputs: dict[str, Any], request: pytest.FixtureRequest
++) -> None:
++    actual = _json_document(golden_outputs["graph_snapshot"], golden_outputs["root"])
++    _check_golden("graph_snapshot.kg.json", actual, request)
++
++
++def test_graph_networkx_golden(
++    golden_outputs: dict[str, Any], request: pytest.FixtureRequest
++) -> None:
++    actual = _json_document(golden_outputs["graph_networkx"], golden_outputs["root"])
++    _check_golden("graph_snapshot.nx.json", actual, request)
++
++
++def test_self_reflection_golden(
++    golden_outputs: dict[str, Any], request: pytest.FixtureRequest
++) -> None:
++    actual = _json_document(golden_outputs["self_reflection"], golden_outputs["root"])
++    _check_golden("self_reflection_findings.json", actual, request)
++
++
++def test_run_index_golden(
++    golden_outputs: dict[str, Any], request: pytest.FixtureRequest
++) -> None:
++    root = golden_outputs["root"]
++    index_path = root / "runs" / "subagents" / "index.jsonl"
++    entries = [
++        _normalize_json(json.loads(line), root)
++        for line in index_path.read_text(encoding="utf-8").splitlines()
++        if line.strip()
++    ]
++    actual = "".join(json.dumps(entry, sort_keys=True) + "\n" for entry in entries)
++    _check_golden("run_index.jsonl", actual, request)
++
++
++def test_closeout_trailers_golden(
++    golden_outputs: dict[str, Any], request: pytest.FixtureRequest
++) -> None:
++    actual = _json_document(golden_outputs["closeout_trailers"], golden_outputs["root"])
++    _check_golden("closeout_trailers.json", actual, request)
++
++
++def _positional_names(help_text: str) -> list[str]:
++    names: list[str] = []
++    in_positionals = False
++    for line in help_text.splitlines():
++        if line.strip() == "positional arguments:":
++            in_positionals = True
++            continue
++        if not in_positionals:
++            continue
++        if line and not line.startswith(" "):
++            break
++        match = POSITIONAL_ARGUMENT_RE.match(line)
++        if match:
++            names.append(match.group("name"))
++    return names
++
++
++def _help(prefix: list[str]) -> str:
++    result = _cli(REPO_ROOT, *prefix, "--help")
++    assert result.stdout.startswith("usage: deskops"), result.stdout
++    return result.stdout
++
++
++def _collect_help() -> dict[str, str]:
++    outputs: dict[str, str] = {}
++    pending: list[list[str]] = [[]]
++    while pending:
++        prefix = pending.pop(0)
++        name = "_".join(["deskops", *prefix])
++        text = _help(prefix)
++        outputs[f"help/{name}.txt"] = text
++        for candidate in _positional_names(text):
++            if candidate in {"-h", "--help"}:
++                continue
++            child = [*prefix, candidate]
++            result = _cli(REPO_ROOT, *child, "--help")
++            if result.stdout.startswith("usage: deskops"):
++                pending.append(child)
++    return outputs
++
++
++def test_help_goldens(request: pytest.FixtureRequest) -> None:
++    outputs = _collect_help()
++    update = request.config.getoption("--update-golden")
++    if update:
++        help_dir = GOLDEN_DIR / "help"
++        for stale in help_dir.glob("*.txt"):
++            if f"help/{stale.name}" not in outputs:
++                stale.unlink()
++    for relative_path, actual in sorted(outputs.items()):
++        _check_golden(relative_path, actual, request)

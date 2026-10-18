@@ -1,0 +1,40 @@
+ M .opencode/skills/use-deskops/SKILL.md
+ M .sldb/core/documents/TaskDoc/task-goldens-hold-across-sldb-extraction-and-python-versions.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/models/__init__.py
+ M desk/tasks/task-goldens-hold-across-sldb-extraction-and-python-versions.md
+ M deskops/cli/commands/desk.py
+ M deskops/cli/model_introspection.py
+ M deskops/cli/registry.py
+ M deskops/data/faq.md
+ M deskops/models/__init__.py
+ M deskops/models/faq.py
+ M deskops/operations.py
+ M docs/diagrams/process/current-agent-workflow-and-automation.md
+ M docs/diagrams/process/current-agent-workflow-and-automation.mmd
+ M docs/faq.md
+ M docs/quickstart.md
+ M tests/fixtures/golden/help/deskops.txt
+ M tests/fixtures/golden/output/list_pills.json
+ M tests/fixtures/golden/output/list_rituals.json
+ M tests/fixtures/golden/output/show_pill.json
+ M tests/fixtures/golden/output/show_pill.text
+ M tests/fixtures/model_contract_hashes.json
+ M tests/test_cli.py
+ M tests/test_command_registry.py
+ M tests/test_desk_sync.py
+ M tests/test_doc_readability.py
+ M tests/test_lifecycle_graph.py
+ M tests/test_model_templates.py
+ M tests/test_output_goldens.py
+?? deskops/cli/commands/issue.py
+?? deskops/services/issues.py
+?? runs/subagents/20261018-task-docs-teach-closeout-commit-as-the-only-close/
+?? runs/subagents/20261018-task-goldens-hold-across-sldb-extraction-and-python-versions/
+?? runs/subagents/20261018-task-issue-close-verb/
+?? runs/subagents/20261018-task-rename-deskops-faqdoc/
+?? tests/fixtures/golden/help/deskops_issue.txt
+?? tests/fixtures/golden/help/deskops_issue_close.txt
+?? tests/fixtures/golden/help/deskops_issue_list.txt
+?? tests/test_issue_cli.py
