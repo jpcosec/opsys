@@ -14,7 +14,6 @@ tasks:
 - desk/tasks/task-classify-large-docs-materialization.md
 - desk/tasks/task-derived-atom-trace-index.md
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
-- desk/tasks/task-guard-component-diagram-projection.md
 - desk/tasks/task-link-skill-surfaces-through-guard-tests.md
 - desk/tasks/task-next-guidance-without-active-task.md
 - desk/tasks/task-next-why-explanation.md
@@ -74,8 +73,6 @@ renaming any command.
 `extract_declared_edges`, plus a test proving that no atom document is mutated.
 - Detect and clean global policy leaks in task files [draft] - Add a review-only `task-policy-leak` finding to `deskops drift check`, then remove the current
 leak from the active task set without changing any global policy text.
-- Guard the SLDB components diagram projection [draft] - Add a focused test that the rendered Markdown block equals the `.mmd` source for the components
-diagram, and fix the block from the source if the test fails.
 - Link skill surfaces through atom-linked drift guard tests [draft] - Accept a changed skill file as linked only when a tracked test that reads that skill tree is itself
 linked to an atom or materialization, and emit evidence naming both the guard test and the skill
 path.

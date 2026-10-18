@@ -1,0 +1,6 @@
+ M .sldb/core/documents/TaskDoc/task-guard-component-diagram-projection.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-guard-component-diagram-projection.md
+?? runs/subagents/20261018-task-guard-component-diagram-projection/
+?? tests/test_diagram_projections.py
