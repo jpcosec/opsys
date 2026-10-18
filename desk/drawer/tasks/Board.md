@@ -53,7 +53,6 @@ F3:
 
 F4:
 
-- `task-rw-f4-single-snapshot-reader` — One reader for the graph snapshot
 - `task-rw-f4-coverage-extractor-decision` — Keep the coverage extractor as an optional report or delete it
 
 F5:

@@ -1,6 +1,12 @@
 ---
 id: task-rw-f4-single-snapshot-reader
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f4-graph-on-sldb-edge-index
@@ -17,13 +23,10 @@ files:
 - tests/test_graph_checks.py
 - tests/test_graph_self_reflection.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f4
-- topic:graph
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f4-single-snapshot-reader.md
 ---
 
 # One reader for the graph snapshot
