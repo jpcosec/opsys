@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -92,3 +92,9 @@ Define a repeatable self-reflection ritual or command that reviews recent work, 
 - atom-self-reflection-is-a-feedback-loop
 - atom-drift-checks-compare-atoms-materializations-implementation
 - atom-promotion-needs-explicit-criteria
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: 'deskops drift check' reporta hallazgos de superficies de conocimiento y closeout tiene gates de conocimiento.
+Refs: b18e950, 5bd2304

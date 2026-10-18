@@ -6,7 +6,7 @@ issue
 
 ## Status
 
-open
+closed
 
 ## Evidence
 
@@ -37,3 +37,9 @@ current failure mode.
 
 Minor: not a documented-path failure, but per pill-cli-gaps-become-tracked-work
 it is routed here instead of staying in session memory.
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: ensure_target_directory da el error claro aceptado en el issue y lo usa 'deskops desk install'.
+Refs: deskops/workspace.py

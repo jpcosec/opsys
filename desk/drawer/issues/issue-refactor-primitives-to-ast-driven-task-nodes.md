@@ -10,7 +10,7 @@ architecture
 
 ## Status
 
-open (blocked on sldb upstream)
+closed
 
 ## Problem
 
@@ -35,3 +35,9 @@ Once the `sldb` core repository implements AST-driven templates, decoupled field
 
 - atom-primitives-encode-operational-rules
 - atom-deskops-owns-workflow-not-document-infrastructure
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Obsoleto: las primitives y routines se retiraron; el ciclo de vida vive en el grafo de rituales del store.
+Refs: a0e00e3, deskops/lifecycle.py

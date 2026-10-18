@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -89,3 +89,9 @@ That document should make it possible to answer, without heuristics:
 
 - atom-deskops
 - atom-deskops-models-are-sldb-documents
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: una sola ruta de identidad (deskops/identity.py) y repo register rechaza ids y raíces duplicadas.
+Refs: 9899f8f, deskops/identity.py

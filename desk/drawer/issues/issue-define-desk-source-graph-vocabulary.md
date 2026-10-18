@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -98,3 +98,9 @@ Build a deskops adapter that emits a KGDB `GraphSnapshot` from desk docs, specs,
 - atom-kgdb-is-graph-substrate-not-reasoner
 - atom-networkx-is-first-graph-runtime
 - atom-source-file-relations-make-knowledge-actionable
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: vocabulario definido en docs/knowledge-graph/desk-source-graph-vocabulary.md, con extractores en deskops/graph/.
+Refs: 4ec06ab, docs/knowledge-graph/desk-source-graph-vocabulary.md

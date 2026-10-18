@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -74,3 +74,9 @@ Provide a deskops command or helper that writes a structured inbox note to the o
 ### Clarify inbox model for inter-project communication
 
 I currently understand the deskops inbox only partially for inter-project communication. From the visible CLI/help, inbox appears to be a structured message intake surface for cross-project requests, clarifications, suggestions, and handoff-like communication, with  likely moving inbox material into more formal workflow artifacts. However, the intended inter-project communication model is still not explicit enough. Please document: (1) when to use Provide a message or use --list/--show. vs ; (2) expected conventions for sender/receiver projects; (3) how inbox items should be phrased for actionability; (4) the lifecycle from inbox -> promote -> task/pill/doc or closure; (5) how to distinguish local notes from true inter-project messages; and (6) examples of good inbox hygiene for cross-project coordination.
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: transporte 'deskops message send|list|read|ack' con sender/target/kind/status/ack en InboxNoteDoc.
+Refs: a8ecad6, deskops/models/inbox.py

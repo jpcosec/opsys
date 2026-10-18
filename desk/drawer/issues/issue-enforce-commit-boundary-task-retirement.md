@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -39,3 +39,9 @@ Only after this boundary is secured should the task be removed from active plann
 
 - atom-every-change-needs-descriptive-commit
 - atom-code-changes-close-with-tests-and-commit
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: 'deskops closeout commit' es el único cierre y hace el commit atómico; advance no cierra.
+Refs: a0e00e3, desk/rituals/closeout.md

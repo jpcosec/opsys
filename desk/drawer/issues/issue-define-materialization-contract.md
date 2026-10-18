@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -72,3 +72,9 @@ Before closeout, classify the current worktree into explanatory slices such as f
 - atom-large-worktree-changes-need-explanatory-slices
 - atom-git-is-explanatory-surface-for-changes
 - atom-closeout-validates-knowledge-surfaces
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: MaterializationContractDoc (source_atoms, target_kind, target_identity, validation) y 'deskops add materialization'.
+Refs: af89a89, deskops/models/materialization.py

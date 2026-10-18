@@ -2,7 +2,7 @@
 
 ## Status
 
-open
+closed
 
 ## Issue
 
@@ -62,3 +62,9 @@ Remove stale atom assumptions and ensure the durable atom surface is only `desk/
 - system:deskops
 - topic:atoms
 - topic:migration
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: docs/atoms.md documenta add atom, five_wh_one_plus, namespaces y el eje de carpetas.
+Refs: a0afaea, docs/atoms.md

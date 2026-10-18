@@ -6,7 +6,7 @@ bug
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -38,3 +38,9 @@ command and the subject, before any document lookup happens.
 
 Stress-test round 3; still reproducible as of 2026-09-24. Roadmap item H3 in
 `issue-stress-test-fix-backlog.md`.
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: los selectores vacíos se rechazan antes de buscar.
+Refs: d42a3e3

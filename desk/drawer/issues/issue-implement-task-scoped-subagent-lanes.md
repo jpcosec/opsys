@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -155,3 +155,9 @@ If `tmux` is used in this repo, it should launch or monitor commands such as:
 - repo inspection commands like `git status` or `deskops show ...`
 
 It should not be embedded into the ETM workflow implementation itself.
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Duplicado: el mismo entregable es desk/drawer/tasks/task-adhoc-subagent-launcher-tmux-multi-cli.md.
+Refs: desk/drawer/tasks/task-adhoc-subagent-launcher-tmux-multi-cli.md

@@ -6,7 +6,7 @@ backlog
 
 ## Status
 
-open
+closed
 
 ## Where this comes from
 
@@ -163,3 +163,9 @@ Día 4: Fase 2 items 17-18-20-21 (8h)
 Día 5: Fase 3 resto + Fase 4 items 31-32 (advance task) (11.5h)
        = 40h
 ```
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Cerrado: 7 de 8 ítems de la fase 0 están arreglados y el ítem confirmado restante (selector vacío) se arregló en d42a3e3; la cola sin verificar apunta a primitives y conceptos retirados.
+Refs: d42a3e3

@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -73,3 +73,9 @@ Define a small promotion policy for common moves: inbox to drawer, inbox to task
 - atom-raw-signals-need-distillation-before-formalization
 - atom-promotion-needs-explicit-criteria
 - atom-available-tasks-are-board-routed-work
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: docs/workflow-policy-reference.md define pills -> atoms -> docs y el ritual de closeout exige la graduación de pills.
+Refs: docs/workflow-policy-reference.md, desk/rituals/closeout.md

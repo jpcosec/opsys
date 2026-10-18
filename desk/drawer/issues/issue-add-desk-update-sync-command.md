@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -43,3 +43,9 @@ Possible command shapes:
 
 - atom-deskops
 - atom-phase-gates-prevent-agent-skipping
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Resuelto: 'deskops desk update' reporta la divergencia en seco y repara con --apply; doctor lo propone.
+Refs: bba5a47, deskops/cli/commands/desk.py
