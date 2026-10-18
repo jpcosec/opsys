@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-task-selectors-resolve-tracked-legacy-filenames.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Task selectors also resolve tracked tasks whose file name predates `task-*` [draft] - When the `task-*.md` pattern finds nothing, task selectors fall back to the TaskDoc files tracked in the repo's `.sldb` under desk/tasks, with the same exact-then-unique-prefix rule.

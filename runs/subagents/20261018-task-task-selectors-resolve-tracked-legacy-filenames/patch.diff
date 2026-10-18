@@ -1,0 +1,142 @@
+diff --git a/deskops/desk_paths.py b/deskops/desk_paths.py
+index 0f33685..4bce800 100644
+--- a/deskops/desk_paths.py
++++ b/deskops/desk_paths.py
+@@ -7,6 +7,7 @@ itself never depends on artifact-specific layout.
+ 
+ from __future__ import annotations
+ 
++from collections.abc import Callable
+ from pathlib import Path
+ 
+ 
+@@ -27,12 +28,14 @@ def resolve_selector(
+     pattern: str,
+     what: str,
+     recursive: bool,
++    keep: Callable[[Path], bool] | None = None,
+ ) -> Path:
+     """Resolve `selector` against `pattern` inside `directories`.
+ 
+     Tier 1 accepts a file whose name or stem equals the selector. Tier 2
+     accepts a unique file whose name or stem starts with it. Zero matches raise
+-    FileNotFoundError; more than one raise ValueError.
++    FileNotFoundError; more than one raise ValueError. `keep`, when given,
++    drops candidates before either tier runs.
+     """
+     if not selector or not str(selector).strip():
+         raise ValueError(f"Empty or whitespace-only selector provided for {what}")
+@@ -44,6 +47,8 @@ def resolve_selector(
+         matches = directory.rglob(pattern) if recursive else directory.glob(pattern)
+         candidates.extend(sorted(matches))
+     candidates = sorted(dict.fromkeys(candidates))
++    if keep is not None:
++        candidates = [path for path in candidates if keep(path)]
+ 
+     exact = [path for path in candidates if selector in {path.name, path.stem}]
+     if len(exact) == 1:
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 2585059..2e32996 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -968,15 +968,44 @@ class DeskopsOperations:
+         )
+ 
+     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
++        try:
++            return resolve_selector(
++                self.desk_root,
++                [directory],
++                selector,
++                self._artifact_glob_pattern(artifact_id),
++                artifact_id,
++                recursive=True,
++            )
++        except FileNotFoundError:
++            tracked = self._tracked_task_paths() if artifact_id == "artifact.task" else set()
++            if not tracked:
++                raise
++        # Tasks written before the `task-*` naming are still tracked TaskDocs.
+         return resolve_selector(
+             self.desk_root,
+             [directory],
+             selector,
+-            self._artifact_glob_pattern(artifact_id),
++            "*.md",
+             artifact_id,
+             recursive=True,
++            keep=lambda path: path.resolve() in tracked,
+         )
+ 
++    def _tracked_task_paths(self) -> set[Path]:
++        records = self.root / ".sldb" / "core" / "documents" / "TaskDoc"
++        if not records.is_dir():
++            return set()
++        tracked = set()
++        for record in records.glob("*.yaml"):
++            try:
++                path = (yaml.safe_load(record.read_text(encoding="utf-8")) or {}).get("path")
++            except (OSError, yaml.YAMLError):
++                continue
++            if path:
++                tracked.add((self.root / path).resolve())
++        return tracked
++
+     def _registered_repositories(self) -> list[dict[str, Any]]:
+         registry_dir = self.desk_root / "registry"
+         if not registry_dir.exists():
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 74f8068..71af867 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -1036,6 +1036,50 @@ def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
+     assert (tmp_path / "desk" / "tasks" / "task-json-task.md").exists()
+ 
+ 
++def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, capsys) -> None:
++    assert main(["init", str(tmp_path)]) == 0
++    created = main(
++        [
++            "add",
++            "task",
++            "--root",
++            str(tmp_path),
++            "--title",
++            "Legacy task",
++            "--goal",
++            "Original goal.",
++            "--scope",
++            "Original scope.",
++            "--implementation-path",
++            "Original path.",
++            "--done-when",
++            "Original done when.",
++        ]
++    )
++    assert created == 0
++    # Simulate a task written before the `task-*` naming: same tracked document, older file name.
++    tasks = tmp_path / "desk" / "tasks"
++    (tasks / "task-legacy-task.md").rename(tasks / "001-legacy-task.md")
++    record = tmp_path / ".sldb" / "core" / "documents" / "TaskDoc" / "task-legacy-task.yaml"
++    record.write_text(
++        record.read_text(encoding="utf-8").replace(
++            "path: desk/tasks/task-legacy-task.md", "path: desk/tasks/001-legacy-task.md"
++        ),
++        encoding="utf-8",
++    )
++    (tasks / "notes.md").write_text("# Not a task\n", encoding="utf-8")
++    capsys.readouterr()
++
++    edited = main(["edit", "task", "001-legacy-task", "goal", "Edited goal.", "--root", str(tmp_path)])
++    capsys.readouterr()
++    untracked = main(["edit", "task", "notes", "goal", "Nope.", "--root", str(tmp_path)])
++    capsys.readouterr()
++
++    assert edited == 0
++    assert "Edited goal." in (tasks / "001-legacy-task.md").read_text(encoding="utf-8")
++    assert untracked != 0
++
++
+ def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
+     created = main(
+         [

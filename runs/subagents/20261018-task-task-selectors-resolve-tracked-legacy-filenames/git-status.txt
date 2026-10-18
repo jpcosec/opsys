@@ -1,0 +1,8 @@
+ M .sldb/core/documents/TaskDoc/task-task-selectors-resolve-tracked-legacy-filenames.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-task-selectors-resolve-tracked-legacy-filenames.md
+ M deskops/desk_paths.py
+ M deskops/operations.py
+ M tests/test_cli.py
+?? runs/subagents/20261018-task-task-selectors-resolve-tracked-legacy-filenames/

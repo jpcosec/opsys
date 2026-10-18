@@ -7,6 +7,7 @@ itself never depends on artifact-specific layout.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from pathlib import Path
 
 
@@ -27,12 +28,14 @@ def resolve_selector(
     pattern: str,
     what: str,
     recursive: bool,
+    keep: Callable[[Path], bool] | None = None,
 ) -> Path:
     """Resolve `selector` against `pattern` inside `directories`.
 
     Tier 1 accepts a file whose name or stem equals the selector. Tier 2
     accepts a unique file whose name or stem starts with it. Zero matches raise
-    FileNotFoundError; more than one raise ValueError.
+    FileNotFoundError; more than one raise ValueError. `keep`, when given,
+    drops candidates before either tier runs.
     """
     if not selector or not str(selector).strip():
         raise ValueError(f"Empty or whitespace-only selector provided for {what}")
@@ -44,6 +47,8 @@ def resolve_selector(
         matches = directory.rglob(pattern) if recursive else directory.glob(pattern)
         candidates.extend(sorted(matches))
     candidates = sorted(dict.fromkeys(candidates))
+    if keep is not None:
+        candidates = [path for path in candidates if keep(path)]
 
     exact = [path for path in candidates if selector in {path.name, path.stem}]
     if len(exact) == 1:

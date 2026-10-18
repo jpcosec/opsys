@@ -1036,6 +1036,50 @@ def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
     assert (tmp_path / "desk" / "tasks" / "task-json-task.md").exists()
 
 
+def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, capsys) -> None:
+    assert main(["init", str(tmp_path)]) == 0
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Legacy task",
+            "--goal",
+            "Original goal.",
+            "--scope",
+            "Original scope.",
+            "--implementation-path",
+            "Original path.",
+            "--done-when",
+            "Original done when.",
+        ]
+    )
+    assert created == 0
+    # Simulate a task written before the `task-*` naming: same tracked document, older file name.
+    tasks = tmp_path / "desk" / "tasks"
+    (tasks / "task-legacy-task.md").rename(tasks / "001-legacy-task.md")
+    record = tmp_path / ".sldb" / "core" / "documents" / "TaskDoc" / "task-legacy-task.yaml"
+    record.write_text(
+        record.read_text(encoding="utf-8").replace(
+            "path: desk/tasks/task-legacy-task.md", "path: desk/tasks/001-legacy-task.md"
+        ),
+        encoding="utf-8",
+    )
+    (tasks / "notes.md").write_text("# Not a task\n", encoding="utf-8")
+    capsys.readouterr()
+
+    edited = main(["edit", "task", "001-legacy-task", "goal", "Edited goal.", "--root", str(tmp_path)])
+    capsys.readouterr()
+    untracked = main(["edit", "task", "notes", "goal", "Nope.", "--root", str(tmp_path)])
+    capsys.readouterr()
+
+    assert edited == 0
+    assert "Edited goal." in (tasks / "001-legacy-task.md").read_text(encoding="utf-8")
+    assert untracked != 0
+
+
 def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
     created = main(
         [

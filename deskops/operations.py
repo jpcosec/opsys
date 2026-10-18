@@ -968,14 +968,43 @@ class DeskopsOperations:
         )
 
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
+        try:
+            return resolve_selector(
+                self.desk_root,
+                [directory],
+                selector,
+                self._artifact_glob_pattern(artifact_id),
+                artifact_id,
+                recursive=True,
+            )
+        except FileNotFoundError:
+            tracked = self._tracked_task_paths() if artifact_id == "artifact.task" else set()
+            if not tracked:
+                raise
+        # Tasks written before the `task-*` naming are still tracked TaskDocs.
         return resolve_selector(
             self.desk_root,
             [directory],
             selector,
-            self._artifact_glob_pattern(artifact_id),
+            "*.md",
             artifact_id,
             recursive=True,
+            keep=lambda path: path.resolve() in tracked,
         )
+
+    def _tracked_task_paths(self) -> set[Path]:
+        records = self.root / ".sldb" / "core" / "documents" / "TaskDoc"
+        if not records.is_dir():
+            return set()
+        tracked = set()
+        for record in records.glob("*.yaml"):
+            try:
+                path = (yaml.safe_load(record.read_text(encoding="utf-8")) or {}).get("path")
+            except (OSError, yaml.YAMLError):
+                continue
+            if path:
+                tracked.add((self.root / path).resolve())
+        return tracked
 
     def _registered_repositories(self) -> list[dict[str, Any]]:
         registry_dir = self.desk_root / "registry"
