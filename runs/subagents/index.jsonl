@@ -40,3 +40,4 @@
 {"task_id": "task-desk-update-archives-rituals-the-model-cannot-carry", "run_id": null, "run_dir": "runs/subagents/20261018-task-desk-update-archives-rituals-the-model-cannot-carry", "session_sha256": null, "commit": "fb86e335077550df5c94f52e30ef917f9af8e714"}
 {"task_id": "task-rw-f6-apply-store-migration", "run_id": null, "run_dir": "runs/subagents/20261018-task-rw-f6-apply-store-migration", "session_sha256": null, "commit": "05c42883f82596533d4c5065df3887bb05caeece"}
 {"task_id": "task-registry-registers-graph-ui-and-fixes-the-sldb-path", "run_id": null, "run_dir": "runs/subagents/20261018-task-registry-registers-graph-ui-and-fixes-the-sldb-path", "session_sha256": null, "commit": "3ca567646169b08dfd9bb6a9e4d3cf2c4f8ddb29"}
+{"task_id": "task-promote-writes-drawer-tasks-as-taskdoc", "run_id": null, "run_dir": "runs/subagents/20261018-task-promote-writes-drawer-tasks-as-taskdoc", "session_sha256": null, "commit": "25c0149b8c997082ceed86a86b04950b37d498bc"}
