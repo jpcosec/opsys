@@ -6,7 +6,7 @@ issue
 
 ## Status
 
-open
+closed
 
 ## Evidence
 
@@ -96,3 +96,9 @@ The repair scripts and the pre-change task backups are kept outside the repos at
 Items 1 and 3 need a decision, not a repair: whether those repos get remotes,
 and where `pills.md` indexes should live relative to the modeled `contexts/`
 directory. Item 4 should stay untouched until the owning domain is identified.
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Fuera del alcance de SLDB_1, por decisión del coordinador del 2026-10-18. Los 9 desks externos pendientes y su estado quedan documentados arriba, en Pending. La migración de ciclo de vida de 2026-10-18 (05c4288, runs/planning/store-migration-20261018.md) además migró hum-core y hum-scrapper y dejó notas en el inbox de los repos cuyos datos no calzan. Retomar cada desk como trabajo de su propio dueño.
+Refs: 05c4288, runs/planning/store-migration-20261018.md
