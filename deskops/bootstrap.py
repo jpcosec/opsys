@@ -10,6 +10,8 @@ import subprocess
 import sys
 from typing import Any
 
+from deskops import doc_io
+
 
 DESKOPS_STORE_LINK = "deskops"
 
@@ -147,9 +149,7 @@ class SLDBBootstrap:
                 idx = load_store_index(store_path)
                 if any(link.name == DESKOPS_STORE_LINK for link in idx.stores):
                     return False
-                from sldb.api import link_store
-
-                link_store(store_path, owner, DESKOPS_STORE_LINK)
+                doc_io.link_store_alias(store_path.parent, owner, DESKOPS_STORE_LINK)
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -170,10 +170,8 @@ class SLDBBootstrap:
     def _inherit_model(self, model_name: str, store_path: Path) -> None:
         ref = f"{DESKOPS_STORE_LINK}:{model_name}"
         if self._sldb_importable():
-            from sldb.api import inherit_model
-
             try:
-                inherit_model(store_path, ref, pythonpath=self.default_pythonpath())
+                doc_io.inherit_model_from(store_path.parent, ref, pythonpath=self.default_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -189,10 +187,8 @@ class SLDBBootstrap:
 
     def _init_relations(self, store_path: Path) -> None:
         if self._sldb_importable():
-            from sldb.api import init_relations
-
             try:
-                init_relations(store_path, pythonpath=self.default_pythonpath())
+                doc_io.init_relations_in(store_path.parent, pythonpath=self.default_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -207,10 +203,8 @@ class SLDBBootstrap:
 
     def _update_store_indexes(self, store_path: Path) -> None:
         if self._sldb_importable():
-            from sldb.api import update_store_indexes
-
             try:
-                update_store_indexes(store_path, self.default_pythonpath())
+                doc_io.update_store_indexes_in(store_path.parent, pythonpath=self.default_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -221,9 +215,8 @@ class SLDBBootstrap:
 
     def _init_store(self, target_path: Path) -> None:
         if self._sldb_importable():
-            from sldb.api.stores.init_store import init_store
             try:
-                init_store(path=target_path)
+                doc_io.init_store_at(target_path)
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:

@@ -40,7 +40,7 @@ Applies to `deskops/operations.py` create methods: `create_artifact`, `create_ta
 
 _Describe the correct way to apply this guidance._
 
-Use a reusable `_with_rollback(write_fn, cleanup_fn)` utility that captures the written path before the write, catches any exception after the write, and runs cleanup. For multi-step creates (task bundle), track every written path and board mutation in a list and iterate cleanup in reverse.
+Use `deskops.doc_io.DocTransaction(root)`: it records each path's original bytes and tracked state before acting and restores both on failure. Wrap the whole create in one `with DocTransaction(self.root):`; inner `with` blocks join that transaction, so `create_task_bundle` and the `_write_doc` calls it makes roll back as one unit. Open the transaction around any multi-step create (task bundle, split, merge) instead of tracking rollback actions per method.
 
 ## How Not
 

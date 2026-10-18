@@ -21,6 +21,8 @@ from typing import Any
 import yaml
 from sldb.runtime.validation import render_model_markdown
 
+from deskops import doc_io
+
 SPEC_PATH = Path(__file__).resolve().parents[1] / "spec" / "workflows" / "task_lifecycle.yaml"
 LIFECYCLE_DIR = Path("desk") / "lifecycle"
 COMPLETE = "complete"
@@ -194,9 +196,7 @@ def _doc_tracked(root: Path, model: str, name: str) -> bool:
 
 
 def _track(root: Path, model: str, path: Path, name: str) -> None:
-    from sldb.api import track_document_file
-
-    track_document_file(_store(root), model, path, name=name, pythonpath=_pythonpath())
+    doc_io.track(root, path, model, name=name, pythonpath=_pythonpath(), force=False)
 
 
 def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
@@ -248,16 +248,14 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
     ids, and writes plus tracks one RelationTypeDoc and one RelationDoc per transition
     under desk/lifecycle/. Existing documents are left as they are.
     """
-    from sldb.api import init_relations
     from sldb.models.relation_doc import RelationDoc
     from sldb.models.relation_type_doc import RelationTypeDoc
 
     root = root.resolve()
     spec = spec or load_lifecycle_spec()
     changes: list[str] = []
-    init_relations(_store(root), pythonpath=_pythonpath())
+    doc_io.init_relations_in(root, pythonpath=_pythonpath())
 
-    from sldb.api import untrack_document
     from sldb.api import doc_status
 
     pending_rituals: list[tuple[str, Path, str]] = []
@@ -277,7 +275,7 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
         if current.exists and current.name != ritual_id:
             # `desk update` tracks surface documents by file stem; the graph names a
             # ritual by its id, so the ritual is re-tracked under that id.
-            untrack_document(_store(root), relative, pythonpath=_pythonpath())
+            doc_io.untrack(root, root / relative, pythonpath=_pythonpath())
             changes.append(f"untracked {relative} (was {current.model}:{current.name})")
         _track(root, RITUAL_MODEL, path, ritual_id)
         changes.append(f"tracked {relative} as {ritual_export_id(ritual_id)}")

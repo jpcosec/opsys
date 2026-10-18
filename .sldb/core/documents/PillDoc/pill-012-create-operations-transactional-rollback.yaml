@@ -1,7 +1,7 @@
 name: pill-012-create-operations-transactional-rollback
 path: desk/contexts/pill-012-create-operations-transactional-rollback.md
-source_hash: 0c2618ea2d1ca48c27fbfb46bd627e5091ee323e614c35dd1e4b2790f9e3c0d9
-content_hash: 9902fb1e565d6c0f81be7f4d15f27dcdfa0dc5d500d91785c3aea0f11b1a6499
+source_hash: 9bcec39c2a011cd217c5ce8a7b85f148bea56b2493d0212506ae4f5326e8258c
+content_hash: 05f89b5c6b7bd2447d9160b1234a7a681da9a5a7fe6a27a8b4040cc2a9277754
 field_hashes:
   title: fbed5195d0ee555663dc414f93a26b867453938c6a41455b1038bc5322d534c3
   id: f39f587e8afaeacb0a823e453f6fc9f619823a9b80ea9711c3d2f1e002d93143
@@ -10,7 +10,7 @@ field_hashes:
   why: 1f589ab9724b4580c6d3cc40acb0c9fb1456b7f9fbe3b4b16e943d49b5efb488
   when: 2a500a1b79b7549773a76cb9258c7651cfb46447e40a16adcc134e9bb9daf711
   where: da6e7f5c0dea5955f9150f60510c298473c77fb26f900b51440e170595634966
-  how: 4ddd32e595e0c7f3ad15899202d2cb8680173e763f9befa9e8a3b52d9e1b80d8
+  how: 3a7e17620e3c2b6771a3b5a781bffbd6ca4e9130e3bf335177ae144341c99919
   how_not: ad4c5e0b5757b6400ae35d4463ac62a8bf8141062fae775a4d96778d39ef0f08
 semantic_tags:
 - pill-type:guardrail

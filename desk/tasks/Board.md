@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f2-transactional-doc-io.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- One doc_io module talks to sldb through its public API, transactionally [draft] - Every sldb store write in deskops (track, untrack, model registration, document update) goes through `deskops/doc_io.py`, which imports only `sldb.api.*` plus the private names listed in its module-level tuple `PRIVATE_SLDB_IMPORTS`, and offers a `DocTransaction` that restores files and store entries when any step fails. Plain file writes that do not touch the store are out of this goal.

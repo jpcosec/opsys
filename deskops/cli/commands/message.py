@@ -8,19 +8,27 @@ import sys
 from typing import Any
 
 import yaml
-from sldb.api import untrack_document
-from sldb.cli.model_utils import registered_model, resolve_model_ref
+from sldb.cli.model_utils import registered_model
 from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 from sldb.runtime.validation import validate_model_input_roundtrip
-from sldb.runtime.validation import validate_model_input_roundtrip
 from sldb.store.layout import project_root
-from sldb.store.ops import track_document
 from sldb.store.resolver import find_local_store
 
+from deskops import doc_io
 from deskops.identity import EcosystemIdentity
+
+
+def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
+    """Compatibility seam: the old positional sldb call signature delegates to doc_io."""
+    doc_io.track(root, path, model_type, name=note_name, pythonpath=pythonpath)
+
+
+def untrack_document(store, document, pythonpath=None):
+    """Compatibility seam: untrack through doc_io instead of the sldb CLI class."""
+    doc_io.untrack(project_root(Path(store)), document, pythonpath=pythonpath)
 
 
 from deskops.models import InboxNoteDoc
@@ -350,7 +358,7 @@ class MessageCLI:
             )
             return None
         store_path, root = context
-        model_type, entry, idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
+        model_type, _entry, _idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
 
         rendered = path.read_text(encoding="utf-8")
         valid, details = validate_model_input_roundtrip(model_type, rendered)
@@ -363,12 +371,12 @@ class MessageCLI:
             track_document(
                 store_path,
                 root,
-                idx,
+                _idx,
                 model_type,
-                entry,
+                _entry,
                 path,
                 note_name,
-                resolve_model_ref,
+                None,
                 args.pythonpath,
             )
 

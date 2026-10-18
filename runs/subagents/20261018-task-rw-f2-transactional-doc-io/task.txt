@@ -1,0 +1,11 @@
+Task: task-rw-f2-transactional-doc-io
+Title: One doc_io module talks to sldb through its public API, transactionally
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f2-transactional-doc-io.md
+Effective pills:
+- desk/contexts/pill-012-create-operations-transactional-rollback.md
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

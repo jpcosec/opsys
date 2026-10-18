@@ -3,8 +3,8 @@ model_ref: deskops.models:PillDoc
 path: deskops/models/pill.py
 documents_index: .sldb/core/documents/PillDoc.yaml
 sections_index: .sldb/runtime/sections/PillDoc.yaml
-model_hash: 15516c7fe425df49414f62a4f15dfda50d8a2a5991bd2cae56e4febc3bc7f511
-roster_hash: 8df602ed531ab4ec140b309f591819282ffc2c05468d24af8b5f5b61d66d8998
+model_hash: 6afcb329b52e982d0ccebf56d3a8aedc1f28ce5913f29dd257c96de50e61d9c2
+roster_hash: 30a8fc64fd6d8df0f6896795ab199bf1f1b535acb9a13194521bbcdfbef0ce17
 contract_hash: 16cbc282a5f20f99f8e31d890d1006d8c243049a78e1d1fca1c0a62737fee5a6
 documents_count: 30
 version: 1

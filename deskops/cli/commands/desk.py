@@ -6,6 +6,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from deskops import doc_io
 from deskops.workspace import ensure_target_directory
 from deskops.workspace import inspect_desk
 from deskops.workspace import migrate_desk
@@ -271,52 +272,39 @@ class DeskCLI:
             print("Registered missing models and converted copied deskops models.")
 
         if untracked_docs:
-            try:
-                from sldb.api.documents.track_document_file import track_document_file
-                pythonpath = str(Path(__file__).resolve().parents[2])
-                for p in untracked_docs:
-                    model = guess_model_for_path(desk_dir, p)
-                    if model:
-                        try:
-                            track_document_file(
-                                store_dir,
-                                model.__name__,
-                                p,
-                                name=p.stem,
-                                pythonpath=pythonpath,
-                                force=True,
-                            )
-                            print(f"Tracked {p.relative_to(root)} as {model.__name__}.")
-                        except Exception as e:
-                            print(f"Failed to track {p.relative_to(root)}: {e}")
-                    else:
-                        print(f"Could not guess model for {p.relative_to(root)}.")
-            except ImportError:
-                print("Failed to import sldb API for tracking documents.")
+            pythonpath = str(Path(__file__).resolve().parents[2])
+            for p in untracked_docs:
+                model = guess_model_for_path(desk_dir, p)
+                if model:
+                    try:
+                        doc_io.track(
+                            root,
+                            p,
+                            model,
+                            name=p.stem,
+                            pythonpath=pythonpath,
+                        )
+                        print(f"Tracked {p.relative_to(root)} as {model.__name__}.")
+                    except Exception as e:
+                        print(f"Failed to track {p.relative_to(root)}: {e}")
+                else:
+                    print(f"Could not guess model for {p.relative_to(root)}.")
 
         if missing_docs:
             # A tracked document whose file is gone must be untracked, not
             # re-indexed: the store would keep describing something that is not there.
-            try:
-                from sldb.api.documents.untrack_document import untrack_document
-                pythonpath = str(Path(__file__).resolve().parents[2])
-                for name in missing_docs:
-                    try:
-                        untrack_document(store_dir, name, pythonpath)
-                        print(f"Untracked {name}: its file is gone.")
-                    except Exception as e:
-                        print(f"Failed to untrack {name}: {e}")
-            except ImportError:
-                print("Failed to import sldb API for untracking documents.")
+            pythonpath = str(Path(__file__).resolve().parents[2])
+            for name in missing_docs:
+                try:
+                    doc_io.untrack(root, name, pythonpath=pythonpath)
+                    print(f"Untracked {name}: its file is gone.")
+                except Exception as e:
+                    print(f"Failed to untrack {name}: {e}")
 
         if invalid_docs:
-            try:
-                from sldb.api.stores.update_store_indexes import update_store_indexes
-                pythonpath = str(Path(__file__).resolve().parents[2])
-                update_store_indexes(store_dir, pythonpath, wait=False)
-                print("Updated store derived indexes.")
-            except ImportError:
-                print("Failed to import sldb API for updating store.")
+            pythonpath = str(Path(__file__).resolve().parents[2])
+            doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
+            print("Updated store derived indexes.")
 
         if store_dir.exists():
             from deskops.lifecycle import ensure_lifecycle_graph

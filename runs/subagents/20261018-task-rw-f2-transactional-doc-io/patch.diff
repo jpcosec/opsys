@@ -1,0 +1,1619 @@
+diff --git a/.sldb/core/documents/PillDoc/pill-012-create-operations-transactional-rollback.yaml b/.sldb/core/documents/PillDoc/pill-012-create-operations-transactional-rollback.yaml
+index 7e8929c..6cf682a 100644
+--- a/.sldb/core/documents/PillDoc/pill-012-create-operations-transactional-rollback.yaml
++++ b/.sldb/core/documents/PillDoc/pill-012-create-operations-transactional-rollback.yaml
+@@ -1,7 +1,7 @@
+ name: pill-012-create-operations-transactional-rollback
+ path: desk/contexts/pill-012-create-operations-transactional-rollback.md
+-source_hash: 0c2618ea2d1ca48c27fbfb46bd627e5091ee323e614c35dd1e4b2790f9e3c0d9
+-content_hash: 9902fb1e565d6c0f81be7f4d15f27dcdfa0dc5d500d91785c3aea0f11b1a6499
++source_hash: 9bcec39c2a011cd217c5ce8a7b85f148bea56b2493d0212506ae4f5326e8258c
++content_hash: 05f89b5c6b7bd2447d9160b1234a7a681da9a5a7fe6a27a8b4040cc2a9277754
+ field_hashes:
+   title: fbed5195d0ee555663dc414f93a26b867453938c6a41455b1038bc5322d534c3
+   id: f39f587e8afaeacb0a823e453f6fc9f619823a9b80ea9711c3d2f1e002d93143
+@@ -10,7 +10,7 @@ field_hashes:
+   why: 1f589ab9724b4580c6d3cc40acb0c9fb1456b7f9fbe3b4b16e943d49b5efb488
+   when: 2a500a1b79b7549773a76cb9258c7651cfb46447e40a16adcc134e9bb9daf711
+   where: da6e7f5c0dea5955f9150f60510c298473c77fb26f900b51440e170595634966
+-  how: 4ddd32e595e0c7f3ad15899202d2cb8680173e763f9befa9e8a3b52d9e1b80d8
++  how: 3a7e17620e3c2b6771a3b5a781bffbd6ca4e9130e3bf335177ae144341c99919
+   how_not: ad4c5e0b5757b6400ae35d4463ac62a8bf8141062fae775a4d96778d39ef0f08
+ semantic_tags:
+ - pill-type:guardrail
+diff --git a/.sldb/core/models/PillDoc.yaml b/.sldb/core/models/PillDoc.yaml
+index cf552d2..1faec32 100644
+--- a/.sldb/core/models/PillDoc.yaml
++++ b/.sldb/core/models/PillDoc.yaml
+@@ -3,8 +3,8 @@ model_ref: deskops.models:PillDoc
+ path: deskops/models/pill.py
+ documents_index: .sldb/core/documents/PillDoc.yaml
+ sections_index: .sldb/runtime/sections/PillDoc.yaml
+-model_hash: 15516c7fe425df49414f62a4f15dfda50d8a2a5991bd2cae56e4febc3bc7f511
+-roster_hash: 8df602ed531ab4ec140b309f591819282ffc2c05468d24af8b5f5b61d66d8998
++model_hash: 6afcb329b52e982d0ccebf56d3a8aedc1f28ce5913f29dd257c96de50e61d9c2
++roster_hash: 30a8fc64fd6d8df0f6896795ab199bf1f1b535acb9a13194521bbcdfbef0ce17
+ contract_hash: 16cbc282a5f20f99f8e31d890d1006d8c243049a78e1d1fca1c0a62737fee5a6
+ documents_count: 30
+ version: 1
+diff --git a/.sldb/core/store_index.yaml b/.sldb/core/store_index.yaml
+index f92ffa1..eb2220d 100644
+--- a/.sldb/core/store_index.yaml
++++ b/.sldb/core/store_index.yaml
+@@ -232,4 +232,4 @@ predicates:
+   description: A composed field of the source (`__compositions__`) renders this document's
+     payload into the source's text; the edge carries the composed field, the field
+     holding the refs and the ref as authored.
+-store_hash: 68a1ab1ad3b8c782b95a6a7121cddc196a2f29a1a1ceec90eeb328ac4e64a989
++store_hash: 55c81ba955ebccd7a89783553812782afbbd32ae36f303f1c3047fa5256b5544
+diff --git a/desk/contexts/pill-012-create-operations-transactional-rollback.md b/desk/contexts/pill-012-create-operations-transactional-rollback.md
+index 0c0ba0c..0a4d647 100644
+--- a/desk/contexts/pill-012-create-operations-transactional-rollback.md
++++ b/desk/contexts/pill-012-create-operations-transactional-rollback.md
+@@ -40,7 +40,7 @@ Applies to `deskops/operations.py` create methods: `create_artifact`, `create_ta
+ 
+ _Describe the correct way to apply this guidance._
+ 
+-Use a reusable `_with_rollback(write_fn, cleanup_fn)` utility that captures the written path before the write, catches any exception after the write, and runs cleanup. For multi-step creates (task bundle), track every written path and board mutation in a list and iterate cleanup in reverse.
++Use `deskops.doc_io.DocTransaction(root)`: it records each path's original bytes and tracked state before acting and restores both on failure. Wrap the whole create in one `with DocTransaction(self.root):`; inner `with` blocks join that transaction, so `create_task_bundle` and the `_write_doc` calls it makes roll back as one unit. Open the transaction around any multi-step create (task bundle, split, merge) instead of tracking rollback actions per method.
+ 
+ ## How Not
+ 
+diff --git a/deskops/bootstrap.py b/deskops/bootstrap.py
+index 81a24a3..5db1e3a 100644
+--- a/deskops/bootstrap.py
++++ b/deskops/bootstrap.py
+@@ -10,6 +10,8 @@ import subprocess
+ import sys
+ from typing import Any
+ 
++from deskops import doc_io
++
+ 
+ DESKOPS_STORE_LINK = "deskops"
+ 
+@@ -147,9 +149,7 @@ class SLDBBootstrap:
+                 idx = load_store_index(store_path)
+                 if any(link.name == DESKOPS_STORE_LINK for link in idx.stores):
+                     return False
+-                from sldb.api import link_store
+-
+-                link_store(store_path, owner, DESKOPS_STORE_LINK)
++                doc_io.link_store_alias(store_path.parent, owner, DESKOPS_STORE_LINK)
+             except Exception as exc:
+                 raise RuntimeError(str(exc))
+         else:
+@@ -170,10 +170,8 @@ class SLDBBootstrap:
+     def _inherit_model(self, model_name: str, store_path: Path) -> None:
+         ref = f"{DESKOPS_STORE_LINK}:{model_name}"
+         if self._sldb_importable():
+-            from sldb.api import inherit_model
+-
+             try:
+-                inherit_model(store_path, ref, pythonpath=self.default_pythonpath())
++                doc_io.inherit_model_from(store_path.parent, ref, pythonpath=self.default_pythonpath())
+             except Exception as exc:
+                 raise RuntimeError(str(exc))
+         else:
+@@ -189,10 +187,8 @@ class SLDBBootstrap:
+ 
+     def _init_relations(self, store_path: Path) -> None:
+         if self._sldb_importable():
+-            from sldb.api import init_relations
+-
+             try:
+-                init_relations(store_path, pythonpath=self.default_pythonpath())
++                doc_io.init_relations_in(store_path.parent, pythonpath=self.default_pythonpath())
+             except Exception as exc:
+                 raise RuntimeError(str(exc))
+         else:
+@@ -207,10 +203,8 @@ class SLDBBootstrap:
+ 
+     def _update_store_indexes(self, store_path: Path) -> None:
+         if self._sldb_importable():
+-            from sldb.api import update_store_indexes
+-
+             try:
+-                update_store_indexes(store_path, self.default_pythonpath())
++                doc_io.update_store_indexes_in(store_path.parent, pythonpath=self.default_pythonpath())
+             except Exception as exc:
+                 raise RuntimeError(str(exc))
+         else:
+@@ -221,9 +215,8 @@ class SLDBBootstrap:
+ 
+     def _init_store(self, target_path: Path) -> None:
+         if self._sldb_importable():
+-            from sldb.api.stores.init_store import init_store
+             try:
+-                init_store(path=target_path)
++                doc_io.init_store_at(target_path)
+             except Exception as exc:
+                 raise RuntimeError(str(exc))
+         else:
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index a0ca505..9b4b2b2 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -6,6 +6,7 @@ import sys
+ from pathlib import Path
+ from typing import Any
+ 
++from deskops import doc_io
+ from deskops.workspace import ensure_target_directory
+ from deskops.workspace import inspect_desk
+ from deskops.workspace import migrate_desk
+@@ -271,52 +272,39 @@ class DeskCLI:
+             print("Registered missing models and converted copied deskops models.")
+ 
+         if untracked_docs:
+-            try:
+-                from sldb.api.documents.track_document_file import track_document_file
+-                pythonpath = str(Path(__file__).resolve().parents[2])
+-                for p in untracked_docs:
+-                    model = guess_model_for_path(desk_dir, p)
+-                    if model:
+-                        try:
+-                            track_document_file(
+-                                store_dir,
+-                                model.__name__,
+-                                p,
+-                                name=p.stem,
+-                                pythonpath=pythonpath,
+-                                force=True,
+-                            )
+-                            print(f"Tracked {p.relative_to(root)} as {model.__name__}.")
+-                        except Exception as e:
+-                            print(f"Failed to track {p.relative_to(root)}: {e}")
+-                    else:
+-                        print(f"Could not guess model for {p.relative_to(root)}.")
+-            except ImportError:
+-                print("Failed to import sldb API for tracking documents.")
++            pythonpath = str(Path(__file__).resolve().parents[2])
++            for p in untracked_docs:
++                model = guess_model_for_path(desk_dir, p)
++                if model:
++                    try:
++                        doc_io.track(
++                            root,
++                            p,
++                            model,
++                            name=p.stem,
++                            pythonpath=pythonpath,
++                        )
++                        print(f"Tracked {p.relative_to(root)} as {model.__name__}.")
++                    except Exception as e:
++                        print(f"Failed to track {p.relative_to(root)}: {e}")
++                else:
++                    print(f"Could not guess model for {p.relative_to(root)}.")
+ 
+         if missing_docs:
+             # A tracked document whose file is gone must be untracked, not
+             # re-indexed: the store would keep describing something that is not there.
+-            try:
+-                from sldb.api.documents.untrack_document import untrack_document
+-                pythonpath = str(Path(__file__).resolve().parents[2])
+-                for name in missing_docs:
+-                    try:
+-                        untrack_document(store_dir, name, pythonpath)
+-                        print(f"Untracked {name}: its file is gone.")
+-                    except Exception as e:
+-                        print(f"Failed to untrack {name}: {e}")
+-            except ImportError:
+-                print("Failed to import sldb API for untracking documents.")
++            pythonpath = str(Path(__file__).resolve().parents[2])
++            for name in missing_docs:
++                try:
++                    doc_io.untrack(root, name, pythonpath=pythonpath)
++                    print(f"Untracked {name}: its file is gone.")
++                except Exception as e:
++                    print(f"Failed to untrack {name}: {e}")
+ 
+         if invalid_docs:
+-            try:
+-                from sldb.api.stores.update_store_indexes import update_store_indexes
+-                pythonpath = str(Path(__file__).resolve().parents[2])
+-                update_store_indexes(store_dir, pythonpath, wait=False)
+-                print("Updated store derived indexes.")
+-            except ImportError:
+-                print("Failed to import sldb API for updating store.")
++            pythonpath = str(Path(__file__).resolve().parents[2])
++            doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
++            print("Updated store derived indexes.")
+ 
+         if store_dir.exists():
+             from deskops.lifecycle import ensure_lifecycle_graph
+diff --git a/deskops/cli/commands/message.py b/deskops/cli/commands/message.py
+index 752bc8f..c679e68 100644
+--- a/deskops/cli/commands/message.py
++++ b/deskops/cli/commands/message.py
+@@ -8,21 +8,29 @@ import sys
+ from typing import Any
+ 
+ import yaml
+-from sldb.api import untrack_document
+-from sldb.cli.model_utils import registered_model, resolve_model_ref
++from sldb.cli.model_utils import registered_model
+ from sldb.cli.store_context import get_store_context
+ from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
+ from sldb.runtime.validation import extract_model_data
+ from sldb.runtime.validation import render_model_markdown
+ from sldb.runtime.validation import validate_model_input_roundtrip
+-from sldb.runtime.validation import validate_model_input_roundtrip
+ from sldb.store.layout import project_root
+-from sldb.store.ops import track_document
+ from sldb.store.resolver import find_local_store
+ 
++from deskops import doc_io
+ from deskops.identity import EcosystemIdentity
+ 
+ 
++def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
++    """Compatibility seam: the old positional sldb call signature delegates to doc_io."""
++    doc_io.track(root, path, model_type, name=note_name, pythonpath=pythonpath)
++
++
++def untrack_document(store, document, pythonpath=None):
++    """Compatibility seam: untrack through doc_io instead of the sldb CLI class."""
++    doc_io.untrack(project_root(Path(store)), document, pythonpath=pythonpath)
++
++
+ from deskops.models import InboxNoteDoc
+ 
+ 
+@@ -350,7 +358,7 @@ class MessageCLI:
+             )
+             return None
+         store_path, root = context
+-        model_type, entry, idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
++        model_type, _entry, _idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
+ 
+         rendered = path.read_text(encoding="utf-8")
+         valid, details = validate_model_input_roundtrip(model_type, rendered)
+@@ -363,12 +371,12 @@ class MessageCLI:
+             track_document(
+                 store_path,
+                 root,
+-                idx,
++                _idx,
+                 model_type,
+-                entry,
++                _entry,
+                 path,
+                 note_name,
+-                resolve_model_ref,
++                None,
+                 args.pythonpath,
+             )
+ 
+diff --git a/deskops/cli/commands/promote.py b/deskops/cli/commands/promote.py
+index 685b853..ca55794 100644
+--- a/deskops/cli/commands/promote.py
++++ b/deskops/cli/commands/promote.py
+@@ -6,6 +6,7 @@ from typing import Any
+ 
+ import yaml
+ 
++from deskops import doc_io
+ from deskops.operations import parse_task_sections
+ 
+ 
+@@ -79,11 +80,7 @@ class PromoteCLI:
+         if not store_path.exists():
+             return None
+         try:
+-            from types import SimpleNamespace
+-
+-            from sldb.cli.commands.doc import DocCLI
+-
+-            DocCLI().untrack(SimpleNamespace(store=str(store_path), pythonpath=None, doc=source.stem))
++            doc_io.untrack(root, source.stem)
+             return None
+         except Exception as exc:  # noqa: BLE001 - store problems must not abort the promotion
+             return f"Warning: could not untrack '{source.stem}' from the store: {exc}"
+diff --git a/deskops/cli/commands/repo.py b/deskops/cli/commands/repo.py
+index 7c9fa3a..cea44c7 100644
+--- a/deskops/cli/commands/repo.py
++++ b/deskops/cli/commands/repo.py
+@@ -4,17 +4,22 @@ from pathlib import Path
+ import re
+ from typing import Any
+ 
+-from sldb.cli.model_utils import registered_model, resolve_model_ref
++from sldb.cli.model_utils import registered_model
+ from sldb.cli.store_context import get_store_context
+ from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
+ from sldb.runtime.validation import render_model_markdown, validate_model_input_roundtrip
+ from sldb.store.layout import project_root
+-from sldb.store.ops import track_document
+ from sldb.store.resolver import find_local_store
+ 
++from deskops import doc_io
+ from deskops.identity import load_repository_registry, EcosystemIdentity
+ 
+ 
++def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
++    """Compatibility seam: the old positional sldb call signature delegates to doc_io."""
++    doc_io.track(root, path, model_type, name=note_name, pythonpath=pythonpath)
++
++
+ class RepoCLI:
+     """Handle repository registration and discovery."""
+ 
+@@ -122,7 +127,7 @@ class RepoCLI:
+             entry,
+             output_path,
+             f"repo-{repo_id}",
+-            resolve_model_ref,
++            None,
+             args.pythonpath,
+         )
+         print(f"Tracked 'repo-{repo_id}'")
+diff --git a/deskops/doc_io.py b/deskops/doc_io.py
+new file mode 100644
+index 0000000..6e0ccfa
+--- /dev/null
++++ b/deskops/doc_io.py
+@@ -0,0 +1,321 @@
++"""The one place deskops writes to an sldb store.
++
++Everything here goes through the public ``sldb.api`` surface. Store writes that have no
++public equivalent are named wrappers around the remaining private calls, and every such
++import is listed in :data:`PRIVATE_SLDB_IMPORTS` so an import scan can keep the boundary
++honest.
++
++``DocTransaction`` is a re-entrant, file-and-store transaction: it records a path's
++original bytes and tracked state before touching it, and on failure restores the store
++entries and the file bytes before re-raising the original error. An inner
++``with DocTransaction(root)`` joins the outer transaction keyed by root, so
++``create_task_bundle`` and the ``_write_doc`` calls it makes roll back as one unit.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++import logging
++from pathlib import Path
++from typing import Any
++
++from sldb.api import (
++    add_model,
++    doc_status,
++    inherit_model,
++    init_relations,
++    init_store,
++    link_store,
++    remove_model,
++    track_document_file,
++    untrack_document,
++    update_store_indexes,
++)
++
++logger = logging.getLogger("deskops.doc_io")
++
++#: Private sldb modules this module is allowed to import. Every write-side operation
++#: used here is public ``sldb.api``; only the renderer lacks a public re-export. Keep
++#: this in sync if a needed operation has no public equivalent (and record the gap in
++#: ``runs/planning/sldb-requests.md``).
++PRIVATE_SLDB_IMPORTS: tuple[str, ...] = (
++    "sldb.runtime.validation",  # render_model_markdown has no sldb.api re-export
++)
++
++_PACKAGE_ROOT = Path(__file__).resolve().parents[1]
++
++
++def _store(root: Path) -> Path:
++    return root / ".sldb"
++
++
++def _has_store(root: Path) -> bool:
++    return _store(root).is_dir()
++
++
++def _pythonpath(pythonpath: str | None) -> str:
++    return pythonpath or str(_PACKAGE_ROOT)
++
++
++def _model_name(model: Any) -> str:
++    if isinstance(model, str):
++        return model
++    return str(getattr(model, "__name__", model))
++
++
++def _absolute(root: Path, path: Path | str) -> Path:
++    candidate = Path(path)
++    return candidate if candidate.is_absolute() else root / candidate
++
++
++def _relative(root: Path, path: Path | str) -> str:
++    absolute = _absolute(root, path).resolve()
++    try:
++        return absolute.relative_to(root.resolve()).as_posix()
++    except ValueError:
++        return absolute.as_posix()
++
++
++def _status(root: Path, path: Path | str) -> Any | None:
++    if not _has_store(root):
++        return None
++    try:
++        return doc_status(_store(root), _relative(root, path))
++    except Exception:
++        return None
++
++
++def is_tracked(root: Path, path: Path | str) -> bool:
++    """Whether ``path`` is the tracked location of exactly one document."""
++    status = _status(root, path)
++    return bool(status is not None and status.exists)
++
++
++def _track(root: Path, path: Path, model: Any, *, name: str | None = None, pythonpath: str | None = None, force: bool = True) -> Any | None:
++    if not _has_store(root):
++        return None
++    return track_document_file(
++        _store(root),
++        _model_name(model),
++        path,
++        name=name or path.stem,
++        pythonpath=_pythonpath(pythonpath),
++        force=force,
++    )
++
++
++def _untrack(root: Path, path_or_name: Path | str, *, pythonpath: str | None = None) -> bool:
++    """Untrack by document name or path. A document that is not tracked is left alone."""
++    if not _has_store(root):
++        return False
++    reference = str(path_or_name)
++    path_like = isinstance(path_or_name, Path) or Path(reference).exists()
++    status = _status(root, path_or_name) if path_like else _status(root, reference)
++    if status is None or not status.exists:
++        # Already untracked is not a failure; real store errors still raise below.
++        return False
++    untrack_document(_store(root), status.name, pythonpath=_pythonpath(pythonpath))
++    return True
++
++
++# ---------------------------------------------------------------------------
++# One-off helpers for writes outside a transaction.
++def track(root: Path, path: Path | str, model: Any, *, name: str | None = None, pythonpath: str | None = None, force: bool = True) -> Any | None:
++    """Track one document, if the root has a store."""
++    return _track(root, _absolute(root, path), model, name=name, pythonpath=pythonpath, force=force)
++
++
++def untrack(root: Path, path_or_name: Path | str, *, pythonpath: str | None = None) -> bool:
++    """Untrack one document by name or path, if the root has a store."""
++    return _untrack(root, path_or_name, pythonpath=pythonpath)
++
++
++def register_model(root: Path, model_ref: str, *, pythonpath: str | None = None, canonical: bool = False) -> Any:
++    """Register a model in ``root``'s store."""
++    return add_model(_store(root), model_ref, pythonpath=_pythonpath(pythonpath), canonical=canonical)
++
++
++def link_store_alias(root: Path, other_store: Path | str, name: str) -> Any:
++    return link_store(_store(root), other_store, name)
++
++
++def inherit_model_from(root: Path, ref: str, *, pythonpath: str | None = None) -> Any:
++    return inherit_model(_store(root), ref, pythonpath=_pythonpath(pythonpath))
++
++
++def init_store_at(path: Path | str) -> Any:
++    return init_store(path=path)
++
++
++def init_relations_in(root: Path, *, pythonpath: str | None = None) -> Any:
++    return init_relations(_store(root), pythonpath=_pythonpath(pythonpath))
++
++
++def update_store_indexes_in(root: Path, *, pythonpath: str | None = None, wait: bool = False) -> Any:
++    return update_store_indexes(_store(root), _pythonpath(pythonpath), wait=wait)
++
++
++def remove_model_from(root: Path, name: str, *, pythonpath: str | None = None, untrack_documents: bool = False) -> Any:
++    return remove_model(_store(root), name, pythonpath=_pythonpath(pythonpath), untrack_documents=untrack_documents)
++
++
++# ---------------------------------------------------------------------------
++@dataclass
++class _PathState:
++    path: Path
++    relative: str
++    original_bytes: bytes | None
++    tracked_model: str | None
++    tracked_name: str | None
++
++    @property
++    def was_tracked(self) -> bool:
++        return self.tracked_name is not None
++
++
++class _RootTransaction:
++    def __init__(self, root: Path) -> None:
++        self.root = root
++        self.states: dict[str, _PathState] = {}
++        self.depth = 0
++
++    def record(self, path: Path | str) -> _PathState:
++        absolute = _absolute(self.root, path).resolve()
++        relative = _relative(self.root, absolute)
++        state = self.states.get(relative)
++        if state is not None:
++            return state
++        status = _status(self.root, absolute)
++        tracked_model = status.model if status is not None and status.exists else None
++        tracked_name = status.name if status is not None and status.exists else None
++        state = _PathState(
++            path=absolute,
++            relative=relative,
++            original_bytes=absolute.read_bytes() if absolute.exists() else None,
++            tracked_model=tracked_model,
++            tracked_name=tracked_name,
++        )
++        self.states[relative] = state
++        return state
++
++    def rollback(self) -> None:
++        # 1. Drop store entries the transaction created, and reset entries whose file
++        #    bytes moved so they can be re-tracked against the restored bytes.
++        for state in reversed(list(self.states.values())):
++            if not _has_store(self.root):
++                break
++            current = _status(self.root, state.path)
++            if current is None or not current.exists:
++                continue
++            file_moved = state.original_bytes != (state.path.read_bytes() if state.path.exists() else None)
++            if not state.was_tracked or file_moved:
++                try:
++                    untrack_document(_store(self.root), current.name, pythonpath=_pythonpath(None))
++                except Exception as exc:  # noqa: BLE001 - rollback must not mask the original error
++                    logger.warning("doc_io rollback: could not untrack %s: %s", state.relative, exc)
++        # 2. Restore the file bytes.
++        for state in reversed(list(self.states.values())):
++            try:
++                if state.original_bytes is None:
++                    if state.path.exists():
++                        state.path.unlink()
++                else:
++                    state.path.parent.mkdir(parents=True, exist_ok=True)
++                    state.path.write_bytes(state.original_bytes)
++            except Exception as exc:  # noqa: BLE001
++                logger.warning("doc_io rollback: could not restore %s: %s", state.relative, exc)
++        # 3. Re-track the documents that were tracked before the transaction.
++        for state in reversed(list(self.states.values())):
++            if state.tracked_name is None or state.tracked_model is None:
++                continue
++            if not state.path.exists():
++                continue
++            current = _status(self.root, state.path)
++            if current is not None and current.exists:
++                continue
++            try:
++                track_document_file(
++                    _store(self.root),
++                    state.tracked_model,
++                    state.path,
++                    name=state.tracked_name,
++                    pythonpath=_pythonpath(None),
++                    force=True,
++                )
++            except Exception as exc:  # noqa: BLE001
++                logger.warning("doc_io rollback: could not re-track %s: %s", state.relative, exc)
++
++
++_STACKS: dict[Path, _RootTransaction] = {}
++
++
++class DocTransaction:
++    """Re-entrant file + store transaction scoped to one repository root."""
++
++    def __init__(self, root: Path) -> None:
++        self.root = root.resolve()
++
++    def __enter__(self) -> "DocTransaction":
++        transaction = _STACKS.get(self.root)
++        if transaction is None:
++            transaction = _RootTransaction(self.root)
++            _STACKS[self.root] = transaction
++        transaction.depth += 1
++        self._transaction = transaction
++        return self
++
++    def __exit__(self, exc_type: Any, exc: Any, traceback: Any) -> bool:
++        transaction = self._transaction
++        transaction.depth -= 1
++        if transaction.depth > 0:
++            return False
++        _STACKS.pop(self.root, None)
++        if exc_type is not None:
++            transaction.rollback()
++        return False
++
++    def record(self, path: Path | str) -> _PathState:
++        """Record a path's original bytes and tracked state before a plain file write."""
++        return self._transaction.record(path)
++
++    def write(self, path: Path | str, model: Any, payload: dict[str, Any]) -> None:
++        absolute = _absolute(self.root, path)
++        state = self._transaction.record(absolute)
++        from sldb.runtime.validation import render_model_markdown
++
++        rendered = render_model_markdown(model, payload) + "\n"
++        if state.tracked_name is not None and _has_store(self.root):
++            untrack_document(_store(self.root), state.tracked_name, pythonpath=_pythonpath(None))
++        absolute.parent.mkdir(parents=True, exist_ok=True)
++        absolute.write_text(rendered, encoding="utf-8")
++        if state.was_tracked:
++            track_document_file(
++                _store(self.root),
++                state.tracked_model,
++                absolute,
++                name=state.tracked_name,
++                pythonpath=_pythonpath(None),
++                force=True,
++            )
++
++    def track(self, path: Path | str, model: Any, *, name: str | None = None, pythonpath: str | None = None) -> Any | None:
++        absolute = _absolute(self.root, path)
++        self._transaction.record(absolute)
++        return _track(self.root, absolute, model, name=name, pythonpath=pythonpath)
++
++    def untrack(self, path_or_name: Path | str, *, pythonpath: str | None = None) -> bool:
++        if isinstance(path_or_name, Path) or Path(str(path_or_name)).exists():
++            self._transaction.record(path_or_name)
++        else:
++            status = _status(self.root, path_or_name)
++            if status is not None and status.exists and status.path:
++                self._transaction.record(status.path)
++        return _untrack(self.root, path_or_name, pythonpath=pythonpath)
++
++    def delete(self, path: Path | str) -> None:
++        absolute = _absolute(self.root, path)
++        state = self._transaction.record(absolute)
++        if state.tracked_name is not None and _has_store(self.root):
++            untrack_document(_store(self.root), state.tracked_name, pythonpath=_pythonpath(None))
++        if absolute.exists():
++            absolute.unlink()
+diff --git a/deskops/lifecycle.py b/deskops/lifecycle.py
+index daf38e0..24c1024 100644
+--- a/deskops/lifecycle.py
++++ b/deskops/lifecycle.py
+@@ -21,6 +21,8 @@ from typing import Any
+ import yaml
+ from sldb.runtime.validation import render_model_markdown
+ 
++from deskops import doc_io
++
+ SPEC_PATH = Path(__file__).resolve().parents[1] / "spec" / "workflows" / "task_lifecycle.yaml"
+ LIFECYCLE_DIR = Path("desk") / "lifecycle"
+ COMPLETE = "complete"
+@@ -194,9 +196,7 @@ def _doc_tracked(root: Path, model: str, name: str) -> bool:
+ 
+ 
+ def _track(root: Path, model: str, path: Path, name: str) -> None:
+-    from sldb.api import track_document_file
+-
+-    track_document_file(_store(root), model, path, name=name, pythonpath=_pythonpath())
++    doc_io.track(root, path, model, name=name, pythonpath=_pythonpath(), force=False)
+ 
+ 
+ def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
+@@ -248,16 +248,14 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
+     ids, and writes plus tracks one RelationTypeDoc and one RelationDoc per transition
+     under desk/lifecycle/. Existing documents are left as they are.
+     """
+-    from sldb.api import init_relations
+     from sldb.models.relation_doc import RelationDoc
+     from sldb.models.relation_type_doc import RelationTypeDoc
+ 
+     root = root.resolve()
+     spec = spec or load_lifecycle_spec()
+     changes: list[str] = []
+-    init_relations(_store(root), pythonpath=_pythonpath())
++    doc_io.init_relations_in(root, pythonpath=_pythonpath())
+ 
+-    from sldb.api import untrack_document
+     from sldb.api import doc_status
+ 
+     pending_rituals: list[tuple[str, Path, str]] = []
+@@ -277,7 +275,7 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
+         if current.exists and current.name != ritual_id:
+             # `desk update` tracks surface documents by file stem; the graph names a
+             # ritual by its id, so the ritual is re-tracked under that id.
+-            untrack_document(_store(root), relative, pythonpath=_pythonpath())
++            doc_io.untrack(root, root / relative, pythonpath=_pythonpath())
+             changes.append(f"untracked {relative} (was {current.model}:{current.name})")
+         _track(root, RITUAL_MODEL, path, ritual_id)
+         changes.append(f"tracked {relative} as {ritual_export_id(ritual_id)}")
+diff --git a/deskops/lifecycle_migration.py b/deskops/lifecycle_migration.py
+index 09e5b0e..d386be2 100644
+--- a/deskops/lifecycle_migration.py
++++ b/deskops/lifecycle_migration.py
+@@ -21,6 +21,7 @@ import re
+ 
+ import yaml
+ 
++from deskops import doc_io
+ from deskops import lifecycle
+ 
+ LEGACY_MODELS = ("RoutineDoc", "ConditionDoc", "ChecklistDoc", "OperatorDoc", "EdgeDoc", "HookDoc")
+@@ -136,11 +137,9 @@ def migrate_legacy_lifecycle(root: Path) -> list[str]:
+     # succeeded, so a refusal leaves every file in place and a rerun picks up from there.
+     pythonpath = str(Path(__file__).resolve().parents[1])
+     if store.exists():
+-        from sldb.api import remove_model
+-
+         for name in legacy_registered_models(root):
+             try:
+-                remove_model(store, name, pythonpath=pythonpath, untrack_documents=True)
++                doc_io.remove_model_from(root, name, pythonpath=pythonpath, untrack_documents=True)
+             except Exception as exc:
+                 raise LegacyMigrationBlocked(
+                     f"sldb could not unregister {name} with its documents: {exc}. No file was deleted. "
+@@ -165,10 +164,8 @@ def migrate_legacy_lifecycle(root: Path) -> list[str]:
+             changes.append(f"rewrote {path.relative_to(root).as_posix()} (lifecycle fields)")
+ 
+     if store.exists():
+-        from sldb.api import update_store_indexes
+-
+         for change in lifecycle.ensure_lifecycle_graph(root):
+             changes.append(f"lifecycle graph: {change}")
+-        update_store_indexes(store, pythonpath, wait=False)
++        doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
+         changes.append("updated store indexes")
+     return changes
+diff --git a/deskops/operations.py b/deskops/operations.py
+index fa0f407..fad8164 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -7,7 +7,7 @@ from pathlib import Path
+ import re
+ import subprocess
+ import sys
+-from typing import Any, Callable
++from typing import Any
+ from urllib.parse import urlparse
+ 
+ import yaml
+@@ -26,6 +26,7 @@ from deskops.models import RitualDoc
+ from deskops.models import StepDoc
+ from deskops.models import TaskDoc
+ from deskops.runtime import Task
++from deskops import doc_io
+ from deskops import lifecycle
+ from deskops.lifecycle import TransitionResult
+ from deskops.atom_tags import axis_folder_relpath
+@@ -359,20 +360,11 @@ class DeskopsOperations:
+         task_id = compiled.task_payload["id"]
+         task_path = self._task_path(task_id)
+ 
+-        rollback_actions: list[Callable[[], None]] = []
+-        try:
++        with doc_io.DocTransaction(self.root):
+             self._write_new_doc(task_path, TaskDoc, compiled.task_payload)
+-            rollback_actions.append(lambda: self._remove_created_file(task_path))
+             self._track_created_document(TaskDoc, task_path, task_id)
+-
+-            board_path = self.desk_root / "tasks" / "Board.md"
+-            board_text = board_path.read_text(encoding="utf-8")
+-            rollback_actions.append(lambda: board_path.write_text(board_text, encoding="utf-8"))
+             self._append_task_to_board(task_id)
+-            return TaskBundle(task_id=task_id, task_path=task_path)
+-        except Exception:
+-            self._rollback(rollback_actions)
+-            raise
++        return TaskBundle(task_id=task_id, task_path=task_path)
+ 
+     def create_artifact(self, artifact_id: str, raw_payload: dict[str, Any]) -> DocumentRecord:
+         self.ensure_workspace()
+@@ -397,12 +389,9 @@ class DeskopsOperations:
+             )
+         else:
+             path = self._artifact_path(artifact_id, compiled.artifact_payload["id"])
+-        self._write_new_doc(path, model, compiled.artifact_payload)
+-        try:
++        with doc_io.DocTransaction(self.root):
++            self._write_new_doc(path, model, compiled.artifact_payload)
+             self._track_created_artifact(artifact_id, model, path, compiled.artifact_payload["id"])
+-        except Exception:
+-            self._remove_created_file(path)
+-            raise
+         return DocumentRecord(kind=artifact_id.split(".")[-1], doc_id=compiled.artifact_payload["id"], path=path)
+ 
+     def edit_artifact_field(self, subject: str, selector: str, field: str, raw_value: str) -> DocumentRecord:
+@@ -716,9 +705,9 @@ class DeskopsOperations:
+             raise ValueError(
+                 f"Refusing to delete {atom_id}; inbound references found: {refs}. Re-run with --force to delete without rewriting references."
+             )
+-        untracked = self._untrack_atom_document(atom_id)
+-        if path.exists():
+-            path.unlink()
++        untracked = doc_io.is_tracked(self.root, path)
++        with doc_io.DocTransaction(self.root) as transaction:
++            transaction.delete(path)
+         return DocumentRecord(kind="atom-untracked" if untracked else "atom", doc_id=atom_id, path=path)
+ 
+     def create_atom_from_source(
+@@ -808,7 +797,6 @@ class DeskopsOperations:
+         path = self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)
+         payload = self._read_doc(path, AtomDoc)
+         atom_id = str(payload.get("id") or path.stem)
+-        original_text = path.read_text(encoding="utf-8")
+         inbound_references = self._find_inbound_atom_references(atom_id, excluded_path=path)
+         if inbound_references and not force:
+             refs = "; ".join(inbound_references)
+@@ -831,12 +819,9 @@ class DeskopsOperations:
+         sections = self._split_atom_answer_sections(str(payload.get("answer") or ""))
+         assignments = self._resolve_atom_split_assignments(normalized_ids, sections, section_flags or [])
+ 
+-        rollback_actions: list[Callable[[], None]] = [
+-            lambda: path.write_text(original_text, encoding="utf-8"),
+-        ]
+         created: list[DocumentRecord] = []
+ 
+-        try:
++        with doc_io.DocTransaction(self.root):
+             for target_id in normalized_ids:
+                 heading, content = assignments[target_id]
+                 title = f"{payload['title']} — {heading}"
+@@ -850,16 +835,11 @@ class DeskopsOperations:
+                 }
+                 new_path = self._atom_doc_path(target_id, list(new_payload.get("tags") or []))
+                 self._write_new_doc(new_path, AtomDoc, new_payload)
+-                rollback_actions.append(lambda new_path=new_path: self._remove_created_file(new_path))
+                 self._track_created_artifact("artifact.atom", AtomDoc, new_path, target_id)
+-                rollback_actions.append(lambda target_id=target_id: self._untrack_atom_document(target_id))
+                 created.append(DocumentRecord(kind="atom", doc_id=target_id, path=new_path))
+ 
+             payload["answer"] = self._render_atom_split_redirect_answer(atom_id, normalized_ids)
+             self._write_doc(path, AtomDoc, payload)
+-        except Exception:
+-            self._rollback(rollback_actions)
+-            raise
+ 
+         return AtomSplitResult(
+             original_id=atom_id,
+@@ -900,20 +880,15 @@ class DeskopsOperations:
+                 "Re-run with --force to keep the target atom semantics and preserve the source atom as a redirect stub."
+             )
+ 
+-        source_text = source_path.read_text(encoding="utf-8")
+-        target_text = target_path.read_text(encoding="utf-8")
+         inbound_references = self._find_inbound_atom_references(source_id, excluded_path=source_path)
++        rewritten_references: list[str] = []
+ 
+-        rollback_actions: list[Callable[[], None]] = [
+-            lambda: source_path.write_text(source_text, encoding="utf-8"),
+-            lambda: target_path.write_text(target_text, encoding="utf-8"),
+-        ]
+-
+-        try:
++        with doc_io.DocTransaction(self.root) as transaction:
+             rewritten_references = self._rewrite_inbound_atom_references(
+                 source_id,
+                 target_id,
+                 excluded_paths={source_path, target_path},
++                transaction=transaction,
+             )
+             merged_answer = self._merge_atom_answers(target_payload, source_payload)
+             target_payload["answer"] = merged_answer
+@@ -925,9 +900,6 @@ class DeskopsOperations:
+ 
+             source_payload["answer"] = self._render_atom_merge_redirect_answer(source_id, target_id)
+             self._write_doc(source_path, AtomDoc, source_payload)
+-        except Exception:
+-            self._rollback(rollback_actions)
+-            raise
+ 
+         return AtomMergeResult(
+             source_id=source_id,
+@@ -1077,137 +1049,144 @@ class DeskopsOperations:
+         files = self._coerce_list(payload.get("files") or [])
+         task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
+         board_rel = "desk/tasks/Board.md"
++        sldb_rel = ".sldb"
+ 
+-        self.logger.debug(f"Removing task {task_id} from Board.md")
+-        board_path = self.desk_root / "tasks" / "Board.md"
+-        board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
+-        if board_before is not None:
+-            board_payload = self._read_doc(board_path, BoardDoc)
+-            task_ref = f"desk/tasks/{task_id}.md"
+-            tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
+-            board_payload["tasks"] = tasks
+-            self._write_doc(board_path, BoardDoc, board_payload)
++        with doc_io.DocTransaction(self.root) as transaction:
++            self.logger.debug(f"Removing task {task_id} from Board.md")
++            board_path = self.desk_root / "tasks" / "Board.md"
++            board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
++            if board_before is not None:
++                board_payload = self._read_doc(board_path, BoardDoc)
++                task_ref = f"desk/tasks/{task_id}.md"
++                tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
++                board_payload["tasks"] = tasks
++                self._write_doc(board_path, BoardDoc, board_payload)
+ 
+-        task_before = task_path.read_bytes() if task_path.exists() else None
++            task_before = task_path.read_bytes() if task_path.exists() else None
+ 
+-        commit_paths: list[str] = []
+-        seen_paths: set[str] = set()
++            # Untrack before anything is staged: the .sldb delta this causes must be
++            # part of the closeout commit, and a failure must abort the closeout.
++            if task_before is not None:
++                transaction.untrack(task_path)
++
++            commit_paths: list[str] = []
++            seen_paths: set[str] = set()
++
++            def add_commit_path(path: str) -> None:
++                if path not in seen_paths:
++                    seen_paths.add(path)
++                    commit_paths.append(path)
++
++            # Only stage (and later commit) listed files that actually changed;
++            # whatever the operator staged for other work must stay untouched.
++            for file in files:
++                status = subprocess.run(
++                    ["git", "status", "--porcelain", "--", file],
++                    cwd=self.root,
++                    capture_output=True,
++                    text=True,
++                )
++                if status.returncode != 0 or not status.stdout.strip():
++                    continue
++                self.logger.debug(f"Staging file: {file}")
++                subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
++                add_commit_path(file)
+ 
+-        def add_commit_path(path: str) -> None:
+-            if path not in seen_paths:
+-                seen_paths.add(path)
+-                commit_paths.append(path)
++            if board_before is not None:
++                subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
++                add_commit_path(board_rel)
+ 
+-        # Only stage (and later commit) listed files that actually changed;
+-        # whatever the operator staged for other work must stay untouched.
+-        for file in files:
+-            status = subprocess.run(
+-                ["git", "status", "--porcelain", "--", file],
++            sldb_status = subprocess.run(
++                ["git", "status", "--porcelain", "--", sldb_rel],
+                 cwd=self.root,
+                 capture_output=True,
+                 text=True,
+             )
+-            if status.returncode != 0 or not status.stdout.strip():
+-                continue
+-            self.logger.debug(f"Staging file: {file}")
+-            subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
+-            add_commit_path(file)
+-
+-        if board_before is not None:
+-            subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
+-            add_commit_path(board_rel)
+-
+-        def restore_index() -> None:
+-            for path in commit_paths:
+-                subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
+-            subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
++            if sldb_status.returncode == 0 and sldb_status.stdout.strip():
++                subprocess.run(["git", "add", "-A", "--", sldb_rel], cwd=self.root, check=False)
++                add_commit_path(sldb_rel)
++
++            def restore_index() -> None:
++                for path in commit_paths:
++                    subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
++                subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
++                if task_before is not None:
++                    task_path.write_bytes(task_before)
++                if board_before is not None:
++                    board_path.write_text(board_before, encoding="utf-8")
++
++            paths_to_remove = []
+             if task_before is not None:
+-                task_path.write_bytes(task_before)
+-            if board_before is not None:
+-                board_path.write_text(board_before, encoding="utf-8")
+-
+-        paths_to_remove = []
+-        if task_before is not None:
+-            paths_to_remove.append(task_path)
+-            tracked = subprocess.run(
+-                ["git", "ls-files", "--error-unmatch", "--", task_rel],
+-                cwd=self.root,
+-                capture_output=True,
+-                text=True,
+-            ).returncode == 0
+-            if tracked:
+-                # A pathspec commit records the working tree, so the gone task
+-                # file must already be removed from both disk and the index.
+-                # The bundle carries uncommitted lifecycle edits at closeout,
+-                # so force the removal; its bytes are restored on failure.
+-                removed = subprocess.run(
+-                    ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
+-                )
+-                if removed.returncode != 0:
+-                    restore_index()
+-                    raise RuntimeError(
+-                        f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
+-                        f"deleted and the desk was left unchanged. Git output: "
+-                        f"{removed.stderr or removed.stdout}"
++                paths_to_remove.append(task_path)
++                tracked = subprocess.run(
++                    ["git", "ls-files", "--error-unmatch", "--", task_rel],
++                    cwd=self.root,
++                    capture_output=True,
++                    text=True,
++                ).returncode == 0
++                if tracked:
++                    # A pathspec commit records the working tree, so the gone task
++                    # file must already be removed from both disk and the index.
++                    # The bundle carries uncommitted lifecycle edits at closeout,
++                    # so force the removal; its bytes are restored on failure.
++                    removed = subprocess.run(
++                        ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
+                     )
+-                add_commit_path(task_rel)
+-
+-        commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+-        
+-        # Check if HEAD is already the closeout commit for this task. The
+-        # subject alone is not proof of ownership: `closeout: task-foo` also
+-        # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
+-        # trailer that every closeout commit carries.
+-        head_task_id = ""
+-        result_log = subprocess.run(
+-            ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
+-            cwd=self.root,
+-            capture_output=True,
+-            text=True,
+-        )
+-        if result_log.returncode == 0:
+-            head_task_id = result_log.stdout.strip()
+-            
+-        if head_task_id == task_id:
+-            self.logger.info(f"Amending closeout commit for {task_id}")
+-            result = subprocess.run(
+-                ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
+-                cwd=self.root,
+-                capture_output=True,
+-                text=True,
+-            )
+-        else:
+-            self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
+-            result = subprocess.run(
+-                ["git", "commit", "-m", commit_msg, "--", *commit_paths],
++                    if removed.returncode != 0:
++                        restore_index()
++                        raise RuntimeError(
++                            f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
++                            f"deleted and the desk was left unchanged. Git output: "
++                            f"{removed.stderr or removed.stdout}"
++                        )
++                    add_commit_path(task_rel)
++
++            commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
++
++            # Check if HEAD is already the closeout commit for this task. The
++            # subject alone is not proof of ownership: `closeout: task-foo` also
++            # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
++            # trailer that every closeout commit carries.
++            head_task_id = ""
++            result_log = subprocess.run(
++                ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
+                 cwd=self.root,
+                 capture_output=True,
+                 text=True,
+             )
+-            
+-        if result.returncode != 0:
+-            # Nothing was committed, so put the desk back exactly as it was and
+-            # leave the bundle in place.
+-            restore_index()
+-            raise RuntimeError(
+-                f"Failed to commit task closure for {task_id}. The bundle was not deleted "
+-                f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
+-            )
++            if result_log.returncode == 0:
++                head_task_id = result_log.stdout.strip()
++
++            if head_task_id == task_id:
++                self.logger.info(f"Amending closeout commit for {task_id}")
++                result = subprocess.run(
++                    ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
++                    cwd=self.root,
++                    capture_output=True,
++                    text=True,
++                )
++            else:
++                self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
++                result = subprocess.run(
++                    ["git", "commit", "-m", commit_msg, "--", *commit_paths],
++                    cwd=self.root,
++                    capture_output=True,
++                    text=True,
++                )
+ 
+-        try:
+-            from sldb.api.documents.untrack_document import untrack_document
+-        except ImportError:
+-            untrack_document = None
++            if result.returncode != 0:
++                # Nothing was committed, so put the desk back exactly as it was and
++                # leave the bundle in place.
++                restore_index()
++                raise RuntimeError(
++                    f"Failed to commit task closure for {task_id}. The bundle was not deleted "
++                    f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
++                )
+ 
+-        for p in paths_to_remove:
+-            if untrack_document:
+-                try:
+-                    untrack_document(None, str(p.relative_to(self.root)), pythonpath=".")
+-                except Exception as e:
+-                    self.logger.warning(f"Failed to untrack {p}: {e}")
+-            if p.exists():
+-                self.logger.debug(f"Removing file {p.name}")
+-                p.unlink()
++            for p in paths_to_remove:
++                if p.exists():
++                    self.logger.debug(f"Removing file {p.name}")
++                    p.unlink()
+ 
+     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
+         evidence = self._closeout_reference_evidence(payload)
+@@ -1763,6 +1742,7 @@ class DeskopsOperations:
+         target_id: str,
+         *,
+         excluded_paths: set[Path] | None = None,
++        transaction: doc_io.DocTransaction | None = None,
+     ) -> list[str]:
+         needle = f"atom:{source_id}"
+         replacement = f"atom:{target_id}"
+@@ -1794,6 +1774,8 @@ class DeskopsOperations:
+             ]
+             if not changed_lines:
+                 continue
++            if transaction is not None:
++                transaction.record(path)
+             path.write_text(updated_text, encoding="utf-8")
+             for line_number in changed_lines:
+                 rewritten.append(f"{path.relative_to(self.root)}:{line_number}")
+@@ -1806,46 +1788,25 @@ class DeskopsOperations:
+         (semantic shards, sections, hashes, journal) consistent; editing the raw
+         index files leaves the derived layers stale.
+         """
+-        store_path = self.root / ".sldb"
+-        try:
+-            from sldb.api.documents.track_document_file import track_document_file
+-            from sldb.api.documents.untrack_document import untrack_document
+-            from sldb.store.layout import store_exists
+-        except ImportError:
+-            return False
+-        if not store_exists(store_path):
++        if not (self.root / ".sldb").is_dir():
+             return False
+ 
+         pythonpath = str(Path(__file__).resolve().parents[1])
+         changed = False
+         for atom_id, new_path in retargets.items():
+             try:
+-                untrack_document(store_path, atom_id, pythonpath)
+-                track_document_file(
+-                    store_path,
+-                    AtomDoc.__name__,
+-                    self.root / new_path,
+-                    name=atom_id,
+-                    pythonpath=pythonpath,
+-                    force=True,
+-                )
++                doc_io.untrack(self.root, atom_id, pythonpath=pythonpath)
++                doc_io.track(self.root, self.root / new_path, AtomDoc, name=atom_id, pythonpath=pythonpath)
+             except Exception:
+                 continue
+             changed = True
+         return changed
+ 
+     def _untrack_atom_document(self, atom_id: str) -> bool:
+-        store_path = self.root / ".sldb"
+-        try:
+-            from sldb.api.documents.untrack_document import untrack_document
+-            from sldb.store.layout import store_exists
+-        except ImportError:
++        if not (self.root / ".sldb").is_dir():
+             return False
+-        if not store_exists(store_path):
+-            return False
+-
+         try:
+-            untrack_document(store_path, atom_id, str(Path(__file__).resolve().parents[1]))
++            doc_io.untrack(self.root, atom_id, pythonpath=str(Path(__file__).resolve().parents[1]))
+         except Exception:
+             return False
+         return True
+@@ -2259,72 +2220,8 @@ class DeskopsOperations:
+                     "model's own renderer; rewrite it through sldb (or fix the model's "
+                     "template) before editing it here."
+                 )
+-        path.parent.mkdir(parents=True, exist_ok=True)
+-        path.write_text(rendered, encoding="utf-8")
+-        if self._write_through_store(path, model, payload):
+-            return
+-        return
+-
+-    def _write_through_store(self, path: Path, model: type[Any], payload: dict[str, Any]) -> bool:
+-        """Write a tracked document through sldb so its stored hashes move with it.
+-
+-        Writing the text directly leaves the store entry describing the previous
+-        content, which the next `sldb stores check` reports as a data mutation.
+-        """
+-        if not self._document_is_tracked(path, model):
+-            return False
+-        try:
+-            from sldb.api.documents.track_document_file import track_document_file
+-            from sldb.api.documents.untrack_document import untrack_document
+-            from sldb.store.layout import store_exists
+-        except ImportError:
+-            return False
+-        store_path = self.root / ".sldb"
+-        if not store_exists(store_path):
+-            return False
+-        pythonpath = str(Path(__file__).resolve().parents[1])
+-        try:
+-            untrack_document(store_path, path.stem, pythonpath)
+-            track_document_file(
+-                store_path,
+-                model.__name__,
+-                path,
+-                name=path.stem,
+-                pythonpath=pythonpath,
+-                force=True,
+-            )
+-        except Exception as exc:
+-            self.logger.debug(f"Store write-through failed for {path.name}, writing directly: {exc}")
+-            return False
+-        return True
+-
+-    def _document_is_tracked(self, path: Path, model: type[Any]) -> bool:
+-        try:
+-            from sldb.store.io import load_documents_index, load_models_index, load_store_index
+-            from sldb.store.layout import store_exists
+-        except ImportError:
+-            return False
+-        store_path = self.root / ".sldb"
+-        if not store_exists(store_path):
+-            return False
+-        try:
+-            store_index = load_store_index(store_path)
+-            entry = next((item for item in store_index.models if item.name == model.__name__), None)
+-            if entry is None:
+-                return False
+-            models_index = load_models_index(self.root / entry.models_index)
+-            documents_index = load_documents_index(self.root / models_index.documents_index)
+-        except Exception:
+-            return False
+-        try:
+-            absolute = path if path.is_absolute() else (self.root / path)
+-            relative = str(absolute.resolve().relative_to(self.root.resolve()))
+-        except ValueError:
+-            return False
+-        return any(
+-            document.path == relative or document.name == path.stem
+-            for document in documents_index.documents
+-        )
++        with doc_io.DocTransaction(self.root) as transaction:
++            transaction.write(path, model, payload)
+ 
+     def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
+         if path.exists():
+@@ -2339,52 +2236,13 @@ class DeskopsOperations:
+         if path.exists():
+             path.unlink()
+ 
+-    def _rollback(self, rollback_actions: list[Callable[[], None]]) -> None:
+-        for action in reversed(rollback_actions):
+-            action()
+-
+     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
+         if artifact_id != "artifact.atom":
+             return
+         self._track_created_document(model, path, doc_id)
+ 
+     def _track_created_document(self, model: type[Any], path: Path, doc_id: str) -> None:
+-        store_path = self.root / ".sldb"
+-        try:
+-            from sldb.cli.model_utils import resolve_model_ref
+-            from sldb.store.io import load_documents_index
+-            from sldb.store.io import load_models_index
+-            from sldb.store.io import load_store_index
+-            from sldb.store.layout import store_exists
+-            from sldb.store.ops import track_document
+-        except ImportError:
+-            return
+-        if not store_exists(store_path):
+-            return
+-
+-        store_index = load_store_index(store_path)
+-        model_entry = next((entry for entry in store_index.models if entry.name == model.__name__), None)
+-        if model_entry is None:
+-            raise RuntimeError(
+-                f"Model {model.__name__} is not registered in store {store_path}; cannot track {path.relative_to(self.root)}"
+-            )
+-
+-        models_index = load_models_index(self.root / model_entry.models_index)
+-        documents_index = load_documents_index(self.root / models_index.documents_index)
+-        if any(entry.name == doc_id for entry in documents_index.documents):
+-            return
+-
+-        track_document(
+-            store_path,
+-            self.root,
+-            store_index,
+-            model,
+-            model_entry,
+-            path,
+-            doc_id,
+-            resolve_model_ref,
+-            str(Path(__file__).resolve().parents[1]),
+-        )
++        doc_io.track(self.root, path, model, name=doc_id)
+ 
+     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
+         raw_text = path.read_text(encoding="utf-8")
+diff --git a/runs/planning/sldb-requests.md b/runs/planning/sldb-requests.md
+new file mode 100644
+index 0000000..aa19a04
+--- /dev/null
++++ b/runs/planning/sldb-requests.md
+@@ -0,0 +1,13 @@
++# sldb API requests from deskops
++
++## Export the model renderer from `sldb.api`
++
++- **Function:** `sldb.runtime.validation.render_model_markdown(model_type, payload, ref_root=None)`
++- **Why:** `deskops/doc_io.py` renders a payload for an untracked file before writing it.
++  `sldb.api.create_document` renders and tracks in one step, but it cannot write a file
++  that must stay untracked, and `save_document_payload` only handles already-tracked
++  documents. Importing `sldb.runtime.validation` directly keeps that one write inside
++  `doc_io`, listed in its `PRIVATE_SLDB_IMPORTS`.
++- **Proposed API:** re-export `render_model_markdown` from `sldb.api` (or add
++  `render_document_payload(store, model_name, payload)`), so consumers can render without
++  reaching into `sldb.runtime.validation`.
+diff --git a/tests/test_doc_io.py b/tests/test_doc_io.py
+new file mode 100644
+index 0000000..54c6f90
+--- /dev/null
++++ b/tests/test_doc_io.py
+@@ -0,0 +1,227 @@
++from __future__ import annotations
++
++import ast
++from pathlib import Path
++import subprocess
++import sys
++
++import pytest
++
++ROOT = Path(__file__).resolve().parents[1]
++if str(ROOT) not in sys.path:
++    sys.path.insert(0, str(ROOT))
++
++from deskops import doc_io
++from deskops.models import AtomDoc
++from deskops.operations import DeskopsOperations
++
++WRITE_MODULE_PREFIXES = ("create_", "delete_", "update_", "track_", "untrack_")
++
++
++def _git(root: Path, *argv: str) -> subprocess.CompletedProcess[str]:
++    result = subprocess.run(["git", *argv], cwd=root, capture_output=True, text=True)
++    assert result.returncode == 0, result.stderr
++    return result
++
++
++def _imported_modules(path: Path) -> list[str]:
++    tree = ast.parse(path.read_text(encoding="utf-8"))
++    modules: list[str] = []
++    for node in ast.walk(tree):
++        if isinstance(node, ast.Import):
++            modules.extend(alias.name for alias in node.names)
++        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
++            modules.append(node.module)
++    return modules
++
++
++def _is_write_side_module(module: str) -> bool:
++    if module == "sldb.store.ops" or module.startswith("sldb.store.ops."):
++        return True
++    if module == "sldb.cli.commands" or module.startswith("sldb.cli.commands."):
++        return True
++    if module.startswith("sldb.api.documents."):
++        leaf = module.rsplit(".", 1)[-1]
++        return leaf.startswith(WRITE_MODULE_PREFIXES)
++    return False
++
++
++def test_only_doc_io_imports_write_side_sldb_modules() -> None:
++    offenders: list[str] = []
++    for path in sorted((ROOT / "deskops").rglob("*.py")):
++        if path.name == "doc_io.py":
++            continue
++        for module in _imported_modules(path):
++            if _is_write_side_module(module):
++                offenders.append(f"{path.relative_to(ROOT)} imports {module}")
++    assert offenders == []
++
++
++def test_doc_io_imports_sldb_api_or_declared_private_modules_only() -> None:
++    offenders: list[str] = []
++    for module in _imported_modules(ROOT / "deskops" / "doc_io.py"):
++        if not module.startswith("sldb"):
++            continue
++        allowed = module in {"sldb", "sldb.api"} or module.startswith("sldb.api.")
++        if not allowed and module not in doc_io.PRIVATE_SLDB_IMPORTS:
++            offenders.append(module)
++    assert offenders == []
++
++
++def _store_check(root: Path) -> dict:
++    from sldb.api import check_store
++
++    return check_store(root / ".sldb", root, pythonpath=str(ROOT))
++
++
++def _atom(operations: DeskopsOperations, title: str) -> Path:
++    record = operations.create_artifact(
++        "artifact.atom",
++        {
++            "title": title,
++            "five_wh_one_plus": "what",
++            "answer": "An atom whose store entry must survive a failed write.",
++        },
++    )
++    return record.path
++
++
++def _fail_first_call(monkeypatch: pytest.MonkeyPatch, name: str) -> dict[str, int]:
++    calls = {"count": 0}
++    original = getattr(doc_io, name)
++
++    def flaky(*args, **kwargs):
++        calls["count"] += 1
++        if calls["count"] == 1:
++            raise RuntimeError(f"injected {name} failure")
++        return original(*args, **kwargs)
++
++    monkeypatch.setattr(doc_io, name, flaky)
++    return calls
++
++
++def test_write_restores_file_bytes_and_store_when_retracking_fails(
++    lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    operations = DeskopsOperations(lifecycle_desk)
++    path = _atom(operations, "Rollback tracked write")
++    before_bytes = path.read_bytes()
++    before_check = _store_check(lifecycle_desk)
++    payload = operations._read_doc(path, AtomDoc)
++    payload["answer"] = "This content must not survive the failed write."
++
++    _fail_first_call(monkeypatch, "track_document_file")
++
++    with pytest.raises(RuntimeError, match="injected track_document_file failure"):
++        with doc_io.DocTransaction(lifecycle_desk) as transaction:
++            transaction.write(path, AtomDoc, payload)
++
++    assert path.read_bytes() == before_bytes
++    assert _store_check(lifecycle_desk) == before_check
++
++
++def test_track_failure_removes_the_file_created_in_the_transaction(
++    lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    path = lifecycle_desk / "desk" / "atoms" / "atom-rollback-new.md"
++    before_check = _store_check(lifecycle_desk)
++    _fail_first_call(monkeypatch, "track_document_file")
++
++    with pytest.raises(RuntimeError, match="injected track_document_file failure"):
++        with doc_io.DocTransaction(lifecycle_desk) as transaction:
++            transaction.write(
++                path,
++                AtomDoc,
++                {
++                    "id": "atom-rollback-new",
++                    "title": "Rollback new atom",
++                    "five_wh_one_plus": "what",
++                    "answer": "A failed track must not leave the file behind.",
++                    "tags": [],
++                },
++            )
++            transaction.track(path, AtomDoc)
++
++    assert not path.exists()
++    assert _store_check(lifecycle_desk) == before_check
++
++
++def test_delete_failure_keeps_the_file_and_the_store_entry(
++    lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    operations = DeskopsOperations(lifecycle_desk)
++    path = _atom(operations, "Rollback delete")
++    before_bytes = path.read_bytes()
++    before_check = _store_check(lifecycle_desk)
++    _fail_first_call(monkeypatch, "untrack_document")
++
++    with pytest.raises(RuntimeError, match="injected untrack_document failure"):
++        with doc_io.DocTransaction(lifecycle_desk) as transaction:
++            transaction.delete(path)
++
++    assert path.read_bytes() == before_bytes
++    assert _store_check(lifecycle_desk) == before_check
++
++
++def test_untrack_failure_restores_the_recorded_tracking(
++    lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    operations = DeskopsOperations(lifecycle_desk)
++    path = _atom(operations, "Rollback untrack")
++    before_check = _store_check(lifecycle_desk)
++    _fail_first_call(monkeypatch, "untrack_document")
++
++    with pytest.raises(RuntimeError, match="injected untrack_document failure"):
++        with doc_io.DocTransaction(lifecycle_desk) as transaction:
++            transaction.untrack(path)
++
++    assert doc_io.is_tracked(lifecycle_desk, path)
++    assert _store_check(lifecycle_desk) == before_check
++
++
++def test_an_inner_transaction_joins_the_outer_one(
++    lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    operations = DeskopsOperations(lifecycle_desk)
++    path = _atom(operations, "Rollback nested write")
++    before_bytes = path.read_bytes()
++    payload = operations._read_doc(path, AtomDoc)
++    payload["answer"] = "Nested writes share one rollback."
++    _fail_first_call(monkeypatch, "track_document_file")
++
++    with pytest.raises(RuntimeError, match="injected track_document_file failure"):
++        with doc_io.DocTransaction(lifecycle_desk):
++            with doc_io.DocTransaction(lifecycle_desk) as inner:
++                inner.write(path, AtomDoc, payload)
++
++    assert path.read_bytes() == before_bytes
++
++
++def test_closeout_commit_includes_the_store_delta_it_causes(lifecycle_desk: Path) -> None:
++    root = lifecycle_desk
++    (root / ".gitignore").write_text(".sldb/runtime/\n", encoding="utf-8")
++    (root / "tests").mkdir()
++    (root / "tests" / "test_evidence.py").write_text("def test_evidence():\n    assert True\n", encoding="utf-8")
++    _git(root, "add", "-A")
++    _git(root, "commit", "-q", "-m", "desk")
++
++    operations = DeskopsOperations(root)
++    task_id = operations.create_task_bundle(
++        {
++            "title": "Closeout store delta",
++            "goal": "The closeout commit carries the .sldb changes.",
++            "scope": "Closeout commit only.",
++            "implementation_path": "deskops/operations.py",
++            "validation": ["pytest"],
++            "references": ["tests/test_evidence.py"],
++        }
++    ).task_id
++    _git(root, "add", "-A")
++    _git(root, "commit", "-q", "-m", "task")
++
++    operations.advance_task(task_id)
++    operations.advance_task(task_id)
++    operations.advance_task(task_id)
++
++    status = _git(root, "status", "--porcelain", "--", ".sldb")
++    assert status.stdout == ""

@@ -7,7 +7,7 @@ from pathlib import Path
 import re
 import subprocess
 import sys
-from typing import Any, Callable
+from typing import Any
 from urllib.parse import urlparse
 
 import yaml
@@ -26,6 +26,7 @@ from deskops.models import RitualDoc
 from deskops.models import StepDoc
 from deskops.models import TaskDoc
 from deskops.runtime import Task
+from deskops import doc_io
 from deskops import lifecycle
 from deskops.lifecycle import TransitionResult
 from deskops.atom_tags import axis_folder_relpath
@@ -359,20 +360,11 @@ class DeskopsOperations:
         task_id = compiled.task_payload["id"]
         task_path = self._task_path(task_id)
 
-        rollback_actions: list[Callable[[], None]] = []
-        try:
+        with doc_io.DocTransaction(self.root):
             self._write_new_doc(task_path, TaskDoc, compiled.task_payload)
-            rollback_actions.append(lambda: self._remove_created_file(task_path))
             self._track_created_document(TaskDoc, task_path, task_id)
-
-            board_path = self.desk_root / "tasks" / "Board.md"
-            board_text = board_path.read_text(encoding="utf-8")
-            rollback_actions.append(lambda: board_path.write_text(board_text, encoding="utf-8"))
             self._append_task_to_board(task_id)
-            return TaskBundle(task_id=task_id, task_path=task_path)
-        except Exception:
-            self._rollback(rollback_actions)
-            raise
+        return TaskBundle(task_id=task_id, task_path=task_path)
 
     def create_artifact(self, artifact_id: str, raw_payload: dict[str, Any]) -> DocumentRecord:
         self.ensure_workspace()
@@ -397,12 +389,9 @@ class DeskopsOperations:
             )
         else:
             path = self._artifact_path(artifact_id, compiled.artifact_payload["id"])
-        self._write_new_doc(path, model, compiled.artifact_payload)
-        try:
+        with doc_io.DocTransaction(self.root):
+            self._write_new_doc(path, model, compiled.artifact_payload)
             self._track_created_artifact(artifact_id, model, path, compiled.artifact_payload["id"])
-        except Exception:
-            self._remove_created_file(path)
-            raise
         return DocumentRecord(kind=artifact_id.split(".")[-1], doc_id=compiled.artifact_payload["id"], path=path)
 
     def edit_artifact_field(self, subject: str, selector: str, field: str, raw_value: str) -> DocumentRecord:
@@ -716,9 +705,9 @@ class DeskopsOperations:
             raise ValueError(
                 f"Refusing to delete {atom_id}; inbound references found: {refs}. Re-run with --force to delete without rewriting references."
             )
-        untracked = self._untrack_atom_document(atom_id)
-        if path.exists():
-            path.unlink()
+        untracked = doc_io.is_tracked(self.root, path)
+        with doc_io.DocTransaction(self.root) as transaction:
+            transaction.delete(path)
         return DocumentRecord(kind="atom-untracked" if untracked else "atom", doc_id=atom_id, path=path)
 
     def create_atom_from_source(
@@ -808,7 +797,6 @@ class DeskopsOperations:
         path = self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)
         payload = self._read_doc(path, AtomDoc)
         atom_id = str(payload.get("id") or path.stem)
-        original_text = path.read_text(encoding="utf-8")
         inbound_references = self._find_inbound_atom_references(atom_id, excluded_path=path)
         if inbound_references and not force:
             refs = "; ".join(inbound_references)
@@ -831,12 +819,9 @@ class DeskopsOperations:
         sections = self._split_atom_answer_sections(str(payload.get("answer") or ""))
         assignments = self._resolve_atom_split_assignments(normalized_ids, sections, section_flags or [])
 
-        rollback_actions: list[Callable[[], None]] = [
-            lambda: path.write_text(original_text, encoding="utf-8"),
-        ]
         created: list[DocumentRecord] = []
 
-        try:
+        with doc_io.DocTransaction(self.root):
             for target_id in normalized_ids:
                 heading, content = assignments[target_id]
                 title = f"{payload['title']} — {heading}"
@@ -850,16 +835,11 @@ class DeskopsOperations:
                 }
                 new_path = self._atom_doc_path(target_id, list(new_payload.get("tags") or []))
                 self._write_new_doc(new_path, AtomDoc, new_payload)
-                rollback_actions.append(lambda new_path=new_path: self._remove_created_file(new_path))
                 self._track_created_artifact("artifact.atom", AtomDoc, new_path, target_id)
-                rollback_actions.append(lambda target_id=target_id: self._untrack_atom_document(target_id))
                 created.append(DocumentRecord(kind="atom", doc_id=target_id, path=new_path))
 
             payload["answer"] = self._render_atom_split_redirect_answer(atom_id, normalized_ids)
             self._write_doc(path, AtomDoc, payload)
-        except Exception:
-            self._rollback(rollback_actions)
-            raise
 
         return AtomSplitResult(
             original_id=atom_id,
@@ -900,20 +880,15 @@ class DeskopsOperations:
                 "Re-run with --force to keep the target atom semantics and preserve the source atom as a redirect stub."
             )
 
-        source_text = source_path.read_text(encoding="utf-8")
-        target_text = target_path.read_text(encoding="utf-8")
         inbound_references = self._find_inbound_atom_references(source_id, excluded_path=source_path)
+        rewritten_references: list[str] = []
 
-        rollback_actions: list[Callable[[], None]] = [
-            lambda: source_path.write_text(source_text, encoding="utf-8"),
-            lambda: target_path.write_text(target_text, encoding="utf-8"),
-        ]
-
-        try:
+        with doc_io.DocTransaction(self.root) as transaction:
             rewritten_references = self._rewrite_inbound_atom_references(
                 source_id,
                 target_id,
                 excluded_paths={source_path, target_path},
+                transaction=transaction,
             )
             merged_answer = self._merge_atom_answers(target_payload, source_payload)
             target_payload["answer"] = merged_answer
@@ -925,9 +900,6 @@ class DeskopsOperations:
 
             source_payload["answer"] = self._render_atom_merge_redirect_answer(source_id, target_id)
             self._write_doc(source_path, AtomDoc, source_payload)
-        except Exception:
-            self._rollback(rollback_actions)
-            raise
 
         return AtomMergeResult(
             source_id=source_id,
@@ -1077,137 +1049,144 @@ class DeskopsOperations:
         files = self._coerce_list(payload.get("files") or [])
         task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
         board_rel = "desk/tasks/Board.md"
+        sldb_rel = ".sldb"
 
-        self.logger.debug(f"Removing task {task_id} from Board.md")
-        board_path = self.desk_root / "tasks" / "Board.md"
-        board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
-        if board_before is not None:
-            board_payload = self._read_doc(board_path, BoardDoc)
-            task_ref = f"desk/tasks/{task_id}.md"
-            tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
-            board_payload["tasks"] = tasks
-            self._write_doc(board_path, BoardDoc, board_payload)
-
-        task_before = task_path.read_bytes() if task_path.exists() else None
-
-        commit_paths: list[str] = []
-        seen_paths: set[str] = set()
-
-        def add_commit_path(path: str) -> None:
-            if path not in seen_paths:
-                seen_paths.add(path)
-                commit_paths.append(path)
-
-        # Only stage (and later commit) listed files that actually changed;
-        # whatever the operator staged for other work must stay untouched.
-        for file in files:
-            status = subprocess.run(
-                ["git", "status", "--porcelain", "--", file],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            )
-            if status.returncode != 0 or not status.stdout.strip():
-                continue
-            self.logger.debug(f"Staging file: {file}")
-            subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
-            add_commit_path(file)
-
-        if board_before is not None:
-            subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
-            add_commit_path(board_rel)
-
-        def restore_index() -> None:
-            for path in commit_paths:
-                subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
-            subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
-            if task_before is not None:
-                task_path.write_bytes(task_before)
+        with doc_io.DocTransaction(self.root) as transaction:
+            self.logger.debug(f"Removing task {task_id} from Board.md")
+            board_path = self.desk_root / "tasks" / "Board.md"
+            board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
             if board_before is not None:
-                board_path.write_text(board_before, encoding="utf-8")
+                board_payload = self._read_doc(board_path, BoardDoc)
+                task_ref = f"desk/tasks/{task_id}.md"
+                tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
+                board_payload["tasks"] = tasks
+                self._write_doc(board_path, BoardDoc, board_payload)
 
-        paths_to_remove = []
-        if task_before is not None:
-            paths_to_remove.append(task_path)
-            tracked = subprocess.run(
-                ["git", "ls-files", "--error-unmatch", "--", task_rel],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            ).returncode == 0
-            if tracked:
-                # A pathspec commit records the working tree, so the gone task
-                # file must already be removed from both disk and the index.
-                # The bundle carries uncommitted lifecycle edits at closeout,
-                # so force the removal; its bytes are restored on failure.
-                removed = subprocess.run(
-                    ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
+            task_before = task_path.read_bytes() if task_path.exists() else None
+
+            # Untrack before anything is staged: the .sldb delta this causes must be
+            # part of the closeout commit, and a failure must abort the closeout.
+            if task_before is not None:
+                transaction.untrack(task_path)
+
+            commit_paths: list[str] = []
+            seen_paths: set[str] = set()
+
+            def add_commit_path(path: str) -> None:
+                if path not in seen_paths:
+                    seen_paths.add(path)
+                    commit_paths.append(path)
+
+            # Only stage (and later commit) listed files that actually changed;
+            # whatever the operator staged for other work must stay untouched.
+            for file in files:
+                status = subprocess.run(
+                    ["git", "status", "--porcelain", "--", file],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
                 )
-                if removed.returncode != 0:
-                    restore_index()
-                    raise RuntimeError(
-                        f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
-                        f"deleted and the desk was left unchanged. Git output: "
-                        f"{removed.stderr or removed.stdout}"
+                if status.returncode != 0 or not status.stdout.strip():
+                    continue
+                self.logger.debug(f"Staging file: {file}")
+                subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
+                add_commit_path(file)
+
+            if board_before is not None:
+                subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
+                add_commit_path(board_rel)
+
+            sldb_status = subprocess.run(
+                ["git", "status", "--porcelain", "--", sldb_rel],
+                cwd=self.root,
+                capture_output=True,
+                text=True,
+            )
+            if sldb_status.returncode == 0 and sldb_status.stdout.strip():
+                subprocess.run(["git", "add", "-A", "--", sldb_rel], cwd=self.root, check=False)
+                add_commit_path(sldb_rel)
+
+            def restore_index() -> None:
+                for path in commit_paths:
+                    subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
+                subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
+                if task_before is not None:
+                    task_path.write_bytes(task_before)
+                if board_before is not None:
+                    board_path.write_text(board_before, encoding="utf-8")
+
+            paths_to_remove = []
+            if task_before is not None:
+                paths_to_remove.append(task_path)
+                tracked = subprocess.run(
+                    ["git", "ls-files", "--error-unmatch", "--", task_rel],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                ).returncode == 0
+                if tracked:
+                    # A pathspec commit records the working tree, so the gone task
+                    # file must already be removed from both disk and the index.
+                    # The bundle carries uncommitted lifecycle edits at closeout,
+                    # so force the removal; its bytes are restored on failure.
+                    removed = subprocess.run(
+                        ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
                     )
-                add_commit_path(task_rel)
+                    if removed.returncode != 0:
+                        restore_index()
+                        raise RuntimeError(
+                            f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
+                            f"deleted and the desk was left unchanged. Git output: "
+                            f"{removed.stderr or removed.stdout}"
+                        )
+                    add_commit_path(task_rel)
 
-        commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
-        
-        # Check if HEAD is already the closeout commit for this task. The
-        # subject alone is not proof of ownership: `closeout: task-foo` also
-        # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
-        # trailer that every closeout commit carries.
-        head_task_id = ""
-        result_log = subprocess.run(
-            ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
-            cwd=self.root,
-            capture_output=True,
-            text=True,
-        )
-        if result_log.returncode == 0:
-            head_task_id = result_log.stdout.strip()
-            
-        if head_task_id == task_id:
-            self.logger.info(f"Amending closeout commit for {task_id}")
-            result = subprocess.run(
-                ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
+            commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
+
+            # Check if HEAD is already the closeout commit for this task. The
+            # subject alone is not proof of ownership: `closeout: task-foo` also
+            # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
+            # trailer that every closeout commit carries.
+            head_task_id = ""
+            result_log = subprocess.run(
+                ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
                 cwd=self.root,
                 capture_output=True,
                 text=True,
             )
-        else:
-            self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
-            result = subprocess.run(
-                ["git", "commit", "-m", commit_msg, "--", *commit_paths],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            )
-            
-        if result.returncode != 0:
-            # Nothing was committed, so put the desk back exactly as it was and
-            # leave the bundle in place.
-            restore_index()
-            raise RuntimeError(
-                f"Failed to commit task closure for {task_id}. The bundle was not deleted "
-                f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
-            )
+            if result_log.returncode == 0:
+                head_task_id = result_log.stdout.strip()
 
-        try:
-            from sldb.api.documents.untrack_document import untrack_document
-        except ImportError:
-            untrack_document = None
+            if head_task_id == task_id:
+                self.logger.info(f"Amending closeout commit for {task_id}")
+                result = subprocess.run(
+                    ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
+            else:
+                self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
+                result = subprocess.run(
+                    ["git", "commit", "-m", commit_msg, "--", *commit_paths],
+                    cwd=self.root,
+                    capture_output=True,
+                    text=True,
+                )
 
-        for p in paths_to_remove:
-            if untrack_document:
-                try:
-                    untrack_document(None, str(p.relative_to(self.root)), pythonpath=".")
-                except Exception as e:
-                    self.logger.warning(f"Failed to untrack {p}: {e}")
-            if p.exists():
-                self.logger.debug(f"Removing file {p.name}")
-                p.unlink()
+            if result.returncode != 0:
+                # Nothing was committed, so put the desk back exactly as it was and
+                # leave the bundle in place.
+                restore_index()
+                raise RuntimeError(
+                    f"Failed to commit task closure for {task_id}. The bundle was not deleted "
+                    f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
+                )
+
+            for p in paths_to_remove:
+                if p.exists():
+                    self.logger.debug(f"Removing file {p.name}")
+                    p.unlink()
 
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
         evidence = self._closeout_reference_evidence(payload)
@@ -1763,6 +1742,7 @@ class DeskopsOperations:
         target_id: str,
         *,
         excluded_paths: set[Path] | None = None,
+        transaction: doc_io.DocTransaction | None = None,
     ) -> list[str]:
         needle = f"atom:{source_id}"
         replacement = f"atom:{target_id}"
@@ -1794,6 +1774,8 @@ class DeskopsOperations:
             ]
             if not changed_lines:
                 continue
+            if transaction is not None:
+                transaction.record(path)
             path.write_text(updated_text, encoding="utf-8")
             for line_number in changed_lines:
                 rewritten.append(f"{path.relative_to(self.root)}:{line_number}")
@@ -1806,46 +1788,25 @@ class DeskopsOperations:
         (semantic shards, sections, hashes, journal) consistent; editing the raw
         index files leaves the derived layers stale.
         """
-        store_path = self.root / ".sldb"
-        try:
-            from sldb.api.documents.track_document_file import track_document_file
-            from sldb.api.documents.untrack_document import untrack_document
-            from sldb.store.layout import store_exists
-        except ImportError:
-            return False
-        if not store_exists(store_path):
+        if not (self.root / ".sldb").is_dir():
             return False
 
         pythonpath = str(Path(__file__).resolve().parents[1])
         changed = False
         for atom_id, new_path in retargets.items():
             try:
-                untrack_document(store_path, atom_id, pythonpath)
-                track_document_file(
-                    store_path,
-                    AtomDoc.__name__,
-                    self.root / new_path,
-                    name=atom_id,
-                    pythonpath=pythonpath,
-                    force=True,
-                )
+                doc_io.untrack(self.root, atom_id, pythonpath=pythonpath)
+                doc_io.track(self.root, self.root / new_path, AtomDoc, name=atom_id, pythonpath=pythonpath)
             except Exception:
                 continue
             changed = True
         return changed
 
     def _untrack_atom_document(self, atom_id: str) -> bool:
-        store_path = self.root / ".sldb"
-        try:
-            from sldb.api.documents.untrack_document import untrack_document
-            from sldb.store.layout import store_exists
-        except ImportError:
+        if not (self.root / ".sldb").is_dir():
             return False
-        if not store_exists(store_path):
-            return False
-
         try:
-            untrack_document(store_path, atom_id, str(Path(__file__).resolve().parents[1]))
+            doc_io.untrack(self.root, atom_id, pythonpath=str(Path(__file__).resolve().parents[1]))
         except Exception:
             return False
         return True
@@ -2259,72 +2220,8 @@ class DeskopsOperations:
                     "model's own renderer; rewrite it through sldb (or fix the model's "
                     "template) before editing it here."
                 )
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(rendered, encoding="utf-8")
-        if self._write_through_store(path, model, payload):
-            return
-        return
-
-    def _write_through_store(self, path: Path, model: type[Any], payload: dict[str, Any]) -> bool:
-        """Write a tracked document through sldb so its stored hashes move with it.
-
-        Writing the text directly leaves the store entry describing the previous
-        content, which the next `sldb stores check` reports as a data mutation.
-        """
-        if not self._document_is_tracked(path, model):
-            return False
-        try:
-            from sldb.api.documents.track_document_file import track_document_file
-            from sldb.api.documents.untrack_document import untrack_document
-            from sldb.store.layout import store_exists
-        except ImportError:
-            return False
-        store_path = self.root / ".sldb"
-        if not store_exists(store_path):
-            return False
-        pythonpath = str(Path(__file__).resolve().parents[1])
-        try:
-            untrack_document(store_path, path.stem, pythonpath)
-            track_document_file(
-                store_path,
-                model.__name__,
-                path,
-                name=path.stem,
-                pythonpath=pythonpath,
-                force=True,
-            )
-        except Exception as exc:
-            self.logger.debug(f"Store write-through failed for {path.name}, writing directly: {exc}")
-            return False
-        return True
-
-    def _document_is_tracked(self, path: Path, model: type[Any]) -> bool:
-        try:
-            from sldb.store.io import load_documents_index, load_models_index, load_store_index
-            from sldb.store.layout import store_exists
-        except ImportError:
-            return False
-        store_path = self.root / ".sldb"
-        if not store_exists(store_path):
-            return False
-        try:
-            store_index = load_store_index(store_path)
-            entry = next((item for item in store_index.models if item.name == model.__name__), None)
-            if entry is None:
-                return False
-            models_index = load_models_index(self.root / entry.models_index)
-            documents_index = load_documents_index(self.root / models_index.documents_index)
-        except Exception:
-            return False
-        try:
-            absolute = path if path.is_absolute() else (self.root / path)
-            relative = str(absolute.resolve().relative_to(self.root.resolve()))
-        except ValueError:
-            return False
-        return any(
-            document.path == relative or document.name == path.stem
-            for document in documents_index.documents
-        )
+        with doc_io.DocTransaction(self.root) as transaction:
+            transaction.write(path, model, payload)
 
     def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         if path.exists():
@@ -2339,52 +2236,13 @@ class DeskopsOperations:
         if path.exists():
             path.unlink()
 
-    def _rollback(self, rollback_actions: list[Callable[[], None]]) -> None:
-        for action in reversed(rollback_actions):
-            action()
-
     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
         if artifact_id != "artifact.atom":
             return
         self._track_created_document(model, path, doc_id)
 
     def _track_created_document(self, model: type[Any], path: Path, doc_id: str) -> None:
-        store_path = self.root / ".sldb"
-        try:
-            from sldb.cli.model_utils import resolve_model_ref
-            from sldb.store.io import load_documents_index
-            from sldb.store.io import load_models_index
-            from sldb.store.io import load_store_index
-            from sldb.store.layout import store_exists
-            from sldb.store.ops import track_document
-        except ImportError:
-            return
-        if not store_exists(store_path):
-            return
-
-        store_index = load_store_index(store_path)
-        model_entry = next((entry for entry in store_index.models if entry.name == model.__name__), None)
-        if model_entry is None:
-            raise RuntimeError(
-                f"Model {model.__name__} is not registered in store {store_path}; cannot track {path.relative_to(self.root)}"
-            )
-
-        models_index = load_models_index(self.root / model_entry.models_index)
-        documents_index = load_documents_index(self.root / models_index.documents_index)
-        if any(entry.name == doc_id for entry in documents_index.documents):
-            return
-
-        track_document(
-            store_path,
-            self.root,
-            store_index,
-            model,
-            model_entry,
-            path,
-            doc_id,
-            resolve_model_ref,
-            str(Path(__file__).resolve().parents[1]),
-        )
+        doc_io.track(self.root, path, model, name=doc_id)
 
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
         raw_text = path.read_text(encoding="utf-8")

@@ -4,15 +4,20 @@ from pathlib import Path
 import re
 from typing import Any
 
-from sldb.cli.model_utils import registered_model, resolve_model_ref
+from sldb.cli.model_utils import registered_model
 from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
 from sldb.runtime.validation import render_model_markdown, validate_model_input_roundtrip
 from sldb.store.layout import project_root
-from sldb.store.ops import track_document
 from sldb.store.resolver import find_local_store
 
+from deskops import doc_io
 from deskops.identity import load_repository_registry, EcosystemIdentity
+
+
+def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
+    """Compatibility seam: the old positional sldb call signature delegates to doc_io."""
+    doc_io.track(root, path, model_type, name=note_name, pythonpath=pythonpath)
 
 
 class RepoCLI:
@@ -122,7 +127,7 @@ class RepoCLI:
             entry,
             output_path,
             f"repo-{repo_id}",
-            resolve_model_ref,
+            None,
             args.pythonpath,
         )
         print(f"Tracked 'repo-{repo_id}'")

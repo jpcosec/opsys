@@ -6,6 +6,7 @@ from typing import Any
 
 import yaml
 
+from deskops import doc_io
 from deskops.operations import parse_task_sections
 
 
@@ -79,11 +80,7 @@ class PromoteCLI:
         if not store_path.exists():
             return None
         try:
-            from types import SimpleNamespace
-
-            from sldb.cli.commands.doc import DocCLI
-
-            DocCLI().untrack(SimpleNamespace(store=str(store_path), pythonpath=None, doc=source.stem))
+            doc_io.untrack(root, source.stem)
             return None
         except Exception as exc:  # noqa: BLE001 - store problems must not abort the promotion
             return f"Warning: could not untrack '{source.stem}' from the store: {exc}"

@@ -21,6 +21,7 @@ import re
 
 import yaml
 
+from deskops import doc_io
 from deskops import lifecycle
 
 LEGACY_MODELS = ("RoutineDoc", "ConditionDoc", "ChecklistDoc", "OperatorDoc", "EdgeDoc", "HookDoc")
@@ -136,11 +137,9 @@ def migrate_legacy_lifecycle(root: Path) -> list[str]:
     # succeeded, so a refusal leaves every file in place and a rerun picks up from there.
     pythonpath = str(Path(__file__).resolve().parents[1])
     if store.exists():
-        from sldb.api import remove_model
-
         for name in legacy_registered_models(root):
             try:
-                remove_model(store, name, pythonpath=pythonpath, untrack_documents=True)
+                doc_io.remove_model_from(root, name, pythonpath=pythonpath, untrack_documents=True)
             except Exception as exc:
                 raise LegacyMigrationBlocked(
                     f"sldb could not unregister {name} with its documents: {exc}. No file was deleted. "
@@ -165,10 +164,8 @@ def migrate_legacy_lifecycle(root: Path) -> list[str]:
             changes.append(f"rewrote {path.relative_to(root).as_posix()} (lifecycle fields)")
 
     if store.exists():
-        from sldb.api import update_store_indexes
-
         for change in lifecycle.ensure_lifecycle_graph(root):
             changes.append(f"lifecycle graph: {change}")
-        update_store_indexes(store, pythonpath, wait=False)
+        doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
         changes.append("updated store indexes")
     return changes

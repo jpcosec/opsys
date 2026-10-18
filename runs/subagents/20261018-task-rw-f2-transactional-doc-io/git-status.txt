@@ -1,0 +1,16 @@
+ M .sldb/core/documents/PillDoc/pill-012-create-operations-transactional-rollback.yaml
+ M .sldb/core/models/PillDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/contexts/pill-012-create-operations-transactional-rollback.md
+ M deskops/bootstrap.py
+ M deskops/cli/commands/desk.py
+ M deskops/cli/commands/message.py
+ M deskops/cli/commands/promote.py
+ M deskops/cli/commands/repo.py
+ M deskops/lifecycle.py
+ M deskops/lifecycle_migration.py
+ M deskops/operations.py
+?? deskops/doc_io.py
+?? runs/planning/sldb-requests.md
+?? runs/subagents/20261018-task-rw-f2-transactional-doc-io/
+?? tests/test_doc_io.py
