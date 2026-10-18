@@ -3,8 +3,8 @@ model_ref: deskops.models:RitualDoc
 path: deskops/models/ritual.py
 documents_index: .sldb/core/documents/RitualDoc.yaml
 sections_index: .sldb/runtime/sections/RitualDoc.yaml
-model_hash: a4785ef20696095045fe7033178c667b3cc9d9495b22b6bc14ab34613b0f7523
-roster_hash: d0961eebebb0efd0222308239b63c3cabdb2a2f785b47f6e540f2596f0d85b19
+model_hash: e3ac27aa95fb2f9758368ea584e4ce925e4ae56ea604a9b5da6ecf37321c2658
+roster_hash: 1767207665524153cbda5d02b1888813d2bf227c95d0116602b2ec82175e88ab
 contract_hash: 8189f904ff08e86676ebc93c73f4aebb3858659ea426334941bbe3763bd546cd
 documents_count: 4
 version: 1
