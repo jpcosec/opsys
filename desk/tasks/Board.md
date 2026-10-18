@@ -7,7 +7,6 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-init-links-federated-models-instead-of-copying.md
-- desk/tasks/task-rw-f4-request-sldb-unresolved-references.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -49,4 +48,3 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - `deskops init` links the deskops models from their owner store instead of copying them [draft] - A store created by `deskops init` registers the deskops models as federated entries owned by the deskops store, and `deskops desk update --apply` converts an existing store's copied entries to federated ones.
-- Write the sldb request for resolving bare ids and reporting unresolved references [draft] - runs/planning/sldb-request-unresolved-references.md contains a reproduction and a proposed public API for both gaps, and the coordinator's written reply is pasted into its `## Response` section.

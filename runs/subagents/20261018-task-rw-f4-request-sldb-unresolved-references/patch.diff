@@ -1,0 +1,211 @@
+diff --git a/runs/planning/sldb-request-unresolved-references.md b/runs/planning/sldb-request-unresolved-references.md
+new file mode 100644
+index 0000000..549894d
+--- /dev/null
++++ b/runs/planning/sldb-request-unresolved-references.md
+@@ -0,0 +1,205 @@
++# Request to sldb: resolve bare reference ids and report unresolved references
++
++Date: 2026-10-18. From: the deskops executor, for the coordinator of SLDB_1.
++Phase F4 of `runs/planning/deskops-rewrite-inventory.md`.
++
++## What deskops needs
++
++F4 replaces deskops' own regex edge extractor (`deskops/graph/extract_edges.py`) with
++sldb's edge index, so that one schema of node ids and one graph runtime are used. Two
++sldb behaviors block that today.
++
++1. `_ids_in` (`src/sldb/store/edge_index/declared_references.py:67-74`) keeps only
++   values written `Model:name`. deskops stores bare ids and paths:
++   `depends_on: [task-x]`, `inherits_from: [task-y]`, `from_drawer: desk/drawer/tasks/task-x.md`,
++   `pills: [desk/contexts/pill-x.md]`, `atoms: [desk/atoms/...]`. None of them emits an
++   edge, even when the target document is tracked.
++2. `resolve_edges` (`src/sldb/store/edge_index/resolve.py:23-34`) leaves out a schema edge
++   whose target is not a node, with no record of it (`kept` loses it; `problems` only
++   describes authored `relation_doc` edges). `deskops graph missing` therefore cannot use
++   the index to find dangling declared references.
++
++## Reproduction
++
++Environment: structuredLanguageDB 0.1.11, Python 3.13.5, deskops from this checkout.
++
++```bash
++export PYTHONPATH=/path/to/deskops-checkout
++rm -rf /tmp/sldb-repro-unresolved && mkdir /tmp/sldb-repro-unresolved
++cd /tmp/sldb-repro-unresolved && git init -q .
++
++deskops init .
++
++deskops add task --root . --title "Bare id repro" \
++  --goal "Show a bare id emits no edge" --scope "Throwaway repro" \
++  --implementation-path "none" --done-when "reproduced" \
++  --depends-on task-nope
++
++deskops add task --root . --title "Qualified id repro" \
++  --goal "Show a qualified id is declared and then dropped" --scope "Throwaway repro" \
++  --implementation-path "none" --done-when "reproduced" \
++  --depends-on TaskDoc:task-nope
++```
++
++The composed index has no `references` edge for either task:
++
++```console
++$ sldb edges show TaskDoc:task-bare-id-repro --relation references --store .sldb
++[]
++$ sldb edges show TaskDoc:task-qualified-id-repro --relation references --store .sldb
++[]
++```
++
++The unit below the index shows why. `declared_reference_edges` keeps the qualified value
++and drops the bare one before anything is resolved:
++
++```python
++from deskops.models import TaskDoc
++from sldb.store.edge_index.declared_references import declared_reference_edges
++
++payload = {"depends_on": ["task-nope", "TaskDoc:task-other"]}
++for edge in declared_reference_edges("TaskDoc", "task-source", TaskDoc, payload):
++    print(edge.model_dump())
++```
++
++```console
++{'source': 'sldb://document/TaskDoc:task-source', 'target': 'sldb://document/TaskDoc:task-other', 'relation': 'references', 'metadata': {'origin': 'schema', 'field': 'depends_on'}}
++```
++
++For the qualified value the edge is written into the document's shard:
++
++```console
++$ grep -A4 'relation: references' .sldb/runtime/edges/TaskDoc/task-qualified-id-repro.yaml
++  relation: references
++  metadata:
++    origin: schema
++    field: depends_on
++```
++
++but composing the index drops it because `TaskDoc:task-nope` is not a node, and reports
++nothing:
++
++```python
++from deskops.models import TaskDoc
++from sldb.store.edge_index.declared_references import declared_reference_edges
++from sldb.store.edge_index.resolve import resolve_edges
++
++edges = declared_reference_edges("TaskDoc", "task-source", TaskDoc, {"depends_on": ["TaskDoc:task-missing"]})
++kept, problems = resolve_edges({}, edges)
++print("declared:", [e.model_dump() for e in edges])
++print("kept:", kept)
++print("problems:", problems)
++```
++
++```console
++declared: [{'source': 'sldb://document/TaskDoc:task-source', 'target': 'sldb://document/TaskDoc:task-missing', 'relation': 'references', 'metadata': {'origin': 'schema', 'field': 'depends_on'}}]
++kept: []
++problems: []
++```
++
++## Proposed API
++
++### (a) Resolve a declared reference field's bare ids
++
++Add a per-field allowed-model declaration for reference fields, mirroring
++`__containment__` (which already maps a field to the models it may hold):
++
++```python
++class TaskDoc(OperationalArtifactDoc):
++    __containment__ = {
++        "current_node": ["RitualDoc"],
++        "pills": ["PillDoc"],
++        "atoms": ["AtomDoc"],
++    }
++    __references__ = ["references", "depends_on", "inherits_from", "from_drawer"]
++    __reference_models__ = {
++        "depends_on": ["TaskDoc"],
++        "inherits_from": ["TaskDoc"],
++        "from_drawer": ["TaskDoc"],
++        # `references` stays out: it is free-form (files, commits, commands).
++    }
++```
++
++Resolution rule for each value in a declared field, in this order:
++
++1. A value that already contains `:` is an export id and is used as written.
++2. A value that names a tracked document's project-relative path is resolved to that
++   document's node. `composition_targets._owners_by_path` already builds this map; a
++   declared reference should reuse it (normalize with `normpath`, strip backticks).
++3. A bare value whose field allows exactly one model is qualified as `Model:value`.
++4. A bare value with no allowed model, or with several, is left unresolved and reported
++   by (b). With several, report `ambiguous` rather than guessing.
++
++Containment should use the same rule: its allowed-model list already exists, but `_ids_in`
++ignores it, so `pills: [pill-x]` would resolve while `pills: [desk/contexts/pill-x.md]`
++needs rule 2.
++
++Notes for the design:
++
++- Keep `__references__` a list. A new dunder is backward compatible for existing models.
++  If it enters `_contract_parts` (`src/sldb/store/hashing.py:88-89`), every model contract
++  moves and each store needs `sldb stores update`; decide whether that migration is worth
++  it, or accept that changing the map does not trigger a rebuild.
++- Shards built under this rule differ, so `EDGE_INDEX_VERSION`
++  (`src/sldb/store/edge_index/node_ids.py:8`) must move from `3` to `4`.
++
++### (b) Report unresolved declared references
++
++```python
++sldb.api.unresolved_references(
++    store: str | Path | None,
++    include_linked: bool = True,
++    exclude_tags: Iterable[str] = (),
++) -> list[UnresolvedReference]
++```
++
++```python
++class UnresolvedReference(BaseModel):
++    source: str                  # export id, e.g. "TaskDoc:task-a"
++    model: str                   # "TaskDoc"
++    field: str                   # "depends_on"
++    target: str                  # value as written: "task-nope", "TaskDoc:task-x", a path
++    target_export_id: str | None # "TaskDoc:task-x" when only the target is missing
++    relation: str                # "references" or "contains"
++    reason: str                  # "missing_document" | "ambiguous" | "unknown_path"
++```
++
++- Fill it while composing, where `resolve_edges` already drops schema/alias edges. Keep
++  this list separate from `EdgeIndex.problems`: `problems` fails authored edges, while an
++  unresolved declared reference is a normal condition a caller inspects.
++- Expose it on `EdgeIndex` (e.g. `unresolved_references`) and as the public function
++  above. A CLI view such as `sldb edges unresolved [--store S]` would make it
++  inspectable; the API is what deskops calls.
++- Include only declared edges (`metadata.field` present), so alias edges are not reported
++  as references.
++
++## deskops caller
++
++`deskops.graph.checks.find_missing_graph_references(root, graph_path=None)` is the
++function to call it. It is reached from `deskops graph missing`
++(`deskops/cli/main.py:_graph_missing`) and from
++`deskops.operations.OperationService._build_atom_from_graph_finding`.
++
++Today it calls `deskops.graph.extract_edges.extract_declared_edges(root).missing_targets`
++and maps the result to `GraphMissingFinding(kind="missing_declared_target", ...)`. F4
++replaces that source with `sldb.api.unresolved_references(store)`, mapping `source` /
++`field` / `target` into the finding, and keeps the regex extractor only for file-path
++edges and provenance (`provenance_path`, `provenance_locator`) that sldb does not carry.
++The caller also needs the archived-record flag (`record: true`) that F0 added; it can
++read it from the source document's payload, or sldb can carry it in the record.
++
++## Response
++
++sldb-04, 2026-10-18 (through a cross-session message to the deskops supervisor): accepted (a) and (b) with changes; ships in structuredLanguageDB 0.1.12; sldb-04 sends the final shape for review before merging and announces the release.
++
++(a) `__reference_models__ = {"field": ["Model", ...]}` as proposed, with:
++1. Resolution at index composition, not in the shard: the shard keeps the value as written plus its field and allowed models, and `resolve_edges` resolves it against the nodes and tracked paths present at that moment (a shard is rebuilt only when its own document changes, so resolving there would go stale).
++2. Rules in order: a value with `:` is used as written; a value that is the path of a tracked document resolves to it (normpath, backticks stripped); a bare value is tried as `Model:value` for each allowed model: exactly one existing resolves, more than one is `ambiguous`, none is `missing_document`.
++3. A field with no declared models (deskops' free-form `references`) resolves only tracked paths and qualified ids; its bare values are not reported.
++4. `__containment__` applies the same rules with its allowed-model list, so `pills: [desk/contexts/pill-x.md]` resolves.
++5. Contract: `__reference_models__` enters the contract hash only when a model declares it; TaskDoc will show `contract moved` once deskops adds it (fix: `sldb stores update`). RelationDoc, RelationTypeDoc and RitualDoc are untouched.
++6. `EDGE_INDEX_VERSION` moves to 4; shards rebuild on their own.
++
++(b) `sldb.api.unresolved_references(store, include_linked=True, exclude_tags=()) -> list[UnresolvedReference]` with fields `source`, `model`, `field`, `target` (as written), `target_export_id` (None when it cannot be qualified), `relation` (`references` | `contains`), `reason` (`missing_document` | `ambiguous` | `unknown_path`) and `source_path`. Also exposed as `EdgeIndex.unresolved_references` (separate from `EdgeIndex.problems`) and as `sldb edges unresolved [--store S] [--format json]`. Only declared edges (with `metadata.field`) are included, not alias edges. `unknown_path` is a path-shaped value (contains `/` or ends in `.md`) that is not a tracked document, in a field with declared models or containment. No `record: true` flag: deskops reads it from the source document's payload through `source`.
++
++deskops accepted this shape on 2026-10-18. task-rw-f4-graph-on-sldb-edge-index requires structuredLanguageDB>=0.1.12.
