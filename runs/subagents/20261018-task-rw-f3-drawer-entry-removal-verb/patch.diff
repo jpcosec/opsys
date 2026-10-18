@@ -1,0 +1,338 @@
+diff --git a/deskops/cli/commands/drawer.py b/deskops/cli/commands/drawer.py
+new file mode 100644
+index 0000000..ad27b3b
+--- /dev/null
++++ b/deskops/cli/commands/drawer.py
+@@ -0,0 +1,19 @@
++from __future__ import annotations
++
++from pathlib import Path
++from typing import Any
++
++from deskops.services.drawer import DrawerService
++
++
++class DrawerCLI:
++    """Drawer entry maintenance."""
++
++    def run(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        if args.drawer_command == "remove":
++            result = DrawerService(root).remove_entry(args.selector, force=args.force)
++            for message in result.messages:
++                print(message)
++            return result.exit_code
++        return 1
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 2266d1e..ae410cd 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -134,6 +134,10 @@ class CLI:
+             from deskops.cli.commands.promote import PromoteCLI
+ 
+             return PromoteCLI().run(args)
++        if args.command == "drawer":
++            from deskops.cli.commands.drawer import DrawerCLI
++
++            return DrawerCLI().run(args)
+         if args.command == "bootstrap":
+             return self._bootstrap()
+         if args.command == "init":
+diff --git a/deskops/cli/parser.py b/deskops/cli/parser.py
+index 6fdbab7..57e628f 100644
+--- a/deskops/cli/parser.py
++++ b/deskops/cli/parser.py
+@@ -45,6 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
+     _add_inbox_commands(subparsers)
+     _add_message_commands(subparsers)
+     _add_promote_commands(subparsers)
++    _add_drawer_commands(subparsers)
+     _add_add_commands(subparsers)
+     _add_edit_commands(subparsers)
+     _add_bind_commands(subparsers)
+@@ -395,6 +396,25 @@ Examples:
+     inbox.add_argument("--title", help="Override the drawer task title")
+ 
+ 
++def _add_drawer_commands(
++    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
++) -> None:
++    p = subparsers.add_parser("drawer", help="Manage deferred drawer entries.")
++    s = p.add_subparsers(dest="drawer_command", required=True)
++
++    remove = s.add_parser(
++        "remove",
++        help="Remove one drawer entry, its tracking, and its bullets on the drawer board.",
++    )
++    remove.add_argument("selector", help=f"Drawer file selector. {SELECTOR_HELP}")
++    remove.add_argument("--root", default=".", help="Target repository root")
++    remove.add_argument(
++        "--force",
++        action="store_true",
++        help="Remove even when a task in desk/tasks/ records the entry in from_drawer.",
++    )
++
++
+ def _add_desk_commands(
+     subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+ ) -> None:
+diff --git a/deskops/services/drawer.py b/deskops/services/drawer.py
+index dc59a40..0fc2256 100644
+--- a/deskops/services/drawer.py
++++ b/deskops/services/drawer.py
+@@ -15,8 +15,10 @@ import re
+ from typing import Any
+ 
+ import yaml
++from sldb.runtime.validation import extract_model_data
+ 
+ from deskops import doc_io
++from deskops.models import TaskDoc
+ from deskops.operations import parse_task_sections
+ 
+ 
+@@ -28,6 +30,14 @@ class DrawerPromotion:
+     messages: list[str] = field(default_factory=list)
+ 
+ 
++@dataclass
++class DrawerRemoval:
++    """Outcome of removing one drawer entry, ready for the CLI to print."""
++
++    exit_code: int
++    messages: list[str] = field(default_factory=list)
++
++
+ class DrawerService:
+     DRAWER_INDEX_FILES = {"README.md", "Board.md"}
+ 
+@@ -125,6 +135,70 @@ class DrawerService:
+         messages.append(f"Path: {target}")
+         return DrawerPromotion(0, messages)
+ 
++    def remove_entry(self, selector: str, *, force: bool = False) -> DrawerRemoval:
++        """Remove one drawer file, its tracking, and its bullets on the drawer board.
++
++        A task in desk/tasks/ that records the entry in from_drawer blocks the
++        removal unless force is set, so deleting the source cannot silently
++        leave active work pointing at a file someone still expects to exist.
++        """
++        try:
++            source = self.resolve_drawer_source(selector)
++        except (FileNotFoundError, ValueError) as exc:
++            return DrawerRemoval(1, [f"Error: {exc}"])
++
++        relative = source.relative_to(self.root).as_posix()
++        if not force:
++            owners = self._tasks_recording(relative)
++            if owners:
++                listing = ", ".join(owners)
++                return DrawerRemoval(
++                    1,
++                    [
++                        f"Error: refusing to remove {relative}: "
++                        f"task records it in from_drawer ({listing}). Use --force to remove it anyway."
++                    ],
++                )
++
++        board = self.desk_root / "drawer" / "tasks" / "Board.md"
++        board_changed = False
++        with doc_io.DocTransaction(self.root) as transaction:
++            if board.exists():
++                original = board.read_text(encoding="utf-8")
++                updated = self._without_entry_bullets(original, source.stem)
++                if updated != original:
++                    transaction.record(board)
++                    board.write_text(updated, encoding="utf-8")
++                    board_changed = True
++            transaction.delete(source)
++
++        messages = [f"Removed drawer entry {relative}"]
++        if board_changed:
++            messages.append(f"Removed its bullets from {board.relative_to(self.root).as_posix()}")
++        return DrawerRemoval(0, messages)
++
++    def _tasks_recording(self, relative: str) -> list[str]:
++        """Active task ids in desk/tasks/ whose from_drawer points at relative."""
++        tasks_dir = self.desk_root / "tasks"
++        if not tasks_dir.exists():
++            return []
++        owners: list[str] = []
++        for path in sorted(tasks_dir.glob("task-*.md")):
++            try:
++                payload = extract_model_data(TaskDoc, path.read_text(encoding="utf-8"))
++            except Exception:  # noqa: BLE001 - one unreadable task must not block the check
++                continue
++            if payload.get("from_drawer") == relative:
++                owners.append(str(payload.get("id") or path.stem))
++        return owners
++
++    def _without_entry_bullets(self, text: str, stem: str) -> str:
++        """Drop every line that starts with ``- `<stem>` ``."""
++        prefix = f"- `{stem}` "
++        return "".join(
++            line for line in text.splitlines(keepends=True) if not line.startswith(prefix)
++        )
++
+     def _untrack_note(self, transaction: doc_io.DocTransaction, source: Path) -> str | None:
+         """Drop the promoted note from the sldb store, best effort.
+ 
+diff --git a/tests/fixtures/golden/help/deskops.txt b/tests/fixtures/golden/help/deskops.txt
+index 2484fe0..4b6cfe0 100644
+--- a/tests/fixtures/golden/help/deskops.txt
++++ b/tests/fixtures/golden/help/deskops.txt
+@@ -1,10 +1,10 @@
+ usage: deskops [-h] [--debug]
+-               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
++               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
+ 
+ deskops: Workflow-domain layer for the hum-ecosystem.
+ 
+ positional arguments:
+-  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
++  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+     about               Print a short overview of deskops and its first-use commands.
+     doctor              Detect and repair common broken desk states safely.
+     status              Show current workspace and workflow status.
+@@ -14,6 +14,7 @@ positional arguments:
+     inbox               Deprecated alias for `deskops message`; use message send/list/read/ack.
+     message             Send, list, read, or acknowledge cross-desk messages.
+     promote             Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.
++    drawer              Manage deferred drawer entries.
+     add                 Create desk workflow artifacts from modeled templates.
+     edit                Update one field on a modeled desk artifact.
+     bind                Bind workflow context artifacts to tasks.
+diff --git a/tests/fixtures/golden/help/deskops_drawer.txt b/tests/fixtures/golden/help/deskops_drawer.txt
+new file mode 100644
+index 0000000..06d1e7d
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_drawer.txt
+@@ -0,0 +1,9 @@
++usage: deskops drawer [-h] {remove} ...
++
++positional arguments:
++  {remove}
++    remove    Remove one drawer entry, its tracking, and its bullets on the
++              drawer board.
++
++options:
++  -h, --help  show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_drawer_remove.txt b/tests/fixtures/golden/help/deskops_drawer_remove.txt
+new file mode 100644
+index 0000000..f6e37e8
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_drawer_remove.txt
+@@ -0,0 +1,11 @@
++usage: deskops drawer remove [-h] [--root ROOT] [--force] selector
++
++positional arguments:
++  selector     Drawer file selector. Selectors accept an exact id, filename,
++               stem, or unique slug fragment where supported.
++
++options:
++  -h, --help   show this help message and exit
++  --root ROOT  Target repository root
++  --force      Remove even when a task in desk/tasks/ records the entry in
++               from_drawer.
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index a0b274e..a4567fa 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -40,7 +40,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
+     captured = capsys.readouterr()
+     assert result == 0
+     assert "usage: deskops" in captured.out
+-    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
++    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
+     assert "Typical flow:" in captured.out
+     assert "deskops add task --root ." in captured.out
+     assert "Use docs/quickstart.md" in captured.out
+diff --git a/tests/test_inbox_promote_cli_gaps.py b/tests/test_inbox_promote_cli_gaps.py
+index 02b265c..f309630 100644
+--- a/tests/test_inbox_promote_cli_gaps.py
++++ b/tests/test_inbox_promote_cli_gaps.py
+@@ -327,3 +327,84 @@ def test_show_task_reports_the_drawer_origin(tmp_path: Path, capsys) -> None:
+     assert main(["show", "task", "task-authored-from-drawer", "--root", str(tmp_path)]) == 0
+ 
+     assert "From drawer: desk/drawer/tasks/task-loose-idea.md" in capsys.readouterr().out
++
++
++# ── drawer remove ────────────────────────────────────────────────────────────
++
++
++def _drawer_board(tmp_path: Path) -> Path:
++    board = tmp_path / "desk" / "drawer" / "tasks" / "Board.md"
++    board.parent.mkdir(parents=True, exist_ok=True)
++    board.write_text(
++        "# Drawer Board\n\n"
++        "Deferred task backlog:\n\n"
++        "- `task-keep-me` — kept entry\n"
++        "- `task-loose-idea` — removed entry (**blocked**)\n"
++        "- `task-keep-me-too` — another kept entry\n",
++        encoding="utf-8",
++    )
++    return board
++
++
++def test_drawer_remove_deletes_the_entry_and_its_board_bullets(tmp_path: Path) -> None:
++    _install_desk(tmp_path)
++    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
++    board = _drawer_board(tmp_path)
++
++    assert main(["drawer", "remove", "loose-idea", "--root", str(tmp_path)]) == 0
++
++    assert not entry.exists()
++    text = board.read_text(encoding="utf-8")
++    assert "task-loose-idea" not in text
++    assert "- `task-keep-me` — kept entry" in text
++    assert "- `task-keep-me-too` — another kept entry" in text
++
++
++def test_drawer_remove_refuses_when_an_active_task_records_the_entry(tmp_path: Path, capsys) -> None:
++    _install_desk(tmp_path)
++    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
++    board = _drawer_board(tmp_path)
++    assert main(_authored_task_argv(tmp_path, "--from-drawer", "loose-idea")) == 0
++    capsys.readouterr()
++
++    assert main(["drawer", "remove", "loose-idea", "--root", str(tmp_path)]) != 0
++
++    assert entry.exists()
++    assert "- `task-loose-idea` — removed entry (**blocked**)" in board.read_text(encoding="utf-8")
++    assert "task-authored-from-drawer" in capsys.readouterr().out
++
++
++def test_drawer_remove_force_skips_the_active_task_check(tmp_path: Path) -> None:
++    _install_desk(tmp_path)
++    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
++    board = _drawer_board(tmp_path)
++    assert main(_authored_task_argv(tmp_path, "--from-drawer", "loose-idea")) == 0
++
++    assert main(["drawer", "remove", "loose-idea", "--force", "--root", str(tmp_path)]) == 0
++
++    assert not entry.exists()
++    assert "task-loose-idea" not in board.read_text(encoding="utf-8")
++    assert (tmp_path / "desk" / "tasks" / "task-authored-from-drawer.md").exists()
++
++
++def test_drawer_remove_untracks_the_entry_from_the_store(tmp_path: Path) -> None:
++    from sldb.cli import main as sldb_main
++
++    _install_desk(tmp_path)
++    entry = _drawer_file(
++        tmp_path,
++        "tasks/task-tracked.md",
++        "---\nkind: suggestion\ncreated_at: 2026-10-18T00:00:00\nstatus: open\n---\n\n# Tracked\n\nBody.\n",
++    )
++    assert sldb_main(["stores", "init", "--path", str(tmp_path)]) == 0
++    assert sldb_main(["models", "add", "deskops.models:InboxNoteDoc", "--store", str(tmp_path / ".sldb")]) == 0
++    assert sldb_main([
++        "docs", "track", str(entry), "--model", "InboxNoteDoc",
++        "--name", entry.stem, "--store", str(tmp_path / ".sldb"), "--force",
++    ]) == 0
++    assert _tracked_names(tmp_path) == [entry.stem]
++
++    assert main(["drawer", "remove", "tracked", "--root", str(tmp_path)]) == 0
++
++    assert not entry.exists()
++    assert _tracked_names(tmp_path) == []

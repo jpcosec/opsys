@@ -1,0 +1,10 @@
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M deskops/services/drawer.py
+ M tests/fixtures/golden/help/deskops.txt
+ M tests/test_cli.py
+ M tests/test_inbox_promote_cli_gaps.py
+?? deskops/cli/commands/drawer.py
+?? runs/subagents/20261018-task-rw-f3-drawer-entry-removal-verb/
+?? tests/fixtures/golden/help/deskops_drawer.txt
+?? tests/fixtures/golden/help/deskops_drawer_remove.txt

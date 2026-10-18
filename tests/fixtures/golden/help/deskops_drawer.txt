@@ -1,0 +1,9 @@
+usage: deskops drawer [-h] {remove} ...
+
+positional arguments:
+  {remove}
+    remove    Remove one drawer entry, its tracking, and its bullets on the
+              drawer board.
+
+options:
+  -h, --help  show this help message and exit

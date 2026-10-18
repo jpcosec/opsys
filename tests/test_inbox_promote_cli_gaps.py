@@ -327,3 +327,84 @@ def test_show_task_reports_the_drawer_origin(tmp_path: Path, capsys) -> None:
     assert main(["show", "task", "task-authored-from-drawer", "--root", str(tmp_path)]) == 0
 
     assert "From drawer: desk/drawer/tasks/task-loose-idea.md" in capsys.readouterr().out
+
+
+# ── drawer remove ────────────────────────────────────────────────────────────
+
+
+def _drawer_board(tmp_path: Path) -> Path:
+    board = tmp_path / "desk" / "drawer" / "tasks" / "Board.md"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    board.write_text(
+        "# Drawer Board\n\n"
+        "Deferred task backlog:\n\n"
+        "- `task-keep-me` — kept entry\n"
+        "- `task-loose-idea` — removed entry (**blocked**)\n"
+        "- `task-keep-me-too` — another kept entry\n",
+        encoding="utf-8",
+    )
+    return board
+
+
+def test_drawer_remove_deletes_the_entry_and_its_board_bullets(tmp_path: Path) -> None:
+    _install_desk(tmp_path)
+    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
+    board = _drawer_board(tmp_path)
+
+    assert main(["drawer", "remove", "loose-idea", "--root", str(tmp_path)]) == 0
+
+    assert not entry.exists()
+    text = board.read_text(encoding="utf-8")
+    assert "task-loose-idea" not in text
+    assert "- `task-keep-me` — kept entry" in text
+    assert "- `task-keep-me-too` — another kept entry" in text
+
+
+def test_drawer_remove_refuses_when_an_active_task_records_the_entry(tmp_path: Path, capsys) -> None:
+    _install_desk(tmp_path)
+    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
+    board = _drawer_board(tmp_path)
+    assert main(_authored_task_argv(tmp_path, "--from-drawer", "loose-idea")) == 0
+    capsys.readouterr()
+
+    assert main(["drawer", "remove", "loose-idea", "--root", str(tmp_path)]) != 0
+
+    assert entry.exists()
+    assert "- `task-loose-idea` — removed entry (**blocked**)" in board.read_text(encoding="utf-8")
+    assert "task-authored-from-drawer" in capsys.readouterr().out
+
+
+def test_drawer_remove_force_skips_the_active_task_check(tmp_path: Path) -> None:
+    _install_desk(tmp_path)
+    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
+    board = _drawer_board(tmp_path)
+    assert main(_authored_task_argv(tmp_path, "--from-drawer", "loose-idea")) == 0
+
+    assert main(["drawer", "remove", "loose-idea", "--force", "--root", str(tmp_path)]) == 0
+
+    assert not entry.exists()
+    assert "task-loose-idea" not in board.read_text(encoding="utf-8")
+    assert (tmp_path / "desk" / "tasks" / "task-authored-from-drawer.md").exists()
+
+
+def test_drawer_remove_untracks_the_entry_from_the_store(tmp_path: Path) -> None:
+    from sldb.cli import main as sldb_main
+
+    _install_desk(tmp_path)
+    entry = _drawer_file(
+        tmp_path,
+        "tasks/task-tracked.md",
+        "---\nkind: suggestion\ncreated_at: 2026-10-18T00:00:00\nstatus: open\n---\n\n# Tracked\n\nBody.\n",
+    )
+    assert sldb_main(["stores", "init", "--path", str(tmp_path)]) == 0
+    assert sldb_main(["models", "add", "deskops.models:InboxNoteDoc", "--store", str(tmp_path / ".sldb")]) == 0
+    assert sldb_main([
+        "docs", "track", str(entry), "--model", "InboxNoteDoc",
+        "--name", entry.stem, "--store", str(tmp_path / ".sldb"), "--force",
+    ]) == 0
+    assert _tracked_names(tmp_path) == [entry.stem]
+
+    assert main(["drawer", "remove", "tracked", "--root", str(tmp_path)]) == 0
+
+    assert not entry.exists()
+    assert _tracked_names(tmp_path) == []

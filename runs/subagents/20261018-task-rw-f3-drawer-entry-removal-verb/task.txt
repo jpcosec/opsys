@@ -1,0 +1,11 @@
+Task: task-rw-f3-drawer-entry-removal-verb
+Title: A CLI verb removes a drawer entry
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f3-drawer-entry-removal-verb.md
+Effective pills:
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+- desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

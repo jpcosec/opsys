@@ -15,14 +15,24 @@ import re
 from typing import Any
 
 import yaml
+from sldb.runtime.validation import extract_model_data
 
 from deskops import doc_io
+from deskops.models import TaskDoc
 from deskops.operations import parse_task_sections
 
 
 @dataclass
 class DrawerPromotion:
     """Outcome of one inbox-to-drawer promotion, ready for the CLI to print."""
+
+    exit_code: int
+    messages: list[str] = field(default_factory=list)
+
+
+@dataclass
+class DrawerRemoval:
+    """Outcome of removing one drawer entry, ready for the CLI to print."""
 
     exit_code: int
     messages: list[str] = field(default_factory=list)
@@ -124,6 +134,70 @@ class DrawerService:
         messages.append(f"Deleted source file {source}")
         messages.append(f"Path: {target}")
         return DrawerPromotion(0, messages)
+
+    def remove_entry(self, selector: str, *, force: bool = False) -> DrawerRemoval:
+        """Remove one drawer file, its tracking, and its bullets on the drawer board.
+
+        A task in desk/tasks/ that records the entry in from_drawer blocks the
+        removal unless force is set, so deleting the source cannot silently
+        leave active work pointing at a file someone still expects to exist.
+        """
+        try:
+            source = self.resolve_drawer_source(selector)
+        except (FileNotFoundError, ValueError) as exc:
+            return DrawerRemoval(1, [f"Error: {exc}"])
+
+        relative = source.relative_to(self.root).as_posix()
+        if not force:
+            owners = self._tasks_recording(relative)
+            if owners:
+                listing = ", ".join(owners)
+                return DrawerRemoval(
+                    1,
+                    [
+                        f"Error: refusing to remove {relative}: "
+                        f"task records it in from_drawer ({listing}). Use --force to remove it anyway."
+                    ],
+                )
+
+        board = self.desk_root / "drawer" / "tasks" / "Board.md"
+        board_changed = False
+        with doc_io.DocTransaction(self.root) as transaction:
+            if board.exists():
+                original = board.read_text(encoding="utf-8")
+                updated = self._without_entry_bullets(original, source.stem)
+                if updated != original:
+                    transaction.record(board)
+                    board.write_text(updated, encoding="utf-8")
+                    board_changed = True
+            transaction.delete(source)
+
+        messages = [f"Removed drawer entry {relative}"]
+        if board_changed:
+            messages.append(f"Removed its bullets from {board.relative_to(self.root).as_posix()}")
+        return DrawerRemoval(0, messages)
+
+    def _tasks_recording(self, relative: str) -> list[str]:
+        """Active task ids in desk/tasks/ whose from_drawer points at relative."""
+        tasks_dir = self.desk_root / "tasks"
+        if not tasks_dir.exists():
+            return []
+        owners: list[str] = []
+        for path in sorted(tasks_dir.glob("task-*.md")):
+            try:
+                payload = extract_model_data(TaskDoc, path.read_text(encoding="utf-8"))
+            except Exception:  # noqa: BLE001 - one unreadable task must not block the check
+                continue
+            if payload.get("from_drawer") == relative:
+                owners.append(str(payload.get("id") or path.stem))
+        return owners
+
+    def _without_entry_bullets(self, text: str, stem: str) -> str:
+        """Drop every line that starts with ``- `<stem>` ``."""
+        prefix = f"- `{stem}` "
+        return "".join(
+            line for line in text.splitlines(keepends=True) if not line.startswith(prefix)
+        )
 
     def _untrack_note(self, transaction: doc_io.DocTransaction, source: Path) -> str | None:
         """Drop the promoted note from the sldb store, best effort.

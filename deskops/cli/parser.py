@@ -45,6 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
     _add_inbox_commands(subparsers)
     _add_message_commands(subparsers)
     _add_promote_commands(subparsers)
+    _add_drawer_commands(subparsers)
     _add_add_commands(subparsers)
     _add_edit_commands(subparsers)
     _add_bind_commands(subparsers)
@@ -393,6 +394,25 @@ Examples:
     inbox.add_argument("selector", help="Inbox filename, stem, or unique slug fragment")
     inbox.add_argument("--root", default=".", help="Target repository root")
     inbox.add_argument("--title", help="Override the drawer task title")
+
+
+def _add_drawer_commands(
+    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+) -> None:
+    p = subparsers.add_parser("drawer", help="Manage deferred drawer entries.")
+    s = p.add_subparsers(dest="drawer_command", required=True)
+
+    remove = s.add_parser(
+        "remove",
+        help="Remove one drawer entry, its tracking, and its bullets on the drawer board.",
+    )
+    remove.add_argument("selector", help=f"Drawer file selector. {SELECTOR_HELP}")
+    remove.add_argument("--root", default=".", help="Target repository root")
+    remove.add_argument(
+        "--force",
+        action="store_true",
+        help="Remove even when a task in desk/tasks/ records the entry in from_drawer.",
+    )
 
 
 def _add_desk_commands(

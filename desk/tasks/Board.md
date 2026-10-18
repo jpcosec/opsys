@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f3-drawer-entry-removal-verb.md
 - desk/tasks/task-rw-f3-tasks-service.md
 # List of pill-xxx paths
 pills:
@@ -48,5 +47,4 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- A CLI verb removes a drawer entry [draft] - The approved verb removes one drawer file, untracks it if tracked, and deletes every Board.md bullet that starts with ``- `<its stem>` ``.
 - Task lifecycle moves to a service and reads TaskDoc only through sldb [draft] - `deskops/services/tasks.py` owns create/advance/next for tasks; `_read_doc` reads TaskDoc only through `extract_model_data`; `parse_task_sections` remains only as an inbox-note helper used by promote.py; the `parse_*_input` functions move to deskops/cli/.

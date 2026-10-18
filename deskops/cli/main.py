@@ -134,6 +134,10 @@ class CLI:
             from deskops.cli.commands.promote import PromoteCLI
 
             return PromoteCLI().run(args)
+        if args.command == "drawer":
+            from deskops.cli.commands.drawer import DrawerCLI
+
+            return DrawerCLI().run(args)
         if args.command == "bootstrap":
             return self._bootstrap()
         if args.command == "init":

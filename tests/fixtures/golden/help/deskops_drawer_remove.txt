@@ -1,0 +1,11 @@
+usage: deskops drawer remove [-h] [--root ROOT] [--force] selector
+
+positional arguments:
+  selector     Drawer file selector. Selectors accept an exact id, filename,
+               stem, or unique slug fragment where supported.
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root
+  --force      Remove even when a task in desk/tasks/ records the entry in
+               from_drawer.
