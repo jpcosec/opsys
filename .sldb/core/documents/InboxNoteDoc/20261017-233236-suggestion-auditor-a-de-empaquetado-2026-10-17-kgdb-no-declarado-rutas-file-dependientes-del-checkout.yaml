@@ -1,0 +1,17 @@
+name: 20261017-233236-suggestion-auditor-a-de-empaquetado-2026-10-17-kgdb-no-declarado-rutas-file-dependientes-del-checkout
+path: desk/inbox/20261017-233236-suggestion-auditor-a-de-empaquetado-2026-10-17-kgdb-no-declarado-rutas-file-dependientes-del-checkout.md
+source_hash: a6a25c54e26c24177a3c3e6d9c49b7f4e2746c2f29bcc4ef2870098ffd142d2e
+content_hash: 2ba159682b3ab8d0e6842c35f91c121111b5a75c79da6a0224c46c5ecc64459d
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: d8d5859ec8d42107e0107e6326a9c63d5f02ab4b4c8edf9ec87a2148c90388e1
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 62a7740b72b91087e2a12be311184692fd5b436cd258bc35e233a568b1541bbe
+  body: ed834bc496d6db4a60a6e22b782f5e308dc54bfd84fe0da9241b6b55ca97a363
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
