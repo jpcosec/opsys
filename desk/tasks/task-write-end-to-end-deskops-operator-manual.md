@@ -1,6 +1,6 @@
 ---
 id: task-write-end-to-end-deskops-operator-manual
-status: deferred
+status: active
 summary: ''
 tags:
 - workspace:desk
@@ -39,15 +39,7 @@ Consolidate the methodology into one operational playbook after runnable slices 
 
 _State what is in scope and what is out of scope._
 
-- first use
-- capture and triage
-- task execution
-- pill binding
-- atom and graph queries
-- materialization
-- drift/self-reflection
-- closeout and commit
-- CI integration
+Coordinator decision (2026-10-18): the manual lives at docs/operator-manual.md. It is for both agents and people who operate a desk. It walks every CLI verb end to end, with examples. Those examples are executable: a test in tests/ (not tests/e2e_agent/, which the coordinator owns) extracts the fenced shell examples from docs/operator-manual.md and runs them in order in a sandbox desk, so the manual cannot drift from the CLI. Out of scope: re-documenting sldb.
 
 ## Implementation Path
 
