@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 
 from deskops import lifecycle
+from deskops.cli.main import main
 from deskops.lifecycle_migration import inspect_legacy_lifecycle
 from deskops.lifecycle_migration import legacy_node_to_ritual
 from deskops.lifecycle_migration import migrate_legacy_lifecycle
@@ -44,6 +45,45 @@ def test_the_lifecycle_graph_lives_in_the_store_as_rituals_and_relation_docs(lif
 def test_ensure_lifecycle_graph_is_idempotent(lifecycle_desk: Path) -> None:
     assert lifecycle.ensure_lifecycle_graph(lifecycle_desk) == []
     assert lifecycle.lifecycle_graph_present(lifecycle_desk)
+
+
+def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_path: Path) -> None:
+    from deskops.bootstrap import SLDBBootstrap
+    from deskops.doc_readability import is_unreadable_by_model
+    from deskops.models import RitualDoc
+    from deskops.workspace import scaffold_desk
+    from sldb.runtime.validation import render_model_markdown
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    assert SLDBBootstrap().init_local_store(root) == 0
+    scaffold_desk(root)
+    ritual = root / "desk" / "rituals" / "execution.md"
+    current = render_model_markdown(
+        RitualDoc,
+        {
+            "id": "ritual-execution",
+            "title": "Execution ritual",
+            "tags": ["workspace:desk"],
+            "purpose": "Carry one active task through scoped implementation.",
+            "trigger": "Start when a task is active.",
+            "preconditions": ["A task exists."],
+            "validation": ["The task is explicit."],
+            "failure_modes": ["Skipping the task."],
+            "completion": "The implementation is ready for testing.",
+        },
+    )
+    old_style = current.split("## Step Details")[0].rstrip() + "\n"
+    ritual.write_text(old_style, encoding="utf-8")
+    assert is_unreadable_by_model(RitualDoc, old_style), "the old-style ritual is the failure case"
+
+    changes = lifecycle.ensure_lifecycle_graph(root)
+
+    assert any("re-rendered desk/rituals/execution.md" in change for change in changes)
+    text = ritual.read_text(encoding="utf-8")
+    assert "## Step Details" in text
+    assert is_unreadable_by_model(RitualDoc, text) == []
+    assert main(["doctor", "--root", str(root)]) == 0
 
 
 def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: Path) -> None:

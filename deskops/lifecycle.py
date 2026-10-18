@@ -199,6 +199,48 @@ def _track(root: Path, model: str, path: Path, name: str) -> None:
     track_document_file(_store(root), model, path, name=name, pythonpath=_pythonpath())
 
 
+def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
+    """Re-render a ritual RitualDoc cannot read; raise if it still cannot round-trip.
+
+    Returns whether the file was rewritten. A hand-authored or older-template ritual can
+    extract as empty while its sections still hold text, so the extracted payload alone
+    is not enough: the source must also be readable by the model.
+    """
+    from deskops.doc_readability import is_unreadable_by_model
+    from deskops.models import RitualDoc
+    from sldb.runtime.validation import extract_model_data
+
+    text = path.read_text(encoding="utf-8")
+    try:
+        payload = extract_model_data(RitualDoc, text)
+        rendered = render_model_markdown(RitualDoc, payload)
+        round_trips = extract_model_data(RitualDoc, rendered) == payload
+    except Exception as exc:
+        raise LifecycleGraphMissing(
+            f"Lifecycle ritual '{ritual_id}' at {relative} cannot be read as {RITUAL_MODEL}: {exc}"
+        ) from exc
+    missing = is_unreadable_by_model(RitualDoc, text)
+    if not missing and round_trips:
+        return False
+
+    path.write_text(rendered + ("" if rendered.endswith("\n") else "\n"), encoding="utf-8")
+    repaired = path.read_text(encoding="utf-8")
+    try:
+        still_missing = is_unreadable_by_model(RitualDoc, repaired)
+        lost = [key for key in payload if extract_model_data(RitualDoc, repaired).get(key) != payload.get(key)]
+    except Exception as exc:
+        raise LifecycleGraphMissing(
+            f"Lifecycle ritual '{ritual_id}' at {relative} cannot be read as {RITUAL_MODEL} after re-rendering: {exc}"
+        ) from exc
+    if still_missing or lost:
+        fields = ", ".join(still_missing or lost)
+        raise LifecycleGraphMissing(
+            f"Lifecycle ritual '{ritual_id}' at {relative} still cannot round-trip through {RITUAL_MODEL} "
+            f"after re-rendering; missing sections: {fields}"
+        )
+    return True
+
+
 def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> list[str]:
     """Make the desk's store carry the lifecycle graph; return what was written or tracked.
 
@@ -218,6 +260,7 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
     from sldb.api import untrack_document
     from sldb.api import doc_status
 
+    pending_rituals: list[tuple[str, Path, str]] = []
     for ritual_id in spec.rituals:
         if _doc_tracked(root, RITUAL_MODEL, ritual_id):
             continue
@@ -225,6 +268,11 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
         if not path.exists():
             raise LifecycleGraphMissing(f"Lifecycle ritual '{ritual_id}' has no document at {path.relative_to(root)}")
         relative = path.relative_to(root).as_posix()
+        if _ensure_ritual_readable(path, ritual_id, relative):
+            changes.append(f"re-rendered {relative} to the current {RITUAL_MODEL} template")
+        pending_rituals.append((ritual_id, path, relative))
+
+    for ritual_id, path, relative in pending_rituals:
         current = doc_status(_store(root), relative)
         if current.exists and current.name != ritual_id:
             # `desk update` tracks surface documents by file stem; the graph names a

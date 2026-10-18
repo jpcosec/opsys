@@ -1,0 +1,131 @@
+diff --git a/deskops/lifecycle.py b/deskops/lifecycle.py
+index dcfbb3f..daf38e0 100644
+--- a/deskops/lifecycle.py
++++ b/deskops/lifecycle.py
+@@ -199,6 +199,48 @@ def _track(root: Path, model: str, path: Path, name: str) -> None:
+     track_document_file(_store(root), model, path, name=name, pythonpath=_pythonpath())
+ 
+ 
++def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
++    """Re-render a ritual RitualDoc cannot read; raise if it still cannot round-trip.
++
++    Returns whether the file was rewritten. A hand-authored or older-template ritual can
++    extract as empty while its sections still hold text, so the extracted payload alone
++    is not enough: the source must also be readable by the model.
++    """
++    from deskops.doc_readability import is_unreadable_by_model
++    from deskops.models import RitualDoc
++    from sldb.runtime.validation import extract_model_data
++
++    text = path.read_text(encoding="utf-8")
++    try:
++        payload = extract_model_data(RitualDoc, text)
++        rendered = render_model_markdown(RitualDoc, payload)
++        round_trips = extract_model_data(RitualDoc, rendered) == payload
++    except Exception as exc:
++        raise LifecycleGraphMissing(
++            f"Lifecycle ritual '{ritual_id}' at {relative} cannot be read as {RITUAL_MODEL}: {exc}"
++        ) from exc
++    missing = is_unreadable_by_model(RitualDoc, text)
++    if not missing and round_trips:
++        return False
++
++    path.write_text(rendered + ("" if rendered.endswith("\n") else "\n"), encoding="utf-8")
++    repaired = path.read_text(encoding="utf-8")
++    try:
++        still_missing = is_unreadable_by_model(RitualDoc, repaired)
++        lost = [key for key in payload if extract_model_data(RitualDoc, repaired).get(key) != payload.get(key)]
++    except Exception as exc:
++        raise LifecycleGraphMissing(
++            f"Lifecycle ritual '{ritual_id}' at {relative} cannot be read as {RITUAL_MODEL} after re-rendering: {exc}"
++        ) from exc
++    if still_missing or lost:
++        fields = ", ".join(still_missing or lost)
++        raise LifecycleGraphMissing(
++            f"Lifecycle ritual '{ritual_id}' at {relative} still cannot round-trip through {RITUAL_MODEL} "
++            f"after re-rendering; missing sections: {fields}"
++        )
++    return True
++
++
+ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> list[str]:
+     """Make the desk's store carry the lifecycle graph; return what was written or tracked.
+ 
+@@ -218,6 +260,7 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
+     from sldb.api import untrack_document
+     from sldb.api import doc_status
+ 
++    pending_rituals: list[tuple[str, Path, str]] = []
+     for ritual_id in spec.rituals:
+         if _doc_tracked(root, RITUAL_MODEL, ritual_id):
+             continue
+@@ -225,6 +268,11 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
+         if not path.exists():
+             raise LifecycleGraphMissing(f"Lifecycle ritual '{ritual_id}' has no document at {path.relative_to(root)}")
+         relative = path.relative_to(root).as_posix()
++        if _ensure_ritual_readable(path, ritual_id, relative):
++            changes.append(f"re-rendered {relative} to the current {RITUAL_MODEL} template")
++        pending_rituals.append((ritual_id, path, relative))
++
++    for ritual_id, path, relative in pending_rituals:
+         current = doc_status(_store(root), relative)
+         if current.exists and current.name != ritual_id:
+             # `desk update` tracks surface documents by file stem; the graph names a
+diff --git a/tests/test_lifecycle_graph.py b/tests/test_lifecycle_graph.py
+index bdad5d0..50365ae 100644
+--- a/tests/test_lifecycle_graph.py
++++ b/tests/test_lifecycle_graph.py
+@@ -5,6 +5,7 @@ from pathlib import Path
+ import pytest
+ 
+ from deskops import lifecycle
++from deskops.cli.main import main
+ from deskops.lifecycle_migration import inspect_legacy_lifecycle
+ from deskops.lifecycle_migration import legacy_node_to_ritual
+ from deskops.lifecycle_migration import migrate_legacy_lifecycle
+@@ -46,6 +47,45 @@ def test_ensure_lifecycle_graph_is_idempotent(lifecycle_desk: Path) -> None:
+     assert lifecycle.lifecycle_graph_present(lifecycle_desk)
+ 
+ 
++def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_path: Path) -> None:
++    from deskops.bootstrap import SLDBBootstrap
++    from deskops.doc_readability import is_unreadable_by_model
++    from deskops.models import RitualDoc
++    from deskops.workspace import scaffold_desk
++    from sldb.runtime.validation import render_model_markdown
++
++    root = tmp_path / "repo"
++    root.mkdir()
++    assert SLDBBootstrap().init_local_store(root) == 0
++    scaffold_desk(root)
++    ritual = root / "desk" / "rituals" / "execution.md"
++    current = render_model_markdown(
++        RitualDoc,
++        {
++            "id": "ritual-execution",
++            "title": "Execution ritual",
++            "tags": ["workspace:desk"],
++            "purpose": "Carry one active task through scoped implementation.",
++            "trigger": "Start when a task is active.",
++            "preconditions": ["A task exists."],
++            "validation": ["The task is explicit."],
++            "failure_modes": ["Skipping the task."],
++            "completion": "The implementation is ready for testing.",
++        },
++    )
++    old_style = current.split("## Step Details")[0].rstrip() + "\n"
++    ritual.write_text(old_style, encoding="utf-8")
++    assert is_unreadable_by_model(RitualDoc, old_style), "the old-style ritual is the failure case"
++
++    changes = lifecycle.ensure_lifecycle_graph(root)
++
++    assert any("re-rendered desk/rituals/execution.md" in change for change in changes)
++    text = ritual.read_text(encoding="utf-8")
++    assert "## Step Details" in text
++    assert is_unreadable_by_model(RitualDoc, text) == []
++    assert main(["doctor", "--root", str(root)]) == 0
++
++
+ def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: Path) -> None:
+     operations = DeskopsOperations(lifecycle_desk)
+     task_id = _task(operations, "Walk the graph")
