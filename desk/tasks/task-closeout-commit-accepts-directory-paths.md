@@ -8,8 +8,7 @@ tags:
 current_node: ritual-execution
 history: []
 references: []
-depends_on:
-- task-closeout-commit-leaves-the-run-index-clean
+depends_on: []
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
 files:

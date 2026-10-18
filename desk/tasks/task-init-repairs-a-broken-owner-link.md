@@ -8,8 +8,7 @@ tags:
 current_node: ritual-execution
 history: []
 references: []
-depends_on:
-- task-tests-never-touch-the-real-global-store
+depends_on: []
 pills:
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files:
