@@ -50,8 +50,6 @@ F2:
 
 F3:
 
-- `task-rw-f3-drawer-entry-removal-verb` — A CLI verb removes a drawer entry
-- `task-rw-f3-closeout-gates-service` — Closeout gates move to a service and verify real evidence
 - `task-rw-f3-tasks-service` — Task lifecycle moves to a service and reads TaskDoc only through sldb
 - `task-rw-f3-atoms-service` — Atom operations move to a service; merge and split roll back fully
 - `task-rw-f3-single-closure-path` — One closure service behind every way of closing a task
