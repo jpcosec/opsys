@@ -1,0 +1,10 @@
+ M .sldb/core/documents/TaskDoc/task-link-skill-surfaces-through-guard-tests.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-link-skill-surfaces-through-guard-tests.md
+ M deskops/constants.py
+ M deskops/operations.py
+?? desk/materializations/
+?? runs/subagents/20261018-task-link-skill-surfaces-through-guard-tests/
+?? tests/test_cli_grammar.py
+?? tests/test_closeout_skill_links.py

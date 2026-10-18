@@ -39,6 +39,7 @@ from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
+from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.desk_paths import resolve_selector
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
 from deskops.paths import data_path
@@ -647,6 +648,7 @@ class DeskopsOperations:
                 findings.append(source_finding)
 
             file_evidence = self._changed_file_link_evidence(relative_path, graph_context)
+            file_evidence.extend(self._skill_guard_test_evidence(relative_path, graph_context))
             if file_evidence:
                 evidence.extend(file_evidence)
                 continue
@@ -772,6 +774,50 @@ class DeskopsOperations:
                     continue
                 evidence.append(f"materialization:{edge.source_id}->{relative_path}")
         return self._dedupe_preserve_order(evidence)
+
+    def _skill_guard_test_evidence(self, relative_path: str, graph_context: dict[str, Any]) -> list[str]:
+        """Evidence for a changed skill file covered by an atom-linked guard test.
+
+        Skill Markdown files are not graph nodes. A changed skill file is linked
+        only when a test that reads its skill tree (and names ``SKILL.md``) is
+        itself linked to an atom or to a valid materialization.
+        """
+        matching_prefix = next(
+            (prefix for prefix in SKILL_TREE_PREFIXES if relative_path.startswith(prefix)),
+            None,
+        )
+        if matching_prefix is None:
+            return []
+
+        tree_token = matching_prefix.rstrip("/")
+        evidence: list[str] = []
+        for test_path in self._atom_linked_test_paths(graph_context):
+            if not test_path.startswith("tests/"):
+                continue
+            path = self.root / test_path
+            if not path.is_file():
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            if "SKILL.md" not in text:
+                continue
+            if tree_token not in text and relative_path not in text:
+                continue
+            evidence.append(f"guard-test:{test_path} -> {relative_path}")
+        return self._dedupe_preserve_order(evidence)
+
+    def _atom_linked_test_paths(self, graph_context: dict[str, Any]) -> list[str]:
+        test_node_ids: set[str] = set()
+        for edge in graph_context["edges"]:
+            if edge.source_id.startswith("test_file:") and edge.target_id.startswith("atom:"):
+                test_node_ids.add(edge.source_id)
+            if edge.target_id.startswith("test_file:") and edge.source_id.startswith("materialization:"):
+                if edge.source_id in graph_context["invalid_materializations"]:
+                    continue
+                test_node_ids.add(edge.target_id)
+        return sorted(node_id.removeprefix("test_file:") for node_id in test_node_ids)
 
     def _generated_artifact_source_finding(self, relative_path: str) -> dict[str, str] | None:
         path = self.root / relative_path

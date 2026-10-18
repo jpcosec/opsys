@@ -1,0 +1,7 @@
+Task: task-link-skill-surfaces-through-guard-tests
+Title: Link skill surfaces through atom-linked drift guard tests
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
