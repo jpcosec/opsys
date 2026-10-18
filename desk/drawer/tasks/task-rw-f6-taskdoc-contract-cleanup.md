@@ -62,6 +62,7 @@ _Outline the expected implementation route or affected surface._
 _List the checks required before this task can close._
 
 - pytest tests/test_model_contract_snapshot.py tests/test_graph_declared_edges.py
+- sldb edges check --store .sldb
 - deskops graph missing --root .
 - pytest tests
 
@@ -75,6 +76,8 @@ _Name the observable condition that makes the task complete._
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
 - Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): F6 enters this cycle.
+
+- Added by the supervisor on 2026-10-18, so the TaskDoc contract moves once: `current_node`, `pills` and `atoms` leave `__containment__` and become `__references__` with `__reference_models__` (`current_node: [RitualDoc]`, `pills: [PillDoc]`, `atoms: [AtomDoc]`, sldb 0.1.12). A pill or ritual is shared by many tasks, and BoardDoc already contains pills and rituals, so the containment cardinality (one parent) fails: `sldb edges check --store .sldb` reports `PillDoc:... has 2 'contains' sources but cardinality is one_to_many` and `RitualDoc:ritual-execution has 3 'contains' sources`. sldb-04 sees 22 such errors in sldb's store. After this change `sldb edges check --store .sldb` must report no contains-cardinality error from TaskDoc fields (rebuild the shards with `sldb stores update` first). `from_drawer` leaves `__references__` and also leaves `__reference_models__`.
 
 ## Open Ambiguities
 
