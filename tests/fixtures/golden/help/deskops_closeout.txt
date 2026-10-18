@@ -1,11 +1,13 @@
-usage: deskops closeout [-h] {commit,supersede,verify} ...
+usage: deskops closeout [-h] {commit,supersede,retire,verify} ...
 
 positional arguments:
-  {commit,supersede,verify}
+  {commit,supersede,retire,verify}
     commit              Create the tool-made closing commit, linked to a run
                         evidence directory or marked manual.
     supersede           Close a task whose subject no longer exists, naming a
                         reason and a resolvable ref.
+    retire              Remove a task that was already resolved before the
+                        ritual lifecycle.
     verify              Strictly verify closeout evidence gates for one task
                         and print a structured report.
 

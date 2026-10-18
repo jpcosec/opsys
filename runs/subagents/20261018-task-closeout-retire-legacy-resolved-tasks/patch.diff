@@ -1,0 +1,430 @@
+diff --git a/deskops/cli/commands/closeout.py b/deskops/cli/commands/closeout.py
+index 8fdef79..e25e51a 100644
+--- a/deskops/cli/commands/closeout.py
++++ b/deskops/cli/commands/closeout.py
+@@ -16,7 +16,9 @@ class CloseoutCLI:
+     linking it to the run evidence directory; with --no-run it carries
+     Closeout-Mode: manual and the stated reason instead. ``supersede`` closes a
+     task whose subject no longer exists, with a reason and a resolvable ref
+-    instead of run evidence. Either way an append-only index records the task
++    instead of run evidence; ``retire`` removes a task that was already resolved
++    before the ritual lifecycle, keeping its status. Either way an append-only
++    index records the task
+     and run, committed together with the closing commit; the commit hash is
+     resolved from its Task-Id trailer.
+     """
+@@ -27,11 +29,25 @@ class CloseoutCLI:
+             return self._commit(args)
+         if command == "supersede":
+             return self._supersede(args)
++        if command == "retire":
++            return self._retire(args)
+         if command == "verify":
+             return self._verify(args)
+-        print("Usage: deskops closeout {commit|supersede|verify} ...")
++        print("Usage: deskops closeout {commit|supersede|retire|verify} ...")
+         return 1
+ 
++    def _retire(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        service = ClosureService(root, DeskopsOperations(root))
++        outcome = service.close_retired(
++            args.task,
++            reason=getattr(args, "reason", "") or "",
++            refs=getattr(args, "ref", None),
++        )
++        for message in outcome.messages:
++            print(message)
++        return outcome.exit_code
++
+     def _supersede(self, args: Any) -> int:
+         root = Path(args.root).resolve()
+         service = ClosureService(root, DeskopsOperations(root))
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index fd39563..5a8d5a3 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -1266,6 +1266,37 @@ work that was never done. It still makes exactly one closing commit: status and
+ history record `superseded`, the commit carries Closeout-Mode: superseded with
+ Closeout-Reason and one Closeout-Ref per ref, the task leaves the Board, and
+ the run index entry is marked superseded.
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("closeout", "retire"),
++            help="Remove a task that was already resolved before the ritual lifecycle.",
++            args=(
++                ROOT_ARG,
++                A("--task", required=True, help="Task id being retired."),
++                A("--reason", required=True, help="Why the task is already resolved."),
++                A(
++                    "--ref",
++                    action="append",
++                    required=True,
++                    help="Ancestor commit id that resolved the task; repeat for more refs.",
++                ),
++            ),
++            handler="deskops.cli.commands.closeout:CloseoutCLI",
++            mutates=True,
++            epilog="""
++Example:
++  deskops closeout retire --root . --task task-fix-thing \\
++    --reason "Resolved before the ritual lifecycle existed" \\
++    --ref 3900ad4
++
++Retire removes a task whose status is already resolved, closed, done or
++complete, as pre-lifecycle tasks are. The ref must be a commit that is HEAD or
++an ancestor. The status is not rewritten and the evidence gates do not run. It
++makes exactly one closing commit: the task leaves the Board, the commit carries
++Closeout-Mode: legacy-resolved with Closeout-Reason and one Closeout-Ref per
++ref, and the run index entry is marked legacy-resolved.
+ """.strip(),
+             raw_text=True,
+         ),
+diff --git a/deskops/services/closure.py b/deskops/services/closure.py
+index 77a9477..0cc13e1 100644
+--- a/deskops/services/closure.py
++++ b/deskops/services/closure.py
+@@ -1,8 +1,8 @@
+ """One closure path for task bundles.
+ 
+ Every way of closing a task ends here: ``deskops closeout commit`` (run-linked
+-and manual routes), ``deskops closeout supersede``, and the legacy
+-``_auto_commit_task_closure`` hook. The
++and manual routes), ``deskops closeout supersede``, ``deskops closeout retire``,
++and the legacy ``_auto_commit_task_closure`` hook. The
+ service owns the whole closure: closeout gates for a board-routed task, Board
+ update, store untracking, bundle removal, exactly one closing commit carrying
+ the route's trailers, and the append-only index entry.
+@@ -182,6 +182,83 @@ class ClosureService:
+             task_path.write_bytes(original)
+         return outcome
+ 
++    def close_retired(
++        self,
++        task_id: str,
++        *,
++        reason: str,
++        refs: list[str] | None,
++        paths: list[str] | None = None,
++        message: str | None = None,
++    ) -> ClosureOutcome:
++        """Remove a task that was already resolved before the ritual lifecycle.
++
++        The task keeps its status: it is not made ``superseded`` and no evidence
++        gates run. A resolved-family status plus a reason and at least one ref
++        that is HEAD or an ancestor commit are the evidence instead, and the
++        closing commit says ``Closeout-Mode: legacy-resolved``.
++        """
++        reason = " ".join((reason or "").split())
++        if not reason:
++            return ClosureOutcome(
++                1,
++                ["Retire needs a non-empty --reason saying why the task is already resolved."],
++            )
++
++        cleaned_refs = [str(ref).strip() for ref in refs or [] if str(ref).strip()]
++        if not cleaned_refs:
++            return ClosureOutcome(
++                1,
++                ["Retire needs at least one --ref naming a commit that is HEAD or an ancestor."],
++            )
++        unresolved = [
++            ref for ref in cleaned_refs if not self._ops.closeout_gates.reference_points_to_commit(ref)
++        ]
++        if unresolved:
++            return ClosureOutcome(
++                1,
++                [f"Unresolvable --ref: {', '.join(unresolved)} (need a commit that is HEAD or an ancestor)."],
++            )
++
++        task_path = self._task_path(task_id)
++        if not task_path.is_file():
++            return ClosureOutcome(1, [f"Task not found: {task_id}"])
++
++        payload = self._ops._read_doc(task_path, TaskDoc)
++        status = str(payload.get("status") or "").strip().lower()
++        if status not in {"resolved", "closed", "done", "complete"}:
++            return ClosureOutcome(
++                1,
++                [
++                    f"Task {task_id} has status '{payload.get('status') or ''}'; only resolved, "
++                    "closed, done or complete tasks can be retired."
++                ],
++            )
++
++        trailers = [
++            f"Task-Id: {task_id}",
++            "Closeout-Mode: legacy-resolved",
++            f"Closeout-Reason: {reason}",
++            *[f"Closeout-Ref: {ref}" for ref in cleaned_refs],
++        ]
++        return self._close(
++            task_id,
++            route="legacy-resolved",
++            subject=message or f"closeout: {task_id}",
++            trailers=trailers,
++            paths=list(paths or []),
++            explicit_paths=True,
++            run_gates=False,
++            index_entry={
++                "task_id": task_id,
++                "run_id": None,
++                "run_dir": None,
++                "session_sha256": None,
++                "mode": "legacy-resolved",
++            },
++            success_line=f"Closing commit {{commit}} made in legacy-resolved mode: {reason}",
++        )
++
+     def _ref_resolves(self, reference: str) -> bool:
+         if self._ops.closeout_gates.reference_points_to_commit(reference):
+             return True
+diff --git a/tests/fixtures/golden/help/deskops_closeout.txt b/tests/fixtures/golden/help/deskops_closeout.txt
+index 98fad04..82b2cd3 100644
+--- a/tests/fixtures/golden/help/deskops_closeout.txt
++++ b/tests/fixtures/golden/help/deskops_closeout.txt
+@@ -1,11 +1,13 @@
+-usage: deskops closeout [-h] {commit,supersede,verify} ...
++usage: deskops closeout [-h] {commit,supersede,retire,verify} ...
+ 
+ positional arguments:
+-  {commit,supersede,verify}
++  {commit,supersede,retire,verify}
+     commit              Create the tool-made closing commit, linked to a run
+                         evidence directory or marked manual.
+     supersede           Close a task whose subject no longer exists, naming a
+                         reason and a resolvable ref.
++    retire              Remove a task that was already resolved before the
++                        ritual lifecycle.
+     verify              Strictly verify closeout evidence gates for one task
+                         and print a structured report.
+ 
+diff --git a/tests/fixtures/golden/help/deskops_closeout_retire.txt b/tests/fixtures/golden/help/deskops_closeout_retire.txt
+new file mode 100644
+index 0000000..098029e
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_closeout_retire.txt
+@@ -0,0 +1,21 @@
++usage: deskops closeout retire [-h] [--root ROOT] --task TASK --reason REASON
++                               --ref REF
++
++options:
++  -h, --help       show this help message and exit
++  --root ROOT      Target repository root.
++  --task TASK      Task id being retired.
++  --reason REASON  Why the task is already resolved.
++  --ref REF        Ancestor commit id that resolved the task; repeat for more refs.
++
++Example:
++  deskops closeout retire --root . --task task-fix-thing \
++    --reason "Resolved before the ritual lifecycle existed" \
++    --ref 3900ad4
++
++Retire removes a task whose status is already resolved, closed, done or
++complete, as pre-lifecycle tasks are. The ref must be a commit that is HEAD or
++an ancestor. The status is not rewritten and the evidence gates do not run. It
++makes exactly one closing commit: the task leaves the Board, the commit carries
++Closeout-Mode: legacy-resolved with Closeout-Reason and one Closeout-Ref per
++ref, and the run index entry is marked legacy-resolved.
+diff --git a/tests/test_closeout.py b/tests/test_closeout.py
+index de8c60e..eba1512 100644
+--- a/tests/test_closeout.py
++++ b/tests/test_closeout.py
+@@ -30,7 +30,8 @@ def _make_repo(tmp_path: Path) -> Path:
+     _git(root, "config", "user.email", "test@example.com")
+     _git(root, "config", "user.name", "Test")
+     (root / "seed.txt").write_text("seed\n", encoding="utf-8")
+-    _git(root, "add", "seed.txt")
++    (root / ".gitignore").write_text(".deskops.log\n", encoding="utf-8")
++    _git(root, "add", "seed.txt", ".gitignore")
+     _git(root, "commit", "-q", "-m", "seed")
+     return root
+ 
+@@ -793,3 +794,173 @@ def test_closeout_supersede_requires_the_reason_flag(
+     assert rc == 2
+     assert "--reason" in capsys.readouterr().err
+     assert _git(root, "rev-parse", "HEAD") == head
++
++
++def _write_legacy_task(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
++    _write(
++        root / "desk" / "tasks" / f"{task_id}.md",
++        f"""---
++id: {task_id}
++status: {status}
++summary: ''
++tags: []
++references:
++- 3900ad4
++depends_on: []
++pills: []
++files: []
++task_type: implementation
++atoms: []
++---
++
++# Task X
++
++## Rationale
++
++Resolved before the ritual lifecycle existed.
++
++## Goal
++
++Remove the resolved task.
++
++## Scope
++
++Stay scoped.
++
++## Implementation Path
++
++Retire it.
++
++## Validation
++
++- pytest
++
++## Done When
++
++Retired.
++""",
++    )
++
++
++def _commit_legacy_task_on_board(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
++    _write_legacy_task(root, task_id, status)
++    _write_board(root, task_id)
++    _git(root, "add", "desk/tasks")
++    _git(root, "commit", "-q", "-m", "add legacy task and board")
++
++
++def _retire_main(root: Path, *argv: str) -> int:
++    return main(["closeout", "retire", "--root", str(root), "--task", "task-x", *argv])
++
++
++@pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete"])
++def test_closeout_retire_removes_a_legacy_resolved_task(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str], status: str
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_legacy_task_on_board(root, status=status)
++    ref = _git(root, "rev-parse", "HEAD")
++    before = (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8")
++
++    rc = _retire_main(root, "--reason", "Resolved before the ritual lifecycle existed", "--ref", ref)
++
++    assert rc == 0, capsys.readouterr().out
++    message = _git(root, "log", "-1", "--format=%B")
++    assert message.splitlines()[0] == "closeout: task-x"
++    assert "Task-Id: task-x" in message
++    assert "Closeout-Mode: legacy-resolved" in message
++    assert "Closeout-Reason: Resolved before the ritual lifecycle existed" in message
++    assert f"Closeout-Ref: {ref}" in message
++    assert _git(root, "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)") == "legacy-resolved"
++
++    assert not (root / "desk" / "tasks" / "task-x.md").exists()
++    assert f"status: {status}" in before
++    assert "desk/tasks/task-x.md" not in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
++    assert _git(root, "status", "--porcelain") == ""
++
++    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
++    assert entry == {
++        "task_id": "task-x",
++        "run_id": None,
++        "run_dir": None,
++        "commit": None,
++        "session_sha256": None,
++        "mode": "legacy-resolved",
++    }
++    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == _git(root, "rev-parse", "HEAD")
++    assert sorted(_git(root, "show", "--name-only", "--format=", "HEAD").splitlines()) == [
++        "desk/tasks/Board.md",
++        "desk/tasks/task-x.md",
++        "runs/subagents/index.jsonl",
++    ]
++
++
++def test_closeout_retire_refuses_a_task_that_is_not_resolved(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++    ref = _git(root, "rev-parse", "HEAD")
++
++    rc = _retire_main(root, "--reason", "not resolved yet", "--ref", ref)
++
++    assert rc == 1
++    assert "only resolved, closed, done or complete tasks can be retired" in capsys.readouterr().out
++    assert _git(root, "rev-parse", "HEAD") == head
++    assert _git(root, "status", "--porcelain") == ""
++    assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: active") == 1
++    assert "desk/tasks/task-x.md" in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
++    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
++
++
++@pytest.mark.parametrize("ref", ["does-not-exist.txt", "deadbeef", "0" * 40, "desk/tasks/Board.md"])
++def test_closeout_retire_refuses_a_ref_that_is_not_an_ancestor_commit_and_leaves_the_tree_unchanged(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str], ref: str
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_legacy_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++
++    rc = _retire_main(root, "--reason", "resolved long ago", "--ref", ref)
++
++    assert rc == 1
++    printed = capsys.readouterr().out
++    assert "Unresolvable --ref" in printed
++    assert "need a commit that is HEAD or an ancestor" in printed
++    assert _git(root, "rev-parse", "HEAD") == head
++    assert _git(root, "status", "--porcelain") == ""
++    assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: resolved") == 1
++    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
++
++
++def test_closeout_retire_requires_at_least_one_ref(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_legacy_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++
++    rc = main(["closeout", "retire", "--root", str(root), "--task", "task-x", "--reason", "resolved"])
++
++    assert rc == 2
++    assert "--ref" in capsys.readouterr().err
++    assert _git(root, "rev-parse", "HEAD") == head
++
++
++def test_closeout_retire_requires_a_reason(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_legacy_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++    ref = _git(root, "rev-parse", "HEAD")
++
++    rc = _retire_main(root, "--reason", "   ", "--ref", ref)
++
++    assert rc == 1
++    assert "Retire needs a non-empty --reason" in capsys.readouterr().out
++    assert _git(root, "rev-parse", "HEAD") == head
++    assert _git(root, "status", "--porcelain") == ""
++    assert (root / "desk" / "tasks" / "task-x.md").exists()
++    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 89cd29c..69f96c8 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -105,6 +105,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
+     ("closeout",),
+     ("closeout", "commit"),
+     ("closeout", "supersede"),
++    ("closeout", "retire"),
+     ("runtime",),
+     ("runtime", "init"),
+     ("runtime", "stop"),

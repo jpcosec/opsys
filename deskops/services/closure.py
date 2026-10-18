@@ -1,8 +1,8 @@
 """One closure path for task bundles.
 
 Every way of closing a task ends here: ``deskops closeout commit`` (run-linked
-and manual routes), ``deskops closeout supersede``, and the legacy
-``_auto_commit_task_closure`` hook. The
+and manual routes), ``deskops closeout supersede``, ``deskops closeout retire``,
+and the legacy ``_auto_commit_task_closure`` hook. The
 service owns the whole closure: closeout gates for a board-routed task, Board
 update, store untracking, bundle removal, exactly one closing commit carrying
 the route's trailers, and the append-only index entry.
@@ -181,6 +181,83 @@ class ClosureService:
         if outcome.exit_code != 0:
             task_path.write_bytes(original)
         return outcome
+
+    def close_retired(
+        self,
+        task_id: str,
+        *,
+        reason: str,
+        refs: list[str] | None,
+        paths: list[str] | None = None,
+        message: str | None = None,
+    ) -> ClosureOutcome:
+        """Remove a task that was already resolved before the ritual lifecycle.
+
+        The task keeps its status: it is not made ``superseded`` and no evidence
+        gates run. A resolved-family status plus a reason and at least one ref
+        that is HEAD or an ancestor commit are the evidence instead, and the
+        closing commit says ``Closeout-Mode: legacy-resolved``.
+        """
+        reason = " ".join((reason or "").split())
+        if not reason:
+            return ClosureOutcome(
+                1,
+                ["Retire needs a non-empty --reason saying why the task is already resolved."],
+            )
+
+        cleaned_refs = [str(ref).strip() for ref in refs or [] if str(ref).strip()]
+        if not cleaned_refs:
+            return ClosureOutcome(
+                1,
+                ["Retire needs at least one --ref naming a commit that is HEAD or an ancestor."],
+            )
+        unresolved = [
+            ref for ref in cleaned_refs if not self._ops.closeout_gates.reference_points_to_commit(ref)
+        ]
+        if unresolved:
+            return ClosureOutcome(
+                1,
+                [f"Unresolvable --ref: {', '.join(unresolved)} (need a commit that is HEAD or an ancestor)."],
+            )
+
+        task_path = self._task_path(task_id)
+        if not task_path.is_file():
+            return ClosureOutcome(1, [f"Task not found: {task_id}"])
+
+        payload = self._ops._read_doc(task_path, TaskDoc)
+        status = str(payload.get("status") or "").strip().lower()
+        if status not in {"resolved", "closed", "done", "complete"}:
+            return ClosureOutcome(
+                1,
+                [
+                    f"Task {task_id} has status '{payload.get('status') or ''}'; only resolved, "
+                    "closed, done or complete tasks can be retired."
+                ],
+            )
+
+        trailers = [
+            f"Task-Id: {task_id}",
+            "Closeout-Mode: legacy-resolved",
+            f"Closeout-Reason: {reason}",
+            *[f"Closeout-Ref: {ref}" for ref in cleaned_refs],
+        ]
+        return self._close(
+            task_id,
+            route="legacy-resolved",
+            subject=message or f"closeout: {task_id}",
+            trailers=trailers,
+            paths=list(paths or []),
+            explicit_paths=True,
+            run_gates=False,
+            index_entry={
+                "task_id": task_id,
+                "run_id": None,
+                "run_dir": None,
+                "session_sha256": None,
+                "mode": "legacy-resolved",
+            },
+            success_line=f"Closing commit {{commit}} made in legacy-resolved mode: {reason}",
+        )
 
     def _ref_resolves(self, reference: str) -> bool:
         if self._ops.closeout_gates.reference_points_to_commit(reference):

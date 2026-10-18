@@ -1,0 +1,21 @@
+usage: deskops closeout retire [-h] [--root ROOT] --task TASK --reason REASON
+                               --ref REF
+
+options:
+  -h, --help       show this help message and exit
+  --root ROOT      Target repository root.
+  --task TASK      Task id being retired.
+  --reason REASON  Why the task is already resolved.
+  --ref REF        Ancestor commit id that resolved the task; repeat for more refs.
+
+Example:
+  deskops closeout retire --root . --task task-fix-thing \
+    --reason "Resolved before the ritual lifecycle existed" \
+    --ref 3900ad4
+
+Retire removes a task whose status is already resolved, closed, done or
+complete, as pre-lifecycle tasks are. The ref must be a commit that is HEAD or
+an ancestor. The status is not rewritten and the evidence gates do not run. It
+makes exactly one closing commit: the task leaves the Board, the commit carries
+Closeout-Mode: legacy-resolved with Closeout-Reason and one Closeout-Ref per
+ref, and the run index entry is marked legacy-resolved.

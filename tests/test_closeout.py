@@ -30,7 +30,8 @@ def _make_repo(tmp_path: Path) -> Path:
     _git(root, "config", "user.email", "test@example.com")
     _git(root, "config", "user.name", "Test")
     (root / "seed.txt").write_text("seed\n", encoding="utf-8")
-    _git(root, "add", "seed.txt")
+    (root / ".gitignore").write_text(".deskops.log\n", encoding="utf-8")
+    _git(root, "add", "seed.txt", ".gitignore")
     _git(root, "commit", "-q", "-m", "seed")
     return root
 
@@ -793,3 +794,173 @@ def test_closeout_supersede_requires_the_reason_flag(
     assert rc == 2
     assert "--reason" in capsys.readouterr().err
     assert _git(root, "rev-parse", "HEAD") == head
+
+
+def _write_legacy_task(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
+    _write(
+        root / "desk" / "tasks" / f"{task_id}.md",
+        f"""---
+id: {task_id}
+status: {status}
+summary: ''
+tags: []
+references:
+- 3900ad4
+depends_on: []
+pills: []
+files: []
+task_type: implementation
+atoms: []
+---
+
+# Task X
+
+## Rationale
+
+Resolved before the ritual lifecycle existed.
+
+## Goal
+
+Remove the resolved task.
+
+## Scope
+
+Stay scoped.
+
+## Implementation Path
+
+Retire it.
+
+## Validation
+
+- pytest
+
+## Done When
+
+Retired.
+""",
+    )
+
+
+def _commit_legacy_task_on_board(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
+    _write_legacy_task(root, task_id, status)
+    _write_board(root, task_id)
+    _git(root, "add", "desk/tasks")
+    _git(root, "commit", "-q", "-m", "add legacy task and board")
+
+
+def _retire_main(root: Path, *argv: str) -> int:
+    return main(["closeout", "retire", "--root", str(root), "--task", "task-x", *argv])
+
+
+@pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete"])
+def test_closeout_retire_removes_a_legacy_resolved_task(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], status: str
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_legacy_task_on_board(root, status=status)
+    ref = _git(root, "rev-parse", "HEAD")
+    before = (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8")
+
+    rc = _retire_main(root, "--reason", "Resolved before the ritual lifecycle existed", "--ref", ref)
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message.splitlines()[0] == "closeout: task-x"
+    assert "Task-Id: task-x" in message
+    assert "Closeout-Mode: legacy-resolved" in message
+    assert "Closeout-Reason: Resolved before the ritual lifecycle existed" in message
+    assert f"Closeout-Ref: {ref}" in message
+    assert _git(root, "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)") == "legacy-resolved"
+
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+    assert f"status: {status}" in before
+    assert "desk/tasks/task-x.md" not in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert _git(root, "status", "--porcelain") == ""
+
+    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert entry == {
+        "task_id": "task-x",
+        "run_id": None,
+        "run_dir": None,
+        "commit": None,
+        "session_sha256": None,
+        "mode": "legacy-resolved",
+    }
+    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == _git(root, "rev-parse", "HEAD")
+    assert sorted(_git(root, "show", "--name-only", "--format=", "HEAD").splitlines()) == [
+        "desk/tasks/Board.md",
+        "desk/tasks/task-x.md",
+        "runs/subagents/index.jsonl",
+    ]
+
+
+def test_closeout_retire_refuses_a_task_that_is_not_resolved(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = _retire_main(root, "--reason", "not resolved yet", "--ref", ref)
+
+    assert rc == 1
+    assert "only resolved, closed, done or complete tasks can be retired" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert _git(root, "status", "--porcelain") == ""
+    assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: active") == 1
+    assert "desk/tasks/task-x.md" in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
+
+
+@pytest.mark.parametrize("ref", ["does-not-exist.txt", "deadbeef", "0" * 40, "desk/tasks/Board.md"])
+def test_closeout_retire_refuses_a_ref_that_is_not_an_ancestor_commit_and_leaves_the_tree_unchanged(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], ref: str
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_legacy_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = _retire_main(root, "--reason", "resolved long ago", "--ref", ref)
+
+    assert rc == 1
+    printed = capsys.readouterr().out
+    assert "Unresolvable --ref" in printed
+    assert "need a commit that is HEAD or an ancestor" in printed
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert _git(root, "status", "--porcelain") == ""
+    assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: resolved") == 1
+    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
+
+
+def test_closeout_retire_requires_at_least_one_ref(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_legacy_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = main(["closeout", "retire", "--root", str(root), "--task", "task-x", "--reason", "resolved"])
+
+    assert rc == 2
+    assert "--ref" in capsys.readouterr().err
+    assert _git(root, "rev-parse", "HEAD") == head
+
+
+def test_closeout_retire_requires_a_reason(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_legacy_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = _retire_main(root, "--reason", "   ", "--ref", ref)
+
+    assert rc == 1
+    assert "Retire needs a non-empty --reason" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert _git(root, "status", "--porcelain") == ""
+    assert (root / "desk" / "tasks" / "task-x.md").exists()
+    assert not (root / "runs" / "subagents" / "index.jsonl").exists()

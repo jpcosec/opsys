@@ -1275,6 +1275,37 @@ the run index entry is marked superseded.
             raw_text=True,
         ),
         Command(
+            path=("closeout", "retire"),
+            help="Remove a task that was already resolved before the ritual lifecycle.",
+            args=(
+                ROOT_ARG,
+                A("--task", required=True, help="Task id being retired."),
+                A("--reason", required=True, help="Why the task is already resolved."),
+                A(
+                    "--ref",
+                    action="append",
+                    required=True,
+                    help="Ancestor commit id that resolved the task; repeat for more refs.",
+                ),
+            ),
+            handler="deskops.cli.commands.closeout:CloseoutCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops closeout retire --root . --task task-fix-thing \\
+    --reason "Resolved before the ritual lifecycle existed" \\
+    --ref 3900ad4
+
+Retire removes a task whose status is already resolved, closed, done or
+complete, as pre-lifecycle tasks are. The ref must be a commit that is HEAD or
+an ancestor. The status is not rewritten and the evidence gates do not run. It
+makes exactly one closing commit: the task leaves the Board, the commit carries
+Closeout-Mode: legacy-resolved with Closeout-Reason and one Closeout-Ref per
+ref, and the run index entry is marked legacy-resolved.
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
             path=("closeout", "verify"),
             help="Strictly verify closeout evidence gates for one task and print a structured report.",
             args=(
