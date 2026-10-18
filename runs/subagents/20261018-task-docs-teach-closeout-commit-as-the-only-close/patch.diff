@@ -1,0 +1,202 @@
+diff --git a/.opencode/skills/use-deskops/SKILL.md b/.opencode/skills/use-deskops/SKILL.md
+index fd90852..b9c5e6b 100644
+--- a/.opencode/skills/use-deskops/SKILL.md
++++ b/.opencode/skills/use-deskops/SKILL.md
+@@ -69,6 +69,7 @@ Key rules:
+ - Promote drawer work before implementation.
+ - Keep one coherent deliverable per task.
+ - Do not skip execution, testing, or closeout gates.
++- `deskops advance task` stops at the closeout node; close only with `deskops closeout commit` (`--run-dir` or `--no-run --reason`).
+ - Every closed task ends with its own atomic commit.
+ - When a whole ready dependency layer closes, run the phase ritual before starting the next layer.
+ - Docs are human-facing materializations of atoms, not the only durable source of truth.
+@@ -112,6 +113,9 @@ deskops show atom <atom-id> --root .
+ deskops add task --root . --from-drawer <drawer-selector> --title <title> --goal <goal> --scope <scope> --validation <check>
+ deskops bind pill <pill-selector> --task <task-id> --root .
+ deskops advance task <task-id> --root .
++deskops closeout commit --task <task-id> --run-dir runs/subagents/<run-dir> --root .
++deskops closeout commit --task <task-id> --no-run --reason "<why>" --root .
++deskops closeout verify --task <task-id> --root .
+ deskops graph build --root .
+ deskops graph missing --root .
+ deskops repo register ...
+diff --git a/deskops/data/faq.md b/deskops/data/faq.md
+index 5be81c3..69edf88 100644
+--- a/deskops/data/faq.md
++++ b/deskops/data/faq.md
+@@ -91,7 +91,9 @@ deskops show repository repo-deskops
+ 
+ **Advance tasks** — `deskops advance task <task-id>`
+ 
+-Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
++Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. It stops at `ritual-closeout`: it never closes the task. The only close is `deskops closeout commit --task <task-id> --run-dir <runs/subagents/dir>` or `deskops closeout commit --task <task-id> --no-run --reason <why>`. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
++
++For a board-routed task, `closeout commit` runs `deskops closeout verify` first. The gate requires test evidence, a link for every path in the task's `files` (an atom reference, a materialization/graph link, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`), and a commit reference that resolves to `HEAD` or an ancestor. The commit reference must already exist when the gate runs, so point it at an earlier commit such as the task's promotion commit; the closing commit does not exist yet.
+ 
+ **Promote inbox notes** — `deskops promote inbox-to-drawer-task <selector>`
+ 
+diff --git a/docs/diagrams/process/current-agent-workflow-and-automation.md b/docs/diagrams/process/current-agent-workflow-and-automation.md
+index 058fa5f..822a4d6 100644
+--- a/docs/diagrams/process/current-agent-workflow-and-automation.md
++++ b/docs/diagrams/process/current-agent-workflow-and-automation.md
+@@ -60,8 +60,8 @@ flowchart TB
+         auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
+         auto_bundle["deskops add task / create_task_bundle\nwrites one task doc at ritual-execution\nand appends the task to Board.md"]
+         auto_next["deskops next\nreads Board + task + deskops/spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
+-        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status"]
+-        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove the task doc from desk\nunroute from Board.md\ngit add/rm + git commit"]
++        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status\nstops at ritual-closeout\nnever closes the task"]
++        auto_close["deskops closeout commit\nruns closeout verify for board-routed tasks\nthen removes the task doc from desk\nunroutes from Board.md\ngit add/rm + git commit"]
+     end
+ 
+     subgraph NotAutomaticYet["Things modeled but not generally auto-fired yet"]
+@@ -117,7 +117,7 @@ flowchart TB
+     auto_close --> git
+ 
+     hook_docs --> no_hook_engine --> rituals_still_manual
+-    close_gate --> auto_advance
++    close_gate --> auto_close
+ ```
+ 
+ ## Surfaces touched by stage
+@@ -254,19 +254,24 @@ Automatically:
+ 
+ - reads the transitions leaving the task's `current_node` from the sldb edge index
+ - evaluates each transition's `--where` condition with sldb (`where_matches`)
+-- fires the first one that holds: sets the status it declares and the next ritual (or `complete`)
++- fires the first one that holds: sets the status it declares and the next ritual
++- stops at `ritual-closeout` and points at `deskops closeout commit`; it never closes the task
+ - reports the blocked gate when none holds
+ 
+-### automatic closeout side effect inside `advance_task()`
++### `deskops closeout commit`
+ 
+-If the advanced task ends at:
++Implemented by `ClosureService` in `deskops/services/closure.py`.
+ 
+-- `status == closed`
+-- `current_node == complete`
++This is the only close path. `advance` stops at `ritual-closeout` and points here; a forced transition to the terminal node is refused.
+ 
+-then `_auto_commit_task_closure()` runs automatically and performs cleanup plus a git commit.
++Automatically:
++
++- for a board-routed task, runs `deskops closeout verify` and refuses to commit when any gate fails
++- removes the task from `desk/tasks/Board.md`
++- untracks the task from the store and removes the task document from disk
++- makes one closing commit, linked to `--run-dir` evidence or marked manual with `--no-run --reason`
+ 
+-That is the closest thing to a currently active automatic closeout hook in the repo runtime.
++The closeout gate requires test evidence, a link for every changed file (an atom/materialization link or a routed follow-up reference), and a commit reference that resolves to `HEAD` or an ancestor. Because the gate runs before the closing commit exists, the commit reference must point at an earlier commit, such as the task's promotion commit.
+ 
+ ## 6. Hooks: current truth
+ 
+diff --git a/docs/diagrams/process/current-agent-workflow-and-automation.mmd b/docs/diagrams/process/current-agent-workflow-and-automation.mmd
+index 4e9daa6..548e1fb 100644
+--- a/docs/diagrams/process/current-agent-workflow-and-automation.mmd
++++ b/docs/diagrams/process/current-agent-workflow-and-automation.mmd
+@@ -38,8 +38,8 @@ flowchart TB
+         auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
+         auto_bundle["deskops add task / create_task_bundle\nwrites one task doc at ritual-execution\nand appends the task to Board.md"]
+         auto_next["deskops next\nreads Board + task + deskops/spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
+-        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status"]
+-        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove the task doc from desk\nunroute from Board.md\ngit add/rm + git commit"]
++        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status\nstops at ritual-closeout\nnever closes the task"]
++        auto_close["deskops closeout commit\nruns closeout verify for board-routed tasks\nthen removes the task doc from desk\nunroutes from Board.md\ngit add/rm + git commit"]
+     end
+ 
+     subgraph NotAutomaticYet["Things modeled but not generally auto-fired yet"]
+@@ -95,4 +95,4 @@ flowchart TB
+     auto_close --> git
+ 
+     hook_docs --> no_hook_engine --> rituals_still_manual
+-    close_gate --> auto_advance
++    close_gate --> auto_close
+diff --git a/docs/faq.md b/docs/faq.md
+index 5be81c3..69edf88 100644
+--- a/docs/faq.md
++++ b/docs/faq.md
+@@ -91,7 +91,9 @@ deskops show repository repo-deskops
+ 
+ **Advance tasks** — `deskops advance task <task-id>`
+ 
+-Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
++Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. It stops at `ritual-closeout`: it never closes the task. The only close is `deskops closeout commit --task <task-id> --run-dir <runs/subagents/dir>` or `deskops closeout commit --task <task-id> --no-run --reason <why>`. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
++
++For a board-routed task, `closeout commit` runs `deskops closeout verify` first. The gate requires test evidence, a link for every path in the task's `files` (an atom reference, a materialization/graph link, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`), and a commit reference that resolves to `HEAD` or an ancestor. The commit reference must already exist when the gate runs, so point it at an earlier commit such as the task's promotion commit; the closing commit does not exist yet.
+ 
+ **Promote inbox notes** — `deskops promote inbox-to-drawer-task <selector>`
+ 
+diff --git a/docs/quickstart.md b/docs/quickstart.md
+index ec7c4cd..18b0b48 100644
+--- a/docs/quickstart.md
++++ b/docs/quickstart.md
+@@ -11,7 +11,7 @@ This guide is a human-facing materialization of these atoms:
+ 
+ Create and close your first desk task without learning SLDB internals first.
+ 
+-In this guide you will install deskops, initialize a repo, create one task, advance it through the workflow, run validation, and close it with a commit.
++In this guide you will install deskops, initialize a repo, create one task, advance it through the workflow, run validation, and close it with `deskops closeout commit`.
+ 
+ ## What deskops does
+ 
+@@ -103,7 +103,9 @@ Then inspect the result:
+ deskops show task task-try-deskops-quickstart
+ ```
+ 
+-The first advance moves the task into active execution. Later advances move it toward testing and closeout when the conditions of the lifecycle transitions hold (`deskops show task` lists them).
++The first advance moves the task into active execution. Later advances move it toward testing and then to the `ritual-closeout` node when the conditions of the lifecycle transitions hold (`deskops show task` lists them).
++
++`advance` stops at the closeout node. It never closes the task: once the task reaches closeout, the command reports that the task closes with `deskops closeout commit`.
+ 
+ ## Test
+ 
+@@ -123,25 +125,40 @@ See `docs/how-to-test-ux-cli.md` and `desk/rituals/testing.md` for deeper testin
+ 
+ ## Close Out
+ 
+-`deskops advance task ...` can move the runtime task status toward `closed` and `complete`, but closeout still requires human cleanup today.
++`deskops advance task ...` moves the task to the `ritual-closeout` node and stops there. `deskops closeout commit` is the only way to close a task.
+ 
+ Before calling a task done:
+ 
+ - Confirm validation passed.
+ - Confirm bound pills and guardrails were satisfied.
++- Set the task's `files` field to every changed path.
++- Set the task's `references` field to test evidence, a link for every changed file, and a commit id that already exists.
+ - Remove or update stale task/context docs.
+-- Remove closed tasks from `desk/tasks/Board.md`.
+-- Untrack the task from the local store if it is tracked.
+-- Commit the coherent closure.
+ 
+-Use one atomic commit for the completed task:
++Close with the run-linked route, using evidence under `runs/subagents/`:
++
++```bash
++deskops closeout commit --task task-try-deskops-quickstart \
++  --run-dir runs/subagents/<run-dir>
++```
++
++Or close without a subagent run and say why:
+ 
+ ```bash
+-git status --short
+-git add <changed-files>
+-git commit -m "docs(desk): close quickstart task"
++deskops closeout commit --task task-try-deskops-quickstart \
++  --no-run --reason "<why the task closes without a run>"
+ ```
+ 
++For a board-routed task, `closeout commit` runs the full `deskops closeout verify` gate before committing. The gate requires:
++
++- a test evidence reference: an existing `.py` file under `tests/`, optionally with a `::node`, or the `pytest <path>` form;
++- a link for every path in the task's `files`: an atom reference, a materialization/graph link to an atom, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`;
++- a commit reference: a lowercase hex commit id that resolves to `HEAD` or an ancestor.
++
++The commit reference must point at an earlier commit that already exists, for example the task's promotion commit. The closing commit is made by `closeout commit` and cannot reference itself.
++
++`closeout commit` then removes the task from `desk/tasks/Board.md`, untracks it from the store, deletes the resolved task document, and makes the one atomic closing commit with the route's trailers.
++
+ See `desk/rituals/phase.md`, `desk/rituals/execution.md`, `desk/rituals/testing.md`, and `desk/rituals/closeout.md` for the full phase-gated workflow.
+ 
+ ## Next References

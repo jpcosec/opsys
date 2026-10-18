@@ -1,0 +1,8 @@
+ M .opencode/skills/use-deskops/SKILL.md
+ M desk/tasks/task-docs-teach-closeout-commit-as-the-only-close.md
+ M deskops/data/faq.md
+ M docs/diagrams/process/current-agent-workflow-and-automation.md
+ M docs/diagrams/process/current-agent-workflow-and-automation.mmd
+ M docs/faq.md
+ M docs/quickstart.md
+?? runs/subagents/20261018-task-docs-teach-closeout-commit-as-the-only-close/

@@ -1,0 +1,10 @@
+Task: task-docs-teach-closeout-commit-as-the-only-close
+Title: Docs and skills teach `closeout commit` as the only way to close a task
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-docs-teach-closeout-commit-as-the-only-close.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

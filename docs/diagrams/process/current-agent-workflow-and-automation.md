@@ -1,3 +1,15 @@
+---
+source_atoms:
+- desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md
+- desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md
+- desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md
+- desk/atoms/workflow-model/atom-clean-agents-start-from-minimum-workflow-set.md
+- desk/atoms/workflow-model/atom-first-safe-action-follows-read-route.md
+- desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md
+- desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md
+provenance: docs/diagrams/process/current-agent-workflow-and-automation.mmd
+---
+
 # Current Agent Workflow and Automation Map
 
 This diagram document is a human-facing materialization of these atoms:
@@ -60,8 +72,8 @@ flowchart TB
         auto_discovery["Pi auto-discovers skills\nfrom configured project skill locations"]
         auto_bundle["deskops add task / create_task_bundle\nwrites one task doc at ritual-execution\nand appends the task to Board.md"]
         auto_next["deskops next\nreads Board + task + deskops/spec/workflows/task_lifecycle.yaml\nmatches current_node to workflow state\nmerges board pills + task pills"]
-        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status"]
-        auto_close["If advance reaches closed + complete\n_auto_commit_task_closure runs\nremove the task doc from desk\nunroute from Board.md\ngit add/rm + git commit"]
+        auto_advance["deskops advance task\nfires the first lifecycle transition\nwhose --where condition holds (sldb)\nand sets current_node/status\nstops at ritual-closeout\nnever closes the task"]
+        auto_close["deskops closeout commit\nruns closeout verify for board-routed tasks\nthen removes the task doc from desk\nunroutes from Board.md\ngit add/rm + git commit"]
     end
 
     subgraph NotAutomaticYet["Things modeled but not generally auto-fired yet"]
@@ -117,7 +129,7 @@ flowchart TB
     auto_close --> git
 
     hook_docs --> no_hook_engine --> rituals_still_manual
-    close_gate --> auto_advance
+    close_gate --> auto_close
 ```
 
 ## Surfaces touched by stage
@@ -254,19 +266,24 @@ Automatically:
 
 - reads the transitions leaving the task's `current_node` from the sldb edge index
 - evaluates each transition's `--where` condition with sldb (`where_matches`)
-- fires the first one that holds: sets the status it declares and the next ritual (or `complete`)
+- fires the first one that holds: sets the status it declares and the next ritual
+- stops at `ritual-closeout` and points at `deskops closeout commit`; it never closes the task
 - reports the blocked gate when none holds
 
-### automatic closeout side effect inside `advance_task()`
+### `deskops closeout commit`
 
-If the advanced task ends at:
+Implemented by `ClosureService` in `deskops/services/closure.py`.
 
-- `status == closed`
-- `current_node == complete`
+This is the only close path. `advance` stops at `ritual-closeout` and points here; a forced transition to the terminal node is refused.
 
-then `_auto_commit_task_closure()` runs automatically and performs cleanup plus a git commit.
+Automatically:
 
-That is the closest thing to a currently active automatic closeout hook in the repo runtime.
+- for a board-routed task, runs `deskops closeout verify` and refuses to commit when any gate fails
+- removes the task from `desk/tasks/Board.md`
+- untracks the task from the store and removes the task document from disk
+- makes one closing commit, linked to `--run-dir` evidence or marked manual with `--no-run --reason`
+
+The closeout gate requires test evidence, a link for every changed file (an atom/materialization link or a routed follow-up reference), and a commit reference that resolves to `HEAD` or an ancestor. Because the gate runs before the closing commit exists, the commit reference must point at an earlier commit, such as the task's promotion commit.
 
 ## 6. Hooks: current truth
 

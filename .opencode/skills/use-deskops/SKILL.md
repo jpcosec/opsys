@@ -69,6 +69,7 @@ Key rules:
 - Promote drawer work before implementation.
 - Keep one coherent deliverable per task.
 - Do not skip execution, testing, or closeout gates.
+- `deskops advance task` stops at the closeout node; close only with `deskops closeout commit` (`--run-dir` or `--no-run --reason`).
 - Every closed task ends with its own atomic commit.
 - When a whole ready dependency layer closes, run the phase ritual before starting the next layer.
 - Docs are human-facing materializations of atoms, not the only durable source of truth.
@@ -112,6 +113,9 @@ deskops show atom <atom-id> --root .
 deskops add task --root . --from-drawer <drawer-selector> --title <title> --goal <goal> --scope <scope> --validation <check>
 deskops bind pill <pill-selector> --task <task-id> --root .
 deskops advance task <task-id> --root .
+deskops closeout commit --task <task-id> --run-dir runs/subagents/<run-dir> --root .
+deskops closeout commit --task <task-id> --no-run --reason "<why>" --root .
+deskops closeout verify --task <task-id> --root .
 deskops graph build --root .
 deskops graph missing --root .
 deskops repo register ...
