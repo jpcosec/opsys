@@ -1,0 +1,11 @@
+Task: task-rw-f5-root-resolution-and-sandbox-guard
+Title: `--root` and the store resolve in one place, and the sandbox guard covers every mutating command
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f5-root-resolution-and-sandbox-guard.md
+Effective pills:
+- desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md
+- desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

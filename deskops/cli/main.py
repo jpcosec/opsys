@@ -14,6 +14,8 @@ sys.path.insert(0, str(PACKAGE_ROOT))
 
 from deskops.cli.parser import build_parser
 from deskops.cli.registry import command_for_path
+from deskops.cli.registry import resolve_context
+from deskops.identity import find_context_root
 
 from deskops.about import print_about
 from deskops.bootstrap import SLDBBootstrap
@@ -44,6 +46,11 @@ def _load_handler(reference: str) -> type:
     module_name, _, attribute = reference.partition(":")
     module = importlib.import_module(module_name)
     return getattr(module, attribute)
+
+
+def _root_option_given(argv: list[str]) -> bool:
+    """Whether ``--root`` was supplied, distinguishing it from the default."""
+    return any(token == "--root" or token.startswith("--root=") for token in argv)
 
 
 def _validate_selectors(args: Any) -> None:
@@ -80,6 +87,8 @@ class CLI:
 
     def run(self, argv: Any = None) -> int:
         bootstrap = SLDBBootstrap()
+        raw_argv = list(sys.argv[1:] if argv is None else argv)
+        root_explicit = _root_option_given(raw_argv)
         parser = build_parser()
         try:
             args = parser.parse_args(argv)
@@ -92,16 +101,7 @@ class CLI:
 
         _validate_selectors(args)
 
-        self._apply_test_root_override(args)
-
-        # An optional --root (message/inbox) leaves the attribute present but
-        # None; only validate it when a value was actually supplied.
-        if getattr(args, "root", None) is not None:
-            root_path = Path(args.root).resolve()
-            if not root_path.exists() or not root_path.is_dir():
-                import sys
-                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
-                return 1
+        setattr(args, "_deskops_root_explicit", root_explicit)
 
         command_path = getattr(args, "_deskops_command_path", None)
         if command_path is None:
@@ -110,6 +110,26 @@ class CLI:
             command = command_for_path(command_path)
         except KeyError:
             raise UsageError(f"Unknown command: {' '.join(command_path)}")
+
+        self._apply_test_root_override(
+            args,
+            mutates=command.mutates,
+            root_explicit=root_explicit,
+        )
+
+        resolved_root, resolved_store = resolve_context(args)
+        if hasattr(args, "root"):
+            args.root = str(resolved_root)
+        if hasattr(args, "store") and resolved_store is not None and not getattr(args, "store", None):
+            args.store = str(resolved_store)
+
+        # An optional --root (message/inbox) leaves the attribute present but
+        # None; only validate it when a value was actually supplied.
+        if getattr(args, "root", None) is not None:
+            root_path = Path(args.root).resolve()
+            if not root_path.exists() or not root_path.is_dir():
+                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
+                return 1
 
         if command.path[0] in _SLDB_BEFORE_DISPATCH:
             ready = bootstrap.ensure_sldb_available()
@@ -121,22 +141,23 @@ class CLI:
 
         return _load_handler(command.handler)().run(args)
 
-    def _apply_test_root_override(self, args: Any) -> None:
+    def _apply_test_root_override(self, args: Any, *, mutates: bool, root_explicit: bool) -> None:
+        """Redirect a mutating command to the configured sandbox root.
+
+        Only applies when the registry marks the command ``mutates`` and the
+        caller did not pass ``--root`` explicitly. It rewrites the root; it
+        never refuses the invocation.
+        """
+        if root_explicit or not mutates:
+            return
         if not hasattr(args, "root"):
             return
-        if getattr(args, "root", None) != ".":
-            return
-        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "message", "inbox", "repo", "graph", "materialize", "drift"}:
-            return
-            
+
         from deskops.config import DeskConfig
-        from pathlib import Path
-        import os
 
         # Authoritative precedence for test-root selection:
         # explicit CLI flag > DESKOPS_TEST_ROOT env > config.local.json > config.json > defaults.
-        # This helper only applies when the CLI root is still the default ".".
-        original_root = Path(".").resolve()
+        original_root = find_context_root()
         desk_root = original_root / "desk"
 
         test_root = os.environ.get("DESKOPS_TEST_ROOT", "").strip()
@@ -153,6 +174,7 @@ class CLI:
         root_path = Path(target_root).resolve()
         root_path.mkdir(parents=True, exist_ok=True)
         args.root = str(root_path)
+        setattr(args, "_deskops_root_override", True)
 
     def _apply_default_pythonpath(self, args: Any, bootstrap: SLDBBootstrap) -> None:
         if not hasattr(args, "pythonpath"):

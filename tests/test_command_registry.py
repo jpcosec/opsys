@@ -40,3 +40,76 @@ def test_registry_paths_are_unique_and_have_parents() -> None:
         assert path
         if len(path) > 1:
             assert path[:-1] in declared
+
+
+MUTATING_COMMANDS: set[tuple[str, ...]] = {
+    ("doctor",),
+    ("bootstrap",),
+    ("init",),
+    ("inbox",),
+    ("message",),
+    ("message", "send"),
+    ("message", "ack"),
+    ("promote",),
+    ("promote", "inbox-to-drawer-task"),
+    ("drawer",),
+    ("drawer", "remove"),
+    ("add",),
+    ("add", "task"),
+    ("add", "pill"),
+    ("add", "ritual"),
+    ("add", "board"),
+    ("add", "atom"),
+    ("add", "materialization"),
+    ("add", "repository"),
+    ("add", "inbox-note"),
+    ("add", "faq-doc"),
+    ("add", "step"),
+    ("edit",),
+    ("edit", "task"),
+    ("edit", "pill"),
+    ("edit", "ritual"),
+    ("edit", "board"),
+    ("edit", "atom"),
+    ("edit", "materialization"),
+    ("edit", "repository"),
+    ("edit", "inbox-note"),
+    ("edit", "faq-doc"),
+    ("edit", "step"),
+    ("bind",),
+    ("bind", "pill"),
+    ("advance",),
+    ("advance", "task"),
+    ("repo",),
+    ("repo", "register"),
+    ("desk",),
+    ("desk", "install"),
+    ("desk", "migrate"),
+    ("desk", "update"),
+    ("atoms",),
+    ("atoms", "add-namespace"),
+    ("atoms", "reorganize"),
+    ("atoms", "create"),
+    ("atoms", "delete"),
+    ("atoms", "split"),
+    ("atoms", "merge"),
+    ("atoms", "crossroad"),
+    ("atoms", "proto"),
+    ("atoms", "type"),
+    ("graph",),
+    ("graph", "build"),
+    ("graph", "reflect"),
+    ("materialize",),
+    ("closeout",),
+    ("closeout", "commit"),
+    ("runtime",),
+    ("runtime", "init"),
+    ("runtime", "stop"),
+}
+
+
+def test_mutating_commands_are_declared_explicitly() -> None:
+    """Every command that writes desk files, the store, or git must say so."""
+    declared = {command.path for command in command_registry() if command.mutates}
+
+    assert declared == MUTATING_COMMANDS

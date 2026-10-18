@@ -7,7 +7,6 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f3-single-closure-path.md
-- desk/tasks/task-rw-f5-root-resolution-and-sandbox-guard.md
 - desk/tasks/task-tests-never-touch-the-real-global-store.md
 # List of pill-xxx paths
 pills:
@@ -50,5 +49,4 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - One closure service behind every way of closing a task [draft] - `deskops/services/closure.py` performs every closure: gates (closeout_gates), Board update, bundle removal, exactly one commit with the route's trailers, and the index entry. `closeout commit` (both routes) uses it with its CLI unchanged.
-- `--root` and the store resolve in one place, and the sandbox guard covers every mutating command [draft] - One resolver turns `--root`/`--store`/cwd into `(desk_root, store)` for every command and stops searching at the nearest ancestor that contains `desk/` or `.git`; the redirect keeps its current action (it changes the root, it does not refuse) but applies to every command the registry marks `mutates=True` and only when `--root` was not given explicitly.
 - The test suite never writes to the user's real `~/.sldb` [draft] - Running `pytest tests` leaves `~/.sldb` byte-identical.

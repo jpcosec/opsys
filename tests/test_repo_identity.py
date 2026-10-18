@@ -10,6 +10,7 @@ from sldb.runtime.validation import render_model_markdown
 from deskops.cli.main import main
 from deskops.identity import EcosystemIdentity
 from deskops.identity import load_repository_registry
+from deskops.identity import resolve_store_context
 from deskops.models import RepositoryDoc
 
 
@@ -71,15 +72,15 @@ def test_repo_identity_resolver_fails_on_duplicate_root(tmp_path: Path) -> None:
 
 
 def test_repo_whoami_prints_canonical_identity(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
-    registry_dir = tmp_path / "desk" / "registry"
-    registry_dir.mkdir(parents=True)
     repo_root = tmp_path / "deskops-child"
     _write_config(repo_root, "deskops-child")
-    _write_repo_doc(registry_dir, repo_id="deskops-child", repo_path="deskops-child")
+    registry_dir = repo_root / "desk" / "registry"
+    registry_dir.mkdir(parents=True)
+    _write_repo_doc(registry_dir, repo_id="deskops-child", repo_path=".")
 
-    store_path = tmp_path / ".sldb"
+    store_path = repo_root / ".sldb"
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
-    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
+    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, repo_root))
 
     result = main(["repo", "whoami", "--root", str(repo_root), "--store", str(store_path)])
 
@@ -124,3 +125,47 @@ def test_a_registry_that_lacks_the_repo_still_fails(
 
     with pytest.raises(SLDBStoreError, match="not found in registry"):
         EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root, require_registry_match=True)
+
+
+def _make_store(root: Path) -> Path:
+    store = root / ".sldb"
+    (store / "core").mkdir(parents=True)
+    (store / "core" / "store_index.yaml").write_text("{}\n", encoding="utf-8")
+    return store
+
+
+def test_nested_sandbox_never_reads_the_outer_repository_store(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A sandbox with its own desk/ is the boundary; the repo store above it is invisible."""
+    outer = tmp_path / "outer"
+    (outer / ".git").mkdir(parents=True)
+    (outer / "desk").mkdir()
+    outer_store = _make_store(outer)
+
+    sandbox = outer / ".tmp" / "deskops-cli-test"
+    (sandbox / "desk").mkdir(parents=True)
+    monkeypatch.chdir(sandbox)
+
+    assert outer_store.exists()
+    with pytest.raises(SLDBStoreError, match="No local store found"):
+        resolve_store_context(None)
+
+
+def test_nested_sandbox_uses_its_own_store_when_it_has_one(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    outer = tmp_path / "outer"
+    (outer / ".git").mkdir(parents=True)
+    (outer / "desk").mkdir()
+    _make_store(outer)
+
+    sandbox = outer / ".tmp" / "deskops-cli-test"
+    (sandbox / "desk").mkdir(parents=True)
+    sandbox_store = _make_store(sandbox)
+    monkeypatch.chdir(sandbox)
+
+    store, root = resolve_store_context(None)
+
+    assert store == sandbox_store.resolve()
+    assert root == sandbox.resolve()

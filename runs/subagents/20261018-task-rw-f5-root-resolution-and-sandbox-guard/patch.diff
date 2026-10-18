@@ -1,0 +1,544 @@
+diff --git a/deskops/cli/commands/message.py b/deskops/cli/commands/message.py
+index c679e68..b3a7d0a 100644
+--- a/deskops/cli/commands/message.py
++++ b/deskops/cli/commands/message.py
+@@ -15,10 +15,10 @@ from sldb.runtime.validation import extract_model_data
+ from sldb.runtime.validation import render_model_markdown
+ from sldb.runtime.validation import validate_model_input_roundtrip
+ from sldb.store.layout import project_root
+-from sldb.store.resolver import find_local_store
+ 
+ from deskops import doc_io
+ from deskops.identity import EcosystemIdentity
++from deskops.identity import find_local_store
+ 
+ 
+ def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
+diff --git a/deskops/cli/commands/repo.py b/deskops/cli/commands/repo.py
+index cea44c7..14b4bea 100644
+--- a/deskops/cli/commands/repo.py
++++ b/deskops/cli/commands/repo.py
+@@ -9,10 +9,10 @@ from sldb.cli.store_context import get_store_context
+ from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
+ from sldb.runtime.validation import render_model_markdown, validate_model_input_roundtrip
+ from sldb.store.layout import project_root
+-from sldb.store.resolver import find_local_store
+ 
+ from deskops import doc_io
+ from deskops.identity import load_repository_registry, EcosystemIdentity
++from deskops.identity import find_local_store
+ 
+ 
+ def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index cddd3e4..531a89e 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -14,6 +14,8 @@ sys.path.insert(0, str(PACKAGE_ROOT))
+ 
+ from deskops.cli.parser import build_parser
+ from deskops.cli.registry import command_for_path
++from deskops.cli.registry import resolve_context
++from deskops.identity import find_context_root
+ 
+ from deskops.about import print_about
+ from deskops.bootstrap import SLDBBootstrap
+@@ -46,6 +48,11 @@ def _load_handler(reference: str) -> type:
+     return getattr(module, attribute)
+ 
+ 
++def _root_option_given(argv: list[str]) -> bool:
++    """Whether ``--root`` was supplied, distinguishing it from the default."""
++    return any(token == "--root" or token.startswith("--root=") for token in argv)
++
++
+ def _validate_selectors(args: Any) -> None:
+     cmd_parts = ["deskops", args.command]
+     subject = getattr(args, "subject", None)
+@@ -80,6 +87,8 @@ class CLI:
+ 
+     def run(self, argv: Any = None) -> int:
+         bootstrap = SLDBBootstrap()
++        raw_argv = list(sys.argv[1:] if argv is None else argv)
++        root_explicit = _root_option_given(raw_argv)
+         parser = build_parser()
+         try:
+             args = parser.parse_args(argv)
+@@ -92,16 +101,7 @@ class CLI:
+ 
+         _validate_selectors(args)
+ 
+-        self._apply_test_root_override(args)
+-
+-        # An optional --root (message/inbox) leaves the attribute present but
+-        # None; only validate it when a value was actually supplied.
+-        if getattr(args, "root", None) is not None:
+-            root_path = Path(args.root).resolve()
+-            if not root_path.exists() or not root_path.is_dir():
+-                import sys
+-                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
+-                return 1
++        setattr(args, "_deskops_root_explicit", root_explicit)
+ 
+         command_path = getattr(args, "_deskops_command_path", None)
+         if command_path is None:
+@@ -111,6 +111,26 @@ class CLI:
+         except KeyError:
+             raise UsageError(f"Unknown command: {' '.join(command_path)}")
+ 
++        self._apply_test_root_override(
++            args,
++            mutates=command.mutates,
++            root_explicit=root_explicit,
++        )
++
++        resolved_root, resolved_store = resolve_context(args)
++        if hasattr(args, "root"):
++            args.root = str(resolved_root)
++        if hasattr(args, "store") and resolved_store is not None and not getattr(args, "store", None):
++            args.store = str(resolved_store)
++
++        # An optional --root (message/inbox) leaves the attribute present but
++        # None; only validate it when a value was actually supplied.
++        if getattr(args, "root", None) is not None:
++            root_path = Path(args.root).resolve()
++            if not root_path.exists() or not root_path.is_dir():
++                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
++                return 1
++
+         if command.path[0] in _SLDB_BEFORE_DISPATCH:
+             ready = bootstrap.ensure_sldb_available()
+             if ready != 0:
+@@ -121,22 +141,23 @@ class CLI:
+ 
+         return _load_handler(command.handler)().run(args)
+ 
+-    def _apply_test_root_override(self, args: Any) -> None:
+-        if not hasattr(args, "root"):
+-            return
+-        if getattr(args, "root", None) != ".":
++    def _apply_test_root_override(self, args: Any, *, mutates: bool, root_explicit: bool) -> None:
++        """Redirect a mutating command to the configured sandbox root.
++
++        Only applies when the registry marks the command ``mutates`` and the
++        caller did not pass ``--root`` explicitly. It rewrites the root; it
++        never refuses the invocation.
++        """
++        if root_explicit or not mutates:
+             return
+-        if args.command not in {"add", "edit", "bind", "list", "show", "advance", "next", "promote", "message", "inbox", "repo", "graph", "materialize", "drift"}:
++        if not hasattr(args, "root"):
+             return
+-            
++
+         from deskops.config import DeskConfig
+-        from pathlib import Path
+-        import os
+ 
+         # Authoritative precedence for test-root selection:
+         # explicit CLI flag > DESKOPS_TEST_ROOT env > config.local.json > config.json > defaults.
+-        # This helper only applies when the CLI root is still the default ".".
+-        original_root = Path(".").resolve()
++        original_root = find_context_root()
+         desk_root = original_root / "desk"
+ 
+         test_root = os.environ.get("DESKOPS_TEST_ROOT", "").strip()
+@@ -153,6 +174,7 @@ class CLI:
+         root_path = Path(target_root).resolve()
+         root_path.mkdir(parents=True, exist_ok=True)
+         args.root = str(root_path)
++        setattr(args, "_deskops_root_override", True)
+ 
+     def _apply_default_pythonpath(self, args: Any, bootstrap: SLDBBootstrap) -> None:
+         if not hasattr(args, "pythonpath"):
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index 4d0b2fd..f83159c 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -13,12 +13,18 @@ from __future__ import annotations
+ 
+ from dataclasses import dataclass
+ from dataclasses import field
++from pathlib import Path
+ from typing import Any
+ 
++from sldb.store.layout import project_root
++
+ from deskops.cli.model_introspection import DEFAULT_FACTORY
+ from deskops.cli.model_introspection import REQUIRED
+ from deskops.cli.model_introspection import artifact_model_fields
+ from deskops.cli.model_introspection import model_cli_fields
++from deskops.errors import UsageError
++from deskops.identity import find_context_root
++from deskops.identity import find_local_store
+ from deskops.operations import ARTIFACT_SUBJECTS
+ 
+ 
+@@ -79,7 +85,7 @@ def A(flags: str | tuple[str, ...], **kwargs: Any) -> Arg:
+ 
+ ROOT_ARG = A("--root", default=".", help="Target repository root.")
+ ROOT_ARG_NO_PERIOD = A("--root", default=".", help="Target repository root")
+-ROOT_ARG_MESSAGE = A("--root", default=".", help="Repository root whose desk/ holds the inbox")
++ROOT_ARG_MESSAGE = A("--root", default=None, help="Repository root whose desk/ holds the inbox")
+ ROOT_ARG_INBOX = A(
+     "--root",
+     help="Repository root whose desk/ holds the inbox; the same --root every other subcommand takes",
+@@ -1271,3 +1277,40 @@ def command_for_path(path: tuple[str, ...]) -> Command:
+         if command.path == path:
+             return command
+     raise KeyError(path)
++
++
++def resolve_context(args: Any) -> tuple[Path, Path | None]:
++    """Resolve one ``(desk_root, store)`` pair for every command.
++
++    ``--root`` sets the desk root and ``--store`` sets the store. When both are
++    given they must agree (the store must be ``<root>/.sldb``). With neither,
++    the upward walk stops at the nearest ancestor containing ``desk/`` or
++    ``.git``; the store is that boundary's ``.sldb`` only, never an ancestor's.
++    """
++    root_arg = getattr(args, "root", None)
++    store_arg = getattr(args, "store", None)
++    root_given = bool(
++        getattr(args, "_deskops_root_explicit", False)
++        or getattr(args, "_deskops_root_override", False)
++        or root_arg not in (None, "", ".")
++    )
++    store_path = Path(store_arg).expanduser().resolve() if store_arg else None
++
++    if root_given:
++        root = Path(root_arg).expanduser().resolve() if root_arg else Path.cwd().resolve()
++        if store_path is not None:
++            expected = (root / ".sldb").resolve()
++            if store_path != expected:
++                raise UsageError(
++                    f"--root '{root}' and --store '{store_path}' disagree; "
++                    f"when both are given the store must be '{expected}'."
++                )
++        else:
++            store_path = find_local_store(root)
++        return root, store_path
++
++    if store_path is not None:
++        return project_root(store_path), store_path
++
++    root = find_context_root()
++    return root, find_local_store(root)
+diff --git a/deskops/identity.py b/deskops/identity.py
+index d1e6714..692cf94 100644
+--- a/deskops/identity.py
++++ b/deskops/identity.py
+@@ -7,7 +7,7 @@ from sldb.cli.store_context import get_store_context
+ from sldb.core.exceptions import SLDBStoreError
+ from sldb.runtime.validation import extract_model_data
+ from sldb.store.layout import project_root
+-from sldb.store.resolver import find_local_store
++from sldb.store.layout import store_exists
+ 
+ from deskops.config import DeskConfig
+ from deskops.models import RepositoryDoc
+@@ -30,6 +30,29 @@ class RegisteredRepository:
+         return self.repo_root / "desk"
+ 
+ 
++def find_context_root(start: Path | None = None) -> Path:
++    """Return the nearest ancestor that looks like a project boundary.
++
++    The upward walk stops at the first directory containing ``desk/`` or
++    ``.git``. Nothing above that boundary is considered, so a sandbox nested
++    inside a repository never falls through to the repository's store or
++    registry. With no matching ancestor the current directory is the boundary.
++    """
++    current = (start or Path.cwd()).resolve()
++    if current.is_file():
++        current = current.parent
++    for directory in [current, *current.parents]:
++        if (directory / "desk").is_dir() or (directory / ".git").exists():
++            return directory
++    return current
++
++
++def find_local_store(start: Path | None = None) -> Path | None:
++    """Return the store at the project boundary, never an ancestor's store."""
++    candidate = find_context_root(start) / ".sldb"
++    return candidate if store_exists(candidate) else None
++
++
+ def resolve_store_context(store_arg: str | None) -> tuple[Path, Path]:
+     if store_arg:
+         return get_store_context(store_arg)
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index a4567fa..9811501 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -2553,3 +2553,40 @@ def test_desk_update_without_store_reports_divergence_and_apply_repairs(
+         text=True,
+     )
+     assert check.returncode == 0, check.stdout + check.stderr
++
++
++def test_explicit_root_dot_bypasses_the_sandbox_override(tmp_path: Path, monkeypatch, capsys) -> None:
++    """An explicit `--root .` is not the default, so the sandbox redirect must not fire."""
++    repo = tmp_path / "explicit-root-repo"
++    (repo / "desk").mkdir(parents=True)
++    sandbox_root = tmp_path / "sandbox-must-stay-empty"
++    monkeypatch.chdir(repo)
++    monkeypatch.setenv("DESKOPS_TEST_ROOT", str(sandbox_root))
++
++    result = main(
++        [
++            "add",
++            "task",
++            "--root",
++            ".",
++            "--title",
++            "Explicit root task",
++            "--goal",
++            "Prove explicit roots win over the sandbox redirect.",
++            "--scope",
++            "Only the explicit root.",
++            "--implementation-path",
++            "Guard the override on explicit flags.",
++            "--done-when",
++            "The task lands in the explicit root.",
++            "--validation",
++            "pytest",
++        ]
++    )
++
++    captured = capsys.readouterr()
++    assert result == 0
++    task_path = repo / "desk" / "tasks" / "task-explicit-root-task.md"
++    assert str(task_path) in captured.out
++    assert task_path.exists()
++    assert not (sandbox_root / "desk" / "tasks" / "task-explicit-root-task.md").exists()
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 59385be..00872b4 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -40,3 +40,76 @@ def test_registry_paths_are_unique_and_have_parents() -> None:
+         assert path
+         if len(path) > 1:
+             assert path[:-1] in declared
++
++
++MUTATING_COMMANDS: set[tuple[str, ...]] = {
++    ("doctor",),
++    ("bootstrap",),
++    ("init",),
++    ("inbox",),
++    ("message",),
++    ("message", "send"),
++    ("message", "ack"),
++    ("promote",),
++    ("promote", "inbox-to-drawer-task"),
++    ("drawer",),
++    ("drawer", "remove"),
++    ("add",),
++    ("add", "task"),
++    ("add", "pill"),
++    ("add", "ritual"),
++    ("add", "board"),
++    ("add", "atom"),
++    ("add", "materialization"),
++    ("add", "repository"),
++    ("add", "inbox-note"),
++    ("add", "faq-doc"),
++    ("add", "step"),
++    ("edit",),
++    ("edit", "task"),
++    ("edit", "pill"),
++    ("edit", "ritual"),
++    ("edit", "board"),
++    ("edit", "atom"),
++    ("edit", "materialization"),
++    ("edit", "repository"),
++    ("edit", "inbox-note"),
++    ("edit", "faq-doc"),
++    ("edit", "step"),
++    ("bind",),
++    ("bind", "pill"),
++    ("advance",),
++    ("advance", "task"),
++    ("repo",),
++    ("repo", "register"),
++    ("desk",),
++    ("desk", "install"),
++    ("desk", "migrate"),
++    ("desk", "update"),
++    ("atoms",),
++    ("atoms", "add-namespace"),
++    ("atoms", "reorganize"),
++    ("atoms", "create"),
++    ("atoms", "delete"),
++    ("atoms", "split"),
++    ("atoms", "merge"),
++    ("atoms", "crossroad"),
++    ("atoms", "proto"),
++    ("atoms", "type"),
++    ("graph",),
++    ("graph", "build"),
++    ("graph", "reflect"),
++    ("materialize",),
++    ("closeout",),
++    ("closeout", "commit"),
++    ("runtime",),
++    ("runtime", "init"),
++    ("runtime", "stop"),
++}
++
++
++def test_mutating_commands_are_declared_explicitly() -> None:
++    """Every command that writes desk files, the store, or git must say so."""
++    declared = {command.path for command in command_registry() if command.mutates}
++
++    assert declared == MUTATING_COMMANDS
+diff --git a/tests/test_message_cli.py b/tests/test_message_cli.py
+index 3404d9d..09caff0 100644
+--- a/tests/test_message_cli.py
++++ b/tests/test_message_cli.py
+@@ -111,20 +111,20 @@ def test_message_send_list_read_ack_roundtrip(tmp_path: Path, monkeypatch, capsy
+     monkeypatch.chdir(target_repo)
+ 
+     assert main(
+-        ["message", "list", "--root", str(target_repo), "--store", str(store_path), "--format", "json"]
++        ["message", "list", "--root", str(target_repo), "--store", str(target_repo / ".sldb"), "--format", "json"]
+     ) == 0
+     listed = json.loads(capsys.readouterr().out)
+     assert [item["id"] for item in listed["notes"]] == [note.stem]
+ 
+     assert main(
+-        ["message", "read", note.stem, "--root", str(target_repo), "--store", str(store_path), "--format", "json"]
++        ["message", "read", note.stem, "--root", str(target_repo), "--store", str(target_repo / ".sldb"), "--format", "json"]
+     ) == 0
+     read = json.loads(capsys.readouterr().out)
+     assert read["status"] == "open"
+     assert "Please acknowledge this message." in read["body"]
+ 
+     assert main(
+-        ["message", "ack", note.stem, "--root", str(target_repo), "--store", str(store_path), "--format", "json"]
++        ["message", "ack", note.stem, "--root", str(target_repo), "--store", str(target_repo / ".sldb"), "--format", "json"]
+     ) == 0
+     acked = json.loads(capsys.readouterr().out)
+     assert acked["status"] == "closed"
+@@ -135,7 +135,7 @@ def test_message_list_reports_empty_inbox(tmp_path: Path, monkeypatch, capsys) -
+     _sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
+     monkeypatch.chdir(target_repo)
+ 
+-    assert main(["message", "list", "--root", str(target_repo), "--store", str(store_path)]) == 0
++    assert main(["message", "list", "--root", str(target_repo), "--store", str(target_repo / ".sldb")]) == 0
+     assert "No messages." in capsys.readouterr().out
+ 
+ 
+@@ -204,3 +204,30 @@ def test_message_ack_restores_note_when_tracking_fails(tmp_path: Path, monkeypat
+     check = _sldb_stores_check(repo_b / ".sldb")
+     assert check.returncode == 0, check.stderr or check.stdout
+     assert "PASS" in check.stdout
++
++
++def test_message_list_uses_store_when_no_root_is_given(
++    tmp_path: Path, monkeypatch, capsys
++) -> None:
++    """`--store` alone anchors the desk, so the old root default cannot mask it."""
++    repo = tmp_path / "store-repo"
++    inbox = repo / "desk" / "inbox"
++    inbox.mkdir(parents=True)
++    note = inbox / "20260101-000000-suggestion-stored.md"
++    note.write_text(
++        "---\nkind: suggestion\nsender_project: sender\ntarget_project: store-repo\n"
++        "created_at: 2026-01-01T00:00:00\nstatus: open\ntitle: Stored note\n---\n\n"
++        "# Stored note\n\nBody.\n",
++        encoding="utf-8",
++    )
++    store = repo / ".sldb"
++    (store / "core").mkdir(parents=True)
++    (store / "core" / "store_index.yaml").write_text("{}\n", encoding="utf-8")
++
++    elsewhere = tmp_path / "elsewhere"
++    elsewhere.mkdir()
++    monkeypatch.chdir(elsewhere)
++
++    assert main(["message", "list", "--store", str(store), "--format", "json"]) == 0
++    payload = json.loads(capsys.readouterr().out)
++    assert [item["id"] for item in payload["notes"]] == [note.stem]
+diff --git a/tests/test_repo_identity.py b/tests/test_repo_identity.py
+index 180d9a3..9e80bb0 100644
+--- a/tests/test_repo_identity.py
++++ b/tests/test_repo_identity.py
+@@ -10,6 +10,7 @@ from sldb.runtime.validation import render_model_markdown
+ from deskops.cli.main import main
+ from deskops.identity import EcosystemIdentity
+ from deskops.identity import load_repository_registry
++from deskops.identity import resolve_store_context
+ from deskops.models import RepositoryDoc
+ 
+ 
+@@ -71,15 +72,15 @@ def test_repo_identity_resolver_fails_on_duplicate_root(tmp_path: Path) -> None:
+ 
+ 
+ def test_repo_whoami_prints_canonical_identity(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+-    registry_dir = tmp_path / "desk" / "registry"
+-    registry_dir.mkdir(parents=True)
+     repo_root = tmp_path / "deskops-child"
+     _write_config(repo_root, "deskops-child")
+-    _write_repo_doc(registry_dir, repo_id="deskops-child", repo_path="deskops-child")
++    registry_dir = repo_root / "desk" / "registry"
++    registry_dir.mkdir(parents=True)
++    _write_repo_doc(registry_dir, repo_id="deskops-child", repo_path=".")
+ 
+-    store_path = tmp_path / ".sldb"
++    store_path = repo_root / ".sldb"
+     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
+-    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
++    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, repo_root))
+ 
+     result = main(["repo", "whoami", "--root", str(repo_root), "--store", str(store_path)])
+ 
+@@ -124,3 +125,47 @@ def test_a_registry_that_lacks_the_repo_still_fails(
+ 
+     with pytest.raises(SLDBStoreError, match="not found in registry"):
+         EcosystemIdentity(str(store_path)).what_repository_am_i_in(repo_root, require_registry_match=True)
++
++
++def _make_store(root: Path) -> Path:
++    store = root / ".sldb"
++    (store / "core").mkdir(parents=True)
++    (store / "core" / "store_index.yaml").write_text("{}\n", encoding="utf-8")
++    return store
++
++
++def test_nested_sandbox_never_reads_the_outer_repository_store(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    """A sandbox with its own desk/ is the boundary; the repo store above it is invisible."""
++    outer = tmp_path / "outer"
++    (outer / ".git").mkdir(parents=True)
++    (outer / "desk").mkdir()
++    outer_store = _make_store(outer)
++
++    sandbox = outer / ".tmp" / "deskops-cli-test"
++    (sandbox / "desk").mkdir(parents=True)
++    monkeypatch.chdir(sandbox)
++
++    assert outer_store.exists()
++    with pytest.raises(SLDBStoreError, match="No local store found"):
++        resolve_store_context(None)
++
++
++def test_nested_sandbox_uses_its_own_store_when_it_has_one(
++    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
++) -> None:
++    outer = tmp_path / "outer"
++    (outer / ".git").mkdir(parents=True)
++    (outer / "desk").mkdir()
++    _make_store(outer)
++
++    sandbox = outer / ".tmp" / "deskops-cli-test"
++    (sandbox / "desk").mkdir(parents=True)
++    sandbox_store = _make_store(sandbox)
++    monkeypatch.chdir(sandbox)
++
++    store, root = resolve_store_context(None)
++
++    assert store == sandbox_store.resolve()
++    assert root == sandbox.resolve()

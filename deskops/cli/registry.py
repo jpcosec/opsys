@@ -13,12 +13,18 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from dataclasses import field
+from pathlib import Path
 from typing import Any
+
+from sldb.store.layout import project_root
 
 from deskops.cli.model_introspection import DEFAULT_FACTORY
 from deskops.cli.model_introspection import REQUIRED
 from deskops.cli.model_introspection import artifact_model_fields
 from deskops.cli.model_introspection import model_cli_fields
+from deskops.errors import UsageError
+from deskops.identity import find_context_root
+from deskops.identity import find_local_store
 from deskops.operations import ARTIFACT_SUBJECTS
 
 
@@ -79,7 +85,7 @@ def A(flags: str | tuple[str, ...], **kwargs: Any) -> Arg:
 
 ROOT_ARG = A("--root", default=".", help="Target repository root.")
 ROOT_ARG_NO_PERIOD = A("--root", default=".", help="Target repository root")
-ROOT_ARG_MESSAGE = A("--root", default=".", help="Repository root whose desk/ holds the inbox")
+ROOT_ARG_MESSAGE = A("--root", default=None, help="Repository root whose desk/ holds the inbox")
 ROOT_ARG_INBOX = A(
     "--root",
     help="Repository root whose desk/ holds the inbox; the same --root every other subcommand takes",
@@ -1271,3 +1277,40 @@ def command_for_path(path: tuple[str, ...]) -> Command:
         if command.path == path:
             return command
     raise KeyError(path)
+
+
+def resolve_context(args: Any) -> tuple[Path, Path | None]:
+    """Resolve one ``(desk_root, store)`` pair for every command.
+
+    ``--root`` sets the desk root and ``--store`` sets the store. When both are
+    given they must agree (the store must be ``<root>/.sldb``). With neither,
+    the upward walk stops at the nearest ancestor containing ``desk/`` or
+    ``.git``; the store is that boundary's ``.sldb`` only, never an ancestor's.
+    """
+    root_arg = getattr(args, "root", None)
+    store_arg = getattr(args, "store", None)
+    root_given = bool(
+        getattr(args, "_deskops_root_explicit", False)
+        or getattr(args, "_deskops_root_override", False)
+        or root_arg not in (None, "", ".")
+    )
+    store_path = Path(store_arg).expanduser().resolve() if store_arg else None
+
+    if root_given:
+        root = Path(root_arg).expanduser().resolve() if root_arg else Path.cwd().resolve()
+        if store_path is not None:
+            expected = (root / ".sldb").resolve()
+            if store_path != expected:
+                raise UsageError(
+                    f"--root '{root}' and --store '{store_path}' disagree; "
+                    f"when both are given the store must be '{expected}'."
+                )
+        else:
+            store_path = find_local_store(root)
+        return root, store_path
+
+    if store_path is not None:
+        return project_root(store_path), store_path
+
+    root = find_context_root()
+    return root, find_local_store(root)

@@ -111,20 +111,20 @@ def test_message_send_list_read_ack_roundtrip(tmp_path: Path, monkeypatch, capsy
     monkeypatch.chdir(target_repo)
 
     assert main(
-        ["message", "list", "--root", str(target_repo), "--store", str(store_path), "--format", "json"]
+        ["message", "list", "--root", str(target_repo), "--store", str(target_repo / ".sldb"), "--format", "json"]
     ) == 0
     listed = json.loads(capsys.readouterr().out)
     assert [item["id"] for item in listed["notes"]] == [note.stem]
 
     assert main(
-        ["message", "read", note.stem, "--root", str(target_repo), "--store", str(store_path), "--format", "json"]
+        ["message", "read", note.stem, "--root", str(target_repo), "--store", str(target_repo / ".sldb"), "--format", "json"]
     ) == 0
     read = json.loads(capsys.readouterr().out)
     assert read["status"] == "open"
     assert "Please acknowledge this message." in read["body"]
 
     assert main(
-        ["message", "ack", note.stem, "--root", str(target_repo), "--store", str(store_path), "--format", "json"]
+        ["message", "ack", note.stem, "--root", str(target_repo), "--store", str(target_repo / ".sldb"), "--format", "json"]
     ) == 0
     acked = json.loads(capsys.readouterr().out)
     assert acked["status"] == "closed"
@@ -135,7 +135,7 @@ def test_message_list_reports_empty_inbox(tmp_path: Path, monkeypatch, capsys) -
     _sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
     monkeypatch.chdir(target_repo)
 
-    assert main(["message", "list", "--root", str(target_repo), "--store", str(store_path)]) == 0
+    assert main(["message", "list", "--root", str(target_repo), "--store", str(target_repo / ".sldb")]) == 0
     assert "No messages." in capsys.readouterr().out
 
 
@@ -204,3 +204,30 @@ def test_message_ack_restores_note_when_tracking_fails(tmp_path: Path, monkeypat
     check = _sldb_stores_check(repo_b / ".sldb")
     assert check.returncode == 0, check.stderr or check.stdout
     assert "PASS" in check.stdout
+
+
+def test_message_list_uses_store_when_no_root_is_given(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    """`--store` alone anchors the desk, so the old root default cannot mask it."""
+    repo = tmp_path / "store-repo"
+    inbox = repo / "desk" / "inbox"
+    inbox.mkdir(parents=True)
+    note = inbox / "20260101-000000-suggestion-stored.md"
+    note.write_text(
+        "---\nkind: suggestion\nsender_project: sender\ntarget_project: store-repo\n"
+        "created_at: 2026-01-01T00:00:00\nstatus: open\ntitle: Stored note\n---\n\n"
+        "# Stored note\n\nBody.\n",
+        encoding="utf-8",
+    )
+    store = repo / ".sldb"
+    (store / "core").mkdir(parents=True)
+    (store / "core" / "store_index.yaml").write_text("{}\n", encoding="utf-8")
+
+    elsewhere = tmp_path / "elsewhere"
+    elsewhere.mkdir()
+    monkeypatch.chdir(elsewhere)
+
+    assert main(["message", "list", "--store", str(store), "--format", "json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert [item["id"] for item in payload["notes"]] == [note.stem]

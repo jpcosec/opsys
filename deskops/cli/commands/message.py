@@ -15,10 +15,10 @@ from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 from sldb.runtime.validation import validate_model_input_roundtrip
 from sldb.store.layout import project_root
-from sldb.store.resolver import find_local_store
 
 from deskops import doc_io
 from deskops.identity import EcosystemIdentity
+from deskops.identity import find_local_store
 
 
 def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):

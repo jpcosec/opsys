@@ -2553,3 +2553,40 @@ def test_desk_update_without_store_reports_divergence_and_apply_repairs(
         text=True,
     )
     assert check.returncode == 0, check.stdout + check.stderr
+
+
+def test_explicit_root_dot_bypasses_the_sandbox_override(tmp_path: Path, monkeypatch, capsys) -> None:
+    """An explicit `--root .` is not the default, so the sandbox redirect must not fire."""
+    repo = tmp_path / "explicit-root-repo"
+    (repo / "desk").mkdir(parents=True)
+    sandbox_root = tmp_path / "sandbox-must-stay-empty"
+    monkeypatch.chdir(repo)
+    monkeypatch.setenv("DESKOPS_TEST_ROOT", str(sandbox_root))
+
+    result = main(
+        [
+            "add",
+            "task",
+            "--root",
+            ".",
+            "--title",
+            "Explicit root task",
+            "--goal",
+            "Prove explicit roots win over the sandbox redirect.",
+            "--scope",
+            "Only the explicit root.",
+            "--implementation-path",
+            "Guard the override on explicit flags.",
+            "--done-when",
+            "The task lands in the explicit root.",
+            "--validation",
+            "pytest",
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert result == 0
+    task_path = repo / "desk" / "tasks" / "task-explicit-root-task.md"
+    assert str(task_path) in captured.out
+    assert task_path.exists()
+    assert not (sandbox_root / "desk" / "tasks" / "task-explicit-root-task.md").exists()

@@ -7,7 +7,7 @@ from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError
 from sldb.runtime.validation import extract_model_data
 from sldb.store.layout import project_root
-from sldb.store.resolver import find_local_store
+from sldb.store.layout import store_exists
 
 from deskops.config import DeskConfig
 from deskops.models import RepositoryDoc
@@ -28,6 +28,29 @@ class RegisteredRepository:
         if self.repo_root is None:
             return None
         return self.repo_root / "desk"
+
+
+def find_context_root(start: Path | None = None) -> Path:
+    """Return the nearest ancestor that looks like a project boundary.
+
+    The upward walk stops at the first directory containing ``desk/`` or
+    ``.git``. Nothing above that boundary is considered, so a sandbox nested
+    inside a repository never falls through to the repository's store or
+    registry. With no matching ancestor the current directory is the boundary.
+    """
+    current = (start or Path.cwd()).resolve()
+    if current.is_file():
+        current = current.parent
+    for directory in [current, *current.parents]:
+        if (directory / "desk").is_dir() or (directory / ".git").exists():
+            return directory
+    return current
+
+
+def find_local_store(start: Path | None = None) -> Path | None:
+    """Return the store at the project boundary, never an ancestor's store."""
+    candidate = find_context_root(start) / ".sldb"
+    return candidate if store_exists(candidate) else None
 
 
 def resolve_store_context(store_arg: str | None) -> tuple[Path, Path]:
