@@ -1,0 +1,10 @@
+ M .sldb/core/documents/TaskDoc/task-next-why-explanation.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-next-why-explanation.md
+ M deskops/cli/commands/operations.py
+ M deskops/cli/registry.py
+ M deskops/services/tasks.py
+ M tests/fixtures/golden/help/deskops_next.txt
+ M tests/test_cli.py
+?? runs/subagents/20261018-task-next-why-explanation/

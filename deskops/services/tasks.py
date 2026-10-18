@@ -133,6 +133,21 @@ class TasksService:
         spec = load_task_lifecycle_spec(self._ops.spec_root)
         state = match_workflow_state(spec, str(payload.get("current_node") or ""))
         pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("effective_pills") or payload.get("pills") or [])]))
+        sources = {
+            "task": str(task_path.relative_to(self.root)),
+            "board": str(board_path.relative_to(self.root)),
+            "workflow": "deskops/spec/workflows/task_lifecycle.yaml",
+        }
+        why = [
+            "task selected by explicit selector"
+            if task_selector
+            else "task selected from the single board route",
+            f"current_node {payload.get('current_node', '')} matched workflow state {state['id']} in {sources['workflow']}",
+            "pills merged from desk/tasks/Board.md and the task",
+            f"source task: {sources['task']}",
+            f"source board: {sources['board']}",
+            f"source workflow: {sources['workflow']}",
+        ]
         return {
             "task": {
                 "id": payload["id"],
@@ -147,11 +162,8 @@ class TasksService:
             "pills": pills,
             "next_actions": list(state.get("next_actions") or []),
             "advance_when": list(state.get("advance_when") or []),
-            "sources": {
-                "task": str(task_path.relative_to(self.root)),
-                "board": str(board_path.relative_to(self.root)),
-                "workflow": "deskops/spec/workflows/task_lifecycle.yaml",
-            },
+            "why": why,
+            "sources": sources,
         }
 
     def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:

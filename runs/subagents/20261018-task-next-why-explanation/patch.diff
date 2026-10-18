@@ -1,0 +1,155 @@
+diff --git a/deskops/cli/commands/operations.py b/deskops/cli/commands/operations.py
+index f356585..1bbeab9 100644
+--- a/deskops/cli/commands/operations.py
++++ b/deskops/cli/commands/operations.py
+@@ -80,7 +80,7 @@ class OperationsCLI:
+             except (FileNotFoundError, ValueError) as exc:
+                 print(f"Error: {exc}")
+                 return 1
+-            self._print_next_action_report(report)
++            self._print_next_action_report(report, why=getattr(args, "why", False))
+             return 0
+ 
+         if args.command == "list" and args.subject == "tasks":
+@@ -165,7 +165,7 @@ class OperationsCLI:
+ 
+         return 1
+ 
+-    def _print_next_action_report(self, report: dict[str, Any]) -> None:
++    def _print_next_action_report(self, report: dict[str, Any], *, why: bool = False) -> None:
+         kind = report.get("kind")
+         if kind == "no_board_task":
+             print("Next:")
+@@ -202,6 +202,10 @@ class OperationsCLI:
+             print("Required pills:")
+             for pill in report["pills"]:
+                 print(f"- {pill}")
++        if why:
++            print("Why:")
++            for item in report.get("why") or []:
++                print(f"- {item}")
+         print("Next actions:")
+         for index, action in enumerate(report["next_actions"], start=1):
+             print(f"{index}. {action}")
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index e72b59b..986c55d 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -377,6 +377,11 @@ Example:
+                     action="store_true",
+                     help="Render the workflow state machine as Mermaid from its source spec.",
+                 ),
++                A(
++                    "--why",
++                    action="store_true",
++                    help="Explain why this task and these actions were selected.",
++                ),
+             ),
+             handler="deskops.cli.commands.operations:OperationsCLI",
+             mutates=False,
+diff --git a/deskops/services/tasks.py b/deskops/services/tasks.py
+index 15a9467..da5fe99 100644
+--- a/deskops/services/tasks.py
++++ b/deskops/services/tasks.py
+@@ -133,6 +133,21 @@ class TasksService:
+         spec = load_task_lifecycle_spec(self._ops.spec_root)
+         state = match_workflow_state(spec, str(payload.get("current_node") or ""))
+         pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("effective_pills") or payload.get("pills") or [])]))
++        sources = {
++            "task": str(task_path.relative_to(self.root)),
++            "board": str(board_path.relative_to(self.root)),
++            "workflow": "deskops/spec/workflows/task_lifecycle.yaml",
++        }
++        why = [
++            "task selected by explicit selector"
++            if task_selector
++            else "task selected from the single board route",
++            f"current_node {payload.get('current_node', '')} matched workflow state {state['id']} in {sources['workflow']}",
++            "pills merged from desk/tasks/Board.md and the task",
++            f"source task: {sources['task']}",
++            f"source board: {sources['board']}",
++            f"source workflow: {sources['workflow']}",
++        ]
+         return {
+             "task": {
+                 "id": payload["id"],
+@@ -147,11 +162,8 @@ class TasksService:
+             "pills": pills,
+             "next_actions": list(state.get("next_actions") or []),
+             "advance_when": list(state.get("advance_when") or []),
+-            "sources": {
+-                "task": str(task_path.relative_to(self.root)),
+-                "board": str(board_path.relative_to(self.root)),
+-                "workflow": "deskops/spec/workflows/task_lifecycle.yaml",
+-            },
++            "why": why,
++            "sources": sources,
+         }
+ 
+     def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:
+diff --git a/tests/fixtures/golden/help/deskops_next.txt b/tests/fixtures/golden/help/deskops_next.txt
+index ad29eed..d4887d5 100644
+--- a/tests/fixtures/golden/help/deskops_next.txt
++++ b/tests/fixtures/golden/help/deskops_next.txt
+@@ -1,4 +1,4 @@
+-usage: deskops next [-h] [--root ROOT] [--diagram] [task_id]
++usage: deskops next [-h] [--root ROOT] [--diagram] [--why] [task_id]
+ 
+ positional arguments:
+   task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+@@ -7,6 +7,7 @@ options:
+   -h, --help   show this help message and exit
+   --root ROOT  Target repository root.
+   --diagram    Render the workflow state machine as Mermaid from its source spec.
++  --why        Explain why this task and these actions were selected.
+ 
+ Examples:
+   deskops next task-fix-thing --root .
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index cd0684b..3c31014 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -811,6 +811,43 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
+     assert task_path.read_text(encoding="utf-8") == before
+ 
+ 
++def test_next_task_why_explains_selection_without_mutating(tmp_path: Path, capsys) -> None:
++    created = main(
++        [
++            "add",
++            "task",
++            "--root",
++            str(tmp_path),
++            "--title",
++            "Explain next selection",
++            "--goal",
++            "Show why next was selected.",
++            "--scope",
++            "Read-only explanation.",
++            "--implementation-path",
++            "deskops/workflow/next_actions.py",
++            "--done-when",
++            "Why section is visible.",
++            "--validation",
++            "pytest",
++        ]
++    )
++    capsys.readouterr()
++    assert created == 0
++    task_path = tmp_path / "desk" / "tasks" / "task-explain-next-selection.md"
++    before = task_path.read_text(encoding="utf-8")
++
++    result = main(["next", "task-explain-next-selection", "--why", "--root", str(tmp_path)])
++    output = capsys.readouterr()
++
++    assert result == 0
++    assert "Why:" in output.out
++    assert "task selected by explicit selector" in output.out
++    assert "deskops/spec/workflows/task_lifecycle.yaml" in output.out
++    assert "desk/tasks/Board.md" in output.out
++    assert task_path.read_text(encoding="utf-8") == before
++
++
+ def test_next_without_selector_guides_when_board_routes_no_tasks(tmp_path: Path, capsys) -> None:
+     assert main(["init", str(tmp_path)]) == 0
+     capsys.readouterr()

@@ -377,6 +377,11 @@ Example:
                     action="store_true",
                     help="Render the workflow state machine as Mermaid from its source spec.",
                 ),
+                A(
+                    "--why",
+                    action="store_true",
+                    help="Explain why this task and these actions were selected.",
+                ),
             ),
             handler="deskops.cli.commands.operations:OperationsCLI",
             mutates=False,

@@ -811,6 +811,43 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
     assert task_path.read_text(encoding="utf-8") == before
 
 
+def test_next_task_why_explains_selection_without_mutating(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Explain next selection",
+            "--goal",
+            "Show why next was selected.",
+            "--scope",
+            "Read-only explanation.",
+            "--implementation-path",
+            "deskops/workflow/next_actions.py",
+            "--done-when",
+            "Why section is visible.",
+            "--validation",
+            "pytest",
+        ]
+    )
+    capsys.readouterr()
+    assert created == 0
+    task_path = tmp_path / "desk" / "tasks" / "task-explain-next-selection.md"
+    before = task_path.read_text(encoding="utf-8")
+
+    result = main(["next", "task-explain-next-selection", "--why", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "Why:" in output.out
+    assert "task selected by explicit selector" in output.out
+    assert "deskops/spec/workflows/task_lifecycle.yaml" in output.out
+    assert "desk/tasks/Board.md" in output.out
+    assert task_path.read_text(encoding="utf-8") == before
+
+
 def test_next_without_selector_guides_when_board_routes_no_tasks(tmp_path: Path, capsys) -> None:
     assert main(["init", str(tmp_path)]) == 0
     capsys.readouterr()

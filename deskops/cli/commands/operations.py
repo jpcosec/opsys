@@ -80,7 +80,7 @@ class OperationsCLI:
             except (FileNotFoundError, ValueError) as exc:
                 print(f"Error: {exc}")
                 return 1
-            self._print_next_action_report(report)
+            self._print_next_action_report(report, why=getattr(args, "why", False))
             return 0
 
         if args.command == "list" and args.subject == "tasks":
@@ -165,7 +165,7 @@ class OperationsCLI:
 
         return 1
 
-    def _print_next_action_report(self, report: dict[str, Any]) -> None:
+    def _print_next_action_report(self, report: dict[str, Any], *, why: bool = False) -> None:
         kind = report.get("kind")
         if kind == "no_board_task":
             print("Next:")
@@ -202,6 +202,10 @@ class OperationsCLI:
             print("Required pills:")
             for pill in report["pills"]:
                 print(f"- {pill}")
+        if why:
+            print("Why:")
+            for item in report.get("why") or []:
+                print(f"- {item}")
         print("Next actions:")
         for index, action in enumerate(report["next_actions"], start=1):
             print(f"{index}. {action}")

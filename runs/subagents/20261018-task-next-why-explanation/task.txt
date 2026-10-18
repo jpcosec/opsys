@@ -1,0 +1,7 @@
+Task: task-next-why-explanation
+Title: Add --why to deskops next
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
