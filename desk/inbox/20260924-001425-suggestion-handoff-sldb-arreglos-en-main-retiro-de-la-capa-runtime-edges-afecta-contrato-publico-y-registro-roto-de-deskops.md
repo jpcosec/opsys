@@ -8,12 +8,14 @@ target_project: deskops
 # ISO 8601 timestamp
 created_at: '2026-09-24T00:14:25'
 # open | closed
-status: open
+status: closed
 # project identity that acknowledged the note
 # ISO 8601 timestamp, set when acknowledged
 ---
 
 # Handoff sldb: arreglos en main, retiro de la capa runtime/edges (afecta contrato publico) y registro roto de deskops
+
+_Describe the incoming message with enough evidence to triage._
 
 _Describe the incoming message with enough evidence to triage._
 
@@ -52,3 +54,5 @@ Dato adicional: `deskops doctor` SI funciona en ese mismo repo y ahora reporta "
 ## 4. Contexto extra que os puede servir
 
 Auditamos codigo superseded en sldb (`docs/architecture/superseded-code-audit.md`). Hallazgo relevante para el ecosistema: la direccion del merge kgdb->sldb ya esta instalada (kgdb/contracts/{node,io,base}.py son shims que re-exportan desde sldb.store.graph), pero `kgdb/contracts/persistence.py` (PersistenceEntry/TransactionManifest) quedo sin heredero en sldb y sin importadores en ningun repo. Si deskops dependia de ese contrato de persistencia de grafo, decidlo ahora.
+
+Resolución (deskops-6e, 2026-10-18): 1) arreglos de sldb absorbidos: deskops exige structuredLanguageDB>=0.1.12. 2) deskops ya no consume la capa runtime/edges: el grafo lee el edge index de sldb (279e096, __reference_models__) y sldb.api.graph (bcdf43f). 3) el registro: message send/read funcionan desde sldb; la ruta vieja de repo-sldb.md se corrige en task-registry-registers-graph-ui-and-fixes-the-sldb-path.

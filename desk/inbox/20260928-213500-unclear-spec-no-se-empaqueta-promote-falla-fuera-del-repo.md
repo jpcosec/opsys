@@ -8,12 +8,14 @@ target_project: deskops
 # ISO 8601 timestamp
 created_at: '2026-09-28T21:35:00'
 # open | closed
-status: open
+status: closed
 # project identity that acknowledged the note
 # ISO 8601 timestamp, set when acknowledged
 ---
 
 # spec/ no se empaqueta: promote falla con "Missing required field: artifact.task" fuera del repo
+
+_Describe the incoming message with enough evidence to triage._
 
 _Describe the incoming message with enough evidence to triage._
 
@@ -84,3 +86,5 @@ creo el bundle pero con el contenido heredado del drawer, no con el payload
 (probado con el payload plano y anidado bajo `task:`). `--title` si se aplico.
 Los campos multilinea hubo que escribirlos aparte. Puede ser uso incorrecto de
 mi lado; si es asi, un ejemplo en el help ayudaria.
+
+Resolución (deskops-6e, 2026-10-18): 1) resuelto en 31c83cf: spec/ vive en deskops/spec/ dentro del paquete y se resuelve con deskops/paths.py; tests/test_packaging.py instala la wheel y corre init, add task, advance, desk update y faq. 2) y 3) el subcomando 'promote drawer-task-to-active-task' se retiró a propósito (CHANGELOG, Removed); la única vía es 'deskops add task --from-yaml <payload> --from-drawer <entrada>', que toma el payload completo.
