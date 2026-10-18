@@ -419,6 +419,11 @@ class ClosureService:
         paths_to_remove: list[Path] = []
 
         try:
+            if task_bytes is not None:
+                # A task created and closed between two commits never reached HEAD.
+                # Record its body first so the closing commit does not erase it.
+                self._record_uncommitted_task(task_id, task_path, task_rel)
+
             with doc_io.DocTransaction(self.root) as transaction:
                 if routed and board_before is not None:
                     board_payload = self._ops._read_doc(board_path, BoardDoc)
@@ -443,11 +448,7 @@ class ClosureService:
                 if task_bytes is not None:
                     # Committed means present in HEAD, not merely staged: a directory in
                     # --paths can stage a task created in this cycle, and HEAD never had it.
-                    in_head = subprocess.run(
-                        ["git", "cat-file", "-e", f"HEAD:{task_rel}"],
-                        cwd=self.root,
-                        capture_output=True,
-                    ).returncode == 0
+                    in_head = self._in_head(task_rel)
                     if not in_head:
                         self._git("rm", "--cached", "-q", "--ignore-unmatch", "--", task_rel, check=False)
                     if in_head:
@@ -470,6 +471,9 @@ class ClosureService:
                 head_task_id = self._git(
                     "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)", check=False
                 )
+                head_mode = self._git(
+                    "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)", check=False
+                )
                 pathspec = list(dict.fromkeys(commit_paths)) if explicit_paths else None
                 if pathspec:
                     # A path git knows neither in the index nor in HEAD (a directory whose
@@ -477,7 +481,7 @@ class ClosureService:
                     pathspec = [path for path in pathspec if self._git_knows(path)]
                     if not pathspec:
                         raise ClosureCommitError("None of the --paths match a file git knows; nothing to commit.")
-                if head_task_id == task_id:
+                if head_task_id == task_id and head_mode != "record":
                     argv = ["commit", "--amend", "--no-edit"]
                 else:
                     argv = ["commit", "-m", message]
@@ -589,6 +593,37 @@ class ClosureService:
             return True
         except ValueError:
             return False
+
+    def _in_head(self, path: str) -> bool:
+        """Whether `path` is already committed in HEAD."""
+        return subprocess.run(
+            ["git", "cat-file", "-e", f"HEAD:{path}"],
+            cwd=self.root,
+            capture_output=True,
+        ).returncode == 0
+
+    def _record_uncommitted_task(self, task_id: str, task_path: Path, task_rel: str) -> None:
+        """Commit the body of a task HEAD never saw, before the closing commit removes it.
+
+        The record commit carries ``Closeout-Mode: record`` so the closing commit does
+        not fold itself into it through the same-Task-Id amend.
+        """
+        if self._in_head(task_rel):
+            return
+        message = f"desk: registra {task_path.stem}\n\nTask-Id: {task_id}\nCloseout-Mode: record\n"
+        added = subprocess.run(
+            ["git", "add", "--", task_rel], cwd=self.root, capture_output=True, text=True
+        )
+        if added.returncode != 0:
+            raise ClosureCommitError(added.stderr.strip() or added.stdout.strip() or f"git add failed for {task_rel}")
+        result = subprocess.run(
+            ["git", "commit", "-m", message, "--", task_rel],
+            cwd=self.root,
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            raise ClosureCommitError(result.stderr.strip() or result.stdout.strip())
 
     def _git_knows(self, path: str) -> bool:
         """Whether `path` matches anything in the index or in HEAD."""

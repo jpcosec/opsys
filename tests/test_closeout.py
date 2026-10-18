@@ -591,6 +591,50 @@ def test_closeout_commit_accepts_a_directory_holding_the_task(
     assert "feature.py" in _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()
 
 
+def test_closeout_records_a_never_committed_task_before_the_closing_commit(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _write_task(root, references=[], files=[])
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+    before = _git(root, "rev-parse", "HEAD")
+
+    rc = _closeout_main(root, "--no-run", "--reason", "no subagent ran", "--paths", "desk/tasks", "feature.py")
+
+    assert rc == 0, capsys.readouterr().out
+    assert _git(root, "status", "--porcelain") == ""
+    assert _git(root, "log", "--format=%s", f"{before}..HEAD").splitlines() == [
+        "closeout: task-x",
+        "desk: registra task-x",
+    ]
+    record = _git(root, "log", "-1", "--format=%B", "HEAD~1")
+    assert record.splitlines()[0] == "desk: registra task-x"
+    assert "Task-Id: task-x" in record
+    assert _git(root, "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)", "HEAD~1") == "record"
+    body = _git(root, "show", "HEAD~1:desk/tasks/task-x.md")
+    assert "# Task X" in body
+    assert "Verify closeout." in body
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+
+
+def test_closeout_committed_task_keeps_a_single_closing_commit(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _write_task(root, references=[], files=[])
+    _git(root, "add", "desk/tasks/task-x.md")
+    _git(root, "commit", "-q", "-m", "add task")
+    before = _git(root, "rev-parse", "HEAD")
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+
+    rc = _closeout_main(root, "--no-run", "--reason", "no subagent ran", "--paths", "desk/tasks", "feature.py")
+
+    assert rc == 0, capsys.readouterr().out
+    assert _git(root, "status", "--porcelain") == ""
+    assert _git(root, "log", "--format=%s", f"{before}..HEAD").splitlines() == ["closeout: task-x"]
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+
+
 def _write_board(root: Path, task_id: str = "task-x") -> None:
     _write(
         root / "desk" / "tasks" / "Board.md",

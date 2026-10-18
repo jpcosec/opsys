@@ -1,0 +1,9 @@
+Task: task-closeout-records-a-never-committed-task-first
+Title: Closing a task that never reached git first records it, so its content stays in history
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

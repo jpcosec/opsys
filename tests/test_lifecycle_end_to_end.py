@@ -269,7 +269,9 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
         "tests/test_amend_owner_smoke.py",
     )
 
-    assert _git(root, "rev-parse", "HEAD~1") == other_closeout, (
+    record = _git(root, "rev-parse", "HEAD~1")
+    assert _git(root, "log", "-1", "--format=%s", record) == "desk: registra task-foo"
+    assert _git(root, "rev-parse", f"{record}^") == other_closeout, (
         "closing task-foo must not amend another task's closeout commit"
     )
     closing_message = _git(root, "log", "-1", "--format=%B")

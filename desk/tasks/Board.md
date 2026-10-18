@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-closeout-records-a-never-committed-task-first.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,5 +44,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Closing a task that never reached git first records it, so its content stays in history [draft] - When `closeout commit`, `closeout supersede` or `closeout retire` closes a task whose file is not in HEAD, ClosureService first makes one commit that adds the task file as it is now, with subject `desk: registra <task stem>` and trailer `Task-Id: <id>`. Then it makes the usual closing commit that removes it. A task that is already committed keeps today's single closing commit.
