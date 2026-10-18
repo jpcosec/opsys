@@ -34,3 +34,4 @@
 {"task_id": "task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task", "run_id": "20260929-task-sync-pi-skills", "run_dir": "runs/subagents/20260929-task-sync-pi-skills", "commit": "7b805d7abe3ea3b48c9965a2e58150e206bd7350", "session_sha256": null}
 {"task_id": "task-rw-f3-single-closure-path", "run_id": null, "run_dir": "runs/subagents/20261018-task-rw-f3-single-closure-path", "session_sha256": null, "commit": "a0e00e354556766b2781554bc309d3673d9c6958"}
 {"task_id": "task-taskdoc-tags-optional-for-legacy-tasks", "run_id": null, "run_dir": "runs/subagents/20261018-task-taskdoc-tags-optional-for-legacy-tasks", "session_sha256": null, "commit": "c5ab8b1ed559187cf49df2ca708b0014a078ab13"}
+{"task_id": "task-task-selectors-resolve-tracked-legacy-filenames", "run_id": null, "run_dir": "runs/subagents/20261018-task-task-selectors-resolve-tracked-legacy-filenames", "session_sha256": null, "commit": "c35cd9e3788c487e2d53a0a51b3d56afcdceb208"}
