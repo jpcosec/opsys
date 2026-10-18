@@ -86,3 +86,14 @@ def test_desk_update_untracks_a_document_whose_file_is_gone(tmp_path: Path) -> N
     )
     notes = [doc.note.value for model in diagnosis.models for doc in model.documents]
     assert "missing" not in notes
+
+
+def test_desk_update_apply_on_a_fresh_repo_writes_the_lifecycle_graph(tmp_path: Path, capsys) -> None:
+    """One --apply on a fresh repo must leave a desk that the next update calls up to date."""
+    cli = CLI()
+
+    assert cli.run(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+    capsys.readouterr()
+
+    assert cli.run(["desk", "update", "--root", str(tmp_path)]) == 0
+    assert "Desk is up to date." in capsys.readouterr().out

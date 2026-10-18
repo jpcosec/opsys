@@ -1,0 +1,10 @@
+Task: task-desk-update-apply-writes-the-lifecycle-graph
+Title: `desk update --apply` on a fresh repo also writes the lifecycle graph
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-desk-update-apply-writes-the-lifecycle-graph.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

@@ -1,0 +1,36 @@
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index 2492a14..a0ca505 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -318,4 +318,12 @@ class DeskCLI:
+             except ImportError:
+                 print("Failed to import sldb API for updating store.")
+ 
++        if store_dir.exists():
++            from deskops.lifecycle import ensure_lifecycle_graph
++            from deskops.lifecycle import lifecycle_graph_present
++
++            if not lifecycle_graph_present(root):
++                for change in ensure_lifecycle_graph(root):
++                    print(f"Lifecycle graph: {change}")
++
+         return 0
+diff --git a/tests/test_desk_sync.py b/tests/test_desk_sync.py
+index a1294f2..edd1365 100644
+--- a/tests/test_desk_sync.py
++++ b/tests/test_desk_sync.py
+@@ -86,3 +86,14 @@ def test_desk_update_untracks_a_document_whose_file_is_gone(tmp_path: Path) -> N
+     )
+     notes = [doc.note.value for model in diagnosis.models for doc in model.documents]
+     assert "missing" not in notes
++
++
++def test_desk_update_apply_on_a_fresh_repo_writes_the_lifecycle_graph(tmp_path: Path, capsys) -> None:
++    """One --apply on a fresh repo must leave a desk that the next update calls up to date."""
++    cli = CLI()
++
++    assert cli.run(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
++    capsys.readouterr()
++
++    assert cli.run(["desk", "update", "--root", str(tmp_path)]) == 0
++    assert "Desk is up to date." in capsys.readouterr().out

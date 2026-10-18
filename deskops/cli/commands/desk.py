@@ -318,4 +318,12 @@ class DeskCLI:
             except ImportError:
                 print("Failed to import sldb API for updating store.")
 
+        if store_dir.exists():
+            from deskops.lifecycle import ensure_lifecycle_graph
+            from deskops.lifecycle import lifecycle_graph_present
+
+            if not lifecycle_graph_present(root):
+                for change in ensure_lifecycle_graph(root):
+                    print(f"Lifecycle graph: {change}")
+
         return 0

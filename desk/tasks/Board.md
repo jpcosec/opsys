@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-desk-update-apply-writes-the-lifecycle-graph.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- `desk update --apply` on a fresh repo also writes the lifecycle graph [draft] - One `desk update --apply` on a fresh repo leaves a desk for which a second `desk update` prints `Desk is up to date.`
