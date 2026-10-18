@@ -1,0 +1,5 @@
+ M tests/test_skill_cli_drift.py
+?? .github/
+?? CHANGELOG.md
+?? desk/inbox/20261018-003127-unclear-closeout-verify-revienta-con-un-yaml-multi-documento-del-repo.md
+?? runs/subagents/20261018-task-rw-ci-tests-workflow-and-changelog/

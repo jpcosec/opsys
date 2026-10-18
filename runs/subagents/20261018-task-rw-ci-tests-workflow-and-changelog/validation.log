@@ -1,0 +1,2 @@
+363 passed, 3 skipped in 195.58s (0:03:15)
+CI job reproduced in a clean clone (no .pi/, no tools/), python3.12 venv, sldb from github main (0.1.11), no kgdb: 362 passed, 4 skipped

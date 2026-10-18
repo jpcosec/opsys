@@ -6,7 +6,8 @@ d35726a): a drawer item becomes an active task only through
 scanned trees may still document the removed command, and the use-deskops
 copies must document the authoring path that replaced it. (.pi/ is
 gitignored by design, so this guard reads the on-disk skill surfaces that
-agents actually load, tracked or not.)
+agents actually load, tracked or not; the local `.pi` copy is skipped when
+that tree is absent, as in a clean checkout.)
 
 Scanned surfaces are every SKILL.md under `.pi/skills`, `.agents/skills`, and
 `.opencode/skills`. README files are excluded by design because only SKILL.md
@@ -20,9 +21,13 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 
 SKILL_TREES = (".pi/skills", ".agents/skills", ".opencode/skills")
+
+PI_SKILLS = ROOT / ".pi" / "skills"
 
 REMOVED_PROMOTION_TOKEN = "drawer-task-to-active-task"
 AUTHORING_FLAG = "from-drawer"
@@ -62,6 +67,11 @@ def test_no_skill_document_contains_the_removed_promotion_command() -> None:
 
 
 def test_use_deskops_copies_document_the_from_drawer_authoring_path() -> None:
+    if not PI_SKILLS.is_dir():
+        pytest.skip(
+            ".pi/skills is gitignored and absent in a clean checkout; "
+            "the local use-deskops skill copy cannot be checked"
+        )
     for copy in USE_DESKOPS_COPIES:
         assert copy.is_file(), f"missing use-deskops skill copy: {copy}"
         assert AUTHORING_FLAG in copy.read_text(encoding="utf-8"), (

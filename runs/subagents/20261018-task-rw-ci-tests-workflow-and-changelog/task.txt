@@ -1,0 +1,10 @@
+Task: task-rw-ci-tests-workflow-and-changelog
+Title: CI runs pytest on every push, and the repo has a CHANGELOG
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-ci-tests-workflow-and-changelog.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
