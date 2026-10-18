@@ -76,7 +76,7 @@ def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
         (path, "question") for path in _glob(root / "desk" / "drawer" / "questions", "*.md")
     )
     candidates.extend(
-        (path, "drawer_task")
+        (path, "task")
         for path in _glob(root / "desk" / "drawer" / "tasks", "*.md")
         if path.name != "Board.md"
     )

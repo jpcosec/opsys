@@ -132,29 +132,6 @@
     {
       "edges": [],
       "identity": {
-        "node_id": "drawer_task:desk/drawer/tasks/task-golden-drawer.md",
-        "node_type": "drawer_task"
-      },
-      "semantics": {
-        "document_id": "task-golden-drawer",
-        "identity": "desk/drawer/tasks/task-golden-drawer.md",
-        "label": "Golden drawer task",
-        "path": "desk/drawer/tasks/task-golden-drawer.md"
-      },
-      "source": {
-        "extractor": "deskops_kgdb_snapshot_v1",
-        "provenance": [
-          {
-            "extractor": "desk_doc_nodes_v1",
-            "path": "desk/drawer/tasks/task-golden-drawer.md",
-            "source_kind": "file_metadata"
-          }
-        ]
-      }
-    },
-    {
-      "edges": [],
-      "identity": {
         "node_id": "facet:how",
         "node_type": "facet"
       },
@@ -456,6 +433,29 @@
           {
             "extractor": "desk_doc_nodes_v1",
             "path": "desk/tasks/task-golden-beta.md",
+            "source_kind": "file_metadata"
+          }
+        ]
+      }
+    },
+    {
+      "edges": [],
+      "identity": {
+        "node_id": "task:task-golden-drawer",
+        "node_type": "task"
+      },
+      "semantics": {
+        "document_id": "task-golden-drawer",
+        "identity": "task-golden-drawer",
+        "label": "Golden drawer task",
+        "path": "desk/drawer/tasks/task-golden-drawer.md"
+      },
+      "source": {
+        "extractor": "deskops_kgdb_snapshot_v1",
+        "provenance": [
+          {
+            "extractor": "desk_doc_nodes_v1",
+            "path": "desk/drawer/tasks/task-golden-drawer.md",
             "source_kind": "file_metadata"
           }
         ]

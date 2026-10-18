@@ -75,12 +75,20 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
     nodes_by_path = {node.path: node for node in [*doc_nodes, *source_nodes]}
     existing_ids = {node.id for node in [*doc_nodes, *source_nodes]}
     ids_by_name = {node.id.split(":", 1)[-1]: node.id for node in [*doc_nodes, *source_nodes]}
-    known_ids = existing_ids | set(ids_by_name)
+    store = _load_store_context(project_root, doc_nodes)
 
     edges: list[DeclaredGraphEdge] = []
     missing_targets: list[MissingGraphTarget] = []
     seen_edges: set[tuple[str, str, str, str]] = set()
     seen_missing: set[tuple[str, str, str]] = set()
+
+    if store is not None:
+        for edge in _store_declared_edges(project_root, store, nodes_by_path):
+            key = (edge.source_id, edge.target_id, edge.role, edge.provenance_locator)
+            if key in seen_edges:
+                continue
+            seen_edges.add(key)
+            edges.append(edge)
 
     for source_node in doc_nodes:
         path = project_root / source_node.path
@@ -89,11 +97,29 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
         text = path.read_text(encoding="utf-8")
         relative_path = source_node.path
         record = True if _is_record_document(text) else None
+        tracked = store.tracked.get(relative_path) if store is not None else None
+        # The sldb edge index owns the declared reference and containment fields of
+        # tracked documents. The local frontmatter reader keeps only the fields the
+        # model does not declare (for example MaterializationContractDoc.source_atoms).
+        skip_fields = _declared_fields_for_model(tracked.model) if tracked else frozenset()
 
-        declarations = [*_frontmatter_declarations(text, source_node.kind, nodes_by_path, ids_by_name), *_atom_declarations(text), *_section_declarations(text)]
+        declarations = [
+            *_frontmatter_declarations(
+                text,
+                source_node.kind,
+                nodes_by_path,
+                ids_by_name,
+                skip_fields=skip_fields,
+            ),
+            *_atom_declarations(text),
+            *_section_declarations(text),
+        ]
         if source_node.kind == "diagram":
             declarations.extend(_diagram_source_declarations(text))
-        if source_node.kind in {"task", "issue"}:
+        if source_node.kind in {"task", "issue"} and not _is_drawer_task_path(relative_path):
+            # Drawer tasks are task nodes now, but they keep the extraction they had
+            # when their kind was ``drawer_task``: the per-line path scanner never
+            # ran for candidates.
             declarations.extend(_explicit_source_file_declarations(text))
 
         for declaration in declarations:
@@ -133,6 +159,19 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
                 )
             )
 
+    if store is not None:
+        for missing in _store_unresolved_targets(project_root, store, nodes_by_path, existing_ids, ids_by_name):
+            if any(
+                existing.source_id == missing.source_id and existing.target_id == missing.target_id
+                for existing in missing_targets
+            ):
+                continue
+            key = (missing.source_id, missing.target_id, missing.provenance_locator)
+            if key in seen_missing:
+                continue
+            seen_missing.add(key)
+            missing_targets.append(missing)
+
     return DeclaredEdgeExtraction(
         edges=sorted(edges, key=lambda edge: (edge.source_id, edge.target_id, edge.role, edge.provenance_locator)),
         missing_targets=sorted(
@@ -140,6 +179,224 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
             key=lambda missing: (missing.source_id, missing.target_id, missing.provenance_locator),
         ),
     )
+
+
+@dataclass(frozen=True)
+class _StoreContext:
+    """The store pieces the declared-edge reader needs: the index and its tracked paths."""
+
+    index: Any
+    tracked: dict[str, Any]
+
+
+def _load_store_context(project_root: Path, doc_nodes: list[Any]) -> _StoreContext | None:
+    """Read the sldb edge index of the project store, when the project has one.
+
+    A root without ``.sldb`` has no tracked documents, so every document keeps the
+    local frontmatter extraction.
+    """
+    store = project_root / ".sldb"
+    if not store.is_dir() or not (store / "core" / "store_index.yaml").is_file():
+        return None
+
+    from sldb.api import doc_status
+    from sldb.api import load_edge_index
+
+    tracked = {}
+    for node in doc_nodes:
+        status = doc_status(store, node.path)
+        if status.status == "ok":
+            tracked[node.path] = status
+    return _StoreContext(index=load_edge_index(store, include_linked=False), tracked=tracked)
+
+
+def _declared_fields_for_model(model_name: str | None) -> frozenset[str]:
+    """Fields whose edges the sldb index owns for a tracked model."""
+    if not model_name:
+        return frozenset()
+    from deskops import models
+
+    model = getattr(models, model_name, None)
+    if model is None:
+        return frozenset()
+    return frozenset(
+        [
+            *getattr(model, "__containment__", {}).keys(),
+            *getattr(model, "__references__", []),
+        ]
+    )
+
+
+def _store_declared_edges(
+    project_root: Path,
+    store: _StoreContext,
+    nodes_by_path: dict[str, Any],
+) -> list[DeclaredGraphEdge]:
+    """Schema edges of the sldb index, mapped to deskops graph node ids.
+
+    The role is the declaring field name, so roles such as ``pills`` and
+    ``depends_on`` stay what they were when the local regex extractor read them.
+    """
+    edges: list[DeclaredGraphEdge] = []
+    records: dict[str, bool | None] = {}
+
+    for edge in store.index.edges:
+        metadata = edge.metadata or {}
+        field = metadata.get("field")
+        if not field or edge.relation not in {"references", "contains"}:
+            continue
+
+        source_record = store.index.nodes.get(edge.source)
+        target_record = store.index.nodes.get(edge.target)
+        if source_record is None or target_record is None:
+            continue
+        source_path = source_record.semantics.get("path")
+        target_path = target_record.semantics.get("path")
+        source_node = nodes_by_path.get(source_path)
+        target_node = nodes_by_path.get(target_path)
+        if source_node is None or target_node is None:
+            # A tracked document or target outside deskops' document surfaces has
+            # no deskops node; the edge cannot be projected into this graph.
+            continue
+
+        if source_path not in records:
+            source_file = project_root / source_path
+            records[source_path] = (
+                True
+                if source_file.is_file() and _is_record_document(source_file.read_text(encoding="utf-8"))
+                else None
+            )
+
+        edges.append(
+            DeclaredGraphEdge(
+                source_id=source_node.id,
+                target_id=target_node.id,
+                role=field,
+                source_kind="declared",
+                confidence="high",
+                provenance_path=source_path,
+                provenance_locator="frontmatter",
+                record=records[source_path],
+            )
+        )
+
+    return edges
+
+
+def _store_unresolved_targets(
+    project_root: Path,
+    store: _StoreContext,
+    nodes_by_path: dict[str, Any],
+    existing_ids: set[str],
+    ids_by_name: dict[str, str],
+) -> list[MissingGraphTarget]:
+    """Declared values the sldb index reports unresolved, as deskops findings.
+
+    sldb resolves against its tracked documents; deskops also has nodes for
+    untracked files (tasks, atoms, docs). A value that names one of those nodes is
+    not dangling in this graph, so it is left out. Prose in a containment field
+    (ritual steps) is not a reference either (``_looks_like_reference``).
+    """
+    nodes_by_id = {node.id: node for node in nodes_by_path.values()}
+    findings: list[MissingGraphTarget] = []
+
+    for reference in store.index.unresolved_references:
+        if reference.relation not in {"references", "contains"}:
+            continue
+        if reference.field in PROVENANCE_FIELDS:
+            continue
+
+        value = (reference.target or "").strip()
+        if not _looks_like_reference(value, nodes_by_path, ids_by_name):
+            continue
+        if _unresolved_value_resolves(reference, value, nodes_by_path, existing_ids, ids_by_name):
+            continue
+
+        source_node = _unresolved_source_node(reference, nodes_by_path, nodes_by_id, ids_by_name)
+        if source_node is None:
+            continue
+
+        source_file = project_root / source_node.path
+        record = (
+            True
+            if source_file.is_file() and _is_record_document(source_file.read_text(encoding="utf-8"))
+            else None
+        )
+        findings.append(
+            MissingGraphTarget(
+                source_id=source_node.id,
+                target_id=_unresolved_target_id(reference, value, nodes_by_path),
+                provenance_path=source_node.path,
+                provenance_locator="frontmatter",
+                reason=f"declared target was not resolved by the sldb edge index ({reference.reason})",
+                record=record,
+            )
+        )
+
+    return findings
+
+
+def _unresolved_source_node(
+    reference: Any,
+    nodes_by_path: dict[str, Any],
+    nodes_by_id: dict[str, Any],
+    ids_by_name: dict[str, str],
+) -> Any | None:
+    source_path = (reference.source_path or "").removeprefix("./")
+    source_node = nodes_by_path.get(source_path)
+    if source_node is not None:
+        return source_node
+    name = reference.source.split(":", 1)[-1]
+    node_id = ids_by_name.get(name)
+    return nodes_by_id.get(node_id) if node_id else None
+
+
+def _unresolved_value_resolves(
+    reference: Any,
+    value: str,
+    nodes_by_path: dict[str, Any],
+    existing_ids: set[str],
+    ids_by_name: dict[str, str],
+) -> bool:
+    if reference.target_export_id:
+        name = reference.target_export_id.split(":", 1)[-1]
+        if name in ids_by_name:
+            return True
+    candidate = value.strip("`").removeprefix("./")
+    if candidate in nodes_by_path:
+        return True
+    resolved = _declared_reference_id(value, nodes_by_path, ids_by_name)
+    return bool(resolved and resolved in existing_ids)
+
+
+def _unresolved_target_id(reference: Any, value: str, nodes_by_path: dict[str, Any]) -> str:
+    if reference.target_export_id:
+        model_name, _, name = reference.target_export_id.partition(":")
+        kind = _kind_for_model_name(model_name)
+        if kind and name:
+            return f"{kind}:{name}"
+        return reference.target_export_id
+    target_id = _target_id_for(value, nodes_by_path)
+    if target_id is not None:
+        return target_id
+    return _missing_target_id(value)
+
+
+def _kind_for_model_name(model_name: str) -> str | None:
+    from deskops import models
+
+    model = getattr(models, model_name, None)
+    if model is None:
+        return None
+    types = (getattr(model, "__semantics__", None) or {}).get("type") or []
+    if not types:
+        return None
+    kind = types[-1]
+    return "materialization" if kind == "materialization_contract" else kind
+
+
+def _is_drawer_task_path(relative_path: str) -> bool:
+    return Path(relative_path).parts[:3] == ("desk", "drawer", "tasks")
 
 
 def _is_record_document(text: str) -> bool:
@@ -170,6 +427,8 @@ def _frontmatter_declarations(
     kind: str | None = None,
     nodes_by_path: dict[str, Any] | None = None,
     ids_by_name: dict[str, str] | None = None,
+    *,
+    skip_fields: frozenset[str] = frozenset(),
 ) -> list[_Declaration]:
     if not text.startswith("---\n"):
         return []
@@ -187,7 +446,7 @@ def _frontmatter_declarations(
     if not isinstance(loaded, dict):
         return []
 
-    declarations = _declarations_from_mapping(loaded, "frontmatter")
+    declarations = _declarations_from_mapping(loaded, "frontmatter", skip_fields)
 
     if kind:
         model = _model_for_kind(kind)
@@ -197,7 +456,7 @@ def _frontmatter_declarations(
                 *getattr(model, "__references__", []),
             ]
             for field_name in declared_fields:
-                if field_name not in loaded:
+                if field_name in skip_fields or field_name not in loaded:
                     continue
                 value = loaded[field_name]
                 items = value if isinstance(value, list) else [value]
@@ -287,9 +546,15 @@ def _atom_declarations(text: str) -> list[_Declaration]:
     return declarations
 
 
-def _declarations_from_mapping(mapping: dict[Any, Any], locator: str) -> list[_Declaration]:
+def _declarations_from_mapping(
+    mapping: dict[Any, Any],
+    locator: str,
+    skip_fields: frozenset[str] = frozenset(),
+) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     for key in ("atoms", "source_atoms", "related_atoms"):
+        if key in skip_fields:
+            continue
         declarations.extend(_atom_declarations_from_value(mapping.get(key), locator, DEFAULT_ROLE))
     materialization = mapping.get("materialization")
     if isinstance(materialization, dict):

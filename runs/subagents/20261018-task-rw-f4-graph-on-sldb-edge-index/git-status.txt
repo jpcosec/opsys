@@ -1,0 +1,12 @@
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M deskops/graph/extract_docs.py
+ M deskops/graph/extract_edges.py
+ M deskops/models/task.py
+ M pyproject.toml
+ M tests/fixtures/golden/graph_snapshot.kg.json
+ M tests/fixtures/golden/graph_snapshot.nx.json
+ M tests/fixtures/model_contract_hashes.json
+?? runs/planning/graph-id-mapping.md
+?? runs/planning/graph-missing-baseline.txt
+?? runs/subagents/20261018-task-rw-f4-graph-on-sldb-edge-index/

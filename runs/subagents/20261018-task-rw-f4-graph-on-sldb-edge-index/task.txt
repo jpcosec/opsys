@@ -1,0 +1,12 @@
+Task: task-rw-f4-graph-on-sldb-edge-index
+Title: Declared graph edges come from the sldb edge index
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f4-graph-on-sldb-edge-index.md
+Effective pills:
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+- desk/contexts/pill-009-source-file-graph-traceability.md
+- desk/contexts/pill-010-graph-runtime-output-policy.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

@@ -1,0 +1,327 @@
+Missing graph references:
+- missing_declared_target: task:task-rw-f3-single-closure-path -> source_file:deskops/services/closure.py
+  provenance: desk/tasks/task-rw-f3-single-closure-path.md:line:18:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-rw-f3-single-closure-path -> source_file:deskops/services/closure.py
+  provenance: desk/tasks/task-rw-f3-single-closure-path.md:line:43:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-rw-f4-graph-on-sldb-edge-index -> test_file:tests/fixtures/golden/graph_snapshot.kg.json
+  provenance: desk/tasks/task-rw-f4-graph-on-sldb-edge-index.md:line:30:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-rw-f4-graph-on-sldb-edge-index -> test_file:tests/fixtures/golden/graph_snapshot.kg.json
+  provenance: desk/tasks/task-rw-f4-graph-on-sldb-edge-index.md:line:71:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-rw-f4-graph-on-sldb-edge-index -> test_file:tests/fixtures/knowledge_graph/static_desk_source_graph.json
+  provenance: desk/tasks/task-rw-f4-graph-on-sldb-edge-index.md:line:34:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-rw-f4-graph-on-sldb-edge-index -> test_file:tests/fixtures/knowledge_graph/static_desk_source_graph.json
+  provenance: desk/tasks/task-rw-f4-graph-on-sldb-edge-index.md:line:63:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+Informational (archived records):
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/drawer/issues/issue-atom-validation-and-traceability.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1013:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/drawer/issues/issue-integrate-kgdb-for-desk-source-knowledge-graph.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1176:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/drawer/issues/issue-integrate-kgdb-for-desk-source-knowledge-graph.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1239:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:721:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:765:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:771:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:798:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-desk-health-and-recovery-surface-deskops-slice.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:804:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1040:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1045:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1074:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1080:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:158:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:227:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:333:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:404:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-drift-check-review-loop.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:722:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:298:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:508:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:578:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:681:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:902:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:907:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:936:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-json-output-for-modeled-documents.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:942:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-per-project-desk-config-and-version-contract.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:764:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-per-project-desk-config-and-version-contract.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:770:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-per-project-desk-config-and-version-contract.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:800:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-add-per-project-desk-config-and-version-contract.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:806:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-atom-lifecycle-operations.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1005:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-atom-lifecycle-operations.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1011:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-atom-lifecycle-operations.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:970:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-atom-lifecycle-operations.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:976:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1110:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:157:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:262:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:297:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:332:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:402:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:507:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:53:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:577:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:680:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-define-materialization-contract-slice-deskops-surface.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:88:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:228:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:509:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:682:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:725:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:89:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:901:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:906:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:935:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-design-operational-cli-grammar.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:941:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:763:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:769:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:799:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-detect-and-migrate-legacy-desk-workspaces.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:805:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1007:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:439:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:971:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-enforce-pill-to-atom-knowledge-graduation-during-task-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:977:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-enrich-templates-with-instructional-text.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:735:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:833:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:838:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:867:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-establish-horizontal-desk-discovery-and-canonical-identity.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:872:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:834:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:839:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:868:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-cross-desk-inbox-delivery-verifiable-and-actionable.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:873:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1109:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:122:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:191:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:367:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:403:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:437:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:472:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:52:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:542:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:612:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:645:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:723:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-make-task-lifecycle-runnable-from-intake-to-closeout.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:87:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1006:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1012:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1041:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1046:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1076:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:1111:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:123:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:334:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:438:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:543:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:611:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:972:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> desk/tasks/task-wire-closeout-to-knowledge-gates.md
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:978:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> source_file:deskops/models/hook.py
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:127:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:deskops-architectural-diagnosis-2026-08-archived-2026-09-24 -> source_file:deskops/models/hook.py
+  provenance: desk/drawer/issues/diagnosis-archive.md:line:443:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:handoff-2026-09-10-session-uncommitted-work-and-open-items -> desk/drawer/features/feature-herdr-supervised-execution-runtime.md
+  provenance: desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md:line:29:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:handoff-2026-09-10-session-uncommitted-work-and-open-items -> test_file:tests/test_section_body_extraction.py
+  provenance: desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md:line:19:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:handoff-2026-09-10-session-uncommitted-work-and-open-items -> test_file:tests/test_section_body_extraction.py
+  provenance: desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md:line:40:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: issue:refactor-primitives-into-ast-driven-task-nodes -> source_file:deskops/runtime/primitives.py
+  provenance: desk/drawer/issues/issue-refactor-primitives-to-ast-driven-task-nodes.md:line:26:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+6 missing, 102 informational

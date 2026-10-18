@@ -12,6 +12,11 @@ class TaskDoc(OperationalArtifactDoc):
         "atoms": ["AtomDoc"],
     }
     __references__ = ["references", "depends_on", "inherits_from", "from_drawer"]
+    __reference_models__ = {
+        "depends_on": ["TaskDoc"],
+        "inherits_from": ["TaskDoc"],
+        "from_drawer": ["TaskDoc"],
+    }
     model_config = {"extra": "allow"}
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
     
