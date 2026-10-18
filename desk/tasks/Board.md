@@ -10,6 +10,7 @@ tasks:
 - desk/tasks/task-rename-deskops-faqdoc.md
 - desk/tasks/task-issue-close-verb.md
 - desk/tasks/task-closeout-commit-accepts-directory-paths.md
+- desk/tasks/task-close-a-task-as-superseded.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -54,3 +55,4 @@ _Generated from the task references above._
 - deskops' FAQ model gets its own name instead of `FAQDoc` [draft] - The deskops FAQ model has a distinct name (for example `DeskFAQDoc`), and every store that tracks FAQ documents with the old name is migrated, with `sldb stores check` PASS.
 - `deskops issue close` closes an issue with its reason and keeps the file as the trace [draft] - `deskops issue close <selector> --reason <text> [--ref <commit-or-path> ...] --root <repo>` finds the issue under desk/issues/ or desk/drawer/issues/, sets its status to closed, appends a resolution with the date, reason and refs, keeps the file, refreshes its store record if it is tracked, and prints the path. `deskops issue list --root <repo> [--status open|closed|all]` lists issues with id, status and title.
 - `closeout commit` accepts a directory in --paths that contains the closing task [draft] - `closeout commit --paths desk/tasks ...` closes a task that was never committed, and a task that was, with one commit and a clean tree.
+- A task whose subject no longer exists closes as superseded, with a reason and a reference [draft] - `deskops closeout supersede --task <id> --reason <text> --ref <commit-or-path> --root <repo>` closes a task from any lifecycle node. It requires the reason and at least one resolvable ref: a commit that is HEAD or an ancestor, or an existing path. The task's status and history record `superseded`, and the commit trailers say so (`Closeout-Mode: superseded`, `Closeout-Reason`, `Closeout-Ref`). It removes the task from the Board in one commit, the same way the closeout commit does, and the run index line marks it as superseded.
