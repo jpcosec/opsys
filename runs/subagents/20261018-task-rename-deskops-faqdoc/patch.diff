@@ -1,0 +1,351 @@
+diff --git a/desk/models/__init__.py b/desk/models/__init__.py
+index 99b5fd4..15a91f7 100644
+--- a/desk/models/__init__.py
++++ b/desk/models/__init__.py
+@@ -5,7 +5,7 @@ from deskops.models.board import BoardDoc
+ from deskops.models.checklist import ChecklistDoc
+ from deskops.models.condition import ConditionDoc
+ from deskops.models.edge import EdgeDoc
+-from deskops.models.faq import FAQDoc
++from deskops.models.faq import DeskFAQDoc
+ from deskops.models.hook import HookDoc
+ from deskops.models.inbox import InboxNoteDoc
+ from deskops.models.operator import OperatorDoc
+@@ -22,7 +22,7 @@ __all__ = [
+     "EdgeDoc",
+     "AtomDoc",
+     "BoardDoc",
+-    "FAQDoc",
++    "DeskFAQDoc",
+     "HookDoc",
+     "InboxNoteDoc",
+     "OperatorDoc",
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index 4911d67..b9f9a6f 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -17,6 +17,65 @@ from deskops.errors import DeskopsEnvironmentError
+ from deskops.paths import package_pythonpath
+ import deskops.models as models
+ 
++#: The deskops FAQ model used to be registered with the same name sldb uses for its
++#: own model. sldb federates models by name, so the old name must be migrated.
++LEGACY_FAQ_MODEL = "FAQDoc"
++LEGACY_FAQ_MODEL_REF = "deskops.models:FAQDoc"
++FAQ_MODEL = "DeskFAQDoc"
++FAQ_MODEL_REF = "deskops.models:DeskFAQDoc"
++
++
++def legacy_faq_model_pending(entries: dict[str, Any]) -> bool:
++    """Whether a store still registers the old deskops FAQ model name."""
++    entry = entries.get(LEGACY_FAQ_MODEL)
++    return entry is not None and getattr(entry, "model_ref", None) == LEGACY_FAQ_MODEL_REF
++
++
++def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> list[str]:
++    """Move an existing store from `FAQDoc` to `DeskFAQDoc`, keeping its documents.
++
++    sldb exposes no model rename, so this registers the new name, retracks every
++    document the old model owns, and removes the old entry with its document
++    records. The Markdown files are never touched, so they stay byte-identical.
++    """
++    from sldb.store.io import load_documents_index
++    from sldb.store.io import load_models_index
++
++    store_dir = root / ".sldb"
++    pythonpath = pythonpath or package_pythonpath()
++    bootstrap = SLDBBootstrap()
++    entries = bootstrap._registered_model_entries(store_dir)
++    if not legacy_faq_model_pending(entries):
++        return []
++
++    changes: list[str] = []
++    if FAQ_MODEL not in entries:
++        doc_io.register_model(root, FAQ_MODEL_REF, pythonpath=pythonpath)
++        changes.append(f"registered {FAQ_MODEL}")
++
++    # The old class no longer exists, so its documents are read from the indexes
++    # instead of resolving the model reference.
++    legacy_entry = entries[LEGACY_FAQ_MODEL]
++    legacy_index = load_models_index(root / legacy_entry.models_index)
++    old_documents = load_documents_index(root / legacy_index.documents_index).documents
++    tracked: set[str] = set()
++    new_entry = bootstrap._registered_model_entries(store_dir).get(FAQ_MODEL)
++    if new_entry is not None:
++        new_index = load_models_index(root / new_entry.models_index)
++        tracked = {document.name for document in load_documents_index(root / new_index.documents_index).documents}
++    for document in old_documents:
++        if document.name in tracked:
++            continue
++        doc_io.track(root, document.path, FAQ_MODEL, name=document.name, pythonpath=pythonpath)
++        changes.append(f"tracked {document.name} as {FAQ_MODEL}")
++
++    doc_io.remove_model_from(
++        root, LEGACY_FAQ_MODEL, pythonpath=pythonpath, untrack_documents=True
++    )
++    changes.append(f"removed {LEGACY_FAQ_MODEL}")
++    return changes
++
++
+ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
+     rel = path.relative_to(desk_dir)
+     parts = rel.parts
+@@ -41,7 +100,7 @@ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
+     if len(parts) == 2 and parts[0] == "steps":
+         return models.StepDoc
+     if len(parts) == 2 and parts[0] == "faq":
+-        return models.FAQDoc
++        return models.DeskFAQDoc
+     if len(parts) == 2 and parts[0] == "lifecycle":
+         return None  # written and tracked by deskops.lifecycle.ensure_lifecycle_graph
+     return None
+@@ -165,6 +224,18 @@ class DeskCLI:
+             except Exception:
+                 pass
+ 
++        legacy_faq_pending = legacy_faq_model_pending(registered_entries)
++        if legacy_faq_pending and apply:
++            print(f"Migrating the deskops FAQ model from {LEGACY_FAQ_MODEL} to {FAQ_MODEL}...")
++            try:
++                for change in migrate_legacy_faq_model(root):
++                    print(f"- {change}")
++                registered_entries = bootstrap._registered_model_entries(store_dir)
++            except Exception as exc:
++                print(f"Error: {exc}")
++                return 1
++            legacy_faq_pending = False
++
+         unregistered_models: list[str] = []
+         copied_models: list[str] = []
+         # A non-editable install has no owner store to inherit from; its directly
+@@ -240,13 +311,17 @@ class DeskCLI:
+             }
+             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
+ 
+-        if not legacy_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
++        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
+             print("Desk is up to date.")
+             return 0
+ 
+         print("Desk divergence report:")
+         if missing_store:
+             print("- Missing store: .sldb")
++        if legacy_faq_pending:
++            print(
++                f"- Legacy FAQ model: {LEGACY_FAQ_MODEL} ({LEGACY_FAQ_MODEL_REF}) should be {FAQ_MODEL}."
++            )
+         if legacy_pending and legacy is not None:
+             print(
+                 "- Legacy task lifecycle: "
+diff --git a/deskops/cli/model_introspection.py b/deskops/cli/model_introspection.py
+index b00447e..e2cabb4 100644
+--- a/deskops/cli/model_introspection.py
++++ b/deskops/cli/model_introspection.py
+@@ -267,7 +267,7 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
+     from deskops.models import (
+         AtomDoc,
+         BoardDoc,
+-        FAQDoc,
++        DeskFAQDoc,
+         InboxNoteDoc,
+         MaterializationContractDoc,
+         PillDoc,
+@@ -279,7 +279,7 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
+     return {
+         "artifact.atom": AtomDoc,
+         "artifact.board": BoardDoc,
+-        "artifact.faq": FAQDoc,
++        "artifact.faq": DeskFAQDoc,
+         "artifact.inbox_note": InboxNoteDoc,
+         "artifact.materialization": MaterializationContractDoc,
+         "artifact.pill": PillDoc,
+diff --git a/deskops/models/__init__.py b/deskops/models/__init__.py
+index c9aec01..f4d6f5f 100644
+--- a/deskops/models/__init__.py
++++ b/deskops/models/__init__.py
+@@ -3,7 +3,7 @@ from .base import OperationalArtifactDoc
+ from .base import PrimitiveDoc
+ from .board import BoardDoc
+ from .crossroad import CrossroadDoc
+-from .faq import FAQDoc
++from .faq import DeskFAQDoc
+ from .inbox import InboxNoteDoc
+ from .materialization import MaterializationContractDoc
+ from .pill import PillDoc
+@@ -20,7 +20,7 @@ __all__ = [
+     "CrossroadDoc",
+     "AtomDoc",
+     "BoardDoc",
+-    "FAQDoc",
++    "DeskFAQDoc",
+     "InboxNoteDoc",
+     "MaterializationContractDoc",
+     "OperationalArtifactDoc",
+diff --git a/deskops/models/faq.py b/deskops/models/faq.py
+index badfa3a..7994146 100644
+--- a/deskops/models/faq.py
++++ b/deskops/models/faq.py
+@@ -3,7 +3,7 @@ from pydantic import Field
+ from sldb import StructuredNLDoc
+ 
+ 
+-class FAQDoc(StructuredNLDoc):
++class DeskFAQDoc(StructuredNLDoc):
+     __semantics__ = {
+         "type": ["documentation", "faq"],
+         "workspace": ["docs", "faq"],
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 6f897c7..acdab33 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -19,7 +19,7 @@ from sldb.runtime.validation import render_model_markdown
+ 
+ from deskops.models import AtomDoc
+ from deskops.models import BoardDoc
+-from deskops.models import FAQDoc
++from deskops.models import DeskFAQDoc
+ from deskops.models import InboxNoteDoc
+ from deskops.models import MaterializationContractDoc
+ from deskops.models import PillDoc
+@@ -65,7 +65,7 @@ ARTIFACT_MODELS = {
+     "artifact.materialization": MaterializationContractDoc,
+     "artifact.repository": RepositoryDoc,
+     "artifact.inbox_note": InboxNoteDoc,
+-    "artifact.faq": FAQDoc,
++    "artifact.faq": DeskFAQDoc,
+     "artifact.step": StepDoc,
+ }
+ 
+diff --git a/tests/fixtures/model_contract_hashes.json b/tests/fixtures/model_contract_hashes.json
+index 9c0498b..6de5074 100644
+--- a/tests/fixtures/model_contract_hashes.json
++++ b/tests/fixtures/model_contract_hashes.json
+@@ -2,7 +2,7 @@
+   "AtomDoc": "ee1a85c1da9ee8ba88d3094404d7771d03e738aad81a0995067fd55369e8b939",
+   "BoardDoc": "efc79456a8b75fb3ece9476ec5c84df977f7ab5a4491a40cfcb1398a12f085cc",
+   "CrossroadDoc": "f1cb8901cf0b6375518de54bbd527963dd396e071243e9d8e2f15f9142ab971d",
+-  "FAQDoc": "c05ce9c314e00f8a9338ce1cbaab37e5a6a16fb880dc41371ef78e6403037f80",
++  "DeskFAQDoc": "c05ce9c314e00f8a9338ce1cbaab37e5a6a16fb880dc41371ef78e6403037f80",
+   "InboxNoteDoc": "b163632f56cd2bc835d2d3726b1b3034d6329017760cce551c6aa7f8f3f8380a",
+   "MaterializationContractDoc": "7a9c4f2a6d1393a581170cb62c4c3779b80310e3b31ebe865e8bfd92d6beaf1b",
+   "PillDoc": "16cbc282a5f20f99f8e31d890d1006d8c243049a78e1d1fca1c0a62737fee5a6",
+diff --git a/tests/test_desk_sync.py b/tests/test_desk_sync.py
+index edd1365..8a11be4 100644
+--- a/tests/test_desk_sync.py
++++ b/tests/test_desk_sync.py
+@@ -40,11 +40,11 @@ def test_desk_update_command(tmp_path: Path):
+     if store_idx.exists():
+         if store_idx.suffix == ".yaml":
+             with open(store_idx) as f: data = yaml.safe_load(f)
+-            data["models"] = [m for m in data["models"] if m["name"] != "FAQDoc"]
++            data["models"] = [m for m in data["models"] if m["name"] != "DeskFAQDoc"]
+             with open(store_idx, "w") as f: yaml.safe_dump(data, f)
+         else:
+             with open(store_idx) as f: data = json.load(f)
+-            data["models"] = [m for m in data["models"] if m["name"] != "FAQDoc"]
++            data["models"] = [m for m in data["models"] if m["name"] != "DeskFAQDoc"]
+             with open(store_idx, "w") as f: json.dump(data, f)
+ 
+     # Test update (dry run)
+@@ -97,3 +97,79 @@ def test_desk_update_apply_on_a_fresh_repo_writes_the_lifecycle_graph(tmp_path:
+ 
+     assert cli.run(["desk", "update", "--root", str(tmp_path)]) == 0
+     assert "Desk is up to date." in capsys.readouterr().out
++
++
++def _make_faq_model_legacy(root: Path) -> None:
++    """Rewrite the store as it looked when the deskops FAQ model was still `FAQDoc`."""
++    store = root / ".sldb"
++    index_path = store / "core" / "store_index.yaml"
++    index = yaml.safe_load(index_path.read_text(encoding="utf-8"))
++    entry = next(model for model in index["models"] if model["name"] == "DeskFAQDoc")
++    entry["name"] = "FAQDoc"
++    entry["model_ref"] = "deskops.models:FAQDoc"
++    entry["models_index"] = ".sldb/core/models/FAQDoc.yaml"
++    index_path.write_text(yaml.safe_dump(index, sort_keys=False), encoding="utf-8")
++
++    models_dir = store / "core" / "models"
++    (models_dir / "DeskFAQDoc.yaml").rename(models_dir / "FAQDoc.yaml")
++    model_index_path = models_dir / "FAQDoc.yaml"
++    model_index = yaml.safe_load(model_index_path.read_text(encoding="utf-8"))
++    model_index["name"] = "FAQDoc"
++    model_index["model_ref"] = "deskops.models:FAQDoc"
++    model_index["documents_index"] = ".sldb/core/documents/FAQDoc.yaml"
++    model_index["sections_index"] = ".sldb/runtime/sections/FAQDoc.yaml"
++    model_index_path.write_text(yaml.safe_dump(model_index, sort_keys=False), encoding="utf-8")
++
++    documents_dir = store / "core" / "documents"
++    (documents_dir / "DeskFAQDoc").rename(documents_dir / "FAQDoc")
++
++
++def test_desk_update_apply_migrates_the_legacy_faq_model(tmp_path: Path, capsys) -> None:
++    from deskops.cli.main import main
++    from sldb.api import describe_model
++
++    assert main(["init", str(tmp_path)]) == 0
++    assert main(
++        [
++            "add",
++            "faq-doc",
++            "--root",
++            str(tmp_path),
++            "--title",
++            "Legacy FAQ",
++            "--body",
++            "Question?\n\nAnswer.",
++        ]
++    ) == 0
++    faq_path = tmp_path / "desk" / "faq" / "faq-legacy-faq.md"
++    original = faq_path.read_bytes()
++    capsys.readouterr()
++
++    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
++    capsys.readouterr()
++    _make_faq_model_legacy(tmp_path)
++
++    assert main(["desk", "update", "--root", str(tmp_path)]) == 1
++    assert "Legacy FAQ model" in capsys.readouterr().out
++
++    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
++    capsys.readouterr()
++
++    names = {
++        model["name"]
++        for model in yaml.safe_load(
++            (tmp_path / ".sldb" / "core" / "store_index.yaml").read_text(encoding="utf-8")
++        )["models"]
++    }
++    assert "DeskFAQDoc" in names
++    assert "FAQDoc" not in names
++
++    documents = describe_model(
++        tmp_path / ".sldb",
++        "DeskFAQDoc",
++        pythonpath=str(Path(__file__).resolve().parents[1]),
++    ).documents
++    assert [document.name for document in documents] == ["faq-legacy-faq"]
++    assert faq_path.read_bytes() == original
++
++    assert main(["desk", "update", "--root", str(tmp_path)]) == 0
+diff --git a/tests/test_model_templates.py b/tests/test_model_templates.py
+index e85ee36..acd8914 100644
+--- a/tests/test_model_templates.py
++++ b/tests/test_model_templates.py
+@@ -4,7 +4,7 @@ import pytest
+ 
+ from deskops.models import AtomDoc
+ from deskops.models import BoardDoc
+-from deskops.models import FAQDoc
++from deskops.models import DeskFAQDoc
+ from deskops.models import InboxNoteDoc
+ from deskops.models import PillDoc
+ from deskops.models import RepositoryDoc
+@@ -44,7 +44,7 @@ MODEL_PAYLOADS = [
+         },
+     ),
+     (
+-        FAQDoc,
++        DeskFAQDoc,
+         {
+             "title": "Template FAQ",
+             "body": "How does it work?\n\nIt roundtrips fixed text safely.",

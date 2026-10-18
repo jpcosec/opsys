@@ -3,7 +3,7 @@ from .base import OperationalArtifactDoc
 from .base import PrimitiveDoc
 from .board import BoardDoc
 from .crossroad import CrossroadDoc
-from .faq import FAQDoc
+from .faq import DeskFAQDoc
 from .inbox import InboxNoteDoc
 from .materialization import MaterializationContractDoc
 from .pill import PillDoc
@@ -20,7 +20,7 @@ __all__ = [
     "CrossroadDoc",
     "AtomDoc",
     "BoardDoc",
-    "FAQDoc",
+    "DeskFAQDoc",
     "InboxNoteDoc",
     "MaterializationContractDoc",
     "OperationalArtifactDoc",

@@ -19,7 +19,7 @@ from sldb.runtime.validation import render_model_markdown
 
 from deskops.models import AtomDoc
 from deskops.models import BoardDoc
-from deskops.models import FAQDoc
+from deskops.models import DeskFAQDoc
 from deskops.models import InboxNoteDoc
 from deskops.models import MaterializationContractDoc
 from deskops.models import PillDoc
@@ -65,7 +65,7 @@ ARTIFACT_MODELS = {
     "artifact.materialization": MaterializationContractDoc,
     "artifact.repository": RepositoryDoc,
     "artifact.inbox_note": InboxNoteDoc,
-    "artifact.faq": FAQDoc,
+    "artifact.faq": DeskFAQDoc,
     "artifact.step": StepDoc,
 }
 

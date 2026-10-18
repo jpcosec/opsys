@@ -1,0 +1,23 @@
+ M .opencode/skills/use-deskops/SKILL.md
+ M .sldb/core/documents/TaskDoc/task-docs-teach-closeout-commit-as-the-only-close.yaml
+ M .sldb/core/documents/TaskDoc/task-rename-deskops-faqdoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/models/__init__.py
+ M desk/tasks/task-docs-teach-closeout-commit-as-the-only-close.md
+ M desk/tasks/task-rename-deskops-faqdoc.md
+ M deskops/cli/commands/desk.py
+ M deskops/cli/model_introspection.py
+ M deskops/data/faq.md
+ M deskops/models/__init__.py
+ M deskops/models/faq.py
+ M deskops/operations.py
+ M docs/diagrams/process/current-agent-workflow-and-automation.md
+ M docs/diagrams/process/current-agent-workflow-and-automation.mmd
+ M docs/faq.md
+ M docs/quickstart.md
+ M tests/fixtures/model_contract_hashes.json
+ M tests/test_desk_sync.py
+ M tests/test_model_templates.py
+?? runs/subagents/20261018-task-docs-teach-closeout-commit-as-the-only-close/
+?? runs/subagents/20261018-task-rename-deskops-faqdoc/

@@ -267,7 +267,7 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
     from deskops.models import (
         AtomDoc,
         BoardDoc,
-        FAQDoc,
+        DeskFAQDoc,
         InboxNoteDoc,
         MaterializationContractDoc,
         PillDoc,
@@ -279,7 +279,7 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
     return {
         "artifact.atom": AtomDoc,
         "artifact.board": BoardDoc,
-        "artifact.faq": FAQDoc,
+        "artifact.faq": DeskFAQDoc,
         "artifact.inbox_note": InboxNoteDoc,
         "artifact.materialization": MaterializationContractDoc,
         "artifact.pill": PillDoc,

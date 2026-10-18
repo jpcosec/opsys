@@ -4,7 +4,7 @@ import pytest
 
 from deskops.models import AtomDoc
 from deskops.models import BoardDoc
-from deskops.models import FAQDoc
+from deskops.models import DeskFAQDoc
 from deskops.models import InboxNoteDoc
 from deskops.models import PillDoc
 from deskops.models import RepositoryDoc
@@ -44,7 +44,7 @@ MODEL_PAYLOADS = [
         },
     ),
     (
-        FAQDoc,
+        DeskFAQDoc,
         {
             "title": "Template FAQ",
             "body": "How does it work?\n\nIt roundtrips fixed text safely.",

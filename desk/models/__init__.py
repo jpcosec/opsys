@@ -5,7 +5,7 @@ from deskops.models.board import BoardDoc
 from deskops.models.checklist import ChecklistDoc
 from deskops.models.condition import ConditionDoc
 from deskops.models.edge import EdgeDoc
-from deskops.models.faq import FAQDoc
+from deskops.models.faq import DeskFAQDoc
 from deskops.models.hook import HookDoc
 from deskops.models.inbox import InboxNoteDoc
 from deskops.models.operator import OperatorDoc
@@ -22,7 +22,7 @@ __all__ = [
     "EdgeDoc",
     "AtomDoc",
     "BoardDoc",
-    "FAQDoc",
+    "DeskFAQDoc",
     "HookDoc",
     "InboxNoteDoc",
     "OperatorDoc",

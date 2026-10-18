@@ -3,7 +3,7 @@ from pydantic import Field
 from sldb import StructuredNLDoc
 
 
-class FAQDoc(StructuredNLDoc):
+class DeskFAQDoc(StructuredNLDoc):
     __semantics__ = {
         "type": ["documentation", "faq"],
         "workspace": ["docs", "faq"],

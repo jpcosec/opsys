@@ -17,6 +17,65 @@ from deskops.errors import DeskopsEnvironmentError
 from deskops.paths import package_pythonpath
 import deskops.models as models
 
+#: The deskops FAQ model used to be registered with the same name sldb uses for its
+#: own model. sldb federates models by name, so the old name must be migrated.
+LEGACY_FAQ_MODEL = "FAQDoc"
+LEGACY_FAQ_MODEL_REF = "deskops.models:FAQDoc"
+FAQ_MODEL = "DeskFAQDoc"
+FAQ_MODEL_REF = "deskops.models:DeskFAQDoc"
+
+
+def legacy_faq_model_pending(entries: dict[str, Any]) -> bool:
+    """Whether a store still registers the old deskops FAQ model name."""
+    entry = entries.get(LEGACY_FAQ_MODEL)
+    return entry is not None and getattr(entry, "model_ref", None) == LEGACY_FAQ_MODEL_REF
+
+
+def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> list[str]:
+    """Move an existing store from `FAQDoc` to `DeskFAQDoc`, keeping its documents.
+
+    sldb exposes no model rename, so this registers the new name, retracks every
+    document the old model owns, and removes the old entry with its document
+    records. The Markdown files are never touched, so they stay byte-identical.
+    """
+    from sldb.store.io import load_documents_index
+    from sldb.store.io import load_models_index
+
+    store_dir = root / ".sldb"
+    pythonpath = pythonpath or package_pythonpath()
+    bootstrap = SLDBBootstrap()
+    entries = bootstrap._registered_model_entries(store_dir)
+    if not legacy_faq_model_pending(entries):
+        return []
+
+    changes: list[str] = []
+    if FAQ_MODEL not in entries:
+        doc_io.register_model(root, FAQ_MODEL_REF, pythonpath=pythonpath)
+        changes.append(f"registered {FAQ_MODEL}")
+
+    # The old class no longer exists, so its documents are read from the indexes
+    # instead of resolving the model reference.
+    legacy_entry = entries[LEGACY_FAQ_MODEL]
+    legacy_index = load_models_index(root / legacy_entry.models_index)
+    old_documents = load_documents_index(root / legacy_index.documents_index).documents
+    tracked: set[str] = set()
+    new_entry = bootstrap._registered_model_entries(store_dir).get(FAQ_MODEL)
+    if new_entry is not None:
+        new_index = load_models_index(root / new_entry.models_index)
+        tracked = {document.name for document in load_documents_index(root / new_index.documents_index).documents}
+    for document in old_documents:
+        if document.name in tracked:
+            continue
+        doc_io.track(root, document.path, FAQ_MODEL, name=document.name, pythonpath=pythonpath)
+        changes.append(f"tracked {document.name} as {FAQ_MODEL}")
+
+    doc_io.remove_model_from(
+        root, LEGACY_FAQ_MODEL, pythonpath=pythonpath, untrack_documents=True
+    )
+    changes.append(f"removed {LEGACY_FAQ_MODEL}")
+    return changes
+
+
 def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
     rel = path.relative_to(desk_dir)
     parts = rel.parts
@@ -41,7 +100,7 @@ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
     if len(parts) == 2 and parts[0] == "steps":
         return models.StepDoc
     if len(parts) == 2 and parts[0] == "faq":
-        return models.FAQDoc
+        return models.DeskFAQDoc
     if len(parts) == 2 and parts[0] == "lifecycle":
         return None  # written and tracked by deskops.lifecycle.ensure_lifecycle_graph
     return None
@@ -165,6 +224,18 @@ class DeskCLI:
             except Exception:
                 pass
 
+        legacy_faq_pending = legacy_faq_model_pending(registered_entries)
+        if legacy_faq_pending and apply:
+            print(f"Migrating the deskops FAQ model from {LEGACY_FAQ_MODEL} to {FAQ_MODEL}...")
+            try:
+                for change in migrate_legacy_faq_model(root):
+                    print(f"- {change}")
+                registered_entries = bootstrap._registered_model_entries(store_dir)
+            except Exception as exc:
+                print(f"Error: {exc}")
+                return 1
+            legacy_faq_pending = False
+
         unregistered_models: list[str] = []
         copied_models: list[str] = []
         # A non-editable install has no owner store to inherit from; its directly
@@ -240,13 +311,17 @@ class DeskCLI:
             }
             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
 
-        if not legacy_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
+        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
             print("Desk is up to date.")
             return 0
 
         print("Desk divergence report:")
         if missing_store:
             print("- Missing store: .sldb")
+        if legacy_faq_pending:
+            print(
+                f"- Legacy FAQ model: {LEGACY_FAQ_MODEL} ({LEGACY_FAQ_MODEL_REF}) should be {FAQ_MODEL}."
+            )
         if legacy_pending and legacy is not None:
             print(
                 "- Legacy task lifecycle: "

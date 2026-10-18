@@ -1,0 +1,10 @@
+Task: task-rename-deskops-faqdoc
+Title: deskops' FAQ model gets its own name instead of `FAQDoc`
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rename-deskops-faqdoc.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

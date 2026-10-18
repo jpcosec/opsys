@@ -40,11 +40,11 @@ def test_desk_update_command(tmp_path: Path):
     if store_idx.exists():
         if store_idx.suffix == ".yaml":
             with open(store_idx) as f: data = yaml.safe_load(f)
-            data["models"] = [m for m in data["models"] if m["name"] != "FAQDoc"]
+            data["models"] = [m for m in data["models"] if m["name"] != "DeskFAQDoc"]
             with open(store_idx, "w") as f: yaml.safe_dump(data, f)
         else:
             with open(store_idx) as f: data = json.load(f)
-            data["models"] = [m for m in data["models"] if m["name"] != "FAQDoc"]
+            data["models"] = [m for m in data["models"] if m["name"] != "DeskFAQDoc"]
             with open(store_idx, "w") as f: json.dump(data, f)
 
     # Test update (dry run)
@@ -97,3 +97,79 @@ def test_desk_update_apply_on_a_fresh_repo_writes_the_lifecycle_graph(tmp_path: 
 
     assert cli.run(["desk", "update", "--root", str(tmp_path)]) == 0
     assert "Desk is up to date." in capsys.readouterr().out
+
+
+def _make_faq_model_legacy(root: Path) -> None:
+    """Rewrite the store as it looked when the deskops FAQ model was still `FAQDoc`."""
+    store = root / ".sldb"
+    index_path = store / "core" / "store_index.yaml"
+    index = yaml.safe_load(index_path.read_text(encoding="utf-8"))
+    entry = next(model for model in index["models"] if model["name"] == "DeskFAQDoc")
+    entry["name"] = "FAQDoc"
+    entry["model_ref"] = "deskops.models:FAQDoc"
+    entry["models_index"] = ".sldb/core/models/FAQDoc.yaml"
+    index_path.write_text(yaml.safe_dump(index, sort_keys=False), encoding="utf-8")
+
+    models_dir = store / "core" / "models"
+    (models_dir / "DeskFAQDoc.yaml").rename(models_dir / "FAQDoc.yaml")
+    model_index_path = models_dir / "FAQDoc.yaml"
+    model_index = yaml.safe_load(model_index_path.read_text(encoding="utf-8"))
+    model_index["name"] = "FAQDoc"
+    model_index["model_ref"] = "deskops.models:FAQDoc"
+    model_index["documents_index"] = ".sldb/core/documents/FAQDoc.yaml"
+    model_index["sections_index"] = ".sldb/runtime/sections/FAQDoc.yaml"
+    model_index_path.write_text(yaml.safe_dump(model_index, sort_keys=False), encoding="utf-8")
+
+    documents_dir = store / "core" / "documents"
+    (documents_dir / "DeskFAQDoc").rename(documents_dir / "FAQDoc")
+
+
+def test_desk_update_apply_migrates_the_legacy_faq_model(tmp_path: Path, capsys) -> None:
+    from deskops.cli.main import main
+    from sldb.api import describe_model
+
+    assert main(["init", str(tmp_path)]) == 0
+    assert main(
+        [
+            "add",
+            "faq-doc",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Legacy FAQ",
+            "--body",
+            "Question?\n\nAnswer.",
+        ]
+    ) == 0
+    faq_path = tmp_path / "desk" / "faq" / "faq-legacy-faq.md"
+    original = faq_path.read_bytes()
+    capsys.readouterr()
+
+    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+    capsys.readouterr()
+    _make_faq_model_legacy(tmp_path)
+
+    assert main(["desk", "update", "--root", str(tmp_path)]) == 1
+    assert "Legacy FAQ model" in capsys.readouterr().out
+
+    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+    capsys.readouterr()
+
+    names = {
+        model["name"]
+        for model in yaml.safe_load(
+            (tmp_path / ".sldb" / "core" / "store_index.yaml").read_text(encoding="utf-8")
+        )["models"]
+    }
+    assert "DeskFAQDoc" in names
+    assert "FAQDoc" not in names
+
+    documents = describe_model(
+        tmp_path / ".sldb",
+        "DeskFAQDoc",
+        pythonpath=str(Path(__file__).resolve().parents[1]),
+    ).documents
+    assert [document.name for document in documents] == ["faq-legacy-faq"]
+    assert faq_path.read_bytes() == original
+
+    assert main(["desk", "update", "--root", str(tmp_path)]) == 0
