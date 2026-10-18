@@ -59,3 +59,4 @@
 {"task_id": "task-next-guidance-without-active-task", "run_id": null, "run_dir": "runs/subagents/20261018-task-next-guidance-without-active-task", "session_sha256": null, "commit": null}
 {"task_id": "task-close-a-task-as-superseded", "run_id": null, "run_dir": "runs/subagents/20261018-task-close-a-task-as-superseded", "session_sha256": null, "commit": null}
 {"task_id": "task-canonical-atom-reference-metadata", "run_id": null, "run_dir": "runs/subagents/20261018-task-canonical-atom-reference-metadata", "session_sha256": null, "commit": null}
+{"task_id": "task-classify-large-docs-materialization", "run_id": null, "run_dir": "runs/subagents/20261018-task-classify-large-docs-materialization", "session_sha256": null, "commit": null}

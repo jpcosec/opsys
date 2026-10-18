@@ -1,9 +1,13 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-cli-mutation-testing-uses-sandbox-desk-roots
+  role: documents
+---
 # How To Test UX CLI
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md`
+Source atoms are declared in the YAML frontmatter.
 
 This is the canonical `deskops` guide for testing CLI user experience, not only CLI correctness.
 

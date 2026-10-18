@@ -1,13 +1,21 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-deskops-owns-workflow-not-document-infrastructure
+  role: documents
+- id: atom-routine-based-task-execution
+  role: documents
+- id: atom-phase-gates-prevent-agent-skipping
+  role: documents
+- id: atom-phases-are-dependency-layers-of-tasks
+  role: documents
+- id: atom-code-changes-close-with-tests-and-commit
+  role: documents
+---
 # deskops Quickstart
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
-- `desk/atoms/workflow-model/atom-routine-based-task-execution.md`
-- `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
-- `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
-- `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
+Source atoms are declared in the YAML frontmatter.
 
 Create and close your first desk task without learning SLDB internals first.
 

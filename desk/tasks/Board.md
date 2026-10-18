@@ -5,7 +5,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-classify-large-docs-materialization.md
 - desk/tasks/task-derived-atom-trace-index.md
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
 - desk/tasks/task-next-why-explanation.md
@@ -51,9 +50,6 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- Declare composed materialization metadata for large docs [draft] - Encode the audited inventory: every composed document declares `atoms:` frontmatter with role
-`documents`, and `deskops/data/faq.md` is enforced as a byte-identical projection of
-`docs/faq.md`.
 - Add a derived atom use-site index [draft] - Provide a read-only `atom_use_sites(root, atom_id)` helper that derives reverse traceability from
 `extract_declared_edges`, plus a test proving that no atom document is mutated.
 - Detect and clean global policy leaks in task files [draft] - Add a review-only `task-policy-leak` finding to `deskops drift check`, then remove the current

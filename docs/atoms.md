@@ -1,12 +1,19 @@
+---
+atoms:
+- id: atom-protoatoms-are-free-atoms-captured-before-typing
+  role: documents
+- id: atom-typing-a-protoatom-keeps-a-redirect-stub
+  role: documents
+- id: atom-atom-folder-axis-is-one-configurable-tag-namespace
+  role: documents
+- id: atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard
+  role: documents
+- id: atom-atom-lifecycle-is-complete-create-from-source-split-merge
+  role: documents
+---
 # Atoms
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/atom-protoatoms-are-free-atoms-captured-before-typing.md`
-- `desk/atoms/atom-typing-a-protoatom-keeps-a-redirect-stub.md`
-- `desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md`
-- `desk/atoms/atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard.md`
-- `desk/atoms/atom-atom-lifecycle-is-complete-create-from-source-split-merge.md`
+Source atoms are declared in the YAML frontmatter.
 
 ## What an atom is
 

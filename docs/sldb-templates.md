@@ -1,12 +1,19 @@
+---
+atoms:
+- id: atom-sldb-template-markers-declare-where-each-field-lives
+  role: documents
+- id: atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
+  role: documents
+- id: atom-instructional-text-makes-a-template-self-sufficient
+  role: documents
+- id: atom-templates-are-defined-as-model-strings
+  role: documents
+- id: atom-do-not-use-instructional-text-as-model-documentation
+  role: documents
+---
 # SLDB templates
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/atom-sldb-template-markers-declare-where-each-field-lives.md`
-- `desk/atoms/atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md`
-- `desk/atoms/atom-instructional-text-makes-a-template-self-sufficient.md`
-- `desk/atoms/atom-templates-are-defined-as-model-strings.md`
-- `desk/atoms/atom-do-not-use-instructional-text-as-model-documentation.md`
+Source atoms are declared in the YAML frontmatter.
 
 ## What a template is
 

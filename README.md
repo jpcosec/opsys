@@ -1,13 +1,21 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-deskops-owns-workflow-not-document-infrastructure
+  role: documents
+- id: atom-sldb-is-read-write-edit-surface
+  role: documents
+- id: atom-spec2viz-mirrors-sldb-for-diagrams
+  role: documents
+- id: atom-cli-should-match-spoken-workflow-language
+  role: documents
+- id: atom-desk-test-root-precedence-is-explicit
+  role: documents
+---
 # deskops
 
-This README is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
-- `desk/atoms/workflow-model/atom-sldb-is-read-write-edit-surface.md`
-- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
-- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
-- `desk/atoms/workflow-model/atom-desk-test-root-precedence-is-explicit.md`
+Source atoms are declared in the YAML frontmatter.
 
 Workflow-domain instance built on top of `sldb`.
 

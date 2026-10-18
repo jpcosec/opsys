@@ -1,13 +1,21 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-deskops-owns-workflow-not-document-infrastructure
+  role: documents
+- id: atom-cli-should-match-spoken-workflow-language
+  role: documents
+- id: atom-inbox-is-coordination-intake
+  role: documents
+- id: atom-drawers-feed-tasks-through-promotion
+  role: documents
+- id: atom-available-tasks-are-board-routed-work
+  role: documents
+---
 # deskops FAQ
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
-- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
-- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
-- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
-- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
+Source atoms are declared in the YAML frontmatter.
 
 This FAQ is the first-use orientation layer for `deskops`.
 

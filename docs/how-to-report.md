@@ -1,11 +1,17 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-reports-capture-evidence-and-next-decision-surface
+  role: documents
+- id: atom-reports-carry-minimal-reproduction-evidence
+  role: documents
+- id: atom-inbox-is-coordination-intake
+  role: documents
+---
 # How To Report
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/workflow-model/atom-reports-capture-evidence-and-next-decision-surface.md`
-- `desk/atoms/workflow-model/atom-reports-carry-minimal-reproduction-evidence.md`
-- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+Source atoms are declared in the YAML frontmatter.
 
 This is the canonical `deskops` guide for writing reports that are operationally useful across tools and repos.
 

@@ -1,19 +1,33 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-phase-gates-prevent-agent-skipping
+  role: documents
+- id: atom-code-changes-close-with-tests-and-commit
+  role: documents
+- id: atom-available-tasks-are-board-routed-work
+  role: documents
+- id: atom-drawers-feed-tasks-through-promotion
+  role: documents
+- id: atom-pills-carry-transitional-task-knowledge
+  role: documents
+- id: atom-pills-are-reusable-across-tasks
+  role: documents
+- id: atom-pills-end-as-atoms-docs-or-deletion
+  role: documents
+- id: atom-phases-are-dependency-layers-of-tasks
+  role: documents
+- id: atom-phase-closeout-reconciles-pills-and-next-work
+  role: documents
+- id: atom-tasks-enable-zero-context-subagents
+  role: documents
+- id: atom-task-board-phases
+  role: documents
+---
 # Workflow Policy Reference
 
-This reference is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
-- `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
-- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
-- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
-- `desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md`
-- `desk/atoms/workflow-model/atom-pills-are-reusable-across-tasks.md`
-- `desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md`
-- `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
-- `desk/atoms/workflow-model/atom-phase-closeout-reconciles-pills-and-next-work.md`
-- `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md`
-- `desk/atoms/workflow-model/atom-task-board-phases.md`
+Source atoms are declared in the YAML frontmatter.
 
 This reference summarizes the current workflow policy used by `deskops`.
 

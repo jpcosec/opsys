@@ -1,0 +1,17 @@
+ M .sldb/core/documents/TaskDoc/task-classify-large-docs-materialization.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M README.md
+ M desk/tasks/task-classify-large-docs-materialization.md
+ M deskops/data/faq.md
+ M deskops/graph/extract_docs.py
+ M docs/atoms.md
+ M docs/faq.md
+ M docs/how-to-report.md
+ M docs/how-to-test-ux-cli.md
+ M docs/knowledge-materialization-model.md
+ M docs/quickstart.md
+ M docs/sldb-templates.md
+ M docs/workflow-policy-reference.md
+?? runs/subagents/20261018-task-classify-large-docs-materialization/
+?? tests/test_large_doc_materialization.py

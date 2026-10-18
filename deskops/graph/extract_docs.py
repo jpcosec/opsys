@@ -99,6 +99,8 @@ def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
         for path in _glob(root / "docs", "**/*.md")
         if "diagrams" not in path.relative_to(root / "docs").parts
     )
+    candidates.extend((path, "doc") for path in _glob(root, "README.md"))
+    candidates.extend((path, "doc") for path in _glob(root / "deskops" / "data", "**/*.md"))
     candidates.extend(
         (path, "spec")
         for path in _glob(root / "spec", "**/*")

@@ -1,0 +1,7 @@
+Task: task-classify-large-docs-materialization
+Title: Declare composed materialization metadata for large docs
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

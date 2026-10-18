@@ -1,0 +1,411 @@
+diff --git a/README.md b/README.md
+index 57655d6..39fac81 100644
+--- a/README.md
++++ b/README.md
+@@ -1,13 +1,21 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-deskops-owns-workflow-not-document-infrastructure
++  role: documents
++- id: atom-sldb-is-read-write-edit-surface
++  role: documents
++- id: atom-spec2viz-mirrors-sldb-for-diagrams
++  role: documents
++- id: atom-cli-should-match-spoken-workflow-language
++  role: documents
++- id: atom-desk-test-root-precedence-is-explicit
++  role: documents
++---
+ # deskops
+ 
+-This README is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+-- `desk/atoms/workflow-model/atom-sldb-is-read-write-edit-surface.md`
+-- `desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md`
+-- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+-- `desk/atoms/workflow-model/atom-desk-test-root-precedence-is-explicit.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ Workflow-domain instance built on top of `sldb`.
+ 
+diff --git a/deskops/data/faq.md b/deskops/data/faq.md
+index 1b1bcc5..69f920d 100644
+--- a/deskops/data/faq.md
++++ b/deskops/data/faq.md
+@@ -1,13 +1,21 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-deskops-owns-workflow-not-document-infrastructure
++  role: documents
++- id: atom-cli-should-match-spoken-workflow-language
++  role: documents
++- id: atom-inbox-is-coordination-intake
++  role: documents
++- id: atom-drawers-feed-tasks-through-promotion
++  role: documents
++- id: atom-available-tasks-are-board-routed-work
++  role: documents
++---
+ # deskops FAQ
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+-- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+-- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+-- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+-- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ This FAQ is the first-use orientation layer for `deskops`.
+ 
+diff --git a/deskops/graph/extract_docs.py b/deskops/graph/extract_docs.py
+index b011b17..7160777 100644
+--- a/deskops/graph/extract_docs.py
++++ b/deskops/graph/extract_docs.py
+@@ -99,6 +99,8 @@ def _iter_doc_paths(root: Path) -> list[tuple[Path, str]]:
+         for path in _glob(root / "docs", "**/*.md")
+         if "diagrams" not in path.relative_to(root / "docs").parts
+     )
++    candidates.extend((path, "doc") for path in _glob(root, "README.md"))
++    candidates.extend((path, "doc") for path in _glob(root / "deskops" / "data", "**/*.md"))
+     candidates.extend(
+         (path, "spec")
+         for path in _glob(root / "spec", "**/*")
+diff --git a/docs/atoms.md b/docs/atoms.md
+index 21e4ebd..c421995 100644
+--- a/docs/atoms.md
++++ b/docs/atoms.md
+@@ -1,12 +1,19 @@
++---
++atoms:
++- id: atom-protoatoms-are-free-atoms-captured-before-typing
++  role: documents
++- id: atom-typing-a-protoatom-keeps-a-redirect-stub
++  role: documents
++- id: atom-atom-folder-axis-is-one-configurable-tag-namespace
++  role: documents
++- id: atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard
++  role: documents
++- id: atom-atom-lifecycle-is-complete-create-from-source-split-merge
++  role: documents
++---
+ # Atoms
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/atom-protoatoms-are-free-atoms-captured-before-typing.md`
+-- `desk/atoms/atom-typing-a-protoatom-keeps-a-redirect-stub.md`
+-- `desk/atoms/atom-atom-folder-axis-is-one-configurable-tag-namespace.md`
+-- `desk/atoms/atom-atom-lifecycle-includes-validate-and-delete-with-inbound-reference-guard.md`
+-- `desk/atoms/atom-atom-lifecycle-is-complete-create-from-source-split-merge.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ ## What an atom is
+ 
+diff --git a/docs/faq.md b/docs/faq.md
+index 1b1bcc5..69f920d 100644
+--- a/docs/faq.md
++++ b/docs/faq.md
+@@ -1,13 +1,21 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-deskops-owns-workflow-not-document-infrastructure
++  role: documents
++- id: atom-cli-should-match-spoken-workflow-language
++  role: documents
++- id: atom-inbox-is-coordination-intake
++  role: documents
++- id: atom-drawers-feed-tasks-through-promotion
++  role: documents
++- id: atom-available-tasks-are-board-routed-work
++  role: documents
++---
+ # deskops FAQ
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+-- `desk/atoms/workflow-model/atom-cli-should-match-spoken-workflow-language.md`
+-- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
+-- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+-- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ This FAQ is the first-use orientation layer for `deskops`.
+ 
+diff --git a/docs/how-to-report.md b/docs/how-to-report.md
+index 7f9b6c4..5427889 100644
+--- a/docs/how-to-report.md
++++ b/docs/how-to-report.md
+@@ -1,11 +1,17 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-reports-capture-evidence-and-next-decision-surface
++  role: documents
++- id: atom-reports-carry-minimal-reproduction-evidence
++  role: documents
++- id: atom-inbox-is-coordination-intake
++  role: documents
++---
+ # How To Report
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-reports-capture-evidence-and-next-decision-surface.md`
+-- `desk/atoms/workflow-model/atom-reports-carry-minimal-reproduction-evidence.md`
+-- `desk/atoms/workflow-model/atom-inbox-is-coordination-intake.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ This is the canonical `deskops` guide for writing reports that are operationally useful across tools and repos.
+ 
+diff --git a/docs/how-to-test-ux-cli.md b/docs/how-to-test-ux-cli.md
+index 247517f..9b1292e 100644
+--- a/docs/how-to-test-ux-cli.md
++++ b/docs/how-to-test-ux-cli.md
+@@ -1,9 +1,13 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-cli-mutation-testing-uses-sandbox-desk-roots
++  role: documents
++---
+ # How To Test UX CLI
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ This is the canonical `deskops` guide for testing CLI user experience, not only CLI correctness.
+ 
+diff --git a/docs/knowledge-materialization-model.md b/docs/knowledge-materialization-model.md
+index cd6ee19..f8573b0 100644
+--- a/docs/knowledge-materialization-model.md
++++ b/docs/knowledge-materialization-model.md
+@@ -1,12 +1,19 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-main-docs-are-composed-materializations
++  role: documents
++- id: atom-materializations-declare-source-atoms
++  role: documents
++- id: atom-docs-materialize-atoms-for-humans
++  role: documents
++- id: atom-specs-formalize-atoms-as-contracts
++  role: documents
++---
+ # Knowledge Materialization Model
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/knowledge-model/atom-main-docs-are-composed-materializations.md`
+-- `desk/atoms/knowledge-model/atom-materializations-declare-source-atoms.md`
+-- `desk/atoms/knowledge-model/atom-docs-materialize-atoms-for-humans.md`
+-- `desk/atoms/knowledge-model/atom-specs-formalize-atoms-as-contracts.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ This model describes how an ideal generic project organizes durable knowledge. It is not specific to this repository.
+ 
+diff --git a/docs/quickstart.md b/docs/quickstart.md
+index 18b0b48..dd8afda 100644
+--- a/docs/quickstart.md
++++ b/docs/quickstart.md
+@@ -1,13 +1,21 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-deskops-owns-workflow-not-document-infrastructure
++  role: documents
++- id: atom-routine-based-task-execution
++  role: documents
++- id: atom-phase-gates-prevent-agent-skipping
++  role: documents
++- id: atom-phases-are-dependency-layers-of-tasks
++  role: documents
++- id: atom-code-changes-close-with-tests-and-commit
++  role: documents
++---
+ # deskops Quickstart
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-deskops-owns-workflow-not-document-infrastructure.md`
+-- `desk/atoms/workflow-model/atom-routine-based-task-execution.md`
+-- `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+-- `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
+-- `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ Create and close your first desk task without learning SLDB internals first.
+ 
+diff --git a/docs/sldb-templates.md b/docs/sldb-templates.md
+index 4ffb899..603153d 100644
+--- a/docs/sldb-templates.md
++++ b/docs/sldb-templates.md
+@@ -1,12 +1,19 @@
++---
++atoms:
++- id: atom-sldb-template-markers-declare-where-each-field-lives
++  role: documents
++- id: atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text
++  role: documents
++- id: atom-instructional-text-makes-a-template-self-sufficient
++  role: documents
++- id: atom-templates-are-defined-as-model-strings
++  role: documents
++- id: atom-do-not-use-instructional-text-as-model-documentation
++  role: documents
++---
+ # SLDB templates
+ 
+-This guide is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/atom-sldb-template-markers-declare-where-each-field-lives.md`
+-- `desk/atoms/atom-sldb-extraction-reads-values-relative-to-the-template-s-own-text.md`
+-- `desk/atoms/atom-instructional-text-makes-a-template-self-sufficient.md`
+-- `desk/atoms/atom-templates-are-defined-as-model-strings.md`
+-- `desk/atoms/atom-do-not-use-instructional-text-as-model-documentation.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ ## What a template is
+ 
+diff --git a/docs/workflow-policy-reference.md b/docs/workflow-policy-reference.md
+index 00c8331..74fb227 100644
+--- a/docs/workflow-policy-reference.md
++++ b/docs/workflow-policy-reference.md
+@@ -1,19 +1,33 @@
++---
++atoms:
++- id: atom-docs-are-human-facing-atom-materializations
++  role: documents
++- id: atom-phase-gates-prevent-agent-skipping
++  role: documents
++- id: atom-code-changes-close-with-tests-and-commit
++  role: documents
++- id: atom-available-tasks-are-board-routed-work
++  role: documents
++- id: atom-drawers-feed-tasks-through-promotion
++  role: documents
++- id: atom-pills-carry-transitional-task-knowledge
++  role: documents
++- id: atom-pills-are-reusable-across-tasks
++  role: documents
++- id: atom-pills-end-as-atoms-docs-or-deletion
++  role: documents
++- id: atom-phases-are-dependency-layers-of-tasks
++  role: documents
++- id: atom-phase-closeout-reconciles-pills-and-next-work
++  role: documents
++- id: atom-tasks-enable-zero-context-subagents
++  role: documents
++- id: atom-task-board-phases
++  role: documents
++---
+ # Workflow Policy Reference
+ 
+-This reference is a human-facing materialization of these atoms:
+-
+-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
+-- `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
+-- `desk/atoms/workflow-model/atom-code-changes-close-with-tests-and-commit.md`
+-- `desk/atoms/workflow-model/atom-available-tasks-are-board-routed-work.md`
+-- `desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md`
+-- `desk/atoms/workflow-model/atom-pills-carry-transitional-task-knowledge.md`
+-- `desk/atoms/workflow-model/atom-pills-are-reusable-across-tasks.md`
+-- `desk/atoms/workflow-model/atom-pills-end-as-atoms-docs-or-deletion.md`
+-- `desk/atoms/workflow-model/atom-phases-are-dependency-layers-of-tasks.md`
+-- `desk/atoms/workflow-model/atom-phase-closeout-reconciles-pills-and-next-work.md`
+-- `desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md`
+-- `desk/atoms/workflow-model/atom-task-board-phases.md`
++Source atoms are declared in the YAML frontmatter.
+ 
+ This reference summarizes the current workflow policy used by `deskops`.
+ 
+diff --git a/tests/test_large_doc_materialization.py b/tests/test_large_doc_materialization.py
+new file mode 100644
+index 0000000..782de8b
+--- /dev/null
++++ b/tests/test_large_doc_materialization.py
+@@ -0,0 +1,61 @@
++from __future__ import annotations
++
++from pathlib import Path
++
++import yaml
++
++from deskops.graph.extract_edges import extract_declared_edges
++
++
++ROOT = Path(__file__).resolve().parents[1]
++
++COMPOSED_DOCS = (
++    "README.md",
++    "docs/atoms.md",
++    "docs/faq.md",
++    "docs/how-to-report.md",
++    "docs/how-to-test-ux-cli.md",
++    "docs/knowledge-materialization-model.md",
++    "docs/quickstart.md",
++    "docs/sldb-templates.md",
++    "docs/workflow-policy-reference.md",
++)
++
++ALLOWED_ROLES = {"references", "documents", "specifies", "constrains", "validates"}
++
++
++def _frontmatter(path: Path) -> dict:
++    text = path.read_text(encoding="utf-8")
++    assert text.startswith("---\n"), f"{path} has no YAML frontmatter"
++    _, rest = text.split("---\n", 1)
++    block, _body = rest.split("\n---", 1)
++    loaded = yaml.safe_load(block)
++    assert isinstance(loaded, dict), f"{path} frontmatter is not a mapping"
++    return loaded
++
++
++def test_composed_docs_declare_atom_frontmatter() -> None:
++    for relative_path in COMPOSED_DOCS:
++        atoms = _frontmatter(ROOT / relative_path).get("atoms")
++        assert isinstance(atoms, list) and atoms, f"{relative_path} declares no atoms"
++        for atom in atoms:
++            assert isinstance(atom, dict) and isinstance(atom.get("id"), str)
++            assert atom["id"].startswith("atom-")
++            assert atom.get("role") in ALLOWED_ROLES
++
++
++def test_packaged_faq_is_a_projection_of_the_docs_faq() -> None:
++    assert (ROOT / "deskops" / "data" / "faq.md").read_bytes() == (
++        ROOT / "docs" / "faq.md"
++    ).read_bytes()
++
++
++def test_composed_doc_frontmatter_emits_declared_atom_edges() -> None:
++    result = extract_declared_edges(ROOT)
++    edges = {(edge.source_id, edge.target_id, edge.role) for edge in result.edges}
++
++    assert (
++        "doc:README.md",
++        "atom:atom-docs-are-human-facing-atom-materializations",
++        "documents",
++    ) in edges

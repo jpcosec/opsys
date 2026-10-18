@@ -1,12 +1,19 @@
+---
+atoms:
+- id: atom-docs-are-human-facing-atom-materializations
+  role: documents
+- id: atom-main-docs-are-composed-materializations
+  role: documents
+- id: atom-materializations-declare-source-atoms
+  role: documents
+- id: atom-docs-materialize-atoms-for-humans
+  role: documents
+- id: atom-specs-formalize-atoms-as-contracts
+  role: documents
+---
 # Knowledge Materialization Model
 
-This guide is a human-facing materialization of these atoms:
-
-- `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
-- `desk/atoms/knowledge-model/atom-main-docs-are-composed-materializations.md`
-- `desk/atoms/knowledge-model/atom-materializations-declare-source-atoms.md`
-- `desk/atoms/knowledge-model/atom-docs-materialize-atoms-for-humans.md`
-- `desk/atoms/knowledge-model/atom-specs-formalize-atoms-as-contracts.md`
+Source atoms are declared in the YAML frontmatter.
 
 This model describes how an ideal generic project organizes durable knowledge. It is not specific to this repository.
 
