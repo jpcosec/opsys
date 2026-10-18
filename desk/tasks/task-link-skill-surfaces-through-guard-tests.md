@@ -76,7 +76,7 @@ _Outline the expected implementation route or affected surface._
      `.pi/skills/use-deskops/SKILL.md`;
    - the same repo without the materialization/atom link still reports
      `missing_changed_file_link`;
-   - a changed `deskops/foo.py` does not use this evidence path.
+   - a changed Python module under deskops/ does not use this evidence path.
 
 ## Validation
 

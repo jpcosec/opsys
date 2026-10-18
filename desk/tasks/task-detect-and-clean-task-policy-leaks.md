@@ -64,7 +64,7 @@ _Outline the expected implementation route or affected surface._
    `desk/tasks/task-init-repairs-a-broken-owner-link.md` ("The supervisor promotes ..." and
    "Closing always requires ..."). Keep the task-specific reproduction and done-when.
 6. Add `tests/test_task_policy_leaks.py`: a leaked sentence is found once; a task-local validation
-   line such as `pytest tests/test_x.py -q` is not found; frontmatter is ignored; the scanner does
+   line such as `a task-specific pytest command` is not found; frontmatter is ignored; the scanner does
    not modify task bytes.
 
 ## Validation
