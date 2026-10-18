@@ -1,0 +1,4 @@
+ M deskops/operations.py
+?? deskops/services/atoms.py
+?? runs/subagents/20261018-task-rw-f3-atoms-service/
+?? tests/test_atoms_transactions.py

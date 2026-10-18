@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f3-atoms-service.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Atom operations move to a service; merge and split roll back fully [draft] - `deskops/services/atoms.py` (`AtomsService(root)`) owns atom create, edit, split, merge, retarget and delete; every write goes through doc_io; merge and split run inside one `DocTransaction` each; operations.py keeps only wrappers.

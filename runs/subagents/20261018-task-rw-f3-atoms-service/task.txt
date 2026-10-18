@@ -1,0 +1,11 @@
+Task: task-rw-f3-atoms-service
+Title: Atom operations move to a service; merge and split roll back fully
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f3-atoms-service.md
+Effective pills:
+- desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md
+- desk/contexts/pill-012-create-operations-transactional-rollback.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
