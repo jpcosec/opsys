@@ -12,7 +12,7 @@ depends_on: []
 pills: []
 files:
 - deskops/models/ritual.py
-- tests/fixtures/model_contract_hashes.json
+- tests/test_model_contract_snapshot.py
 - desk/rituals/phase.md
 task_type: implementation
 inherits_from: []
@@ -38,7 +38,7 @@ RitualDoc.steps is plain text, `sldb edges unresolved --local` reports no Ritual
 
 _State what is in scope and what is out of scope._
 
-In scope: deskops/models/ritual.py (remove steps from __containment__; keep or drop the `step_details` composition according to what it renders, and check for StepDoc references across deskops/ and tests/), the RitualDoc contract hash in tests/fixtures/model_contract_hashes.json, desk/rituals/phase.md (the step with ": " must stay a string after re-rendering through RitualDoc, through the CLI or sldb), and the migration of this repo's store. Out of scope: the StepDoc model itself.
+In scope: deskops/models/ritual.py (remove steps from __containment__; keep or drop the `step_details` composition according to what it renders, and check for StepDoc references across deskops/ and tests/), the RitualDoc contract hash in the model contract snapshot fixture (tests/test_model_contract_snapshot.py reads it), desk/rituals/phase.md (the step with ": " must stay a string after re-rendering through RitualDoc, through the CLI or sldb), and the migration of this repo's store. Out of scope: the StepDoc model itself.
 
 ## Implementation Path
 

@@ -1,12 +1,12 @@
 ---
 source_atoms:
-- desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md
-- desk/atoms/workflow-model/atom-rendered-diagrams-are-projections.md
-- desk/atoms/workflow-model/atom-spec2viz-mirrors-sldb-for-diagrams.md
-- desk/atoms/workflow-model/atom-clean-agents-start-from-minimum-workflow-set.md
-- desk/atoms/workflow-model/atom-first-safe-action-follows-read-route.md
-- desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md
-- desk/atoms/workflow-model/atom-tasks-enable-zero-context-subagents.md
+- atom-docs-are-human-facing-atom-materializations
+- atom-rendered-diagrams-are-projections
+- atom-spec2viz-mirrors-sldb-for-diagrams
+- atom-clean-agents-start-from-minimum-workflow-set
+- atom-first-safe-action-follows-read-route
+- atom-phase-gates-prevent-agent-skipping
+- atom-tasks-enable-zero-context-subagents
 provenance: docs/diagrams/process/current-agent-workflow-and-automation.mmd
 ---
 
