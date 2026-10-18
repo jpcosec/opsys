@@ -98,7 +98,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
             continue
         text = path.read_text(encoding="utf-8")
         relative_path = source_node.path
-        record = True if _is_record_document(text) else None
+        record = True if _is_record_document(text) or _is_closed_issue(source_node.kind, text) else None
         tracked = store.tracked.get(relative_path) if store is not None else None
         # The sldb edge index owns the declared reference and containment fields of
         # tracked documents. The local frontmatter reader keeps only the fields the
@@ -319,9 +319,10 @@ def _store_unresolved_targets(
             continue
 
         source_file = project_root / source_node.path
+        source_text = source_file.read_text(encoding="utf-8") if source_file.is_file() else ""
         record = (
             True
-            if source_file.is_file() and _is_record_document(source_file.read_text(encoding="utf-8"))
+            if source_text and (_is_record_document(source_text) or _is_closed_issue(source_node.kind, source_text))
             else None
         )
         findings.append(
@@ -399,6 +400,15 @@ def _kind_for_model_name(model_name: str) -> str | None:
 
 def _is_drawer_task_path(relative_path: str) -> bool:
     return Path(relative_path).parts[:3] == ("desk", "drawer", "tasks")
+
+
+def _is_closed_issue(kind: str | None, text: str) -> bool:
+    """Whether an issue is closed: a closed issue is history, like a ``record: true`` document."""
+    if kind != "issue":
+        return False
+    from deskops.services.issues import issue_status
+
+    return issue_status(text) == "closed"
 
 
 def _is_record_document(text: str) -> bool:

@@ -1,0 +1,7 @@
+Task: task-closed-issues-count-as-records-in-graph-missing
+Title: A closed issue counts as an archived record in `graph missing`
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

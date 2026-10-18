@@ -1,0 +1,81 @@
+diff --git a/deskops/graph/extract_edges.py b/deskops/graph/extract_edges.py
+index 3c37899..194dbd1 100644
+--- a/deskops/graph/extract_edges.py
++++ b/deskops/graph/extract_edges.py
+@@ -98,7 +98,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
+             continue
+         text = path.read_text(encoding="utf-8")
+         relative_path = source_node.path
+-        record = True if _is_record_document(text) else None
++        record = True if _is_record_document(text) or _is_closed_issue(source_node.kind, text) else None
+         tracked = store.tracked.get(relative_path) if store is not None else None
+         # The sldb edge index owns the declared reference and containment fields of
+         # tracked documents. The local frontmatter reader keeps only the fields the
+@@ -319,9 +319,10 @@ def _store_unresolved_targets(
+             continue
+ 
+         source_file = project_root / source_node.path
++        source_text = source_file.read_text(encoding="utf-8") if source_file.is_file() else ""
+         record = (
+             True
+-            if source_file.is_file() and _is_record_document(source_file.read_text(encoding="utf-8"))
++            if source_text and (_is_record_document(source_text) or _is_closed_issue(source_node.kind, source_text))
+             else None
+         )
+         findings.append(
+@@ -401,6 +402,15 @@ def _is_drawer_task_path(relative_path: str) -> bool:
+     return Path(relative_path).parts[:3] == ("desk", "drawer", "tasks")
+ 
+ 
++def _is_closed_issue(kind: str | None, text: str) -> bool:
++    """Whether an issue is closed: a closed issue is history, like a ``record: true`` document."""
++    if kind != "issue":
++        return False
++    from deskops.services.issues import issue_status
++
++    return issue_status(text) == "closed"
++
++
+ def _is_record_document(text: str) -> bool:
+     """Whether the document carries the archived-record marker in its frontmatter."""
+     if not text.startswith("---\n"):
+diff --git a/tests/test_graph_cli.py b/tests/test_graph_cli.py
+index 7688513..bd29844 100644
+--- a/tests/test_graph_cli.py
++++ b/tests/test_graph_cli.py
+@@ -2,6 +2,8 @@ from __future__ import annotations
+ 
+ from pathlib import Path
+ 
++import pytest
++
+ from deskops.cli.main import main
+ from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
+ from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+@@ -325,3 +327,26 @@ def test_graph_missing_surfaces_an_import_failure_instead_of_masking_it(tmp_path
+     message = capsys.readouterr().err
+     assert "GraphMissingCheckError" not in message
+     assert "broken module" in message
++
++
++@pytest.mark.parametrize("status, expected", [("closed", 0), ("open", 1)])
++def test_graph_missing_treats_a_closed_issue_as_a_record(tmp_path: Path, capsys, status: str, expected: int) -> None:
++    write(
++        tmp_path / "desk/drawer/issues/issue-old.md",
++        f"""# Old issue
++
++## Status
++
++{status}
++
++## Resolution
++
++Refs: desk/tasks/task-gone.md
++""",
++    )
++
++    result = main(["graph", "missing", "--root", str(tmp_path)])
++    out = capsys.readouterr().out
++
++    assert result == expected
++    assert "task-gone.md" in out

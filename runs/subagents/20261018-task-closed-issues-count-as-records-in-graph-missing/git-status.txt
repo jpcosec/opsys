@@ -1,0 +1,7 @@
+ M .sldb/core/documents/TaskDoc/task-closed-issues-count-as-records-in-graph-missing.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-closed-issues-count-as-records-in-graph-missing.md
+ M deskops/graph/extract_edges.py
+ M tests/test_graph_cli.py
+?? runs/subagents/20261018-task-closed-issues-count-as-records-in-graph-missing/

@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from deskops.cli.main import main
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
@@ -325,3 +327,26 @@ def test_graph_missing_surfaces_an_import_failure_instead_of_masking_it(tmp_path
     message = capsys.readouterr().err
     assert "GraphMissingCheckError" not in message
     assert "broken module" in message
+
+
+@pytest.mark.parametrize("status, expected", [("closed", 0), ("open", 1)])
+def test_graph_missing_treats_a_closed_issue_as_a_record(tmp_path: Path, capsys, status: str, expected: int) -> None:
+    write(
+        tmp_path / "desk/drawer/issues/issue-old.md",
+        f"""# Old issue
+
+## Status
+
+{status}
+
+## Resolution
+
+Refs: desk/tasks/task-gone.md
+""",
+    )
+
+    result = main(["graph", "missing", "--root", str(tmp_path)])
+    out = capsys.readouterr().out
+
+    assert result == expected
+    assert "task-gone.md" in out
