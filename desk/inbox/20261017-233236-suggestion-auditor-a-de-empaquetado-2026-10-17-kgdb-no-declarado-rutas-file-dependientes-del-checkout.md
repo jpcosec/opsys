@@ -8,9 +8,11 @@ target_project: deskops
 # ISO 8601 timestamp
 created_at: '2026-10-17T23:32:36'
 # open | closed
-status: open
+status: closed
 # project identity that acknowledged the note
+acknowledged_by: deskops
 # ISO 8601 timestamp, set when acknowledged
+acknowledged_at: '2026-10-18T01:54:33'
 ---
 
 # Auditoría de empaquetado 2026-10-17: kgdb no declarado, rutas __file__ dependientes del checkout
