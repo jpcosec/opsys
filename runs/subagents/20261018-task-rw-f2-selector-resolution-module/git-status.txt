@@ -1,0 +1,4 @@
+ M deskops/operations.py
+?? deskops/desk_paths.py
+?? runs/subagents/20261018-task-rw-f2-selector-resolution-module/
+?? tests/test_desk_paths.py

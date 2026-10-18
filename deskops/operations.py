@@ -36,6 +36,7 @@ from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
+from deskops.desk_paths import resolve_selector
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
@@ -2142,58 +2143,27 @@ class DeskopsOperations:
         return id_pattern.replace("{slug}", "*") + ".md"
 
     def _resolve_glob(self, directory: Path, doc_id: str) -> Path:
-        exact_match = directory / f"{doc_id}.md"
-        if exact_match.exists():
-            return exact_match
-        matches = sorted(directory.glob(f"{doc_id}*.md"))
-        if not matches:
-            raise FileNotFoundError(f"No file found for id '{doc_id}' in {directory}")
-        if len(matches) > 1:
-            raise ValueError(
-                f"Ambiguous id '{doc_id}' in {directory}: {', '.join(p.stem for p in matches)}"
-            )
-        return matches[0]
+        return resolve_selector(self.desk_root, [directory], doc_id, f"{doc_id}*.md", "task", recursive=False)
 
     def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:
-        if not selector or not str(selector).strip():
-            raise ValueError(f"Empty or whitespace-only selector provided for {artifact_id}")
-
-        pattern = self._artifact_glob_pattern(artifact_id)
-        candidates = []
-        for d in directories:
-            if d.exists():
-                candidates.extend(sorted(d.rglob(pattern)))
-        
-        exact = [path for path in candidates if selector in {path.name, path.stem}]
-        if exact:
-            if len(exact) == 1:
-                return exact[0]
-            relative = ", ".join(str(p.relative_to(self.desk_root)) for p in exact)
-            raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {relative}")
-
-        prefix = [path for path in candidates if path.name.startswith(selector) or path.stem.startswith(selector)]
-        if not prefix:
-            dirs_str = ", ".join(str(d.relative_to(self.desk_root)) for d in directories)
-            raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}' in {dirs_str}")
-        if len(prefix) == 1:
-            return prefix[0]
-        relative = ", ".join(str(p.relative_to(self.desk_root)) for p in prefix)
-        raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {relative}")
+        return resolve_selector(
+            self.desk_root,
+            directories,
+            selector,
+            self._artifact_glob_pattern(artifact_id),
+            artifact_id,
+            recursive=True,
+        )
 
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
-        if not selector or not str(selector).strip():
-            raise ValueError(f"Empty or whitespace-only selector provided for {artifact_id}")
-
-        pattern = self._artifact_glob_pattern(artifact_id)
-        candidates = sorted(directory.rglob(pattern))
-        exact = [path for path in candidates if selector in {path.name, path.stem}]
-        if exact:
-            return self._one_artifact_match(artifact_id, directory, selector, exact)
-
-        prefix = [path for path in candidates if path.name.startswith(selector) or path.stem.startswith(selector)]
-        if not prefix:
-            raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}' in {directory}")
-        return self._one_artifact_match(artifact_id, directory, selector, prefix)
+        return resolve_selector(
+            self.desk_root,
+            [directory],
+            selector,
+            self._artifact_glob_pattern(artifact_id),
+            artifact_id,
+            recursive=True,
+        )
 
     def _registered_repositories(self) -> list[dict[str, Any]]:
         registry_dir = self.desk_root / "registry"
@@ -2270,12 +2240,6 @@ class DeskopsOperations:
             "status": str(payload.get("status") or legacy_status),
             "title": title,
         }
-
-    def _one_artifact_match(self, artifact_id: str, directory: Path, selector: str, matches: list[Path]) -> Path:
-        if len(matches) == 1:
-            return matches[0]
-        relative = ", ".join(str(path.relative_to(directory)) for path in matches)
-        raise ValueError(f"Ambiguous {artifact_id} selector '{selector}' in {directory}: {relative}")
 
     def _editable_artifact(self, subject: str, selector: str) -> tuple[type[Any], Path, str]:
         if subject == "task":
