@@ -10,7 +10,6 @@ tasks:
 - desk/tasks/task-classify-large-docs-materialization.md
 - desk/tasks/task-derived-atom-trace-index.md
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
-- desk/tasks/task-next-guidance-without-active-task.md
 - desk/tasks/task-next-why-explanation.md
 # List of pill-xxx paths
 pills:
@@ -63,7 +62,5 @@ a hard closeout gate.
 `extract_declared_edges`, plus a test proving that no atom document is mutated.
 - Detect and clean global policy leaks in task files [draft] - Add a review-only `task-policy-leak` finding to `deskops drift check`, then remove the current
 leak from the active task set without changing any global policy text.
-- Make deskops next guide the user when no board task is routable [draft] - `deskops next` returns a structured, non-mutating guidance report for zero or multiple board
-tasks and exits 0, while preserving the current report for a single task or an explicit selector.
 - Add --why to deskops next [draft] - `deskops next --why` prints a `Why:` section that names the selection route, the matched workflow
 state, the merged pill sources, and the source files, without mutating the desk.

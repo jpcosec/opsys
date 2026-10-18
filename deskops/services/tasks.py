@@ -94,6 +94,40 @@ class TasksService:
 
     def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
         board_path = self.desk_root / "tasks" / "Board.md"
+        board_ref = str(board_path.relative_to(self.root))
+        if not task_selector:
+            task_refs = list(self._read_doc(board_path, BoardDoc).get("tasks") or [])
+            if not task_refs:
+                return {
+                    "kind": "no_board_task",
+                    "board": board_ref,
+                    "suggested_commands": [
+                        "deskops list tasks --root .",
+                        "deskops promote inbox-to-drawer-task <selector> --root .",
+                        'deskops add task --root . --title "..." ...',
+                    ],
+                }
+            if len(task_refs) > 1:
+                tasks = []
+                for task_ref in task_refs:
+                    path = self.root / str(task_ref)
+                    payload = self._read_doc(path, TaskDoc)
+                    tasks.append(
+                        {
+                            "id": str(payload.get("id") or path.stem),
+                            "status": str(payload.get("status") or ""),
+                            "title": str(payload.get("title") or ""),
+                        }
+                    )
+                return {
+                    "kind": "multiple_board_tasks",
+                    "board": board_ref,
+                    "tasks": tasks,
+                    "suggested_commands": [
+                        "deskops next <task-id> --root .",
+                        "deskops list tasks --root .",
+                    ],
+                }
         task_path = self._next_task_path(task_selector, board_path)
         payload = self._resolve_task_payload(task_path.stem)
         spec = load_task_lifecycle_spec(self._ops.spec_root)

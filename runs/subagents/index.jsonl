@@ -56,3 +56,4 @@
 {"task_id": "task-message-delivery-resolves-unregistered-desks", "run_id": null, "run_dir": "runs/subagents/20261018-task-message-delivery-resolves-unregistered-desks", "session_sha256": null, "commit": null}
 {"task_id": "task-link-skill-surfaces-through-guard-tests", "run_id": null, "run_dir": "runs/subagents/20261018-task-link-skill-surfaces-through-guard-tests", "session_sha256": null, "commit": null}
 {"task_id": "task-classify-cli-grammar", "run_id": null, "run_dir": "runs/subagents/20261018-task-classify-cli-grammar", "session_sha256": null, "commit": null}
+{"task_id": "task-next-guidance-without-active-task", "run_id": null, "run_dir": "runs/subagents/20261018-task-next-guidance-without-active-task", "session_sha256": null, "commit": null}

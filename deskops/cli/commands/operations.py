@@ -166,6 +166,24 @@ class OperationsCLI:
         return 1
 
     def _print_next_action_report(self, report: dict[str, Any]) -> None:
+        kind = report.get("kind")
+        if kind == "no_board_task":
+            print("Next:")
+            print(f"No active task is routed by {report['board']}.")
+            print("Suggested commands:")
+            for command in report["suggested_commands"]:
+                print(command)
+            return
+        if kind == "multiple_board_tasks":
+            print("Next:")
+            print(f"Multiple active tasks are routed by {report['board']}; pass a task selector.")
+            print("Routed tasks:")
+            for task in report["tasks"]:
+                print(f"- {task['id']} | {task['status']} | {task['title']}")
+            print("Suggested commands:")
+            for command in report["suggested_commands"]:
+                print(command)
+            return
         print(f"Task: {report['task']['id']}")
         print(f"Title: {report['task']['title']}")
         print(f"Status: {report['task']['status']}")

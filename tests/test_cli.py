@@ -811,6 +811,68 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
     assert task_path.read_text(encoding="utf-8") == before
 
 
+def test_next_without_selector_guides_when_board_routes_no_tasks(tmp_path: Path, capsys) -> None:
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+    board_path = tmp_path / "desk" / "tasks" / "Board.md"
+    before = board_path.read_bytes()
+
+    result = main(["next", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "Next:" in output.out
+    assert "No active task is routed by desk/tasks/Board.md." in output.out
+    assert "deskops list tasks --root ." in output.out
+    assert "deskops promote inbox-to-drawer-task <selector> --root ." in output.out
+    assert 'deskops add task --root . --title "..." ...' in output.out
+    assert board_path.read_bytes() == before
+
+
+def test_next_without_selector_lists_multiple_board_tasks(tmp_path: Path, capsys) -> None:
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+    for title in ("First routed task", "Second routed task"):
+        created = main(
+            [
+                "add",
+                "task",
+                "--root",
+                str(tmp_path),
+                "--title",
+                title,
+                "--goal",
+                "Exercise multi-task guidance.",
+                "--scope",
+                "Read-only next guidance.",
+                "--implementation-path",
+                "No implementation.",
+                "--done-when",
+                "Next guidance names both tasks.",
+                "--validation",
+                "pytest",
+            ]
+        )
+        assert created == 0
+    capsys.readouterr()
+    board_path = tmp_path / "desk" / "tasks" / "Board.md"
+    task_paths = sorted((tmp_path / "desk" / "tasks").glob("task-*.md"))
+    assert len(task_paths) == 2
+    before = {path: path.read_bytes() for path in [board_path, *task_paths]}
+
+    result = main(["next", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert result == 0
+    assert "Next:" in output.out
+    assert "Multiple active tasks are routed by desk/tasks/Board.md; pass a task selector." in output.out
+    assert "task-first-routed-task" in output.out
+    assert "task-second-routed-task" in output.out
+    assert "deskops next <task-id> --root ." in output.out
+    assert "deskops list tasks --root ." in output.out
+    assert {path: path.read_bytes() for path in before} == before
+
+
 def test_next_diagram_renders_workflow_graph_from_spec(capsys) -> None:
     result = main(["next", "--diagram"])
     output = capsys.readouterr()

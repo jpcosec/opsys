@@ -1,0 +1,7 @@
+Task: task-next-guidance-without-active-task
+Title: Make deskops next guide the user when no board task is routable
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
