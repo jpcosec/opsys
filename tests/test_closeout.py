@@ -569,3 +569,22 @@ def test_closeout_verify_tolerates_multi_document_yaml(tmp_path: Path) -> None:
     assert result.returncode == 0, result.stderr
     report = json.loads(result.stdout)
     assert report["ok"] is True
+
+
+@pytest.mark.parametrize("committed", [False, True], ids=["new-task", "committed-task"])
+def test_closeout_commit_accepts_a_directory_holding_the_task(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], committed: bool
+) -> None:
+    root = _make_repo(tmp_path)
+    _write_task(root, references=[], files=[])
+    if committed:
+        _git(root, "add", "desk/tasks/task-x.md")
+        _git(root, "commit", "-q", "-m", "add task")
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+
+    rc = _closeout_main(root, "--no-run", "--reason", "no subagent ran", "--paths", "desk/tasks", "feature.py")
+
+    assert rc == 0, capsys.readouterr().out
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+    assert _git(root, "status", "--porcelain") == ""
+    assert "feature.py" in _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()

@@ -1,0 +1,80 @@
+diff --git a/deskops/services/closure.py b/deskops/services/closure.py
+index 62a4525..1861a82 100644
+--- a/deskops/services/closure.py
++++ b/deskops/services/closure.py
+@@ -273,10 +273,16 @@ class ClosureService:
+                     add_commit_path(".sldb")
+ 
+                 if task_bytes is not None:
+-                    tracked = self._git(
+-                        "ls-files", "--error-unmatch", "--", task_rel, check=False
+-                    )
+-                    if tracked:
++                    # Committed means present in HEAD, not merely staged: a directory in
++                    # --paths can stage a task created in this cycle, and HEAD never had it.
++                    in_head = subprocess.run(
++                        ["git", "cat-file", "-e", f"HEAD:{task_rel}"],
++                        cwd=self.root,
++                        capture_output=True,
++                    ).returncode == 0
++                    if not in_head:
++                        self._git("rm", "--cached", "-q", "--ignore-unmatch", "--", task_rel, check=False)
++                    if in_head:
+                         removed = subprocess.run(
+                             ["git", "rm", "-f", "--", task_rel],
+                             cwd=self.root,
+@@ -297,6 +303,12 @@ class ClosureService:
+                     "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)", check=False
+                 )
+                 pathspec = list(dict.fromkeys(commit_paths)) if explicit_paths else None
++                if pathspec:
++                    # A path git knows neither in the index nor in HEAD (a directory whose
++                    # only file was the never-committed task) would fail the whole commit.
++                    pathspec = [path for path in pathspec if self._git_knows(path)]
++                    if not pathspec:
++                        raise ClosureCommitError("None of the --paths match a file git knows; nothing to commit.")
+                 if head_task_id == task_id:
+                     argv = ["commit", "--amend", "--no-edit"]
+                 else:
+@@ -405,6 +417,14 @@ class ClosureService:
+         except ValueError:
+             return False
+ 
++    def _git_knows(self, path: str) -> bool:
++        """Whether `path` matches anything in the index or in HEAD."""
++        for argv in (["ls-files", "--", path], ["ls-tree", "-r", "--name-only", "HEAD", "--", path]):
++            listed = subprocess.run(["git", *argv], cwd=self.root, capture_output=True, text=True)
++            if listed.returncode == 0 and listed.stdout.strip():
++                return True
++        return False
++
+     def _git(self, *argv: str, check: bool = True) -> str:
+         result = subprocess.run(["git", *argv], cwd=self.root, capture_output=True, text=True)
+         if check and result.returncode != 0:
+diff --git a/tests/test_closeout.py b/tests/test_closeout.py
+index 2bf28bc..627965a 100644
+--- a/tests/test_closeout.py
++++ b/tests/test_closeout.py
+@@ -569,3 +569,22 @@ def test_closeout_verify_tolerates_multi_document_yaml(tmp_path: Path) -> None:
+     assert result.returncode == 0, result.stderr
+     report = json.loads(result.stdout)
+     assert report["ok"] is True
++
++
++@pytest.mark.parametrize("committed", [False, True], ids=["new-task", "committed-task"])
++def test_closeout_commit_accepts_a_directory_holding_the_task(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str], committed: bool
++) -> None:
++    root = _make_repo(tmp_path)
++    _write_task(root, references=[], files=[])
++    if committed:
++        _git(root, "add", "desk/tasks/task-x.md")
++        _git(root, "commit", "-q", "-m", "add task")
++    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
++
++    rc = _closeout_main(root, "--no-run", "--reason", "no subagent ran", "--paths", "desk/tasks", "feature.py")
++
++    assert rc == 0, capsys.readouterr().out
++    assert not (root / "desk" / "tasks" / "task-x.md").exists()
++    assert _git(root, "status", "--porcelain") == ""
++    assert "feature.py" in _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()

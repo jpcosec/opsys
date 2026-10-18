@@ -273,10 +273,16 @@ class ClosureService:
                     add_commit_path(".sldb")
 
                 if task_bytes is not None:
-                    tracked = self._git(
-                        "ls-files", "--error-unmatch", "--", task_rel, check=False
-                    )
-                    if tracked:
+                    # Committed means present in HEAD, not merely staged: a directory in
+                    # --paths can stage a task created in this cycle, and HEAD never had it.
+                    in_head = subprocess.run(
+                        ["git", "cat-file", "-e", f"HEAD:{task_rel}"],
+                        cwd=self.root,
+                        capture_output=True,
+                    ).returncode == 0
+                    if not in_head:
+                        self._git("rm", "--cached", "-q", "--ignore-unmatch", "--", task_rel, check=False)
+                    if in_head:
                         removed = subprocess.run(
                             ["git", "rm", "-f", "--", task_rel],
                             cwd=self.root,
@@ -297,6 +303,12 @@ class ClosureService:
                     "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)", check=False
                 )
                 pathspec = list(dict.fromkeys(commit_paths)) if explicit_paths else None
+                if pathspec:
+                    # A path git knows neither in the index nor in HEAD (a directory whose
+                    # only file was the never-committed task) would fail the whole commit.
+                    pathspec = [path for path in pathspec if self._git_knows(path)]
+                    if not pathspec:
+                        raise ClosureCommitError("None of the --paths match a file git knows; nothing to commit.")
                 if head_task_id == task_id:
                     argv = ["commit", "--amend", "--no-edit"]
                 else:
@@ -404,6 +416,14 @@ class ClosureService:
             return True
         except ValueError:
             return False
+
+    def _git_knows(self, path: str) -> bool:
+        """Whether `path` matches anything in the index or in HEAD."""
+        for argv in (["ls-files", "--", path], ["ls-tree", "-r", "--name-only", "HEAD", "--", path]):
+            listed = subprocess.run(["git", *argv], cwd=self.root, capture_output=True, text=True)
+            if listed.returncode == 0 and listed.stdout.strip():
+                return True
+        return False
 
     def _git(self, *argv: str, check: bool = True) -> str:
         result = subprocess.run(["git", *argv], cwd=self.root, capture_output=True, text=True)

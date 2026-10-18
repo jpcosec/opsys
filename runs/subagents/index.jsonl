@@ -48,3 +48,4 @@
 {"task_id": "task-desk-update-skips-copied-check-in-the-owner-store", "run_id": null, "run_dir": "runs/subagents/20261018-task-desk-update-skips-copied-check-in-the-owner-store", "session_sha256": null, "commit": "7f5fef7750cd2faaf1d1ac87b3b57c8e7bb0c67f"}
 {"task_id": "task-closeout-commit-leaves-the-run-index-clean", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-commit-leaves-the-run-index-clean", "session_sha256": null, "commit": null}
 {"task_id": "task-ritual-steps-are-prose", "run_id": null, "run_dir": "runs/subagents/20261018-task-ritual-steps-are-prose", "session_sha256": null, "commit": null}
+{"task_id": "task-closeout-commit-accepts-directory-paths", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-commit-accepts-directory-paths", "session_sha256": null, "commit": null}

@@ -1,0 +1,9 @@
+ M .sldb/core/documents/TaskDoc/task-closeout-commit-accepts-directory-paths.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-closeout-commit-accepts-directory-paths.md
+ M deskops/services/closure.py
+ M tests/test_closeout.py
+?? runs/subagents/20261018-task-closeout-commit-accepts-directory-paths/
+?? tests/test_diagram_projections.py
+?? tests/test_extension_points.py
