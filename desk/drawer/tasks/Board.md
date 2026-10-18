@@ -31,7 +31,6 @@ Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
 - `task-rw-package-runs-outside-editable-install` — no `Path(__file__)` checkout paths; spec/ packaged; runs from a wheel (after F6)
-- `task-init-links-federated-models-instead-of-copying` — init links deskops models from their owner store (sldb published inherited models on 2026-10-18)
 - `task-rename-deskops-faqdoc` — deskops FAQ model gets its own name; sldb has its own FAQDoc (reported by sldb-04)
 
 ### Deskops rewrite plan (2026-10-16)
@@ -48,7 +47,6 @@ F1:
 
 F2:
 
-- `task-rw-f2-selector-resolution-module` — One module resolves every desk selector
 - `task-rw-f2-typed-errors-and-exit-codes` — Typed errors, a fixed exit-code table, and no swallowed tracebacks
 - `task-rw-f2-transactional-doc-io` — One doc_io module talks to sldb through its public API, transactionally
 
@@ -63,7 +61,6 @@ F3:
 
 F4:
 
-- `task-rw-f4-request-sldb-unresolved-references` — Write the sldb request for resolving bare ids and reporting unresolved references
 - `task-rw-f4-graph-on-sldb-edge-index` — Declared graph edges come from the sldb edge index
 - `task-rw-f4-single-snapshot-reader` — One reader for the graph snapshot
 - `task-rw-f4-coverage-extractor-decision` — Keep the coverage extractor as an optional report or delete it

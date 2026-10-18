@@ -1,6 +1,12 @@
 ---
 id: task-rw-f2-selector-resolution-module
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f1-model-contract-snapshot
@@ -13,14 +19,10 @@ files:
 - deskops/operations.py
 - tests/test_desk_paths.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f2
-- topic:refactor
-- topic:selectors
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f2-selector-resolution-module.md
 ---
 
 # One module resolves every desk selector

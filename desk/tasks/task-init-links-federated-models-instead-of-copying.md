@@ -1,6 +1,12 @@
 ---
 id: task-init-links-federated-models-instead-of-copying
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -11,13 +17,10 @@ files:
 - deskops/cli/commands/desk.py
 - deskops/lifecycle_migration.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- topic:sldb
-- topic:models
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-init-links-federated-models-instead-of-copying.md
 ---
 
 # `deskops init` links the deskops models from their owner store instead of copying them
