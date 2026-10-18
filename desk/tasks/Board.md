@@ -11,6 +11,7 @@ tasks:
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
 - desk/tasks/task-next-why-explanation.md
 - desk/tasks/task-edit-reaches-drawer-tasks-and-rituals-by-id.md
+- desk/tasks/task-closeout-retire-legacy-resolved-tasks.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -64,3 +65,4 @@ leak from the active task set without changing any global policy text.
 - Add --why to deskops next [draft] - `deskops next --why` prints a `Why:` section that names the selection route, the matched workflow
 state, the merged pill sources, and the source files, without mutating the desk.
 - `deskops edit` reaches drawer tasks, and finds rituals by their id [draft] - `deskops edit task <id>` edits a task in desk/drawer/tasks/ when no active task matches, and `deskops edit ritual <id>` accepts the ritual's frontmatter id as well as its file stem.
+- `deskops closeout retire` removes a task that was already resolved before the ritual lifecycle [draft] - `deskops closeout retire --task <id> --reason <text> --ref <commit> [--ref ...] --root <repo>` removes a task whose status is already resolved, closed, done or complete, in one commit with trailers `Closeout-Mode: legacy-resolved`, `Closeout-Reason` and `Closeout-Ref`. The ref must be a commit that is HEAD or an ancestor. The command removes the task from the Board if it is routed there, folds the index line with mode legacy-resolved into the commit, and refuses any task whose status is not resolved.
