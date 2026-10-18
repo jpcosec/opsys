@@ -1,0 +1,549 @@
+Discovered 40 store(s) under /home/jp:
+1. /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb
+2. /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb
+3. /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb
+4. /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb
+5. /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb
+6. /home/jp/AntonIA/repos/grifo/grifo_chatbot/.sldb
+7. /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb
+8. /home/jp/AntonIA/repos/manifest/.sldb
+9. /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/.sldb
+10. /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb
+11. /home/jp/Upla/paper_IEEE/.sldb
+12. /home/jp/Upla/tutor_apoe/.sldb
+13. /home/jp/audiomedia_lodge/legacy/implementacion/.sldb
+14. /home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb
+15. /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb
+16. /home/jp/proyectos/SLDB_1/deskops/.sldb
+17. /home/jp/proyectos/SLDB_1/sldb/.sldb
+18. /home/jp/proyectos/SLDB_1/spec2viz/.sldb
+19. /home/jp/proyectos/TraderBot/.sldb
+20. /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb
+21. /home/jp/proyectos/legacy/hum-core/.sldb
+22. /home/jp/proyectos/legacy/hum-ecosystem/.sldb
+23. /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb
+24. /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb
+25. /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb
+26. /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb
+27. /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb
+28. /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb
+29. /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb
+30. /home/jp/proyectos/legacy/hum-scrapper/.sldb
+31. /home/jp/proyectos/legacy/ontology/.sldb
+32. /home/jp/proyectos/office/humble/.sldb
+33. /home/jp/proyectos/office/humble/Cotizador/.sldb
+34. /home/jp/proyectos/office/humble/humble-framework/.sldb
+35. /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb
+36. /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb
+37. /home/jp/proyectos/wittgenstein/Matrix/review/.sldb
+38. /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb
+39. /home/jp/proyectos/wittgenstein/tractatusIR/.sldb
+40. /home/jp/setup/.sldb
+
+Commands:
+[/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/chatbot/Chatbot_Infra --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb
+[/home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb
+[/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/chatbot/psp_chatbot --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb
+[/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/chatbot/shared_llm-gateway --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb
+[/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/grifo/Chatbot_Infra --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb
+[/home/jp/AntonIA/repos/grifo/grifo_chatbot/.sldb]
+  models to update: TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/grifo/grifo_chatbot/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/grifo/grifo_chatbot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/grifo/grifo_chatbot --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/grifo/grifo_chatbot/.sldb
+[/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/grifo/shared_llm-gateway --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb
+[/home/jp/AntonIA/repos/manifest/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/manifest/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/manifest/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/manifest/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/manifest/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/manifest/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/manifest --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/manifest/.sldb
+[/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/.sldb]
+  models to update: TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/mepu/mepu_ocs_dev --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/.sldb
+[/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb
+[/home/jp/Upla/paper_IEEE/.sldb]
+  models to update: AtomDoc, BoardDoc, FAQDoc, InboxNoteDoc, PillDoc, RepositoryDoc, RitualDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/Upla/paper_IEEE/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/Upla/paper_IEEE/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/Upla/paper_IEEE --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/Upla/paper_IEEE/.sldb
+[/home/jp/Upla/tutor_apoe/.sldb]
+  models to update: BoardDoc, PillDoc, RitualDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/Upla/tutor_apoe/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/Upla/tutor_apoe/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/Upla/tutor_apoe/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/Upla/tutor_apoe/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/Upla/tutor_apoe/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/Upla/tutor_apoe --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/Upla/tutor_apoe/.sldb
+[/home/jp/audiomedia_lodge/legacy/implementacion/.sldb]
+  models to update: AtomDoc, BoardDoc, FAQDoc, InboxNoteDoc, PillDoc, RepositoryDoc, RitualDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/audiomedia_lodge/legacy/implementacion --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/audiomedia_lodge/legacy/implementacion/.sldb
+[/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb]
+  models to update: TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/SLDB_1/UIs/graph_ui --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb
+[/home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/SLDB_1/UIs/marcado-ui --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/UIs/marcado-ui/.sldb
+[/home/jp/proyectos/SLDB_1/deskops/.sldb]
+  models to update: none
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/deskops/.sldb
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/SLDB_1/deskops --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/deskops/.sldb
+[/home/jp/proyectos/SLDB_1/sldb/.sldb]
+  models to update: TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/sldb/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/SLDB_1/sldb/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/SLDB_1/sldb --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/sldb/.sldb
+[/home/jp/proyectos/SLDB_1/spec2viz/.sldb]
+  models to update: TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/spec2viz/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/SLDB_1/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/SLDB_1/spec2viz --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/SLDB_1/spec2viz/.sldb
+[/home/jp/proyectos/TraderBot/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/TraderBot/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/TraderBot/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/TraderBot --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/TraderBot/.sldb
+[/home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb]
+  models to update: AtomDoc, BoardDoc, FAQDoc, InboxNoteDoc, PillDoc, RepositoryDoc, RitualDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb
+[/home/jp/proyectos/legacy/hum-core/.sldb]
+  models to update: none
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-core/.sldb
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-core --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-core/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem/.sldb]
+  models to update: BoardDoc, CrossroadDoc, ProtoAtomDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/knowledge/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/specyaml/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/core/turn_extractor/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem/pilots/repopackage-core/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/pm-surface/hum/.sldb
+[/home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-ecosystem-worktrees/sldb-ui/hum/.sldb
+[/home/jp/proyectos/legacy/hum-scrapper/.sldb]
+  models to update: CrossroadDoc, FAQDoc, InboxNoteDoc, ProtoAtomDoc, RepositoryDoc, RoleDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-scrapper/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/hum-scrapper/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/hum-scrapper/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/hum-scrapper/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/hum-scrapper/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/hum-scrapper/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/hum-scrapper/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/hum-scrapper --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/hum-scrapper/.sldb
+[/home/jp/proyectos/legacy/ontology/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/ontology/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/legacy/ontology/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/legacy/ontology --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/legacy/ontology/.sldb
+[/home/jp/proyectos/office/humble/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/office/humble/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/office/humble/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/office/humble --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/office/humble/.sldb
+[/home/jp/proyectos/office/humble/Cotizador/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/office/humble/Cotizador/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/office/humble/Cotizador/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/office/humble/Cotizador --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/office/humble/Cotizador/.sldb
+[/home/jp/proyectos/office/humble/humble-framework/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/office/humble/humble-framework/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/office/humble/humble-framework/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/office/humble/humble-framework --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/office/humble/humble-framework/.sldb
+[/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/wittgenstein/Matrix/Matrix --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb
+[/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/wittgenstein/Matrix/paper_v2 --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb
+[/home/jp/proyectos/wittgenstein/Matrix/review/.sldb]
+  models to update: AtomDoc, BoardDoc, FAQDoc, InboxNoteDoc, PillDoc, RepositoryDoc, RitualDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/wittgenstein/Matrix/review --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/Matrix/review/.sldb
+[/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb
+[/home/jp/proyectos/wittgenstein/tractatusIR/.sldb]
+  models to update: AtomDoc, BoardDoc, CrossroadDoc, FAQDoc, InboxNoteDoc, PillDoc, ProtoAtomDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update CrossroadDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update ProtoAtomDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/proyectos/wittgenstein/tractatusIR --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/proyectos/wittgenstein/tractatusIR/.sldb
+[/home/jp/setup/.sldb]
+  models to update: AtomDoc, BoardDoc, FAQDoc, InboxNoteDoc, PillDoc, RepositoryDoc, RitualDoc, RoleDoc, StepDoc, TaskDoc
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/setup/.sldb
+  /home/jp/anaconda3/bin/python -m sldb models update AtomDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update BoardDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update FAQDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update InboxNoteDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update PillDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RepositoryDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RitualDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update RoleDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update StepDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m sldb models update TaskDoc --store /home/jp/setup/.sldb --pythonpath /tmp/rw/wt/migrate
+  /home/jp/anaconda3/bin/python -m deskops desk update --root /home/jp/setup --apply
+  /home/jp/anaconda3/bin/python -m sldb stores check --store /home/jp/setup/.sldb
+
+Log: /tmp/rw/wt/migrate/runs/planning/store-migration-20261018.md

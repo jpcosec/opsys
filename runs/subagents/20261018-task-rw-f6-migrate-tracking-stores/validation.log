@@ -1,0 +1,4 @@
+14 passed in 0.18s
+Discovered 40 store(s) under /home/jp:
+434 passed, 3 skipped in 496.36s (0:08:16)
+--apply not run: cross-repo mutation split into task-rw-f6-apply-store-migration, blocked on owner confirmation

@@ -1,0 +1,10 @@
+Task: task-rw-f6-migrate-tracking-stores
+Title: Migrate every store that tracks deskops models
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f6-migrate-tracking-stores.md
+Effective pills:
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
