@@ -67,6 +67,7 @@ class Command:
     description: str | None = None
     raw_text: bool = False
     subcommand_dest: str | None = None
+    deprecated_for: tuple[str, ...] | None = None
 
 
 def A(flags: str | tuple[str, ...], **kwargs: Any) -> Arg:
@@ -506,10 +507,11 @@ def _commands() -> list[Command]:
         ),
         Command(
             path=("status",),
-            help="Show current workspace and workflow status.",
+            help="Deprecated alias for `deskops doctor`; show current workspace and workflow status.",
             args=(ROOT_ARG,),
             handler="deskops.cli.commands.doctor:DoctorCLI",
             mutates=False,
+            deprecated_for=("doctor",),
         ),
         Command(
             path=("faq",),
@@ -566,6 +568,7 @@ def _commands() -> list[Command]:
             ),
             handler="deskops.cli.commands.message:MessageCLI",
             mutates=True,
+            deprecated_for=("message",),
             epilog="""
 Deprecated: use `deskops message send|list|read|ack`.
 
@@ -807,7 +810,7 @@ Examples:
         ),
         Command(
             path=("atoms", "list"),
-            help="List all atoms.",
+            help="Deprecated alias for `deskops list atoms`; list all atoms.",
             args=(
                 ROOT_ARG,
                 A(
@@ -818,6 +821,7 @@ Examples:
             ),
             handler="deskops.cli.commands.atoms:AtomsCLI",
             mutates=False,
+            deprecated_for=("list", "atoms"),
         ),
         Command(
             path=("atoms", "reorganize"),
@@ -831,7 +835,7 @@ Examples:
         ),
         Command(
             path=("atoms", "show"),
-            help="Show an atom.",
+            help="Deprecated alias for `deskops show atom`; show an atom.",
             args=(
                 A("doc_id", help=f"Atom selector. {SELECTOR_HELP}"),
                 ROOT_ARG,
@@ -839,6 +843,7 @@ Examples:
             ),
             handler="deskops.cli.commands.atoms:AtomsCLI",
             mutates=False,
+            deprecated_for=("show", "atom"),
         ),
         Command(
             path=("atoms", "validate"),

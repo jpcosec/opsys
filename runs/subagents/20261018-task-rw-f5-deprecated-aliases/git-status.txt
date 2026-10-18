@@ -1,0 +1,9 @@
+ M deskops/cli/main.py
+ M deskops/cli/registry.py
+ M deskops/cli/render.py
+ M tests/fixtures/golden/help/deskops.txt
+ M tests/fixtures/golden/help/deskops_atoms.txt
+ M tests/test_cli.py
+ M tests/test_message_cli.py
+?? .opencode/skills/deskops-health-and-drift/
+?? runs/subagents/20261018-task-rw-f5-deprecated-aliases/

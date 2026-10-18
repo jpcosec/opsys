@@ -5,10 +5,12 @@ positional arguments:
   {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree}
     add-namespace       Add an extensible atom tag namespace to
                         desk/atoms/tag-namespaces.yaml.
-    list                List all atoms.
+    list                Deprecated alias for `deskops list atoms`; list all
+                        atoms.
     reorganize          Move atoms into folders derived from the configured
                         atom_folder_axis tag namespace. Idempotent.
-    show                Show an atom.
+    show                Deprecated alias for `deskops show atom`; show an
+                        atom.
     validate            Validate one atom or all atoms for lifecycle safety
                         checks.
     create              Create one atom from a pill, graph finding, or diagram

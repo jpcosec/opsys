@@ -1,0 +1,283 @@
+diff --git a/.opencode/skills/deskops-health-and-drift/SKILL.md b/.opencode/skills/deskops-health-and-drift/SKILL.md
+new file mode 100644
+index 0000000..4797890
+--- /dev/null
++++ b/.opencode/skills/deskops-health-and-drift/SKILL.md
+@@ -0,0 +1,54 @@
++---
++name: deskops-health-and-drift
++description: Skill especializado en diagnosticar la salud de desk/, detectar deriva (drift) entre modelos SLDB y agentes materializados, y verificar enlaces en el grafo KGDB. Usar al auditar o reparar repositorios deskops.
++---
++
++# Deskops Health, Repair & Drift Management
++
++**Sub-skill de `use-deskops`.** Carga `use-deskops` primero para superficies, CLI y modelo de workflow. Este skill es una parcialidad: cubre diagnóstico de salud, detección de deriva y reparación.
++
++Guía la inspección de la salud del espacio de trabajo `desk/`, la reparación segura de estados inconsistentes y la detección de deriva de artefactos.
++
++---
++
++## 🚨 MANDATOS CRÍTICOS E INNEGOCIABLES
++
++### 1. Diagnóstico previo a cualquier edición de recuperación
++* NUNCA asumir que el estado de `desk/` está limpio o corrupto sin ejecutar `deskops doctor`.
++* NUNCA modificar manualmente archivos en `desk/` para reparar un estado roto si existe un comando oficial de `deskops`.
++
++### 2. Detección de Deriva de Agentes y Modelos
++* Los archivos instalados de agentes (ej. en `~/.pi/agent/agents/` o `.opencode/`) son **materializaciones** de documentos fuente `RoleDoc`/`Atom`.
++* Si un agente instalado difiere de su fuente, el archivo instalado NO se edita a mano; se edita la fuente y se ejecuta `deskops materialize`.
++
++---
++
++## 📋 Comandos y Procedimientos de Diagnóstico
++
++### Paso 1: Verificación de Salud del Workspace
++```bash
++deskops doctor --root .
++```
++
++### Paso 2: Detección de Enlaces Faltantes en el Grafo (KGDB)
++```bash
++deskops graph build --root .
++deskops graph missing --root .
++```
++
++### Paso 3: Verificación de Deriva (Drift Check)
++```bash
++deskops drift check --root .
++```
++
++### Paso 4: Re-materialización de Agentes
++Si se detecta deriva en los agentes instalados:
++```bash
++deskops materialize --root .
++```
++
++---
++
++## 🚫 Anti-patrones Prohibidos
++- ❌ Editar archivos en `~/.pi/agent/agents/` manualmente.
++- ❌ Saltearse `deskops doctor` cuando hay inconsistencias en `Board.md`.
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 9a06464..6840a1b 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -15,6 +15,7 @@ sys.path.insert(0, str(PACKAGE_ROOT))
+ from deskops.cli.parser import build_parser
+ from deskops.cli.registry import command_for_path
+ from deskops.cli.registry import resolve_context
++from deskops.cli.render import render_deprecation
+ from deskops.cli.render import render_error
+ from deskops.cli.render import requested_format
+ from deskops.identity import find_context_root
+@@ -113,6 +114,9 @@ class CLI:
+         except KeyError:
+             raise UsageError(f"Unknown command: {' '.join(command_path)}")
+ 
++        if command.deprecated_for is not None:
++            render_deprecation(command.deprecated_for)
++
+         self._apply_test_root_override(
+             args,
+             mutates=command.mutates,
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index f83159c..ed1e6cd 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -67,6 +67,7 @@ class Command:
+     description: str | None = None
+     raw_text: bool = False
+     subcommand_dest: str | None = None
++    deprecated_for: tuple[str, ...] | None = None
+ 
+ 
+ def A(flags: str | tuple[str, ...], **kwargs: Any) -> Arg:
+@@ -506,10 +507,11 @@ def _commands() -> list[Command]:
+         ),
+         Command(
+             path=("status",),
+-            help="Show current workspace and workflow status.",
++            help="Deprecated alias for `deskops doctor`; show current workspace and workflow status.",
+             args=(ROOT_ARG,),
+             handler="deskops.cli.commands.doctor:DoctorCLI",
+             mutates=False,
++            deprecated_for=("doctor",),
+         ),
+         Command(
+             path=("faq",),
+@@ -566,6 +568,7 @@ def _commands() -> list[Command]:
+             ),
+             handler="deskops.cli.commands.message:MessageCLI",
+             mutates=True,
++            deprecated_for=("message",),
+             epilog="""
+ Deprecated: use `deskops message send|list|read|ack`.
+ 
+@@ -807,7 +810,7 @@ Examples:
+         ),
+         Command(
+             path=("atoms", "list"),
+-            help="List all atoms.",
++            help="Deprecated alias for `deskops list atoms`; list all atoms.",
+             args=(
+                 ROOT_ARG,
+                 A(
+@@ -818,6 +821,7 @@ Examples:
+             ),
+             handler="deskops.cli.commands.atoms:AtomsCLI",
+             mutates=False,
++            deprecated_for=("list", "atoms"),
+         ),
+         Command(
+             path=("atoms", "reorganize"),
+@@ -831,7 +835,7 @@ Examples:
+         ),
+         Command(
+             path=("atoms", "show"),
+-            help="Show an atom.",
++            help="Deprecated alias for `deskops show atom`; show an atom.",
+             args=(
+                 A("doc_id", help=f"Atom selector. {SELECTOR_HELP}"),
+                 ROOT_ARG,
+@@ -839,6 +843,7 @@ Examples:
+             ),
+             handler="deskops.cli.commands.atoms:AtomsCLI",
+             mutates=False,
++            deprecated_for=("show", "atom"),
+         ),
+         Command(
+             path=("atoms", "validate"),
+diff --git a/deskops/cli/render.py b/deskops/cli/render.py
+index d9ca09e..c415db3 100644
+--- a/deskops/cli/render.py
++++ b/deskops/cli/render.py
+@@ -104,6 +104,12 @@ def render_error(
+     return code
+ 
+ 
++def render_deprecation(replacement: tuple[str, ...]) -> None:
++    """Announce a deprecated alias on stderr without touching stdout."""
++
++    print(f"Deprecated: use `deskops {' '.join(replacement)}`", file=sys.stderr)
++
++
+ def requested_format(argv: list[str]) -> str:
+     """Return the last ``--format`` value in argv, or ``text``.
+ 
+diff --git a/tests/fixtures/golden/help/deskops.txt b/tests/fixtures/golden/help/deskops.txt
+index 4b6cfe0..8add2f7 100644
+--- a/tests/fixtures/golden/help/deskops.txt
++++ b/tests/fixtures/golden/help/deskops.txt
+@@ -7,7 +7,7 @@ positional arguments:
+   {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+     about               Print a short overview of deskops and its first-use commands.
+     doctor              Detect and repair common broken desk states safely.
+-    status              Show current workspace and workflow status.
++    status              Deprecated alias for `deskops doctor`; show current workspace and workflow status.
+     faq                 Browse the first-use FAQ by question.
+     bootstrap           Install or repair sldb and register deskops models in the global store.
+     init                Initialize a local .sldb store and scaffold desk/ if needed.
+diff --git a/tests/fixtures/golden/help/deskops_atoms.txt b/tests/fixtures/golden/help/deskops_atoms.txt
+index 1c7f19b..82e073f 100644
+--- a/tests/fixtures/golden/help/deskops_atoms.txt
++++ b/tests/fixtures/golden/help/deskops_atoms.txt
+@@ -5,10 +5,12 @@ positional arguments:
+   {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree}
+     add-namespace       Add an extensible atom tag namespace to
+                         desk/atoms/tag-namespaces.yaml.
+-    list                List all atoms.
++    list                Deprecated alias for `deskops list atoms`; list all
++                        atoms.
+     reorganize          Move atoms into folders derived from the configured
+                         atom_folder_axis tag namespace. Idempotent.
+-    show                Show an atom.
++    show                Deprecated alias for `deskops show atom`; show an
++                        atom.
+     validate            Validate one atom or all atoms for lifecycle safety
+                         checks.
+     create              Create one atom from a pill, graph finding, or diagram
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 9811501..d5db5b1 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -2590,3 +2590,57 @@ def test_explicit_root_dot_bypasses_the_sandbox_override(tmp_path: Path, monkeyp
+     assert str(task_path) in captured.out
+     assert task_path.exists()
+     assert not (sandbox_root / "desk" / "tasks" / "task-explicit-root-task.md").exists()
++
++
++def _capture_main(argv: list[str], capsys) -> tuple[int, str, str]:
++    result = main(argv)
++    captured = capsys.readouterr()
++    return result, captured.out, captured.err
++
++
++def test_status_alias_warns_and_matches_doctor(tmp_path: Path, capsys) -> None:
++    alias_result, alias_out, alias_err = _capture_main(
++        ["status", "--root", str(tmp_path)], capsys
++    )
++    canonical_result, canonical_out, canonical_err = _capture_main(
++        ["doctor", "--root", str(tmp_path)], capsys
++    )
++
++    assert alias_result == canonical_result
++    assert alias_out == canonical_out
++    assert alias_err == "Deprecated: use `deskops doctor`\n"
++    assert canonical_err == ""
++
++
++def test_atoms_list_alias_warns_and_matches_canonical(tmp_path: Path, capsys) -> None:
++    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
++    capsys.readouterr()
++
++    alias_result, alias_out, alias_err = _capture_main(
++        ["atoms", "list", "--root", str(tmp_path)], capsys
++    )
++    canonical_result, canonical_out, canonical_err = _capture_main(
++        ["list", "atoms", "--root", str(tmp_path)], capsys
++    )
++
++    assert alias_result == canonical_result == 0
++    assert alias_out == canonical_out
++    assert alias_err == "Deprecated: use `deskops list atoms`\n"
++    assert canonical_err == ""
++
++
++def test_atoms_show_alias_warns_and_matches_canonical(tmp_path: Path, capsys) -> None:
++    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
++    capsys.readouterr()
++
++    alias_result, alias_out, alias_err = _capture_main(
++        ["atoms", "show", "atom-trackable-atom", "--root", str(tmp_path)], capsys
++    )
++    canonical_result, canonical_out, canonical_err = _capture_main(
++        ["show", "atom", "atom-trackable-atom", "--root", str(tmp_path)], capsys
++    )
++
++    assert alias_result == canonical_result == 0
++    assert alias_out == canonical_out
++    assert alias_err == "Deprecated: use `deskops show atom`\n"
++    assert canonical_err == ""
+diff --git a/tests/test_message_cli.py b/tests/test_message_cli.py
+index 09caff0..3e956e9 100644
+--- a/tests/test_message_cli.py
++++ b/tests/test_message_cli.py
+@@ -82,6 +82,18 @@ def test_inbox_alias_is_announced_as_deprecated(capsys) -> None:
+     assert "Deprecated: use `deskops message send|list|read|ack`" in output
+ 
+ 
++def test_inbox_alias_warns_and_matches_message_list(tmp_path: Path, capsys) -> None:
++    alias_result = main(["inbox", "--list", "--root", str(tmp_path)])
++    alias_capture = capsys.readouterr()
++    canonical_result = main(["message", "list", "--root", str(tmp_path)])
++    canonical_capture = capsys.readouterr()
++
++    assert alias_result == canonical_result == 0
++    assert alias_capture.out == canonical_capture.out
++    assert alias_capture.err == "Deprecated: use `deskops message`\n"
++    assert canonical_capture.err == ""
++
++
+ def test_message_send_list_read_ack_roundtrip(tmp_path: Path, monkeypatch, capsys) -> None:
+     sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
+     monkeypatch.chdir(sender_repo)

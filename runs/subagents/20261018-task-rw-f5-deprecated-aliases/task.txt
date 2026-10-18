@@ -1,0 +1,10 @@
+Task: task-rw-f5-deprecated-aliases
+Title: Duplicate commands become warned aliases or are removed
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f5-deprecated-aliases.md
+Effective pills:
+- desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

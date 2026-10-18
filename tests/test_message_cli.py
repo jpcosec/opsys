@@ -82,6 +82,18 @@ def test_inbox_alias_is_announced_as_deprecated(capsys) -> None:
     assert "Deprecated: use `deskops message send|list|read|ack`" in output
 
 
+def test_inbox_alias_warns_and_matches_message_list(tmp_path: Path, capsys) -> None:
+    alias_result = main(["inbox", "--list", "--root", str(tmp_path)])
+    alias_capture = capsys.readouterr()
+    canonical_result = main(["message", "list", "--root", str(tmp_path)])
+    canonical_capture = capsys.readouterr()
+
+    assert alias_result == canonical_result == 0
+    assert alias_capture.out == canonical_capture.out
+    assert alias_capture.err == "Deprecated: use `deskops message`\n"
+    assert canonical_capture.err == ""
+
+
 def test_message_send_list_read_ack_roundtrip(tmp_path: Path, monkeypatch, capsys) -> None:
     sender_repo, target_repo, store_path = _setup_inbox_identity_env(tmp_path, monkeypatch)
     monkeypatch.chdir(sender_repo)

@@ -2590,3 +2590,57 @@ def test_explicit_root_dot_bypasses_the_sandbox_override(tmp_path: Path, monkeyp
     assert str(task_path) in captured.out
     assert task_path.exists()
     assert not (sandbox_root / "desk" / "tasks" / "task-explicit-root-task.md").exists()
+
+
+def _capture_main(argv: list[str], capsys) -> tuple[int, str, str]:
+    result = main(argv)
+    captured = capsys.readouterr()
+    return result, captured.out, captured.err
+
+
+def test_status_alias_warns_and_matches_doctor(tmp_path: Path, capsys) -> None:
+    alias_result, alias_out, alias_err = _capture_main(
+        ["status", "--root", str(tmp_path)], capsys
+    )
+    canonical_result, canonical_out, canonical_err = _capture_main(
+        ["doctor", "--root", str(tmp_path)], capsys
+    )
+
+    assert alias_result == canonical_result
+    assert alias_out == canonical_out
+    assert alias_err == "Deprecated: use `deskops doctor`\n"
+    assert canonical_err == ""
+
+
+def test_atoms_list_alias_warns_and_matches_canonical(tmp_path: Path, capsys) -> None:
+    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
+    capsys.readouterr()
+
+    alias_result, alias_out, alias_err = _capture_main(
+        ["atoms", "list", "--root", str(tmp_path)], capsys
+    )
+    canonical_result, canonical_out, canonical_err = _capture_main(
+        ["list", "atoms", "--root", str(tmp_path)], capsys
+    )
+
+    assert alias_result == canonical_result == 0
+    assert alias_out == canonical_out
+    assert alias_err == "Deprecated: use `deskops list atoms`\n"
+    assert canonical_err == ""
+
+
+def test_atoms_show_alias_warns_and_matches_canonical(tmp_path: Path, capsys) -> None:
+    assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
+    capsys.readouterr()
+
+    alias_result, alias_out, alias_err = _capture_main(
+        ["atoms", "show", "atom-trackable-atom", "--root", str(tmp_path)], capsys
+    )
+    canonical_result, canonical_out, canonical_err = _capture_main(
+        ["show", "atom", "atom-trackable-atom", "--root", str(tmp_path)], capsys
+    )
+
+    assert alias_result == canonical_result == 0
+    assert alias_out == canonical_out
+    assert alias_err == "Deprecated: use `deskops show atom`\n"
+    assert canonical_err == ""

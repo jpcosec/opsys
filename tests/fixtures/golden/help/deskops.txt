@@ -7,7 +7,7 @@ positional arguments:
   {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
     about               Print a short overview of deskops and its first-use commands.
     doctor              Detect and repair common broken desk states safely.
-    status              Show current workspace and workflow status.
+    status              Deprecated alias for `deskops doctor`; show current workspace and workflow status.
     faq                 Browse the first-use FAQ by question.
     bootstrap           Install or repair sldb and register deskops models in the global store.
     init                Initialize a local .sldb store and scaffold desk/ if needed.

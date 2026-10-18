@@ -104,6 +104,12 @@ def render_error(
     return code
 
 
+def render_deprecation(replacement: tuple[str, ...]) -> None:
+    """Announce a deprecated alias on stderr without touching stdout."""
+
+    print(f"Deprecated: use `deskops {' '.join(replacement)}`", file=sys.stderr)
+
+
 def requested_format(argv: list[str]) -> str:
     """Return the last ``--format`` value in argv, or ``text``.
 

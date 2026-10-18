@@ -15,6 +15,7 @@ sys.path.insert(0, str(PACKAGE_ROOT))
 from deskops.cli.parser import build_parser
 from deskops.cli.registry import command_for_path
 from deskops.cli.registry import resolve_context
+from deskops.cli.render import render_deprecation
 from deskops.cli.render import render_error
 from deskops.cli.render import requested_format
 from deskops.identity import find_context_root
@@ -112,6 +113,9 @@ class CLI:
             command = command_for_path(command_path)
         except KeyError:
             raise UsageError(f"Unknown command: {' '.join(command_path)}")
+
+        if command.deprecated_for is not None:
+            render_deprecation(command.deprecated_for)
 
         self._apply_test_root_override(
             args,
