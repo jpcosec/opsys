@@ -1,0 +1,7 @@
+Task: task-rewrites-refuse-to-erase-undeclared-sections
+Title: Document rewrites refuse to erase sections and frontmatter keys the model does not declare
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

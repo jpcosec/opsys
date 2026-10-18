@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rewrites-refuse-to-erase-undeclared-sections.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Document rewrites refuse to erase sections the model does not declare [draft] - `_write_doc` refuses to rewrite an existing document when the rewrite would erase an undeclared heading, names the headings, and leaves the file unchanged.

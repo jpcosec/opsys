@@ -11,6 +11,8 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 import yaml
+from sldb.api.documents.frontmatter_keys import undeclared_frontmatter_keys
+from sldb.api.documents.structural_noise import find_structural_noise
 from sldb.cli.utils import parse_data_value
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
@@ -1093,6 +1095,20 @@ class DeskopsOperations:
                     "would erase that content. The document was not produced by the "
                     "model's own renderer; rewrite it through sldb (or fix the model's "
                     "template) before editing it here."
+                )
+            # Headings and frontmatter keys the template never declares are dropped by
+            # extraction; refuse when the rewrite would erase one. A heading counts only
+            # if re-rendering the file's own payload loses it, so replacing a field that
+            # carries a heading (atoms split/merge) is not refused.
+            kept = set((render_model_markdown(model, extract_model_data(model, existing)) + "\n").splitlines())
+            erased = [line for line in find_structural_noise(model, existing, path.name).undeclared if line not in kept]
+            erased += [f"frontmatter key '{key}'" for key in undeclared_frontmatter_keys(model, existing)]
+            if erased:
+                raise ValueError(
+                    f"Refusing to rewrite {path.name}: it has content its model "
+                    f"({model.__name__}) does not declare, and rewriting would erase it: "
+                    f"{'; '.join(erased)}. Move that content into a declared field "
+                    "(or remove it) before editing the document here."
                 )
         with doc_io.DocTransaction(self.root) as transaction:
             transaction.write(path, model, payload)

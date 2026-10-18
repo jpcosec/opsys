@@ -1080,6 +1080,55 @@ def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, c
     assert untracked != 0
 
 
+def test_edit_task_refuses_to_erase_undeclared_content(tmp_path: Path, capsys) -> None:
+    assert main(["init", str(tmp_path)]) == 0
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Hand written task",
+            "--goal",
+            "Original goal.",
+            "--scope",
+            "Original scope.",
+            "--implementation-path",
+            "Original path.",
+            "--done-when",
+            "Original done when.",
+        ]
+    )
+    assert created == 0
+    task_path = tmp_path / "desk" / "tasks" / "task-hand-written-task.md"
+    hand_written = task_path.read_text(encoding="utf-8").replace(
+        "## Goal", "## Out of scope\n\nNever touch prod.\n\n## Goal", 1
+    )
+    task_path.write_text(hand_written, encoding="utf-8")
+    capsys.readouterr()
+
+    edited = main(["edit", "task", "task-hand-written-task", "goal", "New goal.", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert edited != 0
+    assert "## Out of scope" in output.out + output.err
+    assert task_path.read_text(encoding="utf-8") == hand_written
+
+    with_key = task_path.read_text(encoding="utf-8").replace(
+        "## Out of scope\n\nNever touch prod.\n\n", "", 1
+    ).replace("---\nid:", "---\npriority: p0\nid:", 1)
+    task_path.write_text(with_key, encoding="utf-8")
+    capsys.readouterr()
+
+    edited = main(["edit", "task", "task-hand-written-task", "goal", "New goal.", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert edited != 0
+    assert "priority" in output.out + output.err
+    assert task_path.read_text(encoding="utf-8") == with_key
+
+
 def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
     created = main(
         [

@@ -1,0 +1,94 @@
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 2e32996..ba9d229 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -11,6 +11,8 @@ from typing import TYPE_CHECKING
+ from urllib.parse import urlparse
+ 
+ import yaml
++from sldb.api.documents.frontmatter_keys import undeclared_frontmatter_keys
++from sldb.api.documents.structural_noise import find_structural_noise
+ from sldb.cli.utils import parse_data_value
+ from sldb.runtime.validation import extract_model_data
+ from sldb.runtime.validation import render_model_markdown
+@@ -1094,6 +1096,20 @@ class DeskopsOperations:
+                     "model's own renderer; rewrite it through sldb (or fix the model's "
+                     "template) before editing it here."
+                 )
++            # Headings and frontmatter keys the template never declares are dropped by
++            # extraction; refuse when the rewrite would erase one. A heading counts only
++            # if re-rendering the file's own payload loses it, so replacing a field that
++            # carries a heading (atoms split/merge) is not refused.
++            kept = set((render_model_markdown(model, extract_model_data(model, existing)) + "\n").splitlines())
++            erased = [line for line in find_structural_noise(model, existing, path.name).undeclared if line not in kept]
++            erased += [f"frontmatter key '{key}'" for key in undeclared_frontmatter_keys(model, existing)]
++            if erased:
++                raise ValueError(
++                    f"Refusing to rewrite {path.name}: it has content its model "
++                    f"({model.__name__}) does not declare, and rewriting would erase it: "
++                    f"{'; '.join(erased)}. Move that content into a declared field "
++                    "(or remove it) before editing the document here."
++                )
+         with doc_io.DocTransaction(self.root) as transaction:
+             transaction.write(path, model, payload)
+ 
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 71af867..4b34ebd 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -1080,6 +1080,55 @@ def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, c
+     assert untracked != 0
+ 
+ 
++def test_edit_task_refuses_to_erase_undeclared_content(tmp_path: Path, capsys) -> None:
++    assert main(["init", str(tmp_path)]) == 0
++    created = main(
++        [
++            "add",
++            "task",
++            "--root",
++            str(tmp_path),
++            "--title",
++            "Hand written task",
++            "--goal",
++            "Original goal.",
++            "--scope",
++            "Original scope.",
++            "--implementation-path",
++            "Original path.",
++            "--done-when",
++            "Original done when.",
++        ]
++    )
++    assert created == 0
++    task_path = tmp_path / "desk" / "tasks" / "task-hand-written-task.md"
++    hand_written = task_path.read_text(encoding="utf-8").replace(
++        "## Goal", "## Out of scope\n\nNever touch prod.\n\n## Goal", 1
++    )
++    task_path.write_text(hand_written, encoding="utf-8")
++    capsys.readouterr()
++
++    edited = main(["edit", "task", "task-hand-written-task", "goal", "New goal.", "--root", str(tmp_path)])
++    output = capsys.readouterr()
++
++    assert edited != 0
++    assert "## Out of scope" in output.out + output.err
++    assert task_path.read_text(encoding="utf-8") == hand_written
++
++    with_key = task_path.read_text(encoding="utf-8").replace(
++        "## Out of scope\n\nNever touch prod.\n\n", "", 1
++    ).replace("---\nid:", "---\npriority: p0\nid:", 1)
++    task_path.write_text(with_key, encoding="utf-8")
++    capsys.readouterr()
++
++    edited = main(["edit", "task", "task-hand-written-task", "goal", "New goal.", "--root", str(tmp_path)])
++    output = capsys.readouterr()
++
++    assert edited != 0
++    assert "priority" in output.out + output.err
++    assert task_path.read_text(encoding="utf-8") == with_key
++
++
+ def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
+     created = main(
+         [
