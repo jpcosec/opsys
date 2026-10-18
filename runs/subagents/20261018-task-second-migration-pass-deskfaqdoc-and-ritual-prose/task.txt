@@ -1,0 +1,7 @@
+Task: task-second-migration-pass-deskfaqdoc-and-ritual-prose
+Title: Second migration pass: DeskFAQDoc and the prose RitualDoc contract reach every federated store
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

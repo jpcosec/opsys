@@ -69,3 +69,4 @@
 {"task_id": "task-require-sldb-0-1-13", "run_id": null, "run_dir": "runs/subagents/20261018-task-require-sldb-0-1-13", "session_sha256": null, "commit": null}
 {"task_id": "task-closeout-subject-names-the-task-file", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-subject-names-the-task-file", "session_sha256": null, "commit": null}
 {"task_id": "task-message-tracks-only-in-the-target-store", "run_id": null, "run_dir": "runs/subagents/20261018-task-message-tracks-only-in-the-target-store", "session_sha256": null, "commit": null}
+{"task_id": "task-second-migration-pass-deskfaqdoc-and-ritual-prose", "run_id": null, "run_dir": "runs/subagents/20261018-task-second-migration-pass-deskfaqdoc-and-ritual-prose", "session_sha256": null, "commit": null}

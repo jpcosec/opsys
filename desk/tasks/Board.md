@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-second-migration-pass-deskfaqdoc-and-ritual-prose.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,5 +44,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Second migration pass: DeskFAQDoc and the prose RitualDoc contract reach every federated store [draft] - Every store from the first migration's list has run desk update --apply again. That pass re-signs RitualDoc and moves a legacy FAQDoc entry to DeskFAQDoc. The log records each store's stores check, edges check and edges unresolved result. In sldb, only desk/ and .sldb/ are committed, and sldb-04 gets the hash.
