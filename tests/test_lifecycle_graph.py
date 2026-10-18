@@ -86,6 +86,37 @@ def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_pa
     assert main(["doctor", "--root", str(root)]) == 0
 
 
+@pytest.mark.parametrize(
+    "legacy",
+    [
+        "# Execution ritual\n\nReview the board and implement only the active task.\n",
+        "---\nid: ritual-execution\ntags:\n- workspace:desk\n---\n\n# Execution ritual\n\n"
+        "Execute one task at a time.\n\n## Pre-flight\n\n1. Recover board state.\n",
+    ],
+    ids=["no-frontmatter", "own-sections"],
+)
+def test_a_ritual_the_model_cannot_carry_is_archived_and_replaced(tmp_path: Path, legacy: str) -> None:
+    from deskops.bootstrap import SLDBBootstrap
+    from deskops.workspace import scaffold_desk
+    from sldb.api import doc_exists
+
+    root = tmp_path / "repo"
+    root.mkdir()
+    assert SLDBBootstrap().init_local_store(root) == 0
+    scaffold_desk(root)
+    ritual = root / "desk" / "rituals" / "execution.md"
+    ritual.write_text(legacy, encoding="utf-8")
+
+    changes = lifecycle.ensure_lifecycle_graph(root)
+
+    archived = root / "desk" / "drawer" / "rituals" / "legacy-execution.md"
+    assert archived.read_text(encoding="utf-8") == legacy
+    assert any("archived desk/rituals/execution.md" in change for change in changes)
+    assert "id: ritual-execution" in ritual.read_text(encoding="utf-8")
+    assert doc_exists(root / ".sldb", "RitualDoc/ritual-execution")
+    assert main(["doctor", "--root", str(root)]) == 0
+
+
 def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: Path) -> None:
     operations = DeskopsOperations(lifecycle_desk)
     task_id = _task(operations, "Walk the graph")

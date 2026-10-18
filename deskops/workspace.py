@@ -398,6 +398,17 @@ Close a {name} task only after validation passes, any durable knowledge from bou
 """
 
 
+def default_ritual_text(ritual_id: str, name: str) -> str:
+    """The ritual `deskops init` writes for one lifecycle state."""
+    templates = {
+        "ritual-phase": _phase_template,
+        "ritual-execution": _execution_template,
+        "ritual-testing": _testing_template,
+        "ritual-closeout": _closeout_template,
+    }
+    return templates[ritual_id](name)
+
+
 def _drawer_template(name: str) -> str:
     return f"""# Drawer
 

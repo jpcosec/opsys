@@ -221,6 +221,14 @@ def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
         raise LifecycleGraphMissing(
             f"Lifecycle ritual '{ritual_id}' at {relative} cannot be read as {RITUAL_MODEL}: {exc}"
         ) from exc
+    from sldb.api.documents.structural_noise import find_structural_noise
+
+    undeclared = find_structural_noise(RitualDoc, text, relative).undeclared
+    if undeclared:
+        raise LifecycleGraphMissing(
+            f"Lifecycle ritual '{ritual_id}' at {relative} has sections {RITUAL_MODEL} does not declare: "
+            + "; ".join(undeclared)
+        )
     missing = is_unreadable_by_model(RitualDoc, text)
     if not missing and round_trips:
         return False
@@ -241,6 +249,27 @@ def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
             f"after re-rendering; missing sections: {fields}"
         )
     return True
+
+
+def _archive_legacy_ritual(root: Path, path: Path, ritual_id: str) -> Path:
+    """Move a ritual RitualDoc cannot carry to desk/drawer/rituals/ and write the default one.
+
+    A hand-written ritual (no frontmatter id, its own sections, other field shapes) would
+    lose text if it were re-rendered, so it is kept byte for byte where the desk does not
+    model documents, and the lifecycle state gets the ritual `deskops init` writes.
+    """
+    from deskops.workspace import default_ritual_text
+
+    archive_dir = root / "desk" / "drawer" / "rituals"
+    archive_dir.mkdir(parents=True, exist_ok=True)
+    archived = archive_dir / f"legacy-{path.name}"
+    counter = 2
+    while archived.exists():
+        archived = archive_dir / f"legacy-{path.stem}-{counter}.md"
+        counter += 1
+    path.rename(archived)
+    path.write_text(default_ritual_text(ritual_id, root.name), encoding="utf-8")
+    return archived
 
 
 def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> list[str]:
@@ -268,7 +297,16 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
         if not path.exists():
             raise LifecycleGraphMissing(f"Lifecycle ritual '{ritual_id}' has no document at {path.relative_to(root)}")
         relative = path.relative_to(root).as_posix()
-        if _ensure_ritual_readable(path, ritual_id, relative):
+        try:
+            rerendered = _ensure_ritual_readable(path, ritual_id, relative)
+        except LifecycleGraphMissing as exc:
+            archived = _archive_legacy_ritual(root, path, ritual_id)
+            changes.append(
+                f"archived {relative} to {archived.relative_to(root).as_posix()} "
+                f"and wrote the default ritual in its place ({exc})"
+            )
+            rerendered = _ensure_ritual_readable(path, ritual_id, relative)
+        if rerendered:
             changes.append(f"re-rendered {relative} to the current {RITUAL_MODEL} template")
         pending_rituals.append((ritual_id, path, relative))
 

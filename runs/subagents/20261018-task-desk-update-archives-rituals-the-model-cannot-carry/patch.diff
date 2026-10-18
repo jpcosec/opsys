@@ -1,0 +1,145 @@
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index 1726e26..4911d67 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -131,6 +131,11 @@ class DeskCLI:
+             from deskops.lifecycle_migration import LegacyMigrationBlocked
+ 
+             print("Migrating the task lifecycle to the desk's sldb graph...")
++            if store_dir.exists() and "RitualDoc" not in SLDBBootstrap()._registered_model_entries(store_dir):
++                # The lifecycle states are RitualDocs; a store that never registered the
++                # model (an early desk) gets the deskops models before the graph is written.
++                SLDBBootstrap().init_local_store(root)
++                print("- registered the deskops models the lifecycle graph needs")
+             try:
+                 for change in migrate_legacy_lifecycle(root):
+                     print(f"- {change}")
+diff --git a/deskops/lifecycle.py b/deskops/lifecycle.py
+index 97e707d..98d8ca1 100644
+--- a/deskops/lifecycle.py
++++ b/deskops/lifecycle.py
+@@ -221,6 +221,14 @@ def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
+         raise LifecycleGraphMissing(
+             f"Lifecycle ritual '{ritual_id}' at {relative} cannot be read as {RITUAL_MODEL}: {exc}"
+         ) from exc
++    from sldb.api.documents.structural_noise import find_structural_noise
++
++    undeclared = find_structural_noise(RitualDoc, text, relative).undeclared
++    if undeclared:
++        raise LifecycleGraphMissing(
++            f"Lifecycle ritual '{ritual_id}' at {relative} has sections {RITUAL_MODEL} does not declare: "
++            + "; ".join(undeclared)
++        )
+     missing = is_unreadable_by_model(RitualDoc, text)
+     if not missing and round_trips:
+         return False
+@@ -243,6 +251,27 @@ def _ensure_ritual_readable(path: Path, ritual_id: str, relative: str) -> bool:
+     return True
+ 
+ 
++def _archive_legacy_ritual(root: Path, path: Path, ritual_id: str) -> Path:
++    """Move a ritual RitualDoc cannot carry to desk/drawer/rituals/ and write the default one.
++
++    A hand-written ritual (no frontmatter id, its own sections, other field shapes) would
++    lose text if it were re-rendered, so it is kept byte for byte where the desk does not
++    model documents, and the lifecycle state gets the ritual `deskops init` writes.
++    """
++    from deskops.workspace import default_ritual_text
++
++    archive_dir = root / "desk" / "drawer" / "rituals"
++    archive_dir.mkdir(parents=True, exist_ok=True)
++    archived = archive_dir / f"legacy-{path.name}"
++    counter = 2
++    while archived.exists():
++        archived = archive_dir / f"legacy-{path.stem}-{counter}.md"
++        counter += 1
++    path.rename(archived)
++    path.write_text(default_ritual_text(ritual_id, root.name), encoding="utf-8")
++    return archived
++
++
+ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> list[str]:
+     """Make the desk's store carry the lifecycle graph; return what was written or tracked.
+ 
+@@ -268,7 +297,16 @@ def ensure_lifecycle_graph(root: Path, spec: LifecycleSpec | None = None) -> lis
+         if not path.exists():
+             raise LifecycleGraphMissing(f"Lifecycle ritual '{ritual_id}' has no document at {path.relative_to(root)}")
+         relative = path.relative_to(root).as_posix()
+-        if _ensure_ritual_readable(path, ritual_id, relative):
++        try:
++            rerendered = _ensure_ritual_readable(path, ritual_id, relative)
++        except LifecycleGraphMissing as exc:
++            archived = _archive_legacy_ritual(root, path, ritual_id)
++            changes.append(
++                f"archived {relative} to {archived.relative_to(root).as_posix()} "
++                f"and wrote the default ritual in its place ({exc})"
++            )
++            rerendered = _ensure_ritual_readable(path, ritual_id, relative)
++        if rerendered:
+             changes.append(f"re-rendered {relative} to the current {RITUAL_MODEL} template")
+         pending_rituals.append((ritual_id, path, relative))
+ 
+diff --git a/deskops/workspace.py b/deskops/workspace.py
+index 2c329a7..51d5ab4 100644
+--- a/deskops/workspace.py
++++ b/deskops/workspace.py
+@@ -398,6 +398,17 @@ Close a {name} task only after validation passes, any durable knowledge from bou
+ """
+ 
+ 
++def default_ritual_text(ritual_id: str, name: str) -> str:
++    """The ritual `deskops init` writes for one lifecycle state."""
++    templates = {
++        "ritual-phase": _phase_template,
++        "ritual-execution": _execution_template,
++        "ritual-testing": _testing_template,
++        "ritual-closeout": _closeout_template,
++    }
++    return templates[ritual_id](name)
++
++
+ def _drawer_template(name: str) -> str:
+     return f"""# Drawer
+ 
+diff --git a/tests/test_lifecycle_graph.py b/tests/test_lifecycle_graph.py
+index 50365ae..b1693ca 100644
+--- a/tests/test_lifecycle_graph.py
++++ b/tests/test_lifecycle_graph.py
+@@ -86,6 +86,37 @@ def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_pa
+     assert main(["doctor", "--root", str(root)]) == 0
+ 
+ 
++@pytest.mark.parametrize(
++    "legacy",
++    [
++        "# Execution ritual\n\nReview the board and implement only the active task.\n",
++        "---\nid: ritual-execution\ntags:\n- workspace:desk\n---\n\n# Execution ritual\n\n"
++        "Execute one task at a time.\n\n## Pre-flight\n\n1. Recover board state.\n",
++    ],
++    ids=["no-frontmatter", "own-sections"],
++)
++def test_a_ritual_the_model_cannot_carry_is_archived_and_replaced(tmp_path: Path, legacy: str) -> None:
++    from deskops.bootstrap import SLDBBootstrap
++    from deskops.workspace import scaffold_desk
++    from sldb.api import doc_exists
++
++    root = tmp_path / "repo"
++    root.mkdir()
++    assert SLDBBootstrap().init_local_store(root) == 0
++    scaffold_desk(root)
++    ritual = root / "desk" / "rituals" / "execution.md"
++    ritual.write_text(legacy, encoding="utf-8")
++
++    changes = lifecycle.ensure_lifecycle_graph(root)
++
++    archived = root / "desk" / "drawer" / "rituals" / "legacy-execution.md"
++    assert archived.read_text(encoding="utf-8") == legacy
++    assert any("archived desk/rituals/execution.md" in change for change in changes)
++    assert "id: ritual-execution" in ritual.read_text(encoding="utf-8")
++    assert doc_exists(root / ".sldb", "RitualDoc/ritual-execution")
++    assert main(["doctor", "--root", str(root)]) == 0
++
++
+ def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: Path) -> None:
+     operations = DeskopsOperations(lifecycle_desk)
+     task_id = _task(operations, "Walk the graph")

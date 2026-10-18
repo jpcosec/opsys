@@ -1,0 +1,7 @@
+Task: task-desk-update-archives-rituals-the-model-cannot-carry
+Title: `desk update --apply` archives legacy rituals RitualDoc cannot carry and writes the default ones
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

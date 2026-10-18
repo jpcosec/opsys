@@ -131,6 +131,11 @@ class DeskCLI:
             from deskops.lifecycle_migration import LegacyMigrationBlocked
 
             print("Migrating the task lifecycle to the desk's sldb graph...")
+            if store_dir.exists() and "RitualDoc" not in SLDBBootstrap()._registered_model_entries(store_dir):
+                # The lifecycle states are RitualDocs; a store that never registered the
+                # model (an early desk) gets the deskops models before the graph is written.
+                SLDBBootstrap().init_local_store(root)
+                print("- registered the deskops models the lifecycle graph needs")
             try:
                 for change in migrate_legacy_lifecycle(root):
                     print(f"- {change}")

@@ -1,0 +1,10 @@
+ M .sldb/core/documents/TaskDoc/task-desk-update-archives-rituals-the-model-cannot-carry.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-desk-update-archives-rituals-the-model-cannot-carry.md
+ M deskops/cli/commands/desk.py
+ M deskops/lifecycle.py
+ M deskops/workspace.py
+ M tests/test_lifecycle_graph.py
+?? runs/planning/store-migration-20261018.md
+?? runs/subagents/20261018-task-desk-update-archives-rituals-the-model-cannot-carry/
