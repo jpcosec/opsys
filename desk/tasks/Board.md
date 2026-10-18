@@ -8,6 +8,7 @@ tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f3-single-closure-path.md
 - desk/tasks/task-rw-f6-migrate-tracking-stores.md
+- desk/tasks/task-rw-f5-deprecated-aliases.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -50,3 +51,4 @@ _Generated from the task references above._
 
 - One closure service behind every way of closing a task [draft] - `deskops/services/closure.py` performs every closure: gates (closeout_gates), Board update, bundle removal, exactly one commit with the route's trailers, and the index entry. `closeout commit` (both routes) uses it with its CLI unchanged.
 - Migrate every store that tracks deskops models [draft] - scripts/migrate_desk_stores.py migrates every discovered store and logs per-store before/after `sldb stores check` results; every store passes afterwards.
+- Duplicate commands become warned aliases or are removed [draft] - The owner's choice is applied to each duplicate.

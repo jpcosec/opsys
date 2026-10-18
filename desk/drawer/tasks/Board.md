@@ -56,7 +56,6 @@ F4:
 
 F5:
 
-- `task-rw-f5-deprecated-aliases` — Duplicate commands become warned aliases or are removed
 
 F6:
 
