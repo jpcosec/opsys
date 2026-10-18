@@ -1,0 +1,11 @@
+Task: task-rw-f1-model-contract-snapshot
+Title: A test pins the sldb contract hash of every deskops model
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f1-model-contract-snapshot.md
+Effective pills:
+- desk/contexts/pill-006-self-described-store-layout.md
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
