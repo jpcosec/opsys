@@ -42,3 +42,4 @@
 {"task_id": "task-registry-registers-graph-ui-and-fixes-the-sldb-path", "run_id": null, "run_dir": "runs/subagents/20261018-task-registry-registers-graph-ui-and-fixes-the-sldb-path", "session_sha256": null, "commit": "3ca567646169b08dfd9bb6a9e4d3cf2c4f8ddb29"}
 {"task_id": "task-promote-writes-drawer-tasks-as-taskdoc", "run_id": null, "run_dir": "runs/subagents/20261018-task-promote-writes-drawer-tasks-as-taskdoc", "session_sha256": null, "commit": "25c0149b8c997082ceed86a86b04950b37d498bc"}
 {"task_id": "task-goldens-hold-across-sldb-extraction-and-python-versions", "run_id": null, "run_dir": "runs/subagents/20261018-task-goldens-hold-across-sldb-extraction-and-python-versions", "session_sha256": null, "commit": "623f6c7da9095ff8a9442b8c67e88093bb8b64e1"}
+{"task_id": "task-issue-close-verb", "run_id": null, "run_dir": "runs/subagents/20261018-task-issue-close-verb", "session_sha256": null, "commit": "419cd2cebd87411e1ab0831cd7373ce0fd2f0f64"}
