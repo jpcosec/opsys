@@ -8,7 +8,6 @@ tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-ci-tests-workflow-and-changelog.md
 - desk/tasks/task-rw-f1-output-golden-files.md
-- desk/tasks/task-message-tracks-notes-in-the-target-store-and-ack-resigns.md
 - desk/tasks/task-graph-uses-sldb-graph-api-instead-of-kgdb.md
 # List of pill-xxx paths
 pills:
@@ -52,5 +51,4 @@ _Generated from the task references above._
 
 - CI runs pytest on every push, and the repo has a CHANGELOG [draft] - A GitHub Actions workflow runs `pytest tests` on push and pull request to main, and CHANGELOG.md records the changes since the last tag.
 - Golden files pin the graph snapshot, run index, closeout trailers and --help text [draft] - Tests compare those outputs, produced from a fixed fixture desk, against committed golden files with volatile values normalized.
-- `message`/`inbox` track a note in the target repo's store, and `--ack` re-signs it [draft] - A delivered note is tracked in the store of the repo that owns the target desk (the `.sldb` next to the target `desk/`), or not tracked with a warning when that repo has no store; `--ack` updates the tracked note so `sldb stores check` passes afterwards in the target repo.
 - deskops reads and validates graphs through sldb, with no kgdb dependency [draft] - No deskops code, test or packaging metadata imports or declares kgdb. `deskops graph build` validates and writes through sldb, and in a fresh venv without kgdb `pytest tests` passes and `deskops graph build` works.

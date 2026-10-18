@@ -1,0 +1,10 @@
+Task: task-message-tracks-notes-in-the-target-store-and-ack-resigns
+Title: `message`/`inbox` track a note in the target repo's store, and `--ack` re-signs it
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-message-tracks-notes-in-the-target-store-and-ack-resigns.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

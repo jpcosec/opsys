@@ -8,6 +8,7 @@ import sys
 from typing import Any
 
 import yaml
+from sldb.api import untrack_document
 from sldb.cli.model_utils import registered_model, resolve_model_ref
 from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
@@ -103,7 +104,7 @@ class MessageCLI:
         # a delivered note into a reported failure.
         tracked_name = None
         try:
-            tracked_name = self._verify_and_track_note(args, path)
+            tracked_name = self._verify_and_track_note(args, path, desk_root)
         except Exception as exc:
             print(
                 f"Warning: delivered to {path} but could not track it in that store: {exc}",
@@ -147,8 +148,14 @@ class MessageCLI:
         payload["target_project"] = payload.get("target_project") or target_project
         payload["acknowledged_by"] = target_project
         payload["acknowledged_at"] = acknowledged_at
+        original = note.read_text(encoding="utf-8")
         note.write_text(render_model_markdown(InboxNoteDoc, payload) + "\n", encoding="utf-8")
-        tracked_name = self._verify_and_track_note(args, note)
+        try:
+            tracked_name = self._verify_and_track_note(args, note, desk_root)
+        except Exception:
+            # Keep the note and the store agreeing when the ack cannot be tracked.
+            note.write_text(original, encoding="utf-8")
+            raise
         result = {
             "id": note.stem,
             "path": str(note),
@@ -189,13 +196,15 @@ class MessageCLI:
         _ = pythonpath
         return EcosystemIdentity(store_arg).how_do_i_find_another(repo_name)
 
-    def _store_context_safe(self, store_arg: str | None) -> tuple[Path, Path]:
-        if store_arg:
-            return get_store_context(store_arg)
-        local_store = find_local_store()
-        if local_store is None:
-            raise SLDBStoreError("No local store found. Use --store to anchor the repo lookup.")
-        return local_store, project_root(local_store)
+    def _note_store_context(self, args: Any, desk_root: Path) -> tuple[Path, Path] | None:
+        """The store that owns the target desk, or None when its repo has no store."""
+        if args.store:
+            return get_store_context(args.store)
+        repo_root = desk_root.parent
+        store_path = repo_root / ".sldb"
+        if not store_path.is_dir():
+            return None
+        return store_path, repo_root
 
     def _iter_notes(self, desk_root: Path) -> list[Path]:
         inbox_dir = desk_root / "inbox"
@@ -331,8 +340,16 @@ class MessageCLI:
             )
         return sender_project
 
-    def _verify_and_track_note(self, args: Any, path: Path) -> str:
-        store_path, root = self._store_context_safe(args.store)
+    def _verify_and_track_note(self, args: Any, path: Path, desk_root: Path) -> str | None:
+        context = self._note_store_context(args, desk_root)
+        if context is None:
+            print(
+                f"Warning: no .sldb store at {desk_root.parent / '.sldb'}; "
+                f"not tracking {path.name}.",
+                file=sys.stderr,
+            )
+            return None
+        store_path, root = context
         model_type, entry, idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
 
         rendered = path.read_text(encoding="utf-8")
@@ -341,17 +358,28 @@ class MessageCLI:
             raise SLDBValidationError("Message failed validation", details)
 
         note_name = path.stem
-        track_document(
-            store_path,
-            root,
-            idx,
-            model_type,
-            entry,
-            path,
-            note_name,
-            resolve_model_ref,
-            args.pythonpath,
-        )
+
+        def track() -> None:
+            track_document(
+                store_path,
+                root,
+                idx,
+                model_type,
+                entry,
+                path,
+                note_name,
+                resolve_model_ref,
+                args.pythonpath,
+            )
+
+        try:
+            track()
+        except SLDBStoreError as exc:
+            if "already tracked" not in str(exc):
+                raise
+            # Re-sign an existing tracking entry instead of tracking it twice.
+            untrack_document(store_path, note_name, args.pythonpath)
+            track()
         return note_name
 
     def _store_context(self, args: Any) -> tuple[Path, Path] | None:

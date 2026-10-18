@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -20,6 +21,52 @@ if str(TESTS) not in sys.path:
 
 from deskops.cli.main import main
 from test_cli import _setup_inbox_identity_env
+
+
+def _cli(root: Path, *argv: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, "-m", "deskops", *argv], cwd=root, capture_output=True, text=True
+    )
+
+
+def _sldb_stores_check(store_path: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_path)],
+        capture_output=True,
+        text=True,
+    )
+
+
+def _init_repos(tmp_path: Path) -> tuple[Path, Path]:
+    repos = []
+    for name in ("repo-a", "repo-b"):
+        repo = tmp_path / name
+        repo.mkdir()
+        result = _cli(repo, "init", str(repo))
+        assert result.returncode == 0, result.stderr or result.stdout
+        repos.append(repo)
+    return repos[0], repos[1]
+
+
+def _deliver(repo_a: Path, repo_b: Path, title: str) -> tuple[Path, dict]:
+    result = _cli(
+        repo_a,
+        "message",
+        "send",
+        "A note for repo B.",
+        "--title",
+        title,
+        "--kind",
+        "suggestion",
+        "--root",
+        str(repo_b),
+        "--format",
+        "json",
+    )
+    assert result.returncode == 0, result.stderr or result.stdout
+    notes = list((repo_b / "desk" / "inbox").glob("*.md"))
+    assert len(notes) == 1
+    return notes[0], json.loads(result.stdout)
 
 
 def test_message_help_documents_transport_verbs(capsys) -> None:
@@ -90,3 +137,70 @@ def test_message_list_reports_empty_inbox(tmp_path: Path, monkeypatch, capsys) -
 
     assert main(["message", "list", "--root", str(target_repo), "--store", str(store_path)]) == 0
     assert "No messages." in capsys.readouterr().out
+
+
+def test_message_delivery_tracks_note_in_target_repo_store(tmp_path: Path) -> None:
+    from sldb.api import doc_status
+
+    repo_a, repo_b = _init_repos(tmp_path)
+    note, payload = _deliver(repo_a, repo_b, "Tracked in the target store")
+
+    assert payload["target_project"] == "repo-b"
+    assert payload["verified"] is True
+    assert doc_status(repo_a / ".sldb", note.stem).status == "missing"
+    tracked = doc_status(repo_b / ".sldb", note.stem)
+    assert tracked.status == "ok"
+    assert tracked.path == f"desk/inbox/{note.name}"
+    assert not Path(tracked.path).is_absolute()
+    check = _sldb_stores_check(repo_b / ".sldb")
+    assert check.returncode == 0, check.stderr or check.stdout
+    assert "PASS" in check.stdout
+
+
+def test_message_ack_refreshes_note_tracked_in_target_repo_store(tmp_path: Path) -> None:
+    from sldb.api import doc_status
+
+    repo_a, repo_b = _init_repos(tmp_path)
+    note, _ = _deliver(repo_a, repo_b, "Acknowledged in the target store")
+
+    result = _cli(
+        repo_b,
+        "message",
+        "ack",
+        note.stem,
+        "--root",
+        str(repo_b),
+        "--format",
+        "json",
+    )
+    assert result.returncode == 0, result.stderr or result.stdout
+    acked = json.loads(result.stdout)
+    assert acked["status"] == "closed"
+    assert acked["acknowledged_by"] == "repo-b"
+    assert doc_status(repo_b / ".sldb", note.stem).status == "ok"
+    check = _sldb_stores_check(repo_b / ".sldb")
+    assert check.returncode == 0, check.stderr or check.stdout
+    assert "PASS" in check.stdout
+    assert doc_status(repo_a / ".sldb", note.stem).status == "missing"
+
+
+def test_message_ack_restores_note_when_tracking_fails(tmp_path: Path, monkeypatch) -> None:
+    from sldb.api import doc_status
+    from sldb.core.exceptions import SLDBStoreError
+
+    repo_a, repo_b = _init_repos(tmp_path)
+    note, _ = _deliver(repo_a, repo_b, "Restored when tracking fails")
+    original = note.read_bytes()
+
+    def failing_untrack(*_args, **_kwargs):
+        raise SLDBStoreError("simulated refresh failure")
+
+    monkeypatch.setattr("deskops.cli.commands.message.untrack_document", failing_untrack)
+    monkeypatch.chdir(repo_b)
+
+    assert main(["message", "ack", note.stem, "--root", str(repo_b)]) == 1
+    assert note.read_bytes() == original
+    assert doc_status(repo_b / ".sldb", note.stem).status == "ok"
+    check = _sldb_stores_check(repo_b / ".sldb")
+    assert check.returncode == 0, check.stderr or check.stdout
+    assert "PASS" in check.stdout

@@ -1,0 +1,255 @@
+diff --git a/deskops/cli/commands/message.py b/deskops/cli/commands/message.py
+index f651530..752bc8f 100644
+--- a/deskops/cli/commands/message.py
++++ b/deskops/cli/commands/message.py
+@@ -8,6 +8,7 @@ import sys
+ from typing import Any
+ 
+ import yaml
++from sldb.api import untrack_document
+ from sldb.cli.model_utils import registered_model, resolve_model_ref
+ from sldb.cli.store_context import get_store_context
+ from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
+@@ -103,7 +104,7 @@ class MessageCLI:
+         # a delivered note into a reported failure.
+         tracked_name = None
+         try:
+-            tracked_name = self._verify_and_track_note(args, path)
++            tracked_name = self._verify_and_track_note(args, path, desk_root)
+         except Exception as exc:
+             print(
+                 f"Warning: delivered to {path} but could not track it in that store: {exc}",
+@@ -147,8 +148,14 @@ class MessageCLI:
+         payload["target_project"] = payload.get("target_project") or target_project
+         payload["acknowledged_by"] = target_project
+         payload["acknowledged_at"] = acknowledged_at
++        original = note.read_text(encoding="utf-8")
+         note.write_text(render_model_markdown(InboxNoteDoc, payload) + "\n", encoding="utf-8")
+-        tracked_name = self._verify_and_track_note(args, note)
++        try:
++            tracked_name = self._verify_and_track_note(args, note, desk_root)
++        except Exception:
++            # Keep the note and the store agreeing when the ack cannot be tracked.
++            note.write_text(original, encoding="utf-8")
++            raise
+         result = {
+             "id": note.stem,
+             "path": str(note),
+@@ -189,13 +196,15 @@ class MessageCLI:
+         _ = pythonpath
+         return EcosystemIdentity(store_arg).how_do_i_find_another(repo_name)
+ 
+-    def _store_context_safe(self, store_arg: str | None) -> tuple[Path, Path]:
+-        if store_arg:
+-            return get_store_context(store_arg)
+-        local_store = find_local_store()
+-        if local_store is None:
+-            raise SLDBStoreError("No local store found. Use --store to anchor the repo lookup.")
+-        return local_store, project_root(local_store)
++    def _note_store_context(self, args: Any, desk_root: Path) -> tuple[Path, Path] | None:
++        """The store that owns the target desk, or None when its repo has no store."""
++        if args.store:
++            return get_store_context(args.store)
++        repo_root = desk_root.parent
++        store_path = repo_root / ".sldb"
++        if not store_path.is_dir():
++            return None
++        return store_path, repo_root
+ 
+     def _iter_notes(self, desk_root: Path) -> list[Path]:
+         inbox_dir = desk_root / "inbox"
+@@ -331,8 +340,16 @@ class MessageCLI:
+             )
+         return sender_project
+ 
+-    def _verify_and_track_note(self, args: Any, path: Path) -> str:
+-        store_path, root = self._store_context_safe(args.store)
++    def _verify_and_track_note(self, args: Any, path: Path, desk_root: Path) -> str | None:
++        context = self._note_store_context(args, desk_root)
++        if context is None:
++            print(
++                f"Warning: no .sldb store at {desk_root.parent / '.sldb'}; "
++                f"not tracking {path.name}.",
++                file=sys.stderr,
++            )
++            return None
++        store_path, root = context
+         model_type, entry, idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
+ 
+         rendered = path.read_text(encoding="utf-8")
+@@ -341,17 +358,28 @@ class MessageCLI:
+             raise SLDBValidationError("Message failed validation", details)
+ 
+         note_name = path.stem
+-        track_document(
+-            store_path,
+-            root,
+-            idx,
+-            model_type,
+-            entry,
+-            path,
+-            note_name,
+-            resolve_model_ref,
+-            args.pythonpath,
+-        )
++
++        def track() -> None:
++            track_document(
++                store_path,
++                root,
++                idx,
++                model_type,
++                entry,
++                path,
++                note_name,
++                resolve_model_ref,
++                args.pythonpath,
++            )
++
++        try:
++            track()
++        except SLDBStoreError as exc:
++            if "already tracked" not in str(exc):
++                raise
++            # Re-sign an existing tracking entry instead of tracking it twice.
++            untrack_document(store_path, note_name, args.pythonpath)
++            track()
+         return note_name
+ 
+     def _store_context(self, args: Any) -> tuple[Path, Path] | None:
+diff --git a/tests/test_message_cli.py b/tests/test_message_cli.py
+index ca7968b..3404d9d 100644
+--- a/tests/test_message_cli.py
++++ b/tests/test_message_cli.py
+@@ -9,6 +9,7 @@ from __future__ import annotations
+ 
+ import json
+ from pathlib import Path
++import subprocess
+ import sys
+ 
+ ROOT = Path(__file__).resolve().parents[1]
+@@ -22,6 +23,52 @@ from deskops.cli.main import main
+ from test_cli import _setup_inbox_identity_env
+ 
+ 
++def _cli(root: Path, *argv: str) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(
++        [sys.executable, "-m", "deskops", *argv], cwd=root, capture_output=True, text=True
++    )
++
++
++def _sldb_stores_check(store_path: Path) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(
++        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_path)],
++        capture_output=True,
++        text=True,
++    )
++
++
++def _init_repos(tmp_path: Path) -> tuple[Path, Path]:
++    repos = []
++    for name in ("repo-a", "repo-b"):
++        repo = tmp_path / name
++        repo.mkdir()
++        result = _cli(repo, "init", str(repo))
++        assert result.returncode == 0, result.stderr or result.stdout
++        repos.append(repo)
++    return repos[0], repos[1]
++
++
++def _deliver(repo_a: Path, repo_b: Path, title: str) -> tuple[Path, dict]:
++    result = _cli(
++        repo_a,
++        "message",
++        "send",
++        "A note for repo B.",
++        "--title",
++        title,
++        "--kind",
++        "suggestion",
++        "--root",
++        str(repo_b),
++        "--format",
++        "json",
++    )
++    assert result.returncode == 0, result.stderr or result.stdout
++    notes = list((repo_b / "desk" / "inbox").glob("*.md"))
++    assert len(notes) == 1
++    return notes[0], json.loads(result.stdout)
++
++
+ def test_message_help_documents_transport_verbs(capsys) -> None:
+     assert main(["message", "--help"]) == 0
+     output = " ".join(capsys.readouterr().out.split())
+@@ -90,3 +137,70 @@ def test_message_list_reports_empty_inbox(tmp_path: Path, monkeypatch, capsys) -
+ 
+     assert main(["message", "list", "--root", str(target_repo), "--store", str(store_path)]) == 0
+     assert "No messages." in capsys.readouterr().out
++
++
++def test_message_delivery_tracks_note_in_target_repo_store(tmp_path: Path) -> None:
++    from sldb.api import doc_status
++
++    repo_a, repo_b = _init_repos(tmp_path)
++    note, payload = _deliver(repo_a, repo_b, "Tracked in the target store")
++
++    assert payload["target_project"] == "repo-b"
++    assert payload["verified"] is True
++    assert doc_status(repo_a / ".sldb", note.stem).status == "missing"
++    tracked = doc_status(repo_b / ".sldb", note.stem)
++    assert tracked.status == "ok"
++    assert tracked.path == f"desk/inbox/{note.name}"
++    assert not Path(tracked.path).is_absolute()
++    check = _sldb_stores_check(repo_b / ".sldb")
++    assert check.returncode == 0, check.stderr or check.stdout
++    assert "PASS" in check.stdout
++
++
++def test_message_ack_refreshes_note_tracked_in_target_repo_store(tmp_path: Path) -> None:
++    from sldb.api import doc_status
++
++    repo_a, repo_b = _init_repos(tmp_path)
++    note, _ = _deliver(repo_a, repo_b, "Acknowledged in the target store")
++
++    result = _cli(
++        repo_b,
++        "message",
++        "ack",
++        note.stem,
++        "--root",
++        str(repo_b),
++        "--format",
++        "json",
++    )
++    assert result.returncode == 0, result.stderr or result.stdout
++    acked = json.loads(result.stdout)
++    assert acked["status"] == "closed"
++    assert acked["acknowledged_by"] == "repo-b"
++    assert doc_status(repo_b / ".sldb", note.stem).status == "ok"
++    check = _sldb_stores_check(repo_b / ".sldb")
++    assert check.returncode == 0, check.stderr or check.stdout
++    assert "PASS" in check.stdout
++    assert doc_status(repo_a / ".sldb", note.stem).status == "missing"
++
++
++def test_message_ack_restores_note_when_tracking_fails(tmp_path: Path, monkeypatch) -> None:
++    from sldb.api import doc_status
++    from sldb.core.exceptions import SLDBStoreError
++
++    repo_a, repo_b = _init_repos(tmp_path)
++    note, _ = _deliver(repo_a, repo_b, "Restored when tracking fails")
++    original = note.read_bytes()
++
++    def failing_untrack(*_args, **_kwargs):
++        raise SLDBStoreError("simulated refresh failure")
++
++    monkeypatch.setattr("deskops.cli.commands.message.untrack_document", failing_untrack)
++    monkeypatch.chdir(repo_b)
++
++    assert main(["message", "ack", note.stem, "--root", str(repo_b)]) == 1
++    assert note.read_bytes() == original
++    assert doc_status(repo_b / ".sldb", note.stem).status == "ok"
++    check = _sldb_stores_check(repo_b / ".sldb")
++    assert check.returncode == 0, check.stderr or check.stdout
++    assert "PASS" in check.stdout
