@@ -1,0 +1,20 @@
+usage: deskops closeout supersede [-h] [--root ROOT] --task TASK
+                                  --reason REASON --ref REF
+
+options:
+  -h, --help       show this help message and exit
+  --root ROOT      Target repository root.
+  --task TASK      Task id being closed.
+  --reason REASON  Why the task's subject no longer exists.
+  --ref REF        Ancestor commit id or existing path; repeat for more refs.
+
+Example:
+  deskops closeout supersede --root . --task task-fix-thing \
+    --reason "The owner deleted the target feature in 9f64f0f; there is nothing left to do" \
+    --ref 9f64f0f
+
+Supersede skips the evidence gates, because no run, test, or atom describes
+work that was never done. It still makes exactly one closing commit: status and
+history record `superseded`, the commit carries Closeout-Mode: superseded with
+Closeout-Reason and one Closeout-Ref per ref, the task leaves the Board, and
+the run index entry is marked superseded.

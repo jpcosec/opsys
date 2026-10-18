@@ -1240,6 +1240,36 @@ by this command, not by agent discretion.
             raw_text=True,
         ),
         Command(
+            path=("closeout", "supersede"),
+            help="Close a task whose subject no longer exists, naming a reason and a resolvable ref.",
+            args=(
+                ROOT_ARG,
+                A("--task", required=True, help="Task id being closed."),
+                A("--reason", required=True, help="Why the task's subject no longer exists."),
+                A(
+                    "--ref",
+                    action="append",
+                    required=True,
+                    help="Ancestor commit id or existing path; repeat for more refs.",
+                ),
+            ),
+            handler="deskops.cli.commands.closeout:CloseoutCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops closeout supersede --root . --task task-fix-thing \\
+    --reason "The owner deleted the target feature in 9f64f0f; there is nothing left to do" \\
+    --ref 9f64f0f
+
+Supersede skips the evidence gates, because no run, test, or atom describes
+work that was never done. It still makes exactly one closing commit: status and
+history record `superseded`, the commit carries Closeout-Mode: superseded with
+Closeout-Reason and one Closeout-Ref per ref, the task leaves the Board, and
+the run index entry is marked superseded.
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
             path=("closeout", "verify"),
             help="Strictly verify closeout evidence gates for one task and print a structured report.",
             args=(

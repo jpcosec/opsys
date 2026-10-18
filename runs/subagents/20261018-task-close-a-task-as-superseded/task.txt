@@ -1,0 +1,9 @@
+Task: task-close-a-task-as-superseded
+Title: A task whose subject no longer exists closes as superseded, with a reason and a reference
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

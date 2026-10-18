@@ -1,11 +1,13 @@
-usage: deskops closeout [-h] {commit,verify} ...
+usage: deskops closeout [-h] {commit,supersede,verify} ...
 
 positional arguments:
-  {commit,verify}
-    commit         Create the tool-made closing commit, linked to a run
-                   evidence directory or marked manual.
-    verify         Strictly verify closeout evidence gates for one task and
-                   print a structured report.
+  {commit,supersede,verify}
+    commit              Create the tool-made closing commit, linked to a run
+                        evidence directory or marked manual.
+    supersede           Close a task whose subject no longer exists, naming a
+                        reason and a resolvable ref.
+    verify              Strictly verify closeout evidence gates for one task
+                        and print a structured report.
 
 options:
-  -h, --help       show this help message and exit
+  -h, --help            show this help message and exit

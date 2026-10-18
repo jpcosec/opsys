@@ -104,6 +104,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
     ("materialize",),
     ("closeout",),
     ("closeout", "commit"),
+    ("closeout", "supersede"),
     ("runtime",),
     ("runtime", "init"),
     ("runtime", "stop"),

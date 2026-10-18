@@ -1,0 +1,480 @@
+diff --git a/deskops/cli/commands/closeout.py b/deskops/cli/commands/closeout.py
+index f560818..8fdef79 100644
+--- a/deskops/cli/commands/closeout.py
++++ b/deskops/cli/commands/closeout.py
+@@ -14,20 +14,36 @@ class CloseoutCLI:
+     The closing commit is created by ``ClosureService``, not by agent
+     discretion. With --run-dir the commit message carries immutable trailers
+     linking it to the run evidence directory; with --no-run it carries
+-    Closeout-Mode: manual and the stated reason instead. Either way an
+-    append-only index records the task and run, committed together with the
+-    closing commit; the commit hash is resolved from its Task-Id trailer.
++    Closeout-Mode: manual and the stated reason instead. ``supersede`` closes a
++    task whose subject no longer exists, with a reason and a resolvable ref
++    instead of run evidence. Either way an append-only index records the task
++    and run, committed together with the closing commit; the commit hash is
++    resolved from its Task-Id trailer.
+     """
+ 
+     def run(self, args: Any) -> int:
+         command = getattr(args, "closeout_command", None)
+         if command == "commit":
+             return self._commit(args)
++        if command == "supersede":
++            return self._supersede(args)
+         if command == "verify":
+             return self._verify(args)
+-        print("Usage: deskops closeout {commit|verify} ...")
++        print("Usage: deskops closeout {commit|supersede|verify} ...")
+         return 1
+ 
++    def _supersede(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        service = ClosureService(root, DeskopsOperations(root))
++        outcome = service.close_superseded(
++            args.task,
++            reason=getattr(args, "reason", "") or "",
++            refs=getattr(args, "ref", None),
++        )
++        for message in outcome.messages:
++            print(message)
++        return outcome.exit_code
++
+     def _verify(self, args: Any) -> int:
+         root = Path(args.root).resolve()
+         report = DeskopsOperations(root).verify_task_closeout(args.task)
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index e72b59b..fd39563 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -1236,6 +1236,36 @@ Either way an index entry is recorded back into runs/subagents/index.jsonl
+ and committed with the closing commit; it names the task and run, and the
+ commit hash is resolved from the commit's Task-Id trailer. The commit is made
+ by this command, not by agent discretion.
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("closeout", "supersede"),
++            help="Close a task whose subject no longer exists, naming a reason and a resolvable ref.",
++            args=(
++                ROOT_ARG,
++                A("--task", required=True, help="Task id being closed."),
++                A("--reason", required=True, help="Why the task's subject no longer exists."),
++                A(
++                    "--ref",
++                    action="append",
++                    required=True,
++                    help="Ancestor commit id or existing path; repeat for more refs.",
++                ),
++            ),
++            handler="deskops.cli.commands.closeout:CloseoutCLI",
++            mutates=True,
++            epilog="""
++Example:
++  deskops closeout supersede --root . --task task-fix-thing \\
++    --reason "The owner deleted the target feature in 9f64f0f; there is nothing left to do" \\
++    --ref 9f64f0f
++
++Supersede skips the evidence gates, because no run, test, or atom describes
++work that was never done. It still makes exactly one closing commit: status and
++history record `superseded`, the commit carries Closeout-Mode: superseded with
++Closeout-Reason and one Closeout-Ref per ref, the task leaves the Board, and
++the run index entry is marked superseded.
+ """.strip(),
+             raw_text=True,
+         ),
+diff --git a/deskops/services/closure.py b/deskops/services/closure.py
+index 1861a82..77a9477 100644
+--- a/deskops/services/closure.py
++++ b/deskops/services/closure.py
+@@ -1,7 +1,8 @@
+ """One closure path for task bundles.
+ 
+ Every way of closing a task ends here: ``deskops closeout commit`` (run-linked
+-and manual routes) and the legacy ``_auto_commit_task_closure`` hook. The
++and manual routes), ``deskops closeout supersede``, and the legacy
++``_auto_commit_task_closure`` hook. The
+ service owns the whole closure: closeout gates for a board-routed task, Board
+ update, store untracking, bundle removal, exactly one closing commit carrying
+ the route's trailers, and the append-only index entry.
+@@ -24,6 +25,7 @@ import yaml
+ 
+ from deskops import doc_io
+ from deskops.models import BoardDoc
++from deskops.models import TaskDoc
+ 
+ if TYPE_CHECKING:
+     from deskops.operations import DeskopsOperations
+@@ -99,6 +101,95 @@ class ClosureService:
+             success_line=f"Closing commit {{commit}} made manually (no run): {reason}",
+         )
+ 
++    def close_superseded(
++        self,
++        task_id: str,
++        *,
++        reason: str,
++        refs: list[str] | None,
++        paths: list[str] | None = None,
++        message: str | None = None,
++    ) -> ClosureOutcome:
++        """Close a task whose subject no longer exists, from any lifecycle node.
++
++        No evidence gates run: tests, atoms and a run would all describe work
++        that was never done. The reason and at least one resolvable ref (an
++        ancestor commit or an existing path) are the evidence instead, and the
++        closing commit says ``Closeout-Mode: superseded``.
++        """
++        reason = " ".join((reason or "").split())
++        if not reason:
++            return ClosureOutcome(
++                1,
++                ["Supersede needs a non-empty --reason saying why the task's subject no longer exists."],
++            )
++
++        cleaned_refs = [str(ref).strip() for ref in refs or [] if str(ref).strip()]
++        if not cleaned_refs:
++            return ClosureOutcome(
++                1,
++                ["Supersede needs at least one --ref naming an ancestor commit or an existing path."],
++            )
++        unresolved = [ref for ref in cleaned_refs if not self._ref_resolves(ref)]
++        if unresolved:
++            return ClosureOutcome(
++                1,
++                [f"Unresolvable --ref: {', '.join(unresolved)} (need an ancestor commit or an existing path)."],
++            )
++
++        task_path = self._task_path(task_id)
++        if not task_path.is_file():
++            return ClosureOutcome(1, [f"Task not found: {task_id}"])
++
++        original = task_path.read_bytes()
++        payload = self._ops._read_doc(task_path, TaskDoc)
++        payload["status"] = "superseded"
++        payload["history"] = [*(payload.get("history") or []), "superseded"]
++        try:
++            self._ops._write_doc(task_path, TaskDoc, payload)
++        except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
++            task_path.write_bytes(original)
++            return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
++
++        trailers = [
++            f"Task-Id: {task_id}",
++            "Closeout-Mode: superseded",
++            f"Closeout-Reason: {reason}",
++            *[f"Closeout-Ref: {ref}" for ref in cleaned_refs],
++        ]
++        try:
++            outcome = self._close(
++                task_id,
++                route="superseded",
++                subject=message or f"closeout: {task_id}",
++                trailers=trailers,
++                paths=list(paths or []),
++                explicit_paths=True,
++                run_gates=False,
++                index_entry={
++                    "task_id": task_id,
++                    "run_id": None,
++                    "run_dir": None,
++                    "session_sha256": None,
++                    "mode": "superseded",
++                },
++                success_line=f"Closing commit {{commit}} made in superseded mode: {reason}",
++            )
++        except Exception:
++            task_path.write_bytes(original)
++            raise
++        if outcome.exit_code != 0:
++            task_path.write_bytes(original)
++        return outcome
++
++    def _ref_resolves(self, reference: str) -> bool:
++        if self._ops.closeout_gates.reference_points_to_commit(reference):
++            return True
++        path = Path(reference)
++        if not path.is_absolute():
++            path = self.root / path
++        return path.exists()
++
+     def close_with_run(
+         self,
+         task_id: str,
+diff --git a/tests/fixtures/golden/help/deskops_closeout.txt b/tests/fixtures/golden/help/deskops_closeout.txt
+index 2446689..98fad04 100644
+--- a/tests/fixtures/golden/help/deskops_closeout.txt
++++ b/tests/fixtures/golden/help/deskops_closeout.txt
+@@ -1,11 +1,13 @@
+-usage: deskops closeout [-h] {commit,verify} ...
++usage: deskops closeout [-h] {commit,supersede,verify} ...
+ 
+ positional arguments:
+-  {commit,verify}
+-    commit         Create the tool-made closing commit, linked to a run
+-                   evidence directory or marked manual.
+-    verify         Strictly verify closeout evidence gates for one task and
+-                   print a structured report.
++  {commit,supersede,verify}
++    commit              Create the tool-made closing commit, linked to a run
++                        evidence directory or marked manual.
++    supersede           Close a task whose subject no longer exists, naming a
++                        reason and a resolvable ref.
++    verify              Strictly verify closeout evidence gates for one task
++                        and print a structured report.
+ 
+ options:
+-  -h, --help       show this help message and exit
++  -h, --help            show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_closeout_supersede.txt b/tests/fixtures/golden/help/deskops_closeout_supersede.txt
+new file mode 100644
+index 0000000..b48fdc1
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_closeout_supersede.txt
+@@ -0,0 +1,20 @@
++usage: deskops closeout supersede [-h] [--root ROOT] --task TASK
++                                  --reason REASON --ref REF
++
++options:
++  -h, --help       show this help message and exit
++  --root ROOT      Target repository root.
++  --task TASK      Task id being closed.
++  --reason REASON  Why the task's subject no longer exists.
++  --ref REF        Ancestor commit id or existing path; repeat for more refs.
++
++Example:
++  deskops closeout supersede --root . --task task-fix-thing \
++    --reason "The owner deleted the target feature in 9f64f0f; there is nothing left to do" \
++    --ref 9f64f0f
++
++Supersede skips the evidence gates, because no run, test, or atom describes
++work that was never done. It still makes exactly one closing commit: status and
++history record `superseded`, the commit carries Closeout-Mode: superseded with
++Closeout-Reason and one Closeout-Ref per ref, the task leaves the Board, and
++the run index entry is marked superseded.
+diff --git a/tests/test_closeout.py b/tests/test_closeout.py
+index 627965a..de8c60e 100644
+--- a/tests/test_closeout.py
++++ b/tests/test_closeout.py
+@@ -588,3 +588,208 @@ def test_closeout_commit_accepts_a_directory_holding_the_task(
+     assert not (root / "desk" / "tasks" / "task-x.md").exists()
+     assert _git(root, "status", "--porcelain") == ""
+     assert "feature.py" in _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()
++
++
++def _write_board(root: Path, task_id: str = "task-x") -> None:
++    _write(
++        root / "desk" / "tasks" / "Board.md",
++        f"""---
++id: board-tasks
++scope: desk
++tasks:
++- desk/tasks/{task_id}.md
++pills: []
++rituals: []
++tags: []
++---
++
++# Repo Board
++
++## Purpose
++
++Route the active task.
++
++## Notes
++
++No additional notes.
++
++## Task Details
++""",
++    )
++
++
++def _write_lifecycle_task(root: Path, task_id: str = "task-x") -> None:
++    _write(
++        root / "desk" / "tasks" / f"{task_id}.md",
++        f"""---
++id: {task_id}
++status: active
++summary: ''
++tags: []
++current_node: ritual-execution
++history: []
++references: []
++depends_on: []
++pills: []
++files: []
++task_type: implementation
++inherits_from: []
++inherit_acceptance_context: false
++atoms: []
++---
++
++# Task X
++
++## Rationale
++
++The subject was removed.
++
++## Goal
++
++Close it honestly.
++
++## Scope
++
++Stay scoped.
++
++## Implementation Path
++
++Supersede it.
++
++## Validation
++
++- pytest
++
++## Done When
++
++Closed.
++""",
++    )
++
++
++def _commit_task_on_board(root: Path, task_id: str = "task-x") -> None:
++    _write_lifecycle_task(root, task_id)
++    _write_board(root, task_id)
++    _git(root, "add", "desk/tasks")
++    _git(root, "commit", "-q", "-m", "add task and board")
++
++
++def _supersede_main(root: Path, *argv: str) -> int:
++    return main(["closeout", "supersede", "--root", str(root), "--task", "task-x", *argv])
++
++
++def test_closeout_supersede_closes_a_task_with_a_reason_and_commit_ref(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++    ref = _git(root, "rev-parse", "HEAD")
++
++    rc = _supersede_main(root, "--reason", "The owner removed the subject", "--ref", ref)
++
++    assert rc == 0, capsys.readouterr().out
++    message = _git(root, "log", "-1", "--format=%B")
++    assert message.splitlines()[0] == "closeout: task-x"
++    assert "Task-Id: task-x" in message
++    assert "Closeout-Mode: superseded" in message
++    assert "Closeout-Reason: The owner removed the subject" in message
++    assert f"Closeout-Ref: {ref}" in message
++    assert _git(root, "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)") == "superseded"
++
++    assert not (root / "desk" / "tasks" / "task-x.md").exists()
++    assert "desk/tasks/task-x.md" not in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
++    assert _git(root, "status", "--porcelain") == ""
++
++    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
++    assert entry == {
++        "task_id": "task-x",
++        "run_id": None,
++        "run_dir": None,
++        "commit": None,
++        "session_sha256": None,
++        "mode": "superseded",
++    }
++    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == _git(root, "rev-parse", "HEAD")
++    assert sorted(_git(root, "show", "--name-only", "--format=", "HEAD").splitlines()) == [
++        "desk/tasks/Board.md",
++        "desk/tasks/task-x.md",
++        "runs/subagents/index.jsonl",
++    ]
++
++
++def test_closeout_supersede_accepts_an_existing_path_ref(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++
++    rc = _supersede_main(root, "--reason", "subject path was deleted", "--ref", "desk/tasks/Board.md")
++
++    assert rc == 0, capsys.readouterr().out
++    assert not (root / "desk" / "tasks" / "task-x.md").exists()
++    assert "Closeout-Ref: desk/tasks/Board.md" in _git(root, "log", "-1", "--format=%B")
++
++
++@pytest.mark.parametrize("reason", ["", "   "])
++def test_closeout_supersede_requires_a_reason(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str], reason: str
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++    ref = "desk/tasks/Board.md"
++
++    rc = _supersede_main(root, "--reason", reason, "--ref", ref)
++
++    assert rc == 1
++    assert "Supersede needs a non-empty --reason" in capsys.readouterr().out
++    assert _git(root, "rev-parse", "HEAD") == head
++    assert _git(root, "status", "--porcelain") == ""
++    assert (root / "desk" / "tasks" / "task-x.md").exists()
++    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
++
++
++@pytest.mark.parametrize("ref", ["does-not-exist.txt", "deadbeef", "0" * 40])
++def test_closeout_supersede_refuses_an_unresolvable_ref_and_leaves_the_tree_unchanged(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str], ref: str
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++
++    rc = _supersede_main(root, "--reason", "subject removed", "--ref", ref)
++
++    assert rc == 1
++    assert "Unresolvable --ref" in capsys.readouterr().out
++    assert _git(root, "rev-parse", "HEAD") == head
++    assert _git(root, "status", "--porcelain") == ""
++    assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: active") == 1
++    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
++
++
++def test_closeout_supersede_requires_at_least_one_ref(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++
++    rc = main(["closeout", "supersede", "--root", str(root), "--task", "task-x", "--reason", "subject removed"])
++
++    assert rc == 2
++    assert "--ref" in capsys.readouterr().err
++    assert _git(root, "rev-parse", "HEAD") == head
++
++
++def test_closeout_supersede_requires_the_reason_flag(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_task_on_board(root)
++    head = _git(root, "rev-parse", "HEAD")
++
++    rc = _supersede_main(root, "--ref", "desk/tasks/Board.md")
++
++    assert rc == 2
++    assert "--reason" in capsys.readouterr().err
++    assert _git(root, "rev-parse", "HEAD") == head
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 9b6a622..89cd29c 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -104,6 +104,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
+     ("materialize",),
+     ("closeout",),
+     ("closeout", "commit"),
++    ("closeout", "supersede"),
+     ("runtime",),
+     ("runtime", "init"),
+     ("runtime", "stop"),

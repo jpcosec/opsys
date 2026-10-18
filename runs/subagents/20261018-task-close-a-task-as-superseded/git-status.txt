@@ -1,0 +1,16 @@
+ M .sldb/core/documents/RitualDoc/ritual-closeout.yaml
+ M .sldb/core/documents/TaskDoc/task-close-a-task-as-superseded.yaml
+ M .sldb/core/models/BoardDoc.yaml
+ M .sldb/core/models/RitualDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/rituals/closeout.md
+ M desk/tasks/task-close-a-task-as-superseded.md
+ M deskops/cli/commands/closeout.py
+ M deskops/cli/registry.py
+ M deskops/services/closure.py
+ M tests/fixtures/golden/help/deskops_closeout.txt
+ M tests/test_closeout.py
+ M tests/test_command_registry.py
+?? runs/subagents/20261018-task-close-a-task-as-superseded/
+?? tests/fixtures/golden/help/deskops_closeout_supersede.txt

@@ -14,19 +14,35 @@ class CloseoutCLI:
     The closing commit is created by ``ClosureService``, not by agent
     discretion. With --run-dir the commit message carries immutable trailers
     linking it to the run evidence directory; with --no-run it carries
-    Closeout-Mode: manual and the stated reason instead. Either way an
-    append-only index records the task and run, committed together with the
-    closing commit; the commit hash is resolved from its Task-Id trailer.
+    Closeout-Mode: manual and the stated reason instead. ``supersede`` closes a
+    task whose subject no longer exists, with a reason and a resolvable ref
+    instead of run evidence. Either way an append-only index records the task
+    and run, committed together with the closing commit; the commit hash is
+    resolved from its Task-Id trailer.
     """
 
     def run(self, args: Any) -> int:
         command = getattr(args, "closeout_command", None)
         if command == "commit":
             return self._commit(args)
+        if command == "supersede":
+            return self._supersede(args)
         if command == "verify":
             return self._verify(args)
-        print("Usage: deskops closeout {commit|verify} ...")
+        print("Usage: deskops closeout {commit|supersede|verify} ...")
         return 1
+
+    def _supersede(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        service = ClosureService(root, DeskopsOperations(root))
+        outcome = service.close_superseded(
+            args.task,
+            reason=getattr(args, "reason", "") or "",
+            refs=getattr(args, "ref", None),
+        )
+        for message in outcome.messages:
+            print(message)
+        return outcome.exit_code
 
     def _verify(self, args: Any) -> int:
         root = Path(args.root).resolve()

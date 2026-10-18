@@ -588,3 +588,208 @@ def test_closeout_commit_accepts_a_directory_holding_the_task(
     assert not (root / "desk" / "tasks" / "task-x.md").exists()
     assert _git(root, "status", "--porcelain") == ""
     assert "feature.py" in _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()
+
+
+def _write_board(root: Path, task_id: str = "task-x") -> None:
+    _write(
+        root / "desk" / "tasks" / "Board.md",
+        f"""---
+id: board-tasks
+scope: desk
+tasks:
+- desk/tasks/{task_id}.md
+pills: []
+rituals: []
+tags: []
+---
+
+# Repo Board
+
+## Purpose
+
+Route the active task.
+
+## Notes
+
+No additional notes.
+
+## Task Details
+""",
+    )
+
+
+def _write_lifecycle_task(root: Path, task_id: str = "task-x") -> None:
+    _write(
+        root / "desk" / "tasks" / f"{task_id}.md",
+        f"""---
+id: {task_id}
+status: active
+summary: ''
+tags: []
+current_node: ritual-execution
+history: []
+references: []
+depends_on: []
+pills: []
+files: []
+task_type: implementation
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+---
+
+# Task X
+
+## Rationale
+
+The subject was removed.
+
+## Goal
+
+Close it honestly.
+
+## Scope
+
+Stay scoped.
+
+## Implementation Path
+
+Supersede it.
+
+## Validation
+
+- pytest
+
+## Done When
+
+Closed.
+""",
+    )
+
+
+def _commit_task_on_board(root: Path, task_id: str = "task-x") -> None:
+    _write_lifecycle_task(root, task_id)
+    _write_board(root, task_id)
+    _git(root, "add", "desk/tasks")
+    _git(root, "commit", "-q", "-m", "add task and board")
+
+
+def _supersede_main(root: Path, *argv: str) -> int:
+    return main(["closeout", "supersede", "--root", str(root), "--task", "task-x", *argv])
+
+
+def test_closeout_supersede_closes_a_task_with_a_reason_and_commit_ref(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = _supersede_main(root, "--reason", "The owner removed the subject", "--ref", ref)
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message.splitlines()[0] == "closeout: task-x"
+    assert "Task-Id: task-x" in message
+    assert "Closeout-Mode: superseded" in message
+    assert "Closeout-Reason: The owner removed the subject" in message
+    assert f"Closeout-Ref: {ref}" in message
+    assert _git(root, "log", "-1", "--format=%(trailers:key=Closeout-Mode,valueonly)") == "superseded"
+
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+    assert "desk/tasks/task-x.md" not in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert _git(root, "status", "--porcelain") == ""
+
+    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert entry == {
+        "task_id": "task-x",
+        "run_id": None,
+        "run_dir": None,
+        "commit": None,
+        "session_sha256": None,
+        "mode": "superseded",
+    }
+    assert _git(root, "log", "-1", "--format=%H", "--grep", "Task-Id: task-x") == _git(root, "rev-parse", "HEAD")
+    assert sorted(_git(root, "show", "--name-only", "--format=", "HEAD").splitlines()) == [
+        "desk/tasks/Board.md",
+        "desk/tasks/task-x.md",
+        "runs/subagents/index.jsonl",
+    ]
+
+
+def test_closeout_supersede_accepts_an_existing_path_ref(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+
+    rc = _supersede_main(root, "--reason", "subject path was deleted", "--ref", "desk/tasks/Board.md")
+
+    assert rc == 0, capsys.readouterr().out
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+    assert "Closeout-Ref: desk/tasks/Board.md" in _git(root, "log", "-1", "--format=%B")
+
+
+@pytest.mark.parametrize("reason", ["", "   "])
+def test_closeout_supersede_requires_a_reason(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], reason: str
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+    ref = "desk/tasks/Board.md"
+
+    rc = _supersede_main(root, "--reason", reason, "--ref", ref)
+
+    assert rc == 1
+    assert "Supersede needs a non-empty --reason" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert _git(root, "status", "--porcelain") == ""
+    assert (root / "desk" / "tasks" / "task-x.md").exists()
+    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
+
+
+@pytest.mark.parametrize("ref", ["does-not-exist.txt", "deadbeef", "0" * 40])
+def test_closeout_supersede_refuses_an_unresolvable_ref_and_leaves_the_tree_unchanged(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], ref: str
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = _supersede_main(root, "--reason", "subject removed", "--ref", ref)
+
+    assert rc == 1
+    assert "Unresolvable --ref" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert _git(root, "status", "--porcelain") == ""
+    assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: active") == 1
+    assert not (root / "runs" / "subagents" / "index.jsonl").exists()
+
+
+def test_closeout_supersede_requires_at_least_one_ref(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = main(["closeout", "supersede", "--root", str(root), "--task", "task-x", "--reason", "subject removed"])
+
+    assert rc == 2
+    assert "--ref" in capsys.readouterr().err
+    assert _git(root, "rev-parse", "HEAD") == head
+
+
+def test_closeout_supersede_requires_the_reason_flag(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    head = _git(root, "rev-parse", "HEAD")
+
+    rc = _supersede_main(root, "--ref", "desk/tasks/Board.md")
+
+    assert rc == 2
+    assert "--reason" in capsys.readouterr().err
+    assert _git(root, "rev-parse", "HEAD") == head

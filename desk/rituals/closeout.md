@@ -1,7 +1,7 @@
 ---
 # ritual-xxx
 id: ritual-closeout
-# List of step-xxx paths
+# Ordered prose steps; not document references
 steps:
 - 1. Confirm the incoming handoff includes passing evidence for the contract, validations,
   and bound pills.
@@ -21,7 +21,11 @@ steps:
 - 1. Remove stale context docs that are no longer needed.
 - 1. Untrack the task document from the local store if it is tracked.
 - 1. Delete the resolved task file and remove it from the board.
-- 1. Close the task with `deskops closeout commit` as the one entry point and the mandatory final gate.
+- 1. If the task's subject no longer exists, close it with `deskops closeout supersede`,
+  naming a reason and at least one resolvable ref, and stop here instead of running
+  the closeout commit.
+- 1. Close the task with `deskops closeout commit` as the one entry point and the
+  mandatory final gate.
 # e.g., layer:workflow, system:sldb
 tags:
 - system:sldb
@@ -36,7 +40,7 @@ tags:
 
 _Explain why this ritual exists._
 
-Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual. `deskops closeout commit` is the one closure entry point: it runs the closeout gates, removes the task from the Board, removes the bundle, makes exactly one commit with the route's trailers, and records the index entry. `deskops advance` does not close tasks.
+Close a desk task only after tests, board cleanup, store cleanup when needed, and a dedicated closing commit, while leaving shared integration, pill reconciliation, and next-phase preparation to the phase ritual. `deskops closeout commit` is the one closure entry point: it runs the closeout gates, removes the task from the Board, removes the bundle, makes exactly one commit with the route's trailers, and records the index entry. `deskops advance` does not close tasks. `deskops closeout supersede` is the only way to close a task whose subject no longer exists: it records `superseded` and the stated reason instead of pretending the work was done.
 
 ## Trigger
 
@@ -55,6 +59,7 @@ _List the conditions that must hold before running the ritual._
 - Board updates are prepared.
 - Any stale context docs are ready to be removed.
 - The closing change is ready to commit.
+- For a superseded task, the reason states that the subject no longer exists and the ref resolves to an ancestor commit or an existing path.
 
 ## Validation
 
@@ -70,6 +75,8 @@ _List the checks that prove the ritual was performed correctly._
 - The local store stays consistent after untracking.
 - `deskops closeout commit` made exactly one closing commit, with the route's trailers, and recorded its index entry.
 - The task was not treated as closed before the final commit gate.
+- A superseded task was closed with `deskops closeout supersede`, not with a closeout commit that claims completed work.
+- The superseded closing commit carries `Closeout-Mode: superseded`, `Closeout-Reason`, and `Closeout-Ref` trailers.
 
 ## Failure Modes
 
@@ -81,6 +88,8 @@ _List common mistakes this ritual prevents._
 - Closing from green tests alone without checking pill coverage.
 - Removing a pill-bound task without checking whether its durable residue should now point at an atom.
 - Treating board cleanup or task deletion as equivalent to the final commit gate.
+- Closing a task whose subject was removed as if the work had been done.
+- Running `deskops closeout supersede` without a reason or a resolvable ref.
 
 ## Completion
 

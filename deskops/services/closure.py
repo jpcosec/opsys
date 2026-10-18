@@ -1,7 +1,8 @@
 """One closure path for task bundles.
 
 Every way of closing a task ends here: ``deskops closeout commit`` (run-linked
-and manual routes) and the legacy ``_auto_commit_task_closure`` hook. The
+and manual routes), ``deskops closeout supersede``, and the legacy
+``_auto_commit_task_closure`` hook. The
 service owns the whole closure: closeout gates for a board-routed task, Board
 update, store untracking, bundle removal, exactly one closing commit carrying
 the route's trailers, and the append-only index entry.
@@ -24,6 +25,7 @@ import yaml
 
 from deskops import doc_io
 from deskops.models import BoardDoc
+from deskops.models import TaskDoc
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
@@ -98,6 +100,95 @@ class ClosureService:
             },
             success_line=f"Closing commit {{commit}} made manually (no run): {reason}",
         )
+
+    def close_superseded(
+        self,
+        task_id: str,
+        *,
+        reason: str,
+        refs: list[str] | None,
+        paths: list[str] | None = None,
+        message: str | None = None,
+    ) -> ClosureOutcome:
+        """Close a task whose subject no longer exists, from any lifecycle node.
+
+        No evidence gates run: tests, atoms and a run would all describe work
+        that was never done. The reason and at least one resolvable ref (an
+        ancestor commit or an existing path) are the evidence instead, and the
+        closing commit says ``Closeout-Mode: superseded``.
+        """
+        reason = " ".join((reason or "").split())
+        if not reason:
+            return ClosureOutcome(
+                1,
+                ["Supersede needs a non-empty --reason saying why the task's subject no longer exists."],
+            )
+
+        cleaned_refs = [str(ref).strip() for ref in refs or [] if str(ref).strip()]
+        if not cleaned_refs:
+            return ClosureOutcome(
+                1,
+                ["Supersede needs at least one --ref naming an ancestor commit or an existing path."],
+            )
+        unresolved = [ref for ref in cleaned_refs if not self._ref_resolves(ref)]
+        if unresolved:
+            return ClosureOutcome(
+                1,
+                [f"Unresolvable --ref: {', '.join(unresolved)} (need an ancestor commit or an existing path)."],
+            )
+
+        task_path = self._task_path(task_id)
+        if not task_path.is_file():
+            return ClosureOutcome(1, [f"Task not found: {task_id}"])
+
+        original = task_path.read_bytes()
+        payload = self._ops._read_doc(task_path, TaskDoc)
+        payload["status"] = "superseded"
+        payload["history"] = [*(payload.get("history") or []), "superseded"]
+        try:
+            self._ops._write_doc(task_path, TaskDoc, payload)
+        except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
+            task_path.write_bytes(original)
+            return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
+
+        trailers = [
+            f"Task-Id: {task_id}",
+            "Closeout-Mode: superseded",
+            f"Closeout-Reason: {reason}",
+            *[f"Closeout-Ref: {ref}" for ref in cleaned_refs],
+        ]
+        try:
+            outcome = self._close(
+                task_id,
+                route="superseded",
+                subject=message or f"closeout: {task_id}",
+                trailers=trailers,
+                paths=list(paths or []),
+                explicit_paths=True,
+                run_gates=False,
+                index_entry={
+                    "task_id": task_id,
+                    "run_id": None,
+                    "run_dir": None,
+                    "session_sha256": None,
+                    "mode": "superseded",
+                },
+                success_line=f"Closing commit {{commit}} made in superseded mode: {reason}",
+            )
+        except Exception:
+            task_path.write_bytes(original)
+            raise
+        if outcome.exit_code != 0:
+            task_path.write_bytes(original)
+        return outcome
+
+    def _ref_resolves(self, reference: str) -> bool:
+        if self._ops.closeout_gates.reference_points_to_commit(reference):
+            return True
+        path = Path(reference)
+        if not path.is_absolute():
+            path = self.root / path
+        return path.exists()
 
     def close_with_run(
         self,
