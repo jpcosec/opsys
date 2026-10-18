@@ -82,7 +82,7 @@ class ClosureService:
                 1,
                 ["--no-run needs a non-empty --reason saying why the task closes without a subagent run."],
             )
-        subject = message or f"closeout: {task_id}"
+        subject = message or self._default_subject(task_id)
         trailers = [f"Task-Id: {task_id}", "Closeout-Mode: manual", f"Closeout-Reason: {reason}"]
         return self._close(
             task_id,
@@ -161,7 +161,7 @@ class ClosureService:
             outcome = self._close(
                 task_id,
                 route="superseded",
-                subject=message or f"closeout: {task_id}",
+                subject=message or self._default_subject(task_id),
                 trailers=trailers,
                 paths=list(paths or []),
                 explicit_paths=True,
@@ -244,7 +244,7 @@ class ClosureService:
         return self._close(
             task_id,
             route="legacy-resolved",
-            subject=message or f"closeout: {task_id}",
+            subject=message or self._default_subject(task_id),
             trailers=trailers,
             paths=list(paths or []),
             explicit_paths=True,
@@ -328,7 +328,7 @@ class ClosureService:
         return self._close(
             task_id,
             route="run",
-            subject=message or f"closeout: {task_id}",
+            subject=message or self._default_subject(task_id),
             trailers=trailers,
             paths=staged_paths,
             explicit_paths=True,
@@ -350,7 +350,7 @@ class ClosureService:
             self._close(
                 task_id,
                 route="legacy",
-                subject=f"closeout: {task_id}",
+                subject=self._default_subject(task_id, task_path),
                 trailers=[f"Task-Id: {task_id}"],
                 paths=files,
                 explicit_paths=True,
@@ -547,6 +547,11 @@ class ClosureService:
             return self._ops._resolve_glob(self.desk_root / "tasks", task_id)
         except FileNotFoundError:
             return self.desk_root / "tasks" / f"{task_id}.md"
+
+    def _default_subject(self, task_id: str, task_path: Path | None = None) -> str:
+        """Name the task file, so ``git log`` says what closed, not just its id."""
+        path = task_path or self._task_path(task_id)
+        return f"closeout: {path.stem}"
 
     def _board_routes(self, board_path: Path, task_id: str, task_path: Path) -> bool:
         try:

@@ -1,0 +1,7 @@
+Task: task-closeout-subject-names-the-task-file
+Title: The default closeout commit subject names the task file, not a bare id
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

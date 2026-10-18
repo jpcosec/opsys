@@ -67,3 +67,4 @@
 {"task_id": "task-derived-atom-trace-index", "run_id": null, "run_dir": "runs/subagents/20261018-task-derived-atom-trace-index", "session_sha256": null, "commit": null}
 {"task_id": "task-repo-remove-verb", "run_id": null, "run_dir": "runs/subagents/20261018-task-repo-remove-verb", "session_sha256": null, "commit": null}
 {"task_id": "task-require-sldb-0-1-13", "run_id": null, "run_dir": "runs/subagents/20261018-task-require-sldb-0-1-13", "session_sha256": null, "commit": null}
+{"task_id": "task-closeout-subject-names-the-task-file", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-subject-names-the-task-file", "session_sha256": null, "commit": null}

@@ -796,11 +796,16 @@ def test_closeout_supersede_requires_the_reason_flag(
     assert _git(root, "rev-parse", "HEAD") == head
 
 
-def _write_legacy_task(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
+def _write_legacy_task(
+    root: Path,
+    task_id: str = "task-x",
+    status: str = "resolved",
+    filename: str | None = None,
+) -> None:
     _write(
-        root / "desk" / "tasks" / f"{task_id}.md",
+        root / "desk" / "tasks" / (filename or f"{task_id}.md"),
         f"""---
-id: {task_id}
+id: "{task_id}"
 status: {status}
 summary: ''
 tags: []
@@ -842,8 +847,13 @@ Retired.
     )
 
 
-def _commit_legacy_task_on_board(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
-    _write_legacy_task(root, task_id, status)
+def _commit_legacy_task_on_board(
+    root: Path,
+    task_id: str = "task-x",
+    status: str = "resolved",
+    filename: str | None = None,
+) -> None:
+    _write_legacy_task(root, task_id, status, filename)
     _write_board(root, task_id)
     _git(root, "add", "desk/tasks")
     _git(root, "commit", "-q", "-m", "add legacy task and board")
@@ -893,6 +903,50 @@ def test_closeout_retire_removes_a_legacy_resolved_task(
         "desk/tasks/task-x.md",
         "runs/subagents/index.jsonl",
     ]
+
+
+def test_closeout_retire_default_subject_names_the_task_file(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_legacy_task_on_board(root, task_id="001", filename="001-some-title.md")
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = main(
+        [
+            "closeout",
+            "retire",
+            "--root",
+            str(root),
+            "--task",
+            "001",
+            "--reason",
+            "Resolved before the ritual lifecycle existed",
+            "--ref",
+            ref,
+        ]
+    )
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message.splitlines()[0] == "closeout: 001-some-title"
+    assert "Task-Id: 001" in message
+    assert not (root / "desk" / "tasks" / "001-some-title.md").exists()
+
+
+def test_closeout_retire_default_subject_is_unchanged_when_the_stem_matches_the_id(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_legacy_task_on_board(root)
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = _retire_main(root, "--reason", "Resolved before the ritual lifecycle existed", "--ref", ref)
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message.splitlines()[0] == "closeout: task-x"
+    assert "Task-Id: task-x" in message
 
 
 def test_closeout_retire_refuses_a_task_that_is_not_resolved(

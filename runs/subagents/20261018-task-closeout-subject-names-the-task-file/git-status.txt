@@ -1,0 +1,8 @@
+ M .sldb/core/documents/TaskDoc/task-closeout-subject-names-the-task-file.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-closeout-subject-names-the-task-file.md
+ M deskops/services/closure.py
+ M runs/planning/store-migration-20261018.md
+ M tests/test_closeout.py
+?? runs/subagents/20261018-task-closeout-subject-names-the-task-file/

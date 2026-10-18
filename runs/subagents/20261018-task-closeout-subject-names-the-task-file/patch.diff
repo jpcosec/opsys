@@ -1,0 +1,152 @@
+diff --git a/deskops/services/closure.py b/deskops/services/closure.py
+index 0cc13e1..18eb644 100644
+--- a/deskops/services/closure.py
++++ b/deskops/services/closure.py
+@@ -82,7 +82,7 @@ class ClosureService:
+                 1,
+                 ["--no-run needs a non-empty --reason saying why the task closes without a subagent run."],
+             )
+-        subject = message or f"closeout: {task_id}"
++        subject = message or self._default_subject(task_id)
+         trailers = [f"Task-Id: {task_id}", "Closeout-Mode: manual", f"Closeout-Reason: {reason}"]
+         return self._close(
+             task_id,
+@@ -161,7 +161,7 @@ class ClosureService:
+             outcome = self._close(
+                 task_id,
+                 route="superseded",
+-                subject=message or f"closeout: {task_id}",
++                subject=message or self._default_subject(task_id),
+                 trailers=trailers,
+                 paths=list(paths or []),
+                 explicit_paths=True,
+@@ -244,7 +244,7 @@ class ClosureService:
+         return self._close(
+             task_id,
+             route="legacy-resolved",
+-            subject=message or f"closeout: {task_id}",
++            subject=message or self._default_subject(task_id),
+             trailers=trailers,
+             paths=list(paths or []),
+             explicit_paths=True,
+@@ -328,7 +328,7 @@ class ClosureService:
+         return self._close(
+             task_id,
+             route="run",
+-            subject=message or f"closeout: {task_id}",
++            subject=message or self._default_subject(task_id),
+             trailers=trailers,
+             paths=staged_paths,
+             explicit_paths=True,
+@@ -350,7 +350,7 @@ class ClosureService:
+             self._close(
+                 task_id,
+                 route="legacy",
+-                subject=f"closeout: {task_id}",
++                subject=self._default_subject(task_id, task_path),
+                 trailers=[f"Task-Id: {task_id}"],
+                 paths=files,
+                 explicit_paths=True,
+@@ -548,6 +548,11 @@ class ClosureService:
+         except FileNotFoundError:
+             return self.desk_root / "tasks" / f"{task_id}.md"
+ 
++    def _default_subject(self, task_id: str, task_path: Path | None = None) -> str:
++        """Name the task file, so ``git log`` says what closed, not just its id."""
++        path = task_path or self._task_path(task_id)
++        return f"closeout: {path.stem}"
++
+     def _board_routes(self, board_path: Path, task_id: str, task_path: Path) -> bool:
+         try:
+             payload = self._ops._read_doc(board_path, BoardDoc)
+diff --git a/tests/test_closeout.py b/tests/test_closeout.py
+index eba1512..ab76797 100644
+--- a/tests/test_closeout.py
++++ b/tests/test_closeout.py
+@@ -796,11 +796,16 @@ def test_closeout_supersede_requires_the_reason_flag(
+     assert _git(root, "rev-parse", "HEAD") == head
+ 
+ 
+-def _write_legacy_task(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
++def _write_legacy_task(
++    root: Path,
++    task_id: str = "task-x",
++    status: str = "resolved",
++    filename: str | None = None,
++) -> None:
+     _write(
+-        root / "desk" / "tasks" / f"{task_id}.md",
++        root / "desk" / "tasks" / (filename or f"{task_id}.md"),
+         f"""---
+-id: {task_id}
++id: "{task_id}"
+ status: {status}
+ summary: ''
+ tags: []
+@@ -842,8 +847,13 @@ Retired.
+     )
+ 
+ 
+-def _commit_legacy_task_on_board(root: Path, task_id: str = "task-x", status: str = "resolved") -> None:
+-    _write_legacy_task(root, task_id, status)
++def _commit_legacy_task_on_board(
++    root: Path,
++    task_id: str = "task-x",
++    status: str = "resolved",
++    filename: str | None = None,
++) -> None:
++    _write_legacy_task(root, task_id, status, filename)
+     _write_board(root, task_id)
+     _git(root, "add", "desk/tasks")
+     _git(root, "commit", "-q", "-m", "add legacy task and board")
+@@ -895,6 +905,50 @@ def test_closeout_retire_removes_a_legacy_resolved_task(
+     ]
+ 
+ 
++def test_closeout_retire_default_subject_names_the_task_file(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_legacy_task_on_board(root, task_id="001", filename="001-some-title.md")
++    ref = _git(root, "rev-parse", "HEAD")
++
++    rc = main(
++        [
++            "closeout",
++            "retire",
++            "--root",
++            str(root),
++            "--task",
++            "001",
++            "--reason",
++            "Resolved before the ritual lifecycle existed",
++            "--ref",
++            ref,
++        ]
++    )
++
++    assert rc == 0, capsys.readouterr().out
++    message = _git(root, "log", "-1", "--format=%B")
++    assert message.splitlines()[0] == "closeout: 001-some-title"
++    assert "Task-Id: 001" in message
++    assert not (root / "desk" / "tasks" / "001-some-title.md").exists()
++
++
++def test_closeout_retire_default_subject_is_unchanged_when_the_stem_matches_the_id(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    root = _make_repo(tmp_path)
++    _commit_legacy_task_on_board(root)
++    ref = _git(root, "rev-parse", "HEAD")
++
++    rc = _retire_main(root, "--reason", "Resolved before the ritual lifecycle existed", "--ref", ref)
++
++    assert rc == 0, capsys.readouterr().out
++    message = _git(root, "log", "-1", "--format=%B")
++    assert message.splitlines()[0] == "closeout: task-x"
++    assert "Task-Id: task-x" in message
++
++
+ def test_closeout_retire_refuses_a_task_that_is_not_resolved(
+     tmp_path: Path, capsys: pytest.CaptureFixture[str]
+ ) -> None:
