@@ -1,6 +1,6 @@
 ---
 id: task-rw-f0-graph-missing-ignores-archived-records
-status: blocked
+status: deferred
 references: []
 depends_on: []
 pills:
@@ -45,7 +45,7 @@ _Describe the concrete result this task must produce._
 
 _State what is in scope and what is out of scope._
 
-Blocked on the owner's choice (see Open Ambiguities). The record marker is checked on every extracted document, not only under desk/drawer/. With option C the output and exit code of `_graph_missing` in deskops/cli/main.py are in scope. Out of scope: other finding kinds and the sldb-backed graph rewrite (task-rw-f4-graph-on-sldb-edge-index). The 102 findings are all from the three files named in Rationale (checked 2026-10-16 with `deskops graph missing --root .` and grouping by provenance); if new non-record findings appear before this task runs, list them in the closeout and do not hide them.
+The record marker is checked on every extracted document, not only under desk/drawer/. With option C the output and exit code of `_graph_missing` in deskops/cli/main.py are in scope. Out of scope: other finding kinds and the sldb-backed graph rewrite (task-rw-f4-graph-on-sldb-edge-index). The 102 findings are all from the three files named in Rationale (checked 2026-10-16 with `deskops graph missing --root .` and grouping by provenance); if new non-record findings appear before this task runs, list them in the closeout and do not hide them.
 
 ## Implementation Path
 
@@ -70,8 +70,8 @@ _Name the observable condition that makes the task complete._
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): option C with the `record: true` frontmatter marker. Record findings print under `Informational (archived records):`, are not counted, and do not fail the command; it exits 1 iff a non-record finding exists. Add `record: true` frontmatter to the three files. Implement only the option C path of Implementation Path.
 
 ## Open Ambiguities
 
-- Owner decision, handling: A) skip record documents in the path scanner; B) edit the three files so the quoted paths stop looking like references (loses verbatim history); C) report record findings as informational with exit 0 (recommended; semantics in Implementation Path).
-- Owner decision, marker: a `record: true` frontmatter key (recommended; both files need frontmatter added), the title containing 'archived', or a `## Status` section saying resolved/archived.
+None.

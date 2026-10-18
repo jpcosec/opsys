@@ -1,6 +1,6 @@
 ---
 id: task-rw-f3-drawer-entry-removal-verb
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f3-drawer-routing-service
@@ -42,7 +42,7 @@ The approved verb removes one drawer file, untracks it if tracked, and deletes e
 
 _State what is in scope and what is out of scope._
 
-Blocked on the owner decision (see Open Ambiguities). Uses `DrawerService` and `DocTransaction`.
+Uses `DrawerService` and `DocTransaction`.
 
 ## Implementation Path
 
@@ -69,7 +69,8 @@ The verb removes the entry and its Board bullets and the test passes.
 
 - CLI tests build a throwaway repo in pytest's `tmp_path` (git init, one empty seed commit), run `python -m deskops init <root>` (creates the store, the desk and the lifecycle graph that `advance` reads; the `lifecycle_desk` fixture in tests/conftest.py gives the same thing faster), and drive the real CLI, by default with `subprocess.run([sys.executable, '-m', 'deskops', ...], cwd=root)` (helpers `_make_repo` and `_cli` in tests/test_lifecycle_end_to_end.py); a task that says 'in-process' calls `deskops.cli.main.main([...])` with `capsys` instead. Files created in the sandbox are untracked until the test commits them. Never mutate the repo's own `desk/`.
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): the verb is `deskops drawer remove <selector>`. It refuses (exit 1, nothing changed, the message names the task) when an active task in desk/tasks/ has the entry in `from_drawer`; `--force` skips that check explicitly. Add a test for the refusal and one for `--force`.
 
 ## Open Ambiguities
 
-- Owner decision: the verb's name (for example `deskops drawer remove <selector>`), and whether it refuses, warns, or proceeds silently when an active task's `from_drawer` points at the entry.
+None.

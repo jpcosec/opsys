@@ -1,6 +1,6 @@
 ---
 id: task-rw-f6-migrate-tracking-stores
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f6-taskdoc-contract-cleanup
@@ -40,7 +40,7 @@ scripts/migrate_desk_stores.py migrates every discovered store and logs per-stor
 
 _State what is in scope and what is out of scope._
 
-Blocked by the same owner decision as task-rw-f6-taskdoc-contract-cleanup. Discovery: directories named `.sldb` under $HOME whose `core/models/TaskDoc.yaml` exists, excluding paths containing `/.tmp/`, `/.venv/`, `/node_modules/`, `/tools/` or `/tmp/` (matched on whole path segments of the `.sldb` path relative to the discovery root, so a test tree under pytest's `tmp_path` is not excluded by its own location), and only when `git -C <parent of .sldb> rev-parse --is-inside-work-tree` prints `true`. Walk with `os.walk(followlinks=False)`, skip directories that raise PermissionError, and do not descend into a matched store. Each store's repo commit is its owner's.
+Discovery: directories named `.sldb` under $HOME whose `core/models/TaskDoc.yaml` exists, excluding paths containing `/.tmp/`, `/.venv/`, `/node_modules/`, `/tools/` or `/tmp/` (matched on whole path segments of the `.sldb` path relative to the discovery root, so a test tree under pytest's `tmp_path` is not excluded by its own location), and only when `git -C <parent of .sldb> rev-parse --is-inside-work-tree` prints `true`. Walk with `os.walk(followlinks=False)`, skip directories that raise PermissionError, and do not descend into a matched store. Each store's repo commit is its owner's.
 
 ## Implementation Path
 
@@ -71,7 +71,8 @@ The log shows every discovered store PASS after `--apply`.
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): F6 enters this cycle.
 
 ## Open Ambiguities
 
-- Blocked by the same owner decision as task-rw-f6-taskdoc-contract-cleanup: does F6 enter this cycle?
+None.

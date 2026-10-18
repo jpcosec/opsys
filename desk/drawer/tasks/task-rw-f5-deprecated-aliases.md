@@ -1,6 +1,6 @@
 ---
 id: task-rw-f5-deprecated-aliases
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f5-output-renderer
@@ -50,7 +50,7 @@ The owner's choice is applied to each duplicate.
 
 _State what is in scope and what is out of scope._
 
-Blocked on the owner decision. Alias behavior: before any output, print ``Deprecated: use `deskops <canonical>` `` on stderr, then run the canonical command. Removal behavior: argparse rejects the name (`invalid choice`, exit 2). Aliases stay listed in `--help` with their deprecation note (today's behavior, parser.py:500-505, asserted by tests/test_cli.py:42 and tests/test_message_cli.py:35). `inbox` has its own flag grammar (`--list/--show/--ack`) that `MessageCLI._run_legacy` (deskops/cli/commands/message.py:32,57) translates; that translation stays. Docs, skills, README.md, desk/atoms and desk/contexts that recommend an old name are updated in the same task; for a surviving alias, notes that say it is deprecated stay; for a removed name, every mention is rewritten to the canonical command. desk/drawer/ is history (use cases, stress tests) and is not edited.
+Alias behavior: before any output, print ``Deprecated: use `deskops <canonical>` `` on stderr, then run the canonical command. Removal behavior: argparse rejects the name (`invalid choice`, exit 2). Aliases stay listed in `--help` with their deprecation note (today's behavior, parser.py:500-505, asserted by tests/test_cli.py:42 and tests/test_message_cli.py:35). `inbox` has its own flag grammar (`--list/--show/--ack`) that `MessageCLI._run_legacy` (deskops/cli/commands/message.py:32,57) translates; that translation stays. Docs, skills, README.md, desk/atoms and desk/contexts that recommend an old name are updated in the same task; for a surviving alias, notes that say it is deprecated stay; for a removed name, every mention is rewritten to the canonical command. desk/drawer/ is history (use cases, stress tests) and is not edited.
 
 ## Implementation Path
 
@@ -75,7 +75,8 @@ Each duplicate behaves per the decision and every remaining grep hit is a deprec
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): all four duplicates (`inbox`, `status`, `atoms list`, `atoms show`) stay as warned aliases; none is removed.
 
 ## Open Ambiguities
 
-- Owner decision, per duplicate (`inbox`, `status`, `atoms list`, `atoms show`): warned alias, or removal?
+None.

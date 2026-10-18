@@ -42,7 +42,8 @@ In scope: the ritual loop in `ensure_lifecycle_graph` and one test with an old-s
 
 _Outline the expected implementation route or affected surface._
 
-Owner decision: stop with an error, or re-render. Re-rendering rewrites a hand-edited file. Stopping makes the operator fix it, but it is safe.
+1. In the ritual loop of `ensure_lifecycle_graph`, before `_track`, check the round trip (`render_model_markdown(RitualDoc, extract_model_data(RitualDoc, text))` re-extracts the same data). If it fails, re-render the file from what RitualDoc extracts, filling missing sections with the template's placeholders, and check again; if it still fails, raise `LifecycleGraphMissing`.
+2. Test in tests/test_lifecycle_graph.py: a desk whose execution ritual lacks `## Step Details` migrates with a readable ritual and a clean `deskops doctor`.
 
 ## Validation
 
@@ -58,9 +59,8 @@ _Name the observable condition that makes the task complete._
 A desk whose execution ritual has no `## Step Details` either fails `desk update --apply` with a message naming the file, with no ritual tracked, or is migrated with a readable ritual. `deskops doctor` is clean afterwards.
 
 ## Resolved Decisions
-
-None yet.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): re-render. `ensure_lifecycle_graph` re-renders a ritual RitualDoc cannot read to the current template (keeping the content RitualDoc can extract) before tracking it; if the re-rendered file still does not round-trip, it raises `LifecycleGraphMissing` naming the file and tracks nothing.
 
 ## Open Ambiguities
 
-- Stop with an error, or re-render the ritual through RitualDoc (owner decision).
+None.

@@ -1,6 +1,6 @@
 ---
 id: task-rw-f3-single-closure-path
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f3-atoms-service
@@ -43,7 +43,7 @@ _Describe the concrete result this task must produce._
 
 _State what is in scope and what is out of scope._
 
-In scope: closure.py, rewiring `closeout commit`, rewiring `advance` per the open decision, and updating desk/rituals/closeout.md so it names `deskops closeout commit` as the one entry point. Out of scope: the `--run-dir`/`--no-run` CLI contract, which is fixed.
+In scope: closure.py, rewiring `closeout commit`, rewiring `advance` per the decision (option A), and updating desk/rituals/closeout.md so it names `deskops closeout commit` as the one entry point. Out of scope: the `--run-dir`/`--no-run` CLI contract, which is fixed.
 
 ## Implementation Path
 
@@ -70,7 +70,8 @@ Every closing entry point produces the result defined in step 4, and desk/ritual
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): option A. `advance` at the closeout node and `advance --to complete` stop closing: they exit 1 without changing anything and print that the task closes with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. `closeout commit` is the one entry point; tests/test_lifecycle_end_to_end.py and any other test that closes through `advance` switch to `closeout commit`.
 
 ## Open Ambiguities
 
-- Owner decision: once closure is unified, what do `advance` at the closeout node and `advance --to complete` do? A) they stop closing and tell the operator to run `closeout commit` (recommended: one entry point); B) they call the closure service and accept `--run-dir` or `--no-run --reason`; C) `--to complete` is removed and `advance` keeps closing through the service.
+None.

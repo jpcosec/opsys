@@ -1,6 +1,6 @@
 ---
 id: task-rw-f5-output-renderer
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f5-root-resolution-and-sandbox-guard
@@ -41,7 +41,7 @@ Handlers return data; deskops/cli/render.py prints it as text, json or yaml; wit
 
 _State what is in scope and what is out of scope._
 
-Blocked on the owner decision about success shapes (see Open Ambiguities); the renderer, the port and the error envelope land together after it. Handlers return data plus, for text mode, a formatter that produces exactly today's stdout; before porting, record today's stdout for every format each command accepts as the output goldens (step 3), so byte-identity is checked against them. yaml is `yaml.safe_dump(data, sort_keys=False, allow_unicode=True)` (PyYAML, already a dependency). The envelope prints to stdout, like the JSON it replaces. Streaming or progress output (for example `runtime supervise`) and `--help` bypass the renderer. Exit codes and class names come from deskops/errors.py (task-rw-f2-typed-errors-and-exit-codes).
+The renderer, the port and the error envelope land together after it. Handlers return data plus, for text mode, a formatter that produces exactly today's stdout; before porting, record today's stdout for every format each command accepts as the output goldens (step 3), so byte-identity is checked against them. yaml is `yaml.safe_dump(data, sort_keys=False, allow_unicode=True)` (PyYAML, already a dependency). The envelope prints to stdout, like the JSON it replaces. Streaming or progress output (for example `runtime supervise`) and `--help` bypass the renderer. Exit codes and class names come from deskops/errors.py (task-rw-f2-typed-errors-and-exit-codes).
 
 ## Implementation Path
 
@@ -68,7 +68,8 @@ Every command with `--format` prints through the renderer and, for each format t
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): option A. Success JSON keeps today's per-command shapes; the error envelope ships.
 
 ## Open Ambiguities
 
-- Owner decision: success JSON A) keeps today's per-command shapes (no break for external consumers), or B) is wrapped as `{"ok": true, "data": <today's shape>}`.
+None.

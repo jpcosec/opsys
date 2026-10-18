@@ -1,6 +1,6 @@
 ---
 id: task-rw-f6-taskdoc-contract-cleanup
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f6-bootstrap-registers-all-models
@@ -45,7 +45,7 @@ TaskDoc uses `extra: ignore`, drops the `frontmatter` field, its `_merge_frontma
 
 _State what is in scope and what is out of scope._
 
-Blocked on the owner deciding that F6 enters this cycle. The store migration is task-rw-f6-migrate-tracking-stores. `PROVENANCE_FIELDS` in deskops/graph/extract_edges.py stays: it also stops the line scanner from reading the `from_drawer` path (lines 340-346).
+The store migration is task-rw-f6-migrate-tracking-stores. `PROVENANCE_FIELDS` in deskops/graph/extract_edges.py stays: it also stops the line scanner from reading the `from_drawer` path (lines 340-346).
 
 ## Implementation Path
 
@@ -74,7 +74,8 @@ _Name the observable condition that makes the task complete._
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): F6 enters this cycle.
 
 ## Open Ambiguities
 
-- Owner decision: does F6 (TaskDoc contract change plus migrating the 24 stores that track it) enter this cycle, or is it postponed?
+None.

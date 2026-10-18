@@ -39,3 +39,9 @@ sandbox under `.tmp/` would read the repo's registry (inventory finding S7).
 Preflight rounds so far are in `runs/subagents/20261016-rw-plan-preflight-r1/`, `-r2/` and
 `-r3/`; each task directory holds `preflight.md` (the restatement and ambiguities) and
 `resolution.jsonl` (the classification).
+
+## Estado después de F0 (2026-10-18)
+
+Desde la promoción de F0 las tasks del drawer son la fuente: las decisiones del dueño y las tasks
+nuevas se escribieron directo en `desk/drawer/tasks/`. No regeneres el drawer con `gen.py`: pisaría
+esos cambios y volvería a crear las tasks de F0 ya cerradas.

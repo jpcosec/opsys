@@ -1,10 +1,9 @@
 ---
 id: task-rw-f4-coverage-extractor-decision
-status: blocked
+status: deferred
 references: []
 depends_on:
 - task-rw-f4-single-snapshot-reader
-- task-rw-f5-deprecated-aliases
 pills:
 - desk/contexts/pill-010-graph-runtime-output-policy.md
 files:
@@ -43,7 +42,7 @@ The owner's choice is applied (see Open Ambiguities).
 
 _State what is in scope and what is out of scope._
 
-Blocked on the owner decision. The supervisor records the choice under Resolved Decisions and lifts `blocked` when promoting. It runs after the F5 chain (the keep option adds a registry entry, and every F5 task edits deskops/cli/registry.py, created by task-rw-f5-command-registry, an ancestor through task-rw-f5-deprecated-aliases); with the delete option the supervisor may drop that dependency.
+It runs after the F5 chain (the keep option adds a registry entry, and every F5 task edits deskops/cli/registry.py, created by task-rw-f5-command-registry, an ancestor through task-rw-f5-deprecated-aliases); with the delete option the supervisor may drop that dependency.
 
 ## Implementation Path
 
@@ -67,7 +66,8 @@ Delete: `grep -rn extract_coverage deskops/` is empty. Keep: `deskops graph cove
 ## Resolved Decisions
 
 - The supervisor promotes this drawer task to desk/tasks/ and commits that promotion before dispatch. The executor does not commit; the supervisor reviews the diff and makes the closeout commit with `deskops closeout commit --task <id> --run-dir <dir>` or `--no-run --reason <why>`. Closing always requires `pytest tests` green in addition to the task's own Done When.
+- Owner decision (2026-10-18, delegated to the SLDB_1 coordinator): delete. Remove the module per the Delete branch of Implementation Path. In the same task add desk/drawer/issues/issue-coverage-extractor-removed.md that says what the extractor did (atom coverage matches, their scorers and thresholds, the snapshot nodes and edges it produced) and names the last commit that contains deskops/graph/extract_coverage.py (`git log -1 --format=%H -- deskops/graph/extract_coverage.py` before deleting) so it can be recovered. The dependency on task-rw-f5-deprecated-aliases is dropped (the delete option adds no registry entry).
 
 ## Open Ambiguities
 
-- Owner decision: delete extract_coverage.py, or keep it as an opt-in `deskops graph coverage` report (semantics in Implementation Path)?
+None.

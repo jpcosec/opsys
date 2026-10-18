@@ -212,25 +212,31 @@ frontmatter de TaskDoc, y arreglar `MODEL_REFS`. Incluye un script que corre
 **Total aproximado: ~21 días de agente** (después de afdec7f), de los cuales F0 (2 d) da valor
 inmediato por sí sola.
 
-## Decisiones pendientes del dueño
+## Decisiones del dueño (resueltas el 2026-10-18)
 
-Cada decisión bloquea las tasks indicadas entre paréntesis. El issue 2 ya está decidido (opción A).
+El dueño delegó las decisiones en el coordinador de SLDB_1, que las resolvió así. Cada resolución
+quedó también en `## Resolved Decisions` de su task.
 
-1. Qué hace `advance` con el cierre unificado (`task-rw-f3-single-closure-path`):
-   A) deja de cerrar y remite a `closeout commit` (recomendada); B) llama al servicio y acepta
-   `--run-dir` o `--no-run --reason`; C) se elimina `--to complete` y `advance` sigue cerrando vía
-   el servicio.
-2. `extract_coverage.py` (`task-rw-f4-coverage-extractor-decision`): borrarlo, o dejarlo como
-   reporte opcional `deskops graph coverage`.
-3. Comandos duplicados (`task-rw-f5-deprecated-aliases`): para `inbox`, `status`, `atoms list` y
-   `atoms show`, alias con aviso o eliminación.
-4. JSON de éxito (`task-rw-f5-output-renderer`): A) mantener las formas actuales por comando;
-   B) envolverlas en `{"ok": true, "data": ...}`. El envelope de error va en los dos casos.
-5. F6 en este ciclo (`task-rw-f6-taskdoc-contract-cleanup`, `task-rw-f6-migrate-tracking-stores`):
-   sí o se posterga.
+1. `advance` con el cierre unificado (`task-rw-f3-single-closure-path`): **A**. `advance` deja de
+   cerrar y remite a `deskops closeout commit`, que es la única entrada.
+2. `extract_coverage.py` (`task-rw-f4-coverage-extractor-decision`): **borrarlo**, dejando
+   `desk/drawer/issues/issue-coverage-extractor-removed.md` con lo que hacía y el último commit que
+   lo contiene. Se quita la dependencia de `task-rw-f5-deprecated-aliases`.
+3. Comandos duplicados (`task-rw-f5-deprecated-aliases`): `inbox`, `status`, `atoms list` y
+   `atoms show` quedan como **alias con aviso de deprecación**.
+4. JSON de éxito (`task-rw-f5-output-renderer`): **A**, se mantienen las formas actuales; el
+   envelope de error sí va.
+5. F6 (`task-rw-f6-taskdoc-contract-cleanup`, `task-rw-f6-migrate-tracking-stores`): **entra en
+   este ciclo**.
 6. Registros archivados en `graph missing` (`task-rw-f0-graph-missing-ignores-archived-records`):
-   tratamiento A) saltarlos, B) editarlos, C) informativos con exit 0 (recomendada); marca
-   `record: true` en el frontmatter (recomendada), título con "archived", o sección `## Status`.
-7. Verbo para borrar entradas del drawer (`task-rw-f3-drawer-entry-removal-verb`): el nombre
-   (p. ej. `deskops drawer remove`), y si rechaza, avisa o sigue cuando una task activa la tiene
-   en `from_drawer`.
+   **C** (informativos, exit 0) con la marca **`record: true`** en el frontmatter.
+7. Verbo para borrar entradas del drawer (`task-rw-f3-drawer-entry-removal-verb`):
+   **`deskops drawer remove`**, que rechaza si una task activa la tiene en `from_drawer`; `--force`
+   lo salta.
+8. Rituales que RitualDoc no lee (`task-lifecycle-graph-checks-rituals-are-readable`): `desk update
+   --apply` los **re-renderiza** al template actual; si aun así no se leen, falla con error.
+
+Tasks nuevas del 2026-10-18: `task-rw-ci-tests-workflow-and-changelog` (CI con pytest y
+CHANGELOG), `task-rw-package-runs-outside-editable-install` (rutas `Path(__file__)` y `spec/` sin
+empaquetar; va al final, después de F6) y `task-init-links-federated-models-instead-of-copying`
+(bloqueada hasta que sldb publique los modelos federados).
