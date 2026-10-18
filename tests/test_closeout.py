@@ -446,3 +446,39 @@ Done.
     assert report["gates"]["atom_or_materialization_link"]["ok"] is False
     assert any(item["code"] == "generated_artifact_missing_declared_sources" for item in report["findings"])
     assert any("follow-up:task:task-follow-up -> docs/diagrams/example.md" == item for item in report["gates"]["atom_or_materialization_link"]["evidence"])
+
+
+def test_closeout_verify_tolerates_multi_document_yaml(tmp_path: Path) -> None:
+    root = _make_repo(tmp_path)
+    commit = _git(root, "rev-parse", "HEAD")
+    _write_atom(root)
+    _write_task(
+        root,
+        references=[
+            "pytest tests/test_feature.py::test_feature",
+            "desk/atoms/atom-evidence.md",
+            commit,
+        ],
+        files=["desk/atoms/atom-evidence.md"],
+    )
+    _write(root / "tests" / "test_feature.py", "def test_feature():\n    assert True\n")
+    # Graph extraction scans docs/ Markdown for fenced YAML blocks and spec/
+    # YAML files for metadata. A block or file that holds several documents is
+    # not evidence of atom declarations; verify must skip it, not abort.
+    _write(
+        root / "docs" / "vocabulario.md",
+        "# Vocabulario\n\n```yaml\nname: uml-clases\n---\nname: glyph-interfaz\n```\n",
+    )
+    _write(root / "spec" / "vocabulario.yaml", "name: a\n---\nname: b\n")
+
+    result = subprocess.run(
+        [sys.executable, "-m", "deskops", "closeout", "verify", "--root", str(root), "--task", "task-x"],
+        cwd=root,
+        capture_output=True,
+        text=True,
+    )
+
+    assert "Unexpected" not in result.stderr
+    assert result.returncode == 0, result.stderr
+    report = json.loads(result.stdout)
+    assert report["ok"] is True

@@ -147,7 +147,11 @@ def _read_frontmatter_metadata(path: Path) -> dict[str, str]:
 
 
 def _read_yaml_metadata(path: Path) -> dict[str, str]:
-    loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    try:
+        loaded = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    except yaml.YAMLError:
+        # A file that is not a single YAML document is not document metadata.
+        return {}
     if not isinstance(loaded, dict):
         return {}
     return _metadata_from_mapping(loaded)

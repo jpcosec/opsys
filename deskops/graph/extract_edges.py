@@ -271,7 +271,15 @@ def _model_for_kind(kind: str) -> Any | None:
 def _atom_declarations(text: str) -> list[_Declaration]:
     declarations: list[_Declaration] = []
     for match in YAML_FENCE_RE.finditer(text):
-        loaded = yaml.safe_load(match.group("body"))
+        try:
+            loaded_documents = list(yaml.safe_load_all(match.group("body")))
+        except yaml.YAMLError:
+            # A block that is not a single YAML document is not evidence of
+            # atom declarations.
+            continue
+        if len(loaded_documents) != 1:
+            continue
+        loaded = loaded_documents[0]
         if not isinstance(loaded, dict):
             continue
         line_number = text[: match.start()].count("\n") + 1

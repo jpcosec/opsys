@@ -1,0 +1,10 @@
+Task: task-closeout-verify-tolerates-multi-document-yaml
+Title: `closeout verify` does not abort on a multi-document YAML outside desk/
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-closeout-verify-tolerates-multi-document-yaml.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
