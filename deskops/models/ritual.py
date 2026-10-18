@@ -4,19 +4,11 @@ from .base import OperationalArtifactDoc
 
 
 class RitualDoc(OperationalArtifactDoc):
-    __containment__ = {"steps": ["StepDoc"]}
     __semantics__ = {"type": ["workflow", "ritual"], "workspace": ["desk"]}
-    __compositions__ = {
-        "step_details": {
-            "source_field": "steps",
-            "model": "deskops.models:StepDoc",
-            "template": "1. {title}: {action} -> {outcome}",
-        }
-    }
     __template__ = """---
 # ritual-xxx
 id: ⸢rev•id⸥
-# List of step-xxx paths
+# Ordered prose steps; not document references
 steps: ⸢rev•steps⸥
 # e.g., layer:workflow, system:sldb
 tags: ⸢rev•tags⸥
@@ -60,12 +52,6 @@ _Describe what completion looks like._
 
 ⸢rev•completion⸥
 
-## Step Details
-
-_Generated from the step references above._
-
-⸢render•step_details⸥
-
 """.strip()
 
     title: str = Field(description="Short ritual title.")
@@ -78,7 +64,7 @@ _Generated from the step references above._
     )
     steps: list[str] = Field(
         default_factory=list,
-        description="Ordered steps to execute as part of the ritual.",
+        description="Ordered prose steps to execute as part of the ritual; not document references.",
     )
     validation: list[str] = Field(
         default_factory=list,

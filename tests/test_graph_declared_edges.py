@@ -120,6 +120,10 @@ def test_a_declared_field_holding_prose_is_not_an_unresolved_reference(tmp_path:
     assert all(
         "prerequisites" not in edge.target_id for edge in extraction.edges
     )
+    assert not any(
+        edge.source_id == "ritual:ritual-phase" and edge.role == "steps"
+        for edge in extraction.edges
+    ), "Ritual steps are prose, not StepDoc containment"
 
 
 def test_from_drawer_is_provenance_not_a_declared_reference(tmp_path: Path) -> None:

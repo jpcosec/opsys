@@ -70,7 +70,3 @@ _List common mistakes this ritual prevents._
 _Describe what completion looks like._
 
 The task has trustworthy test evidence and can proceed to closeout, with any broader cross-task validation obligations handed forward to the phase ritual.
-
-## Step Details
-
-_Generated from the step references above._

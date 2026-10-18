@@ -1,0 +1,423 @@
+diff --git a/desk/rituals/closeout.md b/desk/rituals/closeout.md
+index 1fa88ea..7ca61f5 100644
+--- a/desk/rituals/closeout.md
++++ b/desk/rituals/closeout.md
+@@ -87,7 +87,3 @@ _List common mistakes this ritual prevents._
+ _Describe what completion looks like._
+ 
+ The task has left the active workspace and its closure is recorded by its own git commit. If it was the last open task in the current phase, the board must still pass through phase closeout before the next phase begins.
+-
+-## Step Details
+-
+-_Generated from the step references above._
+diff --git a/desk/rituals/execution.md b/desk/rituals/execution.md
+index 57edce0..41197e6 100644
+--- a/desk/rituals/execution.md
++++ b/desk/rituals/execution.md
+@@ -105,7 +105,3 @@ _List common mistakes this ritual prevents._
+ _Describe what completion looks like._
+ 
+ The implementation is complete enough to enter the testing ritual through an explicit handoff gate.
+-
+-## Step Details
+-
+-_Generated from the step references above._
+diff --git a/desk/rituals/phase.md b/desk/rituals/phase.md
+index f4265b6..b98b612 100644
+--- a/desk/rituals/phase.md
++++ b/desk/rituals/phase.md
+@@ -1,35 +1,52 @@
+ ---
++# ritual-xxx
+ id: ritual-phase
++# Ordered prose steps; not document references
++steps:
++- 1. Identify the ready dependency layer of tasks whose prerequisites are satisfied
++  and whose planned changes do not overlap operationally.
++- '1. Confirm each task has a fresh execution context bundle: the task doc, board-routed
++  instructions, bound pills, linked atoms, linked files, and validation targets.'
++- 1. Run the execution ritual for each task in the phase before implementation begins.
++- 1. Execute phase tasks in parallel when the environment supports it, or in isolated
++  fresh contexts when parallelism is unavailable.
++- 1. Require each task to close with its own targeted validation and atomic task commit
++  before considering the phase complete.
++- 1. When all phase tasks are closed, run shared integration or end-to-end validation
++  for the combined layer.
++- 1. Fix interaction regressions uncovered by the phase-level validation before phase
++  closeout.
++- '1. Reconcile the pill set touched by the phase: retire stale pills, merge or delete
++  redundant pills, and promote durable residue into atoms and materializations.'
++- 1. Capture newly discovered tasks, dependencies, or next-phase pills before advancing.
++- 1. Create one descriptive phase-closing commit for the integration and reconciliation
++  pass.
++# e.g., layer:workflow, system:sldb
+ tags:
+ - system:sldb
+ - workspace:desk
+ - topic:rituals
+ - topic:phases
+-steps:
+-- 1. Identify the ready dependency layer of tasks whose prerequisites are satisfied and whose planned changes do not overlap operationally.
+-- 1. Confirm each task has a fresh execution context bundle: the task doc, board-routed instructions, bound pills, linked atoms, linked files, and validation targets.
+-- 1. Run the execution ritual for each task in the phase before implementation begins.
+-- 1. Execute phase tasks in parallel when the environment supports it, or in isolated fresh contexts when parallelism is unavailable.
+-- 1. Require each task to close with its own targeted validation and atomic task commit before considering the phase complete.
+-- 1. When all phase tasks are closed, run shared integration or end-to-end validation for the combined layer.
+-- 1. Fix interaction regressions uncovered by the phase-level validation before phase closeout.
+-- 1. Reconcile the pill set touched by the phase: retire stale pills, merge or delete redundant pills, and promote durable residue into atoms and materializations.
+-- 1. Capture newly discovered tasks, dependencies, or next-phase pills before advancing.
+-- 1. Create one descriptive phase-closing commit for the integration and reconciliation pass.
+ ---
+ 
+ # Phase ritual for dependency-layer execution
+ 
+ ## Purpose
+ 
++_Explain why this ritual exists._
++
+ Run one horizontal dependency layer of tasks as the workflow unit above individual task execution, then close that layer with integration validation, pill reconciliation, and next-phase preparation.
+ 
+ ## Trigger
+ 
++_State when this ritual should start._
++
+ Start when the board has one ready set of tasks whose dependencies are satisfied and whose execution can proceed without overlapping operational changes.
+ 
+ ## Preconditions
+ 
++_List the conditions that must hold before running the ritual._
++
+ - The board's active tasks and dependencies are explicit.
+ - The ready phase has been identified as a non-overlapping layer.
+ - Each task has a named context bundle and validation target.
+@@ -38,6 +55,8 @@ Start when the board has one ready set of tasks whose dependencies are satisfied
+ 
+ ## Validation
+ 
++_List the checks that prove the ritual was performed correctly._
++
+ - Every task in the phase executed from fresh context.
+ - Every task closed with its own tests and its own commit.
+ - Shared phase validation passed after task integration.
+@@ -49,6 +68,8 @@ Start when the board has one ready set of tasks whose dependencies are satisfied
+ 
+ ## Failure Modes
+ 
++_List common mistakes this ritual prevents._
++
+ - Starting a phase without identifying the actual dependency layer.
+ - Treating a semantic milestone as a phase even when tasks still depend on one another.
+ - Letting tasks share one long-lived execution context instead of fresh task-specific bundles.
+@@ -58,17 +79,6 @@ Start when the board has one ready set of tasks whose dependencies are satisfied
+ 
+ ## Completion
+ 
+-The current dependency layer is integrated, reconciled, and committed, and the board is ready to start the next phase.
++_Describe what completion looks like._
+ 
+-## Steps
+-
+-- Identify the ready dependency layer of tasks whose prerequisites are satisfied and whose planned changes do not overlap operationally.
+-- Confirm each task has a fresh execution context bundle: the task doc, board-routed instructions, bound pills, linked atoms, linked files, and validation targets.
+-- Run the execution ritual for each task in the phase before implementation begins.
+-- Execute phase tasks in parallel when the environment supports it, or in isolated fresh contexts when parallelism is unavailable.
+-- Require each task to close with its own targeted validation and atomic task commit before considering the phase complete.
+-- When all phase tasks are closed, run shared integration or end-to-end validation for the combined layer.
+-- Fix interaction regressions uncovered by the phase-level validation before phase closeout.
+-- Reconcile the pill set touched by the phase: retire stale pills, merge or delete redundant pills, and promote durable residue into atoms and materializations.
+-- Capture newly discovered tasks, dependencies, or next-phase pills before advancing.
+-- Create one descriptive phase-closing commit for the integration and reconciliation pass.
++The current dependency layer is integrated, reconciled, and committed, and the board is ready to start the next phase.
+diff --git a/desk/rituals/ritual-deployment-ritual.md b/desk/rituals/ritual-deployment-ritual.md
+index cd14590..d171ae6 100644
+--- a/desk/rituals/ritual-deployment-ritual.md
++++ b/desk/rituals/ritual-deployment-ritual.md
+@@ -42,8 +42,3 @@ _List common mistakes this ritual prevents._
+ ## Completion
+ 
+ _Describe what completion looks like._
+-
+-## Steps
+-
+-1.
+-
+diff --git a/desk/rituals/testing.md b/desk/rituals/testing.md
+index b0470c8..2de6416 100644
+--- a/desk/rituals/testing.md
++++ b/desk/rituals/testing.md
+@@ -70,7 +70,3 @@ _List common mistakes this ritual prevents._
+ _Describe what completion looks like._
+ 
+ The task has trustworthy test evidence and can proceed to closeout, with any broader cross-task validation obligations handed forward to the phase ritual.
+-
+-## Step Details
+-
+-_Generated from the step references above._
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index b9f9a6f..4215ad4 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -31,6 +31,27 @@ def legacy_faq_model_pending(entries: dict[str, Any]) -> bool:
+     return entry is not None and getattr(entry, "model_ref", None) == LEGACY_FAQ_MODEL_REF
+ 
+ 
++def moved_model_contracts(root: Path, entries: dict[str, Any]) -> list[str]:
++    """Registered deskops models whose store contract no longer matches this checkout."""
++    from sldb.store.hashing import hash_model_contract
++    from sldb.store.io import load_models_index
++
++    moved: list[str] = []
++    for name, entry in sorted(entries.items()):
++        model_ref = getattr(entry, "model_ref", "") or ""
++        model_type = getattr(models, name, None)
++        models_index = getattr(entry, "models_index", None)
++        if not model_ref.startswith("deskops.models:") or model_type is None or not models_index:
++            continue
++        try:
++            stored = load_models_index(root / models_index).contract_hash
++        except Exception:
++            continue
++        if stored != hash_model_contract(model_type):
++            moved.append(name)
++    return moved
++
++
+ def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> list[str]:
+     """Move an existing store from `FAQDoc` to `DeskFAQDoc`, keeping its documents.
+ 
+@@ -236,6 +257,38 @@ class DeskCLI:
+                 return 1
+             legacy_faq_pending = False
+ 
++        moved_contracts = (
++            moved_model_contracts(root, registered_entries) if store_dir.exists() else []
++        )
++        if moved_contracts and apply:
++            pythonpath = package_pythonpath()
++            for model_name in moved_contracts:
++                print(f"Updating the {model_name} contract...")
++                result = subprocess.run(
++                    [
++                        sys.executable,
++                        "-m",
++                        "sldb",
++                        "models",
++                        "update",
++                        model_name,
++                        "--store",
++                        str(store_dir),
++                        "--pythonpath",
++                        pythonpath,
++                    ],
++                    capture_output=True,
++                    text=True,
++                    check=False,
++                )
++                if result.returncode != 0:
++                    detail = result.stderr.strip() or result.stdout.strip()
++                    print(f"Error: could not update the {model_name} contract: {detail}")
++                    return 1
++                print(f"Updated {model_name} contract.")
++            registered_entries = bootstrap._registered_model_entries(store_dir)
++            moved_contracts = moved_model_contracts(root, registered_entries)
++
+         unregistered_models: list[str] = []
+         copied_models: list[str] = []
+         # A non-editable install has no owner store to inherit from; its directly
+@@ -311,7 +364,7 @@ class DeskCLI:
+             }
+             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
+ 
+-        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
++        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts:
+             print("Desk is up to date.")
+             return 0
+ 
+@@ -322,6 +375,8 @@ class DeskCLI:
+             print(
+                 f"- Legacy FAQ model: {LEGACY_FAQ_MODEL} ({LEGACY_FAQ_MODEL_REF}) should be {FAQ_MODEL}."
+             )
++        if moved_contracts:
++            print(f"- Moved model contracts: {', '.join(moved_contracts)}")
+         if legacy_pending and legacy is not None:
+             print(
+                 "- Legacy task lifecycle: "
+diff --git a/deskops/models/ritual.py b/deskops/models/ritual.py
+index 8ad3924..58d0066 100644
+--- a/deskops/models/ritual.py
++++ b/deskops/models/ritual.py
+@@ -4,19 +4,11 @@ from .base import OperationalArtifactDoc
+ 
+ 
+ class RitualDoc(OperationalArtifactDoc):
+-    __containment__ = {"steps": ["StepDoc"]}
+     __semantics__ = {"type": ["workflow", "ritual"], "workspace": ["desk"]}
+-    __compositions__ = {
+-        "step_details": {
+-            "source_field": "steps",
+-            "model": "deskops.models:StepDoc",
+-            "template": "1. {title}: {action} -> {outcome}",
+-        }
+-    }
+     __template__ = """---
+ # ritual-xxx
+ id: ⸢rev•id⸥
+-# List of step-xxx paths
++# Ordered prose steps; not document references
+ steps: ⸢rev•steps⸥
+ # e.g., layer:workflow, system:sldb
+ tags: ⸢rev•tags⸥
+@@ -60,12 +52,6 @@ _Describe what completion looks like._
+ 
+ ⸢rev•completion⸥
+ 
+-## Step Details
+-
+-_Generated from the step references above._
+-
+-⸢render•step_details⸥
+-
+ """.strip()
+ 
+     title: str = Field(description="Short ritual title.")
+@@ -78,7 +64,7 @@ _Generated from the step references above._
+     )
+     steps: list[str] = Field(
+         default_factory=list,
+-        description="Ordered steps to execute as part of the ritual.",
++        description="Ordered prose steps to execute as part of the ritual; not document references.",
+     )
+     validation: list[str] = Field(
+         default_factory=list,
+diff --git a/tests/fixtures/golden/help/deskops_add_ritual.txt b/tests/fixtures/golden/help/deskops_add_ritual.txt
+index 53dbb4b..353a6ea 100644
+--- a/tests/fixtures/golden/help/deskops_add_ritual.txt
++++ b/tests/fixtures/golden/help/deskops_add_ritual.txt
+@@ -24,7 +24,7 @@ options:
+   --preconditions PRECONDITIONS [PRECONDITIONS ...]
+                         Conditions that must hold before running the ritual.
+   --steps STEPS [STEPS ...]
+-                        Ordered steps to execute as part of the ritual.
++                        Ordered prose steps to execute as part of the ritual; not document references.
+   --validation VALIDATION [VALIDATION ...]
+                         Checks that confirm the ritual was performed correctly.
+   --failure-modes FAILURE_MODES [FAILURE_MODES ...]
+diff --git a/tests/fixtures/model_contract_hashes.json b/tests/fixtures/model_contract_hashes.json
+index 6de5074..fb80ed9 100644
+--- a/tests/fixtures/model_contract_hashes.json
++++ b/tests/fixtures/model_contract_hashes.json
+@@ -10,7 +10,7 @@
+   "RelationDoc": "e2ddf0393e197450a26cf048bdfac1d41f049d00983a9c252b9901f4afe9d516",
+   "RelationTypeDoc": "57b63063959eb2f0b721697bc626d10bc4d960672ed03fa04f9d0a5e1f499699",
+   "RepositoryDoc": "4e3d7ee7a6c1475b5bd6a9cce0510dfc1b7d7e3ede1f63f68f797108a5a817cc",
+-  "RitualDoc": "8189f904ff08e86676ebc93c73f4aebb3858659ea426334941bbe3763bd546cd",
++  "RitualDoc": "fd5777c6019cce9e2c3425026376c9de410e9f8c9c66fe52f88a26a8e8f398d6",
+   "RoleDoc": "0133498aec7921a98513106e1893442b6dd39484b2ec2b5ea700ec6ed837705f",
+   "RunDoc": "91a7ed3e2876f2cb00cbef51f4676bf543fade7907d1d1112732538c13b292b7",
+   "RuntimeProfileDoc": "f4661520a0e3fd50c4115ad314b6aaf3d9d33f70cfde125ea444232532370934",
+diff --git a/tests/test_composition.py b/tests/test_composition.py
+index 89389b2..b504e07 100644
+--- a/tests/test_composition.py
++++ b/tests/test_composition.py
+@@ -10,7 +10,7 @@ SLDB_SRC = ROOT.parent / "sldb" / "src"
+ if str(SLDB_SRC) not in sys.path:
+     sys.path.insert(0, str(SLDB_SRC))
+ 
+-from deskops.models import BoardDoc, RitualDoc, StepDoc, TaskDoc
++from deskops.models import BoardDoc, RitualDoc, TaskDoc
+ from sldb.runtime.validation import extract_model_data
+ from sldb.runtime.validation import render_model_markdown
+ 
+@@ -99,21 +99,11 @@ def test_task_doc_keeps_machine_metadata_in_frontmatter() -> None:
+     assert extracted == payload
+ 
+ 
+-def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
+-    step_path = tmp_path / "step-a.md"
+-    step_path.write_text(
+-        render_model_markdown(
+-            StepDoc,
+-            {
+-                "title": "Validate draft",
+-                "id": "step-a",
+-                "action": "Run model validation against tracked docs.",
+-                "outcome": "A promotable contract draft.",
+-                "tags": ["topic:validation"],
+-            },
+-        ),
+-        encoding="utf-8",
+-    )
++def test_ritual_doc_round_trips_prose_steps_containing_colons():
++    steps = [
++        "1. Run a gate: give one fresh subagent only the TaskDoc.",
++        "1. Store the reformulation at `runs/subagents/<run-dir>/preflight.md`.",
++    ]
+ 
+     rendered = render_model_markdown(
+         RitualDoc,
+@@ -123,7 +113,7 @@ def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
+             "purpose": "Promote safe drafts only.",
+             "trigger": "A model draft is ready.",
+             "preconditions": ["A draft exists."],
+-            "steps": [str(step_path)],
++            "steps": steps,
+             "validation": ["Tracked docs still pass."],
+             "failure_modes": ["Promoting an invalid draft."],
+             "completion": "The active model has been updated safely.",
+@@ -131,8 +121,5 @@ def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
+         },
+     )
+ 
+-    assert "## Step Details" in rendered
+-    assert (
+-        "1. Validate draft: Run model validation against tracked docs. -> A promotable contract draft."
+-        in rendered
+-    )
++    assert "## Step Details" not in rendered
++    assert extract_model_data(RitualDoc, rendered)["steps"] == steps
+diff --git a/tests/test_desk_sync.py b/tests/test_desk_sync.py
+index 8a11be4..24c8c3f 100644
+--- a/tests/test_desk_sync.py
++++ b/tests/test_desk_sync.py
+@@ -173,3 +173,26 @@ def test_desk_update_apply_migrates_the_legacy_faq_model(tmp_path: Path, capsys)
+     assert faq_path.read_bytes() == original
+ 
+     assert main(["desk", "update", "--root", str(tmp_path)]) == 0
++
++
++def test_desk_update_apply_resigns_a_moved_model_contract(tmp_path: Path, capsys) -> None:
++    from deskops.cli.main import main
++    from sldb.store.hashing import hash_model_contract
++    from deskops.models import RitualDoc
++
++    assert main(["init", str(tmp_path)]) == 0
++    model_path = tmp_path / ".sldb" / "core" / "models" / "RitualDoc.yaml"
++    model_index = yaml.safe_load(model_path.read_text(encoding="utf-8"))
++    model_index["contract_hash"] = "0" * 64
++    model_path.write_text(yaml.safe_dump(model_index, sort_keys=False), encoding="utf-8")
++    capsys.readouterr()
++
++    assert main(["desk", "update", "--root", str(tmp_path)]) == 1
++    assert "Moved model contracts: RitualDoc" in capsys.readouterr().out
++
++    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
++    capsys.readouterr()
++
++    resigned = yaml.safe_load(model_path.read_text(encoding="utf-8"))
++    assert resigned["contract_hash"] == hash_model_contract(RitualDoc)
++    assert main(["desk", "update", "--root", str(tmp_path)]) == 0
+diff --git a/tests/test_graph_declared_edges.py b/tests/test_graph_declared_edges.py
+index 3847c80..28d4b72 100644
+--- a/tests/test_graph_declared_edges.py
++++ b/tests/test_graph_declared_edges.py
+@@ -120,6 +120,10 @@ def test_a_declared_field_holding_prose_is_not_an_unresolved_reference(tmp_path:
+     assert all(
+         "prerequisites" not in edge.target_id for edge in extraction.edges
+     )
++    assert not any(
++        edge.source_id == "ritual:ritual-phase" and edge.role == "steps"
++        for edge in extraction.edges
++    ), "Ritual steps are prose, not StepDoc containment"
+ 
+ 
+ def test_from_drawer_is_provenance_not_a_declared_reference(tmp_path: Path) -> None:

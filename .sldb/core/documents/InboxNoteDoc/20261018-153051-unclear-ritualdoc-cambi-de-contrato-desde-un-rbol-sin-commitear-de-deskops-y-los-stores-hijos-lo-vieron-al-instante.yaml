@@ -1,0 +1,17 @@
+name: 20261018-153051-unclear-ritualdoc-cambi-de-contrato-desde-un-rbol-sin-commitear-de-deskops-y-los-stores-hijos-lo-vieron-al-instante
+path: desk/inbox/20261018-153051-unclear-ritualdoc-cambi-de-contrato-desde-un-rbol-sin-commitear-de-deskops-y-los-stores-hijos-lo-vieron-al-instante.md
+source_hash: e8d2d5d9b8481c4a83ac4097c69b55efa3f50929a79756abbf4606aac10acc44
+content_hash: d86c598256dc14c05b392884b36e0e5d3bcc831ef13f187d4dda5d7429284f17
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: dbd3983026f58faf5519446b6a19d028a90307bae52793a48c3aaff9db15f7e0
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: c1382ab8941c9140d294ac66b6bf7bd608d2fcff75cd0f879f134a6209f0326e
+  body: 9bf1d493f846e623a92c383855562893963dd3de0d10dfd2ef6f8937b49a7960
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox

@@ -105,7 +105,3 @@ _List common mistakes this ritual prevents._
 _Describe what completion looks like._
 
 The implementation is complete enough to enter the testing ritual through an explicit handoff gate.
-
-## Step Details
-
-_Generated from the step references above._

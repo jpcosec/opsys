@@ -1,0 +1,30 @@
+ M .sldb/core/documents/RitualDoc/ritual-closeout.yaml
+ M .sldb/core/documents/RitualDoc/ritual-deployment-ritual.yaml
+ M .sldb/core/documents/RitualDoc/ritual-execution.yaml
+ M .sldb/core/documents/RitualDoc/ritual-testing.yaml
+ M .sldb/core/documents/TaskDoc/task-ritual-steps-are-prose.yaml
+ M .sldb/core/models/InboxNoteDoc.yaml
+ M .sldb/core/models/RitualDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/rituals/closeout.md
+ M desk/rituals/execution.md
+ M desk/rituals/phase.md
+ M desk/rituals/ritual-deployment-ritual.md
+ M desk/rituals/testing.md
+ M desk/tasks/task-ritual-steps-are-prose.md
+ M deskops/cli/commands/desk.py
+ M deskops/models/ritual.py
+ M deskops/services/closure.py
+ M tests/fixtures/golden/help/deskops_add_ritual.txt
+ M tests/fixtures/model_contract_hashes.json
+ M tests/test_closeout.py
+ M tests/test_composition.py
+ M tests/test_desk_sync.py
+ M tests/test_graph_declared_edges.py
+?? .sldb/core/documents/InboxNoteDoc/20261018-153051-unclear-ritualdoc-cambi-de-contrato-desde-un-rbol-sin-commitear-de-deskops-y-los-stores-hijos-lo-vieron-al-instante.yaml
+?? .sldb/core/documents/RitualDoc/ritual-phase.yaml
+?? desk/inbox/20261018-153051-unclear-ritualdoc-cambi-de-contrato-desde-un-rbol-sin-commitear-de-deskops-y-los-stores-hijos-lo-vieron-al-instante.md
+?? runs/subagents/20261018-task-ritual-steps-are-prose/
+?? tests/test_diagram_projections.py
+?? tests/test_extension_points.py

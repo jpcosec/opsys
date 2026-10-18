@@ -1,0 +1,7 @@
+Task: task-ritual-steps-are-prose
+Title: Ritual steps are prose items, not StepDoc references
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

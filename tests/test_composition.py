@@ -10,7 +10,7 @@ SLDB_SRC = ROOT.parent / "sldb" / "src"
 if str(SLDB_SRC) not in sys.path:
     sys.path.insert(0, str(SLDB_SRC))
 
-from deskops.models import BoardDoc, RitualDoc, StepDoc, TaskDoc
+from deskops.models import BoardDoc, RitualDoc, TaskDoc
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
@@ -99,21 +99,11 @@ def test_task_doc_keeps_machine_metadata_in_frontmatter() -> None:
     assert extracted == payload
 
 
-def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
-    step_path = tmp_path / "step-a.md"
-    step_path.write_text(
-        render_model_markdown(
-            StepDoc,
-            {
-                "title": "Validate draft",
-                "id": "step-a",
-                "action": "Run model validation against tracked docs.",
-                "outcome": "A promotable contract draft.",
-                "tags": ["topic:validation"],
-            },
-        ),
-        encoding="utf-8",
-    )
+def test_ritual_doc_round_trips_prose_steps_containing_colons():
+    steps = [
+        "1. Run a gate: give one fresh subagent only the TaskDoc.",
+        "1. Store the reformulation at `runs/subagents/<run-dir>/preflight.md`.",
+    ]
 
     rendered = render_model_markdown(
         RitualDoc,
@@ -123,7 +113,7 @@ def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
             "purpose": "Promote safe drafts only.",
             "trigger": "A model draft is ready.",
             "preconditions": ["A draft exists."],
-            "steps": [str(step_path)],
+            "steps": steps,
             "validation": ["Tracked docs still pass."],
             "failure_modes": ["Promoting an invalid draft."],
             "completion": "The active model has been updated safely.",
@@ -131,8 +121,5 @@ def test_ritual_doc_renders_composed_step_details(tmp_path: Path):
         },
     )
 
-    assert "## Step Details" in rendered
-    assert (
-        "1. Validate draft: Run model validation against tracked docs. -> A promotable contract draft."
-        in rendered
-    )
+    assert "## Step Details" not in rendered
+    assert extract_model_data(RitualDoc, rendered)["steps"] == steps

@@ -42,8 +42,3 @@ _List common mistakes this ritual prevents._
 ## Completion
 
 _Describe what completion looks like._
-
-## Steps
-
-1.
-

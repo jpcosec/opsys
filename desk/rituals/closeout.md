@@ -87,7 +87,3 @@ _List common mistakes this ritual prevents._
 _Describe what completion looks like._
 
 The task has left the active workspace and its closure is recorded by its own git commit. If it was the last open task in the current phase, the board must still pass through phase closeout before the next phase begins.
-
-## Step Details
-
-_Generated from the step references above._

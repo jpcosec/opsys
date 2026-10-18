@@ -24,7 +24,7 @@ options:
   --preconditions PRECONDITIONS [PRECONDITIONS ...]
                         Conditions that must hold before running the ritual.
   --steps STEPS [STEPS ...]
-                        Ordered steps to execute as part of the ritual.
+                        Ordered prose steps to execute as part of the ritual; not document references.
   --validation VALIDATION [VALIDATION ...]
                         Checks that confirm the ritual was performed correctly.
   --failure-modes FAILURE_MODES [FAILURE_MODES ...]

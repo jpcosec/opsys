@@ -196,3 +196,24 @@ def test_desk_update_does_not_call_the_owner_store_models_copies(tmp_path: Path,
     monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: owner)
     main(["desk", "update", "--root", str(tmp_path)])
     assert "Copied deskops models" not in capsys.readouterr().out
+def test_desk_update_apply_resigns_a_moved_model_contract(tmp_path: Path, capsys) -> None:
+    from deskops.cli.main import main
+    from sldb.store.hashing import hash_model_contract
+    from deskops.models import RitualDoc
+
+    assert main(["init", str(tmp_path)]) == 0
+    model_path = tmp_path / ".sldb" / "core" / "models" / "RitualDoc.yaml"
+    model_index = yaml.safe_load(model_path.read_text(encoding="utf-8"))
+    model_index["contract_hash"] = "0" * 64
+    model_path.write_text(yaml.safe_dump(model_index, sort_keys=False), encoding="utf-8")
+    capsys.readouterr()
+
+    assert main(["desk", "update", "--root", str(tmp_path)]) == 1
+    assert "Moved model contracts: RitualDoc" in capsys.readouterr().out
+
+    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+    capsys.readouterr()
+
+    resigned = yaml.safe_load(model_path.read_text(encoding="utf-8"))
+    assert resigned["contract_hash"] == hash_model_contract(RitualDoc)
+    assert main(["desk", "update", "--root", str(tmp_path)]) == 0

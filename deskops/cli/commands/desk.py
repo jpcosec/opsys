@@ -31,6 +31,27 @@ def legacy_faq_model_pending(entries: dict[str, Any]) -> bool:
     return entry is not None and getattr(entry, "model_ref", None) == LEGACY_FAQ_MODEL_REF
 
 
+def moved_model_contracts(root: Path, entries: dict[str, Any]) -> list[str]:
+    """Registered deskops models whose store contract no longer matches this checkout."""
+    from sldb.store.hashing import hash_model_contract
+    from sldb.store.io import load_models_index
+
+    moved: list[str] = []
+    for name, entry in sorted(entries.items()):
+        model_ref = getattr(entry, "model_ref", "") or ""
+        model_type = getattr(models, name, None)
+        models_index = getattr(entry, "models_index", None)
+        if not model_ref.startswith("deskops.models:") or model_type is None or not models_index:
+            continue
+        try:
+            stored = load_models_index(root / models_index).contract_hash
+        except Exception:
+            continue
+        if stored != hash_model_contract(model_type):
+            moved.append(name)
+    return moved
+
+
 def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> list[str]:
     """Move an existing store from `FAQDoc` to `DeskFAQDoc`, keeping its documents.
 
@@ -236,6 +257,38 @@ class DeskCLI:
                 return 1
             legacy_faq_pending = False
 
+        moved_contracts = (
+            moved_model_contracts(root, registered_entries) if store_dir.exists() else []
+        )
+        if moved_contracts and apply:
+            pythonpath = package_pythonpath()
+            for model_name in moved_contracts:
+                print(f"Updating the {model_name} contract...")
+                result = subprocess.run(
+                    [
+                        sys.executable,
+                        "-m",
+                        "sldb",
+                        "models",
+                        "update",
+                        model_name,
+                        "--store",
+                        str(store_dir),
+                        "--pythonpath",
+                        pythonpath,
+                    ],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                )
+                if result.returncode != 0:
+                    detail = result.stderr.strip() or result.stdout.strip()
+                    print(f"Error: could not update the {model_name} contract: {detail}")
+                    return 1
+                print(f"Updated {model_name} contract.")
+            registered_entries = bootstrap._registered_model_entries(store_dir)
+            moved_contracts = moved_model_contracts(root, registered_entries)
+
         unregistered_models: list[str] = []
         copied_models: list[str] = []
         # A non-editable install has no owner store to inherit from; its directly
@@ -315,7 +368,7 @@ class DeskCLI:
             }
             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
 
-        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
+        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts:
             print("Desk is up to date.")
             return 0
 
@@ -326,6 +379,8 @@ class DeskCLI:
             print(
                 f"- Legacy FAQ model: {LEGACY_FAQ_MODEL} ({LEGACY_FAQ_MODEL_REF}) should be {FAQ_MODEL}."
             )
+        if moved_contracts:
+            print(f"- Moved model contracts: {', '.join(moved_contracts)}")
         if legacy_pending and legacy is not None:
             print(
                 "- Legacy task lifecycle: "
