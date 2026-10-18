@@ -36,3 +36,4 @@
 {"task_id": "task-taskdoc-tags-optional-for-legacy-tasks", "run_id": null, "run_dir": "runs/subagents/20261018-task-taskdoc-tags-optional-for-legacy-tasks", "session_sha256": null, "commit": "c5ab8b1ed559187cf49df2ca708b0014a078ab13"}
 {"task_id": "task-task-selectors-resolve-tracked-legacy-filenames", "run_id": null, "run_dir": "runs/subagents/20261018-task-task-selectors-resolve-tracked-legacy-filenames", "session_sha256": null, "commit": "c35cd9e3788c487e2d53a0a51b3d56afcdceb208"}
 {"task_id": "task-rewrites-refuse-to-erase-undeclared-sections", "run_id": null, "run_dir": "runs/subagents/20261018-task-rewrites-refuse-to-erase-undeclared-sections", "session_sha256": null, "commit": "83c1776dfd630093fe3dd0497a6ad956710b17c7"}
+{"task_id": "task-edit-keeps-text-values-literal", "run_id": null, "run_dir": "runs/subagents/20261018-task-edit-keeps-text-values-literal", "session_sha256": null, "commit": "6c14022655fa1626b2c7d91f9cfe46616ba568ce"}
