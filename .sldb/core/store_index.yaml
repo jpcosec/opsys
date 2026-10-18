@@ -84,18 +84,6 @@ models:
   - source.document.markdown
   - type.workflow.pill
   - workspace.desk
-- name: FAQDoc
-  model_ref: deskops.models:FAQDoc
-  path: deskops/models/faq.py
-  models_index: .sldb/core/models/FAQDoc.yaml
-  version: 1
-  canonical: false
-  family: null
-  semantics:
-  - representation.markdown
-  - source.document.markdown
-  - type.documentation.faq
-  - workspace.docs.faq
 - name: StepDoc
   model_ref: deskops.models:StepDoc
   path: deskops/models/step.py
@@ -180,6 +168,18 @@ models:
   - representation.markdown
   - source.document.markdown
   - type.relation.instance
+- name: DeskFAQDoc
+  model_ref: deskops.models:DeskFAQDoc
+  path: deskops/models/faq.py
+  models_index: .sldb/core/models/DeskFAQDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.documentation.faq
+  - workspace.docs.faq
 predicates:
 - name: has_model
   axis: WHAT
@@ -232,4 +232,4 @@ predicates:
   description: A composed field of the source (`__compositions__`) renders this document's
     payload into the source's text; the edge carries the composed field, the field
     holding the refs and the ref as authored.
-store_hash: b0408dbf574191c72a85acdf5eb75280819c4182c444024326b70ac07c2886d4
+store_hash: 4b76b0b6537a9f4cb6221528a22d0f525a23874d6024f7033daea12e35d73e26

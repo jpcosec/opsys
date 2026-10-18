@@ -3,6 +3,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
 from deskops.cli.main import main
@@ -47,9 +48,10 @@ def test_inbox_promotion_keeps_structured_sections_flat_in_drawer(tmp_path: Path
     assert text.count("## Scope") == 1
     assert text.count("## Validation") == 1
     assert text.count("## Done When") == 1
-    assert _section(text, "Goal") == "Keep authored goal text."
-    assert _section(text, "Scope") == "Keep authored scope text."
-    assert _section(text, "Validation") == "- pytest tests/test_promotion_nesting.py -q"
+    payload = extract_model_data(TaskDoc, text)
+    assert payload["goal"] == "Keep authored goal text."
+    assert payload["scope"] == "Keep authored scope text."
+    assert payload["validation"] == ["pytest tests/test_promotion_nesting.py -q"]
     assert "## Validation" not in _section(text, "Scope")
     assert "## Done When" not in _section(text, "Scope")
 

@@ -13,7 +13,6 @@ tasks:
 - desk/tasks/task-close-a-task-as-superseded.md
 - desk/tasks/task-docs-teach-closeout-commit-as-the-only-close.md
 - desk/tasks/task-ritual-steps-are-prose.md
-- desk/tasks/task-promote-writes-drawer-tasks-as-taskdoc.md
 - desk/tasks/task-goldens-hold-across-sldb-extraction-and-python-versions.md
 # List of pill-xxx paths
 pills:
@@ -63,5 +62,4 @@ _Generated from the task references above._
 - A task whose subject no longer exists closes as superseded, with a reason and a reference [draft] - `deskops closeout supersede --task <id> --reason <text> --ref <commit-or-path> --root <repo>` closes a task from any lifecycle node. It requires the reason and at least one resolvable ref: a commit that is HEAD or an ancestor, or an existing path. The task's status and history record `superseded`, and the commit trailers say so (`Closeout-Mode: superseded`, `Closeout-Reason`, `Closeout-Ref`). It removes the task from the Board in one commit, the same way the closeout commit does, and the run index line marks it as superseded.
 - Docs and skills teach `closeout commit` as the only way to close a task [draft] - Every doc and skill that walks through closing a task uses `deskops closeout commit` and says that `advance` stops at the closeout node.
 - Ritual steps are prose items, not StepDoc references [draft] - RitualDoc.steps is plain text, `sldb edges unresolved --local` reports no RitualDoc.steps findings, desk/rituals/phase.md is tracked as RitualDoc:ritual-phase, and every store migrates through `desk update --apply`.
-- `promote inbox-to-drawer-task` writes the drawer task as a TaskDoc [draft] - The promoted drawer task is rendered through TaskDoc (status deferred, fields from the note's sections, source note named in `why`), so every TaskDoc reader accepts it.
 - The golden and readability tests hold across sldb's extraction fix and Python 3.12 [draft] - `pytest tests` is green on Python 3.12 and 3.13 against sldb main. The goldens record the real extracted values, the readability test asserts the detector's contract rather than one sldb behavior, and the help goldens compare usage text and option spelling independently of the Python version.

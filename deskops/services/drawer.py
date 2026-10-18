@@ -17,6 +17,7 @@ from typing import Callable
 
 import yaml
 from sldb.runtime.validation import extract_model_data
+from sldb.runtime.validation import render_model_markdown
 
 from deskops import doc_io
 from deskops.models import TaskDoc
@@ -251,44 +252,26 @@ class DrawerService:
         body: str,
         parsed_sections: dict[str, Any],
     ) -> str:
+        # A drawer task is a TaskDoc like any other task, so `add task --from-drawer`,
+        # the store and the readers that extract TaskDoc can all read it.
         fields = parsed_sections["fields"]
-        scope = fields.get("scope") or body.strip() or "No additional detail provided."
-        lines = [
-            f"# {title}",
-            "",
-            f"ID: {task_id}",
-            "Status: deferred",
-            "Priority: medium",
-            "",
-        ]
-
-        if fields.get("why"):
-            lines.extend(["## Rationale", "", fields["why"], ""])
-        lines.extend([
-            "## Goal",
-            "",
-            fields.get("goal") or f"Triage and resolve the inbox message promoted from `{source_path}`.",
-            "",
-            "## Scope",
-            "",
-            scope,
-            "",
-        ])
-        if fields.get("implementation_path"):
-            lines.extend(["## Implementation Path", "", fields["implementation_path"], ""])
-        if fields.get("validation"):
-            lines.extend(["## Validation", "", fields["validation"], ""])
-        lines.extend([
-            "## Source",
-            "",
-            f"- `{source_path}`",
-            "",
-            "## Done When",
-            "",
-            fields.get("done_when") or "- The message is resolved, answered, or promoted into active work.",
-            "",
-        ])
-        return "\n".join(lines)
+        validation = fields.get("validation") or []
+        if isinstance(validation, str):
+            validation = [line.lstrip("- ").strip() for line in validation.splitlines() if line.strip()]
+        payload = {
+            "id": task_id,
+            "title": title,
+            "status": "deferred",
+            "why": fields.get("why") or f"Promoted from the inbox note `{source_path}`.",
+            "goal": fields.get("goal") or f"Triage and resolve the inbox message promoted from `{source_path}`.",
+            "scope": fields.get("scope") or body.strip() or "No additional detail provided.",
+            "implementation_path": fields.get("implementation_path") or "To be defined when the task is promoted.",
+            "validation": validation,
+            "done_when": fields.get("done_when") or "The message is resolved, answered, or promoted into active work.",
+            # The source note is deleted below, so it is named in `why`, not referenced.
+            "tags": ["workspace:desk", "artifact:task", "source:inbox"],
+        }
+        return render_model_markdown(TaskDoc, payload) + "\n"
 
     def _slug(self, text: str) -> str:
         slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")

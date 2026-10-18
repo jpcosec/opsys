@@ -1,0 +1,7 @@
+Task: task-promote-writes-drawer-tasks-as-taskdoc
+Title: `promote inbox-to-drawer-task` writes the drawer task as a TaskDoc
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
