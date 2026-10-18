@@ -7,6 +7,8 @@ Entries cover the unreleased changes since tag `v-stable-2026.08.29`.
 
 ## [Unreleased]
 
+## [0.2.0] - Unreleased
+
 ### Added (rewrite plan F1–F6)
 
 - Model contract snapshot (`tests/fixtures/model_contract_hashes.json`), CLI contract tests, and golden files for help, output, and graph.

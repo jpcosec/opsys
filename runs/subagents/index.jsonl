@@ -71,3 +71,4 @@
 {"task_id": "task-message-tracks-only-in-the-target-store", "run_id": null, "run_dir": "runs/subagents/20261018-task-message-tracks-only-in-the-target-store", "session_sha256": null, "commit": null}
 {"task_id": "task-second-migration-pass-deskfaqdoc-and-ritual-prose", "run_id": null, "run_dir": "runs/subagents/20261018-task-second-migration-pass-deskfaqdoc-and-ritual-prose", "session_sha256": null, "commit": null}
 {"task_id": "task-closed-issues-count-as-records-in-graph-missing", "run_id": null, "run_dir": "runs/subagents/20261018-task-closed-issues-count-as-records-in-graph-missing", "session_sha256": null, "commit": null}
+{"task_id": "task-declare-version-0-2-0-unreleased", "run_id": null, "run_dir": "runs/subagents/20261018-task-declare-version-0-2-0-unreleased", "session_sha256": null, "commit": null}

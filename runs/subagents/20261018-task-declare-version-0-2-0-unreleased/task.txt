@@ -1,0 +1,7 @@
+Task: task-declare-version-0-2-0-unreleased
+Title: deskops declares version 0.2.0 (unreleased) in pyproject and CHANGELOG
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

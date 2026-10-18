@@ -42,7 +42,7 @@ El coordinador pidió el 2026-10-18 un tag de versión con CHANGELOG al cerrar F
 
 _Outline the expected implementation route or affected surface._
 
-With the owner's go-ahead, once the whole suite works together: 1. Bump version to 0.2.0 in pyproject.toml and move [Unreleased] to [0.2.0] with the date in CHANGELOG.md. The structuredLanguageDB>=0.1.13 floor is already declared (task-require-sldb-0-1-13); before tagging deskops, make sure sldb's v0.1.13 is tagged or published, so that pip resolves it outside the checkout. 2. Run pytest tests on 3.12 and 3.13. 3. Commit, git tag -a v0.2.0, and push main and the tag.
+With the owner's go-ahead, once the whole suite works together: 1. Make sure sldb's v0.1.13 is tagged or published, so that pip resolves structuredLanguageDB>=0.1.13 outside the checkout. 2. In CHANGELOG.md, replace '## [0.2.0] - Unreleased' with the release date (pyproject.toml already says 0.2.0, see task-declare-version-0-2-0-unreleased). 3. Run pytest tests on 3.12 and 3.13. 4. Commit, git tag -a v0.2.0, and push main and the tag.
 
 ## Validation
 
