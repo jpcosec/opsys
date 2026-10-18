@@ -7,6 +7,7 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f3-single-closure-path.md
+- desk/tasks/task-rw-package-runs-outside-editable-install.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -48,3 +49,4 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - One closure service behind every way of closing a task [draft] - `deskops/services/closure.py` performs every closure: gates (closeout_gates), Board update, bundle removal, exactly one commit with the route's trailers, and the index entry. `closeout commit` (both routes) uses it with its CLI unchanged.
+- deskops works from a regular (non-editable) install [draft] - A wheel built from this repo and installed (not editable) into a fresh venv runs `deskops init`, `add task`, `advance`, `desk update` and `faq` in a sandbox repo outside the checkout.

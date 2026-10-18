@@ -30,7 +30,6 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
-- `task-rw-package-runs-outside-editable-install` — no `Path(__file__)` checkout paths; spec/ packaged; runs from a wheel (after F6)
 - `task-rename-deskops-faqdoc` — deskops FAQ model gets its own name; sldb has its own FAQDoc (reported by sldb-04)
 
 ### Deskops rewrite plan (2026-10-16)

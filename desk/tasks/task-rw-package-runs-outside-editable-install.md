@@ -1,6 +1,12 @@
 ---
 id: task-rw-package-runs-outside-editable-install
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f6-migrate-tracking-stores
@@ -16,12 +22,10 @@ files:
 - deskops/cli/commands/desk.py
 - deskops/cli/commands/faq.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- topic:packaging
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-package-runs-outside-editable-install.md
 ---
 
 # deskops works from a regular (non-editable) install
