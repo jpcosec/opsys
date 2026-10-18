@@ -1,0 +1,14 @@
+{
+  "materializations": [
+    {
+      "id": "materialization-golden-materialization",
+      "title": "Golden materialization",
+      "source_atoms": [],
+      "target_kind": "document",
+      "target_identity": "atom-golden-one",
+      "intent": "Golden intent",
+      "validation": [],
+      "tags": []
+    }
+  ]
+}

@@ -44,19 +44,24 @@ COMMIT_SHA_RE = re.compile(r"\b[0-9a-f]{40}\b")
 TRAILER_RE = re.compile(r"^(?P<key>[A-Z][A-Za-z0-9-]+): (?P<value>.+)$")
 
 
-def _env() -> dict[str, str]:
+def _env(home: Path | None = None) -> dict[str, str]:
     env = dict(os.environ)
     env["COLUMNS"] = "80"
+    if home is not None:
+        env["HOME"] = str(home)
+        env["XDG_CACHE_HOME"] = str(home / ".cache")
     existing = env.get("PYTHONPATH")
     env["PYTHONPATH"] = str(REPO_ROOT) + (os.pathsep + existing if existing else "")
     return env
 
 
-def _cli(cwd: Path, *argv: str) -> subprocess.CompletedProcess[str]:
+def _cli(
+    cwd: Path, *argv: str, home: Path | None = None
+) -> subprocess.CompletedProcess[str]:
     result = subprocess.run(
         [sys.executable, "-m", "deskops", *argv],
         cwd=cwd,
-        env=_env(),
+        env=_env(home),
         capture_output=True,
         text=True,
     )
@@ -297,3 +302,359 @@ def test_help_goldens(request: pytest.FixtureRequest) -> None:
                 stale.unlink()
     for relative_path, actual in sorted(outputs.items()):
         _check_golden(relative_path, actual, request)
+
+
+# --- command output goldens -------------------------------------------------
+
+STAMP_RE = re.compile(r"\b\d{8}-\d{6}\b")
+FORMATS_TEXT_JSON = ("text", "json")
+FORMATS_TEXT_JSON_YAML = ("text", "json", "yaml")
+
+OUTPUT_FIXTURE_DOCS = (
+    (
+        "ritual",
+        (
+            ["--title", "Golden ritual"],
+            ["--purpose", "Golden purpose"],
+            ["--trigger", "Golden trigger"],
+            ["--completion", "Golden completion"],
+        ),
+    ),
+    (
+        "board",
+        (
+            ["--title", "Golden board"],
+            ["--scope", "golden scope"],
+            ["--purpose", "Golden purpose"],
+        ),
+    ),
+    (
+        "materialization",
+        (
+            ["--title", "Golden materialization"],
+            ["--target-kind", "document"],
+            ["--target-identity", "atom-golden-one"],
+            ["--intent", "Golden intent"],
+        ),
+    ),
+    (
+        "repository",
+        (
+            ["--name", "Golden repository"],
+            ["--description", "Golden description"],
+        ),
+    ),
+    (
+        "inbox-note",
+        (
+            ["--kind", "unclear"],
+            ["--created-at", "2026-01-01T00:00:00"],
+            ["--status", "open"],
+            ["--title", "Golden inbox note"],
+            ["--body", "Golden body"],
+        ),
+    ),
+    (
+        "faq-doc",
+        (
+            ["--title", "Golden FAQ"],
+            ["--body", "What is golden?\n\nGolden output."],
+        ),
+    ),
+    (
+        "step",
+        (
+            ["--title", "Golden step"],
+            ["--action", "Golden action"],
+            ["--outcome", "Golden outcome"],
+        ),
+    ),
+)
+
+SHOW_SUBJECTS = (
+    ("task", "task-golden-alpha"),
+    ("pill", "pill-golden-rule"),
+    ("ritual", "ritual-golden-ritual"),
+    ("board", "board-golden-board"),
+    ("atom", "atom-golden-one"),
+    ("materialization", "materialization-golden-materialization"),
+    ("repository", "repo-golden-repository"),
+    ("inbox-note", "inbox-note-golden-inbox-note"),
+    ("faq-doc", "faq-golden-faq"),
+    ("step", "step-golden-step"),
+)
+
+LIST_SUBJECTS = (
+    "tasks",
+    "pills",
+    "rituals",
+    "boards",
+    "atoms",
+    "materializations",
+    "repositories",
+    "inbox-notes",
+    "faq-docs",
+    "steps",
+)
+
+FAKE_HERDR = """#!/usr/bin/env python3
+import json
+import sys
+
+if sys.argv[1:3] == ["workspace", "list"]:
+    payload = {
+        "result": {
+            "workspaces": [
+                {
+                    "workspace_id": "w-1",
+                    "label": "golden",
+                    "number": 1,
+                    "agent_status": "active",
+                    "pane_count": 1,
+                    "focused": True,
+                }
+            ]
+        }
+    }
+elif sys.argv[1:3] == ["agent", "list"]:
+    payload = {
+        "result": {
+            "agents": [
+                {
+                    "pane_id": "w-1:p-1",
+                    "agent": "pi",
+                    "name": "executor",
+                    "agent_status": "idle",
+                    "cwd": "/tmp/golden-work",
+                    "workspace_id": "w-1",
+                    "tab_id": "t-1",
+                    "terminal_title_stripped": "deskops executor",
+                    "state_change_seq": 7,
+                    "focused": True,
+                }
+            ]
+        }
+    }
+else:
+    payload = {"result": {}}
+print(json.dumps(payload))
+"""
+
+
+def _normalize_output(text: str, replacements: tuple[tuple[str, str], ...]) -> str:
+    for old, new in replacements:
+        text = text.replace(old, new)
+    text = ISO_TIMESTAMP_RE.sub("<ts>", text)
+    text = COMMIT_SHA_RE.sub("<sha>", text)
+    return STAMP_RE.sub("<stamp>", text)
+
+
+def _prepare_output_repo(root: Path, home: Path) -> None:
+    shutil.copytree(FIXTURE_DESK, root)
+    _git(root, "init", "-q")
+    _git(root, "config", "user.email", "test@example.com")
+    _git(root, "config", "user.name", "Test")
+    _git(root, "commit", "--allow-empty", "-q", "-m", "seed")
+    for subject, arguments in OUTPUT_FIXTURE_DOCS:
+        argv = ["add", subject, "--root", str(root)]
+        for argument in arguments:
+            argv.extend(argument)
+        _cli(root, *argv, home=home)
+    (root / "faq.md").write_text(
+        "# Golden FAQ\n\n## What is golden?\n\nGolden output stays stable.\n\n"
+        "## Why keep goldens?\n\nSibling tools parse the CLI.\n",
+        encoding="utf-8",
+    )
+
+
+def _prepare_message_repos(base: Path, home: Path) -> tuple[Path, Path]:
+    sender = base / "sender-repo"
+    target = base / "target-repo"
+    sender.mkdir()
+    target.mkdir()
+    _cli(sender, "init", str(sender), home=home)
+    _cli(target, "init", str(target), home=home)
+    return sender, target
+
+
+def _reset_inbox(target: Path) -> None:
+    for note in (target / "desk" / "inbox").glob("*.md"):
+        note.unlink()
+
+
+def _only_note(target: Path) -> Path:
+    notes = sorted((target / "desk" / "inbox").glob("*.md"))
+    assert len(notes) == 1, notes
+    return notes[0]
+
+
+@pytest.fixture(scope="module")
+def output_golden_env(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
+    base = tmp_path_factory.mktemp("command-output-goldens")
+    home = base / "home"
+    home.mkdir()
+
+    repo = base / "repo"
+    _prepare_output_repo(repo, home)
+
+    sender, target = _prepare_message_repos(base, home)
+
+    herdr = base / "fake-herdr"
+    herdr.write_text(FAKE_HERDR, encoding="utf-8")
+    herdr.chmod(0o755)
+
+    return {"base": base, "home": home, "repo": repo, "sender": sender, "target": target, "herdr": herdr}
+
+
+def _collect_command_output_goldens(env: dict[str, Path]) -> dict[str, str]:
+    home = env["home"]
+    repo = env["repo"]
+    sender = env["sender"]
+    target = env["target"]
+    repo_replacements = ((str(repo), "<root>"), (str(home), "<home>"))
+    message_replacements = (
+        (str(target), "<target>"),
+        (str(sender), "<sender>"),
+        (str(home), "<home>"),
+    )
+    outputs: dict[str, str] = {}
+
+    def capture(
+        name: str,
+        fmt: str,
+        argv: list[str],
+        cwd: Path,
+        replacements: tuple[tuple[str, str], ...],
+    ) -> None:
+        completed = _cli(cwd, *argv, "--format", fmt, home=home)
+        outputs[f"{name}.{fmt}"] = _normalize_output(completed.stdout, replacements)
+
+    for subject in LIST_SUBJECTS:
+        for fmt in FORMATS_TEXT_JSON:
+            capture(
+                f"list_{subject}",
+                fmt,
+                ["list", subject, "--root", str(repo)],
+                repo,
+                repo_replacements,
+            )
+
+    for subject, selector in SHOW_SUBJECTS:
+        for fmt in FORMATS_TEXT_JSON:
+            capture(
+                f"show_{subject}",
+                fmt,
+                ["show", subject, selector, "--root", str(repo)],
+                repo,
+                repo_replacements,
+            )
+
+    for name, argv in (
+        ("atoms_list", ["atoms", "list", "--root", str(repo)]),
+        ("atoms_show", ["atoms", "show", "atom-golden-one", "--root", str(repo)]),
+        ("atoms_tree", ["atoms", "tree", "--root", str(repo)]),
+    ):
+        for fmt in FORMATS_TEXT_JSON:
+            capture(name, fmt, argv, repo, repo_replacements)
+
+    for fmt in FORMATS_TEXT_JSON_YAML:
+        capture(
+            "faq",
+            fmt,
+            ["faq", "--faq-path", str(repo / "faq.md")],
+            repo,
+            repo_replacements,
+        )
+
+    for fmt in FORMATS_TEXT_JSON_YAML:
+        _reset_inbox(target)
+        capture(
+            "message_send",
+            fmt,
+            [
+                "message",
+                "send",
+                f"Golden message for {fmt}.",
+                "--title",
+                f"Golden message {fmt}",
+                "--kind",
+                "suggestion",
+                "--root",
+                str(target),
+            ],
+            sender,
+            message_replacements,
+        )
+        note = _only_note(target)
+        capture(
+            "message_list",
+            fmt,
+            ["message", "list", "--root", str(target)],
+            target,
+            message_replacements,
+        )
+        capture(
+            "message_read",
+            fmt,
+            ["message", "read", note.stem, "--root", str(target)],
+            target,
+            message_replacements,
+        )
+        capture(
+            "message_ack",
+            fmt,
+            ["message", "ack", note.stem, "--root", str(target)],
+            target,
+            message_replacements,
+        )
+
+        _reset_inbox(target)
+        capture(
+            "inbox",
+            fmt,
+            [
+                "inbox",
+                f"Legacy golden message for {fmt}.",
+                "--title",
+                f"Legacy golden {fmt}",
+                "--kind",
+                "unclear",
+                "--root",
+                str(target),
+            ],
+            sender,
+            message_replacements,
+        )
+
+    for fmt in FORMATS_TEXT_JSON:
+        capture(
+            "runtime_workers",
+            fmt,
+            [
+                "runtime",
+                "workers",
+                "--root",
+                str(repo),
+                "--herdr",
+                str(env["herdr"]),
+            ],
+            repo,
+            repo_replacements,
+        )
+
+    return outputs
+
+
+def test_command_output_goldens(
+    output_golden_env: dict[str, Path], request: pytest.FixtureRequest
+) -> None:
+    outputs = _collect_command_output_goldens(output_golden_env)
+    update = request.config.getoption("--update-golden")
+    if update:
+        output_dir = GOLDEN_DIR / "output"
+        output_dir.mkdir(parents=True, exist_ok=True)
+        for stale in output_dir.glob("*"):
+            if f"output/{stale.name}" not in outputs:
+                stale.unlink()
+    for name, actual in sorted(outputs.items()):
+        _check_golden(f"output/{name}", actual, request)

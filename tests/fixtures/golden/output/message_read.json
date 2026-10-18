@@ -1,0 +1,11 @@
+{
+  "id": "<stamp>-suggestion-golden-message-json",
+  "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
+  "title": "Golden message json",
+  "body": "_Describe the incoming message with enough evidence to triage._\n\nGolden message for json.",
+  "kind": "suggestion",
+  "sender_project": "sender-repo",
+  "target_project": "target-repo",
+  "created_at": "<ts>",
+  "status": "open"
+}

@@ -15,6 +15,8 @@ sys.path.insert(0, str(PACKAGE_ROOT))
 from deskops.cli.parser import build_parser
 from deskops.cli.registry import command_for_path
 from deskops.cli.registry import resolve_context
+from deskops.cli.render import render_error
+from deskops.cli.render import requested_format
 from deskops.identity import find_context_root
 
 from deskops.about import print_about
@@ -128,7 +130,10 @@ class CLI:
         if getattr(args, "root", None) is not None:
             root_path = Path(args.root).resolve()
             if not root_path.exists() or not root_path.is_dir():
-                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
+                message = f"Provided --root is not a valid directory: {args.root}"
+                if requested_format(raw_argv) == "json":
+                    return render_error(message, "json", type_name="DomainError")
+                print(f"Error: {message}", file=sys.stderr)
                 return 1
 
         if command.path[0] in _SLDB_BEFORE_DISPATCH:
@@ -184,44 +189,48 @@ class CLI:
         args.pythonpath = bootstrap.default_pythonpath()
 
 
+def _error_parts(exc: BaseException) -> tuple[int, str, str, str, Any]:
+    """One (code, type, message, display text, stream) tuple for every failure."""
+
+    from pydantic import ValidationError
+    from sldb.core.exceptions import SLDBStoreError
+
+    if isinstance(exc, DeskopsError):
+        stream = sys.stdout if isinstance(exc, UsageError) else sys.stderr
+        return exc.exit_code, type(exc).__name__, str(exc), str(exc), stream
+    if isinstance(exc, FileNotFoundError):
+        return 1, type(exc).__name__, str(exc), f"File not found: {exc}", sys.stderr
+    if isinstance(exc, KeyError):
+        return 1, type(exc).__name__, str(exc), f"Missing required field: {exc}", sys.stderr
+    if isinstance(exc, ValidationError):
+        return 1, type(exc).__name__, str(exc), f"Validation error:\n{exc}", sys.stderr
+    if isinstance(exc, ValueError):
+        return 1, type(exc).__name__, str(exc), f"Invalid value: {exc}", sys.stderr
+    if isinstance(exc, SLDBStoreError):
+        return 1, type(exc).__name__, str(exc), f"Store error: {exc}", sys.stderr
+    display = (
+        f"Unexpected error: {type(exc).__name__}: {exc} "
+        "(rerun with --debug for the traceback)"
+    )
+    return 3, type(exc).__name__, str(exc), display, sys.stderr
+
+
 def main(argv: Any = None) -> int:
+    raw_argv = list(sys.argv[1:] if argv is None else argv)
+    fmt = requested_format(raw_argv)
     cli = CLI()
     try:
         return cli.run(argv)
     except SystemExit:
         raise
-    except DeskopsError as exc:
-        stream = sys.stdout if isinstance(exc, UsageError) else sys.stderr
-        print(str(exc), file=stream)
-        return exc.exit_code
-    except FileNotFoundError as exc:
-        print(f"File not found: {exc}", file=sys.stderr)
-        return 1
-    except KeyError as exc:
-        print(f"Missing required field: {exc}", file=sys.stderr)
-        return 1
-    except ValueError as exc:
-        from pydantic import ValidationError
-
-        if isinstance(exc, ValidationError):
-            print(f"Validation error:\n{exc}", file=sys.stderr)
-            return 1
-        print(f"Invalid value: {exc}", file=sys.stderr)
-        return 1
-    except Exception as exc:
-        from sldb.core.exceptions import SLDBStoreError
-
-        if isinstance(exc, SLDBStoreError):
-            print(f"Store error: {exc}", file=sys.stderr)
-            return 1
-        if getattr(cli, "debug", False):
+    except BaseException as exc:
+        code, type_name, message, display, stream = _error_parts(exc)
+        if fmt == "json":
+            return render_error(message, "json", code=code, type_name=type_name)
+        if code == 3 and getattr(cli, "debug", False):
             traceback.print_exc()
-        print(
-            f"Unexpected error: {type(exc).__name__}: {exc} "
-            "(rerun with --debug for the traceback)",
-            file=sys.stderr,
-        )
-        return 3
+        print(display, file=stream)
+        return code
 
 
 if __name__ == "__main__":

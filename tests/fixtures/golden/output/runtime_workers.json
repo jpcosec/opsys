@@ -1,0 +1,36 @@
+{
+  "workers": [
+    {
+      "pane": "w-1:p-1",
+      "kind": "pi",
+      "name": "executor",
+      "status": "idle",
+      "cwd": "/tmp/golden-work",
+      "title": "deskops executor",
+      "workspace": "w-1",
+      "seq": 7,
+      "focused": true
+    }
+  ],
+  "spaces": [
+    {
+      "workspace": "w-1",
+      "label": "golden",
+      "number": 1,
+      "status": "active",
+      "workers": [
+        {
+          "pane": "w-1:p-1",
+          "kind": "pi",
+          "name": "executor",
+          "status": "idle",
+          "cwd": "/tmp/golden-work",
+          "title": "deskops executor",
+          "workspace": "w-1",
+          "seq": 7,
+          "focused": true
+        }
+      ]
+    }
+  ]
+}

@@ -7,6 +7,8 @@ from typing import Any
 from deskops.atom_tags import add_namespace
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import ensure_default_namespaces
+from deskops.cli.render import render
+from deskops.cli.render import render_error
 from deskops.domain_tree import DomainTree
 from deskops.operations import DeskopsOperations
 
@@ -154,20 +156,17 @@ class AtomsCLI:
             try:
                 axis, payloads = operations.list_atoms(getattr(args, "axis_value", None))
             except (FileNotFoundError, ValueError) as exc:
-                print(f"Error: {exc}")
-                return 1
-            if getattr(args, "format", "text") == "json":
-                import json
-                print(json.dumps({"axis": axis, "atoms": payloads}, indent=2, default=str))
-                return 0
-            for payload in payloads:
-                label = payload.get("title") or payload["id"]
-                if axis:
-                    values = ",".join(payload.get("axis_values") or []) or "-"
-                    print(f"{payload['id']} | {label} | {axis}:{values}")
-                else:
-                    print(f"{payload['id']} | {label}")
-            return 0
+                return render_error(
+                    str(exc),
+                    getattr(args, "format", "text"),
+                    type_name=type(exc).__name__,
+                    text=f"Error: {exc}",
+                )
+            return render(
+                {"axis": axis, "atoms": payloads},
+                getattr(args, "format", "text"),
+                lambda _data: _format_atom_list(payloads, axis),
+            )
 
         if args.atoms_command in {"crossroad", "proto", "type", "tree"}:
             return self._run_domain_tree(args, root)
@@ -209,13 +208,17 @@ class AtomsCLI:
                 return 0
             report = tree.tree()
         except (FileNotFoundError, FileExistsError, ValueError, RuntimeError) as exc:
-            print(f"Error: {exc}")
-            return 1
-        if getattr(args, "format", "text") == "json":
-            print(json.dumps(report, indent=2, default=str))
-            return 0
-        _print_tree(report)
-        return 0
+            return render_error(
+                str(exc),
+                getattr(args, "format", "text"),
+                type_name=type(exc).__name__,
+                text=f"Error: {exc}",
+            )
+        return render(
+            report,
+            getattr(args, "format", "text"),
+            _format_tree,
+        )
 
 
 def _with_domain_checks(results: list[dict[str, Any]], domain: list[dict[str, Any]]) -> list[dict[str, Any]]:
@@ -230,21 +233,36 @@ def _with_domain_checks(results: list[dict[str, Any]], domain: list[dict[str, An
     return merged
 
 
-def _print_tree(report: dict[str, Any]) -> None:
+def _format_atom_list(payloads: list[dict[str, Any]], axis: str | None) -> str:
+    lines: list[str] = []
+    for payload in payloads:
+        label = payload.get("title") or payload["id"]
+        if axis:
+            values = ",".join(payload.get("axis_values") or []) or "-"
+            lines.append(f"{payload['id']} | {label} | {axis}:{values}")
+        else:
+            lines.append(f"{payload['id']} | {label}")
+    return "\n".join(lines)
+
+
+def _format_tree(report: dict[str, Any]) -> str:
+    lines: list[str] = []
+
     def walk(node: dict[str, Any], depth: int) -> None:
         pad = "  " * depth
-        print(f"{pad}{node['path']} — {node['title']}")
+        lines.append(f"{pad}{node['path']} — {node['title']}")
         for item in node["items"]:
             target = f" -> {item['typed_as']}" if item.get("typed_as") else ""
-            print(f"{pad}  · {item['id']}  {item['title']}{target}")
+            lines.append(f"{pad}  · {item['id']}  {item['title']}{target}")
         for child in node["children"]:
             walk(child, depth + 1)
 
     for node in report["roots"]:
         walk(node, 0)
     if report["orphans"]:
-        print("Without a written crossroad:")
+        lines.append("Without a written crossroad:")
         for item in report["orphans"]:
-            print(f"  · {item['id']} (domain:{item['domain']})")
+            lines.append(f"  · {item['id']} (domain:{item['domain']})")
     if report["unplaced"]:
-        print(f"Without a domain tag: {len(report['unplaced'])} document(s)")
+        lines.append(f"Without a domain tag: {len(report['unplaced'])} document(s)")
+    return "\n".join(lines)

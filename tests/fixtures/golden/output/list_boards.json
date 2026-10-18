@@ -1,0 +1,43 @@
+{
+  "boards": [
+    {
+      "title": "repo Board",
+      "id": "board-001",
+      "status": "",
+      "summary": "",
+      "tags": [
+        "workspace:desk"
+      ],
+      "current_node": "",
+      "history": [],
+      "scope": "desk",
+      "purpose": "Route the active execution set for repo.",
+      "tasks": [],
+      "pills": [
+        "desk/contexts/pills.md"
+      ],
+      "rituals": [
+        "desk/rituals/phase.md",
+        "desk/rituals/execution.md",
+        "desk/rituals/testing.md",
+        "desk/rituals/closeout.md"
+      ],
+      "notes": "Bootstrap complete. Add active task docs under `desk/tasks/` and route them here."
+    },
+    {
+      "title": "Golden board",
+      "id": "board-golden-board",
+      "status": "",
+      "summary": "",
+      "tags": [],
+      "current_node": "",
+      "history": [],
+      "scope": "golden scope",
+      "purpose": "Golden purpose",
+      "tasks": [],
+      "pills": [],
+      "rituals": [],
+      "notes": "No additional notes."
+    }
+  ]
+}

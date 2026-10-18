@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
-import yaml
+from deskops.cli.render import render
+from deskops.cli.render import render_error
 
 
 @dataclass
@@ -31,8 +31,11 @@ class FAQCLI:
                 faq_path = repo_faq
 
         if not faq_path.exists():
-            print(f"FAQ file not found: {args.faq_path}")
-            return 1
+            return render_error(
+                f"FAQ file not found: {args.faq_path}",
+                args.format,
+                type_name="DomainError",
+            )
 
         entries = self._parse_entries(faq_path)
         if not args.question:
@@ -40,8 +43,11 @@ class FAQCLI:
 
         entry = self._select_entry(entries, str(args.question))
         if entry is None:
-            print(f"Unknown FAQ question: {args.question}")
-            return 1
+            return render_error(
+                f"Unknown FAQ question: {args.question}",
+                args.format,
+                type_name="DomainError",
+            )
         return self._print_entry(entry, args.format)
 
     def _parse_entries(self, path: Path) -> list[FAQEntry]:
@@ -89,28 +95,21 @@ class FAQCLI:
 
     def _print_index(self, entries: list[FAQEntry], fmt: str) -> int:
         payload = [asdict(entry) | {"answer": None} for entry in entries]
-        if fmt == "json":
-            print(json.dumps({"questions": payload}, indent=2))
-        elif fmt == "yaml":
-            print(yaml.safe_dump({"questions": payload}, sort_keys=False, allow_unicode=True))
-        else:
-            print("deskops FAQ questions:")
-            print("")
-            for entry in entries:
-                print(f"{entry.index}. {entry.question} [{entry.slug}]")
-        return 0
+        return render(
+            {"questions": payload},
+            fmt,
+            lambda _data: self._format_index(entries),
+        )
+
+    @staticmethod
+    def _format_index(entries: list[FAQEntry]) -> str:
+        lines = ["deskops FAQ questions:", ""]
+        lines.extend(f"{entry.index}. {entry.question} [{entry.slug}]" for entry in entries)
+        return "\n".join(lines)
 
     def _print_entry(self, entry: FAQEntry, fmt: str) -> int:
         payload = asdict(entry)
-        if fmt == "json":
-            print(json.dumps(payload, indent=2))
-        elif fmt == "yaml":
-            print(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True))
-        else:
-            print(f"{entry.index}. {entry.question}")
-            print("")
-            print(entry.answer)
-        return 0
+        return render(payload, fmt, lambda _data: f"{entry.index}. {entry.question}\n\n{entry.answer}")
 
     def _slug(self, text: str) -> str:
         slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")

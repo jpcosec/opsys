@@ -1,0 +1,16 @@
+{
+  "notes": [
+    {
+      "id": "<stamp>-suggestion-golden-message-json",
+      "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
+      "kind": "suggestion",
+      "sender_project": "sender-repo",
+      "target_project": "target-repo",
+      "status": "open",
+      "created_at": "<ts>",
+      "acknowledged_by": null,
+      "acknowledged_at": null,
+      "title": "Golden message json"
+    }
+  ]
+}

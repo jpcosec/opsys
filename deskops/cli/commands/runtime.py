@@ -1,9 +1,10 @@
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
+from deskops.cli.render import render
+from deskops.cli.render import render_error
 from deskops.config import DeskConfig
 from deskops.runtime.grouping import group_agents_by_workspace
 from deskops.runtime.herdr import HerdrClient, HerdrProvider
@@ -56,8 +57,12 @@ class RuntimeCLI:
                 print(f"Closed Herdr Space: {workspace_id} ({identity})")
                 return 0
         except (ValueError, RuntimeError) as exc:
-            print(f"Error: {exc}")
-            return 1
+            return render_error(
+                str(exc),
+                getattr(args, "format", "text"),
+                type_name=type(exc).__name__,
+                text=f"Error: {exc}",
+            )
         return 1
 
     def _supervise(self, args: Any, executable: str) -> int:
@@ -116,38 +121,35 @@ class RuntimeCLI:
         provider = HerdrProvider(HerdrClient(executable))
         agents = provider.list_agents()
         spaces = group_agents_by_workspace(agents, provider.list_workspaces())
-        if getattr(args, "format", "text") == "json":
-            print(
-                json.dumps(
-                    {
-                        "workers": [self._project_agent(agent) for agent in agents],
-                        "spaces": [
-                            {
-                                "workspace": space["workspace"],
-                                "label": space["label"],
-                                "number": space["number"],
-                                "status": space["status"],
-                                "workers": [self._project_agent(agent) for agent in space["workers"]],
-                            }
-                            for space in spaces
-                        ],
-                    },
-                    indent=2,
-                )
-            )
-            return 0
+        payload = {
+            "workers": [self._project_agent(agent) for agent in agents],
+            "spaces": [
+                {
+                    "workspace": space["workspace"],
+                    "label": space["label"],
+                    "number": space["number"],
+                    "status": space["status"],
+                    "workers": [self._project_agent(agent) for agent in space["workers"]],
+                }
+                for space in spaces
+            ],
+        }
+        return render(payload, getattr(args, "format", "text"), lambda _data: self._format_workers(agents, spaces))
+
+    @staticmethod
+    def _format_workers(agents: list[dict[str, Any]], spaces: list[dict[str, Any]]) -> str:
         if not agents:
-            print("No live Herdr agents.")
-            return 0
+            return "No live Herdr agents."
+        lines: list[str] = []
         for space in spaces:
-            print(
+            lines.append(
                 f"{space['workspace'] or '-'}  {space['label'] or '-'}  ({len(space['workers'])} workers)"
             )
             for agent in space["workers"]:
-                print(
+                lines.append(
                     f"  {agent.get('pane_id', '')} | {agent.get('agent', '')} | {agent.get('name') or '-'} | {agent.get('agent_status', '')} | {agent.get('cwd') or ''}"
                 )
-        return 0
+        return "\n".join(lines)
 
     @staticmethod
     def _project_agent(agent: dict[str, Any]) -> dict[str, Any]:

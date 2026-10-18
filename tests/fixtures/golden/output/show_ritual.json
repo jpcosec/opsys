@@ -1,0 +1,16 @@
+{
+  "title": "Golden ritual",
+  "id": "ritual-golden-ritual",
+  "status": "",
+  "summary": "",
+  "tags": [],
+  "current_node": "",
+  "history": [],
+  "purpose": "Golden purpose",
+  "trigger": "Golden trigger",
+  "preconditions": [],
+  "steps": [],
+  "validation": [],
+  "failure_modes": [],
+  "completion": "Golden completion"
+}

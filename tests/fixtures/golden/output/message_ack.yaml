@@ -1,0 +1,9 @@
+id: <stamp>-suggestion-golden-message-yaml
+path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
+status: closed
+target_project: target-repo
+acknowledged_by: target-repo
+acknowledged_at: '<ts>'
+tracked_name: <stamp>-suggestion-golden-message-yaml
+verified: true
+

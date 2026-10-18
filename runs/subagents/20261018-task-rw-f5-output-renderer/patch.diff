@@ -1,0 +1,2584 @@
+diff --git a/deskops/cli/commands/atoms.py b/deskops/cli/commands/atoms.py
+index cb9d680..d6d7f0f 100644
+--- a/deskops/cli/commands/atoms.py
++++ b/deskops/cli/commands/atoms.py
+@@ -7,6 +7,8 @@ from typing import Any
+ from deskops.atom_tags import add_namespace
+ from deskops.atom_tags import default_registry_path
+ from deskops.atom_tags import ensure_default_namespaces
++from deskops.cli.render import render
++from deskops.cli.render import render_error
+ from deskops.domain_tree import DomainTree
+ from deskops.operations import DeskopsOperations
+ 
+@@ -154,20 +156,17 @@ class AtomsCLI:
+             try:
+                 axis, payloads = operations.list_atoms(getattr(args, "axis_value", None))
+             except (FileNotFoundError, ValueError) as exc:
+-                print(f"Error: {exc}")
+-                return 1
+-            if getattr(args, "format", "text") == "json":
+-                import json
+-                print(json.dumps({"axis": axis, "atoms": payloads}, indent=2, default=str))
+-                return 0
+-            for payload in payloads:
+-                label = payload.get("title") or payload["id"]
+-                if axis:
+-                    values = ",".join(payload.get("axis_values") or []) or "-"
+-                    print(f"{payload['id']} | {label} | {axis}:{values}")
+-                else:
+-                    print(f"{payload['id']} | {label}")
+-            return 0
++                return render_error(
++                    str(exc),
++                    getattr(args, "format", "text"),
++                    type_name=type(exc).__name__,
++                    text=f"Error: {exc}",
++                )
++            return render(
++                {"axis": axis, "atoms": payloads},
++                getattr(args, "format", "text"),
++                lambda _data: _format_atom_list(payloads, axis),
++            )
+ 
+         if args.atoms_command in {"crossroad", "proto", "type", "tree"}:
+             return self._run_domain_tree(args, root)
+@@ -209,13 +208,17 @@ class AtomsCLI:
+                 return 0
+             report = tree.tree()
+         except (FileNotFoundError, FileExistsError, ValueError, RuntimeError) as exc:
+-            print(f"Error: {exc}")
+-            return 1
+-        if getattr(args, "format", "text") == "json":
+-            print(json.dumps(report, indent=2, default=str))
+-            return 0
+-        _print_tree(report)
+-        return 0
++            return render_error(
++                str(exc),
++                getattr(args, "format", "text"),
++                type_name=type(exc).__name__,
++                text=f"Error: {exc}",
++            )
++        return render(
++            report,
++            getattr(args, "format", "text"),
++            _format_tree,
++        )
+ 
+ 
+ def _with_domain_checks(results: list[dict[str, Any]], domain: list[dict[str, Any]]) -> list[dict[str, Any]]:
+@@ -230,21 +233,36 @@ def _with_domain_checks(results: list[dict[str, Any]], domain: list[dict[str, An
+     return merged
+ 
+ 
+-def _print_tree(report: dict[str, Any]) -> None:
++def _format_atom_list(payloads: list[dict[str, Any]], axis: str | None) -> str:
++    lines: list[str] = []
++    for payload in payloads:
++        label = payload.get("title") or payload["id"]
++        if axis:
++            values = ",".join(payload.get("axis_values") or []) or "-"
++            lines.append(f"{payload['id']} | {label} | {axis}:{values}")
++        else:
++            lines.append(f"{payload['id']} | {label}")
++    return "\n".join(lines)
++
++
++def _format_tree(report: dict[str, Any]) -> str:
++    lines: list[str] = []
++
+     def walk(node: dict[str, Any], depth: int) -> None:
+         pad = "  " * depth
+-        print(f"{pad}{node['path']} — {node['title']}")
++        lines.append(f"{pad}{node['path']} — {node['title']}")
+         for item in node["items"]:
+             target = f" -> {item['typed_as']}" if item.get("typed_as") else ""
+-            print(f"{pad}  · {item['id']}  {item['title']}{target}")
++            lines.append(f"{pad}  · {item['id']}  {item['title']}{target}")
+         for child in node["children"]:
+             walk(child, depth + 1)
+ 
+     for node in report["roots"]:
+         walk(node, 0)
+     if report["orphans"]:
+-        print("Without a written crossroad:")
++        lines.append("Without a written crossroad:")
+         for item in report["orphans"]:
+-            print(f"  · {item['id']} (domain:{item['domain']})")
++            lines.append(f"  · {item['id']} (domain:{item['domain']})")
+     if report["unplaced"]:
+-        print(f"Without a domain tag: {len(report['unplaced'])} document(s)")
++        lines.append(f"Without a domain tag: {len(report['unplaced'])} document(s)")
++    return "\n".join(lines)
+diff --git a/deskops/cli/commands/faq.py b/deskops/cli/commands/faq.py
+index cbb339d..75a9d88 100644
+--- a/deskops/cli/commands/faq.py
++++ b/deskops/cli/commands/faq.py
+@@ -1,12 +1,12 @@
+ from __future__ import annotations
+ 
+-import json
+ import re
+ from dataclasses import asdict, dataclass
+ from pathlib import Path
+ from typing import Any
+ 
+-import yaml
++from deskops.cli.render import render
++from deskops.cli.render import render_error
+ 
+ 
+ @dataclass
+@@ -31,8 +31,11 @@ class FAQCLI:
+                 faq_path = repo_faq
+ 
+         if not faq_path.exists():
+-            print(f"FAQ file not found: {args.faq_path}")
+-            return 1
++            return render_error(
++                f"FAQ file not found: {args.faq_path}",
++                args.format,
++                type_name="DomainError",
++            )
+ 
+         entries = self._parse_entries(faq_path)
+         if not args.question:
+@@ -40,8 +43,11 @@ class FAQCLI:
+ 
+         entry = self._select_entry(entries, str(args.question))
+         if entry is None:
+-            print(f"Unknown FAQ question: {args.question}")
+-            return 1
++            return render_error(
++                f"Unknown FAQ question: {args.question}",
++                args.format,
++                type_name="DomainError",
++            )
+         return self._print_entry(entry, args.format)
+ 
+     def _parse_entries(self, path: Path) -> list[FAQEntry]:
+@@ -89,28 +95,21 @@ class FAQCLI:
+ 
+     def _print_index(self, entries: list[FAQEntry], fmt: str) -> int:
+         payload = [asdict(entry) | {"answer": None} for entry in entries]
+-        if fmt == "json":
+-            print(json.dumps({"questions": payload}, indent=2))
+-        elif fmt == "yaml":
+-            print(yaml.safe_dump({"questions": payload}, sort_keys=False, allow_unicode=True))
+-        else:
+-            print("deskops FAQ questions:")
+-            print("")
+-            for entry in entries:
+-                print(f"{entry.index}. {entry.question} [{entry.slug}]")
+-        return 0
++        return render(
++            {"questions": payload},
++            fmt,
++            lambda _data: self._format_index(entries),
++        )
++
++    @staticmethod
++    def _format_index(entries: list[FAQEntry]) -> str:
++        lines = ["deskops FAQ questions:", ""]
++        lines.extend(f"{entry.index}. {entry.question} [{entry.slug}]" for entry in entries)
++        return "\n".join(lines)
+ 
+     def _print_entry(self, entry: FAQEntry, fmt: str) -> int:
+         payload = asdict(entry)
+-        if fmt == "json":
+-            print(json.dumps(payload, indent=2))
+-        elif fmt == "yaml":
+-            print(yaml.safe_dump(payload, sort_keys=False, allow_unicode=True))
+-        else:
+-            print(f"{entry.index}. {entry.question}")
+-            print("")
+-            print(entry.answer)
+-        return 0
++        return render(payload, fmt, lambda _data: f"{entry.index}. {entry.question}\n\n{entry.answer}")
+ 
+     def _slug(self, text: str) -> str:
+         slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+diff --git a/deskops/cli/commands/message.py b/deskops/cli/commands/message.py
+index b3a7d0a..54566e4 100644
+--- a/deskops/cli/commands/message.py
++++ b/deskops/cli/commands/message.py
+@@ -1,6 +1,5 @@
+ from __future__ import annotations
+ 
+-import json
+ from datetime import datetime
+ from pathlib import Path
+ import re
+@@ -17,6 +16,8 @@ from sldb.runtime.validation import validate_model_input_roundtrip
+ from sldb.store.layout import project_root
+ 
+ from deskops import doc_io
++from deskops.cli.render import render
++from deskops.cli.render import render_error
+ from deskops.identity import EcosystemIdentity
+ from deskops.identity import find_local_store
+ 
+@@ -48,8 +49,12 @@ class MessageCLI:
+                 return self._run_message_command(args)
+             return self._run_legacy(args)
+         except (SLDBStoreError, SLDBValidationError, ValueError) as exc:
+-            print(f"Error: {exc}")
+-            return 1
++            return render_error(
++                str(exc),
++                getattr(args, "format", "text"),
++                type_name=type(exc).__name__,
++                text=f"Error: {exc}",
++            )
+ 
+     def _run_message_command(self, args: Any) -> int:
+         subcmd = args.message_command
+@@ -64,8 +69,11 @@ class MessageCLI:
+         if subcmd == "ack":
+             args.ack = args.selector
+             return self._ack_note(args)
+-        print(f"Unknown message command: {subcmd}")
+-        return 1
++        return render_error(
++            f"Unknown message command: {subcmd}",
++            getattr(args, "format", "text"),
++            type_name="DomainError",
++        )
+ 
+     def _run_legacy(self, args: Any) -> int:
+         if getattr(args, "list", False):
+@@ -75,8 +83,11 @@ class MessageCLI:
+         if getattr(args, "ack", None):
+             return self._ack_note(args)
+         if not getattr(args, "message", None):
+-            print("Provide a message or use send/list/read/ack.")
+-            return 1
++            return render_error(
++                "Provide a message or use send/list/read/ack.",
++                getattr(args, "format", "text"),
++                type_name="DomainError",
++            )
+         return self._deliver_note(args)
+ 
+     def _deliver_note(self, args: Any) -> int:
+@@ -135,8 +146,11 @@ class MessageCLI:
+     def _show_note(self, args: Any) -> int:
+         note = self._resolve_note(self._desk_root(args), args.show)
+         if note is None:
+-            print(f"Unknown message: {args.show}")
+-            return 1
++            return render_error(
++                f"Unknown message: {args.show}",
++                getattr(args, "format", "text"),
++                type_name="DomainError",
++            )
+         payload = self._note_detail(note)
+         return self._print(payload, args.format)
+ 
+@@ -144,8 +158,11 @@ class MessageCLI:
+         target_project, desk_root = self._resolve_target(args)
+         note = self._resolve_note(desk_root, args.ack)
+         if note is None:
+-            print(f"Unknown message: {args.ack}")
+-            return 1
++            return render_error(
++                f"Unknown message: {args.ack}",
++                getattr(args, "format", "text"),
++                type_name="DomainError",
++            )
+ 
+         payload = extract_model_data(InboxNoteDoc, note.read_text(encoding="utf-8"))
+         if payload.get("status") == "closed":
+@@ -267,64 +284,67 @@ class MessageCLI:
+         return frontmatter, title, content
+ 
+     def _print(self, payload: Any, fmt: str, key: str | None = None) -> int:
+-        if fmt == "json":
+-            print(json.dumps({key: payload} if key else payload, indent=2, default=str))
+-        elif fmt == "yaml":
+-            print(yaml.safe_dump({key: payload} if key else payload, sort_keys=False, allow_unicode=True))
+-        else:
+-            if key == "notes":
+-                if not payload:
+-                    print("No messages.")
+-                    return 0
+-                for item in payload:
+-                    print(
+-                        f"{item['id']} | {item['kind']} | {item['sender_project']} -> {item['target_project']} | {item['status']} | {item['title']}"
+-                    )
+-            else:
+-                print(f"# {payload['title']}")
+-                print("")
+-                for meta in (
+-                    "kind",
+-                    "sender_project",
+-                    "target_project",
+-                    "created_at",
+-                    "status",
+-                    "acknowledged_by",
+-                    "acknowledged_at",
+-                    "path",
+-                ):
+-                    if meta in payload and payload[meta] not in {None, ""}:
+-                        print(f"{meta}: {payload[meta]}")
+-                print("")
+-                print(payload.get("body", ""))
+-        return 0
++        data = {key: payload} if key else payload
++        if key == "notes":
++            return render(data, fmt, lambda _data: self._format_note_list(payload))
++        return render(data, fmt, lambda _data: self._format_note_detail(payload))
++
++    @staticmethod
++    def _format_note_list(payload: list[dict[str, Any]]) -> str:
++        if not payload:
++            return "No messages."
++        return "\n".join(
++            f"{item['id']} | {item['kind']} | {item['sender_project']} -> {item['target_project']} | {item['status']} | {item['title']}"
++            for item in payload
++        )
++
++    @staticmethod
++    def _format_note_detail(payload: dict[str, Any]) -> str:
++        lines = [f"# {payload['title']}", ""]
++        for meta in (
++            "kind",
++            "sender_project",
++            "target_project",
++            "created_at",
++            "status",
++            "acknowledged_by",
++            "acknowledged_at",
++            "path",
++        ):
++            if meta in payload and payload[meta] not in {None, ""}:
++                lines.append(f"{meta}: {payload[meta]}")
++        lines.append("")
++        lines.append(payload.get("body", ""))
++        return "\n".join(lines)
+ 
+     def _print_delivery_result(self, payload: dict[str, Any], fmt: str) -> int:
+-        if fmt in {"json", "yaml"}:
+-            return self._print(payload, fmt)
+-        print(
+-            "Delivered message "
+-            f"from {payload['sender_project']} to {payload['target_project']} at {payload['path']}"
+-        )
+-        if payload.get("tracked_name"):
+-            print(f"Tracked '{payload['tracked_name']}'")
+-        else:
+-            print("Not tracked in the target store (see the warning above).")
+-        return 0
++        def text(data: dict[str, Any]) -> str:
++            lines = [
++                "Delivered message "
++                f"from {data['sender_project']} to {data['target_project']} at {data['path']}"
++            ]
++            if data.get("tracked_name"):
++                lines.append(f"Tracked '{data['tracked_name']}'")
++            else:
++                lines.append("Not tracked in the target store (see the warning above).")
++            return "\n".join(lines)
++
++        return render(payload, fmt, text)
+ 
+     def _print_ack_result(self, payload: dict[str, Any], fmt: str) -> int:
+-        if fmt in {"json", "yaml"}:
+-            return self._print(payload, fmt)
+-        print(
+-            f"Acknowledged {payload['id']} as {payload['status']} "
+-            f"by {payload['acknowledged_by']} at {payload['acknowledged_at']}"
+-        )
+-        print(f"Path: {payload['path']}")
+-        if payload.get("tracked_name"):
+-            print(f"Tracked '{payload['tracked_name']}'")
+-        else:
+-            print("Not tracked in the target store (see the warning above).")
+-        return 0
++        def text(data: dict[str, Any]) -> str:
++            lines = [
++                f"Acknowledged {data['id']} as {data['status']} "
++                f"by {data['acknowledged_by']} at {data['acknowledged_at']}",
++                f"Path: {data['path']}",
++            ]
++            if data.get("tracked_name"):
++                lines.append(f"Tracked '{data['tracked_name']}'")
++            else:
++                lines.append("Not tracked in the target store (see the warning above).")
++            return "\n".join(lines)
++
++        return render(payload, fmt, text)
+ 
+     def _derive_title(self, message: str) -> str:
+         first = message.strip().splitlines()[0] if message.strip() else "Message"
+diff --git a/deskops/cli/commands/operations.py b/deskops/cli/commands/operations.py
+index 75e5f81..c903fc8 100644
+--- a/deskops/cli/commands/operations.py
++++ b/deskops/cli/commands/operations.py
+@@ -1,13 +1,14 @@
+ from __future__ import annotations
+ 
+-from dataclasses import asdict
+ from pathlib import Path
+-import json
+ import sys
+ from typing import Any
+ 
+ from deskops.cli.parse_input import parse_artifact_input
+ from deskops.cli.parse_input import parse_task_input
++from deskops.cli.render import normalize
++from deskops.cli.render import render
++from deskops.cli.render import render_error
+ from deskops.operations import DeskopsOperations
+ from deskops.operations import ARTIFACT_SUBJECTS
+ 
+@@ -85,88 +86,47 @@ class OperationsCLI:
+         if args.command == "list" and args.subject == "tasks":
+             tasks = operations.list_tasks()
+             repo_routes = operations.list_repo_task_routes() if getattr(args, "include_repos", False) else []
+-            if args.format == "json":
+-                payload = {"tasks": self._normalize(tasks)}
+-                if getattr(args, "include_repos", False):
+-                    payload["repo_routes"] = self._normalize(repo_routes)
+-                self._print_json(payload)
+-                return 0
+-            for task in tasks:
+-                print(f"{task.id} | {task.status} | {task.current_node}")
+-            for route in repo_routes:
+-                print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
+-            return 0
++            payload: dict[str, Any] = {"tasks": tasks}
++            if getattr(args, "include_repos", False):
++                payload["repo_routes"] = repo_routes
++            return render(payload, args.format, lambda _data: self._format_task_list(tasks, repo_routes))
+ 
+         list_artifacts = {meta["list_subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
+         if args.command == "list" and args.subject == "atoms":
+             try:
+                 axis, payloads = operations.list_atoms(getattr(args, "axis_value", None))
+             except (FileNotFoundError, ValueError) as exc:
+-                print(f"Error: {exc}")
+-                return 1
+-            if args.format == "json":
+-                self._print_json({"axis": axis, "atoms": self._normalize(payloads)})
+-                return 0
+-            for payload in payloads:
+-                label = payload.get("title") or payload.get("name") or payload["id"]
+-                if axis:
+-                    values = ",".join(payload.get("axis_values") or []) or "-"
+-                    print(f"{payload['id']} | {label} | {axis}:{values}")
+-                else:
+-                    print(f"{payload['id']} | {label}")
+-            return 0
++                return render_error(
++                    str(exc),
++                    args.format,
++                    type_name=type(exc).__name__,
++                    text=f"Error: {exc}",
++                )
++            return render(
++                {"axis": axis, "atoms": payloads},
++                args.format,
++                lambda _data: self._format_artifact_list(payloads, axis=axis),
++            )
+         if args.command == "list" and args.subject in list_artifacts:
+             artifact_id = list_artifacts[args.subject]
+             payloads = operations.list_artifacts(artifact_id)
+-            if args.format == "json":
+-                self._print_json({args.subject: self._normalize(payloads)})
+-                return 0
+-            for payload in payloads:
+-                label = payload.get("title") or payload.get("name") or payload["id"]
+-                print(f"{payload['id']} | {label}")
+-            return 0
++            return render(
++                {args.subject: payloads},
++                args.format,
++                lambda _data: self._format_artifact_list(payloads),
++            )
+ 
+         if args.command == "show" and args.subject == "task":
+             task, gates = operations.show_task(args.task_id)
+             if task is None:
+-                print(f"No task found for {args.task_id}")
+-                return 1
+-            if args.format == "json":
+-                payload = self._normalize(task)
+-                payload["lifecycle_gates"] = self._normalize(gates)
+-                self._print_json(payload)
+-                return 0
+-            print(f"Task: {task.id}")
+-            print(f"Title: {task.title}")
+-            print(f"Status: {task.status}")
+-            print(f"Current node: {task.current_node}")
+-            print(f"Task type: {task.task_type}")
+-            if task.inherits_from:
+-                print("Inherits from:")
+-                for item in task.inherits_from:
+-                    print(f"- {item}")
+-            if task.from_drawer:
+-                print(f"From drawer: {task.from_drawer}")
+-            if task.effective_pills:
+-                print("Effective pills:")
+-                for item in task.effective_pills:
+-                    print(f"- {item}")
+-            if task.effective_atoms:
+-                print("Effective atoms:")
+-                for item in task.effective_atoms:
+-                    print(f"- {item}")
+-            if task.inherit_acceptance_context:
+-                print("Effective validation:")
+-                for item in task.effective_validation:
+-                    print(f"- {item}")
+-                print(f"Effective done when: {task.effective_done_when}")
+-            if gates:
+-                print("Lifecycle gates:")
+-                for gate in gates:
+-                    state = "open" if gate["holds"] else "closed"
+-                    condition = gate["condition"] or "(none)"
+-                    print(f"- {gate['relation_type']} -> {gate['target']}: {state} [{condition}]")
+-            return 0
++                return render_error(
++                    f"No task found for {args.task_id}",
++                    args.format,
++                    type_name="DomainError",
++                )
++            payload = normalize(task)
++            payload["lifecycle_gates"] = normalize(gates)
++            return render(payload, args.format, lambda _data: self._format_task_detail(task, gates))
+ 
+         show_artifacts = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
+         if args.command == "show" and args.subject in show_artifacts:
+@@ -174,22 +134,17 @@ class OperationsCLI:
+             try:
+                 payload = operations.show_artifact(artifact_id, args.doc_id)
+             except (FileNotFoundError, ValueError) as exc:
+-                print(f"Error: {exc}")
+-                return 1
+-            if args.format == "json":
+-                self._print_json(self._normalize(payload))
+-                return 0
+-            print(f"{args.subject.capitalize()}: {payload['id']}")
+-            label = payload.get("title") or payload.get("name") or payload["id"]
+-            print(f"Title: {label}")
+-            for key, value in payload.items():
+-                if key in {"id", "title", "current_node", "history", "tags"}:
+-                    continue
+-                if isinstance(value, list):
+-                    print(f"{key}: {', '.join(str(item) for item in value)}")
+-                else:
+-                    print(f"{key}: {value}")
+-            return 0
++                return render_error(
++                    str(exc),
++                    args.format,
++                    type_name=type(exc).__name__,
++                    text=f"Error: {exc}",
++                )
++            return render(
++                payload,
++                args.format,
++                lambda _data: self._format_artifact_detail(args.subject, payload),
++            )
+ 
+         if args.command == "advance" and args.subject == "task":
+             from deskops.lifecycle import LifecycleGraphMissing
+@@ -240,16 +195,71 @@ class OperationsCLI:
+         for label, path in report["sources"].items():
+             print(f"- {label}: {path}")
+ 
+-    def _print_json(self, payload: Any) -> None:
+-        print(json.dumps(self._normalize(payload), indent=2))
+-
+-    def _normalize(self, payload: Any) -> Any:
+-        if hasattr(payload, "__dataclass_fields__"):
+-            return self._normalize(asdict(payload))
+-        if isinstance(payload, Path):
+-            return str(payload)
+-        if isinstance(payload, dict):
+-            return {str(key): self._normalize(value) for key, value in payload.items()}
+-        if isinstance(payload, (list, tuple)):
+-            return [self._normalize(value) for value in payload]
+-        return payload
++    @staticmethod
++    def _format_task_list(tasks: Any, repo_routes: Any) -> str:
++        lines = [f"{task.id} | {task.status} | {task.current_node}" for task in tasks]
++        lines.extend(
++            f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}"
++            for route in repo_routes
++        )
++        return "\n".join(lines)
++
++    @staticmethod
++    def _format_artifact_list(payloads: list[dict[str, Any]], *, axis: str | None = None) -> str:
++        lines: list[str] = []
++        for payload in payloads:
++            label = payload.get("title") or payload.get("name") or payload["id"]
++            if axis:
++                values = ",".join(payload.get("axis_values") or []) or "-"
++                lines.append(f"{payload['id']} | {label} | {axis}:{values}")
++            else:
++                lines.append(f"{payload['id']} | {label}")
++        return "\n".join(lines)
++
++    @staticmethod
++    def _format_task_detail(task: Any, gates: list[dict[str, Any]]) -> str:
++        lines = [
++            f"Task: {task.id}",
++            f"Title: {task.title}",
++            f"Status: {task.status}",
++            f"Current node: {task.current_node}",
++            f"Task type: {task.task_type}",
++        ]
++        if task.inherits_from:
++            lines.append("Inherits from:")
++            lines.extend(f"- {item}" for item in task.inherits_from)
++        if task.from_drawer:
++            lines.append(f"From drawer: {task.from_drawer}")
++        if task.effective_pills:
++            lines.append("Effective pills:")
++            lines.extend(f"- {item}" for item in task.effective_pills)
++        if task.effective_atoms:
++            lines.append("Effective atoms:")
++            lines.extend(f"- {item}" for item in task.effective_atoms)
++        if task.inherit_acceptance_context:
++            lines.append("Effective validation:")
++            lines.extend(f"- {item}" for item in task.effective_validation)
++            lines.append(f"Effective done when: {task.effective_done_when}")
++        if gates:
++            lines.append("Lifecycle gates:")
++            for gate in gates:
++                state = "open" if gate["holds"] else "closed"
++                condition = gate["condition"] or "(none)"
++                lines.append(
++                    f"- {gate['relation_type']} -> {gate['target']}: {state} [{condition}]"
++                )
++        return "\n".join(lines)
++
++    @staticmethod
++    def _format_artifact_detail(subject: str, payload: dict[str, Any]) -> str:
++        lines = [f"{subject.capitalize()}: {payload['id']}"]
++        label = payload.get("title") or payload.get("name") or payload["id"]
++        lines.append(f"Title: {label}")
++        for key, value in payload.items():
++            if key in {"id", "title", "current_node", "history", "tags"}:
++                continue
++            if isinstance(value, list):
++                lines.append(f"{key}: {', '.join(str(item) for item in value)}")
++            else:
++                lines.append(f"{key}: {value}")
++        return "\n".join(lines)
+diff --git a/deskops/cli/commands/runtime.py b/deskops/cli/commands/runtime.py
+index 74481ad..99055f2 100644
+--- a/deskops/cli/commands/runtime.py
++++ b/deskops/cli/commands/runtime.py
+@@ -1,9 +1,10 @@
+ from __future__ import annotations
+ 
+-import json
+ from pathlib import Path
+ from typing import Any
+ 
++from deskops.cli.render import render
++from deskops.cli.render import render_error
+ from deskops.config import DeskConfig
+ from deskops.runtime.grouping import group_agents_by_workspace
+ from deskops.runtime.herdr import HerdrClient, HerdrProvider
+@@ -56,8 +57,12 @@ class RuntimeCLI:
+                 print(f"Closed Herdr Space: {workspace_id} ({identity})")
+                 return 0
+         except (ValueError, RuntimeError) as exc:
+-            print(f"Error: {exc}")
+-            return 1
++            return render_error(
++                str(exc),
++                getattr(args, "format", "text"),
++                type_name=type(exc).__name__,
++                text=f"Error: {exc}",
++            )
+         return 1
+ 
+     def _supervise(self, args: Any, executable: str) -> int:
+@@ -116,38 +121,35 @@ class RuntimeCLI:
+         provider = HerdrProvider(HerdrClient(executable))
+         agents = provider.list_agents()
+         spaces = group_agents_by_workspace(agents, provider.list_workspaces())
+-        if getattr(args, "format", "text") == "json":
+-            print(
+-                json.dumps(
+-                    {
+-                        "workers": [self._project_agent(agent) for agent in agents],
+-                        "spaces": [
+-                            {
+-                                "workspace": space["workspace"],
+-                                "label": space["label"],
+-                                "number": space["number"],
+-                                "status": space["status"],
+-                                "workers": [self._project_agent(agent) for agent in space["workers"]],
+-                            }
+-                            for space in spaces
+-                        ],
+-                    },
+-                    indent=2,
+-                )
+-            )
+-            return 0
++        payload = {
++            "workers": [self._project_agent(agent) for agent in agents],
++            "spaces": [
++                {
++                    "workspace": space["workspace"],
++                    "label": space["label"],
++                    "number": space["number"],
++                    "status": space["status"],
++                    "workers": [self._project_agent(agent) for agent in space["workers"]],
++                }
++                for space in spaces
++            ],
++        }
++        return render(payload, getattr(args, "format", "text"), lambda _data: self._format_workers(agents, spaces))
++
++    @staticmethod
++    def _format_workers(agents: list[dict[str, Any]], spaces: list[dict[str, Any]]) -> str:
+         if not agents:
+-            print("No live Herdr agents.")
+-            return 0
++            return "No live Herdr agents."
++        lines: list[str] = []
+         for space in spaces:
+-            print(
++            lines.append(
+                 f"{space['workspace'] or '-'}  {space['label'] or '-'}  ({len(space['workers'])} workers)"
+             )
+             for agent in space["workers"]:
+-                print(
++                lines.append(
+                     f"  {agent.get('pane_id', '')} | {agent.get('agent', '')} | {agent.get('name') or '-'} | {agent.get('agent_status', '')} | {agent.get('cwd') or ''}"
+                 )
+-        return 0
++        return "\n".join(lines)
+ 
+     @staticmethod
+     def _project_agent(agent: dict[str, Any]) -> dict[str, Any]:
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 531a89e..9a06464 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -15,6 +15,8 @@ sys.path.insert(0, str(PACKAGE_ROOT))
+ from deskops.cli.parser import build_parser
+ from deskops.cli.registry import command_for_path
+ from deskops.cli.registry import resolve_context
++from deskops.cli.render import render_error
++from deskops.cli.render import requested_format
+ from deskops.identity import find_context_root
+ 
+ from deskops.about import print_about
+@@ -128,7 +130,10 @@ class CLI:
+         if getattr(args, "root", None) is not None:
+             root_path = Path(args.root).resolve()
+             if not root_path.exists() or not root_path.is_dir():
+-                print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
++                message = f"Provided --root is not a valid directory: {args.root}"
++                if requested_format(raw_argv) == "json":
++                    return render_error(message, "json", type_name="DomainError")
++                print(f"Error: {message}", file=sys.stderr)
+                 return 1
+ 
+         if command.path[0] in _SLDB_BEFORE_DISPATCH:
+@@ -184,44 +189,48 @@ class CLI:
+         args.pythonpath = bootstrap.default_pythonpath()
+ 
+ 
++def _error_parts(exc: BaseException) -> tuple[int, str, str, str, Any]:
++    """One (code, type, message, display text, stream) tuple for every failure."""
++
++    from pydantic import ValidationError
++    from sldb.core.exceptions import SLDBStoreError
++
++    if isinstance(exc, DeskopsError):
++        stream = sys.stdout if isinstance(exc, UsageError) else sys.stderr
++        return exc.exit_code, type(exc).__name__, str(exc), str(exc), stream
++    if isinstance(exc, FileNotFoundError):
++        return 1, type(exc).__name__, str(exc), f"File not found: {exc}", sys.stderr
++    if isinstance(exc, KeyError):
++        return 1, type(exc).__name__, str(exc), f"Missing required field: {exc}", sys.stderr
++    if isinstance(exc, ValidationError):
++        return 1, type(exc).__name__, str(exc), f"Validation error:\n{exc}", sys.stderr
++    if isinstance(exc, ValueError):
++        return 1, type(exc).__name__, str(exc), f"Invalid value: {exc}", sys.stderr
++    if isinstance(exc, SLDBStoreError):
++        return 1, type(exc).__name__, str(exc), f"Store error: {exc}", sys.stderr
++    display = (
++        f"Unexpected error: {type(exc).__name__}: {exc} "
++        "(rerun with --debug for the traceback)"
++    )
++    return 3, type(exc).__name__, str(exc), display, sys.stderr
++
++
+ def main(argv: Any = None) -> int:
++    raw_argv = list(sys.argv[1:] if argv is None else argv)
++    fmt = requested_format(raw_argv)
+     cli = CLI()
+     try:
+         return cli.run(argv)
+     except SystemExit:
+         raise
+-    except DeskopsError as exc:
+-        stream = sys.stdout if isinstance(exc, UsageError) else sys.stderr
+-        print(str(exc), file=stream)
+-        return exc.exit_code
+-    except FileNotFoundError as exc:
+-        print(f"File not found: {exc}", file=sys.stderr)
+-        return 1
+-    except KeyError as exc:
+-        print(f"Missing required field: {exc}", file=sys.stderr)
+-        return 1
+-    except ValueError as exc:
+-        from pydantic import ValidationError
+-
+-        if isinstance(exc, ValidationError):
+-            print(f"Validation error:\n{exc}", file=sys.stderr)
+-            return 1
+-        print(f"Invalid value: {exc}", file=sys.stderr)
+-        return 1
+-    except Exception as exc:
+-        from sldb.core.exceptions import SLDBStoreError
+-
+-        if isinstance(exc, SLDBStoreError):
+-            print(f"Store error: {exc}", file=sys.stderr)
+-            return 1
+-        if getattr(cli, "debug", False):
++    except BaseException as exc:
++        code, type_name, message, display, stream = _error_parts(exc)
++        if fmt == "json":
++            return render_error(message, "json", code=code, type_name=type_name)
++        if code == 3 and getattr(cli, "debug", False):
+             traceback.print_exc()
+-        print(
+-            f"Unexpected error: {type(exc).__name__}: {exc} "
+-            "(rerun with --debug for the traceback)",
+-            file=sys.stderr,
+-        )
+-        return 3
++        print(display, file=stream)
++        return code
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/deskops/cli/render.py b/deskops/cli/render.py
+new file mode 100644
+index 0000000..d9ca09e
+--- /dev/null
++++ b/deskops/cli/render.py
+@@ -0,0 +1,120 @@
++"""One renderer for text, json and yaml command output.
++
++Handlers return their data; for text mode they also pass a formatter that
++produces exactly the human-readable stdout the command printed before the
++renderer existed. JSON and YAML are produced here so every command shares the
++same serialization rules.
++
++Error envelopes are the machine-readable counterpart of a failed command. An
++``--format json`` failure prints ``{"ok": false, "error": {...}}`` to stdout and
++exits with the code the error carries.
++"""
++
++from __future__ import annotations
++
++from dataclasses import asdict
++import json
++from pathlib import Path
++import sys
++from typing import Any
++from typing import Callable
++from typing import TextIO
++
++import yaml
++
++
++TextFormatter = Callable[[Any], str]
++
++
++def normalize(payload: Any) -> Any:
++    """Convert dataclasses, paths, mappings, and sequences to JSON-safe data."""
++
++    if hasattr(payload, "__dataclass_fields__"):
++        return normalize(asdict(payload))
++    if isinstance(payload, Path):
++        return str(payload)
++    if isinstance(payload, dict):
++        return {str(key): normalize(value) for key, value in payload.items()}
++    if isinstance(payload, (list, tuple)):
++        return [normalize(value) for value in payload]
++    return payload
++
++
++def serialize(data: Any, fmt: str) -> str | None:
++    """Return the machine-readable text for ``fmt`` (None for text mode)."""
++
++    if fmt == "json":
++        return json.dumps(normalize(data), indent=2, default=str)
++    if fmt == "yaml":
++        # ``print`` adds a newline; safe_dump already ends with one, exactly as
++        # the per-command yaml printers did before the renderer.
++        return yaml.safe_dump(normalize(data), sort_keys=False, allow_unicode=True)
++    return None
++
++
++def render(
++    data: Any,
++    fmt: str = "text",
++    text: TextFormatter | None = None,
++    *,
++    stream: TextIO | None = None,
++) -> int:
++    """Print ``data`` in ``fmt`` and return success."""
++
++    target = stream if stream is not None else sys.stdout
++    serialized = serialize(data, fmt)
++    if serialized is not None:
++        print(serialized, file=target)
++        return 0
++    if text is None:
++        raise ValueError(f"No text formatter supplied for {type(data).__name__}")
++    output = text(data)
++    if output:
++        print(output, file=target)
++    return 0
++
++
++def error_envelope(code: int, type_name: str, message: str) -> dict[str, Any]:
++    return {
++        "ok": False,
++        "error": {
++            "code": code,
++            "type": type_name,
++            "message": message,
++        },
++    }
++
++
++def render_error(
++    message: str,
++    fmt: str = "text",
++    *,
++    code: int = 1,
++    type_name: str = "DomainError",
++    text: str | None = None,
++    stream: TextIO | None = None,
++) -> int:
++    """Print a failure in the requested format and return its exit code."""
++
++    target = stream if stream is not None else sys.stdout
++    if fmt == "json":
++        print(json.dumps(error_envelope(code, type_name, message), indent=2), file=target)
++    else:
++        print(text if text is not None else message, file=target)
++    return code
++
++
++def requested_format(argv: list[str]) -> str:
++    """Return the last ``--format`` value in argv, or ``text``.
++
++    The dispatcher needs this before parsing so failures raised after argparse
++    (domain errors, validation errors) can still use the error envelope.
++    """
++
++    fmt = "text"
++    for index, token in enumerate(argv):
++        if token == "--format" and index + 1 < len(argv):
++            fmt = argv[index + 1]
++        elif token.startswith("--format="):
++            fmt = token.split("=", 1)[1]
++    return fmt
+diff --git a/tests/fixtures/golden/output/atoms_list.json b/tests/fixtures/golden/output/atoms_list.json
+new file mode 100644
+index 0000000..95d8c7a
+--- /dev/null
++++ b/tests/fixtures/golden/output/atoms_list.json
+@@ -0,0 +1,27 @@
++{
++  "axis": null,
++  "atoms": [
++    {
++      "id": "atom-golden-one",
++      "title": "Golden atom one",
++      "five_wh_one_plus": "what",
++      "answer": "The first golden atom describes a stable output contract.",
++      "tags": [
++        "system:deskops",
++        "topic:golden"
++      ],
++      "axis_values": []
++    },
++    {
++      "id": "atom-golden-two",
++      "title": "Golden atom two",
++      "five_wh_one_plus": "how",
++      "answer": "The second golden atom describes a stable output contract.",
++      "tags": [
++        "system:deskops",
++        "topic:golden"
++      ],
++      "axis_values": []
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/atoms_list.text b/tests/fixtures/golden/output/atoms_list.text
+new file mode 100644
+index 0000000..8d334f0
+--- /dev/null
++++ b/tests/fixtures/golden/output/atoms_list.text
+@@ -0,0 +1,2 @@
++atom-golden-one | Golden atom one
++atom-golden-two | Golden atom two
+diff --git a/tests/fixtures/golden/output/atoms_show.json b/tests/fixtures/golden/output/atoms_show.json
+new file mode 100644
+index 0000000..65fc1da
+--- /dev/null
++++ b/tests/fixtures/golden/output/atoms_show.json
+@@ -0,0 +1,10 @@
++{
++  "id": "atom-golden-one",
++  "title": "Golden atom one",
++  "five_wh_one_plus": "what",
++  "answer": "The first golden atom describes a stable output contract.",
++  "tags": [
++    "system:deskops",
++    "topic:golden"
++  ]
++}
+diff --git a/tests/fixtures/golden/output/atoms_show.text b/tests/fixtures/golden/output/atoms_show.text
+new file mode 100644
+index 0000000..7c3909d
+--- /dev/null
++++ b/tests/fixtures/golden/output/atoms_show.text
+@@ -0,0 +1,4 @@
++Atom: atom-golden-one
++Title: Golden atom one
++five_wh_one_plus: what
++answer: The first golden atom describes a stable output contract.
+diff --git a/tests/fixtures/golden/output/atoms_tree.json b/tests/fixtures/golden/output/atoms_tree.json
+new file mode 100644
+index 0000000..50fc668
+--- /dev/null
++++ b/tests/fixtures/golden/output/atoms_tree.json
+@@ -0,0 +1,18 @@
++{
++  "roots": [],
++  "orphans": [],
++  "unplaced": [
++    {
++      "id": "atom-golden-one",
++      "title": "Golden atom one",
++      "model": "AtomDoc",
++      "typed_as": null
++    },
++    {
++      "id": "atom-golden-two",
++      "title": "Golden atom two",
++      "model": "AtomDoc",
++      "typed_as": null
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/atoms_tree.text b/tests/fixtures/golden/output/atoms_tree.text
+new file mode 100644
+index 0000000..54b5af1
+--- /dev/null
++++ b/tests/fixtures/golden/output/atoms_tree.text
+@@ -0,0 +1 @@
++Without a domain tag: 2 document(s)
+diff --git a/tests/fixtures/golden/output/faq.json b/tests/fixtures/golden/output/faq.json
+new file mode 100644
+index 0000000..a6ed3ed
+--- /dev/null
++++ b/tests/fixtures/golden/output/faq.json
+@@ -0,0 +1,16 @@
++{
++  "questions": [
++    {
++      "index": 1,
++      "question": "What is golden?",
++      "slug": "what-is-golden",
++      "answer": null
++    },
++    {
++      "index": 2,
++      "question": "Why keep goldens?",
++      "slug": "why-keep-goldens",
++      "answer": null
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/faq.text b/tests/fixtures/golden/output/faq.text
+new file mode 100644
+index 0000000..9311608
+--- /dev/null
++++ b/tests/fixtures/golden/output/faq.text
+@@ -0,0 +1,4 @@
++deskops FAQ questions:
++
++1. What is golden? [what-is-golden]
++2. Why keep goldens? [why-keep-goldens]
+diff --git a/tests/fixtures/golden/output/faq.yaml b/tests/fixtures/golden/output/faq.yaml
+new file mode 100644
+index 0000000..357ecbc
+--- /dev/null
++++ b/tests/fixtures/golden/output/faq.yaml
+@@ -0,0 +1,10 @@
++questions:
++- index: 1
++  question: What is golden?
++  slug: what-is-golden
++  answer: null
++- index: 2
++  question: Why keep goldens?
++  slug: why-keep-goldens
++  answer: null
++
+diff --git a/tests/fixtures/golden/output/inbox.json b/tests/fixtures/golden/output/inbox.json
+new file mode 100644
+index 0000000..503f1f9
+--- /dev/null
++++ b/tests/fixtures/golden/output/inbox.json
+@@ -0,0 +1,7 @@
++{
++  "sender_project": "sender-repo",
++  "target_project": "target-repo",
++  "path": "<target>/desk/inbox/<stamp>-unclear-legacy-golden-json.md",
++  "tracked_name": "<stamp>-unclear-legacy-golden-json",
++  "verified": true
++}
+diff --git a/tests/fixtures/golden/output/inbox.text b/tests/fixtures/golden/output/inbox.text
+new file mode 100644
+index 0000000..2433b09
+--- /dev/null
++++ b/tests/fixtures/golden/output/inbox.text
+@@ -0,0 +1,2 @@
++Delivered message from sender-repo to target-repo at <target>/desk/inbox/<stamp>-unclear-legacy-golden-text.md
++Tracked '<stamp>-unclear-legacy-golden-text'
+diff --git a/tests/fixtures/golden/output/inbox.yaml b/tests/fixtures/golden/output/inbox.yaml
+new file mode 100644
+index 0000000..b100b35
+--- /dev/null
++++ b/tests/fixtures/golden/output/inbox.yaml
+@@ -0,0 +1,6 @@
++sender_project: sender-repo
++target_project: target-repo
++path: <target>/desk/inbox/<stamp>-unclear-legacy-golden-yaml.md
++tracked_name: <stamp>-unclear-legacy-golden-yaml
++verified: true
++
+diff --git a/tests/fixtures/golden/output/list_atoms.json b/tests/fixtures/golden/output/list_atoms.json
+new file mode 100644
+index 0000000..95d8c7a
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_atoms.json
+@@ -0,0 +1,27 @@
++{
++  "axis": null,
++  "atoms": [
++    {
++      "id": "atom-golden-one",
++      "title": "Golden atom one",
++      "five_wh_one_plus": "what",
++      "answer": "The first golden atom describes a stable output contract.",
++      "tags": [
++        "system:deskops",
++        "topic:golden"
++      ],
++      "axis_values": []
++    },
++    {
++      "id": "atom-golden-two",
++      "title": "Golden atom two",
++      "five_wh_one_plus": "how",
++      "answer": "The second golden atom describes a stable output contract.",
++      "tags": [
++        "system:deskops",
++        "topic:golden"
++      ],
++      "axis_values": []
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_atoms.text b/tests/fixtures/golden/output/list_atoms.text
+new file mode 100644
+index 0000000..8d334f0
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_atoms.text
+@@ -0,0 +1,2 @@
++atom-golden-one | Golden atom one
++atom-golden-two | Golden atom two
+diff --git a/tests/fixtures/golden/output/list_boards.json b/tests/fixtures/golden/output/list_boards.json
+new file mode 100644
+index 0000000..0b66db5
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_boards.json
+@@ -0,0 +1,43 @@
++{
++  "boards": [
++    {
++      "title": "repo Board",
++      "id": "board-001",
++      "status": "",
++      "summary": "",
++      "tags": [
++        "workspace:desk"
++      ],
++      "current_node": "",
++      "history": [],
++      "scope": "desk",
++      "purpose": "Route the active execution set for repo.",
++      "tasks": [],
++      "pills": [
++        "desk/contexts/pills.md"
++      ],
++      "rituals": [
++        "desk/rituals/phase.md",
++        "desk/rituals/execution.md",
++        "desk/rituals/testing.md",
++        "desk/rituals/closeout.md"
++      ],
++      "notes": "Bootstrap complete. Add active task docs under `desk/tasks/` and route them here."
++    },
++    {
++      "title": "Golden board",
++      "id": "board-golden-board",
++      "status": "",
++      "summary": "",
++      "tags": [],
++      "current_node": "",
++      "history": [],
++      "scope": "golden scope",
++      "purpose": "Golden purpose",
++      "tasks": [],
++      "pills": [],
++      "rituals": [],
++      "notes": "No additional notes."
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_boards.text b/tests/fixtures/golden/output/list_boards.text
+new file mode 100644
+index 0000000..619ea3d
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_boards.text
+@@ -0,0 +1,2 @@
++board-001 | repo Board
++board-golden-board | Golden board
+diff --git a/tests/fixtures/golden/output/list_faq-docs.json b/tests/fixtures/golden/output/list_faq-docs.json
+new file mode 100644
+index 0000000..5d75471
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_faq-docs.json
+@@ -0,0 +1,9 @@
++{
++  "faq-docs": [
++    {
++      "title": "Golden FAQ",
++      "body": "What is golden?\n\nGolden output.",
++      "id": "faq-golden-faq"
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_faq-docs.text b/tests/fixtures/golden/output/list_faq-docs.text
+new file mode 100644
+index 0000000..33ea3d7
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_faq-docs.text
+@@ -0,0 +1 @@
++faq-golden-faq | Golden FAQ
+diff --git a/tests/fixtures/golden/output/list_inbox-notes.json b/tests/fixtures/golden/output/list_inbox-notes.json
+new file mode 100644
+index 0000000..5843c5f
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_inbox-notes.json
+@@ -0,0 +1,12 @@
++{
++  "inbox-notes": [
++    {
++      "kind": "unclear",
++      "created_at": "<ts>",
++      "status": "open",
++      "title": "Golden inbox note",
++      "body": "Golden body",
++      "id": "inbox-note-golden-inbox-note"
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_inbox-notes.text b/tests/fixtures/golden/output/list_inbox-notes.text
+new file mode 100644
+index 0000000..4077e26
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_inbox-notes.text
+@@ -0,0 +1 @@
++inbox-note-golden-inbox-note | Golden inbox note
+diff --git a/tests/fixtures/golden/output/list_materializations.json b/tests/fixtures/golden/output/list_materializations.json
+new file mode 100644
+index 0000000..674bc11
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_materializations.json
+@@ -0,0 +1,14 @@
++{
++  "materializations": [
++    {
++      "id": "materialization-golden-materialization",
++      "title": "Golden materialization",
++      "source_atoms": [],
++      "target_kind": "document",
++      "target_identity": "atom-golden-one",
++      "intent": "Golden intent",
++      "validation": [],
++      "tags": []
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_materializations.text b/tests/fixtures/golden/output/list_materializations.text
+new file mode 100644
+index 0000000..53da892
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_materializations.text
+@@ -0,0 +1 @@
++materialization-golden-materialization | Golden materialization
+diff --git a/tests/fixtures/golden/output/list_pills.json b/tests/fixtures/golden/output/list_pills.json
+new file mode 100644
+index 0000000..3a6b374
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_pills.json
+@@ -0,0 +1,19 @@
++{
++  "pills": [
++    {
++      "title": "Guardrail: golden outputs stay stable",
++      "id": "pill-golden-rule",
++      "tags": [
++        "system:deskops",
++        "pill-type:guardrail",
++        "topic:golden"
++      ],
++      "what": "",
++      "why": "",
++      "when": "",
++      "where": "",
++      "how": "",
++      "how_not": ""
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_pills.text b/tests/fixtures/golden/output/list_pills.text
+new file mode 100644
+index 0000000..48ca4fd
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_pills.text
+@@ -0,0 +1 @@
++pill-golden-rule | Guardrail: golden outputs stay stable
+diff --git a/tests/fixtures/golden/output/list_repositories.json b/tests/fixtures/golden/output/list_repositories.json
+new file mode 100644
+index 0000000..b4c5093
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_repositories.json
+@@ -0,0 +1,11 @@
++{
++  "repositories": [
++    {
++      "name": "Golden repository",
++      "id": "repo-golden-repository",
++      "status": "active",
++      "description": "Golden description",
++      "tags": []
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_repositories.text b/tests/fixtures/golden/output/list_repositories.text
+new file mode 100644
+index 0000000..749abd6
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_repositories.text
+@@ -0,0 +1 @@
++repo-golden-repository | Golden repository
+diff --git a/tests/fixtures/golden/output/list_rituals.json b/tests/fixtures/golden/output/list_rituals.json
+new file mode 100644
+index 0000000..d6edd19
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_rituals.json
+@@ -0,0 +1,92 @@
++{
++  "rituals": [
++    {
++      "title": "Closeout ritual",
++      "id": "ritual-closeout",
++      "status": "",
++      "summary": "",
++      "tags": [
++        "workspace:desk"
++      ],
++      "current_node": "",
++      "history": [],
++      "purpose": "",
++      "trigger": "",
++      "preconditions": [],
++      "steps": [],
++      "validation": [],
++      "failure_modes": [],
++      "completion": ""
++    },
++    {
++      "title": "Execution ritual",
++      "id": "ritual-execution",
++      "status": "",
++      "summary": "",
++      "tags": [
++        "workspace:desk"
++      ],
++      "current_node": "",
++      "history": [],
++      "purpose": "",
++      "trigger": "",
++      "preconditions": [],
++      "steps": [],
++      "validation": [],
++      "failure_modes": [],
++      "completion": ""
++    },
++    {
++      "title": "Phase ritual for dependency-layer execution",
++      "id": "ritual-phase",
++      "status": "",
++      "summary": "",
++      "tags": [
++        "workspace:desk"
++      ],
++      "current_node": "",
++      "history": [],
++      "purpose": "",
++      "trigger": "",
++      "preconditions": [],
++      "steps": [],
++      "validation": [],
++      "failure_modes": [],
++      "completion": ""
++    },
++    {
++      "title": "Golden ritual",
++      "id": "ritual-golden-ritual",
++      "status": "",
++      "summary": "",
++      "tags": [],
++      "current_node": "",
++      "history": [],
++      "purpose": "Golden purpose",
++      "trigger": "Golden trigger",
++      "preconditions": [],
++      "steps": [],
++      "validation": [],
++      "failure_modes": [],
++      "completion": "Golden completion"
++    },
++    {
++      "title": "Testing ritual",
++      "id": "ritual-testing",
++      "status": "",
++      "summary": "",
++      "tags": [
++        "workspace:desk"
++      ],
++      "current_node": "",
++      "history": [],
++      "purpose": "",
++      "trigger": "",
++      "preconditions": [],
++      "steps": [],
++      "validation": [],
++      "failure_modes": [],
++      "completion": ""
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_rituals.text b/tests/fixtures/golden/output/list_rituals.text
+new file mode 100644
+index 0000000..76638e7
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_rituals.text
+@@ -0,0 +1,5 @@
++ritual-closeout | Closeout ritual
++ritual-execution | Execution ritual
++ritual-phase | Phase ritual for dependency-layer execution
++ritual-golden-ritual | Golden ritual
++ritual-testing | Testing ritual
+diff --git a/tests/fixtures/golden/output/list_steps.json b/tests/fixtures/golden/output/list_steps.json
+new file mode 100644
+index 0000000..97adcc9
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_steps.json
+@@ -0,0 +1,11 @@
++{
++  "steps": [
++    {
++      "title": "Golden step",
++      "id": "step-golden-step",
++      "action": "Golden action",
++      "outcome": "Golden outcome",
++      "tags": []
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_steps.text b/tests/fixtures/golden/output/list_steps.text
+new file mode 100644
+index 0000000..e80d3b0
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_steps.text
+@@ -0,0 +1 @@
++step-golden-step | Golden step
+diff --git a/tests/fixtures/golden/output/list_tasks.json b/tests/fixtures/golden/output/list_tasks.json
+new file mode 100644
+index 0000000..52e1502
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_tasks.json
+@@ -0,0 +1,96 @@
++{
++  "tasks": [
++    {
++      "id": "task-golden-alpha",
++      "title": "Golden alpha task",
++      "status": "draft",
++      "summary": "Alpha goal.",
++      "tags": [
++        "workspace:desk",
++        "artifact:task"
++      ],
++      "current_node": "ritual-execution",
++      "history": [],
++      "goal": "Alpha goal.",
++      "scope": "Alpha scope.\n\n### Related Atoms\n\n- atom-golden-one",
++      "references": [],
++      "depends_on": [],
++      "pills": [
++        "desk/contexts/pill-golden-rule.md"
++      ],
++      "files": [],
++      "implementation_path": "Alpha path.",
++      "validation": [
++        "pytest tests/test_output_goldens.py"
++      ],
++      "done_when": "Alpha done.",
++      "task_type": "implementation",
++      "inherits_from": [],
++      "inherit_acceptance_context": false,
++      "atoms": [],
++      "from_drawer": "",
++      "effective_references": [],
++      "effective_pills": [
++        "desk/contexts/pill-golden-rule.md"
++      ],
++      "effective_tags": [
++        "workspace:desk",
++        "artifact:task"
++      ],
++      "effective_atoms": [],
++      "effective_validation": [
++        "pytest tests/test_output_goldens.py"
++      ],
++      "effective_done_when": "Alpha done."
++    },
++    {
++      "id": "task-golden-beta",
++      "title": "Golden beta task",
++      "status": "draft",
++      "summary": "Beta goal.",
++      "tags": [
++        "workspace:desk",
++        "artifact:task"
++      ],
++      "current_node": "ritual-execution",
++      "history": [],
++      "goal": "Beta goal.",
++      "scope": "Beta scope.",
++      "references": [
++        "atom-golden-two"
++      ],
++      "depends_on": [
++        "task-golden-alpha"
++      ],
++      "pills": [
++        "desk/contexts/pill-golden-rule.md"
++      ],
++      "files": [],
++      "implementation_path": "Beta path.",
++      "validation": [
++        "pytest tests/test_output_goldens.py"
++      ],
++      "done_when": "Beta done.",
++      "task_type": "implementation",
++      "inherits_from": [],
++      "inherit_acceptance_context": false,
++      "atoms": [],
++      "from_drawer": "",
++      "effective_references": [
++        "atom-golden-two"
++      ],
++      "effective_pills": [
++        "desk/contexts/pill-golden-rule.md"
++      ],
++      "effective_tags": [
++        "workspace:desk",
++        "artifact:task"
++      ],
++      "effective_atoms": [],
++      "effective_validation": [
++        "pytest tests/test_output_goldens.py"
++      ],
++      "effective_done_when": "Beta done."
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/list_tasks.text b/tests/fixtures/golden/output/list_tasks.text
+new file mode 100644
+index 0000000..498c00c
+--- /dev/null
++++ b/tests/fixtures/golden/output/list_tasks.text
+@@ -0,0 +1,2 @@
++task-golden-alpha | draft | ritual-execution
++task-golden-beta | draft | ritual-execution
+diff --git a/tests/fixtures/golden/output/message_ack.json b/tests/fixtures/golden/output/message_ack.json
+new file mode 100644
+index 0000000..4edab16
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_ack.json
+@@ -0,0 +1,10 @@
++{
++  "id": "<stamp>-suggestion-golden-message-json",
++  "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
++  "status": "closed",
++  "target_project": "target-repo",
++  "acknowledged_by": "target-repo",
++  "acknowledged_at": "<ts>",
++  "tracked_name": "<stamp>-suggestion-golden-message-json",
++  "verified": true
++}
+diff --git a/tests/fixtures/golden/output/message_ack.text b/tests/fixtures/golden/output/message_ack.text
+new file mode 100644
+index 0000000..bb2d87d
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_ack.text
+@@ -0,0 +1,3 @@
++Acknowledged <stamp>-suggestion-golden-message-text as closed by target-repo at <ts>
++Path: <target>/desk/inbox/<stamp>-suggestion-golden-message-text.md
++Tracked '<stamp>-suggestion-golden-message-text'
+diff --git a/tests/fixtures/golden/output/message_ack.yaml b/tests/fixtures/golden/output/message_ack.yaml
+new file mode 100644
+index 0000000..981c7b8
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_ack.yaml
+@@ -0,0 +1,9 @@
++id: <stamp>-suggestion-golden-message-yaml
++path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
++status: closed
++target_project: target-repo
++acknowledged_by: target-repo
++acknowledged_at: '<ts>'
++tracked_name: <stamp>-suggestion-golden-message-yaml
++verified: true
++
+diff --git a/tests/fixtures/golden/output/message_list.json b/tests/fixtures/golden/output/message_list.json
+new file mode 100644
+index 0000000..e833c1e
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_list.json
+@@ -0,0 +1,16 @@
++{
++  "notes": [
++    {
++      "id": "<stamp>-suggestion-golden-message-json",
++      "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
++      "kind": "suggestion",
++      "sender_project": "sender-repo",
++      "target_project": "target-repo",
++      "status": "open",
++      "created_at": "<ts>",
++      "acknowledged_by": null,
++      "acknowledged_at": null,
++      "title": "Golden message json"
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/message_list.text b/tests/fixtures/golden/output/message_list.text
+new file mode 100644
+index 0000000..c4851a3
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_list.text
+@@ -0,0 +1 @@
++<stamp>-suggestion-golden-message-text | suggestion | sender-repo -> target-repo | open | Golden message text
+diff --git a/tests/fixtures/golden/output/message_list.yaml b/tests/fixtures/golden/output/message_list.yaml
+new file mode 100644
+index 0000000..62639a8
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_list.yaml
+@@ -0,0 +1,12 @@
++notes:
++- id: <stamp>-suggestion-golden-message-yaml
++  path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
++  kind: suggestion
++  sender_project: sender-repo
++  target_project: target-repo
++  status: open
++  created_at: '<ts>'
++  acknowledged_by: null
++  acknowledged_at: null
++  title: Golden message yaml
++
+diff --git a/tests/fixtures/golden/output/message_read.json b/tests/fixtures/golden/output/message_read.json
+new file mode 100644
+index 0000000..76bf770
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_read.json
+@@ -0,0 +1,11 @@
++{
++  "id": "<stamp>-suggestion-golden-message-json",
++  "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
++  "title": "Golden message json",
++  "body": "_Describe the incoming message with enough evidence to triage._\n\nGolden message for json.",
++  "kind": "suggestion",
++  "sender_project": "sender-repo",
++  "target_project": "target-repo",
++  "created_at": "<ts>",
++  "status": "open"
++}
+diff --git a/tests/fixtures/golden/output/message_read.text b/tests/fixtures/golden/output/message_read.text
+new file mode 100644
+index 0000000..7855e0f
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_read.text
+@@ -0,0 +1,12 @@
++# Golden message text
++
++kind: suggestion
++sender_project: sender-repo
++target_project: target-repo
++created_at: <ts>
++status: open
++path: <target>/desk/inbox/<stamp>-suggestion-golden-message-text.md
++
++_Describe the incoming message with enough evidence to triage._
++
++Golden message for text.
+diff --git a/tests/fixtures/golden/output/message_read.yaml b/tests/fixtures/golden/output/message_read.yaml
+new file mode 100644
+index 0000000..f083b15
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_read.yaml
+@@ -0,0 +1,13 @@
++id: <stamp>-suggestion-golden-message-yaml
++path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
++title: Golden message yaml
++body: '_Describe the incoming message with enough evidence to triage._
++
++
++  Golden message for yaml.'
++kind: suggestion
++sender_project: sender-repo
++target_project: target-repo
++created_at: '<ts>'
++status: open
++
+diff --git a/tests/fixtures/golden/output/message_send.json b/tests/fixtures/golden/output/message_send.json
+new file mode 100644
+index 0000000..6f9bb37
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_send.json
+@@ -0,0 +1,7 @@
++{
++  "sender_project": "sender-repo",
++  "target_project": "target-repo",
++  "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
++  "tracked_name": "<stamp>-suggestion-golden-message-json",
++  "verified": true
++}
+diff --git a/tests/fixtures/golden/output/message_send.text b/tests/fixtures/golden/output/message_send.text
+new file mode 100644
+index 0000000..28fc7b7
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_send.text
+@@ -0,0 +1,2 @@
++Delivered message from sender-repo to target-repo at <target>/desk/inbox/<stamp>-suggestion-golden-message-text.md
++Tracked '<stamp>-suggestion-golden-message-text'
+diff --git a/tests/fixtures/golden/output/message_send.yaml b/tests/fixtures/golden/output/message_send.yaml
+new file mode 100644
+index 0000000..c364f27
+--- /dev/null
++++ b/tests/fixtures/golden/output/message_send.yaml
+@@ -0,0 +1,6 @@
++sender_project: sender-repo
++target_project: target-repo
++path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
++tracked_name: <stamp>-suggestion-golden-message-yaml
++verified: true
++
+diff --git a/tests/fixtures/golden/output/runtime_workers.json b/tests/fixtures/golden/output/runtime_workers.json
+new file mode 100644
+index 0000000..51217d8
+--- /dev/null
++++ b/tests/fixtures/golden/output/runtime_workers.json
+@@ -0,0 +1,36 @@
++{
++  "workers": [
++    {
++      "pane": "w-1:p-1",
++      "kind": "pi",
++      "name": "executor",
++      "status": "idle",
++      "cwd": "/tmp/golden-work",
++      "title": "deskops executor",
++      "workspace": "w-1",
++      "seq": 7,
++      "focused": true
++    }
++  ],
++  "spaces": [
++    {
++      "workspace": "w-1",
++      "label": "golden",
++      "number": 1,
++      "status": "active",
++      "workers": [
++        {
++          "pane": "w-1:p-1",
++          "kind": "pi",
++          "name": "executor",
++          "status": "idle",
++          "cwd": "/tmp/golden-work",
++          "title": "deskops executor",
++          "workspace": "w-1",
++          "seq": 7,
++          "focused": true
++        }
++      ]
++    }
++  ]
++}
+diff --git a/tests/fixtures/golden/output/runtime_workers.text b/tests/fixtures/golden/output/runtime_workers.text
+new file mode 100644
+index 0000000..4085d95
+--- /dev/null
++++ b/tests/fixtures/golden/output/runtime_workers.text
+@@ -0,0 +1,2 @@
++w-1  golden  (1 workers)
++  w-1:p-1 | pi | executor | idle | /tmp/golden-work
+diff --git a/tests/fixtures/golden/output/show_atom.json b/tests/fixtures/golden/output/show_atom.json
+new file mode 100644
+index 0000000..65fc1da
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_atom.json
+@@ -0,0 +1,10 @@
++{
++  "id": "atom-golden-one",
++  "title": "Golden atom one",
++  "five_wh_one_plus": "what",
++  "answer": "The first golden atom describes a stable output contract.",
++  "tags": [
++    "system:deskops",
++    "topic:golden"
++  ]
++}
+diff --git a/tests/fixtures/golden/output/show_atom.text b/tests/fixtures/golden/output/show_atom.text
+new file mode 100644
+index 0000000..7c3909d
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_atom.text
+@@ -0,0 +1,4 @@
++Atom: atom-golden-one
++Title: Golden atom one
++five_wh_one_plus: what
++answer: The first golden atom describes a stable output contract.
+diff --git a/tests/fixtures/golden/output/show_board.json b/tests/fixtures/golden/output/show_board.json
+new file mode 100644
+index 0000000..fd47c7c
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_board.json
+@@ -0,0 +1,15 @@
++{
++  "title": "Golden board",
++  "id": "board-golden-board",
++  "status": "",
++  "summary": "",
++  "tags": [],
++  "current_node": "",
++  "history": [],
++  "scope": "golden scope",
++  "purpose": "Golden purpose",
++  "tasks": [],
++  "pills": [],
++  "rituals": [],
++  "notes": "No additional notes."
++}
+diff --git a/tests/fixtures/golden/output/show_board.text b/tests/fixtures/golden/output/show_board.text
+new file mode 100644
+index 0000000..114e942
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_board.text
+@@ -0,0 +1,10 @@
++Board: board-golden-board
++Title: Golden board
++status: 
++summary: 
++scope: golden scope
++purpose: Golden purpose
++tasks: 
++pills: 
++rituals: 
++notes: No additional notes.
+diff --git a/tests/fixtures/golden/output/show_faq-doc.json b/tests/fixtures/golden/output/show_faq-doc.json
+new file mode 100644
+index 0000000..fdf208a
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_faq-doc.json
+@@ -0,0 +1,5 @@
++{
++  "title": "Golden FAQ",
++  "body": "What is golden?\n\nGolden output.",
++  "id": "faq-golden-faq"
++}
+diff --git a/tests/fixtures/golden/output/show_faq-doc.text b/tests/fixtures/golden/output/show_faq-doc.text
+new file mode 100644
+index 0000000..2677cec
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_faq-doc.text
+@@ -0,0 +1,5 @@
++Faq-doc: faq-golden-faq
++Title: Golden FAQ
++body: What is golden?
++
++Golden output.
+diff --git a/tests/fixtures/golden/output/show_inbox-note.json b/tests/fixtures/golden/output/show_inbox-note.json
+new file mode 100644
+index 0000000..d04f096
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_inbox-note.json
+@@ -0,0 +1,8 @@
++{
++  "kind": "unclear",
++  "created_at": "<ts>",
++  "status": "open",
++  "title": "Golden inbox note",
++  "body": "Golden body",
++  "id": "inbox-note-golden-inbox-note"
++}
+diff --git a/tests/fixtures/golden/output/show_inbox-note.text b/tests/fixtures/golden/output/show_inbox-note.text
+new file mode 100644
+index 0000000..d9f55a7
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_inbox-note.text
+@@ -0,0 +1,6 @@
++Inbox-note: inbox-note-golden-inbox-note
++Title: Golden inbox note
++kind: unclear
++created_at: <ts>
++status: open
++body: Golden body
+diff --git a/tests/fixtures/golden/output/show_materialization.json b/tests/fixtures/golden/output/show_materialization.json
+new file mode 100644
+index 0000000..c9d5ef5
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_materialization.json
+@@ -0,0 +1,10 @@
++{
++  "id": "materialization-golden-materialization",
++  "title": "Golden materialization",
++  "source_atoms": [],
++  "target_kind": "document",
++  "target_identity": "atom-golden-one",
++  "intent": "Golden intent",
++  "validation": [],
++  "tags": []
++}
+diff --git a/tests/fixtures/golden/output/show_materialization.text b/tests/fixtures/golden/output/show_materialization.text
+new file mode 100644
+index 0000000..8b78b3d
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_materialization.text
+@@ -0,0 +1,7 @@
++Materialization: materialization-golden-materialization
++Title: Golden materialization
++source_atoms: 
++target_kind: document
++target_identity: atom-golden-one
++intent: Golden intent
++validation: 
+diff --git a/tests/fixtures/golden/output/show_pill.json b/tests/fixtures/golden/output/show_pill.json
+new file mode 100644
+index 0000000..7549384
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_pill.json
+@@ -0,0 +1,15 @@
++{
++  "title": "Guardrail: golden outputs stay stable",
++  "id": "pill-golden-rule",
++  "tags": [
++    "system:deskops",
++    "pill-type:guardrail",
++    "topic:golden"
++  ],
++  "what": "",
++  "why": "",
++  "when": "",
++  "where": "",
++  "how": "",
++  "how_not": ""
++}
+diff --git a/tests/fixtures/golden/output/show_pill.text b/tests/fixtures/golden/output/show_pill.text
+new file mode 100644
+index 0000000..23f0923
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_pill.text
+@@ -0,0 +1,8 @@
++Pill: pill-golden-rule
++Title: Guardrail: golden outputs stay stable
++what: 
++why: 
++when: 
++where: 
++how: 
++how_not: 
+diff --git a/tests/fixtures/golden/output/show_repository.json b/tests/fixtures/golden/output/show_repository.json
+new file mode 100644
+index 0000000..0caa7ca
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_repository.json
+@@ -0,0 +1,7 @@
++{
++  "name": "Golden repository",
++  "id": "repo-golden-repository",
++  "status": "active",
++  "description": "Golden description",
++  "tags": []
++}
+diff --git a/tests/fixtures/golden/output/show_repository.text b/tests/fixtures/golden/output/show_repository.text
+new file mode 100644
+index 0000000..0b8b01e
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_repository.text
+@@ -0,0 +1,5 @@
++Repository: repo-golden-repository
++Title: Golden repository
++name: Golden repository
++status: active
++description: Golden description
+diff --git a/tests/fixtures/golden/output/show_ritual.json b/tests/fixtures/golden/output/show_ritual.json
+new file mode 100644
+index 0000000..0e9fa2f
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_ritual.json
+@@ -0,0 +1,16 @@
++{
++  "title": "Golden ritual",
++  "id": "ritual-golden-ritual",
++  "status": "",
++  "summary": "",
++  "tags": [],
++  "current_node": "",
++  "history": [],
++  "purpose": "Golden purpose",
++  "trigger": "Golden trigger",
++  "preconditions": [],
++  "steps": [],
++  "validation": [],
++  "failure_modes": [],
++  "completion": "Golden completion"
++}
+diff --git a/tests/fixtures/golden/output/show_ritual.text b/tests/fixtures/golden/output/show_ritual.text
+new file mode 100644
+index 0000000..5dc3c48
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_ritual.text
+@@ -0,0 +1,11 @@
++Ritual: ritual-golden-ritual
++Title: Golden ritual
++status: 
++summary: 
++purpose: Golden purpose
++trigger: Golden trigger
++preconditions: 
++steps: 
++validation: 
++failure_modes: 
++completion: Golden completion
+diff --git a/tests/fixtures/golden/output/show_step.json b/tests/fixtures/golden/output/show_step.json
+new file mode 100644
+index 0000000..cf97351
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_step.json
+@@ -0,0 +1,7 @@
++{
++  "title": "Golden step",
++  "id": "step-golden-step",
++  "action": "Golden action",
++  "outcome": "Golden outcome",
++  "tags": []
++}
+diff --git a/tests/fixtures/golden/output/show_step.text b/tests/fixtures/golden/output/show_step.text
+new file mode 100644
+index 0000000..f63329f
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_step.text
+@@ -0,0 +1,4 @@
++Step: step-golden-step
++Title: Golden step
++action: Golden action
++outcome: Golden outcome
+diff --git a/tests/fixtures/golden/output/show_task.json b/tests/fixtures/golden/output/show_task.json
+new file mode 100644
+index 0000000..cb61b5a
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_task.json
+@@ -0,0 +1,44 @@
++{
++  "id": "task-golden-alpha",
++  "title": "Golden alpha task",
++  "status": "draft",
++  "summary": "Alpha goal.",
++  "tags": [
++    "workspace:desk",
++    "artifact:task"
++  ],
++  "current_node": "ritual-execution",
++  "history": [],
++  "goal": "Alpha goal.",
++  "scope": "Alpha scope.\n\n### Related Atoms\n\n- atom-golden-one",
++  "references": [],
++  "depends_on": [],
++  "pills": [
++    "desk/contexts/pill-golden-rule.md"
++  ],
++  "files": [],
++  "implementation_path": "Alpha path.",
++  "validation": [
++    "pytest tests/test_output_goldens.py"
++  ],
++  "done_when": "Alpha done.",
++  "task_type": "implementation",
++  "inherits_from": [],
++  "inherit_acceptance_context": false,
++  "atoms": [],
++  "from_drawer": "",
++  "effective_references": [],
++  "effective_pills": [
++    "desk/contexts/pill-golden-rule.md"
++  ],
++  "effective_tags": [
++    "workspace:desk",
++    "artifact:task"
++  ],
++  "effective_atoms": [],
++  "effective_validation": [
++    "pytest tests/test_output_goldens.py"
++  ],
++  "effective_done_when": "Alpha done.",
++  "lifecycle_gates": []
++}
+diff --git a/tests/fixtures/golden/output/show_task.text b/tests/fixtures/golden/output/show_task.text
+new file mode 100644
+index 0000000..cdaca08
+--- /dev/null
++++ b/tests/fixtures/golden/output/show_task.text
+@@ -0,0 +1,7 @@
++Task: task-golden-alpha
++Title: Golden alpha task
++Status: draft
++Current node: ritual-execution
++Task type: implementation
++Effective pills:
++- desk/contexts/pill-golden-rule.md
+diff --git a/tests/test_output_goldens.py b/tests/test_output_goldens.py
+index 1841f21..8c47884 100644
+--- a/tests/test_output_goldens.py
++++ b/tests/test_output_goldens.py
+@@ -44,19 +44,24 @@ COMMIT_SHA_RE = re.compile(r"\b[0-9a-f]{40}\b")
+ TRAILER_RE = re.compile(r"^(?P<key>[A-Z][A-Za-z0-9-]+): (?P<value>.+)$")
+ 
+ 
+-def _env() -> dict[str, str]:
++def _env(home: Path | None = None) -> dict[str, str]:
+     env = dict(os.environ)
+     env["COLUMNS"] = "80"
++    if home is not None:
++        env["HOME"] = str(home)
++        env["XDG_CACHE_HOME"] = str(home / ".cache")
+     existing = env.get("PYTHONPATH")
+     env["PYTHONPATH"] = str(REPO_ROOT) + (os.pathsep + existing if existing else "")
+     return env
+ 
+ 
+-def _cli(cwd: Path, *argv: str) -> subprocess.CompletedProcess[str]:
++def _cli(
++    cwd: Path, *argv: str, home: Path | None = None
++) -> subprocess.CompletedProcess[str]:
+     result = subprocess.run(
+         [sys.executable, "-m", "deskops", *argv],
+         cwd=cwd,
+-        env=_env(),
++        env=_env(home),
+         capture_output=True,
+         text=True,
+     )
+@@ -297,3 +302,359 @@ def test_help_goldens(request: pytest.FixtureRequest) -> None:
+                 stale.unlink()
+     for relative_path, actual in sorted(outputs.items()):
+         _check_golden(relative_path, actual, request)
++
++
++# --- command output goldens -------------------------------------------------
++
++STAMP_RE = re.compile(r"\b\d{8}-\d{6}\b")
++FORMATS_TEXT_JSON = ("text", "json")
++FORMATS_TEXT_JSON_YAML = ("text", "json", "yaml")
++
++OUTPUT_FIXTURE_DOCS = (
++    (
++        "ritual",
++        (
++            ["--title", "Golden ritual"],
++            ["--purpose", "Golden purpose"],
++            ["--trigger", "Golden trigger"],
++            ["--completion", "Golden completion"],
++        ),
++    ),
++    (
++        "board",
++        (
++            ["--title", "Golden board"],
++            ["--scope", "golden scope"],
++            ["--purpose", "Golden purpose"],
++        ),
++    ),
++    (
++        "materialization",
++        (
++            ["--title", "Golden materialization"],
++            ["--target-kind", "document"],
++            ["--target-identity", "atom-golden-one"],
++            ["--intent", "Golden intent"],
++        ),
++    ),
++    (
++        "repository",
++        (
++            ["--name", "Golden repository"],
++            ["--description", "Golden description"],
++        ),
++    ),
++    (
++        "inbox-note",
++        (
++            ["--kind", "unclear"],
++            ["--created-at", "2026-01-01T00:00:00"],
++            ["--status", "open"],
++            ["--title", "Golden inbox note"],
++            ["--body", "Golden body"],
++        ),
++    ),
++    (
++        "faq-doc",
++        (
++            ["--title", "Golden FAQ"],
++            ["--body", "What is golden?\n\nGolden output."],
++        ),
++    ),
++    (
++        "step",
++        (
++            ["--title", "Golden step"],
++            ["--action", "Golden action"],
++            ["--outcome", "Golden outcome"],
++        ),
++    ),
++)
++
++SHOW_SUBJECTS = (
++    ("task", "task-golden-alpha"),
++    ("pill", "pill-golden-rule"),
++    ("ritual", "ritual-golden-ritual"),
++    ("board", "board-golden-board"),
++    ("atom", "atom-golden-one"),
++    ("materialization", "materialization-golden-materialization"),
++    ("repository", "repo-golden-repository"),
++    ("inbox-note", "inbox-note-golden-inbox-note"),
++    ("faq-doc", "faq-golden-faq"),
++    ("step", "step-golden-step"),
++)
++
++LIST_SUBJECTS = (
++    "tasks",
++    "pills",
++    "rituals",
++    "boards",
++    "atoms",
++    "materializations",
++    "repositories",
++    "inbox-notes",
++    "faq-docs",
++    "steps",
++)
++
++FAKE_HERDR = """#!/usr/bin/env python3
++import json
++import sys
++
++if sys.argv[1:3] == ["workspace", "list"]:
++    payload = {
++        "result": {
++            "workspaces": [
++                {
++                    "workspace_id": "w-1",
++                    "label": "golden",
++                    "number": 1,
++                    "agent_status": "active",
++                    "pane_count": 1,
++                    "focused": True,
++                }
++            ]
++        }
++    }
++elif sys.argv[1:3] == ["agent", "list"]:
++    payload = {
++        "result": {
++            "agents": [
++                {
++                    "pane_id": "w-1:p-1",
++                    "agent": "pi",
++                    "name": "executor",
++                    "agent_status": "idle",
++                    "cwd": "/tmp/golden-work",
++                    "workspace_id": "w-1",
++                    "tab_id": "t-1",
++                    "terminal_title_stripped": "deskops executor",
++                    "state_change_seq": 7,
++                    "focused": True,
++                }
++            ]
++        }
++    }
++else:
++    payload = {"result": {}}
++print(json.dumps(payload))
++"""
++
++
++def _normalize_output(text: str, replacements: tuple[tuple[str, str], ...]) -> str:
++    for old, new in replacements:
++        text = text.replace(old, new)
++    text = ISO_TIMESTAMP_RE.sub("<ts>", text)
++    text = COMMIT_SHA_RE.sub("<sha>", text)
++    return STAMP_RE.sub("<stamp>", text)
++
++
++def _prepare_output_repo(root: Path, home: Path) -> None:
++    shutil.copytree(FIXTURE_DESK, root)
++    _git(root, "init", "-q")
++    _git(root, "config", "user.email", "test@example.com")
++    _git(root, "config", "user.name", "Test")
++    _git(root, "commit", "--allow-empty", "-q", "-m", "seed")
++    for subject, arguments in OUTPUT_FIXTURE_DOCS:
++        argv = ["add", subject, "--root", str(root)]
++        for argument in arguments:
++            argv.extend(argument)
++        _cli(root, *argv, home=home)
++    (root / "faq.md").write_text(
++        "# Golden FAQ\n\n## What is golden?\n\nGolden output stays stable.\n\n"
++        "## Why keep goldens?\n\nSibling tools parse the CLI.\n",
++        encoding="utf-8",
++    )
++
++
++def _prepare_message_repos(base: Path, home: Path) -> tuple[Path, Path]:
++    sender = base / "sender-repo"
++    target = base / "target-repo"
++    sender.mkdir()
++    target.mkdir()
++    _cli(sender, "init", str(sender), home=home)
++    _cli(target, "init", str(target), home=home)
++    return sender, target
++
++
++def _reset_inbox(target: Path) -> None:
++    for note in (target / "desk" / "inbox").glob("*.md"):
++        note.unlink()
++
++
++def _only_note(target: Path) -> Path:
++    notes = sorted((target / "desk" / "inbox").glob("*.md"))
++    assert len(notes) == 1, notes
++    return notes[0]
++
++
++@pytest.fixture(scope="module")
++def output_golden_env(tmp_path_factory: pytest.TempPathFactory) -> dict[str, Path]:
++    base = tmp_path_factory.mktemp("command-output-goldens")
++    home = base / "home"
++    home.mkdir()
++
++    repo = base / "repo"
++    _prepare_output_repo(repo, home)
++
++    sender, target = _prepare_message_repos(base, home)
++
++    herdr = base / "fake-herdr"
++    herdr.write_text(FAKE_HERDR, encoding="utf-8")
++    herdr.chmod(0o755)
++
++    return {"base": base, "home": home, "repo": repo, "sender": sender, "target": target, "herdr": herdr}
++
++
++def _collect_command_output_goldens(env: dict[str, Path]) -> dict[str, str]:
++    home = env["home"]
++    repo = env["repo"]
++    sender = env["sender"]
++    target = env["target"]
++    repo_replacements = ((str(repo), "<root>"), (str(home), "<home>"))
++    message_replacements = (
++        (str(target), "<target>"),
++        (str(sender), "<sender>"),
++        (str(home), "<home>"),
++    )
++    outputs: dict[str, str] = {}
++
++    def capture(
++        name: str,
++        fmt: str,
++        argv: list[str],
++        cwd: Path,
++        replacements: tuple[tuple[str, str], ...],
++    ) -> None:
++        completed = _cli(cwd, *argv, "--format", fmt, home=home)
++        outputs[f"{name}.{fmt}"] = _normalize_output(completed.stdout, replacements)
++
++    for subject in LIST_SUBJECTS:
++        for fmt in FORMATS_TEXT_JSON:
++            capture(
++                f"list_{subject}",
++                fmt,
++                ["list", subject, "--root", str(repo)],
++                repo,
++                repo_replacements,
++            )
++
++    for subject, selector in SHOW_SUBJECTS:
++        for fmt in FORMATS_TEXT_JSON:
++            capture(
++                f"show_{subject}",
++                fmt,
++                ["show", subject, selector, "--root", str(repo)],
++                repo,
++                repo_replacements,
++            )
++
++    for name, argv in (
++        ("atoms_list", ["atoms", "list", "--root", str(repo)]),
++        ("atoms_show", ["atoms", "show", "atom-golden-one", "--root", str(repo)]),
++        ("atoms_tree", ["atoms", "tree", "--root", str(repo)]),
++    ):
++        for fmt in FORMATS_TEXT_JSON:
++            capture(name, fmt, argv, repo, repo_replacements)
++
++    for fmt in FORMATS_TEXT_JSON_YAML:
++        capture(
++            "faq",
++            fmt,
++            ["faq", "--faq-path", str(repo / "faq.md")],
++            repo,
++            repo_replacements,
++        )
++
++    for fmt in FORMATS_TEXT_JSON_YAML:
++        _reset_inbox(target)
++        capture(
++            "message_send",
++            fmt,
++            [
++                "message",
++                "send",
++                f"Golden message for {fmt}.",
++                "--title",
++                f"Golden message {fmt}",
++                "--kind",
++                "suggestion",
++                "--root",
++                str(target),
++            ],
++            sender,
++            message_replacements,
++        )
++        note = _only_note(target)
++        capture(
++            "message_list",
++            fmt,
++            ["message", "list", "--root", str(target)],
++            target,
++            message_replacements,
++        )
++        capture(
++            "message_read",
++            fmt,
++            ["message", "read", note.stem, "--root", str(target)],
++            target,
++            message_replacements,
++        )
++        capture(
++            "message_ack",
++            fmt,
++            ["message", "ack", note.stem, "--root", str(target)],
++            target,
++            message_replacements,
++        )
++
++        _reset_inbox(target)
++        capture(
++            "inbox",
++            fmt,
++            [
++                "inbox",
++                f"Legacy golden message for {fmt}.",
++                "--title",
++                f"Legacy golden {fmt}",
++                "--kind",
++                "unclear",
++                "--root",
++                str(target),
++            ],
++            sender,
++            message_replacements,
++        )
++
++    for fmt in FORMATS_TEXT_JSON:
++        capture(
++            "runtime_workers",
++            fmt,
++            [
++                "runtime",
++                "workers",
++                "--root",
++                str(repo),
++                "--herdr",
++                str(env["herdr"]),
++            ],
++            repo,
++            repo_replacements,
++        )
++
++    return outputs
++
++
++def test_command_output_goldens(
++    output_golden_env: dict[str, Path], request: pytest.FixtureRequest
++) -> None:
++    outputs = _collect_command_output_goldens(output_golden_env)
++    update = request.config.getoption("--update-golden")
++    if update:
++        output_dir = GOLDEN_DIR / "output"
++        output_dir.mkdir(parents=True, exist_ok=True)
++        for stale in output_dir.glob("*"):
++            if f"output/{stale.name}" not in outputs:
++                stale.unlink()
++    for name, actual in sorted(outputs.items()):
++        _check_golden(f"output/{name}", actual, request)

@@ -1,0 +1,12 @@
+# Golden message text
+
+kind: suggestion
+sender_project: sender-repo
+target_project: target-repo
+created_at: <ts>
+status: open
+path: <target>/desk/inbox/<stamp>-suggestion-golden-message-text.md
+
+_Describe the incoming message with enough evidence to triage._
+
+Golden message for text.

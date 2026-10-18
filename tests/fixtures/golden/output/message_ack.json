@@ -1,0 +1,10 @@
+{
+  "id": "<stamp>-suggestion-golden-message-json",
+  "path": "<target>/desk/inbox/<stamp>-suggestion-golden-message-json.md",
+  "status": "closed",
+  "target_project": "target-repo",
+  "acknowledged_by": "target-repo",
+  "acknowledged_at": "<ts>",
+  "tracked_name": "<stamp>-suggestion-golden-message-json",
+  "verified": true
+}

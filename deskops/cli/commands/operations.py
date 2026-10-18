@@ -1,13 +1,14 @@
 from __future__ import annotations
 
-from dataclasses import asdict
 from pathlib import Path
-import json
 import sys
 from typing import Any
 
 from deskops.cli.parse_input import parse_artifact_input
 from deskops.cli.parse_input import parse_task_input
+from deskops.cli.render import normalize
+from deskops.cli.render import render
+from deskops.cli.render import render_error
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
 
@@ -85,88 +86,47 @@ class OperationsCLI:
         if args.command == "list" and args.subject == "tasks":
             tasks = operations.list_tasks()
             repo_routes = operations.list_repo_task_routes() if getattr(args, "include_repos", False) else []
-            if args.format == "json":
-                payload = {"tasks": self._normalize(tasks)}
-                if getattr(args, "include_repos", False):
-                    payload["repo_routes"] = self._normalize(repo_routes)
-                self._print_json(payload)
-                return 0
-            for task in tasks:
-                print(f"{task.id} | {task.status} | {task.current_node}")
-            for route in repo_routes:
-                print(f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}")
-            return 0
+            payload: dict[str, Any] = {"tasks": tasks}
+            if getattr(args, "include_repos", False):
+                payload["repo_routes"] = repo_routes
+            return render(payload, args.format, lambda _data: self._format_task_list(tasks, repo_routes))
 
         list_artifacts = {meta["list_subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if args.command == "list" and args.subject == "atoms":
             try:
                 axis, payloads = operations.list_atoms(getattr(args, "axis_value", None))
             except (FileNotFoundError, ValueError) as exc:
-                print(f"Error: {exc}")
-                return 1
-            if args.format == "json":
-                self._print_json({"axis": axis, "atoms": self._normalize(payloads)})
-                return 0
-            for payload in payloads:
-                label = payload.get("title") or payload.get("name") or payload["id"]
-                if axis:
-                    values = ",".join(payload.get("axis_values") or []) or "-"
-                    print(f"{payload['id']} | {label} | {axis}:{values}")
-                else:
-                    print(f"{payload['id']} | {label}")
-            return 0
+                return render_error(
+                    str(exc),
+                    args.format,
+                    type_name=type(exc).__name__,
+                    text=f"Error: {exc}",
+                )
+            return render(
+                {"axis": axis, "atoms": payloads},
+                args.format,
+                lambda _data: self._format_artifact_list(payloads, axis=axis),
+            )
         if args.command == "list" and args.subject in list_artifacts:
             artifact_id = list_artifacts[args.subject]
             payloads = operations.list_artifacts(artifact_id)
-            if args.format == "json":
-                self._print_json({args.subject: self._normalize(payloads)})
-                return 0
-            for payload in payloads:
-                label = payload.get("title") or payload.get("name") or payload["id"]
-                print(f"{payload['id']} | {label}")
-            return 0
+            return render(
+                {args.subject: payloads},
+                args.format,
+                lambda _data: self._format_artifact_list(payloads),
+            )
 
         if args.command == "show" and args.subject == "task":
             task, gates = operations.show_task(args.task_id)
             if task is None:
-                print(f"No task found for {args.task_id}")
-                return 1
-            if args.format == "json":
-                payload = self._normalize(task)
-                payload["lifecycle_gates"] = self._normalize(gates)
-                self._print_json(payload)
-                return 0
-            print(f"Task: {task.id}")
-            print(f"Title: {task.title}")
-            print(f"Status: {task.status}")
-            print(f"Current node: {task.current_node}")
-            print(f"Task type: {task.task_type}")
-            if task.inherits_from:
-                print("Inherits from:")
-                for item in task.inherits_from:
-                    print(f"- {item}")
-            if task.from_drawer:
-                print(f"From drawer: {task.from_drawer}")
-            if task.effective_pills:
-                print("Effective pills:")
-                for item in task.effective_pills:
-                    print(f"- {item}")
-            if task.effective_atoms:
-                print("Effective atoms:")
-                for item in task.effective_atoms:
-                    print(f"- {item}")
-            if task.inherit_acceptance_context:
-                print("Effective validation:")
-                for item in task.effective_validation:
-                    print(f"- {item}")
-                print(f"Effective done when: {task.effective_done_when}")
-            if gates:
-                print("Lifecycle gates:")
-                for gate in gates:
-                    state = "open" if gate["holds"] else "closed"
-                    condition = gate["condition"] or "(none)"
-                    print(f"- {gate['relation_type']} -> {gate['target']}: {state} [{condition}]")
-            return 0
+                return render_error(
+                    f"No task found for {args.task_id}",
+                    args.format,
+                    type_name="DomainError",
+                )
+            payload = normalize(task)
+            payload["lifecycle_gates"] = normalize(gates)
+            return render(payload, args.format, lambda _data: self._format_task_detail(task, gates))
 
         show_artifacts = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if args.command == "show" and args.subject in show_artifacts:
@@ -174,22 +134,17 @@ class OperationsCLI:
             try:
                 payload = operations.show_artifact(artifact_id, args.doc_id)
             except (FileNotFoundError, ValueError) as exc:
-                print(f"Error: {exc}")
-                return 1
-            if args.format == "json":
-                self._print_json(self._normalize(payload))
-                return 0
-            print(f"{args.subject.capitalize()}: {payload['id']}")
-            label = payload.get("title") or payload.get("name") or payload["id"]
-            print(f"Title: {label}")
-            for key, value in payload.items():
-                if key in {"id", "title", "current_node", "history", "tags"}:
-                    continue
-                if isinstance(value, list):
-                    print(f"{key}: {', '.join(str(item) for item in value)}")
-                else:
-                    print(f"{key}: {value}")
-            return 0
+                return render_error(
+                    str(exc),
+                    args.format,
+                    type_name=type(exc).__name__,
+                    text=f"Error: {exc}",
+                )
+            return render(
+                payload,
+                args.format,
+                lambda _data: self._format_artifact_detail(args.subject, payload),
+            )
 
         if args.command == "advance" and args.subject == "task":
             from deskops.lifecycle import LifecycleGraphMissing
@@ -240,16 +195,71 @@ class OperationsCLI:
         for label, path in report["sources"].items():
             print(f"- {label}: {path}")
 
-    def _print_json(self, payload: Any) -> None:
-        print(json.dumps(self._normalize(payload), indent=2))
+    @staticmethod
+    def _format_task_list(tasks: Any, repo_routes: Any) -> str:
+        lines = [f"{task.id} | {task.status} | {task.current_node}" for task in tasks]
+        lines.extend(
+            f"{route.repo_id}:{route.task_id} | {route.status} | {route.title} | {route.task_path}"
+            for route in repo_routes
+        )
+        return "\n".join(lines)
 
-    def _normalize(self, payload: Any) -> Any:
-        if hasattr(payload, "__dataclass_fields__"):
-            return self._normalize(asdict(payload))
-        if isinstance(payload, Path):
-            return str(payload)
-        if isinstance(payload, dict):
-            return {str(key): self._normalize(value) for key, value in payload.items()}
-        if isinstance(payload, (list, tuple)):
-            return [self._normalize(value) for value in payload]
-        return payload
+    @staticmethod
+    def _format_artifact_list(payloads: list[dict[str, Any]], *, axis: str | None = None) -> str:
+        lines: list[str] = []
+        for payload in payloads:
+            label = payload.get("title") or payload.get("name") or payload["id"]
+            if axis:
+                values = ",".join(payload.get("axis_values") or []) or "-"
+                lines.append(f"{payload['id']} | {label} | {axis}:{values}")
+            else:
+                lines.append(f"{payload['id']} | {label}")
+        return "\n".join(lines)
+
+    @staticmethod
+    def _format_task_detail(task: Any, gates: list[dict[str, Any]]) -> str:
+        lines = [
+            f"Task: {task.id}",
+            f"Title: {task.title}",
+            f"Status: {task.status}",
+            f"Current node: {task.current_node}",
+            f"Task type: {task.task_type}",
+        ]
+        if task.inherits_from:
+            lines.append("Inherits from:")
+            lines.extend(f"- {item}" for item in task.inherits_from)
+        if task.from_drawer:
+            lines.append(f"From drawer: {task.from_drawer}")
+        if task.effective_pills:
+            lines.append("Effective pills:")
+            lines.extend(f"- {item}" for item in task.effective_pills)
+        if task.effective_atoms:
+            lines.append("Effective atoms:")
+            lines.extend(f"- {item}" for item in task.effective_atoms)
+        if task.inherit_acceptance_context:
+            lines.append("Effective validation:")
+            lines.extend(f"- {item}" for item in task.effective_validation)
+            lines.append(f"Effective done when: {task.effective_done_when}")
+        if gates:
+            lines.append("Lifecycle gates:")
+            for gate in gates:
+                state = "open" if gate["holds"] else "closed"
+                condition = gate["condition"] or "(none)"
+                lines.append(
+                    f"- {gate['relation_type']} -> {gate['target']}: {state} [{condition}]"
+                )
+        return "\n".join(lines)
+
+    @staticmethod
+    def _format_artifact_detail(subject: str, payload: dict[str, Any]) -> str:
+        lines = [f"{subject.capitalize()}: {payload['id']}"]
+        label = payload.get("title") or payload.get("name") or payload["id"]
+        lines.append(f"Title: {label}")
+        for key, value in payload.items():
+            if key in {"id", "title", "current_node", "history", "tags"}:
+                continue
+            if isinstance(value, list):
+                lines.append(f"{key}: {', '.join(str(item) for item in value)}")
+            else:
+                lines.append(f"{key}: {value}")
+        return "\n".join(lines)

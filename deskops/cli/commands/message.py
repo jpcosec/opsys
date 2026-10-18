@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 from datetime import datetime
 from pathlib import Path
 import re
@@ -17,6 +16,8 @@ from sldb.runtime.validation import validate_model_input_roundtrip
 from sldb.store.layout import project_root
 
 from deskops import doc_io
+from deskops.cli.render import render
+from deskops.cli.render import render_error
 from deskops.identity import EcosystemIdentity
 from deskops.identity import find_local_store
 
@@ -48,8 +49,12 @@ class MessageCLI:
                 return self._run_message_command(args)
             return self._run_legacy(args)
         except (SLDBStoreError, SLDBValidationError, ValueError) as exc:
-            print(f"Error: {exc}")
-            return 1
+            return render_error(
+                str(exc),
+                getattr(args, "format", "text"),
+                type_name=type(exc).__name__,
+                text=f"Error: {exc}",
+            )
 
     def _run_message_command(self, args: Any) -> int:
         subcmd = args.message_command
@@ -64,8 +69,11 @@ class MessageCLI:
         if subcmd == "ack":
             args.ack = args.selector
             return self._ack_note(args)
-        print(f"Unknown message command: {subcmd}")
-        return 1
+        return render_error(
+            f"Unknown message command: {subcmd}",
+            getattr(args, "format", "text"),
+            type_name="DomainError",
+        )
 
     def _run_legacy(self, args: Any) -> int:
         if getattr(args, "list", False):
@@ -75,8 +83,11 @@ class MessageCLI:
         if getattr(args, "ack", None):
             return self._ack_note(args)
         if not getattr(args, "message", None):
-            print("Provide a message or use send/list/read/ack.")
-            return 1
+            return render_error(
+                "Provide a message or use send/list/read/ack.",
+                getattr(args, "format", "text"),
+                type_name="DomainError",
+            )
         return self._deliver_note(args)
 
     def _deliver_note(self, args: Any) -> int:
@@ -135,8 +146,11 @@ class MessageCLI:
     def _show_note(self, args: Any) -> int:
         note = self._resolve_note(self._desk_root(args), args.show)
         if note is None:
-            print(f"Unknown message: {args.show}")
-            return 1
+            return render_error(
+                f"Unknown message: {args.show}",
+                getattr(args, "format", "text"),
+                type_name="DomainError",
+            )
         payload = self._note_detail(note)
         return self._print(payload, args.format)
 
@@ -144,8 +158,11 @@ class MessageCLI:
         target_project, desk_root = self._resolve_target(args)
         note = self._resolve_note(desk_root, args.ack)
         if note is None:
-            print(f"Unknown message: {args.ack}")
-            return 1
+            return render_error(
+                f"Unknown message: {args.ack}",
+                getattr(args, "format", "text"),
+                type_name="DomainError",
+            )
 
         payload = extract_model_data(InboxNoteDoc, note.read_text(encoding="utf-8"))
         if payload.get("status") == "closed":
@@ -267,64 +284,67 @@ class MessageCLI:
         return frontmatter, title, content
 
     def _print(self, payload: Any, fmt: str, key: str | None = None) -> int:
-        if fmt == "json":
-            print(json.dumps({key: payload} if key else payload, indent=2, default=str))
-        elif fmt == "yaml":
-            print(yaml.safe_dump({key: payload} if key else payload, sort_keys=False, allow_unicode=True))
-        else:
-            if key == "notes":
-                if not payload:
-                    print("No messages.")
-                    return 0
-                for item in payload:
-                    print(
-                        f"{item['id']} | {item['kind']} | {item['sender_project']} -> {item['target_project']} | {item['status']} | {item['title']}"
-                    )
-            else:
-                print(f"# {payload['title']}")
-                print("")
-                for meta in (
-                    "kind",
-                    "sender_project",
-                    "target_project",
-                    "created_at",
-                    "status",
-                    "acknowledged_by",
-                    "acknowledged_at",
-                    "path",
-                ):
-                    if meta in payload and payload[meta] not in {None, ""}:
-                        print(f"{meta}: {payload[meta]}")
-                print("")
-                print(payload.get("body", ""))
-        return 0
+        data = {key: payload} if key else payload
+        if key == "notes":
+            return render(data, fmt, lambda _data: self._format_note_list(payload))
+        return render(data, fmt, lambda _data: self._format_note_detail(payload))
+
+    @staticmethod
+    def _format_note_list(payload: list[dict[str, Any]]) -> str:
+        if not payload:
+            return "No messages."
+        return "\n".join(
+            f"{item['id']} | {item['kind']} | {item['sender_project']} -> {item['target_project']} | {item['status']} | {item['title']}"
+            for item in payload
+        )
+
+    @staticmethod
+    def _format_note_detail(payload: dict[str, Any]) -> str:
+        lines = [f"# {payload['title']}", ""]
+        for meta in (
+            "kind",
+            "sender_project",
+            "target_project",
+            "created_at",
+            "status",
+            "acknowledged_by",
+            "acknowledged_at",
+            "path",
+        ):
+            if meta in payload and payload[meta] not in {None, ""}:
+                lines.append(f"{meta}: {payload[meta]}")
+        lines.append("")
+        lines.append(payload.get("body", ""))
+        return "\n".join(lines)
 
     def _print_delivery_result(self, payload: dict[str, Any], fmt: str) -> int:
-        if fmt in {"json", "yaml"}:
-            return self._print(payload, fmt)
-        print(
-            "Delivered message "
-            f"from {payload['sender_project']} to {payload['target_project']} at {payload['path']}"
-        )
-        if payload.get("tracked_name"):
-            print(f"Tracked '{payload['tracked_name']}'")
-        else:
-            print("Not tracked in the target store (see the warning above).")
-        return 0
+        def text(data: dict[str, Any]) -> str:
+            lines = [
+                "Delivered message "
+                f"from {data['sender_project']} to {data['target_project']} at {data['path']}"
+            ]
+            if data.get("tracked_name"):
+                lines.append(f"Tracked '{data['tracked_name']}'")
+            else:
+                lines.append("Not tracked in the target store (see the warning above).")
+            return "\n".join(lines)
+
+        return render(payload, fmt, text)
 
     def _print_ack_result(self, payload: dict[str, Any], fmt: str) -> int:
-        if fmt in {"json", "yaml"}:
-            return self._print(payload, fmt)
-        print(
-            f"Acknowledged {payload['id']} as {payload['status']} "
-            f"by {payload['acknowledged_by']} at {payload['acknowledged_at']}"
-        )
-        print(f"Path: {payload['path']}")
-        if payload.get("tracked_name"):
-            print(f"Tracked '{payload['tracked_name']}'")
-        else:
-            print("Not tracked in the target store (see the warning above).")
-        return 0
+        def text(data: dict[str, Any]) -> str:
+            lines = [
+                f"Acknowledged {data['id']} as {data['status']} "
+                f"by {data['acknowledged_by']} at {data['acknowledged_at']}",
+                f"Path: {data['path']}",
+            ]
+            if data.get("tracked_name"):
+                lines.append(f"Tracked '{data['tracked_name']}'")
+            else:
+                lines.append("Not tracked in the target store (see the warning above).")
+            return "\n".join(lines)
+
+        return render(payload, fmt, text)
 
     def _derive_title(self, message: str) -> str:
         first = message.strip().splitlines()[0] if message.strip() else "Message"

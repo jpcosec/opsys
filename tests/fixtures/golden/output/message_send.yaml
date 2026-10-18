@@ -1,0 +1,6 @@
+sender_project: sender-repo
+target_project: target-repo
+path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
+tracked_name: <stamp>-suggestion-golden-message-yaml
+verified: true
+

@@ -1,0 +1,14 @@
+7 passed in 148.06s (0:02:28)
+json-ok
+task-rw-f3-single-closure-path | draft | ritual-execution
+task-rw-f5-output-renderer | draft | ritual-execution
+{
+  "ok": false,
+  "error": {
+    "code": 1,
+    "type": "DomainError",
+    "message": "No task found for nope"
+  }
+}
+exit=1
+420 passed, 3 skipped in 496.07s (0:08:16)

@@ -1,0 +1,44 @@
+{
+  "id": "task-golden-alpha",
+  "title": "Golden alpha task",
+  "status": "draft",
+  "summary": "Alpha goal.",
+  "tags": [
+    "workspace:desk",
+    "artifact:task"
+  ],
+  "current_node": "ritual-execution",
+  "history": [],
+  "goal": "Alpha goal.",
+  "scope": "Alpha scope.\n\n### Related Atoms\n\n- atom-golden-one",
+  "references": [],
+  "depends_on": [],
+  "pills": [
+    "desk/contexts/pill-golden-rule.md"
+  ],
+  "files": [],
+  "implementation_path": "Alpha path.",
+  "validation": [
+    "pytest tests/test_output_goldens.py"
+  ],
+  "done_when": "Alpha done.",
+  "task_type": "implementation",
+  "inherits_from": [],
+  "inherit_acceptance_context": false,
+  "atoms": [],
+  "from_drawer": "",
+  "effective_references": [],
+  "effective_pills": [
+    "desk/contexts/pill-golden-rule.md"
+  ],
+  "effective_tags": [
+    "workspace:desk",
+    "artifact:task"
+  ],
+  "effective_atoms": [],
+  "effective_validation": [
+    "pytest tests/test_output_goldens.py"
+  ],
+  "effective_done_when": "Alpha done.",
+  "lifecycle_gates": []
+}

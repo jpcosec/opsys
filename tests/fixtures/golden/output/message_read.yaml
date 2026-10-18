@@ -1,0 +1,13 @@
+id: <stamp>-suggestion-golden-message-yaml
+path: <target>/desk/inbox/<stamp>-suggestion-golden-message-yaml.md
+title: Golden message yaml
+body: '_Describe the incoming message with enough evidence to triage._
+
+
+  Golden message for yaml.'
+kind: suggestion
+sender_project: sender-repo
+target_project: target-repo
+created_at: '<ts>'
+status: open
+

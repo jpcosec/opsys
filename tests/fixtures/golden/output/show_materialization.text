@@ -1,0 +1,7 @@
+Materialization: materialization-golden-materialization
+Title: Golden materialization
+source_atoms: 
+target_kind: document
+target_identity: atom-golden-one
+intent: Golden intent
+validation: 

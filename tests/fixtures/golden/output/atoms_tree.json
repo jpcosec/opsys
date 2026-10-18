@@ -1,0 +1,18 @@
+{
+  "roots": [],
+  "orphans": [],
+  "unplaced": [
+    {
+      "id": "atom-golden-one",
+      "title": "Golden atom one",
+      "model": "AtomDoc",
+      "typed_as": null
+    },
+    {
+      "id": "atom-golden-two",
+      "title": "Golden atom two",
+      "model": "AtomDoc",
+      "typed_as": null
+    }
+  ]
+}

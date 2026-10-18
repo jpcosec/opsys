@@ -1,0 +1,19 @@
+{
+  "pills": [
+    {
+      "title": "Guardrail: golden outputs stay stable",
+      "id": "pill-golden-rule",
+      "tags": [
+        "system:deskops",
+        "pill-type:guardrail",
+        "topic:golden"
+      ],
+      "what": "",
+      "why": "",
+      "when": "",
+      "where": "",
+      "how": "",
+      "how_not": ""
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "axis": null,
+  "atoms": [
+    {
+      "id": "atom-golden-one",
+      "title": "Golden atom one",
+      "five_wh_one_plus": "what",
+      "answer": "The first golden atom describes a stable output contract.",
+      "tags": [
+        "system:deskops",
+        "topic:golden"
+      ],
+      "axis_values": []
+    },
+    {
+      "id": "atom-golden-two",
+      "title": "Golden atom two",
+      "five_wh_one_plus": "how",
+      "answer": "The second golden atom describes a stable output contract.",
+      "tags": [
+        "system:deskops",
+        "topic:golden"
+      ],
+      "axis_values": []
+    }
+  ]
+}

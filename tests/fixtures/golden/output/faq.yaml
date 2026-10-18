@@ -1,0 +1,10 @@
+questions:
+- index: 1
+  question: What is golden?
+  slug: what-is-golden
+  answer: null
+- index: 2
+  question: Why keep goldens?
+  slug: why-keep-goldens
+  answer: null
+

@@ -1,0 +1,92 @@
+{
+  "rituals": [
+    {
+      "title": "Closeout ritual",
+      "id": "ritual-closeout",
+      "status": "",
+      "summary": "",
+      "tags": [
+        "workspace:desk"
+      ],
+      "current_node": "",
+      "history": [],
+      "purpose": "",
+      "trigger": "",
+      "preconditions": [],
+      "steps": [],
+      "validation": [],
+      "failure_modes": [],
+      "completion": ""
+    },
+    {
+      "title": "Execution ritual",
+      "id": "ritual-execution",
+      "status": "",
+      "summary": "",
+      "tags": [
+        "workspace:desk"
+      ],
+      "current_node": "",
+      "history": [],
+      "purpose": "",
+      "trigger": "",
+      "preconditions": [],
+      "steps": [],
+      "validation": [],
+      "failure_modes": [],
+      "completion": ""
+    },
+    {
+      "title": "Phase ritual for dependency-layer execution",
+      "id": "ritual-phase",
+      "status": "",
+      "summary": "",
+      "tags": [
+        "workspace:desk"
+      ],
+      "current_node": "",
+      "history": [],
+      "purpose": "",
+      "trigger": "",
+      "preconditions": [],
+      "steps": [],
+      "validation": [],
+      "failure_modes": [],
+      "completion": ""
+    },
+    {
+      "title": "Golden ritual",
+      "id": "ritual-golden-ritual",
+      "status": "",
+      "summary": "",
+      "tags": [],
+      "current_node": "",
+      "history": [],
+      "purpose": "Golden purpose",
+      "trigger": "Golden trigger",
+      "preconditions": [],
+      "steps": [],
+      "validation": [],
+      "failure_modes": [],
+      "completion": "Golden completion"
+    },
+    {
+      "title": "Testing ritual",
+      "id": "ritual-testing",
+      "status": "",
+      "summary": "",
+      "tags": [
+        "workspace:desk"
+      ],
+      "current_node": "",
+      "history": [],
+      "purpose": "",
+      "trigger": "",
+      "preconditions": [],
+      "steps": [],
+      "validation": [],
+      "failure_modes": [],
+      "completion": ""
+    }
+  ]
+}

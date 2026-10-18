@@ -1,0 +1,10 @@
+ M deskops/cli/commands/atoms.py
+ M deskops/cli/commands/faq.py
+ M deskops/cli/commands/message.py
+ M deskops/cli/commands/operations.py
+ M deskops/cli/commands/runtime.py
+ M deskops/cli/main.py
+ M tests/test_output_goldens.py
+?? deskops/cli/render.py
+?? runs/subagents/20261018-task-rw-f5-output-renderer/
+?? tests/fixtures/golden/output/
