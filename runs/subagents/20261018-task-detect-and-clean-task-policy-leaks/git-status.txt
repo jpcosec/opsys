@@ -1,0 +1,9 @@
+ M .sldb/core/documents/TaskDoc/task-detect-and-clean-task-policy-leaks.yaml
+ M .sldb/core/models/BoardDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-detect-and-clean-task-policy-leaks.md
+ M deskops/graph/self_reflection.py
+?? deskops/task_policy.py
+?? runs/subagents/20261018-task-detect-and-clean-task-policy-leaks/
+?? tests/test_task_policy_leaks.py

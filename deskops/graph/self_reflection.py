@@ -421,4 +421,13 @@ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
         loc = f"{violation.path}#{violation.locator}"
         report.append(f"atom-reference: {loc} {violation.reason}")
 
+    # 5. a task body that restates global workflow policy instead of referencing it
+    from deskops.task_policy import scan_task_policy_leaks
+
+    for leak in scan_task_policy_leaks(root):
+        report.append(
+            f"task-policy-leak: {leak.path}:{leak.line} repeats global policy phrase "
+            f"'{leak.phrase}'; reference desk/rituals/closeout.md or a pill instead"
+        )
+
     return report
