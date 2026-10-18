@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-declare-version-0-2-0-unreleased.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -44,3 +45,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- deskops declares version 0.2.0 (unreleased) in pyproject and CHANGELOG [draft] - pyproject.toml says version 0.2.0, and CHANGELOG.md has its current entries under `## [0.2.0] - Unreleased`, with no date and an empty `## [Unreleased]` above it. No tag is created.
