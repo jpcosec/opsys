@@ -173,3 +173,26 @@ def test_desk_update_apply_migrates_the_legacy_faq_model(tmp_path: Path, capsys)
     assert faq_path.read_bytes() == original
 
     assert main(["desk", "update", "--root", str(tmp_path)]) == 0
+
+
+def test_desk_update_does_not_call_the_owner_store_models_copies(tmp_path: Path, monkeypatch, capsys) -> None:
+    from deskops.bootstrap import SLDBBootstrap
+    from deskops.cli.main import main
+
+    # Without an owner store, init registers the models directly, which is the
+    # shape of the deskops owner store itself.
+    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: None)
+    assert main(["init", str(tmp_path)]) == 0
+    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+    other = tmp_path.parent / f"{tmp_path.name}-owner" / ".sldb"
+    other.mkdir(parents=True)
+    capsys.readouterr()
+
+    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: other)
+    main(["desk", "update", "--root", str(tmp_path)])
+    assert "Copied deskops models" in capsys.readouterr().out, "another store's direct models are copies"
+
+    owner = tmp_path / ".sldb"
+    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: owner)
+    main(["desk", "update", "--root", str(tmp_path)])
+    assert "Copied deskops models" not in capsys.readouterr().out

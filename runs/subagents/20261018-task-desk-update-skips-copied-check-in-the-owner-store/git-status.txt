@@ -1,0 +1,7 @@
+ M .sldb/core/documents/TaskDoc/task-desk-update-skips-copied-check-in-the-owner-store.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-desk-update-skips-copied-check-in-the-owner-store.md
+ M deskops/cli/commands/desk.py
+ M tests/test_desk_sync.py
+?? runs/subagents/20261018-task-desk-update-skips-copied-check-in-the-owner-store/

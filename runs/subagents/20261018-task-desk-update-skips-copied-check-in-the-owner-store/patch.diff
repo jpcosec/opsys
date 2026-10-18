@@ -1,0 +1,46 @@
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index b9f9a6f..9f68c9c 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -241,6 +241,10 @@ class DeskCLI:
+         # A non-editable install has no owner store to inherit from; its directly
+         # registered models are the expected state, not copies to convert.
+         owner_store = bootstrap._deskops_owner_store()
++        if owner_store is not None and store_dir.exists() and store_dir.resolve() == owner_store.resolve():
++            # The owner store registers the deskops models directly; that is what
++            # the other stores link to, not a copy of it.
++            owner_store = None
+         for model_name, model_ref in MODEL_REFS.items():
+             entry = registered_entries.get(model_name)
+             if entry is None:
+diff --git a/tests/test_desk_sync.py b/tests/test_desk_sync.py
+index 8a11be4..ec2faa6 100644
+--- a/tests/test_desk_sync.py
++++ b/tests/test_desk_sync.py
+@@ -173,3 +173,26 @@ def test_desk_update_apply_migrates_the_legacy_faq_model(tmp_path: Path, capsys)
+     assert faq_path.read_bytes() == original
+ 
+     assert main(["desk", "update", "--root", str(tmp_path)]) == 0
++
++
++def test_desk_update_does_not_call_the_owner_store_models_copies(tmp_path: Path, monkeypatch, capsys) -> None:
++    from deskops.bootstrap import SLDBBootstrap
++    from deskops.cli.main import main
++
++    # Without an owner store, init registers the models directly, which is the
++    # shape of the deskops owner store itself.
++    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: None)
++    assert main(["init", str(tmp_path)]) == 0
++    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
++    other = tmp_path.parent / f"{tmp_path.name}-owner" / ".sldb"
++    other.mkdir(parents=True)
++    capsys.readouterr()
++
++    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: other)
++    main(["desk", "update", "--root", str(tmp_path)])
++    assert "Copied deskops models" in capsys.readouterr().out, "another store's direct models are copies"
++
++    owner = tmp_path / ".sldb"
++    monkeypatch.setattr(SLDBBootstrap, "_deskops_owner_store", lambda self: owner)
++    main(["desk", "update", "--root", str(tmp_path)])
++    assert "Copied deskops models" not in capsys.readouterr().out

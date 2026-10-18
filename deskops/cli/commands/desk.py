@@ -241,6 +241,10 @@ class DeskCLI:
         # A non-editable install has no owner store to inherit from; its directly
         # registered models are the expected state, not copies to convert.
         owner_store = bootstrap._deskops_owner_store()
+        if owner_store is not None and store_dir.exists() and store_dir.resolve() == owner_store.resolve():
+            # The owner store registers the deskops models directly; that is what
+            # the other stores link to, not a copy of it.
+            owner_store = None
         for model_name, model_ref in MODEL_REFS.items():
             entry = registered_entries.get(model_name)
             if entry is None:
