@@ -1,0 +1,11 @@
+Task: task-rw-f1-cli-contract-tests
+Title: Every CLI surface without a test gets one through main(argv)
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f1-cli-contract-tests.md
+Effective pills:
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

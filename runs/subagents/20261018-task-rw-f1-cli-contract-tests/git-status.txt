@@ -1,0 +1,3 @@
+?? desk/inbox/20261018-003127-unclear-closeout-verify-revienta-con-un-yaml-multi-documento-del-repo.md
+?? runs/subagents/20261018-task-rw-f1-cli-contract-tests/
+?? tests/test_cli_contract.py
