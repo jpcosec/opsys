@@ -1,0 +1,4 @@
+ M deskops/cli/commands/promote.py
+ M deskops/operations.py
+?? deskops/services/
+?? runs/subagents/20261018-task-rw-f3-drawer-routing-service/

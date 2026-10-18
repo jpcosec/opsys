@@ -8,6 +8,7 @@ import re
 import subprocess
 import sys
 from typing import Any
+from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 import yaml
@@ -46,6 +47,9 @@ from deskops.workspace import scaffold_desk
 from deskops.workflow.next_actions import load_task_lifecycle_spec
 from deskops.workflow.next_actions import match_workflow_state
 from deskops.workflow.next_actions import render_workflow_mermaid
+
+if TYPE_CHECKING:
+    from deskops.services.drawer import DrawerService
 
 
 ARTIFACT_MODELS = {
@@ -319,6 +323,7 @@ class DeskopsOperations:
         self.desk_root = self.root / "desk"
         self.spec_root = Path(__file__).resolve().parents[1] / "spec"
         self._spec_registry: SpecRegistry | None = None
+        self._drawer: DrawerService | None = None
         self._setup_logging()
 
     def _setup_logging(self) -> None:
@@ -466,50 +471,18 @@ class DeskopsOperations:
                 print(f"Warning: Failed to load task {path}: {e}", file=sys.stderr)
         return tasks
 
-    DRAWER_INDEX_FILES = {"README.md", "Board.md"}
+    @property
+    def drawer(self) -> "DrawerService":
+        if self._drawer is None:
+            from deskops.services.drawer import DrawerService
+            self._drawer = DrawerService(self.root)
+        return self._drawer
 
     def resolve_drawer_source(self, selector: str) -> Path:
-        """The desk/drawer/ file a task is being authored from.
-
-        Accepts a path (relative to the repo root, or absolute) or a stem /
-        unique slug fragment searched across every drawer subfolder, since the
-        drawer holds features, issues and questions, not only task candidates.
-        The file must live under desk/drawer/.
-        """
-        drawer_root = (self.desk_root / "drawer").resolve()
-        candidate = Path(selector)
-        if not candidate.is_absolute():
-            candidate = self.desk_root.parent / candidate
-        if candidate.is_file():
-            resolved = candidate.resolve()
-            if drawer_root not in resolved.parents:
-                raise ValueError(f"--from-drawer must point inside desk/drawer/: {selector}")
-            return resolved
-        if not drawer_root.exists():
-            raise FileNotFoundError(f"No drawer found at {drawer_root}")
-        files = sorted(
-            path for path in drawer_root.rglob("*.md")
-            if path.is_file() and path.name not in self.DRAWER_INDEX_FILES
-        )
-        exact = [path for path in files if selector in {path.name, path.stem}]
-        matches = exact or [path for path in files if selector.lower() in path.stem.lower()]
-        if not matches:
-            raise FileNotFoundError(f"No drawer file matches '{selector}'")
-        if len(matches) > 1:
-            listing = ", ".join(str(path.relative_to(drawer_root)) for path in matches)
-            raise ValueError(f"Ambiguous drawer selector '{selector}': {listing}")
-        return matches[0].resolve()
+        return self.drawer.resolve_drawer_source(selector)
 
     def attach_drawer_source(self, payload: dict[str, Any], drawer_file: Path) -> dict[str, Any]:
-        """Record where an authored task came from, without copying or deleting it.
-
-        Stored in the task's own from_drawer field, not in references:
-        `deskops edit task <id> references ...` replaces that whole list (the
-        closeout step does exactly that), which would silently drop the origin.
-        One field, one fact -- no parallel tag that could drift from it.
-        Cleanup of the drawer file is left to a human."""
-        relative = drawer_file.resolve().relative_to(self.desk_root.parent.resolve()).as_posix()
-        return {**payload, "from_drawer": relative}
+        return self.drawer.attach_drawer_source(payload, drawer_file)
 
     def list_repo_task_routes(self) -> list[RepoTaskRoute]:
         routes: list[RepoTaskRoute] = []
