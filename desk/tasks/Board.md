@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-rw-f6-apply-store-migration.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Run the store migration with `--apply` on every discovered store [draft] - Every store the owner confirms is migrated, and the log shows each one PASS.

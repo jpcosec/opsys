@@ -1,0 +1,6 @@
+ M .sldb/core/documents/TaskDoc/task-rw-f6-apply-store-migration.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-rw-f6-apply-store-migration.md
+?? runs/planning/store-migration-20261018.md
+?? runs/subagents/20261018-task-rw-f6-apply-store-migration/
