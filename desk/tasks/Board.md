@@ -5,7 +5,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-message-tracks-only-in-the-target-store.md
 - desk/tasks/task-second-migration-pass-deskfaqdoc-and-ritual-prose.md
 # List of pill-xxx paths
 pills:
@@ -47,5 +46,4 @@ _Add short operational notes about the current routed set._
 
 _Generated from the task references above._
 
-- A sent note is tracked only in the target repo's store, never in the sender's [draft] - `deskops message send` and the deprecated `deskops inbox` alias, in every addressing form (--root, --repo, --to), track the delivered note only in the target repo's store, with a target-relative path. The sender's store does not change.
 - Second migration pass: DeskFAQDoc and the prose RitualDoc contract reach every federated store [draft] - Every store from the first migration's list has run desk update --apply again. That pass re-signs RitualDoc and moves a legacy FAQDoc entry to DeskFAQDoc. The log records each store's stores check, edges check and edges unresolved result. In sldb, only desk/ and .sldb/ are committed, and sldb-04 gets the hash.

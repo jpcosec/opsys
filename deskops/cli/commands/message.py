@@ -269,10 +269,17 @@ class MessageCLI:
         return EcosystemIdentity(store_arg).how_do_i_find_another(repo_name)
 
     def _note_store_context(self, args: Any, desk_root: Path) -> tuple[Path, Path] | None:
-        """The store that owns the target desk, or None when its repo has no store."""
+        """The store that owns the target desk, or None when its repo has no store.
+
+        ``--store`` may still describe the sender's store (for example with
+        ``--to``/``--repo``), so it is honored only when it belongs to the
+        target repo. The sender's store is never a fallback for the target.
+        """
+        repo_root = desk_root.parent.resolve()
         if args.store:
-            return get_store_context(args.store)
-        repo_root = desk_root.parent
+            store_path, root = get_store_context(args.store)
+            if root.resolve() == repo_root:
+                return store_path, root
         store_path = repo_root / ".sldb"
         if not store_path.is_dir():
             return None

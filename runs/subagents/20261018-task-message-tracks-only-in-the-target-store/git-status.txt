@@ -1,0 +1,9 @@
+ M .sldb/core/documents/TaskDoc/task-message-tracks-only-in-the-target-store.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-message-tracks-only-in-the-target-store.md
+ M deskops/cli/commands/message.py
+ M tests/test_cli.py
+ M tests/test_message_delivery.py
+?? runs/planning/store-migration-20261018-pass2.md
+?? runs/subagents/20261018-task-message-tracks-only-in-the-target-store/

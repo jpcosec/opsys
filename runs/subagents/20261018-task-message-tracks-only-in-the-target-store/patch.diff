@@ -1,0 +1,164 @@
+diff --git a/deskops/cli/commands/message.py b/deskops/cli/commands/message.py
+index e40f7ac..9d5b4ee 100644
+--- a/deskops/cli/commands/message.py
++++ b/deskops/cli/commands/message.py
+@@ -269,10 +269,17 @@ class MessageCLI:
+         return EcosystemIdentity(store_arg).how_do_i_find_another(repo_name)
+ 
+     def _note_store_context(self, args: Any, desk_root: Path) -> tuple[Path, Path] | None:
+-        """The store that owns the target desk, or None when its repo has no store."""
++        """The store that owns the target desk, or None when its repo has no store.
++
++        ``--store`` may still describe the sender's store (for example with
++        ``--to``/``--repo``), so it is honored only when it belongs to the
++        target repo. The sender's store is never a fallback for the target.
++        """
++        repo_root = desk_root.parent.resolve()
+         if args.store:
+-            return get_store_context(args.store)
+-        repo_root = desk_root.parent
++            store_path, root = get_store_context(args.store)
++            if root.resolve() == repo_root:
++                return store_path, root
+         store_path = repo_root / ".sldb"
+         if not store_path.is_dir():
+             return None
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 72952d4..0b70b6f 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -447,6 +447,10 @@ def _setup_inbox_identity_env(tmp_path: Path, monkeypatch) -> tuple[Path, Path,
+     _write_repo_doc(registry_dir, repo_id="sender-repo", repo_path="sender-repo", name="Sender Repo")
+     _write_repo_doc(registry_dir, repo_id="target-repo", repo_path="target-repo", name="Target Repo")
+ 
++    # Delivery tracks the note in the target repo's own store, never the
++    # sender's ecosystem store.
++    (target_repo / ".sldb").mkdir(parents=True)
++
+     store_path = tmp_path / ".sldb"
+     tracked: list[str] = []
+ 
+diff --git a/tests/test_message_delivery.py b/tests/test_message_delivery.py
+index 9d3ffc6..539a49a 100644
+--- a/tests/test_message_delivery.py
++++ b/tests/test_message_delivery.py
+@@ -54,6 +54,15 @@ def _register(repo: Path, repo_id: str, repo_path: str) -> None:
+     )
+ 
+ 
++def _store_snapshot(repo: Path) -> dict[str, bytes]:
++    store = repo / ".sldb"
++    return {
++        path.relative_to(store).as_posix(): path.read_bytes()
++        for path in sorted(store.rglob("*"))
++        if path.is_file()
++    }
++
++
+ def _write_note(repo: Path, stem: str, *, target_project: str) -> Path:
+     inbox = repo / "desk" / "inbox"
+     inbox.mkdir(parents=True, exist_ok=True)
+@@ -137,6 +146,103 @@ def test_send_resolves_sender_from_sender_repo_not_target_registry(tmp_path: Pat
+     assert json.loads(without_from.stdout)["target_project"] == "target-repo"
+ 
+ 
++def test_send_with_root_tracks_only_in_target_store(tmp_path: Path) -> None:
++    from sldb.api import doc_status
++
++    sender = _init_repo(tmp_path / "repo-a")
++    target = _init_repo(tmp_path / "repo-b")
++    before = _store_snapshot(sender)
++
++    result = _cli(
++        sender,
++        "message",
++        "send",
++        "A note addressed through --root.",
++        "--title",
++        "To a root",
++        "--root",
++        str(target),
++        "--format",
++        "json",
++    )
++
++    assert result.returncode == 0, result.stderr or result.stdout
++    payload = json.loads(result.stdout)
++    assert payload["verified"] is True
++    assert _store_snapshot(sender) == before
++    note = next((target / "desk" / "inbox").glob("*.md"))
++    tracked = doc_status(target / ".sldb", note.stem)
++    assert tracked.status == "ok"
++    assert tracked.path == f"desk/inbox/{note.name}"
++    assert not Path(tracked.path).is_absolute()
++    assert doc_status(sender / ".sldb", note.stem).status == "missing"
++
++
++def test_send_to_registered_repo_tracks_only_in_target_store(tmp_path: Path) -> None:
++    from sldb.api import doc_status
++
++    sender = _init_repo(tmp_path / "repo-a")
++    target = _init_repo(tmp_path / "repo-b")
++    _register(sender, "repo-b", str(target))
++    before = _store_snapshot(sender)
++
++    result = _cli(
++        sender,
++        "message",
++        "send",
++        "A note addressed through --to.",
++        "--title",
++        "To a registered repo",
++        "--to",
++        "repo-b",
++        "--format",
++        "json",
++    )
++
++    assert result.returncode == 0, result.stderr or result.stdout
++    payload = json.loads(result.stdout)
++    assert payload["verified"] is True
++    assert _store_snapshot(sender) == before
++    note = next((target / "desk" / "inbox").glob("*.md"))
++    tracked = doc_status(target / ".sldb", note.stem)
++    assert tracked.status == "ok"
++    assert tracked.path == f"desk/inbox/{note.name}"
++    assert not Path(tracked.path).is_absolute()
++    assert doc_status(sender / ".sldb", note.stem).status == "missing"
++
++
++def test_legacy_inbox_repo_tracks_only_in_target_store(tmp_path: Path) -> None:
++    from sldb.api import doc_status
++
++    sender = _init_repo(tmp_path / "repo-a")
++    target = _init_repo(tmp_path / "repo-b")
++    _register(sender, "repo-b", str(target))
++    before = _store_snapshot(sender)
++
++    result = _cli(
++        sender,
++        "inbox",
++        "A note addressed through the deprecated alias.",
++        "--title",
++        "Legacy repo alias",
++        "--repo",
++        "repo-b",
++        "--format",
++        "json",
++    )
++
++    assert result.returncode == 0, result.stderr or result.stdout
++    payload = json.loads(result.stdout)
++    assert payload["verified"] is True
++    assert _store_snapshot(sender) == before
++    note = next((target / "desk" / "inbox").glob("*.md"))
++    tracked = doc_status(target / ".sldb", note.stem)
++    assert tracked.status == "ok"
++    assert tracked.path == f"desk/inbox/{note.name}"
++    assert not Path(tracked.path).is_absolute()
++    assert doc_status(sender / ".sldb", note.stem).status == "missing"
++
++
+ def test_ack_falls_back_to_config_when_registry_lacks_itself(tmp_path: Path) -> None:
+     repo = _init_repo(tmp_path / "graph-repo")
+     # Registering somebody else used to hide the repo's own identity from ack.

@@ -447,6 +447,10 @@ def _setup_inbox_identity_env(tmp_path: Path, monkeypatch) -> tuple[Path, Path, 
     _write_repo_doc(registry_dir, repo_id="sender-repo", repo_path="sender-repo", name="Sender Repo")
     _write_repo_doc(registry_dir, repo_id="target-repo", repo_path="target-repo", name="Target Repo")
 
+    # Delivery tracks the note in the target repo's own store, never the
+    # sender's ecosystem store.
+    (target_repo / ".sldb").mkdir(parents=True)
+
     store_path = tmp_path / ".sldb"
     tracked: list[str] = []
 

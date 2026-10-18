@@ -1,0 +1,7 @@
+Task: task-message-tracks-only-in-the-target-store
+Title: A sent note is tracked only in the target repo's store, never in the sender's
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

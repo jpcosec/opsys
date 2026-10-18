@@ -54,6 +54,15 @@ def _register(repo: Path, repo_id: str, repo_path: str) -> None:
     )
 
 
+def _store_snapshot(repo: Path) -> dict[str, bytes]:
+    store = repo / ".sldb"
+    return {
+        path.relative_to(store).as_posix(): path.read_bytes()
+        for path in sorted(store.rglob("*"))
+        if path.is_file()
+    }
+
+
 def _write_note(repo: Path, stem: str, *, target_project: str) -> Path:
     inbox = repo / "desk" / "inbox"
     inbox.mkdir(parents=True, exist_ok=True)
@@ -135,6 +144,103 @@ def test_send_resolves_sender_from_sender_repo_not_target_registry(tmp_path: Pat
     assert json.loads(without_from.stdout)["sender_project"] == "sender-repo"
     assert json.loads(with_from.stdout)["sender_project"] == "sender-repo"
     assert json.loads(without_from.stdout)["target_project"] == "target-repo"
+
+
+def test_send_with_root_tracks_only_in_target_store(tmp_path: Path) -> None:
+    from sldb.api import doc_status
+
+    sender = _init_repo(tmp_path / "repo-a")
+    target = _init_repo(tmp_path / "repo-b")
+    before = _store_snapshot(sender)
+
+    result = _cli(
+        sender,
+        "message",
+        "send",
+        "A note addressed through --root.",
+        "--title",
+        "To a root",
+        "--root",
+        str(target),
+        "--format",
+        "json",
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    payload = json.loads(result.stdout)
+    assert payload["verified"] is True
+    assert _store_snapshot(sender) == before
+    note = next((target / "desk" / "inbox").glob("*.md"))
+    tracked = doc_status(target / ".sldb", note.stem)
+    assert tracked.status == "ok"
+    assert tracked.path == f"desk/inbox/{note.name}"
+    assert not Path(tracked.path).is_absolute()
+    assert doc_status(sender / ".sldb", note.stem).status == "missing"
+
+
+def test_send_to_registered_repo_tracks_only_in_target_store(tmp_path: Path) -> None:
+    from sldb.api import doc_status
+
+    sender = _init_repo(tmp_path / "repo-a")
+    target = _init_repo(tmp_path / "repo-b")
+    _register(sender, "repo-b", str(target))
+    before = _store_snapshot(sender)
+
+    result = _cli(
+        sender,
+        "message",
+        "send",
+        "A note addressed through --to.",
+        "--title",
+        "To a registered repo",
+        "--to",
+        "repo-b",
+        "--format",
+        "json",
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    payload = json.loads(result.stdout)
+    assert payload["verified"] is True
+    assert _store_snapshot(sender) == before
+    note = next((target / "desk" / "inbox").glob("*.md"))
+    tracked = doc_status(target / ".sldb", note.stem)
+    assert tracked.status == "ok"
+    assert tracked.path == f"desk/inbox/{note.name}"
+    assert not Path(tracked.path).is_absolute()
+    assert doc_status(sender / ".sldb", note.stem).status == "missing"
+
+
+def test_legacy_inbox_repo_tracks_only_in_target_store(tmp_path: Path) -> None:
+    from sldb.api import doc_status
+
+    sender = _init_repo(tmp_path / "repo-a")
+    target = _init_repo(tmp_path / "repo-b")
+    _register(sender, "repo-b", str(target))
+    before = _store_snapshot(sender)
+
+    result = _cli(
+        sender,
+        "inbox",
+        "A note addressed through the deprecated alias.",
+        "--title",
+        "Legacy repo alias",
+        "--repo",
+        "repo-b",
+        "--format",
+        "json",
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    payload = json.loads(result.stdout)
+    assert payload["verified"] is True
+    assert _store_snapshot(sender) == before
+    note = next((target / "desk" / "inbox").glob("*.md"))
+    tracked = doc_status(target / ".sldb", note.stem)
+    assert tracked.status == "ok"
+    assert tracked.path == f"desk/inbox/{note.name}"
+    assert not Path(tracked.path).is_absolute()
+    assert doc_status(sender / ".sldb", note.stem).status == "missing"
 
 
 def test_ack_falls_back_to_config_when_registry_lacks_itself(tmp_path: Path) -> None:
