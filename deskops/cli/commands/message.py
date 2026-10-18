@@ -18,7 +18,10 @@ from sldb.store.layout import project_root
 from deskops import doc_io
 from deskops.cli.render import render
 from deskops.cli.render import render_error
+from deskops.config import DeskConfig
 from deskops.identity import EcosystemIdentity
+from deskops.identity import UNKNOWN_PROJECT_IDENTITY
+from deskops.identity import find_context_root
 from deskops.identity import find_local_store
 
 
@@ -214,8 +217,52 @@ class MessageCLI:
 
     def _resolve_target(self, args: Any) -> tuple[str, Path]:
         desk_root = self._desk_root(args)
-        target_project = EcosystemIdentity(args.store).what_repository_am_i_in(desk_root.parent, require_registry_match=True)
+        repo_root = desk_root.parent.resolve()
+        config = DeskConfig.load(desk_root) if desk_root.exists() else DeskConfig()
+
+        target_project = None
+        ecosystem = self._target_ecosystem(args, repo_root)
+        if ecosystem is not None:
+            target_project = ecosystem.what_repository_am_i_in(
+                repo_root,
+                require_registry_match=True,
+                allow_unregistered=True,
+                default_to_directory_name=True,
+            )
+        if target_project is None:
+            config_identity = (config.project_identity or UNKNOWN_PROJECT_IDENTITY).strip() or UNKNOWN_PROJECT_IDENTITY
+            target_project = (
+                config_identity if config_identity != UNKNOWN_PROJECT_IDENTITY else repo_root.name
+            )
+
+        if config.project_identity.strip() in {"", UNKNOWN_PROJECT_IDENTITY}:
+            print(
+                f"Warning: target desk '{desk_root}' has no project_identity; "
+                f"resolved it as '{target_project}' from its directory or registry.",
+                file=sys.stderr,
+            )
         return target_project, desk_root
+
+    def _target_ecosystem(self, args: Any, repo_root: Path) -> EcosystemIdentity | None:
+        """The ecosystem anchored at the target repo, never the sender's."""
+        target_store = find_local_store(repo_root)
+        if target_store is None and args.store:
+            candidate = Path(args.store).resolve()
+            if project_root(candidate).resolve() == repo_root:
+                target_store = candidate
+        if target_store is None:
+            return None
+        try:
+            return EcosystemIdentity(str(target_store))
+        except SLDBStoreError:
+            return None
+
+    def _sender_ecosystem(self) -> EcosystemIdentity | None:
+        """The sender's own ecosystem; the target registry must never decide it."""
+        try:
+            return EcosystemIdentity(None)
+        except SLDBStoreError:
+            return None
 
     def _resolve_repo_desk(self, repo_name: str, store_arg: str | None, pythonpath: str | None) -> Path:
         _ = pythonpath
@@ -355,18 +402,46 @@ class MessageCLI:
         return slug or "note"
 
     def _sender_project(self, args: Any) -> str:
-        ecosystem = EcosystemIdentity(args.store)
-        if getattr(args, "sender", None):
-            sender_desk = ecosystem.how_do_i_find_another(args.sender)
-            return ecosystem.what_repository_am_i_in(sender_desk.parent, require_registry_match=True)
+        sender_root = find_context_root()
+        ecosystem = self._sender_ecosystem()
+        config_identity = self._config_identity(sender_root)
+        explicit = getattr(args, "sender", None)
 
-        sender_root = Path.cwd().resolve()
-        sender_project = ecosystem.what_repository_am_i_in(sender_root, require_registry_match=False)
-        if sender_project is None:
-            raise SLDBStoreError(
-                f"Unable to resolve sender identity for '{sender_root}'. Use --sender or register the repository canonically."
+        if explicit:
+            registered = ecosystem is not None and any(
+                entry.id == explicit for entry in ecosystem.entries
             )
-        return sender_project
+            if registered or config_identity == explicit:
+                return explicit
+            if config_identity is None and (ecosystem is None or not ecosystem.entries):
+                # No sender registry or config to check against; honor the explicit id.
+                return explicit
+            raise SLDBStoreError(
+                f"Sender identity '{explicit}' is not the sender repo's identity "
+                f"'{config_identity or UNKNOWN_PROJECT_IDENTITY}' and is not in its registry."
+            )
+
+        if ecosystem is not None:
+            sender_project = ecosystem.what_repository_am_i_in(
+                sender_root,
+                require_registry_match=False,
+                allow_unregistered=True,
+            )
+            if sender_project is not None:
+                return sender_project
+        if config_identity is not None:
+            return config_identity
+        raise SLDBStoreError(
+            f"Unable to resolve sender identity for '{sender_root}'. Use --sender or register the repository canonically."
+        )
+
+    @staticmethod
+    def _config_identity(repo_root: Path) -> str | None:
+        desk_root = repo_root / "desk"
+        if not desk_root.exists():
+            return None
+        identity = (DeskConfig.load(desk_root).project_identity or UNKNOWN_PROJECT_IDENTITY).strip()
+        return identity if identity not in {"", UNKNOWN_PROJECT_IDENTITY} else None
 
     def _verify_and_track_note(self, args: Any, path: Path, desk_root: Path) -> str | None:
         context = self._note_store_context(args, desk_root)

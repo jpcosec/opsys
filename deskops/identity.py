@@ -131,7 +131,25 @@ class EcosystemIdentity:
         self.registry_dir = self.registry_desk_root / "registry"
         self.entries = load_repository_registry(self.registry_desk_root, self.ecosystem_root)
 
-    def what_repository_am_i_in(self, repo_root: Path, *, require_registry_match: bool) -> str | None:
+    def what_repository_am_i_in(
+        self,
+        repo_root: Path,
+        *,
+        require_registry_match: bool,
+        allow_unregistered: bool = False,
+        default_to_directory_name: bool = False,
+    ) -> str | None:
+        """Resolve the identity of the repo at ``repo_root``.
+
+        ``allow_unregistered`` lets a repo whose desk config names it fall back
+        to that config when the local registry does not list it at all. That is
+        the `message ack` case: creating a register for somebody else must not
+        hide the repo's own identity.
+
+        ``default_to_directory_name`` resolves a desk without
+        ``project_identity`` from its directory name instead of failing, which
+        lets a message be delivered to a desk that never configured itself.
+        """
         repo_root = repo_root.resolve()
         desk_root = repo_root / "desk"
         config_identity = UNKNOWN_PROJECT_IDENTITY
@@ -143,12 +161,23 @@ class EcosystemIdentity:
 
         if not self.entries:
             if require_registry_match and config_identity == UNKNOWN_PROJECT_IDENTITY:
+                if default_to_directory_name:
+                    return repo_root.name
                 raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
             return config_identity if config_identity != UNKNOWN_PROJECT_IDENTITY else None
 
         if require_registry_match:
             if config_identity == UNKNOWN_PROJECT_IDENTITY:
-                raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
+                if not default_to_directory_name:
+                    raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
+                return entry_by_root.id if entry_by_root is not None else repo_root.name
+            matches = [entry for entry in self.entries if entry.id == config_identity]
+            if not matches and allow_unregistered:
+                if entry_by_root is not None:
+                    raise SLDBStoreError(
+                        f"Desk config project_identity '{config_identity}' disagrees with registry root match '{entry_by_root.id}' for '{repo_root}'."
+                    )
+                return config_identity
             repo_by_id = resolve_registered_repo(
                 self.entries, config_identity, registry_dir=self.registry_dir
             )
@@ -163,6 +192,8 @@ class EcosystemIdentity:
             return config_identity
         else:
             if entry_by_root is None:
+                if allow_unregistered and config_identity != UNKNOWN_PROJECT_IDENTITY:
+                    return config_identity
                 return None
             if config_identity != UNKNOWN_PROJECT_IDENTITY and config_identity != entry_by_root.id:
                 raise SLDBStoreError(

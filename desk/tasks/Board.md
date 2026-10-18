@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-close-a-task-as-superseded.md
-- desk/tasks/task-message-delivery-resolves-unregistered-desks.md
 - desk/tasks/task-canonical-atom-reference-metadata.md
 - desk/tasks/task-classify-cli-grammar.md
 - desk/tasks/task-classify-large-docs-materialization.md
@@ -56,7 +55,6 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - A task whose subject no longer exists closes as superseded, with a reason and a reference [draft] - `deskops closeout supersede --task <id> --reason <text> --ref <commit-or-path> --root <repo>` closes a task from any lifecycle node. It requires the reason and at least one resolvable ref: a commit that is HEAD or an ancestor, or an existing path. The task's status and history record `superseded`, and the commit trailers say so (`Closeout-Mode: superseded`, `Closeout-Reason`, `Closeout-Ref`). It removes the task from the Board in one commit, the same way the closeout commit does, and the run index line marks it as superseded.
-- `message send` and `message ack` work when the target desk does not register the sender or itself [draft] - A note can always be delivered and acknowledged. The sender identity comes from the sender's own desk config or registry, never from the target's registry. A target desk without project_identity takes its id from the directory name, with a warning. `ack` falls back to the repo's own desk config when a local registry does not list the repo itself.
 - Canonical atom reference field and role vocabulary [draft] - Make `atoms` the only structured artifact field for atom references, validate the five allowed
 roles, and report legacy aliases and invalid roles through `deskops drift check` without adding
 a hard closeout gate.

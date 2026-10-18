@@ -1,0 +1,7 @@
+Task: task-message-delivery-resolves-unregistered-desks
+Title: `message send` and `message ack` work when the target desk does not register the sender or itself
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

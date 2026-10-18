@@ -1,0 +1,359 @@
+diff --git a/deskops/cli/commands/message.py b/deskops/cli/commands/message.py
+index 54566e4..e40f7ac 100644
+--- a/deskops/cli/commands/message.py
++++ b/deskops/cli/commands/message.py
+@@ -18,7 +18,10 @@ from sldb.store.layout import project_root
+ from deskops import doc_io
+ from deskops.cli.render import render
+ from deskops.cli.render import render_error
++from deskops.config import DeskConfig
+ from deskops.identity import EcosystemIdentity
++from deskops.identity import UNKNOWN_PROJECT_IDENTITY
++from deskops.identity import find_context_root
+ from deskops.identity import find_local_store
+ 
+ 
+@@ -214,9 +217,53 @@ class MessageCLI:
+ 
+     def _resolve_target(self, args: Any) -> tuple[str, Path]:
+         desk_root = self._desk_root(args)
+-        target_project = EcosystemIdentity(args.store).what_repository_am_i_in(desk_root.parent, require_registry_match=True)
++        repo_root = desk_root.parent.resolve()
++        config = DeskConfig.load(desk_root) if desk_root.exists() else DeskConfig()
++
++        target_project = None
++        ecosystem = self._target_ecosystem(args, repo_root)
++        if ecosystem is not None:
++            target_project = ecosystem.what_repository_am_i_in(
++                repo_root,
++                require_registry_match=True,
++                allow_unregistered=True,
++                default_to_directory_name=True,
++            )
++        if target_project is None:
++            config_identity = (config.project_identity or UNKNOWN_PROJECT_IDENTITY).strip() or UNKNOWN_PROJECT_IDENTITY
++            target_project = (
++                config_identity if config_identity != UNKNOWN_PROJECT_IDENTITY else repo_root.name
++            )
++
++        if config.project_identity.strip() in {"", UNKNOWN_PROJECT_IDENTITY}:
++            print(
++                f"Warning: target desk '{desk_root}' has no project_identity; "
++                f"resolved it as '{target_project}' from its directory or registry.",
++                file=sys.stderr,
++            )
+         return target_project, desk_root
+ 
++    def _target_ecosystem(self, args: Any, repo_root: Path) -> EcosystemIdentity | None:
++        """The ecosystem anchored at the target repo, never the sender's."""
++        target_store = find_local_store(repo_root)
++        if target_store is None and args.store:
++            candidate = Path(args.store).resolve()
++            if project_root(candidate).resolve() == repo_root:
++                target_store = candidate
++        if target_store is None:
++            return None
++        try:
++            return EcosystemIdentity(str(target_store))
++        except SLDBStoreError:
++            return None
++
++    def _sender_ecosystem(self) -> EcosystemIdentity | None:
++        """The sender's own ecosystem; the target registry must never decide it."""
++        try:
++            return EcosystemIdentity(None)
++        except SLDBStoreError:
++            return None
++
+     def _resolve_repo_desk(self, repo_name: str, store_arg: str | None, pythonpath: str | None) -> Path:
+         _ = pythonpath
+         return EcosystemIdentity(store_arg).how_do_i_find_another(repo_name)
+@@ -355,18 +402,46 @@ class MessageCLI:
+         return slug or "note"
+ 
+     def _sender_project(self, args: Any) -> str:
+-        ecosystem = EcosystemIdentity(args.store)
+-        if getattr(args, "sender", None):
+-            sender_desk = ecosystem.how_do_i_find_another(args.sender)
+-            return ecosystem.what_repository_am_i_in(sender_desk.parent, require_registry_match=True)
+-
+-        sender_root = Path.cwd().resolve()
+-        sender_project = ecosystem.what_repository_am_i_in(sender_root, require_registry_match=False)
+-        if sender_project is None:
++        sender_root = find_context_root()
++        ecosystem = self._sender_ecosystem()
++        config_identity = self._config_identity(sender_root)
++        explicit = getattr(args, "sender", None)
++
++        if explicit:
++            registered = ecosystem is not None and any(
++                entry.id == explicit for entry in ecosystem.entries
++            )
++            if registered or config_identity == explicit:
++                return explicit
++            if config_identity is None and (ecosystem is None or not ecosystem.entries):
++                # No sender registry or config to check against; honor the explicit id.
++                return explicit
+             raise SLDBStoreError(
+-                f"Unable to resolve sender identity for '{sender_root}'. Use --sender or register the repository canonically."
++                f"Sender identity '{explicit}' is not the sender repo's identity "
++                f"'{config_identity or UNKNOWN_PROJECT_IDENTITY}' and is not in its registry."
++            )
++
++        if ecosystem is not None:
++            sender_project = ecosystem.what_repository_am_i_in(
++                sender_root,
++                require_registry_match=False,
++                allow_unregistered=True,
+             )
+-        return sender_project
++            if sender_project is not None:
++                return sender_project
++        if config_identity is not None:
++            return config_identity
++        raise SLDBStoreError(
++            f"Unable to resolve sender identity for '{sender_root}'. Use --sender or register the repository canonically."
++        )
++
++    @staticmethod
++    def _config_identity(repo_root: Path) -> str | None:
++        desk_root = repo_root / "desk"
++        if not desk_root.exists():
++            return None
++        identity = (DeskConfig.load(desk_root).project_identity or UNKNOWN_PROJECT_IDENTITY).strip()
++        return identity if identity not in {"", UNKNOWN_PROJECT_IDENTITY} else None
+ 
+     def _verify_and_track_note(self, args: Any, path: Path, desk_root: Path) -> str | None:
+         context = self._note_store_context(args, desk_root)
+diff --git a/deskops/identity.py b/deskops/identity.py
+index 692cf94..43dca2a 100644
+--- a/deskops/identity.py
++++ b/deskops/identity.py
+@@ -131,7 +131,25 @@ class EcosystemIdentity:
+         self.registry_dir = self.registry_desk_root / "registry"
+         self.entries = load_repository_registry(self.registry_desk_root, self.ecosystem_root)
+ 
+-    def what_repository_am_i_in(self, repo_root: Path, *, require_registry_match: bool) -> str | None:
++    def what_repository_am_i_in(
++        self,
++        repo_root: Path,
++        *,
++        require_registry_match: bool,
++        allow_unregistered: bool = False,
++        default_to_directory_name: bool = False,
++    ) -> str | None:
++        """Resolve the identity of the repo at ``repo_root``.
++
++        ``allow_unregistered`` lets a repo whose desk config names it fall back
++        to that config when the local registry does not list it at all. That is
++        the `message ack` case: creating a register for somebody else must not
++        hide the repo's own identity.
++
++        ``default_to_directory_name`` resolves a desk without
++        ``project_identity`` from its directory name instead of failing, which
++        lets a message be delivered to a desk that never configured itself.
++        """
+         repo_root = repo_root.resolve()
+         desk_root = repo_root / "desk"
+         config_identity = UNKNOWN_PROJECT_IDENTITY
+@@ -143,12 +161,23 @@ class EcosystemIdentity:
+ 
+         if not self.entries:
+             if require_registry_match and config_identity == UNKNOWN_PROJECT_IDENTITY:
++                if default_to_directory_name:
++                    return repo_root.name
+                 raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
+             return config_identity if config_identity != UNKNOWN_PROJECT_IDENTITY else None
+ 
+         if require_registry_match:
+             if config_identity == UNKNOWN_PROJECT_IDENTITY:
+-                raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
++                if not default_to_directory_name:
++                    raise SLDBStoreError("Desk config project_identity is not established (found 'unknown-project').")
++                return entry_by_root.id if entry_by_root is not None else repo_root.name
++            matches = [entry for entry in self.entries if entry.id == config_identity]
++            if not matches and allow_unregistered:
++                if entry_by_root is not None:
++                    raise SLDBStoreError(
++                        f"Desk config project_identity '{config_identity}' disagrees with registry root match '{entry_by_root.id}' for '{repo_root}'."
++                    )
++                return config_identity
+             repo_by_id = resolve_registered_repo(
+                 self.entries, config_identity, registry_dir=self.registry_dir
+             )
+@@ -163,6 +192,8 @@ class EcosystemIdentity:
+             return config_identity
+         else:
+             if entry_by_root is None:
++                if allow_unregistered and config_identity != UNKNOWN_PROJECT_IDENTITY:
++                    return config_identity
+                 return None
+             if config_identity != UNKNOWN_PROJECT_IDENTITY and config_identity != entry_by_root.id:
+                 raise SLDBStoreError(
+diff --git a/tests/test_message_delivery.py b/tests/test_message_delivery.py
+new file mode 100644
+index 0000000..9d3ffc6
+--- /dev/null
++++ b/tests/test_message_delivery.py
+@@ -0,0 +1,161 @@
++"""Message delivery must not depend on the target desk registering the sender.
++
++These are the three failures reported on 2026-10-18:
++
++* a target without ``project_identity`` refused the note,
++* a sender was resolved against the target's registry (so a repo that only
++  registered itself made every foreign sender unresolvable),
++* ``ack`` stopped finding the repo itself once its registry registered some
++  other repo.
++"""
++
++from __future__ import annotations
++
++import json
++from pathlib import Path
++import subprocess
++import sys
++
++ROOT = Path(__file__).resolve().parents[1]
++if str(ROOT) not in sys.path:
++    sys.path.insert(0, str(ROOT))
++
++from deskops.models import InboxNoteDoc
++from deskops.models import RepositoryDoc
++from sldb.runtime.validation import render_model_markdown
++
++
++def _cli(root: Path, *argv: str) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(
++        [sys.executable, "-m", "deskops", *argv], cwd=root, capture_output=True, text=True
++    )
++
++
++def _init_repo(path: Path) -> Path:
++    path.mkdir(parents=True, exist_ok=True)
++    result = _cli(path, "init", str(path))
++    assert result.returncode == 0, result.stderr or result.stdout
++    return path
++
++
++def _register(repo: Path, repo_id: str, repo_path: str) -> None:
++    registry_dir = repo / "desk" / "registry"
++    registry_dir.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "id": repo_id,
++        "name": repo_id,
++        "path": repo_path,
++        "status": "active",
++        "description": f"Repository for {repo_id}.",
++        "tags": [],
++    }
++    (registry_dir / f"repo-{repo_id}.md").write_text(
++        render_model_markdown(RepositoryDoc, payload) + "\n", encoding="utf-8"
++    )
++
++
++def _write_note(repo: Path, stem: str, *, target_project: str) -> Path:
++    inbox = repo / "desk" / "inbox"
++    inbox.mkdir(parents=True, exist_ok=True)
++    payload = {
++        "kind": "suggestion",
++        "sender_project": "sender-repo",
++        "target_project": target_project,
++        "created_at": "2026-01-01T00:00:00",
++        "status": "open",
++        "title": "Ack me",
++        "body": "Please acknowledge this note.",
++    }
++    note = inbox / f"{stem}.md"
++    note.write_text(render_model_markdown(InboxNoteDoc, payload) + "\n", encoding="utf-8")
++    return note
++
++
++def test_send_to_target_without_project_identity_uses_directory_name(tmp_path: Path) -> None:
++    sender = _init_repo(tmp_path / "sender-repo")
++    target = _init_repo(tmp_path / "TraderBot")
++    (target / "desk" / "config.json").write_text("{}\n", encoding="utf-8")
++
++    result = _cli(
++        sender,
++        "message",
++        "send",
++        "A note for an unconfigured desk.",
++        "--title",
++        "No identity",
++        "--root",
++        str(target),
++        "--format",
++        "json",
++    )
++
++    assert result.returncode == 0, result.stderr or result.stdout
++    payload = json.loads(result.stdout)
++    assert payload["sender_project"] == "sender-repo"
++    assert payload["target_project"] == "TraderBot"
++    assert "no project_identity" in result.stderr
++    assert len(list((target / "desk" / "inbox").glob("*.md"))) == 1
++
++
++def test_send_resolves_sender_from_sender_repo_not_target_registry(tmp_path: Path) -> None:
++    sender = _init_repo(tmp_path / "sender-repo")
++    target = _init_repo(tmp_path / "target-repo")
++    # The target's local registry knows only itself, exactly like the reported case.
++    _register(target, "target-repo", str(target))
++
++    without_from = _cli(
++        sender,
++        "message",
++        "send",
++        "Sender comes from the sending repo.",
++        "--title",
++        "No sender override",
++        "--root",
++        str(target),
++        "--format",
++        "json",
++    )
++    with_from = _cli(
++        sender,
++        "message",
++        "send",
++        "Sender comes from the sending repo.",
++        "--title",
++        "Explicit sender",
++        "--from",
++        "sender-repo",
++        "--root",
++        str(target),
++        "--format",
++        "json",
++    )
++
++    assert without_from.returncode == 0, without_from.stderr or without_from.stdout
++    assert with_from.returncode == 0, with_from.stderr or with_from.stdout
++    assert json.loads(without_from.stdout)["sender_project"] == "sender-repo"
++    assert json.loads(with_from.stdout)["sender_project"] == "sender-repo"
++    assert json.loads(without_from.stdout)["target_project"] == "target-repo"
++
++
++def test_ack_falls_back_to_config_when_registry_lacks_itself(tmp_path: Path) -> None:
++    repo = _init_repo(tmp_path / "graph-repo")
++    # Registering somebody else used to hide the repo's own identity from ack.
++    _register(repo, "graph_ui", str(tmp_path / "elsewhere"))
++    note = _write_note(repo, "20260101-000000-suggestion-ackme", target_project="graph-repo")
++
++    result = _cli(
++        repo,
++        "message",
++        "ack",
++        note.stem,
++        "--root",
++        str(repo),
++        "--format",
++        "json",
++    )
++
++    assert result.returncode == 0, result.stderr or result.stdout
++    payload = json.loads(result.stdout)
++    assert payload["status"] == "closed"
++    assert payload["acknowledged_by"] == "graph-repo"
++    assert payload["target_project"] == "graph-repo"

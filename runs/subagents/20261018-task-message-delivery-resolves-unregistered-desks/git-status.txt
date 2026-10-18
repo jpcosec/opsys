@@ -1,0 +1,13 @@
+ M .sldb/core/documents/TaskDoc/task-message-delivery-resolves-unregistered-desks.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-message-delivery-resolves-unregistered-desks.md
+ M deskops/cli/commands/message.py
+ M deskops/constants.py
+ M deskops/identity.py
+ M deskops/operations.py
+?? desk/materializations/
+?? runs/subagents/20261018-task-message-delivery-resolves-unregistered-desks/
+?? tests/test_cli_grammar.py
+?? tests/test_closeout_skill_links.py
+?? tests/test_message_delivery.py
