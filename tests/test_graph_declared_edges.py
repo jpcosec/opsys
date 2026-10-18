@@ -1,10 +1,10 @@
 """Declared model metadata is a graph input.
 
-TaskDoc declares its routine, checklists, pills and atoms as containment and
-its references, depends_on, inherits_from and from_drawer as references.
-BoardDoc declares tasks, pills and rituals. Those declarations only reach the
-snapshot as prose unless the declared fields are read from the model, which is
-what these tests pin down.
+TaskDoc declares current_node, pills and atoms as references, and also its
+references, depends_on and inherits_from. `from_drawer` is provenance, not a
+declared reference. BoardDoc declares tasks, pills and rituals. Those
+declarations only reach the snapshot as prose unless the declared fields are
+read from the model, which is what these tests pin down.
 """
 
 from __future__ import annotations
@@ -64,7 +64,7 @@ def _build_desk(root: Path) -> None:
     )
 
 
-def test_declared_containment_becomes_edges_with_the_field_as_role(tmp_path: Path) -> None:
+def test_declared_references_become_edges_with_the_field_as_role(tmp_path: Path) -> None:
     _build_desk(tmp_path)
 
     extraction = extract_declared_edges(tmp_path)
@@ -122,15 +122,15 @@ def test_a_declared_field_holding_prose_is_not_an_unresolved_reference(tmp_path:
     )
 
 
-def test_from_drawer_is_provenance_not_a_reference_that_must_resolve(tmp_path: Path) -> None:
+def test_from_drawer_is_provenance_not_a_declared_reference(tmp_path: Path) -> None:
     _build_desk(tmp_path)
     write(tmp_path / "desk/drawer/tasks/task-do-the-thing.md", "---\nid: task-do-the-thing\n---\n\n# Drawer\n")
 
     present = extract_declared_edges(tmp_path)
-    assert any(
+    assert not any(
         edge.source_id == "task:task-do-the-thing" and edge.role == "from_drawer"
         for edge in present.edges
-    ), "a drawer entry that still exists is linked as provenance"
+    ), "from_drawer is provenance and contributes no declared edge"
 
     (tmp_path / "desk/drawer/tasks/task-do-the-thing.md").unlink()
 

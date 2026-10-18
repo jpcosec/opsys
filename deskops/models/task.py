@@ -1,45 +1,56 @@
-from pathlib import Path
-
 from pydantic import Field, model_serializer, model_validator
 
 from .base import OperationalArtifactDoc
 
 
+# An absent `optrev` frontmatter key extracts as None, not as "missing": drop
+# those keys before validation so the field default applies and the re-rendered
+# document keeps the bytes it had before the marker existed.
+_ABSENT_FRONTMATTER_DEFAULTS = frozenset({
+    "status",
+    "summary",
+    "current_node",
+    "history",
+    "references",
+    "depends_on",
+    "pills",
+    "files",
+    "task_type",
+    "inherits_from",
+    "inherit_acceptance_context",
+    "atoms",
+    "from_drawer",
+})
+
+
 class TaskDoc(OperationalArtifactDoc):
-    __containment__ = {
+    __references__ = ["references", "depends_on", "inherits_from", "current_node", "pills", "atoms"]
+    __reference_models__ = {
+        "depends_on": ["TaskDoc"],
+        "inherits_from": ["TaskDoc"],
         "current_node": ["RitualDoc"],
         "pills": ["PillDoc"],
         "atoms": ["AtomDoc"],
     }
-    __references__ = ["references", "depends_on", "inherits_from", "from_drawer"]
-    __reference_models__ = {
-        "depends_on": ["TaskDoc"],
-        "inherits_from": ["TaskDoc"],
-        "from_drawer": ["TaskDoc"],
-    }
-    model_config = {"extra": "allow"}
+    model_config = {"extra": "ignore"}
     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
-    
-    frontmatter: dict | None = Field(default=None, description="YAML frontmatter containing task metadata", exclude=True)
-
-    @model_validator(mode="before")
-    @classmethod
-    def _merge_frontmatter(cls, data: dict) -> dict:
-        if isinstance(data, dict) and "frontmatter" in data and isinstance(data["frontmatter"], dict):
-            fm = data.pop("frontmatter")
-            for k, v in fm.items():
-                if k not in data or data[k] is None:
-                    data[k] = v
-        return data
-
-    def render_payload(self, ref_root: Path | None = None) -> dict:
-        data = super().render_payload(ref_root)
-        body_fields = {"title", "why", "goal", "scope", "implementation_path", "validation", "done_when"}
-        data["frontmatter"] = {k: v for k, v in data.items() if k not in body_fields}
-        return data
 
     __template__ = """---
-⸢rev,dict•frontmatter⸥
+id: ⸢rev•id⸥
+status: ⸢optrev•status⸥
+summary: ⸢optrev•summary⸥
+tags: ⸢rev,list•tags⸥
+current_node: ⸢optrev•current_node⸥
+history: ⸢optrev,list•history⸥
+references: ⸢optrev,list•references⸥
+depends_on: ⸢optrev,list•depends_on⸥
+pills: ⸢optrev,list•pills⸥
+files: ⸢optrev,list•files⸥
+task_type: ⸢optrev•task_type⸥
+inherits_from: ⸢optrev,list•inherits_from⸥
+inherit_acceptance_context: ⸢optrev•inherit_acceptance_context⸥
+atoms: ⸢optrev,list•atoms⸥
+from_drawer: ⸢optrev•from_drawer⸥
 ---
 
 # ⸢rev•title⸥
@@ -81,6 +92,17 @@ _Name the observable condition that makes the task complete._
 ⸢rev•done_when⸥
 
 """.strip()
+
+    @model_validator(mode="before")
+    @classmethod
+    def _apply_absent_frontmatter_defaults(cls, data: dict) -> dict:
+        if isinstance(data, dict):
+            return {
+                key: value
+                for key, value in data.items()
+                if not (value is None and key in _ABSENT_FRONTMATTER_DEFAULTS)
+            }
+        return data
 
     title: str = Field(description="Short action-oriented task title.")
     why: str | None = Field(default="Not provided.", description="Rationale or business driver behind the task.")
@@ -141,10 +163,11 @@ _Name the observable condition that makes the task complete._
     def _omit_unset_from_drawer(self, handler):
         """Serialize from_drawer only when it is set.
 
-        TaskDoc is tracked by every desk on the machine (123 tasks across 13
-        stores). A field that always serialized would change the hash of every
-        one of them and put each store in FAIL until migrated. Omitting it when
-        empty keeps existing tasks byte-identical, so no store needs migrating.
+        A field that always serialized would add ``from_drawer: ''`` to every task
+        that has no drawer origin. Omitting it when empty keeps those documents
+        byte-identical when re-rendered. It does not keep the contract hash stable:
+        the field itself is part of the model contract and is hashed whether or not
+        it serializes.
         """
         data = handler(self)
         if not data.get("from_drawer"):

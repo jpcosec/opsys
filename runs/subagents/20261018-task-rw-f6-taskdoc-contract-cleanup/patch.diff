@@ -1,0 +1,573 @@
+diff --git a/.sldb/core/models/TaskDoc.yaml b/.sldb/core/models/TaskDoc.yaml
+index 39561f0..a89b670 100644
+--- a/.sldb/core/models/TaskDoc.yaml
++++ b/.sldb/core/models/TaskDoc.yaml
+@@ -3,9 +3,9 @@ model_ref: deskops.models:TaskDoc
+ path: deskops/models/task.py
+ documents_index: .sldb/core/documents/TaskDoc.yaml
+ sections_index: .sldb/runtime/sections/TaskDoc.yaml
+-model_hash: 84c97839cbe5bee6355602f1ea86bcf4ee3f61ecf82908c2da7f26a9025bc5e2
++model_hash: bbf52e6e85884ad0724db53ac161f6cbe2c48372d1d0c488837092290664a2e0
+ roster_hash: 761954cd997c80d1da8a39ed9348a4e4a337e3b116699641196c6538695bb222
+-contract_hash: 14895c9f3f8dd453ee52b39724fa9d6d8eb61d24107d57066782c63027eb20bd
++contract_hash: 2fe27e8d653b2f100f3e4cf8bcbf21f38aa3ef2e126a6074e00aafe78358bf9b
+ documents_count: 5
+ version: 1
+ canonical: false
+diff --git a/.sldb/core/store_index.yaml b/.sldb/core/store_index.yaml
+index 23688cd..fd3258a 100644
+--- a/.sldb/core/store_index.yaml
++++ b/.sldb/core/store_index.yaml
+@@ -232,4 +232,4 @@ predicates:
+   description: A composed field of the source (`__compositions__`) renders this document's
+     payload into the source's text; the edge carries the composed field, the field
+     holding the refs and the ref as authored.
+-store_hash: 6c7b8da1826c3cb4997c2a69fae09820702211996a6506f4055dbc894ebb3548
++store_hash: d67f074ba1c54eaeb7b1040806a2c4a269613e453424d069528575013bd658b6
+diff --git a/deskops/models/task.py b/deskops/models/task.py
+index 0dab3e6..022f9f0 100644
+--- a/deskops/models/task.py
++++ b/deskops/models/task.py
+@@ -1,45 +1,56 @@
+-from pathlib import Path
+-
+ from pydantic import Field, model_serializer, model_validator
+ 
+ from .base import OperationalArtifactDoc
+ 
+ 
++# An absent `optrev` frontmatter key extracts as None, not as "missing": drop
++# those keys before validation so the field default applies and the re-rendered
++# document keeps the bytes it had before the marker existed.
++_ABSENT_FRONTMATTER_DEFAULTS = frozenset({
++    "status",
++    "summary",
++    "current_node",
++    "history",
++    "references",
++    "depends_on",
++    "pills",
++    "files",
++    "task_type",
++    "inherits_from",
++    "inherit_acceptance_context",
++    "atoms",
++    "from_drawer",
++})
++
++
+ class TaskDoc(OperationalArtifactDoc):
+-    __containment__ = {
+-        "current_node": ["RitualDoc"],
+-        "pills": ["PillDoc"],
+-        "atoms": ["AtomDoc"],
+-    }
+-    __references__ = ["references", "depends_on", "inherits_from", "from_drawer"]
++    __references__ = ["references", "depends_on", "inherits_from", "current_node", "pills", "atoms"]
+     __reference_models__ = {
+         "depends_on": ["TaskDoc"],
+         "inherits_from": ["TaskDoc"],
+-        "from_drawer": ["TaskDoc"],
++        "current_node": ["RitualDoc"],
++        "pills": ["PillDoc"],
++        "atoms": ["AtomDoc"],
+     }
+-    model_config = {"extra": "allow"}
++    model_config = {"extra": "ignore"}
+     __semantics__ = {"type": ["workflow", "task"], "workspace": ["desk"]}
+-    
+-    frontmatter: dict | None = Field(default=None, description="YAML frontmatter containing task metadata", exclude=True)
+-
+-    @model_validator(mode="before")
+-    @classmethod
+-    def _merge_frontmatter(cls, data: dict) -> dict:
+-        if isinstance(data, dict) and "frontmatter" in data and isinstance(data["frontmatter"], dict):
+-            fm = data.pop("frontmatter")
+-            for k, v in fm.items():
+-                if k not in data or data[k] is None:
+-                    data[k] = v
+-        return data
+-
+-    def render_payload(self, ref_root: Path | None = None) -> dict:
+-        data = super().render_payload(ref_root)
+-        body_fields = {"title", "why", "goal", "scope", "implementation_path", "validation", "done_when"}
+-        data["frontmatter"] = {k: v for k, v in data.items() if k not in body_fields}
+-        return data
+ 
+     __template__ = """---
+-⸢rev,dict•frontmatter⸥
++id: ⸢rev•id⸥
++status: ⸢optrev•status⸥
++summary: ⸢optrev•summary⸥
++tags: ⸢rev,list•tags⸥
++current_node: ⸢optrev•current_node⸥
++history: ⸢optrev,list•history⸥
++references: ⸢optrev,list•references⸥
++depends_on: ⸢optrev,list•depends_on⸥
++pills: ⸢optrev,list•pills⸥
++files: ⸢optrev,list•files⸥
++task_type: ⸢optrev•task_type⸥
++inherits_from: ⸢optrev,list•inherits_from⸥
++inherit_acceptance_context: ⸢optrev•inherit_acceptance_context⸥
++atoms: ⸢optrev,list•atoms⸥
++from_drawer: ⸢optrev•from_drawer⸥
+ ---
+ 
+ # ⸢rev•title⸥
+@@ -82,6 +93,17 @@ _Name the observable condition that makes the task complete._
+ 
+ """.strip()
+ 
++    @model_validator(mode="before")
++    @classmethod
++    def _apply_absent_frontmatter_defaults(cls, data: dict) -> dict:
++        if isinstance(data, dict):
++            return {
++                key: value
++                for key, value in data.items()
++                if not (value is None and key in _ABSENT_FRONTMATTER_DEFAULTS)
++            }
++        return data
++
+     title: str = Field(description="Short action-oriented task title.")
+     why: str | None = Field(default="Not provided.", description="Rationale or business driver behind the task.")
+     id: str = Field(description="Stable task identifier.")
+@@ -141,10 +163,11 @@ _Name the observable condition that makes the task complete._
+     def _omit_unset_from_drawer(self, handler):
+         """Serialize from_drawer only when it is set.
+ 
+-        TaskDoc is tracked by every desk on the machine (123 tasks across 13
+-        stores). A field that always serialized would change the hash of every
+-        one of them and put each store in FAIL until migrated. Omitting it when
+-        empty keeps existing tasks byte-identical, so no store needs migrating.
++        A field that always serialized would add ``from_drawer: ''`` to every task
++        that has no drawer origin. Omitting it when empty keeps those documents
++        byte-identical when re-rendered. It does not keep the contract hash stable:
++        the field itself is part of the model contract and is hashed whether or not
++        it serializes.
+         """
+         data = handler(self)
+         if not data.get("from_drawer"):
+diff --git a/runs/planning/taskdoc-unknown-keys.md b/runs/planning/taskdoc-unknown-keys.md
+new file mode 100644
+index 0000000..f9e413b
+--- /dev/null
++++ b/runs/planning/taskdoc-unknown-keys.md
+@@ -0,0 +1,344 @@
++# TaskDoc unknown frontmatter keys
++
++Pre-scan for task-rw-f6-taskdoc-contract-cleanup, run on 2026-10-18.
++
++Discovery rule: `.sldb` directories under `$HOME` with `core/models/TaskDoc.yaml`, excluding whole path segments `.tmp`, `.venv`, `node_modules`, `tools`, `tmp`, and only inside a git work tree.
++
++Stores found: 46. TaskDoc files scanned: 447.
++
++Files below have top-level frontmatter keys outside `TaskDoc.model_fields`; `extra: ignore` drops those keys, so they are exempt from the byte-identical render check and belong to task-rw-f6-migrate-tracking-stores.
++
++| Store | TaskDoc | Unknown keys |
++| --- | --- | --- |
++| `/home/jp/.cache/uv/git-v0/checkouts/cb8fbf0ea9a76f52/62e7603/.sldb` | `desk/tasks/task-write-end-to-end-deskops-operator-manual.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cb8fbf0ea9a76f52/ad30fa5/.sldb` | `desk/tasks/task-write-end-to-end-deskops-operator-manual.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9bcef63/.sldb` | `desk/tasks/task-borrar-la-capa-runtime-edges-y-podar-el-surface-publico.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9bcef63/.sldb` | `desk/tasks/task-cerrar-los-gaps-g1-g5-que-bloquean-el-retiro-de-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9bcef63/.sldb` | `desk/tasks/task-comando-de-porte-sldb-stores-migrate-legacy-edges-y-error-de-migracion.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9bcef63/.sldb` | `desk/tasks/task-dar-fuente-propia-al-grafo-store-graph-deja-de-leer-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9dca856/.sldb` | `desk/tasks/task-borrar-la-capa-runtime-edges-y-podar-el-surface-publico.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9dca856/.sldb` | `desk/tasks/task-cerrar-los-gaps-g1-g5-que-bloquean-el-retiro-de-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9dca856/.sldb` | `desk/tasks/task-comando-de-porte-sldb-stores-migrate-legacy-edges-y-error-de-migracion.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/9dca856/.sldb` | `desk/tasks/task-dar-fuente-propia-al-grafo-store-graph-deja-de-leer-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-borrar-la-capa-runtime-edges-y-podar-el-surface-publico.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-cerrar-los-gaps-g1-g5-que-bloquean-el-retiro-de-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-comando-de-porte-sldb-stores-migrate-legacy-edges-y-error-de-migracion.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-dar-fuente-propia-al-grafo-store-graph-deja-de-leer-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-define-sldb-addressability-model.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-definir-arquitectura-objetivo-modular-de-sldb.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-design-sldb-ast-query-primitives.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-dise-ar-estrategia-de-extracci-n-y-modularizaci-n.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-ejecutar-refactor-base-del-n-cleo-sldb.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-expand-sldb-composition-modes.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-mapear-arquitectura-real-de-sldb.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-retirar-cli-graph-y-cli-graph-old-copias-fosiles-de-un-refactor-interrumpido.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-retirar-core-ingest-isla-muerta-que-sostiene-el-ciclo-kgdb-sldb.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-retirar-modulos-sueltos-sin-importadores.md` | `checklists, routine` |
++| `/home/jp/.cache/uv/git-v0/checkouts/cc76a327e48ac903/d877dad/.sldb` | `desk/tasks/task-tighten-semantic-export-provenance-contract.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-agentes-y-pipeline-desde-la-kb.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-alarmas-runbook-y-rollback.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-backup-y-restore-de-las-tres-bases.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-base-para-produccion.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-borrar-scripts-de-migracion-del-formato-viejo.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-ci-mas-rapido.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-cliente-gian.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-el-kit-usa-la-consulta-de-uso-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-el-kit-vuelve-a-transcribir-notas-de-voz.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-endurecer-lint-de-las-pruebas-del-turno.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-enganche-antes-y-despues-del-turno.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-estado-de-twilio-por-mensaje.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-etiqueta-solo-en-rasgos-categoricos.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-evals-antes-de-publicar.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-features-de-gian.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-gateway-para-produccion.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-identidad-del-store-desde-store-manifest-de-sldb.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-kit-de-pruebas-compartido.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-la-cadena-como-etapas-de-turn.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-limpiar-referencias-a-tokens-viejos-de-ci.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-mensajes-a-la-persona-desde-la-configuracion.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-modelos-nova-del-panel-en-us-east-2.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-nombre-por-plantilla.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-nombres-de-runtimes-legados-en-pruebas-del-kit.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-oraculo-propio-sin-el-legado.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-orden-entre-replicas-de-s5.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-paquetes-de-entidades.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-plantilla-de-satelite.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-postgres-efimero-sin-unshare-en-ops.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-pr-26-modo-basic-portado-a-dev.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-pr-45-pyme-roles-y-panel.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-pr-6-modo-basic-tipo-build-my-agent.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-prueba-con-llm-real.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-prueba-manual-de-entidades-y-perfil-en-dev.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-pruebas-de-cada-paquete-corren-solas.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-publicada-vs-borrador-en-las-conexiones.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-pyme-como-satelite.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-rasgos-categoricos-y-segmento-desde-la-kb.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-releases-por-digest.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-revisar-y-traer-fix-selfix-private-validation.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-s5-con-dos-replicas-y-orden-por-persona.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-secreto-llm-gateway-token-en-dev.md` | `checklists, closeout_evidence_verified, pill_graduation_verified, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-segmento-desde-la-categoria-del-catalogo.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-segundo-cliente-sobre-la-plantilla.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-spec-21-entidades-como-paquetes.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-spec-22-enganche-de-turno.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-alta-en-el-panel-y-webhook.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-completo.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-media.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-resiliencia-y-replay.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-texto-en-dev.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-tope-y-perfil-por-subcuenta.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-traer-la-spec-1-1-de-operabilidad.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-trazas-a-cloudwatch-sin-pii.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/Chatbot_Infra/.sldb` | `desk/tasks/task-vistas-generadas-por-entidad.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/ChatbotsKnowledgeBases/.sldb` | `desk/tasks/task-triaje-de-ramas-de-la-kb.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-dosis-y-fecha-de-aplicacion-como-paquete-de-entidades.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-dpa-y-retencion-de-datos-de-salud.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-imagen-de-psp-desde-el-satelite.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-psp-en-produccion.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-revisar-y-traer-politicas-de-seguridad.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-seguridad-clinica.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-tabla-de-casos-clinicos.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/psp_chatbot/.sldb` | `desk/tasks/task-whatsapp-aprobado-por-meta.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-catalogo-de-openai-y-openrouter.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-ci-propio-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-lector-de-uso-en-el-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-linea-base-de-lint-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-logs-de-llm-gateway-servir-sin-pii.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-notas-de-voz.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-tope-por-tipo-y-pedidos-bloqueados.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/chatbot/shared_llm-gateway/.sldb` | `desk/tasks/task-workflow-check-obligatorio-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-alarmas-runbook-y-rollback.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-backup-y-restore-de-las-tres-bases.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-base-para-produccion.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-borrar-scripts-de-migracion-del-formato-viejo.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-ci-mas-rapido.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-el-kit-usa-la-consulta-de-uso-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-el-kit-vuelve-a-transcribir-notas-de-voz.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-endurecer-lint-de-las-pruebas-del-turno.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-enganche-antes-y-despues-del-turno.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-estado-de-twilio-por-mensaje.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-etiqueta-solo-en-rasgos-categoricos.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-identidad-del-store-desde-store-manifest-de-sldb.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-kit-de-pruebas-compartido.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-limpiar-referencias-a-tokens-viejos-de-ci.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-mensajes-a-la-persona-desde-la-configuracion.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-modelos-nova-del-panel-en-us-east-2.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-nombre-por-plantilla.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-nombres-de-runtimes-legados-en-pruebas-del-kit.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-oraculo-propio-sin-el-legado.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-orden-entre-replicas-de-s5.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-paquetes-de-entidades.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-plantilla-de-satelite.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-postgres-efimero-sin-unshare-en-ops.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-prueba-con-llm-real.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-prueba-manual-de-entidades-y-perfil-en-dev.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-pruebas-de-cada-paquete-corren-solas.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-rasgos-categoricos-y-segmento-desde-la-kb.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-revisar-y-traer-fix-selfix-private-validation.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-s5-con-dos-replicas-y-orden-por-persona.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-secreto-llm-gateway-token-en-dev.md` | `checklists, closeout_evidence_verified, pill_graduation_verified, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-segmento-desde-la-categoria-del-catalogo.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-spec-21-entidades-como-paquetes.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-spec-22-enganche-de-turno.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-alta-en-el-panel-y-webhook.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-completo.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-media.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-resiliencia-y-replay.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-telegram-texto-en-dev.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-traer-la-spec-1-1-de-operabilidad.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/Chatbot_Infra/.sldb` | `desk/tasks/task-vistas-generadas-por-entidad.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-catalogo-de-openai-y-openrouter.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-ci-propio-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-lector-de-uso-en-el-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-linea-base-de-lint-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-logs-de-llm-gateway-servir-sin-pii.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-notas-de-voz.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-tope-por-tipo-y-pedidos-bloqueados.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/grifo/shared_llm-gateway/.sldb` | `desk/tasks/task-workflow-check-obligatorio-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-catalogo-de-openai-y-openrouter.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-ci-propio-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-lector-de-uso-en-el-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-linea-base-de-lint-del-gateway.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-logs-de-llm-gateway-servir-sin-pii.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-notas-de-voz.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-tope-por-tipo-y-pedidos-bloqueados.md` | `checklists, routine` |
++| `/home/jp/AntonIA/repos/mepu/mepu_ocs_dev/shared/llm-gateway/.sldb` | `desk/tasks/task-workflow-check-obligatorio-del-gateway.md` | `checklists, routine` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.claude/worktrees/agent-ad84526feda033646/.sldb` | `desk/tasks/001-define-graph-ui-data-contract.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.claude/worktrees/agent-ad84526feda033646/.sldb` | `desk/tasks/002-define-minimal-editing-surface.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.claude/worktrees/agent-ad84526feda033646/.sldb` | `desk/tasks/003-create-real-graph-fixture.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.claude/worktrees/agent-ad84526feda033646/.sldb` | `desk/tasks/004-wire-reusable-editor-to-real-fixture.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.claude/worktrees/agent-ad84526feda033646/.sldb` | `desk/tasks/005-surface-semantic-signals.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.claude/worktrees/agent-ad84526feda033646/.sldb` | `desk/tasks/006-prove-one-safe-edit-flow.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb` | `desk/tasks/001-define-graph-ui-data-contract.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb` | `desk/tasks/002-define-minimal-editing-surface.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb` | `desk/tasks/003-create-real-graph-fixture.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb` | `desk/tasks/004-wire-reusable-editor-to-real-fixture.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb` | `desk/tasks/005-surface-semantic-signals.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/UIs/graph_ui/.sldb` | `desk/tasks/006-prove-one-safe-edit-flow.md` | `created, domain, priority` |
++| `/home/jp/proyectos/SLDB_1/sldb/.sldb` | `desk/tasks/task-borrar-la-capa-runtime-edges-y-podar-el-surface-publico.md` | `checklists, routine` |
++| `/home/jp/proyectos/SLDB_1/sldb/.sldb` | `desk/tasks/task-cerrar-los-gaps-g1-g5-que-bloquean-el-retiro-de-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/proyectos/SLDB_1/sldb/.sldb` | `desk/tasks/task-comando-de-porte-sldb-stores-migrate-legacy-edges-y-error-de-migracion.md` | `checklists, routine` |
++| `/home/jp/proyectos/SLDB_1/sldb/.sldb` | `desk/tasks/task-dar-fuente-propia-al-grafo-store-graph-deja-de-leer-runtime-edges.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-alinear-repositorios-y-dependencias-base.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-auditar-y-factorizar-los-atoms-existentes-de-la-kb.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-borrar-runtime-legacy-y-reubicar-knowledge-tools-y-source.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-definir-contratos-de-la-oficina-multiagente.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-agente-bibliotecario.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-agente-decisor-y-guardas-de-riesgo.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-agente-estratega-y-propuesta-de-reglas.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-catalogo-de-tools-estadisticas.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-coordinador-determinista-de-la-oficina.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-datasets-autonomos-y-medibles.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-la-oficina-multiagente-sobre-knowledge.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-ledger-runtime-auditable.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-protoagente-materializado-desde-knowledge.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-recuperacion-y-mantenimiento-de-knowledge.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-reglas-y-backtesting-reproducible.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-implementar-ui-auditable-de-la-oficina.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-integrar-la-oficina-y-retirar-el-runtime-heredado.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-modelar-la-biblioteca-operacional-en-sldb.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-refactorizar-el-codigo-de-tools-para-el-runtime-nuevo.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-revisar-y-delimitar-el-runtime-trader-heredado.md` | `checklists, routine` |
++| `/home/jp/proyectos/TraderBot/.sldb` | `desk/tasks/task-separar-las-proyecciones-kgdb-de-knowledge-y-deskops.md` | `checklists, closeout_evidence_verified, pill_graduation_verified, routine` |
++| `/home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb` | `desk/tasks/task-07-verification-matrix-and-evidence-rules.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/hum-ecosystem/core/code2specyaml/.sldb` | `desk/tasks/task-08-optional-sldb-reconciliation-boundary.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/ontology/.sldb` | `desk/tasks/001-define-audit-io-contract.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/ontology/.sldb` | `desk/tasks/002-define-finding-model.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/ontology/.sldb` | `desk/tasks/003-create-audit-fixture.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/ontology/.sldb` | `desk/tasks/004-implement-orphan-and-redundancy-audits.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/ontology/.sldb` | `desk/tasks/005-emit-machine-readable-findings.md` | `created, domain, priority` |
++| `/home/jp/proyectos/legacy/ontology/.sldb` | `desk/tasks/006-prove-consumption-path.md` | `created, domain, priority` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-adopt-real-classification-mapping-from-ods.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-build-minimal-canonical-catalog-fixture.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-build-minimal-category-item-fixture.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-build-minimal-profile-rule-fixture.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-canonicalize-legacy-catalog-into-humble-ready-master-data.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-compose-cotizador-ui-topology-with-humble-views-and-units.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-define-canonical-profile-and-rule-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-define-initialization-profile-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-define-pricing-profile-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-define-rule-definition-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-cotizadorservice-command-catalog.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-cotizadorservice-command-query-catalog.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-cotizadorservice-query-catalog.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-line-override-patch-semantics.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-quote-line-snapshot-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-quote-snapshot-and-line-patch-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-quote-snapshot-header-and-summary-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-service-error-code-taxonomy.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-service-result-and-error-taxonomy.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-freeze-service-success-failure-envelope.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-implement-quotation-domain-engine-on-humble-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-integrate-humble-boundaries-for-local-and-gas-execution.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-map-category-ownership-from-raw-sources.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-map-item-offer-contract-from-raw-sources.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-map-raw-reference-data-to-canonical-category-item-ownership.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-app-signal-payload-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-app-signals-operations-and-transition-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-boundary-serialization-and-versioning-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-catalog-repository-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-command-orchestration-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-cotizadorservice-orchestration-and-snapshot-assembly.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-effective-property-resolution-flow.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-gas-adapter-normalization-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-line-evaluation-pipeline-and-recompute-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-line-pricing-and-line-ruling-outputs.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-lineacotizada-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-local-adapter-normalization-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-local-gas-adapter-normalization-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-local-gas-equivalence-validation-matrix.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-operation-to-service-call-mapping.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-persistence-timing-and-cross-environment-validation.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-persistence-trigger-policy.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-query-orchestration-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-quotationstate-aggregate-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-quotationstate-and-lineacotizada-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-quote-aggregation-and-quote-level-ruling.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-quote-and-catalog-repository-contracts.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-quote-lifecycle-and-transition-guards.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-quote-repository-contract.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-recompute-propagation-policy.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-rendermodel-and-unit-local-state-boundaries.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-save-vs-finalize-lifecycle-guards.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-snapshot-assembly-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-store-slices-and-write-ownership.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-specify-workflow-stage-transition-rules.md` | `checklists, routine` |
++| `/home/jp/proyectos/office/humble/Cotizador/.sldb` | `desk/tasks/task-split-store-snapshot-and-rendermodel-boundaries.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-blockmatrix-desde-el-logicalsystem-ensamblar-el-hipertensor.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-e-r-y-d-i-como-criterio-de-particion-no-como-numero-muerto.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-guardas-de-forma-detectar-w-degenerados-tipo-relacion-universal.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-orden-acyclidad-y-secuencia-lineal-dentro-de-w.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-proyeccion-objeto-sujeto-encadenar-por-termino-medio.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-proyeccion-wigame-y-matrices-a-s-expressions.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/Matrix/.sldb` | `desk/tasks/task-relaciones-axiomas-de-orden-en-relationalgebra.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-add-editorial-validation-language-and-interruption-cues-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-add-editorial-validation-language-and-interruption-cues-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-add-editorial-validation-language-and-interruption-cues-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-add-editorial-validation-language-and-interruption-cues.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-derive-editorial-trace-status-in-graph-payload-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-derive-editorial-trace-status-in-graph-payload-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-derive-editorial-trace-status-in-graph-payload-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-derive-editorial-trace-status-in-graph-payload.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-editorial-browser-shift-from-node-editor-to-argument-trace-ui-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-editorial-browser-shift-from-node-editor-to-argument-trace-ui-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-editorial-browser-shift-from-node-editor-to-argument-trace-ui-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-editorial-browser-shift-from-node-editor-to-argument-trace-ui.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-enforce-paragraph-to-note-to-source-trace-navigation-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-enforce-paragraph-to-note-to-source-trace-navigation-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-enforce-paragraph-to-note-to-source-trace-navigation-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-enforce-paragraph-to-note-to-source-trace-navigation.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-make-the-paragraph-column-an-assertion-surface-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-make-the-paragraph-column-an-assertion-surface-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-make-the-paragraph-column-an-assertion-surface-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-make-the-paragraph-column-an-assertion-surface.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-rebuild-manuscript-pane-as-trace-first-reading-surface-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-rebuild-manuscript-pane-as-trace-first-reading-surface-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-rebuild-manuscript-pane-as-trace-first-reading-surface-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-rebuild-manuscript-pane-as-trace-first-reading-surface.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-notes-as-warrant-and-reasoning-check.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-notes-as-warrant-and-reasoning-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-notes-as-warrant-and-reasoning-test.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-notes-as-warrant-and-reasoning.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-sources-as-evidence-cards-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-sources-as-evidence-cards-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-sources-as-evidence-cards-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-reframe-sources-as-evidence-cards.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-turn-the-sections-column-into-editorial-context-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-turn-the-sections-column-into-editorial-context-readiness-check.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-turn-the-sections-column-into-editorial-context-test.md` | `checklists, resolver_role, subtasks` |
++| `/home/jp/proyectos/wittgenstein/Matrix/paper_v2/.sldb` | `desk/tasks/task-paper-v2-turn-the-sections-column-into-editorial-context.md` | `checklists, resolver_role, routine, subtasks` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-canonicalhypertensor-jax-vram-allocation.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-canonicalhypertensor-jit-bitwise-operations.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-implementar-atomfeeder.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-implementar-logicalspace-registry-bi-direccional.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-meelengine-core-api-facade.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-meelengine-fixpoint-deduction-algorithm.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-rulematrixcompiler-si-mask-encoding.md` | `checklists, routine` |
++| `/home/jp/proyectos/wittgenstein/matrix-shrdlu-spec/matrix/.sldb` | `desk/tasks/task-rulematrixcompiler-sop-reduction.md` | `checklists, routine` |
++| `/home/jp/setup/.sldb` | `desk/tasks/task-centralizar-configuraciones-personales-en-setup.md` | `checklists, routine` |
++
++Unknown-key files: 306.
++
++## Unreadable tracked TaskDocs
++
++These document entries point at files that no longer exist; they have no frontmatter to scan.
++
++| Store | TaskDoc |
++| --- | --- |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-013-product-search-contract.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-014-product-extraction-mission.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-017-search-result-normalization.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-018-query-input-pagination.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-019-mission-completion-rules.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-020-block-detection-observe.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-021-hitl-operator-resume-flow.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-022-passive-bootstrap-blocked-portals.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-023-extraction-persistence-products.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-024-comparison-ready-export.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-025-portal-viability-registry.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-026-cli-product-runs.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-028-blocked-portal-recovery-test.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-029-operator-playbook.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-030-end-to-end-smoke-run.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-032-browseros-user-like-hardening.md` |
++| `/home/jp/proyectos/legacy/hum-scrapper/.sldb` | `desk/tasks/task-033-visual-hint-rescue-primitives.md` |
+diff --git a/tests/fixtures/model_contract_hashes.json b/tests/fixtures/model_contract_hashes.json
+index 6d91c2c..ed07516 100644
+--- a/tests/fixtures/model_contract_hashes.json
++++ b/tests/fixtures/model_contract_hashes.json
+@@ -15,5 +15,5 @@
+   "RunDoc": "91a7ed3e2876f2cb00cbef51f4676bf543fade7907d1d1112732538c13b292b7",
+   "RuntimeProfileDoc": "f4661520a0e3fd50c4115ad314b6aaf3d9d33f70cfde125ea444232532370934",
+   "StepDoc": "faeb52e5f790fd84fed3b4718e5c3ece784a3cd61ed1212ed7cd11e59fdec64e",
+-  "TaskDoc": "14895c9f3f8dd453ee52b39724fa9d6d8eb61d24107d57066782c63027eb20bd"
++  "TaskDoc": "2fe27e8d653b2f100f3e4cf8bcbf21f38aa3ef2e126a6074e00aafe78358bf9b"
+ }
+diff --git a/tests/test_composition.py b/tests/test_composition.py
+index 4925606..89389b2 100644
+--- a/tests/test_composition.py
++++ b/tests/test_composition.py
+@@ -79,9 +79,7 @@ def test_task_doc_keeps_machine_metadata_in_frontmatter() -> None:
+         "implementation_path": "Add draft-first mutations and validate before promotion.",
+         "validation": ["targeted pytest"],
+         "done_when": "The model edit workflow is safe.",
+-        "routine": "routine-task-a",
+         "current_node": "implementation",
+-        "checklists": ["checklist-task-a"],
+         "history": ["created"],
+         "tags": ["system:sldb"],
+         "task_type": "",
+diff --git a/tests/test_graph_declared_edges.py b/tests/test_graph_declared_edges.py
+index 8f68e9a..3847c80 100644
+--- a/tests/test_graph_declared_edges.py
++++ b/tests/test_graph_declared_edges.py
+@@ -1,10 +1,10 @@
+ """Declared model metadata is a graph input.
+ 
+-TaskDoc declares its routine, checklists, pills and atoms as containment and
+-its references, depends_on, inherits_from and from_drawer as references.
+-BoardDoc declares tasks, pills and rituals. Those declarations only reach the
+-snapshot as prose unless the declared fields are read from the model, which is
+-what these tests pin down.
++TaskDoc declares current_node, pills and atoms as references, and also its
++references, depends_on and inherits_from. `from_drawer` is provenance, not a
++declared reference. BoardDoc declares tasks, pills and rituals. Those
++declarations only reach the snapshot as prose unless the declared fields are
++read from the model, which is what these tests pin down.
+ """
+ 
+ from __future__ import annotations
+@@ -64,7 +64,7 @@ def _build_desk(root: Path) -> None:
+     )
+ 
+ 
+-def test_declared_containment_becomes_edges_with_the_field_as_role(tmp_path: Path) -> None:
++def test_declared_references_become_edges_with_the_field_as_role(tmp_path: Path) -> None:
+     _build_desk(tmp_path)
+ 
+     extraction = extract_declared_edges(tmp_path)
+@@ -122,15 +122,15 @@ def test_a_declared_field_holding_prose_is_not_an_unresolved_reference(tmp_path:
+     )
+ 
+ 
+-def test_from_drawer_is_provenance_not_a_reference_that_must_resolve(tmp_path: Path) -> None:
++def test_from_drawer_is_provenance_not_a_declared_reference(tmp_path: Path) -> None:
+     _build_desk(tmp_path)
+     write(tmp_path / "desk/drawer/tasks/task-do-the-thing.md", "---\nid: task-do-the-thing\n---\n\n# Drawer\n")
+ 
+     present = extract_declared_edges(tmp_path)
+-    assert any(
++    assert not any(
+         edge.source_id == "task:task-do-the-thing" and edge.role == "from_drawer"
+         for edge in present.edges
+-    ), "a drawer entry that still exists is linked as provenance"
++    ), "from_drawer is provenance and contributes no declared edge"
+ 
+     (tmp_path / "desk/drawer/tasks/task-do-the-thing.md").unlink()
+ 

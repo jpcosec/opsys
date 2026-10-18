@@ -1,0 +1,11 @@
+Task: task-rw-f6-taskdoc-contract-cleanup
+Title: TaskDoc contract cleanup
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f6-taskdoc-contract-cleanup.md
+Effective pills:
+- desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md
+- desk/contexts/pill-006-self-described-store-layout.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

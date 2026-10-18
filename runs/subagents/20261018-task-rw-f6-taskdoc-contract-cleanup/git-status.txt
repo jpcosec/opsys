@@ -1,0 +1,8 @@
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M deskops/models/task.py
+ M tests/fixtures/model_contract_hashes.json
+ M tests/test_composition.py
+ M tests/test_graph_declared_edges.py
+?? runs/planning/taskdoc-unknown-keys.md
+?? runs/subagents/20261018-task-rw-f6-taskdoc-contract-cleanup/
