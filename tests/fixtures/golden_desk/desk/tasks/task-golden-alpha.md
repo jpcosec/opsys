@@ -38,7 +38,7 @@ _State what is in scope and what is out of scope._
 
 Alpha scope.
 
-## Related Atoms
+### Related Atoms
 
 - atom-golden-one
 

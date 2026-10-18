@@ -1,0 +1,11 @@
+ M desk/drawer/tasks/task-adhoc-subagent-launcher-tmux-multi-cli.md
+ M deskops/cli/commands/operations.py
+ M deskops/cli/commands/promote.py
+ M deskops/operations.py
+ M deskops/services/drawer.py
+ M tests/fixtures/golden_desk/desk/tasks/task-golden-alpha.md
+ M tests/test_promotion_nesting.py
+?? deskops/cli/parse_input.py
+?? deskops/services/tasks.py
+?? runs/subagents/20261018-task-rw-f3-tasks-service/
+?? tests/test_taskdoc_read_without_overlay.py

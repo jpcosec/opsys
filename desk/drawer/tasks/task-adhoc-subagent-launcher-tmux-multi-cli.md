@@ -30,7 +30,7 @@ _Describe the concrete result this task must produce._
 
 Add `deskops launch` so an operator can start a bounded, profile-scoped subagent for one task using an external agent CLI inside tmux, with context compiled from the local desk via sldb, tool limits per role, monitoring, disk-persisted output, and deskops-mediated return signals.
 
-## Resolved Decisions
+### Resolved Decisions
 
 Operator principles (authoritative) and their rulings:
 

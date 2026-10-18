@@ -13,13 +13,13 @@ from dataclasses import field
 from pathlib import Path
 import re
 from typing import Any
+from typing import Callable
 
 import yaml
 from sldb.runtime.validation import extract_model_data
 
 from deskops import doc_io
 from deskops.models import TaskDoc
-from deskops.operations import parse_task_sections
 
 
 @dataclass
@@ -92,6 +92,8 @@ class DrawerService:
         self,
         selector: str,
         title_override: str | None = None,
+        *,
+        parse_sections: Callable[[str], dict[str, Any]],
     ) -> DrawerPromotion:
         """Promote one inbox note into a loose drawer task candidate."""
         source = self._resolve_unique(self.desk_root / "inbox", selector)
@@ -108,7 +110,7 @@ class DrawerService:
         if target.exists():
             return DrawerPromotion(1, [f"Drawer task already exists: {target}"])
 
-        parsed = parse_task_sections(note["body"])
+        parsed = parse_sections(note["body"])
         messages = [f"Created drawer task candidate {task_id}"]
         with doc_io.DocTransaction(self.root) as transaction:
             transaction.record(target)

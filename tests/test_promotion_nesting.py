@@ -55,7 +55,7 @@ def test_inbox_promotion_keeps_structured_sections_flat_in_drawer(tmp_path: Path
 
 
 
-def test_advance_task_reads_nested_task_sections_from_first_occurrence(lifecycle_desk: Path) -> None:
+def test_advance_task_keeps_nested_h3_sections_inside_scope(lifecycle_desk: Path) -> None:
     tmp_path = lifecycle_desk
     operations = DeskopsOperations(tmp_path)
     operations.ensure_workspace()
@@ -68,11 +68,11 @@ def test_advance_task_reads_nested_task_sections_from_first_occurrence(lifecycle
         "goal": "Goal text.",
         "scope": (
             "Keep this intro in scope.\n\n"
-            "## Implementation Path\n\n"
+            "### Implementation Path\n\n"
             "Nested implementation path.\n\n"
-            "## Validation\n\n"
+            "### Validation\n\n"
             "- pytest tests/test_promotion_nesting.py -q\n\n"
-            "## Done When\n\n"
+            "### Done When\n\n"
             "Nested done-when text."
         ),
         "implementation_path": "Generated implementation path.",
@@ -97,7 +97,8 @@ def test_advance_task_reads_nested_task_sections_from_first_occurrence(lifecycle
 
     assert result is not None and result.progressed
     assert task is not None
-    assert task.scope == "Keep this intro in scope."
-    assert task.implementation_path == "Nested implementation path."
-    assert task.validation == ["pytest tests/test_promotion_nesting.py -q"]
-    assert task.done_when == "Nested done-when text."
+    assert task.scope.startswith("Keep this intro in scope.")
+    assert "### Implementation Path" in task.scope
+    assert task.implementation_path == "Generated implementation path."
+    assert task.validation == ["pytest"]
+    assert task.done_when == "Generated done-when text."

@@ -6,6 +6,8 @@ import json
 import sys
 from typing import Any
 
+from deskops.cli.parse_input import parse_artifact_input
+from deskops.cli.parse_input import parse_task_input
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
 
@@ -16,7 +18,7 @@ class OperationsCLI:
         operations = DeskopsOperations(root)
 
         if args.command == "add" and args.subject == "task":
-            payload = operations.parse_task_input(args)
+            payload = parse_task_input(args)
             drawer_selector = getattr(args, "from_drawer", None)
             if not drawer_selector:
                 raw_drawer = payload.get("from_drawer")
@@ -39,7 +41,7 @@ class OperationsCLI:
         artifact_subjects = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if args.command == "add" and args.subject in artifact_subjects:
             artifact_id = artifact_subjects[args.subject]
-            payload = operations.parse_artifact_input(artifact_id, args)
+            payload = parse_artifact_input(artifact_id, args)
             record = operations.create_artifact(artifact_id, payload)
             print(f"Created {record.kind} {record.doc_id}")
             print(f"Path: {record.path}")

@@ -5,7 +5,6 @@ import json
 import logging
 from pathlib import Path
 import re
-import subprocess
 import sys
 from typing import Any
 from typing import TYPE_CHECKING
@@ -42,15 +41,14 @@ from deskops.desk_paths import resolve_selector
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
-from deskops.specs import compile_task_spec
 from deskops.workspace import scaffold_desk
 from deskops.workflow.next_actions import load_task_lifecycle_spec
-from deskops.workflow.next_actions import match_workflow_state
 from deskops.workflow.next_actions import render_workflow_mermaid
 
 if TYPE_CHECKING:
     from deskops.services.closeout_gates import CloseoutGatesService
     from deskops.services.drawer import DrawerService
+    from deskops.services.tasks import TasksService
 
 
 ARTIFACT_MODELS = {
@@ -92,138 +90,11 @@ ARTIFACT_SUBJECTS = {
 }
 
 
-TASK_SECTION_FIELDS: tuple[tuple[str, str], ...] = (
-    ("why", "Rationale"),
-    ("goal", "Goal"),
-    ("scope", "Scope"),
-    ("implementation_path", "Implementation Path"),
-    ("validation", "Validation"),
-    ("done_when", "Done When"),
-)
-
-TASK_HEADING_TO_FIELD = {heading.lower(): field for field, heading in TASK_SECTION_FIELDS}
-TASK_FIELD_TO_HEADING = {field: heading for field, heading in TASK_SECTION_FIELDS}
-TASK_SECTION_PLACEHOLDERS = {
-    "Rationale": "_Explain why this task exists or the business driver behind it._",
-    "Goal": "_Describe the concrete result this task must produce._",
-    "Scope": "_State what is in scope and what is out of scope._",
-    "Implementation Path": "_Outline the expected implementation route or affected surface._",
-    "Validation": "_List the checks required before this task can close._",
-    "Done When": "_Name the observable condition that makes the task complete._",
-}
-
-
 def slugify(text: str) -> str:
     lowered = "".join(ch.lower() if ch.isalnum() else "-" for ch in text)
     parts = [part for part in lowered.split("-") if part]
     slug = "-".join(parts) or "item"
     return slug[:100].rstrip("-")
-
-
-def strip_markdown_frontmatter(text: str) -> str:
-    if not text.startswith("---\n"):
-        return text
-    try:
-        _, rest = text.split("---\n", 1)
-        _frontmatter, body = rest.split("\n---\n", 1)
-    except ValueError:
-        return text
-    return body
-
-
-def parse_task_sections(text: str) -> dict[str, Any]:
-    body = strip_markdown_frontmatter(text)
-    lines = body.splitlines()
-    if lines and lines[0].startswith("# "):
-        lines = lines[1:]
-
-    preamble: list[str] = []
-    sections: dict[str, str] = {}
-    active_heading: str | None = None
-    buffer: list[str] = []
-
-    def flush() -> None:
-        nonlocal buffer, active_heading
-        if active_heading is None:
-            return
-        heading = active_heading
-        active_heading = None
-        field = TASK_HEADING_TO_FIELD[heading.lower()]
-        if field in sections:
-            buffer = []
-            return
-        content = "\n".join(buffer).strip()
-        placeholder = TASK_SECTION_PLACEHOLDERS.get(heading)
-        if placeholder:
-            content_lines = content.splitlines()
-            while content_lines and not content_lines[0].strip():
-                content_lines.pop(0)
-            if content_lines and content_lines[0].strip() == placeholder:
-                content_lines.pop(0)
-                while content_lines and not content_lines[0].strip():
-                    content_lines.pop(0)
-            content = "\n".join(content_lines).strip()
-        sections[field] = content
-        buffer = []
-
-    for line in lines:
-        match = re.match(r"^##\s+(.+?)\s*$", line)
-        if match:
-            heading = match.group(1).strip()
-            if heading.lower() in TASK_HEADING_TO_FIELD:
-                flush()
-                active_heading = heading
-                continue
-        if active_heading is None:
-            preamble.append(line)
-        else:
-            buffer.append(line)
-    flush()
-
-    cleaned_preamble = "\n".join(preamble).strip()
-    return {
-        "fields": sections,
-        "preamble": cleaned_preamble,
-        "has_task_sections": bool(sections),
-    }
-
-
-def parse_validation_section(content: str) -> list[str]:
-    lines = [line.strip() for line in content.splitlines() if line.strip()]
-    bullets: list[str] = []
-    saw_bullet = False
-    for line in lines:
-        if line.startswith("-"):
-            saw_bullet = True
-            item = line[1:].strip()
-            if item:
-                bullets.append(item)
-    if saw_bullet:
-        return bullets
-    return [line for line in lines if line != "-"]
-
-
-def _load_yaml_mapping(path: Path) -> dict[str, Any]:
-    try:
-        payload = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except yaml.YAMLError as exc:
-        raise ValueError(f"Invalid YAML payload in {path}: {exc}") from exc
-    return _ensure_mapping_payload(payload, f"YAML payload in {path}")
-
-
-def _load_json_mapping(raw: str) -> dict[str, Any]:
-    try:
-        payload = json.loads(raw)
-    except json.JSONDecodeError as exc:
-        raise ValueError(f"Invalid JSON payload: {exc.msg}") from exc
-    return _ensure_mapping_payload(payload, "JSON payload")
-
-
-def _ensure_mapping_payload(payload: Any, label: str) -> dict[str, Any]:
-    if not isinstance(payload, dict):
-        kind = type(payload).__name__
-        raise ValueError(f"{label} must be a mapping/object, got {kind}")
-    return dict(payload)
 
 
 def _parse_field_value(model: type[Any], field_name: str, raw_value: str) -> Any:
@@ -325,6 +196,7 @@ class DeskopsOperations:
         self.spec_root = Path(__file__).resolve().parents[1] / "spec"
         self._spec_registry: SpecRegistry | None = None
         self._drawer: DrawerService | None = None
+        self._tasks: TasksService | None = None
         self._closeout_gates: CloseoutGatesService | None = None
         self._setup_logging()
 
@@ -356,22 +228,6 @@ class DeskopsOperations:
         ]:
             (self.desk_root / relative).mkdir(parents=True, exist_ok=True)
         ensure_default_namespaces(default_registry_path(self.root))
-
-    def create_task_bundle(self, raw_payload: dict[str, Any]) -> TaskBundle:
-        """Write one task and route it on the Board. Its lifecycle is the desk's graph
-        (deskops/lifecycle.py), so nothing else is written per task."""
-        self.ensure_workspace()
-        payload = self._normalize_task_payload(raw_payload)
-        spec = lifecycle.load_lifecycle_spec()
-        compiled = compile_task_spec(self.spec_registry, payload, entry_node=spec.entry_node)
-        task_id = compiled.task_payload["id"]
-        task_path = self._task_path(task_id)
-
-        with doc_io.DocTransaction(self.root):
-            self._write_new_doc(task_path, TaskDoc, compiled.task_payload)
-            self._track_created_document(TaskDoc, task_path, task_id)
-            self._append_task_to_board(task_id)
-        return TaskBundle(task_id=task_id, task_path=task_path)
 
     def create_artifact(self, artifact_id: str, raw_payload: dict[str, Any]) -> DocumentRecord:
         self.ensure_workspace()
@@ -428,34 +284,6 @@ class DeskopsOperations:
         self._write_doc(task_path, TaskDoc, task_payload)
         return DocumentRecord(kind="task", doc_id=str(task_payload.get("id", task_path.stem)), path=task_path), pill_ref, True
 
-    def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
-        board_path = self.desk_root / "tasks" / "Board.md"
-        task_path = self._next_task_path(task_selector, board_path)
-        payload = self._resolve_task_payload(task_path.stem)
-        spec = load_task_lifecycle_spec(self.spec_root)
-        state = match_workflow_state(spec, str(payload.get("current_node") or ""))
-        pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("effective_pills") or payload.get("pills") or [])]))
-        return {
-            "task": {
-                "id": payload["id"],
-                "title": payload["title"],
-                "status": payload["status"],
-                "current_node": payload.get("current_node", ""),
-                "task_type": payload.get("task_type", ""),
-                "inherits_from": list(payload.get("inherits_from") or []),
-            },
-            "phase": state["phase"],
-            "ritual": state.get("ritual", ""),
-            "pills": pills,
-            "next_actions": list(state.get("next_actions") or []),
-            "advance_when": list(state.get("advance_when") or []),
-            "sources": {
-                "task": str(task_path.relative_to(self.root)),
-                "board": str(board_path.relative_to(self.root)),
-                "workflow": "spec/workflows/task_lifecycle.yaml",
-            },
-        }
-
     def render_next_action_diagram(self) -> str:
         return render_workflow_mermaid(load_task_lifecycle_spec(self.spec_root))
 
@@ -486,6 +314,27 @@ class DeskopsOperations:
             from deskops.services.drawer import DrawerService
             self._drawer = DrawerService(self.root)
         return self._drawer
+
+    @property
+    def tasks(self) -> "TasksService":
+        if self._tasks is None:
+            from deskops.services.tasks import TasksService
+            self._tasks = TasksService(self.root, self)
+        return self._tasks
+
+    def create_task_bundle(self, raw_payload: dict[str, Any]) -> TaskBundle:
+        return self.tasks.create_task_bundle(raw_payload)
+
+    def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:
+        return self.tasks.advance_task(task_id, target_node=target_node)
+
+    def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
+        return self.tasks.next_action_report(task_selector)
+
+    def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
+        # Kept as a delegating hook: the closure commit itself lives in the
+        # tasks service, but tests and callers exercise it through operations.
+        self.tasks._auto_commit_task_closure(payload, task_path)
 
     def resolve_drawer_source(self, selector: str) -> Path:
         return self.drawer.resolve_drawer_source(selector)
@@ -893,90 +742,15 @@ class DeskopsOperations:
             ambiguities=ambiguities,
         )
 
-    def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:
-        try:
-            task_path = self._resolve_glob(self.desk_root / "tasks", task_id)
-        except FileNotFoundError:
-            return None, None
-        payload = self._read_doc(task_path, TaskDoc)
-
-        if target_node:
-            if target_node in ["draft", "open", "in_progress", "blocked", "closed"]:
-                payload["status"] = target_node
-            else:
-                payload["current_node"] = target_node
-                # Reaching the terminal node closes the task. The gated path
-                # pairs current_node == "complete" with status == "closed"
-                # (see the auto-commit check below); a forced transition that
-                # moved only current_node left the two disagreeing, so the
-                # task looked terminal but never read as closed.
-                if target_node == lifecycle.COMPLETE:
-                    payload["status"] = "closed"
-            self._write_doc(task_path, TaskDoc, payload)
-            advanced_task = self._hydrate_task(payload)
-            self.logger.info(f"Advanced task {task_id} manually to {target_node}")
-            return advanced_task, TransitionResult(target_node, payload.get("status", ""), True, False, f"Forced transition to {target_node}.")
-
-        self._add_closeout_facts(payload)
-        result = lifecycle.advance(self.root, payload)
-        for key in ("closeout_evidence_verified", "pill_graduation_verified"):
-            payload.pop(key, None)
-        advanced_task = self._hydrate_task(payload)
-        if payload.get("status") == "closed" and payload.get("current_node") == lifecycle.COMPLETE:
-            self.logger.info(f"Task {task_id} is complete. Performing auto-commit and cleanup.")
-            self._auto_commit_task_closure(payload, task_path)
-            return advanced_task, result
-        if result.progressed:
-            self._write_doc(task_path, TaskDoc, payload)
-        self.logger.info(f"Advanced task {task_id} to node {payload.get('current_node')}")
-        return advanced_task, result
-
-    def parse_task_input(self, args: Any) -> dict[str, Any]:
-        payload: dict[str, Any] = {}
-        if getattr(args, "from_yaml", None):
-            payload.update(_load_yaml_mapping(Path(args.from_yaml)))
-        elif getattr(args, "payload", None):
-            payload.update(_load_json_mapping(args.payload))
-
-        if getattr(args, "title", None): payload["title"] = args.title
-        if getattr(args, "why", None): payload["why"] = args.why
-        if getattr(args, "goal", None): payload["goal"] = args.goal
-        if getattr(args, "scope", None): payload["scope"] = args.scope
-        if getattr(args, "implementation_path", None): payload["implementation_path"] = args.implementation_path
-        if getattr(args, "done_when", None): payload["done_when"] = args.done_when
-        if getattr(args, "validation", None): payload["validation"] = args.validation
-        if getattr(args, "depends_on", None): payload["depends_on"] = args.depends_on
-        if getattr(args, "task_type", None): payload["task_type"] = args.task_type
-        if getattr(args, "inherits_from", None): payload["inherits_from"] = args.inherits_from
-        if getattr(args, "atom", None): payload["atoms"] = args.atom
-        if getattr(args, "inherit_acceptance_context", False): payload["inherit_acceptance_context"] = True
-
-        return payload
-
-    def parse_artifact_input(self, artifact_id: str, args: Any) -> dict[str, Any]:
-        """Parse a raw payload for artifact creation.
-
-        YAML payload (--from-yaml) is loaded first, then CLI args override it.
-        Field names come from the Pydantic model (the single source of truth),
-        not from the YAML spec's fields list.
-        """
-        payload: dict[str, Any] = {}
-        if getattr(args, "from_yaml", None):
-            payload.update(_load_yaml_mapping(Path(args.from_yaml)))
-
-        model = ARTIFACT_MODELS.get(artifact_id)
-        if model is not None:
-            # Iterate over model fields, not YAML spec fields
-            for field_name in model.model_fields:
-                if field_name == "id":
-                    continue  # id is generated from slug
-                value = getattr(args, field_name, None)
-                if isinstance(value, list) and value:
-                    payload[field_name] = list(value)
-                elif value is not None and not isinstance(value, list):
-                    payload[field_name] = value
-
-        return payload
+    def _append_task_to_board(self, task_id: str) -> None:
+        board_path = self.desk_root / "tasks" / "Board.md"
+        board_payload = self._read_doc(board_path, BoardDoc)
+        task_ref = f"desk/tasks/{task_id}.md"
+        tasks = list(board_payload.get("tasks") or [])
+        if task_ref not in tasks:
+            tasks.append(task_ref)
+            board_payload["tasks"] = tasks
+            self._write_doc(board_path, BoardDoc, board_payload)
 
     def _normalize_task_payload(self, payload: dict[str, Any]) -> dict[str, Any]:
         if payload.get("title") is None:
@@ -1015,160 +789,6 @@ class DeskopsOperations:
         if value in (None, ""):
             return []
         return [str(value)]
-
-    def _append_task_to_board(self, task_id: str) -> None:
-        board_path = self.desk_root / "tasks" / "Board.md"
-        board_payload = self._read_doc(board_path, BoardDoc)
-        task_ref = f"desk/tasks/{task_id}.md"
-        tasks = list(board_payload.get("tasks") or [])
-        if task_ref not in tasks:
-            tasks.append(task_ref)
-            board_payload["tasks"] = tasks
-            self._write_doc(board_path, BoardDoc, board_payload)
-
-    def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
-        task_id = payload.get("id", "unknown-task")
-        files = self._coerce_list(payload.get("files") or [])
-        task_rel = str(task_path.relative_to(self.root)) if task_path.is_absolute() else str(task_path)
-        board_rel = "desk/tasks/Board.md"
-        sldb_rel = ".sldb"
-
-        with doc_io.DocTransaction(self.root) as transaction:
-            self.logger.debug(f"Removing task {task_id} from Board.md")
-            board_path = self.desk_root / "tasks" / "Board.md"
-            board_before = board_path.read_text(encoding="utf-8") if board_path.exists() else None
-            if board_before is not None:
-                board_payload = self._read_doc(board_path, BoardDoc)
-                task_ref = f"desk/tasks/{task_id}.md"
-                tasks = [str(item) for item in board_payload.get("tasks") or [] if str(item) != task_ref]
-                board_payload["tasks"] = tasks
-                self._write_doc(board_path, BoardDoc, board_payload)
-
-            task_before = task_path.read_bytes() if task_path.exists() else None
-
-            # Untrack before anything is staged: the .sldb delta this causes must be
-            # part of the closeout commit, and a failure must abort the closeout.
-            if task_before is not None:
-                transaction.untrack(task_path)
-
-            commit_paths: list[str] = []
-            seen_paths: set[str] = set()
-
-            def add_commit_path(path: str) -> None:
-                if path not in seen_paths:
-                    seen_paths.add(path)
-                    commit_paths.append(path)
-
-            # Only stage (and later commit) listed files that actually changed;
-            # whatever the operator staged for other work must stay untouched.
-            for file in files:
-                status = subprocess.run(
-                    ["git", "status", "--porcelain", "--", file],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                )
-                if status.returncode != 0 or not status.stdout.strip():
-                    continue
-                self.logger.debug(f"Staging file: {file}")
-                subprocess.run(["git", "add", "-A", "--", file], cwd=self.root, check=False)
-                add_commit_path(file)
-
-            if board_before is not None:
-                subprocess.run(["git", "add", "--", board_rel], cwd=self.root, check=False)
-                add_commit_path(board_rel)
-
-            sldb_status = subprocess.run(
-                ["git", "status", "--porcelain", "--", sldb_rel],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            )
-            if sldb_status.returncode == 0 and sldb_status.stdout.strip():
-                subprocess.run(["git", "add", "-A", "--", sldb_rel], cwd=self.root, check=False)
-                add_commit_path(sldb_rel)
-
-            def restore_index() -> None:
-                for path in commit_paths:
-                    subprocess.run(["git", "restore", "--staged", "--", path], cwd=self.root, check=False)
-                subprocess.run(["git", "restore", "--staged", "--", task_rel], cwd=self.root, check=False)
-                if task_before is not None:
-                    task_path.write_bytes(task_before)
-                if board_before is not None:
-                    board_path.write_text(board_before, encoding="utf-8")
-
-            paths_to_remove = []
-            if task_before is not None:
-                paths_to_remove.append(task_path)
-                tracked = subprocess.run(
-                    ["git", "ls-files", "--error-unmatch", "--", task_rel],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                ).returncode == 0
-                if tracked:
-                    # A pathspec commit records the working tree, so the gone task
-                    # file must already be removed from both disk and the index.
-                    # The bundle carries uncommitted lifecycle edits at closeout,
-                    # so force the removal; its bytes are restored on failure.
-                    removed = subprocess.run(
-                        ["git", "rm", "-f", "--", task_rel], cwd=self.root, capture_output=True, text=True
-                    )
-                    if removed.returncode != 0:
-                        restore_index()
-                        raise RuntimeError(
-                            f"Failed to remove task file {task_rel} for {task_id}. The bundle was not "
-                            f"deleted and the desk was left unchanged. Git output: "
-                            f"{removed.stderr or removed.stdout}"
-                        )
-                    add_commit_path(task_rel)
-
-            commit_msg = f"closeout: {task_id}\n\nTask-Id: {task_id}\n"
-
-            # Check if HEAD is already the closeout commit for this task. The
-            # subject alone is not proof of ownership: `closeout: task-foo` also
-            # prefixes `closeout: task-foo-bar`, so decide from the Task-Id
-            # trailer that every closeout commit carries.
-            head_task_id = ""
-            result_log = subprocess.run(
-                ["git", "log", "-1", "--format=%(trailers:key=Task-Id,valueonly)"],
-                cwd=self.root,
-                capture_output=True,
-                text=True,
-            )
-            if result_log.returncode == 0:
-                head_task_id = result_log.stdout.strip()
-
-            if head_task_id == task_id:
-                self.logger.info(f"Amending closeout commit for {task_id}")
-                result = subprocess.run(
-                    ["git", "commit", "--amend", "--no-edit", "--", *commit_paths],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                )
-            else:
-                self.logger.info(f"Committing closure for {task_id}: {commit_msg.strip()}")
-                result = subprocess.run(
-                    ["git", "commit", "-m", commit_msg, "--", *commit_paths],
-                    cwd=self.root,
-                    capture_output=True,
-                    text=True,
-                )
-
-            if result.returncode != 0:
-                # Nothing was committed, so put the desk back exactly as it was and
-                # leave the bundle in place.
-                restore_index()
-                raise RuntimeError(
-                    f"Failed to commit task closure for {task_id}. The bundle was not deleted "
-                    f"and the desk was left unchanged. Git output: {result.stderr or result.stdout}"
-                )
-
-            for p in paths_to_remove:
-                if p.exists():
-                    self.logger.debug(f"Removing file {p.name}")
-                    p.unlink()
 
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
         evidence = self._closeout_reference_evidence(payload)
@@ -1978,9 +1598,6 @@ class DeskopsOperations:
             effective_done_when=payload.get("effective_done_when", payload.get("done_when", "")),
         )
 
-    def _task_path(self, task_id: str) -> Path:
-        return self.desk_root / "tasks" / f"{task_id}.md"
-
     def _artifact_path(self, artifact_id: str, doc_id: str) -> Path:
         return self.desk_root / ARTIFACT_PATHS[artifact_id] / f"{doc_id}.md"
 
@@ -2051,24 +1668,6 @@ class DeskopsOperations:
                 print(f"Warning: Failed to load repository {path}: {e}", file=sys.stderr)
                 continue
         return repositories
-
-    def _next_task_path(self, task_selector: str | None, board_path: Path) -> Path:
-        if task_selector:
-            return self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", task_selector)
-        board_payload = self._read_doc(board_path, BoardDoc)
-        task_refs = list(board_payload.get("tasks") or [])
-        if not task_refs:
-            raise FileNotFoundError("No active tasks routed by desk/tasks/Board.md")
-        if len(task_refs) > 1:
-            raise ValueError("Multiple active tasks are routed; pass a task selector")
-        return self.root / str(task_refs[0])
-
-    def _board_pills(self, board_path: Path) -> list[str]:
-        try:
-            board_payload = self._read_doc(board_path, BoardDoc)
-        except Exception:
-            return []
-        return [str(pill) for pill in board_payload.get("pills") or []]
 
     def _repository_root(self, repository: dict[str, Any]) -> Path:
         repo_path = Path(str(repository["path"]))
@@ -2172,13 +1771,6 @@ class DeskopsOperations:
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
         raw_text = path.read_text(encoding="utf-8")
         payload = extract_model_data(model, raw_text)
-        if model is TaskDoc:
-            parsed_sections = parse_task_sections(raw_text)
-            for field, content in parsed_sections["fields"].items():
-                if field == "validation":
-                    payload[field] = parse_validation_section(content)
-                else:
-                    payload[field] = content
         if "id" not in payload:
             payload["id"] = path.stem
         return payload
