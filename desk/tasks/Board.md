@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-closed-issues-count-as-records-in-graph-missing.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -44,3 +45,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- A closed issue counts as an archived record in `graph missing` [draft] - An issue whose status is closed (frontmatter `status:`, `## Status` section, or `Status:` line) is treated as an archived record by the graph extractor, so `graph missing` lists its unresolved targets as informational. This repository goes back to 0 missing.
