@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -131,3 +131,9 @@ Provide validation and traceability for `desk/atoms/**/*.md` without reintroduci
 - topic:atoms
 - topic:validation
 - topic:traceability
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Propuesta decidida (2026-10-18): campo canónico atoms, con roles references, documents, specifies, constrains y validates (por defecto references); related_atoms queda como alias legacy que drift reporta; validación en deskops/atom_references.py y deskops drift check. La ejecutan dos tasks.
+Refs: desk/tasks/task-canonical-atom-reference-metadata.md, desk/tasks/task-derived-atom-trace-index.md, 4572d7b

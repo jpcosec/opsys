@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -122,3 +122,9 @@ Review and stabilize `docs/diagrams/codebase/sldb-primitives-docs-cli-components
 - atom-cli-is-thin-over-primitives-and-sldb
 - atom-primitives-encode-operational-rules
 - atom-deskops-owns-workflow-not-document-infrastructure
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Dividido en cinco tasks concretas (2026-10-18): guía de next sin task activa, next --why, clasificación de la gramática del CLI, guarda del diagrama de componentes y contrato de puntos de extensión.
+Refs: desk/tasks/task-next-guidance-without-active-task.md, desk/tasks/task-next-why-explanation.md, desk/tasks/task-classify-cli-grammar.md, desk/tasks/task-guard-component-diagram-projection.md, desk/tasks/task-guard-extension-points.md, 4572d7b

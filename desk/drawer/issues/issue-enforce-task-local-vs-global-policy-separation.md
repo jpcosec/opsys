@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -34,3 +34,9 @@ Enforce a strict content boundary:
 
 - atom-tasks-enable-zero-context-subagents
 - atom-workflow-vocabulary-separates-knowledge-and-work
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Propuesta decidida (2026-10-18): taxonomía local vs global escrita en la task, más un hallazgo task-policy-leak en deskops drift check (solo revisión, sin cambiar el gate). La ejecuta task-detect-and-clean-task-policy-leaks.
+Refs: desk/tasks/task-detect-and-clean-task-policy-leaks.md, 4572d7b

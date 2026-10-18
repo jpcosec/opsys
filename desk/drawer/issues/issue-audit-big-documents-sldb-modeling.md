@@ -6,7 +6,7 @@ feature
 
 ## Status
 
-open
+closed
 
 ## Problem
 
@@ -59,3 +59,9 @@ Define how a larger document declares and renders the atoms it composes without 
 - system:sldb
 - topic:atoms
 - topic:composition
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Propuesta decidida (2026-10-18): README.md y docs/*.md quedan composed (frontmatter atoms, rol documents); deskops/data/faq.md queda como projection de docs/faq.md. Inventario por documento en la task.
+Refs: desk/tasks/task-classify-large-docs-materialization.md, 4572d7b

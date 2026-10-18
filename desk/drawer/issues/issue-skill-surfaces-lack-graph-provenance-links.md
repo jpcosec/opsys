@@ -6,7 +6,7 @@ issue
 
 ## Status
 
-open
+closed
 
 ## Evidence
 
@@ -34,3 +34,9 @@ knowledge links per changed file; the gap recurs on every skill-touching task.
 
 Routed from closeout verify per the closeout ritual; do not close skill tasks
 by weakening the gate silently.
+
+## Resolution
+
+Closed: 2026-10-18
+Reason: Propuesta decidida (2026-10-18): un test guardián trackeado y enlazado a atoms cubre los SKILL.md, con evidencia que nombra ambos paths; el gate no se relaja para archivos que no son skills. La ejecuta task-link-skill-surfaces-through-guard-tests.
+Refs: desk/tasks/task-link-skill-surfaces-through-guard-tests.md, 4572d7b
