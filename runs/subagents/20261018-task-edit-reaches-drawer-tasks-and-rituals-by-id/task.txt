@@ -1,0 +1,7 @@
+Task: task-edit-reaches-drawer-tasks-and-rituals-by-id
+Title: `deskops edit` reaches drawer tasks, and finds rituals by their id
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

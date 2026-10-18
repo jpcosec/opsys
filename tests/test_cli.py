@@ -1348,6 +1348,80 @@ def test_edit_pill_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> Non
     assert "Original how." in pill_text
 
 
+def _write_task_doc(path: Path, *, goal: str, status: str = "deferred") -> None:
+    from deskops.models import TaskDoc
+    from sldb.runtime.validation import render_model_markdown
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    doc = TaskDoc(
+        id=path.stem,
+        title="Editable task",
+        status=status,
+        goal=goal,
+        scope="Scope.",
+        implementation_path="Path.",
+        done_when="Done.",
+    )
+    path.write_text(render_model_markdown(TaskDoc, doc.render_payload()) + "\n", encoding="utf-8")
+
+
+def test_edit_task_reaches_drawer_task(tmp_path: Path, capsys) -> None:
+    drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-drawer-only.md"
+    _write_task_doc(drawer_task, goal="Original drawer goal.")
+
+    edited = main(["edit", "task", "task-drawer-only", "goal", "Edited drawer goal.", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert edited == 0
+    assert "Updated task task-drawer-only field goal" in output.out
+    assert "Edited drawer goal." in drawer_task.read_text(encoding="utf-8")
+
+
+def test_edit_task_prefers_active_task_over_drawer_task(tmp_path: Path, capsys) -> None:
+    active_task = tmp_path / "desk" / "tasks" / "task-shadowed.md"
+    drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-shadowed.md"
+    _write_task_doc(active_task, goal="Original active goal.", status="active")
+    _write_task_doc(drawer_task, goal="Original drawer goal.")
+
+    edited = main(["edit", "task", "task-shadowed", "goal", "Edited active goal.", "--root", str(tmp_path)])
+    output = capsys.readouterr()
+
+    assert edited == 0
+    assert "Edited active goal." in active_task.read_text(encoding="utf-8")
+    assert "Original drawer goal." in drawer_task.read_text(encoding="utf-8")
+
+
+def test_edit_ritual_accepts_frontmatter_id(tmp_path: Path, capsys) -> None:
+    from deskops.models import RitualDoc
+    from sldb.runtime.validation import render_model_markdown
+
+    ritual_path = tmp_path / "desk" / "rituals" / "closeout-like.md"
+    ritual_path.parent.mkdir(parents=True, exist_ok=True)
+    ritual = RitualDoc(
+        id="ritual-closeout-like",
+        title="Closeout-like ritual",
+        purpose="Original purpose.",
+        trigger="When closing.",
+        completion="Closed.",
+    )
+    ritual_path.write_text(render_model_markdown(RitualDoc, ritual.render_payload()) + "\n", encoding="utf-8")
+
+    edited = main([
+        "edit",
+        "ritual",
+        "ritual-closeout-like",
+        "purpose",
+        "Edited purpose.",
+        "--root",
+        str(tmp_path),
+    ])
+    output = capsys.readouterr()
+
+    assert edited == 0
+    assert "Updated ritual ritual-closeout-like field purpose" in output.out
+    assert "Edited purpose." in ritual_path.read_text(encoding="utf-8")
+
+
 def test_bind_pill_appends_task_pills_list_from_cli(tmp_path: Path, capsys) -> None:
     created_task = main(
         [

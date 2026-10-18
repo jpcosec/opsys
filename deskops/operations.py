@@ -1116,17 +1116,65 @@ class DeskopsOperations:
 
     def _editable_artifact(self, subject: str, selector: str) -> tuple[type[Any], Path, str]:
         if subject == "task":
-            return TaskDoc, self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", selector), "task"
+            try:
+                path = self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", selector)
+            except FileNotFoundError:
+                # Drawer candidates are tasks too; an active task with the same
+                # selector wins because it resolved before this fallback.
+                path = self._resolve_artifact_selector(
+                    "artifact.task", self.desk_root / "drawer" / "tasks", selector
+                )
+            return TaskDoc, path, "task"
         artifact_subjects = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
         if subject not in artifact_subjects:
             raise ValueError(f"Unsupported edit subject: {subject}")
         artifact_id = artifact_subjects[subject]
         model = ARTIFACT_MODELS[artifact_id]
+        if artifact_id == "artifact.ritual":
+            return model, self._resolve_ritual_selector(selector), subject
         directories = [self.desk_root / ARTIFACT_PATHS[artifact_id]]
         if artifact_id == "artifact.pill":
             directories.append(self.desk_root / "drawer" / "pills")
         path = self._resolve_artifact_selector_multi(artifact_id, directories, selector)
         return model, path, subject
+
+    def _resolve_ritual_selector(self, selector: str) -> Path:
+        directory = self.desk_root / ARTIFACT_PATHS["artifact.ritual"]
+        try:
+            return self._resolve_artifact_selector("artifact.ritual", directory, selector)
+        except FileNotFoundError:
+            pass
+        # Ritual files are named by hand; accept the frontmatter id as well.
+        matches = (
+            [path for path in sorted(directory.glob("*.md")) if self._frontmatter_id(path) == selector]
+            if directory.exists()
+            else []
+        )
+        if not matches:
+            raise FileNotFoundError(f"No artifact.ritual file found for selector '{selector}'")
+        if len(matches) > 1:
+            names = ", ".join(str(path.relative_to(self.desk_root)) for path in matches)
+            raise ValueError(f"Ambiguous artifact.ritual selector '{selector}': {names}")
+        return matches[0]
+
+    @staticmethod
+    def _frontmatter_id(path: Path) -> str | None:
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            return None
+        if not text.startswith("---"):
+            return None
+        parts = text.split("---", 2)
+        if len(parts) < 3:
+            return None
+        try:
+            payload = yaml.safe_load(parts[1])
+        except yaml.YAMLError:
+            return None
+        if not isinstance(payload, dict) or payload.get("id") is None:
+            return None
+        return str(payload["id"])
 
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
         rendered = render_model_markdown(model, payload) + "\n"

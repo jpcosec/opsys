@@ -61,3 +61,4 @@
 {"task_id": "task-canonical-atom-reference-metadata", "run_id": null, "run_dir": "runs/subagents/20261018-task-canonical-atom-reference-metadata", "session_sha256": null, "commit": null}
 {"task_id": "task-classify-large-docs-materialization", "run_id": null, "run_dir": "runs/subagents/20261018-task-classify-large-docs-materialization", "session_sha256": null, "commit": null}
 {"task_id": "task-next-why-explanation", "run_id": null, "run_dir": "runs/subagents/20261018-task-next-why-explanation", "session_sha256": null, "commit": null}
+{"task_id": "task-edit-reaches-drawer-tasks-and-rituals-by-id", "run_id": null, "run_dir": "runs/subagents/20261018-task-edit-reaches-drawer-tasks-and-rituals-by-id", "session_sha256": null, "commit": null}

@@ -1,0 +1,7 @@
+ M .sldb/core/documents/TaskDoc/task-edit-reaches-drawer-tasks-and-rituals-by-id.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-edit-reaches-drawer-tasks-and-rituals-by-id.md
+ M deskops/operations.py
+ M tests/test_cli.py
+?? runs/subagents/20261018-task-edit-reaches-drawer-tasks-and-rituals-by-id/

@@ -1,0 +1,157 @@
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 1cb8573..c09dadd 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -1116,18 +1116,66 @@ class DeskopsOperations:
+ 
+     def _editable_artifact(self, subject: str, selector: str) -> tuple[type[Any], Path, str]:
+         if subject == "task":
+-            return TaskDoc, self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", selector), "task"
++            try:
++                path = self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", selector)
++            except FileNotFoundError:
++                # Drawer candidates are tasks too; an active task with the same
++                # selector wins because it resolved before this fallback.
++                path = self._resolve_artifact_selector(
++                    "artifact.task", self.desk_root / "drawer" / "tasks", selector
++                )
++            return TaskDoc, path, "task"
+         artifact_subjects = {meta["subject"]: artifact_id for artifact_id, meta in ARTIFACT_SUBJECTS.items()}
+         if subject not in artifact_subjects:
+             raise ValueError(f"Unsupported edit subject: {subject}")
+         artifact_id = artifact_subjects[subject]
+         model = ARTIFACT_MODELS[artifact_id]
++        if artifact_id == "artifact.ritual":
++            return model, self._resolve_ritual_selector(selector), subject
+         directories = [self.desk_root / ARTIFACT_PATHS[artifact_id]]
+         if artifact_id == "artifact.pill":
+             directories.append(self.desk_root / "drawer" / "pills")
+         path = self._resolve_artifact_selector_multi(artifact_id, directories, selector)
+         return model, path, subject
+ 
++    def _resolve_ritual_selector(self, selector: str) -> Path:
++        directory = self.desk_root / ARTIFACT_PATHS["artifact.ritual"]
++        try:
++            return self._resolve_artifact_selector("artifact.ritual", directory, selector)
++        except FileNotFoundError:
++            pass
++        # Ritual files are named by hand; accept the frontmatter id as well.
++        matches = (
++            [path for path in sorted(directory.glob("*.md")) if self._frontmatter_id(path) == selector]
++            if directory.exists()
++            else []
++        )
++        if not matches:
++            raise FileNotFoundError(f"No artifact.ritual file found for selector '{selector}'")
++        if len(matches) > 1:
++            names = ", ".join(str(path.relative_to(self.desk_root)) for path in matches)
++            raise ValueError(f"Ambiguous artifact.ritual selector '{selector}': {names}")
++        return matches[0]
++
++    @staticmethod
++    def _frontmatter_id(path: Path) -> str | None:
++        try:
++            text = path.read_text(encoding="utf-8")
++        except OSError:
++            return None
++        if not text.startswith("---"):
++            return None
++        parts = text.split("---", 2)
++        if len(parts) < 3:
++            return None
++        try:
++            payload = yaml.safe_load(parts[1])
++        except yaml.YAMLError:
++            return None
++        if not isinstance(payload, dict) or payload.get("id") is None:
++            return None
++        return str(payload["id"])
++
+     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
+         rendered = render_model_markdown(model, payload) + "\n"
+         if path.exists():
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index cd0684b..474598e 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -1311,6 +1311,80 @@ def test_edit_pill_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> Non
+     assert "Original how." in pill_text
+ 
+ 
++def _write_task_doc(path: Path, *, goal: str, status: str = "deferred") -> None:
++    from deskops.models import TaskDoc
++    from sldb.runtime.validation import render_model_markdown
++
++    path.parent.mkdir(parents=True, exist_ok=True)
++    doc = TaskDoc(
++        id=path.stem,
++        title="Editable task",
++        status=status,
++        goal=goal,
++        scope="Scope.",
++        implementation_path="Path.",
++        done_when="Done.",
++    )
++    path.write_text(render_model_markdown(TaskDoc, doc.render_payload()) + "\n", encoding="utf-8")
++
++
++def test_edit_task_reaches_drawer_task(tmp_path: Path, capsys) -> None:
++    drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-drawer-only.md"
++    _write_task_doc(drawer_task, goal="Original drawer goal.")
++
++    edited = main(["edit", "task", "task-drawer-only", "goal", "Edited drawer goal.", "--root", str(tmp_path)])
++    output = capsys.readouterr()
++
++    assert edited == 0
++    assert "Updated task task-drawer-only field goal" in output.out
++    assert "Edited drawer goal." in drawer_task.read_text(encoding="utf-8")
++
++
++def test_edit_task_prefers_active_task_over_drawer_task(tmp_path: Path, capsys) -> None:
++    active_task = tmp_path / "desk" / "tasks" / "task-shadowed.md"
++    drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-shadowed.md"
++    _write_task_doc(active_task, goal="Original active goal.", status="active")
++    _write_task_doc(drawer_task, goal="Original drawer goal.")
++
++    edited = main(["edit", "task", "task-shadowed", "goal", "Edited active goal.", "--root", str(tmp_path)])
++    output = capsys.readouterr()
++
++    assert edited == 0
++    assert "Edited active goal." in active_task.read_text(encoding="utf-8")
++    assert "Original drawer goal." in drawer_task.read_text(encoding="utf-8")
++
++
++def test_edit_ritual_accepts_frontmatter_id(tmp_path: Path, capsys) -> None:
++    from deskops.models import RitualDoc
++    from sldb.runtime.validation import render_model_markdown
++
++    ritual_path = tmp_path / "desk" / "rituals" / "closeout-like.md"
++    ritual_path.parent.mkdir(parents=True, exist_ok=True)
++    ritual = RitualDoc(
++        id="ritual-closeout-like",
++        title="Closeout-like ritual",
++        purpose="Original purpose.",
++        trigger="When closing.",
++        completion="Closed.",
++    )
++    ritual_path.write_text(render_model_markdown(RitualDoc, ritual.render_payload()) + "\n", encoding="utf-8")
++
++    edited = main([
++        "edit",
++        "ritual",
++        "ritual-closeout-like",
++        "purpose",
++        "Edited purpose.",
++        "--root",
++        str(tmp_path),
++    ])
++    output = capsys.readouterr()
++
++    assert edited == 0
++    assert "Updated ritual ritual-closeout-like field purpose" in output.out
++    assert "Edited purpose." in ritual_path.read_text(encoding="utf-8")
++
++
+ def test_bind_pill_appends_task_pills_list_from_cli(tmp_path: Path, capsys) -> None:
+     created_task = main(
+         [
