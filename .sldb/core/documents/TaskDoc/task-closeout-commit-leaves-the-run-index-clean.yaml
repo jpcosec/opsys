@@ -1,7 +1,7 @@
 name: task-closeout-commit-leaves-the-run-index-clean
 path: desk/tasks/task-closeout-commit-leaves-the-run-index-clean.md
-source_hash: 8599dc6720e992b58b2d8f7db5530cdb75b545f339c27cc8034bf60aea22ffef
-content_hash: 604e7e43c8a37d42edb48789c026b36a6b097bac723dfa2949ad5cf83f2189b0
+source_hash: 65e466f48b8df7be3694b9a0729fb590c3416c018401405feda306976a3fd6e1
+content_hash: 8101e3ee417cd06dbf7a62ac694a31d092db9a76531d2c34cee86a0c1be20512
 field_hashes:
   title: e997fe063cb9a4ff7fb7d6231d7953d178f5295589e316b7b35317f3591e62ac
   id: afdf21ef375cc8087dfd36040c27121de8a582778fdce4a25d7a706a37414407
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 68ff8380afb6c7360b8dd7f4acdb4078ee26478be8bd7e8b3569f7a4a6885405
   files: 0e44a4e66178d616d6a5ceed9ebd6bdcf6f5e48526bea75bc5c644e0749a9f08
-  implementation_path: 22f566150e333795ce930c8a85e1acf9c081b314b7ac235479ad842696ba52d0
+  implementation_path: 01a11e171b3a4e14987fb52ff75c6f25168634eddf208dd1e3f11887101a7527
   validation: f7b563eb2f1711d2aa9de3ba2b92095ef10b14d9b3b77afd3542d4a37d7ed4fd
   done_when: 33d15a266e3c31f494e6b374b13d0ef73b9c3320da4388118b81c5e6224bba3c
   task_type: 2ad47ffa2c44e63f601770d25d4ca879bf9edef3a1ead64bcf60f905f33496f0
