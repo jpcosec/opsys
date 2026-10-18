@@ -43,7 +43,7 @@ Every store the owner confirms is migrated, and the log shows each one PASS.
 
 _State what is in scope and what is out of scope._
 
-In scope: running the script on the confirmed list (all of it, or a subset the owner names). Out of scope: committing in the other repositories, which their owners do.
+In scope: --apply on every store of the dry-run list, sldb included; the owner authorized it on 2026-10-18 (Hazlo, total permiso). A backup of desk/, knowledge/ and .sldb/ of each repo is taken first. In sldb only desk/, knowledge/ and .sldb/ are committed. Out of scope: commits in the other repositories; their owners review the working-tree changes.
 
 ## Implementation Path
 
