@@ -119,6 +119,7 @@ The models under `deskops.models` and the materializers under `deskops.materiali
 
 Durable workflow guidance lives under `docs/`, including:
 
+- `docs/operator-manual.md`
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
 - `docs/quickstart.md`

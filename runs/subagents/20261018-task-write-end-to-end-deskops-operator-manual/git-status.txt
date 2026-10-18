@@ -1,0 +1,10 @@
+ M .sldb/core/documents/TaskDoc/task-write-end-to-end-deskops-operator-manual.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M README.md
+ M desk/tasks/task-write-end-to-end-deskops-operator-manual.md
+ M deskops/data/faq.md
+ M docs/faq.md
+?? docs/operator-manual.md
+?? runs/subagents/20261018-task-write-end-to-end-deskops-operator-manual/
+?? tests/test_operator_manual.py

@@ -1,0 +1,11 @@
+Task: task-write-end-to-end-deskops-operator-manual
+Title: Write end-to-end deskops operator manual
+Status: active
+Current node: ritual-execution
+Task type: 
+Effective pills:
+- desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+- desk/contexts/pill-cli-gaps-become-tracked-work.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
