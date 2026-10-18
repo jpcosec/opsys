@@ -7,6 +7,7 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f6-apply-store-migration.md
+- desk/tasks/task-desk-update-archives-rituals-the-model-cannot-carry.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -48,3 +49,4 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - Run the store migration with `--apply` on every discovered store [draft] - Every store the owner confirms is migrated, and the log shows each one PASS.
+- `desk update --apply` archives legacy rituals RitualDoc cannot carry and writes the default ones [draft] - When a lifecycle ritual cannot round-trip through RitualDoc, `desk update --apply` moves it byte for byte to `desk/drawer/rituals/legacy-<name>.md` (not modeled), writes the ritual `deskops init` writes in its place, tracks that, and reports both paths.
