@@ -1,6 +1,12 @@
 ---
 id: task-rw-f3-single-closure-path
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f3-atoms-service
@@ -14,13 +20,10 @@ files:
 - deskops/cli/commands/closeout.py
 - desk/rituals/closeout.md
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f3
-- topic:closeout
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f3-single-closure-path.md
 ---
 
 # One closure service behind every way of closing a task

@@ -50,11 +50,9 @@ F2:
 
 F3:
 
-- `task-rw-f3-single-closure-path` — One closure service behind every way of closing a task
 
 F4:
 
-- `task-rw-f4-graph-on-sldb-edge-index` — Declared graph edges come from the sldb edge index
 - `task-rw-f4-single-snapshot-reader` — One reader for the graph snapshot
 - `task-rw-f4-coverage-extractor-decision` — Keep the coverage extractor as an optional report or delete it
 

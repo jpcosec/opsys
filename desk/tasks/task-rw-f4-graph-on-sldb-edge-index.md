@@ -1,6 +1,12 @@
 ---
 id: task-rw-f4-graph-on-sldb-edge-index
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f4-request-sldb-unresolved-references
@@ -28,14 +34,10 @@ files:
 - tests/fixtures/knowledge_graph/static_desk_source_graph.json
 - tests/test_graph_extract_docs.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f4
-- topic:graph
-- topic:sldb-boundary
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f4-graph-on-sldb-edge-index.md
 ---
 
 # Declared graph edges come from the sldb edge index
