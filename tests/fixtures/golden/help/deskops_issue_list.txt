@@ -1,0 +1,7 @@
+usage: deskops issue list [-h] [--root ROOT] [--status {open,closed,all}]
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --status {open,closed,all}
+                        Filter issues by status group.

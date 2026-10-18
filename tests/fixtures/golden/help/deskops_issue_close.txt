@@ -1,0 +1,19 @@
+usage: deskops issue close [-h] --reason REASON [--ref REF [REF ...]]
+                           [--root ROOT] [--force]
+                           selector
+
+positional arguments:
+  selector             Issue selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+
+options:
+  -h, --help           show this help message and exit
+  --reason REASON      Why the issue is closing.
+  --ref REF [REF ...]  Commit or path supporting the close; repeat or space-separate as needed.
+  --root ROOT          Target repository root.
+  --force              Close again even when already closed.
+
+Example:
+  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234 --ref deskops/cli
+
+Selector: issue id, filename, stem, or unique slug fragment under desk/issues/ or desk/drawer/issues/.
+The issue status is set to closed and a ## Resolution section records Closed, Reason and Refs.

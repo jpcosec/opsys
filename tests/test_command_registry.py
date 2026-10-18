@@ -54,6 +54,8 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
     ("promote", "inbox-to-drawer-task"),
     ("drawer",),
     ("drawer", "remove"),
+    ("issue",),
+    ("issue", "close"),
     ("add",),
     ("add", "task"),
     ("add", "pill"),

@@ -1,10 +1,10 @@
 usage: deskops [-h] [--debug]
-               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
+               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
 
 deskops: Workflow-domain layer for the hum-ecosystem.
 
 positional arguments:
-  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
     about               Print a short overview of deskops and its first-use commands.
     doctor              Detect and repair common broken desk states safely.
     status              Deprecated alias for `deskops doctor`; show current workspace and workflow status.
@@ -15,6 +15,7 @@ positional arguments:
     message             Send, list, read, or acknowledge cross-desk messages.
     promote             Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.
     drawer              Manage deferred drawer entries.
+    issue               Close and list desk issues.
     add                 Create desk workflow artifacts from modeled templates.
     edit                Update one field on a modeled desk artifact.
     bind                Bind workflow context artifacts to tasks.

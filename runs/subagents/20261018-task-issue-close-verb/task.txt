@@ -1,0 +1,7 @@
+Task: task-issue-close-verb
+Title: `deskops issue close` closes an issue with its reason and keeps the file as the trace
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

@@ -703,6 +703,64 @@ Examples:
             handler="deskops.cli.commands.drawer:DrawerCLI",
             mutates=True,
         ),
+        Command(
+            path=("issue",),
+            help="Close and list desk issues.",
+            args=(),
+            handler="deskops.cli.commands.issue:IssueCLI",
+            mutates=True,
+            subcommand_dest="issue_command",
+            epilog="""
+Examples:
+  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234
+  deskops issue list --root . --status open
+
+Issues live under desk/issues/ or desk/drawer/issues/. Closing keeps the file and appends a ## Resolution section.
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("issue", "close"),
+            help="Close one issue with its reason, keeping the file as the trace.",
+            args=(
+                A("selector", help=f"Issue selector. {SELECTOR_HELP}"),
+                A("--reason", required=True, help="Why the issue is closing."),
+                A(
+                    "--ref",
+                    action="extend",
+                    nargs="+",
+                    default=[],
+                    help="Commit or path supporting the close; repeat or space-separate as needed.",
+                ),
+                ROOT_ARG,
+                A("--force", action="store_true", help="Close again even when already closed."),
+            ),
+            handler="deskops.cli.commands.issue:IssueCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234 --ref deskops/cli
+
+Selector: issue id, filename, stem, or unique slug fragment under desk/issues/ or desk/drawer/issues/.
+The issue status is set to closed and a ## Resolution section records Closed, Reason and Refs.
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("issue", "list"),
+            help="List desk issues with id, status and title.",
+            args=(
+                ROOT_ARG,
+                A(
+                    "--status",
+                    choices=("open", "closed", "all"),
+                    default="all",
+                    help="Filter issues by status group.",
+                ),
+            ),
+            handler="deskops.cli.commands.issue:IssueCLI",
+            mutates=False,
+        ),
         *_operation_shared_commands(),
         Command(
             path=("repo",),

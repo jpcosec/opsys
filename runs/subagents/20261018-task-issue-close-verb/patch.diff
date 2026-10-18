@@ -1,0 +1,843 @@
+diff --git a/deskops/cli/commands/issue.py b/deskops/cli/commands/issue.py
+new file mode 100644
+index 0000000..944bab2
+--- /dev/null
++++ b/deskops/cli/commands/issue.py
+@@ -0,0 +1,38 @@
++from __future__ import annotations
++
++from datetime import date
++from pathlib import Path
++from typing import Any
++
++from deskops.services.issues import close_issue
++from deskops.services.issues import find_issue
++from deskops.services.issues import list_issues
++
++
++class IssueCLI:
++    """Close and list desk issues."""
++
++    def run(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        if args.issue_command == "close":
++            path = find_issue(root, args.selector)
++            result = close_issue(
++                path,
++                args.reason,
++                args.ref,
++                date.today().isoformat(),
++                root=root,
++                force=args.force,
++            )
++            print(f"Closed issue {result.issue_id}")
++            print(f"Path: {result.path}")
++            return 0
++        if args.issue_command == "list":
++            records = list_issues(root, args.status)
++            if not records:
++                print("No issues found.")
++                return 0
++            for record in records:
++                print(f"{record.issue_id} | {record.status} | {record.title}")
++            return 0
++        return 1
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index ed1e6cd..db87e84 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -703,6 +703,64 @@ Examples:
+             handler="deskops.cli.commands.drawer:DrawerCLI",
+             mutates=True,
+         ),
++        Command(
++            path=("issue",),
++            help="Close and list desk issues.",
++            args=(),
++            handler="deskops.cli.commands.issue:IssueCLI",
++            mutates=True,
++            subcommand_dest="issue_command",
++            epilog="""
++Examples:
++  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234
++  deskops issue list --root . --status open
++
++Issues live under desk/issues/ or desk/drawer/issues/. Closing keeps the file and appends a ## Resolution section.
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("issue", "close"),
++            help="Close one issue with its reason, keeping the file as the trace.",
++            args=(
++                A("selector", help=f"Issue selector. {SELECTOR_HELP}"),
++                A("--reason", required=True, help="Why the issue is closing."),
++                A(
++                    "--ref",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Commit or path supporting the close; repeat or space-separate as needed.",
++                ),
++                ROOT_ARG,
++                A("--force", action="store_true", help="Close again even when already closed."),
++            ),
++            handler="deskops.cli.commands.issue:IssueCLI",
++            mutates=True,
++            epilog="""
++Example:
++  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234 --ref deskops/cli
++
++Selector: issue id, filename, stem, or unique slug fragment under desk/issues/ or desk/drawer/issues/.
++The issue status is set to closed and a ## Resolution section records Closed, Reason and Refs.
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("issue", "list"),
++            help="List desk issues with id, status and title.",
++            args=(
++                ROOT_ARG,
++                A(
++                    "--status",
++                    choices=("open", "closed", "all"),
++                    default="all",
++                    help="Filter issues by status group.",
++                ),
++            ),
++            handler="deskops.cli.commands.issue:IssueCLI",
++            mutates=False,
++        ),
+         *_operation_shared_commands(),
+         Command(
+             path=("repo",),
+diff --git a/deskops/services/issues.py b/deskops/services/issues.py
+new file mode 100644
+index 0000000..6dc9625
+--- /dev/null
++++ b/deskops/services/issues.py
+@@ -0,0 +1,373 @@
++"""Issue lookup, status rewrite, and listing.
++
++Issues live under ``desk/issues/`` or ``desk/drawer/issues/`` and are plain
++Markdown, not modeled documents. Three status shapes are accepted, in this
++order: a YAML frontmatter ``status:`` key, a ``## Status`` section whose body
++is the status word, and a ``Status: <word>`` line near the top of the file.
++
++Closing rewrites the status in place and appends a ``## Resolution`` section.
++The file is never deleted: it is the trace of why the issue closed.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from datetime import date
++from pathlib import Path
++import re
++from typing import Iterable
++
++import yaml
++
++from deskops import doc_io
++from deskops.desk_paths import resolve_selector
++from deskops.errors import DomainError
++
++
++_FRONTMATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---\r?\n", re.DOTALL)
++_STATUS_SECTION_RE = re.compile(r"(?m)^##[ \t]+Status[ \t]*\r?\n")
++_STATUS_LINE_RE = re.compile(r"(?m)^Status:[ \t]*(.*)$", re.IGNORECASE)
++_HEADING_RE = re.compile(r"(?m)^#{1,2}[ \t]+\S")
++
++#: Words accepted as a status. Anything else is treated as an unreadable
++#: status so a prose line in a ``## Status`` section is not mistaken for one.
++KNOWN_STATUSES = frozenset(
++    {
++        "open",
++        "closed",
++        "resolved",
++        "done",
++        "fixed",
++        "verified",
++        "implemented",
++        "wontfix",
++        "blocked",
++        "pending",
++        "wip",
++        "in-progress",
++        "in_progress",
++        "archived",
++    }
++)
++
++#: Statuses that count as closed when filtering ``deskops issue list``.
++CLOSED_STATUSES = frozenset(
++    {
++        "closed",
++        "resolved",
++        "done",
++        "fixed",
++        "verified",
++        "implemented",
++        "wontfix",
++        "archived",
++    }
++)
++
++
++@dataclass(frozen=True)
++class Issue:
++    """One issue discovered on disk."""
++
++    path: Path
++    issue_id: str
++    status: str
++    title: str
++
++
++@dataclass(frozen=True)
++class IssueCloseResult:
++    """Outcome of one issue close, ready for the CLI to print."""
++
++    path: Path
++    issue_id: str
++    status: str = "closed"
++
++
++def _relative(path: Path, root: Path | None = None) -> str:
++    if root is not None:
++        try:
++            return path.resolve().relative_to(root.resolve()).as_posix()
++        except ValueError:
++            pass
++    return path.as_posix()
++
++
++def find_issue(root: Path, selector: str) -> Path:
++    """Resolve one issue selector across ``desk/issues`` and the drawer.
++
++    Ambiguous and missing selectors keep the shared :mod:`deskops.desk_paths`
++    behavior: ``ValueError`` and ``FileNotFoundError`` respectively.
++    """
++    desk_root = root.resolve() / "desk"
++    return resolve_selector(
++        desk_root,
++        [desk_root / "issues", desk_root / "drawer" / "issues"],
++        selector,
++        "issue-*.md",
++        "issue",
++        recursive=True,
++    )
++
++
++def _frontmatter(text: str) -> dict[str, object]:
++    match = _FRONTMATTER_RE.match(text)
++    if match is None:
++        return {}
++    try:
++        payload = yaml.safe_load(match.group(1)) or {}
++    except yaml.YAMLError:
++        return {}
++    return payload if isinstance(payload, dict) else {}
++
++
++def _normalize_status(value: object) -> str | None:
++    if value is None:
++        return None
++    token = str(value).strip().strip("\"'").split()
++    if not token:
++        return None
++    word = token[0].strip().lower().rstrip(":")
++    return word if word in KNOWN_STATUSES else None
++
++
++def _frontmatter_status(text: str) -> str | None:
++    payload = _frontmatter(text)
++    for key, value in payload.items():
++        if str(key).lower() == "status":
++            return _normalize_status(value)
++    return None
++
++
++def _status_section_span(text: str) -> tuple[int, int] | None:
++    match = _STATUS_SECTION_RE.search(text)
++    if match is None:
++        return None
++    body_start = match.end()
++    following = _HEADING_RE.search(text[body_start:])
++    body_end = body_start + following.start() if following is not None else len(text)
++    return body_start, body_end
++
++
++def _section_status(text: str) -> str | None:
++    span = _status_section_span(text)
++    if span is None:
++        return None
++    body = text[span[0] : span[1]]
++    for line in body.splitlines():
++        if line.strip():
++            return _normalize_status(line)
++    return None
++
++
++def _status_line_status(text: str) -> str | None:
++    frontmatter = _FRONTMATTER_RE.match(text)
++    offset = frontmatter.end() if frontmatter is not None else 0
++    body = text[offset:]
++    # "Near the top" means before the first level-2 heading. Issue files may
++    # put the H1 title above the Status line, as sldb's issues do.
++    boundary = re.search(r"(?m)^##[ \t]+\S", body)
++    region = body[: boundary.start()] if boundary is not None else body
++    for match in _STATUS_LINE_RE.finditer(region):
++        status = _normalize_status(match.group(1))
++        if status is not None:
++            return status
++    return None
++
++
++def issue_status(text: str) -> str | None:
++    """The normalized status word, or ``None`` when no format is recognizable."""
++    return (
++        _frontmatter_status(text)
++        or _section_status(text)
++        or _status_line_status(text)
++    )
++
++
++def _issue_id(text: str, path: Path) -> str:
++    payload = _frontmatter(text)
++    for key, value in payload.items():
++        if str(key).lower() == "id" and str(value).strip():
++            return str(value).strip()
++    for line in text.splitlines():
++        match = re.match(r"^ID:[ \t]*(\S+)", line)
++        if match:
++            return match.group(1).strip()
++    return path.stem
++
++
++def _issue_title(text: str) -> str:
++    payload = _frontmatter(text)
++    for key, value in payload.items():
++        if str(key).lower() == "title" and str(value).strip():
++            return str(value).strip()
++    match = re.search(r"(?m)^#[ \t]+(.+?)[ \t]*$", text)
++    return match.group(1).strip() if match is not None else ""
++
++
++def read_issue(path: Path, *, root: Path | None = None) -> Issue:
++    """Read one issue, raising a typed error when its status is unreadable."""
++    text = path.read_text(encoding="utf-8")
++    status = issue_status(text)
++    if status is None:
++        raise DomainError(
++            f"No recognizable status in issue file {_relative(path, root)}; "
++            "expected frontmatter 'status:', a '## Status' section, or a 'Status:' line."
++        )
++    return Issue(
++        path=path,
++        issue_id=_issue_id(text, path),
++        status=status,
++        title=_issue_title(text),
++    )
++
++
++def _set_frontmatter_status(text: str) -> str:
++    match = _FRONTMATTER_RE.match(text)
++    if match is None:
++        return text
++    block, count = re.subn(
++        r"(?mi)^(status:[ \t]*).*$", r"\g<1>closed", match.group(1), count=1
++    )
++    if not count:
++        return text
++    return text[: match.start(1)] + block + text[match.end(1) :]
++
++
++def _set_section_status(text: str) -> str:
++    span = _status_section_span(text)
++    if span is None:
++        return text
++    start, end = span
++    lines = text[start:end].splitlines(keepends=True)
++    for index, line in enumerate(lines):
++        if line.strip():
++            ending = line[len(line.rstrip("\r\n")) :]
++            lines[index] = "closed" + ending
++            break
++    return text[:start] + "".join(lines) + text[end:]
++
++
++def _set_status_line(text: str) -> str:
++    frontmatter = _FRONTMATTER_RE.match(text)
++    offset = frontmatter.end() if frontmatter is not None else 0
++    body = text[offset:]
++    boundary = re.search(r"(?m)^##[ \t]+\S", body)
++    limit = boundary.start() if boundary is not None else len(body)
++    region, count = re.subn(
++        r"(?mi)^(status:[ \t]*).*$", r"\g<1>closed", body[:limit], count=1
++    )
++    if not count:
++        return text
++    return text[:offset] + region + body[limit:]
++
++
++def _set_status(text: str) -> str:
++    """Set every status representation present in ``text`` to ``closed``."""
++    changed = _set_frontmatter_status(text)
++    changed = _set_section_status(changed)
++    return _set_status_line(changed)
++
++
++def _append_resolution(text: str, reason: str, refs: Iterable[str], today: str) -> str:
++    block = [
++        "## Resolution",
++        "",
++        f"Closed: {today}",
++        f"Reason: {reason}",
++        f"Refs: {', '.join(refs)}",
++    ]
++    if text and not text.endswith("\n"):
++        text += "\n"
++    if text and not text.endswith("\n\n"):
++        text += "\n"
++    return text + "\n".join(block) + "\n"
++
++
++def _tracked_identity(root: Path, path: Path) -> tuple[str, str] | None:
++    """The model and document name already tracking ``path``, if any."""
++    from sldb.api import doc_status
++
++    store = root / ".sldb"
++    if not store.is_dir():
++        return None
++    try:
++        status = doc_status(store, _relative(path, root))
++    except Exception:  # noqa: BLE001 - an unreadable store must not block closing
++        return None
++    if status is None or not getattr(status, "exists", False):
++        return None
++    return str(status.model), str(status.name)
++
++
++def close_issue(
++    path: Path,
++    reason: str,
++    refs: Iterable[str],
++    today: str,
++    *,
++    root: Path | None = None,
++    force: bool = False,
++) -> IssueCloseResult:
++    """Close one issue in place and append its resolution.
++
++    Already-closed issues are refused unless ``force`` is set. The tracked
++    document, when present, is retracked after the write so the store hash and
++    derived indexes match the file.
++    """
++    resolved_root = root.resolve() if root is not None else _infer_root(path)
++    issue = read_issue(path, root=resolved_root)
++    slug = _relative(path, resolved_root)
++    if issue.status in CLOSED_STATUSES and not force:
++        raise DomainError(
++            f"Issue {issue.issue_id} is already closed ({issue.status}): {slug}. "
++            "Use --force to close it again."
++        )
++
++    normalized_reason = " ".join((reason or "").split())
++    if not normalized_reason:
++        raise DomainError("Closing an issue needs a non-empty --reason.")
++
++    ref_list = [str(ref).strip() for ref in refs if str(ref).strip()]
++    text = path.read_text(encoding="utf-8")
++    updated = _set_status(text)
++    updated = _append_resolution(updated, normalized_reason, ref_list, today)
++
++    identity = _tracked_identity(resolved_root, path)
++    with doc_io.DocTransaction(resolved_root) as transaction:
++        transaction.record(path)
++        if identity is not None:
++            doc_io.untrack(resolved_root, identity[1])
++        path.write_text(updated, encoding="utf-8")
++        if identity is not None:
++            doc_io.track(resolved_root, path, identity[0], name=identity[1])
++    return IssueCloseResult(path=path, issue_id=issue.issue_id)
++
++
++def _infer_root(path: Path) -> Path:
++    for parent in [path.parent, *path.parents]:
++        if (parent / "desk").is_dir():
++            return parent
++    return path.parent
++
++
++def list_issues(root: Path, status: str = "all") -> list[Issue]:
++    """List issues from both issue locations, filtered by status group."""
++    if status not in {"open", "closed", "all"}:
++        raise DomainError(f"Unknown issue status filter: {status}")
++
++    desk_root = root.resolve() / "desk"
++    paths: list[Path] = []
++    for directory in (desk_root / "issues", desk_root / "drawer" / "issues"):
++        if directory.exists():
++            paths.extend(directory.rglob("issue-*.md"))
++    records = [read_issue(path, root=root) for path in sorted(set(paths))]
++
++    if status == "all":
++        return records
++    closed = status == "closed"
++    return [
++        record
++        for record in records
++        if (record.status in CLOSED_STATUSES) == closed
++    ]
+diff --git a/tests/fixtures/golden/help/deskops.txt b/tests/fixtures/golden/help/deskops.txt
+index 8add2f7..ddfbd33 100644
+--- a/tests/fixtures/golden/help/deskops.txt
++++ b/tests/fixtures/golden/help/deskops.txt
+@@ -1,10 +1,10 @@
+ usage: deskops [-h] [--debug]
+-               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
++               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
+ 
+ deskops: Workflow-domain layer for the hum-ecosystem.
+ 
+ positional arguments:
+-  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
++  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+     about               Print a short overview of deskops and its first-use commands.
+     doctor              Detect and repair common broken desk states safely.
+     status              Deprecated alias for `deskops doctor`; show current workspace and workflow status.
+@@ -15,6 +15,7 @@ positional arguments:
+     message             Send, list, read, or acknowledge cross-desk messages.
+     promote             Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.
+     drawer              Manage deferred drawer entries.
++    issue               Close and list desk issues.
+     add                 Create desk workflow artifacts from modeled templates.
+     edit                Update one field on a modeled desk artifact.
+     bind                Bind workflow context artifacts to tasks.
+diff --git a/tests/fixtures/golden/help/deskops_issue.txt b/tests/fixtures/golden/help/deskops_issue.txt
+new file mode 100644
+index 0000000..a5a64c0
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_issue.txt
+@@ -0,0 +1,15 @@
++usage: deskops issue [-h] {close,list} ...
++
++positional arguments:
++  {close,list}
++    close       Close one issue with its reason, keeping the file as the trace.
++    list        List desk issues with id, status and title.
++
++options:
++  -h, --help    show this help message and exit
++
++Examples:
++  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234
++  deskops issue list --root . --status open
++
++Issues live under desk/issues/ or desk/drawer/issues/. Closing keeps the file and appends a ## Resolution section.
+diff --git a/tests/fixtures/golden/help/deskops_issue_close.txt b/tests/fixtures/golden/help/deskops_issue_close.txt
+new file mode 100644
+index 0000000..997c678
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_issue_close.txt
+@@ -0,0 +1,19 @@
++usage: deskops issue close [-h] --reason REASON [--ref REF [REF ...]]
++                           [--root ROOT] [--force]
++                           selector
++
++positional arguments:
++  selector             Issue selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
++
++options:
++  -h, --help           show this help message and exit
++  --reason REASON      Why the issue is closing.
++  --ref REF [REF ...]  Commit or path supporting the close; repeat or space-separate as needed.
++  --root ROOT          Target repository root.
++  --force              Close again even when already closed.
++
++Example:
++  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234 --ref deskops/cli
++
++Selector: issue id, filename, stem, or unique slug fragment under desk/issues/ or desk/drawer/issues/.
++The issue status is set to closed and a ## Resolution section records Closed, Reason and Refs.
+diff --git a/tests/fixtures/golden/help/deskops_issue_list.txt b/tests/fixtures/golden/help/deskops_issue_list.txt
+new file mode 100644
+index 0000000..bf505cf
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_issue_list.txt
+@@ -0,0 +1,7 @@
++usage: deskops issue list [-h] [--root ROOT] [--status {open,closed,all}]
++
++options:
++  -h, --help            show this help message and exit
++  --root ROOT           Target repository root.
++  --status {open,closed,all}
++                        Filter issues by status group.
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index a7395e0..fab838e 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -40,7 +40,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
+     captured = capsys.readouterr()
+     assert result == 0
+     assert "usage: deskops" in captured.out
+-    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
++    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
+     assert "Typical flow:" in captured.out
+     assert "deskops add task --root ." in captured.out
+     assert "Use docs/quickstart.md" in captured.out
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 00872b4..9b6a622 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -54,6 +54,8 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
+     ("promote", "inbox-to-drawer-task"),
+     ("drawer",),
+     ("drawer", "remove"),
++    ("issue",),
++    ("issue", "close"),
+     ("add",),
+     ("add", "task"),
+     ("add", "pill"),
+diff --git a/tests/test_issue_cli.py b/tests/test_issue_cli.py
+new file mode 100644
+index 0000000..035d657
+--- /dev/null
++++ b/tests/test_issue_cli.py
+@@ -0,0 +1,235 @@
++"""`deskops issue close` and `deskops issue list` across the three status formats."""
++
++from __future__ import annotations
++
++from datetime import date
++from pathlib import Path
++
++import pytest
++
++from deskops.cli.main import main
++
++
++FRONTMATTER_ISSUE = """---
++id: issue-frontmatter
++status: open
++tags:
++- system:demo
++---
++
++# Frontmatter issue
++
++Body stays.
++
++## Problem
++
++Details stay.
++"""
++
++SECTION_ISSUE = """# Section issue
++
++## Status
++
++open (blocked upstream)
++
++## Problem
++
++Details stay.
++"""
++
++STATUS_LINE_ISSUE = """# Line issue
++
++ID: issue-line
++Status: open
++
++## What
++
++Details stay.
++"""
++
++
++def _write_issue(root: Path, name: str, text: str) -> Path:
++    path = root / "desk" / "drawer" / "issues" / f"{name}.md"
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++    return path
++
++
++def _run(capsys: pytest.CaptureFixture[str], *argv: str) -> tuple[int, str, str]:
++    code = main(list(argv))
++    captured = capsys.readouterr()
++    return code, captured.out, captured.err
++
++
++@pytest.mark.parametrize(
++    ("name", "text", "expected_prefix", "issue_id"),
++    [
++        (
++            "issue-frontmatter",
++            FRONTMATTER_ISSUE,
++            FRONTMATTER_ISSUE.replace("status: open", "status: closed"),
++            "issue-frontmatter",
++        ),
++        (
++            "issue-section",
++            SECTION_ISSUE,
++            SECTION_ISSUE.replace("open (blocked upstream)", "closed"),
++            "issue-section",
++        ),
++        (
++            "issue-line",
++            STATUS_LINE_ISSUE,
++            STATUS_LINE_ISSUE.replace("Status: open", "Status: closed"),
++            "issue-line",
++        ),
++    ],
++    ids=("frontmatter", "status-section", "status-line"),
++)
++def test_close_each_status_format_then_list(
++    tmp_path: Path,
++    capsys: pytest.CaptureFixture[str],
++    name: str,
++    text: str,
++    expected_prefix: str,
++    issue_id: str,
++) -> None:
++    path = _write_issue(tmp_path, name, text)
++
++    code, out, err = _run(
++        capsys,
++        "issue",
++        "close",
++        name,
++        "--root",
++        str(tmp_path),
++        "--reason",
++        "Fixed by the CLI",
++        "--ref",
++        "abc1234",
++        "--ref",
++        "deskops/cli",
++    )
++
++    assert code == 0, err
++    assert f"Path: {path}" in out
++    updated = path.read_text(encoding="utf-8")
++    assert path.exists()
++    assert updated.split("## Resolution", 1)[0].rstrip() == expected_prefix.rstrip()
++    assert f"Closed: {date.today().isoformat()}" in updated
++    assert "Reason: Fixed by the CLI" in updated
++    assert "Refs: abc1234, deskops/cli" in updated
++
++    code, out, err = _run(capsys, "issue", "list", "--root", str(tmp_path))
++    assert code == 0, err
++    assert f"{issue_id} | closed |" in out
++
++
++def test_list_reports_id_status_and_title(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
++    _write_issue(tmp_path, "issue-open", SECTION_ISSUE.replace("Section issue", "Open issue"))
++    _write_issue(
++        tmp_path,
++        "issue-closed",
++        STATUS_LINE_ISSUE.replace("Line issue", "Closed issue").replace(
++            "ID: issue-line", "ID: issue-closed"
++        ).replace("Status: open", "Status: closed"),
++    )
++
++    code, out, err = _run(capsys, "issue", "list", "--root", str(tmp_path), "--status", "open")
++
++    assert code == 0, err
++    assert "issue-open | open | Open issue" in out
++    assert "issue-closed" not in out
++
++    code, out, err = _run(capsys, "issue", "list", "--root", str(tmp_path), "--status", "closed")
++    assert code == 0, err
++    assert "issue-closed | closed | Closed issue" in out
++    assert "issue-open" not in out
++
++    code, out, err = _run(capsys, "issue", "list", "--root", str(tmp_path), "--status", "all")
++    assert code == 0, err
++    assert "issue-open" in out
++    assert "issue-closed" in out
++
++
++def test_close_refuses_already_closed_issue_unless_forced(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    text = SECTION_ISSUE.replace("open (blocked upstream)", "closed")
++    path = _write_issue(tmp_path, "issue-already-closed", text)
++
++    code, _out, err = _run(
++        capsys, "issue", "close", "issue-already-closed", "--root", str(tmp_path), "--reason", "Again"
++    )
++
++    assert code == 1
++    assert "already closed" in err
++    assert path.read_text(encoding="utf-8") == text
++
++    code, _out, err = _run(
++        capsys,
++        "issue",
++        "close",
++        "issue-already-closed",
++        "--root",
++        str(tmp_path),
++        "--reason",
++        "Closing again",
++        "--force",
++    )
++
++    assert code == 0, err
++    updated = path.read_text(encoding="utf-8")
++    assert "Reason: Closing again" in updated
++    assert "## Resolution" in updated
++
++
++def test_close_unknown_selector_exits_one(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
++    _write_issue(tmp_path, "issue-known", SECTION_ISSUE)
++
++    code, _out, err = _run(
++        capsys, "issue", "close", "issue-missing", "--root", str(tmp_path), "--reason", "Nope"
++    )
++
++    assert code == 1
++    assert "issue-missing" in err
++
++
++def test_close_unreadable_status_names_the_file(
++    tmp_path: Path, capsys: pytest.CaptureFixture[str]
++) -> None:
++    path = _write_issue(tmp_path, "issue-no-status", "# No status\n\n## Status\n\nnarrative text\n")
++
++    code, _out, err = _run(
++        capsys, "issue", "close", "issue-no-status", "--root", str(tmp_path), "--reason", "Nope"
++    )
++
++    assert code == 1
++    assert "No recognizable status" in err
++    assert path.name in err
++    assert "## Resolution" not in path.read_text(encoding="utf-8")
++
++
++def test_close_rejects_empty_reason(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
++    path = _write_issue(tmp_path, "issue-reason", SECTION_ISSUE)
++
++    code, _out, err = _run(
++        capsys, "issue", "close", "issue-reason", "--root", str(tmp_path), "--reason", "   "
++    )
++
++    assert code == 1
++    assert "non-empty --reason" in err
++    assert "## Resolution" not in path.read_text(encoding="utf-8")
++
++
++def test_close_finds_issue_under_desk_issues(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
++    path = tmp_path / "desk" / "issues" / "issue-active.md"
++    path.parent.mkdir(parents=True)
++    path.write_text(STATUS_LINE_ISSUE, encoding="utf-8")
++
++    code, out, err = _run(
++        capsys, "issue", "close", "issue-active", "--root", str(tmp_path), "--reason", "Done"
++    )
++
++    assert code == 0, err
++    assert f"Path: {path}" in out
++    assert "Status: closed" in path.read_text(encoding="utf-8")

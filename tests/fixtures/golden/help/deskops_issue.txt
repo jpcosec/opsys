@@ -1,0 +1,15 @@
+usage: deskops issue [-h] {close,list} ...
+
+positional arguments:
+  {close,list}
+    close       Close one issue with its reason, keeping the file as the trace.
+    list        List desk issues with id, status and title.
+
+options:
+  -h, --help    show this help message and exit
+
+Examples:
+  deskops issue close issue-empty-selector --root . --reason "Fixed by the CLI" --ref abc1234
+  deskops issue list --root . --status open
+
+Issues live under desk/issues/ or desk/drawer/issues/. Closing keeps the file and appends a ## Resolution section.
