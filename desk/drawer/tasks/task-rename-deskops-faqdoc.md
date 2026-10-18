@@ -3,7 +3,7 @@ id: task-rename-deskops-faqdoc
 status: deferred
 references: []
 depends_on:
-- task-rw-f6-migrate-tracking-stores
+- task-rw-f6-apply-store-migration
 pills:
 - desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
 files:
