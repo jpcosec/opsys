@@ -1,3 +1,7 @@
+---
+record: true
+---
+
 # Deskops architectural diagnosis (2026-08, archived 2026-09-24)
 
 A structured diagnosis of the deskops/SLDB stack that broke its findings into atom-shaped

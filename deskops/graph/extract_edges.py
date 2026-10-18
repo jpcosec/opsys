@@ -42,9 +42,10 @@ class DeclaredGraphEdge:
     provenance_path: str
     provenance_locator: str
     extractor: str = EXTRACTOR_NAME
+    record: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        return {key: value for key, value in asdict(self).items() if value is not None}
 
 
 @dataclass(frozen=True)
@@ -55,9 +56,10 @@ class MissingGraphTarget:
     provenance_locator: str
     reason: str
     extractor: str = EXTRACTOR_NAME
+    record: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        return {key: value for key, value in asdict(self).items() if value is not None}
 
 
 @dataclass(frozen=True)
@@ -86,6 +88,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
             continue
         text = path.read_text(encoding="utf-8")
         relative_path = source_node.path
+        record = True if _is_record_document(text) else None
 
         declarations = [*_frontmatter_declarations(text, source_node.kind, nodes_by_path, ids_by_name), *_atom_declarations(text), *_section_declarations(text)]
         if source_node.kind == "diagram":
@@ -108,6 +111,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
                             provenance_path=relative_path,
                             provenance_locator=declaration.locator,
                             reason="declared target was not found among extracted graph nodes",
+                            record=record,
                         )
                     )
                 continue
@@ -125,6 +129,7 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
                     confidence="high",
                     provenance_path=relative_path,
                     provenance_locator=declaration.locator,
+                    record=record,
                 )
             )
 
@@ -135,6 +140,22 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
             key=lambda missing: (missing.source_id, missing.target_id, missing.provenance_locator),
         ),
     )
+
+
+def _is_record_document(text: str) -> bool:
+    """Whether the document carries the archived-record marker in its frontmatter."""
+    if not text.startswith("---\n"):
+        return False
+    try:
+        _, rest = text.split("---\n", 1)
+        block, _body = rest.split("\n---", 1)
+    except ValueError:
+        return False
+    try:
+        loaded = yaml.safe_load(block)
+    except yaml.YAMLError:
+        return False
+    return isinstance(loaded, dict) and loaded.get("record") is True
 
 
 @dataclass(frozen=True)

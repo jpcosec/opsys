@@ -11,6 +11,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from deskops.cli.main import main
+from deskops.graph.checks import find_missing_graph_references
 from deskops.graph.extract_edges import extract_declared_edges
 
 
@@ -134,3 +136,48 @@ def test_from_drawer_is_provenance_not_a_reference_that_must_resolve(tmp_path: P
 
     deleted = extract_declared_edges(tmp_path)
     assert [m for m in deleted.missing_targets if "drawer" in m.target_id] == []
+
+
+LIVE_ISSUE = """# Live issue
+
+## Kind
+
+bug
+
+This issue names `deskops/missing.py`.
+"""
+
+
+def test_live_issue_with_a_dangling_path_still_fails(tmp_path: Path, capsys) -> None:
+    write(tmp_path / "desk/drawer/issues/issue-live.md", LIVE_ISSUE)
+
+    findings = find_missing_graph_references(tmp_path)
+
+    assert [(finding.target_id, finding.record) for finding in findings] == [
+        ("source_file:deskops/missing.py", None)
+    ]
+    result = main(["graph", "missing", "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Missing graph references:" in captured.out
+    assert "1 missing, 0 informational" in captured.out
+
+
+def test_record_issue_with_the_same_dangling_path_is_informational(tmp_path: Path, capsys) -> None:
+    write(
+        tmp_path / "desk/drawer/issues/issue-archived.md",
+        "---\nrecord: true\n---\n\n" + LIVE_ISSUE,
+    )
+
+    findings = find_missing_graph_references(tmp_path)
+
+    assert [(finding.target_id, finding.record) for finding in findings] == [
+        ("source_file:deskops/missing.py", True)
+    ]
+    result = main(["graph", "missing", "--root", str(tmp_path)])
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert "Informational (archived records):" in captured.out
+    assert "0 missing, 1 informational" in captured.out

@@ -1,3 +1,7 @@
+---
+record: true
+---
+
 # Handoff: 2026-09-10 session — uncommitted work and open items
 
 ## Kind

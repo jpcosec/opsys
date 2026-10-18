@@ -24,6 +24,7 @@ class GraphMissingFinding:
     provenance_path: str | None = None
     provenance_locator: str | None = None
     extractor: str | None = None
+    record: bool | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {key: value for key, value in asdict(self).items() if value is not None}
@@ -80,6 +81,7 @@ def _finding_from_missing_target(missing: MissingGraphTarget) -> GraphMissingFin
         provenance_locator=missing.provenance_locator,
         extractor=missing.extractor,
         reason=missing.reason,
+        record=missing.record,
     )
 
 

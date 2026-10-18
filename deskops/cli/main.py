@@ -299,16 +299,29 @@ class CLI:
             print("No missing graph references found.")
             return 0
 
-        print("Missing graph references:")
-        for finding in findings:
-            print(f"- {finding.kind}: {finding.source_id} -> {finding.target_id}")
-            if finding.role:
-                print(f"  role: {finding.role}")
-            if finding.provenance_path:
-                locator = f":{finding.provenance_locator}" if finding.provenance_locator else ""
-                print(f"  provenance: {finding.provenance_path}{locator}")
-            print(f"  reason: {finding.reason}")
-        return 1
+        failing = [finding for finding in findings if not finding.record]
+        informational = [finding for finding in findings if finding.record]
+
+        if failing:
+            print("Missing graph references:")
+            for finding in failing:
+                self._print_graph_missing_finding(finding)
+        if informational:
+            print("Informational (archived records):")
+            for finding in informational:
+                self._print_graph_missing_finding(finding)
+
+        print(f"{len(failing)} missing, {len(informational)} informational")
+        return 1 if failing else 0
+
+    def _print_graph_missing_finding(self, finding: Any) -> None:
+        print(f"- {finding.kind}: {finding.source_id} -> {finding.target_id}")
+        if finding.role:
+            print(f"  role: {finding.role}")
+        if finding.provenance_path:
+            locator = f":{finding.provenance_locator}" if finding.provenance_locator else ""
+            print(f"  provenance: {finding.provenance_path}{locator}")
+        print(f"  reason: {finding.reason}")
 
     def _graph_reflect(self, args: Any) -> int:
         root = Path(args.root).resolve()

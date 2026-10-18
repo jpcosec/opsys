@@ -1,0 +1,9 @@
+ M desk/drawer/issues/diagnosis-archive.md
+ M desk/drawer/issues/issue-refactor-primitives-to-ast-driven-task-nodes.md
+ M desk/drawer/issues/issue-session-20260910-handoff-uncommitted-work-and-open-items.md
+ M deskops/cli/main.py
+ M deskops/graph/checks.py
+ M deskops/graph/extract_edges.py
+ M tests/test_graph_declared_edges.py
+?? desk/inbox/20261018-003127-unclear-closeout-verify-revienta-con-un-yaml-multi-documento-del-repo.md
+?? runs/subagents/20261018-task-rw-f0-graph-missing-ignores-archived-records/

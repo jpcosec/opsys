@@ -1,3 +1,7 @@
+---
+record: true
+---
+
 # Refactor primitives into AST-driven Task nodes
 
 ## Kind
