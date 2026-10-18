@@ -7,6 +7,8 @@ scope: desk
 tasks:
 - desk/tasks/task-derived-atom-trace-index.md
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
+- desk/tasks/task-repo-remove-verb.md
+- desk/tasks/task-message-tracks-only-in-the-target-store.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -51,3 +53,5 @@ _Generated from the task references above._
 `extract_declared_edges`, plus a test proving that no atom document is mutated.
 - Detect and clean global policy leaks in task files [draft] - Add a review-only `task-policy-leak` finding to `deskops drift check`, then remove the current
 leak from the active task set without changing any global policy text.
+- `deskops repo remove` takes a repository out of the registry so it can be registered again [draft] - `deskops repo remove <id> --root <repo>` deletes desk/registry/repo-<id>.md, untracks its RepositoryDoc, and prints the path. Afterwards `repo register` can add the entry again under the right id. A missing id exits 1 with the ids that do exist.
+- A sent note is tracked only in the target repo's store, never in the sender's [draft] - `deskops message send` and the deprecated `deskops inbox` alias, in every addressing form (--root, --repo, --to), track the delivered note only in the target repo's store, with a target-relative path. The sender's store does not change.
