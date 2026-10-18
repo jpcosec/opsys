@@ -9,6 +9,7 @@ tasks:
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
 - desk/tasks/task-repo-remove-verb.md
 - desk/tasks/task-message-tracks-only-in-the-target-store.md
+- desk/tasks/task-closeout-subject-names-the-task-file.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -55,3 +56,4 @@ _Generated from the task references above._
 leak from the active task set without changing any global policy text.
 - `deskops repo remove` takes a repository out of the registry so it can be registered again [draft] - `deskops repo remove <id> --root <repo>` deletes desk/registry/repo-<id>.md, untracks its RepositoryDoc, and prints the path. Afterwards `repo register` can add the entry again under the right id. A missing id exits 1 with the ids that do exist.
 - A sent note is tracked only in the target repo's store, never in the sender's [draft] - `deskops message send` and the deprecated `deskops inbox` alias, in every addressing form (--root, --repo, --to), track the delivered note only in the target repo's store, with a target-relative path. The sender's store does not change.
+- The default closeout commit subject names the task file, not a bare id [draft] - Without -m, every closure route (commit, supersede, retire) uses `closeout: <task file stem>`, for example `closeout: 001-define-graph-ui-data-contract`. When the stem equals the id, the subject stays as it is today. The Task-Id trailer always carries the id.
