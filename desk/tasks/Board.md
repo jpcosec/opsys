@@ -11,6 +11,7 @@ tasks:
 - desk/tasks/task-rw-f1-output-golden-files.md
 - desk/tasks/task-closeout-verify-tolerates-multi-document-yaml.md
 - desk/tasks/task-message-tracks-notes-in-the-target-store-and-ack-resigns.md
+- desk/tasks/task-graph-uses-sldb-graph-api-instead-of-kgdb.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -56,3 +57,4 @@ _Generated from the task references above._
 - Golden files pin the graph snapshot, run index, closeout trailers and --help text [draft] - Tests compare those outputs, produced from a fixed fixture desk, against committed golden files with volatile values normalized.
 - `closeout verify` does not abort on a multi-document YAML outside desk/ [draft] - `closeout verify` and the closeout gate of `advance` complete on a repo that contains a multi-document YAML anywhere, and judge evidence exactly as before for every other file.
 - `message`/`inbox` track a note in the target repo's store, and `--ack` re-signs it [draft] - A delivered note is tracked in the store of the repo that owns the target desk (the `.sldb` next to the target `desk/`), or not tracked with a warning when that repo has no store; `--ack` updates the tracked note so `sldb stores check` passes afterwards in the target repo.
+- deskops reads and validates graphs through sldb, with no kgdb dependency [draft] - No deskops code, test or packaging metadata imports or declares kgdb. `deskops graph build` validates and writes through sldb, and in a fresh venv without kgdb `pytest tests` passes and `deskops graph build` works.

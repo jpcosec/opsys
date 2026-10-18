@@ -1,6 +1,12 @@
 ---
 id: task-graph-uses-sldb-graph-api-instead-of-kgdb
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -16,13 +22,10 @@ files:
 - runs/planning/rewrite-plan/gen.py
 - runs/planning/deskops-rewrite-inventory.md
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- topic:graph
-- topic:packaging
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-graph-uses-sldb-graph-api-instead-of-kgdb.md
 ---
 
 # deskops reads and validates graphs through sldb, with no kgdb dependency
