@@ -1,0 +1,7 @@
+Task: task-canonical-atom-reference-metadata
+Title: Canonical atom reference field and role vocabulary
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

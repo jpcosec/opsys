@@ -1,0 +1,451 @@
+diff --git a/deskops/atom_references.py b/deskops/atom_references.py
+new file mode 100644
+index 0000000..04be296
+--- /dev/null
++++ b/deskops/atom_references.py
+@@ -0,0 +1,91 @@
++"""Canonical atom reference metadata.
++
++One artifact field carries structured atom references: ``atoms``. A reference is
++either a bare atom id or a mapping with an ``id`` and an optional ``role``. The
++role vocabulary is deliberately small; ``related_atoms`` is a legacy alias that
++``deskops drift check`` reports, and ``source_atoms`` remains the
++``MaterializationContractDoc`` field.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from typing import Any
++
++
++CANONICAL_FIELD = "atoms"
++LEGACY_FIELDS = ("related_atoms",)
++MATERIALIZATION_FIELD = "source_atoms"
++ALLOWED_ROLES = ("references", "documents", "specifies", "constrains", "validates")
++DEFAULT_ROLE = "references"
++
++INVALID_ROLE_VIOLATION = "invalid_atom_reference_role"
++LEGACY_FIELD_VIOLATION = "legacy_atom_reference_field"
++
++
++@dataclass(frozen=True)
++class ParsedAtomReference:
++    """One declared atom reference.
++
++    ``role`` keeps the declared value even when it is invalid; ``violation``
++    names the problem so extractors can fall back to ``DEFAULT_ROLE`` while the
++    drift validator reports the declaration instead of hiding it.
++    """
++
++    atom_id: str
++    role: str
++    field_name: str
++    violation: str | None = None
++
++    def as_tuple(self) -> tuple[str, str, str]:
++        return (self.atom_id, self.role, self.field_name)
++
++
++def parse_atom_reference(
++    value: Any,
++    field_name: str = CANONICAL_FIELD,
++) -> ParsedAtomReference | None:
++    """Parse a string or ``{id, role}`` mapping into an atom reference.
++
++    Returns ``None`` when the value is not a reference shape. An unknown role is
++    returned as an explicit ``invalid_atom_reference_role`` violation; it is
++    never silently rewritten here.
++    """
++    if isinstance(value, str):
++        atom_id = value.strip()
++        if not atom_id:
++            return None
++        return ParsedAtomReference(atom_id=atom_id, role=DEFAULT_ROLE, field_name=field_name)
++
++    if not isinstance(value, dict):
++        return None
++
++    atom_id = value.get("id")
++    if not isinstance(atom_id, str) or not atom_id.strip():
++        return None
++
++    role = value.get("role")
++    if not isinstance(role, str) or not role.strip():
++        return ParsedAtomReference(
++            atom_id=atom_id.strip(),
++            role=DEFAULT_ROLE,
++            field_name=field_name,
++        )
++
++    role = role.strip()
++    violation = None if role in ALLOWED_ROLES else INVALID_ROLE_VIOLATION
++    return ParsedAtomReference(
++        atom_id=atom_id.strip(),
++        role=role,
++        field_name=field_name,
++        violation=violation,
++    )
++
++
++def iter_atom_reference_values(value: Any) -> list[Any]:
++    """Normalize a declared field value to the reference shapes to parse."""
++    if isinstance(value, list):
++        return value
++    if value is None:
++        return []
++    return [value]
+diff --git a/deskops/graph/checks.py b/deskops/graph/checks.py
+index c28bc7c..934cc33 100644
+--- a/deskops/graph/checks.py
++++ b/deskops/graph/checks.py
+@@ -5,6 +5,15 @@ from dataclasses import dataclass
+ from pathlib import Path
+ from typing import Any
+ 
++import yaml
++
++from deskops.atom_references import ALLOWED_ROLES
++from deskops.atom_references import CANONICAL_FIELD
++from deskops.atom_references import LEGACY_FIELD_VIOLATION
++from deskops.atom_references import LEGACY_FIELDS
++from deskops.atom_references import MATERIALIZATION_FIELD
++from deskops.atom_references import iter_atom_reference_values
++from deskops.atom_references import parse_atom_reference
+ from deskops.graph.extract_edges import MissingGraphTarget
+ from deskops.graph.extract_edges import extract_declared_edges
+ from deskops.graph.snapshot import GraphSnapshot
+@@ -83,3 +92,114 @@ def _finding_from_missing_target(missing: MissingGraphTarget) -> GraphMissingFin
+         reason=missing.reason,
+         record=missing.record,
+     )
++
++
++@dataclass(frozen=True)
++class AtomReferenceFinding:
++    kind: str
++    path: str
++    locator: str
++    reason: str
++    atom_id: str | None = None
++    role: str | None = None
++    field_name: str | None = None
++
++    def to_dict(self) -> dict[str, Any]:
++        return {key: value for key, value in asdict(self).items() if value is not None}
++
++
++def find_atom_reference_violations(root: Path) -> list[AtomReferenceFinding]:
++    """Report invalid roles and legacy atom reference fields in Markdown frontmatter.
++
++    Only frontmatter under ``desk/`` and ``docs/`` is a declaration. Fenced YAML
++    blocks are examples, so they are not scanned.
++    """
++    project_root = Path(root)
++    findings: list[AtomReferenceFinding] = []
++
++    for surface in ("desk", "docs"):
++        surface_root = project_root / surface
++        if not surface_root.is_dir():
++            continue
++        for path in sorted(surface_root.rglob("*.md")):
++            relative_parts = path.relative_to(project_root).parts
++            if any(part.startswith(".") for part in relative_parts):
++                continue
++            try:
++                text = path.read_text(encoding="utf-8")
++            except OSError:
++                continue
++            frontmatter = _frontmatter_mapping(text)
++            if frontmatter is None:
++                continue
++            relative_path = path.relative_to(project_root).as_posix()
++            findings.extend(_atom_reference_findings(frontmatter, relative_path))
++
++    return sorted(findings, key=lambda finding: (finding.path, finding.locator, finding.kind))
++
++
++def _frontmatter_mapping(text: str) -> dict[Any, Any] | None:
++    if not text.startswith("---\n"):
++        return None
++    try:
++        _, rest = text.split("---\n", 1)
++        block, _body = rest.split("\n---", 1)
++    except ValueError:
++        return None
++    try:
++        loaded = yaml.safe_load(block)
++    except yaml.YAMLError:
++        return None
++    return loaded if isinstance(loaded, dict) else None
++
++
++def _atom_reference_findings(mapping: dict[Any, Any], path: str) -> list[AtomReferenceFinding]:
++    findings: list[AtomReferenceFinding] = []
++    fields: list[tuple[str, Any]] = []
++    for field_name in (CANONICAL_FIELD, MATERIALIZATION_FIELD):
++        if field_name in mapping:
++            fields.append((field_name, mapping[field_name]))
++    materialization = mapping.get("materialization")
++    if isinstance(materialization, dict) and MATERIALIZATION_FIELD in materialization:
++        fields.append(
++            (f"materialization.{MATERIALIZATION_FIELD}", materialization[MATERIALIZATION_FIELD])
++        )
++    for field_name in LEGACY_FIELDS:
++        if field_name in mapping:
++            fields.append((field_name, mapping[field_name]))
++
++    for field_name, value in fields:
++        if field_name in LEGACY_FIELDS:
++            findings.append(
++                AtomReferenceFinding(
++                    kind=LEGACY_FIELD_VIOLATION,
++                    path=path,
++                    locator=f"frontmatter:{field_name}",
++                    field_name=field_name,
++                    reason=(
++                        f"uses legacy atom reference field {field_name}; "
++                        f"declare atom references in {CANONICAL_FIELD}"
++                    ),
++                )
++            )
++
++        for index, item in enumerate(iter_atom_reference_values(value)):
++            parsed = parse_atom_reference(item, field_name)
++            if parsed is None or parsed.violation is None:
++                continue
++            findings.append(
++                AtomReferenceFinding(
++                    kind=parsed.violation,
++                    path=path,
++                    locator=f"frontmatter:{field_name}[{index}]",
++                    atom_id=parsed.atom_id,
++                    role=parsed.role,
++                    field_name=field_name,
++                    reason=(
++                        f"atom {parsed.atom_id} declares invalid role {parsed.role!r}; "
++                        f"allowed roles: {', '.join(ALLOWED_ROLES)}"
++                    ),
++                )
++            )
++
++    return findings
+diff --git a/deskops/graph/extract_edges.py b/deskops/graph/extract_edges.py
+index 704ea68..3c37899 100644
+--- a/deskops/graph/extract_edges.py
++++ b/deskops/graph/extract_edges.py
+@@ -8,15 +8,17 @@ from typing import Any
+ 
+ import yaml
+ 
++from deskops.atom_references import ALLOWED_ROLES
++from deskops.atom_references import CANONICAL_FIELD
++from deskops.atom_references import DEFAULT_ROLE
++from deskops.atom_references import LEGACY_FIELDS
++from deskops.atom_references import MATERIALIZATION_FIELD
+ from deskops.graph.extract_docs import extract_doc_nodes
+ from deskops.graph.extract_sources import extract_source_file_nodes
+ 
+ 
+ EXTRACTOR_NAME = "desk_declared_edges_v1"
+ 
+-ALLOWED_ATOM_ROLES = {"references", "documents", "specifies", "constrains", "validates"}
+-DEFAULT_ROLE = "references"
+-
+ SECTION_HEADING_RE = re.compile(r"^(#{2,6})\s+(.+?)\s*$")
+ # A slug like `atom-pills-carry-transitional-task-knowledge` contains
+ # `task-knowledge`, which is part of an atom name, not a task reference; a real
+@@ -552,7 +554,7 @@ def _declarations_from_mapping(
+     skip_fields: frozenset[str] = frozenset(),
+ ) -> list[_Declaration]:
+     declarations: list[_Declaration] = []
+-    for key in ("atoms", "source_atoms", "related_atoms"):
++    for key in (CANONICAL_FIELD, MATERIALIZATION_FIELD, *LEGACY_FIELDS):
+         if key in skip_fields:
+             continue
+         declarations.extend(_atom_declarations_from_value(mapping.get(key), locator, DEFAULT_ROLE))
+@@ -584,7 +586,7 @@ def _atom_declarations_from_value(value: Any, locator: str, default_role: str) -
+             declarations.append(_Declaration(_atom_id(item), default_role, locator))
+         elif isinstance(item, dict) and isinstance(item.get("id"), str):
+             role = item.get("role") if isinstance(item.get("role"), str) else default_role
+-            if role not in ALLOWED_ATOM_ROLES:
++            if role not in ALLOWED_ROLES:
+                 role = default_role
+             declarations.append(_Declaration(_atom_id(item["id"]), role, locator))
+     return declarations
+diff --git a/deskops/graph/self_reflection.py b/deskops/graph/self_reflection.py
+index d10fb42..18f7880 100644
+--- a/deskops/graph/self_reflection.py
++++ b/deskops/graph/self_reflection.py
+@@ -374,6 +374,7 @@ def _is_excluded_source_path(path: str) -> bool:
+ 
+ 
+ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
++    from deskops.graph.checks import find_atom_reference_violations
+     from deskops.graph.checks import find_missing_graph_references
+     from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+     from deskops.graph.snapshot import GraphSnapshot
+@@ -415,4 +416,9 @@ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
+         loc = f"{finding.provenance_path}#{finding.provenance_locator}" if finding.provenance_path else finding.source_id
+         report.append(f"unrouted-finding: {loc} (missing {finding.target_id}) is not covered by any atom or issue")
+ 
++    # 4. atom reference metadata that does not follow the canonical convention
++    for violation in find_atom_reference_violations(root):
++        loc = f"{violation.path}#{violation.locator}"
++        report.append(f"atom-reference: {loc} {violation.reason}")
++
+     return report
+diff --git a/docs/knowledge-graph/desk-source-graph-vocabulary.md b/docs/knowledge-graph/desk-source-graph-vocabulary.md
+index 03967bd..8e97cab 100644
+--- a/docs/knowledge-graph/desk-source-graph-vocabulary.md
++++ b/docs/knowledge-graph/desk-source-graph-vocabulary.md
+@@ -86,7 +86,7 @@ Do not emit duplicate inverse edges for convenience. KGDB traversal should answe
+ 
+ | Role | Family | Canonical direction | Example source kind | Example target kind | Declared evidence | Inferred evidence | First extractor |
+ |---|---|---|---|---|---|---|---|
+-| `references` | Knowledge use | Referencing surface -> referenced surface. | `doc` | `atom` | Explicit atom reference metadata, Markdown link, or semantic reference field. | Content scan that recognizes an atom id or stable node id. | yes |
++| `references` | Knowledge use | Referencing surface -> referenced surface. | `doc` | `atom` | Explicit `atoms` frontmatter (the canonical atom-reference field; roles: `references`, `documents`, `specifies`, `constrains`, `validates`), Markdown link, or semantic reference field. | Content scan that recognizes an atom id or stable node id. | yes |
+ | `documents` | Knowledge use | Explanatory surface -> atom or documented surface. | `doc` | `atom` | Explicit atom reference role, documentation frontmatter, or curated relation map. | Heading/link context that clearly describes the target. | yes |
+ | `specifies` | Knowledge use | Specifying surface -> specified surface. | `spec` | `cli_command` | Spec section, model declaration, or task output that names the target. | Path or title similarity between a spec and target surface. | yes |
+ | `constrains` | Knowledge use | Constraint source -> constrained surface. | `doc` | `task` | Ritual, policy, pill, or task dependency that explicitly limits behavior. | Content scan that finds imperative policy language naming a target. | yes |
+@@ -105,6 +105,12 @@ Do not emit duplicate inverse edges for convenience. KGDB traversal should answe
+ | `routes` | Operation | Board/index/workflow surface -> task or issue it routes. | `doc` | `task` | Board row, index entry, or routing metadata. | Path convention inside an active task directory. | yes |
+ | `configures` | Operation | Config file or setting surface -> runtime/source/command surface it configures. | `config_file` | `cli_command` | Config key, registry entry, or documented setting target. | Content scan that associates a setting with a target name. | no |
+ 
++### Atom Reference Field And Roles
++
++Artifacts declare atom references in one frontmatter field, `atoms`. A reference is a bare atom id or a mapping with `id` and an optional `role`. The only allowed roles are `references`, `documents`, `specifies`, `constrains`, and `validates`; the default is `references`.
++
++`related_atoms` is a legacy alias: `deskops drift check` reports it as `legacy_atom_reference_field` and points at `atoms`. `source_atoms` remains the `MaterializationContractDoc` field and is not a general artifact field. An unknown role is reported as `invalid_atom_reference_role`; the extractor maps it to `references` so graph extraction continues.
++
+ ### Declared And Inferred Roles
+ 
+ Declared roles come from explicit source-owned metadata or authored text that names both the relation and the target. Examples include an atom reference with `role: documents`, a board row routing a task, a task validation section naming tests, or a config/model file defining a schema. Declared edges should use `source_kind` values such as `declared`, `sldb_semantic`, or `manual`, and may be `high` confidence when the target id is stable and unambiguous.
+diff --git a/tests/test_atom_reference_convention.py b/tests/test_atom_reference_convention.py
+new file mode 100644
+index 0000000..4974475
+--- /dev/null
++++ b/tests/test_atom_reference_convention.py
+@@ -0,0 +1,122 @@
++from __future__ import annotations
++
++from pathlib import Path
++
++from deskops.atom_references import ALLOWED_ROLES
++from deskops.atom_references import CANONICAL_FIELD
++from deskops.atom_references import DEFAULT_ROLE
++from deskops.atom_references import LEGACY_FIELD_VIOLATION
++from deskops.atom_references import parse_atom_reference
++from deskops.graph.checks import find_atom_reference_violations
++
++
++def test_valid_roles_pass(tmp_path: Path) -> None:
++    roles = "".join(f"  - {{id: atom-{role}, role: {role}}}\n" for role in ALLOWED_ROLES)
++    write(
++        tmp_path / "docs/guide.md",
++        f"""---
++{CANONICAL_FIELD}:
++{roles}  - atom-bare
++---
++# Guide
++""",
++    )
++
++    assert find_atom_reference_violations(tmp_path) == []
++
++
++def test_unknown_role_produces_one_finding(tmp_path: Path) -> None:
++    write(
++        tmp_path / "docs/guide.md",
++        """---
++atoms:
++  - id: atom-known
++    role: documents
++  - id: atom-unknown
++    role: explains
++---
++# Guide
++""",
++    )
++
++    findings = find_atom_reference_violations(tmp_path)
++
++    assert [finding.to_dict() for finding in findings] == [
++        {
++            "kind": "invalid_atom_reference_role",
++            "path": "docs/guide.md",
++            "locator": "frontmatter:atoms[1]",
++            "reason": "atom atom-unknown declares invalid role 'explains'; allowed roles: references, documents, specifies, constrains, validates",
++            "atom_id": "atom-unknown",
++            "role": "explains",
++            "field_name": "atoms",
++        }
++    ]
++
++
++def test_related_atoms_produces_one_legacy_finding(tmp_path: Path) -> None:
++    write(
++        tmp_path / "desk/atoms/atom-source.md",
++        """---
++id: atom-source
++related_atoms:
++  - atom-first
++  - atom-second
++---
++# Source
++""",
++    )
++
++    findings = find_atom_reference_violations(tmp_path)
++
++    assert [finding.to_dict() for finding in findings] == [
++        {
++            "kind": LEGACY_FIELD_VIOLATION,
++            "path": "desk/atoms/atom-source.md",
++            "locator": "frontmatter:related_atoms",
++            "reason": "uses legacy atom reference field related_atoms; declare atom references in atoms",
++            "field_name": "related_atoms",
++        }
++    ]
++
++
++def test_bare_string_maps_to_references() -> None:
++    parsed = parse_atom_reference("atom-bare")
++
++    assert parsed is not None
++    assert parsed.as_tuple() == ("atom-bare", DEFAULT_ROLE, CANONICAL_FIELD)
++    assert parsed.violation is None
++
++
++def test_mapping_without_role_maps_to_references() -> None:
++    parsed = parse_atom_reference({"id": "atom-bare"})
++
++    assert parsed is not None
++    assert parsed.as_tuple() == ("atom-bare", DEFAULT_ROLE, CANONICAL_FIELD)
++    assert parsed.violation is None
++
++
++def test_fenced_yaml_examples_are_not_scanned(tmp_path: Path) -> None:
++    write(
++        tmp_path / "docs/guide.md",
++        """---
++title: Guide
++---
++# Guide
++
++```yaml
++atoms:
++  - id: atom-example
++    role: explains
++related_atoms:
++  - atom-example
++```
++""",
++    )
++
++    assert find_atom_reference_violations(tmp_path) == []
++
++
++def write(path: Path, content: str) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(content, encoding="utf-8")

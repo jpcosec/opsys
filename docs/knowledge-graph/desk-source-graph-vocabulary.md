@@ -86,7 +86,7 @@ Do not emit duplicate inverse edges for convenience. KGDB traversal should answe
 
 | Role | Family | Canonical direction | Example source kind | Example target kind | Declared evidence | Inferred evidence | First extractor |
 |---|---|---|---|---|---|---|---|
-| `references` | Knowledge use | Referencing surface -> referenced surface. | `doc` | `atom` | Explicit atom reference metadata, Markdown link, or semantic reference field. | Content scan that recognizes an atom id or stable node id. | yes |
+| `references` | Knowledge use | Referencing surface -> referenced surface. | `doc` | `atom` | Explicit `atoms` frontmatter (the canonical atom-reference field; roles: `references`, `documents`, `specifies`, `constrains`, `validates`), Markdown link, or semantic reference field. | Content scan that recognizes an atom id or stable node id. | yes |
 | `documents` | Knowledge use | Explanatory surface -> atom or documented surface. | `doc` | `atom` | Explicit atom reference role, documentation frontmatter, or curated relation map. | Heading/link context that clearly describes the target. | yes |
 | `specifies` | Knowledge use | Specifying surface -> specified surface. | `spec` | `cli_command` | Spec section, model declaration, or task output that names the target. | Path or title similarity between a spec and target surface. | yes |
 | `constrains` | Knowledge use | Constraint source -> constrained surface. | `doc` | `task` | Ritual, policy, pill, or task dependency that explicitly limits behavior. | Content scan that finds imperative policy language naming a target. | yes |
@@ -104,6 +104,12 @@ Do not emit duplicate inverse edges for convenience. KGDB traversal should answe
 | `defines` | Operation | Defining artifact -> model, ritual, command, schema, tag namespace, or vocabulary item it defines. | `config_file` | `sldb_model` | Schema file, registry, model file, or vocabulary document. | Path convention under a known definition directory. | yes |
 | `routes` | Operation | Board/index/workflow surface -> task or issue it routes. | `doc` | `task` | Board row, index entry, or routing metadata. | Path convention inside an active task directory. | yes |
 | `configures` | Operation | Config file or setting surface -> runtime/source/command surface it configures. | `config_file` | `cli_command` | Config key, registry entry, or documented setting target. | Content scan that associates a setting with a target name. | no |
+
+### Atom Reference Field And Roles
+
+Artifacts declare atom references in one frontmatter field, `atoms`. A reference is a bare atom id or a mapping with `id` and an optional `role`. The only allowed roles are `references`, `documents`, `specifies`, `constrains`, and `validates`; the default is `references`.
+
+`related_atoms` is a legacy alias: `deskops drift check` reports it as `legacy_atom_reference_field` and points at `atoms`. `source_atoms` remains the `MaterializationContractDoc` field and is not a general artifact field. An unknown role is reported as `invalid_atom_reference_role`; the extractor maps it to `references` so graph extraction continues.
 
 ### Declared And Inferred Roles
 

@@ -374,6 +374,7 @@ def _is_excluded_source_path(path: str) -> bool:
 
 
 def drift_check_knowledge_surfaces(root: Path) -> list[str]:
+    from deskops.graph.checks import find_atom_reference_violations
     from deskops.graph.checks import find_missing_graph_references
     from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
     from deskops.graph.snapshot import GraphSnapshot
@@ -414,5 +415,10 @@ def drift_check_knowledge_surfaces(root: Path) -> list[str]:
             continue
         loc = f"{finding.provenance_path}#{finding.provenance_locator}" if finding.provenance_path else finding.source_id
         report.append(f"unrouted-finding: {loc} (missing {finding.target_id}) is not covered by any atom or issue")
+
+    # 4. atom reference metadata that does not follow the canonical convention
+    for violation in find_atom_reference_violations(root):
+        loc = f"{violation.path}#{violation.locator}"
+        report.append(f"atom-reference: {loc} {violation.reason}")
 
     return report

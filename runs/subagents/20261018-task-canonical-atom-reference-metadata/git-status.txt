@@ -1,0 +1,12 @@
+ M .sldb/core/documents/TaskDoc/task-canonical-atom-reference-metadata.yaml
+ M .sldb/core/models/BoardDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-canonical-atom-reference-metadata.md
+ M deskops/graph/checks.py
+ M deskops/graph/extract_edges.py
+ M deskops/graph/self_reflection.py
+ M docs/knowledge-graph/desk-source-graph-vocabulary.md
+?? deskops/atom_references.py
+?? runs/subagents/20261018-task-canonical-atom-reference-metadata/
+?? tests/test_atom_reference_convention.py

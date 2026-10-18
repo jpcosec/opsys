@@ -8,14 +8,16 @@ from typing import Any
 
 import yaml
 
+from deskops.atom_references import ALLOWED_ROLES
+from deskops.atom_references import CANONICAL_FIELD
+from deskops.atom_references import DEFAULT_ROLE
+from deskops.atom_references import LEGACY_FIELDS
+from deskops.atom_references import MATERIALIZATION_FIELD
 from deskops.graph.extract_docs import extract_doc_nodes
 from deskops.graph.extract_sources import extract_source_file_nodes
 
 
 EXTRACTOR_NAME = "desk_declared_edges_v1"
-
-ALLOWED_ATOM_ROLES = {"references", "documents", "specifies", "constrains", "validates"}
-DEFAULT_ROLE = "references"
 
 SECTION_HEADING_RE = re.compile(r"^(#{2,6})\s+(.+?)\s*$")
 # A slug like `atom-pills-carry-transitional-task-knowledge` contains
@@ -552,7 +554,7 @@ def _declarations_from_mapping(
     skip_fields: frozenset[str] = frozenset(),
 ) -> list[_Declaration]:
     declarations: list[_Declaration] = []
-    for key in ("atoms", "source_atoms", "related_atoms"):
+    for key in (CANONICAL_FIELD, MATERIALIZATION_FIELD, *LEGACY_FIELDS):
         if key in skip_fields:
             continue
         declarations.extend(_atom_declarations_from_value(mapping.get(key), locator, DEFAULT_ROLE))
@@ -584,7 +586,7 @@ def _atom_declarations_from_value(value: Any, locator: str, default_role: str) -
             declarations.append(_Declaration(_atom_id(item), default_role, locator))
         elif isinstance(item, dict) and isinstance(item.get("id"), str):
             role = item.get("role") if isinstance(item.get("role"), str) else default_role
-            if role not in ALLOWED_ATOM_ROLES:
+            if role not in ALLOWED_ROLES:
                 role = default_role
             declarations.append(_Declaration(_atom_id(item["id"]), role, locator))
     return declarations
