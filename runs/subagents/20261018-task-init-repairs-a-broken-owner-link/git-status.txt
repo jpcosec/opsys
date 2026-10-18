@@ -1,0 +1,13 @@
+ M .sldb/core/documents/TaskDoc/task-init-repairs-a-broken-owner-link.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M README.md
+ M desk/tasks/task-init-repairs-a-broken-owner-link.md
+ M deskops/bootstrap.py
+ M deskops/data/faq.md
+ M deskops/doc_io.py
+ M docs/faq.md
+ M tests/test_doctor_model_registration.py
+?? docs/operator-manual.md
+?? runs/subagents/20261018-task-init-repairs-a-broken-owner-link/
+?? tests/test_operator_manual.py

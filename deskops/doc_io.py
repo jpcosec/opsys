@@ -133,8 +133,8 @@ def register_model(root: Path, model_ref: str, *, pythonpath: str | None = None,
     return add_model(_store(root), model_ref, pythonpath=_pythonpath(pythonpath), canonical=canonical)
 
 
-def link_store_alias(root: Path, other_store: Path | str, name: str) -> Any:
-    return link_store(_store(root), other_store, name)
+def link_store_alias(root: Path, other_store: Path | str, name: str, *, replace: bool = False) -> Any:
+    return link_store(_store(root), other_store, name, replace=replace)
 
 
 def inherit_model_from(root: Path, ref: str, *, pythonpath: str | None = None) -> Any:

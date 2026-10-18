@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 
@@ -10,6 +11,7 @@ import yaml
 from deskops import models as deskops_models
 from deskops.bootstrap import MODEL_REFS
 from deskops.cli.main import main
+from deskops.paths import package_pythonpath
 from deskops.workspace import scaffold_desk
 
 
@@ -138,3 +140,64 @@ def test_doctor_repair_registers_missing_models_idempotently(tmp_path: Path, mon
     assert main(["doctor", "--root", str(root), "--repair"]) == 0
     out, _ = capsys.readouterr()
     assert "Registered missing models." in out
+
+
+def _store_index(root: Path) -> dict:
+    path = root / ".sldb" / "core" / "store_index.yaml"
+    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+
+
+def _deskops_link(root: Path) -> dict:
+    return next(entry for entry in _store_index(root)["stores"] if entry["name"] == "deskops")
+
+
+def _point_deskops_link_at(root: Path, target: Path) -> None:
+    path = root / ".sldb" / "core" / "store_index.yaml"
+    index = _store_index(root)
+    for entry in index["stores"]:
+        if entry["name"] == "deskops":
+            entry["path"] = os.path.relpath(target, root)
+    path.write_text(yaml.safe_dump(index, sort_keys=False), encoding="utf-8")
+
+
+def _sldb_stores_check(store: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store), "--quiet"],
+        capture_output=True,
+        text=True,
+        env={**os.environ},
+    )
+
+
+def test_init_repairs_a_broken_deskops_link(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "repo"
+    _init_repo(root, capsys)
+    owner = (Path(package_pythonpath()) / ".sldb").resolve()
+
+    deleted = tmp_path / "deleted" / ".sldb"
+    deleted.mkdir(parents=True)
+    _point_deskops_link_at(root, deleted)
+    shutil.rmtree(tmp_path / "deleted")
+
+    assert main(["init", str(root)]) == 0
+    out, _ = capsys.readouterr()
+    assert "Replaced broken 'deskops' link" in out
+    assert (root / _deskops_link(root)["path"]).resolve() == owner
+
+    check = _sldb_stores_check(root / ".sldb")
+    assert check.returncode == 0, check.stdout + check.stderr
+
+
+def test_init_leaves_a_healthy_deskops_link_to_another_store(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "repo"
+    _init_repo(root, capsys)
+    other = tmp_path / "other"
+    _init_repo(other, capsys)
+    other_store = (other / ".sldb").resolve()
+
+    _point_deskops_link_at(root, other_store)
+
+    assert main(["init", str(root)]) == 0
+    out, _ = capsys.readouterr()
+    assert "already links 'deskops'" in out
+    assert (root / _deskops_link(root)["path"]).resolve() == other_store

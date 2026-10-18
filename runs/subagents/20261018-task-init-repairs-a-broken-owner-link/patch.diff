@@ -1,0 +1,159 @@
+diff --git a/deskops/bootstrap.py b/deskops/bootstrap.py
+index 623257c..36e72cf 100644
+--- a/deskops/bootstrap.py
++++ b/deskops/bootstrap.py
+@@ -194,24 +194,32 @@ class SLDBBootstrap:
+         return owner if owner.exists() else None
+ 
+     def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool | None:
+-        """Link `owner` as `deskops` unless the store already links that name.
++        """Link `owner` as `deskops`, repairing a broken link to it.
+ 
+-        Returns True when the link was added, False when it already points at `owner`,
+-        and None when the name is linked to a different (stale) store.
++        Returns True when the link was added or repaired, False when it already points at
++        `owner`, and None when the name is linked to a healthy different store (or the
++        installed sldb cannot replace a link).
+         """
+         if self._sldb_importable():
+-            from sldb.store.io import load_store_index
++            from sldb.api import store_links
+ 
+             try:
+-                idx = load_store_index(store_path)
+                 existing = next(
+-                    (link for link in idx.stores if link.name == DESKOPS_STORE_LINK),
++                    (link for link in store_links(store_path) if link["name"] == DESKOPS_STORE_LINK),
+                     None,
+                 )
+                 if existing is not None:
+-                    target = (store_path.parent / existing.path).resolve()
++                    target = Path(existing["resolved"])
+                     if target == owner.resolve():
+                         return False
++                    if existing["status"] != "ok" and self._link_store_supports_replace():
++                        doc_io.link_store_alias(
++                            store_path.parent, owner, DESKOPS_STORE_LINK, replace=True
++                        )
++                        print(
++                            f"Replaced broken '{DESKOPS_STORE_LINK}' link to {target} with {owner}."
++                        )
++                        return True
+                     print(
+                         f"Warning: {store_path} already links '{DESKOPS_STORE_LINK}' to {target}, "
+                         f"not to {owner}."
+@@ -340,6 +348,14 @@ class SLDBBootstrap:
+         payload = json.loads(result.stdout or "{}")
+         return {entry["name"] for entry in payload.get("models", [])}
+ 
++    def _link_store_supports_replace(self) -> bool:
++        """Whether the installed sldb's `link_store` can re-point an existing link."""
++        from inspect import signature
++
++        from sldb.api import link_store
++
++        return "replace" in signature(link_store).parameters
++
+     def _sldb_importable(self) -> bool:
+         return importlib.util.find_spec("sldb") is not None
+ 
+diff --git a/deskops/doc_io.py b/deskops/doc_io.py
+index 6f782cc..0ebb2f7 100644
+--- a/deskops/doc_io.py
++++ b/deskops/doc_io.py
+@@ -133,8 +133,8 @@ def register_model(root: Path, model_ref: str, *, pythonpath: str | None = None,
+     return add_model(_store(root), model_ref, pythonpath=_pythonpath(pythonpath), canonical=canonical)
+ 
+ 
+-def link_store_alias(root: Path, other_store: Path | str, name: str) -> Any:
+-    return link_store(_store(root), other_store, name)
++def link_store_alias(root: Path, other_store: Path | str, name: str, *, replace: bool = False) -> Any:
++    return link_store(_store(root), other_store, name, replace=replace)
+ 
+ 
+ def inherit_model_from(root: Path, ref: str, *, pythonpath: str | None = None) -> Any:
+diff --git a/tests/test_doctor_model_registration.py b/tests/test_doctor_model_registration.py
+index 0d12cc3..2eb1ece 100644
+--- a/tests/test_doctor_model_registration.py
++++ b/tests/test_doctor_model_registration.py
+@@ -2,6 +2,7 @@ from __future__ import annotations
+ 
+ import os
+ from pathlib import Path
++import shutil
+ import subprocess
+ import sys
+ 
+@@ -10,6 +11,7 @@ import yaml
+ from deskops import models as deskops_models
+ from deskops.bootstrap import MODEL_REFS
+ from deskops.cli.main import main
++from deskops.paths import package_pythonpath
+ from deskops.workspace import scaffold_desk
+ 
+ 
+@@ -138,3 +140,64 @@ def test_doctor_repair_registers_missing_models_idempotently(tmp_path: Path, mon
+     assert main(["doctor", "--root", str(root), "--repair"]) == 0
+     out, _ = capsys.readouterr()
+     assert "Registered missing models." in out
++
++
++def _store_index(root: Path) -> dict:
++    path = root / ".sldb" / "core" / "store_index.yaml"
++    return yaml.safe_load(path.read_text(encoding="utf-8")) or {}
++
++
++def _deskops_link(root: Path) -> dict:
++    return next(entry for entry in _store_index(root)["stores"] if entry["name"] == "deskops")
++
++
++def _point_deskops_link_at(root: Path, target: Path) -> None:
++    path = root / ".sldb" / "core" / "store_index.yaml"
++    index = _store_index(root)
++    for entry in index["stores"]:
++        if entry["name"] == "deskops":
++            entry["path"] = os.path.relpath(target, root)
++    path.write_text(yaml.safe_dump(index, sort_keys=False), encoding="utf-8")
++
++
++def _sldb_stores_check(store: Path) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(
++        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store), "--quiet"],
++        capture_output=True,
++        text=True,
++        env={**os.environ},
++    )
++
++
++def test_init_repairs_a_broken_deskops_link(tmp_path: Path, capsys) -> None:
++    root = tmp_path / "repo"
++    _init_repo(root, capsys)
++    owner = (Path(package_pythonpath()) / ".sldb").resolve()
++
++    deleted = tmp_path / "deleted" / ".sldb"
++    deleted.mkdir(parents=True)
++    _point_deskops_link_at(root, deleted)
++    shutil.rmtree(tmp_path / "deleted")
++
++    assert main(["init", str(root)]) == 0
++    out, _ = capsys.readouterr()
++    assert "Replaced broken 'deskops' link" in out
++    assert (root / _deskops_link(root)["path"]).resolve() == owner
++
++    check = _sldb_stores_check(root / ".sldb")
++    assert check.returncode == 0, check.stdout + check.stderr
++
++
++def test_init_leaves_a_healthy_deskops_link_to_another_store(tmp_path: Path, capsys) -> None:
++    root = tmp_path / "repo"
++    _init_repo(root, capsys)
++    other = tmp_path / "other"
++    _init_repo(other, capsys)
++    other_store = (other / ".sldb").resolve()
++
++    _point_deskops_link_at(root, other_store)
++
++    assert main(["init", str(root)]) == 0
++    out, _ = capsys.readouterr()
++    assert "already links 'deskops'" in out
++    assert (root / _deskops_link(root)["path"]).resolve() == other_store

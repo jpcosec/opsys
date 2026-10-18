@@ -194,24 +194,32 @@ class SLDBBootstrap:
         return owner if owner.exists() else None
 
     def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool | None:
-        """Link `owner` as `deskops` unless the store already links that name.
+        """Link `owner` as `deskops`, repairing a broken link to it.
 
-        Returns True when the link was added, False when it already points at `owner`,
-        and None when the name is linked to a different (stale) store.
+        Returns True when the link was added or repaired, False when it already points at
+        `owner`, and None when the name is linked to a healthy different store (or the
+        installed sldb cannot replace a link).
         """
         if self._sldb_importable():
-            from sldb.store.io import load_store_index
+            from sldb.api import store_links
 
             try:
-                idx = load_store_index(store_path)
                 existing = next(
-                    (link for link in idx.stores if link.name == DESKOPS_STORE_LINK),
+                    (link for link in store_links(store_path) if link["name"] == DESKOPS_STORE_LINK),
                     None,
                 )
                 if existing is not None:
-                    target = (store_path.parent / existing.path).resolve()
+                    target = Path(existing["resolved"])
                     if target == owner.resolve():
                         return False
+                    if existing["status"] != "ok" and self._link_store_supports_replace():
+                        doc_io.link_store_alias(
+                            store_path.parent, owner, DESKOPS_STORE_LINK, replace=True
+                        )
+                        print(
+                            f"Replaced broken '{DESKOPS_STORE_LINK}' link to {target} with {owner}."
+                        )
+                        return True
                     print(
                         f"Warning: {store_path} already links '{DESKOPS_STORE_LINK}' to {target}, "
                         f"not to {owner}."
@@ -339,6 +347,14 @@ class SLDBBootstrap:
         )
         payload = json.loads(result.stdout or "{}")
         return {entry["name"] for entry in payload.get("models", [])}
+
+    def _link_store_supports_replace(self) -> bool:
+        """Whether the installed sldb's `link_store` can re-point an existing link."""
+        from inspect import signature
+
+        from sldb.api import link_store
+
+        return "replace" in signature(link_store).parameters
 
     def _sldb_importable(self) -> bool:
         return importlib.util.find_spec("sldb") is not None
