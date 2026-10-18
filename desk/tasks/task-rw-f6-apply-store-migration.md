@@ -1,6 +1,12 @@
 ---
 id: task-rw-f6-apply-store-migration
-status: blocked
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f6-migrate-tracking-stores
@@ -9,13 +15,10 @@ pills:
 files:
 - runs/planning/store-migration-20261018.md
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f6
-- topic:sldb
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f6-apply-store-migration.md
 ---
 
 # Run the store migration with `--apply` on every discovered store
