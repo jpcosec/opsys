@@ -1,6 +1,12 @@
 ---
 id: task-rw-f2-transactional-doc-io
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f2-typed-errors-and-exit-codes
@@ -20,14 +26,10 @@ files:
 - runs/planning/sldb-requests.md
 - desk/contexts/pill-012-create-operations-transactional-rollback.md
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f2
-- topic:sldb-boundary
-- topic:transactions
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f2-transactional-doc-io.md
 ---
 
 # One doc_io module talks to sldb through its public API, transactionally
