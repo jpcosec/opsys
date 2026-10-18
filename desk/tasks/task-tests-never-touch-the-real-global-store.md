@@ -1,6 +1,12 @@
 ---
 id: task-tests-never-touch-the-real-global-store
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -9,12 +15,10 @@ files:
 - tests/conftest.py
 - deskops/bootstrap.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- topic:testing
-- topic:sldb
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-tests-never-touch-the-real-global-store.md
 ---
 
 # The test suite never writes to the user's real `~/.sldb`
