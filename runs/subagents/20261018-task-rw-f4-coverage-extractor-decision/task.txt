@@ -1,0 +1,10 @@
+Task: task-rw-f4-coverage-extractor-decision
+Title: Keep the coverage extractor as an optional report or delete it
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f4-coverage-extractor-decision.md
+Effective pills:
+- desk/contexts/pill-010-graph-runtime-output-policy.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

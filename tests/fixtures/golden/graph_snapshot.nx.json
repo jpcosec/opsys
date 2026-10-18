@@ -5,34 +5,6 @@
     {
       "metadata": {
         "confidence": "high",
-        "extractor": "desk_kgdb_coverage_v1",
-        "facet": "what",
-        "provenance_locator": "frontmatter:five_wh_one_plus",
-        "provenance_path": "desk/atoms/atom-golden-one.md",
-        "role": "answers",
-        "source_kind": "coverage_materialization"
-      },
-      "relation": "answers",
-      "source": "atom:atom-golden-one",
-      "target": "facet:what"
-    },
-    {
-      "metadata": {
-        "confidence": "high",
-        "extractor": "desk_kgdb_coverage_v1",
-        "facet": "how",
-        "provenance_locator": "frontmatter:five_wh_one_plus",
-        "provenance_path": "desk/atoms/atom-golden-two.md",
-        "role": "answers",
-        "source_kind": "coverage_materialization"
-      },
-      "relation": "answers",
-      "source": "atom:atom-golden-two",
-      "target": "facet:how"
-    },
-    {
-      "metadata": {
-        "confidence": "high",
         "extractor": "desk_declared_edges_v1",
         "provenance_locator": "line:43:related atoms",
         "provenance_path": "desk/tasks/task-golden-alpha.md",
@@ -130,21 +102,7 @@
         "adr": null,
         "ast": null,
         "compliance": null,
-        "edges": [
-          {
-            "metadata": {
-              "confidence": "high",
-              "extractor": "desk_kgdb_coverage_v1",
-              "facet": "what",
-              "provenance_locator": "frontmatter:five_wh_one_plus",
-              "provenance_path": "desk/atoms/atom-golden-one.md",
-              "role": "answers",
-              "source_kind": "coverage_materialization"
-            },
-            "relation_type": "answers",
-            "target_id": "facet:what"
-          }
-        ],
+        "edges": [],
         "git": null,
         "identity": {
           "node_id": "atom:atom-golden-one",
@@ -152,26 +110,10 @@
         },
         "io_ports": [],
         "semantics": {
-          "aliases": [
-            "Golden atom one",
-            "system:deskops",
-            "deskops",
-            "topic:golden",
-            "golden"
-          ],
-          "atom_id": "atom-golden-one",
           "document_id": "atom-golden-one",
-          "five_wh_one_plus": [
-            "what"
-          ],
           "identity": "atom-golden-one",
           "label": "Golden atom one",
-          "path": "desk/atoms/atom-golden-one.md",
-          "tags": [
-            "system:deskops",
-            "topic:golden"
-          ],
-          "title": "Golden atom one"
+          "path": "desk/atoms/atom-golden-one.md"
         },
         "source": {
           "extractor": "deskops_kgdb_snapshot_v1",
@@ -180,11 +122,6 @@
               "extractor": "desk_doc_nodes_v1",
               "path": "desk/atoms/atom-golden-one.md",
               "source_kind": "file_metadata"
-            },
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": "desk/atoms/atom-golden-one.md",
-              "source_kind": "atom_frontmatter"
             }
           ]
         },
@@ -199,21 +136,7 @@
         "adr": null,
         "ast": null,
         "compliance": null,
-        "edges": [
-          {
-            "metadata": {
-              "confidence": "high",
-              "extractor": "desk_kgdb_coverage_v1",
-              "facet": "how",
-              "provenance_locator": "frontmatter:five_wh_one_plus",
-              "provenance_path": "desk/atoms/atom-golden-two.md",
-              "role": "answers",
-              "source_kind": "coverage_materialization"
-            },
-            "relation_type": "answers",
-            "target_id": "facet:how"
-          }
-        ],
+        "edges": [],
         "git": null,
         "identity": {
           "node_id": "atom:atom-golden-two",
@@ -221,26 +144,10 @@
         },
         "io_ports": [],
         "semantics": {
-          "aliases": [
-            "Golden atom two",
-            "system:deskops",
-            "deskops",
-            "topic:golden",
-            "golden"
-          ],
-          "atom_id": "atom-golden-two",
           "document_id": "atom-golden-two",
-          "five_wh_one_plus": [
-            "how"
-          ],
           "identity": "atom-golden-two",
           "label": "Golden atom two",
-          "path": "desk/atoms/atom-golden-two.md",
-          "tags": [
-            "system:deskops",
-            "topic:golden"
-          ],
-          "title": "Golden atom two"
+          "path": "desk/atoms/atom-golden-two.md"
         },
         "source": {
           "extractor": "deskops_kgdb_snapshot_v1",
@@ -249,11 +156,6 @@
               "extractor": "desk_doc_nodes_v1",
               "path": "desk/atoms/atom-golden-two.md",
               "source_kind": "file_metadata"
-            },
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": "desk/atoms/atom-golden-two.md",
-              "source_kind": "atom_frontmatter"
             }
           ]
         },
@@ -261,204 +163,6 @@
       },
       "status": "unknown",
       "type": "atom"
-    },
-    {
-      "id": "facet:how",
-      "schema": {
-        "adr": null,
-        "ast": null,
-        "compliance": null,
-        "edges": [],
-        "git": null,
-        "identity": {
-          "node_id": "facet:how",
-          "node_type": "facet"
-        },
-        "io_ports": [],
-        "semantics": {
-          "description": "W5H1 facet how",
-          "facet": "how",
-          "source_field": "atom.five_wh_one_plus"
-        },
-        "source": {
-          "extractor": "deskops_kgdb_snapshot_v1",
-          "provenance": [
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": ".",
-              "source_kind": "coverage_facet"
-            }
-          ]
-        },
-        "test_map": null
-      },
-      "status": "unknown",
-      "type": "facet"
-    },
-    {
-      "id": "facet:what",
-      "schema": {
-        "adr": null,
-        "ast": null,
-        "compliance": null,
-        "edges": [],
-        "git": null,
-        "identity": {
-          "node_id": "facet:what",
-          "node_type": "facet"
-        },
-        "io_ports": [],
-        "semantics": {
-          "description": "W5H1 facet what",
-          "facet": "what",
-          "source_field": "atom.five_wh_one_plus"
-        },
-        "source": {
-          "extractor": "deskops_kgdb_snapshot_v1",
-          "provenance": [
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": ".",
-              "source_kind": "coverage_facet"
-            }
-          ]
-        },
-        "test_map": null
-      },
-      "status": "unknown",
-      "type": "facet"
-    },
-    {
-      "id": "facet:when",
-      "schema": {
-        "adr": null,
-        "ast": null,
-        "compliance": null,
-        "edges": [],
-        "git": null,
-        "identity": {
-          "node_id": "facet:when",
-          "node_type": "facet"
-        },
-        "io_ports": [],
-        "semantics": {
-          "description": "W5H1 facet when",
-          "facet": "when",
-          "source_field": "atom.five_wh_one_plus"
-        },
-        "source": {
-          "extractor": "deskops_kgdb_snapshot_v1",
-          "provenance": [
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": ".",
-              "source_kind": "coverage_facet"
-            }
-          ]
-        },
-        "test_map": null
-      },
-      "status": "unknown",
-      "type": "facet"
-    },
-    {
-      "id": "facet:where",
-      "schema": {
-        "adr": null,
-        "ast": null,
-        "compliance": null,
-        "edges": [],
-        "git": null,
-        "identity": {
-          "node_id": "facet:where",
-          "node_type": "facet"
-        },
-        "io_ports": [],
-        "semantics": {
-          "description": "W5H1 facet where",
-          "facet": "where",
-          "source_field": "atom.five_wh_one_plus"
-        },
-        "source": {
-          "extractor": "deskops_kgdb_snapshot_v1",
-          "provenance": [
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": ".",
-              "source_kind": "coverage_facet"
-            }
-          ]
-        },
-        "test_map": null
-      },
-      "status": "unknown",
-      "type": "facet"
-    },
-    {
-      "id": "facet:who",
-      "schema": {
-        "adr": null,
-        "ast": null,
-        "compliance": null,
-        "edges": [],
-        "git": null,
-        "identity": {
-          "node_id": "facet:who",
-          "node_type": "facet"
-        },
-        "io_ports": [],
-        "semantics": {
-          "description": "W5H1 facet who",
-          "facet": "who",
-          "source_field": "atom.five_wh_one_plus"
-        },
-        "source": {
-          "extractor": "deskops_kgdb_snapshot_v1",
-          "provenance": [
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": ".",
-              "source_kind": "coverage_facet"
-            }
-          ]
-        },
-        "test_map": null
-      },
-      "status": "unknown",
-      "type": "facet"
-    },
-    {
-      "id": "facet:why",
-      "schema": {
-        "adr": null,
-        "ast": null,
-        "compliance": null,
-        "edges": [],
-        "git": null,
-        "identity": {
-          "node_id": "facet:why",
-          "node_type": "facet"
-        },
-        "io_ports": [],
-        "semantics": {
-          "description": "W5H1 facet why",
-          "facet": "why",
-          "source_field": "atom.five_wh_one_plus"
-        },
-        "source": {
-          "extractor": "deskops_kgdb_snapshot_v1",
-          "provenance": [
-            {
-              "extractor": "desk_kgdb_coverage_v1",
-              "path": ".",
-              "source_kind": "coverage_facet"
-            }
-          ]
-        },
-        "test_map": null
-      },
-      "status": "unknown",
-      "type": "facet"
     },
     {
       "id": "pill:pill-golden-rule",

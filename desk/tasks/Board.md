@@ -8,7 +8,6 @@ tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-rw-f3-single-closure-path.md
 - desk/tasks/task-rw-f5-command-registry.md
-- desk/tasks/task-rw-f4-coverage-extractor-decision.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -51,4 +50,3 @@ _Generated from the task references above._
 
 - One closure service behind every way of closing a task [draft] - `deskops/services/closure.py` performs every closure: gates (closeout_gates), Board update, bundle removal, exactly one commit with the route's trailers, and the index entry. `closeout commit` (both routes) uses it with its CLI unchanged.
 - The CLI is built from a declarative command registry [draft] - deskops/cli/registry.py declares every command once (path, help, args, handler, `mutates: bool`); shared args are defined once; parser.py only walks the registry; every command's `--help` text stays byte-identical to the F1 help goldens, and exit codes stay as pinned by the F1 contract tests.
-- Keep the coverage extractor as an optional report or delete it [draft] - The owner's choice is applied (see Open Ambiguities).

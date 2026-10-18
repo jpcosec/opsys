@@ -1,0 +1,9 @@
+ M deskops/graph/__init__.py
+ D deskops/graph/extract_coverage.py
+ M deskops/graph/snapshot.py
+ M tests/fixtures/golden/graph_snapshot.kg.json
+ M tests/fixtures/golden/graph_snapshot.nx.json
+ D tests/test_graph_extract_coverage.py
+ M tests/test_graph_snapshot.py
+?? desk/drawer/issues/issue-coverage-extractor-removed.md
+?? runs/subagents/20261018-task-rw-f4-coverage-extractor-decision/

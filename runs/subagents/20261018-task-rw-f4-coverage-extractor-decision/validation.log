@@ -1,0 +1,6 @@
+15 passed in 102.25s (0:01:42)
+grep extract_coverage in deskops/: 0
+Graph snapshot written: /home/jp/proyectos/SLDB_1/deskops/.sldb/runtime/graphs/deskops.kg.json
+13 missing, 108 informational
+408 passed, 3 skipped in 356.39s (0:05:56)
+supervisor: added record: true to the removal issue (it quotes the deleted module path)
