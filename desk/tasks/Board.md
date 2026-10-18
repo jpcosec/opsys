@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-taskdoc-tags-optional-for-legacy-tasks.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- Tasks without a `tags:` key validate again after the f6 TaskDoc contract [draft] - A task file with no `tags:` key validates as tags=[], and `desk update --apply` repairs stores whose tasks predate f6.

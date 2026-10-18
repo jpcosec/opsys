@@ -1,0 +1,95 @@
+diff --git a/deskops/models/task.py b/deskops/models/task.py
+index 022f9f0..c24e14b 100644
+--- a/deskops/models/task.py
++++ b/deskops/models/task.py
+@@ -20,6 +20,7 @@ _ABSENT_FRONTMATTER_DEFAULTS = frozenset({
+     "inherit_acceptance_context",
+     "atoms",
+     "from_drawer",
++    "tags",
+ })
+ 
+ 
+@@ -39,7 +40,7 @@ class TaskDoc(OperationalArtifactDoc):
+ id: ⸢rev•id⸥
+ status: ⸢optrev•status⸥
+ summary: ⸢optrev•summary⸥
+-tags: ⸢rev,list•tags⸥
++tags: ⸢optrev,list•tags⸥
+ current_node: ⸢optrev•current_node⸥
+ history: ⸢optrev,list•history⸥
+ references: ⸢optrev,list•references⸥
+diff --git a/tests/fixtures/model_contract_hashes.json b/tests/fixtures/model_contract_hashes.json
+index ed07516..9c0498b 100644
+--- a/tests/fixtures/model_contract_hashes.json
++++ b/tests/fixtures/model_contract_hashes.json
+@@ -15,5 +15,5 @@
+   "RunDoc": "91a7ed3e2876f2cb00cbef51f4676bf543fade7907d1d1112732538c13b292b7",
+   "RuntimeProfileDoc": "f4661520a0e3fd50c4115ad314b6aaf3d9d33f70cfde125ea444232532370934",
+   "StepDoc": "faeb52e5f790fd84fed3b4718e5c3ece784a3cd61ed1212ed7cd11e59fdec64e",
+-  "TaskDoc": "2fe27e8d653b2f100f3e4cf8bcbf21f38aa3ef2e126a6074e00aafe78358bf9b"
++  "TaskDoc": "f4ea849267cabaad40507cd101ae9f46f7826b9ebf63e4c7ab60eb571bce6aa8"
+ }
+diff --git a/tests/test_model_templates.py b/tests/test_model_templates.py
+index 8fbaa0b..e85ee36 100644
+--- a/tests/test_model_templates.py
++++ b/tests/test_model_templates.py
+@@ -228,6 +228,58 @@ This note predates target and ack metadata.
+     assert note.acknowledged_by is None
+     assert note.acknowledged_at is None
+ 
++def test_taskdoc_without_tags_key_validates() -> None:
++    # Tasks written before the f6 TaskDoc contract have no `tags:` frontmatter key.
++    legacy_task = """---
++id: '001'
++status: resolved
++---
++
++# Define graph UI data contract
++
++## Rationale
++
++_Explain why this task exists or the business driver behind it._
++
++Legacy.
++
++## Goal
++
++_Describe the concrete result this task must produce._
++
++A contract.
++
++## Scope
++
++_State what is in scope and what is out of scope._
++
++Contract only.
++
++## Implementation Path
++
++_Outline the expected implementation route or affected surface._
++
++Write it.
++
++## Validation
++
++_List the checks required before this task can close._
++
++- pytest
++
++## Done When
++
++_Name the observable condition that makes the task complete._
++
++It exists."""
++
++    valid, details = validate_model_input_roundtrip(TaskDoc, legacy_task)
++    task = TaskDoc(**extract_model_data(TaskDoc, legacy_task))
++
++    assert valid, details
++    assert task.tags == []
++
++
+ def test_pilldoc_lifecycle_roundtrip():
+     doc = PillDoc(
+         id="pill-abc",

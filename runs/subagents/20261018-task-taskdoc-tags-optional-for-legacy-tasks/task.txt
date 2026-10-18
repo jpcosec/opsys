@@ -1,0 +1,7 @@
+Task: task-taskdoc-tags-optional-for-legacy-tasks
+Title: Tasks without a `tags:` key validate again after the f6 TaskDoc contract
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

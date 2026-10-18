@@ -228,6 +228,58 @@ This note predates target and ack metadata.
     assert note.acknowledged_by is None
     assert note.acknowledged_at is None
 
+def test_taskdoc_without_tags_key_validates() -> None:
+    # Tasks written before the f6 TaskDoc contract have no `tags:` frontmatter key.
+    legacy_task = """---
+id: '001'
+status: resolved
+---
+
+# Define graph UI data contract
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Legacy.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+A contract.
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+Contract only.
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+Write it.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- pytest
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+It exists."""
+
+    valid, details = validate_model_input_roundtrip(TaskDoc, legacy_task)
+    task = TaskDoc(**extract_model_data(TaskDoc, legacy_task))
+
+    assert valid, details
+    assert task.tags == []
+
+
 def test_pilldoc_lifecycle_roundtrip():
     doc = PillDoc(
         id="pill-abc",

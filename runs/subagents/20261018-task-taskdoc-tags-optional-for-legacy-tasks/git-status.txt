@@ -1,0 +1,8 @@
+ M .sldb/core/documents/TaskDoc/task-taskdoc-tags-optional-for-legacy-tasks.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-taskdoc-tags-optional-for-legacy-tasks.md
+ M deskops/models/task.py
+ M tests/fixtures/model_contract_hashes.json
+ M tests/test_model_templates.py
+?? runs/subagents/20261018-task-taskdoc-tags-optional-for-legacy-tasks/

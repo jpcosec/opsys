@@ -20,6 +20,7 @@ _ABSENT_FRONTMATTER_DEFAULTS = frozenset({
     "inherit_acceptance_context",
     "atoms",
     "from_drawer",
+    "tags",
 })
 
 
@@ -39,7 +40,7 @@ class TaskDoc(OperationalArtifactDoc):
 id: ⸢rev•id⸥
 status: ⸢optrev•status⸥
 summary: ⸢optrev•summary⸥
-tags: ⸢rev,list•tags⸥
+tags: ⸢optrev,list•tags⸥
 current_node: ⸢optrev•current_node⸥
 history: ⸢optrev,list•history⸥
 references: ⸢optrev,list•references⸥
