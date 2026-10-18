@@ -1,6 +1,12 @@
 ---
 id: task-message-tracks-notes-in-the-target-store-and-ack-resigns
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -9,13 +15,10 @@ files:
 - deskops/cli/commands/message.py
 - tests/test_message_cli.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- source:graph_ui
-- topic:messaging
-- topic:sldb
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-message-tracks-notes-in-the-target-store-and-ack-resigns.md
 ---
 
 # `message`/`inbox` track a note in the target repo's store, and `--ack` re-signs it

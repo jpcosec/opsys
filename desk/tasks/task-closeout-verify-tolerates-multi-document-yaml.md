@@ -1,6 +1,12 @@
 ---
 id: task-closeout-verify-tolerates-multi-document-yaml
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -9,12 +15,10 @@ files:
 - deskops/operations.py
 - tests/test_closeout.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- source:graph_ui
-- topic:closeout
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-closeout-verify-tolerates-multi-document-yaml.md
 ---
 
 # `closeout verify` does not abort on a multi-document YAML outside desk/

@@ -11,6 +11,8 @@ tasks:
 - desk/tasks/task-rw-ci-tests-workflow-and-changelog.md
 - desk/tasks/task-rw-f1-cli-contract-tests.md
 - desk/tasks/task-rw-f1-output-golden-files.md
+- desk/tasks/task-closeout-verify-tolerates-multi-document-yaml.md
+- desk/tasks/task-message-tracks-notes-in-the-target-store-and-ack-resigns.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -56,3 +58,5 @@ _Generated from the task references above._
 - CI runs pytest on every push, and the repo has a CHANGELOG [draft] - A GitHub Actions workflow runs `pytest tests` on push and pull request to main, and CHANGELOG.md records the changes since the last tag.
 - Every CLI surface without a test gets one through main(argv) [draft] - Each listed subcommand has one in-process test that calls `deskops.cli.main.main([...])` inside a sandbox repo and asserts the exit code and one stable line of output.
 - Golden files pin the graph snapshot, run index, closeout trailers and --help text [draft] - Tests compare those outputs, produced from a fixed fixture desk, against committed golden files with volatile values normalized.
+- `closeout verify` does not abort on a multi-document YAML outside desk/ [draft] - `closeout verify` and the closeout gate of `advance` complete on a repo that contains a multi-document YAML anywhere, and judge evidence exactly as before for every other file.
+- `message`/`inbox` track a note in the target repo's store, and `--ack` re-signs it [draft] - A delivered note is tracked in the store of the repo that owns the target desk (the `.sldb` next to the target `desk/`), or not tracked with a warning when that repo has no store; `--ack` updates the tracked note so `sldb stores check` passes afterwards in the target repo.
