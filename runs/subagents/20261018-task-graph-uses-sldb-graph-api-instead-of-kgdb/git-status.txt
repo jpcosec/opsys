@@ -1,0 +1,11 @@
+ M desk/contexts/pill-008-kgdb-sldb-boundary.md
+ M deskops/cli/main.py
+ M deskops/graph/snapshot.py
+ M pyproject.toml
+ M runs/planning/deskops-rewrite-inventory.md
+ M runs/planning/rewrite-plan/gen.py
+ M tests/test_graph_cli.py
+ M tests/test_graph_snapshot.py
+?? desk/inbox/20261018-003127-unclear-closeout-verify-revienta-con-un-yaml-multi-documento-del-repo.md
+?? runs/subagents/20261017-task-rw-f0-declare-runtime-dependencies/correction.md
+?? runs/subagents/20261018-task-graph-uses-sldb-graph-api-instead-of-kgdb/

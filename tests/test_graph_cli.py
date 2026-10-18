@@ -5,7 +5,6 @@ from pathlib import Path
 from deskops.cli.main import main
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
-from deskops.graph.snapshot import GraphSnapshotCapabilityError
 from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
 from deskops.graph.snapshot import networkx_path_for_snapshot
 
@@ -162,17 +161,16 @@ def test_graph_build_preserves_absolute_output_path(tmp_path: Path, capsys) -> N
     assert networkx_path_for_snapshot(output_path).is_file()
 
 
-def test_graph_build_reports_missing_kgdb_capability(tmp_path: Path, monkeypatch, capsys) -> None:
-    def unavailable(_root: Path) -> Path:
-        raise GraphSnapshotCapabilityError("KGDB graph snapshot validation is unavailable.")
+def test_graph_build_reports_missing_sldb_graph_capability(tmp_path: Path, monkeypatch, capsys) -> None:
+    import sys
 
-    monkeypatch.setattr("deskops.graph.snapshot.write_graph_snapshot", unavailable)
+    monkeypatch.setitem(sys.modules, "sldb.api.graph.snapshot", None)
 
     result = main(["graph", "build", "--root", str(tmp_path)])
 
     captured = capsys.readouterr()
     assert result == 1
-    assert "Error: KGDB graph snapshot validation is unavailable." in captured.out
+    assert "Error: sldb graph API unavailable (sldb.api.graph.snapshot)" in captured.out
     assert not (tmp_path / DEFAULT_SNAPSHOT_PATH).exists()
 
 

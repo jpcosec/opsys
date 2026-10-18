@@ -26,6 +26,14 @@ Reescritura **por dentro, módulo a módulo, detrás de un contrato congelado**
 Hay **bugs que hoy destruyen datos**. Se arreglan antes de reescribir (fase 0),
 independiente de la decisión.
 
+## Estado (actualizado 2026-10-18)
+
+- **kgdb dejó de existir como proyecto.** Su capa de grafo se integró en sldb (`sldb.api.graph`,
+  `sldb.store.graph.graph_io`, merge 6deb222, ADR 2026-09-20). La entrada
+  `task-rw-f0-declare-runtime-dependencies` partía de una premisa falsa: `task-graph-uses-sldb-graph-api-instead-of-kgdb`
+  retiró `kgdb` de `pyproject.toml` y movió las importaciones de grafo a sldb; el entorno base conserva un kgdb
+  0.1.0 residual que no es dependencia. Ver `runs/subagents/20261017-task-rw-f0-declare-runtime-dependencies/correction.md`.
+
 ## Estado (actualizado 2026-10-16)
 
 - **Cerrado**, commiteado y pusheado por el coordinador:

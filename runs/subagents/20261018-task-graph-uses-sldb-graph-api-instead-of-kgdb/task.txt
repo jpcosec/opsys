@@ -1,0 +1,11 @@
+Task: task-graph-uses-sldb-graph-api-instead-of-kgdb
+Title: deskops reads and validates graphs through sldb, with no kgdb dependency
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-graph-uses-sldb-graph-api-instead-of-kgdb.md
+Effective pills:
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

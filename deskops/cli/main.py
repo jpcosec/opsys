@@ -248,10 +248,10 @@ class CLI:
                 else write_graph_snapshot(root)
             )
 
-            from kgdb.graph import load_graph
-            from kgdb.graph import save_graph
+            from sldb.api.graph.snapshot import snapshot_load
+            from sldb.store.graph.graph_io import save_graph
 
-            save_graph(load_graph(output_path), networkx_path_for_snapshot(output_path))
+            save_graph(snapshot_load(output_path), networkx_path_for_snapshot(output_path))
 
         except GraphSnapshotCapabilityError as exc:
             print(f"Error: {exc}")

@@ -1,0 +1,5 @@
+21 passed in 1.33s
+Graph snapshot written: /home/jp/proyectos/SLDB_1/deskops/.sldb/runtime/graphs/deskops.kg.json
+kgdb grep: 0 hits; pyproject: 0
+fresh venv without kgdb (worker run): 351 passed, 3 skipped; graph build exit 0
+363 passed, 3 skipped in 205.96s (0:03:25)

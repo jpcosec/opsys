@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from kgdb.contracts.io import GraphSnapshot
+from sldb.api.graph.snapshot import GraphSnapshot
 
 from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
 from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH

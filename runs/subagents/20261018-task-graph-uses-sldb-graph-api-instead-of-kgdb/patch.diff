@@ -1,0 +1,202 @@
+diff --git a/desk/contexts/pill-008-kgdb-sldb-boundary.md b/desk/contexts/pill-008-kgdb-sldb-boundary.md
+index 948fc10..ba274b4 100644
+--- a/desk/contexts/pill-008-kgdb-sldb-boundary.md
++++ b/desk/contexts/pill-008-kgdb-sldb-boundary.md
+@@ -5,24 +5,23 @@ id: pill-008
+ tags:
+ - system:deskops
+ - system:sldb
+-- system:kgdb
+ - pill-type:decision
+ - topic:knowledge-graph
+ ---
+ 
+-# Decision: keep KGDB parallel to SLDB
++# Decision: sldb owns the graph layer
+ 
+ ## What
+ 
+ _Define the context or guardrail this pill carries._
+ 
+-Deskops graph work must use KGDB as graph persistence and traversal while preserving SLDB as the owner of modeled Markdown and semantic document truth.
++sldb owns graph persistence, traversal, and the graph contracts. deskops builds its workflow-specific snapshot and validates and writes it through the sldb graph API (`sldb.api.graph`, `sldb.store.graph.graph_io`); there is no separate kgdb dependency.
+ 
+ ## Why
+ 
+ _Explain why this context matters for safe execution._
+ 
+-If KGDB starts recreating SLDB semantics, the ecosystem gains two competing sources of truth for document meaning. If deskops bypasses KGDB, graph traversal becomes another workflow-local implementation.
++If deskops reimplemented graph contracts or persisted graphs on its own, the ecosystem would gain a competing graph runtime and two sources of truth for graph semantics. sldb already owns document semantics and the graph layer, so duplicating either boundary splits ownership.
+ 
+ ## When
+ 
+@@ -34,16 +33,16 @@ Apply this pill to every task that emits, imports, queries, or documents graph d
+ 
+ _Name the files, surfaces, or scope this pill applies to._
+ 
+-Applies to `desk/tasks/*graph*.md`, future graph adapter modules, SLDB semantic export payloads, and KGDB ingest/query integration.
++Applies to `desk/tasks/*graph*.md`, deskops graph modules, SLDB semantic export payloads, and graph ingest/query integration.
+ 
+ ## How
+ 
+ _Describe the correct way to apply this guidance._
+ 
+-Treat SLDB semantic tags, indexes, DAG nodes, sections, and document payloads as graph inputs. Treat KGDB graph snapshots and NetworkX traversal as graph runtime. Keep workflow-specific relation extraction in deskops.
++Treat SLDB semantic tags, indexes, DAG nodes, sections, and document payloads as graph inputs. Validate snapshots with `sldb.api.graph.snapshot.GraphSnapshot` and load/save them with `sldb.api.graph.snapshot.snapshot_load` and `sldb.store.graph.graph_io.save_graph`. Keep workflow-specific relation extraction in deskops.
+ 
+ ## How Not
+ 
+ _Describe the shortcut or failure mode to avoid._
+ 
+-Do not add SLDB document parsing or semantic tag derivation to KGDB. Do not make deskops own general graph persistence. Do not treat OWL or ontology reasoning as the first runtime dependency.
++Do not add SLDB document parsing or semantic tag derivation to deskops. Do not reintroduce a kgdb dependency or a deskops-owned graph runtime. Do not treat OWL or ontology reasoning as the first runtime dependency.
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 29ce0a4..8a2241f 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -248,10 +248,10 @@ class CLI:
+                 else write_graph_snapshot(root)
+             )
+ 
+-            from kgdb.graph import load_graph
+-            from kgdb.graph import save_graph
++            from sldb.api.graph.snapshot import snapshot_load
++            from sldb.store.graph.graph_io import save_graph
+ 
+-            save_graph(load_graph(output_path), networkx_path_for_snapshot(output_path))
++            save_graph(snapshot_load(output_path), networkx_path_for_snapshot(output_path))
+ 
+         except GraphSnapshotCapabilityError as exc:
+             print(f"Error: {exc}")
+diff --git a/deskops/graph/snapshot.py b/deskops/graph/snapshot.py
+index 46af3a2..f7107e3 100644
+--- a/deskops/graph/snapshot.py
++++ b/deskops/graph/snapshot.py
+@@ -23,7 +23,7 @@ LEGACY_SNAPSHOT_PATH = Path(".sldb/runtime/knowledge_graph.kg.json")
+ 
+ 
+ class GraphSnapshotCapabilityError(RuntimeError):
+-    """Raised when KGDB snapshot validation support is unavailable."""
++    """Raised when sldb graph snapshot validation support is unavailable."""
+ 
+ 
+ class GraphSnapshotReadError(RuntimeError):
+@@ -116,10 +116,10 @@ def write_graph_snapshot(
+ 
+ def _validate_graph_snapshot(snapshot: dict[str, Any]) -> None:
+     try:
+-        from kgdb.contracts.io import GraphSnapshot
++        from sldb.api.graph.snapshot import GraphSnapshot
+     except ImportError as exc:
+         raise GraphSnapshotCapabilityError(
+-            "KGDB graph snapshot validation is unavailable; install kgdb before running `deskops graph build`."
++            "sldb graph API unavailable (sldb.api.graph.snapshot); upgrade structuredLanguageDB before running `deskops graph build`."
+         ) from exc
+ 
+     GraphSnapshot.model_validate(snapshot)
+diff --git a/pyproject.toml b/pyproject.toml
+index ae40ddb..35e14de 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -8,7 +8,6 @@ dependencies = [
+     "pydantic>=2.0",
+     "PyYAML>=6.0",
+     "structuredLanguageDB>=0.1.9",
+-    "kgdb>=0.1.0",
+ ]
+ 
+ [project.scripts]
+diff --git a/runs/planning/deskops-rewrite-inventory.md b/runs/planning/deskops-rewrite-inventory.md
+index 6f9b5c5..336a1dd 100644
+--- a/runs/planning/deskops-rewrite-inventory.md
++++ b/runs/planning/deskops-rewrite-inventory.md
+@@ -26,6 +26,14 @@ Reescritura **por dentro, módulo a módulo, detrás de un contrato congelado**
+ Hay **bugs que hoy destruyen datos**. Se arreglan antes de reescribir (fase 0),
+ independiente de la decisión.
+ 
++## Estado (actualizado 2026-10-18)
++
++- **kgdb dejó de existir como proyecto.** Su capa de grafo se integró en sldb (`sldb.api.graph`,
++  `sldb.store.graph.graph_io`, merge 6deb222, ADR 2026-09-20). La entrada
++  `task-rw-f0-declare-runtime-dependencies` partía de una premisa falsa: `task-graph-uses-sldb-graph-api-instead-of-kgdb`
++  retiró `kgdb` de `pyproject.toml` y movió las importaciones de grafo a sldb; el entorno base conserva un kgdb
++  0.1.0 residual que no es dependencia. Ver `runs/subagents/20261017-task-rw-f0-declare-runtime-dependencies/correction.md`.
++
+ ## Estado (actualizado 2026-10-16)
+ 
+ - **Cerrado**, commiteado y pusheado por el coordinador:
+diff --git a/runs/planning/rewrite-plan/gen.py b/runs/planning/rewrite-plan/gen.py
+index a30f507..4cc9f38 100644
+--- a/runs/planning/rewrite-plan/gen.py
++++ b/runs/planning/rewrite-plan/gen.py
+@@ -214,6 +214,9 @@ TASKS: list[dict] = [
+         title="pyproject declares kgdb as a dependency",
+         phase="F0",
+         why=(
++            "Correction (2026-10-18): this entry rested on a false premise. kgdb no longer exists as a project; "
++            "its graph layer is part of sldb (`sldb.api.graph`), and task-graph-uses-sldb-graph-api-instead-of-kgdb "
++            "dropped the kgdb dependency and moved the graph imports to sldb. Historical entry follows, unedited. "
+             "deskops imports `sldb` throughout and `kgdb` in deskops/graph/snapshot.py:119 and deskops/cli/main.py:251, "
+             "but pyproject.toml lists only pydantic and PyYAML, so a clean install of deskops cannot import itself."
+         ),
+diff --git a/runs/subagents/20261017-task-rw-f0-declare-runtime-dependencies/correction.md b/runs/subagents/20261017-task-rw-f0-declare-runtime-dependencies/correction.md
+new file mode 100644
+index 0000000..e67f7cb
+--- /dev/null
++++ b/runs/subagents/20261017-task-rw-f0-declare-runtime-dependencies/correction.md
+@@ -0,0 +1,8 @@
++# Correction: task-rw-f0-declare-runtime-dependencies
++
++The task rested on a false premise.
++
++- kgdb no longer exists as a project. Its graph layer was merged into sldb (sldb merge 6deb222, ADR 2026-09-20); the public API is `sldb.api.graph.snapshot` (`snapshot_load`, `GraphSnapshot`) plus `sldb.store.graph.graph_io.load_graph`/`save_graph`.
++- The kgdb 0.1.0 installed in the base environment is a leftover and is not a dependency.
++- `task-graph-uses-sldb-graph-api-instead-of-kgdb` removed `"kgdb>=0.1.0"` from `pyproject.toml`, rewrote the graph imports in `deskops/graph/snapshot.py` and `deskops/cli/main.py` to sldb, updated `tests/test_graph_snapshot.py` and `tests/test_graph_cli.py`, and verified `pytest tests` and `deskops graph build` in a fresh venv without kgdb.
++- The original task's venv install also failed for an unrelated kgdb packaging defect (kgdb requires the `sldb` distribution; the sibling checkout is `structuredLanguageDB`). That defect is moot now that kgdb is gone.
+diff --git a/tests/test_graph_cli.py b/tests/test_graph_cli.py
+index 0e062ac..5236519 100644
+--- a/tests/test_graph_cli.py
++++ b/tests/test_graph_cli.py
+@@ -5,7 +5,6 @@ from pathlib import Path
+ from deskops.cli.main import main
+ from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
+ from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+-from deskops.graph.snapshot import GraphSnapshotCapabilityError
+ from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
+ from deskops.graph.snapshot import networkx_path_for_snapshot
+ 
+@@ -162,17 +161,16 @@ def test_graph_build_preserves_absolute_output_path(tmp_path: Path, capsys) -> N
+     assert networkx_path_for_snapshot(output_path).is_file()
+ 
+ 
+-def test_graph_build_reports_missing_kgdb_capability(tmp_path: Path, monkeypatch, capsys) -> None:
+-    def unavailable(_root: Path) -> Path:
+-        raise GraphSnapshotCapabilityError("KGDB graph snapshot validation is unavailable.")
++def test_graph_build_reports_missing_sldb_graph_capability(tmp_path: Path, monkeypatch, capsys) -> None:
++    import sys
+ 
+-    monkeypatch.setattr("deskops.graph.snapshot.write_graph_snapshot", unavailable)
++    monkeypatch.setitem(sys.modules, "sldb.api.graph.snapshot", None)
+ 
+     result = main(["graph", "build", "--root", str(tmp_path)])
+ 
+     captured = capsys.readouterr()
+     assert result == 1
+-    assert "Error: KGDB graph snapshot validation is unavailable." in captured.out
++    assert "Error: sldb graph API unavailable (sldb.api.graph.snapshot)" in captured.out
+     assert not (tmp_path / DEFAULT_SNAPSHOT_PATH).exists()
+ 
+ 
+diff --git a/tests/test_graph_snapshot.py b/tests/test_graph_snapshot.py
+index e22b9aa..5394493 100644
+--- a/tests/test_graph_snapshot.py
++++ b/tests/test_graph_snapshot.py
+@@ -3,7 +3,7 @@ from __future__ import annotations
+ import json
+ from pathlib import Path
+ 
+-from kgdb.contracts.io import GraphSnapshot
++from sldb.api.graph.snapshot import GraphSnapshot
+ 
+ from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
+ from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH

@@ -214,6 +214,9 @@ TASKS: list[dict] = [
         title="pyproject declares kgdb as a dependency",
         phase="F0",
         why=(
+            "Correction (2026-10-18): this entry rested on a false premise. kgdb no longer exists as a project; "
+            "its graph layer is part of sldb (`sldb.api.graph`), and task-graph-uses-sldb-graph-api-instead-of-kgdb "
+            "dropped the kgdb dependency and moved the graph imports to sldb. Historical entry follows, unedited. "
             "deskops imports `sldb` throughout and `kgdb` in deskops/graph/snapshot.py:119 and deskops/cli/main.py:251, "
             "but pyproject.toml lists only pydantic and PyYAML, so a clean install of deskops cannot import itself."
         ),

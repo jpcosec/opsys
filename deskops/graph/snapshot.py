@@ -23,7 +23,7 @@ LEGACY_SNAPSHOT_PATH = Path(".sldb/runtime/knowledge_graph.kg.json")
 
 
 class GraphSnapshotCapabilityError(RuntimeError):
-    """Raised when KGDB snapshot validation support is unavailable."""
+    """Raised when sldb graph snapshot validation support is unavailable."""
 
 
 class GraphSnapshotReadError(RuntimeError):
@@ -116,10 +116,10 @@ def write_graph_snapshot(
 
 def _validate_graph_snapshot(snapshot: dict[str, Any]) -> None:
     try:
-        from kgdb.contracts.io import GraphSnapshot
+        from sldb.api.graph.snapshot import GraphSnapshot
     except ImportError as exc:
         raise GraphSnapshotCapabilityError(
-            "KGDB graph snapshot validation is unavailable; install kgdb before running `deskops graph build`."
+            "sldb graph API unavailable (sldb.api.graph.snapshot); upgrade structuredLanguageDB before running `deskops graph build`."
         ) from exc
 
     GraphSnapshot.model_validate(snapshot)

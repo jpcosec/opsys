@@ -1,23 +1,22 @@
 name: pill-008-kgdb-sldb-boundary
 path: desk/contexts/pill-008-kgdb-sldb-boundary.md
-source_hash: bb1abf450d35dcce37aec52e8942a04f67cc14b75571a5d6eaa8284cdddb9ba0
-content_hash: 753b11483001e03c5b1938e36f7d77f25bbbe1a271966a97500321cf2ef33114
+source_hash: 59c4b54560dfb219518b379cc1af8df4bfc77cb7a1f6821e34b4da44a7e07073
+content_hash: 29b99dc71a7440a05389640f7254739ecb8a427cb7cf6b776d48a524df845422
 field_hashes:
-  title: eb0650d9171a6edd51da2a5c73f35ff8e0fa2669a9c8609b1bae5e2805a827fa
+  title: bf5da013ec06144771388ca75d7f80b97dcf839d87e154af5017b9f2df9b4a76
   id: 4b84b4855b8c60616cd9fef452bc482fc667db176d9bfe96af5e458351ac3f04
-  tags: de089d7ba2014b8bd93896a8e20eabe14f3394ae50e0feeabbb7b16502041ea5
-  what: eb9125cdea8476b0ac7f0178d2bce00209cd4988b380ebdd729229d728c36209
-  why: 4fa596568320861b6d2fde2dc4c5e883a512c4203de0b98ca9e7c1ad516315b0
+  tags: d3ec387de41161c18dfc70e6223bd39730251fe6d6727cf987ce9d3b52175599
+  what: 3d574af502f9e01d5d4853d616c7fa3b48d967a9ba9ca009b1173da9ea54c9c6
+  why: 2193cd879c246d4a2542ec42cd92aca3f2a7c003f0ffe218f76c3c8c4493f867
   when: b58ed02bc81dedd0025729ffc2ed913df09b972f64eab47525bf8104603eb084
-  where: 1781608ce7e1f38ecff28c0b97011cf811f18ae934c9695944cff2e6d28d7341
-  how: b1eba184b0f5d43d97659fc4b5ba539eac9ee69a8eb0b8a69af22c2f39957441
-  how_not: 0b4bf32d2073ab02470223dc34979b3089dba6da107df6a2caf89a8fd9736e45
+  where: 342dd2abbe309d28ec8fb95f95e224dfdb1ba8e0ef46aa2333f5ad18fb5e5b13
+  how: ce24a70e8867bf0558ff2099f510f90505c74473928b12be997fba997dc91d7d
+  how_not: fdf2461b36ed6becf02bd5c363b2d8bbdbe326669a84d02f392ba45ada9f036e
 semantic_tags:
 - pill-type:decision
 - representation.markdown
 - source.document.markdown
 - system:deskops
-- system:kgdb
 - system:sldb
 - topic:knowledge-graph
 - type.workflow.pill
