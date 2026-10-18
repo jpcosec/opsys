@@ -50,7 +50,6 @@ F2:
 
 F3:
 
-- `task-rw-f3-atoms-service` — Atom operations move to a service; merge and split roll back fully
 - `task-rw-f3-single-closure-path` — One closure service behind every way of closing a task
 
 F4:

@@ -1,6 +1,12 @@
 ---
 id: task-rw-f3-atoms-service
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f3-tasks-service
@@ -13,14 +19,10 @@ files:
 - tests/test_atoms_merge.py
 - tests/test_atoms_split.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f3
-- topic:refactor
-- topic:atoms
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f3-atoms-service.md
 ---
 
 # Atom operations move to a service; merge and split roll back fully
