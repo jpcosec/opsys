@@ -321,11 +321,7 @@ def test_graph_missing_surfaces_an_import_failure_instead_of_masking_it(tmp_path
         return real_import(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "__import__", failing_import)
-    try:
-        main(["graph", "missing", "--root", str(tmp_path)])
-    except BaseException as exc:  # the CLI reports unexpected errors as SystemExit
-        message = str(exc)
-    else:
-        message = capsys.readouterr().out
+    assert main(["graph", "missing", "--root", str(tmp_path)]) == 3
+    message = capsys.readouterr().err
     assert "GraphMissingCheckError" not in message
     assert "broken module" in message

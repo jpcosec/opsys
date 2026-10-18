@@ -1,0 +1,10 @@
+ M deskops/cli/commands/desk.py
+ M deskops/cli/commands/drift.py
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+ M deskops/operations.py
+ M tests/fixtures/golden/help/deskops.txt
+ M tests/test_cli.py
+ M tests/test_graph_cli.py
+?? deskops/errors.py
+?? runs/subagents/20261018-task-rw-f2-typed-errors-and-exit-codes/

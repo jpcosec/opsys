@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import subprocess
 import sys
 from types import SimpleNamespace
 
@@ -2477,3 +2478,78 @@ def test_runtime_workers_herdr_failure_prints_error_and_returns_one(capsys, monk
 
     assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="text")) == 1
     assert capsys.readouterr().out.strip() == "Error: herdr agent list: boom"
+
+
+def test_unexpected_error_exits_three_with_type_and_hint(capsys, monkeypatch) -> None:
+    def boom() -> int:
+        raise RuntimeError("kaboom")
+
+    monkeypatch.setattr("deskops.cli.main.print_about", boom)
+
+    assert main(["about"]) == 3
+
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert (
+        "Unexpected error: RuntimeError: kaboom "
+        "(rerun with --debug for the traceback)"
+    ) in captured.err
+    assert "Traceback" not in captured.err
+
+
+def test_unexpected_error_with_debug_prints_traceback_then_the_line(capsys, monkeypatch) -> None:
+    def boom() -> int:
+        raise RuntimeError("kaboom")
+
+    monkeypatch.setattr("deskops.cli.main.print_about", boom)
+
+    assert main(["--debug", "about"]) == 3
+
+    captured = capsys.readouterr()
+    assert "Traceback (most recent call last):" in captured.err
+    assert "Unexpected error: RuntimeError: kaboom" in captured.err
+    assert captured.err.index("Traceback (most recent call last):") < captured.err.index(
+        "Unexpected error:"
+    )
+
+
+@pytest.mark.parametrize(
+    ("stdout", "returncode"),
+    [
+        ("", 127),  # sldb missing
+        ("this is not json", 1),  # unparseable output
+    ],
+)
+def test_desk_update_exits_three_when_stores_check_has_no_json(
+    tmp_path: Path, capsys, monkeypatch, stdout: str, returncode: int
+) -> None:
+    import deskops.cli.commands.desk as desk_module
+
+    (tmp_path / ".sldb").mkdir()
+
+    def fake_run(*args, **kwargs):
+        return SimpleNamespace(stdout=stdout, stderr="", returncode=returncode)
+
+    monkeypatch.setattr(desk_module.subprocess, "run", fake_run)
+
+    assert main(["desk", "update", "--root", str(tmp_path)]) == 3
+    assert "sldb stores check" in capsys.readouterr().err
+
+
+def test_desk_update_without_store_reports_divergence_and_apply_repairs(
+    tmp_path: Path, capsys
+) -> None:
+    assert main(["desk", "update", "--root", str(tmp_path)]) == 1
+    captured = capsys.readouterr()
+    assert "Desk divergence report:" in captured.out
+    assert "Missing store: .sldb" in captured.out
+    assert "failed" not in captured.out
+
+    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
+
+    check = subprocess.run(
+        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(tmp_path / ".sldb")],
+        capture_output=True,
+        text=True,
+    )
+    assert check.returncode == 0, check.stdout + check.stderr

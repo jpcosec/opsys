@@ -330,18 +330,6 @@ class DeskopsOperations:
             formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
             fh.setFormatter(formatter)
             self.logger.addHandler(fh)
-        self._setup_logging()
-
-    def _setup_logging(self) -> None:
-        log_file = self.root / ".deskops.log"
-        self.logger = logging.getLogger("deskops")
-        self.logger.setLevel(logging.DEBUG)
-        if not self.logger.handlers:
-            fh = logging.FileHandler(log_file)
-            fh.setLevel(logging.DEBUG)
-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-            fh.setFormatter(formatter)
-            self.logger.addHandler(fh)
 
     @property
     def spec_registry(self) -> SpecRegistry:

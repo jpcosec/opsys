@@ -1,0 +1,430 @@
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index 5757f0b..2492a14 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -12,6 +12,7 @@ from deskops.workspace import migrate_desk
+ from deskops.workspace import modeled_desk_markdown_docs
+ from deskops.workspace import scaffold_desk
+ from deskops.bootstrap import SLDBBootstrap, MODEL_REFS
++from deskops.errors import DeskopsEnvironmentError
+ import deskops.models as models
+ 
+ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
+@@ -172,29 +173,42 @@ class DeskCLI:
+         invalid_docs: list[str] = []
+         missing_docs: list[str] = []
+         tracked_mds: set[Path] = set()
+-        result = subprocess.run(
+-            [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_dir), "--format", "json"],
+-            capture_output=True,
+-            text=True,
+-            check=False,
+-        )
+-        if result.stdout:
+-            try:
+-                payload = json.loads(result.stdout)
+-                for model in payload.get("models", []):
+-                    for doc in model.get("documents", []):
+-                        doc_path = doc.get("path")
+-                        if not doc_path:
+-                            continue
+-                        tracked_path = (root / doc_path).resolve()
+-                        tracked_mds.add(tracked_path)
+-                        
+-                        if doc.get("note") not in ("ok",):
+-                            invalid_docs.append(f"{doc_path} ({doc.get('note')})")
+-                            if doc.get("note") == "missing":
+-                                missing_docs.append(doc.get("name") or Path(doc_path).stem)
+-            except json.JSONDecodeError:
+-                pass
++        missing_store = not store_dir.exists()
++        if not missing_store:
++            result = subprocess.run(
++                [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_dir), "--format", "json"],
++                capture_output=True,
++                text=True,
++                check=False,
++            )
++            payload = None
++            if result.stdout and result.stdout.strip():
++                try:
++                    payload = json.loads(result.stdout)
++                except json.JSONDecodeError as exc:
++                    raise DeskopsEnvironmentError(
++                        f"Could not parse 'sldb stores check' output for {store_dir}: {exc}"
++                    ) from exc
++            if payload is None:
++                if result.returncode != 0:
++                    raise DeskopsEnvironmentError(
++                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}"
++                    )
++                raise DeskopsEnvironmentError(
++                    f"'sldb stores check' produced no JSON output for {store_dir}"
++                )
++            for model in payload.get("models", []):
++                for doc in model.get("documents", []):
++                    doc_path = doc.get("path")
++                    if not doc_path:
++                        continue
++                    tracked_path = (root / doc_path).resolve()
++                    tracked_mds.add(tracked_path)
++
++                    if doc.get("note") not in ("ok",):
++                        invalid_docs.append(f"{doc_path} ({doc.get('note')})")
++                        if doc.get("note") == "missing":
++                            missing_docs.append(doc.get("name") or Path(doc_path).stem)
+ 
+         untracked_docs: list[Path] = []
+         if desk_dir.exists():
+@@ -215,11 +229,13 @@ class DeskCLI:
+             }
+             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
+ 
+-        if not legacy_pending and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
++        if not legacy_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
+             print("Desk is up to date.")
+             return 0
+ 
+         print("Desk divergence report:")
++        if missing_store:
++            print("- Missing store: .sldb")
+         if legacy_pending and legacy is not None:
+             print(
+                 "- Legacy task lifecycle: "
+diff --git a/deskops/cli/commands/drift.py b/deskops/cli/commands/drift.py
+index 731d228..78fcea2 100644
+--- a/deskops/cli/commands/drift.py
++++ b/deskops/cli/commands/drift.py
+@@ -3,6 +3,7 @@ from __future__ import annotations
+ import argparse
+ from pathlib import Path
+ 
++from deskops.errors import UsageError
+ from deskops.materializers.roles import drift_check_role_docs
+ from deskops.materializers.runtime_profiles import drift_check_runtime_bindings
+ 
+@@ -10,8 +11,7 @@ from deskops.materializers.runtime_profiles import drift_check_runtime_bindings
+ class DriftCLI:
+     def run(self, args: argparse.Namespace) -> int:
+         if args.drift_command != "check":
+-            print(f"Unknown drift command: {args.drift_command}")
+-            return 2
++            raise UsageError(f"Unknown drift command: {args.drift_command}")
+         root = Path(args.root).resolve()
+         out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
+         findings = drift_check_role_docs(root, out_dir)
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index 8a2241f..2266d1e 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -3,6 +3,7 @@ from __future__ import annotations
+ import os
+ from pathlib import Path
+ import sys
++import traceback
+ from typing import Any
+ 
+ PACKAGE_ROOT = Path(__file__).resolve().parents[2]
+@@ -14,6 +15,8 @@ from deskops.cli.parser import build_parser
+ 
+ from deskops.about import print_about
+ from deskops.bootstrap import SLDBBootstrap
++from deskops.errors import DeskopsError
++from deskops.errors import UsageError
+ from deskops.workspace import ensure_target_directory
+ from deskops.workspace import scaffold_desk
+ 
+@@ -48,6 +51,8 @@ def _validate_selectors(args: Any) -> None:
+ class CLI:
+     """Main CLI dispatcher for deskops."""
+ 
++    debug = False
++
+     def run(self, argv: Any = None) -> int:
+         bootstrap = SLDBBootstrap()
+         parser = build_parser()
+@@ -58,6 +63,8 @@ class CLI:
+                 return exc.code
+             return 0 if exc.code is None else 1
+ 
++        self.debug = bool(getattr(args, "debug", False))
++
+         _validate_selectors(args)
+ 
+         self._apply_test_root_override(args)
+@@ -147,8 +154,7 @@ class CLI:
+ 
+             return RepoCLI().run(args)
+ 
+-        print(f"Unknown command: {args.command}")
+-        return 2
++        raise UsageError(f"Unknown command: {args.command}")
+ 
+     def _bootstrap(self) -> int:
+         return SLDBBootstrap().ensure_machine_ready()
+@@ -225,8 +231,7 @@ class CLI:
+             return self._graph_missing(args)
+         if args.graph_command == "reflect":
+             return self._graph_reflect(args)
+-        print(f"Unknown graph command: {args.graph_command}")
+-        return 2
++        raise UsageError(f"Unknown graph command: {args.graph_command}")
+ 
+     def _graph_build(self, args: Any) -> int:
+         root = Path(args.root).resolve()
+@@ -384,10 +389,15 @@ def _graph_node_label(node: dict[str, Any]) -> str:
+ 
+ 
+ def main(argv: Any = None) -> int:
++    cli = CLI()
+     try:
+-        return CLI().run(argv)
++        return cli.run(argv)
+     except SystemExit:
+         raise
++    except DeskopsError as exc:
++        stream = sys.stdout if isinstance(exc, UsageError) else sys.stderr
++        print(str(exc), file=stream)
++        return exc.exit_code
+     except FileNotFoundError as exc:
+         print(f"File not found: {exc}", file=sys.stderr)
+         return 1
+@@ -395,16 +405,27 @@ def main(argv: Any = None) -> int:
+         print(f"Missing required field: {exc}", file=sys.stderr)
+         return 1
+     except ValueError as exc:
++        from pydantic import ValidationError
++
++        if isinstance(exc, ValidationError):
++            print(f"Validation error:\n{exc}", file=sys.stderr)
++            return 1
+         print(f"Invalid value: {exc}", file=sys.stderr)
+         return 1
+     except Exception as exc:
+-        if exc.__class__.__name__ == "ValidationError":
+-            print(f"Validation error:\n{exc}", file=sys.stderr)
+-            return 1
+-        if exc.__class__.__name__ == "SLDBStoreError":
++        from sldb.core.exceptions import SLDBStoreError
++
++        if isinstance(exc, SLDBStoreError):
+             print(f"Store error: {exc}", file=sys.stderr)
+             return 1
+-        raise SystemExit(f"Unexpected: {exc}")
++        if getattr(cli, "debug", False):
++            traceback.print_exc()
++        print(
++            f"Unexpected error: {type(exc).__name__}: {exc} "
++            "(rerun with --debug for the traceback)",
++            file=sys.stderr,
++        )
++        return 3
+ 
+ 
+ if __name__ == "__main__":
+diff --git a/deskops/cli/parser.py b/deskops/cli/parser.py
+index 87cbfd9..6fdbab7 100644
+--- a/deskops/cli/parser.py
++++ b/deskops/cli/parser.py
+@@ -29,6 +29,11 @@ def build_parser() -> argparse.ArgumentParser:
+         formatter_class=argparse.RawTextHelpFormatter,
+         epilog=WORKFLOW_EPILOG,
+     )
++    parser.add_argument(
++        "--debug",
++        action="store_true",
++        help="Print a full traceback for unexpected errors.",
++    )
+     subparsers = parser.add_subparsers(dest="command", required=True)
+ 
+     _add_about_command(subparsers)
+diff --git a/deskops/errors.py b/deskops/errors.py
+new file mode 100644
+index 0000000..f261655
+--- /dev/null
++++ b/deskops/errors.py
+@@ -0,0 +1,34 @@
++"""Typed deskops errors and their CLI exit codes.
++
++Exit-code contract:
++    0  success
++    1  domain error
++    2  usage error (argparse also uses 2)
++    3  environment error
++"""
++
++from __future__ import annotations
++
++
++class DeskopsError(Exception):
++    """Base class for errors the CLI knows how to report."""
++
++    exit_code = 1
++
++
++class DomainError(DeskopsError):
++    """The request was understood but the workflow domain rejected it."""
++
++    exit_code = 1
++
++
++class UsageError(DeskopsError):
++    """The invocation itself is wrong; reported on stdout like argparse help."""
++
++    exit_code = 2
++
++
++class DeskopsEnvironmentError(DeskopsError):
++    """The local environment (tooling, store, external process) is unusable."""
++
++    exit_code = 3
+diff --git a/deskops/operations.py b/deskops/operations.py
+index 42b89bd..fa0f407 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -320,18 +320,6 @@ class DeskopsOperations:
+         self._spec_registry: SpecRegistry | None = None
+         self._setup_logging()
+ 
+-    def _setup_logging(self) -> None:
+-        log_file = self.root / ".deskops.log"
+-        self.logger = logging.getLogger("deskops")
+-        self.logger.setLevel(logging.DEBUG)
+-        if not self.logger.handlers:
+-            fh = logging.FileHandler(log_file)
+-            fh.setLevel(logging.DEBUG)
+-            formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+-            fh.setFormatter(formatter)
+-            self.logger.addHandler(fh)
+-        self._setup_logging()
+-
+     def _setup_logging(self) -> None:
+         log_file = self.root / ".deskops.log"
+         self.logger = logging.getLogger("deskops")
+diff --git a/tests/fixtures/golden/help/deskops.txt b/tests/fixtures/golden/help/deskops.txt
+index 57c83ea..2484fe0 100644
+--- a/tests/fixtures/golden/help/deskops.txt
++++ b/tests/fixtures/golden/help/deskops.txt
+@@ -1,4 +1,4 @@
+-usage: deskops [-h]
++usage: deskops [-h] [--debug]
+                {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
+ 
+ deskops: Workflow-domain layer for the hum-ecosystem.
+@@ -32,6 +32,7 @@ positional arguments:
+ 
+ options:
+   -h, --help            show this help message and exit
++  --debug               Print a full traceback for unexpected errors.
+ 
+ Typical flow:
+   deskops bootstrap
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 87cc774..a0b274e 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -2,6 +2,7 @@ from __future__ import annotations
+ 
+ import json
+ from pathlib import Path
++import subprocess
+ import sys
+ from types import SimpleNamespace
+ 
+@@ -2477,3 +2478,78 @@ def test_runtime_workers_herdr_failure_prints_error_and_returns_one(capsys, monk
+ 
+     assert cli.run(SimpleNamespace(runtime_command="workers", root=".", herdr="herdr", format="text")) == 1
+     assert capsys.readouterr().out.strip() == "Error: herdr agent list: boom"
++
++
++def test_unexpected_error_exits_three_with_type_and_hint(capsys, monkeypatch) -> None:
++    def boom() -> int:
++        raise RuntimeError("kaboom")
++
++    monkeypatch.setattr("deskops.cli.main.print_about", boom)
++
++    assert main(["about"]) == 3
++
++    captured = capsys.readouterr()
++    assert captured.out == ""
++    assert (
++        "Unexpected error: RuntimeError: kaboom "
++        "(rerun with --debug for the traceback)"
++    ) in captured.err
++    assert "Traceback" not in captured.err
++
++
++def test_unexpected_error_with_debug_prints_traceback_then_the_line(capsys, monkeypatch) -> None:
++    def boom() -> int:
++        raise RuntimeError("kaboom")
++
++    monkeypatch.setattr("deskops.cli.main.print_about", boom)
++
++    assert main(["--debug", "about"]) == 3
++
++    captured = capsys.readouterr()
++    assert "Traceback (most recent call last):" in captured.err
++    assert "Unexpected error: RuntimeError: kaboom" in captured.err
++    assert captured.err.index("Traceback (most recent call last):") < captured.err.index(
++        "Unexpected error:"
++    )
++
++
++@pytest.mark.parametrize(
++    ("stdout", "returncode"),
++    [
++        ("", 127),  # sldb missing
++        ("this is not json", 1),  # unparseable output
++    ],
++)
++def test_desk_update_exits_three_when_stores_check_has_no_json(
++    tmp_path: Path, capsys, monkeypatch, stdout: str, returncode: int
++) -> None:
++    import deskops.cli.commands.desk as desk_module
++
++    (tmp_path / ".sldb").mkdir()
++
++    def fake_run(*args, **kwargs):
++        return SimpleNamespace(stdout=stdout, stderr="", returncode=returncode)
++
++    monkeypatch.setattr(desk_module.subprocess, "run", fake_run)
++
++    assert main(["desk", "update", "--root", str(tmp_path)]) == 3
++    assert "sldb stores check" in capsys.readouterr().err
++
++
++def test_desk_update_without_store_reports_divergence_and_apply_repairs(
++    tmp_path: Path, capsys
++) -> None:
++    assert main(["desk", "update", "--root", str(tmp_path)]) == 1
++    captured = capsys.readouterr()
++    assert "Desk divergence report:" in captured.out
++    assert "Missing store: .sldb" in captured.out
++    assert "failed" not in captured.out
++
++    assert main(["desk", "update", "--root", str(tmp_path), "--apply"]) == 0
++
++    check = subprocess.run(
++        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(tmp_path / ".sldb")],
++        capture_output=True,
++        text=True,
++    )
++    assert check.returncode == 0, check.stdout + check.stderr
+diff --git a/tests/test_graph_cli.py b/tests/test_graph_cli.py
+index 5236519..7688513 100644
+--- a/tests/test_graph_cli.py
++++ b/tests/test_graph_cli.py
+@@ -321,11 +321,7 @@ def test_graph_missing_surfaces_an_import_failure_instead_of_masking_it(tmp_path
+         return real_import(name, *args, **kwargs)
+ 
+     monkeypatch.setattr(builtins, "__import__", failing_import)
+-    try:
+-        main(["graph", "missing", "--root", str(tmp_path)])
+-    except BaseException as exc:  # the CLI reports unexpected errors as SystemExit
+-        message = str(exc)
+-    else:
+-        message = capsys.readouterr().out
++    assert main(["graph", "missing", "--root", str(tmp_path)]) == 3
++    message = capsys.readouterr().err
+     assert "GraphMissingCheckError" not in message
+     assert "broken module" in message

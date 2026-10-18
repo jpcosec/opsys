@@ -1,0 +1,3 @@
+87 passed in 57.63s
+386 passed, 3 skipped in 328.59s (0:05:28)
+supervisor check: desk update on a repo with no .sldb -> divergence report exit 1; --apply exit 0; stores check PASS

@@ -29,6 +29,11 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=WORKFLOW_EPILOG,
     )
+    parser.add_argument(
+        "--debug",
+        action="store_true",
+        help="Print a full traceback for unexpected errors.",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     _add_about_command(subparsers)

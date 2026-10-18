@@ -12,6 +12,7 @@ from deskops.workspace import migrate_desk
 from deskops.workspace import modeled_desk_markdown_docs
 from deskops.workspace import scaffold_desk
 from deskops.bootstrap import SLDBBootstrap, MODEL_REFS
+from deskops.errors import DeskopsEnvironmentError
 import deskops.models as models
 
 def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
@@ -172,29 +173,42 @@ class DeskCLI:
         invalid_docs: list[str] = []
         missing_docs: list[str] = []
         tracked_mds: set[Path] = set()
-        result = subprocess.run(
-            [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_dir), "--format", "json"],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        if result.stdout:
-            try:
-                payload = json.loads(result.stdout)
-                for model in payload.get("models", []):
-                    for doc in model.get("documents", []):
-                        doc_path = doc.get("path")
-                        if not doc_path:
-                            continue
-                        tracked_path = (root / doc_path).resolve()
-                        tracked_mds.add(tracked_path)
-                        
-                        if doc.get("note") not in ("ok",):
-                            invalid_docs.append(f"{doc_path} ({doc.get('note')})")
-                            if doc.get("note") == "missing":
-                                missing_docs.append(doc.get("name") or Path(doc_path).stem)
-            except json.JSONDecodeError:
-                pass
+        missing_store = not store_dir.exists()
+        if not missing_store:
+            result = subprocess.run(
+                [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_dir), "--format", "json"],
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+            payload = None
+            if result.stdout and result.stdout.strip():
+                try:
+                    payload = json.loads(result.stdout)
+                except json.JSONDecodeError as exc:
+                    raise DeskopsEnvironmentError(
+                        f"Could not parse 'sldb stores check' output for {store_dir}: {exc}"
+                    ) from exc
+            if payload is None:
+                if result.returncode != 0:
+                    raise DeskopsEnvironmentError(
+                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}"
+                    )
+                raise DeskopsEnvironmentError(
+                    f"'sldb stores check' produced no JSON output for {store_dir}"
+                )
+            for model in payload.get("models", []):
+                for doc in model.get("documents", []):
+                    doc_path = doc.get("path")
+                    if not doc_path:
+                        continue
+                    tracked_path = (root / doc_path).resolve()
+                    tracked_mds.add(tracked_path)
+
+                    if doc.get("note") not in ("ok",):
+                        invalid_docs.append(f"{doc_path} ({doc.get('note')})")
+                        if doc.get("note") == "missing":
+                            missing_docs.append(doc.get("name") or Path(doc_path).stem)
 
         untracked_docs: list[Path] = []
         if desk_dir.exists():
@@ -215,11 +229,13 @@ class DeskCLI:
             }
             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
 
-        if not legacy_pending and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
+        if not legacy_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
             print("Desk is up to date.")
             return 0
 
         print("Desk divergence report:")
+        if missing_store:
+            print("- Missing store: .sldb")
         if legacy_pending and legacy is not None:
             print(
                 "- Legacy task lifecycle: "

@@ -3,6 +3,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 import sys
+import traceback
 from typing import Any
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[2]
@@ -14,6 +15,8 @@ from deskops.cli.parser import build_parser
 
 from deskops.about import print_about
 from deskops.bootstrap import SLDBBootstrap
+from deskops.errors import DeskopsError
+from deskops.errors import UsageError
 from deskops.workspace import ensure_target_directory
 from deskops.workspace import scaffold_desk
 
@@ -48,6 +51,8 @@ def _validate_selectors(args: Any) -> None:
 class CLI:
     """Main CLI dispatcher for deskops."""
 
+    debug = False
+
     def run(self, argv: Any = None) -> int:
         bootstrap = SLDBBootstrap()
         parser = build_parser()
@@ -57,6 +62,8 @@ class CLI:
             if isinstance(exc.code, int):
                 return exc.code
             return 0 if exc.code is None else 1
+
+        self.debug = bool(getattr(args, "debug", False))
 
         _validate_selectors(args)
 
@@ -147,8 +154,7 @@ class CLI:
 
             return RepoCLI().run(args)
 
-        print(f"Unknown command: {args.command}")
-        return 2
+        raise UsageError(f"Unknown command: {args.command}")
 
     def _bootstrap(self) -> int:
         return SLDBBootstrap().ensure_machine_ready()
@@ -225,8 +231,7 @@ class CLI:
             return self._graph_missing(args)
         if args.graph_command == "reflect":
             return self._graph_reflect(args)
-        print(f"Unknown graph command: {args.graph_command}")
-        return 2
+        raise UsageError(f"Unknown graph command: {args.graph_command}")
 
     def _graph_build(self, args: Any) -> int:
         root = Path(args.root).resolve()
@@ -384,10 +389,15 @@ def _graph_node_label(node: dict[str, Any]) -> str:
 
 
 def main(argv: Any = None) -> int:
+    cli = CLI()
     try:
-        return CLI().run(argv)
+        return cli.run(argv)
     except SystemExit:
         raise
+    except DeskopsError as exc:
+        stream = sys.stdout if isinstance(exc, UsageError) else sys.stderr
+        print(str(exc), file=stream)
+        return exc.exit_code
     except FileNotFoundError as exc:
         print(f"File not found: {exc}", file=sys.stderr)
         return 1
@@ -395,16 +405,27 @@ def main(argv: Any = None) -> int:
         print(f"Missing required field: {exc}", file=sys.stderr)
         return 1
     except ValueError as exc:
+        from pydantic import ValidationError
+
+        if isinstance(exc, ValidationError):
+            print(f"Validation error:\n{exc}", file=sys.stderr)
+            return 1
         print(f"Invalid value: {exc}", file=sys.stderr)
         return 1
     except Exception as exc:
-        if exc.__class__.__name__ == "ValidationError":
-            print(f"Validation error:\n{exc}", file=sys.stderr)
-            return 1
-        if exc.__class__.__name__ == "SLDBStoreError":
+        from sldb.core.exceptions import SLDBStoreError
+
+        if isinstance(exc, SLDBStoreError):
             print(f"Store error: {exc}", file=sys.stderr)
             return 1
-        raise SystemExit(f"Unexpected: {exc}")
+        if getattr(cli, "debug", False):
+            traceback.print_exc()
+        print(
+            f"Unexpected error: {type(exc).__name__}: {exc} "
+            "(rerun with --debug for the traceback)",
+            file=sys.stderr,
+        )
+        return 3
 
 
 if __name__ == "__main__":

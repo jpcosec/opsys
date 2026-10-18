@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from deskops.errors import UsageError
 from deskops.materializers.roles import drift_check_role_docs
 from deskops.materializers.runtime_profiles import drift_check_runtime_bindings
 
@@ -10,8 +11,7 @@ from deskops.materializers.runtime_profiles import drift_check_runtime_bindings
 class DriftCLI:
     def run(self, args: argparse.Namespace) -> int:
         if args.drift_command != "check":
-            print(f"Unknown drift command: {args.drift_command}")
-            return 2
+            raise UsageError(f"Unknown drift command: {args.drift_command}")
         root = Path(args.root).resolve()
         out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
         findings = drift_check_role_docs(root, out_dir)

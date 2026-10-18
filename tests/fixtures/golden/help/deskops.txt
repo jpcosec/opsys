@@ -1,4 +1,4 @@
-usage: deskops [-h]
+usage: deskops [-h] [--debug]
                {about,doctor,status,faq,bootstrap,init,inbox,message,promote,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
 
 deskops: Workflow-domain layer for the hum-ecosystem.
@@ -32,6 +32,7 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
+  --debug               Print a full traceback for unexpected errors.
 
 Typical flow:
   deskops bootstrap
