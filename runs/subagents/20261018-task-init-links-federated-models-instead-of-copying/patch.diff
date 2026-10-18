@@ -1,0 +1,390 @@
+diff --git a/deskops/bootstrap.py b/deskops/bootstrap.py
+index e888615..81a24a3 100644
+--- a/deskops/bootstrap.py
++++ b/deskops/bootstrap.py
+@@ -8,9 +8,11 @@ from pathlib import Path
+ import shutil
+ import subprocess
+ import sys
+-from types import SimpleNamespace
++from typing import Any
+ 
+ 
++DESKOPS_STORE_LINK = "deskops"
++
+ MODEL_REFS = {
+     "BoardDoc": "deskops.models:BoardDoc",
+     "TaskDoc": "deskops.models:TaskDoc",
+@@ -76,21 +78,9 @@ class SLDBBootstrap:
+                 print(f"Error: {exc}")
+                 return 1
+ 
+-        try:
+-            registered = self._registered_model_names(global_store)
+-        except RuntimeError as exc:
+-            print(f"Error: {exc}")
+-            return 1
+-
+-        for model_name, model_ref in MODEL_REFS.items():
+-            if model_name in registered:
+-                continue
+-            print(f"Registering {model_name} in {global_store}...")
+-            try:
+-                self._add_model(model_ref, global_store)
+-            except RuntimeError as exc:
+-                print(f"Error: {exc}")
+-                return 1
++        result = self._register_models(global_store)
++        if result != 0:
++            return result
+ 
+         print("Global deskops model registry is ready.")
+         return 0
+@@ -107,23 +97,124 @@ class SLDBBootstrap:
+                 print(f"Error: {exc}")
+                 return 1
+ 
++        return self._register_models(local_store)
++
++    def _register_models(self, store_path: Path) -> int:
++        """Link the deskops owner store and inherit the model set from it.
++
++        A model registered here as a copy of the deskops class is converted in place by
++        `inherit_model`, keeping its documents and signed contract.
++        """
+         try:
+-            registered = self._registered_model_names(local_store)
++            owner = self._deskops_owner_store()
++            if self._ensure_owner_link(store_path, owner):
++                print(f"Linked {owner} as {DESKOPS_STORE_LINK} in {store_path}.")
++
++            entries = self._registered_model_entries(store_path)
++            for model_name, model_ref in MODEL_REFS.items():
++                entry = entries.get(model_name)
++                if entry is not None:
++                    origin = getattr(entry, "origin", None)
++                    if origin == DESKOPS_STORE_LINK:
++                        continue
++                    if origin or getattr(entry, "model_ref", None) != model_ref:
++                        continue
++                print(f"Inheriting {model_name} in {store_path}...")
++                self._inherit_model(model_name, store_path)
++
++            self._init_relations(store_path)
++            self._update_store_indexes(store_path)
+         except RuntimeError as exc:
+             print(f"Error: {exc}")
+             return 1
+ 
+-        for model_name, model_ref in MODEL_REFS.items():
+-            if model_name in registered:
+-                continue
+-            print(f"Registering {model_name} in {local_store}...")
++        return 0
++
++    def _deskops_owner_store(self) -> Path:
++        owner = self._package_root() / ".sldb"
++        if not owner.exists():
++            raise RuntimeError(
++                f"deskops owner store not found at {owner}; the deskops models must be registered in the deskops repo's .sldb"
++            )
++        return owner
++
++    def _ensure_owner_link(self, store_path: Path, owner: Path) -> bool:
++        """Link `owner` as `deskops` unless the store already has that link."""
++        if self._sldb_importable():
++            from sldb.store.io import load_store_index
++
+             try:
+-                self._add_model(model_ref, local_store)
+-            except RuntimeError as exc:
+-                print(f"Error: {exc}")
+-                return 1
++                idx = load_store_index(store_path)
++                if any(link.name == DESKOPS_STORE_LINK for link in idx.stores):
++                    return False
++                from sldb.api import link_store
+ 
+-        return 0
++                link_store(store_path, owner, DESKOPS_STORE_LINK)
++            except Exception as exc:
++                raise RuntimeError(str(exc))
++        else:
++            existing = self._store_link_names(store_path)
++            if DESKOPS_STORE_LINK in existing:
++                return False
++            self.run_sldb([
++                "stores",
++                "add",
++                str(owner),
++                "--name",
++                DESKOPS_STORE_LINK,
++                "--store",
++                str(store_path),
++            ])
++        return True
++
++    def _inherit_model(self, model_name: str, store_path: Path) -> None:
++        ref = f"{DESKOPS_STORE_LINK}:{model_name}"
++        if self._sldb_importable():
++            from sldb.api import inherit_model
++
++            try:
++                inherit_model(store_path, ref, pythonpath=self.default_pythonpath())
++            except Exception as exc:
++                raise RuntimeError(str(exc))
++        else:
++            self.run_sldb([
++                "models",
++                "inherit",
++                ref,
++                "--store",
++                str(store_path),
++                "--pythonpath",
++                self.default_pythonpath(),
++            ])
++
++    def _init_relations(self, store_path: Path) -> None:
++        if self._sldb_importable():
++            from sldb.api import init_relations
++
++            try:
++                init_relations(store_path, pythonpath=self.default_pythonpath())
++            except Exception as exc:
++                raise RuntimeError(str(exc))
++        else:
++            self.run_sldb([
++                "edges",
++                "init",
++                "--store",
++                str(store_path),
++                "--pythonpath",
++                self.default_pythonpath(),
++            ])
++
++    def _update_store_indexes(self, store_path: Path) -> None:
++        if self._sldb_importable():
++            from sldb.api import update_store_indexes
++
++            try:
++                update_store_indexes(store_path, self.default_pythonpath())
++            except Exception as exc:
++                raise RuntimeError(str(exc))
++        else:
++            self.run_sldb(["stores", "update", "--store", str(store_path)])
+ 
+     def run_sldb(self, args: list[str], *, capture_output: bool = False) -> subprocess.CompletedProcess[str]:
+         return self._run([sys.executable, "-m", "sldb", *args], capture_output=capture_output)
+@@ -138,23 +229,39 @@ class SLDBBootstrap:
+         else:
+             self.run_sldb(["stores", "init", "--path", str(target_path)])
+ 
+-    def _add_model(self, model_ref: str, store_path: Path) -> None:
++    def _registered_model_entries(self, store_path: Path) -> dict[str, Any]:
+         if self._sldb_importable():
+-            from sldb.cli.commands.model import ModelCLI
++            from sldb.store.io import load_store_index
++
+             try:
+-                args = SimpleNamespace(
+-                    model=model_ref,
+-                    store=str(store_path),
+-                    pythonpath=self.default_pythonpath(),
+-                    canonical=False
+-                )
+-                ret = ModelCLI().add(args)
+-                if ret != 0:
+-                    raise RuntimeError(f"Failed to add model {model_ref}")
++                idx = load_store_index(store_path)
++                return {m.name: m for m in idx.models}
+             except Exception as exc:
+                 raise RuntimeError(str(exc))
+-        else:
+-            self.run_sldb(["models", "add", model_ref, "--store", str(store_path)])
++
++        result = self.run_sldb(
++            ["models", "list", "--store", str(store_path), "--format", "json"],
++            capture_output=True,
++        )
++        payload = json.loads(result.stdout or "{}")
++        return {entry["name"]: entry for entry in payload.get("models", [])}
++
++    def _store_link_names(self, store_path: Path) -> set[str]:
++        if self._sldb_importable():
++            from sldb.store.io import load_store_index
++
++            try:
++                idx = load_store_index(store_path)
++                return {link.name for link in idx.stores}
++            except Exception as exc:
++                raise RuntimeError(str(exc))
++
++        result = self.run_sldb(
++            ["stores", "list", "--store", str(store_path), "--format", "json"],
++            capture_output=True,
++        )
++        payload = json.loads(result.stdout or "{}")
++        return {entry["name"] for entry in payload.get("stores", [])}
+ 
+     def _registered_model_names(self, store_path: Path) -> set[str]:
+         if self._sldb_importable():
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index ee8789d..5757f0b 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -150,17 +150,24 @@ class DeskCLI:
+                 missing_desk_files.append("desk/rituals/phase.md")
+ 
+         bootstrap = SLDBBootstrap()
+-        registered_models: set[str] = set()
++        registered_entries: dict[str, Any] = {}
+         if store_dir.exists():
+             try:
+-                registered_models = bootstrap._registered_model_names(store_dir)
++                registered_entries = bootstrap._registered_model_entries(store_dir)
+             except Exception:
+                 pass
+ 
+         unregistered_models: list[str] = []
+-        for model_name in MODEL_REFS.keys():
+-            if model_name not in registered_models:
++        copied_models: list[str] = []
++        for model_name, model_ref in MODEL_REFS.items():
++            entry = registered_entries.get(model_name)
++            if entry is None:
+                 unregistered_models.append(model_name)
++            elif (
++                not getattr(entry, "origin", None)
++                and getattr(entry, "model_ref", None) == model_ref
++            ):
++                copied_models.append(model_name)
+ 
+         invalid_docs: list[str] = []
+         missing_docs: list[str] = []
+@@ -208,7 +215,7 @@ class DeskCLI:
+             }
+             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
+ 
+-        if not legacy_pending and not missing_desk_files and not unregistered_models and not untracked_docs and not invalid_docs:
++        if not legacy_pending and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
+             print("Desk is up to date.")
+             return 0
+ 
+@@ -225,6 +232,8 @@ class DeskCLI:
+             print(f"- Missing desk structure: {', '.join(missing_desk_files)}")
+         if unregistered_models:
+             print(f"- Unregistered models: {', '.join(unregistered_models)}")
++        if copied_models:
++            print(f"- Copied deskops models: {', '.join(copied_models)}")
+         if untracked_docs:
+             rel_untracked = [str(p.relative_to(root)) for p in untracked_docs]
+             print(f"- Untracked desk documents: {', '.join(rel_untracked)}")
+@@ -241,9 +250,9 @@ class DeskCLI:
+             scaffold_desk(root)
+             print("Scaffolded missing desk structure.")
+ 
+-        if unregistered_models:
++        if unregistered_models or copied_models:
+             bootstrap.init_local_store(root)
+-            print("Registered missing models.")
++            print("Registered missing models and converted copied deskops models.")
+ 
+         if untracked_docs:
+             try:
+diff --git a/tests/test_federated_models.py b/tests/test_federated_models.py
+new file mode 100644
+index 0000000..dd82ee1
+--- /dev/null
++++ b/tests/test_federated_models.py
+@@ -0,0 +1,91 @@
++from __future__ import annotations
++
++import subprocess
++import sys
++from pathlib import Path
++
++from sldb.api import add_model, doc_status, init_store, track_document_file
++from sldb.api import store_links
++from sldb.store.io import load_store_index
++
++from deskops.bootstrap import MODEL_REFS
++from deskops.cli.main import main
++from deskops.workspace import scaffold_desk
++
++ROOT = Path(__file__).resolve().parents[1]
++
++
++def _deskops_model_entries(store_path: Path) -> list:
++    return [
++        entry
++        for entry in load_store_index(store_path).models
++        if (entry.model_ref or "").startswith("deskops.models:")
++    ]
++
++
++def _stores_check(store_path: Path) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(
++        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(store_path)],
++        capture_output=True,
++        text=True,
++        check=False,
++    )
++
++
++def test_deskops_init_inherits_deskops_models_instead_of_copying(tmp_path: Path, monkeypatch, capsys) -> None:
++    monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_machine_ready", lambda self: 0)
++    root = tmp_path / "repo"
++    root.mkdir()
++
++    assert main(["init", str(root)]) == 0
++    capsys.readouterr()
++
++    store = root / ".sldb"
++    entries = {entry.name: entry for entry in _deskops_model_entries(store)}
++
++    assert set(entries) == set(MODEL_REFS)
++    for name, model_ref in MODEL_REFS.items():
++        entry = entries[name]
++        assert entry.origin == "deskops"
++        assert entry.path == ""
++        assert entry.model_ref == model_ref
++
++    links = store_links(store)
++    assert [link["name"] for link in links] == ["deskops"]
++    assert links[0]["status"] == "ok"
++
++    check = _stores_check(store)
++    assert check.returncode == 0, check.stdout + check.stderr
++
++
++def test_desk_update_apply_converts_copied_deskops_models(tmp_path: Path, capsys) -> None:
++    root = tmp_path / "repo"
++    root.mkdir()
++    location = init_store(root)
++    store = location.store_path
++    for model_ref in MODEL_REFS.values():
++        add_model(store, model_ref, pythonpath=str(ROOT))
++    scaffold_desk(root)
++    track_document_file(
++        store,
++        "BoardDoc",
++        root / "desk" / "tasks" / "Board.md",
++        name="Board",
++        pythonpath=str(ROOT),
++    )
++    assert doc_status(store, "BoardDoc/Board").status == "ok"
++
++    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
++    capsys.readouterr()
++
++    for name in MODEL_REFS:
++        entry = next(entry for entry in load_store_index(store).models if entry.name == name)
++        assert entry.origin == "deskops"
++        assert entry.path == ""
++    assert doc_status(store, "BoardDoc/Board").status == "ok", "conversion keeps tracked documents"
++
++    check = _stores_check(store)
++    assert check.returncode == 0, check.stdout + check.stderr
++
++    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
++    assert "Desk is up to date." in capsys.readouterr().out

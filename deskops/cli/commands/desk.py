@@ -150,17 +150,24 @@ class DeskCLI:
                 missing_desk_files.append("desk/rituals/phase.md")
 
         bootstrap = SLDBBootstrap()
-        registered_models: set[str] = set()
+        registered_entries: dict[str, Any] = {}
         if store_dir.exists():
             try:
-                registered_models = bootstrap._registered_model_names(store_dir)
+                registered_entries = bootstrap._registered_model_entries(store_dir)
             except Exception:
                 pass
 
         unregistered_models: list[str] = []
-        for model_name in MODEL_REFS.keys():
-            if model_name not in registered_models:
+        copied_models: list[str] = []
+        for model_name, model_ref in MODEL_REFS.items():
+            entry = registered_entries.get(model_name)
+            if entry is None:
                 unregistered_models.append(model_name)
+            elif (
+                not getattr(entry, "origin", None)
+                and getattr(entry, "model_ref", None) == model_ref
+            ):
+                copied_models.append(model_name)
 
         invalid_docs: list[str] = []
         missing_docs: list[str] = []
@@ -208,7 +215,7 @@ class DeskCLI:
             }
             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
 
-        if not legacy_pending and not missing_desk_files and not unregistered_models and not untracked_docs and not invalid_docs:
+        if not legacy_pending and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs:
             print("Desk is up to date.")
             return 0
 
@@ -225,6 +232,8 @@ class DeskCLI:
             print(f"- Missing desk structure: {', '.join(missing_desk_files)}")
         if unregistered_models:
             print(f"- Unregistered models: {', '.join(unregistered_models)}")
+        if copied_models:
+            print(f"- Copied deskops models: {', '.join(copied_models)}")
         if untracked_docs:
             rel_untracked = [str(p.relative_to(root)) for p in untracked_docs]
             print(f"- Untracked desk documents: {', '.join(rel_untracked)}")
@@ -241,9 +250,9 @@ class DeskCLI:
             scaffold_desk(root)
             print("Scaffolded missing desk structure.")
 
-        if unregistered_models:
+        if unregistered_models or copied_models:
             bootstrap.init_local_store(root)
-            print("Registered missing models.")
+            print("Registered missing models and converted copied deskops models.")
 
         if untracked_docs:
             try:

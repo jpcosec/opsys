@@ -1,0 +1,4 @@
+ M deskops/bootstrap.py
+ M deskops/cli/commands/desk.py
+?? runs/subagents/20261018-task-init-links-federated-models-instead-of-copying/
+?? tests/test_federated_models.py
