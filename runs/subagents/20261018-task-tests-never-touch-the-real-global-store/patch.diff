@@ -1,0 +1,77 @@
+diff --git a/tests/conftest.py b/tests/conftest.py
+index ee412a5..426e458 100644
+--- a/tests/conftest.py
++++ b/tests/conftest.py
+@@ -18,6 +18,25 @@ def pytest_addoption(parser: pytest.Parser) -> None:
+     )
+ 
+ 
++@pytest.fixture(autouse=True)
++def _isolated_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
++    """Point HOME at a throwaway directory so no test writes the real ~/.sldb.
++
++    Subprocesses inherit the patched environment, so `python -m deskops` also
++    builds its global store under the fake home. Git gets a user identity from
++    the fake home's .gitconfig; the real one is not consulted.
++    """
++    home = tmp_path / "home"
++    home.mkdir()
++    (home / ".gitconfig").write_text(
++        "[user]\n\tname = Deskops Test\n\temail = test@example.com\n",
++        encoding="utf-8",
++    )
++    monkeypatch.setenv("HOME", str(home))
++    assert Path.home() == home
++    return home
++
++
+ def _git(root: Path, *argv: str) -> None:
+     subprocess.run(["git", *argv], cwd=root, check=True, capture_output=True, text=True)
+ 
+diff --git a/tests/test_global_store_isolation.py b/tests/test_global_store_isolation.py
+new file mode 100644
+index 0000000..f2089bf
+--- /dev/null
++++ b/tests/test_global_store_isolation.py
+@@ -0,0 +1,41 @@
++from __future__ import annotations
++
++import hashlib
++import os
++from pathlib import Path
++import pwd
++import subprocess
++import sys
++
++REAL_HOME = Path(pwd.getpwuid(os.getuid()).pw_dir)
++
++
++def _store_index_hash() -> str | None:
++    index = REAL_HOME / ".sldb" / "core" / "store_index.yaml"
++    if not index.exists():
++        return None
++    return hashlib.sha256(index.read_bytes()).hexdigest()
++
++
++def test_home_is_isolated_from_the_real_home() -> None:
++    assert Path.home() != REAL_HOME
++    assert Path.home().is_dir()
++    assert (Path.home() / ".gitconfig").exists()
++
++
++def test_deskops_init_does_not_touch_the_real_global_store(tmp_path: Path) -> None:
++    root = tmp_path / "repo"
++    root.mkdir()
++    before = _store_index_hash()
++
++    result = subprocess.run(
++        [sys.executable, "-m", "deskops", "init", str(root)],
++        cwd=root,
++        capture_output=True,
++        text=True,
++        env={**os.environ},
++    )
++
++    assert result.returncode == 0, result.stderr or result.stdout
++    assert _store_index_hash() == before
++    assert (Path.home() / ".sldb" / "core" / "store_index.yaml").exists()

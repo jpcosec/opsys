@@ -18,6 +18,25 @@ def pytest_addoption(parser: pytest.Parser) -> None:
     )
 
 
+@pytest.fixture(autouse=True)
+def _isolated_home(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Point HOME at a throwaway directory so no test writes the real ~/.sldb.
+
+    Subprocesses inherit the patched environment, so `python -m deskops` also
+    builds its global store under the fake home. Git gets a user identity from
+    the fake home's .gitconfig; the real one is not consulted.
+    """
+    home = tmp_path / "home"
+    home.mkdir()
+    (home / ".gitconfig").write_text(
+        "[user]\n\tname = Deskops Test\n\temail = test@example.com\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HOME", str(home))
+    assert Path.home() == home
+    return home
+
+
 def _git(root: Path, *argv: str) -> None:
     subprocess.run(["git", *argv], cwd=root, check=True, capture_output=True, text=True)
 
