@@ -1,0 +1,7 @@
+Task: task-repo-remove-verb
+Title: `deskops repo remove` takes a repository out of the registry so it can be registered again
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

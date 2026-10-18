@@ -1,11 +1,13 @@
-usage: deskops repo [-h] {register,whoami} ...
+usage: deskops repo [-h] {register,whoami,remove} ...
 
 positional arguments:
-  {register,whoami}
-    register         Canonically register a repository in the ecosystem
-                     registry and track it in SLDB.
-    whoami           Print the canonical project identity for the current
-                     repository.
+  {register,whoami,remove}
+    register            Canonically register a repository in the ecosystem
+                        registry and track it in SLDB.
+    whoami              Print the canonical project identity for the current
+                        repository.
+    remove              Remove a repository from the ecosystem registry so it
+                        can be registered again.
 
 options:
-  -h, --help         show this help message and exit
+  -h, --help            show this help message and exit

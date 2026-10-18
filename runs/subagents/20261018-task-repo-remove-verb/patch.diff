@@ -1,0 +1,245 @@
+diff --git a/deskops/cli/commands/repo.py b/deskops/cli/commands/repo.py
+index 14b4bea..9d4dce1 100644
+--- a/deskops/cli/commands/repo.py
++++ b/deskops/cli/commands/repo.py
+@@ -28,6 +28,8 @@ class RepoCLI:
+             return self.register(args)
+         if args.repo_command == "whoami":
+             return self.whoami(args)
++        if args.repo_command == "remove":
++            return self.remove(args)
+         return 1
+ 
+     def register(self, args: Any) -> int:
+@@ -134,6 +136,36 @@ class RepoCLI:
+ 
+         return 0
+ 
++    def remove(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        desk_root = root / "desk"
++        try:
++            entries = load_repository_registry(desk_root, root)
++        except SLDBStoreError as e:
++            print(f"Error: {e}")
++            return 1
++
++        selector = args.selector
++        matches = [
++            entry
++            for entry in entries
++            if selector in {entry.id, entry.source_path.stem, f"repo-{entry.id}"}
++        ]
++        if not matches:
++            known = ", ".join(sorted(entry.id for entry in entries)) or "(none)"
++            print(f"Error: Repository '{selector}' is not registered. Registered ids: {known}")
++            return 1
++        if len(matches) > 1:
++            paths = ", ".join(str(entry.source_path) for entry in matches)
++            print(f"Error: Repository selector '{selector}' is ambiguous: {paths}")
++            return 1
++
++        entry = matches[0]
++        with doc_io.DocTransaction(root) as transaction:
++            transaction.delete(entry.source_path)
++        print(entry.source_path)
++        return 0
++
+     def whoami(self, args: Any) -> int:
+         try:
+             project_id = EcosystemIdentity(args.store).what_repository_am_i_in(Path(args.root), require_registry_match=True)
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index ef04c5b..85ed443 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -807,6 +807,18 @@ The issue status is set to closed and a ## Resolution section records Closed, Re
+             mutates=False,
+             description="Print the canonical project identity for the current repository.",
+         ),
++        Command(
++            path=("repo", "remove"),
++            help="Remove a repository from the ecosystem registry so it can be registered again.",
++            args=(
++                A("selector", help=f"Repository id, file stem, or repo-<id>. {SELECTOR_HELP}"),
++                ROOT_ARG,
++                A("--store", help="Store path to anchor the registry lookup"),
++            ),
++            handler="deskops.cli.commands.repo:RepoCLI",
++            mutates=True,
++            description="Remove a repository from the ecosystem registry so it can be registered again.",
++        ),
+         Command(
+             path=("desk",),
+             help="Desk workspace management.",
+diff --git a/tests/fixtures/golden/help/deskops_repo.txt b/tests/fixtures/golden/help/deskops_repo.txt
+index 905bbbb..9728331 100644
+--- a/tests/fixtures/golden/help/deskops_repo.txt
++++ b/tests/fixtures/golden/help/deskops_repo.txt
+@@ -1,11 +1,13 @@
+-usage: deskops repo [-h] {register,whoami} ...
++usage: deskops repo [-h] {register,whoami,remove} ...
+ 
+ positional arguments:
+-  {register,whoami}
+-    register         Canonically register a repository in the ecosystem
+-                     registry and track it in SLDB.
+-    whoami           Print the canonical project identity for the current
+-                     repository.
++  {register,whoami,remove}
++    register            Canonically register a repository in the ecosystem
++                        registry and track it in SLDB.
++    whoami              Print the canonical project identity for the current
++                        repository.
++    remove              Remove a repository from the ecosystem registry so it
++                        can be registered again.
+ 
+ options:
+-  -h, --help         show this help message and exit
++  -h, --help            show this help message and exit
+diff --git a/tests/fixtures/golden/help/deskops_repo_remove.txt b/tests/fixtures/golden/help/deskops_repo_remove.txt
+new file mode 100644
+index 0000000..acf090a
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_repo_remove.txt
+@@ -0,0 +1,13 @@
++usage: deskops repo remove [-h] [--root ROOT] [--store STORE] selector
++
++Remove a repository from the ecosystem registry so it can be registered again.
++
++positional arguments:
++  selector       Repository id, file stem, or repo-<id>. Selectors accept an
++                 exact id, filename, stem, or unique slug fragment where
++                 supported.
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Target repository root.
++  --store STORE  Store path to anchor the registry lookup
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 69f96c8..53d3368 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -84,6 +84,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
+     ("advance", "task"),
+     ("repo",),
+     ("repo", "register"),
++    ("repo", "remove"),
+     ("desk",),
+     ("desk", "install"),
+     ("desk", "migrate"),
+diff --git a/tests/test_registry_robustness.py b/tests/test_registry_robustness.py
+index f71c734..2e5be80 100644
+--- a/tests/test_registry_robustness.py
++++ b/tests/test_registry_robustness.py
+@@ -1,5 +1,7 @@
+ from __future__ import annotations
+ 
++import contextlib
++import io
+ import json
+ from pathlib import Path
+ import re
+@@ -9,7 +11,9 @@ import pytest
+ from sldb.core.exceptions import SLDBStoreError
+ from sldb.runtime.validation import render_model_markdown
+ 
++from deskops.bootstrap import SLDBBootstrap
+ from deskops.cli.main import main
++from deskops import doc_io
+ from deskops.identity import load_repository_registry
+ from deskops.identity import EcosystemIdentity
+ from deskops.models import RepositoryDoc
+@@ -45,6 +49,93 @@ def _write_config(repo_root: Path, project_identity: str) -> None:
+     )
+ 
+ 
++def _init_ecosystem(root: Path) -> Path:
++    root.mkdir(parents=True, exist_ok=True)
++    with contextlib.redirect_stdout(io.StringIO()):
++        assert SLDBBootstrap().init_local_store(root) == 0
++    desk_root = root / "desk"
++    desk_root.mkdir(parents=True, exist_ok=True)
++    (desk_root / "config.json").write_text(
++        json.dumps({"project_identity": "graph_ui"}, indent=2) + "\n",
++        encoding="utf-8",
++    )
++    return root / ".sldb"
++
++
++def test_repo_remove_then_register_same_path_under_correct_id(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    """A mis-registered id is removable so the same root can be registered again."""
++    root = tmp_path / "ecosystem"
++    store_path = _init_ecosystem(root)
++    monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
++
++    register_wrong = main([
++        "repo", "register", "graph-ui", str(root), "--store", str(store_path),
++    ])
++    capsys.readouterr()
++    assert register_wrong == 0
++
++    registry_file = root / "desk" / "registry" / "repo-graph-ui.md"
++    assert registry_file.exists()
++    assert doc_io.is_tracked(root, registry_file)
++
++    removed = main(["repo", "remove", "graph-ui", "--store", str(store_path)])
++    remove_out = capsys.readouterr().out
++    assert removed == 0
++    assert str(registry_file) in remove_out
++    assert not registry_file.exists()
++    assert not doc_io.is_tracked(root, registry_file)
++
++    missing = main(["repo", "remove", "not-registered", "--store", str(store_path)])
++    missing_out = capsys.readouterr().out
++    assert missing == 1
++    assert "not-registered" in missing_out
++    assert "(none)" in missing_out
++
++    register_right = main([
++        "repo",
++        "register",
++        "graph_ui",
++        str(root),
++        "--id",
++        "graph_ui",
++        "--store",
++        str(store_path),
++    ])
++    capsys.readouterr()
++    assert register_right == 0
++    assert (root / "desk" / "registry" / "repo-graph_ui.md").exists()
++
++    whoami = main(["repo", "whoami", "--root", str(root), "--store", str(store_path)])
++    whoami_out = capsys.readouterr().out
++    assert whoami == 0
++    assert whoami_out.strip() == "graph_ui"
++
++
++def test_repo_remove_missing_id_lists_existing_ids(
++    tmp_path: Path,
++    monkeypatch: pytest.MonkeyPatch,
++    capsys: pytest.CaptureFixture[str],
++) -> None:
++    registry_dir = tmp_path / "desk" / "registry"
++    registry_dir.mkdir(parents=True)
++    _write_repo_doc(registry_dir, repo_id="graph-ui", repo_path="graph-ui")
++    store_path = tmp_path / ".sldb"
++    monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
++    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
++
++    result = main(["repo", "remove", "ghost", "--store", str(store_path)])
++    captured = capsys.readouterr()
++
++    assert result == 1
++    assert "Repository 'ghost' is not registered" in captured.out
++    assert "graph-ui" in captured.out
++    assert (registry_dir / "repo-graph-ui.md").exists()
++
++
+ def test_resolve_registered_desk_reports_actionable_missing_registry_message(
+     tmp_path: Path,
+     monkeypatch: pytest.MonkeyPatch,

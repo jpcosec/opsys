@@ -28,6 +28,8 @@ class RepoCLI:
             return self.register(args)
         if args.repo_command == "whoami":
             return self.whoami(args)
+        if args.repo_command == "remove":
+            return self.remove(args)
         return 1
 
     def register(self, args: Any) -> int:
@@ -132,6 +134,36 @@ class RepoCLI:
         )
         print(f"Tracked 'repo-{repo_id}'")
 
+        return 0
+
+    def remove(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        desk_root = root / "desk"
+        try:
+            entries = load_repository_registry(desk_root, root)
+        except SLDBStoreError as e:
+            print(f"Error: {e}")
+            return 1
+
+        selector = args.selector
+        matches = [
+            entry
+            for entry in entries
+            if selector in {entry.id, entry.source_path.stem, f"repo-{entry.id}"}
+        ]
+        if not matches:
+            known = ", ".join(sorted(entry.id for entry in entries)) or "(none)"
+            print(f"Error: Repository '{selector}' is not registered. Registered ids: {known}")
+            return 1
+        if len(matches) > 1:
+            paths = ", ".join(str(entry.source_path) for entry in matches)
+            print(f"Error: Repository selector '{selector}' is ambiguous: {paths}")
+            return 1
+
+        entry = matches[0]
+        with doc_io.DocTransaction(root) as transaction:
+            transaction.delete(entry.source_path)
+        print(entry.source_path)
         return 0
 
     def whoami(self, args: Any) -> int:

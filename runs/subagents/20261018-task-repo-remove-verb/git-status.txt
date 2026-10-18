@@ -1,0 +1,11 @@
+ M .sldb/core/documents/TaskDoc/task-repo-remove-verb.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-repo-remove-verb.md
+ M deskops/cli/commands/repo.py
+ M deskops/cli/registry.py
+ M tests/fixtures/golden/help/deskops_repo.txt
+ M tests/test_command_registry.py
+ M tests/test_registry_robustness.py
+?? runs/subagents/20261018-task-repo-remove-verb/
+?? tests/fixtures/golden/help/deskops_repo_remove.txt

@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import contextlib
+import io
 import json
 from pathlib import Path
 import re
@@ -9,7 +11,9 @@ import pytest
 from sldb.core.exceptions import SLDBStoreError
 from sldb.runtime.validation import render_model_markdown
 
+from deskops.bootstrap import SLDBBootstrap
 from deskops.cli.main import main
+from deskops import doc_io
 from deskops.identity import load_repository_registry
 from deskops.identity import EcosystemIdentity
 from deskops.models import RepositoryDoc
@@ -43,6 +47,93 @@ def _write_config(repo_root: Path, project_identity: str) -> None:
         json.dumps({"project_identity": project_identity}, indent=2) + "\n",
         encoding="utf-8",
     )
+
+
+def _init_ecosystem(root: Path) -> Path:
+    root.mkdir(parents=True, exist_ok=True)
+    with contextlib.redirect_stdout(io.StringIO()):
+        assert SLDBBootstrap().init_local_store(root) == 0
+    desk_root = root / "desk"
+    desk_root.mkdir(parents=True, exist_ok=True)
+    (desk_root / "config.json").write_text(
+        json.dumps({"project_identity": "graph_ui"}, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    return root / ".sldb"
+
+
+def test_repo_remove_then_register_same_path_under_correct_id(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """A mis-registered id is removable so the same root can be registered again."""
+    root = tmp_path / "ecosystem"
+    store_path = _init_ecosystem(root)
+    monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
+
+    register_wrong = main([
+        "repo", "register", "graph-ui", str(root), "--store", str(store_path),
+    ])
+    capsys.readouterr()
+    assert register_wrong == 0
+
+    registry_file = root / "desk" / "registry" / "repo-graph-ui.md"
+    assert registry_file.exists()
+    assert doc_io.is_tracked(root, registry_file)
+
+    removed = main(["repo", "remove", "graph-ui", "--store", str(store_path)])
+    remove_out = capsys.readouterr().out
+    assert removed == 0
+    assert str(registry_file) in remove_out
+    assert not registry_file.exists()
+    assert not doc_io.is_tracked(root, registry_file)
+
+    missing = main(["repo", "remove", "not-registered", "--store", str(store_path)])
+    missing_out = capsys.readouterr().out
+    assert missing == 1
+    assert "not-registered" in missing_out
+    assert "(none)" in missing_out
+
+    register_right = main([
+        "repo",
+        "register",
+        "graph_ui",
+        str(root),
+        "--id",
+        "graph_ui",
+        "--store",
+        str(store_path),
+    ])
+    capsys.readouterr()
+    assert register_right == 0
+    assert (root / "desk" / "registry" / "repo-graph_ui.md").exists()
+
+    whoami = main(["repo", "whoami", "--root", str(root), "--store", str(store_path)])
+    whoami_out = capsys.readouterr().out
+    assert whoami == 0
+    assert whoami_out.strip() == "graph_ui"
+
+
+def test_repo_remove_missing_id_lists_existing_ids(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    registry_dir = tmp_path / "desk" / "registry"
+    registry_dir.mkdir(parents=True)
+    _write_repo_doc(registry_dir, repo_id="graph-ui", repo_path="graph-ui")
+    store_path = tmp_path / ".sldb"
+    monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
+    monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
+
+    result = main(["repo", "remove", "ghost", "--store", str(store_path)])
+    captured = capsys.readouterr()
+
+    assert result == 1
+    assert "Repository 'ghost' is not registered" in captured.out
+    assert "graph-ui" in captured.out
+    assert (registry_dir / "repo-graph-ui.md").exists()
 
 
 def test_resolve_registered_desk_reports_actionable_missing_registry_message(

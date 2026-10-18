@@ -808,6 +808,18 @@ The issue status is set to closed and a ## Resolution section records Closed, Re
             description="Print the canonical project identity for the current repository.",
         ),
         Command(
+            path=("repo", "remove"),
+            help="Remove a repository from the ecosystem registry so it can be registered again.",
+            args=(
+                A("selector", help=f"Repository id, file stem, or repo-<id>. {SELECTOR_HELP}"),
+                ROOT_ARG,
+                A("--store", help="Store path to anchor the registry lookup"),
+            ),
+            handler="deskops.cli.commands.repo:RepoCLI",
+            mutates=True,
+            description="Remove a repository from the ecosystem registry so it can be registered again.",
+        ),
+        Command(
             path=("desk",),
             help="Desk workspace management.",
             args=(),

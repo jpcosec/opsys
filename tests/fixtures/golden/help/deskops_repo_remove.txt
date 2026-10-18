@@ -1,0 +1,13 @@
+usage: deskops repo remove [-h] [--root ROOT] [--store STORE] selector
+
+Remove a repository from the ecosystem registry so it can be registered again.
+
+positional arguments:
+  selector       Repository id, file stem, or repo-<id>. Selectors accept an
+                 exact id, filename, stem, or unique slug fragment where
+                 supported.
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    Target repository root.
+  --store STORE  Store path to anchor the registry lookup
