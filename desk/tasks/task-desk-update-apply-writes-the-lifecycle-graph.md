@@ -1,6 +1,12 @@
 ---
 id: task-desk-update-apply-writes-the-lifecycle-graph
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on: []
 pills:
@@ -9,11 +15,10 @@ files:
 - deskops/cli/commands/desk.py
 - tests/test_desk_sync.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- topic:lifecycle
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-desk-update-apply-writes-the-lifecycle-graph.md
 ---
 
 # `desk update --apply` on a fresh repo also writes the lifecycle graph
