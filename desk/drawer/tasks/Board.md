@@ -56,13 +56,11 @@ F4:
 
 F5:
 
-- `task-rw-f5-root-resolution-and-sandbox-guard` — `--root` and the store resolve in one place, and the sandbox guard covers every mutating command
 - `task-rw-f5-output-renderer` — One renderer for text, json and yaml output with an error envelope
 - `task-rw-f5-deprecated-aliases` — Duplicate commands become warned aliases or are removed
 
 F6:
 
-- `task-rw-f6-bootstrap-registers-all-models` — Bootstrap registers every deskops model, and only bootstrap/init install sldb
 - `task-rw-f6-taskdoc-contract-cleanup` — TaskDoc contract cleanup
 - `task-rw-f6-migrate-tracking-stores` — Migrate every store that tracks deskops models
 

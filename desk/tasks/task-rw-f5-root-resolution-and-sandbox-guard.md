@@ -1,6 +1,12 @@
 ---
 id: task-rw-f5-root-resolution-and-sandbox-guard
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f5-command-registry
@@ -13,14 +19,10 @@ files:
 - deskops/cli/commands/message.py
 - deskops/cli/registry.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f5
-- topic:cli
-- topic:identity
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f5-root-resolution-and-sandbox-guard.md
 ---
 
 # `--root` and the store resolve in one place, and the sandbox guard covers every mutating command
