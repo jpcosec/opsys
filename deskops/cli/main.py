@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import importlib
 import os
 from pathlib import Path
 import sys
@@ -12,13 +13,37 @@ if str(PACKAGE_ROOT) in sys.path:
 sys.path.insert(0, str(PACKAGE_ROOT))
 
 from deskops.cli.parser import build_parser
+from deskops.cli.registry import command_for_path
 
 from deskops.about import print_about
 from deskops.bootstrap import SLDBBootstrap
 from deskops.errors import DeskopsError
 from deskops.errors import UsageError
-from deskops.workspace import ensure_target_directory
-from deskops.workspace import scaffold_desk
+
+
+_SLDB_BEFORE_DISPATCH = frozenset(
+    {
+        "add",
+        "edit",
+        "bind",
+        "next",
+        "list",
+        "show",
+        "advance",
+        "materialize",
+        "drift",
+        "message",
+        "inbox",
+        "repo",
+    }
+)
+_DEFAULT_PYTHONPATH_COMMANDS = frozenset({"message", "inbox", "repo"})
+
+
+def _load_handler(reference: str) -> type:
+    module_name, _, attribute = reference.partition(":")
+    module = importlib.import_module(module_name)
+    return getattr(module, attribute)
 
 
 def _validate_selectors(args: Any) -> None:
@@ -78,120 +103,23 @@ class CLI:
                 print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
                 return 1
 
-        if args.command == "faq":
-            from deskops.cli.commands.faq import FAQCLI
+        command_path = getattr(args, "_deskops_command_path", None)
+        if command_path is None:
+            raise UsageError(f"Unknown command: {args.command}")
+        try:
+            command = command_for_path(command_path)
+        except KeyError:
+            raise UsageError(f"Unknown command: {' '.join(command_path)}")
 
-            return FAQCLI().run(args)
-        if args.command == "about":
-            return print_about()
-        if args.command in {"doctor", "status"}:
-            from deskops.cli.commands.doctor import DoctorCLI
-
-            return DoctorCLI().run(args)
-        if args.command == "materialize":
+        if command.path[0] in _SLDB_BEFORE_DISPATCH:
             ready = bootstrap.ensure_sldb_available()
             if ready != 0:
                 return ready
 
-            from deskops.cli.commands.materialize import MaterializeCLI
+        if command.path[0] in _DEFAULT_PYTHONPATH_COMMANDS:
+            self._apply_default_pythonpath(args, bootstrap)
 
-            return MaterializeCLI().run(args)
-        if args.command == "drift":
-            ready = bootstrap.ensure_sldb_available()
-            if ready != 0:
-                return ready
-
-            from deskops.cli.commands.drift import DriftCLI
-
-            return DriftCLI().run(args)
-        if args.command == "desk":
-            from deskops.cli.commands.desk import DeskCLI
-
-            return DeskCLI().run(args)
-        if args.command == "atoms":
-            from deskops.cli.commands.atoms import AtomsCLI
-
-            return AtomsCLI().run(args)
-        if args.command == "graph":
-            return self._graph(args)
-        if args.command in {"add", "edit", "bind", "next", "list", "show", "advance"}:
-            ready = bootstrap.ensure_sldb_available()
-            if ready != 0:
-                return ready
-
-            from deskops.cli.commands.operations import OperationsCLI
-
-            return OperationsCLI().run(args)
-        if args.command == "runtime":
-            from deskops.cli.commands.runtime import RuntimeCLI
-
-            return RuntimeCLI().run(args)
-        if args.command == "closeout":
-            from deskops.cli.commands.closeout import CloseoutCLI
-
-            return CloseoutCLI().run(args)
-        if args.command == "promote":
-            from deskops.cli.commands.promote import PromoteCLI
-
-            return PromoteCLI().run(args)
-        if args.command == "drawer":
-            from deskops.cli.commands.drawer import DrawerCLI
-
-            return DrawerCLI().run(args)
-        if args.command == "bootstrap":
-            return self._bootstrap()
-        if args.command == "init":
-            return self._init(args)
-
-        ready = bootstrap.ensure_sldb_available()
-        if ready != 0:
-            return ready
-
-        self._apply_default_pythonpath(args, bootstrap)
-
-        if args.command in {"message", "inbox"}:
-            from deskops.cli.commands.message import MessageCLI
-
-            return MessageCLI().run(args)
-        if args.command == "repo":
-            from deskops.cli.commands.repo import RepoCLI
-
-            return RepoCLI().run(args)
-
-        raise UsageError(f"Unknown command: {args.command}")
-
-    def _bootstrap(self) -> int:
-        return SLDBBootstrap().ensure_machine_ready()
-
-    def _init(self, args: Any) -> int:
-        target_path = Path(args.path).resolve()
-        ok, error = ensure_target_directory(target_path)
-        if not ok:
-            print(error)
-            return 1
-
-        bootstrap = SLDBBootstrap()
-        ready = bootstrap.ensure_machine_ready()
-        if ready != 0:
-            return ready
-
-        local_store = bootstrap.init_local_store(target_path)
-        if local_store != 0:
-            return local_store
-
-        result = scaffold_desk(target_path)
-        if result.wrote_anything:
-            print(f"Scaffolded desk at {target_path / 'desk'}.")
-            for path in result.created_paths:
-                print(f"Wrote {path}")
-        else:
-            print(f"Desk already exists at {target_path / 'desk'}.")
-        from deskops.lifecycle import ensure_lifecycle_graph
-
-        for change in ensure_lifecycle_graph(target_path):
-            print(f"Lifecycle graph: {change}")
-        print("Initialization complete.")
-        return 0
+        return _load_handler(command.handler)().run(args)
 
     def _apply_test_root_override(self, args: Any) -> None:
         if not hasattr(args, "root"):
@@ -226,171 +154,12 @@ class CLI:
         root_path.mkdir(parents=True, exist_ok=True)
         args.root = str(root_path)
 
-    def _graph(self, args: Any) -> int:
-        if args.graph_command == "build":
-            return self._graph_build(args)
-        if args.graph_command == "neighbors":
-            return self._graph_neighbors(args)
-        if args.graph_command == "missing":
-            return self._graph_missing(args)
-        if args.graph_command == "reflect":
-            return self._graph_reflect(args)
-        raise UsageError(f"Unknown graph command: {args.graph_command}")
-
-    def _graph_build(self, args: Any) -> int:
-        root = Path(args.root).resolve()
-        if not root.exists() or not root.is_dir():
-            print(f"Error: graph root is not a directory: {root}")
-            return 1
-
-        from deskops.graph.snapshot import GraphSnapshotCapabilityError
-        from deskops.graph.snapshot import networkx_path_for_snapshot
-        from deskops.graph.snapshot import write_graph_snapshot
-
-        try:
-            requested_output = Path(args.output) if args.output else None
-            if requested_output is not None and not requested_output.is_absolute():
-                requested_output = root / requested_output
-            output_path = (
-                write_graph_snapshot(root, requested_output)
-                if requested_output is not None
-                else write_graph_snapshot(root)
-            )
-
-            from sldb.api.graph.snapshot import snapshot_load
-            from sldb.store.graph.graph_io import save_graph
-
-            save_graph(snapshot_load(output_path), networkx_path_for_snapshot(output_path))
-
-        except GraphSnapshotCapabilityError as exc:
-            print(f"Error: {exc}")
-            return 1
-
-        print(f"Graph snapshot written: {output_path}")
-        return 0
-
-    def _graph_neighbors(self, args: Any) -> int:
-        root = Path(args.root).resolve()
-        from deskops.graph.snapshot import GraphSnapshotReadError
-        from deskops.graph.snapshot import default_snapshot_read_path
-        from deskops.graph.snapshot import read_graph_neighbors
-
-        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
-
-        try:
-            neighbors = read_graph_neighbors(graph_path, args.id)
-        except GraphSnapshotReadError as exc:
-            print(f"Error: {exc}")
-            return 1
-
-        self._print_graph_neighbors(args.id, neighbors)
-        return 0
-
-    def _graph_missing(self, args: Any) -> int:
-        root = Path(args.root).resolve()
-        if not root.exists() or not root.is_dir():
-            print(f"Error: graph root is not a directory: {root}")
-            return 1
-
-        # Imported outside the try: a failing import must surface as itself,
-        # not as an unbound name in the except clause.
-        from deskops.graph.checks import GraphMissingCheckError
-        from deskops.graph.checks import find_missing_graph_references
-
-        graph_path = Path(args.graph).resolve() if args.graph else None
-        try:
-            findings = find_missing_graph_references(root, graph_path)
-        except GraphMissingCheckError as exc:
-            print(f"Error: {exc}")
-            return 1
-
-        if not findings:
-            print("No missing graph references found.")
-            return 0
-
-        failing = [finding for finding in findings if not finding.record]
-        informational = [finding for finding in findings if finding.record]
-
-        if failing:
-            print("Missing graph references:")
-            for finding in failing:
-                self._print_graph_missing_finding(finding)
-        if informational:
-            print("Informational (archived records):")
-            for finding in informational:
-                self._print_graph_missing_finding(finding)
-
-        print(f"{len(failing)} missing, {len(informational)} informational")
-        return 1 if failing else 0
-
-    def _print_graph_missing_finding(self, finding: Any) -> None:
-        print(f"- {finding.kind}: {finding.source_id} -> {finding.target_id}")
-        if finding.role:
-            print(f"  role: {finding.role}")
-        if finding.provenance_path:
-            locator = f":{finding.provenance_locator}" if finding.provenance_locator else ""
-            print(f"  provenance: {finding.provenance_path}{locator}")
-        print(f"  reason: {finding.reason}")
-
-    def _graph_reflect(self, args: Any) -> int:
-        root = Path(args.root).resolve()
-        if not root.exists() or not root.is_dir():
-            print(f"Error: graph root is not a directory: {root}")
-            return 1
-
-        from deskops.graph.snapshot import GraphSnapshotReadError
-        from deskops.graph.snapshot import default_snapshot_read_path
-        from deskops.graph.snapshot import read_graph_snapshot
-
-        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
-        from deskops.graph.checks import GraphMissingCheckError
-        from deskops.graph.self_reflection import build_self_reflection_report
-        from deskops.graph.self_reflection import write_self_reflection_report
-
-        try:
-            snapshot = read_graph_snapshot(graph_path)
-            report = build_self_reflection_report(snapshot)
-            output_path = write_self_reflection_report(root, report)
-        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
-            print(f"Error: {exc}")
-            return 1
-
-        summary = report["summary"]
-        print(f"Self-reflection report written: {output_path}")
-        print(f"Findings: {summary['finding_count']}")
-        print(f"Suppressed duplicates: {summary['suppressed_duplicate_count']}")
-        return 0
-
-    def _print_graph_neighbors(self, node_id: str, neighbors: dict[str, Any]) -> None:
-        nodes = neighbors["nodes"]
-        node = neighbors["node"]
-        print(f"Node: {node_id} ({_graph_node_label(node)})")
-        print("Outgoing:")
-        if neighbors["outgoing"]:
-            for edge in neighbors["outgoing"]:
-                target = nodes.get(edge["target"], {"id": edge["target"]})
-                print(f"- {edge['role']} -> {edge['target']} ({_graph_node_label(target)})")
-        else:
-            print("- none")
-
-        print("Incoming:")
-        if neighbors["incoming"]:
-            for edge in neighbors["incoming"]:
-                source = nodes.get(edge["source"], {"id": edge["source"]})
-                print(f"- {edge['source']} ({_graph_node_label(source)}) -> {edge['role']}")
-        else:
-            print("- none")
-
     def _apply_default_pythonpath(self, args: Any, bootstrap: SLDBBootstrap) -> None:
         if not hasattr(args, "pythonpath"):
             return
         if getattr(args, "pythonpath"):
             return
         args.pythonpath = bootstrap.default_pythonpath()
-
-
-def _graph_node_label(node: dict[str, Any]) -> str:
-    return str(node.get("label") or node.get("title") or node.get("id"))
 
 
 def main(argv: Any = None) -> int:

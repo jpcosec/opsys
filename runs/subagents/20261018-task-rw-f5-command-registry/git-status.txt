@@ -1,0 +1,7 @@
+ M deskops/cli/main.py
+ M deskops/cli/parser.py
+?? deskops/cli/commands/core.py
+?? deskops/cli/commands/graph.py
+?? deskops/cli/registry.py
+?? runs/subagents/20261018-task-rw-f5-command-registry/
+?? tests/test_command_registry.py

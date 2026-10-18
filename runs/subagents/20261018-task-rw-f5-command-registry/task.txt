@@ -1,0 +1,11 @@
+Task: task-rw-f5-command-registry
+Title: The CLI is built from a declarative command registry
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+From drawer: desk/drawer/tasks/task-rw-f5-command-registry.md
+Effective pills:
+- desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md
+- desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

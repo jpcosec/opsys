@@ -1,0 +1,3010 @@
+diff --git a/deskops/cli/commands/core.py b/deskops/cli/commands/core.py
+new file mode 100644
+index 0000000..e840a56
+--- /dev/null
++++ b/deskops/cli/commands/core.py
+@@ -0,0 +1,53 @@
++from __future__ import annotations
++
++from pathlib import Path
++from typing import Any
++
++from deskops.bootstrap import SLDBBootstrap
++from deskops.workspace import ensure_target_directory
++from deskops.workspace import scaffold_desk
++
++
++class AboutCLI:
++    def run(self, args: Any) -> int:
++        # Resolved through the CLI module so a patched entrypoint stays visible.
++        from deskops.cli import main as main_module
++
++        return main_module.print_about()
++
++
++class BootstrapCLI:
++    def run(self, args: Any) -> int:
++        return SLDBBootstrap().ensure_machine_ready()
++
++
++class InitCLI:
++    def run(self, args: Any) -> int:
++        target_path = Path(args.path).resolve()
++        ok, error = ensure_target_directory(target_path)
++        if not ok:
++            print(error)
++            return 1
++
++        bootstrap = SLDBBootstrap()
++        ready = bootstrap.ensure_machine_ready()
++        if ready != 0:
++            return ready
++
++        local_store = bootstrap.init_local_store(target_path)
++        if local_store != 0:
++            return local_store
++
++        result = scaffold_desk(target_path)
++        if result.wrote_anything:
++            print(f"Scaffolded desk at {target_path / 'desk'}.")
++            for path in result.created_paths:
++                print(f"Wrote {path}")
++        else:
++            print(f"Desk already exists at {target_path / 'desk'}.")
++        from deskops.lifecycle import ensure_lifecycle_graph
++
++        for change in ensure_lifecycle_graph(target_path):
++            print(f"Lifecycle graph: {change}")
++        print("Initialization complete.")
++        return 0
+diff --git a/deskops/cli/commands/graph.py b/deskops/cli/commands/graph.py
+new file mode 100644
+index 0000000..0655897
+--- /dev/null
++++ b/deskops/cli/commands/graph.py
+@@ -0,0 +1,167 @@
++from __future__ import annotations
++
++from pathlib import Path
++from typing import Any
++
++from deskops.errors import UsageError
++
++
++class GraphCLI:
++    def run(self, args: Any) -> int:
++        if args.graph_command == "build":
++            return self._build(args)
++        if args.graph_command == "neighbors":
++            return self._neighbors(args)
++        if args.graph_command == "missing":
++            return self._missing(args)
++        if args.graph_command == "reflect":
++            return self._reflect(args)
++        raise UsageError(f"Unknown graph command: {args.graph_command}")
++
++    def _build(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        if not root.exists() or not root.is_dir():
++            print(f"Error: graph root is not a directory: {root}")
++            return 1
++
++        from deskops.graph.snapshot import GraphSnapshotCapabilityError
++        from deskops.graph.snapshot import networkx_path_for_snapshot
++        from deskops.graph.snapshot import write_graph_snapshot
++
++        try:
++            requested_output = Path(args.output) if args.output else None
++            if requested_output is not None and not requested_output.is_absolute():
++                requested_output = root / requested_output
++            output_path = (
++                write_graph_snapshot(root, requested_output)
++                if requested_output is not None
++                else write_graph_snapshot(root)
++            )
++
++            from sldb.api.graph.snapshot import snapshot_load
++            from sldb.store.graph.graph_io import save_graph
++
++            save_graph(snapshot_load(output_path), networkx_path_for_snapshot(output_path))
++
++        except GraphSnapshotCapabilityError as exc:
++            print(f"Error: {exc}")
++            return 1
++
++        print(f"Graph snapshot written: {output_path}")
++        return 0
++
++    def _neighbors(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        from deskops.graph.snapshot import GraphSnapshotReadError
++        from deskops.graph.snapshot import default_snapshot_read_path
++        from deskops.graph.snapshot import read_graph_neighbors
++
++        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
++
++        try:
++            neighbors = read_graph_neighbors(graph_path, args.id)
++        except GraphSnapshotReadError as exc:
++            print(f"Error: {exc}")
++            return 1
++
++        self._print_neighbors(args.id, neighbors)
++        return 0
++
++    def _missing(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        if not root.exists() or not root.is_dir():
++            print(f"Error: graph root is not a directory: {root}")
++            return 1
++
++        # Imported outside the try: a failing import must surface as itself,
++        # not as an unbound name in the except clause.
++        from deskops.graph.checks import GraphMissingCheckError
++        from deskops.graph.checks import find_missing_graph_references
++
++        graph_path = Path(args.graph).resolve() if args.graph else None
++        try:
++            findings = find_missing_graph_references(root, graph_path)
++        except GraphMissingCheckError as exc:
++            print(f"Error: {exc}")
++            return 1
++
++        if not findings:
++            print("No missing graph references found.")
++            return 0
++
++        failing = [finding for finding in findings if not finding.record]
++        informational = [finding for finding in findings if finding.record]
++
++        if failing:
++            print("Missing graph references:")
++            for finding in failing:
++                self._print_missing_finding(finding)
++        if informational:
++            print("Informational (archived records):")
++            for finding in informational:
++                self._print_missing_finding(finding)
++
++        print(f"{len(failing)} missing, {len(informational)} informational")
++        return 1 if failing else 0
++
++    def _print_missing_finding(self, finding: Any) -> None:
++        print(f"- {finding.kind}: {finding.source_id} -> {finding.target_id}")
++        if finding.role:
++            print(f"  role: {finding.role}")
++        if finding.provenance_path:
++            locator = f":{finding.provenance_locator}" if finding.provenance_locator else ""
++            print(f"  provenance: {finding.provenance_path}{locator}")
++        print(f"  reason: {finding.reason}")
++
++    def _reflect(self, args: Any) -> int:
++        root = Path(args.root).resolve()
++        if not root.exists() or not root.is_dir():
++            print(f"Error: graph root is not a directory: {root}")
++            return 1
++
++        from deskops.graph.snapshot import GraphSnapshotReadError
++        from deskops.graph.snapshot import default_snapshot_read_path
++        from deskops.graph.snapshot import read_graph_snapshot
++
++        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
++        from deskops.graph.checks import GraphMissingCheckError
++        from deskops.graph.self_reflection import build_self_reflection_report
++        from deskops.graph.self_reflection import write_self_reflection_report
++
++        try:
++            snapshot = read_graph_snapshot(graph_path)
++            report = build_self_reflection_report(snapshot)
++            output_path = write_self_reflection_report(root, report)
++        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
++            print(f"Error: {exc}")
++            return 1
++
++        summary = report["summary"]
++        print(f"Self-reflection report written: {output_path}")
++        print(f"Findings: {summary['finding_count']}")
++        print(f"Suppressed duplicates: {summary['suppressed_duplicate_count']}")
++        return 0
++
++    def _print_neighbors(self, node_id: str, neighbors: dict[str, Any]) -> None:
++        nodes = neighbors["nodes"]
++        node = neighbors["node"]
++        print(f"Node: {node_id} ({_graph_node_label(node)})")
++        print("Outgoing:")
++        if neighbors["outgoing"]:
++            for edge in neighbors["outgoing"]:
++                target = nodes.get(edge["target"], {"id": edge["target"]})
++                print(f"- {edge['role']} -> {edge['target']} ({_graph_node_label(target)})")
++        else:
++            print("- none")
++
++        print("Incoming:")
++        if neighbors["incoming"]:
++            for edge in neighbors["incoming"]:
++                source = nodes.get(edge["source"], {"id": edge["source"]})
++                print(f"- {edge['source']} ({_graph_node_label(source)}) -> {edge['role']}")
++        else:
++            print("- none")
++
++
++def _graph_node_label(node: dict[str, Any]) -> str:
++    return str(node.get("label") or node.get("title") or node.get("id"))
+diff --git a/deskops/cli/main.py b/deskops/cli/main.py
+index b5fa6fc..cddd3e4 100644
+--- a/deskops/cli/main.py
++++ b/deskops/cli/main.py
+@@ -1,5 +1,6 @@
+ from __future__ import annotations
+ 
++import importlib
+ import os
+ from pathlib import Path
+ import sys
+@@ -12,13 +13,37 @@ if str(PACKAGE_ROOT) in sys.path:
+ sys.path.insert(0, str(PACKAGE_ROOT))
+ 
+ from deskops.cli.parser import build_parser
++from deskops.cli.registry import command_for_path
+ 
+ from deskops.about import print_about
+ from deskops.bootstrap import SLDBBootstrap
+ from deskops.errors import DeskopsError
+ from deskops.errors import UsageError
+-from deskops.workspace import ensure_target_directory
+-from deskops.workspace import scaffold_desk
++
++
++_SLDB_BEFORE_DISPATCH = frozenset(
++    {
++        "add",
++        "edit",
++        "bind",
++        "next",
++        "list",
++        "show",
++        "advance",
++        "materialize",
++        "drift",
++        "message",
++        "inbox",
++        "repo",
++    }
++)
++_DEFAULT_PYTHONPATH_COMMANDS = frozenset({"message", "inbox", "repo"})
++
++
++def _load_handler(reference: str) -> type:
++    module_name, _, attribute = reference.partition(":")
++    module = importlib.import_module(module_name)
++    return getattr(module, attribute)
+ 
+ 
+ def _validate_selectors(args: Any) -> None:
+@@ -78,120 +103,23 @@ class CLI:
+                 print(f"Error: Provided --root is not a valid directory: {args.root}", file=sys.stderr)
+                 return 1
+ 
+-        if args.command == "faq":
+-            from deskops.cli.commands.faq import FAQCLI
+-
+-            return FAQCLI().run(args)
+-        if args.command == "about":
+-            return print_about()
+-        if args.command in {"doctor", "status"}:
+-            from deskops.cli.commands.doctor import DoctorCLI
+-
+-            return DoctorCLI().run(args)
+-        if args.command == "materialize":
+-            ready = bootstrap.ensure_sldb_available()
+-            if ready != 0:
+-                return ready
+-
+-            from deskops.cli.commands.materialize import MaterializeCLI
+-
+-            return MaterializeCLI().run(args)
+-        if args.command == "drift":
+-            ready = bootstrap.ensure_sldb_available()
+-            if ready != 0:
+-                return ready
+-
+-            from deskops.cli.commands.drift import DriftCLI
+-
+-            return DriftCLI().run(args)
+-        if args.command == "desk":
+-            from deskops.cli.commands.desk import DeskCLI
+-
+-            return DeskCLI().run(args)
+-        if args.command == "atoms":
+-            from deskops.cli.commands.atoms import AtomsCLI
++        command_path = getattr(args, "_deskops_command_path", None)
++        if command_path is None:
++            raise UsageError(f"Unknown command: {args.command}")
++        try:
++            command = command_for_path(command_path)
++        except KeyError:
++            raise UsageError(f"Unknown command: {' '.join(command_path)}")
+ 
+-            return AtomsCLI().run(args)
+-        if args.command == "graph":
+-            return self._graph(args)
+-        if args.command in {"add", "edit", "bind", "next", "list", "show", "advance"}:
++        if command.path[0] in _SLDB_BEFORE_DISPATCH:
+             ready = bootstrap.ensure_sldb_available()
+             if ready != 0:
+                 return ready
+ 
+-            from deskops.cli.commands.operations import OperationsCLI
+-
+-            return OperationsCLI().run(args)
+-        if args.command == "runtime":
+-            from deskops.cli.commands.runtime import RuntimeCLI
+-
+-            return RuntimeCLI().run(args)
+-        if args.command == "closeout":
+-            from deskops.cli.commands.closeout import CloseoutCLI
+-
+-            return CloseoutCLI().run(args)
+-        if args.command == "promote":
+-            from deskops.cli.commands.promote import PromoteCLI
+-
+-            return PromoteCLI().run(args)
+-        if args.command == "drawer":
+-            from deskops.cli.commands.drawer import DrawerCLI
+-
+-            return DrawerCLI().run(args)
+-        if args.command == "bootstrap":
+-            return self._bootstrap()
+-        if args.command == "init":
+-            return self._init(args)
+-
+-        ready = bootstrap.ensure_sldb_available()
+-        if ready != 0:
+-            return ready
+-
+-        self._apply_default_pythonpath(args, bootstrap)
+-
+-        if args.command in {"message", "inbox"}:
+-            from deskops.cli.commands.message import MessageCLI
+-
+-            return MessageCLI().run(args)
+-        if args.command == "repo":
+-            from deskops.cli.commands.repo import RepoCLI
+-
+-            return RepoCLI().run(args)
+-
+-        raise UsageError(f"Unknown command: {args.command}")
+-
+-    def _bootstrap(self) -> int:
+-        return SLDBBootstrap().ensure_machine_ready()
+-
+-    def _init(self, args: Any) -> int:
+-        target_path = Path(args.path).resolve()
+-        ok, error = ensure_target_directory(target_path)
+-        if not ok:
+-            print(error)
+-            return 1
+-
+-        bootstrap = SLDBBootstrap()
+-        ready = bootstrap.ensure_machine_ready()
+-        if ready != 0:
+-            return ready
+-
+-        local_store = bootstrap.init_local_store(target_path)
+-        if local_store != 0:
+-            return local_store
+-
+-        result = scaffold_desk(target_path)
+-        if result.wrote_anything:
+-            print(f"Scaffolded desk at {target_path / 'desk'}.")
+-            for path in result.created_paths:
+-                print(f"Wrote {path}")
+-        else:
+-            print(f"Desk already exists at {target_path / 'desk'}.")
+-        from deskops.lifecycle import ensure_lifecycle_graph
++        if command.path[0] in _DEFAULT_PYTHONPATH_COMMANDS:
++            self._apply_default_pythonpath(args, bootstrap)
+ 
+-        for change in ensure_lifecycle_graph(target_path):
+-            print(f"Lifecycle graph: {change}")
+-        print("Initialization complete.")
+-        return 0
++        return _load_handler(command.handler)().run(args)
+ 
+     def _apply_test_root_override(self, args: Any) -> None:
+         if not hasattr(args, "root"):
+@@ -226,161 +154,6 @@ class CLI:
+         root_path.mkdir(parents=True, exist_ok=True)
+         args.root = str(root_path)
+ 
+-    def _graph(self, args: Any) -> int:
+-        if args.graph_command == "build":
+-            return self._graph_build(args)
+-        if args.graph_command == "neighbors":
+-            return self._graph_neighbors(args)
+-        if args.graph_command == "missing":
+-            return self._graph_missing(args)
+-        if args.graph_command == "reflect":
+-            return self._graph_reflect(args)
+-        raise UsageError(f"Unknown graph command: {args.graph_command}")
+-
+-    def _graph_build(self, args: Any) -> int:
+-        root = Path(args.root).resolve()
+-        if not root.exists() or not root.is_dir():
+-            print(f"Error: graph root is not a directory: {root}")
+-            return 1
+-
+-        from deskops.graph.snapshot import GraphSnapshotCapabilityError
+-        from deskops.graph.snapshot import networkx_path_for_snapshot
+-        from deskops.graph.snapshot import write_graph_snapshot
+-
+-        try:
+-            requested_output = Path(args.output) if args.output else None
+-            if requested_output is not None and not requested_output.is_absolute():
+-                requested_output = root / requested_output
+-            output_path = (
+-                write_graph_snapshot(root, requested_output)
+-                if requested_output is not None
+-                else write_graph_snapshot(root)
+-            )
+-
+-            from sldb.api.graph.snapshot import snapshot_load
+-            from sldb.store.graph.graph_io import save_graph
+-
+-            save_graph(snapshot_load(output_path), networkx_path_for_snapshot(output_path))
+-
+-        except GraphSnapshotCapabilityError as exc:
+-            print(f"Error: {exc}")
+-            return 1
+-
+-        print(f"Graph snapshot written: {output_path}")
+-        return 0
+-
+-    def _graph_neighbors(self, args: Any) -> int:
+-        root = Path(args.root).resolve()
+-        from deskops.graph.snapshot import GraphSnapshotReadError
+-        from deskops.graph.snapshot import default_snapshot_read_path
+-        from deskops.graph.snapshot import read_graph_neighbors
+-
+-        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
+-
+-        try:
+-            neighbors = read_graph_neighbors(graph_path, args.id)
+-        except GraphSnapshotReadError as exc:
+-            print(f"Error: {exc}")
+-            return 1
+-
+-        self._print_graph_neighbors(args.id, neighbors)
+-        return 0
+-
+-    def _graph_missing(self, args: Any) -> int:
+-        root = Path(args.root).resolve()
+-        if not root.exists() or not root.is_dir():
+-            print(f"Error: graph root is not a directory: {root}")
+-            return 1
+-
+-        # Imported outside the try: a failing import must surface as itself,
+-        # not as an unbound name in the except clause.
+-        from deskops.graph.checks import GraphMissingCheckError
+-        from deskops.graph.checks import find_missing_graph_references
+-
+-        graph_path = Path(args.graph).resolve() if args.graph else None
+-        try:
+-            findings = find_missing_graph_references(root, graph_path)
+-        except GraphMissingCheckError as exc:
+-            print(f"Error: {exc}")
+-            return 1
+-
+-        if not findings:
+-            print("No missing graph references found.")
+-            return 0
+-
+-        failing = [finding for finding in findings if not finding.record]
+-        informational = [finding for finding in findings if finding.record]
+-
+-        if failing:
+-            print("Missing graph references:")
+-            for finding in failing:
+-                self._print_graph_missing_finding(finding)
+-        if informational:
+-            print("Informational (archived records):")
+-            for finding in informational:
+-                self._print_graph_missing_finding(finding)
+-
+-        print(f"{len(failing)} missing, {len(informational)} informational")
+-        return 1 if failing else 0
+-
+-    def _print_graph_missing_finding(self, finding: Any) -> None:
+-        print(f"- {finding.kind}: {finding.source_id} -> {finding.target_id}")
+-        if finding.role:
+-            print(f"  role: {finding.role}")
+-        if finding.provenance_path:
+-            locator = f":{finding.provenance_locator}" if finding.provenance_locator else ""
+-            print(f"  provenance: {finding.provenance_path}{locator}")
+-        print(f"  reason: {finding.reason}")
+-
+-    def _graph_reflect(self, args: Any) -> int:
+-        root = Path(args.root).resolve()
+-        if not root.exists() or not root.is_dir():
+-            print(f"Error: graph root is not a directory: {root}")
+-            return 1
+-
+-        from deskops.graph.snapshot import GraphSnapshotReadError
+-        from deskops.graph.snapshot import default_snapshot_read_path
+-        from deskops.graph.snapshot import read_graph_snapshot
+-
+-        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
+-        from deskops.graph.checks import GraphMissingCheckError
+-        from deskops.graph.self_reflection import build_self_reflection_report
+-        from deskops.graph.self_reflection import write_self_reflection_report
+-
+-        try:
+-            snapshot = read_graph_snapshot(graph_path)
+-            report = build_self_reflection_report(snapshot)
+-            output_path = write_self_reflection_report(root, report)
+-        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
+-            print(f"Error: {exc}")
+-            return 1
+-
+-        summary = report["summary"]
+-        print(f"Self-reflection report written: {output_path}")
+-        print(f"Findings: {summary['finding_count']}")
+-        print(f"Suppressed duplicates: {summary['suppressed_duplicate_count']}")
+-        return 0
+-
+-    def _print_graph_neighbors(self, node_id: str, neighbors: dict[str, Any]) -> None:
+-        nodes = neighbors["nodes"]
+-        node = neighbors["node"]
+-        print(f"Node: {node_id} ({_graph_node_label(node)})")
+-        print("Outgoing:")
+-        if neighbors["outgoing"]:
+-            for edge in neighbors["outgoing"]:
+-                target = nodes.get(edge["target"], {"id": edge["target"]})
+-                print(f"- {edge['role']} -> {edge['target']} ({_graph_node_label(target)})")
+-        else:
+-            print("- none")
+-
+-        print("Incoming:")
+-        if neighbors["incoming"]:
+-            for edge in neighbors["incoming"]:
+-                source = nodes.get(edge["source"], {"id": edge["source"]})
+-                print(f"- {edge['source']} ({_graph_node_label(source)}) -> {edge['role']}")
+-        else:
+-            print("- none")
+-
+     def _apply_default_pythonpath(self, args: Any, bootstrap: SLDBBootstrap) -> None:
+         if not hasattr(args, "pythonpath"):
+             return
+@@ -389,10 +162,6 @@ class CLI:
+         args.pythonpath = bootstrap.default_pythonpath()
+ 
+ 
+-def _graph_node_label(node: dict[str, Any]) -> str:
+-    return str(node.get("label") or node.get("title") or node.get("id"))
+-
+-
+ def main(argv: Any = None) -> int:
+     cli = CLI()
+     try:
+diff --git a/deskops/cli/parser.py b/deskops/cli/parser.py
+index 57e628f..42a73bb 100644
+--- a/deskops/cli/parser.py
++++ b/deskops/cli/parser.py
+@@ -1,1032 +1,79 @@
+-from __future__ import annotations
+-
+-import argparse
++"""Build the argparse tree by walking :mod:`deskops.cli.registry`.
+ 
+-from deskops.cli.model_introspection import artifact_model_fields
+-from deskops.cli.model_introspection import model_cli_fields
+-from deskops.operations import ARTIFACT_SUBJECTS
++No command is declared here: the registry is the single source of truth for
++paths, help text, arguments, and epilogs.
++"""
+ 
++from __future__ import annotations
+ 
+-WORKFLOW_EPILOG = """
+-Typical flow:
+-  deskops bootstrap
+-  deskops init .
+-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+-  deskops list tasks --root .
+-  deskops show task task-fix-thing --root .
+-  deskops advance task task-fix-thing --root .
+-
+-Use docs/quickstart.md for the first full walkthrough.
+-""".strip()
++import argparse
++from typing import Any
+ 
+-SELECTOR_HELP = "Selectors accept an exact id, filename, stem, or unique slug fragment where supported."
++from deskops.cli.registry import ROOT_DESCRIPTION
++from deskops.cli.registry import ROOT_EPILOG
++from deskops.cli.registry import Arg
++from deskops.cli.registry import Command
++from deskops.cli.registry import command_registry
+ 
+ 
+ def build_parser() -> argparse.ArgumentParser:
+     parser = argparse.ArgumentParser(
+         prog="deskops",
+-        description="deskops: Workflow-domain layer for the hum-ecosystem.",
++        description=ROOT_DESCRIPTION,
+         formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=WORKFLOW_EPILOG,
++        epilog=ROOT_EPILOG,
+     )
+     parser.add_argument(
+         "--debug",
+         action="store_true",
+         help="Print a full traceback for unexpected errors.",
+     )
+-    subparsers = parser.add_subparsers(dest="command", required=True)
+-
+-    _add_about_command(subparsers)
+-    _add_doctor_command(subparsers)
+-    _add_status_command(subparsers)
+-    _add_faq_commands(subparsers)
+-    _add_bootstrap_command(subparsers)
+-    _add_init_command(subparsers)
+-    _add_inbox_commands(subparsers)
+-    _add_message_commands(subparsers)
+-    _add_promote_commands(subparsers)
+-    _add_drawer_commands(subparsers)
+-    _add_add_commands(subparsers)
+-    _add_edit_commands(subparsers)
+-    _add_bind_commands(subparsers)
+-    _add_next_command(subparsers)
+-    _add_list_commands(subparsers)
+-    _add_show_commands(subparsers)
+-    _add_advance_commands(subparsers)
+-    _add_repo_commands(subparsers)
+-    _add_desk_commands(subparsers)
+-    _add_atoms_commands(subparsers)
+-    _add_graph_commands(subparsers)
+-    _add_materialize_command(subparsers)
+-    _add_drift_commands(subparsers)
+-    _add_closeout_command(subparsers)
+-    _add_runtime_commands(subparsers)
+-
++    _add_command_level(parser, command_registry(), (), "command")
+     return parser
+ 
+ 
+-def _add_runtime_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("runtime", help="Manage the live Herdr runtime for this DeskOps desk.")
+-    s = p.add_subparsers(dest="runtime_command", required=True)
+-    init = s.add_parser("init", help="Initialize or reuse this desk's Herdr Space.")
+-    init.add_argument("--root", default=".", help="DeskOps repository root.")
+-    init.add_argument("--agents", action="store_true", help="Start executor and tester Pi agents.")
+-    init.add_argument("--herdr", default="herdr", help="Herdr executable.")
+-    for name, help_text in (("status", "Show this desk's Herdr Space."), ("attach", "Focus this desk's Herdr Space."), ("stop", "Close this desk's Herdr Space.")):
+-        command = s.add_parser(name, help=help_text)
+-        command.add_argument("--root", default=".", help="DeskOps repository root.")
+-        command.add_argument("--herdr", default="herdr", help="Herdr executable.")
+-    workers = s.add_parser("workers", help="List live Herdr agents across all workspaces on this machine.")
+-    workers.add_argument("--root", default=".", help="DeskOps repository root.")
+-    workers.add_argument("--herdr", default="herdr", help="Herdr executable.")
+-    workers.add_argument(
+-        "--format",
+-        choices=("text", "json"),
+-        default="text",
+-        help="Output format.",
+-    )
+-    supervise = s.add_parser(
+-        "supervise",
+-        help="Block on one agent's Herdr lifecycle and report blocked/done settles without advancing the desk.",
+-    )
+-    supervise.add_argument("agent", help="Herdr agent name or pane id to supervise, e.g. deskops-executor.")
+-    supervise.add_argument("--root", default=".", help="DeskOps repository root.")
+-    supervise.add_argument("--herdr", default="herdr", help="Herdr executable.")
+-    supervise.add_argument(
+-        "--max-iterations",
+-        type=int,
+-        default=None,
+-        help="Stop after this many settle events instead of running forever (mainly for testing).",
+-    )
+-    supervise.add_argument(
+-        "--read-lines",
+-        type=int,
+-        default=200,
+-        help="Terminal lines to capture from the agent on a blocked or done settle.",
+-    )
+-    supervise.add_argument(
+-        "--timeout-ms",
+-        type=int,
+-        default=None,
+-        help="Give up waiting after this many milliseconds per settle attempt (default: wait indefinitely).",
+-    )
+-
+-def _add_atoms_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("atoms", help="Atom model and namespace management.")
+-    s = p.add_subparsers(dest="atoms_command", required=True)
+-
+-    add_namespace = s.add_parser(
+-        "add-namespace",
+-        help="Add an extensible atom tag namespace to desk/atoms/tag-namespaces.yaml.",
+-    )
+-    add_namespace.add_argument("namespace", help="Namespace name, such as pattern.")
+-    add_namespace.add_argument("--root", default=".", help="Target repository root.")
+-    add_namespace.add_argument("--meaning", required=True, help="What this namespace means.")
+-    add_namespace.add_argument("--use-when", required=True, help="When to use this namespace.")
+-    add_namespace.add_argument(
+-        "--do-not-use-when",
+-        required=True,
+-        help="When an existing namespace should be preferred instead.",
+-    )
+-    add_namespace.add_argument(
+-        "--example",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Example tag using the namespace; repeat or space-separate as needed.",
+-    )
+-
+-    list_cmd = s.add_parser("list", help="List all atoms.")
+-    list_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    list_cmd.add_argument(
+-        "--axis-value",
+-        help="Filter atoms by the configured atom_folder_axis namespace value (e.g. licitaciones).",
+-    )
+-    _add_output_format_argument(list_cmd)
+-
+-    reorganize_cmd = s.add_parser(
+-        "reorganize",
+-        help="Move atoms into folders derived from the configured atom_folder_axis tag namespace. Idempotent.",
+-    )
+-    reorganize_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    reorganize_cmd.add_argument("--dry-run", action="store_true", help="Report planned moves without changing files.")
+-
+-    show_cmd = s.add_parser("show", help="Show an atom.")
+-    show_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
+-    show_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    _add_output_format_argument(show_cmd)
+-
+-    validate_cmd = s.add_parser(
+-        "validate",
+-        help="Validate one atom or all atoms for lifecycle safety checks.",
+-    )
+-    validate_target = validate_cmd.add_mutually_exclusive_group(required=True)
+-    validate_target.add_argument("doc_id", nargs="?", help=f"Atom selector. {SELECTOR_HELP}")
+-    validate_target.add_argument("--all", action="store_true", help="Validate all atoms under desk/atoms/.")
+-    validate_cmd.add_argument("--root", default=".", help="Target repository root.")
+-
+-    create_cmd = s.add_parser(
+-        "create",
+-        help="Create one atom from a pill, graph finding, or diagram source while preserving exact provenance.",
+-    )
+-    create_cmd.add_argument("doc_id", help="New atom id to create, conventionally atom-<slug>.")
+-    create_cmd.add_argument(
+-        "--five-wh-one-plus",
+-        required=True,
+-        choices=("what", "why", "how", "how_not", "when", "where", "for_whom"),
+-        help="The single 5WH1+ question this atom answers.",
+-    )
+-    create_cmd.add_argument("--title", help="Optional title override for the created atom.")
+-    create_cmd.add_argument(
+-        "--tag",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Atom tag to add; repeat or space-separate as needed.",
+-    )
+-    create_sources = create_cmd.add_mutually_exclusive_group(required=True)
+-    create_sources.add_argument(
+-        "--from-pill",
+-        metavar="PILL_ID",
+-        help="Create the atom from one pill field chosen by --five-wh-one-plus.",
+-    )
+-    create_sources.add_argument(
+-        "--from-graph",
+-        metavar="SOURCE_ID->TARGET_ID",
+-        help="Create the atom from one missing graph finding resolved by source and target ids.",
+-    )
+-    create_sources.add_argument(
+-        "--from-diagram",
+-        metavar="SPEC_PATH",
+-        help="Create the atom from one diagram source file such as docs/diagrams/example/source.mmd.",
+-    )
+-    create_cmd.add_argument(
+-        "--graph",
+-        help="Optional graph snapshot path consulted in addition to declared-edge findings when resolving --from-graph.",
+-    )
+-    create_cmd.add_argument("--root", default=".", help="Target repository root.")
+-
+-    delete_cmd = s.add_parser(
+-        "delete",
+-        help="Delete one atom after checking inbound references.",
+-    )
+-    delete_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
+-    delete_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    delete_cmd.add_argument("--force", action="store_true", help="Delete even when inbound atom:<id> references are present.")
+-
+-    split_cmd = s.add_parser(
+-        "split",
+-        help="Split one atom into new atoms while keeping the original as a redirect stub.",
+-    )
+-    split_cmd.add_argument("doc_id", help=f"Atom selector. {SELECTOR_HELP}")
+-    split_cmd.add_argument(
+-        "--into",
+-        nargs="+",
+-        required=True,
+-        metavar="NEW_ATOM_ID",
+-        help="New atom ids to create from the source atom. Provide at least two.",
+-    )
+-    split_cmd.add_argument(
+-        "--section",
+-        action="append",
+-        default=[],
+-        metavar="NEW_ATOM_ID:SECTION_HEADING",
+-        help=(
+-            "Assign a created atom id to a specific markdown heading inside the source atom answer. "
+-            "Repeat once per target. When omitted, sections are assigned to --into ids in order."
+-        ),
+-    )
+-    split_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    split_cmd.add_argument(
+-        "--force",
+-        action="store_true",
+-        help=(
+-            "Proceed even when inbound atom:<id> references exist. The original atom is kept as a redirect stub; "
+-            "referrers are not rewritten automatically."
+-        ),
+-    )
+-
+-    merge_cmd = s.add_parser(
+-        "merge",
+-        help="Merge one source atom into an existing target atom while rewriting inbound references.",
+-    )
+-    merge_cmd.add_argument("doc_id", help=f"Source atom selector. {SELECTOR_HELP}")
+-    merge_cmd.add_argument(
+-        "--into",
+-        required=True,
+-        metavar="TARGET_ATOM_ID",
+-        help="Existing target atom selector that absorbs the source atom.",
+-    )
+-    merge_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    merge_cmd.add_argument(
+-        "--force",
+-        action="store_true",
+-        help=(
+-            "Proceed when merge semantics are ambiguous, such as conflicting five_wh_one_plus values. "
+-            "Inbound atom:<source> references are rewritten to atom:<target>, and the source atom is kept as a redirect stub for traceability."
+-        ),
+-    )
+-
+-
+-    crossroad_cmd = s.add_parser(
+-        "crossroad",
+-        help="Write the crossroad of a domain path: the mandatory parent that describes what hangs below it.",
+-    )
+-    crossroad_cmd.add_argument("path", help="Domain path such as pizzeria.carta; its parent path needs a crossroad first.")
+-    crossroad_cmd.add_argument("--title", required=True, help="Short title of the domain area.")
+-    crossroad_cmd.add_argument("--content", required=True, help="Written description of what hangs below this path.")
+-    crossroad_cmd.add_argument("--root", default=".", help="Target repository root.")
+-
+-    proto_cmd = s.add_parser("proto", help="Create a protoatom: a free atom with a title, content and tags.")
+-    proto_cmd.add_argument("doc_id", help="New protoatom id, conventionally proto-<slug>.")
+-    proto_cmd.add_argument("--title", required=True, help="Short title of the free knowledge unit.")
+-    proto_cmd.add_argument("--content", default="", help="Free markdown content.")
+-    proto_cmd.add_argument(
+-        "--tag",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Atom tag; a single domain:<path> tag places the protoatom in the domain tree.",
+-    )
+-    proto_cmd.add_argument("--root", default=".", help="Target repository root.")
+-
+-    type_cmd = s.add_parser(
+-        "type",
+-        help="Type a protoatom into another sldb model, keeping the protoatom as a redirect stub.",
+-    )
+-    type_cmd.add_argument("doc_id", help="Protoatom selector: id or filename.")
+-    type_cmd.add_argument("--model", required=True, help="Target sldb model name, such as AtomDoc or TaskDoc.")
+-    type_cmd.add_argument("--id", dest="new_id", help="Id of the typed document; defaults to <model>-<slug>.")
+-    type_cmd.add_argument(
+-        "--content-field",
+-        help="Target field that receives the protoatom content; defaults to 'content' when the model has it.",
+-    )
+-    type_cmd.add_argument("--data", help="Inline JSON with the remaining fields the target model requires.")
+-    type_cmd.add_argument("--root", default=".", help="Target repository root.")
+-
+-    tree_cmd = s.add_parser("tree", help="Show the domain tree: crossroads and the documents hanging from them.")
+-    tree_cmd.add_argument("--root", default=".", help="Target repository root.")
+-    _add_output_format_argument(tree_cmd)
+-
+-def _add_graph_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("graph", help="Build and inspect deskops KGDB graph runtime outputs.")
+-    s = p.add_subparsers(dest="graph_command", required=True)
+-
+-    build = s.add_parser("build", help="Build the KGDB graph snapshot runtime artifact.")
+-    build.add_argument("--root", default=".", help="Target repository root.")
+-    build.add_argument(
+-        "--output",
+-        help="GraphSnapshot destination; relative paths are resolved from --root.",
+-    )
+-
+-    neighbors = s.add_parser("neighbors", help="Show incoming and outgoing neighbors for one graph node.")
+-    neighbors.add_argument("id", help="Graph node id to inspect, formatted as type:id (e.g. atom:atom-name, task:task-name, issue:issue-name).")
+-    neighbors.add_argument("--root", default=".", help="Target repository root.")
+-    neighbors.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+-
+-    missing = s.add_parser("missing", help="Report missing graph targets and dangling declared references.")
+-    missing.add_argument("--root", default=".", help="Target repository root.")
+-    missing.add_argument("--graph", help="Optional graph snapshot path to check for missing edge targets.")
+-
+-    reflect = s.add_parser("reflect", help="Write review-only self-reflection findings for a graph snapshot.")
+-    reflect.add_argument("--root", default=".", help="Target repository root.")
+-    reflect.add_argument("--graph", help="Graph snapshot path; defaults to the root runtime snapshot.")
+-
+-
+-def _add_materialize_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "materialize",
+-        help="Render tracked desk role prompts into installed pi-agent files.",
+-    )
+-    p.add_argument("--root", default=".", help="Target repository root.")
+-    p.add_argument(
+-        "--out",
+-        help="Output directory override; defaults to ~/.pi/agent/agents.",
+-    )
+-
+-
+-
+-def _add_drift_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "drift",
+-        help="Check for role-agent drift between tracked role docs and installed agent files.",
+-    )
+-    s = p.add_subparsers(dest="drift_command", required=True)
+-    check = s.add_parser("check", help="Compare rendered role-agent output to installed files.")
+-    check.add_argument("--root", default=".", help="Target repository root.")
+-    check.add_argument(
+-        "--out",
+-        help="Agent directory override; defaults to ~/.pi/agent/agents.",
+-    )
+-
+-
+-
+-def _add_promote_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "promote",
+-        help="Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Examples:
+-  deskops promote inbox-to-drawer-task 20260614-unclear --root .
+-
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="promote_command", required=True)
+-
+-    inbox = s.add_parser(
+-        "inbox-to-drawer-task",
+-        help="Promote one inbox note into a deferred drawer task candidate.",
+-    )
+-    inbox.add_argument("selector", help="Inbox filename, stem, or unique slug fragment")
+-    inbox.add_argument("--root", default=".", help="Target repository root")
+-    inbox.add_argument("--title", help="Override the drawer task title")
+-
+-
+-def _add_drawer_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("drawer", help="Manage deferred drawer entries.")
+-    s = p.add_subparsers(dest="drawer_command", required=True)
+-
+-    remove = s.add_parser(
+-        "remove",
+-        help="Remove one drawer entry, its tracking, and its bullets on the drawer board.",
+-    )
+-    remove.add_argument("selector", help=f"Drawer file selector. {SELECTOR_HELP}")
+-    remove.add_argument("--root", default=".", help="Target repository root")
+-    remove.add_argument(
+-        "--force",
+-        action="store_true",
+-        help="Remove even when a task in desk/tasks/ records the entry in from_drawer.",
+-    )
+-
+-
+-def _add_desk_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("desk", help="Desk workspace management.")
+-    s = p.add_subparsers(dest="desk_command", required=True)
+-
+-    ins = s.add_parser("install", help="Scaffold a minimal local desk/ surface in a repo.")
+-    ins.add_argument("path", help="Target repository path")
+-
+-    migrate = s.add_parser(
+-        "migrate",
+-        help="Adopt a legacy or partial desk into the current non-destructive workspace contract.",
+-    )
+-    migrate.add_argument("--root", default=".", help="Target repository root.")
+-
+-    update = s.add_parser(
+-        "update",
+-        help="Report and repair divergence between the current desk, its models, and its store.",
+-    )
+-    update.add_argument("--root", default=".", help="Target repository root.")
+-    update.add_argument("--apply", action="store_true", help="Apply repairs (dry run by default).")
+-
+-
+-def _add_about_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    subparsers.add_parser(
+-        "about",
+-        help="Print a short overview of deskops and its first-use commands.",
+-    )
+-
+-
+-def _add_doctor_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "doctor",
+-        help="Detect and repair common broken desk states safely.",
+-    )
+-    p.add_argument("--root", default=".", help="Target repository root.")
+-    p.add_argument("--repair", action="store_true", help="Attempt non-destructive repairs.")
+-
+-
+-def _add_status_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "status",
+-        help="Show current workspace and workflow status.",
+-    )
+-    p.add_argument("--root", default=".", help="Target repository root.")
+-
+-
+-def _add_bootstrap_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    subparsers.add_parser(
+-        "bootstrap",
+-        help="Install or repair sldb and register deskops models in the global store.",
+-    )
+-
+-
+-def _add_init_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "init",
+-        help="Initialize a local .sldb store and scaffold desk/ if needed.",
+-    )
+-    p.add_argument("path", nargs="?", default=".", help="Target repository path")
+-
+-
+-def _add_repo_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("repo", help="Repository registration and discovery.")
+-    s = p.add_subparsers(dest="repo_command", required=True)
+-
+-    reg = s.add_parser(
+-        "register",
+-        help="Canonically register a repository in the ecosystem registry and track it in SLDB.",
+-        description="Canonically register a repository in the ecosystem registry and track it in SLDB.",
+-    )
+-    reg.add_argument("name", help="Human-readable name")
+-    reg.add_argument("path", nargs="?", help="Repository root path (relative to ecosystem root or absolute)")
+-    reg.add_argument("--path", dest="path_option", help="Repository root path (relative to ecosystem root or absolute)")
+-    reg.add_argument("--id", help="Stable unique ID, defaults to slugified name")
+-    reg.add_argument("--description", help="Markdown description")
+-    reg.add_argument("--tags", help="Comma-separated tags")
+-    reg.add_argument("--store", help="Store path to anchor the registry")
+-    reg.add_argument("--pythonpath", help="Python path for model resolution")
+-
+-    whoami = s.add_parser(
+-        "whoami",
+-        help="Print the canonical project identity for the current repository.",
+-        description="Print the canonical project identity for the current repository.",
+-    )
+-    whoami.add_argument("--root", default=".", help="Repository root to identify")
+-    whoami.add_argument("--store", help="Store path to anchor the registry lookup")
+-
+-
+-
+-def _add_inbox_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "inbox",
+-        help="Deprecated alias for `deskops message`; use message send/list/read/ack.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog="""
+-Deprecated: use `deskops message send|list|read|ack`.
+-
+-Examples:
+-  deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
+-  deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
+-  deskops inbox --list --root .
+-  deskops inbox --show 20260614-cli-help --root .
+-  deskops inbox --ack 20260614-cli-help --root .
+-
+---show/--ack selector: filename, stem, or slug fragment.
+-""".strip(),
+-    )
+-    p.add_argument("message", nargs="?", help="Inbox note body")
+-    p.add_argument(
+-        "--kind",
+-        choices=("unclear", "suggestion"),
+-        default="unclear",
+-        help="Type of inbox message to write",
+-    )
+-    p.add_argument("--title", help="Short title for the note")
+-    p.add_argument(
+-        "--root",
+-        help="Repository root whose desk/ holds the inbox; the same --root every other subcommand takes",
+-    )
+-    p.add_argument(
+-        "--desk-root",
+-        help="Desk root directory override; defaults to the active project desk",
+-    )
+-    p.add_argument(
+-        "--store",
+-        help="Store path used to resolve the target project root for the default desk",
+-    )
+-    p.add_argument(
+-        "--repo",
+-        help="Target a registered repository name in the ecosystem",
+-    )
+-    p.add_argument(
+-        "--sender",
+-        help="Override the resolved sender identity with a registered project id",
+-    )
+-    p.add_argument(
+-        "--pythonpath",
+-        help="Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model",
+-    )
+-    p.add_argument("--list", action="store_true", help="List desk inbox notes")
+-    p.add_argument("--show", help="Show one inbox note by filename, stem, or slug fragment")
+-    p.add_argument("--ack", help="Acknowledge one inbox note by filename, stem, or slug fragment")
+-    p.add_argument("--limit", type=int, default=20, help="Limit listed notes")
+-    p.add_argument("--format", choices=("text", "json", "yaml"), default="text")
+-
+-
+-def _add_message_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "message",
+-        help="Send, list, read, or acknowledge cross-desk messages.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog="""
+-Examples:
+-  deskops message send "Need follow-up" --to sibling-repo --title "Follow-up"
+-  deskops message list --root .
+-  deskops message read 20260614-cli-help --root .
+-  deskops message ack 20260614-cli-help --root .
+-
+-read/ack selector: filename, stem, or unique slug fragment.
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="message_command", required=True)
+-
+-    def _add_target_args(
+-        parser: argparse.ArgumentParser, *, root: bool, repo: bool = True
+-    ) -> None:
+-        if root:
+-            parser.add_argument(
+-                "--root",
+-                default=".",
+-                help="Repository root whose desk/ holds the inbox",
+-            )
+-        parser.add_argument(
+-            "--desk-root",
+-            help="Desk root directory override; defaults to the active project desk",
+-        )
+-        parser.add_argument(
+-            "--store",
+-            help="Store path used to resolve the target project root for the default desk",
+-        )
+-        if repo:
+-            parser.add_argument(
+-                "--repo",
+-                help="Target a registered repository name in the ecosystem",
+-            )
+-        parser.add_argument(
+-            "--pythonpath",
+-            help="Project path used when auto-tracking messages through the registered model",
+-        )
+-        parser.add_argument("--format", choices=("text", "json", "yaml"), default="text")
+-
+-    send = s.add_parser("send", help="Send a message to a project desk.")
+-    send.add_argument("body", help="Message body")
+-    send.add_argument("--title", help="Short title for the message")
+-    send.add_argument(
+-        "--kind",
+-        choices=("unclear", "suggestion"),
+-        default="suggestion",
+-        help="Type of message to send",
+-    )
+-    send.add_argument(
+-        "--to",
+-        dest="repo",
+-        help="Target a registered repository name in the ecosystem",
+-    )
+-    send.add_argument(
+-        "--from",
+-        dest="sender",
+-        help="Override the resolved sender identity with a registered project id",
+-    )
+-    _add_target_args(send, root=True, repo=False)
+-
+-    lst = s.add_parser("list", help="List received messages.")
+-    _add_target_args(lst, root=True)
+-    lst.add_argument("--limit", type=int, default=20, help="Limit listed messages")
+-
+-    read = s.add_parser("read", help="Read one received message.")
+-    read.add_argument("selector", help="Message filename, stem, or unique slug fragment")
+-    _add_target_args(read, root=True)
+-
+-    ack = s.add_parser("ack", help="Acknowledge one received message.")
+-    ack.add_argument("selector", help="Message filename, stem, or unique slug fragment")
+-    _add_target_args(ack, root=True)
+-
+-
+-def _add_faq_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("faq", help="Browse the first-use FAQ by question.")
+-    p.add_argument(
+-        "question",
+-        nargs="?",
+-        help="Question index, slug, or text fragment. Omit to list available questions.",
+-    )
+-    p.add_argument("--format", choices=("text", "json", "yaml"), default="text")
+-    p.add_argument("--faq-path", default="docs/faq.md", help="FAQ markdown path")
+-
+-
+-def _add_add_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "add",
+-        help="Create desk workflow artifacts from modeled templates.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog="""
+-Examples:
+-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+-  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..."
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="subject", required=True)
+-
+-    task = s.add_parser("task", help="Create an actionable task bundle.")
+-    task.add_argument("payload", nargs="?", help="Inline JSON payload for the task.")
+-    task.add_argument("--from-yaml", help="Load the task payload from a YAML file.")
+-    task.add_argument("--root", default=".", help="Target repository root.")
+-    task.add_argument("--title", help="Task title")
+-    task.add_argument("--why", help="Rationale or business driver")
+-    task.add_argument("--goal", help="Task goal")
+-    task.add_argument("--scope", help="Task scope")
+-    task.add_argument("--implementation-path", help="Implementation path")
+-    task.add_argument("--done-when", help="Task completion rule")
+-    task.add_argument(
+-        "--from-drawer",
+-        help="Drawer file this task is authored from (path, stem, or slug fragment). "
+-        "Recorded in the task's from_drawer field; the drawer file is kept for manual cleanup.",
+-    )
+-    task.add_argument(
+-        "--validation",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Validation command or assertion; repeat or space-separate as needed.",
+-    )
+-    task.add_argument(
+-        "--depends-on",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Task identifiers that must complete first; repeat or space-separate as needed.",
+-    )
+-    task.add_argument("--task-type", help="Workflow task type such as design, implementation, test, reflection, or closeout.")
+-    task.add_argument(
+-        "--inherits-from",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Task identifiers that provide inherited workflow context; repeat or space-separate as needed.",
+-    )
+-    task.add_argument(
+-        "--atom",
+-        action="extend",
+-        nargs="+",
+-        default=[],
+-        help="Workflow or knowledge atom refs bound to the task; repeat or space-separate as needed.",
+-    )
+-    task.add_argument(
+-        "--inherit-acceptance-context",
+-        action="store_true",
+-        help="Inherit validation and done-when context from tasks listed in --inherits-from.",
+-    )
+-
+-    # Build CLI args from the Pydantic model — the single source of truth.
+-    # YAML specs are no longer consulted for field-level CLI metadata.
+-    for artifact_id, meta in ARTIFACT_SUBJECTS.items():
+-        subject = meta["subject"]
+-        help_text = f"Create a {subject} artifact."
+-        if subject == "repository":
+-            help_text = (
+-                "Create a local repository artifact doc; use 'deskops repo register' "
+-                "for canonical ecosystem registration."
+-            )
+-        generated = s.add_parser(
+-            subject,
+-            help=help_text,
+-            description=help_text,
+-            formatter_class=argparse.RawTextHelpFormatter,
+-            epilog=f"Example:\n  deskops add {subject} --root . --title \"Example\"",
+-        )
+-        generated.add_argument("--root", default=".", help="Target repository root.")
+-        generated.add_argument("--from-yaml", help=f"Load the {subject} payload from a YAML file.")
+-
+-        models = artifact_model_fields()
+-        model = models.get(artifact_id)
+-        if model is None:
+-            continue
+-
+-        include_special = artifact_id in {
+-            "artifact.task",
+-        }
+-        for fmeta in model_cli_fields(model, include_special=include_special):
+-            # title is never required=True in CLI — slugified from the value
+-            required = fmeta.is_required and fmeta.name != "title"
+-            kwargs: dict[str, object] = {"required": required, "help": fmeta.help}
+-            if fmeta.is_list:
+-                kwargs["action"] = "extend"
+-                kwargs["nargs"] = "+"
+-                kwargs["default"] = []
+-            if fmeta.choices:
+-                kwargs["choices"] = fmeta.choices
+-            # Carry the default if set (but not sentinel values)
+-            from deskops.cli.model_introspection import DEFAULT_FACTORY, REQUIRED
+-            if fmeta.default is not None and fmeta.default not in (
+-                DEFAULT_FACTORY,
+-                REQUIRED,
+-            ):
+-                kwargs["default"] = fmeta.default
+-
+-            generated.add_argument(fmeta.cli_option, dest=fmeta.name, **kwargs)
+-
+-
+-def _add_edit_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "edit",
+-        help="Update one field on a modeled desk artifact.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Examples:
+-  deskops edit task task-fix-thing goal "Updated goal" --root .
+-  deskops edit pill pill-keep-layers-clean how-not "Do not bypass the guardrail." --root .
+-
+-Values are parsed with SLDB's field-value parser and the document is re-rendered through its model.
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="subject", required=True)
+-    subjects = ["task", *[str(meta["subject"]) for meta in ARTIFACT_SUBJECTS.values()]]
+-    for subject in subjects:
+-        parser = s.add_parser(subject, help=f"Edit one {subject} field.")
+-        parser.add_argument("selector", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}")
+-        parser.add_argument("field", help="Model field name to update; hyphens are accepted for underscores.")
+-        parser.add_argument("value", help="New field value, parsed like an SLDB field value.")
+-        parser.add_argument("--root", default=".", help="Target repository root.")
+-
+-
+-def _add_bind_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "bind",
+-        help="Bind workflow context artifacts to tasks.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Examples:
+-  deskops bind pill task-fix-thing pill-phase-gate --root .
+-
+-This updates the task's modeled `pills` list through the deskops artifact layer.
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="subject", required=True)
+-
+-    pill = s.add_parser(
+-        "pill",
+-        help="Bind one pill to one task.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Example:
+-  deskops bind pill task-fix-thing pill-phase-gate --root .
+-
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    pill.add_argument("task", help=f"Task selector. {SELECTOR_HELP}")
+-    pill.add_argument("pill", help=f"Pill selector. {SELECTOR_HELP}")
+-    pill.add_argument("--root", default=".", help="Target repository root.")
+-
+-
+-def _add_next_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "next",
+-        help="Show the next valid workflow action for a task without mutating it.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog="""
+-Examples:
+-  deskops next task-fix-thing --root .
+-  deskops next --diagram
+-""".strip(),
+-    )
+-    p.add_argument("task_id", nargs="?", help=f"Task selector. {SELECTOR_HELP}")
+-    p.add_argument("--root", default=".", help="Target repository root.")
+-    p.add_argument("--diagram", action="store_true", help="Render the workflow state machine as Mermaid from its source spec.")
+-
+-
+-def _add_output_format_argument(parser: argparse.ArgumentParser) -> None:
+-    parser.add_argument(
+-        "--format",
+-        choices=("text", "json"),
+-        default="text",
+-        help="Output format.",
+-    )
+-
+-
+-
+-def _add_list_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "list",
+-        help="List desk workflow artifacts.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog="""
+-Examples:
+-  deskops list tasks --root .
+-  deskops list pills --root .
+-  deskops list atoms --root .
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="subject", required=True)
+-
+-    tasks = s.add_parser("tasks", help="List actionable tasks.")
+-    tasks.add_argument("--root", default=".", help="Target repository root.")
+-    tasks.add_argument(
+-        "--include-repos",
+-        action="store_true",
+-        help="Also list tasks routed by registered sibling repositories' desk/tasks/Board.md files.",
+-    )
+-    _add_output_format_argument(tasks)
+-
+-    for meta in ARTIFACT_SUBJECTS.values():
+-        kind = meta["list_subject"]
+-        parser = s.add_parser(kind, help=f"List {kind}.")
+-        parser.add_argument("--root", default=".", help="Target repository root.")
+-        if kind == "atoms":
+-            parser.add_argument(
+-                "--axis-value",
+-                help="Filter atoms by the configured atom_folder_axis namespace value (e.g. licitaciones).",
+-            )
+-        _add_output_format_argument(parser)
+-
+-
+-def _add_show_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "show",
+-        help="Show one desk workflow artifact by selector.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Examples:
+-  deskops show task task-fix-thing --root .
+-  deskops show pill pill-keep-layers-clean --root .
+-
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="subject", required=True)
+-
+-    task = s.add_parser(
+-        "task",
+-        help="Show one actionable task by selector.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Example:
+-  deskops show task task-fix-thing --root .
+-
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
+-    task.add_argument("--root", default=".", help="Target repository root.")
+-    _add_output_format_argument(task)
+-
+-    for meta in ARTIFACT_SUBJECTS.values():
+-        subject = meta["subject"]
+-        parser = s.add_parser(subject, help=f"Show one {subject} by selector.")
+-        parser.add_argument("doc_id", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}")
+-        parser.add_argument("--root", default=".", help="Target repository root.")
+-        _add_output_format_argument(parser)
+-
+-
+-def _add_advance_commands(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser(
+-        "advance",
+-        help="Advance an operational artifact through the desk's lifecycle graph.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Example:
+-  deskops advance task task-fix-thing --root .
+-
+-Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    s = p.add_subparsers(dest="subject", required=True)
+-
+-    task = s.add_parser(
+-        "task",
+-        help="Advance one actionable task through the desk's lifecycle graph.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog=f"""
+-Example:
+-  deskops advance task task-fix-thing --root .
+-
+-Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
+-{SELECTOR_HELP}
+-""".strip(),
+-    )
+-    task.add_argument("task_id", help=f"Task selector. {SELECTOR_HELP}")
+-    task.add_argument("--to", help="Optional target node or status for a manual override.")
+-    task.add_argument("--root", default=".", help="Target repository root.")
+-
+-def _add_closeout_command(
+-    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
+-) -> None:
+-    p = subparsers.add_parser("closeout", help="Workflow closeout operations.")
+-    s = p.add_subparsers(dest="closeout_command", required=True)
+-
+-    commit = s.add_parser(
+-        "commit",
+-        help="Create the tool-made closing commit, linked to a run evidence directory or marked manual.",
+-        formatter_class=argparse.RawTextHelpFormatter,
+-        epilog="""
+-Example:
+-  deskops closeout commit --root . --task task-fix-thing \\
+-    --run-dir runs/subagents/20260729-120000-task-fix-thing \\
+-    --run-id 6046eaef --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \\
+-    --paths deskops/foo.py tests/test_foo.py
+-
+-Without a subagent run, close the task manually and say why:
+-  deskops closeout commit --root . --task task-fix-thing \\
+-    --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \\
+-    --paths deskops/foo.py tests/test_foo.py
++def _add_command_level(
++    parser: argparse.ArgumentParser,
++    commands: tuple[Command, ...],
++    parent_path: tuple[str, ...],
++    dest: str | None,
++) -> None:
++    children = [command for command in commands if command.path[:-1] == parent_path]
++    if not children:
++        return
++    if dest is None:
++        raise RuntimeError(f"Command {parent_path!r} declares children without a subcommand dest")
++    subparsers = parser.add_subparsers(dest=dest, required=True)
++    for command in children:
++        command_parser = _add_command_parser(subparsers, command)
++        _add_arguments(command_parser, command.args)
++        _add_command_level(command_parser, commands, command.path, command.subcommand_dest)
++
++
++def _add_command_parser(
++    subparsers: argparse._SubParsersAction[argparse.ArgumentParser],
++    command: Command,
++) -> argparse.ArgumentParser:
++    kwargs: dict[str, Any] = {}
++    if command.raw_text:
++        kwargs["formatter_class"] = argparse.RawTextHelpFormatter
++    if command.description is not None:
++        kwargs["description"] = command.description
++    if command.epilog is not None:
++        kwargs["epilog"] = command.epilog
++    parser = subparsers.add_parser(command.path[-1], help=command.help, **kwargs)
++    parser.set_defaults(_deskops_command_path=command.path)
++    return parser
+ 
+-With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
+-trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
+-Either way the commit hash is recorded back into runs/subagents/index.jsonl. The
+-commit is made by this command, not by agent discretion.
+-""".strip(),
+-    )
+-    commit.add_argument("--root", default=".", help="Target repository root.")
+-    closing_route = commit.add_mutually_exclusive_group()
+-    closing_route.add_argument("--run-dir", help="Run evidence dir under runs/subagents/.")
+-    closing_route.add_argument(
+-        "--no-run",
+-        action="store_true",
+-        help="Close without a subagent run; requires --reason. Use instead of --run-dir.",
+-    )
+-    commit.add_argument("--reason", help="Why the task closes without a run; required with --no-run.")
+-    commit.add_argument("--task", required=True, help="Task id being closed.")
+-    commit.add_argument("-m", "--message", help="Commit message subject.")
+-    commit.add_argument("--paths", nargs="*", default=None, help="Paths to stage; defaults to run.yaml touched paths, else staged index.")
+-    commit.add_argument("--run-id", help="Subagent run id to record in run.yaml (--run-dir only).")
+-    commit.add_argument("--session", help="Child session.jsonl path to hash into run.yaml (--run-dir only).")
+ 
+-    verify = s.add_parser(
+-        "verify",
+-        help="Strictly verify closeout evidence gates for one task and print a structured report.",
+-    )
+-    verify.add_argument("--root", default=".", help="Target repository root.")
+-    verify.add_argument("--task", required=True, help="Task id being verified.")
++def _add_arguments(parser: argparse.ArgumentParser, args: tuple[Arg, ...]) -> None:
++    groups: dict[str, argparse._MutuallyExclusiveGroup] = {}
++    for arg in args:
++        target: Any = parser
++        if arg.group is not None:
++            group = groups.get(arg.group)
++            if group is None:
++                group = parser.add_mutually_exclusive_group(required=arg.group_required)
++                groups[arg.group] = group
++            target = group
++        target.add_argument(*arg.flags, **arg.kwargs)
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+new file mode 100644
+index 0000000..4d0b2fd
+--- /dev/null
++++ b/deskops/cli/registry.py
+@@ -0,0 +1,1273 @@
++"""Declarative registry of every deskops CLI command.
++
++The parser in :mod:`deskops.cli.parser` only walks this data; it declares no
++command itself. Each command appears exactly once, with its full path, help
++text, arguments, handler, and whether it can mutate desk state.
++
++``--help`` output must stay byte-identical to ``tests/fixtures/golden/help``:
++argument order, help text, descriptions, epilogs, and formatter choice are all
++part of the contract.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from dataclasses import field
++from typing import Any
++
++from deskops.cli.model_introspection import DEFAULT_FACTORY
++from deskops.cli.model_introspection import REQUIRED
++from deskops.cli.model_introspection import artifact_model_fields
++from deskops.cli.model_introspection import model_cli_fields
++from deskops.operations import ARTIFACT_SUBJECTS
++
++
++ROOT_DESCRIPTION = "deskops: Workflow-domain layer for the hum-ecosystem."
++ROOT_EPILOG = """
++Typical flow:
++  deskops bootstrap
++  deskops init .
++  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
++  deskops list tasks --root .
++  deskops show task task-fix-thing --root .
++  deskops advance task task-fix-thing --root .
++
++Use docs/quickstart.md for the first full walkthrough.
++""".strip()
++
++SELECTOR_HELP = "Selectors accept an exact id, filename, stem, or unique slug fragment where supported."
++
++
++@dataclass(frozen=True, slots=True)
++class Arg:
++    """One parser argument. Args sharing ``group`` share an exclusive group."""
++
++    flags: tuple[str, ...]
++    kwargs: dict[str, Any] = field(default_factory=dict)
++    group: str | None = None
++    group_required: bool = False
++
++
++@dataclass(frozen=True, slots=True)
++class Command:
++    """One command path. ``handler`` is a dotted ``module:attribute`` path."""
++
++    path: tuple[str, ...]
++    help: str
++    args: tuple[Arg, ...]
++    handler: str
++    mutates: bool
++    epilog: str | None = None
++    description: str | None = None
++    raw_text: bool = False
++    subcommand_dest: str | None = None
++
++
++def A(flags: str | tuple[str, ...], **kwargs: Any) -> Arg:
++    """Shorthand for an argument declaration."""
++
++    normalized = (flags,) if isinstance(flags, str) else tuple(flags)
++    group = kwargs.pop("group", None)
++    group_required = kwargs.pop("group_required", False)
++    return Arg(
++        flags=normalized,
++        kwargs=dict(kwargs),
++        group=group,
++        group_required=group_required,
++    )
++
++
++ROOT_ARG = A("--root", default=".", help="Target repository root.")
++ROOT_ARG_NO_PERIOD = A("--root", default=".", help="Target repository root")
++ROOT_ARG_MESSAGE = A("--root", default=".", help="Repository root whose desk/ holds the inbox")
++ROOT_ARG_INBOX = A(
++    "--root",
++    help="Repository root whose desk/ holds the inbox; the same --root every other subcommand takes",
++)
++ROOT_ARG_WHOAMI = A("--root", default=".", help="Repository root to identify")
++DESK_ROOT_ARG = A("--desk-root", help="Desk root directory override; defaults to the active project desk")
++STORE_ARG = A("--store", help="Store path used to resolve the target project root for the default desk")
++REPO_ARG = A("--repo", help="Target a registered repository name in the ecosystem")
++PYTHONPATH_ARG = A(
++    "--pythonpath",
++    help="Project path used when auto-tracking messages through the registered model",
++)
++PYTHONPATH_INBOX_ARG = A(
++    "--pythonpath",
++    help="Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model",
++)
++OUTPUT_FORMAT_ARG = A("--format", choices=("text", "json"), default="text", help="Output format.")
++OUTPUT_FORMAT_YAML_ARG = A("--format", choices=("text", "json", "yaml"), default="text")
++HERDR_ARG = A("--herdr", default="herdr", help="Herdr executable.")
++RUNTIME_ROOT_ARG = A("--root", default=".", help="DeskOps repository root.")
++
++
++def _add_subject_commands() -> list[Command]:
++    """``deskops add <artifact>`` generated from the Pydantic models."""
++
++    commands: list[Command] = []
++    models = artifact_model_fields()
++    for artifact_id, meta in ARTIFACT_SUBJECTS.items():
++        subject = str(meta["subject"])
++        help_text = f"Create a {subject} artifact."
++        if subject == "repository":
++            help_text = (
++                "Create a local repository artifact doc; use 'deskops repo register' "
++                "for canonical ecosystem registration."
++            )
++        args = [
++            ROOT_ARG,
++            A("--from-yaml", help=f"Load the {subject} payload from a YAML file."),
++        ]
++        model = models.get(artifact_id)
++        if model is not None:
++            include_special = artifact_id in {"artifact.task"}
++            for fmeta in model_cli_fields(model, include_special=include_special):
++                # title is never required=True in CLI — slugified from the value
++                required = fmeta.is_required and fmeta.name != "title"
++                kwargs: dict[str, object] = {"required": required, "help": fmeta.help}
++                if fmeta.is_list:
++                    kwargs["action"] = "extend"
++                    kwargs["nargs"] = "+"
++                    kwargs["default"] = []
++                if fmeta.choices:
++                    kwargs["choices"] = fmeta.choices
++                # Carry the default if set (but not sentinel values)
++                if fmeta.default is not None and fmeta.default not in (
++                    DEFAULT_FACTORY,
++                    REQUIRED,
++                ):
++                    kwargs["default"] = fmeta.default
++                args.append(A(fmeta.cli_option, **kwargs))
++        commands.append(
++            Command(
++                path=("add", subject),
++                help=help_text,
++                args=tuple(args),
++                handler="deskops.cli.commands.operations:OperationsCLI",
++                mutates=True,
++                epilog=f"Example:\n  deskops add {subject} --root . --title \"Example\"",
++                description=help_text,
++                raw_text=True,
++            )
++        )
++    return commands
++
++
++def _list_subject_commands() -> list[Command]:
++    commands: list[Command] = []
++    for meta in ARTIFACT_SUBJECTS.values():
++        kind = str(meta["list_subject"])
++        args = [ROOT_ARG]
++        if kind == "atoms":
++            args.append(
++                A(
++                    "--axis-value",
++                    help="Filter atoms by the configured atom_folder_axis namespace value (e.g. licitaciones).",
++                )
++            )
++        args.append(OUTPUT_FORMAT_ARG)
++        commands.append(
++            Command(
++                path=("list", kind),
++                help=f"List {kind}.",
++                args=tuple(args),
++                handler="deskops.cli.commands.operations:OperationsCLI",
++                mutates=False,
++            )
++        )
++    return commands
++
++
++def _edit_subject_commands() -> list[Command]:
++    subjects = ["task", *[str(meta["subject"]) for meta in ARTIFACT_SUBJECTS.values()]]
++    return [
++        Command(
++            path=("edit", subject),
++            help=f"Edit one {subject} field.",
++            args=(
++                A("selector", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}"),
++                A("field", help="Model field name to update; hyphens are accepted for underscores."),
++                A("value", help="New field value, parsed like an SLDB field value."),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++        )
++        for subject in subjects
++    ]
++
++
++def _show_subject_commands() -> list[Command]:
++    commands: list[Command] = [
++        Command(
++            path=("show", "task"),
++            help="Show one actionable task by selector.",
++            args=(
++                A("task_id", help=f"Task selector. {SELECTOR_HELP}"),
++                ROOT_ARG,
++                OUTPUT_FORMAT_ARG,
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=False,
++            epilog=f"Example:\n  deskops show task task-fix-thing --root .\n\n{SELECTOR_HELP}",
++            raw_text=True,
++        )
++    ]
++    for meta in ARTIFACT_SUBJECTS.values():
++        subject = str(meta["subject"])
++        commands.append(
++            Command(
++                path=("show", subject),
++                help=f"Show one {subject} by selector.",
++                args=(
++                    A("doc_id", help=f"{subject.capitalize()} selector. {SELECTOR_HELP}"),
++                    ROOT_ARG,
++                    OUTPUT_FORMAT_ARG,
++                ),
++                handler="deskops.cli.commands.operations:OperationsCLI",
++                mutates=False,
++            )
++        )
++    return commands
++
++
++def _operation_shared_commands() -> list[Command]:
++    """The ``add/edit/bind/next/list/show/advance`` command group."""
++
++    commands: list[Command] = [
++        Command(
++            path=("add",),
++            help="Create desk workflow artifacts from modeled templates.",
++            args=(),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++            epilog="""
++Examples:
++  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
++  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..."
++""".strip(),
++            raw_text=True,
++            subcommand_dest="subject",
++        ),
++        Command(
++            path=("add", "task"),
++            help="Create an actionable task bundle.",
++            args=(
++                A("payload", nargs="?", help="Inline JSON payload for the task."),
++                A("--from-yaml", help="Load the task payload from a YAML file."),
++                ROOT_ARG,
++                A("--title", help="Task title"),
++                A("--why", help="Rationale or business driver"),
++                A("--goal", help="Task goal"),
++                A("--scope", help="Task scope"),
++                A("--implementation-path", help="Implementation path"),
++                A("--done-when", help="Task completion rule"),
++                A(
++                    "--from-drawer",
++                    help="Drawer file this task is authored from (path, stem, or slug fragment). "
++                    "Recorded in the task's from_drawer field; the drawer file is kept for manual cleanup.",
++                ),
++                A(
++                    "--validation",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Validation command or assertion; repeat or space-separate as needed.",
++                ),
++                A(
++                    "--depends-on",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Task identifiers that must complete first; repeat or space-separate as needed.",
++                ),
++                A("--task-type", help="Workflow task type such as design, implementation, test, reflection, or closeout."),
++                A(
++                    "--inherits-from",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Task identifiers that provide inherited workflow context; repeat or space-separate as needed.",
++                ),
++                A(
++                    "--atom",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Workflow or knowledge atom refs bound to the task; repeat or space-separate as needed.",
++                ),
++                A(
++                    "--inherit-acceptance-context",
++                    action="store_true",
++                    help="Inherit validation and done-when context from tasks listed in --inherits-from.",
++                ),
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++        ),
++        *_add_subject_commands(),
++        Command(
++            path=("edit",),
++            help="Update one field on a modeled desk artifact.",
++            args=(),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++            epilog=f"""
++Examples:
++  deskops edit task task-fix-thing goal "Updated goal" --root .
++  deskops edit pill pill-keep-layers-clean how-not "Do not bypass the guardrail." --root .
++
++Values are parsed with SLDB's field-value parser and the document is re-rendered through its model.
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++            subcommand_dest="subject",
++        ),
++        *_edit_subject_commands(),
++        Command(
++            path=("bind",),
++            help="Bind workflow context artifacts to tasks.",
++            args=(),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++            epilog=f"""
++Examples:
++  deskops bind pill task-fix-thing pill-phase-gate --root .
++
++This updates the task's modeled `pills` list through the deskops artifact layer.
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++            subcommand_dest="subject",
++        ),
++        Command(
++            path=("bind", "pill"),
++            help="Bind one pill to one task.",
++            args=(
++                A("task", help=f"Task selector. {SELECTOR_HELP}"),
++                A("pill", help=f"Pill selector. {SELECTOR_HELP}"),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++            epilog=f"""
++Example:
++  deskops bind pill task-fix-thing pill-phase-gate --root .
++
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("next",),
++            help="Show the next valid workflow action for a task without mutating it.",
++            args=(
++                A("task_id", nargs="?", help=f"Task selector. {SELECTOR_HELP}"),
++                ROOT_ARG,
++                A(
++                    "--diagram",
++                    action="store_true",
++                    help="Render the workflow state machine as Mermaid from its source spec.",
++                ),
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=False,
++            epilog="""
++Examples:
++  deskops next task-fix-thing --root .
++  deskops next --diagram
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("list",),
++            help="List desk workflow artifacts.",
++            args=(),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=False,
++            epilog="""
++Examples:
++  deskops list tasks --root .
++  deskops list pills --root .
++  deskops list atoms --root .
++""".strip(),
++            raw_text=True,
++            subcommand_dest="subject",
++        ),
++        Command(
++            path=("list", "tasks"),
++            help="List actionable tasks.",
++            args=(
++                ROOT_ARG,
++                A(
++                    "--include-repos",
++                    action="store_true",
++                    help="Also list tasks routed by registered sibling repositories' desk/tasks/Board.md files.",
++                ),
++                OUTPUT_FORMAT_ARG,
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=False,
++        ),
++        *_list_subject_commands(),
++        Command(
++            path=("show",),
++            help="Show one desk workflow artifact by selector.",
++            args=(),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=False,
++            epilog=f"""
++Examples:
++  deskops show task task-fix-thing --root .
++  deskops show pill pill-keep-layers-clean --root .
++
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++            subcommand_dest="subject",
++        ),
++        *_show_subject_commands(),
++        Command(
++            path=("advance",),
++            help="Advance an operational artifact through the desk's lifecycle graph.",
++            args=(),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++            epilog=f"""
++Example:
++  deskops advance task task-fix-thing --root .
++
++Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++            subcommand_dest="subject",
++        ),
++        Command(
++            path=("advance", "task"),
++            help="Advance one actionable task through the desk's lifecycle graph.",
++            args=(
++                A("task_id", help=f"Task selector. {SELECTOR_HELP}"),
++                A("--to", help="Optional target node or status for a manual override."),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.operations:OperationsCLI",
++            mutates=True,
++            epilog=f"""
++Example:
++  deskops advance task task-fix-thing --root .
++
++Advancement fires the first lifecycle transition (an sldb RelationDoc between rituals) whose condition holds for the task.
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++        ),
++    ]
++    return commands
++
++
++def _message_target_args(*, root_arg: Arg, repo: bool = True) -> list[Arg]:
++    args = [
++        root_arg,
++        DESK_ROOT_ARG,
++        STORE_ARG,
++    ]
++    if repo:
++        args.append(REPO_ARG)
++    args.extend([PYTHONPATH_ARG, OUTPUT_FORMAT_YAML_ARG])
++    return args
++
++
++def _commands() -> list[Command]:
++    commands: list[Command] = [
++        Command(
++            path=("about",),
++            help="Print a short overview of deskops and its first-use commands.",
++            args=(),
++            handler="deskops.cli.commands.core:AboutCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("doctor",),
++            help="Detect and repair common broken desk states safely.",
++            args=(
++                ROOT_ARG,
++                A("--repair", action="store_true", help="Attempt non-destructive repairs."),
++            ),
++            handler="deskops.cli.commands.doctor:DoctorCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("status",),
++            help="Show current workspace and workflow status.",
++            args=(ROOT_ARG,),
++            handler="deskops.cli.commands.doctor:DoctorCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("faq",),
++            help="Browse the first-use FAQ by question.",
++            args=(
++                A(
++                    "question",
++                    nargs="?",
++                    help="Question index, slug, or text fragment. Omit to list available questions.",
++                ),
++                OUTPUT_FORMAT_YAML_ARG,
++                A("--faq-path", default="docs/faq.md", help="FAQ markdown path"),
++            ),
++            handler="deskops.cli.commands.faq:FAQCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("bootstrap",),
++            help="Install or repair sldb and register deskops models in the global store.",
++            args=(),
++            handler="deskops.cli.commands.core:BootstrapCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("init",),
++            help="Initialize a local .sldb store and scaffold desk/ if needed.",
++            args=(A("path", nargs="?", default=".", help="Target repository path"),),
++            handler="deskops.cli.commands.core:InitCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("inbox",),
++            help="Deprecated alias for `deskops message`; use message send/list/read/ack.",
++            args=(
++                A("message", nargs="?", help="Inbox note body"),
++                A(
++                    "--kind",
++                    choices=("unclear", "suggestion"),
++                    default="unclear",
++                    help="Type of inbox message to write",
++                ),
++                A("--title", help="Short title for the note"),
++                ROOT_ARG_INBOX,
++                DESK_ROOT_ARG,
++                STORE_ARG,
++                REPO_ARG,
++                A("--sender", help="Override the resolved sender identity with a registered project id"),
++                PYTHONPATH_INBOX_ARG,
++                A("--list", action="store_true", help="List desk inbox notes"),
++                A("--show", help="Show one inbox note by filename, stem, or slug fragment"),
++                A("--ack", help="Acknowledge one inbox note by filename, stem, or slug fragment"),
++                A("--limit", type=int, default=20, help="Limit listed notes"),
++                OUTPUT_FORMAT_YAML_ARG,
++            ),
++            handler="deskops.cli.commands.message:MessageCLI",
++            mutates=True,
++            epilog="""
++Deprecated: use `deskops message send|list|read|ack`.
++
++Examples:
++  deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
++  deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
++  deskops inbox --list --root .
++  deskops inbox --show 20260614-cli-help --root .
++  deskops inbox --ack 20260614-cli-help --root .
++
++--show/--ack selector: filename, stem, or slug fragment.
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("message",),
++            help="Send, list, read, or acknowledge cross-desk messages.",
++            args=(),
++            handler="deskops.cli.commands.message:MessageCLI",
++            mutates=True,
++            epilog="""
++Examples:
++  deskops message send "Need follow-up" --to sibling-repo --title "Follow-up"
++  deskops message list --root .
++  deskops message read 20260614-cli-help --root .
++  deskops message ack 20260614-cli-help --root .
++
++read/ack selector: filename, stem, or unique slug fragment.
++""".strip(),
++            raw_text=True,
++            subcommand_dest="message_command",
++        ),
++        Command(
++            path=("message", "send"),
++            help="Send a message to a project desk.",
++            args=(
++                A("body", help="Message body"),
++                A("--title", help="Short title for the message"),
++                A(
++                    "--kind",
++                    choices=("unclear", "suggestion"),
++                    default="suggestion",
++                    help="Type of message to send",
++                ),
++                A("--to", dest="repo", help="Target a registered repository name in the ecosystem"),
++                A(
++                    "--from",
++                    dest="sender",
++                    help="Override the resolved sender identity with a registered project id",
++                ),
++                *_message_target_args(root_arg=ROOT_ARG_MESSAGE, repo=False),
++            ),
++            handler="deskops.cli.commands.message:MessageCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("message", "list"),
++            help="List received messages.",
++            args=(
++                *_message_target_args(root_arg=ROOT_ARG_MESSAGE),
++                A("--limit", type=int, default=20, help="Limit listed messages"),
++            ),
++            handler="deskops.cli.commands.message:MessageCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("message", "read"),
++            help="Read one received message.",
++            args=(
++                A("selector", help="Message filename, stem, or unique slug fragment"),
++                *_message_target_args(root_arg=ROOT_ARG_MESSAGE),
++            ),
++            handler="deskops.cli.commands.message:MessageCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("message", "ack"),
++            help="Acknowledge one received message.",
++            args=(
++                A("selector", help="Message filename, stem, or unique slug fragment"),
++                *_message_target_args(root_arg=ROOT_ARG_MESSAGE),
++            ),
++            handler="deskops.cli.commands.message:MessageCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("promote",),
++            help="Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.",
++            args=(),
++            handler="deskops.cli.commands.promote:PromoteCLI",
++            mutates=True,
++            epilog=f"""
++Examples:
++  deskops promote inbox-to-drawer-task 20260614-unclear --root .
++
++{SELECTOR_HELP}
++""".strip(),
++            raw_text=True,
++            subcommand_dest="promote_command",
++        ),
++        Command(
++            path=("promote", "inbox-to-drawer-task"),
++            help="Promote one inbox note into a deferred drawer task candidate.",
++            args=(
++                A("selector", help="Inbox filename, stem, or unique slug fragment"),
++                ROOT_ARG_NO_PERIOD,
++                A("--title", help="Override the drawer task title"),
++            ),
++            handler="deskops.cli.commands.promote:PromoteCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("drawer",),
++            help="Manage deferred drawer entries.",
++            args=(),
++            handler="deskops.cli.commands.drawer:DrawerCLI",
++            mutates=True,
++            subcommand_dest="drawer_command",
++        ),
++        Command(
++            path=("drawer", "remove"),
++            help="Remove one drawer entry, its tracking, and its bullets on the drawer board.",
++            args=(
++                A("selector", help=f"Drawer file selector. {SELECTOR_HELP}"),
++                ROOT_ARG_NO_PERIOD,
++                A(
++                    "--force",
++                    action="store_true",
++                    help="Remove even when a task in desk/tasks/ records the entry in from_drawer.",
++                ),
++            ),
++            handler="deskops.cli.commands.drawer:DrawerCLI",
++            mutates=True,
++        ),
++        *_operation_shared_commands(),
++        Command(
++            path=("repo",),
++            help="Repository registration and discovery.",
++            args=(),
++            handler="deskops.cli.commands.repo:RepoCLI",
++            mutates=True,
++            subcommand_dest="repo_command",
++        ),
++        Command(
++            path=("repo", "register"),
++            help="Canonically register a repository in the ecosystem registry and track it in SLDB.",
++            args=(
++                A("name", help="Human-readable name"),
++                A("path", nargs="?", help="Repository root path (relative to ecosystem root or absolute)"),
++                A(
++                    "--path",
++                    dest="path_option",
++                    help="Repository root path (relative to ecosystem root or absolute)",
++                ),
++                A("--id", help="Stable unique ID, defaults to slugified name"),
++                A("--description", help="Markdown description"),
++                A("--tags", help="Comma-separated tags"),
++                A("--store", help="Store path to anchor the registry"),
++                A("--pythonpath", help="Python path for model resolution"),
++            ),
++            handler="deskops.cli.commands.repo:RepoCLI",
++            mutates=True,
++            description="Canonically register a repository in the ecosystem registry and track it in SLDB.",
++        ),
++        Command(
++            path=("repo", "whoami"),
++            help="Print the canonical project identity for the current repository.",
++            args=(
++                ROOT_ARG_WHOAMI,
++                A("--store", help="Store path to anchor the registry lookup"),
++            ),
++            handler="deskops.cli.commands.repo:RepoCLI",
++            mutates=False,
++            description="Print the canonical project identity for the current repository.",
++        ),
++        Command(
++            path=("desk",),
++            help="Desk workspace management.",
++            args=(),
++            handler="deskops.cli.commands.desk:DeskCLI",
++            mutates=True,
++            subcommand_dest="desk_command",
++        ),
++        Command(
++            path=("desk", "install"),
++            help="Scaffold a minimal local desk/ surface in a repo.",
++            args=(A("path", help="Target repository path"),),
++            handler="deskops.cli.commands.desk:DeskCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("desk", "migrate"),
++            help="Adopt a legacy or partial desk into the current non-destructive workspace contract.",
++            args=(ROOT_ARG,),
++            handler="deskops.cli.commands.desk:DeskCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("desk", "update"),
++            help="Report and repair divergence between the current desk, its models, and its store.",
++            args=(
++                ROOT_ARG,
++                A("--apply", action="store_true", help="Apply repairs (dry run by default)."),
++            ),
++            handler="deskops.cli.commands.desk:DeskCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms",),
++            help="Atom model and namespace management.",
++            args=(),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++            subcommand_dest="atoms_command",
++        ),
++        Command(
++            path=("atoms", "add-namespace"),
++            help="Add an extensible atom tag namespace to desk/atoms/tag-namespaces.yaml.",
++            args=(
++                A("namespace", help="Namespace name, such as pattern."),
++                ROOT_ARG,
++                A("--meaning", required=True, help="What this namespace means."),
++                A("--use-when", required=True, help="When to use this namespace."),
++                A(
++                    "--do-not-use-when",
++                    required=True,
++                    help="When an existing namespace should be preferred instead.",
++                ),
++                A(
++                    "--example",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Example tag using the namespace; repeat or space-separate as needed.",
++                ),
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "list"),
++            help="List all atoms.",
++            args=(
++                ROOT_ARG,
++                A(
++                    "--axis-value",
++                    help="Filter atoms by the configured atom_folder_axis namespace value (e.g. licitaciones).",
++                ),
++                OUTPUT_FORMAT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("atoms", "reorganize"),
++            help="Move atoms into folders derived from the configured atom_folder_axis tag namespace. Idempotent.",
++            args=(
++                ROOT_ARG,
++                A("--dry-run", action="store_true", help="Report planned moves without changing files."),
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "show"),
++            help="Show an atom.",
++            args=(
++                A("doc_id", help=f"Atom selector. {SELECTOR_HELP}"),
++                ROOT_ARG,
++                OUTPUT_FORMAT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("atoms", "validate"),
++            help="Validate one atom or all atoms for lifecycle safety checks.",
++            args=(
++                A("doc_id", nargs="?", help=f"Atom selector. {SELECTOR_HELP}", group="target", group_required=True),
++                A(
++                    "--all",
++                    action="store_true",
++                    help="Validate all atoms under desk/atoms/.",
++                    group="target",
++                    group_required=True,
++                ),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("atoms", "create"),
++            help="Create one atom from a pill, graph finding, or diagram source while preserving exact provenance.",
++            args=(
++                A("doc_id", help="New atom id to create, conventionally atom-<slug>."),
++                A(
++                    "--five-wh-one-plus",
++                    required=True,
++                    choices=("what", "why", "how", "how_not", "when", "where", "for_whom"),
++                    help="The single 5WH1+ question this atom answers.",
++                ),
++                A("--title", help="Optional title override for the created atom."),
++                A(
++                    "--tag",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Atom tag to add; repeat or space-separate as needed.",
++                ),
++                A(
++                    "--from-pill",
++                    metavar="PILL_ID",
++                    help="Create the atom from one pill field chosen by --five-wh-one-plus.",
++                    group="source",
++                    group_required=True,
++                ),
++                A(
++                    "--from-graph",
++                    metavar="SOURCE_ID->TARGET_ID",
++                    help="Create the atom from one missing graph finding resolved by source and target ids.",
++                    group="source",
++                    group_required=True,
++                ),
++                A(
++                    "--from-diagram",
++                    metavar="SPEC_PATH",
++                    help="Create the atom from one diagram source file such as docs/diagrams/example/source.mmd.",
++                    group="source",
++                    group_required=True,
++                ),
++                A(
++                    "--graph",
++                    help="Optional graph snapshot path consulted in addition to declared-edge findings when resolving --from-graph.",
++                ),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "delete"),
++            help="Delete one atom after checking inbound references.",
++            args=(
++                A("doc_id", help=f"Atom selector. {SELECTOR_HELP}"),
++                ROOT_ARG,
++                A(
++                    "--force",
++                    action="store_true",
++                    help="Delete even when inbound atom:<id> references are present.",
++                ),
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "split"),
++            help="Split one atom into new atoms while keeping the original as a redirect stub.",
++            args=(
++                A("doc_id", help=f"Atom selector. {SELECTOR_HELP}"),
++                A(
++                    "--into",
++                    nargs="+",
++                    required=True,
++                    metavar="NEW_ATOM_ID",
++                    help="New atom ids to create from the source atom. Provide at least two.",
++                ),
++                A(
++                    "--section",
++                    action="append",
++                    default=[],
++                    metavar="NEW_ATOM_ID:SECTION_HEADING",
++                    help=(
++                        "Assign a created atom id to a specific markdown heading inside the source atom answer. "
++                        "Repeat once per target. When omitted, sections are assigned to --into ids in order."
++                    ),
++                ),
++                ROOT_ARG,
++                A(
++                    "--force",
++                    action="store_true",
++                    help=(
++                        "Proceed even when inbound atom:<id> references exist. The original atom is kept as a redirect stub; "
++                        "referrers are not rewritten automatically."
++                    ),
++                ),
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "merge"),
++            help="Merge one source atom into an existing target atom while rewriting inbound references.",
++            args=(
++                A("doc_id", help=f"Source atom selector. {SELECTOR_HELP}"),
++                A(
++                    "--into",
++                    required=True,
++                    metavar="TARGET_ATOM_ID",
++                    help="Existing target atom selector that absorbs the source atom.",
++                ),
++                ROOT_ARG,
++                A(
++                    "--force",
++                    action="store_true",
++                    help=(
++                        "Proceed when merge semantics are ambiguous, such as conflicting five_wh_one_plus values. "
++                        "Inbound atom:<source> references are rewritten to atom:<target>, and the source atom is kept as a redirect stub for traceability."
++                    ),
++                ),
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "crossroad"),
++            help="Write the crossroad of a domain path: the mandatory parent that describes what hangs below it.",
++            args=(
++                A(
++                    "path",
++                    help="Domain path such as pizzeria.carta; its parent path needs a crossroad first.",
++                ),
++                A("--title", required=True, help="Short title of the domain area."),
++                A("--content", required=True, help="Written description of what hangs below this path."),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "proto"),
++            help="Create a protoatom: a free atom with a title, content and tags.",
++            args=(
++                A("doc_id", help="New protoatom id, conventionally proto-<slug>."),
++                A("--title", required=True, help="Short title of the free knowledge unit."),
++                A("--content", default="", help="Free markdown content."),
++                A(
++                    "--tag",
++                    action="extend",
++                    nargs="+",
++                    default=[],
++                    help="Atom tag; a single domain:<path> tag places the protoatom in the domain tree.",
++                ),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "type"),
++            help="Type a protoatom into another sldb model, keeping the protoatom as a redirect stub.",
++            args=(
++                A("doc_id", help="Protoatom selector: id or filename."),
++                A("--model", required=True, help="Target sldb model name, such as AtomDoc or TaskDoc."),
++                A("--id", dest="new_id", help="Id of the typed document; defaults to <model>-<slug>."),
++                A(
++                    "--content-field",
++                    help="Target field that receives the protoatom content; defaults to 'content' when the model has it.",
++                ),
++                A("--data", help="Inline JSON with the remaining fields the target model requires."),
++                ROOT_ARG,
++            ),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("atoms", "tree"),
++            help="Show the domain tree: crossroads and the documents hanging from them.",
++            args=(ROOT_ARG, OUTPUT_FORMAT_ARG),
++            handler="deskops.cli.commands.atoms:AtomsCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("graph",),
++            help="Build and inspect deskops KGDB graph runtime outputs.",
++            args=(),
++            handler="deskops.cli.commands.graph:GraphCLI",
++            mutates=True,
++            subcommand_dest="graph_command",
++        ),
++        Command(
++            path=("graph", "build"),
++            help="Build the KGDB graph snapshot runtime artifact.",
++            args=(
++                ROOT_ARG,
++                A(
++                    "--output",
++                    help="GraphSnapshot destination; relative paths are resolved from --root.",
++                ),
++            ),
++            handler="deskops.cli.commands.graph:GraphCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("graph", "neighbors"),
++            help="Show incoming and outgoing neighbors for one graph node.",
++            args=(
++                A(
++                    "id",
++                    help="Graph node id to inspect, formatted as type:id (e.g. atom:atom-name, task:task-name, issue:issue-name).",
++                ),
++                ROOT_ARG,
++                A("--graph", help="Graph snapshot path; defaults to the root runtime snapshot."),
++            ),
++            handler="deskops.cli.commands.graph:GraphCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("graph", "missing"),
++            help="Report missing graph targets and dangling declared references.",
++            args=(
++                ROOT_ARG,
++                A("--graph", help="Optional graph snapshot path to check for missing edge targets."),
++            ),
++            handler="deskops.cli.commands.graph:GraphCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("graph", "reflect"),
++            help="Write review-only self-reflection findings for a graph snapshot.",
++            args=(
++                ROOT_ARG,
++                A("--graph", help="Graph snapshot path; defaults to the root runtime snapshot."),
++            ),
++            handler="deskops.cli.commands.graph:GraphCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("materialize",),
++            help="Render tracked desk role prompts into installed pi-agent files.",
++            args=(
++                ROOT_ARG,
++                A("--out", help="Output directory override; defaults to ~/.pi/agent/agents."),
++            ),
++            handler="deskops.cli.commands.materialize:MaterializeCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("drift",),
++            help="Check for role-agent drift between tracked role docs and installed agent files.",
++            args=(),
++            handler="deskops.cli.commands.drift:DriftCLI",
++            mutates=False,
++            subcommand_dest="drift_command",
++        ),
++        Command(
++            path=("drift", "check"),
++            help="Compare rendered role-agent output to installed files.",
++            args=(
++                ROOT_ARG,
++                A("--out", help="Agent directory override; defaults to ~/.pi/agent/agents."),
++            ),
++            handler="deskops.cli.commands.drift:DriftCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("closeout",),
++            help="Workflow closeout operations.",
++            args=(),
++            handler="deskops.cli.commands.closeout:CloseoutCLI",
++            mutates=True,
++            subcommand_dest="closeout_command",
++        ),
++        Command(
++            path=("closeout", "commit"),
++            help="Create the tool-made closing commit, linked to a run evidence directory or marked manual.",
++            args=(
++                ROOT_ARG,
++                A("--run-dir", help="Run evidence dir under runs/subagents/.", group="closing_route"),
++                A(
++                    "--no-run",
++                    action="store_true",
++                    help="Close without a subagent run; requires --reason. Use instead of --run-dir.",
++                    group="closing_route",
++                ),
++                A("--reason", help="Why the task closes without a run; required with --no-run."),
++                A("--task", required=True, help="Task id being closed."),
++                A(("-m", "--message"), help="Commit message subject."),
++                A(
++                    "--paths",
++                    nargs="*",
++                    default=None,
++                    help="Paths to stage; defaults to run.yaml touched paths, else staged index.",
++                ),
++                A("--run-id", help="Subagent run id to record in run.yaml (--run-dir only)."),
++                A("--session", help="Child session.jsonl path to hash into run.yaml (--run-dir only)."),
++            ),
++            handler="deskops.cli.commands.closeout:CloseoutCLI",
++            mutates=True,
++            epilog="""
++Example:
++  deskops closeout commit --root . --task task-fix-thing \\
++    --run-dir runs/subagents/20260729-120000-task-fix-thing \\
++    --run-id 6046eaef --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \\
++    --paths deskops/foo.py tests/test_foo.py
++
++Without a subagent run, close the task manually and say why:
++  deskops closeout commit --root . --task task-fix-thing \\
++    --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \\
++    --paths deskops/foo.py tests/test_foo.py
++
++With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
++trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
++Either way the commit hash is recorded back into runs/subagents/index.jsonl. The
++commit is made by this command, not by agent discretion.
++""".strip(),
++            raw_text=True,
++        ),
++        Command(
++            path=("closeout", "verify"),
++            help="Strictly verify closeout evidence gates for one task and print a structured report.",
++            args=(
++                ROOT_ARG,
++                A("--task", required=True, help="Task id being verified."),
++            ),
++            handler="deskops.cli.commands.closeout:CloseoutCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("runtime",),
++            help="Manage the live Herdr runtime for this DeskOps desk.",
++            args=(),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=True,
++            subcommand_dest="runtime_command",
++        ),
++        Command(
++            path=("runtime", "init"),
++            help="Initialize or reuse this desk's Herdr Space.",
++            args=(
++                RUNTIME_ROOT_ARG,
++                A("--agents", action="store_true", help="Start executor and tester Pi agents."),
++                HERDR_ARG,
++            ),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("runtime", "status"),
++            help="Show this desk's Herdr Space.",
++            args=(RUNTIME_ROOT_ARG, HERDR_ARG),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("runtime", "attach"),
++            help="Focus this desk's Herdr Space.",
++            args=(RUNTIME_ROOT_ARG, HERDR_ARG),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("runtime", "stop"),
++            help="Close this desk's Herdr Space.",
++            args=(RUNTIME_ROOT_ARG, HERDR_ARG),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=True,
++        ),
++        Command(
++            path=("runtime", "workers"),
++            help="List live Herdr agents across all workspaces on this machine.",
++            args=(RUNTIME_ROOT_ARG, HERDR_ARG, OUTPUT_FORMAT_ARG),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=False,
++        ),
++        Command(
++            path=("runtime", "supervise"),
++            help="Block on one agent's Herdr lifecycle and report blocked/done settles without advancing the desk.",
++            args=(
++                A("agent", help="Herdr agent name or pane id to supervise, e.g. deskops-executor."),
++                RUNTIME_ROOT_ARG,
++                HERDR_ARG,
++                A(
++                    "--max-iterations",
++                    type=int,
++                    default=None,
++                    help="Stop after this many settle events instead of running forever (mainly for testing).",
++                ),
++                A(
++                    "--read-lines",
++                    type=int,
++                    default=200,
++                    help="Terminal lines to capture from the agent on a blocked or done settle.",
++                ),
++                A(
++                    "--timeout-ms",
++                    type=int,
++                    default=None,
++                    help="Give up waiting after this many milliseconds per settle attempt (default: wait indefinitely).",
++                ),
++            ),
++            handler="deskops.cli.commands.runtime:RuntimeCLI",
++            mutates=False,
++        ),
++    ]
++    return commands
++
++
++def command_registry() -> tuple[Command, ...]:
++    """Return every command in declaration order (parents before children)."""
++
++    return tuple(_commands())
++
++
++def command_for_path(path: tuple[str, ...]) -> Command:
++    """Look up one command by its full path."""
++
++    for command in command_registry():
++        if command.path == path:
++            return command
++    raise KeyError(path)
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+new file mode 100644
+index 0000000..59385be
+--- /dev/null
++++ b/tests/test_command_registry.py
+@@ -0,0 +1,42 @@
++"""The declared command registry must match the frozen CLI surface.
++
++The help goldens were captured from the hand-built parser by
++task-rw-f1-output-golden-files, so comparing registry paths against that
++directory catches both dropped commands and accidental new ones.
++"""
++
++from __future__ import annotations
++
++from pathlib import Path
++
++from deskops.cli.registry import command_registry
++
++
++HELP_GOLDENS = Path(__file__).resolve().parent / "fixtures" / "golden" / "help"
++
++
++def _golden_command_paths() -> set[tuple[str, ...]]:
++    paths: set[tuple[str, ...]] = set()
++    for path in HELP_GOLDENS.glob("deskops_*.txt"):
++        if path.name == "deskops.txt":
++            continue
++        paths.add(tuple(path.stem.split("_")[1:]))
++    return paths
++
++
++def test_registry_paths_match_help_goldens() -> None:
++    declared = {command.path for command in command_registry()}
++
++    assert declared == _golden_command_paths()
++
++
++def test_registry_paths_are_unique_and_have_parents() -> None:
++    commands = command_registry()
++    paths = [command.path for command in commands]
++
++    assert len(paths) == len(set(paths))
++    declared = set(paths)
++    for path in paths:
++        assert path
++        if len(path) > 1:
++            assert path[:-1] in declared
