@@ -1,0 +1,145 @@
+diff --git a/deskops/graph/atom_trace.py b/deskops/graph/atom_trace.py
+new file mode 100644
+index 0000000..246e66c
+--- /dev/null
++++ b/deskops/graph/atom_trace.py
+@@ -0,0 +1,45 @@
++"""Derived reverse traceability for atoms.
++
++Atoms do not store outgoing use-site lists. This module projects the declared
++edges extracted from documents, tasks, tests, and diagrams into the reverse
++question: which artifacts reference a given atom, and in what role?
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from pathlib import Path
++
++from deskops.graph.extract_edges import extract_declared_edges
++
++
++@dataclass(frozen=True)
++class AtomUseSite:
++    """One artifact that declares a reference to an atom."""
++
++    source_id: str
++    role: str
++    path: str
++    locator: str
++
++
++def atom_use_sites(root: Path, atom_id: str) -> list[AtomUseSite]:
++    """Return the declared use sites of ``atom_id`` under ``root``.
++
++    The result is a read-only projection over ``extract_declared_edges``; atom
++    documents are neither read nor written here. Sites are sorted by provenance
++    path and locator.
++    """
++    target_id = f"atom:{atom_id.removeprefix('atom:')}"
++    result = extract_declared_edges(root)
++    sites = [
++        AtomUseSite(
++            source_id=edge.source_id,
++            role=edge.role,
++            path=edge.provenance_path,
++            locator=edge.provenance_locator,
++        )
++        for edge in result.edges
++        if edge.target_id == target_id
++    ]
++    return sorted(sites, key=lambda site: (site.path, site.locator))
+diff --git a/docs/knowledge-graph/desk-source-graph-vocabulary.md b/docs/knowledge-graph/desk-source-graph-vocabulary.md
+index 8e97cab..7cda290 100644
+--- a/docs/knowledge-graph/desk-source-graph-vocabulary.md
++++ b/docs/knowledge-graph/desk-source-graph-vocabulary.md
+@@ -111,6 +111,8 @@ Artifacts declare atom references in one frontmatter field, `atoms`. A reference
+ 
+ `related_atoms` is a legacy alias: `deskops drift check` reports it as `legacy_atom_reference_field` and points at `atoms`. `source_atoms` remains the `MaterializationContractDoc` field and is not a general artifact field. An unknown role is reported as `invalid_atom_reference_role`; the extractor maps it to `references` so graph extraction continues.
+ 
++Reverse atom traceability (which docs, tasks, tests, and diagrams reference an atom) is derived from declared edges at read time. Atoms do not store outgoing use-site lists, and consumers must read the derived projection rather than writing consumer lists back into atom documents.
++
+ ### Declared And Inferred Roles
+ 
+ Declared roles come from explicit source-owned metadata or authored text that names both the relation and the target. Examples include an atom reference with `role: documents`, a board row routing a task, a task validation section naming tests, or a config/model file defining a schema. Declared edges should use `source_kind` values such as `declared`, `sldb_semantic`, or `manual`, and may be `high` confidence when the target id is stable and unambiguous.
+diff --git a/tests/test_graph_atom_trace.py b/tests/test_graph_atom_trace.py
+new file mode 100644
+index 0000000..cbcfee2
+--- /dev/null
++++ b/tests/test_graph_atom_trace.py
+@@ -0,0 +1,75 @@
++from __future__ import annotations
++
++from pathlib import Path
++
++from deskops.graph.atom_trace import atom_use_sites
++
++
++def test_atom_use_sites_reports_document_without_mutating_atom(tmp_path: Path) -> None:
++    atom_path = tmp_path / "desk/atoms/atom-consumer-target.md"
++    write_atom(atom_path, "atom-consumer-target", "Consumer Target")
++    write(
++        tmp_path / "docs/guide.md",
++        """---
++id: guide-doc
++atoms:
++  - id: atom-consumer-target
++    role: documents
++---
++
++# Guide
++""",
++    )
++    before = atom_path.read_bytes()
++
++    sites = atom_use_sites(tmp_path, "atom-consumer-target")
++
++    assert [(site.source_id, site.role, site.path, site.locator) for site in sites] == [
++        ("doc:docs/guide.md", "documents", "docs/guide.md", "frontmatter")
++    ]
++    assert atom_path.read_bytes() == before
++
++
++def test_atom_use_sites_reports_task_source(tmp_path: Path) -> None:
++    write_atom(tmp_path / "desk/atoms/atom-consumer-target.md", "atom-consumer-target", "Consumer Target")
++    write(
++        tmp_path / "desk/tasks/task-consumer.md",
++        """---
++id: task-consumer
++atoms:
++  - atom-consumer-target
++---
++
++# Consumer Task
++""",
++    )
++
++    sites = atom_use_sites(tmp_path, "atom-consumer-target")
++
++    assert ("task:task-consumer", "references", "desk/tasks/task-consumer.md", "frontmatter") in [
++        (site.source_id, site.role, site.path, site.locator) for site in sites
++    ]
++
++
++def write(path: Path, content: str) -> None:
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(content, encoding="utf-8")
++
++
++def write_atom(path: Path, atom_id: str, title: str) -> None:
++    write(
++        path,
++        f"""---
++id: {atom_id}
++title: {title}
++five_wh_one_plus: what
++tags: []
++---
++
++# {title}
++
++## Answer
++
++Existing knowledge.
++""",
++    )

@@ -64,3 +64,4 @@
 {"task_id": "task-edit-reaches-drawer-tasks-and-rituals-by-id", "run_id": null, "run_dir": "runs/subagents/20261018-task-edit-reaches-drawer-tasks-and-rituals-by-id", "session_sha256": null, "commit": null}
 {"task_id": "task-closeout-retire-legacy-resolved-tasks", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-retire-legacy-resolved-tasks", "session_sha256": null, "commit": null}
 {"task_id": "task-detect-and-clean-task-policy-leaks", "run_id": null, "run_dir": "runs/subagents/20261018-task-detect-and-clean-task-policy-leaks", "session_sha256": null, "commit": null}
+{"task_id": "task-derived-atom-trace-index", "run_id": null, "run_dir": "runs/subagents/20261018-task-derived-atom-trace-index", "session_sha256": null, "commit": null}

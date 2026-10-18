@@ -111,6 +111,8 @@ Artifacts declare atom references in one frontmatter field, `atoms`. A reference
 
 `related_atoms` is a legacy alias: `deskops drift check` reports it as `legacy_atom_reference_field` and points at `atoms`. `source_atoms` remains the `MaterializationContractDoc` field and is not a general artifact field. An unknown role is reported as `invalid_atom_reference_role`; the extractor maps it to `references` so graph extraction continues.
 
+Reverse atom traceability (which docs, tasks, tests, and diagrams reference an atom) is derived from declared edges at read time. Atoms do not store outgoing use-site lists, and consumers must read the derived projection rather than writing consumer lists back into atom documents.
+
 ### Declared And Inferred Roles
 
 Declared roles come from explicit source-owned metadata or authored text that names both the relation and the target. Examples include an atom reference with `role: documents`, a board row routing a task, a task validation section naming tests, or a config/model file defining a schema. Declared edges should use `source_kind` values such as `declared`, `sldb_semantic`, or `manual`, and may be `high` confidence when the target id is stable and unambiguous.

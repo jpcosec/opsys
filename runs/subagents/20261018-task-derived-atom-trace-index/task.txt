@@ -1,0 +1,7 @@
+Task: task-derived-atom-trace-index
+Title: Add a derived atom use-site index
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

@@ -1,0 +1,8 @@
+ M .sldb/core/documents/TaskDoc/task-derived-atom-trace-index.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-derived-atom-trace-index.md
+ M docs/knowledge-graph/desk-source-graph-vocabulary.md
+?? deskops/graph/atom_trace.py
+?? runs/subagents/20261018-task-derived-atom-trace-index/
+?? tests/test_graph_atom_trace.py
