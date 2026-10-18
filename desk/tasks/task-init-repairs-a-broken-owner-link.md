@@ -1,6 +1,12 @@
 ---
 id: task-init-repairs-a-broken-owner-link
-status: blocked
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-tests-never-touch-the-real-global-store
@@ -10,11 +16,10 @@ files:
 - deskops/bootstrap.py
 - tests/test_doctor_model_registration.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- topic:sldb
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-init-repairs-a-broken-owner-link.md
 ---
 
 # `deskops init` repairs a broken `deskops` store link instead of skipping it
@@ -35,7 +40,7 @@ _Describe the concrete result this task must produce._
 
 _State what is in scope and what is out of scope._
 
-In scope: `_ensure_owner_link` and tests. Blocked until sldb releases 691f1ae (bump `structuredLanguageDB` to that release).
+Coordinator decision (2026-10-18): while there are no releases, development uses sldb main (the editable checkout), which has unlink_store, link_store(replace=True) and broken_links (691f1ae). In scope: deskops/bootstrap.py repairs a 'deskops' link that points at a missing or different store. It uses link_store(..., replace=True) when sldb exposes it, and keeps today's warning on an sldb without it (feature check, not a version check), plus tests. The dependency floor moves to structuredLanguageDB>=0.1.13 together with the release task, once sldb main declares 0.1.13: pinning it now breaks 'pip install -e .' because sldb main still reports 0.1.12. Out of scope: sldb itself.
 
 ## Implementation Path
 
