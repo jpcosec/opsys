@@ -7,7 +7,6 @@ scope: desk
 tasks:
 - desk/tasks/task-message-tracks-only-in-the-target-store.md
 - desk/tasks/task-closeout-subject-names-the-task-file.md
-- desk/tasks/task-require-sldb-0-1-13.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -50,4 +49,3 @@ _Generated from the task references above._
 
 - A sent note is tracked only in the target repo's store, never in the sender's [draft] - `deskops message send` and the deprecated `deskops inbox` alias, in every addressing form (--root, --repo, --to), track the delivered note only in the target repo's store, with a target-relative path. The sender's store does not change.
 - The default closeout commit subject names the task file, not a bare id [draft] - Without -m, every closure route (commit, supersede, retire) uses `closeout: <task file stem>`, for example `closeout: 001-define-graph-ui-data-contract`. When the stem equals the id, the subject stays as it is today. The Task-Id trailer always carries the id.
-- deskops declares structuredLanguageDB>=0.1.13 [draft] - pyproject.toml requires structuredLanguageDB>=0.1.13, `pip install -e .` resolves against the sldb checkout, CI (which installs sldb from git main) stays green, and the release drawer task no longer lists the floor as pending.

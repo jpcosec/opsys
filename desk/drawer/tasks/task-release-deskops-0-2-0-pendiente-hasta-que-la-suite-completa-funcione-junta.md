@@ -42,12 +42,7 @@ El coordinador pidió el 2026-10-18 un tag de versión con CHANGELOG al cerrar F
 
 _Outline the expected implementation route or affected surface._
 
-Con el visto bueno del dueño, en este orden:
-
-1. Subir la dependencia a structuredLanguageDB>=0.1.13. deskops usa unlink_store, link_store(replace=True) y broken_links de 691f1ae, y los arreglos de extracción 9dcabd9a y d31180e4. Hacerlo solo cuando sldb main declare 0.1.13: mientras sldb reporte 0.1.12, pip rechaza el pin.
-2. Subir version a 0.2.0 y mover [Unreleased] a [0.2.0] con fecha en CHANGELOG.md.
-3. Correr pytest tests en 3.12 y 3.13.
-4. Hacer commit, git tag -a v0.2.0 y push de main y del tag.
+With the owner's go-ahead, once the whole suite works together: 1. Bump version to 0.2.0 in pyproject.toml and move [Unreleased] to [0.2.0] with the date in CHANGELOG.md. The structuredLanguageDB>=0.1.13 floor is already declared (task-require-sldb-0-1-13); before tagging deskops, make sure sldb's v0.1.13 is tagged or published, so that pip resolves it outside the checkout. 2. Run pytest tests on 3.12 and 3.13. 3. Commit, git tag -a v0.2.0, and push main and the tag.
 
 ## Validation
 

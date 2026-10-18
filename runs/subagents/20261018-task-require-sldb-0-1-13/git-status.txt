@@ -1,0 +1,8 @@
+ M .sldb/core/documents/TaskDoc/task-require-sldb-0-1-13.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M CHANGELOG.md
+ M desk/drawer/tasks/task-release-deskops-0-2-0-pendiente-hasta-que-la-suite-completa-funcione-junta.md
+ M desk/tasks/task-require-sldb-0-1-13.md
+ M pyproject.toml
+?? runs/subagents/20261018-task-require-sldb-0-1-13/

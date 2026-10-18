@@ -1,0 +1,78 @@
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 6b70603..43863e1 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -7,6 +7,60 @@ Entries cover the unreleased changes since tag `v-stable-2026.08.29`.
+ 
+ ## [Unreleased]
+ 
++### Added (rewrite plan F1–F6)
++
++- Model contract snapshot (`tests/fixtures/model_contract_hashes.json`), CLI contract tests, and golden files for help, output, and graph.
++- One selector resolution module (`deskops/desk_paths.py`) for every desk artifact lookup.
++- Typed errors with fixed exit codes (1 domain, 2 usage, 3 unexpected) and `--debug` for tracebacks.
++- Transactional document I/O (`deskops/doc_io.py`): a command writes all its documents and store records, or none.
++- Services for drawer routing, closeout gates, tasks, atoms, and closure.
++- `deskops drawer remove`, which refuses while an active task names the entry in `from_drawer` (`--force` skips the check).
++- Command registry, one output renderer with a JSON error envelope, and `--root`/`--store` agreement checks.
++- `scripts/migrate_desk_stores.py` to migrate every store that tracks deskops models (dry-run by default).
++- CI running `pytest tests` on Python 3.13, and this changelog.
++
++### Changed (rewrite plan F1–F6)
++
++- `deskops closeout commit` is the only way to close a task; `advance` stops at closeout and points to it (breaking). The closure runs the full `closeout verify` gate.
++- `init` links deskops models from the deskops store (federated) instead of copying them; bootstrap registers every deskops model.
++- The graph reads sldb's edge index (`__reference_models__`, structuredLanguageDB >= 0.1.12) and one snapshot reader.
++- TaskDoc declares its frontmatter explicitly; `pills`, `current_node`, and `atoms` are references, not containment.
++- `inbox`, `status`, `atoms list`, and `atoms show` remain as deprecated aliases with a warning.
++- The package runs outside an editable install: specs live in `deskops/spec/`, the FAQ ships as `deskops/data/faq.md`.
++- `desk update --apply` writes the lifecycle graph.
++
++### Removed (rewrite plan F1–F6)
++
++- `deskops/graph/extract_coverage.py` (recovery issue points at c378d15).
++
++### Fixed (rewrite plan F1–F6)
++
++- Tasks written before the explicit TaskDoc frontmatter (no `tags:` key) validate again.
++- Task selectors resolve tracked tasks whose file name predates `task-*`.
++- Rewrites (`edit`, `advance`, `bind`) refuse instead of silently erasing headings or frontmatter keys the model does not declare.
++- `edit` keeps text field values literal: multi-line text and values starting with `**` survive.
++- The test suite no longer writes to the real `~/.sldb`.
++
++### Added (desk-to-zero, 2026-10-18)
++
++- `deskops issue close|list` closes an issue in any of the three status formats with a Resolution section (reason, refs) and keeps the file.
++- `deskops closeout supersede` closes a task whose subject no longer exists (reason plus a resolvable ref); `deskops closeout retire` removes a task resolved before the ritual lifecycle (`Closeout-Mode: legacy-resolved`).
++- `deskops repo remove` takes a repository out of the registry so it can be registered again under the right id.
++- `deskops next --why`, and guidance from `deskops next` when the Board routes no task or several.
++- `docs/operator-manual.md`, whose runnable examples the suite executes.
++- Drift findings for invalid atom-reference roles, the legacy `related_atoms` field, and global policy restated inside tasks.
++
++### Changed (desk-to-zero, 2026-10-18)
++
++- Requires structuredLanguageDB>=0.1.13 (link replacement, broken-link detection, and the extraction fixes in sldb main).
++- `closeout commit` folds the run index line into the closing commit; the tree stays clean.
++- deskops' FAQ model is `DeskFAQDoc`; ritual steps are prose, not StepDoc references.
++- `desk update --apply` archives legacy rituals RitualDoc cannot carry to `desk/drawer/rituals/legacy-*.md` and re-signs moved deskops model contracts.
++
++### Fixed (desk-to-zero, 2026-10-18)
++
++- `promote inbox-to-drawer-task` writes a TaskDoc; `closeout commit` accepts a directory in `--paths`; `edit` reaches drawer tasks and finds rituals by id; message delivery and ack work with desks that do not register the sender or themselves.
++
+ ### Added
+ 
+ - Task lifecycle in the SLDB graph: rituals are states and gated relations are transitions.
+diff --git a/pyproject.toml b/pyproject.toml
+index 433060a..80c3915 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -7,7 +7,7 @@ requires-python = ">=3.10"
+ dependencies = [
+     "pydantic>=2.0",
+     "PyYAML>=6.0",
+-    "structuredLanguageDB>=0.1.12",
++    "structuredLanguageDB>=0.1.13",
+ ]
+ 
+ [project.scripts]

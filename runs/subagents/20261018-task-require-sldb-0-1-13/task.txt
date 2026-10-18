@@ -1,0 +1,7 @@
+Task: task-require-sldb-0-1-13
+Title: deskops declares structuredLanguageDB>=0.1.13
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
