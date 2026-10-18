@@ -1,6 +1,12 @@
 ---
 id: task-rename-deskops-faqdoc
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f6-apply-store-migration
@@ -12,12 +18,10 @@ files:
 - deskops/bootstrap.py
 - tests/fixtures/model_contract_hashes.json
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- source:sldb
-- topic:models
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rename-deskops-faqdoc.md
 ---
 
 # deskops' FAQ model gets its own name instead of `FAQDoc`

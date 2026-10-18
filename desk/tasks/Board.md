@@ -6,6 +6,8 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-closeout-commit-leaves-the-run-index-clean.md
+- desk/tasks/task-rename-deskops-faqdoc.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +47,6 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- `closeout commit` leaves the run index clean [draft] - After `deskops closeout commit` (both --run-dir and --no-run) the working tree is clean, and runs/subagents/index.jsonl still records the closing commit's hash.
+- deskops' FAQ model gets its own name instead of `FAQDoc` [draft] - The deskops FAQ model has a distinct name (for example `DeskFAQDoc`), and every store that tracks FAQ documents with the old name is migrated, with `sldb stores check` PASS.
