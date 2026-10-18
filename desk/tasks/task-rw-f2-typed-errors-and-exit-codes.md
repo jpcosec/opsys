@@ -1,6 +1,12 @@
 ---
 id: task-rw-f2-typed-errors-and-exit-codes
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f2-selector-resolution-module
@@ -15,14 +21,10 @@ files:
 - deskops/operations.py
 - tests/test_cli.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f2
-- topic:errors
-- topic:cli
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f2-typed-errors-and-exit-codes.md
 ---
 
 # Typed errors, a fixed exit-code table, and no swallowed tracebacks

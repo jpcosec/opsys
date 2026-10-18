@@ -7,6 +7,7 @@ scope: desk
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
 - desk/tasks/task-init-links-federated-models-instead-of-copying.md
+- desk/tasks/task-rw-f2-typed-errors-and-exit-codes.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -48,3 +49,4 @@ _Add short operational notes about the current routed set._
 _Generated from the task references above._
 
 - `deskops init` links the deskops models from their owner store instead of copying them [draft] - A store created by `deskops init` registers the deskops models as federated entries owned by the deskops store, and `deskops desk update --apply` converts an existing store's copied entries to federated ones.
+- Typed errors, a fixed exit-code table, and no swallowed tracebacks [draft] - deskops raises typed errors from one module; the CLI maps them to exit codes 0 ok, 1 domain error, 2 usage error (argparse already uses 2), 3 environment error; an unexpected exception prints `Unexpected error: <type>: <message> (rerun with --debug for the traceback)` on stderr and exits 3; with `--debug` it prints the full traceback to stderr and still exits 3.

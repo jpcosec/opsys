@@ -47,7 +47,6 @@ F1:
 
 F2:
 
-- `task-rw-f2-typed-errors-and-exit-codes` — Typed errors, a fixed exit-code table, and no swallowed tracebacks
 - `task-rw-f2-transactional-doc-io` — One doc_io module talks to sldb through its public API, transactionally
 
 F3:
