@@ -1,0 +1,7 @@
+Task: task-registry-registers-graph-ui-and-fixes-the-sldb-path
+Title: The repo registry knows graph_ui and spec2viz and points sldb at its current checkout
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

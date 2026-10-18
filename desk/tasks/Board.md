@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
-- desk/tasks/task-registry-registers-graph-ui-and-fixes-the-sldb-path.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -46,5 +45,3 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
-
-- The repo registry knows graph_ui and spec2viz and points sldb at its current checkout [draft] - desk/registry lists graph_ui and spec2viz with their current paths, repo-sldb points at /home/jp/proyectos/SLDB_1/sldb, and `message send --from graph_ui` resolves.

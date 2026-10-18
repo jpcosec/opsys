@@ -1,0 +1,12 @@
+ M .sldb/core/documents/RepositoryDoc/repo-sldb.yaml
+ M .sldb/core/documents/TaskDoc/task-registry-registers-graph-ui-and-fixes-the-sldb-path.yaml
+ M .sldb/core/models/RepositoryDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/registry/repo-sldb.md
+ M desk/tasks/task-registry-registers-graph-ui-and-fixes-the-sldb-path.md
+?? .sldb/core/documents/RepositoryDoc/repo-graph_ui.yaml
+?? .sldb/core/documents/RepositoryDoc/repo-spec2viz.yaml
+?? desk/registry/repo-graph_ui.md
+?? desk/registry/repo-spec2viz.md
+?? runs/subagents/20261018-task-registry-registers-graph-ui-and-fixes-the-sldb-path/
