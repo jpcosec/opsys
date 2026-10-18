@@ -1,0 +1,7 @@
+Task: task-guard-extension-points
+Title: Guard the declared deskops extension points
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

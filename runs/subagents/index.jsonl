@@ -49,3 +49,4 @@
 {"task_id": "task-closeout-commit-leaves-the-run-index-clean", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-commit-leaves-the-run-index-clean", "session_sha256": null, "commit": null}
 {"task_id": "task-ritual-steps-are-prose", "run_id": null, "run_dir": "runs/subagents/20261018-task-ritual-steps-are-prose", "session_sha256": null, "commit": null}
 {"task_id": "task-closeout-commit-accepts-directory-paths", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-commit-accepts-directory-paths", "session_sha256": null, "commit": null}
+{"task_id": "task-guard-extension-points", "run_id": null, "run_dir": "runs/subagents/20261018-task-guard-extension-points", "session_sha256": null, "commit": null}
