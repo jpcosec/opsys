@@ -1,6 +1,12 @@
 ---
 id: task-rw-f5-output-renderer
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f5-root-resolution-and-sandbox-guard
@@ -11,14 +17,10 @@ files:
 - deskops/cli/main.py
 - deskops/cli/registry.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f5
-- topic:cli
-- topic:output
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f5-output-renderer.md
 ---
 
 # One renderer for text, json and yaml output with an error envelope

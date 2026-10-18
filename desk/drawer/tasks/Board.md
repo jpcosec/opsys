@@ -56,12 +56,10 @@ F4:
 
 F5:
 
-- `task-rw-f5-output-renderer` — One renderer for text, json and yaml output with an error envelope
 - `task-rw-f5-deprecated-aliases` — Duplicate commands become warned aliases or are removed
 
 F6:
 
-- `task-rw-f6-taskdoc-contract-cleanup` — TaskDoc contract cleanup
 - `task-rw-f6-migrate-tracking-stores` — Migrate every store that tracks deskops models
 
 Promoted to active desk tasks:
