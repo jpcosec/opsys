@@ -1,6 +1,12 @@
 ---
 id: task-rw-f5-command-registry
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f3-atoms-service
@@ -16,14 +22,10 @@ files:
 - deskops/cli/registry.py
 - tests/test_command_registry.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f5
-- topic:cli
-- topic:refactor
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f5-command-registry.md
 ---
 
 # The CLI is built from a declarative command registry

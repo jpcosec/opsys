@@ -1,6 +1,12 @@
 ---
 id: task-rw-f4-coverage-extractor-decision
-status: deferred
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
 references: []
 depends_on:
 - task-rw-f4-single-snapshot-reader
@@ -13,13 +19,10 @@ files:
 - tests/test_graph_snapshot.py
 - deskops/cli/registry.py
 task_type: implementation
-tags:
-- workspace:desk
-- artifact:task
-- source:drawer
-- plan:deskops-rewrite
-- phase:f4
-- topic:graph
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-rw-f4-coverage-extractor-decision.md
 ---
 
 # Keep the coverage extractor as an optional report or delete it

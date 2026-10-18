@@ -53,11 +53,9 @@ F3:
 
 F4:
 
-- `task-rw-f4-coverage-extractor-decision` — Keep the coverage extractor as an optional report or delete it
 
 F5:
 
-- `task-rw-f5-command-registry` — The CLI is built from a declarative command registry
 - `task-rw-f5-root-resolution-and-sandbox-guard` — `--root` and the store resolve in one place, and the sandbox guard covers every mutating command
 - `task-rw-f5-output-renderer` — One renderer for text, json and yaml output with an error envelope
 - `task-rw-f5-deprecated-aliases` — Duplicate commands become warned aliases or are removed
