@@ -6,6 +6,7 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-write-end-to-end-deskops-operator-manual
+- desk/tasks/task-edit-keeps-text-values-literal.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,3 +46,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- `deskops edit` keeps text field values literal [draft] - Text fields (`str` and `str | None`) take the edit value as written; a JSON string literal is still decoded; list and other typed fields keep YAML/JSON parsing.
