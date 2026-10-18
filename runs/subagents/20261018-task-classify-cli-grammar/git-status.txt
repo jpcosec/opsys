@@ -1,0 +1,6 @@
+ M .sldb/core/documents/TaskDoc/task-classify-cli-grammar.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-classify-cli-grammar.md
+?? runs/subagents/20261018-task-classify-cli-grammar/
+?? tests/test_cli_grammar.py

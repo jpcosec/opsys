@@ -7,7 +7,6 @@ scope: desk
 tasks:
 - desk/tasks/task-close-a-task-as-superseded.md
 - desk/tasks/task-canonical-atom-reference-metadata.md
-- desk/tasks/task-classify-cli-grammar.md
 - desk/tasks/task-classify-large-docs-materialization.md
 - desk/tasks/task-derived-atom-trace-index.md
 - desk/tasks/task-detect-and-clean-task-policy-leaks.md
@@ -57,8 +56,6 @@ _Generated from the task references above._
 - Canonical atom reference field and role vocabulary [draft] - Make `atoms` the only structured artifact field for atom references, validate the five allowed
 roles, and report legacy aliases and invalid roles through `deskops drift check` without adding
 a hard closeout gate.
-- Classify the CLI grammar by workflow noun [draft] - Record one explicit top-level noun classification and enforce it with a test, without removing or
-renaming any command.
 - Declare composed materialization metadata for large docs [draft] - Encode the audited inventory: every composed document declares `atoms:` frontmatter with role
 `documents`, and `deskops/data/faq.md` is enforced as a byte-identical projection of
 `docs/faq.md`.
