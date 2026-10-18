@@ -1129,6 +1129,40 @@ def test_edit_task_refuses_to_erase_undeclared_content(tmp_path: Path, capsys) -
     assert task_path.read_text(encoding="utf-8") == with_key
 
 
+def test_edit_task_keeps_text_values_literal(tmp_path: Path, capsys) -> None:
+    created = main(
+        [
+            "add",
+            "task",
+            "--root",
+            str(tmp_path),
+            "--title",
+            "Literal task",
+            "--goal",
+            "Original goal.",
+            "--scope",
+            "Original scope.",
+            "--implementation-path",
+            "Original path.",
+            "--done-when",
+            "Original done when.",
+        ]
+    )
+    assert created == 0
+    capsys.readouterr()
+
+    steps = "1. First step.\n2. Second step."
+    assert main(["edit", "task", "task-literal-task", "implementation-path", steps, "--root", str(tmp_path)]) == 0
+    assert main(["edit", "task", "task-literal-task", "why", "**Bold** reason.", "--root", str(tmp_path)]) == 0
+    assert main(["edit", "task", "task-literal-task", "goal", '"Quoted goal."', "--root", str(tmp_path)]) == 0
+    capsys.readouterr()
+
+    task_text = (tmp_path / "desk" / "tasks" / "task-literal-task.md").read_text(encoding="utf-8")
+    assert steps in task_text
+    assert "**Bold** reason." in task_text
+    assert "Quoted goal." in task_text and '"Quoted goal."' not in task_text
+
+
 def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> None:
     created = main(
         [

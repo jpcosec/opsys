@@ -105,19 +105,21 @@ def slugify(text: str) -> str:
 def _parse_field_value(model: type[Any], field_name: str, raw_value: str) -> Any:
     """Parse `edit` input as JSON/YAML, but keep text fields as the literal text.
 
-    Free text such as `Fuente: a.md:3, b` is a YAML mapping error (or a dict), not
-    what the user meant for a `str` field, so those fall back to the raw string.
+    YAML folds the line breaks of multi-line text and reads `**bold` as an alias,
+    so a text field (`str` or `str | None`) takes the raw value as written. A JSON
+    string literal (`"..."`) is still decoded, for callers that quote their text.
     """
     annotation = model.model_fields[field_name].annotation
-    try:
-        value = parse_data_value(raw_value)
-    except Exception:
-        if annotation is str:
-            return raw_value
-        raise
-    if annotation is str and not isinstance(value, str):
+    if annotation in (str, str | None):
+        if raw_value.startswith('"'):
+            try:
+                decoded = json.loads(raw_value)
+            except ValueError:
+                return raw_value
+            if isinstance(decoded, str):
+                return decoded
         return raw_value
-    return value
+    return parse_data_value(raw_value)
 
 
 @dataclass(slots=True)

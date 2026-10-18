@@ -1,0 +1,7 @@
+ M .sldb/core/documents/TaskDoc/task-edit-keeps-text-values-literal.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-edit-keeps-text-values-literal.md
+ M deskops/operations.py
+ M tests/test_cli.py
+?? runs/subagents/20261018-task-edit-keeps-text-values-literal/
