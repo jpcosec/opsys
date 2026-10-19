@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-require-python-3-11.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,5 +44,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- deskops requires Python >=3.11 [draft] - pyproject.toml declares requires-python >=3.11, the CHANGELOG 0.2.0 section records it, and CI runs pytest on a 3.11/3.12/3.13 matrix.

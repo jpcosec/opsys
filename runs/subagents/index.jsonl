@@ -77,3 +77,4 @@
 {"task_id": "task-desk-replace-verb-for-unmodeled-files", "run_id": null, "run_dir": "runs/subagents/20261018-task-desk-replace-verb-for-unmodeled-files", "session_sha256": null, "commit": null}
 {"task_id": "task-doctor-accepts-a-repository-with-no-desk", "run_id": null, "run_dir": "runs/subagents/20261018-task-doctor-accepts-a-repository-with-no-desk", "session_sha256": null, "commit": null}
 {"task_id": "task-pill-cli-gaps-track-yaml-and-board", "run_id": null, "run_dir": "runs/subagents/20261018-task-pill-cli-gaps-track-yaml-and-board", "session_sha256": null, "commit": null}
+{"task_id": "task-require-python-3-11", "run_id": null, "run_dir": "runs/subagents/20261019-task-require-python-3-11", "session_sha256": null, "commit": null}

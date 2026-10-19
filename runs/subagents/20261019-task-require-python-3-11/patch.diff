@@ -1,0 +1,47 @@
+diff --git a/.github/workflows/tests.yml b/.github/workflows/tests.yml
+index 7fb2b8b..afd60ec 100644
+--- a/.github/workflows/tests.yml
++++ b/.github/workflows/tests.yml
+@@ -9,12 +9,16 @@ on:
+ jobs:
+   pytest:
+     runs-on: ubuntu-latest
++    strategy:
++      fail-fast: false
++      matrix:
++        python-version: ["3.11", "3.12", "3.13"]
+     steps:
+       - uses: actions/checkout@v4
+ 
+       - uses: actions/setup-python@v5
+         with:
+-          python-version: "3.13"  # the --help goldens are recorded with 3.13; argparse wraps usage differently in 3.12
++          python-version: ${{ matrix.python-version }}
+ 
+       - name: Install dependencies
+         run: |
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 3faa050..bb363d0 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -54,6 +54,7 @@ Entries cover the unreleased changes since tag `v-stable-2026.08.29`.
+ 
+ ### Changed (desk-to-zero, 2026-10-18)
+ 
++- Requires Python >=3.11 (deskops uses `enum.StrEnum`; spec2viz, graph_ui and pron already require 3.11). CI runs the suite on 3.11, 3.12 and 3.13.
+ - Requires structuredLanguageDB>=0.1.13 (link replacement, broken-link detection, and the extraction fixes in sldb main).
+ - `closeout commit` folds the run index line into the closing commit; the tree stays clean.
+ - deskops' FAQ model is `DeskFAQDoc`; ritual steps are prose, not StepDoc references.
+diff --git a/pyproject.toml b/pyproject.toml
+index e81773b..81a0fc9 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -3,7 +3,7 @@ name = "deskops"
+ version = "0.2.0"
+ description = "Workflow-domain layer for the hum-ecosystem"
+ readme = "README.md"
+-requires-python = ">=3.10"
++requires-python = ">=3.11"
+ dependencies = [
+     "pydantic>=2.0",
+     "PyYAML>=6.0",

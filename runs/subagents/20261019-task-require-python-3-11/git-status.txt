@@ -1,0 +1,11 @@
+ M .github/workflows/tests.yml
+ M .sldb/core/documents/InboxNoteDoc/20261018-213734-unclear-corrida-candidata-de-la-suite-sldb-1-spec2viz-tools-suite-check-sh-fr.yaml
+ M .sldb/core/documents/TaskDoc/task-require-python-3-11.yaml
+ M .sldb/core/models/InboxNoteDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M CHANGELOG.md
+ M desk/inbox/20261018-213734-unclear-corrida-candidata-de-la-suite-sldb-1-spec2viz-tools-suite-check-sh-fr.md
+ M desk/tasks/task-require-python-3-11.md
+ M pyproject.toml
+?? runs/subagents/20261019-task-require-python-3-11/
