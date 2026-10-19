@@ -298,3 +298,12 @@ stores check | edges check | edges unresolved --local | uncommitted desk/.sldb p
 Summary: 31/40 PASS
 Log: /home/jp/proyectos/SLDB_1/deskops/runs/planning/store-migration-20261018.md
 ```
+
+## Incident (2026-10-19): kimun was touched
+
+Both passes listed `proyectos/kimun/docs/archive/architecture/spec2viz` among the 40 stores, and the owner forbids touching kimun. The passes left 34 deleted, 3 modified and 5 untracked paths there, none of them committed. The supervisor reverted only that path:
+- `git -C /home/jp/proyectos/kimun restore -- docs/archive/architecture/spec2viz`;
+- removed the 5 untracked paths (desk/drawer/rituals, desk/inbox, desk/lifecycle, desk/rituals/phase.md, sldb/);
+- restored the git-ignored `.sldb/` from the pass-1 backup (`diff -rq` identical).
+
+kimun's own `docs/research/` and `runs/research/2026-10-13/` were not touched. The only inbox note that had landed there was deskops' own pass-1 notice, and it was removed with the path. task-migration-never-touches-kimun makes discovery skip kimun permanently, with a test.

@@ -38,6 +38,10 @@ EXCLUDED_SEGMENTS = frozenset({
     "tools",
     "tmp",
 })
+# Repositories the owner forbids this migration to touch, relative to the discovery
+# root and as absolute paths. A store anywhere below them is never discovered.
+PROTECTED_RELATIVE_ROOTS = (Path("proyectos") / "kimun",)
+PROTECTED_ABSOLUTE_ROOTS = (Path("/home/jp/proyectos/kimun"),)
 COMMAND_TIMEOUT_SECONDS = 300
 LOG_DIR = REPO_ROOT / "runs" / "planning"
 
@@ -86,6 +90,18 @@ def is_excluded(store: Path, root: Path) -> bool:
     return any(part in EXCLUDED_SEGMENTS for part in relative.parts)
 
 
+def is_protected(path: Path, root: Path) -> bool:
+    """Whether a path lies under a repository the migration must never touch."""
+    resolved = path.resolve()
+    if any(resolved == base or base in resolved.parents for base in PROTECTED_ABSOLUTE_ROOTS):
+        return True
+    try:
+        relative = resolved.relative_to(root)
+    except ValueError:
+        return False
+    return any(relative == base or base in relative.parents for base in PROTECTED_RELATIVE_ROOTS)
+
+
 def _is_git_work_tree(repo: Path) -> bool:
     try:
         result = subprocess.run(
@@ -116,6 +132,9 @@ def discover_stores(home: Path | str) -> list[Path]:
         dirnames[:] = [name for name in dirnames if name not in EXCLUDED_SEGMENTS]
 
         current = Path(dirpath)
+        if is_protected(current, root):
+            dirnames[:] = []
+            continue
         if current.name != ".sldb":
             continue
 
@@ -123,7 +142,7 @@ def discover_stores(home: Path | str) -> list[Path]:
         dirnames[:] = []
         if not (current / "core" / "models" / "TaskDoc.yaml").is_file():
             continue
-        if is_excluded(current, root):
+        if is_excluded(current, root) or is_protected(current, root):
             continue
         if _is_git_work_tree(current.parent):
             stores.append(current.resolve())

@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-test-ci-knowledge-integrity-flow.md
-- desk/tasks/task-migration-never-touches-kimun.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -48,4 +47,3 @@ No active tasks routed.
 _Generated from the task references above._
 
 - Test the CI knowledge-integrity flow [draft] - scripts/ci-knowledge-check.sh <root> runs the desk integrity checks: `deskops doctor`, `sldb stores check` and `deskops graph missing`, which gate (non-zero fails), and `deskops drift check`, which is reported and does not gate because its findings are review items. A test runs the script against sandbox desks, and the GitHub workflow runs it on the repository after pytest.
-- The store migration never touches /home/jp/proyectos/kimun [draft] - scripts/migrate_desk_stores.py never discovers a store under a protected root. kimun is protected relative to the discovery root (proyectos/kimun) and also as the absolute path /home/jp/proyectos/kimun. A test proves a TaskDoc-tracking store under <home>/proyectos/kimun/... is not discovered.

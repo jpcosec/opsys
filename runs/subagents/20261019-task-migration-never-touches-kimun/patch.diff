@@ -1,0 +1,99 @@
+diff --git a/runs/planning/store-migration-20261018-pass2.md b/runs/planning/store-migration-20261018-pass2.md
+index c878abd..f51844c 100644
+--- a/runs/planning/store-migration-20261018-pass2.md
++++ b/runs/planning/store-migration-20261018-pass2.md
+@@ -298,3 +298,12 @@ stores check | edges check | edges unresolved --local | uncommitted desk/.sldb p
+ Summary: 31/40 PASS
+ Log: /home/jp/proyectos/SLDB_1/deskops/runs/planning/store-migration-20261018.md
+ ```
++
++## Incident (2026-10-19): kimun was touched
++
++Both passes listed `proyectos/kimun/docs/archive/architecture/spec2viz` among the 40 stores, and the owner forbids touching kimun. The passes left 34 deleted, 3 modified and 5 untracked paths there, none of them committed. The supervisor reverted only that path:
++- `git -C /home/jp/proyectos/kimun restore -- docs/archive/architecture/spec2viz`;
++- removed the 5 untracked paths (desk/drawer/rituals, desk/inbox, desk/lifecycle, desk/rituals/phase.md, sldb/);
++- restored the git-ignored `.sldb/` from the pass-1 backup (`diff -rq` identical).
++
++kimun's own `docs/research/` and `runs/research/2026-10-13/` were not touched. The only inbox note that had landed there was deskops' own pass-1 notice, and it was removed with the path. task-migration-never-touches-kimun makes discovery skip kimun permanently, with a test.
+diff --git a/scripts/migrate_desk_stores.py b/scripts/migrate_desk_stores.py
+index fa25720..a1753d9 100644
+--- a/scripts/migrate_desk_stores.py
++++ b/scripts/migrate_desk_stores.py
+@@ -38,6 +38,10 @@ EXCLUDED_SEGMENTS = frozenset({
+     "tools",
+     "tmp",
+ })
++# Repositories the owner forbids this migration to touch, relative to the discovery
++# root and as absolute paths. A store anywhere below them is never discovered.
++PROTECTED_RELATIVE_ROOTS = (Path("proyectos") / "kimun",)
++PROTECTED_ABSOLUTE_ROOTS = (Path("/home/jp/proyectos/kimun"),)
+ COMMAND_TIMEOUT_SECONDS = 300
+ LOG_DIR = REPO_ROOT / "runs" / "planning"
+ 
+@@ -86,6 +90,18 @@ def is_excluded(store: Path, root: Path) -> bool:
+     return any(part in EXCLUDED_SEGMENTS for part in relative.parts)
+ 
+ 
++def is_protected(path: Path, root: Path) -> bool:
++    """Whether a path lies under a repository the migration must never touch."""
++    resolved = path.resolve()
++    if any(resolved == base or base in resolved.parents for base in PROTECTED_ABSOLUTE_ROOTS):
++        return True
++    try:
++        relative = resolved.relative_to(root)
++    except ValueError:
++        return False
++    return any(relative == base or base in relative.parents for base in PROTECTED_RELATIVE_ROOTS)
++
++
+ def _is_git_work_tree(repo: Path) -> bool:
+     try:
+         result = subprocess.run(
+@@ -116,6 +132,9 @@ def discover_stores(home: Path | str) -> list[Path]:
+         dirnames[:] = [name for name in dirnames if name not in EXCLUDED_SEGMENTS]
+ 
+         current = Path(dirpath)
++        if is_protected(current, root):
++            dirnames[:] = []
++            continue
+         if current.name != ".sldb":
+             continue
+ 
+@@ -123,7 +142,7 @@ def discover_stores(home: Path | str) -> list[Path]:
+         dirnames[:] = []
+         if not (current / "core" / "models" / "TaskDoc.yaml").is_file():
+             continue
+-        if is_excluded(current, root):
++        if is_excluded(current, root) or is_protected(current, root):
+             continue
+         if _is_git_work_tree(current.parent):
+             stores.append(current.resolve())
+diff --git a/tests/test_migrate_desk_stores.py b/tests/test_migrate_desk_stores.py
+index eb740e7..0feac85 100644
+--- a/tests/test_migrate_desk_stores.py
++++ b/tests/test_migrate_desk_stores.py
+@@ -86,6 +86,24 @@ def test_excluded_segments_are_not_discovered(tmp_path: Path, segment: str) -> N
+     assert migrate.discover_stores(home) == []
+ 
+ 
++def test_stores_under_kimun_are_never_discovered(tmp_path: Path) -> None:
++    """The owner forbids the migration to touch kimun (incident of 2026-10-19)."""
++    regular = tmp_path / "proyectos" / "regular"
++    _git_init(regular)
++    kept = _make_store(regular)
++    _git_init(tmp_path / "proyectos" / "kimun")
++    _make_store(tmp_path / "proyectos" / "kimun" / "docs" / "archive" / "architecture" / "spec2viz")
++
++    assert migrate.discover_stores(tmp_path) == [kept.resolve()]
++
++
++def test_the_real_kimun_checkout_is_protected_by_absolute_path() -> None:
++    kimun_store = Path("/home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb")
++
++    assert migrate.is_protected(kimun_store, Path("/somewhere/else"))
++    assert not migrate.is_protected(Path("/home/jp/proyectos/SLDB_1/deskops/.sldb"), Path("/home/jp"))
++
++
+ def test_store_outside_a_git_work_tree_is_not_discovered(tmp_path: Path) -> None:
+     home = tmp_path / "home"
+     home.mkdir(exist_ok=True)

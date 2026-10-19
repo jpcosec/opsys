@@ -1,0 +1,14 @@
+ M .github/workflows/tests.yml
+ M .sldb/core/documents/TaskDoc/task-migration-never-touches-kimun.yaml
+ M .sldb/core/documents/TaskDoc/task-test-ci-knowledge-integrity-flow.yaml
+ M .sldb/core/models/BoardDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-migration-never-touches-kimun.md
+ M desk/tasks/task-test-ci-knowledge-integrity-flow.md
+ M runs/planning/store-migration-20261018-pass2.md
+ M scripts/migrate_desk_stores.py
+ M tests/test_migrate_desk_stores.py
+?? runs/subagents/20261019-task-migration-never-touches-kimun/
+?? scripts/ci-knowledge-check.sh
+?? tests/test_ci_integration.py

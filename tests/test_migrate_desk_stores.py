@@ -86,6 +86,24 @@ def test_excluded_segments_are_not_discovered(tmp_path: Path, segment: str) -> N
     assert migrate.discover_stores(home) == []
 
 
+def test_stores_under_kimun_are_never_discovered(tmp_path: Path) -> None:
+    """The owner forbids the migration to touch kimun (incident of 2026-10-19)."""
+    regular = tmp_path / "proyectos" / "regular"
+    _git_init(regular)
+    kept = _make_store(regular)
+    _git_init(tmp_path / "proyectos" / "kimun")
+    _make_store(tmp_path / "proyectos" / "kimun" / "docs" / "archive" / "architecture" / "spec2viz")
+
+    assert migrate.discover_stores(tmp_path) == [kept.resolve()]
+
+
+def test_the_real_kimun_checkout_is_protected_by_absolute_path() -> None:
+    kimun_store = Path("/home/jp/proyectos/kimun/docs/archive/architecture/spec2viz/.sldb")
+
+    assert migrate.is_protected(kimun_store, Path("/somewhere/else"))
+    assert not migrate.is_protected(Path("/home/jp/proyectos/SLDB_1/deskops/.sldb"), Path("/home/jp"))
+
+
 def test_store_outside_a_git_work_tree_is_not_discovered(tmp_path: Path) -> None:
     home = tmp_path / "home"
     home.mkdir(exist_ok=True)
