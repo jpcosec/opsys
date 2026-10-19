@@ -1,0 +1,394 @@
+diff --git a/deskops/cli/commands/retire.py b/deskops/cli/commands/retire.py
+index 254fb67..19f66c7 100644
+--- a/deskops/cli/commands/retire.py
++++ b/deskops/cli/commands/retire.py
+@@ -20,4 +20,6 @@ class RetireCLI:
+         print(f"Retired {result.path}")
+         print(f"Reason: {result.reason}")
+         print(f"Refs: {', '.join(result.refs)}")
++        for board in result.boards:
++            print(f"Unrouted from {board}")
+         return 0
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index 910cb6a..3dd3357 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -130,9 +130,9 @@ def _add_subject_commands() -> list[Command]:
+         if model is not None:
+             include_special = artifact_id in {"artifact.task"}
+             for fmeta in model_cli_fields(model, include_special=include_special):
+-                # title is never required=True in CLI — slugified from the value
+-                required = fmeta.is_required and fmeta.name != "title"
+-                kwargs: dict[str, object] = {"required": required, "help": fmeta.help}
++                # No model field is argparse-required: --from-yaml may supply it,
++                # and the model validates what the payload still misses.
++                kwargs: dict[str, object] = {"required": False, "help": fmeta.help}
+                 if fmeta.is_list:
+                     kwargs["action"] = "extend"
+                     kwargs["nargs"] = "+"
+diff --git a/deskops/operations.py b/deskops/operations.py
+index c09dadd..415f32b 100644
+--- a/deskops/operations.py
++++ b/deskops/operations.py
+@@ -1223,7 +1223,7 @@ class DeskopsOperations:
+             path.unlink()
+ 
+     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
+-        if artifact_id != "artifact.atom":
++        if artifact_id not in {"artifact.atom", "artifact.pill"}:
+             return
+         self._track_created_document(model, path, doc_id)
+ 
+diff --git a/deskops/services/retire.py b/deskops/services/retire.py
+index 51e97bb..42f6991 100644
+--- a/deskops/services/retire.py
++++ b/deskops/services/retire.py
+@@ -13,6 +13,9 @@ from pathlib import Path
+ 
+ from deskops import doc_io
+ from deskops.errors import DomainError
++from deskops.models import BoardDoc
++from sldb.runtime.validation import extract_model_data
++from sldb.runtime.validation import render_model_markdown
+ 
+ _DEDICATED_VERBS = (
+     ("desk/tasks/", "deskops closeout commit|supersede|retire"),
+@@ -38,6 +41,7 @@ class RetireResult:
+     path: str
+     reason: str
+     refs: tuple[str, ...]
++    boards: tuple[str, ...] = ()
+ 
+ 
+ def retire_document(
+@@ -79,8 +83,9 @@ def retire_document(
+     if unresolved:
+         raise DomainError(f"Unresolvable --ref: {', '.join(unresolved)} (use an ancestor commit or an existing path).")
+ 
++    updates = _board_pill_updates(root, path, relative)
+     if not force:
+-        inbound = _inbound_references(root, path, relative)
++        inbound = _inbound_references(root, path, relative, skip=_handled_boards(root, updates, path, relative))
+         if inbound:
+             raise DomainError(
+                 f"Refusing to retire {relative}: still referenced by {', '.join(inbound)}. "
+@@ -88,8 +93,69 @@ def retire_document(
+             )
+ 
+     with doc_io.DocTransaction(root) as transaction:
++        for board_path, payload in updates:
++            _write_board(root, board_path, payload)
+         transaction.delete(path)
+-    return RetireResult(path=relative, reason=reason, refs=clean_refs)
++    return RetireResult(
++        path=relative,
++        reason=reason,
++        refs=clean_refs,
++        boards=tuple(board_path.relative_to(root).as_posix() for board_path, _ in updates),
++    )
++
++
++def _pill_reference_matches(reference: str, relative: str, stem: str) -> bool:
++    return reference in {
++        relative,
++        f"desk/contexts/{stem}",
++        f"desk/contexts/{stem}.md",
++        stem,
++    }
++
++
++def _board_pill_updates(root: Path, path: Path, relative: str) -> list[tuple[Path, dict]]:
++    """Boards whose ``pills`` list routes ``relative``, with that entry removed."""
++    if not relative.startswith("desk/contexts/"):
++        return []
++    tasks_dir = root / "desk" / "tasks"
++    if not tasks_dir.is_dir():
++        return []
++    updates: list[tuple[Path, dict]] = []
++    for board_path in sorted(tasks_dir.glob("*.md")):
++        if board_path.name != "Board.md" and not board_path.stem.startswith("board-"):
++            continue
++        try:
++            payload = extract_model_data(BoardDoc, board_path.read_text(encoding="utf-8"))
++        except (OSError, UnicodeDecodeError, ValueError):
++            continue
++        payload.setdefault("id", board_path.stem)
++        pills = [str(item) for item in payload.get("pills") or []]
++        kept = [item for item in pills if not _pill_reference_matches(item, relative, path.stem)]
++        if kept == pills:
++            continue
++        payload["pills"] = kept
++        updates.append((board_path, payload))
++    return updates
++
++
++def _handled_boards(root: Path, updates: list[tuple[Path, dict]], path: Path, relative: str) -> set[Path]:
++    """Boards whose rewrite removes every textual reference to the retired pill."""
++    needles = {relative, path.stem}
++    handled: set[Path] = set()
++    for board_path, payload in updates:
++        try:
++            rewritten = render_model_markdown(BoardDoc, payload) + "\n"
++        except ValueError:
++            continue
++        if not any(needle in rewritten for needle in needles):
++            handled.add(board_path.resolve())
++    return handled
++
++
++def _write_board(root: Path, board_path: Path, payload: dict) -> None:
++    from deskops.operations import DeskopsOperations
++
++    DeskopsOperations(root)._write_doc(board_path, BoardDoc, payload)
+ 
+ 
+ def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:
+@@ -102,7 +168,8 @@ def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:
+     return CloseoutGatesService(root).reference_points_to_commit(ref)
+ 
+ 
+-def _inbound_references(root: Path, path: Path, relative: str) -> list[str]:
++def _inbound_references(root: Path, path: Path, relative: str, *, skip: set[Path] | None = None) -> list[str]:
++    skip = skip or set()
+     needles = {relative}
+     if path.suffix == ".md":
+         needles.add(path.stem)
+@@ -114,7 +181,7 @@ def _inbound_references(root: Path, path: Path, relative: str) -> list[str]:
+             candidates.extend(sorted(base.rglob("*.md")))
+     candidates.extend(root / name for name in _REFERENCE_FILES if (root / name).is_file())
+     for candidate in candidates:
+-        if candidate.resolve() == path:
++        if candidate.resolve() == path or candidate.resolve() in skip:
+             continue
+         try:
+             text = candidate.read_text(encoding="utf-8")
+diff --git a/tests/fixtures/golden/help/deskops_add_atom.txt b/tests/fixtures/golden/help/deskops_add_atom.txt
+index 61f8110..375afff 100644
+--- a/tests/fixtures/golden/help/deskops_add_atom.txt
++++ b/tests/fixtures/golden/help/deskops_add_atom.txt
+@@ -1,7 +1,7 @@
+ usage: deskops add atom [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                         [--title TITLE]
+-                        --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
+-                        --answer ANSWER [--tags TAGS [TAGS ...]]
++                        [--five-wh-one-plus {what,why,how,how_not,when,where,for_whom}]
++                        [--answer ANSWER] [--tags TAGS [TAGS ...]]
+                         [--provenance PROVENANCE]
+ 
+ Create a atom artifact.
+diff --git a/tests/fixtures/golden/help/deskops_add_board.txt b/tests/fixtures/golden/help/deskops_add_board.txt
+index 3d273eb..62d71e3 100644
+--- a/tests/fixtures/golden/help/deskops_add_board.txt
++++ b/tests/fixtures/golden/help/deskops_add_board.txt
+@@ -1,7 +1,7 @@
+ usage: deskops add board [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                          [--title TITLE] [--summary SUMMARY]
+-                         [--tags TAGS [TAGS ...]] --scope SCOPE
+-                         --purpose PURPOSE [--tasks TASKS [TASKS ...]]
++                         [--tags TAGS [TAGS ...]] [--scope SCOPE]
++                         [--purpose PURPOSE] [--tasks TASKS [TASKS ...]]
+                          [--pills PILLS [PILLS ...]]
+                          [--rituals RITUALS [RITUALS ...]] [--notes NOTES]
+ 
+diff --git a/tests/fixtures/golden/help/deskops_add_faq-doc.txt b/tests/fixtures/golden/help/deskops_add_faq-doc.txt
+index 19247cc..5dd26e8 100644
+--- a/tests/fixtures/golden/help/deskops_add_faq-doc.txt
++++ b/tests/fixtures/golden/help/deskops_add_faq-doc.txt
+@@ -1,5 +1,5 @@
+ usage: deskops add faq-doc [-h] [--root ROOT] [--from-yaml FROM_YAML]
+-                           [--title TITLE] --body BODY
++                           [--title TITLE] [--body BODY]
+ 
+ Create a faq-doc artifact.
+ 
+diff --git a/tests/fixtures/golden/help/deskops_add_inbox-note.txt b/tests/fixtures/golden/help/deskops_add_inbox-note.txt
+index ede53f2..785695b 100644
+--- a/tests/fixtures/golden/help/deskops_add_inbox-note.txt
++++ b/tests/fixtures/golden/help/deskops_add_inbox-note.txt
+@@ -1,11 +1,12 @@
+ usage: deskops add inbox-note [-h] [--root ROOT] [--from-yaml FROM_YAML]
+-                              --kind {unclear,suggestion}
++                              [--kind {unclear,suggestion}]
+                               [--sender-project SENDER_PROJECT]
+                               [--target-project TARGET_PROJECT]
+-                              --created-at CREATED_AT --status {open,closed}
++                              [--created-at CREATED_AT]
++                              [--status {open,closed}]
+                               [--acknowledged-by ACKNOWLEDGED_BY]
+                               [--acknowledged-at ACKNOWLEDGED_AT]
+-                              [--title TITLE] --body BODY
++                              [--title TITLE] [--body BODY]
+ 
+ Create a inbox-note artifact.
+ 
+diff --git a/tests/fixtures/golden/help/deskops_add_materialization.txt b/tests/fixtures/golden/help/deskops_add_materialization.txt
+index 20d774e..eec5155 100644
+--- a/tests/fixtures/golden/help/deskops_add_materialization.txt
++++ b/tests/fixtures/golden/help/deskops_add_materialization.txt
+@@ -1,9 +1,9 @@
+ usage: deskops add materialization [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                                    [--title TITLE]
+                                    [--source-atoms SOURCE_ATOMS [SOURCE_ATOMS ...]]
+-                                   --target-kind TARGET_KIND
+-                                   --target-identity TARGET_IDENTITY
+-                                   --intent INTENT
++                                   [--target-kind TARGET_KIND]
++                                   [--target-identity TARGET_IDENTITY]
++                                   [--intent INTENT]
+                                    [--validation VALIDATION [VALIDATION ...]]
+                                    [--tags TAGS [TAGS ...]]
+                                    [--provenance PROVENANCE]
+diff --git a/tests/fixtures/golden/help/deskops_add_pill.txt b/tests/fixtures/golden/help/deskops_add_pill.txt
+index 635b358..abbc571 100644
+--- a/tests/fixtures/golden/help/deskops_add_pill.txt
++++ b/tests/fixtures/golden/help/deskops_add_pill.txt
+@@ -1,7 +1,8 @@
+ usage: deskops add pill [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                         [--title TITLE] [--summary SUMMARY]
+-                        [--tags TAGS [TAGS ...]] --what WHAT --why WHY
+-                        --when WHEN --where WHERE --how HOW --how-not HOW_NOT
++                        [--tags TAGS [TAGS ...]] [--what WHAT] [--why WHY]
++                        [--when WHEN] [--where WHERE] [--how HOW]
++                        [--how-not HOW_NOT]
+ 
+ Create a pill artifact.
+ 
+diff --git a/tests/fixtures/golden/help/deskops_add_repository.txt b/tests/fixtures/golden/help/deskops_add_repository.txt
+index 5f8014b..ef89264 100644
+--- a/tests/fixtures/golden/help/deskops_add_repository.txt
++++ b/tests/fixtures/golden/help/deskops_add_repository.txt
+@@ -1,6 +1,6 @@
+ usage: deskops add repository [-h] [--root ROOT] [--from-yaml FROM_YAML]
+-                              --name NAME [--path PATH] [--status STATUS]
+-                              --description DESCRIPTION
++                              [--name NAME] [--path PATH] [--status STATUS]
++                              [--description DESCRIPTION]
+                               [--tags TAGS [TAGS ...]]
+ 
+ Create a local repository artifact doc; use 'deskops repo register' for canonical ecosystem registration.
+diff --git a/tests/fixtures/golden/help/deskops_add_ritual.txt b/tests/fixtures/golden/help/deskops_add_ritual.txt
+index 353a6ea..78b04b2 100644
+--- a/tests/fixtures/golden/help/deskops_add_ritual.txt
++++ b/tests/fixtures/golden/help/deskops_add_ritual.txt
+@@ -1,12 +1,12 @@
+ usage: deskops add ritual [-h] [--root ROOT] [--from-yaml FROM_YAML]
+                           [--title TITLE] [--summary SUMMARY]
+-                          [--tags TAGS [TAGS ...]] --purpose PURPOSE
+-                          --trigger TRIGGER
++                          [--tags TAGS [TAGS ...]] [--purpose PURPOSE]
++                          [--trigger TRIGGER]
+                           [--preconditions PRECONDITIONS [PRECONDITIONS ...]]
+                           [--steps STEPS [STEPS ...]]
+                           [--validation VALIDATION [VALIDATION ...]]
+                           [--failure-modes FAILURE_MODES [FAILURE_MODES ...]]
+-                          --completion COMPLETION
++                          [--completion COMPLETION]
+ 
+ Create a ritual artifact.
+ 
+diff --git a/tests/fixtures/golden/help/deskops_add_step.txt b/tests/fixtures/golden/help/deskops_add_step.txt
+index 04c4138..8c23a0f 100644
+--- a/tests/fixtures/golden/help/deskops_add_step.txt
++++ b/tests/fixtures/golden/help/deskops_add_step.txt
+@@ -1,5 +1,5 @@
+ usage: deskops add step [-h] [--root ROOT] [--from-yaml FROM_YAML]
+-                        [--title TITLE] --action ACTION --outcome OUTCOME
++                        [--title TITLE] [--action ACTION] [--outcome OUTCOME]
+                         [--tags TAGS [TAGS ...]]
+ 
+ Create a step artifact.
+diff --git a/tests/test_retire_cli.py b/tests/test_retire_cli.py
+index bd980dd..656dafa 100644
+--- a/tests/test_retire_cli.py
++++ b/tests/test_retire_cli.py
+@@ -1,6 +1,8 @@
+ from __future__ import annotations
+ 
++import json
+ import subprocess
++import sys
+ from pathlib import Path
+ 
+ from deskops.cli.main import main
+@@ -26,13 +28,78 @@ def _retire(root: Path, path: str, *extra: str) -> int:
+     return main(["retire", path, "--root", str(root), "--reason", "Describes a retired surface", *extra])
+ 
+ 
++def _store_check(root: Path) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(
++        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(root / ".sldb")],
++        capture_output=True,
++        text=True,
++    )
++
++
++def _add_pill(root: Path, title: str = "Old guardrail") -> Path:
++    assert main(["add", "pill", "--root", str(root), "--title", title, "--what", "w", "--why", "y", "--when", "n", "--where", "e", "--how", "h", "--how-not", "x"]) == 0
++    return next((root / "desk" / "contexts").glob(f"pill-{title.lower().replace(' ', '-')}*.md"))
++
++
++def test_add_pill_tracks_the_created_document(tmp_path: Path, capsys) -> None:
++    from sldb.api import doc_status
++
++    root = _repo(tmp_path)
++    pill = _add_pill(root)
++    relative = pill.relative_to(root).as_posix()
++    capsys.readouterr()
++
++    assert doc_status(root / ".sldb", relative).exists
++    assert main(["doctor", "--root", str(root)]) == 0
++    assert "Desk is healthy" in capsys.readouterr().out
++
++
++def test_add_pill_from_yaml_needs_no_field_flags(tmp_path: Path) -> None:
++    from sldb.api import doc_status
++
++    root = _repo(tmp_path)
++    payload = tmp_path / "pill.yaml"
++    payload.write_text(
++        "title: YAML pill\nwhat: w\nwhy: y\nwhen: n\nwhere: e\nhow: h\nhow_not: x\n",
++        encoding="utf-8",
++    )
++
++    assert main(["add", "pill", "--from-yaml", str(payload), "--root", str(root)]) == 0
++
++    pill = root / "desk" / "contexts" / "pill-yaml-pill.md"
++    assert pill.exists()
++    assert doc_status(root / ".sldb", "desk/contexts/pill-yaml-pill.md").exists
++
++
++def test_retire_unroutes_a_board_routed_pill_and_keeps_the_store_green(tmp_path: Path, capsys) -> None:
++    from sldb.api import doc_status
++
++    root = _repo(tmp_path)
++    pill = _add_pill(root)
++    relative = pill.relative_to(root).as_posix()
++    assert main(["edit", "board", "Board", "pills", json.dumps([relative]), "--root", str(root)]) == 0
++    board = root / "desk" / "tasks" / "Board.md"
++    assert relative in board.read_text(encoding="utf-8")
++    capsys.readouterr()
++
++    assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 0
++    out = capsys.readouterr().out
++
++    assert "Unrouted from desk/tasks/Board.md" in out
++    assert not pill.exists()
++    assert relative not in board.read_text(encoding="utf-8")
++    assert not doc_status(root / ".sldb", relative).exists
++    assert main(["doctor", "--root", str(root)]) == 0
++    check = _store_check(root)
++    assert check.returncode == 0
++    assert "PASS" in check.stdout
++
++
+ def test_retire_removes_a_tracked_pill_and_its_store_record(tmp_path: Path, capsys) -> None:
+     from sldb.api import doc_status
+ 
+     root = _repo(tmp_path)
+-    assert main(["add", "pill", "--root", str(root), "--title", "Old guardrail", "--what", "w", "--why", "y", "--when", "n", "--where", "e", "--how", "h", "--how-not", "x"]) == 0
+-    main(["desk", "update", "--root", str(root), "--apply"])
+-    pill = next((root / "desk" / "contexts").glob("pill-old-guardrail*.md"))
++    pill = _add_pill(root)
+     relative = pill.relative_to(root).as_posix()
+     assert doc_status(root / ".sldb", relative).exists
+     capsys.readouterr()

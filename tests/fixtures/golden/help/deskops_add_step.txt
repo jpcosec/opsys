@@ -1,5 +1,5 @@
 usage: deskops add step [-h] [--root ROOT] [--from-yaml FROM_YAML]
-                        [--title TITLE] --action ACTION --outcome OUTCOME
+                        [--title TITLE] [--action ACTION] [--outcome OUTCOME]
                         [--tags TAGS [TAGS ...]]
 
 Create a step artifact.

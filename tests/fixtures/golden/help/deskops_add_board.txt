@@ -1,7 +1,7 @@
 usage: deskops add board [-h] [--root ROOT] [--from-yaml FROM_YAML]
                          [--title TITLE] [--summary SUMMARY]
-                         [--tags TAGS [TAGS ...]] --scope SCOPE
-                         --purpose PURPOSE [--tasks TASKS [TASKS ...]]
+                         [--tags TAGS [TAGS ...]] [--scope SCOPE]
+                         [--purpose PURPOSE] [--tasks TASKS [TASKS ...]]
                          [--pills PILLS [PILLS ...]]
                          [--rituals RITUALS [RITUALS ...]] [--notes NOTES]
 

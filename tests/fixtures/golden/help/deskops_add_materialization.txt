@@ -1,9 +1,9 @@
 usage: deskops add materialization [-h] [--root ROOT] [--from-yaml FROM_YAML]
                                    [--title TITLE]
                                    [--source-atoms SOURCE_ATOMS [SOURCE_ATOMS ...]]
-                                   --target-kind TARGET_KIND
-                                   --target-identity TARGET_IDENTITY
-                                   --intent INTENT
+                                   [--target-kind TARGET_KIND]
+                                   [--target-identity TARGET_IDENTITY]
+                                   [--intent INTENT]
                                    [--validation VALIDATION [VALIDATION ...]]
                                    [--tags TAGS [TAGS ...]]
                                    [--provenance PROVENANCE]

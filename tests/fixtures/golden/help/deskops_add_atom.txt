@@ -1,7 +1,7 @@
 usage: deskops add atom [-h] [--root ROOT] [--from-yaml FROM_YAML]
                         [--title TITLE]
-                        --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
-                        --answer ANSWER [--tags TAGS [TAGS ...]]
+                        [--five-wh-one-plus {what,why,how,how_not,when,where,for_whom}]
+                        [--answer ANSWER] [--tags TAGS [TAGS ...]]
                         [--provenance PROVENANCE]
 
 Create a atom artifact.

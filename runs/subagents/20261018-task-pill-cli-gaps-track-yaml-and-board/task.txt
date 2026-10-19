@@ -1,0 +1,7 @@
+Task: task-pill-cli-gaps-track-yaml-and-board
+Title: Pill CLI gaps: add pill tracks what it creates, --from-yaml needs no flags, retire unroutes the pill from the Board
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

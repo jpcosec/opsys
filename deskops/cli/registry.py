@@ -130,9 +130,9 @@ def _add_subject_commands() -> list[Command]:
         if model is not None:
             include_special = artifact_id in {"artifact.task"}
             for fmeta in model_cli_fields(model, include_special=include_special):
-                # title is never required=True in CLI — slugified from the value
-                required = fmeta.is_required and fmeta.name != "title"
-                kwargs: dict[str, object] = {"required": required, "help": fmeta.help}
+                # No model field is argparse-required: --from-yaml may supply it,
+                # and the model validates what the payload still misses.
+                kwargs: dict[str, object] = {"required": False, "help": fmeta.help}
                 if fmeta.is_list:
                     kwargs["action"] = "extend"
                     kwargs["nargs"] = "+"

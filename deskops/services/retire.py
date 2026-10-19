@@ -13,6 +13,9 @@ from pathlib import Path
 
 from deskops import doc_io
 from deskops.errors import DomainError
+from deskops.models import BoardDoc
+from sldb.runtime.validation import extract_model_data
+from sldb.runtime.validation import render_model_markdown
 
 _DEDICATED_VERBS = (
     ("desk/tasks/", "deskops closeout commit|supersede|retire"),
@@ -38,6 +41,7 @@ class RetireResult:
     path: str
     reason: str
     refs: tuple[str, ...]
+    boards: tuple[str, ...] = ()
 
 
 def retire_document(
@@ -79,8 +83,9 @@ def retire_document(
     if unresolved:
         raise DomainError(f"Unresolvable --ref: {', '.join(unresolved)} (use an ancestor commit or an existing path).")
 
+    updates = _board_pill_updates(root, path, relative)
     if not force:
-        inbound = _inbound_references(root, path, relative)
+        inbound = _inbound_references(root, path, relative, skip=_handled_boards(root, updates, path, relative))
         if inbound:
             raise DomainError(
                 f"Refusing to retire {relative}: still referenced by {', '.join(inbound)}. "
@@ -88,8 +93,69 @@ def retire_document(
             )
 
     with doc_io.DocTransaction(root) as transaction:
+        for board_path, payload in updates:
+            _write_board(root, board_path, payload)
         transaction.delete(path)
-    return RetireResult(path=relative, reason=reason, refs=clean_refs)
+    return RetireResult(
+        path=relative,
+        reason=reason,
+        refs=clean_refs,
+        boards=tuple(board_path.relative_to(root).as_posix() for board_path, _ in updates),
+    )
+
+
+def _pill_reference_matches(reference: str, relative: str, stem: str) -> bool:
+    return reference in {
+        relative,
+        f"desk/contexts/{stem}",
+        f"desk/contexts/{stem}.md",
+        stem,
+    }
+
+
+def _board_pill_updates(root: Path, path: Path, relative: str) -> list[tuple[Path, dict]]:
+    """Boards whose ``pills`` list routes ``relative``, with that entry removed."""
+    if not relative.startswith("desk/contexts/"):
+        return []
+    tasks_dir = root / "desk" / "tasks"
+    if not tasks_dir.is_dir():
+        return []
+    updates: list[tuple[Path, dict]] = []
+    for board_path in sorted(tasks_dir.glob("*.md")):
+        if board_path.name != "Board.md" and not board_path.stem.startswith("board-"):
+            continue
+        try:
+            payload = extract_model_data(BoardDoc, board_path.read_text(encoding="utf-8"))
+        except (OSError, UnicodeDecodeError, ValueError):
+            continue
+        payload.setdefault("id", board_path.stem)
+        pills = [str(item) for item in payload.get("pills") or []]
+        kept = [item for item in pills if not _pill_reference_matches(item, relative, path.stem)]
+        if kept == pills:
+            continue
+        payload["pills"] = kept
+        updates.append((board_path, payload))
+    return updates
+
+
+def _handled_boards(root: Path, updates: list[tuple[Path, dict]], path: Path, relative: str) -> set[Path]:
+    """Boards whose rewrite removes every textual reference to the retired pill."""
+    needles = {relative, path.stem}
+    handled: set[Path] = set()
+    for board_path, payload in updates:
+        try:
+            rewritten = render_model_markdown(BoardDoc, payload) + "\n"
+        except ValueError:
+            continue
+        if not any(needle in rewritten for needle in needles):
+            handled.add(board_path.resolve())
+    return handled
+
+
+def _write_board(root: Path, board_path: Path, payload: dict) -> None:
+    from deskops.operations import DeskopsOperations
+
+    DeskopsOperations(root)._write_doc(board_path, BoardDoc, payload)
 
 
 def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:
@@ -102,7 +168,8 @@ def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:
     return CloseoutGatesService(root).reference_points_to_commit(ref)
 
 
-def _inbound_references(root: Path, path: Path, relative: str) -> list[str]:
+def _inbound_references(root: Path, path: Path, relative: str, *, skip: set[Path] | None = None) -> list[str]:
+    skip = skip or set()
     needles = {relative}
     if path.suffix == ".md":
         needles.add(path.stem)
@@ -114,7 +181,7 @@ def _inbound_references(root: Path, path: Path, relative: str) -> list[str]:
             candidates.extend(sorted(base.rglob("*.md")))
     candidates.extend(root / name for name in _REFERENCE_FILES if (root / name).is_file())
     for candidate in candidates:
-        if candidate.resolve() == path:
+        if candidate.resolve() == path or candidate.resolve() in skip:
             continue
         try:
             text = candidate.read_text(encoding="utf-8")

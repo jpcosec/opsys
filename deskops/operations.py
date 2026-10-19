@@ -1223,7 +1223,7 @@ class DeskopsOperations:
             path.unlink()
 
     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
-        if artifact_id != "artifact.atom":
+        if artifact_id not in {"artifact.atom", "artifact.pill"}:
             return
         self._track_created_document(model, path, doc_id)
 

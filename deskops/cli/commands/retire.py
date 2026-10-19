@@ -20,4 +20,6 @@ class RetireCLI:
         print(f"Retired {result.path}")
         print(f"Reason: {result.reason}")
         print(f"Refs: {', '.join(result.refs)}")
+        for board in result.boards:
+            print(f"Unrouted from {board}")
         return 0

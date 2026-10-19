@@ -1,12 +1,12 @@
 usage: deskops add ritual [-h] [--root ROOT] [--from-yaml FROM_YAML]
                           [--title TITLE] [--summary SUMMARY]
-                          [--tags TAGS [TAGS ...]] --purpose PURPOSE
-                          --trigger TRIGGER
+                          [--tags TAGS [TAGS ...]] [--purpose PURPOSE]
+                          [--trigger TRIGGER]
                           [--preconditions PRECONDITIONS [PRECONDITIONS ...]]
                           [--steps STEPS [STEPS ...]]
                           [--validation VALIDATION [VALIDATION ...]]
                           [--failure-modes FAILURE_MODES [FAILURE_MODES ...]]
-                          --completion COMPLETION
+                          [--completion COMPLETION]
 
 Create a ritual artifact.
 

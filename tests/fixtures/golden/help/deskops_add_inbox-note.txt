@@ -1,11 +1,12 @@
 usage: deskops add inbox-note [-h] [--root ROOT] [--from-yaml FROM_YAML]
-                              --kind {unclear,suggestion}
+                              [--kind {unclear,suggestion}]
                               [--sender-project SENDER_PROJECT]
                               [--target-project TARGET_PROJECT]
-                              --created-at CREATED_AT --status {open,closed}
+                              [--created-at CREATED_AT]
+                              [--status {open,closed}]
                               [--acknowledged-by ACKNOWLEDGED_BY]
                               [--acknowledged-at ACKNOWLEDGED_AT]
-                              [--title TITLE] --body BODY
+                              [--title TITLE] [--body BODY]
 
 Create a inbox-note artifact.
 

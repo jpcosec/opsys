@@ -1,6 +1,6 @@
 usage: deskops add repository [-h] [--root ROOT] [--from-yaml FROM_YAML]
-                              --name NAME [--path PATH] [--status STATUS]
-                              --description DESCRIPTION
+                              [--name NAME] [--path PATH] [--status STATUS]
+                              [--description DESCRIPTION]
                               [--tags TAGS [TAGS ...]]
 
 Create a local repository artifact doc; use 'deskops repo register' for canonical ecosystem registration.

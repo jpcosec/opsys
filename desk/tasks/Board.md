@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-pill-cli-gaps-track-yaml-and-board.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,5 +44,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Pill CLI gaps: add pill tracks what it creates, --from-yaml needs no flags, retire unroutes the pill from the Board [draft] - `add pill` tracks the created PillDoc in the store. `add pill --from-yaml` accepts a payload without the per-field flags, as `add task --from-yaml` already does. `retire` on a pill removes it from every Board's `pills` list in the same transaction and reports that it did.

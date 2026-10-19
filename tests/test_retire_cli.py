@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import subprocess
+import sys
 from pathlib import Path
 
 from deskops.cli.main import main
@@ -26,13 +28,78 @@ def _retire(root: Path, path: str, *extra: str) -> int:
     return main(["retire", path, "--root", str(root), "--reason", "Describes a retired surface", *extra])
 
 
+def _store_check(root: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [sys.executable, "-m", "sldb", "stores", "check", "--store", str(root / ".sldb")],
+        capture_output=True,
+        text=True,
+    )
+
+
+def _add_pill(root: Path, title: str = "Old guardrail") -> Path:
+    assert main(["add", "pill", "--root", str(root), "--title", title, "--what", "w", "--why", "y", "--when", "n", "--where", "e", "--how", "h", "--how-not", "x"]) == 0
+    return next((root / "desk" / "contexts").glob(f"pill-{title.lower().replace(' ', '-')}*.md"))
+
+
+def test_add_pill_tracks_the_created_document(tmp_path: Path, capsys) -> None:
+    from sldb.api import doc_status
+
+    root = _repo(tmp_path)
+    pill = _add_pill(root)
+    relative = pill.relative_to(root).as_posix()
+    capsys.readouterr()
+
+    assert doc_status(root / ".sldb", relative).exists
+    assert main(["doctor", "--root", str(root)]) == 0
+    assert "Desk is healthy" in capsys.readouterr().out
+
+
+def test_add_pill_from_yaml_needs_no_field_flags(tmp_path: Path) -> None:
+    from sldb.api import doc_status
+
+    root = _repo(tmp_path)
+    payload = tmp_path / "pill.yaml"
+    payload.write_text(
+        "title: YAML pill\nwhat: w\nwhy: y\nwhen: n\nwhere: e\nhow: h\nhow_not: x\n",
+        encoding="utf-8",
+    )
+
+    assert main(["add", "pill", "--from-yaml", str(payload), "--root", str(root)]) == 0
+
+    pill = root / "desk" / "contexts" / "pill-yaml-pill.md"
+    assert pill.exists()
+    assert doc_status(root / ".sldb", "desk/contexts/pill-yaml-pill.md").exists
+
+
+def test_retire_unroutes_a_board_routed_pill_and_keeps_the_store_green(tmp_path: Path, capsys) -> None:
+    from sldb.api import doc_status
+
+    root = _repo(tmp_path)
+    pill = _add_pill(root)
+    relative = pill.relative_to(root).as_posix()
+    assert main(["edit", "board", "Board", "pills", json.dumps([relative]), "--root", str(root)]) == 0
+    board = root / "desk" / "tasks" / "Board.md"
+    assert relative in board.read_text(encoding="utf-8")
+    capsys.readouterr()
+
+    assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 0
+    out = capsys.readouterr().out
+
+    assert "Unrouted from desk/tasks/Board.md" in out
+    assert not pill.exists()
+    assert relative not in board.read_text(encoding="utf-8")
+    assert not doc_status(root / ".sldb", relative).exists
+    assert main(["doctor", "--root", str(root)]) == 0
+    check = _store_check(root)
+    assert check.returncode == 0
+    assert "PASS" in check.stdout
+
+
 def test_retire_removes_a_tracked_pill_and_its_store_record(tmp_path: Path, capsys) -> None:
     from sldb.api import doc_status
 
     root = _repo(tmp_path)
-    assert main(["add", "pill", "--root", str(root), "--title", "Old guardrail", "--what", "w", "--why", "y", "--when", "n", "--where", "e", "--how", "h", "--how-not", "x"]) == 0
-    main(["desk", "update", "--root", str(root), "--apply"])
-    pill = next((root / "desk" / "contexts").glob("pill-old-guardrail*.md"))
+    pill = _add_pill(root)
     relative = pill.relative_to(root).as_posix()
     assert doc_status(root / ".sldb", relative).exists
     capsys.readouterr()

@@ -1,7 +1,8 @@
 usage: deskops add pill [-h] [--root ROOT] [--from-yaml FROM_YAML]
                         [--title TITLE] [--summary SUMMARY]
-                        [--tags TAGS [TAGS ...]] --what WHAT --why WHY
-                        --when WHEN --where WHERE --how HOW --how-not HOW_NOT
+                        [--tags TAGS [TAGS ...]] [--what WHAT] [--why WHY]
+                        [--when WHEN] [--where WHERE] [--how HOW]
+                        [--how-not HOW_NOT]
 
 Create a pill artifact.
 

@@ -1,0 +1,19 @@
+ M .sldb/core/documents/TaskDoc/task-pill-cli-gaps-track-yaml-and-board.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-pill-cli-gaps-track-yaml-and-board.md
+ M deskops/cli/commands/retire.py
+ M deskops/cli/registry.py
+ M deskops/operations.py
+ M deskops/services/retire.py
+ M tests/fixtures/golden/help/deskops_add_atom.txt
+ M tests/fixtures/golden/help/deskops_add_board.txt
+ M tests/fixtures/golden/help/deskops_add_faq-doc.txt
+ M tests/fixtures/golden/help/deskops_add_inbox-note.txt
+ M tests/fixtures/golden/help/deskops_add_materialization.txt
+ M tests/fixtures/golden/help/deskops_add_pill.txt
+ M tests/fixtures/golden/help/deskops_add_repository.txt
+ M tests/fixtures/golden/help/deskops_add_ritual.txt
+ M tests/fixtures/golden/help/deskops_add_step.txt
+ M tests/test_retire_cli.py
+?? runs/subagents/20261018-task-pill-cli-gaps-track-yaml-and-board/
