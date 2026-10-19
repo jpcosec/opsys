@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-desk-replace-verb-for-unmodeled-files.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -33,14 +34,16 @@ tags:
 
 _Explain what this board routes and why it exists._
 
-
+Route the active execution set for deskops.
 
 ## Notes
 
 _Add short operational notes about the current routed set._
 
-- Make role prompts sldb-tracked RoleDocs with pi-agent materialization [active] - Roles become canonical sldb-tracked documents; installed pi agents become regenerated artifacts; drift is detectable via `deskops drift check`.
+No active tasks routed.
 
 ## Task Details
 
 _Generated from the task references above._
+
+- `deskops desk replace` edits unmodeled desk files through the CLI with an exact text replacement [draft] - `deskops desk replace <path> --old <text> --new <text> [--count N] --root <repo>` replaces an exact substring in one file under desk/. By default the substring must occur exactly once, or exactly N times with --count. Otherwise the command refuses and the file stays untouched. A store-tracked document is re-tracked after the write. The command prints the path and the number of replacements.
