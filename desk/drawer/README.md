@@ -1,4 +1,4 @@
-# Drawer (opsys)
+# Drawer
 
 This guide is a human-facing materialization of these atoms:
 
@@ -9,24 +9,15 @@ This guide is a human-facing materialization of these atoms:
 
 `desk/drawer/` holds deferred opsys workflow-domain work that should not enter active execution yet.
 
-It is the place for internal planning and deferred work. Do not use `desk/inbox/` as an agent scratchpad for future work; inbox is for messages addressed to the project and records the sending project.
+## Remaining surfaces
 
-Use it for:
+- `desk/drawer/features/feature-runtime-and-launcher.md` — OWNER decision: keep a Herdr-backed `deskops launch` or retire it in favor of `deskops runtime supervise` plus an external harness.
+- `desk/drawer/tasks/Board.md` — routes the deferred task backlog.
+- `desk/drawer/stress-tests/st-15-ci-integration.md` and `desk/drawer/use-cases/uc-15-deskops-as-a-ci-step.md` — the CI knowledge-integrity gap, pending a task.
 
-- future features
-- backlog plans
-- ideas that still need shaping before they become desk tasks
+## Retired surfaces
 
-## Surfaces
-
-- `desk/drawer/features/` holds deferred feature documents.
-- `desk/drawer/issues/` holds deferred issues and closed routing records.
-- `desk/drawer/use-cases/` holds user interaction narratives before they become specs or tests.
-- `desk/drawer/stress-tests/` holds scripted UX stress-tests derived from the use cases.
-- `desk/drawer/attention/` holds inbox items that need human attention before they can be promoted, rejected, or deleted.
-- `desk/drawer/questions/` holds unresolved workflow/model questions before they become tasks, atoms, docs, specs, diagrams, or rituals.
-- `desk/drawer/rituals/` holds deferred ritual drafts before they are promoted into active `desk/rituals/` or implemented as CLI operations.
-- `desk/drawer/tasks/Board.md` routes deferred items without promoting them into execution.
+The covered use-cases and stress-tests were retired on 2026-10-19 because their flows are exercised by the test suite; each retirement commit names the covering test. The findings archive was retired with them (git history is the record). The answered questions were removed after their answers were verified against the code. The drawer triage and knowledge distillation passes were promoted to `desk/rituals/`. `feature-agent-role-models.md` was replaced by `desk/roles/`; `feature-sldb-ui-surface-inspection.md` was routed to sldb/spec2viz; the master plan was retired because kgdb no longer exists. The attention review is in `desk/logbook/log-2026-06-21-workflow-baseline-before-roles-refactor.md`.
 
 ## Rule
 
