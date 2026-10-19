@@ -1,10 +1,12 @@
-usage: deskops desk [-h] {install,migrate,update} ...
+usage: deskops desk [-h] {install,migrate,replace,update} ...
 
 positional arguments:
-  {install,migrate,update}
+  {install,migrate,replace,update}
     install             Scaffold a minimal local desk/ surface in a repo.
     migrate             Adopt a legacy or partial desk into the current non-
                         destructive workspace contract.
+    replace             Replace an exact substring in one desk file that has
+                        no modeled edit verb.
     update              Report and repair divergence between the current desk,
                         its models, and its store.
 

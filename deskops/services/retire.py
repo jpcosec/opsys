@@ -22,6 +22,15 @@ _DEDICATED_VERBS = (
 )
 _REFERENCE_SURFACES = ("desk", "docs")
 _REFERENCE_FILES = ("README.md", "AGENTS.md")
+#: Paths `deskops doctor` and `deskops desk update` require as the desk's structure.
+_REQUIRED_STRUCTURE = frozenset(
+    {
+        "desk/config.json",
+        "desk/drawer",
+        "desk/rituals/phase.md",
+        "desk/tasks/Board.md",
+    }
+)
 
 
 @dataclass(frozen=True)
@@ -48,11 +57,17 @@ def retire_document(
         relative = path.relative_to(root).as_posix()
     except ValueError as exc:
         raise DomainError(f"{target} is not inside {root}") from exc
-    if not relative.startswith("desk/") or not path.is_file():
+    if not relative.startswith("desk/"):
         raise DomainError(f"{relative} is not a file under desk/")
     for prefix, verb in _DEDICATED_VERBS:
         if relative.startswith(prefix):
             raise DomainError(f"{relative} has its own retirement verb: use `{verb}`.")
+    if relative in _REQUIRED_STRUCTURE:
+        raise DomainError(
+            f"{relative} is required desk structure: `deskops doctor` repairs it, so it cannot be retired."
+        )
+    if not path.is_file():
+        raise DomainError(f"{relative} is not a file under desk/")
 
     reason = " ".join(reason.split())
     if not reason:

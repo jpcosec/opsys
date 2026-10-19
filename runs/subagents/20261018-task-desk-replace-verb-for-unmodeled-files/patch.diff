@@ -1,0 +1,472 @@
+diff --git a/deskops/cli/commands/desk.py b/deskops/cli/commands/desk.py
+index c685392..6201265 100644
+--- a/deskops/cli/commands/desk.py
++++ b/deskops/cli/commands/desk.py
+@@ -134,10 +134,25 @@ class DeskCLI:
+             return self.install(args)
+         if args.desk_command == "migrate":
+             return self.migrate(args)
++        if args.desk_command == "replace":
++            return self.replace(args)
+         if args.desk_command == "update":
+             return self.update(args)
+         return 1
+ 
++    def replace(self, args: Any) -> int:
++        from deskops.services.replace import replace_text
++
++        result = replace_text(
++            Path(args.root),
++            args.path,
++            args.old,
++            args.new,
++            count=args.count,
++        )
++        print(f"Replaced {result.replacements} occurrence(s) in {result.path}")
++        return 0
++
+     def install(self, args: Any) -> int:
+         target_path = Path(args.path).resolve()
+         ok, error = ensure_target_directory(target_path)
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index ea6c72f..910cb6a 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -871,6 +871,27 @@ The issue status is set to closed and a ## Resolution section records Closed, Re
+             handler="deskops.cli.commands.desk:DeskCLI",
+             mutates=True,
+         ),
++        Command(
++            path=("desk", "replace"),
++            help="Replace an exact substring in one desk file that has no modeled edit verb.",
++            args=(
++                A(
++                    "path",
++                    help="Path of the file under desk/ (desk/... or relative to the desk root).",
++                ),
++                ROOT_ARG,
++                A("--old", required=True, help="Exact text to replace; must occur --count times."),
++                A("--new", required=True, help="Replacement text."),
++                A(
++                    "--count",
++                    type=int,
++                    default=1,
++                    help="Exact number of occurrences of --old to require (default: 1).",
++                ),
++            ),
++            handler="deskops.cli.commands.desk:DeskCLI",
++            mutates=True,
++        ),
+         Command(
+             path=("desk", "update"),
+             help="Report and repair divergence between the current desk, its models, and its store.",
+diff --git a/deskops/services/replace.py b/deskops/services/replace.py
+new file mode 100644
+index 0000000..e70e5de
+--- /dev/null
++++ b/deskops/services/replace.py
+@@ -0,0 +1,116 @@
++"""Replace an exact substring in one desk file that has no modeled edit verb.
++
++``deskops edit`` reaches the modeled fields of supported subjects. Files whose
++path does not map to one of those subjects — drawer notes, issue bodies, role
++prompts, the atom tag namespace file — are edited here instead.
++
++A store-tracked file keeps its tracking: its bytes change and the store record
++is rebuilt from them, so ``deskops doctor`` and ``sldb stores check`` stay green.
++"""
++
++from __future__ import annotations
++
++from dataclasses import dataclass
++from pathlib import Path
++
++from deskops import doc_io
++from deskops.errors import DomainError
++
++#: Paths whose documents ``deskops edit`` can already reach. Every modeled
++#: subject except atoms (any depth below desk/atoms/) and drawer tasks (which
++#: are only modeled when they are valid TaskDocs).
++_MODELED_PREFIXES = {
++    "desk/tasks/": "task",
++    "desk/contexts/": "pill",
++    "desk/rituals/": "ritual",
++    "desk/materializations/": "materialization",
++    "desk/registry/": "repository",
++    "desk/inbox/": "inbox-note",
++    "desk/faq/": "faq-doc",
++    "desk/steps/": "step",
++}
++
++
++@dataclass(frozen=True)
++class ReplaceResult:
++    path: str
++    replacements: int
++
++
++def replace_text(
++    root: Path,
++    target: str,
++    old: str,
++    new: str,
++    *,
++    count: int = 1,
++) -> ReplaceResult:
++    """Replace ``old`` with ``new`` exactly ``count`` times in one desk file."""
++    root = root.resolve()
++    path = Path(target)
++    path = (path if path.is_absolute() else root / path).resolve()
++    if not path.exists() and not path.is_absolute():
++        desk_relative = (root / "desk" / target).resolve()
++        if desk_relative.exists():
++            path = desk_relative
++    try:
++        relative = path.relative_to(root).as_posix()
++    except ValueError as exc:
++        raise DomainError(f"{target} is not inside {root}") from exc
++    if not relative.startswith("desk/") or not path.is_file():
++        raise DomainError(f"{relative} is not a file under desk/")
++    if not old:
++        raise DomainError("--old must not be empty.")
++    if count < 1:
++        raise DomainError("--count must be at least 1.")
++    try:
++        text = path.read_text(encoding="utf-8")
++    except UnicodeDecodeError as exc:
++        raise DomainError(f"{relative} is not UTF-8 text: {exc}") from exc
++
++    subject = _modeled_subject(relative, text)
++    if subject is not None:
++        raise DomainError(
++            f"{relative} is a modeled {subject} document: use `deskops edit {subject} <selector> <field> <value>`."
++        )
++
++    found = text.count(old)
++    if found != count:
++        raise DomainError(
++            f"Refusing to replace in {relative}: found {found} occurrence(s) of --old, "
++            f"expected {count}. The file is unchanged."
++        )
++
++    updated = text.replace(old, new)
++    with doc_io.DocTransaction(root) as transaction:
++        state = transaction.record(path)
++        path.write_text(updated, encoding="utf-8")
++        if state.was_tracked and state.tracked_model is not None:
++            transaction.untrack(path)
++            transaction.track(path, state.tracked_model, name=state.tracked_name)
++    return ReplaceResult(path=relative, replacements=count)
++
++
++def _modeled_subject(relative: str, text: str) -> str | None:
++    for prefix, subject in _MODELED_PREFIXES.items():
++        if relative.startswith(prefix):
++            return subject
++    if relative.startswith("desk/atoms/") and relative.endswith(".md"):
++        return "atom"
++    if relative.startswith("desk/drawer/tasks/") and relative.endswith(".md"):
++        # Drawer candidates are task documents when they parse as one. Older
++        # drawer notes do not, and have no edit verb, so they stay replaceable.
++        if _is_task_doc(text):
++            return "task"
++    return None
++
++
++def _is_task_doc(text: str) -> bool:
++    from deskops.models import TaskDoc
++    from sldb.runtime.validation import extract_model_data
++
++    try:
++        extract_model_data(TaskDoc, text)
++    except Exception:
++        return False
++    return True
+diff --git a/deskops/services/retire.py b/deskops/services/retire.py
+index 988c9cd..51e97bb 100644
+--- a/deskops/services/retire.py
++++ b/deskops/services/retire.py
+@@ -22,6 +22,15 @@ _DEDICATED_VERBS = (
+ )
+ _REFERENCE_SURFACES = ("desk", "docs")
+ _REFERENCE_FILES = ("README.md", "AGENTS.md")
++#: Paths `deskops doctor` and `deskops desk update` require as the desk's structure.
++_REQUIRED_STRUCTURE = frozenset(
++    {
++        "desk/config.json",
++        "desk/drawer",
++        "desk/rituals/phase.md",
++        "desk/tasks/Board.md",
++    }
++)
+ 
+ 
+ @dataclass(frozen=True)
+@@ -48,11 +57,17 @@ def retire_document(
+         relative = path.relative_to(root).as_posix()
+     except ValueError as exc:
+         raise DomainError(f"{target} is not inside {root}") from exc
+-    if not relative.startswith("desk/") or not path.is_file():
++    if not relative.startswith("desk/"):
+         raise DomainError(f"{relative} is not a file under desk/")
+     for prefix, verb in _DEDICATED_VERBS:
+         if relative.startswith(prefix):
+             raise DomainError(f"{relative} has its own retirement verb: use `{verb}`.")
++    if relative in _REQUIRED_STRUCTURE:
++        raise DomainError(
++            f"{relative} is required desk structure: `deskops doctor` repairs it, so it cannot be retired."
++        )
++    if not path.is_file():
++        raise DomainError(f"{relative} is not a file under desk/")
+ 
+     reason = " ".join(reason.split())
+     if not reason:
+diff --git a/tests/fixtures/golden/help/deskops_desk.txt b/tests/fixtures/golden/help/deskops_desk.txt
+index 5959c93..30eb2e7 100644
+--- a/tests/fixtures/golden/help/deskops_desk.txt
++++ b/tests/fixtures/golden/help/deskops_desk.txt
+@@ -1,10 +1,12 @@
+-usage: deskops desk [-h] {install,migrate,update} ...
++usage: deskops desk [-h] {install,migrate,replace,update} ...
+ 
+ positional arguments:
+-  {install,migrate,update}
++  {install,migrate,replace,update}
+     install             Scaffold a minimal local desk/ surface in a repo.
+     migrate             Adopt a legacy or partial desk into the current non-
+                         destructive workspace contract.
++    replace             Replace an exact substring in one desk file that has
++                        no modeled edit verb.
+     update              Report and repair divergence between the current desk,
+                         its models, and its store.
+ 
+diff --git a/tests/fixtures/golden/help/deskops_desk_replace.txt b/tests/fixtures/golden/help/deskops_desk_replace.txt
+new file mode 100644
+index 0000000..72a4eeb
+--- /dev/null
++++ b/tests/fixtures/golden/help/deskops_desk_replace.txt
+@@ -0,0 +1,14 @@
++usage: deskops desk replace [-h] [--root ROOT] --old OLD --new NEW
++                            [--count COUNT]
++                            path
++
++positional arguments:
++  path           Path of the file under desk/ (desk/... or relative to the
++                 desk root).
++
++options:
++  -h, --help     show this help message and exit
++  --root ROOT    Target repository root.
++  --old OLD      Exact text to replace; must occur --count times.
++  --new NEW      Replacement text.
++  --count COUNT  Exact number of occurrences of --old to require (default: 1).
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 25206f5..c0316c6 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -89,6 +89,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
+     ("desk",),
+     ("desk", "install"),
+     ("desk", "migrate"),
++    ("desk", "replace"),
+     ("desk", "update"),
+     ("atoms",),
+     ("atoms", "add-namespace"),
+diff --git a/tests/test_desk_replace.py b/tests/test_desk_replace.py
+new file mode 100644
+index 0000000..cccbf7a
+--- /dev/null
++++ b/tests/test_desk_replace.py
+@@ -0,0 +1,172 @@
++from __future__ import annotations
++
++import subprocess
++from pathlib import Path
++
++from deskops import doc_io
++from deskops.cli.main import main
++from deskops.models import RoleDoc
++from sldb.runtime.validation import render_model_markdown
++
++
++def _git(root: Path, *args: str) -> str:
++    return subprocess.run(["git", *args], cwd=root, capture_output=True, text=True, check=True).stdout.strip()
++
++
++def _repo(tmp_path: Path) -> Path:
++    root = tmp_path / "repo"
++    root.mkdir()
++    assert main(["init", str(root)]) == 0
++    _git(root, "init", "-q")
++    _git(root, "config", "user.email", "t@example.com")
++    _git(root, "config", "user.name", "T")
++    _git(root, "add", "-A")
++    _git(root, "commit", "-q", "-m", "seed")
++    return root
++
++
++def _replace(root: Path, path: str, old: str, new: str, *extra: str) -> int:
++    return main(["desk", "replace", path, "--root", str(root), "--old", old, "--new", new, *extra])
++
++
++def _write(root: Path, relative: str, text: str) -> Path:
++    path = root / relative
++    path.parent.mkdir(parents=True, exist_ok=True)
++    path.write_text(text, encoding="utf-8")
++    return path
++
++
++def test_replace_edits_an_unmodeled_drawer_file(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    note = _write(root, "desk/drawer/features/note.md", "# Feature\n\nOld wording.\n")
++    capsys.readouterr()
++
++    assert _replace(root, "desk/drawer/features/note.md", "Old wording.", "New wording.") == 0
++    out = capsys.readouterr().out
++
++    assert "Replaced 1 occurrence(s) in desk/drawer/features/note.md" in out
++    assert note.read_text(encoding="utf-8") == "# Feature\n\nNew wording.\n"
++
++
++def test_replace_refuses_when_the_old_text_is_missing(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    _write(root, "desk/drawer/features/note.md", "# Feature\n")
++    capsys.readouterr()
++
++    assert _replace(root, "desk/drawer/features/note.md", "absent", "new") == 1
++    captured = capsys.readouterr()
++    assert "found 0 occurrence(s)" in captured.out + captured.err
++    assert (root / "desk/drawer/features/note.md").read_text(encoding="utf-8") == "# Feature\n"
++
++
++def test_replace_requires_an_exact_count(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    note = _write(root, "desk/drawer/features/note.md", "same same\n")
++    capsys.readouterr()
++
++    assert _replace(root, "desk/drawer/features/note.md", "same", "other") == 1
++    captured = capsys.readouterr()
++    assert "found 2 occurrence(s)" in captured.out + captured.err
++    assert note.read_text(encoding="utf-8") == "same same\n"
++
++    assert _replace(root, "desk/drawer/features/note.md", "same", "other", "--count", "2") == 0
++    assert note.read_text(encoding="utf-8") == "other other\n"
++
++
++def test_replace_retracks_a_role_doc_and_keeps_the_store_pass(tmp_path: Path, capsys) -> None:
++    from sldb.api import check_store, doc_status
++
++    root = _repo(tmp_path)
++    role_path = _write(
++        root,
++        "desk/roles/deskops-supervisor.md",
++        render_model_markdown(
++            RoleDoc,
++            {
++                "id": "role-deskops-supervisor",
++                "name": "deskops-supervisor",
++                "description": "Use when acting as the desk workflow supervisor.",
++                "kind": "pi",
++                "model": "anthropic/claude-opus-4-8",
++                "fallback_models": [],
++                "tools": ["read", "bash"],
++                "system_prompt_mode": "replace",
++                "inherit_project_context": True,
++                "inherit_skills": True,
++                "default_context": "fresh",
++                "body": "# Workflow Supervisor\n\nOld body.",
++            },
++        )
++        + "\n",
++    )
++    doc_io.track(root, role_path, "RoleDoc")
++    capsys.readouterr()
++
++    assert _replace(root, "desk/roles/deskops-supervisor.md", "# Workflow Supervisor", "# Workflow Lead") == 0
++
++    assert "New body" not in role_path.read_text(encoding="utf-8")
++    assert "# Workflow Lead" in role_path.read_text(encoding="utf-8")
++    assert doc_status(root / ".sldb", "desk/roles/deskops-supervisor.md").exists
++    check = check_store(root / ".sldb", root, pythonpath=str(Path(__file__).resolve().parents[1]))
++    assert check["ok"] is True
++
++
++def test_replace_refuses_a_modeled_pill(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    pill = _write(root, "desk/contexts/pill-old.md", "# Old pill\n\nOld wording.\n")
++    capsys.readouterr()
++
++    assert _replace(root, "desk/contexts/pill-old.md", "Old wording.", "New wording.") == 1
++    captured = capsys.readouterr()
++    assert "deskops edit pill" in captured.out + captured.err
++    assert pill.read_text(encoding="utf-8") == "# Old pill\n\nOld wording.\n"
++
++
++def test_replace_edits_an_issue_body(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    issue = _write(root, "desk/issues/issue-old.md", "ID: issue-old\nStatus: open\n\nOld wording.\n")
++    capsys.readouterr()
++
++    assert _replace(root, "desk/issues/issue-old.md", "Old wording.", "New wording.") == 0
++
++    assert issue.read_text(encoding="utf-8") == "ID: issue-old\nStatus: open\n\nNew wording.\n"
++
++
++def test_replace_edits_legacy_drawer_tasks_but_refuses_a_valid_task_doc(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    legacy = _write(
++        root,
++        "desk/drawer/tasks/task-legacy.md",
++        "# Legacy drawer task\n\nStatus: draft\n\nOld wording.\n",
++    )
++    capsys.readouterr()
++
++    assert _replace(root, "desk/drawer/tasks/task-legacy.md", "Old wording.", "New wording.") == 0
++    assert "New wording." in legacy.read_text(encoding="utf-8")
++
++    assert main(
++        [
++            "add",
++            "task",
++            "--root",
++            str(root),
++            "--title",
++            "Modeled task",
++            "--goal",
++            "g",
++            "--scope",
++            "s",
++            "--validation",
++            "pytest",
++        ]
++    ) == 0
++    task = next((root / "desk" / "tasks").glob("task-modeled-task*.md"))
++    drawer_task = root / "desk" / "drawer" / "tasks" / task.name
++    drawer_task.parent.mkdir(parents=True, exist_ok=True)
++    drawer_task.write_bytes(task.read_bytes())
++    capsys.readouterr()
++
++    assert _replace(root, drawer_task.relative_to(root).as_posix(), "# Modeled task", "# Renamed") == 1
++    captured = capsys.readouterr()
++    assert "deskops edit task" in captured.out + captured.err
++    assert "# Modeled task" in drawer_task.read_text(encoding="utf-8")
+diff --git a/tests/test_retire_cli.py b/tests/test_retire_cli.py
+index 4a92ad3..bd980dd 100644
+--- a/tests/test_retire_cli.py
++++ b/tests/test_retire_cli.py
+@@ -71,6 +71,15 @@ def test_retire_points_tasks_and_drawer_entries_at_their_own_verbs(tmp_path: Pat
+     assert "closeout" in captured.out + captured.err
+ 
+ 
++def test_retire_refuses_required_desk_structure(tmp_path: Path, capsys) -> None:
++    root = _repo(tmp_path)
++    for relative in ("desk/rituals/phase.md", "desk/config.json"):
++        assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 1
++        captured = capsys.readouterr()
++        assert "required desk structure" in captured.out + captured.err
++        assert (root / relative).exists()
++
++
+ def test_retire_refuses_an_unresolvable_ref_and_keeps_the_file(tmp_path: Path, capsys) -> None:
+     root = _repo(tmp_path)
+     leftover = root / "desk" / "models" / "__init__.py"

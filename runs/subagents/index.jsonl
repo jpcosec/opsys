@@ -74,3 +74,4 @@
 {"task_id": "task-declare-version-0-2-0-unreleased", "run_id": null, "run_dir": "runs/subagents/20261018-task-declare-version-0-2-0-unreleased", "session_sha256": null, "commit": null}
 {"task_id": "task-closeout-records-a-never-committed-task-first", "run_id": null, "run_dir": "runs/subagents/20261018-task-closeout-records-a-never-committed-task-first", "session_sha256": null, "commit": null}
 {"task_id": "task-retire-verb-for-desk-documents", "run_id": null, "run_dir": "runs/subagents/20261018-task-retire-verb-for-desk-documents", "session_sha256": null, "commit": null}
+{"task_id": "task-desk-replace-verb-for-unmodeled-files", "run_id": null, "run_dir": "runs/subagents/20261018-task-desk-replace-verb-for-unmodeled-files", "session_sha256": null, "commit": null}

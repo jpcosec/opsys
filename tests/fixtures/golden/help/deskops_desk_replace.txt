@@ -1,0 +1,14 @@
+usage: deskops desk replace [-h] [--root ROOT] --old OLD --new NEW
+                            [--count COUNT]
+                            path
+
+positional arguments:
+  path           Path of the file under desk/ (desk/... or relative to the
+                 desk root).
+
+options:
+  -h, --help     show this help message and exit
+  --root ROOT    Target repository root.
+  --old OLD      Exact text to replace; must occur --count times.
+  --new NEW      Replacement text.
+  --count COUNT  Exact number of occurrences of --old to require (default: 1).

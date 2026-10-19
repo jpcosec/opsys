@@ -71,6 +71,15 @@ def test_retire_points_tasks_and_drawer_entries_at_their_own_verbs(tmp_path: Pat
     assert "closeout" in captured.out + captured.err
 
 
+def test_retire_refuses_required_desk_structure(tmp_path: Path, capsys) -> None:
+    root = _repo(tmp_path)
+    for relative in ("desk/rituals/phase.md", "desk/config.json"):
+        assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 1
+        captured = capsys.readouterr()
+        assert "required desk structure" in captured.out + captured.err
+        assert (root / relative).exists()
+
+
 def test_retire_refuses_an_unresolvable_ref_and_keeps_the_file(tmp_path: Path, capsys) -> None:
     root = _repo(tmp_path)
     leftover = root / "desk" / "models" / "__init__.py"

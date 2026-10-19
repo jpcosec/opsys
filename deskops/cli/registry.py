@@ -872,6 +872,27 @@ The issue status is set to closed and a ## Resolution section records Closed, Re
             mutates=True,
         ),
         Command(
+            path=("desk", "replace"),
+            help="Replace an exact substring in one desk file that has no modeled edit verb.",
+            args=(
+                A(
+                    "path",
+                    help="Path of the file under desk/ (desk/... or relative to the desk root).",
+                ),
+                ROOT_ARG,
+                A("--old", required=True, help="Exact text to replace; must occur --count times."),
+                A("--new", required=True, help="Replacement text."),
+                A(
+                    "--count",
+                    type=int,
+                    default=1,
+                    help="Exact number of occurrences of --old to require (default: 1).",
+                ),
+            ),
+            handler="deskops.cli.commands.desk:DeskCLI",
+            mutates=True,
+        ),
+        Command(
             path=("desk", "update"),
             help="Report and repair divergence between the current desk, its models, and its store.",
             args=(

@@ -134,9 +134,24 @@ class DeskCLI:
             return self.install(args)
         if args.desk_command == "migrate":
             return self.migrate(args)
+        if args.desk_command == "replace":
+            return self.replace(args)
         if args.desk_command == "update":
             return self.update(args)
         return 1
+
+    def replace(self, args: Any) -> int:
+        from deskops.services.replace import replace_text
+
+        result = replace_text(
+            Path(args.root),
+            args.path,
+            args.old,
+            args.new,
+            count=args.count,
+        )
+        print(f"Replaced {result.replacements} occurrence(s) in {result.path}")
+        return 0
 
     def install(self, args: Any) -> int:
         target_path = Path(args.path).resolve()

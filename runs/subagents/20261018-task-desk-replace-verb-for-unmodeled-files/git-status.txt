@@ -1,0 +1,17 @@
+ M .sldb/core/documents/TaskDoc/task-desk-replace-verb-for-unmodeled-files.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-desk-replace-verb-for-unmodeled-files.md
+ M deskops/cli/commands/desk.py
+ M deskops/cli/commands/doctor.py
+ M deskops/cli/registry.py
+ M deskops/services/retire.py
+ M tests/fixtures/golden/help/deskops_desk.txt
+ M tests/test_cli.py
+ M tests/test_command_registry.py
+ M tests/test_doctor_unmodeled_surfaces.py
+ M tests/test_retire_cli.py
+?? deskops/services/replace.py
+?? runs/subagents/20261018-task-desk-replace-verb-for-unmodeled-files/
+?? tests/fixtures/golden/help/deskops_desk_replace.txt
+?? tests/test_desk_replace.py
