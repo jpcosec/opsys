@@ -18,8 +18,7 @@ Do not leave reviewed items here after the decision is made.
 
 Thirteen test fixtures were deleted. The eight real notes were folded into the
 surfaces they belonged to and removed: two merged into their matching issues
-(`issue-implement-task-scoped-subagent-lanes`,
-`issue-formalize-inter-project-inbox-communication`), four whose knowledge
+(the task-scoped subagent lanes and the inter-project inbox issues, both since closed and retired), four whose knowledge
 already lived in atoms were deleted, and the three historical workflow
 snapshots were merged into
 `desk/logbook/log-2026-06-21-workflow-baseline-before-roles-refactor.md`.

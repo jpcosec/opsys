@@ -6,13 +6,9 @@ This board routes deferred work only.
 
 - `use-cases/` — 15 use-case narratives covering the CLI surfaces
 - `stress-tests/` — 15 scripted UX tests, with every finding archived in
-  `stress-tests/findings-archive.md`; what is left to fix is tracked in
-  `issues/issue-stress-test-fix-backlog.md`
-- `issues/` — 29 files: open work, closed and routed entries kept for the record, and
-  `issue-ecosystem-desk-sweep-remaining-repos.md`, the 2026-09-30 sweep that raised
-  healthy desks from 6 to 30 of 39 and lists the 9 still pending and why, and
-  `diagnosis-archive.md`, the 2026-08 architectural diagnosis whose durable part is
-  now six atoms
+  `stress-tests/findings-archive.md`; the fix backlog is closed
+- `issues/` — empty: on 2026-10-19 every closed issue was retired with `deskops retire`,
+  each citing the commit that resolved it; their history is in git
 - `questions/` — decisions that block implementation, with their status
 - `features/` — four deferred design documents:
   - `feature-runtime-and-launcher.md` — how a task reaches an agent: tmux launcher, Herdr runtime, semantic execution adapter
@@ -145,7 +141,6 @@ All currently routed drawer tasks have been promoted into active desk task bundl
 Reviewed 2026-09-24: the issue set was folded from 40 files to 24, the attention
 pile was emptied, and the stress-test findings were archived into one file. See
 the review notes in `attention/README.md` and the commit history for the merge
-map. `issue-session-20260910-handoff-uncommitted-work-and-open-items.md` and
-`issue-deskops-init-spawns-one-process-per-model.md` are both resolved.
+map. The session handoff and the one-process-per-model issues were resolved and later retired.
 
 Audited 2026-10-19: removed retired drawer references, recorded that KGDB was merged into sldb, and added the pending 0.2.0 release task.

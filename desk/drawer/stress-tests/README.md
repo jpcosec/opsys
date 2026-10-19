@@ -11,7 +11,7 @@ the desk.
 
 - `st-01..st-15*.md` — the tests, one per use case
 - `findings-archive.md` — every finding from the six rounds that ran them, verbatim
-- `desk/drawer/issues/issue-stress-test-fix-backlog.md` — closed; all Phase 0 items are fixed, including empty selectors (`d42a3e3`).
+- the fix backlog issue was closed and retired on 2026-10-19; all Phase 0 items are fixed, including empty selectors (`d42a3e3`).
 
 ## Running them
 
