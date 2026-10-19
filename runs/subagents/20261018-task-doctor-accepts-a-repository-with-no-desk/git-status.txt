@@ -1,0 +1,8 @@
+ M .sldb/core/documents/TaskDoc/task-doctor-accepts-a-repository-with-no-desk.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-doctor-accepts-a-repository-with-no-desk.md
+ M deskops/cli/commands/doctor.py
+ M tests/test_cli.py
+ M tests/test_doctor_unmodeled_surfaces.py
+?? runs/subagents/20261018-task-doctor-accepts-a-repository-with-no-desk/

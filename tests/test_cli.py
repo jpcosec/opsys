@@ -225,6 +225,52 @@ def test_doctor_reports_legacy_desk_with_missing_config(tmp_path: Path, capsys) 
     assert "Run with --repair to attempt automatic fixes." in captured.out
 
 
+def test_doctor_accepts_a_repository_with_no_desk(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "no-desk-project"
+    root.mkdir()
+
+    result = main(["doctor", "--root", str(root)])
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert captured.out == (
+        f"No desk at {root.resolve()}: this repository has no desk/ "
+        "(run deskops init to create one).\n"
+    )
+    assert "Doctor Findings:" not in captured.out
+    assert "Run with --repair" not in captured.out
+    assert not (root / "desk").exists()
+
+
+def test_doctor_repair_does_not_scaffold_a_repository_with_no_desk(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "no-desk-project"
+    root.mkdir()
+
+    result = main(["doctor", "--root", str(root), "--repair"])
+
+    captured = capsys.readouterr()
+    assert result == 0
+    assert "No desk at" in captured.out
+    assert "Scaffolded missing desk/ structure." not in captured.out
+    assert not (root / "desk").exists()
+
+
+def test_doctor_still_reports_a_partial_desk(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "partial-project"
+    (root / "desk" / "tasks").mkdir(parents=True)
+    (root / "desk" / "tasks" / "Board.md").write_text("# Board\n", encoding="utf-8")
+    (root / "desk" / "config.json").write_text(
+        json.dumps({"versions": {"desk_format": CURRENT_DESK_FORMAT}}), encoding="utf-8"
+    )
+
+    result = main(["doctor", "--root", str(root)])
+
+    captured = capsys.readouterr()
+    assert result == 1
+    assert "Missing desk structure: desk/drawer/, desk/rituals/phase.md" in captured.out
+    assert "No desk at" not in captured.out
+
+
 def test_desk_migrate_preserves_authored_legacy_files_and_scaffolds_missing_surfaces(tmp_path: Path, capsys) -> None:
     root = tmp_path / "legacy-project"
     root.mkdir()

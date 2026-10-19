@@ -27,9 +27,14 @@ class DoctorCLI:
         desk_dir = root / "desk"
         missing_desk_files: list[str] = []
 
-        if inspection.classification == "absent":
-            missing_desk_files.append("desk/")
-        elif desk_dir.exists():
+        if inspection.classification == "absent" and not (desk_dir / "config.json").exists():
+            print(
+                f"No desk at {root}: this repository has no desk/ "
+                "(run deskops init to create one)."
+            )
+            return 0
+
+        if desk_dir.exists():
             if not (desk_dir / "tasks" / "Board.md").exists():
                 missing_desk_files.append("desk/tasks/Board.md")
             if not (desk_dir / "drawer").exists():

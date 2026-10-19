@@ -1,0 +1,7 @@
+Task: task-doctor-accepts-a-repository-with-no-desk
+Title: `deskops doctor` on a repository with no desk reports that there is no desk and exits 0
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

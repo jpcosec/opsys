@@ -66,7 +66,7 @@ def _prepare_current_modeled_surfaces(root: Path) -> list[str]:
     ]
 
 
-def test_doctor_reports_missing_desk_without_crashing_on_deskless_root(tmp_path: Path) -> None:
+def test_doctor_accepts_deskless_root_without_crashing(tmp_path: Path) -> None:
     root = tmp_path / "empty"
     root.mkdir()
     env = dict(os.environ)
@@ -81,8 +81,10 @@ def test_doctor_reports_missing_desk_without_crashing_on_deskless_root(tmp_path:
         check=False,
     )
 
-    assert result.returncode == 1
-    assert "Missing desk structure: desk/" in result.stdout
+    assert result.returncode == 0
+    assert "No desk at" in result.stdout
+    assert "this repository has no desk/" in result.stdout
+    assert "Missing desk structure" not in result.stdout
     assert "Unexpected:" not in result.stdout
     assert "Unexpected:" not in result.stderr
 
