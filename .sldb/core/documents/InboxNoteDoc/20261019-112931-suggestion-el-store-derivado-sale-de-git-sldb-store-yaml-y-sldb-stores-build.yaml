@@ -1,0 +1,17 @@
+name: 20261019-112931-suggestion-el-store-derivado-sale-de-git-sldb-store-yaml-y-sldb-stores-build
+path: desk/inbox/20261019-112931-suggestion-el-store-derivado-sale-de-git-sldb-store-yaml-y-sldb-stores-build.md
+source_hash: b1ab404a9dab1aa356751cb35930af61be1369f9bae4722bdb9d8909c5f9fc63
+content_hash: 89963a8f764d1b8f3db515cdad021a423da562c5ae894144e8f3cb4c43bb7f8a
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: b75b493ac6f66e6262deb5d782320d66087f994bf7f4d1aba367b11ad4b78070
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: ef436692d9c892019290b8ff430917dfe223b2d704828e68bd38a72241eb26c0
+  body: 5e41442465f38fbd00d5f0e6f4a253999142ea78b6ba7bb75ad0a72de7f11039
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox

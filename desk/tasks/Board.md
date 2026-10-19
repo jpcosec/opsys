@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-derived-store-out-of-git.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -44,3 +45,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- deskops declares its store in .sldb/store.yaml and takes .sldb/core out of git [draft] - .sldb/store.yaml declares deskops' models, predicates and include rules with no absolute paths. .sldb/core/ is git-ignored and removed from the index. In a clean clone with sldb as a sibling, `sldb stores build` and `sldb stores check` pass. CI runs `sldb stores build` before pytest and `sldb stores build --check`. spec2viz and graph_ui are told by inbox.
