@@ -1,7 +1,7 @@
 name: deskops-supervisor
 path: desk/roles/deskops-supervisor.md
-source_hash: 402d5edca83372e3863bd7b423eb54df5f6ec649d841fe9846772943c9a7b5ff
-content_hash: 0c54b8e79215e7159f7df78d1b11fcfedd904cf84d6c73021f6ceba0d8292a86
+source_hash: a57e98078da0d33e88ad59b9650162d76dc051a5fcf37750bb68db18eb7b6d7d
+content_hash: 92c454f37bd0e3c78522d9ebf696096eb4b7c245661985a1e7564477d053eb9d
 field_hashes:
   id: a72c8291e98c725136452df047b6fbc248acc73bd2a6d98575b266624db1678d
   name: 8537fadb7b35983cfe3a8088b7167efb122ece5ec3959bffbd815e3c7253c38b
@@ -14,7 +14,7 @@ field_hashes:
   inherit_project_context: b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b
   inherit_skills: b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b
   default_context: b1e5780cb6ded9edcf5bac26c937adb4aa3023ab34d951398d5b4bed5ae4e115
-  body: e36e5cc0d6ea369fb0a2fb9fdd3ed827692f44d67b00f0879823a02ec5b8131d
+  body: 8cb4afa4b44dbcc5f80113b3c9093937a5f9e9bf4e881b5b0acf47564c87f649
 semantic_tags:
 - representation.markdown
 - source.document.markdown

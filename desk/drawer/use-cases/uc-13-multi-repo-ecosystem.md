@@ -5,10 +5,9 @@ The hum-ecosystem has multiple repos. The user has deskops installed globally an
 **Interaction flow:**
 
 1. `deskops repo register ~/projects/hum-ecosystem/tools/deskops` → registers a desk
-2. `deskops repo list` → sees all registered desks
-3. `deskops repo switch tools/deskops` → active desk context changes
-4. Now `deskops atoms list` shows atoms for that project
-5. `deskops repo switch tools/another-tool` → context switches
+2. `deskops repo whoami` → confirms which desk the current root resolves to
+3. `ls desk/registry/` → sees all registered desks
+4. `deskops repo remove <selector>` → unregisters a desk
 
 **What this user is trying to do:**
 Work across the ecosystem without getting confused about which desk is active. The repo registry is their workspace manager.

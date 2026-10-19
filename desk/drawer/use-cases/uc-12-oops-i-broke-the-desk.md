@@ -4,17 +4,17 @@ The user was editing atoms and specs, ran a bad command, and now something is of
 
 **Interaction flow:**
 
-1. `deskops status` → health check of the desk workspace
+1. `deskops doctor --root .` → health check of the desk workspace
 2. Report: "3 issues found — 2 broken atom references, 1 stale graph snapshot"
-3. `deskops status --fix` → auto-fixes what it can
+3. `deskops doctor --repair` → auto-fixes what it can
 4. For things it can't fix: gives clear instructions
-5. User follows instructions, re-runs `status`, desk is healthy again
+5. User follows instructions, re-runs `doctor`, desk is healthy again
 
 **What this user is trying to do:**
 Self-healing. They want the tool to help them recover from mistakes, not just report errors. Good error messages with next steps are more valuable than perfect prevention.
 
 **When this breaks:**
-- `status` says "everything fine" when things are obviously broken
+- `doctor` says "everything fine" when things are obviously broken
 - Auto-fix makes things worse without a rollback
 - Instructions assume too much context ("fix atom X" — how?)
 - Error messages are stack traces instead of human explanations

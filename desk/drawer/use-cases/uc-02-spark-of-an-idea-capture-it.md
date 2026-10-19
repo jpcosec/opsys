@@ -4,9 +4,9 @@ Working on something else, the user gets an idea. They need to dump it somewhere
 
 **Interaction flow:**
 
-1. `deskops inbox add "we should have a way to auto-tag atoms based on their content"` → saved
-2. Later: `deskops inbox list` → sees the idea sitting there
-3. `deskops inbox show 1` → reads the full note
+1. `deskops message send "..."` → saved
+2. Later: `deskops message list` → sees the idea sitting there
+3. `deskops message read <selector>` → reads the full note
 4. Decides it has legs: routes it to the drawer or promotes it to a task
 
 **What this user is trying to do:**

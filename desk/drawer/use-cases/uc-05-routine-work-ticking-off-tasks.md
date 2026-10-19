@@ -1,14 +1,15 @@
-# UC-05: Routine work — ticking off tasks
+# UC-05: Task lifecycle — moving through rituals
 
 The user has a task board with work items. They want to pick something up, work on it, and mark progress.
 
 **Interaction flow:**
 
-1. `deskops list` → sees available tasks with status and phase
-2. `deskops show desk-042` → reads the task details
-3. Starts working: `deskops advance desk-042 --to in_progress`
-4. Finishes implementation: commits, then `deskops advance desk-042 --to review`
-5. After review passes: `deskops advance desk-042 --to done`
+1. `deskops list tasks` → sees available tasks with status and phase
+2. `deskops show task <id>` → reads the task details
+3. `deskops next <id>` → sees the next valid action
+4. Starts working: `deskops advance task <id>`
+5. Finishes implementation: `deskops closeout verify --task <id>`
+6. After verification passes: `deskops closeout commit --task <id> --no-run --reason "..."`
 
 **What this user is trying to do:**
 Track progress without leaving the terminal. They want the task board to reflect reality with minimal overhead.

@@ -5,18 +5,14 @@
 ## Script
 
 ```bash
-# 1. Closeout completo
-deskops closeout
+# 1. Verificar closeout
+deskops closeout verify --task <id>
 
-# 2. Closeout con fase especifica
-deskops closeout --phase graph-building
+# 2. Corregir lo que falta y re-ejecutar
+deskops closeout verify --task <id>
 
-# 3. Closeout falla — ver que falta
-deskops closeout --verbose
-
-# 4. Corregir lo que falta y re-ejecutar
-# (various fixes)
-deskops closeout
+# 3. Commit de cierre
+deskops closeout commit --task <id> --no-run --reason "..."
 ```
 
 ## Puntos de estrés
@@ -24,8 +20,6 @@ deskops closeout
 | Paso | Qué mirar |
 |---|---|
 | `closeout` | ¿El output dice PASS/FAIL claramente? ¿O hay que escudriñar? |
-| Detalle de fallo | ¿Cada fallo dice qué cheque se ejecutó, qué esperaba, y qué encontró? |
-| Fase específica | ¿Corre solo los checks relevantes a esa fase, o es un alias para correr todo? |
 | Re-ejecución | ¿Los items que ya pasaron se cachean o se re-ejecutan siempre? |
 
 ## Modos de fracaso

@@ -6,16 +6,17 @@
 
 ```bash
 # 1. Capture simple
-deskops inbox "we should auto-tag atoms by content"
+deskops message send "we should auto-tag atoms by content"
 
 # 2. Capture con urgencia (medio escribiendo)
-deskops inbox "el grafo no esta mostrando"
+deskops message send "el grafo no esta mostrando"
 
 # 3. Ver lo capturado
-deskops inbox --list
+deskops message list
 
-# 4. Ver detalle
-deskops inbox --show <selector>
+# 4. Leer y confirmar
+deskops message read <selector>
+deskops message ack <selector>
 
 # 5. Promover a trabajo diferido
 deskops promote inbox-to-drawer-task <selector>

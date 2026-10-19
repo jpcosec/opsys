@@ -185,9 +185,9 @@ Home (landing page: README.md general)
 │   ├── What is a Desk?
 │   ├── Tasks & Boards
 │   ├── Pills & Context
-│   ├── Rituals & Routines
+│   ├── Rituals (lifecycle states)
 │   ├── Atoms & Knowledge
-│   ├── Primitives (conditions, operators, checklists, edges)
+│   ├── Workflow model (tasks, atoms, graph)
 │   └── Spec-driven artifacts
 ├── Workflow Guide             # Flujos completos paso a paso
 │   ├── How to start a task

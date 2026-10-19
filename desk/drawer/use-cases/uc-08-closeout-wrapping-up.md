@@ -4,14 +4,14 @@ A task or phase is done. Before calling it complete, the user runs a closeout ri
 
 **Interaction flow:**
 
-1. Run `deskops closeout` — or some named ritual
+1. Run `deskops closeout verify --task <id>`
 2. System checks:
    - Are all atoms still consistent with each other?
    - Are materializations up to date?
    - Is the graph coherent?
    - Are there drift items that need attention?
 3. Gets a pass/fail with details
-4. If pass: marks the phase as truly done
+4. If pass: `deskops closeout commit --task <id> --no-run --reason "..."`
 5. If fail: gets a list of what to fix before closing
 
 **What this user is trying to do:**

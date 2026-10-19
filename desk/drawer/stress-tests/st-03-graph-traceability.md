@@ -9,17 +9,17 @@
 deskops graph build
 
 # 2. Navegar vecinos de un atomo clave
-deskops graph neighbors atom-materialization-contracts-bind-source-output-validation
+deskops graph neighbors atom:atom-materialization-contracts-bind-source-output-validation
 
 # 3. Navegar vecinos de algo que NO es atomo (spec, source file)
 deskops graph neighbors specs/my-spec
 deskops graph neighbors deskops/operations.py
 
 # 4. Seguir cadena: vecinos de vecinos
-deskops graph neighbors atom-specs-formalize-atoms-as-contracts
+deskops graph neighbors atom:atom-specs-formalize-atoms-as-contracts
 
 # 5. Nodo sin conexiones
-deskops graph neighbors atom-orphaned-idea
+deskops graph neighbors atom:atom-orphaned-idea
 ```
 
 ## Puntos de estrés

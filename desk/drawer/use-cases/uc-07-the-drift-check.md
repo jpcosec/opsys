@@ -4,13 +4,9 @@ The team has been coding for weeks. The atoms describe how things should work. T
 
 **Interaction flow:**
 
-1. `deskops drift check` → compares atom claims against implementation
-2. Gets a report:
-   - **Green**: claims match implementation
-   - **Yellow**: claims exist but can't be verified automatically
-   - **Red**: claims contradict implementation
-3. User drills into a red item → sees what the atom says vs what the code does
-4. Decides: update the atom, update the code, or acknowledge drift
+1. `deskops drift check --root .` → compares atom claims against implementation
+2. Reads the findings: each one names the check, the expected claim, and what was found
+3. Decides: update the atom or update the code
 
 **What this user is trying to do:**
 Keep knowledge and implementation in sync. Drift is inevitable — they want to surface it, not hide it. The report tells them where to focus.

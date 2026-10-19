@@ -7,17 +7,17 @@
 ```bash
 # Simular lo que correria en CI
 
-# 1. Build graph
-deskops graph build --ci
+# 1. Tests
+python -m pytest tests -q
 
 # 2. Missing check (exit non-zero si hay missing)
-deskops graph missing --ci
+deskops graph missing
 
 # 3. Drift check (exit non-zero si hay drift)
-deskops drift check --ci
+deskops drift check
 
 # 4. Closeout (exit non-zero si no pasa)
-deskops closeout --ci-mode
+deskops closeout verify --task <id>
 
 # 5. Ver exit codes
 echo $?
@@ -27,7 +27,6 @@ echo $?
 
 | Paso | Qué mirar |
 |---|---|
-| `--ci` flag | ¿Cambia el output (menos verbose, más parseable)? ¿O es igual que local? |
 | Exit codes | ¿Cada comando distingue "error real" (2) de "found issues" (1) de "success" (0)? |
 | Output en CI | ¿Los mensajes son grep-friendly? ¿O tienen colores/formatos que no funcionan en logs CI? |
 | Dependencias | ¿Deskops requiere cosas que no están en un entorno CI mínimo (git config, home dir)? |

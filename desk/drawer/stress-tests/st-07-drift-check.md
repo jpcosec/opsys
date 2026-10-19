@@ -6,23 +6,10 @@
 
 ```bash
 # 1. Drift check completo
-deskops drift check
+deskops drift check --root .
 
-# 2. Drift check por area
-deskops drift check --scope graph
-deskops drift check --scope materialization
-
-# 3. Drift check con --verbose
-deskops drift check --verbose
-
-# 4. Ver detalle de un drift item especifico
-deskops drift show drift-003
-
-# 5. Acknowledge drift (aceptar que existe sin arreglarlo)
-deskops drift acknowledge drift-003 --reason "will fix in next sprint"
-
-# 6. Re-check despues de acknowledge
-deskops drift check
+# 2. Drift check con salida a un directorio
+deskops drift check --out <dir>
 ```
 
 ## Puntos de estrés
@@ -32,8 +19,6 @@ deskops drift check
 | `drift check` | ¿El reporte usa colores o iconos (✓/⚠/✗)? ¿O es texto plano sin señal visual? |
 | Items green | ¿Son checks reales o falsos porque el test es demasiado superficial? |
 | Items red | ¿El mensaje dice "el atomo X dice Y pero el codigo hace Z"? |
-| `--scope` | ¿Filtra correctamente o siempre corre todo? |
-| `drift acknowledge` | ¿El acknowledge persiste entre runs? ¿O hay que repetirlo siempre? |
 
 ## Modos de fracaso
 

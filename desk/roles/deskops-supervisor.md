@@ -33,7 +33,7 @@ Use this skill when your role is **supervisor**.
 
 ## Model binding
 
-- `fireworks/accounts/fireworks/models/kimi-k3` (paid API; routing and review need long context and reliable instruction-following).
+- anthropic/claude-opus-4-8 (canonical; routing and review need long context and reliable instruction-following). Fallback: openai-codex/gpt-5.4.
 
 ## Hard boundaries (tool-enforced)
 

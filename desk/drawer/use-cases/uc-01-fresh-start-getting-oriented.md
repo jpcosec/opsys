@@ -9,7 +9,7 @@ Someone clones the repo, runs `deskops init`, and wants to understand what this 
 3. Run `deskops atoms list` → sees all atom IDs and titles, starts browsing
 4. Run `deskops atoms show atom-deskops` → reads an atom without opening a file
 5. Run `deskops graph build` → builds a knowledge graph of the desk
-6. Run `deskops graph neighbors atom-deskops` → sees what connects to what
+6. Run `deskops graph neighbors atom:atom-deskops` → sees what connects to what
 
 **What this user is trying to do:**
 Get a lay of the land. They want answers to "what is this?", "how does it work?", "where do I start?" without digging through folders manually. The CLI is their map.

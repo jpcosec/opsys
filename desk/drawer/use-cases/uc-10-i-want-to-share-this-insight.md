@@ -5,7 +5,7 @@ The user has been working with the desk and wants to communicate what they've le
 **Interaction flow:**
 
 1. Build understanding in the desk (atoms, graph, materializations)
-2. `deskops materialize` → generates human-friendly documents from atoms
+2. Write or update the atom materialization doc under `docs/` (see `MaterializationContractDoc`)
 3. Output goes to `docs/` — readable in a browser, in markdown, on GitHub
 4. User shares a link: "read the materialization at docs/architecture-overview.md"
 5. Reader doesn't need deskops installed — just reads the rendered docs

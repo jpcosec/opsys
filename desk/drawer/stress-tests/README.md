@@ -11,10 +11,7 @@ the desk.
 
 - `st-01..st-15*.md` — the tests, one per use case
 - `findings-archive.md` — every finding from the six rounds that ran them, verbatim
-- `desk/drawer/issues/issue-stress-test-fix-backlog.md` — what is left to fix,
-  with Phase 0 re-verified against the current CLI
-- `desk/drawer/issues/issue-empty-selector-validation-error.md` — the one Phase 0
-  item still reproducible
+- `desk/drawer/issues/issue-stress-test-fix-backlog.md` — closed; all Phase 0 items are fixed, including empty selectors (`d42a3e3`).
 
 ## Running them
 

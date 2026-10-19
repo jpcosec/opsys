@@ -1,6 +1,6 @@
 # Agent role models
 
-Merged on 2026-09-24. These three arrived as models imported from paper_IEEE. Supervisor and executor are now real RoleDocs (`desk/roles/deskops-supervisor.md`, `desk/roles/deskops-executor.md`, plus a tester) that are tracked and materialize the installed agent files, so what is recorded here is the modelling intent. The router role has no RoleDoc yet.
+Supervisor, executor, and tester are RoleDocs under `desk/roles/`; the router role has no RoleDoc. The imported bodies below are historical: `desk/agents/` is deleted and retirement is `deskops closeout commit`, not file deletion.
 
 
 ---

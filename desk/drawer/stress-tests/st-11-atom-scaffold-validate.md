@@ -6,7 +6,7 @@
 
 ```bash
 # 1. Scaffold atomo nuevo
-deskops atoms new "Why we use pydantic over dataclasses"
+deskops add atom --title "Why we use pydantic over dataclasses" --five-wh-one-plus what --answer "..."
 
 # 2. Validar atomo vacio (solo scaffold)
 deskops atoms validate desk/atoms/workflow-model/atom-why-we-use-pydantic-over-dataclasses.md
@@ -19,16 +19,16 @@ deskops atoms validate desk/atoms/workflow-model/atom-why-we-use-pydantic-over-d
 deskops atoms validate desk/atoms/workflow-model/atom-broken-format.md
 
 # 5. Scaffold con nombre invalido
-deskops atoms new ""
-deskops atoms new "a"  # demasiado corto
-deskops atoms new "a"$'\n'"b"  # multilinea
+deskops add atom --title "" --five-wh-one-plus what --answer "..."
+deskops add atom --title "a" --five-wh-one-plus what --answer "..."  # demasiado corto
+deskops add atom --title "a"$'\n'"b" --five-wh-one-plus what --answer "..."  # multilinea
 ```
 
 ## Puntos de estrés
 
 | Paso | Qué mirar |
 |---|---|
-| `atoms new` | ¿El path donde crea el archivo es predecible? ¿Lo imprime? |
+| `add atom` | ¿El path donde crea el archivo es predecible? ¿Lo imprime? |
 | Template inicial | ¿Tiene todos los campos requeridos? ¿Incluye comentarios guía? |
 | `validate` | ¿Cada error señala línea exacta? ¿El mensaje dice "falta campo X" o "error de parsing"? |
 | Validación de tags | ¿Valida contra el namespace conocido? ¿O acepta cualquier tag? |

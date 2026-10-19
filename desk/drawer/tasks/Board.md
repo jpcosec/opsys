@@ -8,17 +8,15 @@ This board routes deferred work only.
 - `stress-tests/` — 15 scripted UX tests, with every finding archived in
   `stress-tests/findings-archive.md`; what is left to fix is tracked in
   `issues/issue-stress-test-fix-backlog.md`
-- `issues/` — 28 files: open work, closed and routed entries kept for the record, and
+- `issues/` — 29 files: open work, closed and routed entries kept for the record, and
   `issue-ecosystem-desk-sweep-remaining-repos.md`, the 2026-09-30 sweep that raised
   healthy desks from 6 to 30 of 39 and lists the 9 still pending and why, and
   `diagnosis-archive.md`, the 2026-08 architectural diagnosis whose durable part is
   now six atoms
 - `questions/` — decisions that block implementation, with their status
-- `features/` — six deferred design documents:
-  - `workflow-execution-engine.md` — hooks, state machines, condition evaluators, gated pipeline
+- `features/` — four deferred design documents:
   - `feature-runtime-and-launcher.md` — how a task reaches an agent: tmux launcher, Herdr runtime, semantic execution adapter
   - `feature-agent-role-models.md` — the router/supervisor/executor models, now mostly RoleDocs
-  - `feature-materialization-pipeline.md` — documents from atoms, artifacts for agents
   - `master-plan-deskops-knowledge-decouple-and-execution-runtime.md` — annotated: written against kgdb, which is gone
   - `feature-sldb-ui-surface-inspection.md` — routed elsewhere (sldb/spec2viz)
 - `attention/` — empty; reviewed on 2026-09-24
@@ -30,6 +28,7 @@ This board routes deferred work only.
 Deferred task backlog:
 
 - `task-adhoc-subagent-launcher-tmux-multi-cli` — deskops launch: tmux + codex/agy/pi, sldb-compiled per-role context, tool limits by profile, disk-persisted output, deskops-mediated signals (ambiguities resolved; ready to promote)
+- `task-release-deskops-0-2-0-pendiente-hasta-que-la-suite-completa-funcione-junta` — release 0.2.0, pending until the full suite works together
 
 ### Deskops rewrite plan (2026-10-16)
 
@@ -58,7 +57,7 @@ F5:
 F6:
 
 
-Promoted to active desk tasks:
+Promoted to active desk tasks (historical):
 
 - `task-sync-pi-skills-with-the-deliberate-removal-of-promote-drawer-task-to-active-task`
 - `task-improve-cli-help-progressive-disclosure`
@@ -99,10 +98,7 @@ SLDB inbox (`tools/sldb/desk/inbox/`):
 - `20260614-000002` — add store health-check API
 - `20260614-000003` — add model registration query API
 
-KGDB inbox (`tools/kgdb/desk/inbox/`):
-- `20260614-000000` — stabilize graph snapshot validation
-- `20260614-000001` — stabilize relation serialization
-- `20260614-000002` — add graph trace query surface
+KGDB was merged into sldb; its inbox no longer exists.
 
 Removed from this drawer (moved out):
 - `task-stabilize-init-local-store-failures` → atomized as SLDB inbox items above
@@ -112,18 +108,6 @@ Removed from this drawer (moved out):
 ## Imports from paper_IEEE
 
 Items imported from `paper_IEEE/desk/` on 2026-06-22, filtered for deskops relevance. The sender project is `paper_IEEE`.
-
-### Attention (desk/drawer/attention/)
-
-Items triaged into `desk/drawer/attention/` for human review before promotion:
-
-- `20260621-034212-suggestion-clarify-atoms-vs-pills-and-knowledge-flow-in-deskops-docs.md` — epistemic flow documentation gap (overlaps drawer issue)
-- `20260621-034342-unclear-clarify-inbox-model-for-inter-project-communication.md` — inter-project inbox model (overlaps drawer issue)
-- `20260621-113406-note-tmux-usage-for-development-and-testing-only.md` — tmux boundary: external orchestration only, not runtime logic
-- `20260621-120052-note-task-closeout-requires-testing-and-commit-boundary.md` — closeout gate: commit boundary required before retirement
-- `20260621-160450-note-workflow-summary-so-far.md` — comprehensive workflow model documentation
-- `20260621-160930-note-current-workflow-invariants.md` — 13 concise workflow invariants
-- `20260621-164028-note-subagent-ready-task-standard-checklist.md` — 100% subagent-ready task checklist (13 sections)
 
 ### Features (desk/drawer/features/)
 
@@ -144,7 +128,6 @@ Items triaged into `desk/drawer/attention/` for human review before promotion:
 - `desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md`
 - `desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md`
 - `desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md`
-- `desk/contexts/pill-operator-manual-follows-stable-runnable-slices.md`
 
 ## Rituals
 
@@ -164,3 +147,5 @@ pile was emptied, and the stress-test findings were archived into one file. See
 the review notes in `attention/README.md` and the commit history for the merge
 map. `issue-session-20260910-handoff-uncommitted-work-and-open-items.md` and
 `issue-deskops-init-spawns-one-process-per-model.md` are both resolved.
+
+Audited 2026-10-19: removed retired drawer references, recorded that KGDB was merged into sldb, and added the pending 0.2.0 release task.

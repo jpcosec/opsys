@@ -5,7 +5,7 @@ Status: deferred
 
 ## Purpose
 
-Convert raw context into integrated deskops knowledge: atoms, deferred questions, deferred tasks, graph relations, SLDB indexes, KGDB query state, validation evidence, and a descriptive commit.
+Convert raw context into integrated deskops knowledge: atoms, deferred questions, deferred tasks, graph relations, SLDB indexes, sldb graph state, validation evidence, and a descriptive commit.
 
 Use this ritual when a conversation, investigation, drift finding, missing manual, or unclear workflow area contains enough signal that leaving it in chat history would lose project knowledge.
 
@@ -49,13 +49,13 @@ Use this ritual when a conversation, investigation, drift finding, missing manua
 - `sldb stores update --store .sldb --pythonpath .` to refresh semantic indexes, section indexes, and hashes after adding modeled documents.
 - `sldb stores check --store .sldb --pythonpath .` to prove the local store is coherent before closeout.
 
-## KGDB Tools Used
+## Graph checks
 
-- KGDB runtime output written by `deskops graph build` under `.sldb/runtime/knowledge_graph.kg.json` and `.sldb/runtime/knowledge_graph.nx.json`.
-- KGDB node identity conventions such as `atom:<id>` and `question:<path>` through the deskops graph vocabulary.
-- KGDB edge queries exposed by `deskops graph neighbors` to verify relation direction and provenance at the deskops level.
+- Graph runtime output written by `deskops graph build` under `.sldb/runtime/graphs/deskops.kg.json`.
+- Node identity conventions such as `atom:<id>` and `question:<path>` through the deskops graph vocabulary.
+- Edge queries exposed by `deskops graph build`, `deskops graph missing`, and `deskops graph neighbors` to verify relation direction and provenance at the deskops level.
 
-## Routine Steps
+## Steps
 
 1. Capture the raw context and name the distillation scope.
 1. Read existing modeled knowledge through SLDB or deskops where possible instead of relying only on raw text search.
@@ -100,13 +100,12 @@ Use this ritual when a conversation, investigation, drift finding, missing manua
 
 ## Promotion Rule
 
-This ritual is deferred until it is converted into an active `desk/rituals/` document or decomposed into routines, hooks, and gates. The first implementation task should preserve the validation gates above.
+This ritual is deferred until it is promoted into an active `desk/rituals/` document. The first implementation task should preserve the validation gates above.
 
 ## Tags
 
 - system:deskops
 - system:sldb
-- system:kgdb
 - workspace:drawer
 - topic:atoms
 - topic:knowledge-distillation

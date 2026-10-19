@@ -5,7 +5,7 @@ Status: resolved
 
 ## Question
 
-Four decisions block implementation of `desk/drawer/features/feature-herdr-supervised-execution-runtime.md`. Each one changes what gets built or what gets committed, and none should be resolved implicitly by whoever writes the code first.
+Four decisions block implementation of `desk/drawer/features/feature-runtime-and-launcher.md`. Each one changes what gets built or what gets committed, and none should be resolved implicitly by whoever writes the code first.
 
 ### 1. Which model is canonical for the supervisor role?
 
@@ -38,6 +38,6 @@ Decision 4 determines whether the durable run record is queryable through the st
 - promoting `task-adhoc-subagent-launcher-tmux-multi-cli`
 - any `deskops runtime supervise` implementation
 
-## Blocked Surface
+## Resolved
 
-`deskops inbox` cannot record these notes today. The command aborts with `Duplicate repository root` because `desk/registry/` holds nine repo documents pointing at this same root — `described-repo`, `repo-deskops-alt`, `deskops-dir`, `deskops`, `my-repo`, `myrepo`, `pythonpath-repo`, `store-test`, `tagged-repo`. All but `deskops` look like stress-test leftovers. Passing `--sender` does not bypass it. Until the registry is deduplicated, coordination intake is unavailable and notes like this one have to live in the drawer.
+Resolved: the registry was deduplicated and `deskops message send`, `list`, `read`, `ack` works; duplicate roots are rejected by `deskops/identity.py`.

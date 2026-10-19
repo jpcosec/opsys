@@ -11,12 +11,6 @@ deskops graph build
 # 2. Self-reflection
 deskops graph reflect
 
-# 3. Reflection detallada
-deskops graph reflect --verbose
-
-# 4. Reflection por tipo de hallazgo
-deskops graph reflect --kind orphans
-deskops graph reflect --kind cycles
 ```
 
 ## Puntos de estrés
@@ -27,8 +21,6 @@ deskops graph reflect --kind cycles
 | Hallazgos | ¿Son concretos ("atomo X no tiene referencias") o vagos ("hay nodos desconectados")? |
 | Orphans | ¿Diferencia entre "intencionalmente standalone" y "genuinamente huérfano"? |
 | Ciclos | ¿Reporta el ciclo exacto (A→B→C→A) o solo "there's a cycle"? |
-| `--verbose` | ¿Agrega información útil o solo ruido? |
-| `--kind` | ¿Filtra bien? ¿Muestra kinds válidos si se pasa uno inválido? |
 
 ## Modos de fracaso
 

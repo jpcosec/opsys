@@ -18,11 +18,6 @@ Use this drawer when a concept, connection, flow, diagram, or 5WH1+ answer is un
 - Use 5WH1+ to expose missing definitions, missing flow boundaries, and missing query surfaces.
 - Identify which existing diagrams already answer a question and which diagrams are missing.
 
-## Files
-
-- `workflow-questions.md` - open questions grouped by surface and 5WH1+.
-- `workflow-question-map.md` - diagram of the currently suspected connections and unresolved edges.
-
 ## Promotion Rule
 
 A question leaves this drawer only when it is promoted into one of these surfaces:
@@ -30,7 +25,7 @@ A question leaves this drawer only when it is promoted into one of these surface
 - an atom, when the answer is durable one-question knowledge
 - a doc/spec/diagram update, when the answer explains or formalizes a larger surface
 - a task, when the answer requires implementation or migration work
-- a ritual/routine/hook, when the answer changes operational process
+- a ritual, when the answer changes operational process
 - an inbox note, when the answer depends on another repo or tool owner
 
 Do not delete a question just because it feels obvious after discussion. Delete or archive it only after the answer is represented in a durable surface or intentionally rejected.
@@ -59,7 +54,7 @@ This file now tracks only unresolved workflow questions. Questions with stable a
 - atom-documents-point-to-atoms
 - atom-repo-artifacts-need-atom-traceability
 - atom-orphan-artifacts-are-knowledge-system-failures
-- atom-kgdb-owns-relations-between-knowledge-surfaces
+- atom-sldb-semantics-are-graph-inputs
 - atom-drawers-feed-tasks-through-promotion
 - atom-inbox-routes-external-needs-toward-work
 - atom-changes-flow-through-tasks-and-pills
@@ -90,9 +85,9 @@ This file now tracks only unresolved workflow questions. Questions with stable a
 
 - How do repo artifacts connect to atoms? -> `atom-repo-artifacts-need-atom-traceability`, `atom-knowledge-graph-connects-desk-and-source-files`
 - Why are orphan artifacts failures? -> `atom-orphan-artifacts-are-knowledge-system-failures`
-- What owns relations? -> `atom-kgdb-owns-relations-between-knowledge-surfaces`, `atom-kgdb-should-parallel-sldb-not-compete`
+- What owns relations? -> `atom-sldb-semantics-are-graph-inputs`, `atom-knowledge-graph-connects-desk-and-source-files`
 - What does SLDB provide? -> `atom-sldb-is-read-write-edit-surface`, `atom-sldb-semantics-are-graph-inputs`
-- What does KGDB provide? -> `atom-kgdb-is-graph-substrate-not-reasoner`, `atom-networkx-is-first-graph-runtime`
+- What do sldb graph contracts provide? -> `atom-sldb-semantics-are-graph-inputs`
 
 ### Work Flow
 
@@ -160,10 +155,10 @@ This file now tracks only unresolved workflow questions. Questions with stable a
 - Who decides whether a pill becomes an atom, doc update, spec update, or deletion?
 - Where should deleted pill history be discoverable beyond git history?
 
-### Task And Routine Semantics
+### Task Lifecycle Semantics
 
 - What exact state means initialized, ready for execution, ready for testing, ready for closeout, and closed?
-- How does `deskops advance task` evaluate routine progress?
+- How does the sldb ritual graph evaluate transition conditions?
 - How does the board compute or record phases?
 - How does the close/test/commit hook decide whether it runs per task, per phase, or both?
 
@@ -223,7 +218,6 @@ flowchart TB
         tasks["Tasks\nactive executable work units"]
         pills["Pills\ntransient bounded context"]
         rituals["Rituals\ntextual process"]
-        routines["Routines/hooks/gates\nstructured or automatic process"]
     end
 
     subgraph Execution["Execution and feedback"]
@@ -255,9 +249,6 @@ flowchart TB
     board -->|binds process| rituals
     tasks -->|requires bounded context| pills
     tasks -->|uses process| rituals
-    rituals -->|decompose when stable?| routines
-    routines -->|advance/check/block?| tasks
-    routines -->|audit/delete?| pills
 
     tasks -->|assigned to| agent
     pills -->|bound context for| agent
@@ -300,7 +291,7 @@ Current workflow atom base represented by this question map:
 - atom-every-change-needs-descriptive-commit
 - atom-git-history-is-the-past
 - atom-inbox-routes-external-needs-toward-work
-- atom-kgdb-owns-relations-between-knowledge-surfaces
+- atom-sldb-semantics-are-graph-inputs
 - atom-orphan-artifacts-are-knowledge-system-failures
 - atom-pills-end-as-atoms-docs-or-deletion
 - atom-pills-index-existing-and-bound-future-context

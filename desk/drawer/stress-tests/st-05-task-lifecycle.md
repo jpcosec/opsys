@@ -5,24 +5,26 @@
 ## Script
 
 ```bash
-# 1. Ver tablero
-deskops list
+# 1. Ver tareas
+deskops list tasks
 
 # 2. Ver detalle de una tarea
-deskops show desk-042
+deskops show task <id>
 
-# 3. Avanzar tarea por fases
-deskops advance desk-042 --to in_progress
+# 3. Ver la siguiente accion
+deskops next <id>
 
-# 4. Saltarse una fase (intencional)
-deskops advance desk-042 --to done
-# ¿debería dejar? ¿tiene phase gates?
+# 4. Avanzar tarea (transicion valida)
+deskops advance task <id>
 
-# 5. Avanzar tarea inexistente
-deskops advance desk-999 --to in_progress
+# 5. Verificar closeout
+deskops closeout verify --task <id>
 
-# 6. Estado después de todo
-deskops list
+# 6. Cerrar con commit
+deskops closeout commit --task <id> --no-run --reason "..."
+
+# 7. Avanzar tarea inexistente
+deskops advance task desk-999
 ```
 
 ## Puntos de estrés
@@ -31,8 +33,8 @@ deskops list
 |---|---|
 | `list` | ¿Muestra fase actual? ¿Prioridad? ¿Asignado? ¿O solo ID y título? |
 | `show` | ¿El detalle incluye historial de avances? ¿Quién movió la tarea y cuándo? |
-| `advance` sin fase actual | ¿Asume una fase default o falla? |
-| `advance --to done` saltándose review | ¿El phase gate lo bloquea con un mensaje claro? |
+| `advance` sin transición válida | ¿Asume una transición default o falla? |
+| `advance` con transición inválida | ¿La validación de transición lo bloquea con un mensaje claro? |
 | Tarea inexistente | ¿El error identifica el problema o solo dice "not found"? |
 
 ## Modos de fracaso

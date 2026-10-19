@@ -4,7 +4,7 @@ The user has a concept they want to capture as an atom. They don't remember the 
 
 **Interaction flow:**
 
-1. `deskops atoms new "Why we use pydantic over dataclasses"` → scaffolds a new atom file
+1. `deskops add atom --title "..." --five-wh-one-plus what --answer "..."` → scaffolds a new atom file
 2. Opens the file: template is pre-filled with frontmatter and an answer section
 3. User writes the answer, adjusts tags, saves
 4. `deskops atoms validate my-new-atom` → checks frontmatter, tags, link format

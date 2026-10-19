@@ -93,7 +93,7 @@ feature
 
 ### Status
 
-Implemented and merged into working tree, uncommitted. `question-herdr-runtime-open-decisions.md` is resolved; all four decisions were carried through:
+Implemented and committed on main. `question-herdr-runtime-open-decisions.md` is resolved; all four decisions were carried through:
 
 - `RoleDoc` has typed frontmatter (`kind`, `model`, `fallback_models`, `tools`, `system_prompt_mode`, `inherit_project_context`, `inherit_skills`, `default_context`); `ROLE_AGENT_SPECS` is deleted; the three tracked role docs are migrated and the supervisor's model is the deployed `anthropic/claude-opus-4-8` (decision 1).
 - `RuntimeProfileDoc` is registered and tracked (`desk/runtimes/runtime-pi.md`, `desk/runtimes/runtime-claude.md`); `deskops/materializers/runtime_profiles.py::build_agent_spec_args` is the pure role+profile -> CLI-args translation; `deskops/runtime/initializer.py::build_role_agent_panes` derives every agent pane from tracked RoleDocs, no role name or kind hardcoded anywhere.
@@ -139,7 +139,7 @@ This document covers the deskops side only: models, materializers, adapter, CLI 
 
 ### Relationship to the tmux launcher feature
 
-`feature-adhoc-subagent-launcher-tmux-multi-cli.md` and its ready-to-promote drawer task cover substantially this same ground, over tmux + `codex`/`agy`/`pi`. Its already-resolved operator principles (context compiled via sldb from tracked RoleDocs, minimal bundle per profile, one launch = one task = one run dir, everything persisted to disk) apply unchanged here and should be inherited, not restated.
+`task-adhoc-subagent-launcher-tmux-multi-cli.md` covers substantially this same ground, over tmux + `codex`/`agy`/`pi`, retargeted onto Herdr. Its already-resolved operator principles (context compiled via sldb from tracked RoleDocs, minimal bundle per profile, one launch = one task = one run dir, everything persisted to disk) apply unchanged here and should be inherited, not restated.
 
 The difference is transport. Herdr provides agent detection and lifecycle states that tmux cannot, is already installed and running, and already reports session identity. Recommendation is to retarget the existing task rather than build a second launcher; that is decision 3 in the question doc.
 

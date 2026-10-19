@@ -20,7 +20,7 @@ deskops atoms show atom-deskops
 
 # 4. Graph orientation
 deskops graph build
-deskops graph neighbors atom-deskops
+deskops graph neighbors atom:atom-deskops
 ```
 
 ## Puntos de estrés

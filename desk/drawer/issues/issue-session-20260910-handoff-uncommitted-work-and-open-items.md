@@ -26,7 +26,7 @@ A long session changed deskops and sldb (and the setup repo) without committing,
 
 deskops (`git status` shows ~45 changed/new files):
 
-- Herdr supervised runtime: `deskops runtime supervise`, `RuntimeProfileDoc` (`desk/runtimes/`), `RunDoc` (registered, nothing writes it yet), `RoleDoc` typed frontmatter, `ROLE_AGENT_SPECS` removed. Details: `desk/drawer/features/feature-herdr-supervised-execution-runtime.md`.
+- Herdr supervised runtime: `deskops runtime supervise`, `RuntimeProfileDoc` (`desk/runtimes/`), `RunDoc` (registered, nothing writes it yet), `RoleDoc` typed frontmatter, `ROLE_AGENT_SPECS` removed. Details: `desk/drawer/features/feature-runtime-and-launcher.md`.
 - Inbox note 20260827-160657: `deskops inbox --root`; `promote inbox-to-drawer-task` untracks the note before deleting it.
 - Inbox note 20260827-164846: `advance task --to complete` also sets `status: closed`.
 - `promote drawer-task-to-active-task` removed. It filled every required task field with generic placeholders. A drawer item now becomes a task only through `deskops add task`.

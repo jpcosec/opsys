@@ -9,22 +9,13 @@
 deskops repo register ~/projects/hum-ecosystem/tools/deskops
 deskops repo register ~/projects/hum-ecosystem/tools/another-tool
 
-# 2. Listar repos registrados
-deskops repo list
+# 2. Ver repo activo actual
+deskops repo whoami
 
-# 3. Switch context
-deskops repo switch tools/another-tool
-deskops atoms list  # deberia mostrar atoms de another-tool
+# 3. Ver los repos registrados: ls desk/registry/
 
-# 4. Switch back
-deskops repo switch tools/deskops
-deskops atoms list
-
-# 5. Ver repo activo actual
-deskops repo current
-
-# 6. Unregister
-deskops repo unregister tools/another-tool
+# 4. Remover repo
+deskops repo remove <selector>
 ```
 
 ## Puntos de estrés
@@ -32,17 +23,16 @@ deskops repo unregister tools/another-tool
 | Paso | Qué mirar |
 |---|---|
 | `repo register` con path absoluto vs relativo | ¿Normaliza? ¿O se guarda tal cual? |
-| `repo list` | ¿Marca cuál es el activo? ¿Con un * o color? |
-| `repo switch` a repo no registrado | ¿Error claro o KeyError? |
-| `atoms list` después de switch | ¿Efectivamente cambió el contexto? ¿O el estado es global? |
-| `repo current` | ¿El output es un path completo o un alias corto? |
+| `repo whoami` | ¿Dice con claridad qué repo resuelve la raíz actual? |
+| `repo remove` de un repo no registrado | ¿Error claro o KeyError? |
+| `repo whoami` | ¿El output es un path completo o un alias corto? |
 
 ## Modos de fracaso
 
 - `repo register` requiere flags en vez de aceptar el path como positional
 - El contexto activo es ambiguo — corre en el repo incorrecto sin avisar
-- `repo list` muestra paths larguísimos que rompen el layout de la terminal
+- `repo whoami` o `repo remove` muestran paths larguísimos que rompen el layout de la terminal
 - Registrar el mismo repo dos veces da duplicado silencioso o error confuso
-- `repo unregister` borra el repo pero no pregunta si el usuario está seguro
+- `repo remove` borra el repo pero no pregunta si el usuario está seguro
 - Si el path del repo ya no existe, los comandos fallan con error interno en vez de "repo not found at path"
 - No hay `repo switch --last` para volver al repo anterior rápido

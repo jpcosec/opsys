@@ -16,8 +16,7 @@ Intuitive user interaction narratives. These are not specs — they're thought-c
 | UC-02 | Spark of an idea — capture it | inbox |
 | UC-03 | "Where does this atom touch?" | graph neighbors |
 | UC-04 | "I think the graph is missing something" | graph missing, graph build |
-| UC-05 | Routine work — ticking off tasks | add, list, show, advance |
-| UC-06 | Spec to artifact pipeline | specs, materialization |
+| UC-05 | Task lifecycle | list, show, next, advance, closeout |
 | UC-07 | "Has reality drifted from the atoms?" | drift check |
 | UC-08 | Closeout — wrapping up | closeout ritual |
 | UC-09 | Self-reflection — "What does the system think?" | graph reflect |
@@ -26,7 +25,7 @@ Intuitive user interaction narratives. These are not specs — they're thought-c
 | UC-12 | "Oops, I broke the desk" | status, self-healing |
 | UC-13 | Multi-repo ecosystem | repo register, switch |
 | UC-14 | Atom evolution — split/merge/deprecate | atoms lifecycle |
-| UC-15 | Deskops as a CI step | CI integration |
+| UC-15 | Deskops as a CI step | CI via pytest and graph/drift checks |
 
 ## Next step
 
