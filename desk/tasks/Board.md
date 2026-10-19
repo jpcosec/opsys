@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-message-selector-rejects-ambiguous-fragments.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -44,3 +45,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- message read/ack and inbox --show/--ack reject an ambiguous slug fragment with exit 2 [draft] - When a fragment matches more than one note, _resolve_note raises UsageError (exit 2) naming every candidate and acts on none. An exact filename or stem still wins, and a fragment matching exactly one note still works.
