@@ -1,0 +1,91 @@
+diff --git a/.github/workflows/tests.yml b/.github/workflows/tests.yml
+index afd60ec..8ef9197 100644
+--- a/.github/workflows/tests.yml
++++ b/.github/workflows/tests.yml
+@@ -12,7 +12,7 @@ jobs:
+     strategy:
+       fail-fast: false
+       matrix:
+-        python-version: ["3.11", "3.12", "3.13"]
++        python-version: ["3.12", "3.13"]
+     steps:
+       - uses: actions/checkout@v4
+ 
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index bb363d0..66e3b1c 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -54,7 +54,7 @@ Entries cover the unreleased changes since tag `v-stable-2026.08.29`.
+ 
+ ### Changed (desk-to-zero, 2026-10-18)
+ 
+-- Requires Python >=3.11 (deskops uses `enum.StrEnum`; spec2viz, graph_ui and pron already require 3.11). CI runs the suite on 3.11, 3.12 and 3.13.
++- Requires Python >=3.12 (Python 3.10 reaches end of life in October 2026; the whole suite moves to 3.12). CI runs the suite on 3.12 and 3.13. The test that kept the package importable on 3.10 and 3.11 is removed.
+ - Requires structuredLanguageDB>=0.1.13 (link replacement, broken-link detection, and the extraction fixes in sldb main).
+ - `closeout commit` folds the run index line into the closing commit; the tree stays clean.
+ - deskops' FAQ model is `DeskFAQDoc`; ritual steps are prose, not StepDoc references.
+diff --git a/pyproject.toml b/pyproject.toml
+index 81a0fc9..10c9a34 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -3,7 +3,7 @@ name = "deskops"
+ version = "0.2.0"
+ description = "Workflow-domain layer for the hum-ecosystem"
+ readme = "README.md"
+-requires-python = ">=3.11"
++requires-python = ">=3.12"
+ dependencies = [
+     "pydantic>=2.0",
+     "PyYAML>=6.0",
+diff --git a/tests/test_python_floor_compat.py b/tests/test_python_floor_compat.py
+deleted file mode 100644
+index ac6b5be..0000000
+--- a/tests/test_python_floor_compat.py
++++ /dev/null
+@@ -1,46 +0,0 @@
+-"""deskops declares requires-python >=3.10.
+-
+-Python 3.12 (PEP 701) lets an f-string reuse its own quote inside a
+-replacement field; 3.10 and 3.11 reject that file with a SyntaxError at import
+-time. The suite runs on newer interpreters, so the check reads the tokens.
+-"""
+-
+-from __future__ import annotations
+-
+-from pathlib import Path
+-import sys
+-import token
+-import tokenize
+-
+-import pytest
+-
+-
+-PACKAGE = Path(__file__).resolve().parents[1] / "deskops"
+-
+-
+-def _fstrings_reusing_their_quote(path: Path) -> list[int]:
+-    lines: list[int] = []
+-    stack: list[str] = []
+-    with path.open("rb") as handle:
+-        for tok in tokenize.tokenize(handle.readline):
+-            if tok.type == token.FSTRING_START:
+-                quote = tok.string.lstrip("rRbBfFuU")
+-                if stack and stack[-1][0] in quote:
+-                    lines.append(tok.start[0])
+-                stack.append(quote)
+-            elif tok.type == token.FSTRING_END:
+-                stack.pop()
+-            elif tok.type == token.STRING and stack:
+-                if stack[-1][0] in tok.string.lstrip("rRbBfFuU")[:3]:
+-                    lines.append(tok.start[0])
+-    return lines
+-
+-
+-@pytest.mark.skipif(sys.version_info < (3, 12), reason="older interpreters fail at import instead")
+-def test_no_fstring_reuses_its_own_quote() -> None:
+-    offenders = {
+-        str(path.relative_to(PACKAGE.parent)): found
+-        for path in sorted(PACKAGE.rglob("*.py"))
+-        if (found := _fstrings_reusing_their_quote(path))
+-    }
+-    assert offenders == {}

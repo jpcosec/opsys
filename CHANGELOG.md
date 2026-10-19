@@ -54,7 +54,7 @@ Entries cover the unreleased changes since tag `v-stable-2026.08.29`.
 
 ### Changed (desk-to-zero, 2026-10-18)
 
-- Requires Python >=3.11 (deskops uses `enum.StrEnum`; spec2viz, graph_ui and pron already require 3.11). CI runs the suite on 3.11, 3.12 and 3.13.
+- Requires Python >=3.12 (Python 3.10 reaches end of life in October 2026; the whole suite moves to 3.12). CI runs the suite on 3.12 and 3.13. The test that kept the package importable on 3.10 and 3.11 is removed.
 - Requires structuredLanguageDB>=0.1.13 (link replacement, broken-link detection, and the extraction fixes in sldb main).
 - `closeout commit` folds the run index line into the closing commit; the tree stays clean.
 - deskops' FAQ model is `DeskFAQDoc`; ritual steps are prose, not StepDoc references.

@@ -1,0 +1,9 @@
+ M .github/workflows/tests.yml
+ M .sldb/core/documents/TaskDoc/task-require-python-3-12.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M CHANGELOG.md
+ M desk/tasks/task-require-python-3-12.md
+ M pyproject.toml
+D  tests/test_python_floor_compat.py
+?? runs/subagents/20261019-task-require-python-3-12/

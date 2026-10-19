@@ -79,3 +79,4 @@
 {"task_id": "task-pill-cli-gaps-track-yaml-and-board", "run_id": null, "run_dir": "runs/subagents/20261018-task-pill-cli-gaps-track-yaml-and-board", "session_sha256": null, "commit": null}
 {"task_id": "task-require-python-3-11", "run_id": null, "run_dir": "runs/subagents/20261019-task-require-python-3-11", "session_sha256": null, "commit": null}
 {"task_id": "task-retire-accepts-closed-drawer-issues", "run_id": null, "run_dir": "runs/subagents/20261019-task-retire-accepts-closed-drawer-issues", "session_sha256": null, "commit": null}
+{"task_id": "task-require-python-3-12", "run_id": null, "run_dir": "runs/subagents/20261019-task-require-python-3-12", "session_sha256": null, "commit": null}

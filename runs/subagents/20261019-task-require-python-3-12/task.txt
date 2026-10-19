@@ -1,0 +1,7 @@
+Task: task-require-python-3-12
+Title: deskops requires Python >=3.12 and drops 3.10/3.11 compatibility code
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
