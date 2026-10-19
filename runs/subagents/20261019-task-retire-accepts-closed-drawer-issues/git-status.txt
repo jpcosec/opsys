@@ -1,0 +1,7 @@
+ M .sldb/core/documents/TaskDoc/task-retire-accepts-closed-drawer-issues.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-retire-accepts-closed-drawer-issues.md
+ M deskops/services/retire.py
+ M tests/test_retire_cli.py
+?? runs/subagents/20261019-task-retire-accepts-closed-drawer-issues/

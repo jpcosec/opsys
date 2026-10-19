@@ -1,0 +1,7 @@
+Task: task-retire-accepts-closed-drawer-issues
+Title: `deskops retire` also retires closed drawer issues, with their reason and refs
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

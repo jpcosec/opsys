@@ -157,3 +157,48 @@ def test_retire_refuses_an_unresolvable_ref_and_keeps_the_file(tmp_path: Path, c
     assert leftover.exists()
     assert _retire(root, "desk/models/__init__.py", "--ref", _git(root, "rev-parse", "HEAD")) == 0
     assert not leftover.exists()
+
+
+def _drawer_issue(root: Path, stem: str, status: str) -> Path:
+    issue = root / "desk" / "drawer" / "issues" / f"{stem}.md"
+    issue.parent.mkdir(parents=True, exist_ok=True)
+    issue.write_text(f"# {stem}\n\n## Status\n\n{status}\n", encoding="utf-8")
+    board = root / "desk" / "drawer" / "tasks" / "Board.md"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    existing = board.read_text(encoding="utf-8") if board.exists() else "# Drawer\n\n"
+    board.write_text(existing + f"- `{stem}` — an issue\n", encoding="utf-8")
+    return issue
+
+
+def test_retire_takes_a_closed_drawer_issue_and_its_board_bullet(tmp_path: Path, capsys) -> None:
+    root = _repo(tmp_path)
+    issue = _drawer_issue(root, "issue-done", "closed")
+    capsys.readouterr()
+
+    assert _retire(root, "desk/drawer/issues/issue-done.md", "--ref", _git(root, "rev-parse", "HEAD")) == 0
+    out = capsys.readouterr().out
+
+    assert not issue.exists()
+    assert "issue-done" not in (root / "desk" / "drawer" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert "desk/drawer/tasks/Board.md" in out
+
+
+def test_retire_refuses_an_open_drawer_issue(tmp_path: Path, capsys) -> None:
+    root = _repo(tmp_path)
+    issue = _drawer_issue(root, "issue-live", "open")
+    capsys.readouterr()
+
+    assert _retire(root, "desk/drawer/issues/issue-live.md", "--ref", _git(root, "rev-parse", "HEAD")) == 1
+    captured = capsys.readouterr()
+    assert "issue close" in captured.out + captured.err
+    assert issue.exists()
+
+
+def test_retire_takes_an_archived_record_issue(tmp_path: Path, capsys) -> None:
+    root = _repo(tmp_path)
+    record = root / "desk" / "drawer" / "issues" / "diagnosis-archive.md"
+    record.parent.mkdir(parents=True, exist_ok=True)
+    record.write_text("---\nrecord: true\n---\n\n# Archive\n", encoding="utf-8")
+
+    assert _retire(root, "desk/drawer/issues/diagnosis-archive.md", "--ref", _git(root, "rev-parse", "HEAD")) == 0
+    assert not record.exists()

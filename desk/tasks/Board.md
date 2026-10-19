@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-retire-accepts-closed-drawer-issues.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -45,5 +44,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- `deskops retire` also retires closed drawer issues, with their reason and refs [draft] - `deskops retire desk/drawer/issues/<file>.md --reason ... --ref ...` works when the issue's status is closed or resolved, or when the issue is an archived record (`record: true`). Open drawer issues and other drawer entries keep pointing at `drawer remove` (or `issue close` for open issues). The drawer Board's bullets for the retired issue are removed in the same transaction, as drawer remove does.

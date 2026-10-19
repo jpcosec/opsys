@@ -63,8 +63,11 @@ def retire_document(
         raise DomainError(f"{target} is not inside {root}") from exc
     if not relative.startswith("desk/"):
         raise DomainError(f"{relative} is not a file under desk/")
+    closed_issue = _is_retirable_drawer_issue(path, relative)
     for prefix, verb in _DEDICATED_VERBS:
-        if relative.startswith(prefix):
+        if relative.startswith(prefix) and not closed_issue:
+            if relative.startswith("desk/drawer/issues/"):
+                verb = "deskops issue close (open issues), then deskops retire"
             raise DomainError(f"{relative} has its own retirement verb: use `{verb}`.")
     if relative in _REQUIRED_STRUCTURE:
         raise DomainError(
@@ -84,8 +87,13 @@ def retire_document(
         raise DomainError(f"Unresolvable --ref: {', '.join(unresolved)} (use an ancestor commit or an existing path).")
 
     updates = _board_pill_updates(root, path, relative)
+    drawer_board = root / "desk" / "drawer" / "tasks" / "Board.md"
+    unrouted_drawer = closed_issue and drawer_board.is_file() and _drawer_bullets_removed(drawer_board, path.stem) is not None
     if not force:
-        inbound = _inbound_references(root, path, relative, skip=_handled_boards(root, updates, path, relative))
+        skip = _handled_boards(root, updates, path, relative)
+        if unrouted_drawer:
+            skip.add(drawer_board.resolve())
+        inbound = _inbound_references(root, path, relative, skip=skip)
         if inbound:
             raise DomainError(
                 f"Refusing to retire {relative}: still referenced by {', '.join(inbound)}. "
@@ -95,13 +103,47 @@ def retire_document(
     with doc_io.DocTransaction(root) as transaction:
         for board_path, payload in updates:
             _write_board(root, board_path, payload)
+        if unrouted_drawer:
+            transaction.record(drawer_board)
+            drawer_board.write_text(_drawer_bullets_removed(drawer_board, path.stem), encoding="utf-8")
         transaction.delete(path)
-    return RetireResult(
-        path=relative,
-        reason=reason,
-        refs=clean_refs,
-        boards=tuple(board_path.relative_to(root).as_posix() for board_path, _ in updates),
-    )
+    boards = [board_path.relative_to(root).as_posix() for board_path, _ in updates]
+    if unrouted_drawer:
+        boards.append(drawer_board.relative_to(root).as_posix())
+    return RetireResult(path=relative, reason=reason, refs=clean_refs, boards=tuple(boards))
+
+
+def _is_retirable_drawer_issue(path: Path, relative: str) -> bool:
+    """A drawer issue that is already closed or resolved, or an archived record."""
+    if not relative.startswith("desk/drawer/issues/") or path.suffix != ".md" or not path.is_file():
+        return False
+    from deskops.services.issues import issue_status
+
+    text = path.read_text(encoding="utf-8")
+    if issue_status(text) in {"closed", "resolved"}:
+        return True
+    return _frontmatter_record(text)
+
+
+def _frontmatter_record(text: str) -> bool:
+    if not text.startswith("---\n"):
+        return False
+    import yaml
+
+    try:
+        block = text.split("---\n", 2)[1]
+        loaded = yaml.safe_load(block)
+    except (IndexError, yaml.YAMLError):
+        return False
+    return isinstance(loaded, dict) and loaded.get("record") is True
+
+
+def _drawer_bullets_removed(board: Path, stem: str) -> str | None:
+    """The drawer Board without its ``- `<stem>` `` bullets, or None when it has none."""
+    text = board.read_text(encoding="utf-8")
+    prefix = f"- `{stem}`"
+    kept = "".join(line for line in text.splitlines(keepends=True) if not line.startswith(prefix))
+    return kept if kept != text else None
 
 
 def _pill_reference_matches(reference: str, relative: str, stem: str) -> bool:
