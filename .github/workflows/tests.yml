@@ -33,3 +33,6 @@ jobs:
 
       - name: Run tests
         run: python -m pytest tests -q
+
+      - name: Check knowledge integrity
+        run: bash scripts/ci-knowledge-check.sh .

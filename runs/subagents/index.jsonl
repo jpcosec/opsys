@@ -81,3 +81,4 @@
 {"task_id": "task-retire-accepts-closed-drawer-issues", "run_id": null, "run_dir": "runs/subagents/20261019-task-retire-accepts-closed-drawer-issues", "session_sha256": null, "commit": null}
 {"task_id": "task-require-python-3-12", "run_id": null, "run_dir": "runs/subagents/20261019-task-require-python-3-12", "session_sha256": null, "commit": null}
 {"task_id": "task-migration-never-touches-kimun", "run_id": null, "run_dir": "runs/subagents/20261019-task-migration-never-touches-kimun", "session_sha256": null, "commit": null}
+{"task_id": "task-test-ci-knowledge-integrity-flow", "run_id": null, "run_dir": "runs/subagents/20261019-task-test-ci-knowledge-integrity-flow", "session_sha256": null, "commit": null}

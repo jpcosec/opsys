@@ -13,7 +13,6 @@ This guide is a human-facing materialization of these atoms:
 
 - `desk/drawer/features/feature-runtime-and-launcher.md` — OWNER decision: keep a Herdr-backed `deskops launch` or retire it in favor of `deskops runtime supervise` plus an external harness.
 - `desk/drawer/tasks/Board.md` — routes the deferred task backlog.
-- `desk/drawer/stress-tests/st-15-ci-integration.md` and `desk/drawer/use-cases/uc-15-deskops-as-a-ci-step.md` — the CI knowledge-integrity gap, pending a task.
 
 ## Retired surfaces
 

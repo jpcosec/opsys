@@ -1,0 +1,9 @@
+ M .github/workflows/tests.yml
+ M desk/drawer/README.md
+ D desk/drawer/stress-tests/st-15-ci-integration.md
+ M desk/drawer/tasks/Board.md
+ D desk/drawer/use-cases/uc-15-deskops-as-a-ci-step.md
+ M desk/tasks/task-test-ci-knowledge-integrity-flow.md
+?? runs/subagents/20261019-task-test-ci-knowledge-integrity-flow/
+?? scripts/ci-knowledge-check.sh
+?? tests/test_ci_integration.py

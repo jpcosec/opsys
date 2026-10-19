@@ -1,0 +1,93 @@
+diff --git a/.github/workflows/tests.yml b/.github/workflows/tests.yml
+index 8ef9197..767d2fb 100644
+--- a/.github/workflows/tests.yml
++++ b/.github/workflows/tests.yml
+@@ -33,3 +33,6 @@ jobs:
+ 
+       - name: Run tests
+         run: python -m pytest tests -q
++
++      - name: Check knowledge integrity
++        run: bash scripts/ci-knowledge-check.sh .
+diff --git a/scripts/ci-knowledge-check.sh b/scripts/ci-knowledge-check.sh
+new file mode 100755
+index 0000000..14c1a8e
+--- /dev/null
++++ b/scripts/ci-knowledge-check.sh
+@@ -0,0 +1,25 @@
++#!/usr/bin/env bash
++# Knowledge-integrity checks for a desk, run by CI after pytest.
++# usage: scripts/ci-knowledge-check.sh [root]
++#
++# doctor, the sldb store check and graph missing gate: the first non-zero exit
++# fails the script. drift check is reported but does not gate, because its
++# findings are review items, not integrity failures.
++set -u
++
++root="${1:-.}"
++
++gate() {
++  echo "== $*"
++  "$@" || { echo "FAILED: $*" >&2; exit 1; }
++}
++
++gate python -m deskops doctor --root "$root"
++gate python -m sldb stores check --store "$root/.sldb"
++gate python -m deskops graph missing --root "$root"
++
++agents_out="$(mktemp -d)"
++trap 'rm -rf "$agents_out"' EXIT
++echo "== python -m deskops drift check --root $root (advisory)"
++python -m deskops drift check --root "$root" --out "$agents_out" \
++  || echo "drift check reported findings; review them, they do not fail CI"
+diff --git a/tests/test_ci_integration.py b/tests/test_ci_integration.py
+new file mode 100644
+index 0000000..9dff964
+--- /dev/null
++++ b/tests/test_ci_integration.py
+@@ -0,0 +1,45 @@
++"""scripts/ci-knowledge-check.sh gates a desk on doctor, the store check and graph missing."""
++
++from __future__ import annotations
++
++from pathlib import Path
++import subprocess
++import sys
++
++
++ROOT = Path(__file__).resolve().parents[1]
++SCRIPT = ROOT / "scripts" / "ci-knowledge-check.sh"
++CLI = [sys.executable, "-m", "deskops"]
++
++
++def _sandbox_desk(tmp_path: Path) -> Path:
++    repo = tmp_path / "repo"
++    repo.mkdir()
++    subprocess.run(["git", "init", "-q"], cwd=repo, check=True)
++    result = subprocess.run([*CLI, "init", str(repo)], capture_output=True, text=True)
++    assert result.returncode == 0, result.stderr or result.stdout
++    return repo
++
++
++def _run_check(repo: Path) -> subprocess.CompletedProcess[str]:
++    return subprocess.run(["bash", str(SCRIPT), str(repo)], capture_output=True, text=True)
++
++
++def test_ci_check_passes_on_a_fresh_desk(tmp_path: Path) -> None:
++    result = _run_check(_sandbox_desk(tmp_path))
++
++    assert result.returncode == 0, result.stdout + result.stderr
++    assert "No missing graph references found." in result.stdout
++
++
++def test_ci_check_fails_on_a_dangling_source_atom(tmp_path: Path) -> None:
++    repo = _sandbox_desk(tmp_path)
++    guide = repo / "docs" / "guide.md"
++    guide.parent.mkdir(parents=True)
++    guide.write_text("# Guide\n\n```yaml\nsource_atoms:\n  - atom-missing\n```\n", encoding="utf-8")
++
++    result = _run_check(repo)
++
++    assert result.returncode != 0
++    assert "dangling_source_atom_reference: doc:docs/guide.md -> atom:atom-missing" in result.stdout
++    assert "FAILED: python -m deskops graph missing" in result.stderr
