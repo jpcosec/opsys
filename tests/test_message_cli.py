@@ -243,3 +243,31 @@ def test_message_list_uses_store_when_no_root_is_given(
     assert main(["message", "list", "--store", str(store), "--format", "json"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert [item["id"] for item in payload["notes"]] == [note.stem]
+
+
+def test_message_ack_rejects_a_fragment_that_matches_two_notes(tmp_path: Path) -> None:
+    """2026-10-19: `message ack 20261019-120241` acked 20261019-120253, whose title quoted it."""
+    repo_a, repo_b = _init_repos(tmp_path)
+    first, _ = _deliver(repo_a, repo_b, "sldb ci en verde")
+    prefix = first.stem.split("-suggestion-")[0]
+    result = _cli(
+        repo_a, "message", "send", "Corrected hashes.", "--title", f"correccion de mi nota {prefix}",
+        "--kind", "suggestion", "--root", str(repo_b),
+    )
+    assert result.returncode == 0, result.stderr or result.stdout
+    (second,) = [path for path in (repo_b / "desk" / "inbox").glob("*.md") if path != first]
+    assert prefix in second.stem
+
+    ambiguous = _cli(repo_b, "message", "ack", prefix, "--root", str(repo_b))
+
+    assert ambiguous.returncode == 2, ambiguous.stdout + ambiguous.stderr
+    output = ambiguous.stdout + ambiguous.stderr
+    assert first.stem in output and second.stem in output
+    for note in (first, second):
+        assert "status: open" in note.read_text(encoding="utf-8")
+
+    exact = _cli(repo_b, "message", "ack", first.stem, "--root", str(repo_b))
+
+    assert exact.returncode == 0, exact.stdout + exact.stderr
+    assert "status: closed" in first.read_text(encoding="utf-8")
+    assert "status: open" in second.read_text(encoding="utf-8")

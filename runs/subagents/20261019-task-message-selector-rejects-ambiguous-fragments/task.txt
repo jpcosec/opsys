@@ -1,0 +1,7 @@
+Task: task-message-selector-rejects-ambiguous-fragments
+Title: message read/ack and inbox --show/--ack reject an ambiguous slug fragment with exit 2
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

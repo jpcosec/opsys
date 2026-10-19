@@ -1,0 +1,4 @@
+ M desk/tasks/task-message-selector-rejects-ambiguous-fragments.md
+ M deskops/cli/commands/message.py
+ M tests/test_message_cli.py
+?? runs/subagents/20261019-task-message-selector-rejects-ambiguous-fragments/

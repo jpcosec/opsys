@@ -36,6 +36,7 @@ def untrack_document(store, document, pythonpath=None):
 
 
 from deskops.models import InboxNoteDoc
+from deskops.errors import UsageError
 
 
 class MessageCLI:
@@ -297,7 +298,14 @@ class MessageCLI:
         if exact is not None:
             return exact
         lowered = raw.lower()
-        return next((path for path in notes if lowered in path.stem.lower()), None)
+        matches = [path for path in notes if lowered in path.stem.lower()]
+        if len(matches) > 1:
+            listing = ", ".join(path.stem for path in sorted(matches))
+            raise UsageError(
+                f"Ambiguous message selector '{raw}' matches {len(matches)} notes: {listing}. "
+                "Pass the full filename or stem."
+            )
+        return matches[0] if matches else None
 
     def _note_summary(self, path: Path) -> dict[str, str | None]:
         frontmatter, title, _ = self._parse_note(path)
