@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-retire-verb-for-desk-documents.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -44,3 +45,5 @@ _Add short operational notes about the current routed set._
 ## Task Details
 
 _Generated from the task references above._
+
+- `deskops retire` removes an obsolete desk document with its reason and refs [draft] - `deskops retire <path> --reason <text> --ref <commit-or-path> [--ref ...] [--force] --root <repo>` deletes one file under desk/ and untracks it from the store if tracked, in one DocTransaction, then prints the path, reason and refs. It refuses when other desk/docs files still reference it, listing them, unless --force is given. It refuses kinds that have their own verb, naming that verb: tasks in desk/tasks, drawer entries, atoms, and registry entries.

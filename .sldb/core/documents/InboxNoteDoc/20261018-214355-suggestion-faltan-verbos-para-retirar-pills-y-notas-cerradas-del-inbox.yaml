@@ -1,0 +1,17 @@
+name: 20261018-214355-suggestion-faltan-verbos-para-retirar-pills-y-notas-cerradas-del-inbox
+path: desk/inbox/20261018-214355-suggestion-faltan-verbos-para-retirar-pills-y-notas-cerradas-del-inbox.md
+source_hash: 53779771901ed73c0555f30c28a77074eb1d17dae1060c9312ba6c8de14a8372
+content_hash: 6120adb0da650fe629f74bbde4e4e6149e7eba49c6029c6c84cb4642812d40cb
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: ced2151e430a26b91ffaf6732c27cf65c891b0781045dd3a1ff56834239e671d
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: a74426b4cd00484d909336c50856ba17f93aa794cb5a7739e11a18aba5840bde
+  body: a794dd83327cf6d0c2fb48884bcf0ea49c47ba3803627f27e8430004e758e8e0
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
