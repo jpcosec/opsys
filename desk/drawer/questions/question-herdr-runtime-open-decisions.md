@@ -41,3 +41,12 @@ Decision 4 determines whether the durable run record is queryable through the st
 ## Resolved
 
 Resolved: the registry was deduplicated and `deskops message send`, `list`, `read`, `ack` works; duplicate roots are rejected by `deskops/identity.py`.
+
+## Code verification (2026-10-19, HEAD 5998485)
+
+1. Canonical supervisor model: `desk/roles/deskops-supervisor.md:8` is `anthropic/claude-opus-4-8`, matching the decision.
+2. Transcripts: `runs/subagents/*/session.jsonl` is ignored (`.gitignore:19`); `closeout commit` reads or hashes the pinned session and emits the digest in `run.yaml` and the `Session-Sha256` trailer (`deskops/services/closure.py:304-326`).
+3. Herdr supersedes tmux: `deskops runtime supervise` exists (`deskops/cli/commands/runtime.py:68`, `deskops/runtime/supervise.py:42`, `:70`), and no `deskops/` module mentions tmux.
+4. Run record: `RunDoc` is defined (`deskops/models/run.py:6`), exported (`deskops/models/__init__.py:14`), and registered through the model-ref registry (`deskops/bootstrap.py:26-31`); its own docstring says nothing writes it yet (`deskops/models/run.py:9-15`), and `closeout` still writes `run.yaml` (`deskops/services/closure.py:297`).
+
+All four decisions are carried in code; this question can close.

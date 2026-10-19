@@ -41,3 +41,11 @@ The boundary in force:
 
 Recorded in `README.md` (SLDB boundary) and `AGENTS.md` (core boundaries), which
 is where an agent will actually look for it.
+
+## Code verification (2026-10-19, HEAD 5998485)
+
+- Document/stores boundary: deskops imports only public sldb APIs (`track_document_file`, `untrack_document`, `init_store`, `update_store_indexes`, and related) in `deskops/doc_io.py:23-32`; the single private import is the renderer that has no `sldb.api` re-export (`deskops/doc_io.py:39-45`).
+- Graph boundary: deskops builds its own snapshot at `.sldb/runtime/graphs/deskops.kg.json` (`deskops/graph/snapshot.py:19`, `:287`) and validates it with `sldb.api.graph.snapshot.GraphSnapshot` (`deskops/graph/snapshot.py:297-305`). There is no kgdb ingest call.
+- Dependencies: `pyproject.toml:7-11` lists pydantic, PyYAML, and `structuredLanguageDB`; no `kgdb` dependency. Remaining `kgdb` strings are legacy filename filters and schema names (`deskops/graph/snapshot.py:17-18`).
+
+The boundary statement is accurate; no change is required.

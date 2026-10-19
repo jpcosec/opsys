@@ -43,3 +43,13 @@ is not tracked, and a file that records that something happened is tracked.
 
 See `desk/drawer/questions/question-herdr-runtime-open-decisions.md` for the
 transcript decision and `.gitignore` for the implementation.
+
+## Code verification (2026-10-19, HEAD 5998485)
+
+- `.sldb/runtime/` is generated and ignored: `.gitignore:7`; the default graph snapshot is `.sldb/runtime/graphs/deskops.kg.json` (`deskops/graph/snapshot.py:19`) and the self-reflection report is `.sldb/runtime/self_reflection_findings.json` (`deskops/graph/self_reflection.py:17`).
+- Run evidence is committed, including `runs/subagents/index.jsonl` (`deskops/services/closure.py:511`); only raw transcripts are ignored (`.gitignore:19`) and e2e event streams are ignored (`.gitignore:25`).
+- `closeout commit` writes `run.yaml` and hashes the pinned session into it (`deskops/services/closure.py:297`, `:304-326`).
+- `RunDoc` is defined and registered but nothing writes it yet (`deskops/models/run.py:6-15`; `deskops/bootstrap.py:26-31`).
+- Role materialization is generated output (`deskops/cli/commands/materialize.py:13`); atom payload builders are library code, not tracked artifacts (`deskops/materializers/atoms.py:4`, `:22`).
+
+The policy table is accurate as written; no change is required.
