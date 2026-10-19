@@ -307,3 +307,8 @@ Both passes listed `proyectos/kimun/docs/archive/architecture/spec2viz` among th
 - restored the git-ignored `.sldb/` from the pass-1 backup (`diff -rq` identical).
 
 kimun's own `docs/research/` and `runs/research/2026-10-13/` were not touched. The only inbox note that had landed there was deskops' own pass-1 notice, and it was removed with the path. task-migration-never-touches-kimun makes discovery skip kimun permanently, with a test.
+
+
+## Evidence loss (2026-10-19)
+
+The machine rebooted at 09:36 on 2026-10-19 and /tmp was cleared. The pre-migration backups of the 40 repos are gone: `/tmp/rw/mig/backup/` (pass 1: desk/, knowledge/ and .sldb/) and `/tmp/rw/mig2/backup/` (pass 2). So were the helper scripts and logs under /tmp/rw. The state before migration can no longer be rebuilt from backup; git history is the only record for tracked files, and git-ignored `.sldb/` state from before the migration is lost. The kimun revert (task-migration-never-touches-kimun) used the pass-1 backup and was verified identical before the reboot, so it is not affected. Backups for future passes must live outside /tmp.

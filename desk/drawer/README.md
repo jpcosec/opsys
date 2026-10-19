@@ -11,12 +11,11 @@ This guide is a human-facing materialization of these atoms:
 
 ## Remaining surfaces
 
-- `desk/drawer/features/feature-runtime-and-launcher.md` — OWNER decision: keep a Herdr-backed `deskops launch` or retire it in favor of `deskops runtime supervise` plus an external harness.
-- `desk/drawer/tasks/Board.md` — routes the deferred task backlog.
+- `desk/drawer/tasks/Board.md` — routes the deferred task backlog; only the 0.2.0 release task remains, waiting for the suite's coordinated deploy.
 
 ## Retired surfaces
 
-The covered use-cases and stress-tests were retired on 2026-10-19 because their flows are exercised by the test suite; each retirement commit names the covering test. The findings archive was retired with them (git history is the record). The answered questions were removed after their answers were verified against the code. The drawer triage and knowledge distillation passes were promoted to `desk/rituals/`. `feature-agent-role-models.md` was replaced by `desk/roles/`; `feature-sldb-ui-surface-inspection.md` was routed to sldb/spec2viz; the master plan was retired because kgdb no longer exists. The attention review is in `desk/logbook/log-2026-06-21-workflow-baseline-before-roles-refactor.md`.
+The covered use-cases and stress-tests were retired on 2026-10-19 because their flows are exercised by the test suite; each retirement commit names the covering test. The findings archive was retired with them (git history is the record). The answered questions were removed after their answers were verified against the code. The drawer triage and knowledge distillation passes were promoted to `desk/rituals/`. `feature-agent-role-models.md` was replaced by `desk/roles/`; `feature-sldb-ui-surface-inspection.md` was routed to sldb/spec2viz; the master plan was retired because kgdb no longer exists; the runtime-and-launcher feature and the tmux launcher task were retired because `deskops runtime supervise` plus the external harness cover them. The attention review is in `desk/logbook/log-2026-06-21-workflow-baseline-before-roles-refactor.md`.
 
 ## Rule
 
