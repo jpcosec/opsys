@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-test-ci-knowledge-integrity-flow.md
 # List of pill-xxx paths
 pills:
 - desk/contexts/pill-001-task-closure-commit.md
@@ -44,3 +45,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Test the CI knowledge-integrity flow [draft] - scripts/ci-knowledge-check.sh <root> runs the desk integrity checks: `deskops doctor`, `sldb stores check` and `deskops graph missing`, which gate (non-zero fails), and `deskops drift check`, which is reported and does not gate because its findings are review items. A test runs the script against sandbox desks, and the GitHub workflow runs it on the repository after pytest.
