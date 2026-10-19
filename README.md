@@ -103,6 +103,7 @@ Maintain the semantic store with:
 ```bash
 sldb stores check --store .sldb
 sldb stores update --store .sldb --pythonpath .
+sldb stores build --check --store .sldb
 ```
 
 ## Spec2viz Boundary
@@ -150,6 +151,12 @@ pip install -e .[dev]
 ```
 
 If `sldb` is not already available on the machine, `deskops` can bootstrap it from the sibling checkout at `../sldb`.
+
+The store under `.sldb/core/` is derived and not versioned; `.sldb/store.yaml` declares it. After cloning, build it once:
+
+```bash
+sldb stores build --store .sldb
+```
 
 Recommended first-use flow:
 
