@@ -1,0 +1,2 @@
+ M desk/tasks/task-derived-store-out-of-git.md
+?? runs/subagents/20261019-task-derived-store-out-of-git/

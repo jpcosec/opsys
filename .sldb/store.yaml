@@ -108,9 +108,6 @@ include:
   glob: desk/atoms/knowledge-model/*.md
 - model: AtomDoc
   glob: desk/atoms/workflow-model/*.md
-- model: BoardDoc
-  paths:
-  - desk/tasks/Board.md
 - model: CrossroadDoc
   paths:
   - desk/atoms/crossroad-knowledge-management.md
@@ -178,3 +175,6 @@ include:
   glob: desk/runtimes/*.md
 - model: TaskDoc
   glob: desk/tasks/task-*.md
+- model: BoardDoc
+  paths:
+  - desk/tasks/Board.md

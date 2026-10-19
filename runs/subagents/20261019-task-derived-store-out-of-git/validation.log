@@ -1,0 +1,9 @@
+Clean clone of 376fdcc, with sldb fdb13b6a as a sibling, an isolated HOME and a fresh venv:
+  sldb stores build: links 0, models 17, tracked 214, generated 0, undeclared 0, missing 0
+  sldb stores check: PASS: store integrity — 214 documents in 17 models
+  sldb stores build --check: PASS: the sources rebuild the store
+  pytest tests: 1 failed, 559 passed, 4 skipped (tests/test_gitignore_policy.py still required .sldb/core to be trackable)
+  ci-knowledge-check: graph missing flagged this task's reference to sldb's design doc path
+Fix cf52e11: the policy test now follows the derived layout -> tests/test_gitignore_policy.py: 1 passed.
+This closeout removes the task doc, which clears the graph-missing finding.
+Final gate before push: the full suite in a fresh clean clone of the closing commit (reported to the coordinator).
