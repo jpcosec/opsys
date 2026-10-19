@@ -31,8 +31,17 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
+      - name: Build the store from its sources
+        # .sldb/core/ is derived and not versioned (sldb docs/architecture/derived-store-boundary.md);
+        # .sldb/store.yaml declares it. deskops links no store, and sldb's models come from the
+        # installed package.
+        run: sldb stores build --store .sldb
+
       - name: Run tests
         run: python -m pytest tests -q
+
+      - name: Check the store rebuilds from the versioned sources
+        run: sldb stores build --check --store .sldb
 
       - name: Check knowledge integrity
         run: bash scripts/ci-knowledge-check.sh .
