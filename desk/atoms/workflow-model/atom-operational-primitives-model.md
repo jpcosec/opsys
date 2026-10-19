@@ -4,8 +4,8 @@ title: Task lifecycle is an sldb graph
 five_wh_one_plus: what
 tags:
 - system:deskops
-- topic:routines
-- layer:runtime
+- topic:lifecycle
+- layer:workflow
 ---
 
 # Task lifecycle is an sldb graph

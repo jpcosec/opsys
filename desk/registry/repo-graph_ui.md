@@ -15,4 +15,4 @@ tags: []
 
 _Describe the repository purpose, scope, and role in the ecosystem._
 
-Repository for graph_ui.
+Visual editor for pron and sldb stores; active mindmap frontend under frontends/mindmap.

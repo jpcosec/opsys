@@ -19,8 +19,9 @@ steps:
 - 1. If verify reports a rendered artifact with a sibling source but no declared `source_atoms`
   or `provenance`, fix the artifact metadata before closing.
 - 1. Remove stale context docs that are no longer needed.
-- 1. Untrack the task document from the local store if it is tracked.
-- 1. Delete the resolved task file and remove it from the board.
+- '1. Leave removal and untracking to deskops closeout commit: it removes the task
+  from the Board, untracks it, and deletes the bundle in the closing commit. Do not
+  delete or untrack by hand first.'
 - 1. If the task's subject no longer exists, close it with `deskops closeout supersede`,
   naming a reason and at least one resolvable ref, and stop here instead of running
   the closeout commit.
@@ -56,7 +57,6 @@ _List the conditions that must hold before running the ritual._
 - Bound pill obligations were checked during testing.
 - If the task bound one or more pills, closeout reviewed whether any durable pill residue now needs an atom reference in the task `references` list.
 - The testing-to-closeout handoff gate is explicit.
-- Board updates are prepared.
 - Any stale context docs are ready to be removed.
 - The closing change is ready to commit.
 - For a superseded task, the reason states that the subject no longer exists and the ref resolves to an ancestor commit or an existing path.

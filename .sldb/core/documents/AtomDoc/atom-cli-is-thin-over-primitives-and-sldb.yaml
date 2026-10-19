@@ -1,19 +1,19 @@
 name: atom-cli-is-thin-over-primitives-and-sldb
 path: desk/atoms/workflow-model/atom-cli-is-thin-over-primitives-and-sldb.md
-source_hash: de1db033d3f011713266507ef6dd1a790243f0c9c3ddfd1cb00e6b747f2210f0
-content_hash: 111f18908d4f9fc3be7f512d679b14ace88eae8cc95aa8fa106946c1b141cb08
+source_hash: fa66ca971dbfbd36b8bf349d48c9cc0160830fa13b4cd631993d3d1305db9226
+content_hash: e002aa6add602bbcf8eb87ad6d7d57ac9e686ece192eb3edb3c94d94c4cf4fb2
 field_hashes:
   id: 63601b443adb21725d8a3cc93a95c470c3306fc69abcbbbc7d533cace7f6224c
   title: b8fd29d2384487bb028b2de730c6f06eb7ea6dc9d2b61a6bb205845636876580
   five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
   answer: b2dd0dabe6563dab4d01580b461c19c74fca2e25e325e9ea3d033e1c214164e2
-  tags: e705fa66e3ba9bd585058922ad6d6e6a763c3fcdba6f821cf29e8525ec1b1b68
+  tags: 0f3ba35a97f5cf817639f9b3e6e6a21a798b99967e7ca46243a570abcd6ec4bb
 semantic_tags:
 - representation.markdown
 - source.document.markdown
 - system:deskops
 - system:sldb
 - topic:cli
-- topic:primitives
+- topic:lifecycle
 - type.knowledge.atom
 - workspace.desk.atoms

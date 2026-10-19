@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-Every codebase artifact should be traceable to one or more atoms, either directly as a materialization or through KGDB relations that connect the artifact's function, language, library, pattern, consumers, tests, linting, composition, or usage to durable knowledge.
+Every codebase artifact should be traceable to one or more atoms, either directly as a materialization or through SLDB graph relations that connect artifact function, language, library, pattern, consumers, tests, linting, composition, or usage to durable knowledge.

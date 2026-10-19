@@ -13,7 +13,7 @@ tags:
 
 ## Answer
 
-Desk health deliberately separates desk workspace repair from SLDB store health. The `deskops doctor` command delegates store-level diagnostics (model registration, document validity, field integrity) to `sldb stores check`, keeping the boundary clean between workflow-domain surfaces and shared document infrastructure.
+Desk health keeps desk workspace repair and SLDB store health separate. deskops doctor delegates document validity and store integrity to sldb stores check; it detects missing deskops model registrations from the store index, and owns workspace checks (desk structure, legacy classification, unmodeled and untracked documents). Desk repair does not initialize or repair the SLDB store itself.
 
 ## Boundary Rationale
 
@@ -27,7 +27,6 @@ Mixing these concerns into one health command creates ambiguity about ownership 
 ```
 deskops doctor
   ├── desk structure checks  → deskops (own repair)
-  ├── stale runtime files    → deskops (own repair)
   ├── untracked docs         → deskops (report only)
   ├── invalid docs           → sldb stores check (report via delegation)
   └── store integrity        → sldb stores check (delegate)

@@ -1,11 +1,11 @@
 name: pill-009-source-file-graph-traceability
 path: desk/contexts/pill-009-source-file-graph-traceability.md
-source_hash: f75f50ac151e1465ecbc9562c82a38e195e18e43f6ddd36e04f36fe39ff14962
-content_hash: cd17c5d0b44be8b756b9e90d2e7eef885a556df83e8b76aed9757659747c9abc
+source_hash: ebde5305fed57e68f0fb8640d4394d4e7319f0e3ebff592bc7e56e01a21cade6
+content_hash: 687aae1861bcfa4e7d1ae2b44de76e6b5bf1b619e599e84d83a42a0b2b70677a
 field_hashes:
   title: 84a0a46e30edf4dd56c418268200bb52ccf9fbd150f363a7d5b492600d406ff0
   id: 8e5ce6f6573ddd93705e0d5707ca28d8e0b667eab537b0d42aea25104ba77972
-  tags: 73eb5844a4082e6867db1e16f7d1e1366f7d3f45d3306a36de34bd4d05935efd
+  tags: 358ae9af95d09bcf5edf251f29984cca6804483d9194262ca9bf841189c1d389
   what: 26993d49ae10994801a6e0b17c25dd97d704c631104c415f104fcb509a1217c7
   why: 29e796ef604d9b5e88aee377bfaeb0778b1a9358ee36a82d52d7b42f0b5e12c7
   when: a6374d300b036e6cc49dbc2cdebf0ace0d1b12af2e8bbcbce484667e436ded52
@@ -17,7 +17,6 @@ semantic_tags:
 - representation.markdown
 - source.document.markdown
 - system:deskops
-- system:kgdb
 - topic:source-code
 - topic:traceability
 - type.workflow.pill

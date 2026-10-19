@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Field specs define reusable semantic dimensions for artifacts, and the compiler ports those dimensions into the artifact model's own SLDB fields instead of creating separate field-instance documents.
+Field specs define reusable semantic dimensions for artifacts. Artifact specs list those field IDs, but the Pydantic model for each artifact owns its concrete fields and values; there are no separate field-instance documents.

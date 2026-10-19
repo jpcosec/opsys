@@ -34,7 +34,7 @@ Apply this pill whenever a task changes `deskops message`, `deskops inbox`, repo
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Applies to `deskops/cli/commands/message.py`, the deprecated `deskops inbox` alias, repo registry resolution, future desk update/sync flows, and any design for cross-desk replies or acknowledgements.
+Applies to deskops/cli/commands/message.py, the deprecated deskops inbox alias, repo registry resolution, deskops desk update, and cross-desk acknowledgement or reply flows.
 
 ## How
 

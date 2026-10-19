@@ -34,7 +34,7 @@ Apply this pill to self-reflection routines, graph missing checks, stale relatio
 
 _Name the files, surfaces, or scope this pill applies to._
 
-Applies to `desk/tasks/*self-reflection*.md`, future graph/reflection commands, and any generated inbox or drawer output.
+Applies to desk/tasks/*self-reflection*.md, deskops graph reflect, and any generated inbox or drawer output.
 
 ## How
 

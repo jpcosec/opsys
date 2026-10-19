@@ -9,4 +9,4 @@ tags: []
 
 ## Answer
 
-deskops add task and promote track every generated task document into the local .sldb store via sldb.store.ops.track_document at write time; if a store exists but the task model is not registered, creation fails instead of silently leaving an untracked doc.
+deskops add task writes the TaskDoc and tracks it through doc_io.track_document_file (sldb.api) inside a DocTransaction at creation time; if a store exists but TaskDoc is not registered, tracking fails and the task is rolled back instead of leaving an untracked document.

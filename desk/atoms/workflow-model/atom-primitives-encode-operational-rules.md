@@ -4,7 +4,7 @@ title: Operational rules are graph data
 five_wh_one_plus: what
 tags:
 - system:deskops
-- topic:primitives
+- topic:lifecycle
 - topic:workflow
 ---
 

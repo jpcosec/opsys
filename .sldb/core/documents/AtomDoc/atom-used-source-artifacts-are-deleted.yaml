@@ -1,12 +1,12 @@
 name: atom-used-source-artifacts-are-deleted
 path: desk/atoms/workflow-model/atom-used-source-artifacts-are-deleted.md
-source_hash: 09fa8f7304b35675f769fc6d63e0be33f992dcac8a0260329c1f4cd296fc166e
-content_hash: b824e924514db996c8a94031edf9225ab78375dc7d20dd63b6bd706ab6b8da31
+source_hash: c4ed935a72df5b2552560b6e495bc77d89cda5ce61e8ed8760d9c4bb3a11bad6
+content_hash: 61e4fd69731cc336c920da8499842be57d0f0172bf073d57e66a154a8278344c
 field_hashes:
   id: 23155c77c36f5365bb6de815a96b192b8b683de3fa17a2a044e84966faa6d61e
   title: a3792db334889d964bbcce03626b5e48dd8a79c7588b8eb50a6feef2b727d6b8
   five_wh_one_plus: 6d924791a1798656302bd4b9716a494a0c5f7f55ad9ceebf629dfb2317e86078
-  answer: 0e38a815ed620d5d34868da2480e4c4ef9039330ce5681b434a468bbbd483704
+  answer: c7458a4faa727273f11a7c0ccc0fb6c5afcd2007d555d98bc2d292bba961c056
   tags: d36fe6e3effab6de9f5a9613252ea5b24cc38e9c90abc46953de49f4bcbe752f
 semantic_tags:
 - representation.markdown

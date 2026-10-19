@@ -4,7 +4,7 @@ title: Knowledge graph connects desk and source files
 five_wh_one_plus: what
 tags:
 - system:deskops
-- system:kgdb
+- system:sldb
 - topic:knowledge-graph
 - topic:source-code
 ---

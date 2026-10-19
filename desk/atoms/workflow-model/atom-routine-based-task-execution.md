@@ -5,7 +5,7 @@ five_wh_one_plus: how
 tags:
 - system:deskops
 - topic:tasks
-- topic:routines
+- topic:lifecycle
 ---
 
 # Lifecycle-graph task execution

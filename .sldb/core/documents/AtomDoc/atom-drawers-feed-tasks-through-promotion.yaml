@@ -1,19 +1,19 @@
 name: atom-drawers-feed-tasks-through-promotion
 path: desk/atoms/workflow-model/atom-drawers-feed-tasks-through-promotion.md
-source_hash: ecebb906b4645747a0379b98ec3c53252ffb89fdf6d32bb8c6e44c438b2b38b9
-content_hash: ad82757440f017cd74190f88165c155305133d49671068250779b2be7288a61b
+source_hash: 7089ba64bc43b6a37adc76f85cbec9ce7bd71d6a5aed7ad1f82606d253712f4f
+content_hash: 25ed167ded26cac91ba8a23619fc6c7150afd7c57925ed5d37a9e483153c900b
 field_hashes:
   id: 63a40389fa955de4240aab56c849032897e336ecfbc550a3a26b014e2885c672
-  title: 5e7597ced0b6ce66c8be2e3169363c9b07b1c9f691e5d3d99e45317edc415976
+  title: 8056ab101da567a6705acd5330d798fe9bf563fda522baa70b57d0fa03535a13
   five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
-  answer: 085e5205e48b739426ebffeaa4a83276b6099649238d92179f8b1271196ce9b7
-  tags: f168e89c97aa7495d48fbb57e22ba1fe72efc5890e9d532d97ea0efa03cab026
+  answer: 1da2092020eb78bac5a508a2db8c638d685f86bb544f698970752e8feeae456a
+  tags: 4ad730ab449c06f8af49ecab44bae4db8f5ea86ef1953845f0b860546bc48676
 semantic_tags:
 - representation.markdown
 - source.document.markdown
 - system:deskops
+- topic:authoring
 - topic:drawer
-- topic:promotion
 - topic:tasks
 - type.knowledge.atom
 - workspace.desk.atoms

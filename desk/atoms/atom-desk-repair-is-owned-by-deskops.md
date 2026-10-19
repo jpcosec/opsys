@@ -13,13 +13,13 @@ tags:
 
 ## Answer
 
-Desk repair covers all operations that fix or scaffold desk-owned workflow surfaces. This includes creating missing `desk/` directories, removing stale runtime files, and detecting untracked or invalid documents.
+Desk repair covers the operations that fix or scaffold desk-owned workflow surfaces. deskops doctor --repair creates missing desk/ structure and registers missing deskops models; it reports untracked or unreadable documents and legacy desks for manual migration. Deskops does not own SLDB store initialization, model schema changes, or document-content repair.
 
 ## Owned Operations
 
 `deskops` owns repair for:
 - Missing or incomplete `desk/` directory structure
-- Stale graph runtime files (`.sldb/runtime/`)
+- Registration of missing deskops models
 - Detection and reporting of untracked desk documents
 - Detection and reporting of malformed desk artifacts
 

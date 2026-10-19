@@ -5,7 +5,6 @@ five_wh_one_plus: how
 tags:
 - system:deskops
 - system:sldb
-- system:kgdb
 - topic:knowledge-graph
 ---
 
@@ -13,4 +12,4 @@ tags:
 
 ## Answer
 
-SLDB semantic tags, semantic DAG nodes, equivalences, tracked documents, sections, and model semantics should become inputs to the ecosystem knowledge graph instead of being reimplemented inside KGDB.
+SLDB semantic tags, semantic DAG nodes, equivalences, tracked documents, sections and model semantics are inputs to the ecosystem graph through sldb.api.graph rather than being reimplemented by a separate graph project.

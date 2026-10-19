@@ -4,7 +4,7 @@ id: pill-010
 # e.g., language:python, library:pydantic
 tags:
 - system:deskops
-- system:kgdb
+- system:sldb
 - pill-type:guardrail
 - topic:runtime
 - topic:drift-control
@@ -28,7 +28,7 @@ Graph outputs can become large, noisy, and stale. Keeping generated outputs in r
 
 _Describe when an agent should apply this pill._
 
-Apply this pill whenever a task writes KGDB graph JSON, generated indexes, query results, or self-reflection reports.
+Apply this pill whenever a task writes deskops graph snapshot JSON, generated indexes, query results, or self-reflection reports.
 
 ## Where
 

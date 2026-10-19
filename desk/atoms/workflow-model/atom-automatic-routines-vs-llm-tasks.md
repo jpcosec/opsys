@@ -1,15 +1,15 @@
 ---
 id: atom-automatic-routines-vs-llm-tasks
-title: Automatic routines are not LLM tasks
+title: Deterministic checks are not LLM tasks
 five_wh_one_plus: how
 tags:
 - system:deskops
-- topic:routines
-- topic:hooks
+- topic:automation
+- topic:workflow
 ---
 
-# Automatic routines are not LLM tasks
+# Deterministic checks are not LLM tasks
 
 ## Answer
 
-Actions that require semantic judgment belong to LLM/subagent tasks. Deterministic checks over known inputs, such as running touched-surface tests or phase e2e, belong to automatic routines or hooks.
+Actions that require semantic judgment belong to LLM/subagent tasks. Deterministic checks over known inputs, such as running touched-surface tests, closeout validation, or phase end-to-end checks, belong to tests, CI, or CLI gates. The routine and hook models were retired with the primitive layer.

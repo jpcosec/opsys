@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-A clean agent needs the README orientation, active board, bound pills, execution and closeout rituals, and relevant atoms before making a safe repository change.
+A clean agent needs the README orientation, active board, bound pills, the phase, execution, testing, and closeout rituals, and relevant atoms before making a safe repository change.

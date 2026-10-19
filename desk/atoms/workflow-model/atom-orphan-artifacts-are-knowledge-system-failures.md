@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-A repository should not keep orphan documents or files that lack KGDB relations to relevant atoms and are not represented as materializations through SLDB-managed knowledge surfaces.
+A repository should not keep orphan documents or files that lack SLDB graph relations to relevant atoms and are not represented as materializations through SLDB-managed knowledge surfaces.

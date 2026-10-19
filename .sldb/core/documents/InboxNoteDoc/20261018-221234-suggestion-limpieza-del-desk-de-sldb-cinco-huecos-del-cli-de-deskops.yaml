@@ -1,0 +1,17 @@
+name: 20261018-221234-suggestion-limpieza-del-desk-de-sldb-cinco-huecos-del-cli-de-deskops
+path: desk/inbox/20261018-221234-suggestion-limpieza-del-desk-de-sldb-cinco-huecos-del-cli-de-deskops.md
+source_hash: 26c877c5a59553ed949367491a16cbc4d2b9b9223272c5f8ba9dba83e4aa21ee
+content_hash: a9d25b148cceb88b91dc62291a9bd46ca6d31f3578d8c6259c58dc94258d1ac7
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 3584bd611939c670d18a0c2d79d5dded8d4b10185baa79928113f9f87878754d
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: e3712e606d4ff754d139b6a9ae39f374396cf9da7265360d3de0fa00db0bdf9e
+  body: 7b4bbe86c2f18470414f266223557151e2ebe648cbff6747ff53548b569c69df
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox

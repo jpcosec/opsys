@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Inbox notes are messages addressed to the current project: questions, bugs, blockers, suggestions, requirements, cross-project coordination messages, or explicit self-messages. They are not an agent scratchpad for deferred work; that belongs in drawers until promoted.
+Inbox notes are messages addressed to the current project: questions, bugs, blockers, suggestions, requirements, cross-project coordination messages, or explicit self-messages. They are not an agent scratchpad for deferred work; that belongs in drawers until a routed task is authored from it.

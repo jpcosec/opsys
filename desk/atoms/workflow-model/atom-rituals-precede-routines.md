@@ -1,15 +1,15 @@
 ---
 id: atom-rituals-precede-routines
-title: Rituals precede graph transitions
+title: Rituals are lifecycle graph states
 five_wh_one_plus: what
 tags:
 - system:deskops
 - topic:rituals
-- topic:routines
+- topic:lifecycle
 ---
 
-# Rituals precede graph transitions
+# Rituals are lifecycle graph states
 
 ## Answer
 
-Rituals are the current human-readable process form; once stable, they can decompose into lifecycle graph transitions, gates, and automatic checks.
+Rituals are the human-readable states of the lifecycle graph. Each transition between them is a typed sldb RelationDoc with a `--where` gate, so ritual prose and executable graph state stay aligned.

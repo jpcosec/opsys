@@ -46,3 +46,5 @@ Pass only when the reformulation reproduces the task intent closely enough to ex
 ## How Not
 
 _Describe the shortcut or failure mode to avoid._
+
+Do not dispatch an Executor when the fresh-context subagent could not restate the TaskDoc without guessing, and do not let coordinator chat memory fill gaps the TaskDoc does not contain.

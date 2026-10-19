@@ -12,15 +12,17 @@ tags:
 
 ## Answer
 
-Desk health measures whether a desk workspace contains the expected structure, tracked documents, and operational surfaces without corruption or drift. It is the runtime integrity state of the `desk/` directory and its relationship to the tracking infrastructure.
+Desk health is the integrity state of the desk/ workspace: whether it has the expected structure, tracked modeled documents, readable document content, and registered deskops models, and whether it classifies as absent, empty, legacy or current. deskops doctor measures it; store-level document validity is delegated to sldb stores check.
 
 ## Evidence
 
 `deskops/cli/commands/doctor.py` checks:
 - Missing or malformed `desk/` directory structure
 - Untracked modeled documents in `desk/`
+- Documents the model cannot read
 - Invalid task/pill/atom/ritual documents (malformed YAML frontmatter)
-- Stale graph runtime files (`.sldb/runtime/`)
+- An unreadable local store index
+- Unregistered deskops models
 
 ## Related Atoms
 

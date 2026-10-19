@@ -1,12 +1,12 @@
 name: atom-desk-health-is-measured-by-cli-diagnostics
 path: desk/atoms/atom-desk-health-is-measured-by-cli-diagnostics.md
-source_hash: 88b8a3034e2c81cc891f7c2d1c5579d89656d7e6c531744d83ac4b2ed60d3047
-content_hash: 6f271682d102914e49b37bdc055b1f7804e2b4db1d21c0087d056b92ed89425a
+source_hash: ca05157cceac006d5f05155022bff05cf56cb69ca87e1855b68a27cf4cc8591e
+content_hash: c6399b1adc9fb3bd1b91861c6d8a2f7d1f16d38af784db7dae30fe0f3ea09b78
 field_hashes:
   id: 50a15c2e4921c2e01256f9d230cc777dbc40c2e88fb30acdfaea41d008d291ec
   title: 357c9159ab480adbe4a230292c7a5c5226302e5438e126b16e51ab8cfa9d6fa0
   five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
-  answer: 91dd052b06164ba5b3f24e86ab83160cca427a64104e0c729d8ec5313fe50895
+  answer: df6541cb2e2e04b28d19bde02dd33d5df700cb5d28892b8e96fec42037fbea66
   tags: 69397ac908e9297d60b42db393abaf98c4557e61e2b88921141ee491df903401
 semantic_tags:
 - representation.markdown

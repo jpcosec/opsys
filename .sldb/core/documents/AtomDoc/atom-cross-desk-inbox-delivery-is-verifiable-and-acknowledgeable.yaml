@@ -1,12 +1,12 @@
 name: atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable
 path: desk/atoms/atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable.md
-source_hash: 8efbfe934cd9d25945efa8f8c6086a3837ee677979662e848eeb043eb3e78343
-content_hash: 858483215b72ac4895995e0bd66d475e7bfa3824567cb4dfc05b068b38608269
+source_hash: 19e8000d9e12e7d0cb1264590a88f6dba5dfb374e5611e5836aec7abac78c877
+content_hash: e5cf9a495c28db37e71986be24ee4c9eff97b2ed07a1555c8c905c266e2465d1
 field_hashes:
   id: 15b8b1ff6c2eb0e45b2ee53a15e9a031b294bb8135e1b425a12d27939ccb53d8
   title: 0862e557d23f3ddd3b0f996e52acaca7a6427a32a43d3701e5513cf71ff2d032
   five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
-  answer: e0c85ca18cdcefb2fbb2efd98f37c602471a8cfbb2ea2d8f0f8f62ea75dd7591
+  answer: f5cf972b60433ef3e82214eecfe26a0000769c265a13a94d955f57111ce6efdc
   tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 semantic_tags:
 - representation.markdown

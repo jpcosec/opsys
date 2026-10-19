@@ -15,4 +15,4 @@ tags: []
 
 _Describe the repository purpose, scope, and role in the ecosystem._
 
-Repository for spec2viz.
+Turns semantic YAML specs into diagrams and charts (PlantUML, Mermaid, Vega).

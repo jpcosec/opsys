@@ -3,11 +3,10 @@ id: atom-cross-desk-inbox-delivery-is-verifiable-and-acknowledgeable
 title: Cross-desk inbox delivery is verifiable and acknowledgeable
 five_wh_one_plus: what
 tags: []
-provenance: null
 ---
 
 # Cross-desk inbox delivery is verifiable and acknowledgeable
 
 ## Answer
 
-Inbox delivery to sibling desks resolves the target through the canonical identity resolver, returns a structured delivery result, and supports --ack plus optional target/ack fields so senders can verify the note landed.
+Cross-desk messaging resolves the target through the canonical identity resolver, writes a structured delivery result (sender, target, path, tracked_name, verified), and supports acknowledgement: deskops message send/list/read plus deskops message ack <selector> closes the note and records target_project, acknowledged_by and acknowledged_at. deskops inbox remains a deprecated alias.

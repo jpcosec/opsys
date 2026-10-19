@@ -3,10 +3,10 @@ model_ref: deskops.models:StepDoc
 path: deskops/models/step.py
 documents_index: .sldb/core/documents/StepDoc.yaml
 sections_index: .sldb/runtime/sections/StepDoc.yaml
-model_hash: 99d6db0a27f0ee72e436c5c646e6c0d3c106354defe2b7a0be26e9df074820d8
-roster_hash: 4adb385370c4e6eb3556c2f20ceda3b1414d35d89ddcbbe348436c846df826d4
+model_hash: dd3a2c0d0a07e7950b867bdee110eefd5acc6b253b24be58400d557d4dad1fbf
+roster_hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 contract_hash: faeb52e5f790fd84fed3b4718e5c3ece784a3cd61ed1212ed7cd11e59fdec64e
-documents_count: 2
+documents_count: 0
 version: 1
 canonical: false
 family: null

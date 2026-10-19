@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Drawer items are deferred candidates and do not execute until they are promoted into active desk surfaces and routed through the task workflow.
+Drawer items are deferred candidates and do not execute until someone authors a routed task from them with `deskops add task --from-drawer` and the task is routed through the workflow.

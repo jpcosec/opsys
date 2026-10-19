@@ -1,6 +1,6 @@
 ---
 id: atom-spec-fields-compile-into-model-fields
-title: Spec fields compile into model fields
+title: Spec fields describe model fields
 five_wh_one_plus: how
 tags:
 - system:deskops
@@ -9,8 +9,8 @@ tags:
 - topic:specs
 ---
 
-# Spec fields compile into model fields
+# Spec fields describe model fields
 
 ## Answer
 
-Spec fields define artifact schema vocabulary for the compiler, but concrete values belong inside the artifact model payload rather than in separate desk field documents.
+Spec field YAML defines reusable field vocabulary used by artifact specs and structure diagrams. The Pydantic model for each artifact owns its fields, and concrete values belong inside the artifact payload rather than in separate desk field documents.

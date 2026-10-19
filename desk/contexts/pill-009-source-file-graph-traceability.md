@@ -4,7 +4,6 @@ id: pill-009
 # e.g., language:python, library:pydantic
 tags:
 - system:deskops
-- system:kgdb
 - pill-type:model
 - topic:source-code
 - topic:traceability

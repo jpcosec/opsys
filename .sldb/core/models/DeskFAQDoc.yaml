@@ -3,10 +3,10 @@ model_ref: deskops.models:DeskFAQDoc
 path: deskops/models/faq.py
 documents_index: .sldb/core/documents/DeskFAQDoc.yaml
 sections_index: .sldb/runtime/sections/DeskFAQDoc.yaml
-model_hash: 4662cdd8173b893a370046fddf478658a47f84886d0a5622e19c9d2a696aad1b
-roster_hash: 6e969da1a12750ecd9ca039dfe2ea1360aab9c92b67921110d4464e70e7c399a
+model_hash: 5bf7fd4278b5d0f1820ac62901e18a0e4baff09a60dcd504951d8a56c3fdf3e9
+roster_hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
 contract_hash: c05ce9c314e00f8a9338ce1cbaab37e5a6a16fb880dc41371ef78e6403037f80
-documents_count: 3
+documents_count: 0
 version: 1
 canonical: false
 family: null

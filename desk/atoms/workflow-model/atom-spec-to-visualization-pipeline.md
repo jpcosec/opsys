@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Deskops generates Mermaid diagrams from artifact specs so structure diagrams and lifecycle diagrams derive from the same YAML definitions that drive artifact compilation.
+Deskops renders the lifecycle state machine as Mermaid from its workflow spec (`deskops next --diagram`). Artifact structure diagrams can be rendered from artifact specs through `deskops.specs.mermaid`, but the CLI does not currently expose that projection.

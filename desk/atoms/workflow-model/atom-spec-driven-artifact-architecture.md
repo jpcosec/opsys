@@ -12,4 +12,4 @@ tags:
 
 ## Answer
 
-Deskops artifact models are described by YAML specs that declare document shape, reusable fields, and workflow transitions before the compiler turns them into structured markdown documents.
+Deskops artifact YAML specs supply artifact-level config such as id patterns, status defaults, tag defaults, and field lists for structure diagrams. The Pydantic model owns the fields of each artifact, and the task lifecycle is declared in its own workflow spec, `deskops/spec/workflows/task_lifecycle.yaml`, not in artifact specs.

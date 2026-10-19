@@ -1,18 +1,18 @@
 name: atom-self-generating-spec-derived-cli
 path: desk/atoms/workflow-model/atom-self-generating-spec-derived-cli.md
-source_hash: 00fdd2214e3d1f7d0aa179c6f08e136f24fccf3bf3d08a9e37304cee96bf307a
-content_hash: 03dad6e743f6e1a07ed8feecd70d86bb527ef18a1c1d3f7dec927078783addc8
+source_hash: ae8a478e580e66ef16442bc47a295ffc83bcdef694974ded5843c080df73cfb4
+content_hash: 5be1906bff6888b5230ec9d69487223f8cdce46c0d4f91a07b6c24780231cc46
 field_hashes:
   id: 02f92064dc4d7bb2e0977966bbbe8c98055e2a6f938d54f9520e6c0d68341fc1
-  title: 982951e2b23d4c1e9a025a7433164cfbb1c515a2c348f8ffc8407255a781f5ad
+  title: 8487fa8cc3170c68af6813cf9d70f626eed24d83c5ddff28be3cbd5574b165f1
   five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
-  answer: 10ff9bc1c499c4276b5f753dc5110135c086c6a5364ae30b8d4d57ed465d0a4b
-  tags: 44684aaccfce10c53ebb26dcc5ae66f771114a56b8f021ff764984d668352b94
+  answer: 1ba13fd45ad6af2816e0e78e01239e674b115726b5c2d5f9c5faea5b0e9fea65
+  tags: 4c6e11db1ab24ba9080687653ed6812dea330f26c5dfc689b1350eca5bb9a94b
 semantic_tags:
 - layer:cli
 - representation.markdown
 - source.document.markdown
 - system:deskops
-- topic:specs
+- topic:models
 - type.knowledge.atom
 - workspace.desk.atoms

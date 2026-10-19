@@ -1,18 +1,18 @@
 name: atom-primitives-encode-operational-rules
 path: desk/atoms/workflow-model/atom-primitives-encode-operational-rules.md
-source_hash: c1bfc6afdc40e0d6baca7b70a3675e268b9350a0505533ba1ce399685632aeec
-content_hash: 019fef1813321a19dd6fb1f3dd51dee44a5b14ad32370bc200cf6c7bffd016d9
+source_hash: f3a1c009a6c70775e6bf255ec813bc1ff3418323b806f00c8a162d28552498aa
+content_hash: 6577f1179d388161d305cb173144e54d4e2550052c529fcbda60eba6f00290f4
 field_hashes:
   id: ed7286dc6c698a6d5d94b4b20b7121f6d3ab9c63e7dfa54da9da2e6376786642
   title: 878b634d5e9aadf37a854fded2a8a62724a6d4ef5876f22ff6c30e24e98d451e
   five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
   answer: 4e170bfe6534e44d94a38953247e4b16de08e35f67a99faa0d241d3ec48b898f
-  tags: 549fe66cd622b48b907abd5af401d96db42ad9f02ed077c56cb51a706ff28093
+  tags: 5a133bad35158b51faa973e5713775892c6b2b6780e48fc0428d49b420f33cba
 semantic_tags:
 - representation.markdown
 - source.document.markdown
 - system:deskops
-- topic:primitives
+- topic:lifecycle
 - topic:workflow
 - type.knowledge.atom
 - workspace.desk.atoms

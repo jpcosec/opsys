@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-The first deskops knowledge graph runtime should use KGDB's NetworkX-backed graph contracts for traversal, neighborhood queries, and export before introducing heavier ontology or OWL reasoning.
+The sldb graph runtime (sldb.api.graph) uses NetworkX for traversal, neighborhood queries, path analysis and snapshot export; deskops builds its graph snapshot from that API before introducing heavier ontology or OWL reasoning.

@@ -13,4 +13,4 @@ tags:
 
 ## Answer
 
-An atom reference should say more than the atom id; it should capture the role the atom plays, such as source, constrains, validates, explains, contradicts, supersedes, or raises_question.
+An atom reference carries the role the atom plays. deskops accepts these roles for explicit atom references: references, documents, specifies, constrains and validates (deskops/atom_references.py ALLOWED_ROLES). Graph edges also carry field-derived roles such as supports, uses, materializes, implements, tests, violates, invokes, defines, routes and configures.

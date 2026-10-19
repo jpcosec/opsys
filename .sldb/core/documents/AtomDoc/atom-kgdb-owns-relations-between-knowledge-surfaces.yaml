@@ -1,18 +1,18 @@
 name: atom-kgdb-owns-relations-between-knowledge-surfaces
 path: desk/atoms/workflow-model/atom-kgdb-owns-relations-between-knowledge-surfaces.md
-source_hash: 6fd9f8958f1849cb2193c64ee0e7ce8dccefedf733300af3a61c4d58c2c838d7
-content_hash: fe0ccfb83f2bf007940795e94c22b0859d94d423570ad9ec2aa10a0d36a93a78
+source_hash: 6aeb1eeba56e41efeb5a39cb1474657666222d38f1b1b438cd090c5942c7363c
+content_hash: d4a2812e72daf396560adacf89f530aa79a2af1e74b829c4ad7be75f616e5c6e
 field_hashes:
   id: e79c4fcb303d4f6c1199d65f1e53e1ed6b784175cd7bd522ba4d64d7976b3314
-  title: 85c28f76f848c70f6dd170baf607016f0ea44ceb76db3d2d53b58cb008f147da
+  title: 229246cc3944e61db6da3c5e4f3778afb433643c03b19107df35abf66a0c3204
   five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
-  answer: 8be7f2e8b4f1ad2fa34a9686a9173c7e64692ae8007991d42fc3d8cdfd04371c
-  tags: edcf8bbdf3ca3a2e42cdafb51367748978e7d0044863e350c1ef991dd85a71ba
+  answer: d816c3c5d7cf581f909163a5f2f53a5c06f2fe97db0ee2611dbaf57c0b909adf
+  tags: 7da0e951f3132ba8b73a954d5c3d3f795abcd753893c5d4749abcabd2ab3036a
 semantic_tags:
 - representation.markdown
 - source.document.markdown
 - system:deskops
-- system:kgdb
+- system:sldb
 - topic:knowledge-graph
 - topic:relations
 - type.knowledge.atom

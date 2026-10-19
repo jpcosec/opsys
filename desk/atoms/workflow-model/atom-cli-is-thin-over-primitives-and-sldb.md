@@ -6,7 +6,7 @@ tags:
 - system:deskops
 - system:sldb
 - topic:cli
-- topic:primitives
+- topic:lifecycle
 ---
 
 # CLI is thin over SLDB and its graph
