@@ -1,0 +1,103 @@
+diff --git a/deskops/cli/registry.py b/deskops/cli/registry.py
+index 85ed443..ea6c72f 100644
+--- a/deskops/cli/registry.py
++++ b/deskops/cli/registry.py
+@@ -708,6 +708,36 @@ Examples:
+             handler="deskops.cli.commands.drawer:DrawerCLI",
+             mutates=True,
+         ),
++        Command(
++            path=("retire",),
++            help="Retire one obsolete desk document that has no dedicated verb, with its reason and refs.",
++            args=(
++                A("path", help="Path of the file under desk/ to retire (pills, inbox notes, steps, roles, runtimes, faq, logbook, materializations, leftovers)."),
++                ROOT_ARG_NO_PERIOD,
++                A("--reason", required=True, help="Why the document is obsolete."),
++                A(
++                    "--ref",
++                    action="append",
++                    required=True,
++                    help="Commit (HEAD or an ancestor) or existing path that replaces or resolves it. Repeatable.",
++                ),
++                A(
++                    "--force",
++                    action="store_true",
++                    help="Retire even when other desk or docs files still reference it.",
++                ),
++            ),
++            handler="deskops.cli.commands.retire:RetireCLI",
++            mutates=True,
++            raw_text=True,
++            epilog=(
++                "Example:\n"
++                "  deskops retire desk/contexts/pill-old.md --root . \\\n"
++                "    --reason \"Describes the retired routine primitives\" --ref a0e00e3\n\n"
++                "Tasks, drawer entries, atoms and registry entries keep their own verbs:\n"
++                "closeout, drawer remove, atoms delete, repo remove."
++            ),
++        ),
+         Command(
+             path=("issue",),
+             help="Close and list desk issues.",
+diff --git a/tests/fixtures/golden/help/deskops.txt b/tests/fixtures/golden/help/deskops.txt
+index ddfbd33..e2f1eea 100644
+--- a/tests/fixtures/golden/help/deskops.txt
++++ b/tests/fixtures/golden/help/deskops.txt
+@@ -1,10 +1,10 @@
+ usage: deskops [-h] [--debug]
+-               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
++               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime} ...
+ 
+ deskops: Workflow-domain layer for the hum-ecosystem.
+ 
+ positional arguments:
+-  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
++  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+     about               Print a short overview of deskops and its first-use commands.
+     doctor              Detect and repair common broken desk states safely.
+     status              Deprecated alias for `deskops doctor`; show current workspace and workflow status.
+@@ -15,6 +15,7 @@ positional arguments:
+     message             Send, list, read, or acknowledge cross-desk messages.
+     promote             Promote inbox notes into loose drawer candidates. Drawer items become tasks only by authoring them with `deskops add task`.
+     drawer              Manage deferred drawer entries.
++    retire              Retire one obsolete desk document that has no dedicated verb, with its reason and refs.
+     issue               Close and list desk issues.
+     add                 Create desk workflow artifacts from modeled templates.
+     edit                Update one field on a modeled desk artifact.
+diff --git a/tests/test_cli.py b/tests/test_cli.py
+index 0b70b6f..a2f0807 100644
+--- a/tests/test_cli.py
++++ b/tests/test_cli.py
+@@ -40,7 +40,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
+     captured = capsys.readouterr()
+     assert result == 0
+     assert "usage: deskops" in captured.out
+-    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
++    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
+     assert "Typical flow:" in captured.out
+     assert "deskops add task --root ." in captured.out
+     assert "Use docs/quickstart.md" in captured.out
+diff --git a/tests/test_cli_grammar.py b/tests/test_cli_grammar.py
+index af49499..9ceea7c 100644
+--- a/tests/test_cli_grammar.py
++++ b/tests/test_cli_grammar.py
+@@ -27,6 +27,7 @@ TOP_LEVEL_GRAMMAR: dict[str, frozenset[str]] = {
+             "runtime",
+             "drawer",
+             "issue",
++            "retire",
+         }
+     ),
+     "model_crud": frozenset({"add", "edit", "list", "show"}),
+diff --git a/tests/test_command_registry.py b/tests/test_command_registry.py
+index 53d3368..25206f5 100644
+--- a/tests/test_command_registry.py
++++ b/tests/test_command_registry.py
+@@ -85,6 +85,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
+     ("repo",),
+     ("repo", "register"),
+     ("repo", "remove"),
++    ("retire",),
+     ("desk",),
+     ("desk", "install"),
+     ("desk", "migrate"),

@@ -1,0 +1,7 @@
+Task: task-retire-verb-for-desk-documents
+Title: `deskops retire` removes an obsolete desk document with its reason and refs
+Status: draft
+Current node: ritual-execution
+Task type: implementation
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

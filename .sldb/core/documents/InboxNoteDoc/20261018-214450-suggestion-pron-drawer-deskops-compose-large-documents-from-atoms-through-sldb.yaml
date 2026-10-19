@@ -1,0 +1,17 @@
+name: 20261018-214450-suggestion-pron-drawer-deskops-compose-large-documents-from-atoms-through-sldb
+path: desk/inbox/20261018-214450-suggestion-pron-drawer-deskops-compose-large-documents-from-atoms-through-sldb.md
+source_hash: 87a8d8efa83c81dc2b5e5fef93ba0e40f2678ea591db0c270a7f1310ea0bb1d0
+content_hash: 1cd1e8ea0124d426340cff7e04bb35675758c655701bec5b40120fe2e1d01f77
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: 1d147ab379788e0277ce278d918ca7cf9e0572dffeefc59e10d282ef146bd45c
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 47c525babe9805eff956b6c29f5317de94e8c9141747e725b1e7df1363cd531f
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 6425def724386125c356bdd268ad4ebddf95aca8504b2e48568479a6303b34a3
+  body: 1c2177407c25b2074b2a93f341b611526ca4ad2bc4500f2dcae859f38f98c78c
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox

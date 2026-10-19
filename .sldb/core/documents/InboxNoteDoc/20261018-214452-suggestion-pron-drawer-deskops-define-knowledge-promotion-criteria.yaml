@@ -1,0 +1,17 @@
+name: 20261018-214452-suggestion-pron-drawer-deskops-define-knowledge-promotion-criteria
+path: desk/inbox/20261018-214452-suggestion-pron-drawer-deskops-define-knowledge-promotion-criteria.md
+source_hash: 954f3567310d1bb32347bdb342e37d64a9f2be8a3c16a843ccba89bcb87be593
+content_hash: a3b888cf71cdffd73f2b9b4cb5f156471b0ad3224cb2be3c1e2c853b7763b7e3
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: 1d147ab379788e0277ce278d918ca7cf9e0572dffeefc59e10d282ef146bd45c
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 22f9f253d11ef93a6657cdc35e1506edd1bd2255159aadbeeedd6bd30efea27a
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 1291c23989f410e145395765002150910771912fff4489439e22aba306392ee2
+  body: 09132cdf3427d5b4f999ddec92eb12cb7bb1b03f4f57732476f9abeb8805c506
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox

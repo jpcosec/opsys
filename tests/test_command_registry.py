@@ -85,6 +85,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
     ("repo",),
     ("repo", "register"),
     ("repo", "remove"),
+    ("retire",),
     ("desk",),
     ("desk", "install"),
     ("desk", "migrate"),

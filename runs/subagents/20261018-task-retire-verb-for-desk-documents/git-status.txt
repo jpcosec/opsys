@@ -1,0 +1,25 @@
+ M .sldb/core/documents/TaskDoc/task-retire-verb-for-desk-documents.yaml
+ M .sldb/core/models/InboxNoteDoc.yaml
+ M .sldb/core/models/TaskDoc.yaml
+ M .sldb/core/store_index.yaml
+ M desk/tasks/task-retire-verb-for-desk-documents.md
+ M deskops/cli/registry.py
+ M tests/fixtures/golden/help/deskops.txt
+ M tests/test_cli.py
+ M tests/test_cli_grammar.py
+ M tests/test_command_registry.py
+?? .sldb/core/documents/InboxNoteDoc/20261018-214450-suggestion-pron-drawer-deskops-compose-large-documents-from-atoms-through-sldb.yaml
+?? .sldb/core/documents/InboxNoteDoc/20261018-214451-suggestion-pron-drawer-deskops-validate-atoms-and-trace-composed-usage.yaml
+?? .sldb/core/documents/InboxNoteDoc/20261018-214452-suggestion-pron-drawer-deskops-audit-big-documents-sldb-modeling.yaml
+?? .sldb/core/documents/InboxNoteDoc/20261018-214452-suggestion-pron-drawer-deskops-define-knowledge-promotion-criteria.yaml
+?? desk/inbox/20261018-213734-unclear-corrida-candidata-de-la-suite-sldb-1-spec2viz-tools-suite-check-sh-fr.md
+?? desk/inbox/20261018-214355-suggestion-faltan-verbos-para-retirar-pills-y-notas-cerradas-del-inbox.md
+?? desk/inbox/20261018-214450-suggestion-pron-drawer-deskops-compose-large-documents-from-atoms-through-sldb.md
+?? desk/inbox/20261018-214451-suggestion-pron-drawer-deskops-validate-atoms-and-trace-composed-usage.md
+?? desk/inbox/20261018-214452-suggestion-pron-drawer-deskops-audit-big-documents-sldb-modeling.md
+?? desk/inbox/20261018-214452-suggestion-pron-drawer-deskops-define-knowledge-promotion-criteria.md
+?? deskops/cli/commands/retire.py
+?? deskops/services/retire.py
+?? runs/subagents/20261018-task-retire-verb-for-desk-documents/
+?? tests/fixtures/golden/help/deskops_retire.txt
+?? tests/test_retire_cli.py

@@ -709,6 +709,36 @@ Examples:
             mutates=True,
         ),
         Command(
+            path=("retire",),
+            help="Retire one obsolete desk document that has no dedicated verb, with its reason and refs.",
+            args=(
+                A("path", help="Path of the file under desk/ to retire (pills, inbox notes, steps, roles, runtimes, faq, logbook, materializations, leftovers)."),
+                ROOT_ARG_NO_PERIOD,
+                A("--reason", required=True, help="Why the document is obsolete."),
+                A(
+                    "--ref",
+                    action="append",
+                    required=True,
+                    help="Commit (HEAD or an ancestor) or existing path that replaces or resolves it. Repeatable.",
+                ),
+                A(
+                    "--force",
+                    action="store_true",
+                    help="Retire even when other desk or docs files still reference it.",
+                ),
+            ),
+            handler="deskops.cli.commands.retire:RetireCLI",
+            mutates=True,
+            raw_text=True,
+            epilog=(
+                "Example:\n"
+                "  deskops retire desk/contexts/pill-old.md --root . \\\n"
+                "    --reason \"Describes the retired routine primitives\" --ref a0e00e3\n\n"
+                "Tasks, drawer entries, atoms and registry entries keep their own verbs:\n"
+                "closeout, drawer remove, atoms delete, repo remove."
+            ),
+        ),
+        Command(
             path=("issue",),
             help="Close and list desk issues.",
             args=(),

@@ -27,6 +27,7 @@ TOP_LEVEL_GRAMMAR: dict[str, frozenset[str]] = {
             "runtime",
             "drawer",
             "issue",
+            "retire",
         }
     ),
     "model_crud": frozenset({"add", "edit", "list", "show"}),

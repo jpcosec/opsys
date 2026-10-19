@@ -1,0 +1,17 @@
+name: 20261018-214451-suggestion-pron-drawer-deskops-validate-atoms-and-trace-composed-usage
+path: desk/inbox/20261018-214451-suggestion-pron-drawer-deskops-validate-atoms-and-trace-composed-usage.md
+source_hash: a9f04082c79c5e452507afbfb40af7a312524c721e310ea31c2191d416c13fd8
+content_hash: 90898693f5f552b3e7a253953540beac699aaef0ae4f5d49e542fc36fa3793b5
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: 1d147ab379788e0277ce278d918ca7cf9e0572dffeefc59e10d282ef146bd45c
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 2e8fc96d0b271928f67bc53a7670d28c047eb31ac497a24a98f67adfc2868811
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 5c6b2cbe6b8ae45b602067b4cb7bdcc77c911a8a70f4124f2285656ebd59a0ba
+  body: 536520852c4ee35bf493f3ccc2a0a01e8528091110e6a07697cc26e6f3b2856a
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
