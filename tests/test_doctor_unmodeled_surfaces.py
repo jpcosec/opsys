@@ -136,20 +136,10 @@ def test_doctor_reports_only_untracked_sldb_modeled_surfaces(tmp_path: Path, mon
     _seed_unmodeled_docs(root)
     _write(root / "desk" / "tasks" / "untracked-task.md", "# Untracked\n")
 
-    assert main(["doctor", "--root", str(root)]) == 1
+    # Only the modeled surface is reported, and as an alert: nothing is broken.
+    assert main(["doctor", "--root", str(root)]) == 0
     out, _ = capsys.readouterr()
 
-    assert "Untracked desk documents: desk/tasks/untracked-task.md" in out
-    assert "These are SLDB-modeled surfaces with broken tracking/state, not intentionally unmodeled desk notes." in out
-    assert "Ignored by design:" in out
-    assert "desk/drawer/** is intentionally not SLDB-modeled" in out
-    assert "desk/inbox/** is intentionally not SLDB-modeled" in out
-    assert "desk/issues/** is intentionally not SLDB-modeled" in out
-    assert "desk/features/** is intentionally not SLDB-modeled" in out
-    assert "desk/logbook/** is intentionally not SLDB-modeled" in out
-    assert "desk/METHODOLOGY.md is a top-level desk note intentionally not SLDB-modeled" in out
-    assert "desk/drawer/features/future-work.md" not in out
-    assert "desk/inbox/20260902-000000-suggestion-ignore-me.md" not in out
-    assert "desk/issues/issue-non-modeled.md" not in out
-    assert "desk/features/future-surface.md" not in out
-    assert "desk/logbook/README.md" not in out
+    assert "Not tracked yet: desk/tasks/untracked-task.md" in out
+    for unmodeled in ("drawer/features", "inbox/", "issues/", "features/", "logbook/", "METHODOLOGY.md"):
+        assert unmodeled not in out

@@ -575,17 +575,24 @@ def _inspect_surface_store_health(root: Path, surface_docs: list[Path]) -> tuple
                 if absolute not in tracked_surface_set:
                     continue
                 tracked.add(absolute)
+                # An edited, re-contracted or moved document is an alert, not a malformed
+                # surface: it does not make the desk legacy (see deskops.doctor_findings).
                 note = doc.get("note")
-                if note not in ("ok", "benign_mutation"):
+                if note not in _NOT_MALFORMED_NOTES:
                     invalid.append(f"{doc_path} ({note})")
 
-    if result.returncode != 0 and not invalid:
+    # `stores check` exits 1 on a store that only moved; its JSON is the verdict, the exit
+    # code only matters when there is no JSON to read.
+    if result.returncode != 0 and payload is None:
         stderr = result.stderr.strip().splitlines()
         if stderr:
             return tracked, invalid, f"sldb stores check failed: {stderr[0]}"
         return tracked, invalid, "sldb stores check failed"
 
     return tracked, invalid, None
+
+
+_NOT_MALFORMED_NOTES = frozenset({"ok", "benign_mutation", "data_mutation", "contract_mutation", "missing"})
 
 
 def _dedupe(items: list[str]) -> list[str]:

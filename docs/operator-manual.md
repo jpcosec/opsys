@@ -75,7 +75,15 @@ deskops doctor --root .
 deskops status --root .
 ```
 
-Repair only when you understand the reported findings:
+The report has two parts. **Errors** mean the desk is broken: missing structure,
+a tracked document that is gone, a document its model cannot read, an unregistered
+model, a store that cannot be read. They make `doctor` exit 1. **Alerts** mean the
+store moved under an expected change: a document edited, moved or added by hand, a
+model contract that changed. Nothing is broken; register them with
+`deskops desk update --apply`. Alerts alone exit 0, and they are always printed.
+
+`--repair` acts on errors only (it scaffolds structure and registers models). Use it
+when you understand the reported errors:
 
 ```bash
 deskops doctor --root . --repair

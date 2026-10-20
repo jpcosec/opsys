@@ -220,7 +220,7 @@ def test_doctor_reports_legacy_desk_with_missing_config(tmp_path: Path, capsys) 
 
     captured = capsys.readouterr()
     assert result == 1
-    assert "Doctor Findings:" in captured.out
+    assert "Errors (the desk is broken):" in captured.out
     assert "Legacy desk detected: desk/config.json" in captured.out
     assert "Run with --repair to attempt automatic fixes." in captured.out
 
@@ -2635,16 +2635,18 @@ def test_doctor_reports_untracked_documents_and_missing_structure(tmp_path: Path
     # Run doctor without repair
     assert main(["doctor", "--root", str(root)]) == 1
     out, err = capsys.readouterr()
-    assert "Doctor Findings:" in out
+    assert "Errors (the desk is broken):" in out
     assert "Missing desk structure: desk/drawer/" in out
-    assert "Untracked desk documents: desk/tasks/untracked-task.md" in out
+    # A document added by hand is an expected change, not damage: an alert.
+    assert "Not tracked yet: desk/tasks/untracked-task.md" in out
+    assert "register edits, moves and new documents with: deskops desk update --apply" in out
     assert "Run with --repair to attempt automatic fixes." in out
 
-    # Run doctor with repair
-    assert main(["doctor", "--root", str(root), "--repair"]) == 1
+    # Repair fixes the error; the alert is left for desk update, and alone it does not fail.
+    assert main(["doctor", "--root", str(root), "--repair"]) == 0
     out, err = capsys.readouterr()
-    assert "Scaffolded missing desk/ structure." in out
-    assert "Manual repair required to track documents (use sldb docs track)." in out
+    assert "Scaffolded missing desk/ structure" in out
+    assert "Not tracked yet: desk/tasks/untracked-task.md" in out
 
     # Check if things were repaired
     assert (root / "desk" / "drawer").exists()

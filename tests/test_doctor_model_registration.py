@@ -134,12 +134,11 @@ def test_doctor_repair_registers_missing_models_idempotently(tmp_path: Path, mon
 
     assert main(["doctor", "--root", str(root), "--repair"]) == 0
     out, _ = capsys.readouterr()
-    assert "Registered missing models." in out
-    assert "Unregistered models: StepDoc" in out
+    assert "Registered missing models: StepDoc" in out
 
     assert main(["doctor", "--root", str(root), "--repair"]) == 0
     out, _ = capsys.readouterr()
-    assert "Registered missing models." in out
+    assert "Registered missing models: StepDoc" in out
 
 
 def _store_index(root: Path) -> dict:
