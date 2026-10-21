@@ -1,0 +1,11 @@
+$ sldb stores check --store .sldb
+PASS: store integrity — 218 documents in 17 models — 4 alerta(s)
+alert: [store/structural-noise] AtomDoc:atom-desk-health-delegates-store-diagnostics-to-sldb: 4 heading(s) the model does not declare: ## Boundary Rationale, ## Delegation Pattern, ## Evidence, ## Tags
+    fix     : create a model that inherits it and declares those sections as optrev fields
+alert: [store/structural-noise] AtomDoc:atom-desk-health-is-measured-by-cli-diagnostics: 4 heading(s) the model does not declare: ## Diagnostic Surface, ## Repairability, ## Evidence, ## Tags
+    fix     : create a model that inherits it and declares those sections as optrev fields
+alert: [store/structural-noise] AtomDoc:atom-desk-health-is-workspace-integrity-state: 3 heading(s) the model does not declare: ## Evidence, ## Related Atoms, ## Tags
+    fix     : create a model that inherits it and declares those sections as optrev fields
+alert: [store/structural-noise] AtomDoc:atom-desk-repair-is-owned-by-deskops: 4 heading(s) the model does not declare: ## Owned Operations, ## Not Owned, ## Evidence, ## Tags
+    fix     : create a model that inherits it and declares those sections as optrev fields
+exit 0

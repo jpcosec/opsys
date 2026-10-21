@@ -1,0 +1,8 @@
+$ python -m deskops next
+Next:
+No active task is routed by desk/tasks/Board.md.
+Suggested commands:
+deskops list tasks --root .
+deskops promote inbox-to-drawer-task <selector> --root .
+deskops add task --root . --title "..." ...
+exit 0

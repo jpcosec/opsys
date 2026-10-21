@@ -183,6 +183,8 @@ include:
   - desk/materializations/materialization-materialization-targets-outside-package-tests.md
   - desk/materializations/materialization-graph-extract-sources-unit-tests.md
   - desk/materializations/materialization-graph-vocabulary-source-kind-update.md
+  - desk/materializations/materialization-board-portable-context.md
+  - desk/materializations/materialization-board-portable-references-regressions.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

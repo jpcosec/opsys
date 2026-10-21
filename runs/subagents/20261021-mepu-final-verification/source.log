@@ -1,0 +1,2 @@
+$ python -c import deskops; print(deskops.__file__)
+/home/jp/proyectos/SLDB_1/deskops/.tmp/mepu-final-verification/deskops/__init__.py

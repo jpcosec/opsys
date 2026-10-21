@@ -1,0 +1,110 @@
+ $F/edges-unresolved-final.log
+ (echo '$ python -m deskops graph missing'; python -m deskops graph
+ missing 2>&1; echo "exit $?") > $F/graph-missing-final.log
+ head -2 $F/store-check-final.log; tail -1 $F/store-check-final.log; grep
+ -c alert: $F/store-check-final.log; cat $F/edges-unresolved-final.log
+ $F/graph-missing-final.log
+ sldb docs list --store .sldb 2>/dev/null | grep -i
+ materialization-board; git status --short
+
+ ... (28 earlier lines, ctrl+o to expand)
+ (MaterializationContractDoc) ->
+ desk/materializations/materialization-board-portable-references-regressi
+ ons.md
+  M .sldb/store.yaml
+ ?? runs/subagents/20261021-mepu-final-verification/
+
+ Took 20.8s
+
+
+
+ $ cd /home/jp/proyectos/SLDB_1/deskops/.tmp/mepu-final-verification &&
+ F=.tmp/final-validation; grep alert: $F/store-check-final.log | cut
+ -c1-90; (echo '$ python -m deskops next'; python -m deskops next 2>&1;
+ echo "exit $?") > $F/next-final.log; tail -15 $F/next-final.log; grep -n
+ "status:" desk/tasks/task-board-portable-references.md
+ desk/tasks/task-closeout-without-atoms.md 2>&1 | head; ls desk/tasks/
+
+ ... (16 earlier lines, ctrl+o to expand)
+ grep: desk/tasks/task-board-portable-references.md: No such file or
+ directory
+ grep: desk/tasks/task-closeout-without-atoms.md: No such file or
+ directory
+ Board.md
+
+ Took 0.5s
+
+
+ Verdict: PASS. I found no blocking defects; the phase still needs its
+ phase-closing commit, which per your instructions I did not make.
+
+ Evidence I checked (no full pytest rerun)
+ - Full suite: .tmp/final-validation/pytest-full-after-build.log shows
+ 583 passed, 4 skipped in 1009.49s.
+ - Its JSON, pytest-full-after-build.json, says exit 0 and 1012.03s; the
+ time differs from the log because it covers the whole process.
+ - Focused tests: pytest-focused.log shows 67 passed in 31.29s, and
+ pytest-focused.json says exit 0.
+ - pytest-full.log is an old run that was killed (results.json exit -15,
+ failing only because no store was built yet). The after-build run
+ replaces it, so it doesn't count.
+ - Earlier checks before the store update: store-build.log (216 tracked,
+ 0 missing), store-check.log (PASS, 4 alerts), edges-unresolved.log ([]),
+ graph-missing.log (none missing).
+
+ Final store check after your update (new logs in .tmp/final-validation/)
+ - store-check-final.log: PASS, 218 documents in 17 models, 4 alerts,
+ exit 0. That is 216 plus the two Board materializations.
+ - The 4 alerts are the same store/structural-noise warnings on the
+ atom-desk-health* atoms that were there before; they are not new.
+ - edges-unresolved-final.log: [], exit 0.
+ - graph-missing-final.log: "No missing graph references found.", exit 0.
+ - sldb docs list now shows both materialization-board-portable-context
+ and materialization-board-portable-references-regressions.
+
+ The fourth skip
+ - It is tests/test_skill_cli_drift.py:71, which skips when .pi/skills
+ doesn't exist.
+ - .pi/ is gitignored, so it is missing in the isolated worktree but
+ present in the main checkout. That is why the earlier session saw 584
+ passed and 3 skipped.
+ - The other 3 skips are tests/e2e_agent/test_agent_scenarios.py:40,
+ which need DESKOPS_AGENT_E2E=1 and pi.
+ - I confirmed this by running only those two files with -rs:
+ skip-candidates-final.log shows 4 passed, 4 skipped, 3 deselected, exit
+ 0.
+ - The skip comes from the test environment, not from a regression.
+
+ Store declaration
+ - Yes, the two Board materializations should be declared, and now they
+ are: .sldb/store.yaml has 2 new lines under the
+ MaterializationContractDoc paths.
+ - That change is not committed yet; it is the only modified tracked file
+ in the worktree.
+
+ Board routing and policy
+ - The Board now names pills and rituals portably (pill-…, ritual-…), and
+ the store maps all four ritual names to their files.
+ - deskops next (next-final.log, exit 0) reports no routed active task;
+ both tasks are closed and no task files remain in desk/tasks/.
+ - The closeout exemption applies only when the desk has no atom files.
+ Test evidence and the commit-reference check are still required, and
+ this repo has atoms, so its own gate is still strict.
+ - The atom was updated first, and docs/faq.md and deskops/data/faq.md
+ were changed to match it.
+
+ Actionable items
+ 1. Phase ritual step 10 isn't done: the .sldb/store.yaml change still
+ has to go into a descriptive phase-closing commit.
+ 2. There is an untracked
+ runs/subagents/20261021-mepu-final-verification/ folder; the coordinator
+ should decide whether to commit it with the phase or leave it out.
+ 3. Minor: the comments in desk/tasks/Board.md still say "List of
+ pill-xxx paths" and "List of ritual-xxx paths", which no longer matches
+ the name-based entries. It doesn't change behaviour.
+
+──────────────────────────────────────────────────────────────────────────
+
+──────────────────────────────────────────────────────────────────────────
+~/proyectos/SLDB_1/deskops (fix/closeout-ignora-archivos-ignorados)
+↑22 ↓4.5k R290k W45k $0.374 4.7%/1.0M (auto)      claude-opus-5-5 • medium

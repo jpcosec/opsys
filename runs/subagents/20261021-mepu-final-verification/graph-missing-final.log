@@ -1,0 +1,3 @@
+$ python -m deskops graph missing
+No missing graph references found.
+exit 0

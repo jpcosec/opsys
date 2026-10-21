@@ -1,0 +1,3 @@
+$ sldb edges unresolved --store .sldb --format json
+[]
+exit 0
