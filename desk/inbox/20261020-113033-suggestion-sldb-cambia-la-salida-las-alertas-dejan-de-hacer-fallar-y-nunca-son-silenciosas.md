@@ -8,9 +8,11 @@ target_project: deskops
 # ISO 8601 timestamp
 created_at: '2026-10-20T11:30:33'
 # open | closed
-status: open
+status: closed
 # project identity that acknowledged the note
+acknowledged_by: deskops
 # ISO 8601 timestamp, set when acknowledged
+acknowledged_at: '2026-10-29T10:05:15'
 ---
 
 # sldb cambia la salida: las alertas dejan de hacer fallar y nunca son silenciosas

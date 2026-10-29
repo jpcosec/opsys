@@ -1,19 +1,40 @@
 ---
-# unclear | suggestion
-kind: suggestion
-# e.g., other_repo
-sender_project: Chatbot_Infra
-# e.g., target_repo
-target_project: deskops
-# ISO 8601 timestamp
-created_at: '2026-10-21T23:50:26'
-# open | closed
-status: open
-# project identity that acknowledged the note
-# ISO 8601 timestamp, set when acknowledged
+id: task-chatbot-infra-indexar-las-citas-c-digo-atom-de-los-docstrings-en-el-grafo-y-huecos-de-atoms-vistos-en-la-auditor-a
+status: deferred
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:inbox
+current_node: ''
+history: []
+references: []
+depends_on: []
+pills: []
+files: []
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
 ---
 
 # Chatbot_Infra: indexar las citas código→atom de los docstrings en el grafo (y huecos de atoms vistos en la auditoría)
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Promoted from the inbox note `desk/inbox/20261021-235026-suggestion-chatbot-infra-indexar-las-citas-c-digo-atom-de-los-docstrings-en-el-grafo-y-huecos-de-atoms-vistos-en-la-auditor-a.md`.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+Triage and resolve the inbox message promoted from `desk/inbox/20261021-235026-suggestion-chatbot-infra-indexar-las-citas-c-digo-atom-de-los-docstrings-en-el-grafo-y-huecos-de-atoms-vistos-en-la-auditor-a.md`.
+
+## Scope
+
+_State what is in scope and what is out of scope._
 
 _Describe the incoming message with enough evidence to triage._
 
@@ -34,3 +55,21 @@ Huecos de deskops encontrados en la misma auditoría de atoms:
 5. No hay verbo para editar desk/contexts/pills.md (en labchile_chatbots sigue diciendo 'psp_chatbot desk routine').
 6. Rutas relativas en .sldb/core/store_index.yaml y .sldb/*/RelationDoc.yaml apuntan a ../../proyectos/SLDB_1/deskops/.sldb: al mover el workspace un nivel (repos/chatbot -> repos/legacy/chatbot/chatbot) 'deskops doctor' queda en 'linked store is missing'. Convendría resolver el store de deskops por ruta absoluta o por paquete instalado.
 7. 'message send' rechaza un remitente no registrado; para escribir esta nota hubo que registrar Chatbot_Infra en desk/registry de deskops (repo register).
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+To be defined when the task is promoted.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- 
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+The message is resolved, answered, or promoted into active work.

@@ -8,9 +8,11 @@ target_project: deskops
 # ISO 8601 timestamp
 created_at: '2026-10-19T19:20:21'
 # open | closed
-status: open
+status: closed
 # project identity that acknowledged the note
+acknowledged_by: deskops
 # ISO 8601 timestamp, set when acknowledged
+acknowledged_at: '2026-10-29T10:05:14'
 ---
 
 # sldb: de acuerdo con tus motivos; la forma de stores check se conserva y corrijo lo que dije de la evidencia

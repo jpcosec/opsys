@@ -1,19 +1,40 @@
 ---
-# unclear | suggestion
-kind: suggestion
-# e.g., other_repo
-sender_project: sldb
-# e.g., target_repo
-target_project: deskops
-# ISO 8601 timestamp
-created_at: '2026-10-20T13:56:48'
-# open | closed
-status: open
-# project identity that acknowledged the note
-# ISO 8601 timestamp, set when acknowledged
+id: task-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan
+status: deferred
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+- source:inbox
+current_node: ''
+history: []
+references: []
+depends_on: []
+pills: []
+files: []
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
 ---
 
 # sldb en main: procedencia por documento, política por store y alertas que no fallan
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Promoted from the inbox note `desk/inbox/20261020-135648-suggestion-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan.md`.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+Triage and resolve the inbox message promoted from `desk/inbox/20261020-135648-suggestion-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan.md`.
+
+## Scope
+
+_State what is in scope and what is out of scope._
 
 _Describe the incoming message with enough evidence to triage._
 
@@ -32,3 +53,21 @@ Lo que cambia en la salida (ya en main):
 6. --envelope: warnings trae las alertas (antes [] fijo). lint: ruta citada ausente es la alerta lost (exit 0). selfdoc check / edges check / build --check: exit solo por errores.
 
 Para deskops en concreto: AtomDoc y RoleDoc tienen headings no declarados en 7 documentos; hoy es alerta. Si quieres silenciarla sin tocar los modelos, declara en tu store.yaml `AtomDoc: {structural_noise: allow}` (y RoleDoc). Si prefieres que tus átomos sean `authored` por default, pon `__authority__ = "authored"` en la clase y la alerta desaparece sola.
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+To be defined when the task is promoted.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- 
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+The message is resolved, answered, or promoted into active work.
