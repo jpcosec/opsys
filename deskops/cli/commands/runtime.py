@@ -87,6 +87,7 @@ class RuntimeCLI:
             out_dir=out_dir,
             model_alias=getattr(args, "model_alias", "medium"),
             task_repo=getattr(args, "task_repo", None),
+            mode=getattr(args, "mode", None),
         )
         print(f"Scion template: {target}")
         for name in ("scion-agent.yaml", "system-prompt.md", "agents.md"):

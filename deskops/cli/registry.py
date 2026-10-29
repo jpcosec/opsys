@@ -1473,6 +1473,12 @@ ref, and the run index entry is marked legacy-resolved.
                     help="Portable Scion model size alias written to the template (the harness-config resolves it).",
                 ),
                 A("--task-repo", default=None, help="Repository under /workspace the agent may write to; named in agents.md."),
+                A(
+                    "--mode",
+                    choices=("executor", "coordinator"),
+                    default=None,
+                    help="Which agents.md to write: executor (one bounded task) or coordinator (owns a desk). Default: by role name.",
+                ),
                 A("--task", default=None, help="Task id being dispatched; with --agent, also records a RunDoc under runs/subagents/."),
                 A("--agent", default=None, help="Scion agent slug for the RunDoc (what you pass to `scion start`)."),
                 A(

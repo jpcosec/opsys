@@ -1,7 +1,8 @@
 usage: deskops runtime template [-h] [--root ROOT] [--harness HARNESS]
                                 [--out OUT]
                                 [--model-alias {small,medium,large,extra-large}]
-                                [--task-repo TASK_REPO] [--task TASK]
+                                [--task-repo TASK_REPO]
+                                [--mode {executor,coordinator}] [--task TASK]
                                 [--agent AGENT] [--task-root TASK_ROOT]
                                 [--run-dir RUN_DIR]
                                 role_id
@@ -23,6 +24,9 @@ options:
   --task-repo TASK_REPO
                         Repository under /workspace the agent may write to;
                         named in agents.md.
+  --mode {executor,coordinator}
+                        Which agents.md to write: executor (one bounded task)
+                        or coordinator (owns a desk). Default: by role name.
   --task TASK           Task id being dispatched; with --agent, also records a
                         RunDoc under runs/subagents/.
   --agent AGENT         Scion agent slug for the RunDoc (what you pass to

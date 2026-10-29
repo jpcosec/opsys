@@ -85,6 +85,21 @@ def test_pi_template_targets_the_pi_harness_config(executor: dict, profiles: dic
     assert "repository `sldb`" in files["agents.md"]
 
 
+def test_supervisor_role_gets_coordinator_instructions(profiles: dict[str, dict]) -> None:
+    _, supervisor = find_role_doc(ROOT, "role-deskops-supervisor")
+    files = scion_template_files(supervisor, profiles["claude"], harness="claude", task_repo="deskops")
+    agents = files["agents.md"]
+    assert "coordinator of the `deskops` desk" in agents
+    assert "One executor per repository at a time" in agents
+    assert "Do not push" in agents and "Never decide for the owner" in agents
+    # the executor text is not in it, and an explicit mode overrides the name
+    assert "You are a deskops executor" not in agents
+    forced = scion_template_files(supervisor, profiles["claude"], harness="claude", mode="executor")
+    assert "You are a deskops executor" in forced["agents.md"]
+    with pytest.raises(ValueError, match="mode must be"):
+        scion_template_files(supervisor, profiles["claude"], harness="claude", mode="boss")
+
+
 def test_tools_fold_into_command_args_when_the_profile_has_a_flag(profiles: dict[str, dict]) -> None:
     role = {"id": "role-x", "name": "x", "description": "d", "kind": "claude", "model": "", "tools": ["Read", "Bash"], "body": "# x"}
     agent = yaml.safe_load(scion_template_files(role, profiles["claude"], harness="claude")["scion-agent.yaml"])

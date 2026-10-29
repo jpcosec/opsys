@@ -108,12 +108,18 @@ def scion_template_files(
     model_alias: str = DEFAULT_MODEL_ALIAS,
     task_repo: str | None = None,
     source: str | None = None,
+    mode: str | None = None,
 ) -> dict[str, str]:
     """Render the three template files as ``{filename: text}``.
 
     ``source`` is a human-readable provenance line (role path + runtime path)
-    written at the top of ``scion-agent.yaml``.
+    written at the top of ``scion-agent.yaml``. ``mode`` picks the
+    ``agents.md``: ``executor`` (one bounded task) or ``coordinator`` (owns a
+    desk); by default a role whose name says supervisor/coordinator gets the
+    coordinator instructions.
     """
+    if mode not in (None, "executor", "coordinator"):
+        raise ValueError(f"mode must be executor or coordinator, got '{mode}'")
     if model_alias not in MODEL_SIZE_ALIASES:
         raise ValueError(f"model alias must be one of {MODEL_SIZE_ALIASES}, got '{model_alias}'")
     if harness not in HARNESS_BY_KIND.values():
@@ -176,8 +182,71 @@ def scion_template_files(
 
     agent_yaml = "\n".join(lines) + "\n"
     system_prompt = (body or f"# {role_name}") + "\n"
-    agents_md = _render_agents_md(role_name, harness, task_repo)
+    resolved_mode = mode or ("coordinator" if "supervisor" in role_name or "coordinator" in role_name else "executor")
+    if resolved_mode == "coordinator":
+        agents_md = _render_coordinator_agents_md(role_name, harness, task_repo)
+    else:
+        agents_md = _render_agents_md(role_name, harness, task_repo)
     return {"scion-agent.yaml": agent_yaml, "system-prompt.md": system_prompt, "agents.md": agents_md}
+
+
+def _render_coordinator_agents_md(role_name: str, harness: str, task_repo: str | None) -> str:
+    """Instructions for the long-lived agent that owns one desk.
+
+    One coordinator per desk is the shape the owner chose (2026-10-29): it is
+    the only writer of that ``desk/``, it dispatches short-lived executors
+    through ``scion start``, waits blocked, reviews their evidence and closes.
+    What needs the owner is never decided here.
+    """
+    repo = task_repo or "<repo>"
+    return (
+        f"# {role_name}: coordinator of the `{repo}` desk on Scion ({harness})\n"
+        "\n"
+        "You are the long-lived coordinator of ONE desk. The desk, not your memory, holds the state; every time you\n"
+        "wake up, read it again. You are the only agent that writes `/workspace/" + repo + "/desk/`.\n"
+        "\n"
+        "## Each time you wake up\n"
+        "\n"
+        "```bash\n"
+        f"cd /workspace/{repo}\n"
+        "deskops show board Board --root .          # active tasks and their nodes\n"
+        "deskops message list --root .              # inbox: incoming notes\n"
+        "scion list                                 # executors you already dispatched\n"
+        "git status --short --branch\n"
+        "```\n"
+        "\n"
+        "## What you do\n"
+        "\n"
+        "1. **Triage the inbox.** Informational or duplicate -> `deskops message ack`. Bounded work for this repo ->\n"
+        "   `deskops promote inbox-to-drawer-task`, then `deskops add task --from-drawer ...` when it is next.\n"
+        "   Work for another repo -> `deskops message send --to <repo>`. A decision only the owner can make ->\n"
+        "   leave the note open and say so with `sciontool status waiting_for_input \"<the question>\"`.\n"
+        "2. **Dispatch one executor per active task that has none.** Build the prompt from `deskops show task <id>`:\n"
+        "   the task id, the repo, what to verify or implement, the validation command, the evidence files, and the\n"
+        "   three prohibitions (no desk/ writes, no closeout, no commits unless the task says so). Then:\n"
+        "   `scion start " + repo + "-<short-slug> \"<prompt>\" --type deskops-executor` and record it:\n"
+        "   `deskops runtime template role-deskops-executor --harness " + harness + " --root /workspace/deskops --out /tmp/t"
+        " --task <id> --agent " + repo + "-<short-slug> --task-root /workspace/" + repo + "`.\n"
+        "3. **One executor per repository at a time.** Agents share the checkout; two writers on the same repo\n"
+        "   collide in git. Different repositories may run in parallel.\n"
+        "4. **Wait properly.** After dispatching: `sciontool status blocked \"waiting on <agent>\"`. Scion wakes you\n"
+        "   when the child completes, stalls or asks for input. Do not poll in a loop.\n"
+        "5. **Review before closing.** Read `runs/subagents/<run>/result-summary.md` and `validation.log`; re-run the\n"
+        "   task's validation yourself; check `git status` shows only what the task scoped. Then\n"
+        "   `deskops advance task <id>` through its gates and `deskops closeout commit --task <id> --run-dir <run>\n"
+        "   --paths <files>`. If evidence is missing, message the executor or dispatch a new one; never fabricate it.\n"
+        "   Then `scion stop <agent>`: an executor that reported completed keeps its container alive until stopped,\n"
+        "   and Scion counts that idle time against its duration limit.\n"
+        "6. **Do not push.** Commits stay local; the owner pushes. Report what you committed.\n"
+        "7. **Report.** When the desk has nothing dispatchable left, `sciontool status completed \"<one-line summary>\"`.\n"
+        "\n"
+        "## Never\n"
+        "\n"
+        "- Never edit a tracked desk document by hand; always the `deskops` / `sldb` CLIs (`--help` first).\n"
+        "- Never write outside `/workspace/" + repo + "` except `runs/` evidence and inbox notes sent through `deskops message send`.\n"
+        "- Never decide for the owner: releases, policy, model design, anything a note marks as theirs.\n"
+        "- Never answer an executor's question on the owner's behalf; surface it.\n"
+    )
 
 
 def _render_agents_md(role_name: str, harness: str, task_repo: str | None) -> str:
@@ -238,6 +307,7 @@ def materialize_scion_template(
     out_dir: Path | None = None,
     model_alias: str = DEFAULT_MODEL_ALIAS,
     task_repo: str | None = None,
+    mode: str | None = None,
 ) -> Path:
     """Write the template for ``role_id`` and return its directory.
 
@@ -254,7 +324,7 @@ def materialize_scion_template(
     harness_name = pick_harness_config(kind)
     source = f"{role_path.relative_to(root).as_posix()} + desk/runtimes/{profile.get('id', kind)}.md"
     files = scion_template_files(
-        role_doc, profile, harness=harness_name, model_alias=model_alias, task_repo=task_repo, source=source
+        role_doc, profile, harness=harness_name, model_alias=model_alias, task_repo=task_repo, source=source, mode=mode
     )
     target = template_dir_for(root, role_doc, out_dir)
     target.mkdir(parents=True, exist_ok=True)
