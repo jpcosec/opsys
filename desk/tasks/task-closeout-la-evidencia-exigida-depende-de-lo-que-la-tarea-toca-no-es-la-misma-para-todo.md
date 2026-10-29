@@ -31,13 +31,13 @@ Tres notas (Chatbot_Infra 2026-10-22, deskops 2026-10-27, mepu_ocs_dev 2026-10-2
 
 _Describe the concrete result this task must produce._
 
-closeout verify/commit exigen evidencia según la naturaleza de la tarea: una tarea que cambia código (.py en los paths cerrados o en el diff) exige tests + commit + átomo o materialización como hoy; una tarea de docs/spec/diseño exige commit y el documento entregado; una tarea externa exige una referencia externa verificable (URL o id de ticket) en references. La compuerta dice siempre qué clase de tarea detectó y qué evidencia pidió por eso.
+La evidencia de cierre se declara al crear la tarea y el closeout verifica exactamente eso. TaskDoc gana el campo closeout_evidence (lista con vocabulario cerrado: tests, commit, atom, materialization, document, external). deskops add task lo recibe con --evidence; si falta, lo rellena por task_type (code -> tests+commit+atom|materialization; docs|spec|design -> commit+document; external -> external); sin --evidence ni task_type falla con el mensaje de cómo declararla. closeout verify/commit comprueban solo lo declarado. Si el diff trae .py y la tarea no declaró tests, no bloquea: alerta visible (nunca silenciosa). La compuerta siempre imprime 'esta tarea declaró X; encontré Y'.
 
 ## Scope
 
 _State what is in scope and what is out of scope._
 
-deskops/services/closeout_gates.py, deskops/operations.py (verify_task_closeout, _has_verified_task_closeout_evidence), deskops/cli/commands/closeout.py; usar TaskDoc.task_type (code|docs|design|spec|external; default code) y, si no está declarado, inferir por los archivos tocados. Tests en tests/ para las cuatro clases. Actualizar desk/rituals/closeout.md y el atom que describa la regla (crear uno nuevo con deskops add atom si no existe).
+deskops/models/task.py (campo closeout_evidence + template), deskops/cli/registry.py y cli/commands/core.py (add task --evidence, fallo sin evidencia ni task_type), deskops/services/closeout_gates.py y deskops/operations.py (verify_task_closeout lee lo declarado; alerta por .py sin tests), deskops/cli/commands/closeout.py (mensaje 'declaró X; encontré Y'), desk/rituals/closeout.md, un atom nuevo que enuncie la regla, tests en tests/ para las cuatro clases y para el fallo de add task. Las tareas existentes sin el campo se tratan como code (migración implícita, con alerta).
 
 ## Implementation Path
 
@@ -55,4 +55,4 @@ _List the checks required before this task can close._
 
 _Name the observable condition that makes the task complete._
 
-Los tests de las cuatro clases pasan; reproducir el caso LIN-1 (tarea external con una URL en references) cierra con closeout commit --no-run; una tarea code sin tests sigue bloqueada; el mensaje de la compuerta nombra la clase detectada.
+pytest -q tests -k 'closeout or add_task' en verde; una tarea external con una URL en references cierra con closeout commit --no-run; una tarea code sin tests sigue bloqueada; una tarea docs cierra con commit + documento; add task sin --evidence ni --task-type falla explicando; el mensaje de la compuerta nombra lo declarado y lo encontrado; decisión del dueño 2026-10-29 registrada en el atom.
