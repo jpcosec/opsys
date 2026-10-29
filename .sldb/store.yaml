@@ -1,5 +1,13 @@
 version: 1
-links: []
+links:
+- name: sldb
+  path: ../sldb/.sldb
+- name: spec2viz
+  path: ../spec2viz/.sldb
+- name: pron
+  path: ../pron/.sldb
+- name: scion
+  path: ../scion/.sldb
 models:
 - name: AtomDoc
   model_ref: deskops.models:AtomDoc
