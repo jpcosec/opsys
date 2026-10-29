@@ -84,3 +84,6 @@
 {"task_id": "task-test-ci-knowledge-integrity-flow", "run_id": null, "run_dir": "runs/subagents/20261019-task-test-ci-knowledge-integrity-flow", "session_sha256": null, "commit": null}
 {"task_id": "task-derived-store-out-of-git", "run_id": null, "run_dir": "runs/subagents/20261019-task-derived-store-out-of-git", "session_sha256": null, "commit": null}
 {"task_id": "task-message-selector-rejects-ambiguous-fragments", "run_id": null, "run_dir": "runs/subagents/20261019-task-message-selector-rejects-ambiguous-fragments", "session_sha256": null, "commit": null}
+{"task_id": "task-closeout-without-atoms", "run_id": null, "run_dir": "runs/subagents/20261021-closeout-without-atoms", "session_sha256": null, "commit": null}
+{"task_id": "task-board-portable-references", "run_id": null, "run_dir": "runs/subagents/20261021-board-portable-references", "session_sha256": null, "commit": null}
+{"task_id": "task-declared-materialization-targets-resolve-outside-the-indexed-package", "run_id": null, "run_dir": "runs/subagents/20261021-materialization-targets-outside-package", "session_sha256": null, "commit": null}

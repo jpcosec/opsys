@@ -1,0 +1,18 @@
+## fix/closeout-ignora-archivos-ignorados
+ M .sldb/store.yaml
+ M desk/tasks/task-declared-materialization-targets-resolve-outside-the-indexed-package.md
+ M deskops/graph/extract_sources.py
+ M deskops/operations.py
+ M docs/knowledge-graph/desk-source-graph-vocabulary.md
+ M tests/test_graph_extract_sources.py
+?? desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md
+?? desk/inbox/20261019-192021-suggestion-sldb-de-acuerdo-con-tus-motivos-la-forma-de-stores-check-se-conserva-y-corrijo-lo-que-dije-de-la-evidencia.md
+?? desk/inbox/20261020-113033-suggestion-sldb-cambia-la-salida-las-alertas-dejan-de-hacer-fallar-y-nunca-son-silenciosas.md
+?? desk/inbox/20261020-135648-suggestion-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan.md
+?? desk/inbox/20261020-141330-suggestion-sldb-c-mo-declarar-anchors-a-c-digo-desde-atoms-tasks-y-docs-codeanchordoc-anchors-record-check.md
+?? desk/materializations/materialization-extract-sources-declared-targets.md
+?? desk/materializations/materialization-graph-extract-sources-unit-tests.md
+?? desk/materializations/materialization-graph-vocabulary-source-kind-update.md
+?? desk/materializations/materialization-materialization-targets-outside-package-tests.md
+?? runs/subagents/20261021-materialization-targets-outside-package/git-status.txt
+?? tests/test_materialization_targets_outside_package.py

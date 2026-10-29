@@ -629,6 +629,12 @@ class DeskopsOperations:
     ) -> CloseoutGateReport:
         evidence = list(reference_evidence["atom"])
         findings: list[dict[str, str]] = []
+        has_local_atoms = any(
+            path.is_file()
+            for path in (self.desk_root / "atoms").rglob(self._artifact_glob_pattern("artifact.atom"))
+        )
+        if not has_local_atoms:
+            evidence.append("knowledge-coverage-exempt: no local atom documents")
         graph_context = self._build_closeout_graph_context()
 
         for raw_path in changed_files:
@@ -658,6 +664,9 @@ class DeskopsOperations:
                     evidence.append(f"follow-up:{follow_up} -> {relative_path}")
                 continue
 
+            if not has_local_atoms:
+                continue
+
             findings.append(
                 {
                     "code": "missing_changed_file_link",
@@ -666,7 +675,7 @@ class DeskopsOperations:
                 }
             )
 
-        if not changed_files and not reference_evidence["atom"]:
+        if has_local_atoms and not changed_files and not reference_evidence["atom"]:
             findings.append(
                 {
                     "code": "missing_atom_or_materialization_link",
@@ -1223,7 +1232,7 @@ class DeskopsOperations:
             path.unlink()
 
     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
-        if artifact_id not in {"artifact.atom", "artifact.pill"}:
+        if artifact_id not in {"artifact.atom", "artifact.pill", "artifact.materialization"}:
             return
         self._track_created_document(model, path, doc_id)
 

@@ -1,0 +1,273 @@
+FFF...FF.....FF..................................................        [100%]
+=================================== FAILURES ===================================
+______________ test_atomless_coverage_is_optional[files0-missing] ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_atomless_coverage_is_opti0')
+layout = 'missing', files = []
+
+    @pytest.mark.parametrize("layout", ["missing", "empty", "readme"])
+    @pytest.mark.parametrize("files", [[], ["seed.txt"]])
+    def test_atomless_coverage_is_optional(tmp_path: Path, layout: str, files: list[str]) -> None:
+        root, refs = _repo(tmp_path)
+        if layout != "missing":
+            (root / "desk/atoms").mkdir()
+        if layout == "readme":
+            _write(root / "desk/atoms/README.md", "# Local atom guide\n")
+            (root / "desk/atoms/atom-directory.md").mkdir()
+        _write_task(root, refs, files)
+>       report = _verify(root)
+
+tests/test_closeout_atomless.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_closeout_atomless.py:35: in _verify
+    report = json.loads(result.stdout)
+/home/jp/anaconda3/lib/python3.13/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x722d695a86e0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:363: JSONDecodeError
+_______________ test_atomless_coverage_is_optional[files0-empty] _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_atomless_coverage_is_opti1')
+layout = 'empty', files = []
+
+    @pytest.mark.parametrize("layout", ["missing", "empty", "readme"])
+    @pytest.mark.parametrize("files", [[], ["seed.txt"]])
+    def test_atomless_coverage_is_optional(tmp_path: Path, layout: str, files: list[str]) -> None:
+        root, refs = _repo(tmp_path)
+        if layout != "missing":
+            (root / "desk/atoms").mkdir()
+        if layout == "readme":
+            _write(root / "desk/atoms/README.md", "# Local atom guide\n")
+            (root / "desk/atoms/atom-directory.md").mkdir()
+        _write_task(root, refs, files)
+>       report = _verify(root)
+
+tests/test_closeout_atomless.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_closeout_atomless.py:35: in _verify
+    report = json.loads(result.stdout)
+/home/jp/anaconda3/lib/python3.13/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x722d695a86e0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:363: JSONDecodeError
+______________ test_atomless_coverage_is_optional[files0-readme] _______________
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_atomless_coverage_is_opti2')
+layout = 'readme', files = []
+
+    @pytest.mark.parametrize("layout", ["missing", "empty", "readme"])
+    @pytest.mark.parametrize("files", [[], ["seed.txt"]])
+    def test_atomless_coverage_is_optional(tmp_path: Path, layout: str, files: list[str]) -> None:
+        root, refs = _repo(tmp_path)
+        if layout != "missing":
+            (root / "desk/atoms").mkdir()
+        if layout == "readme":
+            _write(root / "desk/atoms/README.md", "# Local atom guide\n")
+            (root / "desk/atoms/atom-directory.md").mkdir()
+        _write_task(root, refs, files)
+>       report = _verify(root)
+
+tests/test_closeout_atomless.py:50: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_closeout_atomless.py:35: in _verify
+    report = json.loads(result.stdout)
+/home/jp/anaconda3/lib/python3.13/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x722d695a86e0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:363: JSONDecodeError
+_ test_local_atoms_preserve_strict_coverage[files0-missing_atom_or_materialization_link-False] _
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_local_atoms_preserve_stri0')
+nested = False, files = [], code = 'missing_atom_or_materialization_link'
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("files,code", [([], "missing_atom_or_materialization_link"), (["seed.txt"], "missing_changed_file_link")])
+    def test_local_atoms_preserve_strict_coverage(tmp_path: Path, nested: bool, files: list[str], code: str) -> None:
+        root, refs = _repo(tmp_path)
+        _write_atom(root)
+        if nested:
+            target = root / "desk/atoms/domain/topic/atom-evidence.md"
+            target.parent.mkdir(parents=True)
+            (root / "desk/atoms/atom-evidence.md").rename(target)
+        _write_task(root, refs, files)
+>       report = _verify(root)
+
+tests/test_closeout_atomless.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_closeout_atomless.py:35: in _verify
+    report = json.loads(result.stdout)
+/home/jp/anaconda3/lib/python3.13/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x722d695a86e0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:363: JSONDecodeError
+_ test_local_atoms_preserve_strict_coverage[files0-missing_atom_or_materialization_link-True] _
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_local_atoms_preserve_stri1')
+nested = True, files = [], code = 'missing_atom_or_materialization_link'
+
+    @pytest.mark.parametrize("nested", [False, True])
+    @pytest.mark.parametrize("files,code", [([], "missing_atom_or_materialization_link"), (["seed.txt"], "missing_changed_file_link")])
+    def test_local_atoms_preserve_strict_coverage(tmp_path: Path, nested: bool, files: list[str], code: str) -> None:
+        root, refs = _repo(tmp_path)
+        _write_atom(root)
+        if nested:
+            target = root / "desk/atoms/domain/topic/atom-evidence.md"
+            target.parent.mkdir(parents=True)
+            (root / "desk/atoms/atom-evidence.md").rename(target)
+        _write_task(root, refs, files)
+>       report = _verify(root)
+
+tests/test_closeout_atomless.py:65: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_closeout_atomless.py:35: in _verify
+    report = json.loads(result.stdout)
+/home/jp/anaconda3/lib/python3.13/json/__init__.py:346: in loads
+    return _default_decoder.decode(s)
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <json.decoder.JSONDecoder object at 0x722d695a86e0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+/home/jp/anaconda3/lib/python3.13/json/decoder.py:363: JSONDecodeError
+___________ test_atomless_paths_and_generated_provenance_still_fail ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_atomless_paths_and_genera0')
+
+    def test_atomless_paths_and_generated_provenance_still_fail(tmp_path: Path) -> None:
+        root, refs = _repo(tmp_path)
+        _write(root / "docs/example.mmd", "flowchart TD\n    A-->B\n")
+        _write(root / "docs/example.md", "# Example\n")
+        _write_task(root, refs, ["absent.txt", "../outside.txt", "docs/example.md"])
+        report = _verify(root)
+        codes = [finding["code"] for finding in report["findings"]]
+>       assert codes.count("changed_file_missing") == 2
+E       AssertionError: assert 1 == 2
+E        +  where 1 = <built-in method count of list object at 0x722d662a73c0>('changed_file_missing')
+E        +    where <built-in method count of list object at 0x722d662a73c0> = ['changed_file_missing', 'generated_artifact_missing_declared_sources'].count
+
+tests/test_closeout_atomless.py:103: AssertionError
+____________ test_atomless_board_routed_task_closes_with_one_commit ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-79/test_atomless_board_routed_tas0')
+
+    def test_atomless_board_routed_task_closes_with_one_commit(tmp_path: Path) -> None:
+        root, _refs = _repo(tmp_path)
+        _write_board(root)
+        _git(root, "add", ".")
+        _git(root, "commit", "-q", "-m", "route task")
+        before = _git(root, "rev-parse", "HEAD")
+        result = _cli(root, "commit", "--no-run", "--reason", "CLI regression exercised directly")
+>       assert result.returncode == 0, result.stdout + result.stderr
+E       AssertionError: Nothing staged and no paths given. Pass --paths.
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['/home/jp/anaconda3/bin/python', '-m', 'deskops', 'closeout', 'commit', '--root', '/tmp/pytest-... regression exercised directly'], returncode=1, stdout='Nothing staged and no paths given. Pass --paths.\n', stderr='').returncode
+
+tests/test_closeout_atomless.py:118: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_closeout_atomless.py::test_atomless_coverage_is_optional[files0-missing]
+FAILED tests/test_closeout_atomless.py::test_atomless_coverage_is_optional[files0-empty]
+FAILED tests/test_closeout_atomless.py::test_atomless_coverage_is_optional[files0-readme]
+FAILED tests/test_closeout_atomless.py::test_local_atoms_preserve_strict_coverage[files0-missing_atom_or_materialization_link-False]
+FAILED tests/test_closeout_atomless.py::test_local_atoms_preserve_strict_coverage[files0-missing_atom_or_materialization_link-True]
+FAILED tests/test_closeout_atomless.py::test_atomless_paths_and_generated_provenance_still_fail
+FAILED tests/test_closeout_atomless.py::test_atomless_board_routed_task_closes_with_one_commit
+7 failed, 58 passed in 19.55s
+.................................................................        [100%]
+65 passed in 21.36s

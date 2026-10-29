@@ -7,19 +7,19 @@ scope: desk
 tasks: []
 # List of pill-xxx paths
 pills:
-- desk/contexts/pill-001-task-closure-commit.md
-- desk/contexts/pill-005-subagent-execution.md
-- desk/contexts/pill-007-phase-gated-task-flow.md
-- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
-- desk/contexts/pill-phase-closeout-reconciles-pills-and-surfaces-next-work.md
-- desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
-- desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md
+- pill-001-task-closure-commit
+- pill-005-subagent-execution
+- pill-007-phase-gated-task-flow
+- pill-durable-pill-knowledge-graduates-to-atoms-at-closeout
+- pill-phase-closeout-reconciles-pills-and-surfaces-next-work
+- pill-ready-phases-prove-dependencies-and-non-overlap
+- pill-board-routed-pills-stay-minimal-and-reusable
 # List of ritual-xxx paths
 rituals:
-- desk/rituals/phase.md
-- desk/rituals/execution.md
-- desk/rituals/closeout.md
-- desk/rituals/testing.md
+- ritual-phase
+- ritual-execution
+- ritual-closeout
+- ritual-testing
 # e.g., system:sldb, workspace:desk
 tags:
 - system:sldb

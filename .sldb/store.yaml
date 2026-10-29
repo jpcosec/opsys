@@ -175,6 +175,15 @@ include:
   glob: desk/runtimes/*.md
 - model: TaskDoc
   glob: desk/tasks/task-*.md
+- model: MaterializationContractDoc
+  paths:
+  - desk/materializations/materialization-closeout-link-policy.md
+  - desk/materializations/materialization-closeout-atomless-regressions.md
+  - desk/materializations/materialization-extract-sources-declared-targets.md
+  - desk/materializations/materialization-materialization-targets-outside-package-tests.md
+  - desk/materializations/materialization-graph-extract-sources-unit-tests.md
+  - desk/materializations/materialization-graph-vocabulary-source-kind-update.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+policy: {}

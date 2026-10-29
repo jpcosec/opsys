@@ -1,0 +1,17 @@
+Missing graph references:
+- missing_declared_target: task:task-board-portable-references -> desk/atoms/workflow-model/atom-board-context-uses-portable-document-names.md
+  provenance: desk/tasks/task-board-portable-references.md:line:21:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-board-portable-references -> test_file:tests/test_board_portable_references.py
+  provenance: desk/tasks/task-board-portable-references.md:line:20:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-board-portable-references -> test_file:tests/test_board_portable_references.py
+  provenance: desk/tasks/task-board-portable-references.md:line:59:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-closeout-without-atoms -> test_file:tests/test_closeout_atomless.py
+  provenance: desk/tasks/task-closeout-without-atoms.md:line:25:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-closeout-without-atoms -> test_file:tests/test_closeout_atomless.py
+  provenance: desk/tasks/task-closeout-without-atoms.md:line:69:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+5 missing, 0 informational

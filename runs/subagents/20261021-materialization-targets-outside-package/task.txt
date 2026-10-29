@@ -1,0 +1,4 @@
+Task: task-declared-materialization-targets-resolve-outside-the-indexed-package
+Title: Declared materialization targets resolve outside the indexed package
+Status: draft
+Current node: ritual-execution

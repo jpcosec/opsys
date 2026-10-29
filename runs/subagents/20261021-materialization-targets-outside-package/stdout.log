@@ -1,0 +1,74 @@
+# Commands run and key output
+
+## 1. Implementation changes
+
+### deskops/graph/extract_sources.py
+- Added `import yaml`
+- Added `_declared_materialization_target_nodes()` helper function
+- Added `_read_target_identity()` helper function
+- Modified `extract_source_file_nodes()` to include declared materialization targets
+- New nodes use `source_kind: "declared_materialization_target"` provenance
+
+### deskops/operations.py
+- Modified `_track_created_artifact()` to include `"artifact.materialization"` in trackable artifacts
+- Line 1236: Changed condition from `{"artifact.atom", "artifact.pill"}` to `{"artifact.atom", "artifact.pill", "artifact.materialization"}`
+
+### docs/knowledge-graph/desk-source-graph-vocabulary.md
+- Line 149: Added `declared_materialization_target` to the source_kind values list
+- Added documentation for the new provenance value
+
+### tests/test_graph_extract_sources.py
+- Added 11 new unit tests for declared materialization targets
+- Tests cover: src files, github workflows, doc surfaces (no node), path rule dedup,
+  ./ stripping, absolute paths, .. paths, kind:id targets, nonexistent files,
+  excluded .tmp and tools dirs
+
+### tests/test_materialization_targets_outside_package.py
+- New test file with 4 integration tests
+- test_declared_target_outside_package_becomes_graph_node: verifies targets become nodes
+- test_declared_target_missing_file_stays_missing: verifies nonexistent stays missing_declared_target
+- test_add_materialization_tracks_document_in_store: verifies .sldb tracking
+- test_closeout_verify_accepts_materialization_coverage: verifies closeout coverage
+
+## 2. Artifact creation
+
+$ deskops add atom --title "Declared materialization targets are graph nodes" ...
+Created atom atom-declared-materialization-targets-are-graph-nodes
+Path: desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md
+
+$ deskops add materialization --title "Extract sources declared targets" ...
+Created materialization materialization-extract-sources-declared-targets
+Path: desk/materializations/materialization-extract-sources-declared-targets.md
+
+$ deskops add materialization --title "Materialization targets outside package tests" ...
+Created materialization materialization-materialization-targets-outside-package-tests
+Path: desk/materializations/materialization-materialization-targets-outside-package-tests.md
+
+$ deskops add materialization --title "Graph extract sources unit tests" ...
+Created materialization materialization-graph-extract-sources-unit-tests
+Path: desk/materializations/materialization-graph-extract-sources-unit-tests.md
+
+$ deskops add materialization --title "Graph vocabulary source_kind update" ...
+Created materialization materialization-graph-vocabulary-source-kind-update
+Path: desk/materializations/materialization-graph-vocabulary-source-kind-update.md
+
+## 3. Task updates
+
+$ deskops edit task ... references ...
+Updated task references to include the new atom
+
+$ deskops edit task ... files ...
+Updated task files to list specific materialization files instead of desk/materializations/
+
+## 4. Validation
+
+$ deskops graph missing --root .
+No missing graph references found.
+
+$ pytest tests/test_materialization_targets_outside_package.py tests/test_graph_extract_sources.py tests/test_materialization_contract.py -v
+============================= test session starts ==============================
+23 passed in 50.77s
+
+$ deskops closeout verify --root . --task ...
+atom_or_materialization_link gate: ok: true
+(tests and commit gates fail as expected - supervisor adds evidence)

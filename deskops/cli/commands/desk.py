@@ -100,9 +100,11 @@ def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> li
 def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
     rel = path.relative_to(desk_dir)
     parts = rel.parts
-    if len(parts) == 2 and parts[0] == "tasks" and parts[1] == "Board.md":
-        return models.BoardDoc
     if len(parts) == 2 and parts[0] == "tasks":
+        # Boards share tasks/ with the tasks (ARTIFACT_PATHS): the main Board.md and
+        # any extra board written by `deskops add board` (stem `board-…`).
+        if parts[1] == "Board.md" or path.stem.startswith("board-"):
+            return models.BoardDoc
         return models.TaskDoc
     if len(parts) == 2 and parts[0] == "contexts":
         return models.PillDoc

@@ -146,7 +146,7 @@ Every edge must carry enough metadata to distinguish declared facts from weak in
 | Property | Required | Meaning |
 |---|---|---|
 | `role` | yes | One controlled role from this vocabulary or a later compatible extension. |
-| `source_kind` | yes | Extraction source: `declared`, `sldb_semantic`, `path_rule`, `content_scan`, `test_name`, or `manual`. |
+| `source_kind` | yes | Extraction source: `declared`, `sldb_semantic`, `path_rule`, `content_scan`, `test_name`, `declared_materialization_target`, or `manual`. Source file nodes from materialization targets use `declared_materialization_target`. |
 | `confidence` | yes | `high`, `medium`, or `low`. |
 | `provenance_path` | yes | Repository-relative file path where the relation evidence was found. |
 | `provenance_locator` | no | Optional line, section id, frontmatter key, test name, or symbol locator. |

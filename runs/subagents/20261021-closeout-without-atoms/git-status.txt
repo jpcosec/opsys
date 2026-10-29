@@ -1,0 +1,9 @@
+## fix/mepu-board-and-closeout
+ M .sldb/store.yaml
+?? desk/inbox/20261019-192021-suggestion-sldb-de-acuerdo-con-tus-motivos-la-forma-de-stores-check-se-conserva-y-corrijo-lo-que-dije-de-la-evidencia.md
+?? desk/inbox/20261020-102639-suggestion-closeout-verify-no-ve-materializaciones-de-archivos-fuera-del-desk-en-repos-con-src.md
+?? desk/inbox/20261020-104307-suggestion-requisitos-d4-d6-de-governance-pr-en-taskdoc-alertas-en-el-inbox-y-rundoc.md
+?? desk/inbox/20261020-113033-suggestion-sldb-cambia-la-salida-las-alertas-dejan-de-hacer-fallar-y-nunca-son-silenciosas.md
+?? desk/inbox/20261020-135648-suggestion-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan.md
+?? desk/inbox/20261020-141330-suggestion-sldb-c-mo-declarar-anchors-a-c-digo-desde-atoms-tasks-y-docs-codeanchordoc-anchors-record-check.md
+?? runs/subagents/20261021-closeout-without-atoms/

@@ -338,6 +338,35 @@ def test_closeout_commit_run_dir_through_main_is_unchanged(tmp_path: Path) -> No
 
 
 @pytest.mark.parametrize("route", ["run-dir", "no-run"])
+def test_closeout_commit_keeps_an_ignored_run_index_local(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], route: str
+) -> None:
+    """A project that ignores runs/subagents/index.jsonl gets the closing commit without it and
+    without an error; the entry is still written to the local index."""
+    root = _make_repo(tmp_path)
+    (root / ".gitignore").write_text(".deskops.log\nruns/subagents/index.jsonl\n", encoding="utf-8")
+    _git(root, "commit", "-q", "-am", "ignore the run index")
+    (root / "feature.py").write_text("x = 1\n", encoding="utf-8")
+
+    if route == "run-dir":
+        _make_run_dir(root)
+        rc = _closeout_main(root, "--run-dir", "runs/subagents/20260729-120000-task-x", "--paths", "feature.py")
+    else:
+        rc = _closeout_main(root, "--no-run", "--reason", "no subagent ran", "--paths", "feature.py")
+
+    out = capsys.readouterr()
+    assert rc == 0, out.out + out.err
+    assert "ignored" not in (out.out + out.err).lower()
+    assert _git(root, "ls-files", "runs/subagents/index.jsonl") == ""
+    assert "runs/subagents/index.jsonl" not in _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()
+    assert _git(root, "show", "--name-only", "--format=", "HEAD").splitlines()[0] == "feature.py"
+    assert "Task-Id: task-x" in _git(root, "log", "-1", "--format=%B")
+    entry = json.loads((root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1])
+    assert entry["task_id"] == "task-x" and entry["commit"] is None
+    assert _git(root, "status", "--porcelain", "--untracked-files=all", "--", "feature.py") == ""
+
+
+@pytest.mark.parametrize("route", ["run-dir", "no-run"])
 def test_closeout_commit_leaves_the_working_tree_clean(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], route: str
 ) -> None:

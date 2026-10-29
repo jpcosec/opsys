@@ -1,0 +1,49 @@
+---
+# board-xxx
+id: board-001
+# Affected workspace or domain
+scope: desk
+# List of task-xxx paths
+tasks:
+- desk/tasks/task-declared-materialization-targets-resolve-outside-the-indexed-package.md
+# List of pill-xxx paths
+pills:
+- pill-001-task-closure-commit
+- pill-005-subagent-execution
+- pill-007-phase-gated-task-flow
+- pill-durable-pill-knowledge-graduates-to-atoms-at-closeout
+- pill-phase-closeout-reconciles-pills-and-surfaces-next-work
+- pill-ready-phases-prove-dependencies-and-non-overlap
+- pill-board-routed-pills-stay-minimal-and-reusable
+# List of ritual-xxx paths
+rituals:
+- ritual-phase
+- ritual-execution
+- ritual-closeout
+- ritual-testing
+# e.g., system:sldb, workspace:desk
+tags:
+- system:sldb
+- workspace:desk
+- topic:routing
+---
+
+# Desk Board
+
+## Purpose
+
+_Explain what this board routes and why it exists._
+
+Route the active execution set for deskops.
+
+## Notes
+
+_Add short operational notes about the current routed set._
+
+No active tasks routed.
+
+## Task Details
+
+_Generated from the task references above._
+
+- Declared materialization targets resolve outside the indexed package [draft] - A MaterializationContractDoc whose target_identity is a repo-relative path to an existing file makes that file a graph node, so `deskops graph missing` no longer reports it and `deskops closeout verify` counts the materialization as changed-file coverage for that path, whatever the file's directory or suffix. `deskops add materialization` tracks the created document in the project's .sldb store when one exists.

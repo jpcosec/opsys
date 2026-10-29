@@ -1,0 +1,14 @@
+Missing graph references:
+- missing_declared_target: task:task-declared-materialization-targets-resolve-outside-the-indexed-package -> desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md
+  provenance: desk/tasks/task-declared-materialization-targets-resolve-outside-the-indexed-package.md:line:31:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-declared-materialization-targets-resolve-outside-the-indexed-package -> test_file:tests/test_materialization_targets_outside_package.py
+  provenance: desk/tasks/task-declared-materialization-targets-resolve-outside-the-indexed-package.md:line:30:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-declared-materialization-targets-resolve-outside-the-indexed-package -> test_file:tests/test_materialization_targets_outside_package.py
+  provenance: desk/tasks/task-declared-materialization-targets-resolve-outside-the-indexed-package.md:line:65:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-declared-materialization-targets-resolve-outside-the-indexed-package -> test_file:tests/test_materialization_targets_outside_package.py
+  provenance: desk/tasks/task-declared-materialization-targets-resolve-outside-the-indexed-package.md:line:71:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+4 missing, 0 informational

@@ -77,6 +77,11 @@ def extract_declared_edges(root: Path) -> DeclaredEdgeExtraction:
     nodes_by_path = {node.path: node for node in [*doc_nodes, *source_nodes]}
     existing_ids = {node.id for node in [*doc_nodes, *source_nodes]}
     ids_by_name = {node.id.split(":", 1)[-1]: node.id for node in [*doc_nodes, *source_nodes]}
+    # A portable reference names the document as sldb tracks it: by its file stem. Some documents
+    # carry a shorter frontmatter id (``pill-001`` in ``pill-001-task-closure-commit.md``); the stem
+    # must resolve to the same node so Board context stays portable (task-board-portable-references).
+    for node in [*doc_nodes, *source_nodes]:
+        ids_by_name.setdefault(Path(node.path).stem, node.id)
     store = _load_store_context(project_root, doc_nodes)
 
     edges: list[DeclaredGraphEdge] = []

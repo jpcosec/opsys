@@ -1,0 +1,13 @@
+Task: task-board-portable-references
+Title: Use portable document names for package Board context
+Status: draft
+Current node: ritual-execution
+Task type: 
+From drawer: desk/drawer/tasks/task-board-portable-references.md
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

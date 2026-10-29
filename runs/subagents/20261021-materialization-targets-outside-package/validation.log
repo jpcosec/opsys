@@ -1,0 +1,35 @@
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- /home/jp/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /home/jp/proyectos/SLDB_1/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 23 items
+
+tests/test_materialization_targets_outside_package.py::test_declared_target_outside_package_becomes_graph_node PASSED [  4%]
+tests/test_materialization_targets_outside_package.py::test_declared_target_missing_file_stays_missing PASSED [  8%]
+tests/test_materialization_targets_outside_package.py::test_add_materialization_tracks_document_in_store PASSED [ 13%]
+tests/test_materialization_targets_outside_package.py::test_closeout_verify_accepts_materialization_coverage PASSED [ 17%]
+tests/test_graph_extract_sources.py::test_extract_source_file_nodes_reads_file_level_source_surfaces PASSED [ 21%]
+tests/test_graph_extract_sources.py::test_extract_source_file_nodes_excludes_generated_runtime_outputs_by_default PASSED [ 26%]
+tests/test_graph_extract_sources.py::test_extract_source_file_nodes_skips_vendored_tools_and_tmp_trees PASSED [ 30%]
+tests/test_graph_extract_sources.py::test_declared_target_src_file_becomes_source_node PASSED [ 34%]
+tests/test_graph_extract_sources.py::test_declared_target_github_workflow_becomes_source_node PASSED [ 39%]
+tests/test_graph_extract_sources.py::test_declared_target_doc_surface_produces_no_source_node PASSED [ 43%]
+tests/test_graph_extract_sources.py::test_declared_target_already_matched_by_path_rule_not_duplicated PASSED [ 47%]
+tests/test_graph_extract_sources.py::test_declared_target_leading_dotslash_is_stripped PASSED [ 52%]
+tests/test_graph_extract_sources.py::test_declared_target_absolute_path_produces_no_node PASSED [ 56%]
+tests/test_graph_extract_sources.py::test_declared_target_dotdot_path_produces_no_node PASSED [ 60%]
+tests/test_graph_extract_sources.py::test_declared_target_kind_id_produces_no_node PASSED [ 65%]
+tests/test_graph_extract_sources.py::test_declared_target_nonexistent_produces_no_node PASSED [ 69%]
+tests/test_graph_extract_sources.py::test_declared_target_excluded_tmp_produces_no_node PASSED [ 73%]
+tests/test_graph_extract_sources.py::test_declared_target_excluded_tools_produces_no_node PASSED [ 78%]
+tests/test_materialization_contract.py::test_materialization_contract_doc_roundtrips PASSED [ 82%]
+tests/test_materialization_contract.py::test_materialization_contract_spec_and_workspace_scaffold PASSED [ 86%]
+tests/test_materialization_contract.py::test_cli_add_list_and_show_materialization PASSED [ 91%]
+tests/test_materialization_contract.py::test_materialization_graph_checks_accept_resolved_source_atoms_and_target_identity PASSED [ 95%]
+tests/test_materialization_contract.py::test_graph_missing_reports_materialization_reference_failures PASSED [100%]
+
+============================= 23 passed in 50.77s ==============================
+- python -m pytest -q -> 603 passed, 3 skipped in 812.88s

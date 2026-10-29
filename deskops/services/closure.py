@@ -516,8 +516,11 @@ class ClosureService:
             with index_path.open("a", encoding="utf-8") as handle:
                 handle.write(json.dumps(entry) + "\n")
             try:
-                self._git("add", "--", index_rel)
-                self._git("commit", "--amend", "--no-edit", "--", index_rel)
+                # A project that ignores the run index keeps it local: the entry is written,
+                # but neither staged nor folded into the closing commit (the trailer is enough).
+                if not self._git_ignores(index_rel):
+                    self._git("add", "--", index_rel)
+                    self._git("commit", "--amend", "--no-edit", "--", index_rel)
             except Exception:
                 if index_before is None:
                     index_path.unlink(missing_ok=True)
@@ -624,6 +627,12 @@ class ClosureService:
         )
         if result.returncode != 0:
             raise ClosureCommitError(result.stderr.strip() or result.stdout.strip())
+
+    def _git_ignores(self, path: str) -> bool:
+        """Whether `path` is excluded by the project's ignore rules (a tracked file never is)."""
+        result = subprocess.run(["git", "check-ignore", "-q", "--", path], cwd=self.root,
+                                capture_output=True, text=True)
+        return result.returncode == 0
 
     def _git_knows(self, path: str) -> bool:
         """Whether `path` matches anything in the index or in HEAD."""

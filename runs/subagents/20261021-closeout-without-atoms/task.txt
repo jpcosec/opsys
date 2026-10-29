@@ -1,0 +1,13 @@
+Task: task-closeout-without-atoms
+Title: Allow closeout in desks without atoms
+Status: draft
+Current node: ritual-execution
+Task type: 
+From drawer: desk/drawer/tasks/task-closeout-without-atoms.md
+Effective pills:
+- desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-005-subagent-execution.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

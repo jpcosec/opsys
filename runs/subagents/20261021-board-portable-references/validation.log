@@ -1,0 +1,74 @@
+FF                                                                       [100%]
+=================================== FAILURES ===================================
+_ test_linked_board_context_belongs_to_provider_despite_consumer_path_collisions _
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-83/test_linked_board_context_belo0')
+
+    def test_linked_board_context_belongs_to_provider_despite_consumer_path_collisions(tmp_path):
+        provider = tmp_path / 'provider'
+        consumer = tmp_path / 'consumer'
+        for root in (provider, consumer):
+            copy_context(root)
+            store = init_store(root).store_path
+            for model in ('BoardDoc', 'PillDoc', 'RitualDoc'):
+                add_model(store, f'deskops.models:{model}', pythonpath=str(ROOT))
+            for model, name, relative in CONTEXT:
+                # Consumer has identical paths but deliberately distinct tracked identities.
+                track_document_file(store, model, root / relative,
+                                    name=name if root == provider else f'consumer-{name}',
+                                    pythonpath=str(ROOT))
+        track_document_file(provider / '.sldb', 'BoardDoc', provider / 'desk/tasks/Board.md',
+                            name='Board', pythonpath=str(ROOT))
+        link_store(consumer / '.sldb', provider / '.sldb', 'provider')
+        unresolved = unresolved_references(consumer / '.sldb')
+        assert not [ref for ref in unresolved if ref.source == 'provider:BoardDoc:Board'
+                    and ref.field in {'pills', 'rituals'}]
+        edges = edges_from(consumer / '.sldb', 'provider:BoardDoc:Board', relation='contains')
+>       assert {edge.target for edge in edges} == {
+            f'sldb://doc/provider:{model}:{name}' for model, name, _ in CONTEXT
+        }
+E       AssertionError: assert {'sldb://docu...xt-work', ...} == {'sldb://doc/...xt-work', ...}
+E         
+E         Extra items in the left set:
+E         'sldb://document/provider:PillDoc:pill-007-phase-gated-task-flow'
+E         'sldb://document/provider:PillDoc:pill-001-task-closure-commit'
+E         'sldb://document/provider:RitualDoc:ritual-closeout'
+E         'sldb://document/provider:PillDoc:pill-phase-closeout-reconciles-pills-and-surfaces-next-work'
+E         'sldb://document/provider:PillDoc:pill-durable-pill-knowledge-graduates-to-atoms-at-closeout'...
+E         
+E         ...Full output truncated (19 lines hidden), use '-vv' to show
+
+tests/test_board_portable_references.py:65: AssertionError
+______ test_local_graph_next_show_and_retirement_accept_portable_context _______
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-83/test_local_graph_next_show_and0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7c9b5e6b27b0>
+
+    def test_local_graph_next_show_and_retirement_accept_portable_context(tmp_path, capsys):
+        copy_context(tmp_path)
+        assert not (tmp_path / '.sldb').exists()
+        graph = GraphSnapshot.model_validate(build_graph_snapshot(tmp_path))
+        nodes = {node.identity.node_id: node for node in graph.nodes}
+        board = nodes['board:board-001']
+        context_paths = {relative for _, _, relative in CONTEXT}
+        contained_paths = {
+            nodes[edge.target_id].metadata['path'] for edge in board.edges
+            if edge.relation_type == 'contains' and edge.target_id in nodes
+        }
+>       assert context_paths <= contained_paths
+E       AssertionError: assert {'desk/contex...work.md', ...} <= set()
+E         
+E         Extra items in the left set:
+E         'desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md'
+E         'desk/rituals/execution.md'
+E         'desk/contexts/pill-007-phase-gated-task-flow.md'
+E         'desk/rituals/phase.md'
+E         'desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md'...
+E         
+E         ...Full output truncated (6 lines hidden), use '-vv' to show
+
+tests/test_board_portable_references.py:82: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_board_portable_references.py::test_linked_board_context_belongs_to_provider_despite_consumer_path_collisions
+FAILED tests/test_board_portable_references.py::test_local_graph_next_show_and_retirement_accept_portable_context
+2 failed in 3.79s

@@ -1,0 +1,31 @@
+.........................                                                [100%]
+25 passed in 26.63s
+
+---
+SANDBOX REPRODUCTION (.tmp/tester-gov-repro2):
+
+$ deskops init .tmp/tester-gov-repro2
+# Created repo with desk/
+
+$ mkdir -p src/vsm/organs .github/workflows
+$ echo "# Links module" > src/vsm/organs/links.py
+$ echo "name: Pulse" > .github/workflows/pulse.yml
+# Created target files
+
+$ deskops add atom --title "CI CD workflow policy" --five-wh-one-plus how --answer "CI workflow is defined in YAML files." --tags "topic:ci"
+# Created atom-ci-cd-workflow-policy
+
+$ deskops add materialization --title "Links implementation" --source-atoms atom-ci-cd-workflow-policy --target-kind source_file --target-identity "src/vsm/organs/links.py" --intent "..."
+# Created materialization-links-implementation
+
+$ deskops add materialization --title "Pulse workflow" --source-atoms atom-ci-cd-workflow-policy --target-kind config_file --target-identity ".github/workflows/pulse.yml" --intent "..."
+# Created materialization-pulse-workflow
+
+$ deskops graph missing --root .tmp/tester-gov-repro2
+No missing graph references found.
+Exit code: 0
+
+$ sldb stores check --store .tmp/tester-gov-repro2/.sldb --format json
+# MaterializationContractDoc lists both materializations:
+# - materialization-links-implementation
+# - materialization-pulse-workflow

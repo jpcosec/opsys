@@ -1,0 +1,6 @@
+$ pytest -q tests/test_closeout_atomless.py tests/test_closeout.py tests/test_closeout_skill_links.py
+.................................................................        [100%]
+65 passed in 21.44s
+
+Exit: 0
+Targeted wall seconds: 22.55

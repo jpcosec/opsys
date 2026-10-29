@@ -217,3 +217,15 @@ def test_desk_update_apply_resigns_a_moved_model_contract(tmp_path: Path, capsys
     resigned = yaml.safe_load(model_path.read_text(encoding="utf-8"))
     assert resigned["contract_hash"] == hash_model_contract(RitualDoc)
     assert main(["desk", "update", "--root", str(tmp_path)]) == 0
+
+
+def test_guess_model_treats_extra_boards_in_tasks_as_boards(tmp_path: Path) -> None:
+    """`deskops add board` writes `board-<slug>.md` next to Board.md (ARTIFACT_PATHS puts boards in
+    tasks/); tracking it as a TaskDoc fails validation (no `status`) and breaks `desk update --apply`."""
+    from deskops import models
+    from deskops.cli.commands.desk import guess_model_for_path
+
+    desk = tmp_path / "desk"
+    assert guess_model_for_path(desk, desk / "tasks" / "Board.md") is models.BoardDoc
+    assert guess_model_for_path(desk, desk / "tasks" / "board-compromisos-26-10.md") is models.BoardDoc
+    assert guess_model_for_path(desk, desk / "tasks" / "task-doc-7.md") is models.TaskDoc

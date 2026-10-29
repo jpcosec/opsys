@@ -1,0 +1,176 @@
+=== Validation Commands Output ===
+Date: 2026-10-21T16:58:59-03:00
+
+=== 1. pytest tests/test_materialization_targets_outside_package.py ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- /home/jp/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /home/jp/proyectos/SLDB_1/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 4 items
+
+tests/test_materialization_targets_outside_package.py::test_declared_target_outside_package_becomes_graph_node PASSED [ 25%]
+tests/test_materialization_targets_outside_package.py::test_declared_target_missing_file_stays_missing PASSED [ 50%]
+tests/test_materialization_targets_outside_package.py::test_add_materialization_tracks_document_in_store PASSED [ 75%]
+tests/test_materialization_targets_outside_package.py::test_closeout_verify_accepts_materialization_coverage PASSED [100%]
+
+========================= 4 passed in 65.26s (0:01:05) =========================
+
+=== 2. pytest tests/test_graph_extract_sources.py ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- /home/jp/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /home/jp/proyectos/SLDB_1/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 14 items
+
+tests/test_graph_extract_sources.py::test_extract_source_file_nodes_reads_file_level_source_surfaces PASSED [  7%]
+tests/test_graph_extract_sources.py::test_extract_source_file_nodes_excludes_generated_runtime_outputs_by_default PASSED [ 14%]
+tests/test_graph_extract_sources.py::test_extract_source_file_nodes_skips_vendored_tools_and_tmp_trees PASSED [ 21%]
+tests/test_graph_extract_sources.py::test_declared_target_src_file_becomes_source_node PASSED [ 28%]
+tests/test_graph_extract_sources.py::test_declared_target_github_workflow_becomes_source_node PASSED [ 35%]
+tests/test_graph_extract_sources.py::test_declared_target_doc_surface_produces_no_source_node PASSED [ 42%]
+tests/test_graph_extract_sources.py::test_declared_target_already_matched_by_path_rule_not_duplicated PASSED [ 50%]
+tests/test_graph_extract_sources.py::test_declared_target_leading_dotslash_is_stripped PASSED [ 57%]
+tests/test_graph_extract_sources.py::test_declared_target_absolute_path_produces_no_node PASSED [ 64%]
+tests/test_graph_extract_sources.py::test_declared_target_dotdot_path_produces_no_node PASSED [ 71%]
+tests/test_graph_extract_sources.py::test_declared_target_kind_id_produces_no_node PASSED [ 78%]
+tests/test_graph_extract_sources.py::test_declared_target_nonexistent_produces_no_node PASSED [ 85%]
+tests/test_graph_extract_sources.py::test_declared_target_excluded_tmp_produces_no_node PASSED [ 92%]
+tests/test_graph_extract_sources.py::test_declared_target_excluded_tools_produces_no_node PASSED [100%]
+
+============================== 14 passed in 0.18s ==============================
+
+=== 3. pytest tests/test_materialization_contract.py ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- /home/jp/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /home/jp/proyectos/SLDB_1/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 5 items
+
+tests/test_materialization_contract.py::test_materialization_contract_doc_roundtrips PASSED [ 20%]
+tests/test_materialization_contract.py::test_materialization_contract_spec_and_workspace_scaffold PASSED [ 40%]
+tests/test_materialization_contract.py::test_cli_add_list_and_show_materialization PASSED [ 60%]
+tests/test_materialization_contract.py::test_materialization_graph_checks_accept_resolved_source_atoms_and_target_identity PASSED [ 80%]
+tests/test_materialization_contract.py::test_graph_missing_reports_materialization_reference_failures PASSED [100%]
+
+============================== 5 passed in 2.43s ===============================
+
+=== 4. pytest tests/test_output_goldens.py ===
+============================= test session starts ==============================
+platform linux -- Python 3.13.5, pytest-8.3.4, pluggy-1.5.0 -- /home/jp/anaconda3/bin/python
+cachedir: .pytest_cache
+rootdir: /home/jp/proyectos/SLDB_1/deskops
+configfile: pyproject.toml
+plugins: pyfakefs-6.1.6, archon-0.0.7, cov-7.1.0, anyio-4.13.0, asyncio-1.2.0, syrupy-6.1.1, langsmith-0.7.22, timeout-2.4.0
+asyncio: mode=Mode.STRICT, debug=False, asyncio_default_fixture_loop_scope=function, asyncio_default_test_loop_scope=function
+collecting ... collected 7 items
+
+tests/test_output_goldens.py::test_graph_snapshot_golden PASSED          [ 14%]
+tests/test_output_goldens.py::test_graph_networkx_golden PASSED          [ 28%]
+tests/test_output_goldens.py::test_self_reflection_golden PASSED         [ 42%]
+tests/test_output_goldens.py::test_run_index_golden PASSED               [ 57%]
+tests/test_output_goldens.py::test_closeout_trailers_golden PASSED       [ 71%]
+tests/test_output_goldens.py::test_help_goldens Exit 124
+
+=== 5. deskops graph missing --root . ===
+No missing graph references found.
+
+=== 6. Sandbox end-to-end validation in .tmp/tester-gov-repro ===
+Files created:
+-rw-rw-r-- 1 jp jp 15 Oct 21 17:07 .tmp/tester-gov-repro/src/vsm/organs/links.py
+-rw-rw-r-- 1 jp jp 12 Oct 21 17:07 .tmp/tester-gov-repro/.github/workflows/pulse.yml
+
+Atom created:
+total 16
+drwxrwxr-x  2 jp jp 4096 Oct 21 17:07 .
+drwxrwxr-x 14 jp jp 4096 Oct 21 17:07 ..
+-rw-rw-r--  1 jp jp  232 Oct 21 17:07 atom-ci-cd-workflow-policy.md
+-rw-rw-r--  1 jp jp 1013 Oct 21 17:07 tag-namespaces.yaml
+
+Materializations created:
+total 16
+drwxrwxr-x  2 jp jp 4096 Oct 21 17:07 .
+drwxrwxr-x 14 jp jp 4096 Oct 21 17:07 ..
+-rw-rw-r--  1 jp jp  337 Oct 21 17:07 materialization-links-module-implementation.md
+-rw-rw-r--  1 jp jp  319 Oct 21 17:07 materialization-pulse-workflow-configuration.md
+
+deskops graph missing:
+No missing graph references found.
+Exit code: 0
+
+Materializations tracked in sldb stores check (filtered):
+[{'name': 'MaterializationContractDoc', 'hash_b_ok': True, 'roster_ok': True, 'contract_ok': True, 'legacy_contract': False, 'resolved': True, 'roster_only_failure': False, 'documents': [{'name': 'materialization-links-module-implementation', 'path': 'desk/materializations/materialization-links-module-implementation.md', 'path_exists': True, 'hash_c_ok': True, 'hash_d_ok': True, 'content_ok': True, 'fields_ok': True, 'note': 'ok', 'explain': 'ok'}, {'name': 'materialization-pulse-workflow-configuration', 'path': 'desk/materializations/materialization-pulse-workflow-configuration.md', 'path_exists': True, 'hash_c_ok': True, 'hash_d_ok': True, 'content_ok': True, 'fields_ok': True, 'note': 'ok', 'explain': 'ok'}]}]
+
+=== 7. closeout verify --root . --task <this task> ===
+{
+  "findings": [
+    {
+      "code": "missing_tests_evidence",
+      "message": "No resolvable test evidence reference found."
+    },
+    {
+      "code": "missing_commit_evidence",
+      "message": "No resolvable commit reference found."
+    }
+  ],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/knowledge-model/atom-materialization-contracts-bind-source-output-validation.md",
+        "desk/atoms/workflow-model/atom-closeout-verify-requires-tests-links-and-commit.md",
+        "desk/atoms/knowledge-model/atom-materializations-declare-source-atoms.md",
+        "desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md",
+        "materialization:materialization:materialization-extract-sources-declared-targets->deskops/graph/extract_sources.py",
+        "materialization:materialization:materialization-closeout-link-policy->deskops/operations.py",
+        "materialization:materialization:materialization-graph-vocabulary-source-kind-update->docs/knowledge-graph/desk-source-graph-vocabulary.md",
+        "materialization:materialization:materialization-graph-extract-sources-unit-tests->tests/test_graph_extract_sources.py",
+        "materialization:materialization:materialization-materialization-targets-outside-package-tests->tests/test_materialization_targets_outside_package.py",
+        "atom-doc:desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md",
+        "materialization:materialization:materialization-extract-sources-declared-targets->desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md",
+        "materialization:materialization:materialization-graph-extract-sources-unit-tests->desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md",
+        "materialization:materialization:materialization-graph-vocabulary-source-kind-update->desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md",
+        "materialization:materialization:materialization-materialization-targets-outside-package-tests->desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md",
+        "graph:materialization:materialization-extract-sources-declared-targets->atom:atom-declared-materialization-targets-are-graph-nodes",
+        "graph:materialization:materialization-materialization-targets-outside-package-tests->atom:atom-declared-materialization-targets-are-graph-nodes",
+        "graph:materialization:materialization-graph-extract-sources-unit-tests->atom:atom-declared-materialization-targets-are-graph-nodes",
+        "graph:materialization:materialization-graph-vocabulary-source-kind-update->atom:atom-declared-materialization-targets-are-graph-nodes",
+        "graph:task:task-declared-materialization-targets-resolve-outside-the-indexed-package->atom:atom-closeout-verify-requires-tests-links-and-commit",
+        "graph:task:task-declared-materialization-targets-resolve-outside-the-indexed-package->atom:atom-declared-materialization-targets-are-graph-nodes",
+        "graph:task:task-declared-materialization-targets-resolve-outside-the-indexed-package->atom:atom-materialization-contracts-bind-source-output-validation",
+        "graph:task:task-declared-materialization-targets-resolve-outside-the-indexed-package->atom:atom-materializations-declare-source-atoms"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [],
+      "findings": [
+        {
+          "code": "missing_commit_evidence",
+          "message": "No resolvable commit reference found."
+        }
+      ],
+      "ok": false
+    },
+    "tests": {
+      "evidence": [],
+      "findings": [
+        {
+          "code": "missing_tests_evidence",
+          "message": "No resolvable test evidence reference found."
+        }
+      ],
+      "ok": false
+    }
+  },
+  "ok": false,
+  "task_id": "task-declared-materialization-targets-resolve-outside-the-indexed-package"
+}
