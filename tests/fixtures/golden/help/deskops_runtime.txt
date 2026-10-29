@@ -1,7 +1,8 @@
-usage: deskops runtime [-h] {init,status,attach,stop,workers,supervise} ...
+usage: deskops runtime [-h]
+                       {init,status,attach,stop,workers,supervise,template} ...
 
 positional arguments:
-  {init,status,attach,stop,workers,supervise}
+  {init,status,attach,stop,workers,supervise,template}
     init                Initialize or reuse this desk's Herdr Space.
     status              Show this desk's Herdr Space.
     attach              Focus this desk's Herdr Space.
@@ -10,6 +11,9 @@ positional arguments:
                         machine.
     supervise           Block on one agent's Herdr lifecycle and report
                         blocked/done settles without advancing the desk.
+    template            Materialize a RoleDoc + RuntimeProfileDoc as a Scion
+                        agent template (scion-agent.yaml, system-prompt.md,
+                        agents.md).
 
 options:
   -h, --help            show this help message and exit

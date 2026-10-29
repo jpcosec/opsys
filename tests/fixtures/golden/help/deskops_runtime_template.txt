@@ -1,0 +1,28 @@
+usage: deskops runtime template [-h] [--root ROOT] [--harness HARNESS]
+                                [--out OUT]
+                                [--model-alias {small,medium,large,extra-large}]
+                                [--task-repo TASK_REPO] [--task TASK]
+                                [--agent AGENT]
+                                role_id
+
+positional arguments:
+  role_id               RoleDoc id or name, e.g. role-deskops-executor or
+                        deskops-executor.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           DeskOps repository root.
+  --harness HARNESS     Scion harness-config / runtime kind to target (claude,
+                        codex, antigravity, pi); defaults to the role's kind.
+  --out OUT             Template directory; defaults to
+                        <root>/.scion/templates/<role-name>/.
+  --model-alias {small,medium,large,extra-large}
+                        Portable Scion model size alias written to the
+                        template (the harness-config resolves it).
+  --task-repo TASK_REPO
+                        Repository under /workspace the agent may write to;
+                        named in agents.md.
+  --task TASK           Task id being dispatched; with --agent, also records a
+                        RunDoc under runs/subagents/.
+  --agent AGENT         Scion agent slug for the RunDoc (what you pass to
+                        `scion start`).

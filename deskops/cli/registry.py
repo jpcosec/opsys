@@ -1454,6 +1454,31 @@ ref, and the run index entry is marked legacy-resolved.
             handler="deskops.cli.commands.runtime:RuntimeCLI",
             mutates=False,
         ),
+        Command(
+            path=("runtime", "template"),
+            help="Materialize a RoleDoc + RuntimeProfileDoc as a Scion agent template (scion-agent.yaml, system-prompt.md, agents.md).",
+            args=(
+                A("role_id", help="RoleDoc id or name, e.g. role-deskops-executor or deskops-executor."),
+                RUNTIME_ROOT_ARG,
+                A(
+                    "--harness",
+                    default=None,
+                    help="Scion harness-config / runtime kind to target (claude, codex, antigravity, pi); defaults to the role's kind.",
+                ),
+                A("--out", default=None, help="Template directory; defaults to <root>/.scion/templates/<role-name>/."),
+                A(
+                    "--model-alias",
+                    choices=("small", "medium", "large", "extra-large"),
+                    default="medium",
+                    help="Portable Scion model size alias written to the template (the harness-config resolves it).",
+                ),
+                A("--task-repo", default=None, help="Repository under /workspace the agent may write to; named in agents.md."),
+                A("--task", default=None, help="Task id being dispatched; with --agent, also records a RunDoc under runs/subagents/."),
+                A("--agent", default=None, help="Scion agent slug for the RunDoc (what you pass to `scion start`)."),
+            ),
+            handler="deskops.cli.commands.runtime:RuntimeCLI",
+            mutates=True,
+        ),
     ]
     return commands
 

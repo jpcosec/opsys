@@ -17,6 +17,8 @@ class RuntimeCLI:
         root = Path(args.root).resolve()
         executable = getattr(args, "herdr", "herdr")
         try:
+            if args.runtime_command == "template":
+                return self._template(args, root)
             if args.runtime_command == "supervise":
                 return self._supervise(args, executable)
             if args.runtime_command == "workers":
@@ -64,6 +66,43 @@ class RuntimeCLI:
                 text=f"Error: {exc}",
             )
         return 1
+
+    def _template(self, args: Any, root: Path) -> int:
+        """Write a Scion template for one role; optionally record the dispatch as a RunDoc.
+
+        Never calls ``scion``: launching (``scion start <agent> "<task>"
+        --type <template>``) stays a deliberate gesture of the supervisor.
+        """
+        from deskops.runtime.scion import materialize_scion_template, record_scion_run
+
+        out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
+        task_id = getattr(args, "task", None)
+        agent = getattr(args, "agent", None)
+        if bool(task_id) != bool(agent):
+            raise ValueError("--task and --agent go together: the RunDoc needs both the task and the Scion agent slug")
+        target = materialize_scion_template(
+            root,
+            args.role_id,
+            harness=getattr(args, "harness", None),
+            out_dir=out_dir,
+            model_alias=getattr(args, "model_alias", "medium"),
+            task_repo=getattr(args, "task_repo", None),
+        )
+        print(f"Scion template: {target}")
+        for name in ("scion-agent.yaml", "system-prompt.md", "agents.md"):
+            print(f"  {name}")
+        if task_id and agent:
+            harness = getattr(args, "harness", None) or ""
+            run_path = record_scion_run(
+                root,
+                task_id=task_id,
+                role_id=args.role_id,
+                kind=harness or "scion",
+                agent_slug=agent,
+            )
+            print(f"RunDoc: {run_path.relative_to(root)}")
+        print(f"Next: scion start {agent or '<agent>'} \"<task>\" --type {target.name}")
+        return 0
 
     def _supervise(self, args: Any, executable: str) -> int:
         """Block on one agent, reporting blocked/done settles as they happen.
