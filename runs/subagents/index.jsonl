@@ -89,3 +89,4 @@
 {"task_id": "task-declared-materialization-targets-resolve-outside-the-indexed-package", "run_id": null, "run_dir": "runs/subagents/20261021-materialization-targets-outside-package", "session_sha256": null, "commit": null}
 {"task_id": "task-integrar-fix-closeout-ignora-archivos-ignorados-en-main", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-adapter-deskops-a-scion-runtime-template", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
+{"task_id": "task-scion-executor-rundoc-junto-a-la-tarea-y-evidencia-que-el-closeout-acepta", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
