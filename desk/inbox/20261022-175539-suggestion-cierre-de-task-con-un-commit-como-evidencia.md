@@ -8,9 +8,11 @@ target_project: deskops
 # ISO 8601 timestamp
 created_at: '2026-10-22T17:55:39'
 # open | closed
-status: open
+status: closed
 # project identity that acknowledged the note
+acknowledged_by: deskops
 # ISO 8601 timestamp, set when acknowledged
+acknowledged_at: '2026-10-29T10:45:10'
 ---
 
 # Cierre de task con un commit como evidencia
