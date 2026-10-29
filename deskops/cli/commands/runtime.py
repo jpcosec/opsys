@@ -93,14 +93,18 @@ class RuntimeCLI:
             print(f"  {name}")
         if task_id and agent:
             harness = getattr(args, "harness", None) or ""
+            # Roles live in the deskops desk; the task may live in another repo's
+            # desk. The RunDoc belongs next to the task.
+            task_root = Path(args.task_root).expanduser().resolve() if getattr(args, "task_root", None) else root
             run_path = record_scion_run(
-                root,
+                task_root,
                 task_id=task_id,
                 role_id=args.role_id,
                 kind=harness or "scion",
                 agent_slug=agent,
+                run_dir=getattr(args, "run_dir", None),
             )
-            print(f"RunDoc: {run_path.relative_to(root)}")
+            print(f"RunDoc: {run_path.relative_to(task_root)} (in {task_root})")
         print(f"Next: scion start {agent or '<agent>'} \"<task>\" --type {target.name}")
         return 0
 

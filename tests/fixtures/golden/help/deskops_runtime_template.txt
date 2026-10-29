@@ -2,7 +2,8 @@ usage: deskops runtime template [-h] [--root ROOT] [--harness HARNESS]
                                 [--out OUT]
                                 [--model-alias {small,medium,large,extra-large}]
                                 [--task-repo TASK_REPO] [--task TASK]
-                                [--agent AGENT]
+                                [--agent AGENT] [--task-root TASK_ROOT]
+                                [--run-dir RUN_DIR]
                                 role_id
 
 positional arguments:
@@ -26,3 +27,9 @@ options:
                         RunDoc under runs/subagents/.
   --agent AGENT         Scion agent slug for the RunDoc (what you pass to
                         `scion start`).
+  --task-root TASK_ROOT
+                        Repository root whose desk owns --task; the RunDoc is
+                        written there (defaults to --root).
+  --run-dir RUN_DIR     Existing evidence directory (relative to the task
+                        root) the RunDoc points at; defaults to a new
+                        runs/subagents/<ts>-<task> path.

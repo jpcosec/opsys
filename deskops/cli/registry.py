@@ -1475,6 +1475,16 @@ ref, and the run index entry is marked legacy-resolved.
                 A("--task-repo", default=None, help="Repository under /workspace the agent may write to; named in agents.md."),
                 A("--task", default=None, help="Task id being dispatched; with --agent, also records a RunDoc under runs/subagents/."),
                 A("--agent", default=None, help="Scion agent slug for the RunDoc (what you pass to `scion start`)."),
+                A(
+                    "--task-root",
+                    default=None,
+                    help="Repository root whose desk owns --task; the RunDoc is written there (defaults to --root).",
+                ),
+                A(
+                    "--run-dir",
+                    default=None,
+                    help="Existing evidence directory (relative to the task root) the RunDoc points at; defaults to a new runs/subagents/<ts>-<task> path.",
+                ),
             ),
             handler="deskops.cli.commands.runtime:RuntimeCLI",
             mutates=True,

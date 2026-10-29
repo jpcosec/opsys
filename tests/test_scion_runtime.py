@@ -113,6 +113,31 @@ def test_cli_runtime_template(tmp_path: Path, capsys) -> None:
     assert (tmp_path / "t" / "scion-agent.yaml").exists()
 
 
+def test_cli_task_root_puts_the_rundoc_next_to_the_task(tmp_path: Path, capsys) -> None:
+    task_root = tmp_path / "other-repo"
+    task_root.mkdir()
+    code = main([
+        "runtime", "template", "role-deskops-executor", "--root", str(ROOT), "--harness", "claude",
+        "--out", str(tmp_path / "t"), "--task", "task-x", "--agent", "agent-x", "--task-root", str(task_root),
+    ])
+    out = capsys.readouterr().out
+    assert code == 0, out
+    runs = list((task_root / "runs" / "subagents").glob("*-task-x/run.md"))
+    assert len(runs) == 1, out
+
+    # An agent that already made its own evidence dir: the RunDoc points there.
+    code = main([
+        "runtime", "template", "role-deskops-executor", "--root", str(ROOT), "--harness", "claude",
+        "--out", str(tmp_path / "t"), "--task", "task-x", "--agent", "agent-y", "--task-root", str(task_root),
+        "--run-dir", "runs/subagents/20261029-000000-task-x",
+    ])
+    assert code == 0, capsys.readouterr().out
+    doc = extract_model_data(RunDoc, (task_root / "runs/subagents/20261029-000000-task-x/run.md").read_text(encoding="utf-8"))
+    assert doc["run_dir"] == "runs/subagents/20261029-000000-task-x" and doc["id"] == "run-agent-y"
+    assert not list((ROOT / "runs" / "subagents").glob("*-task-x"))  # nothing written into the roles' repo
+    assert extract_model_data(RunDoc, runs[0].read_text(encoding="utf-8"))["id"] == "run-agent-x"
+
+
 def test_cli_task_without_agent_is_an_error(tmp_path: Path, capsys) -> None:
     code = main(["runtime", "template", "role-deskops-executor", "--root", str(ROOT), "--out", str(tmp_path / "t"), "--task", "task-x"])
     captured = capsys.readouterr()
