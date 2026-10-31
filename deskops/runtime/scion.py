@@ -49,6 +49,10 @@ MODEL_SIZE_ALIASES: tuple[str, ...] = ("small", "medium", "large", "extra-large"
 DEFAULT_MODEL_ALIAS = "medium"
 DEFAULT_MAX_TURNS = 200
 DEFAULT_MAX_DURATION = "2h"
+#: A coordinator waits blocked on its children and Scion counts that idle time,
+#: so the executor's limit would kill it mid-review.
+COORDINATOR_MAX_TURNS = 1000
+COORDINATOR_MAX_DURATION = "24h"
 
 TEMPLATE_FILES: tuple[str, ...] = ("scion-agent.yaml", "system-prompt.md", "agents.md")
 
@@ -126,6 +130,7 @@ def scion_template_files(
         raise ValueError(f"unknown Scion harness-config '{harness}' (known: {', '.join(sorted(set(HARNESS_BY_KIND.values())))})")
 
     role_name = str(role_doc.get("name") or role_doc.get("id") or "role")
+    resolved_mode = mode or ("coordinator" if "supervisor" in role_name or "coordinator" in role_name else "executor")
     description = str(role_doc.get("description") or "").strip()
     body = str(role_doc.get("body") or "").strip()
     unsupported = set(profile.get("unsupported_role_fields") or [])
@@ -148,8 +153,9 @@ def scion_template_files(
             f"the harness-config '{harness}' resolves it to a concrete model (Scion local/templates.md)."
         )
     lines.append(f"model: {model_alias}")
-    lines.append(f"max_turns: {DEFAULT_MAX_TURNS}")
-    lines.append(f"max_duration: {DEFAULT_MAX_DURATION}")
+    coordinator = resolved_mode == "coordinator"
+    lines.append(f"max_turns: {COORDINATOR_MAX_TURNS if coordinator else DEFAULT_MAX_TURNS}")
+    lines.append(f"max_duration: {COORDINATOR_MAX_DURATION if coordinator else DEFAULT_MAX_DURATION}")
 
     command_args = _command_args(role_doc, profile)
     if command_args:
@@ -182,7 +188,6 @@ def scion_template_files(
 
     agent_yaml = "\n".join(lines) + "\n"
     system_prompt = (body or f"# {role_name}") + "\n"
-    resolved_mode = mode or ("coordinator" if "supervisor" in role_name or "coordinator" in role_name else "executor")
     if resolved_mode == "coordinator":
         agents_md = _render_coordinator_agents_md(role_name, harness, task_repo)
     else:
@@ -220,7 +225,7 @@ def _render_coordinator_agents_md(role_name: str, harness: str, task_repo: str |
         "1. **Triage the inbox.** Informational or duplicate -> `deskops message ack`. Bounded work for this repo ->\n"
         "   `deskops promote inbox-to-drawer-task`, then `deskops add task --from-drawer ...` when it is next.\n"
         "   Work for another repo -> `deskops message send --to <repo>`. A decision only the owner can make ->\n"
-        "   leave the note open and say so with `sciontool status waiting_for_input \"<the question>\"`.\n"
+        "   leave the note open and say so with `sciontool status ask_user \"<the question>\"`.\n"
         "2. **Dispatch one executor per active task that has none.** Build the prompt from `deskops show task <id>`:\n"
         "   the task id, the repo, what to verify or implement, the validation command, the evidence files, and the\n"
         "   three prohibitions (no desk/ writes, no closeout, no commits unless the task says so). Then:\n"
@@ -238,7 +243,7 @@ def _render_coordinator_agents_md(role_name: str, harness: str, task_repo: str |
         "   Then `scion stop <agent>`: an executor that reported completed keeps its container alive until stopped,\n"
         "   and Scion counts that idle time against its duration limit.\n"
         "6. **Do not push.** Commits stay local; the owner pushes. Report what you committed.\n"
-        "7. **Report.** When the desk has nothing dispatchable left, `sciontool status completed \"<one-line summary>\"`.\n"
+        "7. **Report.** When the desk has nothing dispatchable left, `sciontool status task_completed \"<one-line summary>\"`.\n"
         "\n"
         "## Never\n"
         "\n"
@@ -295,7 +300,8 @@ def _render_agents_md(role_name: str, harness: str, task_repo: str | None) -> st
         "## When done\n"
         "\n"
         "- Leave the working tree committed or clearly described in `result-summary.md`; do not run `deskops closeout`.\n"
-        "- Say you are done (`sciontool status completed` if available) so the supervisor wakes up.\n"
+        "- Say you are done with `sciontool status task_completed \"<one-line summary>\"`: Scion wakes the coordinator\n"
+        "  on that status, not on `blocked`.\n"
     )
 
 

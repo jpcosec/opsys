@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import re
 import sys
 
 import pytest
@@ -98,6 +99,20 @@ def test_supervisor_role_gets_coordinator_instructions(profiles: dict[str, dict]
     assert "You are a deskops executor" in forced["agents.md"]
     with pytest.raises(ValueError, match="mode must be"):
         scion_template_files(supervisor, profiles["claude"], harness="claude", mode="boss")
+
+
+def test_statuses_are_ones_sciontool_has_and_wake_the_coordinator(executor: dict, profiles: dict[str, dict]) -> None:
+    _, supervisor = find_role_doc(ROOT, "role-deskops-supervisor")
+    coordinator = scion_template_files(supervisor, profiles["claude"], harness="claude", task_repo="deskops")
+    worker = scion_template_files(executor, profiles["claude"], harness="claude", task_repo="deskops")
+    for text in (coordinator["agents.md"], worker["agents.md"]):
+        statuses = set(re.findall(r"sciontool status (\w+)", text))
+        assert statuses <= {"ask_user", "blocked", "task_completed"}, statuses
+    assert "sciontool status task_completed" in worker["agents.md"]  # blocked would not wake the coordinator
+
+    # A coordinator idles blocked on its children; the executor's limit would kill it.
+    assert yaml.safe_load(coordinator["scion-agent.yaml"])["max_duration"] == "24h"
+    assert yaml.safe_load(worker["scion-agent.yaml"])["max_duration"] == "2h"
 
 
 def test_tools_fold_into_command_args_when_the_profile_has_a_flag(profiles: dict[str, dict]) -> None:
