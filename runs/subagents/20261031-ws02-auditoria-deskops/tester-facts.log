@@ -1,0 +1,10 @@
+# Recolectado por el Supervisor, NO por el Tester: datos que un Tester sin bash no puede obtener. No es prueba independiente.
+
+$ grep -c "path=(" deskops/cli/registry.py
+80
+
+$ sldb models list --store .sldb | grep -c "^- "
+17
+
+$ wc -l runs/subagents/20261031-ws02-auditoria-deskops/file-inventory.tsv
+193 runs/subagents/20261031-ws02-auditoria-deskops/file-inventory.tsv

@@ -1,0 +1,59 @@
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M desk/tasks/task-ws02-inventariar-superficies-y-operaciones-deskops.md
+ M desk/tasks/task-ws03-inventariar-persistencia-consultas-y-notaciones.md
+ M desk/tasks/task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso.md
+?? desk/drawer/plans/workspace-documental/auditoria/
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/board.txt
+?? runs/subagents/20261031-ws02-auditoria-deskops/commands.log
+?? runs/subagents/20261031-ws02-auditoria-deskops/file-inventory.tsv
+?? runs/subagents/20261031-ws02-auditoria-deskops/git-status.txt
+?? runs/subagents/20261031-ws02-auditoria-deskops/models-list.txt
+?? runs/subagents/20261031-ws02-auditoria-deskops/result-summary.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/runs-inventory.tsv
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-facts.log
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-input.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-pane.txt
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-receipt.json
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-result-summary.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-v1-result-summary.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-v2-facts.log
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-v2-input.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-v2-receipt.json
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester-v2.stderr
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester.exit
+?? runs/subagents/20261031-ws02-auditoria-deskops/tester.stderr
+?? runs/subagents/20261031-ws02-auditoria-deskops/testing-handoff.md
+?? runs/subagents/20261031-ws02-auditoria-deskops/validation.log
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/commands.log
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/result-summary.md
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-facts.log
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-input.md
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-pane.txt
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-receipt.json
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-result-summary.md
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-v1-result-summary.md
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-v2-facts.log
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-v2-input.md
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-v2-receipt.json
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester-v2.stderr
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester.exit
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/tester.stderr
+?? runs/subagents/20261031-ws03-auditoria-infraestructura/testing-handoff.md
+?? runs/subagents/20261031-ws04-auditoria-ui/commands.log
+?? runs/subagents/20261031-ws04-auditoria-ui/result-summary.md
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-facts.log
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-input.md
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-pane.txt
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-receipt.json
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-result-summary.md
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-v1-result-summary.md
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-v2-facts.log
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-v2-input.md
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-v2-receipt.json
+?? runs/subagents/20261031-ws04-auditoria-ui/tester-v2.stderr
+?? runs/subagents/20261031-ws04-auditoria-ui/tester.exit
+?? runs/subagents/20261031-ws04-auditoria-ui/tester.stderr
+?? runs/subagents/20261031-ws04-auditoria-ui/testing-handoff.md

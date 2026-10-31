@@ -1,0 +1,10 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+$ sha256sum desk/drawer/plans/workspace-documental/auditoria/deskops.md
+14fc6c94a6b7642492743ec3ccf554ba57bf1c06a44d8ced302c665e6754d890
+
+$ wc -l runs/subagents/20261031-ws02-auditoria-deskops/models-list.txt; head -3 runs/subagents/20261031-ws02-auditoria-deskops/commands.log
+18 runs/subagents/20261031-ws02-auditoria-deskops/models-list.txt
+# Reconstruido despues de la ejecucion a partir de lo recordado; no fue capturado en vivo.
+deskops show task task-ws02-inventariar-superficies-y-operaciones-deskops --root .
+cat runs/subagents/20261031-ws02-auditoria-deskops/preflight-disposition.md

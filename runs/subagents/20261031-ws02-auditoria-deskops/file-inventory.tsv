@@ -1,0 +1,193 @@
+path	sha256	modelo	git	texto
+desk/contexts/README.md	df89d9c2a02932a9178c5301a54628962e6e7d25b37815d366a7a2f730395861	no modelado	clean	utf8
+desk/contexts/pill-001-task-closure-commit.md	67d4efe0d44239b6ea5ddaf306b560bb14b948c212edc95a36e58295fe789c04	PillDoc	clean	utf8
+desk/contexts/pill-005-subagent-execution.md	2e0ea89eababbd5cdc7aca4f0bf515b3e7b9f20c3cfcefcbf9b974449bc9bea7	PillDoc	clean	utf8
+desk/contexts/pill-006-self-described-store-layout.md	4ef731bf560b77cfe44980618eff411b2b08bea516f33941ea79d2ee5537fc86	PillDoc	clean	utf8
+desk/contexts/pill-007-phase-gated-task-flow.md	b1e28c062e135464c036aa0dc41b2532fdbc921d3c90526dcc0d7213fa126398	PillDoc	clean	utf8
+desk/contexts/pill-008-kgdb-sldb-boundary.md	59c4b54560dfb219518b379cc1af8df4bfc77cb7a1f6821e34b4da44a7e07073	PillDoc	clean	utf8
+desk/contexts/pill-009-source-file-graph-traceability.md	ebde5305fed57e68f0fb8640d4394d4e7319f0e3ebff592bc7e56e01a21cade6	PillDoc	clean	utf8
+desk/contexts/pill-010-graph-runtime-output-policy.md	2dea2f646adae1585e121fcf21d8b192be456a3fc44102c8e5e968b127edbbae	PillDoc	clean	utf8
+desk/contexts/pill-011-self-reflection-noise-control.md	7cc7a4606b08cad1c49ac44248b094ee42722f61dbfc7a474100690f0a4e45a3	PillDoc	clean	utf8
+desk/contexts/pill-012-create-operations-transactional-rollback.md	9bcec39c2a011cd217c5ce8a7b85f148bea56b2493d0212506ae4f5326e8258c	PillDoc	clean	utf8
+desk/contexts/pill-atom-lifecycle-preserves-provenance-and-materialization-links.md	996126085e2cdb823162277ea531335b8faa55597fb38109a4c6f4b94ab1c87d	PillDoc	clean	utf8
+desk/contexts/pill-board-routed-pills-stay-minimal-and-reusable.md	be15c872c7041037964d2084cdd1503f952e147cdd9373080215427470bb3f33	PillDoc	clean	utf8
+desk/contexts/pill-canonical-desk-identity-enables-horizontal-routing.md	bb7c677a7cada77d31c65069e2b144b40a4881f43308fcc1e365aaf1115cc71a	PillDoc	clean	utf8
+desk/contexts/pill-cli-gaps-become-tracked-work.md	e24a9143653b5c64b074bd11e7cd0214148a97af74e9b99faca22b3d79e21a74	PillDoc	clean	utf8
+desk/contexts/pill-closeout-knowledge-gates-require-traceable-evidence.md	bf02c09d2e9946cfd474aea148661d99c4cbf9fa901ed82309958403598dfcb2	PillDoc	clean	utf8
+desk/contexts/pill-cross-desk-inbox-needs-delivery-verification-and-follow-up.md	e652449f10a9f9df266db6594ca3448d0079655ea1f38d0a320db71b644fe1e1	PillDoc	clean	utf8
+desk/contexts/pill-doctor-separates-desk-repair-from-sldb-health.md	87a6b5d30b17b136ac5c1cc6ad0544052275dc6048a91dc35a22b4aa8ed59065	PillDoc	clean	utf8
+desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md	b9ede9025fbc027e9584969570e1f35a0031086b1a03837c21c935cd85e3cfc1	PillDoc	clean	utf8
+desk/contexts/pill-durable-pill-knowledge-graduates-to-atoms-at-closeout.md	0ddc822bd37c474643fb954cb0312c15f4390ef9a829f376f4f185f6571f9613	PillDoc	clean	utf8
+desk/contexts/pill-legacy-desk-formats-need-explicit-adaptation.md	b2deb641a4dd628d932ecffaabc95777f33939c59f261bcacdd77dd96ce2d8fd	PillDoc	clean	utf8
+desk/contexts/pill-list-surfaces-must-expose-malformed-docs.md	9fd81b3c622a6c2fe422de93ef14ae3cf904d74fa27ca0c50a506bc86a527f5a	PillDoc	clean	utf8
+desk/contexts/pill-machine-readable-cli-output-needs-stable-contract.md	2feeb224f2ba4ec65fb70b20897bb8b6eb4a840c141de92f22d2efd4423e382d	PillDoc	clean	utf8
+desk/contexts/pill-materialization-contracts-declare-source-intent-and-target.md	ecacf04260386460011d78a97b521cecc66e461de3f2cea614baa2c1bbbcc470	PillDoc	clean	utf8
+desk/contexts/pill-operational-cli-grammar-follows-spoken-workflow.md	74f87156da6e10dab89f82823b3e5c365375c1b96a58061790977b985071e4b3	PillDoc	clean	utf8
+desk/contexts/pill-pattern-supervisor-playbook-buenas-tareas-bundle-contexto-cero-y-frontera-de-modelos.md	87962fe471e6a54eea59a761ba01121aca06b5999c904ef8a60d914ada748126	PillDoc	clean	utf8
+desk/contexts/pill-phase-closeout-reconciles-pills-and-surfaces-next-work.md	55468a658bd03aef658ed73f1785df233c76f338db6cab786d77cce698569894	PillDoc	clean	utf8
+desk/contexts/pill-project-local-config-carries-version-and-sandbox-policy.md	88fbd655fbd34bb9c9deb682dd75b3349d7e974495911a70bf30dbd44bf1c388	PillDoc	clean	utf8
+desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md	94d70a8848564cc8ca03f625d517e1be662999673386f7b87752906dad44e5e1	PillDoc	clean	utf8
+desk/contexts/pill-real-cli-surfaces-prove-operator-contracts.md	ba62fe8e0793864308391f45ad4e677b283cd825fdea507550320b4aca8ed87d	PillDoc	clean	utf8
+desk/contexts/pill-zero-context-preflight-precedes-executor.md	5e9d67ac97625c6d4923924081e7e1e8977ceec3f288704901581675a0c814cc	PillDoc	clean	utf8
+desk/contexts/pills.md	48be4f494c71ab426de47a329723469078c99f8b3e11c0d4b16f34f75d332501	no modelado	clean	utf8
+desk/drawer/README.md	037ea3b19d2cdc6ad0d06ff32e7de195a495986b43df0636f08bd48f96dd18a8	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/README.md	cf30569033ed312f5ac4d13e6fe8b4c6e20da0291c5de15a41a958c8d8be2232	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/__pycache__/build_plan.cpython-313.pyc	a46b8632c424dca1a059abe10b2c206d8260e583bfc6362b2ff4360c6ce1ebb4	no comprobado (no UTF-8)	clean	no-utf8
+desk/drawer/plans/workspace-documental/__pycache__/context_review.cpython-313.pyc	790c2b66979d63c869521edebf6d2f4b5cbf124a279fa56e80a6eb48c719523a	no comprobado (no UTF-8)	clean	no-utf8
+desk/drawer/plans/workspace-documental/__pycache__/validate_plan.cpython-313.pyc	889f8739b7d306b4a40e79c6ba9d613a2172573b1b0cab6d12fa512ca6d83c3b	no comprobado (no UTF-8)	clean	no-utf8
+desk/drawer/plans/workspace-documental/alcance.md	203ef33a2a98706a6746f93d1912bd518c27ba88768c0d2181d553dbb802eba2	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/borradores/manual.md	76c7264f6ff4205029a4fa5ea671502bef07da1024c5634173a6e25ef6218865	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/borradores/user-flows.md	f4d38f5506699290f5c8f626bd0006e1d6bf366d08b1bb265389e17861968901	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/borradores/vision.md	5a994564c283c8304e1e2bb13e009b5e87577eafa4cdf90a884da1edb1ba001a	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/borradores/vistas.md	bfca2147974db8ac8704a73c33cf8ac0ade8f607d271fb747fcf869aae2db5b5	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/brief.md	89a914832915dd7cc6f1895efe8603cef055a7d8f442cbdc42a49a062fae9586	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/build_plan.py	22de48ff3f71e7169cece195aa4e5ae539a82194768cf5bc9bc5cc6069244d6e	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/cierre.md	5d3c825a3147483d291dbf6cb3e0bc3e57d8b8dbdf3db39ee2374aa1426cb89c	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/cobertura.md	da759798ae818c08d19c1f66b663fdfde7165b5f9c83071ffca3444389fe71ba	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/context-review-guide.md	3150ef714004d5beb58dc4a55e7894513b3b3aafd337a51d7a90e31f8b1443c7	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/context_review.py	209e66b5d60b34efe870616f9deac2960ab8e57c2cbec6916e32b661945f9f69	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/dag.diagram.graph.html	5a73ab4931a0b438f85dad0d0c1d4ba58508b7d7ec71bc3f9b409e7287bece86	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/dag.diagram.mmd	29765bd676d054f2fc84c864e23c883782f56ceb15d9cf57a2564c3e3017e7b0	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/dag.diagram.yaml	ee4136a25c2a5bb3a37a2c29557042a78021d8a8a9f6460fcc7d65cf10383da9	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/dag.yaml	56f0161d0a0c73ae7f52d4de22231b5fddb11aea15b72f20dcd8155d55e001ad	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/decisiones.md	9691ea6ee22961c766b99d13739550621dc18ed5a47593cdcac246ca72cda5f4	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reconciliacion.md	8b96ab2cc2d7040ab4d9d919caff7991660ad00b44601c0730fee3246515ce1a	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/render_diagram.py	75633bcb9c98d56586762f3ed5eac5e4f2027f9fdd200e6b78b69ad0bef40281	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/README.md	c7d10df4078f12ac6978016f842d823ffc98c3d33579d057019f3167ca44aa8d	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r1/claude.md	2d4f64fca293edd43a1f291b63c6ab90c4a507551514208357139f8240ca959c	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r1/dag-v1.yaml	ac12cf81b28b3ca24a8ccd2dc030a631906b74997755094bc4df5ba3285fe3ff	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r1/deepseek.md	bbe21f301ecf772f26761a4647cdeb75c2d795f6e2f7155e8e34e0ce2428755c	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r1/gemini-terminal.txt	d51cc6edf4b03be6805dccbfc5b3ce6f9c4d08ba9bb94d23be3590243b0e8f90	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r2/claude.md	a91cd6840823896a2f5efc4c039e97abec1d2b8c038a631a4fc9718c7094771d	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r2/deepseek.md	467af518c9e5f84092a0a265393296c5fe17b384538e63fd1b35ab3d135bdc2a	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r2/gemini.md	167f7abb0fbb37548fdbea792f09b538ccc2f084650a027e18c4dc9e47b8f214	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r3/claude.md	16b7c211251e93cfab1bcff3bce1a95b4ca50a216ef2c84b5d208f0bd025ef2c	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r3/deepseek.md	3ef5b80e7ca64d5a0acde07df2586cd8e7621dbf67d777fb2f91b5a32812adad	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r3/gemini.md	58f99571d690b5921d6a8b4c911cdec58ee1ca560f8e6ca4b49914c8ad96f548	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r4/claude.md	0c763364a971b223acb4b520abe72ffe1438408a7e43ec5f8288de7bfe6845fb	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r4/deepseek.md	bb59e6b968d46c0e7e204df8e6c2f1a7125bfb8340dde38e5d3a1b4f8d059d0a	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r4/gemini.md	05c14008b7726f0c9782b9b4fee7004787ecab04fb41b75c6a2f21368c4ecab4	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r5/claude.md	6e87863e4b094d21b133542d2e1f27b9920a847222856c32718766e0be8c4e1e	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r5/deepseek.md	75c83da922da53db70fc3c59bcb8bef76c82a270fc44473e304e84243c51657c	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/reviews/r5/gemini.md	4e8d9508c40489ddc04ee92bdb6e594a17850d5cf11870fc1fa73883f736b464	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/validacion-humana.md	09f240a3c6a763e02df1054f65373a8c39bea208f71ab3bfdee055f6f667a299	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/validate_plan.py	db42bb95ee1de137a03bd0541fb3706aca37dbc6d6a75a0529423a0ec8e82f61	no modelado	clean	utf8
+desk/drawer/plans/workspace-documental/validation.txt	2bcd63ae6049893d2824177feabb7c8af6557bfa409edf2f18d500e610fcba25	no modelado	clean	utf8
+desk/drawer/tasks/Board.md	2d9d300e86467b2f57c8eb9d260310492c2d386ae837b0154cd7ac31e81b679f	no modelado	clean	utf8
+desk/drawer/tasks/task-chatbot-infra-indexar-las-citas-c-digo-atom-de-los-docstrings-en-el-grafo-y-huecos-de-atoms-vistos-en-la-auditor-a.md	1d612607708e55123db1810dc3b44e39ae01049857a871e32f06a98649e09507	no modelado	clean	utf8
+desk/drawer/tasks/task-closeout-commit-reference-points-to-test-solo-acepta-root-tests-py.md	6bc3c65c10237dc29a4f9afb802814943ee5d268cb0ed3d8f482e903a4c93f98	no modelado	clean	utf8
+desk/drawer/tasks/task-closeout-la-compuerta-tests-missing-tests-evidence-bloquea-tareas-que.md	17b5c3dccbe3f5da7b50b2cd7d134d71565c207d16e5c9be001c0aa36e0a035f	no modelado	clean	utf8
+desk/drawer/tasks/task-closeout-verify-ignora-el-campo-atoms-de-la-tarea-y-solo-lee-references.md	0cd893f137c034703a22383aeea374af2bd87bb065428b834599a58056a2d7a1	no modelado	clean	utf8
+desk/drawer/tasks/task-closeout-verify-no-ve-materializaciones-de-archivos-fuera-del-desk-en-repos-con-src.md	02587e608b75079ac241e27a9fb821ca258fc7cc5d65fd250fe7638b28bdb81c	no modelado	clean	utf8
+desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md	125b862b88883028060365d2ff8584fc5dcd313140623a71b858fae6d9b17ba9	no modelado	clean	utf8
+desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md	848f8ceba82b6f3c793ee277b932a8ef3337a059e4aebe3712cd989f8360717b	no modelado	??	utf8
+desk/drawer/tasks/task-mepu-selector-por-ruta-en-edit-task-y-diagn-stico-drawer.md	10bcfbdf8835d60814696f30202350c5b01edfb1952c88af8663cd38da8bed32	no modelado	clean	utf8
+desk/drawer/tasks/task-release-deskops-0-2-0-pendiente-hasta-que-la-suite-completa-funcione-junta.md	2f6fbfe240f0ec9fe54e6e07d8eb03b238ca93e61d0d9e4553a4c442cf31d263	no modelado	clean	utf8
+desk/drawer/tasks/task-requisitos-d4-d6-de-governance-pr-en-taskdoc-alertas-en-el-inbox-y-rundoc.md	9adb2cc8f6f36fb3c7791b63c7511c9db7be549b4669693e54fefda3739de2c4	no modelado	clean	utf8
+desk/drawer/tasks/task-revisar-dag-workspace-con-agentes-baratos.md	1f7567e07e2bd9d4745be58164f668742c4cde2886c353128d72340bdda8b202	no modelado	clean	utf8
+desk/drawer/tasks/task-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan.md	4151253ff605a701115e81f9e6794f339edd48463b135811ca5eada740c409e2	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws01.md	23ba8f02fee90fafc03aa69ddc1a3dcdda012b57875633f44db81603a8fbbf3e	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws02.md	5bb30158f126898b4110357339df178b10981f387f49b026d2cdc51901c41c0c	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws03.md	7916dae13ae9cc2cb04cc5ea720edd9e0986d1263eb289db8dc18e788c50c170	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws04.md	7e01062a0658cb040ef17e7b7a2cb5a3e5d885be77b20fb29523bf447fa99313	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws05.md	f29e4f778c87194e49b1576fc2c4c74182ab18d163aeb23ac5fbdb4ba99d92da	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws06.md	ce882e7a5289be73cbcecf5f29964d3de8fc216f4f59b1c25a969f4ae5b1ed0e	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws07.md	3704c5bd935e0a82ca010a056137eccbfe2e97f388ef839c89b36749e762aecc	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws08.md	11d93db193b334e8e4d8d96e5d6412504b792dd41b9c6f5b79a89a6c09cc07d0	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws09.md	f002c69205d9858276e4f6c3af6bd52b2b1c3e0f499944954a81d3c327841d4e	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws10.md	aa1708d7a3c1f2c4515e66a914411028cc2d13e1587866f1678174e988c8efa6	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws11.md	59039b5b91c4fecf207aef84a74675954df9b523abfff271714bf1287abe0dc3	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws12.md	5b129511ee5f1771a154566d0e6e4729f070c52736d7a54162b33c2327eeecad	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws13-1.md	78bc7fa409252e264d6ea8f6190cc8a9c5e11196183cdc4feab468814d85bfe8	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws13-2.md	1f6e4dadce313dbcb99d9f0bd2a800bf7dcf93a75afe13195ef9cf62069f84d8	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws13-3.md	a7229dc9068aba519a4e5f69e1e115e29ae51a713120e276acf911ae1ad78ff1	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws13.md	cea8edb4ed54d851ec75a65cf9b72444b6831c385ab35197dd815fa7a643ef4c	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws14.md	a45af9b71e01a146982c7f7b4ad62f9974f8b1eac2550b4d3f3b64ec23ca3325	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws15-1.md	d8f3972c400912592fc8b32fc2697c2f10c25db2a8fdb04c3cb1b4ea9584d4d1	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws15-2.md	6aa36440bb50988314db93cc0b616fa94dc8fff2d211db0911bd314f71cadc89	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws15.md	bc68ef6d8ee4cc66a9f9a64734e9d639eaebabcfa264f0dd7354dcd65a642aae	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws16.md	db06e09771537c613d6af26da9eb38f69b6628c5c96d97aa830bc7617137b77c	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws17.md	6e03daf86ca306670cf1fb0c10b3ad912be013e64ef84e5cab96c1713521cf11	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws18.md	90ad5082cd77a40f7a970ad8a9de2b179e374ad6c6bd6633dc0e602aa23b6a85	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws19-1.md	256b558e813cd74c796ecb31aa4100b1d628bbaea9e81023bd5655451792fbff	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws19-2.md	aee9212e9ed94727c3baf8e3d1d1e8e7da3b8b7de737b202160d0fd8289bd712	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws19.md	edb251c12d3325b90a1f1a4d1d76c8f54c08eeed2318299360c21fb2f8fde565	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws20.md	06a12eaa9308f72c329f5de5807fbdd172751f99f406c1100e0c300c5e225d2b	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws21.md	226c629bf487a0cef8c23511b4ecb94830fe19fff759db8c32b0d7e19d986cee	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws22.md	e189b5d75d84d41740cc9501fb14778860388b2aee48a961c37c669080eec08b	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws23.md	73ff9486b5410ea5e384ccc15c099222cb956dc705e3e56e385203d8385d5003	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws24.md	e26f8cb0d76459b2e328c50ff3e503525c0a85a66fcb46a48307b9b2f79c7243	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws25-1.md	a6ddce726149e24043b736d71b1fd3dd020a0265f4cd42eb35e3d953db6f76bc	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws25-2.md	d60c59973602805c2e86a778c32dfbceefb389bebbbb094e45477ef9095dc3f8	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws25.md	983452e86a7768553f9b4814501ecb28238fadfd881f0921d7b2d7594b8c70f4	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws26-1.md	0acd6a1f4afedce0a600d53edb8bb323fcbfa5adfa3c0571c8ab53301f4a5007	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws26-2.md	7502d4cbc0d57f91212c08631bcdbbf1d13f3526c9ef681ed9077ddcdb679b30	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws26.md	1359164af790da25fc235ad80c1474f3ba0da2e947a920a4b44c7583e4cbf216	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws27-1.md	38617f7287f04652004f947c9c8a5e2a5c154061b2966004a871eeb2f5dec7fc	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws27-2.md	438dea8b9af5afd29e1ac1c5d8902ab4efe691bd922d728fd2c4578f42cfd731	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws27.md	4f5c29b04a6a6c6cae5f07892f1ee1833f08e760fed3eb12cf4e36db7932a8c7	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws28.md	50e0a363386f8609943900af99e73e82ac26c0646b0ae081487718b663c6fae4	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws29.md	4bc18f04a76d6d31ae6d5dc47ca29c352c88a6c551aa6b3989a5f73010b6a7a0	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws30.md	7738a848d69bdb26c5d1cde778a35abdc5eba3ba862d31185ea9d0e2379ad6e2	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws31.md	24b4835ed3c23655e025860ffaf835553174accf067e0952f73203b69cef2ffd	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws32-1.md	08c1567af984d9bb983d08ea305cca0bf9b3ef20a9b7f32960370421b75ce5cb	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws32-2.md	bd12fb77cefa0e800df0df653c8e3d631853ed7a626cc70a1c4a55c2ffcd5efb	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws32.md	2fe1b45f492dcc56ac5d8a037171c2e3d2fb9a1cecffd38798d2bc8ad4fc3591	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws33-1.md	84e508c06409d941b9781b932da0b0a0d3ad01ccdd811b1cbd64769906d56aec	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws33-2.md	4a0c1177a461fe88eaea154ec641e38335508a80bcd1836b7e383f82b9e89595	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws33.md	f8b745a7f0930c185ff5389fdcfd9a8e5e7ca52122257ac736cd7eaa974a0104	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws34-1.md	cbf548d4da867559914e8768abfbf1f1c8ece18437e4a99b1f223d78aee62b5c	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws34-2.md	6a3ada1f9693c738f9dd1aab4c1c8b04525e72af72558d507c1b7707c62a63bb	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws34.md	6e28767dbfee2925b1eda55ad30de7545c381d12091ec51f5f6df0f56d8a4167	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws35.md	c4f2d691ea11623299b850155d9075c2512a18a27c038ac63c4a653b1851892a	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws36.md	487b52633ebbd5d08215404f36bcb2d72885ac9a4c925c006e740926c0d738df	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws37.md	a0cc4b5ae607eda0c8531fc0744e001a67d9003f8f25ccb2481162327b7ddece	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws38.md	dc4f9fc31c35de3ec2542abab5c5d5bc7eaa50764634079eb41ef11788c4da5d	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws39.md	6a3d249fc9bd37c6b402b1f58a6f2b5faffc68f0eba3b069673560ebe09f112f	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws40.md	3806acc025bbae344ef4e7b49573be82f8978bce72869dd11fec79b7e582f2c4	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws41.md	6202ce314fe0e6b3cd287fc42bbeea2f23b2182be8abf5db6acd413408c716ce	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws42.md	349c41be74e0c1618a94781cb9438197b156bea784892b123c4e9cd567d3598a	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws43.md	f0f7a41cfeb11f8c7b2c2f6279b8894fd97104ec4ea585ee77f5c55963ca9abb	no modelado	clean	utf8
+desk/drawer/tasks/workspace-documental/task-ws44.md	b89dd20ed6bff2486658d7fb5e0537c7da06a7c8026e2b5d350371ff55d9e716	no modelado	clean	utf8
+desk/inbox/20261019-112931-suggestion-el-store-derivado-sale-de-git-sldb-store-yaml-y-sldb-stores-build.md	3137cacb07e0785addf26d79bd82206f591dce8ebc8d31565a17b42ef50eff04	InboxNoteDoc	clean	utf8
+desk/inbox/20261019-120241-suggestion-sldb-ci-en-verde-con-el-store-derivado-respuestas-a-tus-dudas-de-declare.md	f32a3a2f9a832c52221b23592f308486f4198881cafa76cfd5087fcf28173e64	InboxNoteDoc	clean	utf8
+desk/inbox/20261019-120253-suggestion-sldb-correcci-n-de-hashes-en-mi-nota-20261019-120241.md	5285c0217739d791803be4947bca903f141c1bc7c6f5144f89faf150cd73aa9b	InboxNoteDoc	clean	utf8
+desk/inbox/20261019-121252-suggestion-sldb-envelope-un-json-por-corrida-y-exit-codes-tipados-opt-in.md	442345ccdf387e22d376e8d6f81b9de10083d183da97afe75df81894f59dbc87	InboxNoteDoc	clean	utf8
+desk/inbox/20261019-122055-suggestion-sldb-evidencia-en-las-aristas-opt-in-edges-show-evidence.md	31ddebcdf6ac9b815800d793234ffb535a9930ad5f65e2c016be812c9555f2d4	InboxNoteDoc	clean	utf8
+desk/inbox/20261019-130108-suggestion-sldb-puedes-migrar-deskops-clon-limpio-de-fadd3b59-en-pass.md	33c461bd6ade777c1fb3c67df2bee0b21cfd61d74f414fafc50f9ab196b9efce	InboxNoteDoc	clean	utf8
+desk/inbox/20261019-192021-suggestion-sldb-de-acuerdo-con-tus-motivos-la-forma-de-stores-check-se-conserva-y-corrijo-lo-que-dije-de-la-evidencia.md	c863d9ca06a702bdb6553a547de6110129369dd87f94a393793b34bc2322524e	InboxNoteDoc	clean	utf8
+desk/inbox/20261020-113033-suggestion-sldb-cambia-la-salida-las-alertas-dejan-de-hacer-fallar-y-nunca-son-silenciosas.md	14b4783ec649c433f9eb5c80a1d8699a02d170a8e963ee42310ce9726f3ab846	InboxNoteDoc	clean	utf8
+desk/inbox/20261020-141330-suggestion-sldb-c-mo-declarar-anchors-a-c-digo-desde-atoms-tasks-y-docs-codeanchordoc-anchors-record-check.md	2c96ff9e026329ab224de498a6a87fe08bc003d2023397e0d57d868a56afb15d	InboxNoteDoc	clean	utf8
+desk/inbox/20261022-175539-suggestion-cierre-de-task-con-un-commit-como-evidencia.md	8233d569f25a6c428d8f42b7b36c23538da8a58172065ba36e40f5a0d4f6592e	InboxNoteDoc	clean	utf8
+desk/inbox/20261028-084951-unclear-closeout-sin-camino-para-tareas-que-no-tocan-c-digo.md	6de8b5d39ed6f80e5bbe8f30e1ffb67cdb1acf886b6a1b4460a0268dcd61c36e	InboxNoteDoc	clean	utf8
+desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md	bda2d155c87f9fc4e664227c606d486de76dd55d2f6e5b3820486a261771fba5	InboxNoteDoc	 M	utf8
+desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md	7c7005d55447d7cf9e81ba3c27ae7a54e858ab0ef9c6bcff6de1e5e6ba2429cc	InboxNoteDoc	 M	utf8
+desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md	0ac77d59308e84de61dabe9b53f1e9c0d0c2042a821cabe05f974bb175f53350	InboxNoteDoc	??	utf8
+desk/lifecycle/closeout-task_completes.md	d10e77d3142a7c509e879554a1bcd8c694c89be03c2ad759b497e3585df88e2d	RelationDoc	clean	utf8
+desk/lifecycle/execution-task_activates.md	24bffc8303f00b9eaaccc0ced148147a2433517f4dc8f617b06ee3c9863f83e1	RelationDoc	clean	utf8
+desk/lifecycle/testing-task_hands_to_closeout.md	d8cecd0ee1cc33ad17ae42337731432651a00f575e3f77a7a939b9fd7115f532	RelationDoc	clean	utf8
+desk/lifecycle/type-task_activates.md	82694800f31844ed3b86b5913f2cbf02eaebf24f4143a8a4542a64374d9217b5	RelationTypeDoc	clean	utf8
+desk/lifecycle/type-task_completes.md	5b3f4ce0793df8b2ee535b6b37490b8d0abdd4c8bb8b43b330ddb6134ead7f0f	RelationTypeDoc	clean	utf8
+desk/lifecycle/type-task_hands_to_closeout.md	d16cc9c1d329c8d362e0d08c9ba3d6f23bbc7538429fd82cf20540c593f700bf	RelationTypeDoc	clean	utf8
+desk/registry/repo-Chatbot_Infra.md	34f87db0f02a53db39761b474dcba5971e2ca329c9a4c6304ad1571cc47ffc0a	RepositoryDoc	clean	utf8
+desk/registry/repo-deskops.md	c8ecdad160838d0b067fd9c704c9a6c174ab48ebf5f30c4084d4c97a1905c686	RepositoryDoc	clean	utf8
+desk/registry/repo-graph_ui.md	401be8e950c70aae13c28eb47366a2b15c569cec81db5f5ba921d6e07e546765	RepositoryDoc	clean	utf8
+desk/registry/repo-scion.md	a10c281c19ab95f037ee29c5c7d22a0801cdc4a313ce622f0fed0957a7e16fbe	RepositoryDoc	clean	utf8
+desk/registry/repo-sldb.md	dbe4addf62e0b70beab11728824e0c2efb2348beea76e2a50ca68a543be22c55	RepositoryDoc	clean	utf8
+desk/registry/repo-spec2viz.md	86f2777845d536e56ad89f49f6208c14c8968c5a1e68177d94c717d0c2080214	RepositoryDoc	clean	utf8
+desk/rituals/closeout.md	9978878ba0473b4a6492d9c6913d33ab123bb04f05c1ed15f5af66ea001a9945	RitualDoc	clean	utf8
+desk/rituals/context-review.md	d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0	RitualDoc	clean	utf8
+desk/rituals/execution.md	a71dcee57990863a292c5b2fe2e232260e1c568c39926d6917309b4aa5295d51	RitualDoc	clean	utf8
+desk/rituals/phase.md	4237e350328a7976e289895e773dea5acc18b333f12f3c664f0534c596f68f76	RitualDoc	clean	utf8
+desk/rituals/ritual-drawer-triage.md	174c6a3b364788693feda9b98c4445289e05b265b95d9acad012758ef936611c	RitualDoc	clean	utf8
+desk/rituals/ritual-knowledge-distillation-pass.md	ba9b8e832d13c2f7070bb2ad45f7ef8c334ef9ed319623786980bbe6d7c1813a	RitualDoc	clean	utf8
+desk/rituals/testing.md	53e4f79648579b35becf4cad3a08e9d26b6c293c8745e8b07c7990c4b0a579c6	RitualDoc	clean	utf8
+desk/roles/deskops-executor.md	b9fd17b4c88d7db6f5f112676c568e7bd491e43da81de0e3837930d3aa606960	RoleDoc	clean	utf8
+desk/roles/deskops-supervisor.md	a57e98078da0d33e88ad59b9650162d76dc051a5fcf37750bb68db18eb7b6d7d	RoleDoc	clean	utf8
+desk/roles/deskops-tester.md	88a657056f0bbec08c69c70cb2464ba7c6519c09e2312b0791e9234c34e05a10	RoleDoc	clean	utf8
+desk/runtimes/runtime-claude.md	192b325cc4fc77c4780be38518c7747e0eb46aa73466008aa073d0a56059c069	RuntimeProfileDoc	clean	utf8
+desk/runtimes/runtime-pi.md	a51f3272313ff3ad36e30dad2c2a9f2351be78cd9c5640b5d4bb23315aeca91c	RuntimeProfileDoc	clean	utf8
+desk/tasks/Board.md	eb06475e1b2d6001dc51519ccce8353218af021f81c8cdf970a0eb24ea92b109	BoardDoc	clean	utf8
+desk/tasks/task-ws02-inventariar-superficies-y-operaciones-deskops.md	9ad71102310271bcf5427238a4be2408205d95232331c96217a18f3924b7924e	TaskDoc	clean	utf8
+desk/tasks/task-ws03-inventariar-persistencia-consultas-y-notaciones.md	6985a84a0a862751348fe889014fe50bdb204e14a1e6e603f9a060bee475b73f	TaskDoc	clean	utf8
+desk/tasks/task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso.md	fde6cd3c8aa202ac8334838b379bb294cf08c50793007b445fd5910f74aff1f3	TaskDoc	clean	utf8

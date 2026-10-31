@@ -1,0 +1,18 @@
+Models in /home/jp/proyectos/SLDB_1/deskops/.sldb:
+- AtomDoc | deskops.models:AtomDoc | 145 docs, v1
+- BoardDoc | deskops.models:BoardDoc | 1 docs, v1
+- CrossroadDoc | deskops.models:CrossroadDoc | 1 docs, v1
+- DeskFAQDoc | deskops.models:DeskFAQDoc | 0 docs, v1
+- InboxNoteDoc | deskops.models:InboxNoteDoc | 14 docs, v1
+- MaterializationContractDoc | deskops.models:MaterializationContractDoc | 6 docs, v1
+- PillDoc | deskops.models:PillDoc | 29 docs, v1
+- ProtoAtomDoc | deskops.models:ProtoAtomDoc | 0 docs, v1
+- RelationDoc | sldb.models.relation_doc:RelationDoc | 3 docs, v1
+- RelationTypeDoc | sldb.models.relation_type_doc:RelationTypeDoc | 17 docs, v1
+- RepositoryDoc | deskops.models:RepositoryDoc | 6 docs, v1
+- RitualDoc | deskops.models:RitualDoc | 7 docs, v1
+- RoleDoc | deskops.models:RoleDoc | 3 docs, v1
+- RunDoc | deskops.models:RunDoc | 2 docs, v1
+- RuntimeProfileDoc | deskops.models:RuntimeProfileDoc | 2 docs, v1
+- StepDoc | deskops.models:StepDoc | 0 docs, v1
+- TaskDoc | deskops.models:TaskDoc | 3 docs, v1

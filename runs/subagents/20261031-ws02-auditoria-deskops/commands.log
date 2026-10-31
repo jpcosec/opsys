@@ -1,0 +1,96 @@
+# Reconstruido despues de la ejecucion a partir de lo recordado; no fue capturado en vivo.
+deskops show task task-ws02-inventariar-superficies-y-operaciones-deskops --root .
+cat runs/subagents/20261031-ws02-auditoria-deskops/preflight-disposition.md
+ls
+ls runs/subagents/20261031-ws02-auditoria-deskops/ desk/drawer/plans/workspace-documental/
+sed -n 1,80p desk/drawer/plans/workspace-documental/brief.md
+wc -l deskops/cli/registry.py deskops/operations.py
+ls deskops deskops/cli
+ls .sldb
+which deskops sldb
+git rev-parse HEAD
+git status --short | wc -l
+git -C .. rev-parse HEAD
+git status --short
+grep -n "def command_registry" -A30 deskops/cli/registry.py
+grep -n "^class DeskopsOperations" deskops/operations.py
+sldb models list --store .sldb
+ls -la .sldb .sldb/core
+wc -l .sldb/store.yaml
+head -40 .sldb/store.yaml
+sed -n 40,206p .sldb/store.yaml
+ls .sldb/core/documents .sldb/core/models
+python -c "from deskops.cli.registry import command_registry; ..."
+python -c "import inspect; from deskops.operations import DeskopsOperations ..."
+sed -n 201,640p deskops/operations.py
+wc -l deskops/cli/commands/*.py deskops/services/*.py
+grep -rn "git\b|subprocess" deskops --include=*.py
+cat -n deskops/cli/commands/{core,drawer,drift,materialize,issue,retire}.py
+cat -n deskops/cli/commands/closeout.py
+cat -n deskops/cli/commands/doctor.py
+grep -n "    def |^def |^class " deskops/services/closure.py
+sed -n 330,560p deskops/services/closure.py
+sed -n 640,760p deskops/operations.py
+sed -n 1,120p deskops/services/closeout_gates.py
+cat -n deskops/cli/commands/operations.py
+ls -la .deskops.log
+git check-ignore -v .deskops.log
+cat -n deskops/services/tasks.py
+grep -n "def _write_doc|def _write_new_doc|def _track_created|def _read_doc|def _track" deskops/operations.py
+sed -n '/def _write_doc/,/def _resolve_glob/p' deskops/operations.py
+cat -n deskops/doc_io.py
+cat -n deskops/cli/commands/atoms.py
+grep -n "    def |doc_io\.|transaction\.|\.unlink|rename|write_text|shutil" deskops/services/atoms.py
+grep -n same en deskops/domain_tree.py
+sed -n 100,182p deskops/services/atoms.py
+sed -n 112,170p deskops/domain_tree.py
+sed -n 214,230p deskops/domain_tree.py
+grep -n "ensure_workspace" deskops/operations.py deskops/services/*.py deskops/domain_tree.py
+grep -n "def scaffold_desk" -A60 deskops/workspace.py
+cat -n deskops/cli/commands/message.py
+cat -n deskops/cli/commands/promote.py deskops/cli/commands/faq.py
+cat -n deskops/services/drawer.py
+cat -n deskops/cli/commands/graph.py deskops/cli/commands/repo.py
+grep -n "DEFAULT_SNAPSHOT_PATH|DEFAULT_REPORT_PATH|def write_graph_snapshot|def write_self_reflection_report" deskops/graph/*.py
+cat -n deskops/cli/commands/desk.py
+cat -n deskops/cli/commands/runtime.py
+sed -n 1,60p deskops/services/retire.py
+sed -n 60,110p deskops/services/retire.py
+sed -n 303,372p deskops/services/issues.py
+sed -n 314,345p deskops/runtime/scion.py
+sed -n 355,410p deskops/runtime/scion.py
+sed -n 23,96p deskops/runtime/initializer.py
+sed -n 36,76p deskops/bootstrap.py
+grep -n "def ensure_machine_ready|def init_local_store" -A40 deskops/bootstrap.py
+sed -n 275,300p deskops/lifecycle.py
+deskops --help
+grep -n "deprecated|subcommand_dest|required" deskops/cli/parser.py
+sed -n 25,60p deskops/cli/parser.py
+sed -n 1,224p deskops/cli/main.py | grep -n "deprecated|mutates|handler"
+sed -n 520,550p deskops/workspace.py
+grep -n "def migrate_desk" -A50 deskops/workspace.py
+grep -rn "RoleDoc|RuntimeProfileDoc|RepositoryDoc|RitualDoc|RelationDoc|MaterializationContractDoc|ProtoAtomDoc|CrossroadDoc|StepDoc|DeskFAQDoc" deskops
+ls .sldb/core/documents/TaskDoc
+head -30 .sldb/core/store_index.yaml
+git check-ignore -v .sldb/runtime .sldb/core/store_index.yaml
+git ls-files .sldb
+find .sldb -type f | wc -l
+find .sldb/core -type f | wc -l
+find .sldb/runtime -type f | wc -l
+sldb stores --help
+sldb stores check --help
+find desk -type f | wc -l
+ls desk
+find desk/<categoria> -type f | wc -l
+ls runs/subagents | wc -l
+python -I /tmp/ws02aud/inv.py
+python -I /tmp/ws02aud/runs.py
+sha256sum runs/subagents/20261031-ws02-auditoria-deskops/file-inventory.tsv runs/subagents/20261031-ws02-auditoria-deskops/runs-inventory.tsv
+ls -d desk/phases desk/phase desk/issues desk/faq desk/crossroads desk/crossroad
+grep -rIl --exclude-dir=__pycache__ phase desk deskops
+grep -rIl --exclude-dir=__pycache__ -i phase desk deskops
+idem con fase y fase -i
+ls -ld desk/steps desk/faq desk/drawer/issues
+sldb models list --store .sldb > /tmp/ws02aud/models.txt
+python -I /tmp/ws02aud/gen.py
+git status --short | wc -l
