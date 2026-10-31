@@ -6,7 +6,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-ws03-inventariar-persistencia-consultas-y-notaciones.md
-- desk/tasks/task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -49,4 +48,3 @@ No active tasks routed.
 _Generated from the task references above._
 
 - WS03: Inventariar persistencia, consultas y notaciones [active] - Producir desk/drawer/plans/workspace-documental/auditoria/infraestructura.md como auditoría de solo lectura del estado actual, verificable fila por fila.
-- WS04: Inventariar UI y reconciliar trabajo en curso [ready_for_testing] - Producir desk/drawer/plans/workspace-documental/auditoria/ui.md como auditoría de solo lectura del estado actual, verificable fila por fila.
