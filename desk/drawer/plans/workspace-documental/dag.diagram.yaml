@@ -1,0 +1,208 @@
+id: workspace-documental-dag
+title: 'Workspace documental: DAG de entregables'
+type: component
+version: '0.1'
+data:
+  nodes:
+    A1:
+      label: 'A1: Auditar documentos, relaciones y capacidades existentes'
+      kind: core
+    A2:
+      label: 'A2: Escribir visión y modelo de interacción del workspace'
+      kind: core
+    A3:
+      label: 'A3: Escribir user-flows y escenarios de aceptación'
+      kind: core
+    A4:
+      label: 'A4: Escribir catálogo de vistas y renderizaciones'
+      kind: core
+    A5:
+      label: 'A5: Escribir índice y convención del manual de usuario'
+      kind: core
+    B1:
+      label: 'B1: Reconciliar visión, recorridos y código'
+      kind: core
+    B2:
+      label: 'B2: Definir contratos de navegación y autoría'
+      kind: core
+    B3:
+      label: 'B3: Definir contrato de interacción y operaciones'
+      kind: core
+    C1:
+      label: 'C1: Resolver contrato y clasificación de huecos documentales'
+      kind: core
+    C2:
+      label: 'C2: Escribir entradas e índices navegables del ecosistema'
+      kind: core
+    C3:
+      label: 'C3: Escribir definiciones de vistas reutilizables'
+      kind: core
+    D1:
+      label: 'D1: Implementar workspace y navegación documental'
+      kind: core
+    D2:
+      label: 'D2: Integrar fuente Markdown y edición estructurada'
+      kind: core
+    D3:
+      label: 'D3: Implementar renderizaciones sobre documentos'
+      kind: core
+    D4:
+      label: 'D4: Habilitar operaciones del desk desde el contexto'
+      kind: core
+    E1:
+      label: 'E1: Unificar identidad y registro por intento Scion'
+      kind: core
+    E2:
+      label: 'E2: Vincular conversaciones, resultados y decisiones'
+      kind: core
+    E3:
+      label: 'E3: Proyectar ejecución y revisión en el workspace'
+      kind: core
+    F1:
+      label: 'F1: Integrar salud, cambios e impacto'
+      kind: core
+    G1:
+      label: 'G1: Validar recorridos humanos básicos'
+      kind: core
+    G2:
+      label: 'G2: Validar delegación y revisión trazable'
+      kind: core
+    H1:
+      label: 'H1: Publicar manual del workspace documental'
+      kind: core
+    H2:
+      label: 'H2: Completar manual de ejecución y revisión'
+      kind: core
+  edges:
+  - from: A1
+    to: B1
+    relation: prerequisite
+    label: ''
+  - from: A2
+    to: B1
+    relation: prerequisite
+    label: ''
+  - from: A3
+    to: B1
+    relation: prerequisite
+    label: ''
+  - from: A4
+    to: B1
+    relation: prerequisite
+    label: ''
+  - from: A5
+    to: B1
+    relation: prerequisite
+    label: ''
+  - from: B1
+    to: B2
+    relation: prerequisite
+    label: ''
+  - from: B1
+    to: B3
+    relation: prerequisite
+    label: ''
+  - from: B2
+    to: C1
+    relation: prerequisite
+    label: ''
+  - from: C1
+    to: C2
+    relation: prerequisite
+    label: ''
+  - from: C1
+    to: C3
+    relation: prerequisite
+    label: ''
+  - from: A4
+    to: C3
+    relation: prerequisite
+    label: ''
+  - from: C2
+    to: D1
+    relation: prerequisite
+    label: ''
+  - from: B3
+    to: D1
+    relation: prerequisite
+    label: ''
+  - from: D1
+    to: D2
+    relation: prerequisite
+    label: ''
+  - from: D1
+    to: D3
+    relation: prerequisite
+    label: ''
+  - from: C3
+    to: D3
+    relation: prerequisite
+    label: ''
+  - from: D2
+    to: D4
+    relation: prerequisite
+    label: ''
+  - from: D3
+    to: D4
+    relation: prerequisite
+    label: ''
+  - from: B3
+    to: E1
+    relation: prerequisite
+    label: ''
+  - from: E1
+    to: E2
+    relation: prerequisite
+    label: ''
+  - from: B3
+    to: E2
+    relation: prerequisite
+    label: ''
+  - from: E2
+    to: E3
+    relation: prerequisite
+    label: ''
+  - from: D4
+    to: E3
+    relation: prerequisite
+    label: ''
+  - from: D2
+    to: F1
+    relation: prerequisite
+    label: ''
+  - from: D3
+    to: F1
+    relation: prerequisite
+    label: ''
+  - from: D4
+    to: G1
+    relation: prerequisite
+    label: ''
+  - from: F1
+    to: G1
+    relation: prerequisite
+    label: ''
+  - from: G1
+    to: G2
+    relation: prerequisite
+    label: ''
+  - from: E3
+    to: G2
+    relation: prerequisite
+    label: ''
+  - from: G1
+    to: H1
+    relation: prerequisite
+    label: ''
+  - from: A5
+    to: H1
+    relation: prerequisite
+    label: ''
+  - from: H1
+    to: H2
+    relation: prerequisite
+    label: ''
+  - from: G2
+    to: H2
+    relation: prerequisite
+    label: ''

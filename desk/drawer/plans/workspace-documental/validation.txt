@@ -1,0 +1,16 @@
+Validación documental: PASS
+23 candidatos con IDs únicos; dependencias internas resolubles; DAG acíclico; archivos candidatos y 4 borradores presentes.
+Capas topológicas (no fases autorizadas):
+A1, A2, A3, A4, A5
+B1
+B2, B3
+C1, E1
+C2, C3, E2
+D1
+D2, D3
+D4, F1
+E3, G1
+G2, H1
+H2
+Referencias externas: 2 presentes, 4 no disponibles y explícitamente pendientes en A1. No prueban implementación.
+Spec2viz: spec validado y Mermaid/HTML generados. Sin cambios de código de producto; pytest no requerido para este paquete de planificación.

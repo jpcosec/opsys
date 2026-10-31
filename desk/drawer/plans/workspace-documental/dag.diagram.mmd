@@ -1,0 +1,64 @@
+---
+config:
+  layout: elk
+  flowchart:
+    curve: linear
+---
+%% spec2viz: generated from desk/drawer/plans/workspace-documental/dag.diagram.yaml; do not edit, run `spec2viz diagram validate desk/drawer/plans/workspace-documental/dag.diagram.yaml` and re-render
+flowchart TD
+    A1["A1: Auditar documentos, relaciones y capacidades existentes"]
+    A2["A2: Escribir visión y modelo de interacción del workspace"]
+    A3["A3: Escribir user-flows y escenarios de aceptación"]
+    A4["A4: Escribir catálogo de vistas y renderizaciones"]
+    A5["A5: Escribir índice y convención del manual de usuario"]
+    B1["B1: Reconciliar visión, recorridos y código"]
+    B2["B2: Definir contratos de navegación y autoría"]
+    B3["B3: Definir contrato de interacción y operaciones"]
+    C1["C1: Resolver contrato y clasificación de huecos documentales"]
+    C2["C2: Escribir entradas e índices navegables del ecosistema"]
+    C3["C3: Escribir definiciones de vistas reutilizables"]
+    D1["D1: Implementar workspace y navegación documental"]
+    D2["D2: Integrar fuente Markdown y edición estructurada"]
+    D3["D3: Implementar renderizaciones sobre documentos"]
+    D4["D4: Habilitar operaciones del desk desde el contexto"]
+    E1["E1: Unificar identidad y registro por intento Scion"]
+    E2["E2: Vincular conversaciones, resultados y decisiones"]
+    E3["E3: Proyectar ejecución y revisión en el workspace"]
+    F1["F1: Integrar salud, cambios e impacto"]
+    G1["G1: Validar recorridos humanos básicos"]
+    G2["G2: Validar delegación y revisión trazable"]
+    H1["H1: Publicar manual del workspace documental"]
+    H2["H2: Completar manual de ejecución y revisión"]
+    A1 -->|"prerequisite"| B1
+    A2 -->|"prerequisite"| B1
+    A3 -->|"prerequisite"| B1
+    A4 -->|"prerequisite"| B1
+    A5 -->|"prerequisite"| B1
+    B1 -->|"prerequisite"| B2
+    B1 -->|"prerequisite"| B3
+    B2 -->|"prerequisite"| C1
+    C1 -->|"prerequisite"| C2
+    C1 -->|"prerequisite"| C3
+    A4 -->|"prerequisite"| C3
+    C2 -->|"prerequisite"| D1
+    B3 -->|"prerequisite"| D1
+    D1 -->|"prerequisite"| D2
+    D1 -->|"prerequisite"| D3
+    C3 -->|"prerequisite"| D3
+    D2 -->|"prerequisite"| D4
+    D3 -->|"prerequisite"| D4
+    B3 -->|"prerequisite"| E1
+    E1 -->|"prerequisite"| E2
+    B3 -->|"prerequisite"| E2
+    E2 -->|"prerequisite"| E3
+    D4 -->|"prerequisite"| E3
+    D2 -->|"prerequisite"| F1
+    D3 -->|"prerequisite"| F1
+    D4 -->|"prerequisite"| G1
+    F1 -->|"prerequisite"| G1
+    G1 -->|"prerequisite"| G2
+    E3 -->|"prerequisite"| G2
+    G1 -->|"prerequisite"| H1
+    A5 -->|"prerequisite"| H1
+    H1 -->|"prerequisite"| H2
+    G2 -->|"prerequisite"| H2
