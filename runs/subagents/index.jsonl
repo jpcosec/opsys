@@ -97,3 +97,4 @@
 {"task_id": "task-ws02-inventariar-superficies-y-operaciones-deskops", "run_id": null, "run_dir": "runs/subagents/20261031-ws02-auditoria-deskops", "session_sha256": null, "commit": null}
 {"task_id": "task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso", "run_id": null, "run_dir": "runs/subagents/20261031-ws04-auditoria-ui", "session_sha256": null, "commit": null}
 {"task_id": "task-ws03-inventariar-persistencia-consultas-y-notaciones", "run_id": null, "run_dir": "runs/subagents/20261031-ws03-auditoria-infraestructura", "session_sha256": null, "commit": null}
+{"task_id": "task-corregir-auditor\u00edas-ws03-y-ws04-tras-revisi\u00f3n-independiente", "run_id": null, "run_dir": "runs/subagents/20261031-correccion-ws03-ws04", "session_sha256": null, "commit": null}

@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-corregir-auditorías-ws03-y-ws04-tras-revisión-independiente.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Corregir auditorías WS03 y WS04 tras revisión independiente [draft] - Dejar desk/drawer/plans/workspace-documental/auditoria/infraestructura.md y desk/drawer/plans/workspace-documental/auditoria/ui.md coherentes con las fuentes en los cuatro puntos revisados, sin ampliar alcance.
