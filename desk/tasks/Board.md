@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-consolidar-ajuste-canónico-del-plan-workspace-tras-ws06.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Consolidar ajuste canónico del plan workspace tras WS06 [draft] - Dejar brief.md, dag.yaml, reconciliacion.md y canonical-adjustments.md coherentes con la evidencia, con los nodos afectados re-revisados y build --check, validate --check y context_review status en verde, sin implementar nada.
