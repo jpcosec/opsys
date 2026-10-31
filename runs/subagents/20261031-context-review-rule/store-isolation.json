@@ -1,0 +1,7 @@
+{
+  "reason": "closeout auto-stages .sldb; isolate only new ritual declaration",
+  "restored_exact_worktree_bytes": true,
+  "before_sha256": "38121d50daf9715941eb6e93a43fccb304b8da90e43c6139c65f708ea5e19af3",
+  "after_sha256": "38121d50daf9715941eb6e93a43fccb304b8da90e43c6139c65f708ea5e19af3",
+  "backup_outside_git": "/tmp/deskops-context-closeout-volfi4ol/store.yaml.full"
+}
