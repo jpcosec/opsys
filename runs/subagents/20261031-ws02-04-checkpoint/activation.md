@@ -1,0 +1,21 @@
+# Activación de la capa WS02–WS04
+
+Fuente: delegación recibida en el pane Claude `w3Y:p1` el 2026-10-31, transmitida por Codex `w3Y:p2`, que declara actuar por instrucción nueva del solicitante («pasale el plan a claude, luego revisas tu»). Texto íntegro abajo.
+
+Alcance de esta activación: preparar y ejecutar la capa WS02/WS03/WS04, con el checkpoint para revisión de Codex. No cambia `execution_authorized=false` de `dag.yaml`, que describe el cierre de planificación. No concede Scion, push, mensajes Scion ni la capa siguiente.
+
+## Texto recibido
+
+El solicitante indica ahora: «pasale el plan a claude, luego revisas tu». Te traspaso la coordinación de ejecución del plan completo del workspace documental. Yo (Codex en w3Y:p2) haré revisión independiente de tus entregas. Tu pane es el Claude del tab1, w3Y:p1. Trabaja en /home/jp/proyectos/SLDB_1/deskops y recupera estado desde AGENTS.md y sus skills/ruta antes de modificar.
+
+Plan final committed cc8d83da, fase documental cerrada 2286b976. Entrada: desk/drawer/plans/workspace-documental/cierre.md; fuente canónica dag.yaml; README.md, decisiones.md, reconciliacion.md, cobertura.md y validacion-humana.md. Evidencia: runs/subagents/20261031-finalizar-plan-workspace/{owner-decisions.json,tester-result-summary.md,phase-closeout.md,council/summary.md}. 72 nodos con comprensión barata vigente,0stale,3expertos APTO y Tester PASS documental. No confundas esto con UI implementada ni copies base ya existente.
+
+Esta instrucción nueva del solicitante autoriza continuar el trabajo siguiendo el plan; execution_authorized=false describe el cierre anterior de planificación y no implica pedir de nuevo permiso para preparar/auditar. Registra la activación posterior con su nueva fuente y respeta los gates técnicos/humanos de cada delta. Ya se confirmó Mindmap+SLDB/pron+Deskops, lectura/manual primero, Markdown editable solo tras API reversible/conflictos/protegidos, sin commit al guardar; UI read-only/handoff si coordinador escribe hasta canal coordinado real. Solicitante responsable producto/recepción tres repos y usuario Taller (2s abrir/buscar,3s guardar,10s arranque); Scion posterior sin permiso dispatch/mensajes. P07/P09 son defaults técnicos delegados, no firmas humanas nuevas. No reabrir preguntas ya respondidas.
+
+Empieza por la primera capa REAL pendiente del núcleo: WS02/WS03/WS04. WS01 está cubierto por brief con hash y WS07 decisiones cubiertas; aún aplicar auditorías/WS06 sin reescribirlo todo. NO empezar Scion WS05 ahora ni saltar a código UI sin contratos/recepción. Workspace base graph_ui a1b2b22/f16fcd1 ya existe; edición contextual y Changes siguen drafts. Reusar base y reconciliar sus tareas antes de duplicar deltas. Hay 4 dirty paths ajenos conocidos (2inbox edits, candidato Kimun y nota superseded); preservarlos.
+
+Ejecuta workflow oficial: drawer creation commit→promoción commit→TaskDoc-only y cold-bundle baratos nuevos sin contexto/tools por tarea→Executor/Testers independientes→closeout por task→phase integration/reconciliación. No ejecutar múltiples tasks en una lane ni contar concilio como barato. La revisión barata de candidatas no sustituye preflight de TaskDoc ejecutable con archivos/operaciones/contratos actuales. Usa perfil DeepSeek flash low disponible; stdin DEVNULL; el helper pi--version ya fue corregido a stderr/stdout. Conserva evidencia y no inventes API, aprobación ni pruebas verdes.
+
+Primer CHECKPOINT para revisión mía: completa/reconcilia la capa WS02–WS04 con pruebas/commits/evidencias y un handoff autosuficiente indicando qué cambió, contratos/huecos, riesgos y validación. No avances la siguiente capa antes de que yo revise ese checkpoint. Es primer punto de control del plan completo, no sustitución por una entrega parcial. Escríbeme por Herdr agent prompt w3Y:p2 cuando tengas ese handoff; si hay bloqueo concreto documenta y avisa. No publicar/push ni enviar mensajes Scion por esta delegación.
+
+Confirma en este pane que recibiste el plan, qué capa tomarás y dónde dejarás el handoff. Procede sin esperar confirmación adicional para lo autorizado. No cambies documentos para aparentar ejecución o aceptación de capacidades aún no verificadas. Root revisor verificará resultados, no solo tu resumen.

@@ -1,0 +1,37 @@
+title: 'WS03: Inventariar persistencia, consultas y notaciones'
+why: Primera capa real del núcleo del plan workspace (cierre.md). Activada por runs/subagents/20261031-ws02-04-checkpoint/activation.md;
+  las auditorías alimentan WS06 y WS08-12 con datos comprobados.
+goal: Producir desk/drawer/plans/workspace-documental/auditoria/infraestructura.md como auditoría de solo lectura del estado
+  actual, verificable fila por fila.
+scope: 'Auditoría de solo lectura de sldb/pron/spec2viz: fuente/payload, conflictos y límites de locks (control de concurrencia
+  real de sldb/pron: CAS por revisión/hash, locks de archivo o DB; a auditar), referencias documentales, búsquedas (índices
+  o consultas expuestas) y alcance real ViewDoc. Kimun solo referencia. Solo lectura fuera del entregable. Rutas de lectura:
+  ../sldb, ../pron, ../spec2viz. Kimun no se usa como fuente de decisión. Se escribe únicamente desk/drawer/plans/workspace-documental/auditoria/infraestructura.md
+  y evidencia en runs/subagents/20261031-ws03-auditoria-infraestructura/. No se modifica código, otro repo, dag.yaml, reconciliacion.md,
+  Board ajeno ni tareas de otros. Fuera de alcance: WS05 Scion, contratos nuevos, implementación.'
+implementation_path: '1. Leer fuentes actuales. 2. Escribir desk/drawer/plans/workspace-documental/auditoria/infraestructura.md:
+  encabezado con fecha, commit HEAD de cada repo leído y universo auditado; luego las filas. 3. Registrar comandos usados
+  en runs/subagents/20261031-ws03-auditoria-infraestructura/commands.log. 4. Dejar runs/subagents/20261031-ws03-auditoria-infraestructura/result-summary.md
+  (qué se hizo, huecos, qué revisar). Lo no comprobado se marca «no comprobado» con causa: no se infiere. El Executor no hace
+  commits, no escribe en desk/ salvo desk/drawer/plans/workspace-documental/auditoria/infraestructura.md, y no corre closeout.'
+done_when: 'Acceptance: Una salida documental, sin cambios interrepo; distinguir API comprobada (lectura citada del estado
+  actual), ausencia y hueco.'
+validation:
+- test -s desk/drawer/plans/workspace-documental/auditoria/infraestructura.md
+- python desk/drawer/plans/workspace-documental/build_plan.py --check
+- python desk/drawer/plans/workspace-documental/validate_plan.py --check
+- python desk/drawer/plans/workspace-documental/context_review.py status
+- Tester independiente muestrea filas contra la fuente citada y deja runs/subagents/20261031-ws03-auditoria-infraestructura/tester-result-summary.md
+task_type: docs
+closeout_evidence:
+- commit
+- document
+from_drawer: desk/drawer/tasks/workspace-documental/task-ws03.md
+references:
+- desk/drawer/plans/workspace-documental/cierre.md
+- desk/drawer/plans/workspace-documental/dag.yaml
+- desk/drawer/plans/workspace-documental/brief.md
+- runs/subagents/20261031-ws02-04-checkpoint/activation.md
+- desk/rituals/context-review.md
+files:
+- desk/drawer/plans/workspace-documental/auditoria/infraestructura.md

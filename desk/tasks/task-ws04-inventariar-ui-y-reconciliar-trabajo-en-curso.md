@@ -1,0 +1,74 @@
+---
+id: task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
+references:
+- desk/drawer/plans/workspace-documental/cierre.md
+- desk/drawer/plans/workspace-documental/dag.yaml
+- desk/drawer/plans/workspace-documental/brief.md
+- runs/subagents/20261031-ws02-04-checkpoint/activation.md
+- desk/rituals/context-review.md
+depends_on: []
+pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
+files:
+- desk/drawer/plans/workspace-documental/auditoria/ui.md
+task_type: docs
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/workspace-documental/task-ws04.md
+closeout_evidence:
+- commit
+- document
+---
+
+# WS04: Inventariar UI y reconciliar trabajo en curso
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Primera capa real del núcleo del plan workspace (cierre.md). Activada por runs/subagents/20261031-ws02-04-checkpoint/activation.md; las auditorías alimentan WS06 y WS08-12 con datos comprobados.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+Producir desk/drawer/plans/workspace-documental/auditoria/ui.md como auditoría de solo lectura del estado actual, verificable fila por fila.
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+Leer graph_ui (../UIs/graph_ui) Board, tareas y código actuales; mapear a deltas existentes los nodos de este plan que toquen graph_ui (tarea o entrada del Board de graph_ui, o commit que ya lo implementa), registrando la correspondencia en auditoria/ui.md; identificar sesiones y solapamientos sin cambiar sus tareas. SPEC externo = /home/jp/proyectos/softfactory_spec/SPEC.md. Sesión = trabajo en curso observable en Board, git status o paneles herdr. Solo lectura fuera del entregable. Rutas de lectura: ../UIs/graph_ui, /home/jp/proyectos/softfactory_spec/SPEC.md, desk/drawer/plans/workspace-documental/reconciliacion.md, dag.yaml para listar nodos graph_ui, y `herdr pane list` como lectura de sesiones visibles. Se escribe únicamente desk/drawer/plans/workspace-documental/auditoria/ui.md y evidencia en runs/subagents/20261031-ws04-auditoria-ui/. No se modifica código, otro repo, dag.yaml, reconciliacion.md, Board ajeno ni tareas de otros. Fuera de alcance: WS05 Scion, contratos nuevos, implementación.
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+1. Leer fuentes actuales. 2. Escribir desk/drawer/plans/workspace-documental/auditoria/ui.md: encabezado con fecha, commit HEAD de cada repo leído y universo auditado; luego las filas. 3. Registrar comandos usados en runs/subagents/20261031-ws04-auditoria-ui/commands.log. 4. Dejar runs/subagents/20261031-ws04-auditoria-ui/result-summary.md (qué se hizo, huecos, qué revisar). Lo no comprobado se marca «no comprobado» con causa: no se infiere. El Executor no hace commits, no escribe en desk/ salvo desk/drawer/plans/workspace-documental/auditoria/ui.md, y no corre closeout.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- test -s desk/drawer/plans/workspace-documental/auditoria/ui.md
+- python desk/drawer/plans/workspace-documental/build_plan.py --check
+- python desk/drawer/plans/workspace-documental/validate_plan.py --check
+- python desk/drawer/plans/workspace-documental/context_review.py status
+- Tester independiente muestrea filas contra la fuente citada y deja runs/subagents/20261031-ws04-auditoria-ui/tester-result-summary.md
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+Acceptance: Cada tarea externa con path, estado observado, hash y alcance, y cada solapamiento (misma tarea o archivos reclamados por dos sesiones); reconciliar también el SPEC externo (coincidencias, discrepancias y ausencias frente a este plan, con path y hash) y cualquier encargo aportado al ejecutar. Hash = SHA256 del archivo de tarea. Encargo aportado = documento que el solicitante entregue explícitamente al ejecutor; si no hay, se registra que no hubo. Tabla de mapeo para cada nodo graph_ui: ID, base reutilizada/delta/ticket o ausencia explícita (no omitir), path/símbolo y commit observado si implementado. Partir de HEAD/Board y commits a1b2b22/f16fcd1/134a665; ampliar historia solo si una referencia actual lo requiere. Sesiones visibles en estado observado son coordinación, nunca autoridad privada; ausencia de sesión se registra. Commit solo prueba base citada, no aceptación ampliada.
