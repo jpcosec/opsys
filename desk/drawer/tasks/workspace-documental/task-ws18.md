@@ -24,11 +24,11 @@ Base explícita: `spec2viz:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-ViewDoc con su NotationDoc (la notación que el ViewDoc referencia) para selecciones y notación ya soportadas por spec2viz; no crear UI pages declarativas ficticias.
+ViewDoc con su NotationDoc (la notación que el ViewDoc referencia) para selecciones y notación ya soportadas por spec2viz; no crear UI pages declarativas ficticias. Selecciones concretas y notación requerida vienen de catálogo WS09 y contrato WS11, contrastados con capacidades WS03; si catálogo no fija selección mínima, detener promoción y corregir ese contrato antes de elegir una. No inventar selección aquí.
 
 ## Aceptación
 
-Vista portable (el mismo ViewDoc sin código específico del host) renderiza sobre un store real la selección declarada, coincide con ella y el ViewDoc documenta qué selecciona; tareas receptoras en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; no modificar su repo desde este plan.
+Vista portable (el mismo ViewDoc sin código específico del host) renderiza sobre un store real la selección declarada, coincide con ella y el ViewDoc documenta qué selecciona; tareas receptoras en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; este paquete documental deskops no escribe en spec2viz; la futura TaskDoc de WS18 se promueve y ejecuta en spec2viz por su supervisor/Executor, con recepción G_SPEC_VIEW para ese delta.
 
 ## Dependencias
 
@@ -36,7 +36,7 @@ Tareas: WS09, WS11. Gates: G_SPEC_VIEW. Ver estados/evidencia en dag.yaml; un ar
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS18/98641d44392a5c7f1671142e13a7001e10ed1d57e43076eeeb87459d3ef02e82/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS18/d3a27636533b74412f9d472a032a07ed3381cf3fd0fe59bd94c9e36cb4afd45f/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

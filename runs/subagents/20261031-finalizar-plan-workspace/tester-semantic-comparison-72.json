@@ -1,0 +1,653 @@
+{
+  "method": "Tester read every final output and disposition against current scope/acceptance/dependencies/gates. Row contains exact excerpt and independent node-specific comparison, not merely APTO count.",
+  "nodes": [
+    {
+      "id": "ROOT",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/9e68501cb91711421be16cc1953942dc3d0efdab0fb234eb1784533fe778c626/attempt-1",
+      "input_sha256": "9e68501cb91711421be16cc1953942dc3d0efdab0fb234eb1784533fe778c626",
+      "contract_sha256": "05d398b125697238e3c4644a5cf23bb9193ca16c2f00078dddcd4d1d7fbeef58",
+      "dry_run_sample": "Ejecución hipotética por hijos, respetando aristas y sin simultanear lo no listo:\n\n1. **PK01** produce auditorías y matriz de deltas con repos dueños; entrega evidencia a PK02.\n2. **PK02** reutiliza decisiones, define UFs, vistas, convención manual y contratos de navegación/operaciones; alimenta PK03, PK04, PK05 y contratos de PK07/PK08.\n3. **PK03** entrega lector/descubrimiento probado con corpus WS40 y acta WS16; alimenta PK04, PK05 y PK06.\n4. **PK04** produce entradas authored y representaciones navegables; ViewDoc queda opcional; alimenta PK05/PK06.\n5. **PK05** produce autoría segura, intake/trabajo, evidencia y pruebas WS30; alimenta PK06.\n6. **PK06** publica entradas reales y manual versionado desde WS17/WS30/WS10; valida WS43/31.\n7. ",
+      "independent_comparison": "Resultado sustantivo completo y transferencias PK01→02→lector→representaciones→manual; extras/Scion separados, no ejecución ni permisos.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK01",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK01/f5a07b584a494ad340632a146ae53ffe1e14648a504e227f3cc16db24801a0b5/attempt-1",
+      "input_sha256": "f5a07b584a494ad340632a146ae53ffe1e14648a504e227f3cc16db24801a0b5",
+      "contract_sha256": "6239ca4debb210729625cbcaa2dd2686aed6726fc1922e8c2ea5c71b429da666",
+      "dry_run_sample": "Orden hipotético: WS01 —brief ya cubierto; se verifica hash/alcance y enlace a `decisiones.md`— entrega `brief.md` como entrada común. En paralelo, WS02, WS03, WS04 y WS05 leen brief; WS02 produce `auditoria/deskops.md`, WS03 `auditoria/infraestructura.md`, WS04 `auditoria/ui.md` y WS05 `auditoria/scion.md`. Después WS06 consume WS02–WS04 y escribe la matriz en `reconciliacion.md`; WS05 no entra en WS06 y pasa al ramal E. Validación integrada: cada fila de auditoría aparece o se excluye explícitamente en la matriz, cada nodo graph_ui tiene mapeo, cada delta tiene repo/ticket/responsable P01 y evidencia citada; se revisa el paquete completo contra acceptance. Sin ejecutar.",
+      "independent_comparison": "Auditorías tras WS01; WS06 consume02/03/04, WS05 va a E. Descartes de independencia/integración sustentados en aristas/acceptance.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK02",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK02/e3207c4bf542f664ec366fcc16cd439a68ee565d152e9eb4583a510c0880e499/attempt-1",
+      "input_sha256": "e3207c4bf542f664ec366fcc16cd439a68ee565d152e9eb4583a510c0880e499",
+      "contract_sha256": "99c0d0c30c594053cb1554288398d947b05fe81b56e26df13be1fa49b4446341",
+      "dry_run_sample": "Orden hipotético: **WS07 → WS08 y WS10 en paralelo → WS09 → WS11 → WS12**.\n\n- **WS07** consume WS06 y el registro humano; entrega decisiones, `source_mode` y restricciones a todos.\n- **WS08** entrega `user-flows.md` a WS09/WS11/WS12.\n- **WS10** entrega convención y etiquetas del manual a WS09.\n- **WS09** entrega catálogo de vistas a WS11.\n- **WS11** entrega identidad/navegación, clasificación de huecos y mapa de recepción a WS12.\n- **WS12** entrega whitelist de operaciones.\n\nValidación futura, sin ejecutar: trazar Pxx; comprobar UF→operación/error/nodo/gate; vista→origen/contrato/renderer/estado; coherencia navegación↔vistas↔UFs; whitelist cubre mutaciones referidas y huecos con productor; G_SOURCE pendiente impide editable; recepción por d",
+      "independent_comparison": "Secuencia07→08/10→09→11→12 compatible; integración es coherencia entre artefactos, no entregable inexistente.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK03",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK03/58d0d3e7b4bedf73f5198ae9aa0ecd10347ec8896883d3abe922673dc2e1e1d8/attempt-1",
+      "input_sha256": "58d0d3e7b4bedf73f5198ae9aa0ecd10347ec8896883d3abe922673dc2e1e1d8",
+      "contract_sha256": "49d924cdc5fca124c128f00e64f1fcb9e1846f2c152d42b2e13ae74a4eaf83b1",
+      "dry_run_sample": "Hipotético, sin ejecutar:\n1. Entradas externas: contrato WS11 y user-flows WS08; G_UI_READ.\n2. WS40 tras WS11/WS08: genera dos repos con desk y uno sin desk, stores/documentos, commits y manifiesto JSON. Entrega corpus/manifiesto a WS41 y WS16.\n3. WS13 tras WS11: integra lector en graph_ui; WS13.1 aporta grafo/Code e integración documental; agrega explorador, dos documentos, tabs/historia y foco. Entrega UI/tests a WS14, WS15 y WS41.\n4. WS14 y WS15 tras completar WS13, en paralelo: WS14 entrega búsqueda con estados vacío/error/degradado; WS15 entrega errores de lectura y orientación sin desk. Ambos alimentan WS16.\n5. WS41 tras WS13, WS11 y WS40: lee dos stores del manifiesto, enlaces entre desks y errores de alias/path/store; entrega lectur",
+      "independent_comparison": "Lector real, corpus40 y acta16;40 no espera17,41 consume40,16 espera14/15/41. No guardado ni edición temprana.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK04",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK04/05bb6d0c2f35787a7633703fb94e61e8682d189b97a2cbefa82f9ef7ccc0269f/attempt-1",
+      "input_sha256": "05bb6d0c2f35787a7633703fb94e61e8682d189b97a2cbefa82f9ef7ccc0269f",
+      "contract_sha256": "0ba0a91a5603b6227c2a03855897656c7f81375d0c1fec9b2788814ab46635a3",
+      "dry_run_sample": "1. **WS17** consume contrato WS11 y manifiesto/corpus WS40; produce plantillas `ejemplo/nav/`; WS40 regenera el destino temporal sin tocar el registry real.\n2. **WS22 y WS23** consumen lector/identidad WS13 y catálogo WS09; producen vistas Board y procedimiento en graph_ui, solo lectura.\n3. **WS24** reutiliza el lector WS13, la API de grafo sldb (WS03) y el catálogo WS09; produce vista genérica y grafo local.\n4. **WS18**, opcional, consume WS09/WS11 y requiere G_SPEC_VIEW; produce ViewDoc/NotationDoc portable en spec2viz sin bloquear WS24.\n\n**Integración futura:** la identidad WS11 enlaza lista, tablero, dependencias, procedimiento y conocimiento; se validaría con corpus WS40/WS16 y WS30 que los mismos TaskDoc abren en todas las representac",
+      "independent_comparison": "Representaciones/índices sobre identidad común,18 opcional; integración verificable por soporte y no escritura.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK05",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK05/efb464ae2961a9ac73b060f5b3ea83e1e2a795cf90a85e653506f19896655317/attempt-1",
+      "input_sha256": "efb464ae2961a9ac73b060f5b3ea83e1e2a795cf90a85e653506f19896655317",
+      "contract_sha256": "39d6f16fd450303e7271f6e18ea0fe65ec1bbc1662a5c8f6153b12161ac2f3c6",
+      "dry_run_sample": "- **Entradas/orden:** WS12 (contrato/whitelist) alimenta WS19, WS20, WS25, WS27, WS28, WS42. WS19+WS20/G_SOURCE habilitan WS21 editable. WS22+WS12 habilitan WS26. WS13+WS12 habilitan WS27. WS27+WS12 habilitan WS28. WS19+WS24+WS12 habilitan WS42. WS17 y salidas de WS21/22/23/24/25/26/28/42 alimentan WS30.\n- **Cambios previstos:** WS19 editores de campos y relaciones con before-image; WS20 API pública de guardado raw-source y tests de roundtrip/conflicto/recuperación/campos protegidos (G_SOURCE/G_SLDB_WRITE); WS21 alternancia fuente/render con buffer; WS25 captura/ack; WS26 autoría y Board; WS27 diff/evidencia; WS28 verificación y handoff de closeout; WS42 split/merge/typing; WS30 acta humana.\n- **Dependencias:** G_HUMAN_READ, G_UI_WRITE, G_W",
+      "independent_comparison": "Nuevo dry-run exige19+20/G_SOURCE→21,22+12→26,19+24+12→42,27→28 y salidas→30; UF01 explícito en hijo30 resuelve abreviatura navegación.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK06",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK06/debcb8a59827921792a50b04eac0e990278759eb6225a90d0475ef8e9a463b49/attempt-1",
+      "input_sha256": "debcb8a59827921792a50b04eac0e990278759eb6225a90d0475ef8e9a463b49",
+      "contract_sha256": "7b5eae1b3618195e2ae355984e0310546664222b4d56d444ea52fbdf14b754c0",
+      "dry_run_sample": "Lecturas hipotéticas: `dag.yaml`, WS31/WS43, sus dependencias WS10/WS17/WS30, brief/alcance/decisiones/manual/cobertura y contratos WS11/WS12. Orden: WS17 produce plantillas `ejemplo/nav/`; WS30 produce acta humana con paths/hashes; WS10 precisa índice. Con eso, el hijo WS43 publica el desk real: `desk/README.md`, mapa/índices, átomos y acta de publicación. Después, el hijo WS31 consume WS10, WS30 y WS43 y publica el manual versionado, assets y átomos vinculados. Dependencias/gates: `G_HUMAN_MANUAL` para WS31/WS43; `G_PRODUCT` y `G_WRITE_CONTRACT` para WS43; WS30 aporta validación humana. Validaciones futuras: links/roots verificables, referencias a acta/versión, atom→doc con fuente, etiquetas disponible/propuesto/bloqueado, mapa real disti",
+      "independent_comparison": "43 publica desk real después30/17,31 consume43/30/10. Átomos y pasos trazados, extras propuestos.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK07",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK07/3b78fbe98f16ffeb976211b1d90f03cccce8ddaf6d2f7cca64c6c129d92865d8/attempt-1",
+      "input_sha256": "3b78fbe98f16ffeb976211b1d90f03cccce8ddaf6d2f7cca64c6c129d92865d8",
+      "contract_sha256": "255f2db61c0141671924f335c7dfc2c5f7146ce6b983aeb17de6d8774012b65d",
+      "dry_run_sample": "No hay arista entre WS29 y WS39: el orden hipotético es paralelo, sujeto a sus dependencias. WS29 espera WS15/WS24; recibe lectura, errores/modo degradado y vecindad; produce vista Changes, pruebas sobre store temporal y evidencia de mutación/impacto. WS39 espera WS12/WS13; recibe contrato de operaciones/escritura y panel Context; produce acceso a Schema, editor existente, pruebas y acta humana. No hay artefacto que pase de WS29 a WS39 ni viceversa.\n\nIntegración: el manual etiqueta cada extensión según evidencia; validación por pruebas de WS29, prueba UF09/acta de WS39 y G_HUMAN_MODEL, sin exigir aceptación conjunta ni bloquear lector/manual básico. No se ejecuta nada.",
+      "independent_comparison": "29/39 independientes tras respectivos deps; prueba propia y acta modelos, no bloqueo núcleo.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "PK08",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/PK08/7822de3b03715be2f34a9be61dc980262ad6545e1d94939be4e41f94cd00994f/attempt-1",
+      "input_sha256": "7822de3b03715be2f34a9be61dc980262ad6545e1d94939be4e41f94cd00994f",
+      "contract_sha256": "2298b47f55bb84413606928c22661fda3526dfc2f503dc5cee0432d330c85835",
+      "dry_run_sample": "Sin ejecutar:\n\n- **Lecturas previas:** alcance, brief, decisiones, gates, inventario WS05 y contratos/actas externas. WS05 y WS07 alimentan el paquete desde fuera.\n- **Orden hipotético:** WS44 tras WS05/WS07, con operador/acceso registrados, produce `G_SCION` mediante probe read-only. Luego WS32 → WS33 → WS34 → WS35/WS36 → WS37 → WS38.\n- **Entradas/salidas:** WS32 fija identidad, manifiesto y cierre; WS33 enlaza mensajes, resultados y decisiones; WS34 expone adaptador dispatch/reply bajo `G_EXEC`; WS35 muestra trazas; WS36 integra intervención; WS37 valida recorrido real; WS38 publica capítulo y átomos.\n- **Integración/validación futura:** recorrido pregunta/intervención/corrección/evidencia/decisión/cierre por WS28, con acta humana WS37; p",
+      "independent_comparison": "Probe44 antes32/33/34;35/36 sintetizados con slash, no afirmación paralelo.36 espera35 en contrato;37/38 posteriores. Compresión registrada, no nueva autorización.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS01",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS01/12a8d6161a80c88ff10458c620463dfa8c977ba79eb80cdc0f08f7138ae07968/attempt-1",
+      "input_sha256": "12a8d6161a80c88ff10458c620463dfa8c977ba79eb80cdc0f08f7138ae07968",
+      "contract_sha256": "32e577db4dd7058d3b79e98770fa23db465da2da5f9d0ccbf6ba9d4238e7125b",
+      "dry_run_sample": "3. «Acuerdos textuales tienen actor/fuente» frente a «La persona solicita» y «Extractos textuales que delimitan intención»: los extractos del brief no identifican fuente verificable por cita. Obligaría a inventar la fuente o dar por cumplido sin ella.\n\nDRY-RUN\nLecturas previstas: guía de revisión, `brief.md`, `decisiones.md`, nodo WS01 de `dag.yaml` y documentos de alcance/cobertura/visión ya incluidos. Cambios previstos: ninguno por defecto; si el hash de `covered_work` coincide, no tocar `brief.md`; solo editarlo ante cambio real y sin tocar `decisiones.md`. Dependencias: `depends_on: []`, `requires: []`; sin gates propios. Validaciones futuras: SHA256 de `brief.md`, enlace al registro P01–P09, actor/fuente de acuerdos textuales, distinci",
+      "independent_comparison": "No reescribir brief cubierto sin cambio real; hash, glosario y decisión enlazada. Disposición distingue citas motivacionales de aprobación técnica.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS02",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS02/f863930303f7f884f880db570d305c486a443e04f10fbb17cdb394846f9cb0f7/attempt-1",
+      "input_sha256": "f863930303f7f884f880db570d305c486a443e04f10fbb17cdb394846f9cb0f7",
+      "contract_sha256": "d81efda29e8a89f569a94b6dd719b5b35a7d5a0450d01a910f754322b99236c9",
+      "dry_run_sample": "- **Lecturas previstas:** `dag.yaml` (WS02/WS01), `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`, checkout `deskops`, store `.sldb`, salida read-only de `sldb models list` y código de CLI/`DeskopsOperations`.\n- **Cambios previstos:** crear `auditoria/deskops.md`.\n- **Dependencias:** WS01 (brief/glosario) y store local; si falta store, fila «no comprobado».\n- **Validaciones futuras:** filas con `archivo:línea` o salida de solo lectura, sin duplicar por comando, revisión de contexto y promoción posterior. No se ejecuta nada.",
+      "independent_comparison": "Una fila/superficie con todas operaciones y evidencia; efectos Git/model bindings se descubren por fuentes, no decisiones inventadas.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS03",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS03/da7a2b9a3f9d96756d8f549203d13108d814ef01f9821787f6732a8577e73dc6/attempt-1",
+      "input_sha256": "da7a2b9a3f9d96756d8f549203d13108d814ef01f9821787f6732a8577e73dc6",
+      "contract_sha256": "fd5b1526ee51309c357dbcee50c72f6105bc124cf390e854bb623ea8f5196c7c",
+      "dry_run_sample": "- **Lecturas previstas:** `dag.yaml`, `brief.md`, `alcance.md`, `decisiones.md`, guía de revisión y estado de solo lectura de `sldb/pron/spec2viz`.\n- **Cambios previstos:** únicamente crear/editar `auditoria/infraestructura.md` en `deskops`; ningún cambio en repos auditados.\n- **Dependencias:** `WS01` como prerrequisito directo; sin `requires`. `WS06` consumirá después la auditoría.\n- **Validaciones futuras:** revisar que la salida cite lecturas, distinga comprobado/ausente/hueco y no introduzca cambios interrepo; promoción posterior mediante TaskDoc con archivos, pills y evidencia, sujeta a preflight.\n- **No se ejecuta nada** en este nodo.",
+      "independent_comparison": "Auditoría read-only infraestructura; ausencia/hueco no suplidos, snapshot al ejecutar debe citarse; no cambio interrepo.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS04",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS04/bebcf5b7fa3129d8a31bfd925541b835a63653500944261ccd6e1ba6bab2974b/attempt-1",
+      "input_sha256": "bebcf5b7fa3129d8a31bfd925541b835a63653500944261ccd6e1ba6bab2974b",
+      "contract_sha256": "0ec4e5beb1d37056d12cddb5617ec3313a9f699245b886c03e15ffd1f2cc947e",
+      "dry_run_sample": "**Lecturas previstas:** `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`, `reconciliacion.md`, `dag.yaml`, SPEC externo, Board/tareas/código de `graph_ui`, `git status`/HEAD y commits `a1b2b22`, `f16fcd1`, `134a665`; paneles `herdr` para sesiones.\n\n**Cambios previstos:** crear o actualizar `deskops:desk/drawer/plans/workspace-documental/auditoria/ui.md`. Sin cambios en tareas de `graph_ui`.\n\n**Dependencias:** WS01 aporta brief/glosario; acceso de lectura a `graph_ui` y al SPEC externo.\n\n**Validaciones futuras:** cada tarea externa con path, estado, hash y alcance; cada solapamiento; tabla por nodo `graph_ui`; reconciliación del SPEC con path y hash; registro de encargo aportado o de su ausencia; ninguna modificación de tareas.",
+      "independent_comparison": "Mapeo completo graph_ui y SPEC con SHA256; commits prueban base, sesiones no autoridad; solo documento local.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS05",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS05/20b4bba263d18fbba66a9a5fa46157b4383c150e954dcd50b9cefd2b67c02bd7/attempt-1",
+      "input_sha256": "20b4bba263d18fbba66a9a5fa46157b4383c150e954dcd50b9cefd2b67c02bd7",
+      "contract_sha256": "6fc2c821230aefdfcf2ab4fbfd1dab452cabf383ae94c3ea3d115cc8e87261e8",
+      "dry_run_sample": "**Lecturas previstas:** guía, `dag.yaml`, brief, alcance, decisiones, cobertura; código/documentación de deskops y `../scion`; configuración sin secretos; `runtime/templates/RunDoc` y API documentada/exportada.\n**Cambios previstos:** crear el inventario en `auditoria/scion.md`, señalando campos internos fuera de la API pública, capabilities requeridas por WS32/WS33 y límites que exigen API real.\n**Dependencias:** WS01 como prerrequisito; consumidores WS44, WS32 y WS33; WS12 aportará después el contrato de registro por intento.\n**Validaciones futuras:** aceptación del inventario; separación de conceptos y permisos; no usar tablas internas como interfaz; ausencia de secretos; mapeo de capabilities por nodo; registrar hueco si no hay API públi",
+      "independent_comparison": "Inventario estático público sin endpoint/credenciales; no G_SCION. Probe delegado44.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS06",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS06/1eca5e1fe98e11e434bdee6ea5db232059263d223c4829208cc483c2902daad7/attempt-1",
+      "input_sha256": "1eca5e1fe98e11e434bdee6ea5db232059263d223c4829208cc483c2902daad7",
+      "contract_sha256": "9dbc1292e09dbf581056c4eeaceb616da755389955c21eea91b581ea383d9dab",
+      "dry_run_sample": "**Lecturas previstas:** `reconciliacion.md` existente, `dag.yaml`, `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`; salidas de WS02 (`auditoria/deskops.md`), WS03 (`auditoria/infraestructura.md`) y WS04 (`auditoria/ui.md`).\n\n**Cambios previstos:** actualizar únicamente `reconciliacion.md` con la matriz agrupada por repo dueño; sin tocar Board ni tareas externas.\n\n**Dependencias:** WS02, WS03 y WS04 como insumos de inventario y reconciliación.\n\n**Validaciones futuras:** comprobar que cada fila tenga repo dueño, clasificación, correspondencia ticket/delta, evidencia de path/símbolo/commit cuando aplique, y responsable P01; verificar que no se hayan creado gates ni modificado el Board de graph_ui.",
+      "independent_comparison": "Matriz por capacidad/delta y repo, no copiar nodos; elección ticket/delta se evidencia, recepción futura no supuesta.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS07",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS07/1cc681a71a8431e185b4137e3915416ced7b87e8167218d42d5cd533142eb21c/attempt-1",
+      "input_sha256": "1cc681a71a8431e185b4137e3915416ced7b87e8167218d42d5cd533142eb21c",
+      "contract_sha256": "a9569642fd6b96b741d23348033de703fb99300461b19ffd04aa37282951b04a",
+      "dry_run_sample": "- Lecturas: nodo WS07, `decisiones.md`, `owner-decisions.json`, `dag.yaml` (parameters/gates/covered_work), `brief.md`, `alcance.md` y guía.\n- Cambios previstos: actualizar `decisiones.md` solo ante decisión explícita nueva con fuente verificable; conservar `baseline_proposal` y la condición de `source_mode`; no tocar contratos ni otros nodos.\n- Dependencias: WS06 como prerrequisito declarado; G_PRODUCT/G_WRITE_POLICY registrados por WS07; G_SOURCE pendiente de WS20.\n- Validaciones futuras: cada Pxx con tipo, actor, fuente y nodos/gates; no repetir preguntas; `baseline_proposal` y `source_mode` sin prometer habilitación; preflight de promoción.",
+      "independent_comparison": "Reutiliza respuestas/Pxx y source_mode condicionado; WS06 output reconciliación sí suministrado, no preguntas repetidas.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS08",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS08/b6741f952a04e9e68da0458e0078b9539b8072278ca54a8c4f0230dfca33adfc/attempt-1",
+      "input_sha256": "b6741f952a04e9e68da0458e0078b9539b8072278ca54a8c4f0230dfca33adfc",
+      "contract_sha256": "708dae1414df5ab962378be3c1c0248b852b371be2ec8c9e08b2a172f9b25c72",
+      "dry_run_sample": "- **Lecturas previstas:** `dag.yaml` (WS08 y vecinos), guía, brief, alcance, decisiones, cobertura, validación humana, `user-flows.md` y auditorías `deskops/infraestructura/ui` vía WS06/WS07.\n- **Cambios previstos:** reescribir solo `borradores/user-flows.md`.\n- **Dependencias:** WS07 concluido con registro P01–P09; G_PRODUCT satisfecho; operaciones desde auditorías transitivas. WS29 no es dependencia directa.\n- **Validaciones futuras:** comprobar las 10 UF, campos exigidos, huecos con productor, gates correctos (WS16/30/37/39; WS29 como prueba técnica), delegación condicionada y ausencia de promesas fuera de alcance.",
+      "independent_comparison": "UF01–10 con listas operaciones/nodos/gates; huecos asignados, manual significa operación M,29 futuro no API ya existente.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS09",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS09/bc658b86011eca2ba377e80d68e0f64d38edebfe550278c85d0a5f3001edcce3/attempt-1",
+      "input_sha256": "bc658b86011eca2ba377e80d68e0f64d38edebfe550278c85d0a5f3001edcce3",
+      "contract_sha256": "db63604050fba77fca8130958b185656c0e634f791c40645e296f674dca529b8",
+      "dry_run_sample": "Lecturas previstas: guía, brief, alcance, decisiones, cobertura, `vistas.md`, entradas de WS09 y vecinos en `dag.yaml`; por dependencia, `borradores/user-flows.md` (WS08), `borradores/manual.md` (WS10), auditorías WS02–WS04 y `auditoria/ui.md`.\nCambios previstos: reescribir cada fila de las tablas de `vistas.md` con origen, contrato, renderer, acción/dueño, error y estado; completar la ficha por fila; clasificar componentes authored/derivado/local; marcar «no definido» con productor WS11/12 o futura implementación cuando falte evidencia.\nDependencias: decisiones P01–P09 (WS07), criterios de estado de WS10, UFs de WS08, disponibilidad de WS04, contratos/capacidades de WS02–WS03.\nValidaciones futuras, sin ejecutar: ninguna fila o ficha incomp",
+      "independent_comparison": "Catálogo por fila con origen/contrato/renderer/estado; disponible según WS10 no solo código observado WS04.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS10",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS10/f14f85126c0f278f88fac332c2776b33f5795f045e800af627d6d36934258718/attempt-1",
+      "input_sha256": "f14f85126c0f278f88fac332c2776b33f5795f045e800af627d6d36934258718",
+      "contract_sha256": "f0f30c78744136e9bad45ab5bf9e361c419709436ca3876e3425f75a5e592664",
+      "dry_run_sample": "**Lecturas previstas:** `borradores/manual.md`, `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`, nodo WS10 y gates en `dag.yaml`, auditorías WS02–WS04 y `docs/operator-manual.md` como manual CLI reutilizable.\n\n**Cambios previstos:** únicamente `borradores/manual.md`: índice/esquema conceptual, ejemplo fijo `Taller` en `graph_ui:.tmp/workspace-documental-ejemplo/` con productor WS40 y estado futuro, y definiciones de disponibilidad con remisión de pruebas/actas a sus productores.\n\n**Dependencias:** WS02 y WS07 directas; WS03/WS04 transitivas vía WS06/WS07; `G_PRODUCT` satisfecho; WS40 como productor futuro del corpus, no dependencia ejecutable.\n\n**Validaciones futuras:** comprobar que no se introduzcan pasos/capturas ficticios, que",
+      "independent_comparison": "Índice/conceptos, Taller futuro y etiquetas estrictas; sin pasos/capturas inventadas.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS11",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS11/454e9ae26013ec1a0ccc0246a47d6763ed045e15ccef91608beaadb3c17059d9/attempt-1",
+      "input_sha256": "454e9ae26013ec1a0ccc0246a47d6763ed045e15ccef91608beaadb3c17059d9",
+      "contract_sha256": "53243ad428bbd671520282e462b84d7d50a3d1546b31f4052b9469e6654e97e9",
+      "dry_run_sample": "**Lecturas previstas:** `dag.yaml` WS11 y dependencias; `decisiones.md`; `alcance.md`; guía/brief; auditorías WS02–04 por dependencia transitiva; `borradores/user-flows.md` de WS08; `borradores/vistas.md` de WS09.  \n**Cambios previstos:** crear/actualizar solo `deskops:desk/drawer/plans/workspace-documental/contratos/navegacion.md`; enlaces a actas externas solo si ya existen.  \n**Dependencias:** WS09/WS08; G_PRODUCT satisfecho; G_UI_READ pendiente por delta, no bloquea contrato base; G_SPEC_VIEW opcional y separado para WS18.  \n**Validaciones futuras:** citar API/evidencia con path/símbolo/commit; clasificar cada hueco como instancia/vínculo/consulta/API/renderer con productor; mapear deltas graph_ui con actor P01, IDs y efectos; no declar",
+      "independent_comparison": "Contrato identidad/origen/API y estado local P07 separados; no exige backend foco ni actas interrepo al cerrar contrato.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS12",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS12/2d0be4858f8cf582f2a4582b82c7ebab75ee74c472e7f2b48f30dcc33578e81e/attempt-1",
+      "input_sha256": "2d0be4858f8cf582f2a4582b82c7ebab75ee74c472e7f2b48f30dcc33578e81e",
+      "contract_sha256": "5121e2b27b720025eeede5b35c63a417a6e65e9afcf0f77846eef800b5f399c5",
+      "dry_run_sample": "**Lecturas previstas:** `dag.yaml` (WS12, vecinos y gates), guía, brief, alcance, decisiones, cobertura; auditorías WS02–04 y contrato WS11 por dependencia transitiva; evidencia de G_WRITE_POLICY y G_CLOSEOUT.\n\n**Cambios previstos:** publicar `contratos/operaciones.md` con whitelist, matriz de capacidades/efectos, estado comprobado/faltante y enlaces de recepción por delta. Sin tocar actas ni ejecutar operaciones.\n\n**Dependencias:** WS11 y WS08 como prerrequisitos; G_WRITE_POLICY y G_CLOSEOUT ya satisfechos. G_SOURCE pendiente de WS20; G_SLDB_WRITE, G_UI_WRITE y G_WRITE_CONTRACT se evalúan por delta. G_EXEC/G_SCION no habilitan nada en WS12.\n\n**Validaciones futuras:** citar path/símbolo/commit para lo comprobado; clasificar lo demás como fa",
+      "independent_comparison": "Whitelist por efectos/canal/actor/protegidos; contrato puede cerrar con huecos asignados; productor20 no consumidor21 puede tener API pendiente.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS13",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13/cddaa79f3b74a78fd78c2e1c0764860c361c02fc9044b0c002ab3739271f2a55/attempt-1",
+      "input_sha256": "cddaa79f3b74a78fd78c2e1c0764860c361c02fc9044b0c002ab3739271f2a55",
+      "contract_sha256": "3c1b922ac5269c1cff3e7f58c0e1277d95d4daee3ca00cfdedb4b95a31291396",
+      "dry_run_sample": "Lecturas previstas: input y fuentes citadas; nodo WS13, dependencias WS11/WS13.1–WS13.3 y gate `G_UI_READ`. Cambios previstos: ninguno; esta revisión no modifica plan, código ni actas. Dependencias: contrato WS11, salidas de los tres hijos y recibo externo por delta. Validaciones futuras: aceptación de cada hijo; lectura de Markdown modelado/no modelado; fuente cruda íntegra; contexto, enlaces y foco compartido; explorador con refresco sin reinicio; pestañas, dos documentos lado a lado e historia; ausencia de índices nuevos y de workspace duplicado. No se ejecuta nada.",
+      "independent_comparison": "Aggregate suma hijos13.1/2/3, no implementación propia ni gate pasado por commit.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS13.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/793f1a6e84597102d83c8bada9af43c16ac49626f4aebf9d78496d21831ee9cf/attempt-1",
+      "input_sha256": "793f1a6e84597102d83c8bada9af43c16ac49626f4aebf9d78496d21831ee9cf",
+      "contract_sha256": "358c1c04d30e81e4e57c04ad2db25b6342e467e999788c6e3c8bb45d31355a3d",
+      "dry_run_sample": "Lecturas: nodo WS13.1, guía, brief, alcance, decisiones, cobertura, reconciliación, aristas WS11/WS13/WS13.2/WS13.3 y gate `G_UI_READ`. Cambios previstos: ninguno; solo este dictamen. Dependencias: contrato WS11 (identidad/origen/foco/enlaces), catálogo WS09 transitivo, acta externa `G_UI_READ` por delta, base `a1b2b22` y matriz WS06 vía WS11/WS12. Validaciones futuras: fuente cruda íntegra, panel con identidad/relaciones/origen, seguimiento de enlaces, alternancia texto/graph/code y foco por documento sin duplicar instancia; no basta `f16fcd1`.",
+      "independent_comparison": "Markdown crudo/render y foco con correspondencia real WS11; no mapping universal texto→Code. Descarte cita condición específica de representaciones soportadas.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS13.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/e9bb87a0f4a8d6e2e414d622edcd141b11d91b59c8d60995ca242478d9cd2163/attempt-1",
+      "input_sha256": "e9bb87a0f4a8d6e2e414d622edcd141b11d91b59c8d60995ca242478d9cd2163",
+      "contract_sha256": "a150d8a9a3b80d55c0b3af13d5235863a2fb5b19bc0f488acb537b568b500fc5",
+      "dry_run_sample": "- Lecturas: nodo WS13.2, guía, brief, alcance, decisiones, reconciliación; contratos vecinos WS11/WS13.1 solo como dependencias.  \n- Cambios previstos: crear explorer en graph_ui, reutilizar catálogo/filtro, abrir documentos modelados y no modelados, pruebas de alta/refresco; posiblemente registrar la vista sin ampliar alcance.  \n- Dependencias: contrato WS11, lector WS13.1, catálogo/API existente, G_UI_READ por delta.  \n- Validaciones futuras: alta en store temporal y Markdown en desk; apertura sin ID; aparición tras refresco sin reinicio ni cambio de código; revisión de recepción y solapamiento.",
+      "independent_comparison": "Explorer ambas clases/refresco sin reinicio; API y seguridad vienen11, si faltan contrato bloquea, no backend inventado.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS13.3",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.3/31a076cbb0d765d81f4939c986854d09eb058bb665655137a9e0a08229745881/attempt-1",
+      "input_sha256": "31a076cbb0d765d81f4939c986854d09eb058bb665655137a9e0a08229745881",
+      "contract_sha256": "c4fa9df60eb015f9d02399c60724f96c630930167cda45ba65b8ae8df456be3f",
+      "dry_run_sample": "- **Lecturas:** nodo WS13.3, guía, brief, alcance, decisiones, reconciliación, dag (vecinos WS11/WS13.1/WS13 y gate G_UI_READ).\n- **Cambios previstos:** ninguno; solo revisión textual, sin ejecución.\n- **Dependencias:** contrato de navegación e identidad de WS11; base de lectura WS13.1 (a1b2b22/f16fcd1 reutilizable); acta G_UI_READ por delta.\n- **Validaciones futuras:** prueba de abrir/cambiar/cerrar pestañas, dos divisiones, alternancia con foco e historia conservados; verificación de no persistencia tras recarga; recibo del delta en repo receptor.",
+      "independent_comparison": "Pestañas/dos documentos/foco/historia; detalles sucesión/popstate dependen11/TaskDoc sin ampliar a infinitas divisiones.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS14",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS14/b43901d1bf05812c99d481f2d99be88387d35481e52ba17e8d7a1bb744461755/attempt-1",
+      "input_sha256": "b43901d1bf05812c99d481f2d99be88387d35481e52ba17e8d7a1bb744461755",
+      "contract_sha256": "5aa191ede3a406b6885f039fc49f532ce747823e46c9060f61699b80e55ddcb3",
+      "dry_run_sample": "**Lecturas previstas:** `dag.yaml` de WS14, `auditoria/infraestructura.md` de WS03, contrato WS11, TaskDoc de promoción, código actual del workspace y pruebas existentes. Sin ejecutar.\n\n**Cambios previstos:** código de búsqueda en `frontends/mindmap/source/`, integración en `views/workspace/` y pruebas en `tests/`; archivos exactos quedan para el TaskDoc.\n\n**Dependencias:** WS13 como lector integrado; `G_UI_READ` pendiente por delta; WS11 y WS03 transitivos; API `sldb find` o ruta de `sldb serve`.\n\n**Validaciones futuras:** recorrido por teclado buscar–abrir–volver con consulta y foco conservados; tres estados diferenciados; prueba de peticiones que teclear no dispara carga completa del grafo.",
+      "independent_comparison": "API find/serve real; vacío/error/degradado separados y prueba sin full graph al teclear; teclado conserva consulta/foco.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS15",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15/80c5857353eb6231fc979c89c141c2d648150acb2199a8fb180f72e5e2d278e5/attempt-1",
+      "input_sha256": "80c5857353eb6231fc979c89c141c2d648150acb2199a8fb180f72e5e2d278e5",
+      "contract_sha256": "14c96819a475e8dc85b29b6c2cf797e593efd54feb5705dd4ae62ecd52d4736a",
+      "dry_run_sample": "**Lecturas:** nodo WS15 de `dag.yaml`; guía de revisión; `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md` y `reconciliacion.md` suministrados. Sin herramientas ni ejecución.\n**Cambios previstos:** ninguno; WS15 es `node_role: aggregate` y no se ejecuta.\n**Dependencias:** WS13, WS15.1 y WS15.2; requiere G_UI_READ, evaluado `per_delta`. Las dependencias transitivas WS11/WS12 llegan por WS13.\n**Validaciones futuras:** comprobar aceptación de WS15.1 y WS15.2; verificar el acta de G_UI_READ del delta concreto en repo receptor; no inferir cierre por commits. WS16 y WS29 dependen de WS15 para validación/consumo posterior.",
+      "independent_comparison": "Aggregate errores/orientación acepta hijos, sin offline ni segunda lectura.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS15.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/a5674b84e829adc6c49a803cef9048cb261ba0d73cb1f00b5d200cdd0fb2c975/attempt-1",
+      "input_sha256": "a5674b84e829adc6c49a803cef9048cb261ba0d73cb1f00b5d200cdd0fb2c975",
+      "contract_sha256": "96359e596a228ceb22a8b058b852901fe3a6d64d5a438118854660c8529901a3",
+      "dry_run_sample": "Lecturas: input completo (guía, brief, alcance, decisiones, cobertura, reconciliación, nodo WS15.1, vecinos WS13/WS15 y gate G_UI_READ).\nCambios previstos: ninguno en esta revisión; futuros en `graph_ui/frontends/mindmap/views/workspace/errors/` y `tests/`.\nDependencias: WS13/WS13.1 para lectura Markdown; WS11 para errores de API, red sin respuesta y CDN; G_UI_READ por delta. Si falta contrato, detener y registrar el hueco.\nValidaciones futuras: distinguir error de API/red sin respuesta y fallo CDN; reintento tras restaurar backend recupera lectura conservando pestañas/foco/historia; CDN con diagnóstico visible y prueba de no carga; límite read-only visible; no borrar historial ni fingir vacío. Sin ejecutar nada.",
+      "independent_comparison": "Error backend real vs CDN y read-only distintos; recuperación conserva historia, no backend fingido ni offline prometido.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS15.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.2/c07b89bcf14260be871cfb4fbeefac9daa0ea71916fd760fbfa644c3f7f43dae/attempt-1",
+      "input_sha256": "c07b89bcf14260be871cfb4fbeefac9daa0ea71916fd760fbfa644c3f7f43dae",
+      "contract_sha256": "cd54499c1e2cff058d14329f18ebf700364b0dc1eef9a05f8abf56ebaa1467b3",
+      "dry_run_sample": "**Lecturas previstas:** nodo WS15.2, aristas WS13/WS15, gate G_UI_READ, guía, brief, alcance, decisiones, cobertura, reconciliación y referencia externa del workspace. Sin ejecutar.\n\n**Cambios previstos:** implementar o conciliar la vista de orientación en el `output_scope`, con tests; integrarla como delta o ticket receptor existente, sin duplicar la base a1b2b22/f16fcd1/134a665.\n\n**Dependencias:** WS13 (agregado con WS13.1–13.3) y, transitivamente, WS11 para rutas de lectura; G_UI_READ pendiente y evaluado por delta concreto.\n\n**Validaciones futuras:** abrir un proyecto temporal sin desk y comprobar orientación, ruta y comando sin mutación; verificar que GET no inicializa; ejecutar `deskops init` fuera de la UI y refrescar; pruebas de int",
+      "independent_comparison": "GET orientación sin inicializar; init CLI externo y refresco, prueba UF10.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS16",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS16/792200f3263f35292f0549a12297f6f715d33cd08425f875c7138e6e3d7f90c6/attempt-1",
+      "input_sha256": "792200f3263f35292f0549a12297f6f715d33cd08425f875c7138e6e3d7f90c6",
+      "contract_sha256": "087f1fc9ab626cd2a62d5272b8b67b93d46aa95e777abcda8b76fdc9aca7f3c6",
+      "dry_run_sample": "- **Lecturas previstas:** manifiesto JSON de WS40; `validacion-humana.md`; `cobertura.md`; `borradores/user-flows.md`; contratos/entradas producidos por WS11/WS14/WS15/WS41.\n- **Cambios previstos:** escribir el acta en el `output_scope` indicado; registrar fallos, ayudas solicitadas, timestamps y resultados técnicos; mantener el gate pendiente ante fallo medido.\n- **Dependencias:** WS14 (búsqueda), WS15 (errores/degradado y orientación sin desk), WS08 (guiones), WS40 (corpus y manifiesto), WS41 (lectura multidesk).\n- **Validaciones futuras:** 20 aperturas, 10 búsquedas, arranque ≤10 s, p95 ≤2 s, sin guardados; commit atómico del acta en graph_ui; verificación de que el recorrido se completa sin rutas memorizadas ni instrucciones verbales.\n-",
+      "independent_comparison": "Acta humana lectura sobre40 y segundo desk41;20 aperturas/10 búsquedas, no guardados; falla mantiene gate pendiente.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS17",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS17/c53e461e063433cf723d90c79ef0d87875cf1b886d3e48079470649080a5b876/attempt-1",
+      "input_sha256": "c53e461e063433cf723d90c79ef0d87875cf1b886d3e48079470649080a5b876",
+      "contract_sha256": "2582c75ba234025a2268d1e2e656a6df769240e24a47e6d07a045c0ef25c2a99",
+      "dry_run_sample": "**Lecturas:** guía, brief, alcance, decisiones, nodo WS17, contrato WS11 y generador/manifiesto WS40 cuando existan.\n**Cambios previstos:** crear plantillas en `ejemplo/nav/`; ninguna escritura en repos reales, registry ni corpus temporal.\n**Dependencias:** contrato de navegación WS11 (identidad/roots/aliases) y generador WS40 (parámetro de plantillas y manifiesto). Regla común: si falta contrato, detenerse sin sustituto.\n**Validaciones futuras:** regenerar el corpus con las plantillas, recorrer enlaces sin UI, comprobar resolución de roots/stores de ambos desks, ausencia de duplicación y de enlaces al checkout real; WS30 registra plantillas/paths/hashes y WS43 contrasta la publicación.",
+      "independent_comparison": "Plantillas fuente única, no corpus ni registry real; contrato11/generador40 fijan raíces; prueba regen ambos desks.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS18",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS18/d3a27636533b74412f9d472a032a07ed3381cf3fd0fe59bd94c9e36cb4afd45f/attempt-1",
+      "input_sha256": "d3a27636533b74412f9d472a032a07ed3381cf3fd0fe59bd94c9e36cb4afd45f",
+      "contract_sha256": "18760a3da43f8e89f04b8279047775a531a6b9063b75852d7d7c48b155520b7a",
+      "dry_run_sample": "**Lecturas:** WS09 (`vistas.md`), contrato de navegación WS11, capacidades WS03, documentación/código existente de ViewDoc y NotationDoc en spec2viz, store/corpus real y pruebas actuales.\n\n**Cambios previstos:** añadir el ViewDoc/NotationDoc y pruebas en spec2viz; ningún cambio en deskops.\n\n**Dependencias:** WS09/WS11 disponibles; G_SPEC_VIEW recibido para este delta antes de promover; dueño de spec2viz confirma rutas.\n\n**Validaciones futuras:** preflight de promoción, render sobre store real, comparación con la selección declarada, documentación de la selección, recepción G_SPEC_VIEW y revisión del delta. Sin ejecutar.",
+      "independent_comparison": "ViewDoc portable en spec2viz futuro con recepción; selección mínima de09/11, falta bloquea, no UI ficticia.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS19",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19/fef872bb00d0eb1685959b0db53144e98d41cafd5d8b6a16f966dbfc8078ef86/attempt-1",
+      "input_sha256": "fef872bb00d0eb1685959b0db53144e98d41cafd5d8b6a16f966dbfc8078ef86",
+      "contract_sha256": "6b9df97a63ad275541830feb6384b8fedd3b98c7d2a8148a978a520639f2381f",
+      "dry_run_sample": "**Lecturas:** guía de revisión, brief, alcance, decisiones, cobertura, reconciliación, `dag.yaml` de WS19 y bloques de contexto de WS12, WS19.1, WS19.2, WS21, WS42 y gates.\n**Cambios previstos:** ninguno; esta revisión no modifica el plan ni ejecuta tareas.\n**Dependencias:** WS12 produce contrato/whitelist; WS19.1 y WS19.2 son hijos necesarios; gates G_HUMAN_READ, G_UI_WRITE y G_WRITE_CONTRACT permanecen pendientes y se evalúan por delta. WS11/WS08 llegan de forma transitiva.\n**Validaciones futuras:** comprobar aceptación de ambos hijos y recibos por delta; no inferir cierre por commits ni exigir aceptación conjunta de otros deltas.",
+      "independent_comparison": "Aggregate campos/relaciones, no propia implementación; humano lectura habilita UI, API pruebas separadas.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS19.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/e0c7b82d181d27f222c2a591eec7efc29804e07a28210deb13f86108be2fd254/attempt-1",
+      "input_sha256": "e0c7b82d181d27f222c2a591eec7efc29804e07a28210deb13f86108be2fd254",
+      "contract_sha256": "3ba17dafdc3d54b4f32337625c2e35ff8179125a27f913d4179da6aba21ba851",
+      "dry_run_sample": "- **Lecturas:** guía, brief, alcance, decisiones, cobertura, reconciliación, nodo WS19.1 y gates.\n- **Cambios previstos:** ninguno en esta revisión; si se promueve, archivos en `fields/` y `tests/`, consumo de endpoints WS12, sin cambios de contrato.\n- **Dependencias:** WS12 (contrato, whitelist, endpoints), G_WRITE_CONTRACT, G_UI_WRITE por delta, G_HUMAN_READ y agregado WS19; WS11/WS08 y WS02–WS10 de forma transitiva.\n- **Validaciones futuras:** guardar/recargar; escritura obsoleta conserva texto local y muestra conflicto; protegidos no editables; read-only en otros modos; no duplicar `editing`; TaskDoc y preflight.",
+      "independent_comparison": "CAS/recarga/texto conservado y protegidos; modo/canal exclusivo se comprueba en12, lock UI no autoridad CLI.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS19.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/0f00740bfa68534f070fe49cf24985c7732b2a0a801acb38afdc88868926475e/attempt-1",
+      "input_sha256": "0f00740bfa68534f070fe49cf24985c7732b2a0a801acb38afdc88868926475e",
+      "contract_sha256": "c00f48adce519c6353f5e1e12293ee441184658468bfd2ae3c27b7448af794df",
+      "dry_run_sample": "**Lecturas previstas:** contrato WS12 (whitelist de relaciones, campos, canal, actor, revisión y errores); base `a1b2b22/f16fcd1/134a665` y archivos de workspace citados; actas del delta para G_UI_WRITE y G_HUMAN_READ.\n\n**Cambios previstos:** componentes y llamadas de alta/baja de relaciones en `views/workspace/relations/`, más pruebas; sin semántica nueva ni commit automático.\n\n**Dependencias:** WS12 y, por transitividad, WS11/WS08 y WS02–WS10; contrato técnico de la operación y API pública existente; gates por delta, no aceptación conjunta.\n\n**Validaciones futuras:** alta y baja persisten tras recarga; relación no permitida rechazada; revisión obsoleta rechazada con error visible; pruebas con store temporal real o corpus WS40.",
+      "independent_comparison": "Alta/baja permitida por12 persistente y rechazo revisión/relación inválida; no semántica de componente.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS20",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS20/2d5c282e5bb3afe4d9d491c59aa2cc1d62b9366818e206df9f6b2368aae82720/attempt-1",
+      "input_sha256": "2d5c282e5bb3afe4d9d491c59aa2cc1d62b9366818e206df9f6b2368aae82720",
+      "contract_sha256": "8a6a29bea401e9c2a9c73436b0ce9a9e9f5104f4bd01ef49abb0e73ffe17ffc0",
+      "dry_run_sample": "**Lecturas previstas:** fuentes suministradas; al ejecutar, contrato de WS12 y `desk/drawer/tasks/workspace-documental/task-ws20.md` para fijar archivos, escenarios y textos.\n**Cambios previstos:** primero verificar capacidad en `sldb`; si existe y satisface la aceptación, añadir o confirmar pruebas; si es parcial, completar únicamente lo faltante y reprobar todo el contrato; si falta, implementar dentro de `output_scope` mediante la tarea receptora sldb.\n**Dependencias:** WS12 como productor del contrato técnico; `G_WRITE_CONTRACT` por delta; `G_SLDB_WRITE` como recibo externo por delta; `source_mode=editable`.\n**Validaciones futuras, sin ejecutar:** API pública; roundtrip guardar/extraer sin pérdida; conflicto con revisión; recuperación t",
+      "independent_comparison": "Verificar API antes completar faltante en sldb; todos roundtrip/conflicto/recuperación/protegidos reales, productor único G_SOURCE.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS21",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS21/ba22a8a6c420c1300fea33122bbdfa0d9e7fb2d407e98cb3f747ae512ad2944e/attempt-1",
+      "input_sha256": "ba22a8a6c420c1300fea33122bbdfa0d9e7fb2d407e98cb3f747ae512ad2944e",
+      "contract_sha256": "429fc1f20c1c2cf392dc82606e464cec4cd51a481a14de6622c5a259bee5de14",
+      "dry_run_sample": "Lecturas previstas: guía, brief, alcance, decisiones, dag.yaml (WS21, parámetro `source_mode`, gates) y contratos vecinos WS19/WS20 solo como dependencias. Cambios previstos: componentes de alternancia fuente/render y pruebas en `frontends/mindmap/views/workspace/; tests/`, sin archivos concretos hasta TaskDoc. Dependencias: WS19 por agregado; variante editable añade WS20; WS12 llega transitivamente; gates G_UI_WRITE y G_WRITE_CONTRACT por delta, más G_SOURCE en editable; G_HUMAN_READ llega vía WS19. Validaciones futuras: pruebas de roundtrip/conflicto y campos protegidos, recibos per_delta, y validación manual WS30.",
+      "independent_comparison": "Variante editable añade20/G_SOURCE; buffer conserva cambios; preview exacto se fija contrato, no descarte implícito.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS22",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS22/bacdbcdd6798048e98d02337153d7af1d6703046b62d2f0132b2cdbdfaabc42f/attempt-1",
+      "input_sha256": "bacdbcdd6798048e98d02337153d7af1d6703046b62d2f0132b2cdbdfaabc42f",
+      "contract_sha256": "155328756ad4a011c5cf59c0150c54f7e939a82ca12c7e71ea29606112e374b0",
+      "dry_run_sample": "Lecturas: guía, brief, alcance, decisiones, cobertura, reconciliación, nodo WS22, contratos de WS13/WS09 y gate G_UI_READ. Cambios previstos: implementación solo en `board/` y `tests/` de graph_ui; reutilizar lector y APIs reales de deskops; sin tomar `dag.yaml` como fuente de estados ni implementar arrastre de status. Dependencias: WS13 (lector, foco/historia), WS09 (catálogo de renderizaciones), G_UI_READ (recibo por delta) y transitivas WS11/WS12. Validaciones futuras: que las tres vistas abran el mismo TaskDoc; selección/links comunes; estados/lifecycle desde deskops; ausencia de duplicados; no confundir predicado con test; acta G_UI_READ; promoción y validación humana. No se ejecuta nada.",
+      "independent_comparison": "Tres representaciones mismo TaskDoc, lifecycle desde deskops; no drag status ni predicado como test.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS23",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS23/8725d8adb032e93105442f8a17144216a01132732128e1fb2e383ae04e8c6508/attempt-1",
+      "input_sha256": "8725d8adb032e93105442f8a17144216a01132732128e1fb2e383ae04e8c6508",
+      "contract_sha256": "055c99436a4e54a1214de258a398c4b24d000e4aeac3867898fefc9edefd4971",
+      "dry_run_sample": "**Lecturas:** `dag.yaml` (WS23, WS13, WS09, gates), brief, alcance, decisiones, reconciliación; salidas de WS09/WS11 y acta `G_UI_READ`; corpus WS40 o store temporal.\n\n**Cambios previstos:** módulo de procedimiento en `procedure/` y pruebas; vista read-only con navegación a documentos/soporte, transiciones origen/destino/condición y ausencia de peticiones de escritura.\n\n**Dependencias:** WS13 como agregado completado; WS09 como inventario; WS11 transitivamente como contrato de navegación; datos de lifecycle desde deskops; acta de recepción por delta del receptor P01. Si falta contrato/API, aplica la regla común: detenerse y registrar el hueco.\n\n**Validaciones futuras:** apertura de documentos/soporte; no auto-marcado por lectura; progreso s",
+      "independent_comparison": "Ritual/StepDoc solo lectura y prueba no escrituras; progreso solo campo/API observado.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS24",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS24/3673fa3a9a982ee0ec2575167b2e717e219844a9f5160ef74312dbceb22daa79/attempt-1",
+      "input_sha256": "3673fa3a9a982ee0ec2575167b2e717e219844a9f5160ef74312dbceb22daa79",
+      "contract_sha256": "11e5d94d0a511240cd3b35630a40c12994e35f1b304a845f0b03311d0c82e061",
+      "dry_run_sample": "**Lecturas previstas:** guía, brief, alcance, decisiones, cobertura, reconciliación, nodo WS24, contratos vecinos WS13/WS09/WS29/WS30/WS42 y gates.\n**Cambios previstos:** registrar/reutilizar la vista genérica en `shell/registry.js`; extender el panel Context existente; consumir backlinks de la API de grafo de SLDB; pruebas en `tests/`.\n**Dependencias:** WS13 (lector/explorador), WS09 (catálogo), transitivas WS03 (auditoría de grafo) y WS11 (contrato), más `G_UI_READ`.\n**Validaciones futuras:** aceptación por delta con acta de P01; comparar backlinks con la API; comprobar Markdown sin modelo y sin tags inventados; verificar clasificación y vecindad; confirmar que no se exige un renderer por clase.",
+      "independent_comparison": "Genérico/modelo opcional/tags reales y backlinks2hops; no nuevo lector ni dependencia18.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS25",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25/273b9abe0d78f4229ea7568c4953a969c982305e88a5ac4485f2ab2a8413dee5/attempt-1",
+      "input_sha256": "273b9abe0d78f4229ea7568c4953a969c982305e88a5ac4485f2ab2a8413dee5",
+      "contract_sha256": "34b262ef7dd03fe4a65adcd88a98252f1f700d30df0b6865552299ea96730bbb",
+      "dry_run_sample": "Lecturas: guía de revisión, nodo WS25, gates y fuentes de contexto suministradas; no se revisan contratos vecinos ni se leen archivos no incluidos. Cambios previstos: ninguno; solo revisión del encargo. Dependencias: WS12 como productor del contrato; WS25.1 y WS25.2 como hijos; G_WRITE_CONTRACT y G_UI_WRITE con evaluación `per_delta` y `accepted_scope_nodes` vacíos; G_HUMAN_READ producido por WS16. Validaciones futuras: comprobar aceptación de ambos hijos, recibos por delta, acta humana de lectura antes de habilitar mutaciones UI y ausencia de tarea implícita o envío interdesk. Nada ejecutado.",
+      "independent_comparison": "Aggregate lectura/ack/captura local, ack no aprobación y no envío interdesk.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS25.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/4f7e466672da13d72895098dcef2df0ce1a87dd8a80e165b08d0d873355be6b7/attempt-1",
+      "input_sha256": "4f7e466672da13d72895098dcef2df0ce1a87dd8a80e165b08d0d873355be6b7",
+      "contract_sha256": "1c04ff2e05576469bbd264351e3c837eb2e403c22a408edf701368a52d4903fe",
+      "dry_run_sample": "**Lecturas:** nodo WS25.1; aristas WS12/WS25 y gates; guía de revisión; `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`. **Cambios previstos:** vista de inbox y tests dentro del `output_scope`; no se modifica el contrato WS12. **Dependencias:** contrato/endpoints de WS12; `G_WRITE_CONTRACT` por delta; `G_HUMAN_READ`; `G_UI_WRITE` por delta; padre agregado WS25. **Validaciones futuras:** ack persiste tras recarga mostrando el mensaje origen; respuesta local disponible solo si WS12 la define, y si no se declara no disponible; permisos del contrato aplicados; no se crea tarea implícita ni cron de triage.",
+      "independent_comparison": "Ack persiste con origen; respuesta local solo contrato, sin tarea/cron.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS25.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/fc68841d23bfd19b4b46527d8af994a68cfb17c3a19cbfb875b07a30e8b61c6c/attempt-1",
+      "input_sha256": "fc68841d23bfd19b4b46527d8af994a68cfb17c3a19cbfb875b07a30e8b61c6c",
+      "contract_sha256": "60eb8b412df71c19d64939687aa223a2525d03fb55902dd8412a5ab365b8d950",
+      "dry_run_sample": "Lecturas: nodo WS25.2, aristas WS12/WS25, gates, guía, brief, alcance, decisiones y cobertura.  \nCambios previstos: UI de captura en `graph_ui` y pruebas de persistencia por destino, origen ruta/mensaje, ausencia de tarea implícita y permisos. No se modifican vecinos ni contratos.  \nDependencias: contrato WS12; G_HUMAN_READ producido por WS16; G_UI_WRITE por recibo per-delta del receptor P01; G_WRITE_CONTRACT por WS12. Si falta contrato, API o permiso, detenerse y registrar hueco con repo dueño, sin sustituto.  \nValidaciones futuras: recarga real, destino elegido, origen tipado visible, no creación de tarea, permisos aplicados, prueba separada drawer/protoátomo; acta humana antes de habilitar mutaciones en UI. Nada de esto se ejecuta aquí.",
+      "independent_comparison": "Destino explícito drawer/proto, rutas y mensajes origen, pruebas separadas; no tarea implícita.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS26",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26/8c82ede53c2b71855149996fb3fe907166845a16eb64a7a5a66eafb19bb90a8d/attempt-1",
+      "input_sha256": "8c82ede53c2b71855149996fb3fe907166845a16eb64a7a5a66eafb19bb90a8d",
+      "contract_sha256": "316947debc5c42056ffd12e91781b48315251bcd1ef3f641d2e86642ed7af7ef",
+      "dry_run_sample": "**Lecturas previstas:** guía de revisión, `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`, nodo WS26, contratos de WS12/WS22/WS26.1/WS26.2 y gates.  \n**Cambios previstos:** ninguno; solo informe de revisión.  \n**Dependencias:** WS12 (contrato de operaciones/escritura), WS22 (Board navegable), WS26.1 y WS26.2. Las dependencias transitivas de WS12/WS22 ya están cubiertas por el DAG.  \n**Validaciones futuras:** aceptación de ambos hijos; G_HUMAN_READ antes de habilitar mutaciones en UI; G_UI_WRITE y G_WRITE_CONTRACT por delta concreto; G_CLOSEOUT ya satisfecho. Desarrollo y pruebas aisladas de API pueden avanzar sin acta humana de lectura.",
+      "independent_comparison": "Aggregate autoría/routing tras22 y12; distinguir Board route de ejecutar.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS26.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/22c491060652837f8b55a381f481ab28b6760903c42de766ab50a5d767e9d255/attempt-1",
+      "input_sha256": "22c491060652837f8b55a381f481ab28b6760903c42de766ab50a5d767e9d255",
+      "contract_sha256": "321789eeb24c6eb32d74407448bcc8c5b8d73ae842a9b004c543e0f597d9fb5a",
+      "dry_run_sample": "**Lecturas:** `context-review-guide.md`, `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md` y el nodo WS26.1 con los contratos vecinos aportados.\n\n**Cambios previstos:** ninguno ahora. En ejecución futura: código de autoría en `graph_ui`, integración de endpoints autorizados por WS12 y pruebas.\n\n**Dependencias:** contrato WS12 por operación/campo/canal; representación Board/TaskDoc de WS22; G_CLOSEOUT satisfecho; G_HUMAN_READ, G_UI_WRITE y G_WRITE_CONTRACT pendientes por delta.\n\n**Validaciones futuras:** UF04 con TaskDoc real; evidencia, dependencias y pills vinculadas y visibles tras recarga; intento de avance no altera `status`; operación Git sin contrato/dueño produce handoff y “no disponible”; pruebas con store temporal real o co",
+      "independent_comparison": "TaskDoc desde candidato con evidencia/deps/pills y recarga; Git sin contrato se handoff, status no edición directa.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS26.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/b7ac66c40c3c0c36d736a0f901eb20cf28657067f76d54a7b197737f0f66df5b/attempt-1",
+      "input_sha256": "b7ac66c40c3c0c36d736a0f901eb20cf28657067f76d54a7b197737f0f66df5b",
+      "contract_sha256": "9d9393abafc2aab6207efa570e52e92be62e3f493c60ea38b7f5ea7a57b19adc",
+      "dry_run_sample": "**Lecturas previstas:** `dag.yaml` (WS26.2 y vecinos), `task_file` de WS26.2, contrato `contratos/operaciones.md` de WS12, salidas de WS22 y WS26.1, BoardDoc/lifecycle y ritual de fase vigente en Deskops, y estado real del repo `graph_ui`.\n\n**Cambios previstos:** código en `frontends/mindmap/views/workspace/routing/`, integración con endpoints autorizados por WS12 y pruebas en `tests/`. Sin promoción nueva ni escritura fuera del scope.\n\n**Dependencias:** WS12 (contrato de operaciones), WS22 (Board navegable) y WS26.1 (autoría). Gates: `G_CLOSEOUT` satisfecho; `G_WRITE_CONTRACT` y `G_UI_WRITE` por delta; `G_HUMAN_READ` pendiente para uso de mutaciones en UI, sin bloquear pruebas aisladas de API.\n\n**Validaciones futuras:** `deskops show board",
+      "independent_comparison": "Ruta Board y capa ready sin solapamiento; files ausentes/globs dudosos no comprobado, nunca ready optimista. Supervisor rol promoción, no actor humano inventado.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS27",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27/13912cb9b06e3e2d39c4275c3e5979c9862e218efbcda019a97b90656c718c23/attempt-1",
+      "input_sha256": "13912cb9b06e3e2d39c4275c3e5979c9862e218efbcda019a97b90656c718c23",
+      "contract_sha256": "047a6a896d4a0b3dae8e4568c3bcb04c926feb2131e0df2e98ca635d3d962917",
+      "dry_run_sample": "Lecturas: nodo WS27 en `dag.yaml` y guía; brief, alcance, decisiones y cobertura para límites. Cambios previstos: ninguno; solo veredicto de revisión. Dependencias: WS13 (lector/foco/historia), WS12 (contrato de operaciones), WS27.1 y WS27.2; `G_UI_READ` con `evaluation: per_delta` y `contract_source: WS11`. Validaciones futuras: al promover, comprobar la aceptación de cada hijo y el recibo del delta concreto; no exigir aceptación conjunta ni implementar en esta revisión.",
+      "independent_comparison": "Aggregate27.1/2 con aceptación hijos; no ejecución propia.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS27.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/5797e0fb9b460ac3bedce7fd82ccc3434a724ae26ea247ff1c7d7f7a8b95caa2/attempt-1",
+      "input_sha256": "5797e0fb9b460ac3bedce7fd82ccc3434a724ae26ea247ff1c7d7f7a8b95caa2",
+      "contract_sha256": "92206d3a86b0421a83f97fb74198362f59944e9b1894c186548984333f889091",
+      "dry_run_sample": "**Lecturas previstas:** `dag.yaml` (WS27.1, vecinos WS13/WS12, gate G_UI_READ), guía, brief, alcance, decisiones, cobertura y TaskDoc de promoción cuando exista. **Cambios previstos:** vista de diff/historial read-only, resolución de repo/rutas vía WS11, estados sin historial/ruta no disponible y tests. **Dependencias:** WS13, WS12, contrato WS11 y G_UI_READ por delta. **Validaciones futuras:** diff real, ausencia de escritura/reversión, una sección por repo, casos sin commits, commits no resolubles y rutas sin repo; acta G_UI_READ del receptor P01. Nada ejecutado.",
+      "independent_comparison": "Diff por repo/task, refs commits resolubles y files; errores ambiguos no adivinar, sin escritura/revert,29 separado.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS27.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/ff669146e97dc42ee23acdc9c9f4442ae2bda1031bf4e6585bfdf3b3310c09c8/attempt-1",
+      "input_sha256": "ff669146e97dc42ee23acdc9c9f4442ae2bda1031bf4e6585bfdf3b3310c09c8",
+      "contract_sha256": "5cd5ef217ebf87af367d118804936f998b9ba6fdf26b0bc8e4a0cb9d4a83943e",
+      "dry_run_sample": "**Lecturas previstas:** guía, brief, alcance, decisiones, `dag.yaml` del nodo y vecinos; TaskDoc de promoción cuando exista.\n\n**Cambios previstos:** componente de evidencia, resolución de referencias/archivos de TaskDoc, apertura en lector y pruebas de estados. Sin cambios en contratos ni en modelos Deskops.\n\n**Dependencias:** WS13 entrega lector/historia/foco; WS12 entrega correspondencia por tipo, artefactos soporte y salida de `closeout verify`. G_UI_READ está pendiente y es intencional: exige acta por delta, no aceptación conjunta.\n\n**Validaciones futuras:** declarada sin artefacto, artefacto no declarado, verificación fallida, evidencia ausente y reporte/comando fallido deben verse distintos; apertura de Markdown interno; ruta declarad",
+      "independent_comparison": "Declarada/encontrada/verificada diferentes según verify real; no verificación artefacto independiente ni falso éxito ante fallo.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS28",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS28/2736c6051889d71e8366ee463176c1a9a73057021767055634a661f23cdcb6ed/attempt-1",
+      "input_sha256": "2736c6051889d71e8366ee463176c1a9a73057021767055634a661f23cdcb6ed",
+      "contract_sha256": "1e156a4b09ede5b5f34e4d066057cfa97645bf3d56fb4dc26c7e3f658706d54e",
+      "dry_run_sample": "Lecturas: guía, brief, alcance, decisiones, cobertura, nodo WS28 y aristas WS27/WS12/WS30, gates.\nCambios previstos: ninguno; esta revisión no modifica el plan.\nDependencias: WS27 (agregado de diff/evidencia) y WS12 (contrato de operaciones por delta); G_CLOSEOUT satisfecho; G_HUMAN_READ, G_UI_WRITE y G_WRITE_CONTRACT pendientes y evaluados por delta.\nValidaciones futuras: confirmar que el contrato WS12 nombra canal y efectos para verify/handoff; comprobar que no se crea endpoint de cierre HTTP; verificar que la aceptación se observa con `deskops show task`, commit externo y refresco; revisar que el handoff incluye evidencia y no un terminal genérico.",
+      "independent_comparison": "Verify y handoff externo, cierre solo confirmado con commit/refresco; endpoints12 no excepción cierre HTTP; coordinador ausente lectura/preparación.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS29",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS29/2282366b3957034e15bc21f45ae7a6849cd37ab726f29de69941166e37383537/attempt-1",
+      "input_sha256": "2282366b3957034e15bc21f45ae7a6849cd37ab726f29de69941166e37383537",
+      "contract_sha256": "6589efef2aa5313c8e875b8046d3e62452dc757e7b85afbf44e518b180294bfa",
+      "dry_run_sample": "- **Lecturas previstas:** nodo WS29 y edges de WS15/WS24; referencia externa de la tarea Changes; contrato WS11; salidas de WS24/WS03 sobre API de grafo; documentación de los tres comandos en sus repos dueños; decisiones y reconciliación.\n- **Cambios previstos:** vista/integración en `frontends/mindmap/views/workspace/changes/`; rutas de integridad según WS11; tests con store temporal real.\n- **Dependencias:** WS15 completado cuando lo estén sus hijos; WS24 con grafo local y API de sldb; WS11 definiendo rutas de integridad; comandos disponibles y documentados; recibo G_UI_READ del delta concreto.\n- **Validaciones futuras:** mutación real muestra documento afectado, relaciones a 1 hop en ambos sentidos y hallazgos agrupados por comando; enla",
+      "independent_comparison": "Mutación store temporal real,1hop ambas direcciones y comandos integridad; no reparar/CST ni bloquear manual.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS30",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS30/6fcab09909f2340a3d46a327019128e7de3b57d5a26e7715223fd941a0d413f7/attempt-1",
+      "input_sha256": "6fcab09909f2340a3d46a327019128e7de3b57d5a26e7715223fd941a0d413f7",
+      "contract_sha256": "bff9e3fa419e52da3c539a79ca668fdab834cac90c5af219a4f5337c1dba0f70",
+      "dry_run_sample": "**Lecturas previstas:** guía de revisión; nodo WS30 y vecinos WS17/21/22/23/24/25/26/28/42; brief, alcance, decisiones, cobertura, validacion-humana y user-flows.\n**Cambios previstos:** ninguno ejecutable. Solo se generaría el acta manual y el recibo de `G_HUMAN_MANUAL`; no se toca código ni otros repos.\n**Dependencias:** WS17 aporta plantillas; WS40 las materializa; WS21–26/28/42 aportan edición, navegación y cierre. `G_HUMAN_MANUAL` queda pendiente hasta el acta.\n**Validaciones futuras:** recorridos UF01 con entradas WS17, UF02/03 edición/04/05; conflicto en dos ventanas; navegación por teclado; paths/hashes; registro de fallos y bloqueo del gate si el guion falla.",
+      "independent_comparison": "UF01 entradas17 más02/03/04/05, teclado/conflicto/humano; WS08 transitivo, fallos no causalidad inventada.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS31",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS31/d775c4230fd8852ee2e11af7058eeb16c6b7ad37d3a3b1f752077072b4fb25cc/attempt-1",
+      "input_sha256": "d775c4230fd8852ee2e11af7058eeb16c6b7ad37d3a3b1f752077072b4fb25cc",
+      "contract_sha256": "d83f387ee2dc0cdb2e986c092985901b14b641e501469d942b74445a9fd6b7f7",
+      "dry_run_sample": "Lecturas previstas: `brief.md`, `alcance.md`, `decisiones.md`, `cobertura.md`, `borradores/manual.md`, nodo WS31 de `dag.yaml` y, en promoción, `task-ws31.md` si existe. Cambios previstos: crear/actualizar el manual, sus assets y átomos enlazados; incorporar índice, capturas y limitaciones; marcar como propuesto lo no demostrado. Dependencias: WS30 aporta acta humana y recorridos; WS10 aporta índice/convención; WS43 aporta publicación real y acta; G_HUMAN_MANUAL debe estar resuelto por WS30. Validaciones futuras, sin ejecutar: que cada instrucción remita a acta WS30 o WS43; que etiquetas sean coherentes con actas/commits; que links resuelvan; que exista un átomo por Pxx vigente y por contrato inventariado, con fuente declarada y relación át",
+      "independent_comparison": "Manual solo pasos actas30/43; átomos Pxx/contratos y extras propuestos; independencia de WS29/modelos.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS32",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32/52e1c340dd994a0ee84c32e55eda74f6e811c33d619c23b63dd41387b20eb9b9/attempt-1",
+      "input_sha256": "52e1c340dd994a0ee84c32e55eda74f6e811c33d619c23b63dd41387b20eb9b9",
+      "contract_sha256": "d29eb6544e386ede0ca8f23d5bc6fb2917857c3645d00e65bcc38a3114cc3714",
+      "dry_run_sample": "Lecturas: guía, brief, alcance, decisiones, cobertura, reconciliación, nodo WS32, contratos de WS05/WS12/WS32.1/WS32.2/WS33 y gates. Metadata del ticket externo: ruta, existencia y hash; su contenido no se suministra. Cambios previstos: ninguno; esta revisión no promueve ni edita archivos. Dependencias: WS05 (inventario), WS12 (contrato y `G_WRITE_CONTRACT` por delta), hijos WS32.1/32.2; `G_CLOSEOUT` satisfecho, `G_SCION` no verificado y `G_WRITE_CONTRACT` pendiente. Validaciones futuras: aceptación de ambos hijos, dos IDs locales distintos sin red, idempotencia local, registro SLDB, ausencia de mocks, recibo por delta y correlación real en WS34/37.",
+      "independent_comparison": "Aggregate identidad/idempotencia local sin segundo pipeline; refinar ticket significa integración promoción, no ejecutor agregado.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS32.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/8a9ef2feabf27fc0708e4b7c8d3477926352532fbd6bc949a9c3cb09131d7958/attempt-1",
+      "input_sha256": "8a9ef2feabf27fc0708e4b7c8d3477926352532fbd6bc949a9c3cb09131d7958",
+      "contract_sha256": "a32a09ef54bfddfa32cfc047a93a556a0b7494e977ed65df20f2156a1448eb86",
+      "dry_run_sample": "**Lecturas previstas:** nodo WS32.1, guía, brief/alcance/decisiones/reconciliación, referencia externa Scion, y contratos/artefactos de WS05 y WS12 cuando existan. **Cambios previstos:** `deskops/runtime/scion.py`, `models/run.py`, `services/closure.py` y `tests/`, limitados a identidad/persistencia local. **Dependencias:** WS05 aporta inventario; WS12 especifica contrato y ubicación del registro; G_CLOSEOUT está satisfecho; G_SCION sigue no verificado y G_WRITE_CONTRACT pendiente por delta. **Validaciones futuras:** dos intentos generan IDs distintos; el registro intent/no confirmado usa operaciones reales sobre store temporal; no se invoca red ni se simula Hub; el modelo se registra/valida por SLDB; RunDoc trackeado se edita por API/CLI; ",
+      "independent_comparison": "Dos IDs antes dispatch/store real y modelo SLDB; no respuesta Hub fabricada.34/37 correlación real con G_EXEC.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS32.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/724105a3083146792e43a443bd57c13d7f7b740171320cddcb8eb58c1bf3a5f7/attempt-1",
+      "input_sha256": "724105a3083146792e43a443bd57c13d7f7b740171320cddcb8eb58c1bf3a5f7",
+      "contract_sha256": "bb4512c6b39c2476383ab1da3a5d188757db2ab04dbf8a47803880994b402af3",
+      "dry_run_sample": "Lecturas previstas: ticket de `external_references.scion`, auditoría WS05, contrato WS12, salidas de WS32.1, `deskops/runtime/scion.py`, `models/run.py`, `services/closure.py`, tests y evidencia de G_CLOSEOUT. Cambios previstos: persistencia idempotente por id de intento y pruebas de repetición; sin red. Dependencias: artefacto/contrato de sesión y hash de WS05/WS12, registro por intento de WS32.1 y gates declarados. Si falta artefacto o contrato de hash, corresponde registrar hueco y bloquear la coincidencia antes de promoción. Validaciones futuras: ejecutar tests locales con store temporal, repetir la finalización sobre el mismo id de intento, comprobar ausencia de duplicados y coincidencia de id, hash y evidencia; no invocar Hub.",
+      "independent_comparison": "Finalizar mismo intento no duplica y hash fuente sesión real12/05; sin artefacto bloquea coincidencia, no fake digest.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS33",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33/634c8b8564f5b2c8a4718be2e021e1ee2be60ddba47afefce5eec6f1c59a3ce1/attempt-1",
+      "input_sha256": "634c8b8564f5b2c8a4718be2e021e1ee2be60ddba47afefce5eec6f1c59a3ce1",
+      "contract_sha256": "f9c2bcb8f1acae3225bd04e1bfe65dd0f8c9c1cd61b8500eba4f943215228082",
+      "dry_run_sample": "Lecturas: nodo WS33, hijos WS33.1/WS33.2, gates y guía. Cambios previstos: ninguno; un agregado no se ejecuta ni produce artefactos propios. Dependencias: WS32, WS11 y los hijos; requires G_SCION/G_WRITE_CONTRACT. Validaciones futuras: aceptación de WS33.1 —importación repetida sin duplicar mensajes/resultados y huecos de procedencia— y de WS33.2 —decisión con actor, intento, tarea y resultado aprobar/pedir corrección—; al cumplirse ambas, WS33 queda cumplido para sus dependientes.",
+      "independent_comparison": "Aggregate backend documental, G_WRITE_CONTRACT propio además SCION; acepta hijos, editor UI independiente.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS33.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/60bea826b52bd027faea1851f8152b7690a3775a2317e5d8d14d60db419261c7/attempt-1",
+      "input_sha256": "60bea826b52bd027faea1851f8152b7690a3775a2317e5d8d14d60db419261c7",
+      "contract_sha256": "7f6d0d5677e11419435cdbb8af0cfded0341ffdedffb6e15352e6a5c30e966f0",
+      "dry_run_sample": "Lecturas: nodo WS33.1, brief/alcance/decisiones, contrato WS12, inventario WS05, probe WS44 y TaskDoc de promoción. Cambios previstos: adaptador en `runtime/`, modelos/reportes y tests en `deskops`; ninguna escritura en tablas Scion. Dependencias: WS32 (con WS11/WS12 transitivos), `G_SCION`, `G_WRITE_CONTRACT`; el identificador de fuente se comprueba en WS05/WS44. Validaciones futuras: importación repetida sin duplicados, conversación completa no atribuida a un intento, mensajes no vinculados como hueco, resultados con procedencia y ausencia de mutaciones Scion.",
+      "independent_comparison": "Claves distintas mensaje y resultado explícitas; no intento/conversación entera inferidos. Estado no resoluble queda hueco por contrato12.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS33.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/c0f8469dac7dd808f5d9b607333dda222d3835dd299f63e52f9f9ff54a444e35/attempt-1",
+      "input_sha256": "c0f8469dac7dd808f5d9b607333dda222d3835dd299f63e52f9f9ff54a444e35",
+      "contract_sha256": "a34e72095bcd7f0f1a95e537d5feb8277e1ee93a900bc98288fb5369335c16d5",
+      "dry_run_sample": "**Lecturas previstas:** guía de context review; brief; alcance; decisiones; cobertura; reconciliación; nodo WS33.2, vecinos WS32/WS33/WS33.1 y gates; referencia externa Scion. Sin ejecución.\n\n**Cambios previstos:** ninguno en esta revisión. La implementación futura quedaría acotada a `deskops:runtime/` (adaptador definido por contrato), `modelos/reportes` y `tests/`.\n\n**Dependencias:** contrato WS12 para operación, actor y errores; identidad de intento de WS32; vinculación de WS33.1; G_SCION producido por WS44; G_WRITE_CONTRACT por delta. La promoción exige TaskDoc, archivos y preflight.\n\n**Validaciones futuras:** registro con actor, intento y tarea; aceptación de ambos resultados; rechazo de “pedir corrección” sin texto; verificación de qu",
+      "independent_comparison": "Decisión actor humano/intento/tarea y corrección con texto; completed no aprobado, no testing/cierre; contrato técnico propio.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS34",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34/9953c6f507c75f69c9a619c79a2e8f2e241b47ac30a7a7594a5e53502d6a1760/attempt-1",
+      "input_sha256": "9953c6f507c75f69c9a619c79a2e8f2e241b47ac30a7a7594a5e53502d6a1760",
+      "contract_sha256": "bc6cfdab8d63960ed4683c86bb90c26616e41efdb747efd49d2869227a548206",
+      "dry_run_sample": "Lecturas previstas: guía de revisión, brief, alcance, decisiones, cobertura, nodo WS34 y contratos vecinos (WS33, WS12, WS34.1, WS34.2, WS36, gates). Cambios previstos: ninguno; es nodo agregado y no se ejecuta. Dependencias: WS33 y WS12 como prerrequisitos; WS34.1 y WS34.2 como hijos que materializan el resultado; gates G_EXEC, G_SCION y G_WRITE_CONTRACT. Validaciones futuras: aceptación de ambos hijos, contrato WS12 por delta, evidencia de dispatch aceptado/rechazado o timeout y reply vinculado al intento. Nada de esto se ejecuta aquí.",
+      "independent_comparison": "Aggregate dispatch/reply público con gateEXEC/SCION/contrato, nada ejecutado ahora.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS34.1",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/104ad7961711b2dcfb9a163b3f176f9d1bc4daca4636989facf5c7313724d2bb/attempt-1",
+      "input_sha256": "104ad7961711b2dcfb9a163b3f176f9d1bc4daca4636989facf5c7313724d2bb",
+      "contract_sha256": "f2cb78e14e40b150222d853d5371f6c8340e33cf7edb8e23f0ff05e9e3ce6e69",
+      "dry_run_sample": "- **Lecturas previstas:** `dag.yaml` (nodo, aristas, gates), WS12, WS33 y, transitivamente, WS32/WS32.1/WS32.2; `decisiones.md`, `alcance.md`.\n- **Cambios previstos:** implementar adaptador y pruebas en `deskops`; ninguna mutación real durante planificación.\n- **Dependencias:** WS33 y WS12; WS32 vía WS33. Gates G_EXEC/G_SCION/G_WRITE_CONTRACT pendientes.\n- **Validaciones futuras:** dispatch real aceptado y otro rechazado o vencido por timeout; correlación con id de intento WS32.1 y registros WS32.2; confirmación solo con respuesta observada del Hub; ausencia de shell/transporte duplicado.",
+      "independent_comparison": "Dispatch real aceptado y rechazado/timeout con intento local; confirmed solo Hub observado, umbral de12/TaskDoc.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS34.2",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/6e73c268f12451eb44519cd0cfec0894c16374f5d9f915a6864e64dc7fc716d6/attempt-1",
+      "input_sha256": "6e73c268f12451eb44519cd0cfec0894c16374f5d9f915a6864e64dc7fc716d6",
+      "contract_sha256": "4358699d1d18270793cbab724a5b2e84bb75f7994df37f73a1efde7fcc2aa1bc",
+      "dry_run_sample": "**Lecturas previstas:** nodo WS34.2, guía, brief, alcance, decisiones y referencias del DAG a WS33, WS12, WS34.1 y gates. También el TaskDoc de promoción cuando exista.\n**Cambios previstos:** ninguno en esta revisión. En ejecución futura, adaptador de reply y pruebas en `deskops`; no se modifica el plan.\n**Dependencias:** WS33, WS12 y WS34.1; requieren G_EXEC, G_SCION y G_WRITE_CONTRACT.\n**Validaciones futuras:** agente real demuestra respuesta vinculada al intento correcto; timeout se reporta como fallo sin confirmación; umbral según contrato WS12. No se ejecuta nada.",
+      "independent_comparison": "Reply intento correcto y timeout fallo local sin confirmación, no afirmar estado remoto; mensajes no planificación.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS35",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS35/d6f94405aab71268f7dadd4382c61dfa609762388c5c31306437f508f1de5d01/attempt-1",
+      "input_sha256": "d6f94405aab71268f7dadd4382c61dfa609762388c5c31306437f508f1de5d01",
+      "contract_sha256": "b436eb86dde8f99de283b50c85b568e5063e81dcd80d44a529e53cdcdf1c4da7",
+      "dry_run_sample": "Lecturas: `task-ws35.md`, contratos de WS33.1/WS33.2, WS27 y WS11/12, y reglas de alcance. Cambios previstos: vista de ejecución y tests dentro de `output_scope`; sin ejecución real. Dependencias: WS33 y WS27; WS13 vía WS27 para evidencia; gates `G_SCION` y `G_UI_READ` por delta. Validaciones futuras: agrupación y enlaces, apertura de evidencia en el lector, no equivalencia `completed`=aprobado/cerrado; escenarios exactos en TaskDoc.",
+      "independent_comparison": "Mensajes/resultados/decisión bajo intento y fuente; huecos no vínculo inventado, decisión33.2 no32, UI read-only.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS36",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS36/c386484fa62275b4d94306b05720ea8af20dbc1947548acc57f0c254b60b72c7/attempt-1",
+      "input_sha256": "c386484fa62275b4d94306b05720ea8af20dbc1947548acc57f0c254b60b72c7",
+      "contract_sha256": "770522edc8d0871640d44a2c3e43c8873a7a8cb8a8b958a511dc231ca1526104",
+      "dry_run_sample": "**Lecturas previstas:** nodo WS36 en `dag.yaml`, guía, brief, alcance, decisiones y cobertura; contratos vecinos WS34, WS35 y WS33.2, y gates G_EXEC/G_SCION/G_UI_WRITE/G_WRITE_CONTRACT, solo como referencia. **Cambios previstos:** implementación futura en `graph_ui` dentro de `output_scope`, sin ejecutar ni promover. **Dependencias:** WS34 y WS35; WS33.2 como contexto de revisión y registro de decisión; WS12 como fuente del contrato de operación. **Validaciones futuras:** tests de respuesta vinculada al intento y operación confirmada; revisión con actor humano y evidencia WS33.1/WS33.2; error visible ante ausencia de API/permisos; no autoaprobación ni simulación. WS37 validará con agente real.",
+      "independent_comparison": "UI solo adaptador34 y operación decisión33.2, no autoaprobación; pruebas errorAPI/permisos/actor/evidencia.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS37",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS37/ea2e835f2fbaeb1f4605d4943fa23cda2d10ef223069c2d3b1f784d5aed804c6/attempt-1",
+      "input_sha256": "ea2e835f2fbaeb1f4605d4943fa23cda2d10ef223069c2d3b1f784d5aed804c6",
+      "contract_sha256": "8104372dd24612f2043c7e94f78a4e7313186d850ce89c0cdb5aa6396a1da998",
+      "dry_run_sample": "Lecturas previstas: nodo y gates de `dag.yaml`, `validacion-humana.md`, UF06 en `user-flows.md` y contratos de dependencias WS36/WS30. Cambios previstos: ninguno durante la revisión; al ejecutarse el nodo, un acta en `output_scope` y la evidencia de `G_HUMAN_DELEGATE`. Dependencias: WS36 y WS30; `G_EXEC` externo; `G_SCION` producido por WS44; participante humano según P08. Validaciones futuras: recorrido UF06 con Scion real, acta con actor humano, versión, guion, resultado y soportes; comprobar ausencia de mocks y de autoaprobación; verificar que un fallo bloquea el gate. Sin ejecución.",
+      "independent_comparison": "Humano+Scion real UF06 y acta, handoff28; no mocks ni completed aprobado, no bloquea31.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS38",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS38/e9016f8306308b429c823631142a211ad39bc31b1b0121aed3a04b346ea8cbf7/attempt-1",
+      "input_sha256": "e9016f8306308b429c823631142a211ad39bc31b1b0121aed3a04b346ea8cbf7",
+      "contract_sha256": "7eefb0fe78c3f226e2fde0b77ea89800fb995be7013874d8018d8e40fb442392",
+      "dry_run_sample": "**Lecturas previstas:** nodo WS38 y gates en `dag.yaml`; nodos vecinos WS37 y WS31; `context-review-guide.md`; `brief.md`; `alcance.md`; `decisiones.md`; `cobertura.md`; `borradores/manual.md`.\n\n**Cambios previstos:** actualizar la sección de delegación en `docs/workspace-user-manual.md`; enlazar o crear átomos en `desk/atoms/` según reglas durables de WS37; posiblemente incorporar referencias en `docs/assets/workspace-user-manual/`.\n\n**Dependencias:** acta de WS37 en `graph_ui:runs/subagents/workspace-documental-acceptance/delegacion/acta.md`; gate G_HUMAN_DELEGATE resuelto por WS37; manual y átomos de WS31; G_EXEC externo solo citado como requisito operativo.\n\n**Validaciones futuras:** cada paso cita el acta de WS37 y operaciones reales; ",
+      "independent_comparison": "Manual delegación solo tras37/31, átomos equivalentes reutilizados, permisos sesión no durables.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS39",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS39/b274656b302ed19e6a64a47309777a984df37c7b984400ae45d86b21c2061187/attempt-1",
+      "input_sha256": "b274656b302ed19e6a64a47309777a984df37c7b984400ae45d86b21c2061187",
+      "contract_sha256": "641afa4e202520bda56b44616a2dde1c188c08a84c004ba1087671dbef7afdb6",
+      "dry_run_sample": "**Lecturas:** nodo WS39, guía, brief, alcance, decisiones y cobertura; contratos de vecinos WS12/WS13 como prerrequisitos; inventario WS04 y API sldb `draft/validate/promote`; panel Context de WS13 (`node/workspace-view.js`).\n\n**Cambios previstos:** solo `shell/dialogs.js`, `views/models/`, `tests/` y acta; no tocar sldb ni modelos.\n\n**Dependencias:** WS12 (contrato por delta, G_WRITE_CONTRACT), WS13 (lector/Context); gates G_HUMAN_READ (WS16), G_UI_WRITE (recepción P01 por delta) y G_WRITE_CONTRACT; G_HUMAN_MODEL lo produce WS39.\n\n**Validaciones futuras:** UF09 en store temporal real; efectos/errores declarados por WS12; acta humana con participante P08; bloqueo de promote sin API/autoridad; G_HUMAN_MODEL antes del manual de WS31.",
+      "independent_comparison": "Editor Schema existente desde Context y acta UF09, sin modelo no clase inventada; gateMODEL solo disponibilidad capítulo, no manual básico.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS40",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS40/af6fd2abd3d2346feea263d0acc1e5399153fcb2108aeaf25227f16d609b389b/attempt-1",
+      "input_sha256": "af6fd2abd3d2346feea263d0acc1e5399153fcb2108aeaf25227f16d609b389b",
+      "contract_sha256": "3fed6947d30cd91c8bbba0d49df3046d026abd5cf8a4d53c219029949bc873bc",
+      "dry_run_sample": "Lecturas: nodo WS40, guía, brief, alcance, decisiones, cobertura y contratos vecinos de WS11/WS08/WS16/WS17/WS41/gates; no reviso esos bloques ni ejecuto nada.\n\nCambios previstos: versionar generador y pruebas en `graph_ui`; producir corpus temporal, commits en repos temporales, manifiesto JSON e instrucciones; no escribir en desk real ni commitear corpus generado como registro competidor.\n\nDependencias: contrato WS11 y user-flows WS08; `G_UI_READ` por delta; CLIs verificados en WS02/WS03 por dependencia transitiva; plantillas WS17 solo después, sin bloquear el cierre inicial de WS40.\n\nValidaciones futuras: ejecutar el comando dos veces y comprobar recreación aislada, commits git reales, manifiesto con roots/stores/commits/documentos clave ",
+      "independent_comparison": "Generador real dos desks+sin desk/commits/manifiesto y entrada mínima;17 opcional posterior y ningún fake server.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS41",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS41/215ed21ac053796b7548171dde4890b06d2c01723051ce0f7f6148a469171296/attempt-1",
+      "input_sha256": "215ed21ac053796b7548171dde4890b06d2c01723051ce0f7f6148a469171296",
+      "contract_sha256": "5358b97d31cfe6690022061409a2194c2530c73da0a7eadc8908cb26695f129e",
+      "dry_run_sample": "Lecturas previstas: guía, brief, alcance, decisiones, cobertura, nodo WS41, vecinos WS11/WS13/WS40 y gate G_UI_READ.\nCambios previstos: resolución de contexto por store en `graph_ui` usando APIs públicas y el contrato WS11; UI de identidad/origen, navegación de enlaces e historia; estados de error; pruebas con los dos stores del manifiesto WS40.\nDependencias: contrato WS11 con aliases/roots; lector e historia WS13; corpus, manifiesto y enlaces authored WS40; recibo G_UI_READ del delta concreto.\nValidaciones futuras: pruebas de lectura cruzada y retorno; rechazo de alias/root/path no autorizado y store ausente; ausencia de mutaciones cruzadas; no alteración del `SLDB_STORE` global; UF08 humano en WS16. Nada se ejecuta ahora.",
+      "independent_comparison": "Lectura dos stores roots autorizados sin global SLDB_STORE; errores alias/path/store, UF08 humano16.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS42",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS42/267d0911c7ae8af1b9ae8ef1418e020329fe6a91e3c42685be6fd3ffa5629d2c/attempt-1",
+      "input_sha256": "267d0911c7ae8af1b9ae8ef1418e020329fe6a91e3c42685be6fd3ffa5629d2c",
+      "contract_sha256": "e80d3eb96619406d1c6fd9decbce8b30a2c05c7f7aa922942e711295c3040dff",
+      "dry_run_sample": "- **Lecturas previstas:** `dag.yaml#node:WS42`, guía, brief, alcance, decisiones, cobertura, gates y bloques de vecinos WS12/WS19/WS24/WS30.\n- **Cambios previstos:** extender `frontends/mindmap/views/workspace/knowledge/`, tests y llamadas a endpoints de la whitelist WS12; sin backend nuevo ni renderer propio.\n- **Dependencias:** WS12 (contrato/whitelist), WS19 (edición/conflicto), WS24 (vista/backlinks), WS30 (validación humana); gates per_delta `G_HUMAN_READ`, `G_UI_WRITE`, `G_WRITE_CONTRACT`.\n- **Validaciones futuras:** pruebas aisladas de API, inspección/validación de materializaciones, escenarios UF03 en acta WS30 y etiquetas de disponibilidad. Nada ejecutado.",
+      "independent_comparison": "Espera19/24/12; split/merge reales y materializaciones validas/invalidas por modelo/API; store prueba real puede ser propio,40 alternativo no API falsa.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS43",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS43/53d0be7261aea33f82675835bdef21871ba956a50131a361daf042530687d9ba/attempt-1",
+      "input_sha256": "53d0be7261aea33f82675835bdef21871ba956a50131a361daf042530687d9ba",
+      "contract_sha256": "abf53d5e1b2d1c7407971120cfff3eb8360450de537293e48cd20afaf9839033",
+      "dry_run_sample": "**Lecturas previstas:** `dag.yaml` (WS43, WS17, WS30, gates), guía, brief, alcance, decisiones y cobertura; contrato `contratos/navegacion.md` de WS11; contrato por delta de WS12; acta WS30; plantillas WS17; `desk/registry/repo-*.md`; átomos existentes.  \n**Cambios previstos:** crear/actualizar `desk/README.md`; mapa/índices authored en deskops; átomos enlazados; acta de publicación; commit de cierre.  \n**Dependencias:** WS17, WS30, WS11 (transitiva), G_HUMAN_MANUAL, G_PRODUCT satisfecho, G_WRITE_CONTRACT por delta para WS43.  \n**Validaciones futuras:** resolver cada root/alias y enlace a path existente del repo enlazado; comprobar reutilización del registry; verificar átomos enlazados y correspondencia con paths/hashes del acta WS30; confi",
+      "independent_comparison": "Publicación real tras acta30+17, todos repos registry sin escribir hermanos; correspondencia paths/hashes y durable→átomos.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    },
+    {
+      "id": "WS44",
+      "evidence": "runs/subagents/20261031-workspace-context-reviews/context-review/WS44/8f1af582b3ef7368462aafb8c699338942d30f9d63fb6da6abc04c40eb63d850/attempt-1",
+      "input_sha256": "8f1af582b3ef7368462aafb8c699338942d30f9d63fb6da6abc04c40eb63d850",
+      "contract_sha256": "3bae5491475120da3f0a59acf8d767b07790454ddd2433fc0be2bf3f688354d6",
+      "dry_run_sample": "- **Lecturas previstas:** `auditoria/scion.md` de WS05; `autorizaciones/scion.md`; configuración Scion existente sin secretos; referencias de WS32/WS33 para capabilities mínimas.\n- **Cambios previstos:** escribir únicamente `auditoria/scion-probe.md` con respuesta pública real, actor del probe, Hub, fecha y capabilities. No mutar Scion.\n- **Dependencias:** WS05 y WS07; G_PRODUCT satisfecho; operador designado y permiso read-only registrado por el solicitante. Si WS05 no mapea capabilities por nodo, detenerse y registrar el hueco antes del probe.\n- **Validaciones futuras:** G_SCION solo se satisface con el probe real; tras cambio de Hub/API/credencial debe repetirse e invalidarse el recibo previo. WS32 no avanza sin G_SCION.",
+      "independent_comparison": "Operador/acceso designado futuro para probe read-only; respuesta real/capabilities antes SCION, cambioHub/API invalida.",
+      "verdict": "PASS planning comprehension with named future dependencies; no product authorization"
+    }
+  ]
+}

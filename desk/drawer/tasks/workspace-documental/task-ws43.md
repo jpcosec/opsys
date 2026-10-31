@@ -20,7 +20,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `deskops`. Tamaño relativo: S.
 
-desk/README.md; mapa de ecosistema/índices según P09 y WS11; átomos de acuerdos durables
+desk/README.md; mapa de ecosistema/índices según P09 y WS11; átomos de acuerdos durables; runs/subagents/workspace-documental-acceptance/publicacion/acta.md
 
 Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
@@ -30,7 +30,7 @@ Aplicar entradas/índices authored validados en Taller al deskops real, por oper
 
 ## Aceptación
 
-P09 y contrato fijan ubicación/modelo opcional; los acuerdos durables aplicados al mapa (Pxx aceptadas y contratos navegacion.md/operaciones.md de WS11/WS12) quedan en átomos enlazados desde él. El participante que fija P08 recorre Markdown y UI real, links/roots verificables (root = alias/root autorizado por el contrato de navegación; un enlace es verificable si resuelve a un path existente del repo enlazado), commit por `deskops closeout commit`, acta deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md y commit; no publicar solo ejemplo como si fuera ecosistema real y el mapa publicado corresponde a las entradas/índices validados en Taller. Escribir una entrada en un proyecto adicional requiere su tarea de repo y acuerdo de alcance.
+P09 y contrato fijan ubicación/modelo opcional; los acuerdos durables aplicados al mapa (Pxx aceptadas y contratos navegacion.md/operaciones.md de WS11/WS12) quedan en átomos enlazados desde él. El participante que fija P08 recorre Markdown y UI real, links/roots verificables (root = alias/root autorizado por el contrato de navegación; un enlace es verificable si resuelve a un path existente del repo enlazado), commit por `deskops closeout commit`, acta deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md y commit; no publicar solo ejemplo como si fuera ecosistema real y el mapa publicado corresponde a las entradas/índices validados en Taller. Escribir una entrada en un proyecto adicional requiere su tarea de repo y acuerdo de alcance. Regla durable de mapa = navegación/identidad/registry reusable P01/P02/P07/P09 vigentes (incluidos defaults técnicos); P03–06 solo si mapa expone operaciones, P08 remite a protocolo, permisos de sesión no se atomizan. Reutilizar átomo equivalente antes de crear. Contrastar lista paths/hashes de entradas WS17 que acta WS30 valida y registrar correspondencia a publicación. Repo listado sin entrada authored: enlazar registro existente y mostrar entrada ausente con follow-up del repo dueño; no omitir repo ni fabricar entrada interrepo.
 
 ## Dependencias
 
@@ -38,7 +38,7 @@ Tareas: WS17, WS30. Gates: G_HUMAN_MANUAL, G_PRODUCT, G_WRITE_CONTRACT. Ver esta
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS43/0a10feb9fdb122c06e668909e323edb316631df2ecc44c36d5b18cb853d6f6c7/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS43/53d0be7261aea33f82675835bdef21871ba956a50131a361daf042530687d9ba/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

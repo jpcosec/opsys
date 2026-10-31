@@ -1,0 +1,2 @@
+No product changes, commits, Board edits or workflow closeout by Executor. Spec2viz skill project path missing; loaded parallel .opencode copy.
+Metadata observation: old runner pi_version empty because pi --version emits stderr; preserved originals, honest post-run version/executable supplement, future stdout-or-stderr+DEVNULL fix. No model rerun for metadata-only capture.

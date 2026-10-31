@@ -28,7 +28,7 @@ Añadir al manual operación de delegación y revisión trazable tal como quedó
 
 ## Aceptación
 
-Cada paso remite al acta de WS37 y a operaciones reales; cada acuerdo durable deja su átomo vinculado; los fallos registrados en esa acta se documentan; se indica que G_EXEC es necesario para operar.
+Cada paso remite al acta de WS37 y a operaciones reales; cada acuerdo durable deja su átomo vinculado; los fallos registrados en esa acta se documentan; se indica que G_EXEC es necesario para operar. Acuerdo durable = regla de operación/autoridad/identidad de delegación demostrada y reusable fuera de una sesión; incidente/timestamp/resultado puntual queda en acta. Buscar átomos existentes de WS31 por regla; enlazar/actualizar el mismo cuando cubre acuerdo, crear solo si no existe regla equivalente. No atomizar permisos de una sola sesión.
 
 ## Dependencias
 
@@ -36,7 +36,7 @@ Tareas: WS37, WS31. Gates: G_HUMAN_DELEGATE. Ver estados/evidencia en dag.yaml; 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS38/876a25abfea893214befcad379c0bc36654471eecef40fc1b4d85859e7032f13/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS38/e9016f8306308b429c823631142a211ad39bc31b1b0121aed3a04b346ea8cbf7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

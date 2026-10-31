@@ -1,0 +1,83 @@
+{
+  "method": "execute real AST gate-validation block without top-level build/store/model calls",
+  "source_sha256": "db42bb95ee1de137a03bd0541fb3706aca37dbc6d6a75a0529423a0ec8e82f61",
+  "cases": [
+    {
+      "case": "valid",
+      "outcome": "accepted",
+      "expected": "accepted",
+      "pass": true,
+      "error": ""
+    },
+    {
+      "case": "id_only",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_actor",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_date",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_commit",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_blob",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_scope",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_effect",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "missing_repo",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "AssertionError: ('G_UI_READ', 'WS13', 'delta lacks exact receipt')"
+    },
+    {
+      "case": "invalid_commit",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "CalledProcessError: Command '['git', '-C', '/home/jp/proyectos/SLDB_1/deskops', 'cat-file', '-e', '0000000000000000000000000000000000000001']' returned non-zero exit status 1."
+    },
+    {
+      "case": "invalid_blob",
+      "outcome": "rejected",
+      "expected": "rejected",
+      "pass": true,
+      "error": "CalledProcessError: Command '['git', '-C', '/home/jp/proyectos/SLDB_1/deskops', 'cat-file', '-e', '0000000000000000000000000000000000000001']' returned non-zero exit status 1."
+    }
+  ]
+}

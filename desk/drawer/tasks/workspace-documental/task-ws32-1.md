@@ -27,11 +27,11 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Refinar el ticket de external_references.scion, sin segundo pipeline: intento no es slug; dispatch intent (intención registrada) y confirmed (Scion aceptó) como hechos separados del RunDoc; ambos se registran en el registro por intento que WS32.2 vuelve manifiesto canónico. Confirmed = respuesta de la API pública de Scion con la identidad que exponga, a comprobar en WS05/WS44.
+Refinar el ticket de external_references.scion, sin segundo pipeline: intento no es slug; dispatch intent (intención local registrada) y confirmed (solo respuesta Hub observada) como hechos separados del RunDoc; ambos se registran en el registro por intento que WS32.2 vuelve manifiesto canónico. Confirmed = respuesta de la API pública de Scion con la identidad que exponga, a comprobar en WS05/WS44. WS12 especifica contrato/ubicación del registro por intento (input de WS32.2), derivado del runtime real inventariado WS05; WS32.1 materializa ese registro e identidades según contrato, no inventa almacenamiento. Código models/run.py se cambia como código de modelo con registro/validación SLDB; instancias RunDoc trackeadas se crean/editan por API/CLI SLDB, sin ad hoc Markdown. Solo identidad/persistencia mediante operaciones locales reales en store temporal, SIN dispatch/reply de red ni evento Hub fingido. Registro local intent/no confirmado no afirma fallo/éxito de Hub.
 
 ## Aceptación
 
-Dos intentos del mismo agente y un dispatch fallido (rechazo de la API o timeout) conservan identidades distintas, evidenciadas por ids de intento propios, generados por deskops antes del dispatch; cambios de RunDoc por el flujo SLDB de modelos (registro y edición de documento trackeado con CLI sldb), no edición ad hoc.
+Dos intentos locales generan IDs distintos antes de dispatch y registro intent/no confirmado mediante operaciones reales del store temporal, sin simular respuesta Hub ni invocar red. Ningún no confirmado se etiqueta como fallo/aceptado Hub sin evidencia. WS34 (con G_EXEC) y WS37 demostrarán dispatch real fallido/confirmado y correlación exacta al id previo; contrato de integración explícito. Código modelos se registra/valida SLDB y RunDoc trackeado se edita por API/CLI, no ad hoc.
 
 ## Dependencias
 
@@ -41,7 +41,7 @@ Solapamiento: `scion` en external_references. Solo delta o ticket existente tras
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/71f96d632110f2bc5ceba73997b2b1e68ce6d3e060522e5df93bac926bced593/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/8a9ef2feabf27fc0708e4b7c8d3477926352532fbd6bc949a9c3cb09131d7958/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

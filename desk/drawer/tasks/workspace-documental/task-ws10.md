@@ -24,11 +24,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Índice y capítulos conceptuales, ejemplo fijo y etiqueta de disponibilidad; reutilizar manual CLI. Usa auditoria WS02–WS04; WS03/WS04 llegan de forma transitiva por WS06/WS07.
+Índice y esquema de capítulos conceptuales (propósito/entradas/salidas, no redacción del manual completo), ejemplo fijo y etiqueta de disponibilidad; reutilizar manual CLI. Usa auditoria WS02–WS04; WS03/WS04 llegan de forma transitiva por WS06/WS07. Ejemplo fijo acordado P08: Taller, graph_ui:.tmp/workspace-documental-ejemplo/, productor WS40; hasta generarse describir como corpus futuro, sin capturas ni pasos inventados.
 
 ## Aceptación
 
-Definiciones verificables de disponible/propuesto/bloqueado; no escribir pasos ni capturas ficticios.
+Registrar en borradores/manual.md definiciones: disponible solo versión/commit implementado + pruebas relevantes + acta humana del recorrido y pasos verificados; propuesto intención sin esa evidencia; bloqueado dependencia/contrato identificado pendiente. Contrastar estado actual con auditorías WS02–04 y remitir pruebas/actas futuras a sus productores. No escribir pasos ni capturas ficticios.
 
 ## Dependencias
 
@@ -36,7 +36,7 @@ Tareas: WS02, WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS10/1a815c3a51d42fbe540fac61b0f7e9c5f5331fbf26ae474bc090733833670fa3/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS10/f14f85126c0f278f88fac332c2776b33f5795f045e800af627d6d36934258718/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

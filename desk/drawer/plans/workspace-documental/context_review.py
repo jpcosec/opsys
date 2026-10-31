@@ -89,6 +89,7 @@ def neighbours(d: dict, node: dict) -> tuple:
         ids += [t['id'] for t in d['tasks'] if nid in t['depends_on']]
         if node.get('parent_id'):
             ids.append(node['parent_id'])
+    ids += node.get('review_context_nodes', [])
     ids = list(dict.fromkeys(i for i in ids if i != nid))
     gate_ids = list(node.get('requires', []))
     for v in node.get('variants', []):
@@ -112,6 +113,11 @@ def bundle(d: dict, node: dict) -> tuple:
         add(str(PLAN / rel), (B / rel).read_text(), 'whole_file')
     dump = lambda o: yaml.safe_dump(o, allow_unicode=True, sort_keys=False)
     neigh, gates = neighbours(d, node)
+    if node.get('overlap_with'):
+        key=node['overlap_with']
+        add(str(PLAN / 'dag.yaml') + '#external_reference:'+key, dump({key:d['external_references'][key]}), 'external_reference')
+    if node['id']=='WS07':
+        add(str(PLAN / 'dag.yaml') + '#baseline_proposal', dump({'baseline_proposal':d['baseline_proposal']}), 'baseline_proposal')
     if 'source_mode' in dump(contract(node)):
         add(str(PLAN / 'dag.yaml') + '#parameters', dump(d['parameters']), 'parameters')
     add(str(PLAN / 'dag.yaml') + f'#node:{node["id"]}', dump(contract(node)), 'node_contract')
@@ -122,7 +128,7 @@ def bundle(d: dict, node: dict) -> tuple:
     if gates:
         add(str(PLAN / 'dag.yaml') + '#gates', dump(gates), 'gate_contracts')
     parts.append(
-        f'FILE:instruccion\nRevisa el nodo {node["id"]} siguiendo context-review-guide.md. Los bloques edge son '
+        f'FILE:instruccion\nRevisa el nodo {node["id"]} siguiendo context-review-guide.md. ' + ('Para ROOT/PK, reformula el RESULTADO SUSTANTIVO del paquete y da DRY-RUN HIPOTETICO de ejecucion de hijos en orden, entradas/salidas entre ellos e integracion/validacion. No describas solo como revisar hashes/status/disposition: eso es gate de comprension, no el trabajo del paquete. No ejecutes nada. ' if node['id']=='ROOT' or node['id'].startswith('PK') else '') + 'Los bloques edge son '
         'contratos de sus vecinos; no los revises. No ejecutes nada.\n')
     return ''.join(p + '\n' for p in parts).encode(), records
 
@@ -160,7 +166,8 @@ def review(d: dict, node: dict) -> dict:
         return {'id': node['id'], 'attempt': str(answered.relative_to(ROOT)), 'ok': True}
     if failed >= MAX_TECHNICAL:
         return {'id': node['id'], 'attempt': str((RUN / node['id'] / input_sha).relative_to(ROOT)), 'ok': False}
-    version = subprocess.run(['pi', '--version'], capture_output=True, text=True).stdout.strip()
+    version_proc = subprocess.run(['pi', '--version'], stdin=subprocess.DEVNULL, capture_output=True, text=True)
+    version = (version_proc.stdout or version_proc.stderr).strip()
     for _ in range(MAX_TECHNICAL - failed):
         out = attempt_dir(node['id'], input_sha)
         out.mkdir(parents=True)

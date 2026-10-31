@@ -26,7 +26,7 @@ Leer graph_ui (../UIs/graph_ui) Board, tareas y código actuales; mapear a delta
 
 ## Aceptación
 
-Cada tarea externa con path, estado observado, hash y alcance, y cada solapamiento (misma tarea o archivos reclamados por dos sesiones); reconciliar también el SPEC externo (coincidencias, discrepancias y ausencias frente a este plan, con path y hash) y cualquier encargo aportado al ejecutar. Hash = SHA256 del archivo de tarea. Encargo aportado = documento que el solicitante entregue explícitamente al ejecutor; si no hay, se registra que no hubo.
+Cada tarea externa con path, estado observado, hash y alcance, y cada solapamiento (misma tarea o archivos reclamados por dos sesiones); reconciliar también el SPEC externo (coincidencias, discrepancias y ausencias frente a este plan, con path y hash) y cualquier encargo aportado al ejecutar. Hash = SHA256 del archivo de tarea. Encargo aportado = documento que el solicitante entregue explícitamente al ejecutor; si no hay, se registra que no hubo. Tabla de mapeo para cada nodo graph_ui: ID, base reutilizada/delta/ticket o ausencia explícita (no omitir), path/símbolo y commit observado si implementado. Partir de HEAD/Board y commits a1b2b22/f16fcd1/134a665; ampliar historia solo si una referencia actual lo requiere. Sesiones visibles en estado observado son coordinación, nunca autoridad privada; ausencia de sesión se registra. Commit solo prueba base citada, no aceptación ampliada.
 
 ## Dependencias
 
@@ -34,7 +34,7 @@ Tareas: WS01. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un ar
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS04/84ab389514752ec1020c32a21bf172a6f796baabc15a575d891556fcfbb75b0e/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS04/bebcf5b7fa3129d8a31bfd925541b835a63653500944261ccd6e1ba6bab2974b/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -1,0 +1,35 @@
+{
+  "semantic_cases": [
+    {
+      "case": "contract_scope_change_invalidates_node",
+      "problems": [
+        "WS32: input changed",
+        "WS33: input changed",
+        "WS33.1: input changed",
+        "WS33.2: input changed",
+        "WS36: input changed"
+      ],
+      "pass": true
+    },
+    {
+      "case": "supplied_gate_change_invalidates_consumers",
+      "problems": [
+        "PK02: input changed",
+        "PK05: input changed",
+        "WS07: input changed",
+        "WS12: input changed",
+        "WS20: input changed",
+        "WS21: input changed"
+      ],
+      "pass": true
+    },
+    {
+      "case": "review_metadata_does_not_change_bundle",
+      "problems": [],
+      "pass": true
+    }
+  ],
+  "all_cases_pass": true,
+  "frozen_source_count": 85,
+  "frozen_changed": []
+}

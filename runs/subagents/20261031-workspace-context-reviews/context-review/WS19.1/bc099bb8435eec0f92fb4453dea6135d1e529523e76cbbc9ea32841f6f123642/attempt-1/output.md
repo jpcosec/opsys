@@ -1,0 +1,11 @@
+## REFORMULACION
+WS19.1 es un encargo de implementación para que `graph_ui` edite campos del workspace reutilizando editores y la API del contrato WS12, con revisión hash CAS y conflicto visible. Resultado: UI de edición de campos con guardado/recarga verificable, rechazo de escritura obsoleta conservando el texto local y campos workflow-protected no editables, más tests. Repo dueño: `graph_ui`; salida en `frontends/mindmap/views/workspace/fields/` y `tests/`, consumiendo endpoints WS12 sin cambios de contrato. Límites: solo campos (no relaciones, que corresponde a WS19.2), no raw-source, otros modos read-only hasta contrato; G_HUMAN_READ solo habilita uso de mutaciones en UI, no desarrollo/pruebas aisladas de API; no duplicar la base a1b2b22.
+
+## AMBIGUEDADES
+1. Cita: «Mutación restringida a desk en modo manual exclusivo (P03); otros modos read-only hasta contrato.» Obligaría a inventar qué señal o estado define “modo manual exclusivo” y cómo detectarlo en la UI; P03 solo describe el caso de otro coordinador escritor y el nodo no identifica explícitamente qué artefacto de WS12 fija ese modo.
+
+## DRY-RUN
+Lecturas previstas: `dag.yaml` (WS19.1/WS19), guía, brief, alcance, decisiones, cobertura y reconciliación; el TaskDoc de promoción aún no autorizado. Cambios previstos: componentes de edición de campos en `graph_ui`, integración de endpoints WS12, tests de guardado, recarga, conflicto y campos protegidos. Dependencias: contrato/whitelist WS12 y sus gates por delta (`G_WRITE_CONTRACT`, `G_UI_WRITE`); `G_HUMAN_READ` antes de habilitar mutaciones UI; base integrada a1b2b22. Validaciones futuras: guardar/recargar dato real; escritura obsoleta muestra conflicto sin perder texto local; campos protegidos no editables; modos no exclusivos read-only; pruebas aisladas de API y validación humana sobre corpus WS40. Sin ejecución.
+
+## FUTURO
+WS12 debe publicar contrato, whitelist y política de coordinador por operación/campo; el receptor P01 en `graph_ui` produce el acta de `G_UI_WRITE` por delta; WS16 produce el acta de `G_HUMAN_READ`. WS19.2 cubre relaciones. La promoción fijará archivos, escenarios y textos exactos; la aceptación final y cualquier habilitación de uso corresponden al humano y a los gates, no a este revisor.

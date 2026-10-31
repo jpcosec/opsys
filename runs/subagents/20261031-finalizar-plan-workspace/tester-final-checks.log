@@ -1,0 +1,31 @@
+$ /home/jp/anaconda3/bin/python /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+
+exit_code=0
+$ /home/jp/anaconda3/bin/python /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/validate_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+STRUCTURE/COHERENCE: PASS
+Context review states: {'reviewed': 72}; stale or pending problems: 0
+63 candidate nodes; 15 explicit gates; no cycles (including gate producers).
+Generated README/table/task files/diagram spec match canonical YAML.
+Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
+Planning candidates preparable after documentary coverage verification: WS02, WS03, WS04, WS05
+Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
+Currently blocked candidates: 58
+G_HUMAN_READ: receipt location versionable under current gitignore
+G_HUMAN_MANUAL: receipt location versionable under current gitignore
+G_HUMAN_DELEGATE: receipt location versionable under current gitignore
+G_HUMAN_MODEL: receipt location versionable under current gitignore
+workspace: observed path/hash unchanged
+editing: observed path/hash unchanged
+changes: observed path/hash unchanged
+scion: observed path/hash unchanged
+kimun_reference_only: observed path/hash unchanged
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+
+exit_code=0
+$ /home/jp/anaconda3/bin/python /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+
+exit_code=0

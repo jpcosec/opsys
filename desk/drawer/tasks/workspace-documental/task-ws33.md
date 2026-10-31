@@ -13,6 +13,7 @@ depends_on:
 - WS33.2
 requires:
 - G_SCION
+- G_WRITE_CONTRACT
 ---
 
 # Vincular mensajes, resultados y decisiones
@@ -37,13 +38,13 @@ Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación.
 
 ## Dependencias
 
-Tareas: WS32, WS11, WS33.1, WS33.2. Gates: G_SCION. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS32, WS11, WS33.1, WS33.2. Gates: G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `scion` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33/02cca2e66c67e64a1e426f496c6dbdc1b07637c6ccb6fa6ad6ba0e8348cd8d07/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33/634c8b8564f5b2c8a4718be2e021e1ee2be60ddba47afefce5eec6f1c59a3ce1/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

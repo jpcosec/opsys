@@ -1,0 +1,12 @@
+{
+  "audit_at": "2026-10-31T15:50:01.255398+00:00",
+  "kind": "post-run runner-source provenance supplement; original receipt unchanged",
+  "batch_log": "runs/subagents/20261031-finalizar-plan-workspace/runner-final.log",
+  "runner_source": {
+    "path": "runs/subagents/20261031-finalizar-plan-workspace/runner-source-r1.py",
+    "sha256": "8069953f8eb44386cb43c7f3044635d0c862d79bb7c262349e1f2ea3327ffd1b"
+  },
+  "node_id": "WS26.1",
+  "input_sha256": "943043890188c2dbb38f25098dab871670fe72e7f8ba2588690ca5b21b6e9503",
+  "pi_version_observation": "runs/subagents/20261031-finalizar-plan-workspace/pi-version-provenance.json"
+}

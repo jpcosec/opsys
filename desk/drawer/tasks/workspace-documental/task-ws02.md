@@ -22,11 +22,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Superficie = cada archivo, comando público o modelo registrado concreto de las categorías enumeradas; una fila por superficie. Modelos y Markdown no modelado; inbox/drawer/issues/FAQ/crossroads/pills/fases/rituales/registry/roles/runs; firmas públicas, efectos Git y cierre. Modelado = tiene modelo registrado en el store (`sldb models list`); Markdown no modelado = el resto. Firmas públicas = comandos CLI de deskops y métodos de DeskopsOperations. Cierre = `deskops closeout verify|commit`.
+Superficie = cada archivo, comando público o modelo registrado concreto de las categorías enumeradas; una fila por superficie. Modelos y Markdown no modelado; inbox/drawer/issues/FAQ/crossroads/pills/fases/rituales/registry/roles/runs; firmas públicas, efectos Git y cierre. Modelado = tiene modelo registrado en el store (`sldb models list`); Markdown no modelado = el resto. Firmas públicas = comandos CLI de deskops y métodos de DeskopsOperations. Cierre = `deskops closeout verify|commit`. Universo: archivos de categorías enumeradas bajo desk/ de este checkout, comandos Deskops y modelos que sirven esas superficies; store local .sldb del checkout. Una fila por superficie con lista de todas sus operaciones públicas; no duplicar por comando. Para dato pasivo registrar path/hash o listado read-only; falta store se informa no comprobado con causa.
 
 ## Aceptación
 
-Cada fila incluye ubicación (archivo o símbolo de código) y la operación expuesta (comando o método que la lee o muta, o «dato pasivo»), con estado comprobado; no inferir modelo por carpeta. Estado comprobado = lectura citada con archivo:línea o salida de comando de solo lectura; lo no comprobado se marca «no comprobado» con causa (ausente, inaccesible o no encontrado).
+Cada fila incluye ubicación (archivo o símbolo de código) y la operación expuesta (comando o método que la lee o muta, o «dato pasivo»), con estado comprobado; no inferir modelo por carpeta. Estado comprobado = lectura citada con archivo:línea o salida de comando de solo lectura; lo no comprobado se marca «no comprobado» con causa (ausente, inaccesible o no encontrado). Una fila contiene lista de operaciones, no elegir solo una. La evidencia puede ser archivo:línea, hash/listado read-only o salida de comando según soporte; alcance de categorías y store local .sldb, sin inventariar binarios ajenos.
 
 ## Dependencias
 
@@ -34,7 +34,7 @@ Tareas: WS01. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un ar
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS02/13abece72d860f563c79e265f2607c2130f38e4f374549810b4cd50cb69720f2/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS02/f863930303f7f884f880db570d305c486a443e04f10fbb17cdb394846f9cb0f7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

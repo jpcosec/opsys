@@ -28,11 +28,11 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Manifiesto, RunDoc y cierre consistentes e idempotentes sobre el intento correcto (el identificado por el id de intento que cita el cierre, nunca por agente o slug). Manifiesto = registro canónico por intento que materializa RunDoc y registros de closeout, según el ticket de external_references.scion (campos mínimos: id de intento, identidad de agente, identidad de run si la API la expone, timestamps, hash de sesión, evidencia y commit de cierre).
+Manifiesto, RunDoc y cierre consistentes e idempotentes sobre el intento correcto (el identificado por el id de intento que cita el cierre, nunca por agente o slug). Manifiesto = registro canónico por intento que materializa RunDoc y registros de closeout, según el ticket de external_references.scion (campos mínimos: id de intento, identidad de agente, identidad de run si la API la expone, timestamps, hash de sesión, evidencia y commit de cierre). Idempotencia de persistencia local por operaciones reales del store temporal, sin dispatch/reply de red ni confirmar evento Hub no observado; prueba runtime con Hub y correlación es WS34/37 bajo G_EXEC.
 
 ## Aceptación
 
-Una finalización repetida sobre el mismo id de intento conserva identidad y evidencia sin crear registros nuevos; manifiesto, RunDoc y registros de closeout coinciden en id de intento, hash de sesión y evidencia.
+Una finalización repetida sobre el mismo id de intento conserva identidad y evidencia sin crear registros nuevos; manifiesto, RunDoc y registros de closeout coinciden en id de intento, hash de sesión y evidencia. Sesión aquí = artefacto de sesión/log del intento que identifique inventario WS05 y contrato WS12, con campo/algoritmo digest y fuente exactos declarados allí. No hash de proceso/slug ni valor fabricado. Si no existe artefacto/contrato de hash, registrar hueco con productor WS12/WS05 y bloquear esa coincidencia antes de promoción.
 
 ## Dependencias
 
@@ -42,7 +42,7 @@ Solapamiento: `scion` en external_references. Solo delta o ticket existente tras
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/4819deb2d5062bb72ddd5010cdaa360fa84a62ef6b42209826f776346121f225/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/724105a3083146792e43a443bd57c13d7f7b740171320cddcb8eb58c1bf3a5f7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -5,7 +5,7 @@ owner_repo: graph_ui
 node_role: delivery
 depends_on:
 - WS12
-- WS16
+- WS13
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -26,7 +26,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Hacer navegables Schema/editar clases ya disponibles desde documento/contexto; usar draft/validate/promote de sldb. No reimplementar modelos.
+Hacer navegables Schema/editar clases ya disponibles desde documento/contexto; usar draft/validate/promote de sldb. No reimplementar modelos. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura. Contexto = panel lateral Context del lector WS13 (node/workspace-view.js); acceso desde documento activo muestra Schema/clase origen de ese documento y abre editor existente inventariado WS04. Probar ese punto de entrada además de mutación UF09; ruta/selector exacto se fija en TaskDoc. WS13 aporta el lector requerido para integración, G_HUMAN_READ solo habilita uso de mutaciones.
 
 ## Aceptación
 
@@ -34,11 +34,11 @@ UF09 inspección y mutación en store temporal real de prueba; comprobar los efe
 
 ## Dependencias
 
-Tareas: WS12, WS16. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS13. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS39/0ea47b78a26f267f4a3e63e7e18252bbfed6ec558417e20e02973e7f64cced82/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS39/b274656b302ed19e6a64a47309777a984df37c7b984400ae45d86b21c2061187/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

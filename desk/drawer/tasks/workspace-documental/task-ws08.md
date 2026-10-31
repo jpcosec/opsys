@@ -27,7 +27,7 @@ Mapear UF a operaciones de WS02/03/04; cubrir manual, captura, revisión, cambio
 
 ## Aceptación
 
-Cada UF tiene entrada/salida, operación, error, nodo y gate humano; no prometer función fuera de alcance. Nodo = ID del DAG. Una operación ausente se marca hueco, sin inventarla.
+Cada UF tiene entrada/salida, operación, error, nodo y gate humano; no prometer función fuera de alcance. Nodo = ID del DAG. Una operación ausente se marca hueco, sin inventarla. Cubrir todas UF01–UF10; operación/nodo/gate admiten listas completas, no elegir nodo principal. Distinguir gate humano WS16/30/37/39 de prueba técnica propia WS29; si no hay gate humano adicional escribir ninguno adicional. Delegación se documenta condicionada a G_SCION/G_EXEC, sin habilitarla.
 
 ## Dependencias
 
@@ -35,7 +35,7 @@ Tareas: WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un archivo pr
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS08/73d611c0c5e259e0ca9e59650185e0275a59e169693913c3bf6c34b0ac10739c/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS08/b6741f952a04e9e68da0458e0078b9539b8072278ca54a8c4f0230dfca33adfc/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

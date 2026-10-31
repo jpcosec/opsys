@@ -6,7 +6,6 @@ node_role: delivery
 parent_id: WS25
 depends_on:
 - WS12
-- WS16
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -27,7 +26,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-UI para leer mensajes, ack y respuesta dentro del mismo desk mediante operaciones permitidas por contrato; sin envío interdesk; no confundir ack con aprobación.
+UI para leer mensajes, ack y respuesta dentro del mismo desk mediante operaciones permitidas por contrato; sin envío interdesk; no confundir ack con aprobación. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -35,11 +34,11 @@ Ack persiste tras recargar mostrando el mensaje origen; respuesta local solo si 
 
 ## Dependencias
 
-Tareas: WS12, WS16. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/b4078ccd74b2b9b92bb9146a336c47f8fa40dc4d96768df6da2b1727dc1cbc66/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/4f7e466672da13d72895098dcef2df0ce1a87dd8a80e165b08d0d873355be6b7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

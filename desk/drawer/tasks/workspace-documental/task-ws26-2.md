@@ -29,11 +29,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Enrutamiento explícito en Board y representación de capa lista por dependencias/no solapamiento; promoción solo cuando el contrato resuelve commits previos por canal autorizado. Enrutar = añadir la tarea a la lista tasks del BoardDoc por operación pública. Capa lista = tareas sin dependencias pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc y el ritual de fase.
+Enrutamiento explícito en Board y representación de capa lista por dependencias/no solapamiento; promoción solo cuando el contrato resuelve commits previos por canal autorizado. Enrutar = añadir la tarea a la lista tasks del BoardDoc por operación pública. Capa lista = tareas sin dependencias pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc y el ritual de fase. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
-Tras enrutar, `deskops show board` muestra la tarea y la UI la distingue de una tarea en ejecución; el canal de promoción respeta commits previos y estado real; la capa lista se muestra separada de tareas en ejecución y de tareas con dependencias pendientes o archivos solapados.
+Tras enrutar, `deskops show board` muestra la tarea y la UI la distingue de una tarea en ejecución; el canal de promoción respeta commits previos y estado real; la capa lista se muestra separada de tareas en ejecución y de tareas con dependencias pendientes o archivos solapados. No implementar promoción nueva: invocar solo operación completa ya admitida por WS12; si falta, preparar handoff y mostrar pendiente, no promoción terminada. Capa lista usa rutas normalizadas/expansión de files que documente contrato WS12 y ritual vigente: igualdad o contención directorio implican solapamiento; glob/no-resolución dudosa implica no comprobado y revisión supervisor antes de marcar lista, no heurística optimista.
 
 ## Dependencias
 
@@ -41,7 +41,7 @@ Tareas: WS12, WS22, WS26.1. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/4c5a7de6b0f75029824d378c3957cf8e94e48ebc670dc6ef32f925098ed9a6fd/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/b7ac66c40c3c0c36d736a0f901eb20cf28657067f76d54a7b197737f0f66df5b/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

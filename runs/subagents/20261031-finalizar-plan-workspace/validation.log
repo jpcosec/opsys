@@ -1,0 +1,4 @@
+Independent final Tester evidence index
+PASS documentary plan only.
+See tester-validation.log (commands/output/exits), tester-result-summary.md (verdict/limits), tester-final-integrity.json (all72), tester-semantic-comparison-72.json (all72 content), tester-all-attempt-integrity.json (243 attempts), tester-closeout-pytest.log (23PASS/3deselected; no rerun).
+Executor result-summary.md/testing-handoff.md preserved.

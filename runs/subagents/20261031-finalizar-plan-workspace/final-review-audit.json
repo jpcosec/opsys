@@ -1,0 +1,1966 @@
+{
+  "new_attempts": 243,
+  "current_nodes": 72,
+  "stale": 0,
+  "technical_failures": 0,
+  "unique_pids": 243,
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "thinking": "low",
+  "stdin": "devnull",
+  "execution_authorized": false,
+  "candidate_nodes": 63,
+  "review_logs": {
+    "runner-final.log": 72,
+    "runner-round2.log": 70,
+    "runner-round3.log": 69,
+    "runner-macro-sequence.log": 2,
+    "runner-contract-final.log": 30
+  },
+  "attempts": [
+    {
+      "node": "ROOT",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/18877f0eefd7a7a205bb1362a2c52d1c91cc5aff691f9021bdf5c0603504ec60/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "18877f0eefd7a7a205bb1362a2c52d1c91cc5aff691f9021bdf5c0603504ec60",
+      "pid": 1345793,
+      "technical_failure": false
+    },
+    {
+      "node": "PK01",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK01/ea29fc4bb3019e4b7234307c5dffd0c87497d1c2229cc4818511dad0ddff5b31/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "ea29fc4bb3019e4b7234307c5dffd0c87497d1c2229cc4818511dad0ddff5b31",
+      "pid": 1345881,
+      "technical_failure": false
+    },
+    {
+      "node": "PK02",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK02/6cb9c45f0ef7323df4947022bc8ee9afbac54fb3cc0b77c7e7cbc219afdcd751/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "6cb9c45f0ef7323df4947022bc8ee9afbac54fb3cc0b77c7e7cbc219afdcd751",
+      "pid": 1345927,
+      "technical_failure": false
+    },
+    {
+      "node": "PK03",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK03/6a3fee6d4d3898f3b490e098241fe82af9d416beec29cb4bf645fc245f68dd5d/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "6a3fee6d4d3898f3b490e098241fe82af9d416beec29cb4bf645fc245f68dd5d",
+      "pid": 1345831,
+      "technical_failure": false
+    },
+    {
+      "node": "PK04",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK04/4105107827322b99655ad65c52d99c90dd1b793279107b92c1176fe92d6438f8/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "4105107827322b99655ad65c52d99c90dd1b793279107b92c1176fe92d6438f8",
+      "pid": 1345905,
+      "technical_failure": false
+    },
+    {
+      "node": "PK05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK05/9b8daad55507f62f13d42887ee0fc58fc0f8539dd65527ce36a3c562e6242464/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "9b8daad55507f62f13d42887ee0fc58fc0f8539dd65527ce36a3c562e6242464",
+      "pid": 1345812,
+      "technical_failure": false
+    },
+    {
+      "node": "PK06",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK06/51fc37a32f6463beafca6e4a7615acdd7ea49c5d9b06fd7786ce49e97f07bb04/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "51fc37a32f6463beafca6e4a7615acdd7ea49c5d9b06fd7786ce49e97f07bb04",
+      "pid": 1345849,
+      "technical_failure": false
+    },
+    {
+      "node": "PK07",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK07/8c9b5811e18cda0a7dc052a6bde4e2615a9cd44d2f201ddf27f270c1da373079/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "8c9b5811e18cda0a7dc052a6bde4e2615a9cd44d2f201ddf27f270c1da373079",
+      "pid": 1345882,
+      "technical_failure": false
+    },
+    {
+      "node": "PK08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK08/fcc1ca251ddfa64388b7b1eaeaafa172bf728692c03ac02b1a72305b22ab9ff9/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "fcc1ca251ddfa64388b7b1eaeaafa172bf728692c03ac02b1a72305b22ab9ff9",
+      "pid": 1346403,
+      "technical_failure": false
+    },
+    {
+      "node": "WS01",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS01/81e24dc5c0d017793f3ad0bf3d227fcff62273c87c9bf9b5c5bdeee5bbe60bf1/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "81e24dc5c0d017793f3ad0bf3d227fcff62273c87c9bf9b5c5bdeee5bbe60bf1",
+      "pid": 1346475,
+      "technical_failure": false
+    },
+    {
+      "node": "WS02",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS02/fd2b5d31b574d9ddd01eea4707fe3c71196a8637a1db29f9dcca2408c95bf2b4/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "fd2b5d31b574d9ddd01eea4707fe3c71196a8637a1db29f9dcca2408c95bf2b4",
+      "pid": 1346546,
+      "technical_failure": false
+    },
+    {
+      "node": "WS03",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS03/7ae477732ad3fabd347877b69ae9c2f5a527cef49e40a9db3786b1802a38b225/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "7ae477732ad3fabd347877b69ae9c2f5a527cef49e40a9db3786b1802a38b225",
+      "pid": 1346613,
+      "technical_failure": false
+    },
+    {
+      "node": "WS04",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS04/aeafc47540c1ceecf3ee3940e5b3546cfae33f52159bf4e24da8bcb0bc3112a4/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "aeafc47540c1ceecf3ee3940e5b3546cfae33f52159bf4e24da8bcb0bc3112a4",
+      "pid": 1346714,
+      "technical_failure": false
+    },
+    {
+      "node": "WS05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS05/98b710335e1b02f2b9199ec9b7445ac8310fa414dfa548084e9edd549bb18a9f/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "98b710335e1b02f2b9199ec9b7445ac8310fa414dfa548084e9edd549bb18a9f",
+      "pid": 1346733,
+      "technical_failure": false
+    },
+    {
+      "node": "WS06",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS06/b3494b1d3806f6c6379cb2fdf08673e7b47603abe8e2870ce456c1d0af50a9ec/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "b3494b1d3806f6c6379cb2fdf08673e7b47603abe8e2870ce456c1d0af50a9ec",
+      "pid": 1346915,
+      "technical_failure": false
+    },
+    {
+      "node": "WS07",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS07/97fc1eced088fdc5978479cf01dbb5627b0e6c0354a989b2c9aad40a7e83ba8b/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "97fc1eced088fdc5978479cf01dbb5627b0e6c0354a989b2c9aad40a7e83ba8b",
+      "pid": 1346996,
+      "technical_failure": false
+    },
+    {
+      "node": "WS08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS08/7cf5e2fb9a15e9d65dc01c70836933f7954b309ee5f2b7e3e847784a32be81f0/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "7cf5e2fb9a15e9d65dc01c70836933f7954b309ee5f2b7e3e847784a32be81f0",
+      "pid": 1347305,
+      "technical_failure": false
+    },
+    {
+      "node": "WS09",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS09/fa74ab58d220d83ecf11ecb114584bc193a756338471dce6f1c7df608ec2d7aa/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "fa74ab58d220d83ecf11ecb114584bc193a756338471dce6f1c7df608ec2d7aa",
+      "pid": 1347424,
+      "technical_failure": false
+    },
+    {
+      "node": "WS10",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS10/4ed680c41b3bcc9774ee0ee220fbbe2bae60cb3e652d5ccadfc80d7f76e3ac2b/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "4ed680c41b3bcc9774ee0ee220fbbe2bae60cb3e652d5ccadfc80d7f76e3ac2b",
+      "pid": 1347446,
+      "technical_failure": false
+    },
+    {
+      "node": "WS11",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS11/8b1928135c0ec6af82e3c8696af961c03ce90bd187de6df46422541098d05d0b/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "8b1928135c0ec6af82e3c8696af961c03ce90bd187de6df46422541098d05d0b",
+      "pid": 1347546,
+      "technical_failure": false
+    },
+    {
+      "node": "WS12",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS12/5facb95bdf9da87f003f515c2a351a5360b9403995a0fb18ea2c92fd8f3b829a/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "5facb95bdf9da87f003f515c2a351a5360b9403995a0fb18ea2c92fd8f3b829a",
+      "pid": 1347670,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13/2baa285664ac00579a1748366ba7c54892f03b4ce0a84b5be7539b7eba0d9a3c/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "2baa285664ac00579a1748366ba7c54892f03b4ce0a84b5be7539b7eba0d9a3c",
+      "pid": 1347825,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/a648bb58c4bc8b65746100670e1a2efa591c4c3de2273c347cc1451970c424c6/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "a648bb58c4bc8b65746100670e1a2efa591c4c3de2273c347cc1451970c424c6",
+      "pid": 1347952,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/009fe59a4b37949e5be55c32adf541aa12ff742386a94f1cdaad1c6c4ea9abfe/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "009fe59a4b37949e5be55c32adf541aa12ff742386a94f1cdaad1c6c4ea9abfe",
+      "pid": 1348107,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.3",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.3/5d4196120c9c387b1e94e5f0b8b33cb885ad4679b8f175ad1d6fb75233536bc0/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "5d4196120c9c387b1e94e5f0b8b33cb885ad4679b8f175ad1d6fb75233536bc0",
+      "pid": 1348243,
+      "technical_failure": false
+    },
+    {
+      "node": "WS14",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS14/1c5f5eb14d082288c89a1b3ec07e0e88e9e51621a835b063a8233186bbc45e86/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "1c5f5eb14d082288c89a1b3ec07e0e88e9e51621a835b063a8233186bbc45e86",
+      "pid": 1348380,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15/e3e83d412db89ca0ec6b87b344377e0400255c2c44c8edc462fe65fe8fa927e9/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "e3e83d412db89ca0ec6b87b344377e0400255c2c44c8edc462fe65fe8fa927e9",
+      "pid": 1348401,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/e35f82ac7304660e3cdab707c502d69bc71b2b608c7af1fab7bf2abd8ac322c2/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "e35f82ac7304660e3cdab707c502d69bc71b2b608c7af1fab7bf2abd8ac322c2",
+      "pid": 1348624,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.2/9c3cc692cdd5517cc38e6ec0b655afec09f861f98f5ea645703b9b97ec7b7315/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "9c3cc692cdd5517cc38e6ec0b655afec09f861f98f5ea645703b9b97ec7b7315",
+      "pid": 1348712,
+      "technical_failure": false
+    },
+    {
+      "node": "WS16",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS16/b4b3c6c6ce4c855e799e38c0d88dc3f4ca394b86dec38cd716028425f75cecd4/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "b4b3c6c6ce4c855e799e38c0d88dc3f4ca394b86dec38cd716028425f75cecd4",
+      "pid": 1348794,
+      "technical_failure": false
+    },
+    {
+      "node": "WS17",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS17/69c3ae528fbc17b87f7af5ba9fa9a2848efd5b0bba44b62bea9cb8ebac426420/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "69c3ae528fbc17b87f7af5ba9fa9a2848efd5b0bba44b62bea9cb8ebac426420",
+      "pid": 1348856,
+      "technical_failure": false
+    },
+    {
+      "node": "WS18",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS18/969ee9254a658bc45c82a1b09b83c8961d1f69f5dacf1d9a3e779b981977bd59/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "969ee9254a658bc45c82a1b09b83c8961d1f69f5dacf1d9a3e779b981977bd59",
+      "pid": 1348917,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19/50143505188ffd2c8bef4137189eee24003dfc1021c1a269c2c562f86ffac2f9/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "50143505188ffd2c8bef4137189eee24003dfc1021c1a269c2c562f86ffac2f9",
+      "pid": 1349041,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/c8d9bfe7d3eef4695216cdc198d2e9dea9f421715767fa5c314d36f0ad3572a9/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "c8d9bfe7d3eef4695216cdc198d2e9dea9f421715767fa5c314d36f0ad3572a9",
+      "pid": 1349101,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/5632950b75e4e508c91adccbc1f4a11ff9f27a016eecb8b9650881f0d93aa704/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "5632950b75e4e508c91adccbc1f4a11ff9f27a016eecb8b9650881f0d93aa704",
+      "pid": 1349285,
+      "technical_failure": false
+    },
+    {
+      "node": "WS20",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS20/55d5ea994fdc6d050171dd92492e550618e41b4a949d43e9c399e79598e3eb55/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "55d5ea994fdc6d050171dd92492e550618e41b4a949d43e9c399e79598e3eb55",
+      "pid": 1349519,
+      "technical_failure": false
+    },
+    {
+      "node": "WS21",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS21/ffdb0a1e8f0dbb6d0167d263409782871ac36f4e453dcd4d947cfd509cc5af05/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "ffdb0a1e8f0dbb6d0167d263409782871ac36f4e453dcd4d947cfd509cc5af05",
+      "pid": 1349630,
+      "technical_failure": false
+    },
+    {
+      "node": "WS22",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS22/eed43d6716b97e85d26fd0be5d2dc760f7d1a7be5eb2f824b2471b960a76b73e/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "eed43d6716b97e85d26fd0be5d2dc760f7d1a7be5eb2f824b2471b960a76b73e",
+      "pid": 1349658,
+      "technical_failure": false
+    },
+    {
+      "node": "WS23",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS23/db5ffa3041f3c9e8f0bda1e31592e110b6725633e0d4472d6cabfd8bb86e4d4f/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "db5ffa3041f3c9e8f0bda1e31592e110b6725633e0d4472d6cabfd8bb86e4d4f",
+      "pid": 1349808,
+      "technical_failure": false
+    },
+    {
+      "node": "WS24",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS24/75894d816f92e0228c152d0f475abb80bf6c7a4ae72a65c0bcb88fbd47052399/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "75894d816f92e0228c152d0f475abb80bf6c7a4ae72a65c0bcb88fbd47052399",
+      "pid": 1349904,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25/60b3bb4349ba7afd1ce18cd8d4fb78c397d2d0b5a5a9f858a0962ef535e433cf/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "60b3bb4349ba7afd1ce18cd8d4fb78c397d2d0b5a5a9f858a0962ef535e433cf",
+      "pid": 1349980,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/bcbb278b419e6787002018147ab139ff4395b37f31633436f976480bf13865a7/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "bcbb278b419e6787002018147ab139ff4395b37f31633436f976480bf13865a7",
+      "pid": 1350063,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/aacd11e8a6dd25f9ccd4e20e96a54fb46e716e719143daa7a772129737ff7ab3/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "aacd11e8a6dd25f9ccd4e20e96a54fb46e716e719143daa7a772129737ff7ab3",
+      "pid": 1350105,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26/b80dd4b89232a56dba1f549902aecf64510f10b138215347e99ddf7cff9a9be9/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "b80dd4b89232a56dba1f549902aecf64510f10b138215347e99ddf7cff9a9be9",
+      "pid": 1350209,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/943043890188c2dbb38f25098dab871670fe72e7f8ba2588690ca5b21b6e9503/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "943043890188c2dbb38f25098dab871670fe72e7f8ba2588690ca5b21b6e9503",
+      "pid": 1350339,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/126ae2c7d0e437e483e37254c6ffb4d05bcedbc27f0ef4d4a761e068802377e0/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "126ae2c7d0e437e483e37254c6ffb4d05bcedbc27f0ef4d4a761e068802377e0",
+      "pid": 1350505,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27/02306dac2472c9c4f57082d34c489004e8c193cb73d84cb142e2081a13c3b1ae/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "02306dac2472c9c4f57082d34c489004e8c193cb73d84cb142e2081a13c3b1ae",
+      "pid": 1350524,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/e3335dab671ebe054d2151c6d71b2f40b558e1ef237d131d9c192eb367dd631e/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "e3335dab671ebe054d2151c6d71b2f40b558e1ef237d131d9c192eb367dd631e",
+      "pid": 1350815,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/8171b27e9324b26fd7a6f7512b8dd97a8d3ac7d3f303771113fa985944e9725c/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "8171b27e9324b26fd7a6f7512b8dd97a8d3ac7d3f303771113fa985944e9725c",
+      "pid": 1350873,
+      "technical_failure": false
+    },
+    {
+      "node": "WS28",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS28/4432c2461c3530990c3092f0d880cace70c53499860e6f3dac3baa87ca8d6f90/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "4432c2461c3530990c3092f0d880cace70c53499860e6f3dac3baa87ca8d6f90",
+      "pid": 1351011,
+      "technical_failure": false
+    },
+    {
+      "node": "WS29",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS29/0c84f58584fa3714a4cda1a2aa1e0af02fcdde97caedb9aed42c113cffe17680/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "0c84f58584fa3714a4cda1a2aa1e0af02fcdde97caedb9aed42c113cffe17680",
+      "pid": 1351109,
+      "technical_failure": false
+    },
+    {
+      "node": "WS30",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS30/bae710bda10cc799aa0e071af8f541ab0cbd5d45c31b119e292c3d43adf6375f/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "bae710bda10cc799aa0e071af8f541ab0cbd5d45c31b119e292c3d43adf6375f",
+      "pid": 1351292,
+      "technical_failure": false
+    },
+    {
+      "node": "WS31",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS31/7e226c5c218e1ec041a6ec7d1d42627c757182dda789762ff0b8f4aae4266060/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "7e226c5c218e1ec041a6ec7d1d42627c757182dda789762ff0b8f4aae4266060",
+      "pid": 1351597,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32/d8f6ecfa552ad49a9d35b84727e3769e329396ad5d66d874b002355cd633ea2a/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "d8f6ecfa552ad49a9d35b84727e3769e329396ad5d66d874b002355cd633ea2a",
+      "pid": 1351688,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/c9fe77b2f523c1df2b6a1e7bebe5dc4785deb3485d9e5ce9e344596cc071e2f9/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "c9fe77b2f523c1df2b6a1e7bebe5dc4785deb3485d9e5ce9e344596cc071e2f9",
+      "pid": 1351767,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/5375b35d24345acb0d9cef5a63e2584793c7a0443a3ab88fb756d5a1c578c800/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "5375b35d24345acb0d9cef5a63e2584793c7a0443a3ab88fb756d5a1c578c800",
+      "pid": 1351953,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33/99d7f02f8feabbf123b33c31fe1d1e353126624b4b0adbd8ad88f6dafcaec05b/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "99d7f02f8feabbf123b33c31fe1d1e353126624b4b0adbd8ad88f6dafcaec05b",
+      "pid": 1352022,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/23ac9959fcc70a56e923a22fe3a8b99003083d946118324054e96c0cdca6f002/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "23ac9959fcc70a56e923a22fe3a8b99003083d946118324054e96c0cdca6f002",
+      "pid": 1352133,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/2e7a72755e6ac7f8ec7be89c9e2e109bf5f65c9504e6ae5e386fb5e7ec75ab66/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "2e7a72755e6ac7f8ec7be89c9e2e109bf5f65c9504e6ae5e386fb5e7ec75ab66",
+      "pid": 1352253,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34/b784ca6c190f375319af5e39e96ac64d90498d5eabba06a48328d1e971b8d654/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "b784ca6c190f375319af5e39e96ac64d90498d5eabba06a48328d1e971b8d654",
+      "pid": 1352325,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/1a09d0d6fa1c28ca293bfcaaff4175ddcb215925785c2eda0ef531528756c9ba/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "1a09d0d6fa1c28ca293bfcaaff4175ddcb215925785c2eda0ef531528756c9ba",
+      "pid": 1352366,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/778d1a71301739e3c4b6e57401a46f71f2fbab49337d2e2340938d872ed8de5b/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "778d1a71301739e3c4b6e57401a46f71f2fbab49337d2e2340938d872ed8de5b",
+      "pid": 1352470,
+      "technical_failure": false
+    },
+    {
+      "node": "WS35",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS35/485a3987534b9784736766df6b0e3339da7824b1a8e5f70c4b2eec95b5a828d3/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "485a3987534b9784736766df6b0e3339da7824b1a8e5f70c4b2eec95b5a828d3",
+      "pid": 1352559,
+      "technical_failure": false
+    },
+    {
+      "node": "WS36",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS36/8505ddcb24440d3a237ddafd8db6f2f53d22686d48610a432c6c3d1b58701921/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "8505ddcb24440d3a237ddafd8db6f2f53d22686d48610a432c6c3d1b58701921",
+      "pid": 1352766,
+      "technical_failure": false
+    },
+    {
+      "node": "WS37",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS37/a23312ffa7af7a0443f8b6ca8b266de22ec344e01ea4b864599199f765632546/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "a23312ffa7af7a0443f8b6ca8b266de22ec344e01ea4b864599199f765632546",
+      "pid": 1352879,
+      "technical_failure": false
+    },
+    {
+      "node": "WS38",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS38/37a78053bab4f1d46e0c49da740e158c3beeab4c65767357e3911502e5a1afc3/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "37a78053bab4f1d46e0c49da740e158c3beeab4c65767357e3911502e5a1afc3",
+      "pid": 1352994,
+      "technical_failure": false
+    },
+    {
+      "node": "WS39",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS39/aaf107fe4ab5bf0b25f9156fc9c6daad5a0ca30ca066a4f6de15360019b20d80/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "aaf107fe4ab5bf0b25f9156fc9c6daad5a0ca30ca066a4f6de15360019b20d80",
+      "pid": 1353140,
+      "technical_failure": false
+    },
+    {
+      "node": "WS40",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS40/65b97c463c80132dad0fc35c759c6766e0b9a53862885f399afaf4f458f52f56/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "65b97c463c80132dad0fc35c759c6766e0b9a53862885f399afaf4f458f52f56",
+      "pid": 1353234,
+      "technical_failure": false
+    },
+    {
+      "node": "WS41",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS41/2ca4a8a60840d81e3b70747024b320ad4b50d369ef1701d9b093e633b78a2853/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "2ca4a8a60840d81e3b70747024b320ad4b50d369ef1701d9b093e633b78a2853",
+      "pid": 1353351,
+      "technical_failure": false
+    },
+    {
+      "node": "WS42",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS42/d95f6dc89cbc95e98cd7cbdeba0c675b7f6783718f78bf1d9457c7ba56724a54/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "d95f6dc89cbc95e98cd7cbdeba0c675b7f6783718f78bf1d9457c7ba56724a54",
+      "pid": 1353445,
+      "technical_failure": false
+    },
+    {
+      "node": "WS43",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS43/0edc40f17ea3a9e3af2be60a507abc1533d23eb50a02d2b944f4f9ddeb101008/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "0edc40f17ea3a9e3af2be60a507abc1533d23eb50a02d2b944f4f9ddeb101008",
+      "pid": 1353464,
+      "technical_failure": false
+    },
+    {
+      "node": "WS44",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS44/7921170d971663d9e6cb7bd6358bf66c8557df37207d6569ae9d5b55ab49e4ef/attempt-1",
+      "log": "runner-final.log",
+      "input_sha256": "7921170d971663d9e6cb7bd6358bf66c8557df37207d6569ae9d5b55ab49e4ef",
+      "pid": 1353560,
+      "technical_failure": false
+    },
+    {
+      "node": "ROOT",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/66434728c76f23d6a38ddb510bca446c7dee9a37b8f3dce65abded303e933880/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "66434728c76f23d6a38ddb510bca446c7dee9a37b8f3dce65abded303e933880",
+      "pid": 1356243,
+      "technical_failure": false
+    },
+    {
+      "node": "PK01",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK01/96109352ad4a1ac3caa7e90286348eff7b05de5063b4780593b5714e20bc5770/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "96109352ad4a1ac3caa7e90286348eff7b05de5063b4780593b5714e20bc5770",
+      "pid": 1356349,
+      "technical_failure": false
+    },
+    {
+      "node": "PK02",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK02/4e455946e9bd85739238b28b12d203c95c74c00e85a82a5d099f72a4a48516f6/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "4e455946e9bd85739238b28b12d203c95c74c00e85a82a5d099f72a4a48516f6",
+      "pid": 1356281,
+      "technical_failure": false
+    },
+    {
+      "node": "PK03",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK03/eb59bce978e48612f7dde6395792e85eb956801e665ca7a5c6c8b0269f22e677/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "eb59bce978e48612f7dde6395792e85eb956801e665ca7a5c6c8b0269f22e677",
+      "pid": 1356350,
+      "technical_failure": false
+    },
+    {
+      "node": "PK04",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK04/e38d5be01a004cee70ba233720a36f1d99400ddfbef800f7db953bafa91a689e/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "e38d5be01a004cee70ba233720a36f1d99400ddfbef800f7db953bafa91a689e",
+      "pid": 1356223,
+      "technical_failure": false
+    },
+    {
+      "node": "PK05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK05/4ee03d3334c8f9364dc9b5a22afe349eb8af113a438cf38aa8964cfa321b2f52/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "4ee03d3334c8f9364dc9b5a22afe349eb8af113a438cf38aa8964cfa321b2f52",
+      "pid": 1356262,
+      "technical_failure": false
+    },
+    {
+      "node": "PK06",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK06/728d1fd6cb1dadff3745a5622291c4b57e13c238fe922e1c15b37aea97e9d886/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "728d1fd6cb1dadff3745a5622291c4b57e13c238fe922e1c15b37aea97e9d886",
+      "pid": 1356217,
+      "technical_failure": false
+    },
+    {
+      "node": "PK07",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK07/336946c01fafe7d164221e59dfa4c0a125361d27d375cd36056b23ed6f59dd43/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "336946c01fafe7d164221e59dfa4c0a125361d27d375cd36056b23ed6f59dd43",
+      "pid": 1356299,
+      "technical_failure": false
+    },
+    {
+      "node": "PK08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK08/3c60783cdbc102196b627602fcb47bd3c46250cd8eb4ff3665ef7bf96ac2f4f1/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "3c60783cdbc102196b627602fcb47bd3c46250cd8eb4ff3665ef7bf96ac2f4f1",
+      "pid": 1356866,
+      "technical_failure": false
+    },
+    {
+      "node": "WS01",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS01/4b0bfbaaa943e598182b56a2c0ab101f5f668b1cfb687ac23525b7d6bd3a6bef/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "4b0bfbaaa943e598182b56a2c0ab101f5f668b1cfb687ac23525b7d6bd3a6bef",
+      "pid": 1357050,
+      "technical_failure": false
+    },
+    {
+      "node": "WS02",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS02/28258ffebd7cc2fd6ce82c3524e8e6250bf464913242accb5ff88ae0ae48cf08/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "28258ffebd7cc2fd6ce82c3524e8e6250bf464913242accb5ff88ae0ae48cf08",
+      "pid": 1357344,
+      "technical_failure": false
+    },
+    {
+      "node": "WS03",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS03/382692b4c9a1ac2885b72e6a41dc2aee425b28e7879a0b8b5a23f596da24de67/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "382692b4c9a1ac2885b72e6a41dc2aee425b28e7879a0b8b5a23f596da24de67",
+      "pid": 1357464,
+      "technical_failure": false
+    },
+    {
+      "node": "WS04",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS04/11813b1d206b2a850bf9d4ddb95680f693d48bc6eb770220471084df560b6037/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "11813b1d206b2a850bf9d4ddb95680f693d48bc6eb770220471084df560b6037",
+      "pid": 1357579,
+      "technical_failure": false
+    },
+    {
+      "node": "WS05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS05/c522ac3561271d1a38e5c258f5324c3d1118c55b83d09f4b0784b5e2e14e85bd/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "c522ac3561271d1a38e5c258f5324c3d1118c55b83d09f4b0784b5e2e14e85bd",
+      "pid": 1357646,
+      "technical_failure": false
+    },
+    {
+      "node": "WS06",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS06/af877b806169d191f7c2bed1640a339fc23ce3a62a2b7542a4623fa51b5e7a3b/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "af877b806169d191f7c2bed1640a339fc23ce3a62a2b7542a4623fa51b5e7a3b",
+      "pid": 1357766,
+      "technical_failure": false
+    },
+    {
+      "node": "WS07",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS07/4a7f50985491d0ef78fe0dbe2b78e208ce1cc87c2e90e5c0704d073ed5f98226/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "4a7f50985491d0ef78fe0dbe2b78e208ce1cc87c2e90e5c0704d073ed5f98226",
+      "pid": 1357930,
+      "technical_failure": false
+    },
+    {
+      "node": "WS08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS08/923885d9fd267c653c0c4f5429e33aad1199f89b8bf1258cc1b3555b41f6325c/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "923885d9fd267c653c0c4f5429e33aad1199f89b8bf1258cc1b3555b41f6325c",
+      "pid": 1358118,
+      "technical_failure": false
+    },
+    {
+      "node": "WS09",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS09/5ec4809398b020702ccff625513a5bc949d5a3e90158b3c92eb76b54b8c54703/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "5ec4809398b020702ccff625513a5bc949d5a3e90158b3c92eb76b54b8c54703",
+      "pid": 1358222,
+      "technical_failure": false
+    },
+    {
+      "node": "WS10",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS10/bb392046da758b7f2b57c3280d5358fcceb29f18ec0174f24b6ba4b79115a494/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "bb392046da758b7f2b57c3280d5358fcceb29f18ec0174f24b6ba4b79115a494",
+      "pid": 1358353,
+      "technical_failure": false
+    },
+    {
+      "node": "WS11",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS11/7cfc5274443292b4d3b3d0bc67a4ea9f9632205555c5d3ac1b2d63635e479ce2/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "7cfc5274443292b4d3b3d0bc67a4ea9f9632205555c5d3ac1b2d63635e479ce2",
+      "pid": 1358440,
+      "technical_failure": false
+    },
+    {
+      "node": "WS12",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS12/2174c48e377e54fe03f81e95d981e36bf4a4a5fff9d5d47e11f4f0f86cd27dd9/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "2174c48e377e54fe03f81e95d981e36bf4a4a5fff9d5d47e11f4f0f86cd27dd9",
+      "pid": 1358769,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13/2d62bc05684ce59107c5ab8ee61189e493a0eab699b4d7884835435a50ac0086/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "2d62bc05684ce59107c5ab8ee61189e493a0eab699b4d7884835435a50ac0086",
+      "pid": 1358840,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/90dde3db32ad73bd239320c9fe034243d0b629f471cabb8b4ab57b0ccf2af98f/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "90dde3db32ad73bd239320c9fe034243d0b629f471cabb8b4ab57b0ccf2af98f",
+      "pid": 1358950,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/55150f2d59813faba25ec3fa69b229490599a3df0a59b3a6477f0ca22d3ea92a/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "55150f2d59813faba25ec3fa69b229490599a3df0a59b3a6477f0ca22d3ea92a",
+      "pid": 1359141,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.3",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.3/04c1938554f844ded4a8bede85797e5706dbcddc99349a8751cb80d6b0fced8e/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "04c1938554f844ded4a8bede85797e5706dbcddc99349a8751cb80d6b0fced8e",
+      "pid": 1359209,
+      "technical_failure": false
+    },
+    {
+      "node": "WS14",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS14/cd079da5a0b5c38894f08de4eeebcf3a56de613c976c76f135528932dbe0e1d3/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "cd079da5a0b5c38894f08de4eeebcf3a56de613c976c76f135528932dbe0e1d3",
+      "pid": 1359288,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15/ecb03b6ba30fec06867be2589506beee0f56b521d8e8e8bb2fa77e6215df6ebf/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "ecb03b6ba30fec06867be2589506beee0f56b521d8e8e8bb2fa77e6215df6ebf",
+      "pid": 1359311,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/361e911dd22a5a3a188ac41e4a17be000e9f87372d40613415d2c71871dee479/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "361e911dd22a5a3a188ac41e4a17be000e9f87372d40613415d2c71871dee479",
+      "pid": 1359464,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.2/02f2df303ca35fbe4329f3aeb43dda54a5cd0ce906890f7691ad68d406e64a14/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "02f2df303ca35fbe4329f3aeb43dda54a5cd0ce906890f7691ad68d406e64a14",
+      "pid": 1359655,
+      "technical_failure": false
+    },
+    {
+      "node": "WS16",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS16/45f5b1da19f5c1e6b091a69bd2a9e88365595a7fa4c51aaa32c7bf759ae0dc68/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "45f5b1da19f5c1e6b091a69bd2a9e88365595a7fa4c51aaa32c7bf759ae0dc68",
+      "pid": 1359720,
+      "technical_failure": false
+    },
+    {
+      "node": "WS17",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS17/eee725a16b7d03c6349a06343e1a2764c15ac3fe519acb261df201a47804172c/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "eee725a16b7d03c6349a06343e1a2764c15ac3fe519acb261df201a47804172c",
+      "pid": 1359861,
+      "technical_failure": false
+    },
+    {
+      "node": "WS18",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS18/618d3a0c97697a4d26c5f4e0c0a6aa198e5bbf7d94360eb1c7cb996b90187b8a/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "618d3a0c97697a4d26c5f4e0c0a6aa198e5bbf7d94360eb1c7cb996b90187b8a",
+      "pid": 1359884,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19/b22b36ef91c9c457822110b5e123b42829f5f3cd18f4ea8088578b100c0044e6/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "b22b36ef91c9c457822110b5e123b42829f5f3cd18f4ea8088578b100c0044e6",
+      "pid": 1360066,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/bc099bb8435eec0f92fb4453dea6135d1e529523e76cbbc9ea32841f6f123642/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "bc099bb8435eec0f92fb4453dea6135d1e529523e76cbbc9ea32841f6f123642",
+      "pid": 1360209,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/6b92c3616393b888d1a4e5d1abf04a250604e8f02b77f67127e68ee5e15a344f/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "6b92c3616393b888d1a4e5d1abf04a250604e8f02b77f67127e68ee5e15a344f",
+      "pid": 1360228,
+      "technical_failure": false
+    },
+    {
+      "node": "WS20",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS20/0aa02aeb92bbe6852c9490bd7cb14fa85ddf971b9f10c3420d9f6d7025e993d2/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "0aa02aeb92bbe6852c9490bd7cb14fa85ddf971b9f10c3420d9f6d7025e993d2",
+      "pid": 1360368,
+      "technical_failure": false
+    },
+    {
+      "node": "WS21",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS21/98f31703537cd1707605245d215a8a18519b149472fa9bc00f6f74b20e10bff8/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "98f31703537cd1707605245d215a8a18519b149472fa9bc00f6f74b20e10bff8",
+      "pid": 1360462,
+      "technical_failure": false
+    },
+    {
+      "node": "WS22",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS22/a82ad18390bb31475e91a05c060e42473c883ef3e898265cf5b228ddac8e8d12/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "a82ad18390bb31475e91a05c060e42473c883ef3e898265cf5b228ddac8e8d12",
+      "pid": 1360629,
+      "technical_failure": false
+    },
+    {
+      "node": "WS23",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS23/8073edd6c9024f12851c7e4b3058963892ef7c296999705b2417ee31b3d8cb09/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "8073edd6c9024f12851c7e4b3058963892ef7c296999705b2417ee31b3d8cb09",
+      "pid": 1360763,
+      "technical_failure": false
+    },
+    {
+      "node": "WS24",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS24/401e25b7e928a1c5c450d275532fdf69275d20f199e57702e55ecbf21c7e3a68/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "401e25b7e928a1c5c450d275532fdf69275d20f199e57702e55ecbf21c7e3a68",
+      "pid": 1360910,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25/72483872d57290206dbc8ebc63630cd145e3285893699a55e70ed2d162391fe8/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "72483872d57290206dbc8ebc63630cd145e3285893699a55e70ed2d162391fe8",
+      "pid": 1360970,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/dd1d914829c43f760e7fb98e08a1ce5d107665573ab07a56195e202dab48ad73/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "dd1d914829c43f760e7fb98e08a1ce5d107665573ab07a56195e202dab48ad73",
+      "pid": 1361150,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/3d1cc10f2e8e677eb6fa5019187927bda1e212c972be2ff319d82b8c77ae1f20/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "3d1cc10f2e8e677eb6fa5019187927bda1e212c972be2ff319d82b8c77ae1f20",
+      "pid": 1361169,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26/858e700309aa7dd72ac0f44f2f87e2261937fa874b88ef5d8b0d9b4e7b6b7807/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "858e700309aa7dd72ac0f44f2f87e2261937fa874b88ef5d8b0d9b4e7b6b7807",
+      "pid": 1361396,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/493b69b2839aad5c6864e9b4c0252316191da0297baaf4f3f0ec48213c9fb375/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "493b69b2839aad5c6864e9b4c0252316191da0297baaf4f3f0ec48213c9fb375",
+      "pid": 1361483,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/3f8b465056332593afda36f827124ee378f9c54da6fb772f8a816bb0ee71ff0a/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "3f8b465056332593afda36f827124ee378f9c54da6fb772f8a816bb0ee71ff0a",
+      "pid": 1361545,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27/457e6188b2afb4ef44c6cb4fbd20443f1a0db0a401bf8fef8df12b8dd87590bf/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "457e6188b2afb4ef44c6cb4fbd20443f1a0db0a401bf8fef8df12b8dd87590bf",
+      "pid": 1361661,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/14021a5843418d27fdf095dea75d1195f37ba4864c7fa14204c72094d65a260a/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "14021a5843418d27fdf095dea75d1195f37ba4864c7fa14204c72094d65a260a",
+      "pid": 1361771,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/4a10b80e5b10372a0e61be96e5277efbef4066beaf54751f133447e353086eca/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "4a10b80e5b10372a0e61be96e5277efbef4066beaf54751f133447e353086eca",
+      "pid": 1361980,
+      "technical_failure": false
+    },
+    {
+      "node": "WS28",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS28/eb6a9ab774950fe78c9372698209879de86b0ff8bf7892911a359a11de64fe62/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "eb6a9ab774950fe78c9372698209879de86b0ff8bf7892911a359a11de64fe62",
+      "pid": 1362051,
+      "technical_failure": false
+    },
+    {
+      "node": "WS29",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS29/177f3e9409e5f2b1f9d70ccba2fcd373d833e04942494fb06ee173b475e14717/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "177f3e9409e5f2b1f9d70ccba2fcd373d833e04942494fb06ee173b475e14717",
+      "pid": 1362092,
+      "technical_failure": false
+    },
+    {
+      "node": "WS30",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS30/58984f01ca24d23b1087ba3be3b83d41594a330bd9fe37e0e054b4dfd5597284/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "58984f01ca24d23b1087ba3be3b83d41594a330bd9fe37e0e054b4dfd5597284",
+      "pid": 1362214,
+      "technical_failure": false
+    },
+    {
+      "node": "WS31",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS31/b46e7e1fc12c6e657a3084625f9bef238ecd8f3740e924ec25a009e9044d4630/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "b46e7e1fc12c6e657a3084625f9bef238ecd8f3740e924ec25a009e9044d4630",
+      "pid": 1362316,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32/c5d7d4891406d82cc4c528e82461773f3d19878e35d316e4299428204b9d26c4/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "c5d7d4891406d82cc4c528e82461773f3d19878e35d316e4299428204b9d26c4",
+      "pid": 1362454,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/26901a2ab3e2bd7ca6908081b43a8b91385244b5abf8da171158ed541547d7bb/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "26901a2ab3e2bd7ca6908081b43a8b91385244b5abf8da171158ed541547d7bb",
+      "pid": 1362514,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/6c1b844141ed40c290c06ba77a95bd0708fabc66fbf4574a79da83fb1fb5bde5/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "6c1b844141ed40c290c06ba77a95bd0708fabc66fbf4574a79da83fb1fb5bde5",
+      "pid": 1362591,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33/ab946edf2335ff4d56fcb45de4be9d722c81a6e135d6b047d7fc362a95f7fe7f/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "ab946edf2335ff4d56fcb45de4be9d722c81a6e135d6b047d7fc362a95f7fe7f",
+      "pid": 1362653,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34/b94b80ec20019f320c5fff7b680877dd4f9a0e9ce6feb63eb44d72b6020640dc/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "b94b80ec20019f320c5fff7b680877dd4f9a0e9ce6feb63eb44d72b6020640dc",
+      "pid": 1362841,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/9396933a2af781b481fc8d184762ba6d09e440d2f263740f7f61aa62f6cb2569/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "9396933a2af781b481fc8d184762ba6d09e440d2f263740f7f61aa62f6cb2569",
+      "pid": 1362960,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/8d4c7b9d5ace62a2bbffcd9ff02676b776fc9bb13b9d4592915c67284429a643/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "8d4c7b9d5ace62a2bbffcd9ff02676b776fc9bb13b9d4592915c67284429a643",
+      "pid": 1362987,
+      "technical_failure": false
+    },
+    {
+      "node": "WS35",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS35/194e94d74576df22adb3fba3a6e69208176a91ae1582528b97d29e5449c8358b/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "194e94d74576df22adb3fba3a6e69208176a91ae1582528b97d29e5449c8358b",
+      "pid": 1363087,
+      "technical_failure": false
+    },
+    {
+      "node": "WS36",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS36/2dcf969194338e2de3a5c7fd2903ca06a12d501ac321554318846db7a7a7f0ab/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "2dcf969194338e2de3a5c7fd2903ca06a12d501ac321554318846db7a7a7f0ab",
+      "pid": 1363189,
+      "technical_failure": false
+    },
+    {
+      "node": "WS37",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS37/ea2e835f2fbaeb1f4605d4943fa23cda2d10ef223069c2d3b1f784d5aed804c6/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "ea2e835f2fbaeb1f4605d4943fa23cda2d10ef223069c2d3b1f784d5aed804c6",
+      "pid": 1363372,
+      "technical_failure": false
+    },
+    {
+      "node": "WS38",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS38/e9016f8306308b429c823631142a211ad39bc31b1b0121aed3a04b346ea8cbf7/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "e9016f8306308b429c823631142a211ad39bc31b1b0121aed3a04b346ea8cbf7",
+      "pid": 1363394,
+      "technical_failure": false
+    },
+    {
+      "node": "WS39",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS39/9b648cc10d135f521c62a62de44c91fd527bafcded7beb7595932ef541c9523a/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "9b648cc10d135f521c62a62de44c91fd527bafcded7beb7595932ef541c9523a",
+      "pid": 1363504,
+      "technical_failure": false
+    },
+    {
+      "node": "WS40",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS40/37d7f90c12032e9674aea563a9796a72a9f08a258a63b1476f4dc3b8c60ff122/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "37d7f90c12032e9674aea563a9796a72a9f08a258a63b1476f4dc3b8c60ff122",
+      "pid": 1363663,
+      "technical_failure": false
+    },
+    {
+      "node": "WS41",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS41/ea80ad15fb195f1cca2c1bf9fd3ee5857aa065c3fefc350f2106d755260402b9/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "ea80ad15fb195f1cca2c1bf9fd3ee5857aa065c3fefc350f2106d755260402b9",
+      "pid": 1363745,
+      "technical_failure": false
+    },
+    {
+      "node": "WS42",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS42/ab614525d95443c07fafb444dcb7b007ee6ef01cfeb759050d449c1d3d50f52a/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "ab614525d95443c07fafb444dcb7b007ee6ef01cfeb759050d449c1d3d50f52a",
+      "pid": 1363831,
+      "technical_failure": false
+    },
+    {
+      "node": "WS43",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS43/d502be3379b431cd71742346897a707e9be64b4264a83651962a96fd0a56500f/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "d502be3379b431cd71742346897a707e9be64b4264a83651962a96fd0a56500f",
+      "pid": 1363944,
+      "technical_failure": false
+    },
+    {
+      "node": "WS44",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS44/8f1af582b3ef7368462aafb8c699338942d30f9d63fb6da6abc04c40eb63d850/attempt-1",
+      "log": "runner-round2.log",
+      "input_sha256": "8f1af582b3ef7368462aafb8c699338942d30f9d63fb6da6abc04c40eb63d850",
+      "pid": 1364049,
+      "technical_failure": false
+    },
+    {
+      "node": "ROOT",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/ddae81480cdae7c44f2e2e36607b3462f3290079b56effe49e487173fe76848f/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "ddae81480cdae7c44f2e2e36607b3462f3290079b56effe49e487173fe76848f",
+      "pid": 1366517,
+      "technical_failure": false
+    },
+    {
+      "node": "PK01",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK01/f5a07b584a494ad340632a146ae53ffe1e14648a504e227f3cc16db24801a0b5/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "f5a07b584a494ad340632a146ae53ffe1e14648a504e227f3cc16db24801a0b5",
+      "pid": 1366555,
+      "technical_failure": false
+    },
+    {
+      "node": "PK02",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK02/e3207c4bf542f664ec366fcc16cd439a68ee565d152e9eb4583a510c0880e499/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "e3207c4bf542f664ec366fcc16cd439a68ee565d152e9eb4583a510c0880e499",
+      "pid": 1366491,
+      "technical_failure": false
+    },
+    {
+      "node": "PK03",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK03/58d0d3e7b4bedf73f5198ae9aa0ecd10347ec8896883d3abe922673dc2e1e1d8/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "58d0d3e7b4bedf73f5198ae9aa0ecd10347ec8896883d3abe922673dc2e1e1d8",
+      "pid": 1366484,
+      "technical_failure": false
+    },
+    {
+      "node": "PK04",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK04/05bb6d0c2f35787a7633703fb94e61e8682d189b97a2cbefa82f9ef7ccc0269f/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "05bb6d0c2f35787a7633703fb94e61e8682d189b97a2cbefa82f9ef7ccc0269f",
+      "pid": 1366440,
+      "technical_failure": false
+    },
+    {
+      "node": "PK05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK05/ba6d273b46f97974e62c0e77feb36dd249512fc9e138c09bacd5578be9c9b173/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "ba6d273b46f97974e62c0e77feb36dd249512fc9e138c09bacd5578be9c9b173",
+      "pid": 1366471,
+      "technical_failure": false
+    },
+    {
+      "node": "PK06",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK06/debcb8a59827921792a50b04eac0e990278759eb6225a90d0475ef8e9a463b49/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "debcb8a59827921792a50b04eac0e990278759eb6225a90d0475ef8e9a463b49",
+      "pid": 1366536,
+      "technical_failure": false
+    },
+    {
+      "node": "PK07",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK07/3b78fbe98f16ffeb976211b1d90f03cccce8ddaf6d2f7cca64c6c129d92865d8/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "3b78fbe98f16ffeb976211b1d90f03cccce8ddaf6d2f7cca64c6c129d92865d8",
+      "pid": 1366421,
+      "technical_failure": false
+    },
+    {
+      "node": "PK08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK08/1701a4102d7f61a70dfe74febea22915970e16f339d9a4fa02a820663872639a/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "1701a4102d7f61a70dfe74febea22915970e16f339d9a4fa02a820663872639a",
+      "pid": 1367024,
+      "technical_failure": false
+    },
+    {
+      "node": "WS01",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS01/12a8d6161a80c88ff10458c620463dfa8c977ba79eb80cdc0f08f7138ae07968/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "12a8d6161a80c88ff10458c620463dfa8c977ba79eb80cdc0f08f7138ae07968",
+      "pid": 1367104,
+      "technical_failure": false
+    },
+    {
+      "node": "WS02",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS02/f863930303f7f884f880db570d305c486a443e04f10fbb17cdb394846f9cb0f7/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "f863930303f7f884f880db570d305c486a443e04f10fbb17cdb394846f9cb0f7",
+      "pid": 1367236,
+      "technical_failure": false
+    },
+    {
+      "node": "WS03",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS03/da7a2b9a3f9d96756d8f549203d13108d814ef01f9821787f6732a8577e73dc6/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "da7a2b9a3f9d96756d8f549203d13108d814ef01f9821787f6732a8577e73dc6",
+      "pid": 1367484,
+      "technical_failure": false
+    },
+    {
+      "node": "WS04",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS04/bebcf5b7fa3129d8a31bfd925541b835a63653500944261ccd6e1ba6bab2974b/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "bebcf5b7fa3129d8a31bfd925541b835a63653500944261ccd6e1ba6bab2974b",
+      "pid": 1367515,
+      "technical_failure": false
+    },
+    {
+      "node": "WS05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS05/1cb0b9281224429eb5001a94f85e5eaa1b93ff94879cb797b5ec9f56a1d3a81c/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "1cb0b9281224429eb5001a94f85e5eaa1b93ff94879cb797b5ec9f56a1d3a81c",
+      "pid": 1367631,
+      "technical_failure": false
+    },
+    {
+      "node": "WS06",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS06/1eca5e1fe98e11e434bdee6ea5db232059263d223c4829208cc483c2902daad7/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "1eca5e1fe98e11e434bdee6ea5db232059263d223c4829208cc483c2902daad7",
+      "pid": 1367649,
+      "technical_failure": false
+    },
+    {
+      "node": "WS07",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS07/1cc681a71a8431e185b4137e3915416ced7b87e8167218d42d5cd533142eb21c/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "1cc681a71a8431e185b4137e3915416ced7b87e8167218d42d5cd533142eb21c",
+      "pid": 1367819,
+      "technical_failure": false
+    },
+    {
+      "node": "WS08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS08/b6741f952a04e9e68da0458e0078b9539b8072278ca54a8c4f0230dfca33adfc/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "b6741f952a04e9e68da0458e0078b9539b8072278ca54a8c4f0230dfca33adfc",
+      "pid": 1367910,
+      "technical_failure": false
+    },
+    {
+      "node": "WS09",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS09/bc658b86011eca2ba377e80d68e0f64d38edebfe550278c85d0a5f3001edcce3/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "bc658b86011eca2ba377e80d68e0f64d38edebfe550278c85d0a5f3001edcce3",
+      "pid": 1367929,
+      "technical_failure": false
+    },
+    {
+      "node": "WS10",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS10/f14f85126c0f278f88fac332c2776b33f5795f045e800af627d6d36934258718/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "f14f85126c0f278f88fac332c2776b33f5795f045e800af627d6d36934258718",
+      "pid": 1368133,
+      "technical_failure": false
+    },
+    {
+      "node": "WS11",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS11/c1bdb847f4d3c89cc92d557f56e40ff721896a623d64ee20170de5e865d694c2/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "c1bdb847f4d3c89cc92d557f56e40ff721896a623d64ee20170de5e865d694c2",
+      "pid": 1368193,
+      "technical_failure": false
+    },
+    {
+      "node": "WS12",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS12/44ffbd8d1ccb6a2d03c372d193116d7db275d9cb9036559c342ee06349973c9f/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "44ffbd8d1ccb6a2d03c372d193116d7db275d9cb9036559c342ee06349973c9f",
+      "pid": 1368304,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13/cddaa79f3b74a78fd78c2e1c0764860c361c02fc9044b0c002ab3739271f2a55/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "cddaa79f3b74a78fd78c2e1c0764860c361c02fc9044b0c002ab3739271f2a55",
+      "pid": 1368324,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/793f1a6e84597102d83c8bada9af43c16ac49626f4aebf9d78496d21831ee9cf/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "793f1a6e84597102d83c8bada9af43c16ac49626f4aebf9d78496d21831ee9cf",
+      "pid": 1368512,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/e9bb87a0f4a8d6e2e414d622edcd141b11d91b59c8d60995ca242478d9cd2163/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "e9bb87a0f4a8d6e2e414d622edcd141b11d91b59c8d60995ca242478d9cd2163",
+      "pid": 1368627,
+      "technical_failure": false
+    },
+    {
+      "node": "WS13.3",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS13.3/31a076cbb0d765d81f4939c986854d09eb058bb665655137a9e0a08229745881/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "31a076cbb0d765d81f4939c986854d09eb058bb665655137a9e0a08229745881",
+      "pid": 1368761,
+      "technical_failure": false
+    },
+    {
+      "node": "WS14",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS14/b43901d1bf05812c99d481f2d99be88387d35481e52ba17e8d7a1bb744461755/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "b43901d1bf05812c99d481f2d99be88387d35481e52ba17e8d7a1bb744461755",
+      "pid": 1368780,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15/80c5857353eb6231fc979c89c141c2d648150acb2199a8fb180f72e5e2d278e5/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "80c5857353eb6231fc979c89c141c2d648150acb2199a8fb180f72e5e2d278e5",
+      "pid": 1368799,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/a5674b84e829adc6c49a803cef9048cb261ba0d73cb1f00b5d200cdd0fb2c975/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "a5674b84e829adc6c49a803cef9048cb261ba0d73cb1f00b5d200cdd0fb2c975",
+      "pid": 1369156,
+      "technical_failure": false
+    },
+    {
+      "node": "WS15.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS15.2/c07b89bcf14260be871cfb4fbeefac9daa0ea71916fd760fbfa644c3f7f43dae/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "c07b89bcf14260be871cfb4fbeefac9daa0ea71916fd760fbfa644c3f7f43dae",
+      "pid": 1369225,
+      "technical_failure": false
+    },
+    {
+      "node": "WS16",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS16/792200f3263f35292f0549a12297f6f715d33cd08425f875c7138e6e3d7f90c6/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "792200f3263f35292f0549a12297f6f715d33cd08425f875c7138e6e3d7f90c6",
+      "pid": 1369470,
+      "technical_failure": false
+    },
+    {
+      "node": "WS17",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS17/c53e461e063433cf723d90c79ef0d87875cf1b886d3e48079470649080a5b876/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "c53e461e063433cf723d90c79ef0d87875cf1b886d3e48079470649080a5b876",
+      "pid": 1369494,
+      "technical_failure": false
+    },
+    {
+      "node": "WS18",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS18/d3a27636533b74412f9d472a032a07ed3381cf3fd0fe59bd94c9e36cb4afd45f/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "d3a27636533b74412f9d472a032a07ed3381cf3fd0fe59bd94c9e36cb4afd45f",
+      "pid": 1369708,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19/5743355ceb3f80089893e77685c6636cdf63fa4be2f53f2826dc9bd3b30b788f/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "5743355ceb3f80089893e77685c6636cdf63fa4be2f53f2826dc9bd3b30b788f",
+      "pid": 1369794,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/417d8c1905e20d93bc22d3a391c84e5e8c3348b32364ba613e9922445affaa1d/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "417d8c1905e20d93bc22d3a391c84e5e8c3348b32364ba613e9922445affaa1d",
+      "pid": 1369874,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/78980f2709f16c546ef49ada58b4013402aac0a9cef33320739f1ee5801068fc/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "78980f2709f16c546ef49ada58b4013402aac0a9cef33320739f1ee5801068fc",
+      "pid": 1370455,
+      "technical_failure": false
+    },
+    {
+      "node": "WS20",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS20/929d763cd7137bc61e715d58bcbd731baef5741b890bf2e616117c962b3d3df4/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "929d763cd7137bc61e715d58bcbd731baef5741b890bf2e616117c962b3d3df4",
+      "pid": 1370711,
+      "technical_failure": false
+    },
+    {
+      "node": "WS21",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS21/77343a5d9d9f9945153f6d23da074099c3a45c248253ac8a489f52483eedd738/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "77343a5d9d9f9945153f6d23da074099c3a45c248253ac8a489f52483eedd738",
+      "pid": 1370869,
+      "technical_failure": false
+    },
+    {
+      "node": "WS22",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS22/bacdbcdd6798048e98d02337153d7af1d6703046b62d2f0132b2cdbdfaabc42f/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "bacdbcdd6798048e98d02337153d7af1d6703046b62d2f0132b2cdbdfaabc42f",
+      "pid": 1370983,
+      "technical_failure": false
+    },
+    {
+      "node": "WS23",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS23/8725d8adb032e93105442f8a17144216a01132732128e1fb2e383ae04e8c6508/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "8725d8adb032e93105442f8a17144216a01132732128e1fb2e383ae04e8c6508",
+      "pid": 1371073,
+      "technical_failure": false
+    },
+    {
+      "node": "WS24",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS24/3673fa3a9a982ee0ec2575167b2e717e219844a9f5160ef74312dbceb22daa79/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "3673fa3a9a982ee0ec2575167b2e717e219844a9f5160ef74312dbceb22daa79",
+      "pid": 1371153,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25/ed2e6071ab80d58338675f08e5effd6fcea1ccd0ae1bdb1d77f4675fc51a4a7c/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "ed2e6071ab80d58338675f08e5effd6fcea1ccd0ae1bdb1d77f4675fc51a4a7c",
+      "pid": 1371217,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/db13ff4c8abe29c0d5938df1fc02dec65dd9ab7658f6a9f1f46e9c11633a2893/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "db13ff4c8abe29c0d5938df1fc02dec65dd9ab7658f6a9f1f46e9c11633a2893",
+      "pid": 1371473,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/12530d9698e1fa6a60868be15956801bf49c3e983593bee880bb5ec118059dbd/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "12530d9698e1fa6a60868be15956801bf49c3e983593bee880bb5ec118059dbd",
+      "pid": 1371591,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26/c64ec2b1ba85dd1a251483e9ccaece7614ff88900c471107b329f8afd14038ed/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "c64ec2b1ba85dd1a251483e9ccaece7614ff88900c471107b329f8afd14038ed",
+      "pid": 1371610,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/b5870a2e31b9d67674b40999982f5eb6040bdfd094866760abec7b401456bd78/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "b5870a2e31b9d67674b40999982f5eb6040bdfd094866760abec7b401456bd78",
+      "pid": 1371749,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/f8afa17cb26e0de3c75539a271a77134e435784818402c21400eadd26ddf0294/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "f8afa17cb26e0de3c75539a271a77134e435784818402c21400eadd26ddf0294",
+      "pid": 1371872,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27/13912cb9b06e3e2d39c4275c3e5979c9862e218efbcda019a97b90656c718c23/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "13912cb9b06e3e2d39c4275c3e5979c9862e218efbcda019a97b90656c718c23",
+      "pid": 1372011,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/5797e0fb9b460ac3bedce7fd82ccc3434a724ae26ea247ff1c7d7f7a8b95caa2/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "5797e0fb9b460ac3bedce7fd82ccc3434a724ae26ea247ff1c7d7f7a8b95caa2",
+      "pid": 1372115,
+      "technical_failure": false
+    },
+    {
+      "node": "WS27.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/ff669146e97dc42ee23acdc9c9f4442ae2bda1031bf4e6585bfdf3b3310c09c8/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "ff669146e97dc42ee23acdc9c9f4442ae2bda1031bf4e6585bfdf3b3310c09c8",
+      "pid": 1372230,
+      "technical_failure": false
+    },
+    {
+      "node": "WS28",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS28/3f87117e791b111ff4d4fbb841c3ea2d80b3a9537e13052d2c91475a31973639/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "3f87117e791b111ff4d4fbb841c3ea2d80b3a9537e13052d2c91475a31973639",
+      "pid": 1372295,
+      "technical_failure": false
+    },
+    {
+      "node": "WS29",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS29/2282366b3957034e15bc21f45ae7a6849cd37ab726f29de69941166e37383537/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "2282366b3957034e15bc21f45ae7a6849cd37ab726f29de69941166e37383537",
+      "pid": 1372366,
+      "technical_failure": false
+    },
+    {
+      "node": "WS30",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS30/6fcab09909f2340a3d46a327019128e7de3b57d5a26e7715223fd941a0d413f7/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "6fcab09909f2340a3d46a327019128e7de3b57d5a26e7715223fd941a0d413f7",
+      "pid": 1372479,
+      "technical_failure": false
+    },
+    {
+      "node": "WS31",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS31/d775c4230fd8852ee2e11af7058eeb16c6b7ad37d3a3b1f752077072b4fb25cc/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "d775c4230fd8852ee2e11af7058eeb16c6b7ad37d3a3b1f752077072b4fb25cc",
+      "pid": 1372561,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32/3d68aa5cd8f6e83af4938b88e4e24ff8480db614dc28a4572c62aa0fc9b9a204/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "3d68aa5cd8f6e83af4938b88e4e24ff8480db614dc28a4572c62aa0fc9b9a204",
+      "pid": 1372670,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/c44a5a3686eadccc1725a03c0826394312d22f6afd011c6cb3ee87a50d7f79b5/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "c44a5a3686eadccc1725a03c0826394312d22f6afd011c6cb3ee87a50d7f79b5",
+      "pid": 1372735,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/f2399cf0d7f23705879bd2e26cbb7918d3cb3b90fc423fcd91eb0f395313a36e/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "f2399cf0d7f23705879bd2e26cbb7918d3cb3b90fc423fcd91eb0f395313a36e",
+      "pid": 1372842,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33/31443561e3c724cdc243cab0c7fbe0a7669c3d8a338fdfb1e12a9e0d7033eacf/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "31443561e3c724cdc243cab0c7fbe0a7669c3d8a338fdfb1e12a9e0d7033eacf",
+      "pid": 1372969,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/ea0ec07df4a116ee8d41e6b77a3da080908607bc3183fbe708bafa090772611d/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "ea0ec07df4a116ee8d41e6b77a3da080908607bc3183fbe708bafa090772611d",
+      "pid": 1372988,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/2506738b81e34de707aaab50397c242fdb4e5239d7d60fa02131af95b0ce6e23/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "2506738b81e34de707aaab50397c242fdb4e5239d7d60fa02131af95b0ce6e23",
+      "pid": 1373137,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34/10a1511564b2eebd66f1677a43b04581072b5b99bbf26b9c083cd5c612c5704c/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "10a1511564b2eebd66f1677a43b04581072b5b99bbf26b9c083cd5c612c5704c",
+      "pid": 1373273,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/10b7bbcc2f00d8da6956eaebae613d4432f649cdcd1120aaa88051128f6b9fc8/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "10b7bbcc2f00d8da6956eaebae613d4432f649cdcd1120aaa88051128f6b9fc8",
+      "pid": 1373451,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/379c882ba20424a92fe14b80142d19c3aef8f3ec5d37930dd75894b071a3fe42/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "379c882ba20424a92fe14b80142d19c3aef8f3ec5d37930dd75894b071a3fe42",
+      "pid": 1373470,
+      "technical_failure": false
+    },
+    {
+      "node": "WS35",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS35/610110984574e6244c0ce3b82668a1713575c0f1043c7be213b32755522ed9a0/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "610110984574e6244c0ce3b82668a1713575c0f1043c7be213b32755522ed9a0",
+      "pid": 1373565,
+      "technical_failure": false
+    },
+    {
+      "node": "WS36",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS36/09544c0e484c8293b88ce14c2245ab59f31720b09624339ca115bd1ba3d95e19/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "09544c0e484c8293b88ce14c2245ab59f31720b09624339ca115bd1ba3d95e19",
+      "pid": 1373693,
+      "technical_failure": false
+    },
+    {
+      "node": "WS39",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS39/cf164e0b6428cb9d26fa45bf5886d427b7eff2c5b93b9777903a949b563e4c51/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "cf164e0b6428cb9d26fa45bf5886d427b7eff2c5b93b9777903a949b563e4c51",
+      "pid": 1373819,
+      "technical_failure": false
+    },
+    {
+      "node": "WS40",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS40/af6fd2abd3d2346feea263d0acc1e5399153fcb2108aeaf25227f16d609b389b/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "af6fd2abd3d2346feea263d0acc1e5399153fcb2108aeaf25227f16d609b389b",
+      "pid": 1373839,
+      "technical_failure": false
+    },
+    {
+      "node": "WS41",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS41/215ed21ac053796b7548171dde4890b06d2c01723051ce0f7f6148a469171296/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "215ed21ac053796b7548171dde4890b06d2c01723051ce0f7f6148a469171296",
+      "pid": 1374097,
+      "technical_failure": false
+    },
+    {
+      "node": "WS42",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS42/481fde32692b34e1f641ee6408ff774fcefebc1b0efc0e9213e013ec9a5f6a0e/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "481fde32692b34e1f641ee6408ff774fcefebc1b0efc0e9213e013ec9a5f6a0e",
+      "pid": 1374166,
+      "technical_failure": false
+    },
+    {
+      "node": "WS43",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS43/01f43810cdae3bed34349e64c724c1893291134af7751da801b934100557b0a8/attempt-1",
+      "log": "runner-round3.log",
+      "input_sha256": "01f43810cdae3bed34349e64c724c1893291134af7751da801b934100557b0a8",
+      "pid": 1374185,
+      "technical_failure": false
+    },
+    {
+      "node": "ROOT",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/9e68501cb91711421be16cc1953942dc3d0efdab0fb234eb1784533fe778c626/attempt-1",
+      "log": "runner-macro-sequence.log",
+      "input_sha256": "9e68501cb91711421be16cc1953942dc3d0efdab0fb234eb1784533fe778c626",
+      "pid": 1371309,
+      "technical_failure": false
+    },
+    {
+      "node": "PK05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK05/efb464ae2961a9ac73b060f5b3ea83e1e2a795cf90a85e653506f19896655317/attempt-1",
+      "log": "runner-macro-sequence.log",
+      "input_sha256": "efb464ae2961a9ac73b060f5b3ea83e1e2a795cf90a85e653506f19896655317",
+      "pid": 1371308,
+      "technical_failure": false
+    },
+    {
+      "node": "PK08",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/PK08/7822de3b03715be2f34a9be61dc980262ad6545e1d94939be4e41f94cd00994f/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "7822de3b03715be2f34a9be61dc980262ad6545e1d94939be4e41f94cd00994f",
+      "pid": 1376770,
+      "technical_failure": false
+    },
+    {
+      "node": "WS05",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS05/20b4bba263d18fbba66a9a5fa46157b4383c150e954dcd50b9cefd2b67c02bd7/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "20b4bba263d18fbba66a9a5fa46157b4383c150e954dcd50b9cefd2b67c02bd7",
+      "pid": 1376711,
+      "technical_failure": false
+    },
+    {
+      "node": "WS11",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS11/454e9ae26013ec1a0ccc0246a47d6763ed045e15ccef91608beaadb3c17059d9/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "454e9ae26013ec1a0ccc0246a47d6763ed045e15ccef91608beaadb3c17059d9",
+      "pid": 1376744,
+      "technical_failure": false
+    },
+    {
+      "node": "WS12",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS12/2d0be4858f8cf582f2a4582b82c7ebab75ee74c472e7f2b48f30dcc33578e81e/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "2d0be4858f8cf582f2a4582b82c7ebab75ee74c472e7f2b48f30dcc33578e81e",
+      "pid": 1376750,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19/fef872bb00d0eb1685959b0db53144e98d41cafd5d8b6a16f966dbfc8078ef86/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "fef872bb00d0eb1685959b0db53144e98d41cafd5d8b6a16f966dbfc8078ef86",
+      "pid": 1376685,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/e0c7b82d181d27f222c2a591eec7efc29804e07a28210deb13f86108be2fd254/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "e0c7b82d181d27f222c2a591eec7efc29804e07a28210deb13f86108be2fd254",
+      "pid": 1376789,
+      "technical_failure": false
+    },
+    {
+      "node": "WS19.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/0f00740bfa68534f070fe49cf24985c7732b2a0a801acb38afdc88868926475e/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "0f00740bfa68534f070fe49cf24985c7732b2a0a801acb38afdc88868926475e",
+      "pid": 1376687,
+      "technical_failure": false
+    },
+    {
+      "node": "WS20",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS20/2d5c282e5bb3afe4d9d491c59aa2cc1d62b9366818e206df9f6b2368aae82720/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "2d5c282e5bb3afe4d9d491c59aa2cc1d62b9366818e206df9f6b2368aae82720",
+      "pid": 1376655,
+      "technical_failure": false
+    },
+    {
+      "node": "WS21",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS21/ba22a8a6c420c1300fea33122bbdfa0d9e7fb2d407e98cb3f747ae512ad2944e/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "ba22a8a6c420c1300fea33122bbdfa0d9e7fb2d407e98cb3f747ae512ad2944e",
+      "pid": 1377194,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25/273b9abe0d78f4229ea7568c4953a969c982305e88a5ac4485f2ab2a8413dee5/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "273b9abe0d78f4229ea7568c4953a969c982305e88a5ac4485f2ab2a8413dee5",
+      "pid": 1377273,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/4f7e466672da13d72895098dcef2df0ce1a87dd8a80e165b08d0d873355be6b7/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "4f7e466672da13d72895098dcef2df0ce1a87dd8a80e165b08d0d873355be6b7",
+      "pid": 1377360,
+      "technical_failure": false
+    },
+    {
+      "node": "WS25.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/fc68841d23bfd19b4b46527d8af994a68cfb17c3a19cbfb875b07a30e8b61c6c/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "fc68841d23bfd19b4b46527d8af994a68cfb17c3a19cbfb875b07a30e8b61c6c",
+      "pid": 1377524,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26/8c82ede53c2b71855149996fb3fe907166845a16eb64a7a5a66eafb19bb90a8d/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "8c82ede53c2b71855149996fb3fe907166845a16eb64a7a5a66eafb19bb90a8d",
+      "pid": 1377587,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/22c491060652837f8b55a381f481ab28b6760903c42de766ab50a5d767e9d255/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "22c491060652837f8b55a381f481ab28b6760903c42de766ab50a5d767e9d255",
+      "pid": 1377655,
+      "technical_failure": false
+    },
+    {
+      "node": "WS26.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/b7ac66c40c3c0c36d736a0f901eb20cf28657067f76d54a7b197737f0f66df5b/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "b7ac66c40c3c0c36d736a0f901eb20cf28657067f76d54a7b197737f0f66df5b",
+      "pid": 1377728,
+      "technical_failure": false
+    },
+    {
+      "node": "WS28",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS28/2736c6051889d71e8366ee463176c1a9a73057021767055634a661f23cdcb6ed/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "2736c6051889d71e8366ee463176c1a9a73057021767055634a661f23cdcb6ed",
+      "pid": 1377870,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32/52e1c340dd994a0ee84c32e55eda74f6e811c33d619c23b63dd41387b20eb9b9/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "52e1c340dd994a0ee84c32e55eda74f6e811c33d619c23b63dd41387b20eb9b9",
+      "pid": 1377938,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/8a9ef2feabf27fc0708e4b7c8d3477926352532fbd6bc949a9c3cb09131d7958/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "8a9ef2feabf27fc0708e4b7c8d3477926352532fbd6bc949a9c3cb09131d7958",
+      "pid": 1377960,
+      "technical_failure": false
+    },
+    {
+      "node": "WS32.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/724105a3083146792e43a443bd57c13d7f7b740171320cddcb8eb58c1bf3a5f7/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "724105a3083146792e43a443bd57c13d7f7b740171320cddcb8eb58c1bf3a5f7",
+      "pid": 1378082,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33/634c8b8564f5b2c8a4718be2e021e1ee2be60ddba47afefce5eec6f1c59a3ce1/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "634c8b8564f5b2c8a4718be2e021e1ee2be60ddba47afefce5eec6f1c59a3ce1",
+      "pid": 1378101,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/60bea826b52bd027faea1851f8152b7690a3775a2317e5d8d14d60db419261c7/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "60bea826b52bd027faea1851f8152b7690a3775a2317e5d8d14d60db419261c7",
+      "pid": 1378390,
+      "technical_failure": false
+    },
+    {
+      "node": "WS33.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/c0f8469dac7dd808f5d9b607333dda222d3835dd299f63e52f9f9ff54a444e35/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "c0f8469dac7dd808f5d9b607333dda222d3835dd299f63e52f9f9ff54a444e35",
+      "pid": 1378478,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34/9953c6f507c75f69c9a619c79a2e8f2e241b47ac30a7a7594a5e53502d6a1760/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "9953c6f507c75f69c9a619c79a2e8f2e241b47ac30a7a7594a5e53502d6a1760",
+      "pid": 1378606,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.1",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/104ad7961711b2dcfb9a163b3f176f9d1bc4daca4636989facf5c7313724d2bb/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "104ad7961711b2dcfb9a163b3f176f9d1bc4daca4636989facf5c7313724d2bb",
+      "pid": 1378696,
+      "technical_failure": false
+    },
+    {
+      "node": "WS34.2",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/6e73c268f12451eb44519cd0cfec0894c16374f5d9f915a6864e64dc7fc716d6/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "6e73c268f12451eb44519cd0cfec0894c16374f5d9f915a6864e64dc7fc716d6",
+      "pid": 1378718,
+      "technical_failure": false
+    },
+    {
+      "node": "WS35",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS35/d6f94405aab71268f7dadd4382c61dfa609762388c5c31306437f508f1de5d01/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "d6f94405aab71268f7dadd4382c61dfa609762388c5c31306437f508f1de5d01",
+      "pid": 1378812,
+      "technical_failure": false
+    },
+    {
+      "node": "WS36",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS36/c386484fa62275b4d94306b05720ea8af20dbc1947548acc57f0c254b60b72c7/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "c386484fa62275b4d94306b05720ea8af20dbc1947548acc57f0c254b60b72c7",
+      "pid": 1378891,
+      "technical_failure": false
+    },
+    {
+      "node": "WS39",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS39/b274656b302ed19e6a64a47309777a984df37c7b984400ae45d86b21c2061187/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "b274656b302ed19e6a64a47309777a984df37c7b984400ae45d86b21c2061187",
+      "pid": 1379004,
+      "technical_failure": false
+    },
+    {
+      "node": "WS42",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS42/267d0911c7ae8af1b9ae8ef1418e020329fe6a91e3c42685be6fd3ffa5629d2c/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "267d0911c7ae8af1b9ae8ef1418e020329fe6a91e3c42685be6fd3ffa5629d2c",
+      "pid": 1379125,
+      "technical_failure": false
+    },
+    {
+      "node": "WS43",
+      "path": "runs/subagents/20261031-workspace-context-reviews/context-review/WS43/53d0be7261aea33f82675835bdef21871ba956a50131a361daf042530687d9ba/attempt-1",
+      "log": "runner-contract-final.log",
+      "input_sha256": "53d0be7261aea33f82675835bdef21871ba956a50131a361daf042530687d9ba",
+      "pid": 1379191,
+      "technical_failure": false
+    }
+  ]
+}

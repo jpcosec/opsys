@@ -21,11 +21,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Editar brief.md en sitio: acuerdos textuales y distinciones documento/nodo/vista/renderer/consulta/foco; ningún requisito remite a un chat invisible.
+Brief/glosario ya authored y cubiertos por recibo covered_work. Al promover auditorías verificar hash/alcance; no reescribir si no cambió decisión/contrato. Si cambia realmente el encargo, editar solo brief.md con acuerdos textuales y vocabulario documento/nodo/vista/renderer/consulta/foco; sin chat invisible.
 
 ## Aceptación
 
-Un review barato sin historial reformula el producto solo con brief.md. Cada acuerdo (cita o frase de autorización) de la sección «Encargo y acuerdos explícitos» cita al solicitante y cada propuesta del registro Pxx remite a decisiones.md.
+brief.md enlaza decisiones.md como registro Pxx completo; no editar decisiones.md desde este nodo. Acuerdos textuales tienen actor/fuente y distinciones glosario legibles. Coordinator compara reformulación/dry-run de review barato aislado ritual-context-review con intención y explicita hallazgos/disposición; APTO no basta. Cobertura documental actual satisface elaboración del brief, no lifecycle cerrado ni autorización producto.
 
 ## Dependencias
 
@@ -33,7 +33,7 @@ Tareas: ninguna. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS01/3a9efb5dd5e8a15aab4649cf0b9dd3cbd577b711abf23395fb010f18d0d53a23/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS01/12a8d6161a80c88ff10458c620463dfa8c977ba79eb80cdc0f08f7138ae07968/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

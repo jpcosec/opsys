@@ -1,6 +1,6 @@
 # Visión del workspace documental
 
-Estado: borrador basado en brief.md; contrato por reconciliar en WS07. No describe funcionalidades ya entregadas ni reemplaza átomos/modelos del proyecto.
+Estado: borrador basado en brief.md; base producto registrada en decisiones.md; contratos técnicos WS11/WS12 pendientes. No describe funcionalidades ya entregadas ni reemplaza átomos/modelos del proyecto.
 
 ## Propósito
 
@@ -29,10 +29,10 @@ Explorador, documentos abiertos en pestañas y divisiones, búsqueda y panel con
 
 ## Decisiones abiertas
 
-Dónde viven y qué contratos usan las entradas e índices; alcance real de ViewDoc; backend inicial vs ruta Kimun; representación y persistencia de selección/disposición; política de edición fuente y sincronización; autoridad y compatibilidad de acciones; latencia aceptable. Resolver con WS02–WS04/WS07/WS11/WS12, no improvisar al dibujar pantallas.
+Dónde viven y qué contratos usan las entradas e índices; alcance real de ViewDoc; APIs backend real; representación local de selección/disposición acordada en P07; guardas de edición fuente y sincronización; autoridad y compatibilidad de acciones; mediciones contra objetivos aceptados P08. Resolver contratos con WS02–WS04/WS11/WS12, no improvisar al dibujar pantallas.
 
 ## Superficies adicionales y material existente
 
 CrossroadDoc y namespaces organizan dominios; issues Markdown deliberadamente no modelados son legibles y operables mediante contratos existentes. FAQ y StepDoc son documentos de orientación/procedimiento. Brainstorm, Schema/edición de clases y Specs ya existen en Mindmap: inventariar y conservar/integrar sus capacidades explícitamente. Carpetas legacy (features/primitives/logbook/materializers) se clasifican por soporte actual en WS02, no por nombre ni como modelo obligatorio nuevo. KGDB no es otro servicio nuevo: la capa de grafo actual vive en sldb; no reintroducir el proyecto retirado.
 
-Vocabulario normativo de este borrador: brief.md. Alcance: alcance.md. Propuestas de host, backend y escritura: decisiones.md (pendientes). El workspace puede enfocar nodos no documentales, pero el documento no pierde su identidad al cambiar de representación.
+Vocabulario normativo de este borrador: brief.md. Alcance: alcance.md. Base acordada de host, backend y escritura: decisiones.md; pendiente prueba técnica de sus guardas. El workspace puede enfocar nodos no documentales, pero el documento no pierde su identidad al cambiar de representación.

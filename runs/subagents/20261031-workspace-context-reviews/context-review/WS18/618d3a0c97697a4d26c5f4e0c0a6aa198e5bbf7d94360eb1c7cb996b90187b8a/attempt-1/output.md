@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: declarar en spec2viz proyecciones de grafo reutilizables —ViewDoc y su NotationDoc— para selecciones y notación ya soportadas. Resultado: una Vista portable, sin código específico del host, que renderiza sobre un store real la selección declarada, coincide con ella y documenta qué selecciona. Repo dueño: spec2viz (`output_base: spec2viz:repository_root/`; rutas concretas las confirma su dueño al promover). Límites: no crear UI pages declarativas ficticias ni inventar selección; si el catálogo WS09 no fija selección mínima, detener promoción y corregir ese contrato antes de elegir una. Depende de WS09 y WS11; requiere G_SPEC_VIEW, pendiente e intencional. Deskops no escribe en spec2viz.
+
+AMBIGUEDADES
+Ninguna. Las fuentes de selección y notación están nombradas —catálogo WS09, contrato WS11 y contraste con capacidades WS03— y el nodo fija la conducta si falta la selección mínima. Las rutas exactas, archivos, casos de prueba y textos quedan delegados a la promoción/TaskDoc, que la guía excluye como ambigüedad. G_SPEC_VIEW pendiente es intencional y su productor está definido.
+
+DRY-RUN
+Lecturas previstas, sin ejecutar: nodo y aristas; brief, alcance, decisiones, cobertura y guía; al promover, catálogo WS09, contrato WS11, capacidades WS03, ViewDoc/NotationDoc existentes en spec2viz y acta G_SPEC_VIEW. Cambios previstos: declaración ViewDoc+NotationDoc y pruebas en spec2viz; ningún archivo en deskops ni en otros repos. Dependencias: WS09 y WS11, con WS02–WS10 transitivos; G_SPEC_VIEW pendiente. Validaciones futuras: TaskDoc de promoción en spec2viz con archivos, pills, evidencia y preflight; render sobre store temporal real o corpus WS40; comprobar que la selección declarada coincide, que el ViewDoc documenta qué selecciona y que no hay código específico del host; recibo G_SPEC_VIEW por delta.
+
+FUTURO
+Producen otro nodo o humano: WS09 fija catálogo y selección mínima; WS11 aporta el contrato; P01/receptor de spec2viz emite el acta G_SPEC_VIEW y promueve la tarea receptora. Si falta contrato, selección o permiso, el ejecutor se detiene y registra el hueco con repo dueño; no crea sustituto. La promoción y ejecución en spec2viz corresponden a su supervisor/Executor; deskops solo registra el enlace.

@@ -1,0 +1,185 @@
+$ ['git', '-C', '../UIs/graph_ui', 'show', '--format=full', '--stat', 'a1b2b22']
+commit a1b2b22d4cf48be540fed8d88b8209414a3b4632
+Author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+Commit: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+
+    feat(workspace): proyecciones document, graph, code y sidebar context
+
+ ...cion-documento-grafo-local-codigo-y-contexto.md |   3 +-
+ docs/workspace-ui.md                               |  53 ++
+ frontends/mindmap/serve.py                         |   7 +
+ frontends/mindmap/shell/registry.js                |   3 +-
+ .../mindmap/views/workspace/node/workspace-view.js | 588 ++++++++++++++++++++
+ .../mindmap/views/workspace/node/workspace.css     | 537 ++++++++++++++++++
+ .../mindmap/views/workspace/node/workspace.mjs     |  96 ++++
+ frontends/mindmap/workspace_routes.py              | 617 +++++++++++++++++++++
+ runs/subagents/20261031-workspace-ui/board.txt     |  10 +
+ runs/subagents/20261031-workspace-ui/next.txt      |  21 +
+ runs/subagents/20261031-workspace-ui/preflight.md  |  93 ++++
+ runs/subagents/20261031-workspace-ui/run.yaml      |   5 +
+ runs/subagents/20261031-workspace-ui/task.txt      |  12 +
+ tests/e2e_mindmap_flow.py                          |   6 +-
+ tests/e2e_mindmap_workspace.py                     | 195 +++++++
+ tests/mindmap-workspace.test.mjs                   | 194 +++++++
+ tests/test_mindmap_workspace.py                    | 434 +++++++++++++++
+ 17 files changed, 2869 insertions(+), 5 deletions(-)
+
+exit 0
+$ ['git', '-C', '../UIs/graph_ui', 'show', '--format=full', '--stat', 'f16fcd1']
+commit f16fcd100aef1af14f55c9d00ab9c4bf1e8bac78
+Author: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+Commit: github-actions[bot] <github-actions[bot]@users.noreply.github.com>
+
+    closeout: task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto
+    
+    Task-Id: task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto
+    Closeout-Mode: manual
+    Closeout-Reason: integrada: squash a1b2b22
+
+ .sldb/store.yaml                                   |  1 -
+ desk/tasks/Board.md                                |  4 +-
+ ...cion-documento-grafo-local-codigo-y-contexto.md | 76 ----------------------
+ runs/subagents/index.jsonl                         |  1 +
+ 4 files changed, 4 insertions(+), 78 deletions(-)
+
+exit 0
+$ ['git', '-C', '../UIs/graph_ui', 'show', 'f16fcd1^:desk/tasks/task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto.md']
+---
+id: task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto
+status: active
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
+references:
+- /home/jp/proyectos/softfactory_spec/SPEC.md
+- docs/deskops-ui.md
+- docs/mindmap-spec.md
+depends_on: []
+pills:
+- desk/contexts/pill-guardrail-no-mocks-no-stubs-no-fake-data-in-deliverables.md
+files:
+- frontends/mindmap/serve.py
+- frontends/mindmap/workspace_routes.py
+- frontends/mindmap/shell/registry.js
+- frontends/mindmap/views/workspace/
+- tests/test_mindmap_workspace.py
+- tests/mindmap-workspace.test.mjs
+- tests/e2e_mindmap_workspace.py
+- docs/workspace-ui.md
+task_type: code
+inherits_from: []
+inherit_acceptance_context: false
+atoms:
+- atom-workspace-presents-document-graph-code-and-changes-as-projections-of-the-same-node
+closeout_evidence:
+- tests
+- commit
+- atom
+- document
+---
+
+# Workspace multiproyeccion: documento, grafo local, codigo y contexto
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+En softfactory_spec (K07, K10, K13), documento, grafo, código, tarea y decisión arquitectónica son proyecciones navegables del mismo nodo lógico. Hoy Mindmap ofrece vistas globales por faceta pero no un workspace centrado en el objeto seleccionado que permita alternar entre Documento, Grafo (1-2 hops) y Código conservando su panel lateral de identidad y relaciones.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+Entregar en frontends/mindmap la vista /workspace/node con pestañas Document, Graph (vecindad a 1-2 hops con filtros por tipo) y Code (proyección del archivo o fragmento referenciado), junto con el panel lateral Context que muestra identidad, hash, estado, relaciones entrantes/salientes y permite navegar haciendo clic hacia cualquier nodo relacionado.
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+Solo graph_ui: frontends/mindmap/serve.py y rutas de lectura de nodo/vecindad/código bajo el repo, frontends/mindmap/shell/registry.js, frontends/mindmap/views/workspace/, pruebas en tests/ (pytest, node --test y Playwright sobre store temporal real) y documentación en docs/. Sin mocks ni parsers propios fuera de sldb y deskops.
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+Añadir endpoint de proyección de nodo en frontends/mindmap (documento + vecindad a 1-2 hops desde el grafo del store + lectura acotada de fragmentos de archivos referenciados) y la vista /workspace/node con tabs Document/Graph/Code y panel Context reutilizando shell, router y skins existentes.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- pytest -q tests/test_mindmap_workspace.py
+- node --test tests/mindmap-workspace.test.mjs
+- pytest -q tests/e2e_mindmap_workspace.py
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+Seleccionar un documento, átomo o tarea permite alternar entre Document, Graph (1-2 hops filtrable) y Code, inspeccionar su identidad, hash y relaciones en el panel Context y navegar a cualquier nodo vinculado, con suite pytest, node --test y tests/e2e_mindmap_workspace.py en verde.
+
+exit 0
+$ ['git', 'show', '1fefa97^:desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md']
+---
+id: task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo
+status: active
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-testing
+history:
+- task_activates
+references: []
+depends_on: []
+pills: []
+files: []
+task_type: ''
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-closeout-la-compuerta-tests-missing-tests-evidence-bloquea-tareas-que.md
+---
+
+# Closeout: la evidencia exigida depende de lo que la tarea toca, no es la misma para todo
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Tres notas (Chatbot_Infra 2026-10-22, deskops 2026-10-27, mepu_ocs_dev 2026-10-28) chocaron con lo mismo: closeout commit exige tests + commit + átomo/materialización para cualquier tarea, y eso bloquea tareas solo de specs/docs y tareas ejecutadas fuera del repo (LIN-1 en Linear). El dueño (2026-10-29): la regla está mal planteada; no se puede pedir la misma evidencia para todo.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+La evidencia de cierre se declara al crear la tarea y el closeout verifica exactamente eso. TaskDoc gana el campo closeout_evidence (lista con vocabulario cerrado: tests, commit, atom, materialization, document, external). deskops add task lo recibe con --evidence; si falta, lo rellena por task_type (code -> tests+commit+atom|materialization; docs|spec|design -> commit+document; external -> external); sin --evidence ni task_type falla con el mensaje de cómo declararla. closeout verify/commit comprueban solo lo declarado. Si el diff trae .py y la tarea no declaró tests, no bloquea: alerta visible (nunca silenciosa). La compuerta siempre imprime 'esta tarea declaró X; encontré Y'.
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+deskops/models/task.py (campo closeout_evidence + template), deskops/cli/registry.py y cli/commands/core.py (add task --evidence, fallo sin evidencia ni task_type), deskops/services/closeout_gates.py y deskops/operations.py (verify_task_closeout lee lo declarado; alerta por .py sin tests), deskops/cli/commands/closeout.py (mensaje 'declaró X; encontré Y'), desk/rituals/closeout.md, un atom nuevo que enuncie la regla, tests en tests/ para las cuatro clases y para el fallo de add task. Las tareas existentes sin el campo se tratan como code (migración implícita, con alerta).
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+Agente Scion (deskops-executor) implementa con tests; el supervisor revisa y cierra.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- python -m pytest -q tests -k closeout
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+pytest -q tests -k 'closeout or add_task' en verde; una tarea external con una URL en references cierra con closeout commit --no-run; una tarea code sin tests sigue bloqueada; una tarea docs cierra con commit + documento; add task sin --evidence ni --task-type falla explicando; el mensaje de la compuerta nombra lo declarado y lo encontrado; decisión del dueño 2026-10-29 registrada en el atom.
+
+exit 0

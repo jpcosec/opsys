@@ -30,7 +30,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Implementación o delta conciliado sobre ticket workspace en draft: documento/fuente solo lectura, contexto, enlaces, tabs/historia y selección por documento/nodo. Mantener Code local y rutas del host; no requerir índices nuevos. Incluir explorador de documentos modelados/no modelados, dos documentos lado a lado y tabs/historia. Se reutiliza el registro de vistas existente en shell/registry.js; organización de contenido procede de documentos/consultas.
+Implementación o delta conciliado sobre workspace integrado a1b2b22: documento/fuente solo lectura, contexto, enlaces, tabs/historia y selección por documento/nodo. Mantener Code local y rutas del host; no requerir índices nuevos. Incluir explorador de documentos modelados/no modelados, dos documentos lado a lado y tabs/historia. Se reutiliza el registro de vistas existente en shell/registry.js; organización de contenido procede de documentos/consultas.
 
 ## Aceptación
 
@@ -44,7 +44,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13/0d84ea2ec396c934ded39716e9e8fb4b94bd68571c00da760c149f27d0a1f361/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13/cddaa79f3b74a78fd78c2e1c0764860c361c02fc9044b0c002ab3739271f2a55/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

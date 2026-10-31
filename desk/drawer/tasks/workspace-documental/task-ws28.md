@@ -27,7 +27,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Verificar con `deskops closeout verify` por el canal del contrato WS12, diagnosticar faltantes y ofrecer handoff explícito con evidencia: a `deskops closeout commit` por CLI en modo manual, o al coordinador si está activo (P03). No commit/close desde HTTP en baseline. G_HUMAN_READ aplica porque es una acción de escritura del baseline.
+Verificar con `deskops closeout verify` por el canal del contrato WS12, diagnosticar faltantes y ofrecer handoff explícito con evidencia: a `deskops closeout commit` por CLI en modo manual, o al coordinador si está activo (P03). No commit/close desde HTTP en baseline. G_HUMAN_READ aplica porque es una acción de escritura del baseline. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -39,7 +39,7 @@ Tareas: WS27, WS12. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRAC
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS28/cf26fc5b867bd80c53d26080c5c8e5d1b000b7cc43542497641525b74e6fcba9/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS28/2736c6051889d71e8366ee463176c1a9a73057021767055634a661f23cdcb6ed/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

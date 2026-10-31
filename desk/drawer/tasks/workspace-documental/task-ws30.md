@@ -34,7 +34,7 @@ Persona recorre UF02/03 edición/04/05; integra conocimiento y tarea en ejemplo;
 
 ## Aceptación
 
-Registro humano bajo protocolo; un fallo de guion bloquea el gate y el responsable del repo dueño abre tarea en el nodo que lo causó; una observación solo se registra. No llamar ready a un flujo solo por tests.
+Registro humano bajo protocolo; un fallo de guion bloquea el gate y el responsable del repo dueño abre tarea en el nodo que lo causó; una observación solo se registra. No llamar ready a un flujo solo por tests. Acta enumera plantillas/entradas WS17 validadas, paths/hashes y recorridos, para que WS43 pueda trazar publicación real. UF03 incluye edición y navegación/lectura necesarias para comprobar origen/resultado; WS16 ya cubre lectura completa. Si causa de fallo no está aislada, registrar incidente con repo/superficie y que supervisor receptor autorice diagnóstico antes de atribuir nodo; no inventar causalidad ni corregir otro repo.
 
 ## Dependencias
 
@@ -42,7 +42,7 @@ Tareas: WS17, WS21, WS22, WS23, WS24, WS25, WS26, WS28, WS42. Gates: ninguno adi
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS30/8e894d58c0242c7279b69314a4e4e9ff7780312efe04c2774b7a9fb344166770/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS30/6fcab09909f2340a3d46a327019128e7de3b57d5a26e7715223fd941a0d413f7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

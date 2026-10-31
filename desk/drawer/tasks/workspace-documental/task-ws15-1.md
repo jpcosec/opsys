@@ -24,11 +24,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Referencia rota, documento ausente, modelo no importable, backend caído y fuente no editable; error mostrado en el panel afectado sin borrar historial ni fingir vacío. Fallos de CDN visibles como límite actual.
+Referencia rota, documento ausente, modelo no importable y backend caído se muestran en panel afectado sin borrar historial ni fingir vacío. Fuente sin permiso/capacidad de edición es límite read-only visible, no fallo de lectura. Fallos CDN se declaran límite actual sin prometer offline.
 
 ## Aceptación
 
-Leer Markdown existente cuando el soporte lo permita, informar límites reales y tras reintento manual recuperar conexión sin perder pestañas, foco ni historia. Errores distinguidos por la respuesta de la API, según contrato WS11. Si las dependencias CDN no cargan, la pantalla lo dice y un test lo cubre; empaquetado offline queda fuera.
+Reutilizar lectura Markdown de WS13.1 donde siga disponible; no implementar otro lector ni guardado. Contrato WS11 define errores de API y estados de red sin respuesta, incluido fallo de carga CDN; pruebas distinguen ambos sin inventar respuesta del backend ausente. Reintentar backend tras restaurarlo recupera lectura conservando pestañas/foco/historia; fallo CDN tiene diagnóstico visible y prueba de no carga, sin exigir recuperación offline. Empaquetado offline fuera.
 
 ## Dependencias
 
@@ -38,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/9ec2d5d02a2ad973a6ad8437fdd724353a4d5a2a28332cc1302d3c6c12d39558/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/a5674b84e829adc6c49a803cef9048cb261ba0d73cb1f00b5d200cdd0fb2c975/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

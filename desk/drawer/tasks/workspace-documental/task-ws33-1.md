@@ -8,6 +8,7 @@ depends_on:
 - WS32
 requires:
 - G_SCION
+- G_WRITE_CONTRACT
 ---
 
 # Vincular mensajes y resultados al intento
@@ -32,13 +33,13 @@ Con contrato público real, una importación repetida (mismo Hub/proyecto y conv
 
 ## Dependencias
 
-Tareas: WS32. Gates: G_SCION. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS32. Gates: G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `scion` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/a1bf4d397620f5a5e3bd8c43ce0fe63d21108faaddf53c1901ce467e3aa9951b/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/60bea826b52bd027faea1851f8152b7690a3775a2317e5d8d14d60db419261c7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

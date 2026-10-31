@@ -59,7 +59,7 @@ variants:
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS21/5aa5d90d2e62e3dce22589ee9d2c1e17147ac0071f698f472b3a4138066b04c3/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS21/ba22a8a6c420c1300fea33122bbdfa0d9e7fb2d407e98cb3f747ae512ad2944e/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

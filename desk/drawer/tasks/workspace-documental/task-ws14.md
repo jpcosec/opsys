@@ -23,11 +23,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Texto/campos/semántica solo según API real; resultados abren el documento con su identidad y ruta de origen. Sin resultados/error/degradación diferenciados.
+Texto/campos/semántica solo según API real; resultados abren el documento con su identidad y ruta de origen. Estados diferenciados: búsqueda sin resultados, error y degradación.
 
 ## Aceptación
 
-Usar `sldb find` o su ruta en `sldb serve`, según auditoria/infraestructura.md (producido por WS03) y contrato WS11; no parser propio. Con teclado: buscar, abrir un resultado y volver conserva consulta y foco. Sin resultados; error de backend (la API no responde o falla y la UI lo declara sin mostrar vacío); y búsqueda degradada (la API responde con capacidad parcial, p. ej. sin semántica, y la UI declara qué no cubre) se ven como tres estados distintos; no cargar todo grafo en cada tecla.
+Usar `sldb find` o su ruta en `sldb serve`, según auditoria/infraestructura.md (producido por WS03) y contrato WS11; no parser propio. Con teclado: buscar, abrir un resultado y volver conserva consulta y foco. Sin resultados; error de backend (la API no responde o falla y la UI lo declara sin mostrar vacío); y búsqueda degradada (la API responde con capacidad parcial, p. ej. sin semántica, y la UI declara qué no cubre) se ven como tres estados distintos; no cargar todo grafo en cada tecla. Comprobar en prueba de peticiones que teclear no dispara petición de carga completa del grafo; no exige debounce/umbral nuevo, mecanismo se fija en TaskDoc.
 
 ## Dependencias
 
@@ -37,7 +37,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS14/2b4778233aa3a3c4b2b4f815f3ae0c60ac89d9d25452e0035e71738e251bc8db/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS14/b43901d1bf05812c99d481f2d99be88387d35481e52ba17e8d7a1bb744461755/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

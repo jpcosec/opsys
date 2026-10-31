@@ -1,0 +1,24 @@
+{
+  "note": "Post-run supplemental audit. r1 verified against git HEAD and initial frozen-source hash. r2 reconstructed from recorded exact bounded patches before its launch. r3/final reconstructed and byte-equal current runner; no code changes during those processes. Original model receipts untouched. Exact saved input/output/pid/argv timestamps remain primary evidence.",
+  "versions": {
+    "r1": {
+      "path": "runs/subagents/20261031-finalizar-plan-workspace/runner-source-r1.py",
+      "sha256": "8069953f8eb44386cb43c7f3044635d0c862d79bb7c262349e1f2ea3327ffd1b"
+    },
+    "r2": {
+      "path": "runs/subagents/20261031-finalizar-plan-workspace/runner-source-r2.py",
+      "sha256": "a83944e689f90d2a5fecb1171c8a16df2e34cb65ba98edc8f52bcf66321cc248"
+    },
+    "r3-final": {
+      "path": "runs/subagents/20261031-finalizar-plan-workspace/runner-source-r3-final.py",
+      "sha256": "253b1e4da57c016eb317fa146cb06f12829876cc52eccbda6fe2bd29e2218e1d"
+    }
+  },
+  "logs": {
+    "runner-final.log": "r1",
+    "runner-round2.log": "r2",
+    "runner-round3.log": "r3-final",
+    "runner-macro-sequence.log": "r3-final",
+    "runner-contract-final.log": "r3-final"
+  }
+}

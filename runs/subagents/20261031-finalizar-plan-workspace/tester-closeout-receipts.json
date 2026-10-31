@@ -1,0 +1,82 @@
+{
+  "at": "2026-10-31T15:22:52.749067+00:00",
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "show",
+        "--format=fuller",
+        "--stat",
+        "59244c9"
+      ],
+      "exit_code": 0,
+      "stdout": "commit 59244c946f048dd6c527133f1b3025c22026d9b2\nAuthor:     deskops-supervisor <scion@localhost>\nAuthorDate: Sat Oct 31 05:54:58 2026 +0000\nCommit:     deskops-supervisor <scion@localhost>\nCommitDate: Sat Oct 31 05:54:58 2026 +0000\n\n    feat(closeout): la evidencia exigida la declara la tarea al crearse y se verifica exacta\n    \n    TaskDoc gana closeout_evidence (vocabulario cerrado; --evidence/--task-type en add task).\n    El cambio de contrato del modelo (hash TaskDoc actualizado en el snapshot) es el cambio\n    deliberado decidido por el owner el 2026-10-29.\n    \n    Suite completa: 635 passed, 3 failed ajenos a la tarea (test_command_registry,\n    test_board_portable_references, test_taskdoc_read_without_overlay).\n\n ...clared-at-task-creation-and-verified-exactly.md |  15 ++\n desk/rituals/closeout.md                           |  11 +-\n deskops/cli/commands/closeout.py                   |   6 +\n deskops/cli/commands/operations.py                 |   9 +\n deskops/cli/parse_input.py                         |   1 +\n deskops/cli/registry.py                            |  10 +\n deskops/models/task.py                             |  19 +-\n deskops/operations.py                              | 161 ++++++++++--\n deskops/runtime/task.py                            |   1 +\n deskops/services/closeout_gates.py                 | 129 ++++++++-\n deskops/services/closure.py                        |  11 +-\n deskops/services/tasks.py                          |   3 +\n deskops/specs/compiler.py                          |   1 +\n docs/operator-manual.md                            |   1 +\n .../scenarios/first-task-to-closeout.yaml          |   2 +-\n tests/e2e_agent/scenarios/inbox-to-task.yaml       |   2 +-\n tests/e2e_agent/scenarios/stuck-task-gate.yaml     |   2 +-\n tests/fixtures/golden/help/deskops_add_task.txt    |   9 +\n tests/fixtures/golden/output/list_tasks.json       |   2 +\n tests/fixtures/golden/output/show_task.json        |   1 +\n tests/fixtures/model_contract_hashes.json          |   2 +-\n tests/test_add_task_from_drawer.py                 |   9 +-\n tests/test_board_portable_references.py            |   2 +-\n tests/test_cli.py                                  |  42 ++-\n tests/test_closeout_declared_evidence.py           | 291 +++++++++++++++++++++\n tests/test_desk_replace.py                         |   2 +\n tests/test_inbox_promote_cli_gaps.py               |   2 +-\n tests/test_lifecycle_end_to_end.py                 |  10 +-\n tests/test_operational.py                          |   1 +\n 29 files changed, 708 insertions(+), 49 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "--format=fuller",
+        "--stat",
+        "1fefa97"
+      ],
+      "exit_code": 0,
+      "stdout": "commit 1fefa97a3c7a94b967543136d550e00a7786766c\nAuthor:     deskops-supervisor <scion@localhost>\nAuthorDate: Sat Oct 31 05:55:57 2026 +0000\nCommit:     deskops-supervisor <scion@localhost>\nCommitDate: Sat Oct 31 05:55:57 2026 +0000\n\n    desk: cierra closeout con evidencia declarada\n    \n    Task-Id: task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo\n    Run-Dir: runs/subagents/20261029-153233-closeout-evidence\n\n .sldb/store.yaml                                   | 10 +++-\n desk/tasks/Board.md                                |  2 -\n ...o-que-la-tarea-toca-no-es-la-misma-para-todo.md | 58 ----------------------\n .../20261029-153233-closeout-evidence/board.txt    | 10 ++++\n .../git-status.txt                                 | 30 +++++++++++\n .../20261029-153233-closeout-evidence/graph.txt    |  1 +\n .../20261029-153233-closeout-evidence/next.txt     | 25 ++++++++++\n .../result-summary.md                              | 23 +++++++++\n .../20261029-153233-closeout-evidence/run.yaml     |  5 ++\n .../20261029-153233-closeout-evidence/task.txt     |  8 +++\n .../validation.log                                 | 26 ++++++++++\n runs/subagents/index.jsonl                         |  1 +\n 12 files changed, 137 insertions(+), 62 deletions(-)\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "1fefa97^:desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md"
+      ],
+      "exit_code": 0,
+      "stdout": "---\nid: task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo\nstatus: active\nsummary: ''\ntags:\n- workspace:desk\n- artifact:task\ncurrent_node: ritual-testing\nhistory:\n- task_activates\nreferences: []\ndepends_on: []\npills: []\nfiles: []\ntask_type: ''\ninherits_from: []\ninherit_acceptance_context: false\natoms: []\nfrom_drawer: desk/drawer/tasks/task-closeout-la-compuerta-tests-missing-tests-evidence-bloquea-tareas-que.md\n---\n\n# Closeout: la evidencia exigida depende de lo que la tarea toca, no es la misma para todo\n\n## Rationale\n\n_Explain why this task exists or the business driver behind it._\n\nTres notas (Chatbot_Infra 2026-10-22, deskops 2026-10-27, mepu_ocs_dev 2026-10-28) chocaron con lo mismo: closeout commit exige tests + commit + \u00e1tomo/materializaci\u00f3n para cualquier tarea, y eso bloquea tareas solo de specs/docs y tareas ejecutadas fuera del repo (LIN-1 en Linear). El due\u00f1o (2026-10-29): la regla est\u00e1 mal planteada; no se puede pedir la misma evidencia para todo.\n\n## Goal\n\n_Describe the concrete result this task must produce._\n\nLa evidencia de cierre se declara al crear la tarea y el closeout verifica exactamente eso. TaskDoc gana el campo closeout_evidence (lista con vocabulario cerrado: tests, commit, atom, materialization, document, external). deskops add task lo recibe con --evidence; si falta, lo rellena por task_type (code -> tests+commit+atom|materialization; docs|spec|design -> commit+document; external -> external); sin --evidence ni task_type falla con el mensaje de c\u00f3mo declararla. closeout verify/commit comprueban solo lo declarado. Si el diff trae .py y la tarea no declar\u00f3 tests, no bloquea: alerta visible (nunca silenciosa). La compuerta siempre imprime 'esta tarea declar\u00f3 X; encontr\u00e9 Y'.\n\n## Scope\n\n_State what is in scope and what is out of scope._\n\ndeskops/models/task.py (campo closeout_evidence + template), deskops/cli/registry.py y cli/commands/core.py (add task --evidence, fallo sin evidencia ni task_type), deskops/services/closeout_gates.py y deskops/operations.py (verify_task_closeout lee lo declarado; alerta por .py sin tests), deskops/cli/commands/closeout.py (mensaje 'declar\u00f3 X; encontr\u00e9 Y'), desk/rituals/closeout.md, un atom nuevo que enuncie la regla, tests en tests/ para las cuatro clases y para el fallo de add task. Las tareas existentes sin el campo se tratan como code (migraci\u00f3n impl\u00edcita, con alerta).\n\n## Implementation Path\n\n_Outline the expected implementation route or affected surface._\n\nAgente Scion (deskops-executor) implementa con tests; el supervisor revisa y cierra.\n\n## Validation\n\n_List the checks required before this task can close._\n\n- python -m pytest -q tests -k closeout\n\n## Done When\n\n_Name the observable condition that makes the task complete._\n\npytest -q tests -k 'closeout or add_task' en verde; una tarea external con una URL en references cierra con closeout commit --no-run; una tarea code sin tests sigue bloqueada; una tarea docs cierra con commit + documento; add task sin --evidence ni --task-type falla explicando; el mensaje de la compuerta nombra lo declarado y lo encontrado; decisi\u00f3n del due\u00f1o 2026-10-29 registrada en el atom.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "show",
+        "1fefa97",
+        "--",
+        "desk/tasks/Board.md"
+      ],
+      "exit_code": 0,
+      "stdout": "commit 1fefa97a3c7a94b967543136d550e00a7786766c\nAuthor: deskops-supervisor <scion@localhost>\nDate:   Sat Oct 31 05:55:57 2026 +0000\n\n    desk: cierra closeout con evidencia declarada\n    \n    Task-Id: task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo\n    Run-Dir: runs/subagents/20261029-153233-closeout-evidence\n\ndiff --git a/desk/tasks/Board.md b/desk/tasks/Board.md\nindex c4832955..6f46b83d 100644\n--- a/desk/tasks/Board.md\n+++ b/desk/tasks/Board.md\n@@ -5,7 +5,6 @@ id: board-001\n scope: desk\n # List of task-xxx paths\n tasks:\n-- desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md\n - desk/tasks/task-revisar-dag-workspace-con-agentes-baratos.md\n # List of pill-xxx paths\n pills:\n@@ -48,5 +47,4 @@ No active tasks routed.\n \n _Generated from the task references above._\n \n-- Closeout: la evidencia exigida depende de lo que la tarea toca, no es la misma para todo [active] - La evidencia de cierre se declara al crear la tarea y el closeout verifica exactamente eso. TaskDoc gana el campo closeout_evidence (lista con vocabulario cerrado: tests, commit, atom, materialization, document, external). deskops add task lo recibe con --evidence; si falta, lo rellena por task_type (code -> tests+commit+atom|materialization; docs|spec|design -> commit+document; external -> external); sin --evidence ni task_type falla con el mensaje de c\u00f3mo declararla. closeout verify/commit comprueban solo lo declarado. Si el diff trae .py y la tarea no declar\u00f3 tests, no bloquea: alerta visible (nunca silenciosa). La compuerta siempre imprime 'esta tarea declar\u00f3 X; encontr\u00e9 Y'.\n - Revisar recursivamente DAG workspace con agentes baratos [draft] - Revisar realmente ra\u00edz, paquetes expl\u00edcitos y cada candidata WS01\u2013WS44; corregir los encargos y descomponer cuando haga falta, conservando evidencia y bloqueos honestos.\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "59244c9",
+        "1fefa97"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "git",
+        "merge-base",
+        "--is-ancestor",
+        "1fefa97",
+        "HEAD"
+      ],
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ""
+    }
+  ],
+  "sources": {
+    "tests/test_closeout_declared_evidence.py": "ccf9a17ce1e5fa64a1b1ed6620e9f653b81b1bcba0a33be7be3bb55dd90b62c1",
+    "tests/test_lifecycle_end_to_end.py": "876ad10b2778887c5f2475e219fd2b3d8f2e83249bbf903522a5aa6f7d883591",
+    "deskops/services/closure.py": "1a87b08fb284a0240f10ba54fa95916e17756d505b4de80999d750d574442348",
+    "deskops/services/closeout_gates.py": "8f17f8a207e831762421433692ac409b1e3909bbd0061cab9307be65e12e0ab9",
+    "deskops/operations.py": "c5a36046f9b3142b3aa9cb4ccec0713c35692ab97dffbd5f5ff443ea03815620"
+  }
+}

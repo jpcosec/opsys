@@ -27,7 +27,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Invocar contratos reales de atoms split/merge y proto typing cuando disponibles, con confirmación de la persona usuaria en la UI, que ve el origen y el efecto de la operación antes de ejecutar; materializaciones se inspeccionan/validan, no se generan destinos arbitrarios.
+Invocar contratos reales de atoms split/merge y proto typing cuando disponibles, con confirmación de la persona usuaria en la UI, que ve el origen y el efecto de la operación antes de ejecutar; materializaciones se inspeccionan/validan, no se generan destinos arbitrarios. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura. Operaciones split/merge/proto typing vienen del inventario Deskops WS02 y APIs SLDB WS03, concretadas por WS12; si faltan, WS12 registra productor/hueco y UI no disponible. Materializaciones: modelo MaterializationContractDoc de deskops/models/materialization.py registrado en el store temporal real seleccionado por TaskDoc (o manifiesto Taller WS40), versión/commit registrados; validar por API pública SLDB contra ese modelo, no renderer propio.
 
 ## Aceptación
 
@@ -39,7 +39,7 @@ Tareas: WS19, WS24, WS12. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS42/8884a0950634846609b44339f08a0824cb3ce8e41e47ddc704af0b5aacf8ff45/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS42/267d0911c7ae8af1b9ae8ef1418e020329fe6a91e3c42685be6fd3ffa5629d2c/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

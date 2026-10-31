@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato sin historial/herramientas. Reformula intención/resultado/límites; detecta ambigüedades reales del encargo que obliguen a inventar y detalla dry-run de lecturas/cambios/dependencias/validaciones por roles SIN ejecutar. Fuentes a leer son trabajo futuro del Executor, no afirmes haberlas auditado. No exigir formato editorial exacto ni trabajo fuera de scope. Máximo 450 palabras.",
+    "--print",
+    "@runs/subagents/20261031-finalizar-plan-workspace/cold-input-v2.md"
+  ],
+  "input_sha256": "eaccbfc371a88a6ffc5b313139b814e62ddf5980256395a3024efa013bf6fe04",
+  "returncode": 0,
+  "fresh_process": true,
+  "stdin": "devnull",
+  "selection": "perfil flash barato disponible"
+}

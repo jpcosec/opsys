@@ -1,0 +1,23 @@
+{
+  "at": "2026-10-31T15:25:54.723445+00:00",
+  "paths": {
+    "desk/drawer/plans/workspace-documental/validacion-humana.md": "09f240a3c6a763e02df1054f65373a8c39bea208f71ab3bfdee055f6f667a299",
+    "desk/drawer/plans/workspace-documental/decisiones.md": "9691ea6ee22961c766b99d13739550621dc18ed5a47593cdcac246ca72cda5f4",
+    "desk/drawer/plans/workspace-documental/README.md": "32fac4994126518858cbfa8015dfdca69d14cf47758bbd4d7eee0f78745810b0",
+    "desk/drawer/plans/workspace-documental/alcance.md": "203ef33a2a98706a6746f93d1912bd518c27ba88768c0d2181d553dbb802eba2",
+    "desk/drawer/plans/workspace-documental/cobertura.md": "da759798ae818c08d19c1f66b663fdfde7165b5f9c83071ffca3444389fe71ba",
+    "desk/drawer/plans/workspace-documental/reconciliacion.md": "2b95c2b37704649f75b93b5944543124f5423541d91a825af1cfe12b195b2cbd",
+    "desk/drawer/plans/workspace-documental/context-review-guide.md": "3150ef714004d5beb58dc4a55e7894513b3b3aafd337a51d7a90e31f8b1443c7",
+    "desk/drawer/plans/workspace-documental/brief.md": "89a914832915dd7cc6f1895efe8603cef055a7d8f442cbdc42a49a062fae9586",
+    "desk/drawer/plans/workspace-documental/cierre.md": "5d3c825a3147483d291dbf6cb3e0bc3e57d8b8dbdf3db39ee2374aa1426cb89c",
+    "desk/drawer/plans/workspace-documental/dag.yaml": "3bc9e8d664db4929a85bb31517692ea847c8661e70be66bd38f0fe76472cc352",
+    "desk/drawer/plans/workspace-documental/borradores/user-flows.md": "f4d38f5506699290f5c8f626bd0006e1d6bf366d08b1bb265389e17861968901",
+    "desk/drawer/plans/workspace-documental/borradores/vistas.md": "bfca2147974db8ac8704a73c33cf8ac0ade8f607d271fb747fcf869aae2db5b5",
+    "desk/drawer/plans/workspace-documental/borradores/vision.md": "5a994564c283c8304e1e2bb13e009b5e87577eafa4cdf90a884da1edb1ba001a",
+    "desk/drawer/plans/workspace-documental/borradores/manual.md": "76c7264f6ff4205029a4fa5ea671502bef07da1024c5634173a6e25ef6218865",
+    "desk/drawer/plans/workspace-documental/validate_plan.py": "94853060a5148a70fcbf549be1e283852d5456e1099d48bc6b1a64720faa3e98",
+    "desk/drawer/plans/workspace-documental/build_plan.py": "8e814a5731842e2af0f11dd9cd5293e9abe8dc63e9a259ed4de0ef2e8d072f2c",
+    "desk/drawer/plans/workspace-documental/context_review.py": "8069953f8eb44386cb43c7f3044635d0c862d79bb7c262349e1f2ea3327ffd1b",
+    "desk/drawer/plans/workspace-documental/render_diagram.py": "75633bcb9c98d56586762f3ed5eac5e4f2027f9fdd200e6b78b69ad0bef40281"
+  }
+}

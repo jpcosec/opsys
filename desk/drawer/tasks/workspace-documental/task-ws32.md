@@ -31,7 +31,7 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Refinar el ticket de external_references.scion, sin segundo pipeline: intento no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes.
+Refinar el ticket de external_references.scion, sin segundo pipeline: intento no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes. WS32.1/32.2 validan identidad/registro/idempotencia local sin dispatch/reply de red; estados Hub reales se prueban y correlacionan en WS34/37 bajo G_EXEC, sin mocks ni eventos inventados.
 
 ## Aceptación
 
@@ -45,7 +45,7 @@ Solapamiento: `scion` en external_references. Solo delta o ticket existente tras
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32/008e0d1f049bf9dec37ce031ce6b1afb90ccfdd520f4b9b4735e8e1cd51f58fb/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32/52e1c340dd994a0ee84c32e55eda74f6e811c33d619c23b63dd41387b20eb9b9/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -29,7 +29,7 @@ Explorador sobre documentos reales del store y Markdown no modelado del desk. El
 
 ## Aceptación
 
-Desde el explorador abrir un documento modelado y uno no modelado sin conocer su ID ni usar índices nuevos; al añadir un documento al store temporal de prueba, aparece sin cambiar código.
+Desde el explorador abrir un documento modelado y uno no modelado sin conocer su ID ni usar índices nuevos; al añadir un documento al store temporal de prueba, aparece sin cambiar código. Altas de documento modelado en store y Markdown no modelado en desk aparecen tras refresco explícito del catálogo sin reiniciar servidor ni cambiar código. Se permite reutilizar catálogo/filtro existente para modelados; WS11 determina API/seguridad para no modelados.
 
 ## Dependencias
 
@@ -39,7 +39,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/a2c46a5742fbf497036a041a9f54373dd06b7b2a78fc07c4edc33fa955b85cfc/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/e9bb87a0f4a8d6e2e414d622edcd141b11d91b59c8d60995ca242478d9cd2163/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -1,0 +1,12 @@
+{
+  "kind": "post-run supplementary version observation; not a retroactive startup capture",
+  "observed_at": "2026-10-31T15:50:01.100881+00:00",
+  "version": "0.67.3",
+  "executable": "/home/jp/bin/pirate/pi-mono/packages/coding-agent/dist/cli.js",
+  "executable_sha256": "423de19e292535dba74aea4102f2e407fc62986828d832ddcadaa9b4cfe47ecb",
+  "executable_mtime_utc": "2026-08-31T20:51:37.084947+00:00",
+  "command_receipt": "runs/subagents/20261031-finalizar-plan-workspace/pi-version-command.json",
+  "limitation": "Original receipts captured only stdout so pi_version is empty. pi --version returns version on stderr. Original model receipt is preserved. No executable installation/change was performed by this task.",
+  "future_runner_fix_sha256": "209e66b5d60b34efe870616f9deac2960ab8e57c2cbec6916e32b661945f9f69",
+  "actual_model_batch_runner_versions": "runs/subagents/20261031-finalizar-plan-workspace/runner-source-versions.json"
+}

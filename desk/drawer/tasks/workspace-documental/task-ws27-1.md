@@ -25,7 +25,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Diff Git e historial read-only junto a la TaskDoc. Base: commits listados en TaskDoc.references y rutas en TaskDoc.files (campos del modelo TaskDoc de deskops); sin commits, working tree contra HEAD limitado a esas rutas.
+Diff Git e historial read-only junto a la TaskDoc. Base: commits listados en TaskDoc.references y rutas en TaskDoc.files (campos del modelo TaskDoc de deskops); sin commits, working tree contra HEAD limitado a esas rutas. Historial baseline = commits de TaskDoc.references resolubles y ordenados por fecha de commit, limitados a TaskDoc.files; sin commits se declara que no hay historial referenciado y se usa diff working tree→HEAD. Repo/rutas se resuelven por contrato WS11 con registry/aliases, presentando root repo explícito; ruta sin repo resoluble queda no disponible, no adivinar ni escribir cruzado.
 
 ## Aceptación
 
@@ -37,7 +37,7 @@ Tareas: WS13, WS12. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/d8d2228282267c19f018b9e3cfbc775febeda081a7bb07e8f21898d9bbb1d60a/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/5797e0fb9b460ac3bedce7fd82ccc3434a724ae26ea247ff1c7d7f7a8b95caa2/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

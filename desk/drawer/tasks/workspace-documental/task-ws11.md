@@ -18,7 +18,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `deskops`. Tamaño relativo: M.
 
-contratos/navegacion.md; actas de aceptación de G_UI_READ y G_SPEC_VIEW en el repo receptor
+contratos/navegacion.md; enlaces a recibos externos G_UI_READ por delta, G_SPEC_VIEW opcional
 
 Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
@@ -28,7 +28,7 @@ Un documento Markdown mantiene identidad/ruta/modelo opcional; graph/code admite
 
 ## Aceptación
 
-Resolver cada hueco como instancia/vínculo/consulta/API/renderer; si falta API abrir dependencia acotada del repo dueño antes de code. Sin migración Kimun implícita. Para cerrar, obtener aceptación del delta lector en graph_ui y de ViewDoc en spec2viz por responsable designado en WS07; si no hay recepción, el contrato queda pendiente, no se publica como cerrado. El acta de G_UI_READ enumera sus scope_nodes, incluidos corpus WS40 y multidesk WS41; el acta de G_SPEC_VIEW enumera los suyos, para no dejar deltas sin recepción.
+Identidad/origen/foco/enlaces y lectura multidesk definidos con APIs reales citadas por auditorías WS02–04 (path/símbolo/commit y evidencia existente); cada hueco clasificado instancia/vínculo/consulta/API/renderer y productor dueño antes de code. Mapear recepción requerida por delta en graph_ui (actor P01, IDs y efectos); enlazar acta externa solo si el receptor ya la registró. El contrato básico puede cerrar sin recepción de Changes, Scion ni ViewDoc opcional; cada delta sigue bloqueado hasta su propio recibo. G_SPEC_VIEW se obtiene separadamente al preparar WS18, sin bloquear navegación base. WS11 cierra con contrato básico revisado, clasificación de huecos y mapa de deltas que requieren recepción; puede cerrar sin acta receptora. Recibos son producidos por solicitante P01/repo receptor al preparar cada delta, no por Executor de WS11 ni por escritura interrepo. Cada delta espera su propio recibo; contrato básico no afirma que ninguno se haya recibido.
 
 ## Dependencias
 
@@ -36,7 +36,7 @@ Tareas: WS09, WS08. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS11/2e49b4b0318a2c6b203f180b66bba947c68397f0da9723863462e793c2234542/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS11/454e9ae26013ec1a0ccc0246a47d6763ed045e15ccef91608beaadb3c17059d9/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

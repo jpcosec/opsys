@@ -28,7 +28,7 @@ RitualDoc/StepDoc/lifecycle sobre referencias reales; pasos y fuentes navegables
 
 ## Aceptación
 
-Un procedimiento abre sus documentos y soporte; no auto-marcar pasos como realizados por leerlos. El estado de un paso solo viene de deskops; esta vista no lo escribe.
+Un procedimiento abre sus documentos y soporte; no auto-marcar pasos como realizados por leerlos. Mostrar progreso/estado de paso solo si WS02/WS09/WS11 identifican campo/API real de deskops que lo produce; si no, pasos authored son inertes y no hay progreso inventado. La vista no escribe estado. Las transiciones muestran origen/destino/condición declarados del lifecycle, sin controles que invoquen avance ni mutaciones; prueba de no peticiones de escritura.
 
 ## Dependencias
 
@@ -38,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS23/e27a5dc27bc7233e1e95acee05a87bef6efc5b0ddc0ebc317ec6ef916cb9440c/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS23/8725d8adb032e93105442f8a17144216a01132732128e1fb2e383ae04e8c6508/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

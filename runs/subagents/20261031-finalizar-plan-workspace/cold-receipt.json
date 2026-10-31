@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato aislado de este encargo. Solo texto explícito, sin herramientas ni historial. Reformula propósito/resultado/repo/límites, busca ambigüedades del encargo y da dry-run concreto por roles SIN ejecutar. Distingue tareas futuras asignadas y detalles rutinarios delegados de lagunas. No pidas realizar auditoría o implementación de producto ahora. Máximo 500 palabras.",
+    "--print",
+    "@runs/subagents/20261031-finalizar-plan-workspace/cold-input.md"
+  ],
+  "input_sha256": "93a1a8b7d666710c05608c8f65765694c8fc7b37ff51da2a00cc361a0b8b9117",
+  "returncode": 0,
+  "fresh_process": true,
+  "stdin": "devnull",
+  "selection": "perfil flash barato configurado; sin afirmar mínimo global"
+}

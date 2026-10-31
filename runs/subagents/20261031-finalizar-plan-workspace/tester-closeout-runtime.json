@@ -1,0 +1,11 @@
+{
+  "argv": [
+    "/home/jp/anaconda3/bin/python",
+    "-c",
+    "import deskops,deskops.services.closure,deskops.services.closeout_gates,sys; print(deskops.__file__); print(deskops.services.closure.__file__); print(deskops.services.closeout_gates.__file__);print(sys.executable)"
+  ],
+  "cwd": "/tmp",
+  "exit_code": 0,
+  "stdout": "/home/jp/proyectos/SLDB_1/deskops/deskops/__init__.py\n/home/jp/proyectos/SLDB_1/deskops/deskops/services/closure.py\n/home/jp/proyectos/SLDB_1/deskops/deskops/services/closeout_gates.py\n/home/jp/anaconda3/bin/python\n",
+  "stderr": ""
+}

@@ -6,7 +6,6 @@ node_role: delivery
 parent_id: WS19
 depends_on:
 - WS12
-- WS16
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -27,7 +26,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Edición de campos reutilizando editores y API, con revisión esperada (hash CAS del documento) y conflicto visible (mensaje de rechazo con el texto local conservado); workflow-protected fields no editables por este canal. Delta sobre ticket draft de edición.
+Edición de campos reutilizando editores y API, con revisión esperada (hash CAS del documento) y conflicto visible (mensaje de rechazo con el texto local conservado); workflow-protected fields no editables por este canal. Delta sobre workspace integrado a1b2b22 de edición. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -35,13 +34,13 @@ Guardar/recargar confirma dato real; una escritura obsoleta no pierde texto loca
 
 ## Dependencias
 
-Tareas: WS12, WS16. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/f3746af70901f843020eccb48c545278fccea8658b652f83cae6a9695f0edbd2/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/e0c7b82d181d27f222c2a591eec7efc29804e07a28210deb13f86108be2fd254/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

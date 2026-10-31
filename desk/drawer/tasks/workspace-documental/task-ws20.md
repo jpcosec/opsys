@@ -28,7 +28,7 @@ Primero verificar capacidad existente. Un documento raw-source se extrae/valida 
 
 ## Aceptación
 
-Reversible = guardar y volver a extraer conserva campos y secciones sin pérdida. En ambas ramas G_SOURCE exige API pública y tests de roundtrip, conflicto, recuperación tras fallo y campos protegidos. Si la capacidad existe, esos tests bastan y no se duplica código. Si falta, se implementa en sldb mediante tarea propia aceptada en G_SLDB_WRITE.
+Reversible = guardar y volver a extraer conserva campos y secciones sin pérdida. En ambas ramas G_SOURCE exige API pública y tests de roundtrip, conflicto, recuperación tras fallo y campos protegidos. Si la capacidad existe, esos tests bastan y no se duplica código. Si falta, se implementa en sldb mediante tarea propia aceptada en G_SLDB_WRITE. WS20 se convierte en esa tarea propia en sldb al promoverse (mismo delta/recibo G_SLDB_WRITE), no crea un segundo productor. Capacidad existente significa que satisface todos los requisitos de esta aceptación/G_SOURCE; parcial se completa solo en lo faltante y se vuelve a probar todo el contrato.
 
 ## Dependencias
 
@@ -42,7 +42,7 @@ enabled_when:
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS20/ea3dd3d1769edb6f19b5d03834decf3ce1f8c227c7a694ee1f0157536b77863a/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS20/2d5c282e5bb3afe4d9d491c59aa2cc1d62b9366818e206df9f6b2368aae82720/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

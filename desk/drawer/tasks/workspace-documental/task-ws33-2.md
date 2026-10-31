@@ -9,6 +9,7 @@ depends_on:
 - WS33.1
 requires:
 - G_SCION
+- G_WRITE_CONTRACT
 ---
 
 # Registrar decisión humana explícita
@@ -33,13 +34,13 @@ Una decisión humana queda registrada con actor, referencia al intento y a su ta
 
 ## Dependencias
 
-Tareas: WS32, WS33.1. Gates: G_SCION. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS32, WS33.1. Gates: G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `scion` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/8f9f6f56d4a2c53c0472d498a721d7fa3cb9ce516e2f72b86982cc55353a6105/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/c0f8469dac7dd808f5d9b607333dda222d3835dd299f63e52f9f9ff54a444e35/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -8,7 +8,6 @@ children:
 - WS25.2
 depends_on:
 - WS12
-- WS16
 - WS25.1
 - WS25.2
 requires:
@@ -31,7 +30,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-UI para mensaje/ack y captura interna de drawer/protoátomo mediante operaciones permitidas por contrato; no confundir ack con aprobación.
+UI para mensaje/ack y captura interna de drawer/protoátomo mediante operaciones permitidas por contrato; no confundir ack con aprobación. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -39,11 +38,11 @@ Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación.
 
 ## Dependencias
 
-Tareas: WS12, WS16, WS25.1, WS25.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS25.1, WS25.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS25/72ce8631e30e15f58fe1a31d938443871e21ca8dcc66a2f9fdba8c540c62d7df/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS25/273b9abe0d78f4229ea7568c4953a969c982305e88a5ac4485f2ab2a8413dee5/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

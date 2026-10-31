@@ -23,11 +23,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Escribir solo entradas/índices authored como plantillas versionadas bajo el paquete del plan; no es el productor del corpus. El generador de WS40 acepta estas fuentes y las materializa bajo su root temporal, sin copiar inventarios derivados ni escribir repos reales. Puede escribirse antes de WS16: el lector no depende de estos índices nuevos; WS30 sí los integra.
+Escribir solo entradas/índices authored como plantillas versionadas bajo el paquete del plan; no es el productor del corpus. El generador de WS40 acepta estas fuentes y las materializa bajo su root temporal, sin copiar inventarios derivados ni escribir repos reales. Puede escribirse antes de WS16: el lector no depende de estos índices nuevos; WS30 sí los integra. Índice authored = texto curado y enlaces de entrada elegidos para recorrido, sin copiar listados completos del store que debe resolver consulta. Registry = desk/registry/repo-*.md existente inventariado WS02. WS43 lo reutiliza en publicación real; plantillas temporales enlazan por roots/aliases del manifiesto WS40, sin copiar ni depender del registry real.
 
 ## Aceptación
 
-Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown sin UI; source versionado y destino temporal no son registros independientes. Verificar al regenerar que cada plantilla resuelve el root/store de procedencia de los dos desks del manifiesto WS40; no duplicar el registry de deskops.
+Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown sin UI; source versionado y destino temporal no son registros independientes. Verificar al regenerar que cada plantilla resuelve el root/store de procedencia de los dos desks del manifiesto WS40; no duplicar el registry de deskops; el conjunto temporal usa solo manifiesto WS40, no enlaces al checkout real. Plantillas son fuente única: destino temporal se regenera desde ellas, no se edita/commitea como registro competidor. Resolver cada link según identidad/root/store/aliases contrato WS11 contra manifiesto WS40; conjunto de plantillas cubre ambos desks, no cada plantilla individual.
 
 ## Dependencias
 
@@ -35,7 +35,7 @@ Tareas: WS11, WS40. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml;
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS17/57a71a2d06fca00c8f6d24b526706fc49a09287fbb05ec9b546b1e892a538278/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS17/c53e461e063433cf723d90c79ef0d87875cf1b886d3e48079470649080a5b876/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -19,7 +19,7 @@ for t in D['tasks']:
         + '\n\n## Dependencias\n\nTareas: ' + (', '.join(t['depends_on']) or 'ninguna') + '. Gates: ' + (', '.join(t['requires']) or 'ninguno adicional') + '. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.\n'
         + ('\nSolapamiento: `' + t['overlap_with'] + '` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.\n' if t.get('overlap_with') else '')
         + ('\n## Variante\n\n' + yaml.safe_dump({k:t[k] for k in ('enabled_when','variants') if k in t},allow_unicode=True,sort_keys=False) if ('enabled_when' in t or 'variants' in t) else '')
-        + '\n## Review barato de comprensión\n\nEstado: `' + t['context_review']['status'] + '`. Protocolo requerido: `' + t['context_review']['required_protocol'] + '`. Evidencia: ' + str(t['context_review']['evidence']) + '. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.\n'
+        + '\n## Review barato de comprensión\n\nEstado: `' + t['context_review']['status'] + '`. Protocolo requerido: `' + t['context_review']['required_protocol'] + '`. Evidencia: ' + str(t['context_review']['evidence']) + '. ' + ('Revisión barata vigente; acredita comprensión, no ejecución.' if t['context_review']['status']=='reviewed' else 'Revisión barata pendiente; no ejecutar.') + ' APTO del concilio es experto y no satisface este gate.\n'
         + '\n## Gate de promoción\n\nAuthorar TaskDoc completa en repo dueño, fijar archivos, operaciones, pills/átomos y evidencia; confirmar no solapamiento y dependencias/gates; ejecutar revisión de comprensión con contexto limpio. Para código: pruebas reales específicas y suite requerida del repo (pytest/Node/Playwright según superficie). Para UX: gate humano correspondiente; para docs: links y hechos comprobados. Ritual/commit de task y fase obligatorios. Esta candidata no está lista para un ejecutor de código por sí sola.\n')
     rows.append('| ' + t['id'] + ' | [' + t['title'] + '](../../tasks/workspace-documental/' + Path(t['task_file']).name + ') | ' + (', '.join(t['depends_on']) or '—') + ' | ' + (', '.join(t['requires']) or '—') + ' | ' + t['owner_repo'] + ' | ' + t['estimate'] + ' |')
 _nodes = [D['hierarchy']['root']] + D['hierarchy']['packages'] + D['tasks']
@@ -29,9 +29,9 @@ for _n in _nodes:
 review_summary = ', '.join(f'{k}: {v}' for k, v in sorted(_counts.items()))
 hierarchy_rows = ['- **' + p['id'] + ' ' + p['title'] + '**: ' + ', '.join(p['children']) for p in D['hierarchy']['packages']]
 gate_rows = ['| ' + k + ' | ' + v['state'] + ' | ' + v['title'] + ' | ' + v['resolver'] + ' |' for k, v in D['gates'].items()]
-outputs[B / 'README.md'] = '''# Workspace documental — plan revisado por concilio
+outputs[B / 'README.md'] = '''# Workspace documental — plan final documental
 
-Revisión ''' + str(D['revision']) + '''. Estado: ''' + D['status'] + '''. Propuesta de planificación, no activación ni ejecución de producto.
+Revisión ''' + str(D['revision']) + '''. Estado: ''' + D['status'] + '''. Planificación final; no activación ni ejecución de producto.
 
 ## Reviews baratos
 
@@ -45,17 +45,18 @@ ROOT y PK agrupan la revisión; no son dependencias. Un nodo `aggregate` no se e
 
 ## Entrada
 
+- [Cierre y secuencia del plan](cierre.md): base acordada, trabajo cubierto y próximos deltas.
 - [Brief y glosario](brief.md): requisitos autosuficientes, sin chat ni memoria privada necesaria.
-- [Decisiones](decisiones.md): alternativas, humano responsable y evidencia requerida; pendientes explícitas.
+- [Decisiones](decisiones.md): decisiones humanas registradas y defaults técnicos delegados; APIs y aceptación de uso siguen pendientes.
 - [Alcance](alcance.md): lector, autoría manual, Scion opcional y exclusiones.
 - [Reconciliación](reconciliacion.md): cómo integrar trabajo activo sin duplicarlo.
 - [Cobertura de user-flows](cobertura.md) y [validación humana](validacion-humana.md).
 
-Baseline propuesta: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no migración ni dependencia de este DAG. El humano resuelve las propuestas en WS07 antes de código afectado. El plan no se apoya en decisiones que solo estén en la memoria de un agente.
+Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no migración ni dependencia de este DAG. WS07 reutiliza el registro literal ya resuelto; no repetir decisiones sin cambio real. El plan no se apoya en decisiones que solo estén en la memoria de un agente.
 
 ## Documentos que podemos escribir ahora
 
-[Visión](borradores/vision.md), [user-flows](borradores/user-flows.md), [catálogo de vistas](borradores/vistas.md) e [índice del manual](borradores/manual.md) tienen semilla de intención. WS01 aclara vocabulario/fuentes y WS02–05 auditan; WS08–10 convierten intención en contratos contrastados. Un borrador existente no equivale a tarea cerrada, aprobación humana o función disponible.
+[Visión](borradores/vision.md), [user-flows](borradores/user-flows.md), [catálogo de vistas](borradores/vistas.md) e [índice del manual](borradores/manual.md) tienen semilla de intención. WS01 ya fija vocabulario/fuentes con recibo documental; WS02–05 auditan; WS08–10 convierten intención en contratos contrastados. Un borrador existente no equivale a tarea cerrada, aprobación humana o función disponible.
 
 ## DAG y candidatas
 
@@ -89,7 +90,7 @@ Revisiones independientes y resolución de hallazgos en [reviews](reviews/README
 producers = {k:v['produced_by'] for k,v in D['gates'].items() if v.get('produced_by')}
 nodes = {t['id']: {'label': t['id'] + ': ' + t['title'], 'kind': 'core'} for t in D['tasks']}
 nodes.update({k: {'label': k + ' [' + v['state'] + ']', 'kind': 'boundary'} for k, v in D['gates'].items()})
-edges = [{'from': p, 'to': t['id'], 'relation': 'prerequisite', 'label': ''} for t in D['tasks'] for p in t['depends_on'] + t['requires']]
+edges = [{'from': p, 'to': t['id'], 'relation': 'prerequisite', 'label': 'habilitar uso UI' if p=='G_HUMAN_READ' else ('recibo por delta' if D['gates'].get(p,{}).get('evaluation')=='per_delta' else '')} for t in D['tasks'] for p in t['depends_on'] + t['requires']]
 edges += [{'from': v, 'to': k, 'relation': 'evidence', 'label': 'evidencia'} for k, v in producers.items()]
 for t in D['tasks']:
     for variant in t.get('variants', []):

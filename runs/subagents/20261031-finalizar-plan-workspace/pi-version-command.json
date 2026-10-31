@@ -1,0 +1,10 @@
+{
+  "argv": [
+    "pi",
+    "--version"
+  ],
+  "stdin": "DEVNULL",
+  "returncode": 0,
+  "stdout": "",
+  "stderr": "0.67.3\n"
+}

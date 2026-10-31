@@ -29,7 +29,7 @@ Inventariar fuente, queries, Board, ritual, conocimiento/crossroads, issues, FAQ
 
 ## Aceptación
 
-Cada fila tiene origen, contrato (o «sin contrato» si el soporte no lo tiene), renderer, acción/dueño, error y estado. Distinguir authored/derivado/preferencia local. Aplica a cada fila de las tablas de vistas.md y completa la ficha por fila. Estado = disponible/propuesto/bloqueado según WS10; disponibilidad actual viene de auditoria/ui.md (WS04); error = fallo visible esperado para esa fila.
+Cada fila inventaría origen, contrato (o «sin contrato» si el soporte no lo tiene), renderer, acción/dueño, error y estado desde auditorías WS02–04/decisiones y UFs WS08. Campo sin evidencia se marca no definido con productor WS11/12 o futura implementación, incluido renderer/actor/campos/relaciones; nunca inventar actor/API disponible. Distinguir authored/derivado/preferencia local. Aplica a cada fila de las tablas de vistas.md y completa la ficha por fila. Estado = disponible/propuesto/bloqueado según WS10; disponibilidad actual viene de auditoria/ui.md (WS04); error = fallo visible esperado para esa fila. Filas compuestas admiten listas de contratos/renderers/acciones/errores y clasificación por componente authored/derivado/local; separar fila solo si el delta tiene evidencia/estado independiente. Para propuesto/bloqueado indicar error esperado condicionado a contrato/implementación, o no definido con productor WS11/12 si falta; nunca inventar error actual.
 
 ## Dependencias
 
@@ -37,7 +37,7 @@ Tareas: WS07, WS10, WS08. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; u
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS09/f34d622aae8d8e6ff0cefe588870edb4a400ddf9930fa957accc1dd59be06453/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS09/bc658b86011eca2ba377e80d68e0f64d38edebfe550278c85d0a5f3001edcce3/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

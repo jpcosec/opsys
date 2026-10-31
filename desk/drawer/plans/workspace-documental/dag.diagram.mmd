@@ -4,7 +4,7 @@ config:
   flowchart:
     curve: linear
 ---
-%% spec2viz: generated from dag.diagram.yaml; do not edit, run `spec2viz diagram validate dag.diagram.yaml` and re-render
+%% spec2viz: generated from desk/drawer/plans/workspace-documental/dag.diagram.yaml; do not edit, run `spec2viz diagram validate desk/drawer/plans/workspace-documental/dag.diagram.yaml` and re-render
 flowchart TD
     WS01["WS01: Fijar brief y glosario autosuficientes"]
     WS02["WS02: Inventariar superficies y operaciones Deskops"]
@@ -12,7 +12,7 @@ flowchart TD
     WS04["WS04: Inventariar UI y reconciliar trabajo en curso"]
     WS05["WS05: Inventariar identidad y API Scion"]
     WS06["WS06: Proponer correspondencia de alcance con repos dueños"]
-    WS07["WS07: Resolver decisiones de producto y escritura"]
+    WS07["WS07: Mantener registro trazado de decisiones acordadas"]
     WS08["WS08: Precisar user-flows y criterios observables"]
     WS09["WS09: Precisar catálogo de renderizaciones"]
     WS10["WS10: Precisar índice y convención del manual"]
@@ -69,15 +69,15 @@ flowchart TD
     WS42["WS42: Integrar operaciones de conocimiento existentes"]
     WS43["WS43: Publicar navegación documental del desk real"]
     WS44["WS44: Comprobar y revalidar acceso público a Scion"]
-    G_PRODUCT["G_PRODUCT [pending]"]
-    G_CLOSEOUT["G_CLOSEOUT [blocked]"]
+    G_PRODUCT["G_PRODUCT [satisfied]"]
+    G_CLOSEOUT["G_CLOSEOUT [satisfied]"]
     G_SOURCE["G_SOURCE [pending]"]
     G_SCION["G_SCION [unverified]"]
     G_EXEC["G_EXEC [pending]"]
     G_HUMAN_READ["G_HUMAN_READ [pending]"]
     G_HUMAN_MANUAL["G_HUMAN_MANUAL [pending]"]
     G_HUMAN_DELEGATE["G_HUMAN_DELEGATE [pending]"]
-    G_WRITE_POLICY["G_WRITE_POLICY [pending]"]
+    G_WRITE_POLICY["G_WRITE_POLICY [satisfied]"]
     G_WRITE_CONTRACT["G_WRITE_CONTRACT [pending]"]
     G_UI_READ["G_UI_READ [pending]"]
     G_UI_WRITE["G_UI_WRITE [pending]"]
@@ -111,25 +111,25 @@ flowchart TD
     WS13.1 -->|"prerequisite"| WS13
     WS13.2 -->|"prerequisite"| WS13
     WS13.3 -->|"prerequisite"| WS13
-    G_UI_READ -->|"prerequisite"| WS13
+    G_UI_READ -->|"recibo por delta"| WS13
     WS11 -->|"prerequisite"| WS13.1
-    G_UI_READ -->|"prerequisite"| WS13.1
+    G_UI_READ -->|"recibo por delta"| WS13.1
     WS11 -->|"prerequisite"| WS13.2
     WS13.1 -->|"prerequisite"| WS13.2
-    G_UI_READ -->|"prerequisite"| WS13.2
+    G_UI_READ -->|"recibo por delta"| WS13.2
     WS11 -->|"prerequisite"| WS13.3
     WS13.1 -->|"prerequisite"| WS13.3
-    G_UI_READ -->|"prerequisite"| WS13.3
+    G_UI_READ -->|"recibo por delta"| WS13.3
     WS13 -->|"prerequisite"| WS14
-    G_UI_READ -->|"prerequisite"| WS14
+    G_UI_READ -->|"recibo por delta"| WS14
     WS13 -->|"prerequisite"| WS15
     WS15.1 -->|"prerequisite"| WS15
     WS15.2 -->|"prerequisite"| WS15
-    G_UI_READ -->|"prerequisite"| WS15
+    G_UI_READ -->|"recibo por delta"| WS15
     WS13 -->|"prerequisite"| WS15.1
-    G_UI_READ -->|"prerequisite"| WS15.1
+    G_UI_READ -->|"recibo por delta"| WS15.1
     WS13 -->|"prerequisite"| WS15.2
-    G_UI_READ -->|"prerequisite"| WS15.2
+    G_UI_READ -->|"recibo por delta"| WS15.2
     WS14 -->|"prerequisite"| WS16
     WS15 -->|"prerequisite"| WS16
     WS08 -->|"prerequisite"| WS16
@@ -139,97 +139,91 @@ flowchart TD
     WS40 -->|"prerequisite"| WS17
     WS09 -->|"prerequisite"| WS18
     WS11 -->|"prerequisite"| WS18
-    G_SPEC_VIEW -->|"prerequisite"| WS18
+    G_SPEC_VIEW -->|"recibo por delta"| WS18
     WS12 -->|"prerequisite"| WS19
-    WS16 -->|"prerequisite"| WS19
     WS19.1 -->|"prerequisite"| WS19
     WS19.2 -->|"prerequisite"| WS19
-    G_HUMAN_READ -->|"prerequisite"| WS19
-    G_UI_WRITE -->|"prerequisite"| WS19
-    G_WRITE_CONTRACT -->|"prerequisite"| WS19
+    G_HUMAN_READ -->|"habilitar uso UI"| WS19
+    G_UI_WRITE -->|"recibo por delta"| WS19
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS19
     WS12 -->|"prerequisite"| WS19.1
-    WS16 -->|"prerequisite"| WS19.1
-    G_HUMAN_READ -->|"prerequisite"| WS19.1
-    G_UI_WRITE -->|"prerequisite"| WS19.1
-    G_WRITE_CONTRACT -->|"prerequisite"| WS19.1
+    G_HUMAN_READ -->|"habilitar uso UI"| WS19.1
+    G_UI_WRITE -->|"recibo por delta"| WS19.1
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS19.1
     WS12 -->|"prerequisite"| WS19.2
-    WS16 -->|"prerequisite"| WS19.2
-    G_HUMAN_READ -->|"prerequisite"| WS19.2
-    G_UI_WRITE -->|"prerequisite"| WS19.2
-    G_WRITE_CONTRACT -->|"prerequisite"| WS19.2
+    G_HUMAN_READ -->|"habilitar uso UI"| WS19.2
+    G_UI_WRITE -->|"recibo por delta"| WS19.2
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS19.2
     WS12 -->|"prerequisite"| WS20
-    G_SLDB_WRITE -->|"prerequisite"| WS20
-    G_WRITE_CONTRACT -->|"prerequisite"| WS20
+    G_SLDB_WRITE -->|"recibo por delta"| WS20
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS20
     WS19 -->|"prerequisite"| WS21
-    G_UI_WRITE -->|"prerequisite"| WS21
-    G_WRITE_CONTRACT -->|"prerequisite"| WS21
+    G_UI_WRITE -->|"recibo por delta"| WS21
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS21
     WS13 -->|"prerequisite"| WS22
     WS09 -->|"prerequisite"| WS22
-    G_UI_READ -->|"prerequisite"| WS22
+    G_UI_READ -->|"recibo por delta"| WS22
     WS13 -->|"prerequisite"| WS23
     WS09 -->|"prerequisite"| WS23
-    G_UI_READ -->|"prerequisite"| WS23
+    G_UI_READ -->|"recibo por delta"| WS23
     WS13 -->|"prerequisite"| WS24
-    WS18 -->|"prerequisite"| WS24
-    G_UI_READ -->|"prerequisite"| WS24
+    WS09 -->|"prerequisite"| WS24
+    G_UI_READ -->|"recibo por delta"| WS24
     WS12 -->|"prerequisite"| WS25
-    WS16 -->|"prerequisite"| WS25
     WS25.1 -->|"prerequisite"| WS25
     WS25.2 -->|"prerequisite"| WS25
-    G_HUMAN_READ -->|"prerequisite"| WS25
-    G_UI_WRITE -->|"prerequisite"| WS25
-    G_WRITE_CONTRACT -->|"prerequisite"| WS25
+    G_HUMAN_READ -->|"habilitar uso UI"| WS25
+    G_UI_WRITE -->|"recibo por delta"| WS25
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS25
     WS12 -->|"prerequisite"| WS25.1
-    WS16 -->|"prerequisite"| WS25.1
-    G_HUMAN_READ -->|"prerequisite"| WS25.1
-    G_UI_WRITE -->|"prerequisite"| WS25.1
-    G_WRITE_CONTRACT -->|"prerequisite"| WS25.1
+    G_HUMAN_READ -->|"habilitar uso UI"| WS25.1
+    G_UI_WRITE -->|"recibo por delta"| WS25.1
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS25.1
     WS12 -->|"prerequisite"| WS25.2
-    WS16 -->|"prerequisite"| WS25.2
-    G_HUMAN_READ -->|"prerequisite"| WS25.2
-    G_UI_WRITE -->|"prerequisite"| WS25.2
-    G_WRITE_CONTRACT -->|"prerequisite"| WS25.2
+    G_HUMAN_READ -->|"habilitar uso UI"| WS25.2
+    G_UI_WRITE -->|"recibo por delta"| WS25.2
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS25.2
     WS12 -->|"prerequisite"| WS26
     WS22 -->|"prerequisite"| WS26
     WS26.1 -->|"prerequisite"| WS26
     WS26.2 -->|"prerequisite"| WS26
     G_CLOSEOUT -->|"prerequisite"| WS26
-    G_HUMAN_READ -->|"prerequisite"| WS26
-    G_UI_WRITE -->|"prerequisite"| WS26
-    G_WRITE_CONTRACT -->|"prerequisite"| WS26
+    G_HUMAN_READ -->|"habilitar uso UI"| WS26
+    G_UI_WRITE -->|"recibo por delta"| WS26
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS26
     WS12 -->|"prerequisite"| WS26.1
     WS22 -->|"prerequisite"| WS26.1
     G_CLOSEOUT -->|"prerequisite"| WS26.1
-    G_HUMAN_READ -->|"prerequisite"| WS26.1
-    G_UI_WRITE -->|"prerequisite"| WS26.1
-    G_WRITE_CONTRACT -->|"prerequisite"| WS26.1
+    G_HUMAN_READ -->|"habilitar uso UI"| WS26.1
+    G_UI_WRITE -->|"recibo por delta"| WS26.1
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS26.1
     WS12 -->|"prerequisite"| WS26.2
     WS22 -->|"prerequisite"| WS26.2
     WS26.1 -->|"prerequisite"| WS26.2
     G_CLOSEOUT -->|"prerequisite"| WS26.2
-    G_HUMAN_READ -->|"prerequisite"| WS26.2
-    G_UI_WRITE -->|"prerequisite"| WS26.2
-    G_WRITE_CONTRACT -->|"prerequisite"| WS26.2
+    G_HUMAN_READ -->|"habilitar uso UI"| WS26.2
+    G_UI_WRITE -->|"recibo por delta"| WS26.2
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS26.2
     WS13 -->|"prerequisite"| WS27
     WS12 -->|"prerequisite"| WS27
     WS27.1 -->|"prerequisite"| WS27
     WS27.2 -->|"prerequisite"| WS27
-    G_UI_READ -->|"prerequisite"| WS27
+    G_UI_READ -->|"recibo por delta"| WS27
     WS13 -->|"prerequisite"| WS27.1
     WS12 -->|"prerequisite"| WS27.1
-    G_UI_READ -->|"prerequisite"| WS27.1
+    G_UI_READ -->|"recibo por delta"| WS27.1
     WS13 -->|"prerequisite"| WS27.2
     WS12 -->|"prerequisite"| WS27.2
-    G_UI_READ -->|"prerequisite"| WS27.2
+    G_UI_READ -->|"recibo por delta"| WS27.2
     WS27 -->|"prerequisite"| WS28
     WS12 -->|"prerequisite"| WS28
     G_CLOSEOUT -->|"prerequisite"| WS28
-    G_HUMAN_READ -->|"prerequisite"| WS28
-    G_UI_WRITE -->|"prerequisite"| WS28
-    G_WRITE_CONTRACT -->|"prerequisite"| WS28
+    G_HUMAN_READ -->|"habilitar uso UI"| WS28
+    G_UI_WRITE -->|"recibo por delta"| WS28
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS28
     WS15 -->|"prerequisite"| WS29
     WS24 -->|"prerequisite"| WS29
-    G_UI_READ -->|"prerequisite"| WS29
+    G_UI_READ -->|"recibo por delta"| WS29
     WS17 -->|"prerequisite"| WS30
     WS21 -->|"prerequisite"| WS30
     WS22 -->|"prerequisite"| WS30
@@ -249,56 +243,59 @@ flowchart TD
     WS32.2 -->|"prerequisite"| WS32
     G_CLOSEOUT -->|"prerequisite"| WS32
     G_SCION -->|"prerequisite"| WS32
-    G_WRITE_CONTRACT -->|"prerequisite"| WS32
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS32
     WS05 -->|"prerequisite"| WS32.1
     WS12 -->|"prerequisite"| WS32.1
     G_CLOSEOUT -->|"prerequisite"| WS32.1
     G_SCION -->|"prerequisite"| WS32.1
-    G_WRITE_CONTRACT -->|"prerequisite"| WS32.1
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS32.1
     WS05 -->|"prerequisite"| WS32.2
     WS12 -->|"prerequisite"| WS32.2
     WS32.1 -->|"prerequisite"| WS32.2
     G_CLOSEOUT -->|"prerequisite"| WS32.2
     G_SCION -->|"prerequisite"| WS32.2
-    G_WRITE_CONTRACT -->|"prerequisite"| WS32.2
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS32.2
     WS32 -->|"prerequisite"| WS33
     WS11 -->|"prerequisite"| WS33
     WS33.1 -->|"prerequisite"| WS33
     WS33.2 -->|"prerequisite"| WS33
     G_SCION -->|"prerequisite"| WS33
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS33
     WS32 -->|"prerequisite"| WS33.1
     G_SCION -->|"prerequisite"| WS33.1
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS33.1
     WS32 -->|"prerequisite"| WS33.2
     WS33.1 -->|"prerequisite"| WS33.2
     G_SCION -->|"prerequisite"| WS33.2
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS33.2
     WS33 -->|"prerequisite"| WS34
     WS12 -->|"prerequisite"| WS34
     WS34.1 -->|"prerequisite"| WS34
     WS34.2 -->|"prerequisite"| WS34
     G_EXEC -->|"prerequisite"| WS34
     G_SCION -->|"prerequisite"| WS34
-    G_WRITE_CONTRACT -->|"prerequisite"| WS34
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS34
     WS33 -->|"prerequisite"| WS34.1
     WS12 -->|"prerequisite"| WS34.1
     G_EXEC -->|"prerequisite"| WS34.1
     G_SCION -->|"prerequisite"| WS34.1
-    G_WRITE_CONTRACT -->|"prerequisite"| WS34.1
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS34.1
     WS33 -->|"prerequisite"| WS34.2
     WS12 -->|"prerequisite"| WS34.2
     WS34.1 -->|"prerequisite"| WS34.2
     G_EXEC -->|"prerequisite"| WS34.2
     G_SCION -->|"prerequisite"| WS34.2
-    G_WRITE_CONTRACT -->|"prerequisite"| WS34.2
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS34.2
     WS33 -->|"prerequisite"| WS35
     WS27 -->|"prerequisite"| WS35
     G_SCION -->|"prerequisite"| WS35
-    G_UI_READ -->|"prerequisite"| WS35
+    G_UI_READ -->|"recibo por delta"| WS35
     WS34 -->|"prerequisite"| WS36
     WS35 -->|"prerequisite"| WS36
     G_EXEC -->|"prerequisite"| WS36
     G_SCION -->|"prerequisite"| WS36
-    G_UI_WRITE -->|"prerequisite"| WS36
-    G_WRITE_CONTRACT -->|"prerequisite"| WS36
+    G_UI_WRITE -->|"recibo por delta"| WS36
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS36
     WS36 -->|"prerequisite"| WS37
     WS30 -->|"prerequisite"| WS37
     G_EXEC -->|"prerequisite"| WS37
@@ -307,28 +304,28 @@ flowchart TD
     WS31 -->|"prerequisite"| WS38
     G_HUMAN_DELEGATE -->|"prerequisite"| WS38
     WS12 -->|"prerequisite"| WS39
-    WS16 -->|"prerequisite"| WS39
-    G_HUMAN_READ -->|"prerequisite"| WS39
-    G_UI_WRITE -->|"prerequisite"| WS39
-    G_WRITE_CONTRACT -->|"prerequisite"| WS39
+    WS13 -->|"prerequisite"| WS39
+    G_HUMAN_READ -->|"habilitar uso UI"| WS39
+    G_UI_WRITE -->|"recibo por delta"| WS39
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS39
     WS11 -->|"prerequisite"| WS40
     WS08 -->|"prerequisite"| WS40
-    G_UI_READ -->|"prerequisite"| WS40
+    G_UI_READ -->|"recibo por delta"| WS40
     WS13 -->|"prerequisite"| WS41
     WS11 -->|"prerequisite"| WS41
     WS40 -->|"prerequisite"| WS41
-    G_UI_READ -->|"prerequisite"| WS41
+    G_UI_READ -->|"recibo por delta"| WS41
     WS19 -->|"prerequisite"| WS42
     WS24 -->|"prerequisite"| WS42
     WS12 -->|"prerequisite"| WS42
-    G_HUMAN_READ -->|"prerequisite"| WS42
-    G_UI_WRITE -->|"prerequisite"| WS42
-    G_WRITE_CONTRACT -->|"prerequisite"| WS42
+    G_HUMAN_READ -->|"habilitar uso UI"| WS42
+    G_UI_WRITE -->|"recibo por delta"| WS42
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS42
     WS17 -->|"prerequisite"| WS43
     WS30 -->|"prerequisite"| WS43
     G_HUMAN_MANUAL -->|"prerequisite"| WS43
     G_PRODUCT -->|"prerequisite"| WS43
-    G_WRITE_CONTRACT -->|"prerequisite"| WS43
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS43
     WS05 -->|"prerequisite"| WS44
     WS07 -->|"prerequisite"| WS44
     G_PRODUCT -->|"prerequisite"| WS44
@@ -340,10 +337,6 @@ flowchart TD
     WS37 -->|"evidencia"| G_HUMAN_DELEGATE
     WS07 -->|"evidencia"| G_WRITE_POLICY
     WS12 -->|"evidencia"| G_WRITE_CONTRACT
-    WS11 -->|"evidencia"| G_UI_READ
-    WS12 -->|"evidencia"| G_UI_WRITE
-    WS12 -->|"evidencia"| G_SLDB_WRITE
-    WS11 -->|"evidencia"| G_SPEC_VIEW
     WS39 -->|"evidencia"| G_HUMAN_MODEL
     WS20 -->|"source_mode=editable"| WS21
     G_SOURCE -->|"source_mode=editable"| WS21

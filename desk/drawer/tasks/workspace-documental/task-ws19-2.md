@@ -6,7 +6,6 @@ node_role: delivery
 parent_id: WS19
 depends_on:
 - WS12
-- WS16
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -27,7 +26,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en el componente.
+Alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en el componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -35,13 +34,13 @@ Alta y baja persisten y se confirman tras recargar; una relación no permitida o
 
 ## Dependencias
 
-Tareas: WS12, WS16. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/f963cf774b07d48dfd7951e6780076a1c6cd176b2d57ebf9356da138740f0615/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/0f00740bfa68534f070fe49cf24985c7732b2a0a801acb38afdc88868926475e/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

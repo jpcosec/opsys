@@ -1,6 +1,6 @@
 # Protocolo de uso y evidencia
 
-Propuesta pendiente de P08. Participante: solicitante humano de esta sesión o persona explícitamente designada. Agente de pruebas prepara entorno y observa; no firma como usuario humano ni convierte screenshots en aprobación.
+Protocolo con base P08 aceptada el 2026-10-31 (owner-decisions.json ítem 2). Participante: solicitante humano de esta sesión; puede designar sustituto expresamente. Agente de pruebas prepara entorno y observa; no firma como usuario humano ni convierte screenshots en aprobación.
 
 ## Ejemplo reproducible
 
@@ -14,13 +14,13 @@ Proyecto Taller bajo graph_ui:.tmp/workspace-documental-ejemplo/, con su propio 
 - WS39: UF09 modelos; validar su prueba específica antes de etiquetar capítulo de personalización como disponible.
 - WS29: UF07 impacto avanzado; prueba propia de mutaciones y soporte. Su ausencia no bloquea manual básico, que debe decirlo.
 
-Las mutaciones de baseline requieren G_HUMAN_READ; las representaciones solo lectura pueden construirse en paralelo sin que eso implique aceptación humana.
+Habilitar mutaciones de baseline en UI requiere G_HUMAN_READ; desarrollo/pruebas aisladas de API no esperan ese acta humana; las representaciones solo lectura pueden construirse en paralelo sin que eso implique aceptación humana.
 
 ## Evidencia y aceptación
 
 Guardar guion, versiones/commits, corpus, comandos públicos, timestamps y resultados técnicos; grabación o capturas del recorrido; observaciones, fallos y decisión explícita del participante. La persona debe poder completar el guion sin rutas memorizadas ni instrucciones verbales correctivas del agente. Registrar ayudas solicitadas. Un fallo de recorrido bloquea el gate correspondiente y abre tarea de corrección, no solo un cambio de umbral.
 
-Presupuestos propuestos (P08 debe confirmarlos): lectura/navegación local caliente p95 <=2 s, guardado local <=3 s; primer arranque <=10 s en corpus de ejemplo. Si una operación excede 1 s, estado de progreso visible sin afirmar éxito; registrar error/timeout. Medir al menos 20 aperturas, 10 búsquedas (WS16 y WS30) y 10 guardados (solo WS30, porque WS16 no muta) sobre corpus y tamaño documentados; no extrapolar producción. Carga grande se reporta aparte.
+Objetivos iniciales aceptados por P08 (no mediciones obtenidas): lectura/navegación local caliente p95 <=2 s, guardado local <=3 s; primer arranque <=10 s en corpus de ejemplo. Si una operación excede 1 s, estado de progreso visible sin afirmar éxito; registrar error/timeout. Medir al menos 20 aperturas, 10 búsquedas (WS16 y WS30) y 10 guardados (solo WS30, porque WS16 no muta) sobre corpus y tamaño documentados; no extrapolar producción. Carga grande se reporta aparte.
 
 ## Qué significa disponible
 

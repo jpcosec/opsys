@@ -25,7 +25,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Evidencia junto a la TaskDoc. Sin modelo de comentarios nuevo.
+Evidencia junto a la TaskDoc. Sin modelo de comentarios nuevo. WS12 fija correspondencia por tipo de evidencia declarada TaskDoc (no inferencia por extensión en renderer), artefactos soporte y salida pública de closeout verify; declarada/encontrada/gates/summary se muestran según reporte real. Verificada refiere al resultado del gate de la TaskDoc/tipo, no prueba independiente del artefacto. Reporte ausente/fallo de comando es no verificable con error, nunca verificado.
 
 ## Aceptación
 
@@ -37,7 +37,7 @@ Tareas: WS13, WS12. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/e201d0e0bef1b5f380b2fe5e97f93f9b6db02b3d3818dcf96df2733dfecca646/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/ff669146e97dc42ee23acdc9c9f4442ae2bda1031bf4e6585bfdf3b3310c09c8/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

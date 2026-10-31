@@ -29,7 +29,7 @@ Publicar navegación, edición, captura, trabajo manual y revisión demostradas;
 
 ## Aceptación
 
-Cada instrucción remite al acta de WS30 o al acta de publicación de WS43 de la versión publicada; un átomo por cada Pxx ya aceptado por humano en decisiones.md y por cada contrato en contratos/ (navegacion.md, operaciones.md u otros de WS11/WS12); las propuestas Pxx pendientes no se atomizan; etiquetas, links y atom->doc verificados. Scion se incluye solo como capítulo marcado propuesto hasta WS38. Para capítulos que mencionen personalización o impacto, comprobar G_HUMAN_MODEL/WS29 o mantener etiqueta propuesta; no bloquear manual básico por esos extras.
+Cada instrucción remite al acta de WS30 o al acta de publicación de WS43 de la versión publicada; un átomo por cada decisión Pxx humana o técnica ya registrada y vigente en decisiones.md y por cada contrato en contratos/ (navegacion.md, operaciones.md u otros de WS11/WS12); no atomizar permisos o aceptación técnica que aún no existen; etiquetas, links y atom->doc verificados. Scion se incluye solo como capítulo marcado propuesto hasta WS38. Para capítulos que mencionen personalización o impacto, comprobar G_HUMAN_MODEL/WS29 o mantener etiqueta propuesta; no bloquear manual básico por esos extras. contratos/ se resuelve en deskops:desk/drawer/plans/workspace-documental/contratos/ según output_base WS11/12; otros contratos solo si dichos productores los inventarían explícitamente. Para WS29 exigir referencia a pruebas reales/recibo y commit de su TaskDoc de ejecución; sin ella capítulo sigue propuesto. Executor del manual comprueba links resolubles, etiquetas coherentes con actas/commits y atom→doc con fuente declarada; Tester independiente verifica esos criterios antes del cierre.
 
 ## Dependencias
 
@@ -37,7 +37,7 @@ Tareas: WS30, WS10, WS43. Gates: G_HUMAN_MANUAL. Ver estados/evidencia en dag.ya
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS31/7b324eb249ff393a0e13b1ecfc2929615c6e3ff2ff67126a3b6ca12d614497af/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS31/d775c4230fd8852ee2e11af7058eeb16c6b7ad37d3a3b1f752077072b4fb25cc/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

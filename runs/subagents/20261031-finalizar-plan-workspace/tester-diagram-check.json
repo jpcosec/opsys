@@ -1,0 +1,58 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "spec2viz",
+        "about"
+      ],
+      "exit_code": 0,
+      "stdout": "spec2viz \u2014 semantic specs -> diagrams -> catalog HTML\n\nWhere the diagrams live:\n  package examples : /home/jp/proyectos/SLDB_1/spec2viz/examples\n    - activity    activity/example.yml, activity/validation.yml\n    - catalog     catalog/leaves/architecture-vistas.yml, catalog/leaves/sample-component.yml, catalog/project.yml\n    - class       class/runtime.yml\n    - component   component/example.yml\n    - deployment  deployment/example.yml\n    - fixtures    fixtures/canonical.yml\n    - matrix      matrix/example.yml\n    - reflection  reflection/canonical.yml\n    - sequence    sequence/example.yml\n    - state       state/example.yml\n  catalog config   : examples/catalog/project.yml\n\nFlow to HTML:\n  1. diagram validate <spec.yml>\n  2. diagram render   <spec.yml> --out <dir>\n  3. diagram lint     <rendered.mmd>\n  4. catalog build    --config <vistas.yml> --out <out.html>\n     (build alias = catalog build; --atoms-dir injects window.ATOMS_DB)\n\nServe a built catalog:\n  catalog serve --html <out.html> --port 8000\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "spec2viz",
+        "diagram",
+        "validate",
+        "/home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.yaml"
+      ],
+      "exit_code": 0,
+      "stdout": "dag.diagram.yaml: OK\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "spec2viz",
+        "diagram",
+        "render",
+        "/home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.yaml",
+        "--renderer",
+        "mermaid",
+        "--out",
+        "/home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections"
+      ],
+      "exit_code": 0,
+      "stdout": "Rendered dag.diagram.yaml -> /home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections/dag.diagram.mmd\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "spec2viz",
+        "diagram",
+        "render",
+        "/home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.yaml",
+        "--renderer",
+        "graph",
+        "--out",
+        "/home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections"
+      ],
+      "exit_code": 0,
+      "stdout": "Rendered dag.diagram.yaml -> /home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections/dag.diagram.graph.html\n",
+      "stderr": ""
+    }
+  ],
+  "byte_equal_to_final": {
+    "dag.diagram.mmd": true,
+    "dag.diagram.graph.html": true
+  }
+}

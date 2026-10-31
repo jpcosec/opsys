@@ -1,0 +1,26 @@
+# Executor result — final documentary plan, testing handoff
+
+Execution complete for the authorized planning scope. Official task/phase closeout and the independent final plan Tester remain with Supervisor. No commit, Board/ritual/skill edits, product changes, Scion communications or product execution authorization were made by Executor.
+
+## Deliverable
+
+`desk/drawer/plans/workspace-documental/cierre.md` is the authored final entry: agreed base, implemented base vs remaining deltas, delivery sequence, first preparable core layer, actors, manual/views/user-flows/evidence and actual start conditions. `dag.yaml` revision 8/status `final_plan_reviewed` is canonical. All 63 candidate task nodes (54 delivery, 9 aggregate), ROOT and 8 packages are retained: 72 reviewed nodes, 0 stale. `execution_authorized=false`; no WS candidate was turned into an active TaskDoc.
+
+The three owner answers are verbatim in decisiones.md with actor/date/origin/item mapping. P01–06/P08 are human decisions; P07/P09 are delegated conservative technical defaults, not invented signatures. Source mode is editable as a selected variant, with actual raw-source guardas still gated by WS20/G_SOURCE. Scion operator/access/dispatch permissions remain later and ungranted.
+
+Workspace base is implemented (a1b2b22, f16fcd1, 134a665); editing/Changes remain drafts. Reconciliation cites durable runtime code, current task hashes and historical git TaskDoc receipts without recreating deleted tasks. It records base reuse vs each expanded acceptance for WS13/hijos, 14/15/19/22–24/27–29/32. WS01 brief is already covered with a verified hash; WS07 decisions already documented, with audit reconciliation still future. First preparable core work is WS02–04, not rewriting decisions; WS05 is independent later Scion inventory.
+
+Technical reception is external per delta: P01/repo receptor records acta; WS11/12 map requirements/contracts and link only existing actas. No cross-repo authoring permission is inferred. Optional ViewDoc WS18 no longer blocks base WS24; Changes/models/Scion do not block core. G_WRITE_CONTRACT is per effect, now explicitly including WS33/33.1/33.2 persistence, not inherited from WS32's receipt. accepted_scope_nodes are empty everywhere. Helper validation requires individual receipt fields/git references if future accepted scopes are added.
+
+G_HUMAN_READ enables mutations in UI, not isolated API development/tests. WS32.1/32.2 identity/idempotence are local without dispatch/Hub fiction; actual accepted/rejected/timeout correlation belongs WS34/37 under G_EXEC. Macro ROOT/PK contracts describe substantive results, transfer/order/integration and hypothetical dry-runs, separated from review_completion; PK05's corrected dry-run respects WS19+WS24→WS42 and WS22→WS26.
+
+## Evidence and validation
+
+- `executor-validation.log` / `executor-validation-commands.json`: build --check, validate --check, context status, py_compile helpers, git diff --check and semantic/integrity audit all PASS. `validation.txt` reports 72 reviewed/0 stale and unchanged external path/hashes.
+- `final-review-audit.json`: 243 real new answered attempts across five bounded batches (72 + 70 + 69 + macro 2 + final per-effect 30), 243 distinct process PIDs, 0 technical failures. Exact input/output/contract hashes, argv/provider/model/thinking low/isolation/DEVNULL and no previous review sources verified. All final 72 evidence paths are from those new attempts and exact-current bundles with accepted_current dispositions. Prior rejected/superseded attempts preserved append-only.
+- Per-attempt dispositions compare the actual reformulation and dry-run, resolve true contract findings and reject editorial/future-TaskDoc details with source/arista/producer reasons. `round1/2/3-findings.json` retain summaries. No APTO token or expert verdict substitutes for comparison.
+- `reconciliation-receipts.log` and Tester closeout receipts preserve historical implementation/closeout evidence. G_CLOSEOUT satisfied from independent targeted current tests: **23 passed, 3 deselected, exit 0**, plus exact Task-Id/parentage assertions; see tester-closeout-contract.md. Pathspec/rollback were read, not executed by that selector. No authentication/RBAC/UI authority claimed.
+- `runner-source-versions.json` / source snapshots and per-attempt runner-source-receipt.json document actual helper versions (post-run supplemental audit). Original receipts are untouched. Version limitation: original runner read only stdout for `pi --version`, which prints **0.67.3 on stderr**. `pi-version-command.json` and `pi-version-provenance.json` explicitly record this observation AFTER the model runs, executable path/hash and limitation; they do not pretend it was captured at startup. Future capture now uses stdout-or-stderr with DEVNULL, with no bundle changes.
+- `final-frozen-sources.json` records final package/candidate hashes. Changing only context_review metadata was checked to leave all 72 bundles/contracts unchanged.
+
+No global suite was run or claimed green; known historical external baseline failures remain documented. No UI journey, G_SOURCE, technical reception, human-use acta or Scion capability was fabricated. Final independent plan Tester and expert council confirmation are separate Supervisor gates.

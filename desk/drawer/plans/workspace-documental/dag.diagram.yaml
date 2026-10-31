@@ -23,7 +23,7 @@ data:
       label: 'WS06: Proponer correspondencia de alcance con repos dueños'
       kind: core
     WS07:
-      label: 'WS07: Resolver decisiones de producto y escritura'
+      label: 'WS07: Mantener registro trazado de decisiones acordadas'
       kind: core
     WS08:
       label: 'WS08: Precisar user-flows y criterios observables'
@@ -194,10 +194,10 @@ data:
       label: 'WS44: Comprobar y revalidar acceso público a Scion'
       kind: core
     G_PRODUCT:
-      label: G_PRODUCT [pending]
+      label: G_PRODUCT [satisfied]
       kind: boundary
     G_CLOSEOUT:
-      label: G_CLOSEOUT [blocked]
+      label: G_CLOSEOUT [satisfied]
       kind: boundary
     G_SOURCE:
       label: G_SOURCE [pending]
@@ -218,7 +218,7 @@ data:
       label: G_HUMAN_DELEGATE [pending]
       kind: boundary
     G_WRITE_POLICY:
-      label: G_WRITE_POLICY [pending]
+      label: G_WRITE_POLICY [satisfied]
       kind: boundary
     G_WRITE_CONTRACT:
       label: G_WRITE_CONTRACT [pending]
@@ -350,7 +350,7 @@ data:
   - from: G_UI_READ
     to: WS13
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS11
     to: WS13.1
     relation: prerequisite
@@ -358,7 +358,7 @@ data:
   - from: G_UI_READ
     to: WS13.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS11
     to: WS13.2
     relation: prerequisite
@@ -370,7 +370,7 @@ data:
   - from: G_UI_READ
     to: WS13.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS11
     to: WS13.3
     relation: prerequisite
@@ -382,7 +382,7 @@ data:
   - from: G_UI_READ
     to: WS13.3
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS14
     relation: prerequisite
@@ -390,7 +390,7 @@ data:
   - from: G_UI_READ
     to: WS14
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS15
     relation: prerequisite
@@ -406,7 +406,7 @@ data:
   - from: G_UI_READ
     to: WS15
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS15.1
     relation: prerequisite
@@ -414,7 +414,7 @@ data:
   - from: G_UI_READ
     to: WS15.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS15.2
     relation: prerequisite
@@ -422,7 +422,7 @@ data:
   - from: G_UI_READ
     to: WS15.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS14
     to: WS16
     relation: prerequisite
@@ -462,12 +462,8 @@ data:
   - from: G_SPEC_VIEW
     to: WS18
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
-    to: WS19
-    relation: prerequisite
-    label: ''
-  - from: WS16
     to: WS19
     relation: prerequisite
     label: ''
@@ -482,55 +478,47 @@ data:
   - from: G_HUMAN_READ
     to: WS19
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS19
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS19
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
-    to: WS19.1
-    relation: prerequisite
-    label: ''
-  - from: WS16
     to: WS19.1
     relation: prerequisite
     label: ''
   - from: G_HUMAN_READ
     to: WS19.1
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS19.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS19.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
-    to: WS19.2
-    relation: prerequisite
-    label: ''
-  - from: WS16
     to: WS19.2
     relation: prerequisite
     label: ''
   - from: G_HUMAN_READ
     to: WS19.2
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS19.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS19.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
     to: WS20
     relation: prerequisite
@@ -538,11 +526,11 @@ data:
   - from: G_SLDB_WRITE
     to: WS20
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS20
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS19
     to: WS21
     relation: prerequisite
@@ -550,11 +538,11 @@ data:
   - from: G_UI_WRITE
     to: WS21
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS21
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS22
     relation: prerequisite
@@ -566,7 +554,7 @@ data:
   - from: G_UI_READ
     to: WS22
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS23
     relation: prerequisite
@@ -578,24 +566,20 @@ data:
   - from: G_UI_READ
     to: WS23
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS24
     relation: prerequisite
     label: ''
-  - from: WS18
+  - from: WS09
     to: WS24
     relation: prerequisite
     label: ''
   - from: G_UI_READ
     to: WS24
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
-    to: WS25
-    relation: prerequisite
-    label: ''
-  - from: WS16
     to: WS25
     relation: prerequisite
     label: ''
@@ -610,55 +594,47 @@ data:
   - from: G_HUMAN_READ
     to: WS25
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS25
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS25
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
-    to: WS25.1
-    relation: prerequisite
-    label: ''
-  - from: WS16
     to: WS25.1
     relation: prerequisite
     label: ''
   - from: G_HUMAN_READ
     to: WS25.1
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS25.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS25.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
-    to: WS25.2
-    relation: prerequisite
-    label: ''
-  - from: WS16
     to: WS25.2
     relation: prerequisite
     label: ''
   - from: G_HUMAN_READ
     to: WS25.2
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS25.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS25.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
     to: WS26
     relation: prerequisite
@@ -682,15 +658,15 @@ data:
   - from: G_HUMAN_READ
     to: WS26
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS26
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS26
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
     to: WS26.1
     relation: prerequisite
@@ -706,15 +682,15 @@ data:
   - from: G_HUMAN_READ
     to: WS26.1
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS26.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS26.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS12
     to: WS26.2
     relation: prerequisite
@@ -734,15 +710,15 @@ data:
   - from: G_HUMAN_READ
     to: WS26.2
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS26.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS26.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS27
     relation: prerequisite
@@ -762,7 +738,7 @@ data:
   - from: G_UI_READ
     to: WS27
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS27.1
     relation: prerequisite
@@ -774,7 +750,7 @@ data:
   - from: G_UI_READ
     to: WS27.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS27.2
     relation: prerequisite
@@ -786,7 +762,7 @@ data:
   - from: G_UI_READ
     to: WS27.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS27
     to: WS28
     relation: prerequisite
@@ -802,15 +778,15 @@ data:
   - from: G_HUMAN_READ
     to: WS28
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS28
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS28
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS15
     to: WS29
     relation: prerequisite
@@ -822,7 +798,7 @@ data:
   - from: G_UI_READ
     to: WS29
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS17
     to: WS30
     relation: prerequisite
@@ -902,7 +878,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS32
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS05
     to: WS32.1
     relation: prerequisite
@@ -922,7 +898,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS32.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS05
     to: WS32.2
     relation: prerequisite
@@ -946,7 +922,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS32.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS32
     to: WS33
     relation: prerequisite
@@ -967,6 +943,10 @@ data:
     to: WS33
     relation: prerequisite
     label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS33
+    relation: prerequisite
+    label: recibo por delta
   - from: WS32
     to: WS33.1
     relation: prerequisite
@@ -975,6 +955,10 @@ data:
     to: WS33.1
     relation: prerequisite
     label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS33.1
+    relation: prerequisite
+    label: recibo por delta
   - from: WS32
     to: WS33.2
     relation: prerequisite
@@ -987,6 +971,10 @@ data:
     to: WS33.2
     relation: prerequisite
     label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS33.2
+    relation: prerequisite
+    label: recibo por delta
   - from: WS33
     to: WS34
     relation: prerequisite
@@ -1014,7 +1002,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS34
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS33
     to: WS34.1
     relation: prerequisite
@@ -1034,7 +1022,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS34.1
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS33
     to: WS34.2
     relation: prerequisite
@@ -1058,7 +1046,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS34.2
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS33
     to: WS35
     relation: prerequisite
@@ -1074,7 +1062,7 @@ data:
   - from: G_UI_READ
     to: WS35
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS34
     to: WS36
     relation: prerequisite
@@ -1094,11 +1082,11 @@ data:
   - from: G_UI_WRITE
     to: WS36
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS36
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS36
     to: WS37
     relation: prerequisite
@@ -1131,22 +1119,22 @@ data:
     to: WS39
     relation: prerequisite
     label: ''
-  - from: WS16
+  - from: WS13
     to: WS39
     relation: prerequisite
     label: ''
   - from: G_HUMAN_READ
     to: WS39
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS39
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS39
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS11
     to: WS40
     relation: prerequisite
@@ -1158,7 +1146,7 @@ data:
   - from: G_UI_READ
     to: WS40
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS13
     to: WS41
     relation: prerequisite
@@ -1174,7 +1162,7 @@ data:
   - from: G_UI_READ
     to: WS41
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS19
     to: WS42
     relation: prerequisite
@@ -1190,15 +1178,15 @@ data:
   - from: G_HUMAN_READ
     to: WS42
     relation: prerequisite
-    label: ''
+    label: habilitar uso UI
   - from: G_UI_WRITE
     to: WS42
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS42
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS17
     to: WS43
     relation: prerequisite
@@ -1218,7 +1206,7 @@ data:
   - from: G_WRITE_CONTRACT
     to: WS43
     relation: prerequisite
-    label: ''
+    label: recibo por delta
   - from: WS05
     to: WS44
     relation: prerequisite
@@ -1261,22 +1249,6 @@ data:
     label: evidencia
   - from: WS12
     to: G_WRITE_CONTRACT
-    relation: evidence
-    label: evidencia
-  - from: WS11
-    to: G_UI_READ
-    relation: evidence
-    label: evidencia
-  - from: WS12
-    to: G_UI_WRITE
-    relation: evidence
-    label: evidencia
-  - from: WS12
-    to: G_SLDB_WRITE
-    relation: evidence
-    label: evidencia
-  - from: WS11
-    to: G_SPEC_VIEW
     relation: evidence
     label: evidencia
   - from: WS39

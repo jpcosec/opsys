@@ -1,0 +1,16 @@
+{
+  "argv": [
+    "pytest",
+    "-q",
+    "tests/test_closeout_declared_evidence.py",
+    "tests/test_lifecycle_end_to_end.py",
+    "-k",
+    "closeout"
+  ],
+  "cwd": "/home/jp/proyectos/SLDB_1/deskops",
+  "started_at": "2026-10-31T15:22:32.365851+00:00",
+  "head": "bd93985c70fbb859a90b6a697929a50ac413bed0",
+  "python": "/home/jp/anaconda3/bin/python",
+  "exit_code": 0,
+  "finished_at": "2026-10-31T15:24:33.531936+00:00"
+}

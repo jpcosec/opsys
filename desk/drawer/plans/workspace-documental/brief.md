@@ -1,8 +1,8 @@
-# Brief autosuficiente y glosario — borrador para WS01/WS07
+# Brief autosuficiente y glosario — base final de planificación
 
 ## Encargo y acuerdos explícitos del solicitante
 
-La persona solicita un DAG que cubra el workspace documental, sus vistas/renderizaciones, manual y user-flows; ahora pide iterar con el concilio hasta pulirlo. Esto autoriza corregir el plan, no implementar la UI ni modificar tareas de otras sesiones.
+La persona solicita un DAG que cubra el workspace documental, sus vistas/renderizaciones, manual y user-flows; el encargo actual finaliza planificación con decisiones humanas registradas. Esto autoriza corregir el plan, no implementar la UI ni modificar tareas de otras sesiones.
 
 Extractos textuales que delimitan intención, conservados aquí para no depender del historial:
 
@@ -49,4 +49,4 @@ Una persona puede entrar, comprender un desk, navegar conocimiento/trabajo/proce
 
 ## Estado de las decisiones
 
-Ver decisiones.md. Los acuerdos anteriores no resuelven automáticamente host, autoridad de escritura, fuente protegida, Git o aprobación humana. WS07 produce ese registro; no se inventa aceptación por existir este archivo.
+Ver decisiones.md. El núcleo ya está registrado en decisiones.md y owner-decisions.json. WS07 verifica/reutiliza ese registro, no vuelve a pedir firmas. La decisión de producto no acredita APIs, recepción técnica, actas de uso ni permisos Scion.

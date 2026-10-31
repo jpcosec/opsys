@@ -8,7 +8,6 @@ children:
 - WS19.2
 depends_on:
 - WS12
-- WS16
 - WS19.1
 - WS19.2
 requires:
@@ -31,7 +30,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Delta sobre ticket draft de edición; reutilizar editores y API, revisión esperada y conflicto visible; workflow-protected fields no editables por este canal. Incluir alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en componente.
+Delta sobre workspace integrado a1b2b22 de edición; reutilizar editores y API, revisión esperada y conflicto visible; workflow-protected fields no editables por este canal. Incluir alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -39,13 +38,13 @@ Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación.
 
 ## Dependencias
 
-Tareas: WS12, WS16, WS19.1, WS19.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS19.1, WS19.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19/b6313253bf754241092be0d5d99d22d49baeedcf5de4778b88a5fa915a25bbc2/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19/fef872bb00d0eb1685959b0db53144e98d41cafd5d8b6a16f966dbfc8078ef86/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

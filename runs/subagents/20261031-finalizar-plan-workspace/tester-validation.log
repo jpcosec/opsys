@@ -1,0 +1,94 @@
+Independent Tester; final handoff validation 2026-10-31T15:55:26.240786+00:00
+HEAD bd93985c70fbb859a90b6a697929a50ac413bed0
+
+$ /home/jp/anaconda3/bin/python /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+
+exit_code=0
+$ /home/jp/anaconda3/bin/python /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/validate_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+STRUCTURE/COHERENCE: PASS
+Context review states: {'reviewed': 72}; stale or pending problems: 0
+63 candidate nodes; 15 explicit gates; no cycles (including gate producers).
+Generated README/table/task files/diagram spec match canonical YAML.
+Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
+Planning candidates preparable after documentary coverage verification: WS02, WS03, WS04, WS05
+Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
+Currently blocked candidates: 58
+G_HUMAN_READ: receipt location versionable under current gitignore
+G_HUMAN_MANUAL: receipt location versionable under current gitignore
+G_HUMAN_DELEGATE: receipt location versionable under current gitignore
+G_HUMAN_MODEL: receipt location versionable under current gitignore
+workspace: observed path/hash unchanged
+editing: observed path/hash unchanged
+changes: observed path/hash unchanged
+scion: observed path/hash unchanged
+kimun_reference_only: observed path/hash unchanged
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+
+exit_code=0
+$ /home/jp/anaconda3/bin/python /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+
+exit_code=0
+
+G_CLOSEOUT focalized earlier; NOT RERUN:
+$ pytest -q tests/test_closeout_declared_evidence.py tests/test_lifecycle_end_to_end.py -k closeout
+.......................                                                  [100%]
+23 passed, 3 deselected in 120.46s (0:02:00)
+
+exit_code=0
+
+Own audits: exact current72 input/contract/output/ordered source/argv/disposition evidence PASS;243 answered attempts integrity PASS;243 unique PIDs;no stale.
+Semantic comparison EVERY final node: tester-semantic-comparison-72.json,72 independent comparisons.
+Helper negative cases:11 per-delta checks PASS;3 invalidation cases PASS;85 frozen files unchanged.
+
+$ spec2viz about
+spec2viz — semantic specs -> diagrams -> catalog HTML
+
+Where the diagrams live:
+  package examples : /home/jp/proyectos/SLDB_1/spec2viz/examples
+    - activity    activity/example.yml, activity/validation.yml
+    - catalog     catalog/leaves/architecture-vistas.yml, catalog/leaves/sample-component.yml, catalog/project.yml
+    - class       class/runtime.yml
+    - component   component/example.yml
+    - deployment  deployment/example.yml
+    - fixtures    fixtures/canonical.yml
+    - matrix      matrix/example.yml
+    - reflection  reflection/canonical.yml
+    - sequence    sequence/example.yml
+    - state       state/example.yml
+  catalog config   : examples/catalog/project.yml
+
+Flow to HTML:
+  1. diagram validate <spec.yml>
+  2. diagram render   <spec.yml> --out <dir>
+  3. diagram lint     <rendered.mmd>
+  4. catalog build    --config <vistas.yml> --out <out.html>
+     (build alias = catalog build; --atoms-dir injects window.ATOMS_DB)
+
+Serve a built catalog:
+  catalog serve --html <out.html> --port 8000
+exit_code=0
+
+$ spec2viz diagram validate /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.yaml
+dag.diagram.yaml: OK
+exit_code=0
+
+$ spec2viz diagram render /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.yaml --renderer mermaid --out /home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections
+Rendered dag.diagram.yaml -> /home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections/dag.diagram.mmd
+exit_code=0
+
+$ spec2viz diagram render /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.yaml --renderer graph --out /home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections
+Rendered dag.diagram.yaml -> /home/jp/proyectos/SLDB_1/deskops/runs/subagents/20261031-finalizar-plan-workspace/tester-diagram-projections/dag.diagram.graph.html
+exit_code=0
+Diagram projections byte-equal to final package: {"dag.diagram.mmd": true, "dag.diagram.graph.html": true}
+
+$ git status --short -- deskops tests
+exit_code=0
+
+$ git diff --check -- desk/drawer/plans/workspace-documental desk/drawer/tasks/workspace-documental
+exit_code=0
+
+VERDICT PASS — documentary plan only; no product authorization. See tester-result-summary.md for exact limits.

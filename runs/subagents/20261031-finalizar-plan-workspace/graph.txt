@@ -1,0 +1,8 @@
+Missing graph references:
+- missing_declared_target: task:task-finalizar-plan-workspace-documental -> desk/README.md
+  provenance: desk/tasks/task-finalizar-plan-workspace-documental.md:line:71:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-finalizar-plan-workspace-documental -> desk/drawer/plans/workspace-documental/README.md
+  provenance: desk/tasks/task-finalizar-plan-workspace-documental.md:line:15:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+2 missing, 0 informational

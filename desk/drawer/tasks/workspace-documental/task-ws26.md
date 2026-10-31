@@ -32,7 +32,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Autoría explícita desde candidato, evidencia declarada, dependencias y contexto/pill binding; promoción solo cuando el contrato resuelve commits previos por canal autorizado. Incluir enrutamiento explícito en Board y representación de capa lista por dependencias/no solapamiento; sin confundir Board route con ejecución. El canal de promoción debe respetar commits previos y estado real.
+Autoría explícita desde candidato, evidencia declarada, dependencias y contexto/pill binding; promoción solo cuando el contrato resuelve commits previos por canal autorizado. Incluir enrutamiento explícito en Board y representación de capa lista por dependencias/no solapamiento; sin confundir Board route con ejecución. El canal de promoción debe respetar commits previos y estado real. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -44,7 +44,7 @@ Tareas: WS12, WS22, WS26.1, WS26.2. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE,
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26/cfc06f2a1adf94eed7850994c641ef00423802230e0aa428df1fc51ea35761d1/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26/8c82ede53c2b71855149996fb3fe907166845a16eb64a7a5a66eafb19bb90a8d/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-31",
+  "actor": "solicitante humano de esta sesión, identificado por respuestas vinculadas",
+  "source_tool_call": "call_387acc8d34de4f35bc4bafab9263bd58",
+  "answers": [
+    {
+      "question": "Para la primera entrega, ¿confirmamos extender el Mindmap existente usando SLDB/pron y Deskops, sin migrar a Kimun, con lectura y operación manual primero y Scion como ramal posterior?",
+      "answer": "Sí, mantener esa base y Scion después",
+      "item": 0
+    },
+    {
+      "question": "¿Qué alcance de edición dejamos en el plan? En ambos casos: guardar no hace commit; cierre y promoción respetan el workflow Deskops; con otro coordinador escribiendo, la UI queda en lectura/handoff hasta contar con un canal de escritura coordinado.",
+      "answer": "Markdown editable tras probar API reversible, conflictos y campos protegidos",
+      "item": 1
+    },
+    {
+      "question": "¿Quedas tú como responsable de producto y aceptación de deltas en graph_ui, SLDB y spec2viz, y como participante de las pruebas de uso sobre el proyecto temporal Taller? Los objetivos iniciales serían abrir/buscar ≤2 s, guardar ≤3 s y arrancar ≤10 s; Scion se designa cuando abordemos ese ramal.",
+      "answer": "Sí, yo; acepto Taller y esos objetivos iniciales",
+      "item": 2
+    }
+  ]
+}

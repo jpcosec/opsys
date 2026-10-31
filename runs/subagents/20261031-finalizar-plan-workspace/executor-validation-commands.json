@@ -1,0 +1,58 @@
+[
+  {
+    "argv": [
+      "python",
+      "desk/drawer/plans/workspace-documental/build_plan.py",
+      "--check"
+    ],
+    "start": "2026-10-31T15:50:27.507500+00:00",
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "python",
+      "desk/drawer/plans/workspace-documental/validate_plan.py",
+      "--check"
+    ],
+    "start": "2026-10-31T15:50:27.675352+00:00",
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "python",
+      "desk/drawer/plans/workspace-documental/context_review.py",
+      "status"
+    ],
+    "start": "2026-10-31T15:50:28.425552+00:00",
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "python",
+      "-m",
+      "py_compile",
+      "desk/drawer/plans/workspace-documental/build_plan.py",
+      "desk/drawer/plans/workspace-documental/validate_plan.py",
+      "desk/drawer/plans/workspace-documental/context_review.py"
+    ],
+    "start": "2026-10-31T15:50:28.962183+00:00",
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "git",
+      "diff",
+      "--check"
+    ],
+    "start": "2026-10-31T15:50:29.000094+00:00",
+    "exit_code": 0
+  },
+  {
+    "argv": [
+      "python",
+      "runs/subagents/20261031-finalizar-plan-workspace/audit_final.py"
+    ],
+    "start": "2026-10-31T15:50:29.013280+00:00",
+    "exit_code": 0
+  }
+]

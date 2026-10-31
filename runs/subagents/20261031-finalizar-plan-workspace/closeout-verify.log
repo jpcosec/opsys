@@ -1,0 +1,38 @@
+{
+  "alerts": [],
+  "declared": [
+    "commit",
+    "document"
+  ],
+  "findings": [],
+  "found": [
+    "commit",
+    "document"
+  ],
+  "gates": {
+    "commit": {
+      "evidence": [
+        "a8601fe",
+        "bd93985"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "document": {
+      "evidence": [
+        "desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md",
+        "desk/rituals/context-review.md",
+        "desk/drawer/plans/workspace-documental/README.md",
+        "runs/subagents/20261031-finalizar-plan-workspace/tester-result-summary.md",
+        "runs/subagents/20261031-finalizar-plan-workspace/council/summary.md",
+        "desk/drawer/plans/workspace-documental/cierre.md"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "implicit_code": false,
+  "ok": true,
+  "summary": "esta tarea declar\u00f3 commit, document; encontr\u00e9 commit, document",
+  "task_id": "task-finalizar-plan-workspace-documental"
+}

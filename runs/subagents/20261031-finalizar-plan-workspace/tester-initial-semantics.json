@@ -1,0 +1,62 @@
+{
+  "refs": [
+    {
+      "name": "workspace",
+      "path": "/home/jp/proyectos/SLDB_1/UIs/graph_ui/frontends/mindmap/workspace_routes.py",
+      "expected": "dfbf68a70f3f1394119bc9cbcdbffe9ac9237397a5fa07788152146a697f39c9",
+      "actual": "dfbf68a70f3f1394119bc9cbcdbffe9ac9237397a5fa07788152146a697f39c9",
+      "pass": true
+    },
+    {
+      "name": "editing",
+      "path": "/home/jp/proyectos/SLDB_1/UIs/graph_ui/desk/tasks/task-edicion-contextual-de-relaciones-y-campos-con-control-de-concurrencia.md",
+      "expected": "ea6b71f2795eb5f944c75e83ced4c2ba770e260436efae5bbc19aa82192b50c6",
+      "actual": "ea6b71f2795eb5f944c75e83ced4c2ba770e260436efae5bbc19aa82192b50c6",
+      "pass": true
+    },
+    {
+      "name": "changes",
+      "path": "/home/jp/proyectos/SLDB_1/UIs/graph_ui/desk/tasks/task-vista-changes-arbol-de-hashes-staleness-e-impacto-en-conocimiento.md",
+      "expected": "433ecb51e6dc433b8bb94d0acecc6d508793ae743eae563283aa40c5f8e24377",
+      "actual": "433ecb51e6dc433b8bb94d0acecc6d508793ae743eae563283aa40c5f8e24377",
+      "pass": true
+    },
+    {
+      "name": "scion",
+      "path": "/home/jp/proyectos/SLDB_1/deskops/desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md",
+      "expected": "125b862b88883028060365d2ff8584fc5dcd313140623a71b858fae6d9b17ba9",
+      "actual": "125b862b88883028060365d2ff8584fc5dcd313140623a71b858fae6d9b17ba9",
+      "pass": true
+    },
+    {
+      "name": "kimun_reference_only",
+      "path": "/home/jp/proyectos/SLDB_1/deskops/desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md",
+      "expected": "848f8ceba82b6f3c793ee277b932a8ef3337a059e4aebe3712cd989f8360717b",
+      "actual": "848f8ceba82b6f3c793ee277b932a8ef3337a059e4aebe3712cd989f8360717b",
+      "pass": true
+    },
+    {
+      "name": "closeout",
+      "path": "/home/jp/proyectos/SLDB_1/deskops/deskops/services/closeout_gates.py",
+      "expected": "8f17f8a207e831762421433692ac409b1e3909bbd0061cab9307be65e12e0ab9",
+      "actual": "8f17f8a207e831762421433692ac409b1e3909bbd0061cab9307be65e12e0ab9",
+      "pass": true
+    }
+  ],
+  "repo_heads": {
+    "deskops": "bd93985c70fbb859a90b6a697929a50ac413bed0",
+    "graph_ui": "134a6653b8b44423cb0a58ab329383841a9e706f",
+    "sldb": "77bd6d0097f46efdec5e7eeb0e58d71d70b98be5",
+    "spec2viz": "10df4f0893efde77fdd0e1d5794644e95a723731"
+  },
+  "satisfied_gates": [
+    "G_PRODUCT",
+    "G_CLOSEOUT",
+    "G_WRITE_POLICY"
+  ],
+  "execution_authorized": false,
+  "candidate_count": 63,
+  "candidate_states": [
+    "candidate"
+  ]
+}
