@@ -1,0 +1,900 @@
+          • A1 exige auditar 4 repositorios (sldb, kimun, spec2viz,
+          graph_ui + deskops) y además localizar/reconciliar 4 tickets
+          desaparecidos (reference_status).
+          • C1 tiene dueño abstracto repos dueños y agrupa decisiones
+          sobre instancias, vínculos, consultas, contratos y modelos en
+          múltiples repositorios.
+      • Consecuencia: Ninguno de los nodos C1, D1–D4, F1 cumple la
+      regla de atomicidad de deskops (un entregable acotado con lista
+      explícita de archivos y validación verificable en un repo dueño).
+  6. Dependencias externas rotas y colisión con la tarea activa de
+  closeout
+      • Archivo/sección: dag.yaml `existing_work` y `reference_status
+      (líneas 300-306) y task-closeout-...md.
+      • Defecto:
+          • 4 de las 6 rutas en existing_work (workspace, editing,
+          changes, kimun) no existen en disco, pero D1, D2 y F1
+          redactan su criterio de aceptación diciendo "Reutilizar tarea
+          existente..." (dag.yaml l.145, 159, 242). Si A1 no las
+          encuentra, D1, D2 y F1 quedan con criterios de aceptación
+          vacíos de especificación técnica.
+          • La tarea activa task-closeout-la-evidencia-exigida-... está
+          modificando actualmente TaskDoc (closeout_evidence), add task
+          --evidence, closeout_gates.py y operations.py. Sin embargo,
+          en el DAG solo E1 la declara como external_prerequisites
+          (dag.yaml l.209-210); no está declarada como prerrequisito
+          externo de B3 ni de D4, pese a que B3 y D4 diseñan e
+          implementan la autoría de tareas (add task) y la
+          verificación/cierre (closeout) desde la UI.
+      • Consecuencia: Ejecutar o cerrar el contrato de B3/D4 sin
+      esperar o incorporar el nuevo contrato closeout_evidence / --
+      evidence de la tarea activa romperá la creación y verificación de
+      tareas en D4 (incluyendo las tareas de tipo docs|spec|design como
+      A1–C3 y H1–H2).
+
+  ──────
+  ### 4. Documentos que se pueden redactar ya vs requieren decisiones
+
+   Documento / Nodo │ ¿… │ … │ Qué requiere decisiones previas (y cuá…
+  ──────────────────┼────┼───┼─────────────────────────────────────────
+   inventario.md    │ Sí │ E │ Ninguna decisión de diseño; es
+   (A1)             │ (d │ s │ relevamiento fáctico.
+                    │ e  │ t │
+                    │ in │ a │
+                    │ me │ d │
+                    │ di │ o │
+                    │ at │ r │
+                    │ o) │ e │
+                    │    │ a │
+                    │    │ l │
+                    │    │ v │
+                    │    │ e │
+                    │    │ r │
+                    │    │ i │
+                    │    │ f │
+                    │    │ i │
+                    │    │ c │
+                    │    │ a │
+                    │    │ d │
+                    │    │ o │
+                    │    │ d │
+                    │    │ e │
+                    │    │ l │
+                    │    │ o │
+                    │    │ s │
+                    │    │ 1 │
+                    │    │ 5 │
+                    │    │ m │
+                    │    │ o │
+                    │    │ d │
+                    │    │ e │
+                    │    │ l │
+                    │    │ o │
+                    │    │ s │
+                    │    │ e │
+                    │    │ n │
+                    │    │ _ │
+                    │    │ _ │
+                    │    │ i │
+                    │    │ n │
+                    │    │ i │
+                    │    │ t │
+                    │    │ _ │
+                    │    │ _ │
+                    │    │ . │
+                    │    │ p │
+                    │    │ y │
+                    │    │ : │
+                    │    │ 1 │
+                    │    │ - │
+                    │    │ 3 │
+                    │    │ 7 │
+                    │    │ , │
+                    │    │ v │
+                    │    │ e │
+                    │    │ r │
+                    │    │ b │
+                    │    │ o │
+                    │    │ s │
+                    │    │ C │
+                    │    │ L │
+                    │    │ I │
+                    │    │ e │
+                    │    │ n │
+                    │    │ o │
+                    │    │ p │
+                    │    │ e │
+                    │    │ r │
+                    │    │ a │
+                    │    │ t │
+                    │    │ o │
+                    │    │ r │
+                    │    │ - │
+                    │    │ m │
+                    │    │ a │
+                    │    │ n │
+                    │    │ u │
+                    │    │ a │
+                    │    │ l │
+                    │    │ . │
+                    │    │ m │
+                    │    │ d │
+                    │    │ : │
+                    │    │ 7 │
+                    │    │ 4 │
+                    │    │ 1 │
+                    │    │ - │
+                    │    │ 7 │
+                    │    │ 7 │
+                    │    │ 1 │
+                    │    │ , │
+                    │    │ m │
+                    │    │ o │
+                    │    │ d │
+                    │    │ e │
+                    │    │ l │
+                    │    │ o │
+                    │    │ s │
+                    │    │ S │
+                    │    │ p │
+                    │    │ e │
+                    │    │ c │
+                    │    │ D │
+                    │    │ o │
+                    │    │ c │
+                    │    │ ` │
+                    │    │ / │
+                    │    │ ` │
+                    │    │ N │
+                    │    │ o │
+                    │    │ t │
+                    │    │ a │
+                    │    │ t │
+                    │    │ i │
+                    │    │ o │
+                    │    │ n │
+                    │    │ D │
+                    │    │ o │
+                    │    │ c │
+                    │    │ ` │
+                    │    │ / │
+                    │    │ ` │
+                    │    │ V │
+                    │    │ i │
+                    │    │ e │
+                    │    │ w │
+                    │    │ D │
+                    │    │ o │
+                    │    │ c │
+                    │    │ e │
+                    │    │ n │
+                    │    │ s │
+                    │    │ p │
+                    │    │ e │
+                    │    │ c │
+                    │    │ 2 │
+                    │    │ v │
+                    │    │ i │
+                    │    │ z │
+                    │    │ , │
+                    │    │ y │
+                    │    │ v │
+                    │    │ i │
+                    │    │ s │
+                    │    │ t │
+                    │    │ a │
+                    │    │ s │
+                    │    │ a │
+                    │    │ c │
+                    │    │ t │
+                    │    │ i │
+                    │    │ v │
+                    │    │ a │
+                    │    │ s │
+                    │    │ e │
+                    │    │ n │
+                    │    │ g │
+                    │    │ r │
+                    │    │ a │
+                    │    │ p │
+                    │    │ h │
+                    │    │ _ │
+                    │    │ u │
+                    │    │ i │
+                    │    │ ( │
+                    │    │ K │
+                    │    │ B │
+                    │    │ , │
+                    │    │ B │
+                    │    │ r │
+                    │    │ a │
+                    │    │ i │
+                    │    │ n │
+                    │    │ s │
+                    │    │ t │
+                    │    │ o │
+                    │    │ r │
+                    │    │ m │
+                    │    │ , │
+                    │    │ S │
+                    │    │ c │
+                    │    │ h │
+                    │    │ e │
+                    │    │ m │
+                    │    │ a │
+                    │    │ , │
+                    │    │ D │
+                    │    │ e │
+                    │    │ s │
+                    │    │ k │
+                    │    │ o │
+                    │    │ p │
+                    │    │ s │
+                    │    │ ) │
+                    │    │ . │
+   borradores/visio │ Pa │ I │ Cerrar como contrato requiere decidir
+   n.md (A2)        │ rc │ n │ en B1 el backend objetivo (sldb actual
+                    │ ia │ v │ vs kimun) y el alcance de edición en
+                    │ l  │ a │ UI.
+                    │ (c │ r │
+                    │ om │ i │
+                    │ o  │ a │
+                    │ ma │ n │
+                    │ rc │ t │
+                    │ o  │ e │
+                    │ e  │ s │
+                    │ in │ d │
+                    │ va │ e │
+                    │ ri │ f │
+                    │ an │ r │
+                    │ te │ o │
+                    │ s) │ n │
+                    │    │ t │
+                    │    │ e │
+                    │    │ r │
+                    │    │ a │
+                    │    │ ( │
+                    │    │ s │
+                    │    │ l │
+                    │    │ d │
+                    │    │ b │
+                    │    │ p │
+                    │    │ e │
+                    │    │ r │
+                    │    │ s │
+                    │    │ i │
+                    │    │ s │
+                    │    │ t │
+                    │    │ e │
+                    │    │ n │
+                    │    │ c │
+                    │    │ i │
+                    │    │ a │
+                    │    │ / │
+                    │    │ c │
+                    │    │ a │
+                    │    │ m │
+                    │    │ p │
+                    │    │ o │
+                    │    │ s │
+                    │    │ v │
+                    │    │ s │
+                    │    │ d │
+                    │    │ e │
+                    │    │ s │
+                    │    │ k │
+                    │    │ o │
+                    │    │ p │
+                    │    │ s │
+                    │    │ w │
+                    │    │ o │
+                    │    │ r │
+                    │    │ k │
+                    │    │ f │
+                    │    │ l │
+                    │    │ o │
+                    │    │ w │
+                    │    │ v │
+                    │    │ s │
+                    │    │ s │
+                    │    │ p │
+                    │    │ e │
+                    │    │ c │
+                    │    │ 2 │
+                    │    │ v │
+                    │    │ i │
+                    │    │ z │
+                    │    │ d │
+                    │    │ i │
+                    │    │ a │
+                    │    │ g │
+                    │    │ r │
+                    │    │ a │
+                    │    │ m │
+                    │    │ a │
+                    │    │ s │
+                    │    │ ) │
+                    │    │ y │
+                    │    │ p │
+                    │    │ r │
+                    │    │ i │
+                    │    │ n │
+                    │    │ c │
+                    │    │ i │
+                    │    │ p │
+                    │    │ i │
+                    │    │ o │
+                    │    │ s │
+                    │    │ d │
+                    │    │ e │
+                    │    │ p │
+                    │    │ r │
+                    │    │ o │
+                    │    │ d │
+                    │    │ u │
+                    │    │ c │
+                    │    │ t │
+                    │    │ o │
+                    │    │ ( │
+                    │    │ v │
+                    │    │ i │
+                    │    │ s │
+                    │    │ i │
+                    │    │ o │
+                    │    │ n │
+                    │    │ . │
+                    │    │ m │
+                    │    │ d │
+                    │    │   │
+                    │    │ § │
+                    │    │ C │
+                    │    │ r │
+                    │    │ i │
+                    │    │ t │
+                    │    │ e │
+                    │    │ r │
+                    │    │ i │
+                    │    │ o │
+                    │    │ s │
+                    │    │   │
+                    │    │ d │
+                    │    │ e │
+                    │    │   │
+                    │    │ p │
+                    │    │ r │
+                    │    │ o │
+                    │    │ d │
+                    │    │ u │
+                    │    │ c │
+                    │    │ t │
+                    │    │ o │
+                    │    │ ) │
+                    │    │ . │
+   borradores/user- │ Pa │ L │ Requiere que A1 confirme qué existe en
+   flows.md (A3)    │ rc │ o │ UI y que B1/B3 decidan cómo se
+                    │ ia │ s │ resuelven conflictos de edición (UF03),
+                    │ l  │ 8 │ si closeout commit es operable en UI
+                    │ (o │ o │ (UF05) y cómo opera la federación
+                    │ bj │ b │ (UF08).
+                    │ et │ j │
+                    │ iv │ e │
+                    │ os │ t │
+                    │ y  │ i │
+                    │ ma │ v │
+                    │ pe │ o │
+                    │ o  │ s │
+                    │ CL │ h │
+                    │ I  │ u │
+                    │ ac │ m │
+                    │ tu │ a │
+                    │ al │ n │
+                    │ )  │ o │
+                    │    │ s │
+                    │    │ ( │
+                    │    │ U │
+                    │    │ F │
+                    │    │ 0 │
+                    │    │ 1 │
+                    │    │ – │
+                    │    │ U │
+                    │    │ F │
+                    │    │ 0 │
+                    │    │ 8 │
+                    │    │ ) │
+                    │    │ y │
+                    │    │ s │
+                    │    │ u │
+                    │    │ c │
+                    │    │ o │
+                    │    │ r │
+                    │    │ r │
+                    │    │ e │
+                    │    │ s │
+                    │    │ p │
+                    │    │ o │
+                    │    │ n │
+                    │    │ d │
+                    │    │ e │
+                    │    │ n │
+                    │    │ c │
+                    │    │ i │
+                    │    │ a │
+                    │    │ c │
+                    │    │ o │
+                    │    │ n │
+                    │    │ l │
+                    │    │ a │
+                    │    │ s │
+                    │    │ o │
+                    │    │ p │
+                    │    │ e │
+                    │    │ r │
+                    │    │ a │
+                    │    │ c │
+                    │    │ i │
+                    │    │ o │
+                    │    │ n │
+                    │    │ e │
+                    │    │ s │
+                    │    │ C │
+                    │    │ L │
+                    │    │ I │
+                    │    │ h │
+                    │    │ o │
+                    │    │ y │
+                    │    │ e │
+                    │    │ x │
+                    │    │ i │
+                    │    │ s │
+                    │    │ t │
+                    │    │ e │
+                    │    │ n │
+                    │    │ t │
+                    │    │ e │
+                    │    │ s │
+                    │    │ e │
+                    │    │ n │
+                    │    │ d │
+                    │    │ e │
+                    │    │ s │
+                    │    │ k │
+                    │    │ o │
+                    │    │ p │
+                    │    │ s │
+                    │    │ y │
+                    │    │ s │
+                    │    │ l │
+                    │    │ d │
+                    │    │ b │
+                    │    │ . │
+   borradores/vista │ Pa │ Q │ Completar la "Ficha de cada vista"
+   s.md (A4)        │ rc │ u │ (renderer requerido, destino de
+                    │ ia │ é │ escritura, conflictos) no es posible en
+                    │ l  │ m │ A4 sin inventar, porque depende de las
+                    │ (i │ o │ decisiones de B2, B3 y C1.
+                    │ nv │ d │
+                    │ en │ e │
+                    │ ta │ l │
+                    │ ri │ o │
+                    │ o  │ s │
+                    │ de │ y │
+                    │ fu │ r │
+                    │ en │ e │
+                    │ te │ l │
+                    │ s  │ a │
+                    │ y  │ c │
+                    │ re │ i │
+                    │ gl │ o │
+                    │ as │ n │
+                    │ ge │ e │
+                    │ ne │ s │
+                    │ ra │ e │
+                    │ le │ x │
+                    │ s) │ i │
+                    │    │ s │
+                    │    │ t │
+                    │    │ e │
+                    │    │ n │
+                    │    │ c │
+                    │    │ o │
+                    │    │ m │
+                    │    │ o │
+                    │    │ f │
+                    │    │ u │
+                    │    │ e │
+                    │    │ n │
+                    │    │ t │
+                    │    │ e │
+                    │    │ , │
+                    │    │ q │
+                    │    │ u │
+                    │    │ é │
+                    │    │ c │
+                    │    │ u │
+                    │    │ b │
+                    │    │ r │
+                    │    │ e │
+                    │    │ h │
+                    │    │ o │
+                    │    │ y │
+                    │    │ V │
+                    │    │ i │
+                    │    │ e │
+                    │    │ w │
+                    │    │ D │
+                    │    │ o │
+                    │    │ c │
+                    │    │ y │
+                    │    │ q │
+                    │    │ u │
+                    │    │ é │
+                    │    │ v │
+                    │    │ i │
+                    │    │ s │
+                    │    │ t │
+                    │    │ a │
+                    │    │ s │
+                    │    │ y │
+                    │    │ a │
+                    │    │ t │
+                    │    │ i │
+                    │    │ e │
+                    │    │ n │
+                    │    │ e │
+                    │    │ g │
+                    │    │ r │
+                    │    │ a │
+                    │    │ p │
+                    │    │ h │
+                    │    │ _ │
+                    │    │ u │
+                    │    │ i │
+                    │    │ . │
+   borradores/manua │ Sí │ Í │ El contenido instructivo de UI espera a
+   l.md (A5)        │ (í │ n │ H1 (tras G1) y H2 (tras G2), como el
+                    │ nd │ d │ propio plan reconoce
+                    │ ic │ i │ (manual.md §Qué espera validación).
+                    │ e, │ c │
+                    │ co │ e │
+                    │ nv │ d │
+                    │ en │ e │
+                    │ ci │ 1 │
+                    │ ón │ 7 │
+                    │ y  │ s │
+                    │ en │ e │
+                    │ la │ c │
+                    │ ce │ c │
+                    │ s  │ i │
+                    │ CL │ o │
+                    │ I) │ n │
+                    │    │ e │
+                    │    │ s │
+                    │    │ , │
+                    │    │ c │
+                    │    │ o │
+                    │    │ n │
+                    │    │ v │
+                    │    │ e │
+                    │    │ n │
+                    │    │ c │
+                    │    │ i │
+                    │    │ ó │
+                    │    │ n │
+                    │    │ e │
+                    │    │ d │
+                    │    │ i │
+                    │    │ t │
+                    │    │ o │
+                    │    │ r │
+                    │    │ i │
+                    │    │ a │
+                    │    │ l │
+                    │    │ ( │
+                    │    │ d │
+                    │    │ i │
+                    │    │ s │
+                    │    │ p │
+                    │    │ o │
+                    │    │ n │
+                    │    │ i │
+                    │    │ b │
+                    │    │ l │
+                    │    │ e │
+                    │    │ / │
+                    │    │ p │
+                    │    │ r │
+                    │    │ o │
+                    │    │ p │
+                    │    │ u │
+                    │    │ e │
+                    │    │ s │
+                    │    │ t │
+                    │    │ o │
+                    │    │ / │
+                    │    │ b │
+                    │    │ l │
+                    │    │ o │
+                    │    │ q │
+                    │    │ u │
+                    │    │ e │
+                    │    │ a │
+                    │    │ d │
+                    │    │ o │
+                    │    │ ) │
+                    │    │ , │
+                    │    │ e │
+                    │    │ l │
+                    │    │ e │
+                    │    │ c │
+                    │    │ c │
+                    │    │ i │
+                    │    │ ó │
+                    │    │ n │
+                    │    │ d │
+                    │    │ e │
+                    │    │ l │
+                    │    │ p │
+                    │    │ r │
+                    │    │ o │
+                    │    │ y │
+                    │    │ e │
+                    │    │ c │
+                    │    │ t │
+                    │    │ o │
+                    │    │ d │
+                    │    │ e │
+                    │    │ e │
+                    │    │ j │
+                    │    │ e │
+                    │    │ m │
+                    │    │ p │
+                    │    │ l │
+                    │    │ o │
+                    │    │ y │
+                    │    │ e │
+                    │    │ n │
+                    │    │ l │
+                    │    │ a │
+                    │    │ c │
+                    │    │ e │
+                    │    │ s │
+                    │    │ a │
+                    │    │ o │
+                    │    │ p │
+                    │    │ e │
+                    │    │ r │
+                    │    │ a │
+                    │    │ t │
+                    │    │ o │
+                    │    │ r │
+                    │    │ - │
+                    │    │ m │
+                    │    │ a │
+                    │    │ n │
+                    │    │ u │
+                    │    │ a │
+                    │    │ l │
+                    │    │ . │
+                    │    │ m │
+                    │    │ d │
+                    │    │ . │
+   contrato-        │ No │ N │ Requieren el resultado de A1, el cierre
+   producto.md      │    │ o │ de la tarea activa de closeout, y
+   (B1), contrato-  │    │ p │ decisiones explícitas de arquitectura
+   navegacion.md    │    │ u │ sobre backend (sldb vs kimun), modelo
+   (B2), contrato-  │    │ e │ de índices, edición Markdown vs campos
+   interaccion.md   │    │ d │ y autoridad de acciones en UI.
+   (B3)             │    │ e │
+                    │    │ n │
+                    │    │ r │
+                    │    │ e │
+                    │    │ d │
+                    │    │ a │
+                    │    │ c │
+                    │    │ t │
+                    │    │ a │
+                    │    │ r │
+                    │    │ s │
+                    │    │ e │
+                    │    │ a │
+                    │    │ ú │
+                    │    │ n │
+                    │    │ s │
+                    │    │ i │
+                    │    │ n │
+                    │    │ l │
+                    │    │ a │
+                    │    │ s │
+                    │    │ e │
+                    │    │ v │
+                    │    │ i │
+                    │    │ d │
+                    │    │ e │
+                    │    │ n │
+                    │    │ c │
+                    │    │ i │
+                    │    │ a │
+                    │    │ s │
+                    │    │ d │
+                    │    │ e │
+                    │    │ A │
+                    │    │ 1 │
+                    │    │ y │
+                    │    │ d │
+                    │    │ e │
+                    │    │ c │
+                    │    │ i │
+                    │    │ s │
+                    │    │ i │
+                    │    │ o │
+                    │    │ n │
+                    │    │ e │
+                    │    │ s │
+                    │    │ d │
+                    │    │ e │
+                    │    │ l │
+                    │    │ d │
+                    │    │ u │
+                    │    │ e │
+                    │    │ ñ │
+                    │    │ o │
+                    │    │ . │
+   Entradas         │ No │ — │ Requieren B2/C1 (saber dónde viven,
+   Markdown (C2) y  │    │   │ cómo se enlazan y qué contrato usan) y
+   Vistas (C3)      │    │   │ B3.
+  ──────
+  ### 5. Omisiones de recorridos humanos o superficies
+
+  Contrastando vision.md, user-flows.md y vistas.md con las superficies
+  reales verificadas en __init__.py, operator-manual.md y README.md:
+
+  1. CrossroadDoc, árbol de dominios y eje de carpetas
+  (atom_folder_axis) omitidos
+      • Evidencia en código/manual: CrossroadDoc, desk/atoms/tag-
+      namespaces.yaml, deskops atoms crossroad, deskops atoms tree y
+      deskops atoms reorganize (docs/atoms.md l.38-72,
+      operator-manual.md l.505-527). Todo átomo con tag domain:a.b
+      exige un CrossroadDoc escrito para cada padre (a, a.b).
+      • Omisión: Ni vision.md, ni vistas.md, ni UF03 (Trabajar
+      conocimiento) mencionan CrossroadDoc, el registro de namespaces
+      ni la jerarquía obligatoria de dominios.
+      • Consecuencia: La navegación y curación de conocimiento en la UI
+      fallará o violará las reglas del store al etiquetar átomos o
+      recorrer el árbol de conocimiento sin sus crossroads padres.
+  2. Superficie desk/issues/ (Issues no modelados) omitida
+      • Evidencia en código/manual:
+      docs/operator-manual.md §Issues (l.472-498) documenta
+      desk/issues/ y desk/drawer/issues/ como archivos Markdown
+      deliberadamente no modelados (deskops issue list, deskops issue
+      close).
+      • Omisión: vision.md §Unidad de trabajo afirma que "Los
+      documentos del desk son Markdown con contratos estructurados", y
+      vistas.md no incluye los issues.
+      • Consecuencia: Un workspace que asuma que todo archivo Markdown
+      de desk/ tiene un modelo StructuredNLDoc tratará desk/issues/*.md
+      como documentos rotos o invisibles.
+  3. DeskFAQDoc (faq-doc) y StepDoc (step) ausentes como artefactos
+  específicos
+      • Evidencia en código/manual: DeskFAQDoc y StepDoc están en
+      __init__.py:6-36 y en los comandos add/list/show/edit
+      (operator-manual.md l.206-210).
+      • Omisión: StepDoc se menciona solo de pasada junto a rituales y
+      DeskFAQDoc no aparece en vision.md, vistas.md ni UF01 (pese a que
+      deskops faq es el comando principal de orientación inicial en un
+      desk, ver operator-manual.md l.57-66).
+      • Consecuencia: UF01 (Entrar a un proyecto desconocido)
+      desaprovecha la superficie DeskFAQDoc ya existente para
+      orientación humana.
+  4. Recorridos y vistas ya existentes en graph_ui (Brainstorm, Schema
+  / edición de clases, y catálogo SpecDoc de spec2viz) desconectados
+  del plan
+      • Evidencia en código: graph_ui ya tiene en producción
+      /draft/tree` (Brainstorm) con conversión a KB,
+      /models/diagram` (Schema + diálogo Editar clases) y la
+      integración de catálogo SpecDoc`/`SpecNodeDoc`/`NotationDoc.
+      • Omisión: README.md (línea 3) descarta globalmente "La UI
+      anterior es un experimento técnico, no contrato de producto",
+      mientras que manual.md §15 menciona "Personalizar modelos, vistas
+      y configuración" sin ningún user-flow en user-flows.md ni fila en
+      vistas.md que recoja la inspección/edición de esquemas de modelos
+      (Schema), el flujo Brainstorm -> ProtoAtom/KB ni los diagramas de
+      arquitectura SpecDoc.
+      • Consecuencia: Un ejecutor de D1–D3 no sabe si debe preservar,
+      integrar o destruir las vistas activas de frontends/mindmap/
+      (/documents/map, /draft/tree, /models/diagram, /workflow/deskops),
+      y el capítulo 15 del manual queda huérfano de user-flow y de
+      validación en G1.
+  5. Superficie de materialización de roles y chequeo de drift (deskops
+  materialize / deskops drift check)
+      • Evidencia en código/manual:
+      operator-manual.md §Roles, materialization, and drift (l.643-712)
+      verifica la sincronía entre RoleDoc (desk/roles/),
+      RuntimeProfileDoc (desk/runtimes/) y los agentes instalados.
+      • Omisión: En vistas.md (línea 17) se listan Roles, runtime
+      profiles y RunDoc solo para delegar/revisar ejecuciones (UF06),
+      omitiendo el diagnóstico de drift check y la materialización de
+      roles en UF07 (Diagnosticar y mantener) y F1.
+      • Consecuencia: El diagnóstico de salud en F1/UF07 ignora una de
+      las compuertas de deriva ya existentes en deskops.
+
+  ──────
+  ### 6. Veredicto y correcciones prioritarias
+
+  Veredicto: No ejecutable todavía en sus capas de contrato e
+  implementación (B2–H2); apto únicamente para iniciar la capa A1–A5 si
+  se corrigen antes las dependencias e inconsistencias del DAG.
+  El plan acierta en su filosofía de fronteras (no confundir
+  representación con documento, mantener a deskops como autoridad de
+  workflow y a sldb/kimun como autoridad de persistencia, exigir
+  recorrido completo sin agentes y no dar por existentes los 4 tickets
+  faltantes). Sin embargo, como artefacto de ejecución con contexto
+  cero, presenta aristas contradictorias, paquetes monolíticos (C1,
+  D1–D4, F1), dependencia de 4 especificaciones ausentes y ambigüedades
+  críticas entre el stack actual (sldb/pron) y el futuro (kimun).
+
+  #### 5 correcciones prioritarias antes de promover tareas:
+
+  1. Separar explícitamente la entrega sobre el stack actual (sldb +
+  pron en graph_ui) de la migración a kimun (D1–D4, F1):
+      • Dónde: dag.yaml (`D2`, `F1`) y
+      README.md §Reutilización y preguntas abiertas.
+      • Corrección: No basar la aceptación de D1, D2 y F1 en 3 tickets
+      inexistentes de kimun
+      (unresolved_reference_not_an_existing_executable_ticket). Fijar
+      que el MVP de D1–D4 y F1 se construye y verifica contra las APIs
+      reales hoy disponibles en sldb + deskops (doctor, stores check,
+      graph missing/reflect, drift check, sldb docs/fields), y mover el
+      adaptador kimun serve / Merkle CST a un ramal condicional
+      separado tras M1/M2/C2.
+  2. Corregir las aristas defectuosas del DAG (B2 -> B3, E2, C2 -> D1 y
+  closeout activo):
+      • Dónde: dag.yaml y tabla de README.md l.24-48 (regenerando dag.
+      diagram.* con render_diagram.py).
+      • Corrección:
+          • Alinear README.md l.42 con dag.yaml en E2 y añadir B2 (o
+          C1) a E2.depends_on.
+          • Añadir B2 -> B3 (no definir
+          interacción/edición/composiciones sin el contrato de
+          identidad/navegación) y B3 -> C3 (eliminando la arista
+          redundante A4 -> C3).
+          • Cambiar D1.depends_on de [C2, B3] a [C1, B3] para no
+          bloquear el código del shell por la redacción de entradas de
+          todos los proyectos (C2), manteniendo C2 -> G1.
+          • Añadir la tarea activa
+          task-closeout-la-evidencia-exigida-... como
+          external_prerequisites de B3 y D4 (no solo de E1).
+
+  3. Acotar A4 y C3 a la realidad verificada de ViewDoc/NotationDoc y
+  frontends/mindmap/:
+      • Dónde: vistas.md, task-a4.md y task-c3.md.
+      • Corrección: Dejar explícito que ViewDoc solo cubre proyecciones
+      de grafo portables (layered/rings por {model, where}), mientras
+      que las vistas de documento, tablero, procedimiento o formulario
+      son modos de renderizado del frontend (graph_ui) sobre modelos
+      StructuredNLDoc, e incorporar en A4 el destino de las vistas
+      existentes de mindmap (KB, Brainstorm, Schema, Specs, Deskops).
+  4. Incorporar las superficies omitidas del desk real (CrossroadDoc,
+  desk/issues/, DeskFAQDoc, StepDoc y drift check):
+      • Dónde: borradores/vision.md §Unidad de trabajo y §Superficies,
+      borradores/user-flows.md (`UF01`, `UF03`, `UF07`) y vistas.md.
+      • Corrección: Incluir CrossroadDoc y namespaces en UF03/vistas.md,
+      reconocer los documentos Markdown no modelados (desk/issues/) en
+      vision.md/vistas.md, incluir DeskFAQDoc en UF01 y añadir un flujo
+      o extensión para Schema/edición de modelos que respalde el
+      capítulo 15 del manual.
+  5. Atomizar C1, D1, D2, D3, D4 y F1 por repositorio dueño y
+  entregable verificable:
+      • Dónde: dag.yaml:101-251 y candidatas task-c1.md, task-d1.md..
+      task-d4.md, task-f1.md.
+      • Corrección: Ninguna tarea promovible debe tener dueño compuesto
+      (deskops + graph_ui, graph_ui + infraestructura, repos dueños).
+      Dividir cada nodo de implementación por repositorio único y por
+      superficie (p. ej. separar en D3 el renderizador de BoardDoc del
+      de RitualDoc/lifecycle y del de AtomDoc/CrossroadDoc; separar en
+      D4 las operaciones en deskops del cableado en graph_ui).
+
+
+──────────────────────────────────────────────────────────────────────────
+>
+──────────────────────────────────────────────────────────────────────────
+? for shortcuts                                    Gemini 4 Argon · medium

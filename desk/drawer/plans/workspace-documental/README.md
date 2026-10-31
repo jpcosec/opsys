@@ -1,76 +1,102 @@
-# Plan: workspace documental de Deskops
+# Workspace documental — plan revisado por concilio
 
-Propuesta del 2026-10-31. Este paquete registra el DAG y borradores; no activa tareas ni autoriza implementaciones en repos hermanos. La UI anterior es un experimento técnico, no contrato de producto. No modifica la tarea activa de closeout ni trabajo ajeno.
+Revisión 5. Estado: reviewed_plan_pending_decisions. Propuesta de planificación, no activación ni ejecución de producto.
 
-## Fuentes y frontera
+## Entrada
 
-Esta conversación; README.md, docs/atoms.md, docs/operator-manual.md, modelos de deskops; ViewDoc/NotationDoc de spec2viz; superficie sldb y UI activa Mindmap. También se consultó /home/jp/proyectos/softfactory_spec/SPEC.md: existen candidatos de workspace, Changes, edición Kimun y correlación Scion. Los integramos como trabajo existente a precisar, no como evidencia de que ya funcionen. Kimun es una ruta de migración con dependencias externas, no un requisito para redactar o navegar Markdown hoy.
+- [Brief y glosario](brief.md): requisitos autosuficientes, sin chat ni memoria privada necesaria.
+- [Decisiones](decisiones.md): alternativas, humano responsable y evidencia requerida; pendientes explícitas.
+- [Alcance](alcance.md): lector, autoría manual, Scion opcional y exclusiones.
+- [Reconciliación](reconciliacion.md): cómo integrar trabajo activo sin duplicarlo.
+- [Cobertura de user-flows](cobertura.md) y [validación humana](validacion-humana.md).
 
-## Documentos que ya podemos escribir
+Baseline propuesta: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no migración ni dependencia de este DAG. El humano resuelve las propuestas en WS07 antes de código afectado. El plan no se apoya en decisiones que solo estén en la memoria de un agente.
 
-| Borrador incluido | Qué fija ahora | Qué no da por resuelto |
-|---|---|---|
-| [Visión](borradores/vision.md) | Workspace documental, superficies y límites | Backend y contratos faltantes |
-| [User-flows](borradores/user-flows.md) | Ocho recorridos humanos con aceptación | Controles y capacidades aún no implementados |
-| [Vistas](borradores/vistas.md) | Fuentes, representaciones, operaciones y ficha de vista | Un renderer propio para cada tipo o nuevos modelos obligatorios |
-| [Manual](borradores/manual.md) | Índice, ejemplo compartido y convención de disponibilidad | Instrucciones/capturas de una UI futura |
+## Documentos que podemos escribir ahora
 
-Los cuatro están redactados como borradores, no tareas cerradas ni docs de producto aprobados. La auditoría A1 y la reconciliación B1 establecen hechos y acuerdos; los durables pasan a átomos antes de docs. El manual CLI existente se reutiliza sin reemplazarlo por instrucciones hipotéticas.
+[Visión](borradores/vision.md), [user-flows](borradores/user-flows.md), [catálogo de vistas](borradores/vistas.md) e [índice del manual](borradores/manual.md) tienen semilla de intención. WS01 aclara vocabulario/fuentes y WS02–05 auditan; WS08–10 convierten intención en contratos contrastados. Un borrador existente no equivale a tarea cerrada, aprobación humana o función disponible.
 
-## DAG de entregables
+## DAG y candidatas
 
-Fuente editable: [dag.yaml](dag.yaml). Flecha significa prerrequisito -> dependiente. Cada nodo tiene una candidata en drawer con alcance y aceptación; antes de promoción debe precisarse la lista de archivos/operaciones, pills/átomos y validación. Los IDs de este plan no son todavía IDs de tareas activas. Dependencias externas y condicionales están declaradas en YAML y candidatas; no se consideran satisfechas por existir un archivo.
+[dag.yaml](dag.yaml) es la única fuente de IDs/aristas/gates/metadatos. Esta tabla, las fichas de candidatas y las proyecciones se generan. No corregir dependencias solo en README o Mermaid. Las fichas están en drawer y requieren promoción formal en su repo dueño antes de ejecución. Tamaños S/M son relativos, no promesas de horas.
 
-| ID | Entregable | Depende de | Dueño previsto |
+| ID | Entregable | Depende de tareas | Gates adicionales | Repo dueño | Tamaño |
+|---|---|---|---|---|---|
+| WS01 | [Fijar brief y glosario autosuficientes](../../tasks/workspace-documental/task-ws01.md) | — | — | deskops | S |
+| WS02 | [Inventariar superficies y operaciones Deskops](../../tasks/workspace-documental/task-ws02.md) | WS01 | — | deskops | M |
+| WS03 | [Inventariar persistencia, consultas y notaciones](../../tasks/workspace-documental/task-ws03.md) | WS01 | — | deskops | M |
+| WS04 | [Inventariar UI y reconciliar trabajo en curso](../../tasks/workspace-documental/task-ws04.md) | WS01 | — | deskops | M |
+| WS05 | [Inventariar identidad y API Scion](../../tasks/workspace-documental/task-ws05.md) | WS01 | — | deskops | M |
+| WS06 | [Registrar acuerdos de alcance con repos dueños](../../tasks/workspace-documental/task-ws06.md) | WS02, WS03, WS04 | — | deskops | S |
+| WS07 | [Resolver decisiones de producto y escritura](../../tasks/workspace-documental/task-ws07.md) | WS06 | — | deskops | M |
+| WS08 | [Precisar user-flows y criterios observables](../../tasks/workspace-documental/task-ws08.md) | WS07 | G_PRODUCT | deskops | M |
+| WS09 | [Precisar catálogo de renderizaciones](../../tasks/workspace-documental/task-ws09.md) | WS07 | G_PRODUCT | deskops | M |
+| WS10 | [Precisar índice y convención del manual](../../tasks/workspace-documental/task-ws10.md) | WS02, WS07 | G_PRODUCT | deskops | S |
+| WS11 | [Cerrar contrato de navegación e identidad](../../tasks/workspace-documental/task-ws11.md) | WS09, WS08 | G_PRODUCT | deskops | M |
+| WS12 | [Cerrar contrato de operaciones y escritura](../../tasks/workspace-documental/task-ws12.md) | WS11, WS08 | G_WRITE_POLICY | deskops | M |
+| WS13 | [Integrar lector workspace con historia y foco](../../tasks/workspace-documental/task-ws13.md) | WS11 | G_UI_READ | graph_ui | M |
+| WS14 | [Integrar búsqueda navegable del workspace](../../tasks/workspace-documental/task-ws14.md) | WS13 | G_UI_READ | graph_ui | M |
+| WS15 | [Mostrar errores de lectura y modo degradado](../../tasks/workspace-documental/task-ws15.md) | WS13 | G_UI_READ | graph_ui | S |
+| WS16 | [Validar con humano lectura y descubrimiento](../../tasks/workspace-documental/task-ws16.md) | WS14, WS15, WS08, WS40, WS41 | — | graph_ui | M |
+| WS17 | [Escribir entradas e índices del desk ejemplo](../../tasks/workspace-documental/task-ws17.md) | WS11, WS40 | — | deskops | S |
+| WS18 | [Declarar proyecciones de grafo reutilizables](../../tasks/workspace-documental/task-ws18.md) | WS09, WS11 | G_SPEC_VIEW | spec2viz | S |
+| WS19 | [Integrar edición de campos con conflicto](../../tasks/workspace-documental/task-ws19.md) | WS12, WS16 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS20 | [Probar o completar guardado fuente reversible](../../tasks/workspace-documental/task-ws20.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | M |
+| WS21 | [Integrar fuente y renderizado editables](../../tasks/workspace-documental/task-ws21.md) | WS19 | G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS22 | [Renderizar Board como trabajo navegable](../../tasks/workspace-documental/task-ws22.md) | WS13, WS09 | G_UI_READ | graph_ui | M |
+| WS23 | [Renderizar rituales y pasos como procedimiento](../../tasks/workspace-documental/task-ws23.md) | WS13, WS09 | G_UI_READ | graph_ui | S |
+| WS24 | [Integrar conocimiento y grafo local](../../tasks/workspace-documental/task-ws24.md) | WS13, WS18 | G_UI_READ | graph_ui | M |
+| WS25 | [Integrar captura y triage en UI](../../tasks/workspace-documental/task-ws25.md) | WS12, WS16 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS26 | [Integrar autoría y contexto de tareas](../../tasks/workspace-documental/task-ws26.md) | WS12, WS22 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS27 | [Integrar revisión de cambios y evidencia](../../tasks/workspace-documental/task-ws27.md) | WS13, WS12 | G_UI_READ | graph_ui | M |
+| WS28 | [Integrar verificación y handoff de cierre](../../tasks/workspace-documental/task-ws28.md) | WS27, WS12 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS29 | [Integrar Changes e impacto comprobable](../../tasks/workspace-documental/task-ws29.md) | WS15, WS24 | G_UI_READ | graph_ui | M |
+| WS30 | [Validar autoría y revisión manual completas](../../tasks/workspace-documental/task-ws30.md) | WS17, WS21, WS22, WS23, WS24, WS25, WS26, WS28, WS42 | — | graph_ui | M |
+| WS31 | [Publicar manual documental básico probado](../../tasks/workspace-documental/task-ws31.md) | WS30, WS10, WS43 | G_HUMAN_MANUAL | deskops | M |
+| WS32 | [Unificar identidad de intento y cierre Scion](../../tasks/workspace-documental/task-ws32.md) | WS05, WS12 | G_CLOSEOUT, G_SCION, G_WRITE_CONTRACT | deskops | M |
+| WS33 | [Vincular mensajes, resultados y decisiones](../../tasks/workspace-documental/task-ws33.md) | WS32, WS11 | G_SCION | deskops | M |
+| WS34 | [Exponer despacho y respuesta Scion autorizados](../../tasks/workspace-documental/task-ws34.md) | WS33, WS12 | G_EXEC, G_SCION, G_WRITE_CONTRACT | deskops | M |
+| WS35 | [Mostrar ejecución y trazabilidad en workspace](../../tasks/workspace-documental/task-ws35.md) | WS33, WS27 | G_SCION, G_UI_READ | graph_ui | M |
+| WS36 | [Integrar delegación e intervención humanas](../../tasks/workspace-documental/task-ws36.md) | WS34, WS35 | G_EXEC, G_SCION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS37 | [Validar delegación con agente real](../../tasks/workspace-documental/task-ws37.md) | WS36, WS30 | G_EXEC, G_SCION | graph_ui | M |
+| WS38 | [Publicar capítulos verificados de delegación](../../tasks/workspace-documental/task-ws38.md) | WS37, WS31 | G_HUMAN_DELEGATE | deskops | S |
+| WS39 | [Integrar inspección y edición de modelos existente](../../tasks/workspace-documental/task-ws39.md) | WS12, WS16 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS40 | [Crear generador reproducible del corpus Taller](../../tasks/workspace-documental/task-ws40.md) | WS11, WS08 | G_UI_READ | graph_ui | M |
+| WS41 | [Implementar lectura segura entre desks](../../tasks/workspace-documental/task-ws41.md) | WS13, WS11, WS40 | G_UI_READ | graph_ui | M |
+| WS42 | [Integrar operaciones de conocimiento existentes](../../tasks/workspace-documental/task-ws42.md) | WS19, WS24, WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS43 | [Publicar navegación documental del desk real](../../tasks/workspace-documental/task-ws43.md) | WS17, WS30 | G_HUMAN_MANUAL, G_PRODUCT, G_WRITE_CONTRACT | deskops | S |
+| WS44 | [Comprobar y revalidar acceso público a Scion](../../tasks/workspace-documental/task-ws44.md) | WS05, WS07 | G_PRODUCT | deskops | S |
+
+## Gates externos y humanos
+
+| Gate | Estado observado | Significado | Resolver |
 |---|---|---|---|
-| A1 | [Auditar documentos, relaciones y capacidades existentes](../../tasks/workspace-documental/task-a1.md) | — | deskops + repos dueños |
-| A2 | [Escribir visión y modelo de interacción del workspace](../../tasks/workspace-documental/task-a2.md) | — | deskops |
-| A3 | [Escribir user-flows y escenarios de aceptación](../../tasks/workspace-documental/task-a3.md) | — | deskops |
-| A4 | [Escribir catálogo de vistas y renderizaciones](../../tasks/workspace-documental/task-a4.md) | — | deskops + graph_ui |
-| A5 | [Escribir índice y convención del manual de usuario](../../tasks/workspace-documental/task-a5.md) | — | deskops |
-| B1 | [Reconciliar visión, recorridos y código](../../tasks/workspace-documental/task-b1.md) | A1, A2, A3, A4, A5 | deskops |
-| B2 | [Definir contratos de navegación y autoría](../../tasks/workspace-documental/task-b2.md) | B1 | deskops + infraestructura |
-| B3 | [Definir contrato de interacción y operaciones](../../tasks/workspace-documental/task-b3.md) | B1 | deskops + graph_ui |
-| C1 | [Resolver contrato y clasificación de huecos documentales](../../tasks/workspace-documental/task-c1.md) | B2 | repos dueños |
-| C2 | [Escribir entradas e índices navegables del ecosistema](../../tasks/workspace-documental/task-c2.md) | C1 | deskops + proyectos |
-| C3 | [Escribir definiciones de vistas reutilizables](../../tasks/workspace-documental/task-c3.md) | C1, A4 | spec2viz + graph_ui |
-| D1 | [Implementar workspace y navegación documental](../../tasks/workspace-documental/task-d1.md) | C2, B3 | graph_ui |
-| D2 | [Integrar fuente Markdown y edición estructurada](../../tasks/workspace-documental/task-d2.md) | D1 | graph_ui + infraestructura |
-| D3 | [Implementar renderizaciones sobre documentos](../../tasks/workspace-documental/task-d3.md) | D1, C3 | graph_ui |
-| D4 | [Habilitar operaciones del desk desde el contexto](../../tasks/workspace-documental/task-d4.md) | D2, D3 | deskops + graph_ui |
-| E1 | [Unificar identidad y registro por intento Scion](../../tasks/workspace-documental/task-e1.md) | B3 | deskops + Scion |
-| E2 | [Vincular conversaciones, resultados y decisiones](../../tasks/workspace-documental/task-e2.md) | E1, D2 | Scion + deskops |
-| E3 | [Proyectar ejecución y revisión en el workspace](../../tasks/workspace-documental/task-e3.md) | E2, D4 | graph_ui |
-| F1 | [Integrar salud, cambios e impacto](../../tasks/workspace-documental/task-f1.md) | D2, D3 | graph_ui + infraestructura |
-| G1 | [Validar recorridos humanos básicos](../../tasks/workspace-documental/task-g1.md) | D4, F1 | deskops + graph_ui |
-| G2 | [Validar delegación y revisión trazable](../../tasks/workspace-documental/task-g2.md) | G1, E3 | deskops + graph_ui + Scion |
-| H1 | [Publicar manual del workspace documental](../../tasks/workspace-documental/task-h1.md) | G1, A5 | deskops |
-| H2 | [Completar manual de ejecución y revisión](../../tasks/workspace-documental/task-h2.md) | H1, G2 | deskops |
+| G_PRODUCT | pending | Decisiones de producto registradas por humano | WS07 |
+| G_CLOSEOUT | blocked | Contrato de evidencia de closeout estabilizado | external |
+| G_SOURCE | pending | Fuente reversible y guardas de campos probadas | WS20 |
+| G_SCION | unverified | Scion accesible y contrato público comprobado | WS44 por operador Scion designado en WS07 |
+| G_EXEC | pending | Humano autoriza ejecución y comunicaciones del escenario | external |
+| G_HUMAN_READ | pending | Persona aprueba recorrido de lectura | WS16 |
+| G_HUMAN_MANUAL | pending | Persona aprueba autoría/revisión | WS30 |
+| G_HUMAN_DELEGATE | pending | Persona aprueba delegación | WS37 |
+| G_WRITE_POLICY | pending | Política de escritura aprobada por humano | WS07 |
+| G_WRITE_CONTRACT | pending | Contrato técnico de operaciones verificado | WS12 |
+| G_UI_READ | pending | Deltas de lectura aceptados en graph_ui | WS11 |
+| G_UI_WRITE | pending | Deltas de mutación aceptados en graph_ui | WS12 |
+| G_SLDB_WRITE | pending | Alcance fuente aceptado en sldb | WS12 |
+| G_SPEC_VIEW | pending | Alcance de proyecciones aceptado en spec2viz | WS11 |
+| G_HUMAN_MODEL | pending | Persona valida inspección/edición de modelos | WS39 |
 
-## Orden de trabajo y gates
+Cada output_scope se resuelve respecto de su output_base explícito; las actas de uso viven en repo dueño. Los productores de gates también se declaran en dag.yaml, sin aristas ocultas en generador. source_mode determina la variante WS21 y si WS20 pertenece a la entrega; pending bloquea ambos. Los gates se satisfacen con el tipo de evidencia declarado, nunca por existencia del archivo. El validador comprueba referencias, ausencia de ciclos y coherencia de proyecciones; muestra por separado candidatas de preparación, bloqueos y autorización. Cero nodos tienen ejecución de producto autorizada. Las capas topológicas no son fases operativas: falta aprobar gates, no solapamiento, TaskDoc y cierre de cada fase. Las observaciones de referencias tienen hash para detectar movimiento, no para aprobar trabajo.
 
-Primera capa candidata: A1–A5 (archivos separados y sin dependencias internas). A2–A5 tienen semilla escrita; requieren revisión. Luego B1; luego B2 y B3 en paralelo. El resto se selecciona por dependencias satisfechas y archivos sin solapamiento, no por letra o tema. Por ejemplo E1 se puede preparar tras B3 pero no ejecutar sobre cierre hasta que cierre la tarea activa que toca ese servicio. Una capa lista no equivale automáticamente a fase activa: ejecutar ritual de fase y comprobar no solapamiento en cada repo.
+## Entregas y gates de uso
 
-Entrega documental/manual básica: C2 + D1–D4 + F1 -> G1 -> H1. Ramal opcional de delegación: E1–E3 -> G2 -> H2. G1 no depende de Scion; H1 puede publicarse antes de G2. Lectura/navegación inicial D1 tampoco espera edición distribuida.
+WS13–16 y WS40/41 dan lector con búsqueda y errores antes de edición o índices nuevos. WS40 produce corpus temporal y WS17 aporta solo plantillas de entradas authored. WS19–28, WS42 y WS30 dan autoría/revisión manual; WS31 publica su manual. WS29 (Changes) y WS39 (Schema) son extensiones con aceptación propia, no prerrequisitos del lector o manual básico. WS32–38 son el ramal de Scion con permisos de ejecución explícitos. El cierre baseline usa handoff verificado al CLI/coordinador, no commit desde HTTP.
 
-Cada tarea activa debe pasar preflight, ejecución, testing y cierre atómico. Cada fase cierra con integración y reconciliación de pills. Tests técnicos no sustituyen la comprobación del recorrido humano. No se amplía automáticamente a base de datos compartida, transporte nuevo ni despliegue distribuido.
+## Reproducción y revisión
 
-## Reutilización y preguntas abiertas
+`python desk/drawer/plans/workspace-documental/build_plan.py` genera tabla/fichas/spec del diagrama. `python desk/drawer/plans/workspace-documental/validate_plan.py` verifica coherencia. `python desk/drawer/plans/workspace-documental/render_diagram.py` genera Mermaid y HTML mediante spec2viz. El modo `build_plan.py --check` no escribe y detecta proyecciones obsoletas.
 
-D1 refina workspace multiproyección ya capturado; D2 refina adaptador/edición; F1 refina Changes; E1/E2 descomponen correlación Scion. Antes de promover hay que reconciliar y atomizar las candidatas originales, no ejecutar ambos tickets. El contrato Opsys–Kimun es dependencia condicional de sus adaptadores, con M1/M2/C2 comprobados en el repo dueño. No crear sustitutos en deskops para huecos de infraestructura.
+[Diagrama interactivo](dag.diagram.graph.html) · [Mermaid](dag.diagram.mmd) · [Validación](validation.txt). El diagrama incluye gates como nodos; leer flechas de prerequisito a dependiente, sin confundir estado pendiente con implementación.
 
-B2 debe resolver dónde viven entradas e índices y si bastan contratos existentes. B3 debe resolver navegación/edición y autoridad de acciones. Las decisiones que requieren dueño se presentan como decisiones, sin usar su ausencia como permiso para inventar arquitectura.
-
-## Diagrama y validación
-
-- [Diagrama interactivo generado](dag.diagram.graph.html)
-- [Mermaid generado](dag.diagram.mmd)
-- [Spec de diagrama derivado](dag.diagram.yaml)
-
-Regenerar: `python desk/drawer/plans/workspace-documental/render_diagram.py`, después `spec2viz diagram render desk/drawer/plans/workspace-documental/dag.diagram.yaml --renderer mermaid --out desk/drawer/plans/workspace-documental` (o `--renderer graph`). No editar las proyecciones para cambiar dependencias: editar dag.yaml y las candidatas correspondientes.
-
-Revisión: E2 depende de E1 y del contrato B3, no de edición UI. C1 cierra clasificación y contratos, no exige modelos nuevos. D1/D4 requieren atomización antes de ejecución; los demás también deben verificarse por coherencia del entregable al promover. La captura del plan no ejecuta estos nodos ni cierra tareas del producto.
-
-## Estado de referencias externas al validar
-
-La especificación externa cita tickets de workspace, edición, Changes e integración Kimun que se pudieron leer al iniciar la revisión, pero sus archivos ya no estaban disponibles al validar este paquete. Se conservan sus rutas como procedencia pendiente, no como dependencias satisfechas ni tareas existentes ejecutables. A1 debe reconciliar su ubicación/estado antes de promover o duplicar trabajo. Los archivos de correlación Scion y de la tarea activa de closeout sí existen. Ver reference_status en dag.yaml. Este plan no restaura ni modifica trabajo ajeno.
+Revisiones independientes y resolución de hallazgos en [reviews](reviews/README.md). Los IDs antiguos A1–H2 se conservan en legacy_mapping de dag.yaml para trazabilidad, no como otro DAG activo. No se modificaron tareas ajenas ni el Board de graph_ui.

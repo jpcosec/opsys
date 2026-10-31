@@ -1,208 +1,840 @@
 id: workspace-documental-dag
-title: 'Workspace documental: DAG de entregables'
+title: 'Workspace documental: entregables y gates'
 type: component
 version: '0.1'
 data:
   nodes:
-    A1:
-      label: 'A1: Auditar documentos, relaciones y capacidades existentes'
+    WS01:
+      label: 'WS01: Fijar brief y glosario autosuficientes'
       kind: core
-    A2:
-      label: 'A2: Escribir visión y modelo de interacción del workspace'
+    WS02:
+      label: 'WS02: Inventariar superficies y operaciones Deskops'
       kind: core
-    A3:
-      label: 'A3: Escribir user-flows y escenarios de aceptación'
+    WS03:
+      label: 'WS03: Inventariar persistencia, consultas y notaciones'
       kind: core
-    A4:
-      label: 'A4: Escribir catálogo de vistas y renderizaciones'
+    WS04:
+      label: 'WS04: Inventariar UI y reconciliar trabajo en curso'
       kind: core
-    A5:
-      label: 'A5: Escribir índice y convención del manual de usuario'
+    WS05:
+      label: 'WS05: Inventariar identidad y API Scion'
       kind: core
-    B1:
-      label: 'B1: Reconciliar visión, recorridos y código'
+    WS06:
+      label: 'WS06: Registrar acuerdos de alcance con repos dueños'
       kind: core
-    B2:
-      label: 'B2: Definir contratos de navegación y autoría'
+    WS07:
+      label: 'WS07: Resolver decisiones de producto y escritura'
       kind: core
-    B3:
-      label: 'B3: Definir contrato de interacción y operaciones'
+    WS08:
+      label: 'WS08: Precisar user-flows y criterios observables'
       kind: core
-    C1:
-      label: 'C1: Resolver contrato y clasificación de huecos documentales'
+    WS09:
+      label: 'WS09: Precisar catálogo de renderizaciones'
       kind: core
-    C2:
-      label: 'C2: Escribir entradas e índices navegables del ecosistema'
+    WS10:
+      label: 'WS10: Precisar índice y convención del manual'
       kind: core
-    C3:
-      label: 'C3: Escribir definiciones de vistas reutilizables'
+    WS11:
+      label: 'WS11: Cerrar contrato de navegación e identidad'
       kind: core
-    D1:
-      label: 'D1: Implementar workspace y navegación documental'
+    WS12:
+      label: 'WS12: Cerrar contrato de operaciones y escritura'
       kind: core
-    D2:
-      label: 'D2: Integrar fuente Markdown y edición estructurada'
+    WS13:
+      label: 'WS13: Integrar lector workspace con historia y foco'
       kind: core
-    D3:
-      label: 'D3: Implementar renderizaciones sobre documentos'
+    WS14:
+      label: 'WS14: Integrar búsqueda navegable del workspace'
       kind: core
-    D4:
-      label: 'D4: Habilitar operaciones del desk desde el contexto'
+    WS15:
+      label: 'WS15: Mostrar errores de lectura y modo degradado'
       kind: core
-    E1:
-      label: 'E1: Unificar identidad y registro por intento Scion'
+    WS16:
+      label: 'WS16: Validar con humano lectura y descubrimiento'
       kind: core
-    E2:
-      label: 'E2: Vincular conversaciones, resultados y decisiones'
+    WS17:
+      label: 'WS17: Escribir entradas e índices del desk ejemplo'
       kind: core
-    E3:
-      label: 'E3: Proyectar ejecución y revisión en el workspace'
+    WS18:
+      label: 'WS18: Declarar proyecciones de grafo reutilizables'
       kind: core
-    F1:
-      label: 'F1: Integrar salud, cambios e impacto'
+    WS19:
+      label: 'WS19: Integrar edición de campos con conflicto'
       kind: core
-    G1:
-      label: 'G1: Validar recorridos humanos básicos'
+    WS20:
+      label: 'WS20: Probar o completar guardado fuente reversible'
       kind: core
-    G2:
-      label: 'G2: Validar delegación y revisión trazable'
+    WS21:
+      label: 'WS21: Integrar fuente y renderizado editables'
       kind: core
-    H1:
-      label: 'H1: Publicar manual del workspace documental'
+    WS22:
+      label: 'WS22: Renderizar Board como trabajo navegable'
       kind: core
-    H2:
-      label: 'H2: Completar manual de ejecución y revisión'
+    WS23:
+      label: 'WS23: Renderizar rituales y pasos como procedimiento'
       kind: core
+    WS24:
+      label: 'WS24: Integrar conocimiento y grafo local'
+      kind: core
+    WS25:
+      label: 'WS25: Integrar captura y triage en UI'
+      kind: core
+    WS26:
+      label: 'WS26: Integrar autoría y contexto de tareas'
+      kind: core
+    WS27:
+      label: 'WS27: Integrar revisión de cambios y evidencia'
+      kind: core
+    WS28:
+      label: 'WS28: Integrar verificación y handoff de cierre'
+      kind: core
+    WS29:
+      label: 'WS29: Integrar Changes e impacto comprobable'
+      kind: core
+    WS30:
+      label: 'WS30: Validar autoría y revisión manual completas'
+      kind: core
+    WS31:
+      label: 'WS31: Publicar manual documental básico probado'
+      kind: core
+    WS32:
+      label: 'WS32: Unificar identidad de intento y cierre Scion'
+      kind: core
+    WS33:
+      label: 'WS33: Vincular mensajes, resultados y decisiones'
+      kind: core
+    WS34:
+      label: 'WS34: Exponer despacho y respuesta Scion autorizados'
+      kind: core
+    WS35:
+      label: 'WS35: Mostrar ejecución y trazabilidad en workspace'
+      kind: core
+    WS36:
+      label: 'WS36: Integrar delegación e intervención humanas'
+      kind: core
+    WS37:
+      label: 'WS37: Validar delegación con agente real'
+      kind: core
+    WS38:
+      label: 'WS38: Publicar capítulos verificados de delegación'
+      kind: core
+    WS39:
+      label: 'WS39: Integrar inspección y edición de modelos existente'
+      kind: core
+    WS40:
+      label: 'WS40: Crear generador reproducible del corpus Taller'
+      kind: core
+    WS41:
+      label: 'WS41: Implementar lectura segura entre desks'
+      kind: core
+    WS42:
+      label: 'WS42: Integrar operaciones de conocimiento existentes'
+      kind: core
+    WS43:
+      label: 'WS43: Publicar navegación documental del desk real'
+      kind: core
+    WS44:
+      label: 'WS44: Comprobar y revalidar acceso público a Scion'
+      kind: core
+    G_PRODUCT:
+      label: G_PRODUCT [pending]
+      kind: boundary
+    G_CLOSEOUT:
+      label: G_CLOSEOUT [blocked]
+      kind: boundary
+    G_SOURCE:
+      label: G_SOURCE [pending]
+      kind: boundary
+    G_SCION:
+      label: G_SCION [unverified]
+      kind: boundary
+    G_EXEC:
+      label: G_EXEC [pending]
+      kind: boundary
+    G_HUMAN_READ:
+      label: G_HUMAN_READ [pending]
+      kind: boundary
+    G_HUMAN_MANUAL:
+      label: G_HUMAN_MANUAL [pending]
+      kind: boundary
+    G_HUMAN_DELEGATE:
+      label: G_HUMAN_DELEGATE [pending]
+      kind: boundary
+    G_WRITE_POLICY:
+      label: G_WRITE_POLICY [pending]
+      kind: boundary
+    G_WRITE_CONTRACT:
+      label: G_WRITE_CONTRACT [pending]
+      kind: boundary
+    G_UI_READ:
+      label: G_UI_READ [pending]
+      kind: boundary
+    G_UI_WRITE:
+      label: G_UI_WRITE [pending]
+      kind: boundary
+    G_SLDB_WRITE:
+      label: G_SLDB_WRITE [pending]
+      kind: boundary
+    G_SPEC_VIEW:
+      label: G_SPEC_VIEW [pending]
+      kind: boundary
+    G_HUMAN_MODEL:
+      label: G_HUMAN_MODEL [pending]
+      kind: boundary
   edges:
-  - from: A1
-    to: B1
+  - from: WS01
+    to: WS02
     relation: prerequisite
     label: ''
-  - from: A2
-    to: B1
+  - from: WS01
+    to: WS03
     relation: prerequisite
     label: ''
-  - from: A3
-    to: B1
+  - from: WS01
+    to: WS04
     relation: prerequisite
     label: ''
-  - from: A4
-    to: B1
+  - from: WS01
+    to: WS05
     relation: prerequisite
     label: ''
-  - from: A5
-    to: B1
+  - from: WS02
+    to: WS06
     relation: prerequisite
     label: ''
-  - from: B1
-    to: B2
+  - from: WS03
+    to: WS06
     relation: prerequisite
     label: ''
-  - from: B1
-    to: B3
+  - from: WS04
+    to: WS06
     relation: prerequisite
     label: ''
-  - from: B2
-    to: C1
+  - from: WS06
+    to: WS07
     relation: prerequisite
     label: ''
-  - from: C1
-    to: C2
+  - from: WS07
+    to: WS08
     relation: prerequisite
     label: ''
-  - from: C1
-    to: C3
+  - from: G_PRODUCT
+    to: WS08
     relation: prerequisite
     label: ''
-  - from: A4
-    to: C3
+  - from: WS07
+    to: WS09
     relation: prerequisite
     label: ''
-  - from: C2
-    to: D1
+  - from: G_PRODUCT
+    to: WS09
     relation: prerequisite
     label: ''
-  - from: B3
-    to: D1
+  - from: WS02
+    to: WS10
     relation: prerequisite
     label: ''
-  - from: D1
-    to: D2
+  - from: WS07
+    to: WS10
     relation: prerequisite
     label: ''
-  - from: D1
-    to: D3
+  - from: G_PRODUCT
+    to: WS10
     relation: prerequisite
     label: ''
-  - from: C3
-    to: D3
+  - from: WS09
+    to: WS11
     relation: prerequisite
     label: ''
-  - from: D2
-    to: D4
+  - from: WS08
+    to: WS11
     relation: prerequisite
     label: ''
-  - from: D3
-    to: D4
+  - from: G_PRODUCT
+    to: WS11
     relation: prerequisite
     label: ''
-  - from: B3
-    to: E1
+  - from: WS11
+    to: WS12
     relation: prerequisite
     label: ''
-  - from: E1
-    to: E2
+  - from: WS08
+    to: WS12
     relation: prerequisite
     label: ''
-  - from: B3
-    to: E2
+  - from: G_WRITE_POLICY
+    to: WS12
     relation: prerequisite
     label: ''
-  - from: E2
-    to: E3
+  - from: WS11
+    to: WS13
     relation: prerequisite
     label: ''
-  - from: D4
-    to: E3
+  - from: G_UI_READ
+    to: WS13
     relation: prerequisite
     label: ''
-  - from: D2
-    to: F1
+  - from: WS13
+    to: WS14
     relation: prerequisite
     label: ''
-  - from: D3
-    to: F1
+  - from: G_UI_READ
+    to: WS14
     relation: prerequisite
     label: ''
-  - from: D4
-    to: G1
+  - from: WS13
+    to: WS15
     relation: prerequisite
     label: ''
-  - from: F1
-    to: G1
+  - from: G_UI_READ
+    to: WS15
     relation: prerequisite
     label: ''
-  - from: G1
-    to: G2
+  - from: WS14
+    to: WS16
     relation: prerequisite
     label: ''
-  - from: E3
-    to: G2
+  - from: WS15
+    to: WS16
     relation: prerequisite
     label: ''
-  - from: G1
-    to: H1
+  - from: WS08
+    to: WS16
     relation: prerequisite
     label: ''
-  - from: A5
-    to: H1
+  - from: WS40
+    to: WS16
     relation: prerequisite
     label: ''
-  - from: H1
-    to: H2
+  - from: WS41
+    to: WS16
     relation: prerequisite
     label: ''
-  - from: G2
-    to: H2
+  - from: WS11
+    to: WS17
     relation: prerequisite
     label: ''
+  - from: WS40
+    to: WS17
+    relation: prerequisite
+    label: ''
+  - from: WS09
+    to: WS18
+    relation: prerequisite
+    label: ''
+  - from: WS11
+    to: WS18
+    relation: prerequisite
+    label: ''
+  - from: G_SPEC_VIEW
+    to: WS18
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS19
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS19
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS19
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS19
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS19
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS20
+    relation: prerequisite
+    label: ''
+  - from: G_SLDB_WRITE
+    to: WS20
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS20
+    relation: prerequisite
+    label: ''
+  - from: WS19
+    to: WS21
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS21
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS21
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS22
+    relation: prerequisite
+    label: ''
+  - from: WS09
+    to: WS22
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS22
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS23
+    relation: prerequisite
+    label: ''
+  - from: WS09
+    to: WS23
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS23
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS24
+    relation: prerequisite
+    label: ''
+  - from: WS18
+    to: WS24
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS24
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS25
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS25
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS25
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS25
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS25
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: WS22
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS27
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS27
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS27
+    relation: prerequisite
+    label: ''
+  - from: WS27
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: WS15
+    to: WS29
+    relation: prerequisite
+    label: ''
+  - from: WS24
+    to: WS29
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS29
+    relation: prerequisite
+    label: ''
+  - from: WS17
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS21
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS22
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS23
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS24
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS25
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS26
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS28
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS42
+    to: WS30
+    relation: prerequisite
+    label: ''
+  - from: WS30
+    to: WS31
+    relation: prerequisite
+    label: ''
+  - from: WS10
+    to: WS31
+    relation: prerequisite
+    label: ''
+  - from: WS43
+    to: WS31
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_MANUAL
+    to: WS31
+    relation: prerequisite
+    label: ''
+  - from: WS05
+    to: WS32
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS32
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS32
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS32
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS32
+    relation: prerequisite
+    label: ''
+  - from: WS32
+    to: WS33
+    relation: prerequisite
+    label: ''
+  - from: WS11
+    to: WS33
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS33
+    relation: prerequisite
+    label: ''
+  - from: WS33
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: G_EXEC
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: WS33
+    to: WS35
+    relation: prerequisite
+    label: ''
+  - from: WS27
+    to: WS35
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS35
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS35
+    relation: prerequisite
+    label: ''
+  - from: WS34
+    to: WS36
+    relation: prerequisite
+    label: ''
+  - from: WS35
+    to: WS36
+    relation: prerequisite
+    label: ''
+  - from: G_EXEC
+    to: WS36
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS36
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS36
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS36
+    relation: prerequisite
+    label: ''
+  - from: WS36
+    to: WS37
+    relation: prerequisite
+    label: ''
+  - from: WS30
+    to: WS37
+    relation: prerequisite
+    label: ''
+  - from: G_EXEC
+    to: WS37
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS37
+    relation: prerequisite
+    label: ''
+  - from: WS37
+    to: WS38
+    relation: prerequisite
+    label: ''
+  - from: WS31
+    to: WS38
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_DELEGATE
+    to: WS38
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS39
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS39
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS39
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS39
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS39
+    relation: prerequisite
+    label: ''
+  - from: WS11
+    to: WS40
+    relation: prerequisite
+    label: ''
+  - from: WS08
+    to: WS40
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS40
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS41
+    relation: prerequisite
+    label: ''
+  - from: WS11
+    to: WS41
+    relation: prerequisite
+    label: ''
+  - from: WS40
+    to: WS41
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS41
+    relation: prerequisite
+    label: ''
+  - from: WS19
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: WS24
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: WS17
+    to: WS43
+    relation: prerequisite
+    label: ''
+  - from: WS30
+    to: WS43
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_MANUAL
+    to: WS43
+    relation: prerequisite
+    label: ''
+  - from: G_PRODUCT
+    to: WS43
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS43
+    relation: prerequisite
+    label: ''
+  - from: WS05
+    to: WS44
+    relation: prerequisite
+    label: ''
+  - from: WS07
+    to: WS44
+    relation: prerequisite
+    label: ''
+  - from: G_PRODUCT
+    to: WS44
+    relation: prerequisite
+    label: ''
+  - from: WS07
+    to: G_PRODUCT
+    relation: evidence
+    label: evidencia
+  - from: WS20
+    to: G_SOURCE
+    relation: evidence
+    label: evidencia
+  - from: WS44
+    to: G_SCION
+    relation: evidence
+    label: evidencia
+  - from: WS16
+    to: G_HUMAN_READ
+    relation: evidence
+    label: evidencia
+  - from: WS30
+    to: G_HUMAN_MANUAL
+    relation: evidence
+    label: evidencia
+  - from: WS37
+    to: G_HUMAN_DELEGATE
+    relation: evidence
+    label: evidencia
+  - from: WS07
+    to: G_WRITE_POLICY
+    relation: evidence
+    label: evidencia
+  - from: WS12
+    to: G_WRITE_CONTRACT
+    relation: evidence
+    label: evidencia
+  - from: WS11
+    to: G_UI_READ
+    relation: evidence
+    label: evidencia
+  - from: WS12
+    to: G_UI_WRITE
+    relation: evidence
+    label: evidencia
+  - from: WS12
+    to: G_SLDB_WRITE
+    relation: evidence
+    label: evidencia
+  - from: WS11
+    to: G_SPEC_VIEW
+    relation: evidence
+    label: evidencia
+  - from: WS39
+    to: G_HUMAN_MODEL
+    relation: evidence
+    label: evidencia
+  - from: WS20
+    to: WS21
+    relation: conditional
+    label: source_mode=editable
+  - from: G_SOURCE
+    to: WS21
+    relation: conditional
+    label: source_mode=editable

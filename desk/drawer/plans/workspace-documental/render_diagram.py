@@ -1,11 +1,9 @@
-"""Generate a diagram projection; dag.yaml remains the authored task graph."""
+"""Generate diagram projections through spec2viz; never author Mermaid by hand."""
 from pathlib import Path
-import yaml
-
-base = Path(__file__).resolve().parent
-data = yaml.safe_load((base / 'dag.yaml').read_text())
-tasks = data['tasks']
-spec = {'id': 'workspace-documental-dag', 'title': 'Workspace documental: DAG de entregables', 'type': 'component', 'version': '0.1', 'data': {
-    'nodes': {t['id']: {'label': t['id'] + ': ' + t['title'], 'kind': 'core'} for t in tasks},
-    'edges': [{'from': dep, 'to': t['id'], 'relation': 'prerequisite', 'label': ''} for t in tasks for dep in t['depends_on']]}}
-(base / 'dag.diagram.yaml').write_text(yaml.safe_dump(spec, allow_unicode=True, sort_keys=False))
+import subprocess
+import sys
+B = Path(__file__).resolve().parent
+subprocess.run([sys.executable, str(B/'build_plan.py'), '--check'], check=True)
+subprocess.run(['spec2viz','diagram','validate',str(B/'dag.diagram.yaml')],check=True)
+for renderer in ['mermaid','graph']:
+    subprocess.run(['spec2viz','diagram','render',str(B/'dag.diagram.yaml'),'--renderer',renderer,'--out',str(B)],check=True)

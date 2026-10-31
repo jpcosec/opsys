@@ -1,6 +1,6 @@
 # Catálogo inicial de vistas y renderizaciones
 
-Estado: borrador. No es una lista de páginas a implementar ni una taxonomía de modelos aprobada. A4/B2 deben contrastar cada caso con documentos, consultas y renderizadores existentes.
+Estado: borrador. No es una lista de páginas a implementar ni una taxonomía de modelos aprobada. WS09/WS11 deben contrastar cada caso con documentos, consultas y renderizadores existentes.
 
 | Fuente / selección | Representaciones candidatas | Operaciones / navegación |
 |---|---|---|
@@ -9,7 +9,7 @@ Estado: borrador. No es una lista de páginas a implementar ni una taxonomía de
 | Board y sus referencias | Lista, tablero, dependencias | Abrir tareas/contexto/rituales; operaciones de enrutamiento |
 | Task y documentos vinculados | Encargo, procedimiento aplicable, evidencia/cambios | Preparar, ejecutar, validar, revisar; acciones de workflow |
 | Ritual, pasos y lifecycle | Procedimiento, relaciones/transiciones | Consultar obligaciones y condiciones; edición del contrato soportado |
-| Átomos/protoátomos y fuentes | Documento, agrupación/consulta, relaciones | Capturar, clasificar, vincular, dividir/reunir, materializar |
+| Átomos/protoátomos y fuentes | Documento, agrupación/consulta, relaciones | Capturar, clasificar, vincular, dividir/reunir, consultar procedencia/materializaciones y validación soportada |
 | Inbox: entradas y consulta | Lista y mensaje/documento | Leer, responder, ack y triage según contrato |
 | Drawer: candidatos y mapas | Documentos, lista/consulta, relaciones | Aclarar/organizar; autoría de trabajo explícita |
 | MaterializationContractDoc y soportes | Contrato, origen/destino, impacto | Navegar procedencia, verificar vigencia y validación |
@@ -29,3 +29,18 @@ Estado: borrador. No es una lista de páginas a implementar ni una taxonomía de
 ## Ficha de cada vista (pendiente de completar)
 
 Propósito humano; documento/consulta origen; identidad; contrato/modelo; campos y relaciones usados; renderer existente o requerido; navegación; acciones y dueño; destino de escritura; conflictos/errores; disponibilidad actual; aceptación mediante user-flow.
+
+## Filas que faltaban
+
+| Soporte | Representación | Acciones/dueño |
+|---|---|---|
+| CrossroadDoc y namespace | Documento/árbol de dominio y relaciones | Abrir padres/hijos reales, no jerarquía por carpeta arbitraria |
+| Issue Markdown sin modelo | Markdown fuente/render y lista por operaciones existentes | issue list/close por autoridad, no validarlo como TaskDoc |
+| DeskFAQDoc | Documento y navegación de preguntas | Orientación, buscar y abrir; edición bajo contrato |
+| StepDoc y pills | Documento/procedimiento/contexto vinculado | Consultar referencia y aplicar operación soportada |
+| Código local referenciado | Code read-only y soporte del nodo | Leer archivo/rango seguro según infraestructura real; sin CST supuesto |
+| SpecDoc/NotationDoc/ViewDoc | Documento y notación/gráfico soportado | Reutilizar Specs; ViewDoc solo grafo portable |
+| Modelos y templates | Schema/edición de clase existente | Draft/validate/promote público, WS39 |
+| Historial/diff Git | Revisión read-only junto al documento/tarea | Abrir evidencia; distinto de Changes/integridad; sin revert destructivo |
+
+El registro estático de renderizadores/capacidades del shell puede existir en código; lo que no se hardcodea como verdad separada es el inventario y la organización de documentos/proyectos. Vocabulario de brief.md separa ViewDoc, representación, foco y consulta. La edición fuente espera WS20; una preferencia local no se convierte por defecto en documento compartido.

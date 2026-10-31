@@ -1,0 +1,39 @@
+---
+id: WS41
+status: candidate
+owner_repo: graph_ui
+depends_on:
+- WS13
+- WS11
+- WS40
+requires:
+- G_UI_READ
+---
+
+# Implementar lectura segura entre desks
+
+Candidata de planificación; no TaskDoc activa ni autorización de ejecución. Fuente: [dag.yaml](../../plans/workspace-documental/dag.yaml).
+
+## Entregable y archivos previstos
+
+Repo único: `graph_ui`. Tamaño relativo: M.
+
+frontends/mindmap/source/; endpoints de lectura por store; views/workspace/; tests/
+
+Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
+
+## Alcance
+
+Resolver aliases/roots explícitamente autorizados en contrato WS11, usando APIs públicas de stores; cada request conserva proyecto/store sin cambiar global SLDB_STORE. Leer segundo desk y volver, sin mutaciones cruzadas.
+
+## Aceptación
+
+UF08 lectura sobre dos stores de WS40: identidad/origen visibles, links ida/vuelta y errores de acceso; rechazar roots arbitrarios o paths escapados. No afirmar federación por copiar contenido.
+
+## Dependencias
+
+Tareas: WS13, WS11, WS40. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+
+## Gate de promoción
+
+Authorar TaskDoc completa en repo dueño, fijar archivos, operaciones, pills/átomos y evidencia; confirmar no solapamiento y dependencias/gates; ejecutar revisión de comprensión con contexto limpio. Para código: pruebas reales específicas y suite requerida del repo (pytest/Node/Playwright según superficie). Para UX: gate humano correspondiente; para docs: links y hechos comprobados. Ritual/commit de task y fase obligatorios. Esta candidata no está lista para un ejecutor de código por sí sola.

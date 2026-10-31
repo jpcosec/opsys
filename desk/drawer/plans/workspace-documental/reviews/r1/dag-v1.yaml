@@ -1,0 +1,306 @@
+id: workspace-documental
+status: proposed
+as_of: '2026-10-31'
+edge_meaning: prerequisite -> dependent
+existing_work:
+  workspace: ../UIs/graph_ui/desk/drawer/tasks/task-workspace-multiproyeccion-documento-grafo-codigo-y-contexto.md
+  editing: ../UIs/graph_ui/desk/drawer/tasks/task-adaptador-kimun-serve-y-edicion-contextual-bidireccional.md
+  changes: ../UIs/graph_ui/desk/drawer/tasks/task-vista-changes-merkle-staleness-e-impacto-en-conocimiento.md
+  scion: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
+  kimun: desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-desk.md
+  closeout: desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md
+tasks:
+- id: A1
+  title: Auditar documentos, relaciones y capacidades existentes
+  depends_on: []
+  owner: deskops + repos dueños
+  deliverable: inventario.md
+  acceptance: 'Inventario por superficie: documentos reales, modelo, enlaces, operaciones
+    públicas, renderizadores, huecos y estado comprobado. Revisar sldb, kimun, spec2viz
+    y UIs activos; distinguir migración propuesta de capacidad actual.'
+  path: desk/drawer/tasks/workspace-documental/task-a1.md
+  status: deferred
+- id: A2
+  title: Escribir visión y modelo de interacción del workspace
+  depends_on: []
+  owner: deskops
+  deliverable: borradores/vision.md
+  acceptance: Visión documental, límites, vocabulario y casos humanos contrastados
+    con esta conversación. Revisar borrador incluido; no convertir preferencias provisionales
+    en contratos aprobados.
+  path: desk/drawer/tasks/workspace-documental/task-a2.md
+  status: deferred
+- id: A3
+  title: Escribir user-flows y escenarios de aceptación
+  depends_on: []
+  owner: deskops
+  deliverable: borradores/user-flows.md
+  acceptance: Recorridos de explorar, capturar, conocer, organizar, ejecutar, revisar
+    y mantener, incluyendo trabajo sin agentes. Cada flujo nombra documentos, operaciones,
+    errores y criterio observable.
+  path: desk/drawer/tasks/workspace-documental/task-a3.md
+  status: deferred
+- id: A4
+  title: Escribir catálogo de vistas y renderizaciones
+  depends_on: []
+  owner: deskops + graph_ui
+  deliverable: borradores/vistas.md
+  acceptance: Matriz documento/selección -> representación -> navegación -> edición
+    -> acción -> dueño. Diferenciar documentos, consultas, vistas y preferencias locales;
+    partir del borrador y ViewDoc existente.
+  path: desk/drawer/tasks/workspace-documental/task-a4.md
+  status: deferred
+- id: A5
+  title: Escribir índice y convención del manual de usuario
+  depends_on: []
+  owner: deskops
+  deliverable: borradores/manual.md
+  acceptance: Índice orientado a actividades, un proyecto de ejemplo y etiquetas disponible/propuesto/bloqueado.
+    Reutilizar docs/operator-manual.md para CLI sin presentarlo como manual de UI.
+  path: desk/drawer/tasks/workspace-documental/task-a5.md
+  status: deferred
+- id: B1
+  title: Reconciliar visión, recorridos y código
+  depends_on:
+  - A1
+  - A2
+  - A3
+  - A4
+  - A5
+  owner: deskops
+  deliverable: contrato-producto.md
+  acceptance: Matriz de cobertura de cada recorrido, decisiones abiertas y capacidades.
+    Capturar acuerdos durables en átomos antes de materializarlos en docs. No aprobar
+    el producto solo por tests técnicos.
+  path: desk/drawer/tasks/workspace-documental/task-b1.md
+  status: deferred
+- id: B2
+  title: Definir contratos de navegación y autoría
+  depends_on:
+  - B1
+  owner: deskops + infraestructura
+  deliverable: contrato-navegacion.md
+  acceptance: 'Identidad y resolución local/federada, documentos entrada/índice, enlaces
+    y backlinks derivados, consultas guardadas, composiciones y contextos. Clasificar
+    cada hueco: falta instancia, vínculo, modelo o renderer. No crear modelos de forma
+    anticipada.'
+  path: desk/drawer/tasks/workspace-documental/task-b2.md
+  status: deferred
+- id: B3
+  title: Definir contrato de interacción y operaciones
+  depends_on:
+  - B1
+  owner: deskops + graph_ui
+  deliverable: contrato-interaccion.md
+  acceptance: Abrir/volver/dividir/buscar/seguir relación/editar; selección compartida;
+    fuente y renderizado sobre mismo origen. Acciones públicas, autoridad de workflow,
+    revisión optimista, errores, pérdida de soporte y límites de escritura; nada de
+    editar status para evadir rituales.
+  path: desk/drawer/tasks/workspace-documental/task-b3.md
+  status: deferred
+- id: C1
+  title: Resolver contrato y clasificación de huecos documentales
+  depends_on:
+  - B2
+  owner: repos dueños
+  deliverable: 'matriz resuelta: instancia, vínculo, consulta, contrato o renderer'
+  acceptance: Decidir por caso si bastan Markdown, referencias, consultas y modelos
+    existentes. Puede cerrar sin modelos nuevos. Si se demuestra un hueco de infraestructura,
+    registrarlo en el repo dueño y crear dependencias solo para los nodos afectados;
+    no bloquear entradas Markdown por una migración hipotética. Antes de promover,
+    descomponer cualquier implementación de modelo en tareas atómicas propias con
+    roundtrip y resolución verificables.
+  path: desk/drawer/tasks/workspace-documental/task-c1.md
+  status: deferred
+- id: C2
+  title: Escribir entradas e índices navegables del ecosistema
+  depends_on:
+  - C1
+  owner: deskops + proyectos
+  deliverable: entradas Markdown del ecosistema y desk ejemplo
+  acceptance: Crear instancias de entrada ecosistema/proyecto y mapas necesarios,
+    con enlaces reales, explicaciones y alcance. Poder recorrerlas en Markdown sin
+    UI. No replicar inventarios derivables ni imponer Board como índice universal.
+  path: desk/drawer/tasks/workspace-documental/task-c2.md
+  status: deferred
+- id: C3
+  title: Escribir definiciones de vistas reutilizables
+  depends_on:
+  - C1
+  - A4
+  owner: spec2viz + graph_ui
+  deliverable: ViewDoc/NotationDoc o contratos existentes aplicables
+  acceptance: Declarar selecciones, relaciones y notación sobre fuentes reales. Diferenciar
+    un tablero documental de una consulta sobre varios documentos; no forzar todos
+    los renderizadores dentro del ViewDoc de grafos.
+  path: desk/drawer/tasks/workspace-documental/task-c3.md
+  status: deferred
+- id: D1
+  title: Implementar workspace y navegación documental
+  depends_on:
+  - C2
+  - B3
+  owner: graph_ui
+  deliverable: workspace funcional
+  acceptance: Reutilizar y precisar tarea existente de workspace multiproyección.
+    Explorador, abrir documentos, pestañas/división, volver, enlaces resolubles, selección
+    común y rutas profundas; sin inventario de páginas hardcodeado.
+  path: desk/drawer/tasks/workspace-documental/task-d1.md
+  status: deferred
+  refines_existing: ../UIs/graph_ui/desk/drawer/tasks/task-workspace-multiproyeccion-documento-grafo-codigo-y-contexto.md
+  execution_readiness: work_package_requires_atomization
+  reuse_status: unresolved_reference_not_an_existing_executable_ticket
+- id: D2
+  title: Integrar fuente Markdown y edición estructurada
+  depends_on:
+  - D1
+  owner: graph_ui + infraestructura
+  deliverable: edición de documentos reales
+  acceptance: Reutilizar tarea de adaptador/edición existente. Fuente/render comparten
+    identidad; escrituras por APIs del dueño con conflictos explícitos y composición
+    con origen. Si la ruta kimun exige dependencias externas, registrarlas; no bloquear
+    lectura ni borradores por migración.
+  path: desk/drawer/tasks/workspace-documental/task-d2.md
+  status: deferred
+  refines_existing: ../UIs/graph_ui/desk/drawer/tasks/task-adaptador-kimun-serve-y-edicion-contextual-bidireccional.md
+  conditional_prerequisites:
+  - desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-desk.md
+    (solo si se adopta backend Kimun; verificar M1/M2/C2 en repo dueño)
+  reuse_status: unresolved_reference_not_an_existing_executable_ticket
+- id: D3
+  title: Implementar renderizaciones sobre documentos
+  depends_on:
+  - D1
+  - C3
+  owner: graph_ui
+  deliverable: renderizadores y vistas componibles
+  acceptance: Board como tablero/lista/dependencias; ritual como procedimiento; documento
+    y relaciones como texto/grafo; átomos y conocimiento como documentos enlazados.
+    Edición conserva origen; nunca otra base de verdad por vista.
+  path: desk/drawer/tasks/workspace-documental/task-d3.md
+  status: deferred
+- id: D4
+  title: Habilitar operaciones del desk desde el contexto
+  depends_on:
+  - D2
+  - D3
+  owner: deskops + graph_ui
+  deliverable: acciones operables sobre selección
+  acceptance: Intake/ack y paso al drawer, autoría explícita de tareas, vinculación
+    de contexto, lifecycle y revisión/cierre por operaciones existentes. Separar condición
+    sintáctica de evidencia probada; explicar permisos/precondiciones y efectos antes
+    de mutar.
+  path: desk/drawer/tasks/workspace-documental/task-d4.md
+  status: deferred
+  execution_readiness: work_package_requires_atomization
+- id: E1
+  title: Unificar identidad y registro por intento Scion
+  depends_on:
+  - B3
+  owner: deskops + Scion
+  deliverable: RunDoc/manifiesto coherentes
+  acceptance: 'Refinar tarea existente de correlación, sin duplicarla: distinguir
+    intención y dispatch confirmado, agente e intento; finalización idempotente y
+    evidencia/commit. Depende además de estabilizar tarea activa de closeout antes
+    de editar servicio compartido.'
+  path: desk/drawer/tasks/workspace-documental/task-e1.md
+  status: deferred
+  refines_existing: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
+  external_prerequisites:
+  - desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md
+- id: E2
+  title: Vincular conversaciones, resultados y decisiones
+  depends_on:
+  - E1
+  - B3
+  owner: Scion + deskops
+  deliverable: trazabilidad consultable
+  acceptance: 'Descomponer tramo posterior de tarea existente: referencias Hub/proyecto/conversación/mensaje/intento,
+    deduplicación, procedencia y decisión humana explícita. Scion conserva transporte;
+    no copiar todo chat indiscriminadamente ni confundir completed con aprobado.'
+  path: desk/drawer/tasks/workspace-documental/task-e2.md
+  status: deferred
+  refines_existing: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
+- id: E3
+  title: Proyectar ejecución y revisión en el workspace
+  depends_on:
+  - E2
+  - D4
+  owner: graph_ui
+  deliverable: lectura tarea-intento-mensaje-evidencia-decisión
+  acceptance: Navegar desde documentos del desk a ejecución y soporte de revisión.
+    Agentes son una superficie del workspace; el flujo manual sigue completo sin Scion.
+  path: desk/drawer/tasks/workspace-documental/task-e3.md
+  status: deferred
+- id: F1
+  title: Integrar salud, cambios e impacto
+  depends_on:
+  - D2
+  - D3
+  owner: graph_ui + infraestructura
+  deliverable: diagnósticos navegables
+  acceptance: Reutilizar tarea Changes existente. Mostrar conflictos, referencias
+    rotas, staleness e impacto con origen, sin inventar hashes ni capacidad de anclas.
+    Ruta kimun depende de API disponible y autoridad acordada.
+  path: desk/drawer/tasks/workspace-documental/task-f1.md
+  status: deferred
+  refines_existing: ../UIs/graph_ui/desk/drawer/tasks/task-vista-changes-merkle-staleness-e-impacto-en-conocimiento.md
+  conditional_prerequisites:
+  - desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-desk.md
+    (solo si se adopta backend Kimun; verificar M1/M2/C2 en repo dueño)
+  reuse_status: unresolved_reference_not_an_existing_executable_ticket
+- id: G1
+  title: Validar recorridos humanos básicos
+  depends_on:
+  - D4
+  - F1
+  owner: deskops + graph_ui
+  deliverable: evidencia de uso sin Scion
+  acceptance: Persona entra a desk desconocido, entiende, encuentra, edita, organiza
+    y revisa trabajo sin rutas memorizadas. Casos con referencias rotas, conflictos
+    y vacíos; teclado, latencia y continuidad de navegación. Validar utilidad además
+    de corrección técnica.
+  path: desk/drawer/tasks/workspace-documental/task-g1.md
+  status: deferred
+- id: G2
+  title: Validar delegación y revisión trazable
+  depends_on:
+  - G1
+  - E3
+  owner: deskops + graph_ui + Scion
+  deliverable: recorrido real delegado
+  acceptance: 'Agente real y desk temporal: pregunta, intervención, evidencia, corrección
+    y decisión vinculadas al intento. No mocks como prueba de integración. Este ramal
+    no bloquea entrega documental/manual básica.'
+  path: desk/drawer/tasks/workspace-documental/task-g2.md
+  status: deferred
+- id: H1
+  title: Publicar manual del workspace documental
+  depends_on:
+  - G1
+  - A5
+  owner: deskops
+  deliverable: manual de usuario básico verificado
+  acceptance: Completar capítulos disponibles sobre sistema real y materializar conocimiento
+    en docs desde átomos. Recorridos reproducibles y links navegables; conservar explícita
+    la distinción actual/propuesto.
+  path: desk/drawer/tasks/workspace-documental/task-h1.md
+  status: deferred
+- id: H2
+  title: Completar manual de ejecución y revisión
+  depends_on:
+  - H1
+  - G2
+  owner: deskops
+  deliverable: capítulos de delegación comprobados
+  acceptance: Añadir trazabilidad, decisiones humanas y operación Scion demostradas;
+    no convertir previsiones arquitectónicas en instrucciones ejecutables.
+  path: desk/drawer/tasks/workspace-documental/task-h2.md
+  status: deferred
+reference_status:
+  workspace: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
+  editing: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
+  changes: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
+  scion: verified_path_exists
+  kimun: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
+  closeout: verified_path_exists

@@ -1,306 +1,1287 @@
-id: workspace-documental
-status: proposed
+id: deskops-workspace-documental
+revision: 5
+status: reviewed_plan_pending_decisions
 as_of: '2026-10-31'
-edge_meaning: prerequisite -> dependent
-existing_work:
-  workspace: ../UIs/graph_ui/desk/drawer/tasks/task-workspace-multiproyeccion-documento-grafo-codigo-y-contexto.md
-  editing: ../UIs/graph_ui/desk/drawer/tasks/task-adaptador-kimun-serve-y-edicion-contextual-bidireccional.md
-  changes: ../UIs/graph_ui/desk/drawer/tasks/task-vista-changes-merkle-staleness-e-impacto-en-conocimiento.md
-  scion: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
-  kimun: desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-desk.md
-  closeout: desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md
+source: dag.yaml is canonical; generated README/table/task files/diagram must agree
+baseline_proposal: Current sldb/pron + graph_ui/Mindmap. Kimun is reference only;
+  no migration in this DAG. WS07 must record human product decisions before gated
+  code.
+execution_authorized: false
+estimate_legend:
+  S: one bounded deliverable, relative size small; not elapsed-time promise
+  M: bounded feature/contract; split at promotion if more than one deliverable; no
+    estimate is implementation evidence
+gates:
+  G_PRODUCT:
+    title: Decisiones de producto registradas por humano
+    state: pending
+    resolver: WS07
+    evidence: decisiones.md; cada decision requiere actor/fecha/resultado; no se satisface
+      por archivo presente; P01 debe incluir responsables de cada repo receptor y
+      operador Scion identificados por el solicitante, con actor/fecha; no se satisface
+      por nota de intención.
+    produced_by: WS07
+  G_CLOSEOUT:
+    title: Contrato de evidencia de closeout estabilizado
+    state: blocked
+    resolver: external
+    path: desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md
+    evidence: commit de cierre + prueba contrato evidencia/autoría; desaparición del
+      task no basta
+  G_SOURCE:
+    title: Fuente reversible y guardas de campos probadas
+    state: pending
+    resolver: WS20
+    evidence: API pública y tests roundtrip/conflicto/campos protegidos, con revisión
+      de contrato
+    produced_by: WS20
+  G_SCION:
+    title: Scion accesible y contrato público comprobado
+    state: unverified
+    resolver: WS44 por operador Scion designado en WS07
+    evidence: auditoria/scion-probe.md bajo paquete del plan; actor de WS44, fecha/Hub/endpoint/identidad/capabilities
+      de API pública, sin secretos. WS05 solo inventaría; WS44 permanece bloqueada
+      hasta probe real y puede revalidarse.
+    produced_by: WS44
+  G_EXEC:
+    title: Humano autoriza ejecución y comunicaciones del escenario
+    state: pending
+    resolver: external
+    evidence: 'deskops:desk/drawer/plans/workspace-documental/autorizaciones/scion.md:
+      permiso explícito del solicitante/designee para agente/proyecto/acciones/alcance/sesión.
+      Plan/review no autoriza ejecución.'
+  G_HUMAN_READ:
+    title: Persona aprueba recorrido de lectura
+    state: pending
+    resolver: WS16
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/lectura/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    produced_by: WS16
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/lectura/acta.md
+  G_HUMAN_MANUAL:
+    title: Persona aprueba autoría/revisión
+    state: pending
+    resolver: WS30
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/manual/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    produced_by: WS30
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/manual/acta.md
+  G_HUMAN_DELEGATE:
+    title: Persona aprueba delegación
+    state: pending
+    resolver: WS37
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/delegacion/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    produced_by: WS37
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/delegacion/acta.md
+  G_WRITE_POLICY:
+    title: Política de escritura aprobada por humano
+    state: pending
+    resolver: WS07
+    evidence: P03–P06 resueltos por humano; principios y límites, no whitelist final
+      producida por WS12
+    produced_by: WS07
+  G_WRITE_CONTRACT:
+    title: Contrato técnico de operaciones verificado
+    state: pending
+    resolver: WS12
+    produced_by: WS12
+    evidence: whitelist por campo/operación, canal/actor, API/revisión/Git y efectos
+      comprobados; revisión por responsable identificado
+  G_UI_READ:
+    title: Deltas de lectura aceptados en graph_ui
+    state: pending
+    resolver: WS11
+    produced_by: WS11
+    evidence: Acta de aceptación del delta definido por contrato, con identidad/fecha
+      del responsable graph_ui designado explícitamente por el solicitante; task receptora
+      y no solapamiento confirmados. No basta una propuesta.
+    scope_nodes:
+    - WS13
+    - WS14
+    - WS15
+    - WS22
+    - WS23
+    - WS24
+    - WS27
+    - WS29
+    - WS35
+    - WS40
+    - WS41
+  G_UI_WRITE:
+    title: Deltas de mutación aceptados en graph_ui
+    state: pending
+    resolver: WS12
+    produced_by: WS12
+    evidence: Acta de aceptación del delta definido por contrato, con identidad/fecha
+      del responsable graph_ui designado explícitamente por el solicitante; task receptora
+      y no solapamiento confirmados. No basta una propuesta.
+    scope_nodes:
+    - WS19
+    - WS21
+    - WS25
+    - WS26
+    - WS28
+    - WS36
+    - WS39
+    - WS42
+  G_SLDB_WRITE:
+    title: Alcance fuente aceptado en sldb
+    state: pending
+    resolver: WS12
+    produced_by: WS12
+    evidence: Acta de aceptación del delta definido por contrato, con identidad/fecha
+      del responsable sldb designado explícitamente por el solicitante; task receptora
+      y no solapamiento confirmados. No basta una propuesta.
+    scope_nodes:
+    - WS20
+  G_SPEC_VIEW:
+    title: Alcance de proyecciones aceptado en spec2viz
+    state: pending
+    resolver: WS11
+    produced_by: WS11
+    evidence: Acta de aceptación del delta definido por contrato, con identidad/fecha
+      del responsable spec2viz designado explícitamente por el solicitante; task receptora
+      y no solapamiento confirmados. No basta una propuesta.
+    scope_nodes:
+    - WS18
+  G_HUMAN_MODEL:
+    title: Persona valida inspección/edición de modelos
+    state: pending
+    resolver: WS39
+    produced_by: WS39
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/modelos/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/modelos/acta.md
+external_references:
+  workspace:
+    path: ../UIs/graph_ui/desk/tasks/task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto.md
+    exists: true
+    sha256: e5e083d36052046b6f3a887e361370aa075f82915e0491fc5e54503be4b9572b
+    interpretation: reference_only_not_satisfied_gate
+  editing:
+    path: ../UIs/graph_ui/desk/tasks/task-edicion-contextual-de-relaciones-y-campos-con-control-de-concurrencia.md
+    exists: true
+    sha256: 4129610ab9838a73b458d6a85138a2563ab87a0d6f97113e34f2373743650f67
+    interpretation: reference_only_not_satisfied_gate
+  changes:
+    path: ../UIs/graph_ui/desk/tasks/task-vista-changes-arbol-de-hashes-staleness-e-impacto-en-conocimiento.md
+    exists: true
+    sha256: 26582f9e3552abbe74db43271ab916a358df113bd7fb37cdfe17e6e6881d80cc
+    interpretation: reference_only_not_satisfied_gate
+  scion:
+    path: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
+    exists: true
+    sha256: 125b862b88883028060365d2ff8584fc5dcd313140623a71b858fae6d9b17ba9
+    interpretation: reference_only_not_satisfied_gate
+  kimun_reference_only:
+    path: desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+    exists: true
+    sha256: 848f8ceba82b6f3c793ee277b932a8ef3337a059e4aebe3712cd989f8360717b
+    interpretation: reference_only_not_satisfied_gate
+  closeout:
+    path: desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md
+    exists: true
+    sha256: cb4f7d019cf53c1a153f57dff1da661c78ada4ed3c8256fc4db2f8577dbdedf2
+    interpretation: reference_only_not_satisfied_gate
 tasks:
-- id: A1
-  title: Auditar documentos, relaciones y capacidades existentes
+- id: WS01
+  title: Fijar brief y glosario autosuficientes
+  status: candidate
+  kind: planning
   depends_on: []
-  owner: deskops + repos dueños
-  deliverable: inventario.md
-  acceptance: 'Inventario por superficie: documentos reales, modelo, enlaces, operaciones
-    públicas, renderizadores, huecos y estado comprobado. Revisar sldb, kimun, spec2viz
-    y UIs activos; distinguir migración propuesta de capacidad actual.'
-  path: desk/drawer/tasks/workspace-documental/task-a1.md
-  status: deferred
-- id: A2
-  title: Escribir visión y modelo de interacción del workspace
-  depends_on: []
-  owner: deskops
-  deliverable: borradores/vision.md
-  acceptance: Visión documental, límites, vocabulario y casos humanos contrastados
-    con esta conversación. Revisar borrador incluido; no convertir preferencias provisionales
-    en contratos aprobados.
-  path: desk/drawer/tasks/workspace-documental/task-a2.md
-  status: deferred
-- id: A3
-  title: Escribir user-flows y escenarios de aceptación
-  depends_on: []
-  owner: deskops
-  deliverable: borradores/user-flows.md
-  acceptance: Recorridos de explorar, capturar, conocer, organizar, ejecutar, revisar
-    y mantener, incluyendo trabajo sin agentes. Cada flujo nombra documentos, operaciones,
-    errores y criterio observable.
-  path: desk/drawer/tasks/workspace-documental/task-a3.md
-  status: deferred
-- id: A4
-  title: Escribir catálogo de vistas y renderizaciones
-  depends_on: []
-  owner: deskops + graph_ui
-  deliverable: borradores/vistas.md
-  acceptance: Matriz documento/selección -> representación -> navegación -> edición
-    -> acción -> dueño. Diferenciar documentos, consultas, vistas y preferencias locales;
-    partir del borrador y ViewDoc existente.
-  path: desk/drawer/tasks/workspace-documental/task-a4.md
-  status: deferred
-- id: A5
-  title: Escribir índice y convención del manual de usuario
-  depends_on: []
-  owner: deskops
-  deliverable: borradores/manual.md
-  acceptance: Índice orientado a actividades, un proyecto de ejemplo y etiquetas disponible/propuesto/bloqueado.
-    Reutilizar docs/operator-manual.md para CLI sin presentarlo como manual de UI.
-  path: desk/drawer/tasks/workspace-documental/task-a5.md
-  status: deferred
-- id: B1
-  title: Reconciliar visión, recorridos y código
+  requires: []
+  owner_repo: deskops
+  output_scope: brief.md
+  scope: Capturar acuerdos textuales y distinciones documento/nodo/vista/renderer/consulta/foco;
+    ningún requisito remite a un chat invisible.
+  acceptance: Leer brief y reformular producto sin historial; acuerdos separados de
+    propuestas.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws01.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS02
+  title: Inventariar superficies y operaciones Deskops
+  status: candidate
+  kind: planning
   depends_on:
-  - A1
-  - A2
-  - A3
-  - A4
-  - A5
-  owner: deskops
-  deliverable: contrato-producto.md
-  acceptance: Matriz de cobertura de cada recorrido, decisiones abiertas y capacidades.
-    Capturar acuerdos durables en átomos antes de materializarlos en docs. No aprobar
-    el producto solo por tests técnicos.
-  path: desk/drawer/tasks/workspace-documental/task-b1.md
-  status: deferred
-- id: B2
-  title: Definir contratos de navegación y autoría
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/deskops.md
+  scope: Modelos y Markdown no modelado; inbox/drawer/issues/FAQ/crossroads/pills/fases/rituales/registry/roles/runs;
+    firmas públicas, efectos Git y cierre.
+  acceptance: Cada fila incluye archivo/código/operación y estado comprobado; no inferir
+    modelo por carpeta.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws02.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS03
+  title: Inventariar persistencia, consultas y notaciones
+  status: candidate
+  kind: planning
   depends_on:
-  - B1
-  owner: deskops + infraestructura
-  deliverable: contrato-navegacion.md
-  acceptance: 'Identidad y resolución local/federada, documentos entrada/índice, enlaces
-    y backlinks derivados, consultas guardadas, composiciones y contextos. Clasificar
-    cada hueco: falta instancia, vínculo, modelo o renderer. No crear modelos de forma
-    anticipada.'
-  path: desk/drawer/tasks/workspace-documental/task-b2.md
-  status: deferred
-- id: B3
-  title: Definir contrato de interacción y operaciones
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/infraestructura.md
+  scope: 'Auditoría de solo lectura de sldb/pron/spec2viz: fuente/payload, conflictos
+    y límites de locks, referencias, búsquedas y alcance real ViewDoc. Kimun solo
+    referencia.'
+  acceptance: Una salida documental, sin cambios interrepo; distinguir API comprobada,
+    ausencia y hueco.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws03.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS04
+  title: Inventariar UI y reconciliar trabajo en curso
+  status: candidate
+  kind: planning
   depends_on:
-  - B1
-  owner: deskops + graph_ui
-  deliverable: contrato-interaccion.md
-  acceptance: Abrir/volver/dividir/buscar/seguir relación/editar; selección compartida;
-    fuente y renderizado sobre mismo origen. Acciones públicas, autoridad de workflow,
-    revisión optimista, errores, pérdida de soporte y límites de escritura; nada de
-    editar status para evadir rituales.
-  path: desk/drawer/tasks/workspace-documental/task-b3.md
-  status: deferred
-- id: C1
-  title: Resolver contrato y clasificación de huecos documentales
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/ui.md
+  scope: Leer graph_ui Board, tareas y código actuales; mapear nodos de este plan
+    a deltas existentes; identificar sesiones y solapamientos sin cambiar sus tareas.
+  acceptance: Cada tarea externa con path, estado observado, hash y alcance; reconciliar
+    también SPEC externo y cualquier encargo aportado al ejecutar.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws04.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS05
+  title: Inventariar identidad y API Scion
+  status: candidate
+  kind: planning
   depends_on:
-  - B2
-  owner: repos dueños
-  deliverable: 'matriz resuelta: instancia, vínculo, consulta, contrato o renderer'
-  acceptance: Decidir por caso si bastan Markdown, referencias, consultas y modelos
-    existentes. Puede cerrar sin modelos nuevos. Si se demuestra un hueco de infraestructura,
-    registrarlo en el repo dueño y crear dependencias solo para los nodos afectados;
-    no bloquear entradas Markdown por una migración hipotética. Antes de promover,
-    descomponer cualquier implementación de modelo en tareas atómicas propias con
-    roundtrip y resolución verificables.
-  path: desk/drawer/tasks/workspace-documental/task-c1.md
-  status: deferred
-- id: C2
-  title: Escribir entradas e índices navegables del ecosistema
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/scion.md
+  scope: 'Leer runtime/templates/RunDoc y API pública de Scion; separar slug/agente/intento/dispatch/mensaje/conversación
+    y permisos. Puede registrar observaciones de API ya disponibles sin crear un segundo
+    recibo: solo el probe de WS44 es evidencia de G_SCION. Sin agentes/mensajes/config
+    ni mostrar tokens. WS05 no produce G_SCION; el probe y sus reintentos son responsabilidad
+    explícita de WS44, incluso si el inventario aporta observaciones.'
+  acceptance: No usar tablas internas como interfaz; señalar campos internos no expuestos
+    y capacidades que requieren API real.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws05.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS06
+  title: Registrar acuerdos de alcance con repos dueños
+  status: candidate
+  kind: planning
   depends_on:
-  - C1
-  owner: deskops + proyectos
-  deliverable: entradas Markdown del ecosistema y desk ejemplo
-  acceptance: Crear instancias de entrada ecosistema/proyecto y mapas necesarios,
-    con enlaces reales, explicaciones y alcance. Poder recorrerlas en Markdown sin
-    UI. No replicar inventarios derivables ni imponer Board como índice universal.
-  path: desk/drawer/tasks/workspace-documental/task-c2.md
-  status: deferred
-- id: C3
-  title: Escribir definiciones de vistas reutilizables
+  - WS02
+  - WS03
+  - WS04
+  requires: []
+  owner_repo: deskops
+  output_scope: reconciliacion.md
+  scope: 'Una matriz por implementación: ya cubierto, extender ticket existente o
+    nuevo delta. Proponer atomización a dueño graph_ui sin despachar ni modificar
+    su Board.'
+  acceptance: Matriz propuesta con correspondencia ticket/delta y responsable por
+    designar; no produce gates de aceptación ni aprueba deltas que aún no están definidos.
+    WS11/12 obtienen aceptación específica por repo receptor.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws06.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS07
+  title: Resolver decisiones de producto y escritura
+  status: candidate
+  kind: planning
   depends_on:
-  - C1
-  - A4
-  owner: spec2viz + graph_ui
-  deliverable: ViewDoc/NotationDoc o contratos existentes aplicables
-  acceptance: Declarar selecciones, relaciones y notación sobre fuentes reales. Diferenciar
-    un tablero documental de una consulta sobre varios documentos; no forzar todos
-    los renderizadores dentro del ViewDoc de grafos.
-  path: desk/drawer/tasks/workspace-documental/task-c3.md
-  status: deferred
-- id: D1
-  title: Implementar workspace y navegación documental
+  - WS06
+  requires: []
+  owner_repo: deskops
+  output_scope: decisiones.md
+  scope: El humano dueño del producto confirma o corrige baseline, host, fuente/edición,
+    escritura/Git/coordinador y cierre; registrar alternativas, fecha y evidencia
+    de cada decisión. Designar con identidad explícita a responsable de graph_ui,
+    sldb y spec2viz para aceptar deltas; se puede designar al solicitante, no suponerlo.
+    Registrar source_mode=editable o read_only en parámetros del DAG y reconsiderar
+    alcance según P04. Designar explícitamente también al operador responsable del
+    ramal Scion, con identidad registrada por el solicitante en P01; no requiere configurar/ejecutar
+    Scion ni concede permiso G_EXEC.
+  acceptance: No inventar aprobación. Gates G_PRODUCT y G_WRITE_POLICY solo pasan
+    por registro explícito. Redacción de alternativas puede avanzar mientras esperan.
+    No cerrar sin registro de designación de responsables graph_ui/sldb/spec2viz y
+    operador Scion en P01 (puede ser el propio solicitante si lo confirma), con actor
+    humano/fecha; P01 no equivale a autorización de ejecución.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws07.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS08
+  title: Precisar user-flows y criterios observables
+  status: candidate
+  kind: planning
   depends_on:
-  - C2
-  - B3
-  owner: graph_ui
-  deliverable: workspace funcional
-  acceptance: Reutilizar y precisar tarea existente de workspace multiproyección.
-    Explorador, abrir documentos, pestañas/división, volver, enlaces resolubles, selección
-    común y rutas profundas; sin inventario de páginas hardcodeado.
-  path: desk/drawer/tasks/workspace-documental/task-d1.md
-  status: deferred
-  refines_existing: ../UIs/graph_ui/desk/drawer/tasks/task-workspace-multiproyeccion-documento-grafo-codigo-y-contexto.md
-  execution_readiness: work_package_requires_atomization
-  reuse_status: unresolved_reference_not_an_existing_executable_ticket
-- id: D2
-  title: Integrar fuente Markdown y edición estructurada
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: borradores/user-flows.md
+  scope: Mapear UF a operaciones de WS02/03/04; cubrir manual, captura, revisión,
+    cambios, arranque, multidesk, schemas y modo degradado. UF02 responder significa
+    dentro del desk/contexto autorizado local; ack local disponible según contrato.
+    UF08 es lectura; envío interdesk fuera de baseline, sin excepción implícita a
+    P07.
+  acceptance: Cada UF tiene entrada/salida, operación, error, nodo y gate humano;
+    no prometer función fuera de alcance.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws08.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS09
+  title: Precisar catálogo de renderizaciones
+  status: candidate
+  kind: planning
   depends_on:
-  - D1
-  owner: graph_ui + infraestructura
-  deliverable: edición de documentos reales
-  acceptance: Reutilizar tarea de adaptador/edición existente. Fuente/render comparten
-    identidad; escrituras por APIs del dueño con conflictos explícitos y composición
-    con origen. Si la ruta kimun exige dependencias externas, registrarlas; no bloquear
-    lectura ni borradores por migración.
-  path: desk/drawer/tasks/workspace-documental/task-d2.md
-  status: deferred
-  refines_existing: ../UIs/graph_ui/desk/drawer/tasks/task-adaptador-kimun-serve-y-edicion-contextual-bidireccional.md
-  conditional_prerequisites:
-  - desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-desk.md
-    (solo si se adopta backend Kimun; verificar M1/M2/C2 en repo dueño)
-  reuse_status: unresolved_reference_not_an_existing_executable_ticket
-- id: D3
-  title: Implementar renderizaciones sobre documentos
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: borradores/vistas.md
+  scope: Inventariar fuente, queries, Board, ritual, conocimiento/crossroads, issues,
+    FAQ, Code y vistas existentes; ViewDoc es grafo, no contrato universal de UI.
+  acceptance: Cada fila tiene origen, contrato, renderer, acción/dueño, error y estado.
+    Distinguir authored/derivado/preferencia local.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws09.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS10
+  title: Precisar índice y convención del manual
+  status: candidate
+  kind: planning
   depends_on:
-  - D1
-  - C3
-  owner: graph_ui
-  deliverable: renderizadores y vistas componibles
-  acceptance: Board como tablero/lista/dependencias; ritual como procedimiento; documento
-    y relaciones como texto/grafo; átomos y conocimiento como documentos enlazados.
-    Edición conserva origen; nunca otra base de verdad por vista.
-  path: desk/drawer/tasks/workspace-documental/task-d3.md
-  status: deferred
-- id: D4
-  title: Habilitar operaciones del desk desde el contexto
+  - WS02
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: borradores/manual.md
+  scope: Índice y capítulos conceptuales, ejemplo fijo y etiqueta de disponibilidad;
+    reutilizar manual CLI.
+  acceptance: Definiciones verificables de disponible/propuesto/bloqueado; no escribir
+    pasos ni capturas ficticios.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws10.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS11
+  title: Cerrar contrato de navegación e identidad
+  status: candidate
+  kind: planning
   depends_on:
-  - D2
-  - D3
-  owner: deskops + graph_ui
-  deliverable: acciones operables sobre selección
-  acceptance: Intake/ack y paso al drawer, autoría explícita de tareas, vinculación
-    de contexto, lifecycle y revisión/cierre por operaciones existentes. Separar condición
-    sintáctica de evidencia probada; explicar permisos/precondiciones y efectos antes
-    de mutar.
-  path: desk/drawer/tasks/workspace-documental/task-d4.md
-  status: deferred
-  execution_readiness: work_package_requires_atomization
-- id: E1
-  title: Unificar identidad y registro por intento Scion
+  - WS09
+  - WS08
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: contratos/navegacion.md
+  scope: Un documento Markdown mantiene identidad/ruta/modelo opcional; graph/code
+    admiten otros nodos con origen. Resolución repo/store explícita, foco, enlaces/historia
+    y modo read-only multidesk. Clasificar huecos sin modelos hipotéticos.
+  acceptance: Resolver cada hueco como instancia/vínculo/consulta/API/renderer; si
+    falta API abrir dependencia acotada del repo dueño antes de code. Sin migración
+    Kimun implícita. Para cerrar, obtener aceptación del delta lector en graph_ui
+    y de ViewDoc en spec2viz por responsable designado en WS07; si no hay recepción,
+    el contrato queda pendiente, no se publica como cerrado. El acta receptora enumera
+    scope_nodes de G_UI_READ/G_SPEC_VIEW, incluidos corpus WS40 y multidesk WS41,
+    para no dejar deltas sin recepción.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws11.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS12
+  title: Cerrar contrato de operaciones y escritura
+  status: candidate
+  kind: planning
   depends_on:
-  - B3
-  owner: deskops + Scion
-  deliverable: RunDoc/manifiesto coherentes
-  acceptance: 'Refinar tarea existente de correlación, sin duplicarla: distinguir
-    intención y dispatch confirmado, agente e intento; finalización idempotente y
-    evidencia/commit. Depende además de estabilizar tarea activa de closeout antes
-    de editar servicio compartido.'
-  path: desk/drawer/tasks/workspace-documental/task-e1.md
-  status: deferred
-  refines_existing: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
-  external_prerequisites:
-  - desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md
-- id: E2
-  title: Vincular conversaciones, resultados y decisiones
+  - WS11
+  - WS08
+  requires:
+  - G_WRITE_POLICY
+  owner_repo: deskops
+  output_scope: contratos/operaciones.md
+  scope: Whitelist de lectura/mutación por campo/modelo; adapter CLI/API público;
+    policy coordinador, Git, workflow-protected fields, CAS/locks, fallos parciales,
+    permisos y closeout fuera del servidor UI.
+  acceptance: 'G_WRITE_POLICY verificado; registrar capability exacta para cada acción.
+    No asumir lock UI protege escritores CLI. Toda operación sin contrato queda no
+    disponible. WS07 ya aprobó principios, WS12 produce whitelist final. Contrato
+    para campos/knowledge/intake puede cerrar sin esperar closeout: operaciones de
+    autoría/cierre quedan bloqueadas por G_CLOSEOUT hasta evidencia; no se las etiqueta
+    disponibles. Aceptar deltas de escritura por graph_ui antes de cerrar; aceptar
+    delta en sldb solo si source_mode=editable. Con read_only, G_SLDB_WRITE no es
+    prerrequisito ni se anuncia como aprobado. La verificación del contrato clasifica
+    APIs como existentes/comprobadas o faltantes, no exige implementar WS20 para cerrar
+    WS12: la capacidad raw-source faltante se diseña y queda gated por G_SOURCE.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws12.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS13
+  title: Integrar lector workspace con historia y foco
+  status: candidate
+  kind: implementation
   depends_on:
-  - E1
-  - B3
-  owner: Scion + deskops
-  deliverable: trazabilidad consultable
-  acceptance: 'Descomponer tramo posterior de tarea existente: referencias Hub/proyecto/conversación/mensaje/intento,
-    deduplicación, procedencia y decisión humana explícita. Scion conserva transporte;
-    no copiar todo chat indiscriminadamente ni confundir completed con aprobado.'
-  path: desk/drawer/tasks/workspace-documental/task-e2.md
-  status: deferred
-  refines_existing: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
-- id: E3
-  title: Proyectar ejecución y revisión en el workspace
+  - WS11
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/; shell/router.js; rutas de lectura
+  scope: 'Implementación o delta conciliado sobre ticket workspace en draft: documento/fuente
+    solo lectura, contexto, enlaces, tabs/historia y selección por documento/nodo.
+    Mantener Code local y rutas del host; no requerir índices nuevos. Incluir explorador
+    de documentos modelados/no modelados, dos documentos lado a lado y tabs/historia.
+    Registro de renderer en código permitido; organización de contenido procede de
+    documentos/consultas.'
+  acceptance: Abrir dos documentos, cambiar texto/graph/code donde soporte existe
+    y volver preserva origen. Markdown sin modelo legible; sin crear otro workspace
+    independiente. Desde explorador abrir dos documentos en divisiones, alternar foco
+    y volver; no depender de conocer un ID ni de índices nuevos. Si el acta de WS11
+    eligió integrar ticket draft, su cierre/evidencia sustituye ese delta; no suponer
+    una base workspace ya implementada.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws13.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS14
+  title: Integrar búsqueda navegable del workspace
+  status: candidate
+  kind: implementation
   depends_on:
-  - E2
-  - D4
-  owner: graph_ui
-  deliverable: lectura tarea-intento-mensaje-evidencia-decisión
-  acceptance: Navegar desde documentos del desk a ejecución y soporte de revisión.
-    Agentes son una superficie del workspace; el flujo manual sigue completo sin Scion.
-  path: desk/drawer/tasks/workspace-documental/task-e3.md
-  status: deferred
-- id: F1
-  title: Integrar salud, cambios e impacto
+  - WS13
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/source/; views/workspace/; tests/
+  scope: Texto/campos/semántica solo según API real; resultados enlazan identidad
+    y contexto. Búsqueda vacía/error/degradación diferenciados.
+  acceptance: Usar find público, no parser propio. Teclado y abrir/volver conservan
+    consulta y foco; no cargar todo grafo en cada tecla.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws14.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS15
+  title: Mostrar errores de lectura y modo degradado
+  status: candidate
+  kind: implementation
   depends_on:
-  - D2
-  - D3
-  owner: graph_ui + infraestructura
-  deliverable: diagnósticos navegables
-  acceptance: Reutilizar tarea Changes existente. Mostrar conflictos, referencias
-    rotas, staleness e impacto con origen, sin inventar hashes ni capacidad de anclas.
-    Ruta kimun depende de API disponible y autoridad acordada.
-  path: desk/drawer/tasks/workspace-documental/task-f1.md
-  status: deferred
-  refines_existing: ../UIs/graph_ui/desk/drawer/tasks/task-vista-changes-merkle-staleness-e-impacto-en-conocimiento.md
-  conditional_prerequisites:
-  - desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-desk.md
-    (solo si se adopta backend Kimun; verificar M1/M2/C2 en repo dueño)
-  reuse_status: unresolved_reference_not_an_existing_executable_ticket
-- id: G1
-  title: Validar recorridos humanos básicos
+  - WS13
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/; tests/
+  scope: 'Referencia rota, documento ausente, modelo no importable, backend caído
+    y fuente no editable; error localizado sin borrar historial ni fingir vacío. UF10:
+    proyecto sin desk muestra orientación, destino explícito e init CLI; nunca inicializar
+    por GET. Tras init externo real, refrescar lectura. Incluye errores de instalación/CDN
+    como límites visibles.'
+  acceptance: Leer Markdown existente cuando soporte permita, informar límites reales,
+    recuperar conexión sin perder contexto. CDN actual diagnosticado; empaquetado
+    offline queda fuera.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws15.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS16
+  title: Validar con humano lectura y descubrimiento
+  status: candidate
+  kind: validation
   depends_on:
-  - D4
-  - F1
-  owner: deskops + graph_ui
-  deliverable: evidencia de uso sin Scion
-  acceptance: Persona entra a desk desconocido, entiende, encuentra, edita, organiza
-    y revisa trabajo sin rutas memorizadas. Casos con referencias rotas, conflictos
-    y vacíos; teclado, latencia y continuidad de navegación. Validar utilidad además
-    de corrección técnica.
-  path: desk/drawer/tasks/workspace-documental/task-g1.md
-  status: deferred
-- id: G2
-  title: Validar delegación y revisión trazable
+  - WS14
+  - WS15
+  - WS08
+  - WS40
+  - WS41
+  requires: []
+  owner_repo: graph_ui
+  output_scope: runs/subagents/workspace-documental-acceptance/lectura/
+  scope: Gate humano temprano para UF01/UF03 lectura/UF07 diagnóstico y UF08 lectura;
+    desk ejemplo y protocolo en validacion-humana.md. Incluye UF10 arranque/ausencia
+    de desk y UF08 lectura del segundo desk real, sin mutación interdesk.
+  acceptance: Humano real realiza recorrido; agente no sustituye aprobación. Fallos
+    abren correcciones antes de edición. Reportar tiempos y pruebas técnicas por separado.
+    Preparar corpus por WS40; G_HUMAN_READ es requisito de toda mutación del baseline.
+    Renderizaciones read-only pueden desarrollarse en paralelo sin afirmar aceptación
+    de usuario.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws16.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS17
+  title: Escribir entradas e índices del desk ejemplo
+  status: candidate
+  kind: documentation
   depends_on:
-  - G1
-  - E3
-  owner: deskops + graph_ui + Scion
-  deliverable: recorrido real delegado
-  acceptance: 'Agente real y desk temporal: pregunta, intervención, evidencia, corrección
-    y decisión vinculadas al intento. No mocks como prueba de integración. Este ramal
-    no bloquea entrega documental/manual básica.'
-  path: desk/drawer/tasks/workspace-documental/task-g2.md
-  status: deferred
-- id: H1
-  title: Publicar manual del workspace documental
+  - WS11
+  - WS40
+  requires: []
+  owner_repo: deskops
+  output_scope: ejemplo/nav/ (plantillas Markdown versionadas en el paquete del plan)
+  scope: 'Escribir solo entradas/índices authored como plantillas versionadas bajo
+    el paquete del plan; no es el productor del corpus. El generador de WS40 acepta
+    estas fuentes y las materializa bajo su root temporal, sin copiar inventarios
+    derivados ni escribir repos reales. Puede escribirse antes de WS16: el lector
+    no depende de estos índices nuevos; WS30 sí los integra.'
+  acceptance: Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown
+    sin UI; source versionado y destino temporal no son registros independientes.
+    Resolver dos desks y procedencia; no duplicar registry.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws17.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+- id: WS18
+  title: Declarar proyecciones de grafo reutilizables
+  status: candidate
+  kind: implementation
   depends_on:
-  - G1
-  - A5
-  owner: deskops
-  deliverable: manual de usuario básico verificado
-  acceptance: Completar capítulos disponibles sobre sistema real y materializar conocimiento
-    en docs desde átomos. Recorridos reproducibles y links navegables; conservar explícita
-    la distinción actual/propuesto.
-  path: desk/drawer/tasks/workspace-documental/task-h1.md
-  status: deferred
-- id: H2
-  title: Completar manual de ejecución y revisión
+  - WS09
+  - WS11
+  requires:
+  - G_SPEC_VIEW
+  owner_repo: spec2viz
+  output_scope: sldb/views/ (nombres confirmados por contrato); tests/
+  scope: ViewDoc/NotationDoc para selecciones y notación ya soportadas; no crear UI
+    pages declarativas ficticias.
+  acceptance: Vista portable evaluada sobre store real y documentación de qué selecciona;
+    tareas receptoras en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW
+    requerido; no modificar su repo desde este plan.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws18.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: spec2viz:repository_root/
+- id: WS19
+  title: Integrar edición de campos con conflicto
+  status: candidate
+  kind: implementation
   depends_on:
-  - H1
-  - G2
-  owner: deskops
-  deliverable: capítulos de delegación comprobados
-  acceptance: Añadir trazabilidad, decisiones humanas y operación Scion demostradas;
-    no convertir previsiones arquitectónicas en instrucciones ejecutables.
-  path: desk/drawer/tasks/workspace-documental/task-h2.md
-  status: deferred
-reference_status:
-  workspace: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
-  editing: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
-  changes: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
-  scion: verified_path_exists
-  kimun: referenced_by_softfactory_spec_but_path_missing_reconcile_in_A1
-  closeout: verified_path_exists
+  - WS12
+  - WS16
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/; source/; endpoints; tests/
+  scope: Delta sobre ticket draft de edición; reutilizar editores y API, revisión
+    esperada y conflicto visible; workflow-protected fields no editables por este
+    canal. Incluir alta/baja de relaciones permitidas por contrato, usando API real
+    y before-image; no crear semántica de relaciones en componente.
+  acceptance: Guardar/recargar confirma dato real; stale no pierde texto local. Mutación
+    restringida a desk en modo manual coordinado; otros modos read-only hasta contrato.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws19.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: editing
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS20
+  title: Probar o completar guardado fuente reversible
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_SLDB_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: sldb
+  output_scope: src/sldb/api/documents/; src/sldb/cli/serve/; tests/
+  scope: Primero verificar capacidad existente. Un documento raw-source se extrae/valida
+    y guarda por API pública con revisión y preservación de campos protegidos; no
+    sobrescribir Markdown desde browser.
+  acceptance: 'Si capacidad existe: evidencia de contrato suficiente, no código duplicado.
+    Si falta: intake/tarea sldb propia y roundtrip, conflicto y recuperación reales
+    antes de cerrar G_SOURCE.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws20.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  enabled_when:
+    parameter: source_mode
+    equals: editable
+  output_base: sldb:repository_root/
+- id: WS21
+  title: Integrar fuente y renderizado editables
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS19
+  requires:
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/; tests/
+  scope: Alternar fuente/render con mismo origen, revisión y dirty buffer; usar guardado
+    fuente autorizado. Composición escribe solo origen trazable soportado. Ejecutar
+    solo la variante elegida por P04; pending bloquea preparación. No requiere G_SOURCE
+    si el humano eligió fuente read_only.
+  acceptance: Cumplir la aceptación específica de la variante P04. En editable, G_SOURCE
+    y G_WRITE_CONTRACT pasan y se prueba edición/conflicto/roundtrip. En read_only,
+    fuente legible no editable y edición por campos probada; manual/WS30 no declaran
+    edición fuente disponible.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws21.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: editing
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  variants:
+  - when:
+      parameter: source_mode
+      equals: editable
+    depends_on:
+    - WS20
+    requires:
+    - G_SOURCE
+    acceptance: Fuente y render editables con API reversible y campos protegidos;
+      roundtrip/conflicto real.
+  - when:
+      parameter: source_mode
+      equals: read_only
+    depends_on: []
+    requires: []
+    acceptance: Fuente explícitamente read-only y campos editables por API. Conservar
+      buffer/foco, ocultar guardado fuente; manual y WS30 etiquetan este alcance sin
+      afirmar edición fuente completa.
+  output_base: graph_ui:repository_root/
+- id: WS22
+  title: Renderizar Board como trabajo navegable
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS09
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/board/; tests/
+  scope: Representar Board real como lista/tablero y dependencias, abriendo los mismos
+    TaskDoc/contextos. No reemplazar workflow con drag-and-drop de status.
+  acceptance: Selección y links comunes con lector; estados/gates reales; no duplicar
+    tareas ni presentar predicado satisfecho como test aprobado.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws22.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS23
+  title: Renderizar rituales y pasos como procedimiento
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS09
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/procedure/; tests/
+  scope: RitualDoc/StepDoc/lifecycle sobre referencias reales; obligaciones, transiciones
+    y fuentes navegables.
+  acceptance: Un procedimiento abre sus documentos y soporte; no auto-marcar pasos
+    como realizados por leerlos.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws23.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS24
+  title: Integrar conocimiento y grafo local
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS18
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/graph/; Context; tests/
+  scope: Reutilizar gráfico actual y documento genérico para átomos/protoátomos/crossroads/materializaciones/pills,
+    clasificación y vecindad; preservar Code local de tarea actual.
+  acceptance: Navegación ida/vuelta por fuentes y backlinks derivados; soporte no
+    modelado visible. No un renderer nuevo obligatorio por cada clase.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws24.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS25
+  title: Integrar captura y triage en UI
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS16
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/intake/; endpoints; tests/
+  scope: UI para mensaje/ack y captura interna de drawer/protoátomo mediante operaciones
+    permitidas por contrato; no confundir ack con aprobación.
+  acceptance: UF02 pasa persistencia/recarga y origen; no tarea implícita ni cron
+    de triage. Roles/permisos del contrato aplicados.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws25.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS26
+  title: Integrar autoría y contexto de tareas
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS22
+  requires:
+  - G_CLOSEOUT
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/task/; endpoints; tests/
+  scope: Autoría explícita desde candidato, evidencia declarada, dependencias y contexto/pill
+    binding; promoción solo cuando el contrato resuelve commits previos por canal
+    autorizado. Incluir enrutamiento explícito en Board y representación de capa lista
+    por dependencias/no solapamiento; sin confundir Board route con ejecución. El
+    canal de promoción debe respetar commits previos y estado real.
+  acceptance: UF04 con TaskDoc/Board reales; nunca editar status para avanzar. Si
+    operación Git no tiene contrato/manual owner, mantener acción read-only/handoff
+    explícito y gate humano no pasa hasta resolver.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws26.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS27
+  title: Integrar revisión de cambios y evidencia
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS12
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/review/; rutas git read-only; tests/
+  scope: Diff Git y artefactos de evidencia junto al encargo, historial read-only;
+    diferenciar cambios de código de integridad del store.
+  acceptance: Diff real scoped al repo y tarea (la asociación a intento se añade en
+    WS35), sin execute/revert genérico. Mostrar declarada/encontrada/verificada y
+    abrir soporte; no inventar CommentDoc antes de contrato.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws27.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS28
+  title: Integrar verificación y handoff de cierre
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS27
+  - WS12
+  requires:
+  - G_CLOSEOUT
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/review/; endpoints; tests/
+  scope: Verificar con autoridad Deskops, diagnosticar faltantes y ofrecer handoff
+    explícito a closeout CLI/coordinador con evidencia. No commit/close desde HTTP
+    en baseline.
+  acceptance: UF05 termina al confirmar resultado real del cierre externo y refrescar
+    estado; comando o solicitud no equivalen a cierre. Sin terminal embebido genérico.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws28.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS29
+  title: Integrar Changes e impacto comprobable
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS15
+  - WS24
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/changes/; rutas integridad; tests/
+  scope: Delta sobre tarea Changes actual; stores check/doctor/drift y relaciones
+    comprobadas. No CST ni árbol Kimun supuesto.
+  acceptance: 'Mutaciones reales muestran soporte/alcance/errores. Reparar no es automático:
+    acción documentada o tarea explícita. Esta extensión no bloquea lector/manual
+    básico.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws29.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: changes
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+- id: WS30
+  title: Validar autoría y revisión manual completas
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS17
+  - WS21
+  - WS22
+  - WS23
+  - WS24
+  - WS25
+  - WS26
+  - WS28
+  - WS42
+  requires: []
+  owner_repo: graph_ui
+  output_scope: runs/subagents/workspace-documental-acceptance/manual/
+  scope: Persona recorre UF02/03 edición/04/05; integra conocimiento y tarea en ejemplo;
+    errores, teclado, dos ventanas y conflictos, con historial. Incluye explícitamente
+    UF01 usando entradas authored WS17 materializadas por generador WS40, además de
+    edición/operación; no limitarlo a búsqueda.
+  acceptance: Registro humano bajo protocolo; problemas implican tareas de corrección
+    de la misma capa. No llamar ready a un flujo solo por tests.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws30.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS31
+  title: Publicar manual documental básico probado
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS30
+  - WS10
+  - WS43
+  requires:
+  - G_HUMAN_MANUAL
+  owner_repo: deskops
+  output_scope: docs/workspace-user-manual.md; desk/atoms/ vinculados
+  scope: Publicar navegación, edición, captura, trabajo manual y revisión demostradas;
+    actualizar índice/capturas/limitaciones.
+  acceptance: Cada instrucción tiene evidencia vigente; etiquetas, links y atom->doc
+    verificados. Scion solo capítulo marcado propuesto hasta WS38. Para capítulos
+    que mencionen personalización o impacto, comprobar G_HUMAN_MODEL/WS29 o mantener
+    etiqueta propuesta; no bloquear manual básico por esos extras.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws31.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:repository_root/
+- id: WS32
+  title: Unificar identidad de intento y cierre Scion
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS05
+  - WS12
+  requires:
+  - G_CLOSEOUT
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: deskops/runtime/scion.py; models/run.py; services/closure.py; tests/
+  scope: 'Refinar ticket existente, sin segundo pipeline: intento no es slug, dispatch
+    intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes.'
+  acceptance: G_CLOSEOUT pasa; dos intentos mismo agente, dispatch fallido y finalización
+    repetida conservan identidades/evidencia; schema mediante SLDB.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws32.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: deskops:repository_root/
+- id: WS33
+  title: Vincular mensajes, resultados y decisiones
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS32
+  - WS11
+  requires:
+  - G_SCION
+  owner_repo: deskops
+  output_scope: runtime/ (adaptador definido por contrato); modelos/reportes; tests/
+  scope: Referencias Hub/proyecto/conversación/mensaje/intento y revisión humana explícita;
+    dedup y procedencia. Backend documental, independiente de editor UI.
+  acceptance: G_SCION y contrato público real; importación repetida no duplica ni
+    atribuye conversación completa a un intento. No tocar tablas Scion.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws33.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
+  output_base: deskops:repository_root/
+- id: WS34
+  title: Exponer despacho y respuesta Scion autorizados
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS33
+  - WS12
+  requires:
+  - G_EXEC
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: runtime/; cli/commands/runtime.py o API definida; tests/
+  scope: Un adaptador público restringido para dispatch/reply, con confirmación, identidad
+    de intento, timeout/errores y autoridad del coordinador.
+  acceptance: G_SCION/G_EXEC pasan; agente real demuestra aceptación/fallo/respuesta.
+    No shell arbitrario, no duplicar transporte ni mandar mensajes en la tarea de
+    planificación.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws34.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:repository_root/
+- id: WS35
+  title: Mostrar ejecución y trazabilidad en workspace
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS33
+  - WS27
+  requires:
+  - G_SCION
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/execution/; tests/
+  scope: Lectura tarea-intento-conversación-resultados-decisión usando fuente dueña
+    y referencias documentales.
+  acceptance: Intento correcto, enlaces origen, evidencia legible; completed no se
+    traduce en aprobado/cerrado.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws35.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS36
+  title: Integrar delegación e intervención humanas
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS34
+  - WS35
+  requires:
+  - G_EXEC
+  - G_SCION
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/execution/; endpoints; tests/
+  scope: Invocar solo adaptador autorizado para dispatch/reply y solicitud de decisión;
+    revisión con actor/evidencia visible.
+  acceptance: Respuesta vinculada al intento y operación confirmada; ausencia de API/permisos
+    visible. No autoaprobación ni simulación.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws36.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS37
+  title: Validar delegación con agente real
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS36
+  - WS30
+  requires:
+  - G_EXEC
+  - G_SCION
+  owner_repo: graph_ui
+  output_scope: runs/subagents/workspace-documental-acceptance/delegacion/
+  scope: 'UF06 real: pregunta/intervención/corrección/evidencia/decisión y cierre
+    vía autoridad, con actor humano.'
+  acceptance: G_SCION/G_EXEC y protocolo; no sustituir integración por mocks ni completed
+    por aprobación. No bloquea WS31.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws37.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS38
+  title: Publicar capítulos verificados de delegación
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS37
+  - WS31
+  requires:
+  - G_HUMAN_DELEGATE
+  owner_repo: deskops
+  output_scope: docs/workspace-user-manual.md; desk/atoms/ vinculados
+  scope: Añadir instrucciones runtime y revisión trazable, con lo que funciona y fallos
+    demostrados.
+  acceptance: Capturas y operaciones reales; mantención de contratos y autorización
+    documentadas.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws38.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:repository_root/
+- id: WS39
+  title: Integrar inspección y edición de modelos existente
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS16
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: shell/dialogs.js; views/models/; tests/
+  scope: Hacer navegables Schema/editar clases ya disponibles desde documento/contexto;
+    usar draft/validate/promote del dueño. No reimplementar modelos.
+  acceptance: UF09 inspección y mutación en store temporal; confirmar efectos de contrato
+    y errores; no habilitar promover si API/autoridad falta. Extensión posterior al
+    lector básico. Guardar acta de prueba humana en graph_ui:runs/subagents/workspace-documental-acceptance/modelos/acta.md
+    con participante designado y resultado; G_HUMAN_MODEL debe pasar antes de marcar
+    capítulo disponible.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws39.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS40
+  title: Crear generador reproducible del corpus Taller
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS11
+  - WS08
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: tests/fixtures/workspace_documental/; script de seed; tests/
+  scope: Versionar un generador en graph_ui que usa contratos/CLI reales, no servidor
+    fake. Crear dos repos temporales bajo .tmp/workspace-documental-ejemplo/ (o tmp_path
+    en pruebas), sus stores y documentos, incluyendo Markdown no modelado, Code local
+    y referencia rota. Aceptar opcionalmente plantillas de navegación WS17. Generar
+    instrucciones de instalación/arranque del ejemplo y entrada mínima ecosistema/proyecto
+    con enlaces al Board/FAQ/conocimiento reales creados, para que WS16 pruebe una
+    entrada sin esperar índices ricos WS17.
+  acceptance: Un comando crea/recrea entorno aislado, registra datos/commits/roots
+    y nunca toca desk real; los paths se devuelven como manifiesto. Es productor único
+    de corpus para WS16/30; WS17 solo aporta contenido authored. Entrada mínima y
+    README de arranque reproducibles, manifiesto de ubicación y segundo desk; WS17
+    enriquece navegación posteriormente.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws40.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS41
+  title: Implementar lectura segura entre desks
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS11
+  - WS40
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/source/; endpoints de lectura por store; views/workspace/;
+    tests/
+  scope: Resolver aliases/roots explícitamente autorizados en contrato WS11, usando
+    APIs públicas de stores; cada request conserva proyecto/store sin cambiar global
+    SLDB_STORE. Leer segundo desk y volver, sin mutaciones cruzadas.
+  acceptance: 'UF08 lectura sobre dos stores de WS40: identidad/origen visibles, links
+    ida/vuelta y errores de acceso; rechazar roots arbitrarios o paths escapados.
+    No afirmar federación por copiar contenido.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws41.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS42
+  title: Integrar operaciones de conocimiento existentes
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS19
+  - WS24
+  - WS12
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/knowledge/; endpoints whitelist;
+    tests/
+  scope: Invocar contratos reales de atoms split/merge y proto typing cuando disponibles,
+    con confirmación de alcance y procedencia; materializaciones se inspeccionan/validan,
+    no se generan destinos arbitrarios.
+  acceptance: UF03 dividir/reunir/tipar con persistencia, referencias y conflictos
+    reales; cada capability no soportada se declara no disponible y bloquea ese escenario,
+    no se simula. Cubierto por WS30.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws42.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+- id: WS43
+  title: Publicar navegación documental del desk real
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS17
+  - WS30
+  requires:
+  - G_HUMAN_MANUAL
+  - G_PRODUCT
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: desk/README.md; mapa de ecosistema/índices según P09 y WS11; átomos
+    de acuerdos durables
+  scope: Aplicar entradas/índices authored validados en Taller al deskops real, por
+    operaciones autorizadas y preservando registry como inventario derivable. Enlazar
+    repos conocidos por identidad/origen y su entrada existente; no modificar repos
+    hermanos ni imponer nuevos modelos. Registrar conocimiento durable en átomos antes
+    de docs.
+  acceptance: P09 y contrato fijan ubicación/modelo opcional. Persona designada recorre
+    Markdown y UI real, links/roots verificables, acta deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md
+    y commit; no publicar solo ejemplo como si fuera ecosistema real. Cada proyecto
+    adicional requiere su tarea de repo y acuerdo de alcance.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws43.md
+  promotion: not_authorized; require exact paths, model/contract, pills/atoms, evidence
+    and cold preflight
+  output_base: deskops:repository_root/
+- id: WS44
+  title: Comprobar y revalidar acceso público a Scion
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS05
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: auditoria/scion-probe.md
+  scope: Responsable de instalación Scion, identificado por solicitante en WS07, realiza
+    probe read-only de API con acceso ya autorizado; verifica capacidades/identidad
+    necesarias para intento y mensajes. Sin crear agentes, enviar mensajes, cambiar
+    config o mostrar secretos. Puede repetir el probe si el inventario WS05 terminó
+    sin acceso.
+  acceptance: G_SCION se satisface solo con respuesta pública real, identidad/fecha/capabilities
+    y actor registrados. Si API o acceso no están, WS44 permanece bloqueada, no se
+    cierra unverified ni se avanza WS32. Tras cambio de Hub/API/credencial, repetir
+    y invalidar recibo previo.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws44.md
+  promotion: not_authorized; appoint responsible operator and confirm read-only permission
+    before probe
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+legacy_mapping:
+  A1: WS02–WS05
+  A2: WS01/WS07
+  A3: WS08
+  A4: WS09
+  A5: WS10
+  B1: WS06/WS07
+  B2/C1: WS11
+  B3: WS12
+  C2: WS17
+  C3: WS18
+  D1: WS13–WS16
+  D2: WS19–WS21
+  D3: WS22–WS24
+  D4: WS25–WS28
+  E1: WS32
+  E2: WS33
+  E3: WS34–WS37
+  F1: WS15/WS29
+  G1: WS16/WS30
+  G2: WS37
+  H1: WS31
+  H2: WS38
+parameters:
+  source_mode:
+    value: pending
+    allowed:
+    - pending
+    - editable
+    - read_only
+    decided_by: P04/WS07
+    evidence: decisiones.md con actor humano; sincronizar valor al resolver P04
+repo_roots:
+  deskops: .
+  graph_ui: ../UIs/graph_ui
+  sldb: ../sldb
+  spec2viz: ../spec2viz
+council_review:
+  rounds: 5
+  final_round: R5
+  verdicts:
+    claude: APTO COMO PLAN
+    deepseek: APTO COMO PLAN
+    gemini: APTO COMO PLAN
+  scope: planning only; does not authorize implementation, approve Pxx or satisfy
+    any gate
