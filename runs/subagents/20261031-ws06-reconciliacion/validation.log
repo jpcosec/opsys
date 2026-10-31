@@ -1,0 +1,8 @@
+2026-10-31T20:26:28-03:00
+python build_plan.py --check -> exit 0 | Generated table/task files/diagram spec match dag.yaml
+python validate_plan.py --check -> exit 1 (fallo ESPERADO y declarado en la TaskDoc) | AssertionError: ['PK01: input changed', 'WS04: input changed', 'WS06: input changed', 'WS13: input changed', 'WS13.1: in
+python context_review.py status -> 25 nodos,  input changed 
+PK01 WS04 WS06 WS13 WS13.1 WS13.2 WS13.3 WS14 WS15 WS15.1 WS15.2 WS19 WS19.1 WS19.2 WS21 WS22 WS23 WS24 WS29 WS32 WS32.1 WS32.2 WS33 WS33.1 WS33.2 
+git diff 3e1c24f0 protegido: 0 archivos
+matriz: 68 filas; ya cubierto 33, nuevo delta 32, extender ticket 2, no adoptado 1; cobertura 63/63
+Tester v1: RESULTADO: PASS; Tester v2 delta: RESULTADO: PASS

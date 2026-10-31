@@ -1,0 +1,1 @@
+task-ws06-proponer-correspondencia-de-alcance-con-repos-dueños | ready_for_testing | ritual-closeout

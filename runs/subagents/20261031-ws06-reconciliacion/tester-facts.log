@@ -1,0 +1,8 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+sha256 reconciliacion.md fdb7f5bbf2e63760b651c09c3b8ccec746ba4506f4d0594233c7bc28bbedaf50
+prefijo previo intacto: True (comparado con git show HEAD)
+filas C-nn: 68 únicas; clasificación: ya cubierto 33, nuevo delta 31, extender ticket 3, no adoptado 1
+cobertura: 63 de 63 nodos de dag.yaml en la tabla final
+context_review.py status: 25 nodos «input changed», exactamente los declarados en la TaskDoc
+build_plan.py --check: pasa

@@ -1,0 +1,23 @@
+ M desk/drawer/plans/workspace-documental/reconciliacion.md
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M "desk/tasks/task-ws06-proponer-correspondencia-de-alcance-con-repos-due\303\261os.md"
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-ws06-reconciliacion/board.txt
+?? runs/subagents/20261031-ws06-reconciliacion/canonical-adjustments.md
+?? runs/subagents/20261031-ws06-reconciliacion/git-status.txt
+?? runs/subagents/20261031-ws06-reconciliacion/result-summary.md
+?? runs/subagents/20261031-ws06-reconciliacion/tester-facts.log
+?? runs/subagents/20261031-ws06-reconciliacion/tester-input.md
+?? runs/subagents/20261031-ws06-reconciliacion/tester-pane.txt
+?? runs/subagents/20261031-ws06-reconciliacion/tester-receipt.json
+?? runs/subagents/20261031-ws06-reconciliacion/tester-result-summary.md
+?? runs/subagents/20261031-ws06-reconciliacion/tester-v1-result-summary.md
+?? runs/subagents/20261031-ws06-reconciliacion/tester-v2-input.md
+?? runs/subagents/20261031-ws06-reconciliacion/tester-v2-receipt.json
+?? runs/subagents/20261031-ws06-reconciliacion/tester-v2.stderr
+?? runs/subagents/20261031-ws06-reconciliacion/tester.exit
+?? runs/subagents/20261031-ws06-reconciliacion/tester.stderr
+?? runs/subagents/20261031-ws06-reconciliacion/testing-handoff.md
+?? runs/subagents/20261031-ws06-reconciliacion/validation.log
