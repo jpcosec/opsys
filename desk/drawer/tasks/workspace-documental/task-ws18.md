@@ -18,17 +18,17 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `spec2viz`. Tamaño relativo: S.
 
-sldb/views/ (rutas confirmadas por el dueño de spec2viz al promover); tests/
+sldb/views/ (ruta y registro confirmados según el contrato al promover; con output_base spec2viz (raíz del repo) puede ser spec2viz/sldb/views/ y el prefijo textual no cambia el dueño); tests/
 
 Base explícita: `spec2viz:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-ViewDoc con su NotationDoc (la notación que el ViewDoc referencia) para selecciones y notación ya soportadas por spec2viz; no crear UI pages declarativas ficticias. Selecciones concretas y notación requerida vienen de catálogo WS09 y contrato WS11, contrastados con capacidades WS03; si catálogo no fija selección mínima, detener promoción y corregir ese contrato antes de elegir una. No inventar selección aquí.
+Autoría de ViewDoc y NotationDoc concretos (la notación que el ViewDoc referencia) para selecciones y notación ya soportadas por spec2viz, y su comprobación sobre stores reales reutilizando el evaluador y las rutas de graph_ui (C-37) y la notación de spec2viz (C-49). ViewDoc es datos sin ruta de store y el evaluador recibe el store por petición, así que no se pide portabilidad genérica, ni servicio, CLI o runtime fuera de graph_ui, ni extraer o compartir el evaluador. No crear UI pages declarativas ficticias. Selecciones concretas y notación requerida vienen de catálogo WS09 y contrato WS11, contrastados con capacidades WS03; si catálogo no fija selección mínima, detener promoción y corregir ese contrato antes de elegir una. No inventar selección aquí.
 
 ## Aceptación
 
-Vista portable (el mismo ViewDoc sin código específico del host) renderiza sobre un store real la selección declarada, coincide con ella y el ViewDoc documenta qué selecciona; tareas receptoras en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; este paquete documental deskops no escribe en spec2viz; la futura TaskDoc de WS18 se promueve y ejecuta en spec2viz por su supervisor/Executor, con recepción G_SPEC_VIEW para ese delta.
+Los ViewDoc y NotationDoc concretos definidos por WS09/WS11 se evalúan con el camino existente de graph_ui sobre un store real, la selección coincide con la declarada y el ViewDoc documenta qué selecciona; no se alega que una prueba con dos stores demuestre el mismo payload completo (cambia filtros); tareas receptoras en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; este paquete documental deskops no escribe en spec2viz; la futura TaskDoc de WS18 se promueve y ejecuta en spec2viz por su supervisor/Executor, con recepción G_SPEC_VIEW para ese delta.
 
 ## Dependencias
 

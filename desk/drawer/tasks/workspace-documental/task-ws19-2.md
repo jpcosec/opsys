@@ -8,6 +8,7 @@ depends_on:
 - WS12
 requires:
 - G_HUMAN_READ
+- G_PAYLOAD_PRECONDITION
 - G_UI_WRITE
 - G_WRITE_CONTRACT
 ---
@@ -34,7 +35,7 @@ Alta y baja persisten y se confirman tras recargar; una relación no permitida o
 
 ## Dependencias
 
-Tareas: WS12. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12. Gates: G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 

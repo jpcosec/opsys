@@ -21,7 +21,7 @@ La última respuesta siguió al paralelo con Org-mode/Obsidian/IDE: exploración
 - **Vista de trabajo**: selección de contenido más forma de presentarlo en el workspace. No implica página ni archivo nuevo.
 - **Renderización/representación**: transformación visible del soporte; la edición se dirige a su origen y autoridad.
 - **Renderer**: pieza de la UI que materializa una representación.
-- **Proyección de grafo ViewDoc**: contrato existente de spec2viz para nodos por modelo/predicado, relaciones, dirección y notación/layout. No define por sí mismo formularios, tabs o tableros.
+- **Proyección de grafo ViewDoc**: modelo de spec2viz (datos, sin ruta de store) para nodos por modelo/predicado, relaciones, dirección y notación/layout. El evaluador, las rutas de evaluación y guardado y el render viven en graph_ui, solo en modo local; el evaluador recibe el store por petición. No define por sí mismo formularios, tabs o tableros.
 - **Composición**: representación que reúne contenido de varios documentos; cada edición va al documento dueño de ese contenido.
 - **Consulta**: selección derivada evaluada por infraestructura; no un inventario authored duplicado. No se promete modelo de consulta guardada sin prueba de WS03.
 - **Foco**: elemento seleccionado por una persona, compartido entre representaciones del mismo documento; no selección compartida entre usuarios.
@@ -30,14 +30,14 @@ La última respuesta siguió al paralelo con Org-mode/Obsidian/IDE: exploración
 
 ## Términos del desk y de operación
 
-- **Drawer / candidato**: trabajo capturado en desk/drawer/; un candidato no es tarea hasta autorarlo con `deskops add task`.
+- **Drawer / candidato**: trabajo capturado en desk/drawer/; un candidato no es tarea hasta autorarlo con `deskops add task`. La captura directa a drawer (origen preservado, sin tarea activa, colisiones controladas) es un canal permitido pendiente del contrato WS12, que compara la API SLDB existente, su composición y un eventual wrapper Deskops; ninguno está aprobado.
 - **Inbox**: mensajes entrantes en desk/inbox/; ack registra recepción, no aceptación del trabajo.
 - **Protoátomo**: átomo libre con título y contenido, aún sin clasificar (`deskops atoms proto`).
 - **TaskDoc / Board**: tarea modelada y su lista de enrutamiento; enrutar es añadirla al Board.
 - **RitualDoc, StepDoc, lifecycle**: procedimiento, pasos y grafo de transiciones del desk.
 - **Fase y capa lista**: tareas sin dependencias pendientes ni archivos solapados, según el ritual de fase.
 - **Soporte / origen**: archivo o dato real que respalda una representación, y su ruta o referencia.
-- **Revisión / before-image**: hash con que una escritura prueba que partió del estado actual; si no coincide, se rechaza.
+- **Revisión / precondición de escritura**: tres cosas distintas. (1) *Before-image por valor existente*: `expected` en `POST /save` de sldb, que compara el payload completo y responde HTTP 409 si no coincide; es una capacidad optimista real, con límites. (2) *Token publicado*: `version` / `content_hash` que sldb emite al leer un documento; hoy no se recibe en la escritura. (3) *Comparación o escritura pública con precondición compartida* entre API, CLI y UI: aún no probada. El contrato WS12 define representación, precondición, operaciones y escritores alcanzados; no se fuerza CAS en toda CLI ni un algoritmo de hash, y la frescura no se infiere por CLI. WS45 (sldb) verifica o completa esa precondición para la escritura de payload, independiente de `source_mode`.
 - **Modo degradado**: el backend o una dependencia falla y la UI sigue mostrando lo que puede, declarando el límite.
 - **Capability**: operación concreta con su canal y efectos.
 - **Handoff**: la UI prepara una acción y la deja a otro canal o actor; no equivale a hecha.

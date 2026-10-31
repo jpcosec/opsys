@@ -24,11 +24,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Una matriz con una fila por delta o capacidad única (varios nodos pueden remitir a la misma fila), agrupada por repo dueño: ya cubierto (capacidad observable en código implementado, citando path/símbolo y commit observado), extender ticket existente (incluido un draft del Board) o nuevo delta. La fila Scion RunDoc/cierre de reconciliacion.md conserva el tratamiento ya registrado (descomposición en WS32/33) sin requerir WS05. Registrar en reconciliacion.md la atomización propuesta, sin notificar, despachar ni modificar el Board de graph_ui; el responsable receptor ya designado en P01 acepta por delta en WS11/12.
+Una matriz con una fila por delta o capacidad única (varios nodos pueden remitir a la misma fila), agrupada por repo dueño: ya cubierto (capacidad observable en código implementado, citando path/símbolo y commit observado), extender ticket existente (incluido un draft del Board) o nuevo delta. La fila Scion RunDoc/cierre de reconciliacion.md conserva el tratamiento ya registrado (descomposición en WS32/33): WS06 puede clasificar y conservar esa descomposición sin ejecutar WS05; WS32 y WS33 conservan sus dependencias (incluida WS05) y gates canónicos. Registrar en reconciliacion.md la atomización propuesta, sin notificar, despachar ni modificar el Board de graph_ui. Recibos externos: el receptor P01 produce el acta en su repo al preparar cada delta; WS11 y WS12 son fuente de contrato y solo enlazan esas actas. Sin firmas, gates ni recepción ficticia. «No designado en P01» para deskops es un dato de esa tabla, no un permiso que frene trabajo local autorizado.
 
 ## Aceptación
 
-Matriz con una fila por delta o capacidad propuesta, agrupada por repo dueño, no por nodo del DAG; correspondencia ticket/delta y responsable ya designado P01; operador Scion posterior solo para ramal E; no produce gates de aceptación ni aprueba deltas que aún no están definidos. WS11/12 obtienen aceptación específica por repo receptor.
+Matriz con una fila por delta o capacidad propuesta, agrupada por repo dueño, no por nodo del DAG; correspondencia ticket/delta y responsable ya designado P01; operador Scion posterior solo para ramal E; no produce gates de aceptación ni aprueba deltas que aún no están definidos. WS11/12 son fuente de contrato y enlazan el acta del receptor P01 por delta; WS06 no firma ni registra recepción.
 
 ## Dependencias
 

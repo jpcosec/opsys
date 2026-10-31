@@ -26,11 +26,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones controladas) está pendiente del contrato WS12, que compara API SLDB existente, composición y eventual wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
-UF02: una captura persiste tras recargar en el destino elegido, con origen y sin tarea implícita. Permisos del contrato aplicados. Origen = referencia tipada al soporte del que nace la captura (ruta o mensaje), con representación fijada por el contrato WS12; los orígenes ruta y mensaje se registran y se muestran tras recargar.
+UF02: una captura persiste tras recargar en el destino elegido, con origen y sin tarea implícita. Permisos del contrato aplicados. Origen = referencia tipada al soporte del que nace la captura (ruta o mensaje), con representación fijada por el contrato WS12; los orígenes ruta y mensaje se registran y se muestran tras recargar. Una colisión con un candidato existente no se sobrescribe en silencio; se controla según el contrato.
 
 ## Dependencias
 

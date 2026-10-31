@@ -69,9 +69,11 @@ flowchart TD
     WS42["WS42: Integrar operaciones de conocimiento existentes"]
     WS43["WS43: Publicar navegación documental del desk real"]
     WS44["WS44: Comprobar y revalidar acceso público a Scion"]
+    WS45["WS45: Verificar o completar la precondición de escritura de payload"]
     G_PRODUCT["G_PRODUCT [satisfied]"]
     G_CLOSEOUT["G_CLOSEOUT [satisfied]"]
     G_SOURCE["G_SOURCE [pending]"]
+    G_PAYLOAD_PRECONDITION["G_PAYLOAD_PRECONDITION [pending]"]
     G_SCION["G_SCION [unverified]"]
     G_EXEC["G_EXEC [pending]"]
     G_HUMAN_READ["G_HUMAN_READ [pending]"]
@@ -144,20 +146,24 @@ flowchart TD
     WS19.1 -->|"prerequisite"| WS19
     WS19.2 -->|"prerequisite"| WS19
     G_HUMAN_READ -->|"habilitar uso UI"| WS19
+    G_PAYLOAD_PRECONDITION -->|"prerequisite"| WS19
     G_UI_WRITE -->|"recibo por delta"| WS19
     G_WRITE_CONTRACT -->|"recibo por delta"| WS19
     WS12 -->|"prerequisite"| WS19.1
     G_HUMAN_READ -->|"habilitar uso UI"| WS19.1
+    G_PAYLOAD_PRECONDITION -->|"prerequisite"| WS19.1
     G_UI_WRITE -->|"recibo por delta"| WS19.1
     G_WRITE_CONTRACT -->|"recibo por delta"| WS19.1
     WS12 -->|"prerequisite"| WS19.2
     G_HUMAN_READ -->|"habilitar uso UI"| WS19.2
+    G_PAYLOAD_PRECONDITION -->|"prerequisite"| WS19.2
     G_UI_WRITE -->|"recibo por delta"| WS19.2
     G_WRITE_CONTRACT -->|"recibo por delta"| WS19.2
     WS12 -->|"prerequisite"| WS20
     G_SLDB_WRITE -->|"recibo por delta"| WS20
     G_WRITE_CONTRACT -->|"recibo por delta"| WS20
     WS19 -->|"prerequisite"| WS21
+    G_PAYLOAD_PRECONDITION -->|"prerequisite"| WS21
     G_UI_WRITE -->|"recibo por delta"| WS21
     G_WRITE_CONTRACT -->|"recibo por delta"| WS21
     WS13 -->|"prerequisite"| WS22
@@ -329,8 +335,12 @@ flowchart TD
     WS05 -->|"prerequisite"| WS44
     WS07 -->|"prerequisite"| WS44
     G_PRODUCT -->|"prerequisite"| WS44
+    WS12 -->|"prerequisite"| WS45
+    G_SLDB_WRITE -->|"recibo por delta"| WS45
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS45
     WS07 -->|"evidencia"| G_PRODUCT
     WS20 -->|"evidencia"| G_SOURCE
+    WS45 -->|"evidencia"| G_PAYLOAD_PRECONDITION
     WS44 -->|"evidencia"| G_SCION
     WS16 -->|"evidencia"| G_HUMAN_READ
     WS30 -->|"evidencia"| G_HUMAN_MANUAL

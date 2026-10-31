@@ -12,6 +12,7 @@ depends_on:
 - WS19.2
 requires:
 - G_HUMAN_READ
+- G_PAYLOAD_PRECONDITION
 - G_UI_WRITE
 - G_WRITE_CONTRACT
 ---
@@ -30,7 +31,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Delta sobre workspace integrado a1b2b22 de edición; reutilizar editores y API, revisión esperada y conflicto visible; workflow-protected fields no editables por este canal. Incluir alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+Delta sobre workspace integrado a1b2b22 de edición; reutilizar editores y API, precondición de escritura (WS45/WS12) y conflicto visible; workflow-protected fields no editables por este canal. Incluir alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
@@ -38,7 +39,7 @@ Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación.
 
 ## Dependencias
 
-Tareas: WS12, WS19.1, WS19.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS19.1, WS19.2. Gates: G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 

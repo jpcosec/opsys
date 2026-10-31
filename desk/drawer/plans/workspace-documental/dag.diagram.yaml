@@ -193,6 +193,9 @@ data:
     WS44:
       label: 'WS44: Comprobar y revalidar acceso público a Scion'
       kind: core
+    WS45:
+      label: 'WS45: Verificar o completar la precondición de escritura de payload'
+      kind: core
     G_PRODUCT:
       label: G_PRODUCT [satisfied]
       kind: boundary
@@ -201,6 +204,9 @@ data:
       kind: boundary
     G_SOURCE:
       label: G_SOURCE [pending]
+      kind: boundary
+    G_PAYLOAD_PRECONDITION:
+      label: G_PAYLOAD_PRECONDITION [pending]
       kind: boundary
     G_SCION:
       label: G_SCION [unverified]
@@ -479,6 +485,10 @@ data:
     to: WS19
     relation: prerequisite
     label: habilitar uso UI
+  - from: G_PAYLOAD_PRECONDITION
+    to: WS19
+    relation: prerequisite
+    label: ''
   - from: G_UI_WRITE
     to: WS19
     relation: prerequisite
@@ -495,6 +505,10 @@ data:
     to: WS19.1
     relation: prerequisite
     label: habilitar uso UI
+  - from: G_PAYLOAD_PRECONDITION
+    to: WS19.1
+    relation: prerequisite
+    label: ''
   - from: G_UI_WRITE
     to: WS19.1
     relation: prerequisite
@@ -511,6 +525,10 @@ data:
     to: WS19.2
     relation: prerequisite
     label: habilitar uso UI
+  - from: G_PAYLOAD_PRECONDITION
+    to: WS19.2
+    relation: prerequisite
+    label: ''
   - from: G_UI_WRITE
     to: WS19.2
     relation: prerequisite
@@ -532,6 +550,10 @@ data:
     relation: prerequisite
     label: recibo por delta
   - from: WS19
+    to: WS21
+    relation: prerequisite
+    label: ''
+  - from: G_PAYLOAD_PRECONDITION
     to: WS21
     relation: prerequisite
     label: ''
@@ -1219,12 +1241,28 @@ data:
     to: WS44
     relation: prerequisite
     label: ''
+  - from: WS12
+    to: WS45
+    relation: prerequisite
+    label: ''
+  - from: G_SLDB_WRITE
+    to: WS45
+    relation: prerequisite
+    label: recibo por delta
+  - from: G_WRITE_CONTRACT
+    to: WS45
+    relation: prerequisite
+    label: recibo por delta
   - from: WS07
     to: G_PRODUCT
     relation: evidence
     label: evidencia
   - from: WS20
     to: G_SOURCE
+    relation: evidence
+    label: evidencia
+  - from: WS45
+    to: G_PAYLOAD_PRECONDITION
     relation: evidence
     label: evidencia
   - from: WS44

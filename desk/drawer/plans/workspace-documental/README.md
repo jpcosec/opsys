@@ -1,10 +1,10 @@
 # Workspace documental — plan final documental
 
-Revisión 8. Estado: final_plan_reviewed. Planificación final; no activación ni ejecución de producto.
+Revisión 9. Estado: final_plan_reviewed. Planificación final; no activación ni ejecución de producto.
 
 ## Reviews baratos
 
-El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): reviewed: 72. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
+El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): pending: 1, reviewed: 72. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
 
 ## Jerarquía de revisión
 
@@ -14,7 +14,7 @@ ROOT y PK agrupan la revisión; no son dependencias. Un nodo `aggregate` no se e
 - **PK02 Decisiones y contratos**: WS07, WS08, WS09, WS10, WS11, WS12
 - **PK03 Lector y descubrimiento**: WS13, WS14, WS15, WS16, WS40, WS41
 - **PK04 Navegación y representaciones**: WS17, WS18, WS22, WS23, WS24
-- **PK05 Autoría y operación manual**: WS19, WS20, WS21, WS25, WS26, WS27, WS28, WS30, WS42
+- **PK05 Autoría y operación manual**: WS19, WS20, WS21, WS45, WS25, WS26, WS27, WS28, WS30, WS42
 - **PK06 Publicación básica**: WS31, WS43
 - **PK07 Extensiones independientes**: WS29, WS39
 - **PK08 Ramal Scion opcional**: WS32, WS33, WS34, WS35, WS36, WS37, WS38, WS44
@@ -63,11 +63,11 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | WS16 | [Validar con humano lectura y descubrimiento](../../tasks/workspace-documental/task-ws16.md) | WS14, WS15, WS08, WS40, WS41 | — | graph_ui | M |
 | WS17 | [Escribir entradas e índices del desk ejemplo](../../tasks/workspace-documental/task-ws17.md) | WS11, WS40 | — | deskops | S |
 | WS18 | [Declarar proyecciones de grafo reutilizables](../../tasks/workspace-documental/task-ws18.md) | WS09, WS11 | G_SPEC_VIEW | spec2viz | S |
-| WS19 | [Integrar edición de campos con conflicto](../../tasks/workspace-documental/task-ws19.md) | WS12, WS19.1, WS19.2 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS19.1 | [Editar campos con conflicto visible](../../tasks/workspace-documental/task-ws19-1.md) | WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS19.2 | [Editar relaciones permitidas por contrato](../../tasks/workspace-documental/task-ws19-2.md) | WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS19 | [Integrar edición de campos con conflicto](../../tasks/workspace-documental/task-ws19.md) | WS12, WS19.1, WS19.2 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS19.1 | [Editar campos con conflicto visible](../../tasks/workspace-documental/task-ws19-1.md) | WS12 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS19.2 | [Editar relaciones permitidas por contrato](../../tasks/workspace-documental/task-ws19-2.md) | WS12 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS20 | [Comprobar o completar guardado fuente reversible](../../tasks/workspace-documental/task-ws20.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | M |
-| WS21 | [Integrar fuente y renderizado según source_mode](../../tasks/workspace-documental/task-ws21.md) | WS19 | G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS21 | [Integrar fuente y renderizado según source_mode](../../tasks/workspace-documental/task-ws21.md) | WS19 | G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS22 | [Renderizar Board como trabajo navegable](../../tasks/workspace-documental/task-ws22.md) | WS13, WS09 | G_UI_READ | graph_ui | M |
 | WS23 | [Renderizar rituales y pasos como procedimiento](../../tasks/workspace-documental/task-ws23.md) | WS13, WS09 | G_UI_READ | graph_ui | S |
 | WS24 | [Integrar conocimiento y grafo local](../../tasks/workspace-documental/task-ws24.md) | WS13, WS09 | G_UI_READ | graph_ui | M |
@@ -103,6 +103,7 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | WS42 | [Integrar operaciones de conocimiento existentes](../../tasks/workspace-documental/task-ws42.md) | WS19, WS24, WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS43 | [Publicar navegación documental del desk real](../../tasks/workspace-documental/task-ws43.md) | WS17, WS30 | G_HUMAN_MANUAL, G_PRODUCT, G_WRITE_CONTRACT | deskops | S |
 | WS44 | [Comprobar y revalidar acceso público a Scion](../../tasks/workspace-documental/task-ws44.md) | WS05, WS07 | G_PRODUCT | deskops | S |
+| WS45 | [Verificar o completar la precondición de escritura de payload](../../tasks/workspace-documental/task-ws45.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | M |
 
 ## Gates externos y humanos
 
@@ -111,6 +112,7 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | G_PRODUCT | satisfied | Decisiones de producto registradas por humano | WS07 |
 | G_CLOSEOUT | satisfied | Contrato de evidencia de closeout estabilizado | independent tester focalizado / recibo actual del contrato |
 | G_SOURCE | pending | Fuente reversible y guardas de campos probadas | WS20 |
+| G_PAYLOAD_PRECONDITION | pending | Precondicion de escritura de payload verificada en sldb | WS45 |
 | G_SCION | unverified | Scion accesible y contrato público comprobado | WS44, operador a designar al abordar ramal E |
 | G_EXEC | pending | Humano autoriza ejecución y comunicaciones del escenario | external |
 | G_HUMAN_READ | pending | Persona aprueba recorrido de lectura | WS16 |

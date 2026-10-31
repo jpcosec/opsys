@@ -6,6 +6,7 @@ node_role: delivery
 depends_on:
 - WS19
 requires:
+- G_PAYLOAD_PRECONDITION
 - G_UI_WRITE
 - G_WRITE_CONTRACT
 ---
@@ -24,7 +25,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Alternar fuente/render con mismo origen, revisión y dirty buffer; usar guardado fuente autorizado. Composición escribe solo origen trazable soportado. Ejecutar solo la variante elegida por P04; Con pending no se prepara ni se promueve este nodo. Al alternar con cambios sin guardar se conserva el buffer; nunca se descarta sin confirmación explícita de la persona usuaria; si no confirma, el buffer se conserva. No requiere G_SOURCE si el humano eligió fuente read_only.
+Alternar fuente/render con mismo origen, revisión y dirty buffer; usar guardado fuente autorizado. Composición escribe solo origen trazable soportado. Ejecutar solo la variante elegida por P04; Con pending no se prepara ni se promueve este nodo. Al alternar con cambios sin guardar se conserva el buffer; nunca se descarta sin confirmación explícita de la persona usuaria; si no confirma, el buffer se conserva. No requiere G_SOURCE si el humano eligió fuente read_only; el guardado por campos exige G_PAYLOAD_PRECONDITION en ambas variantes.
 
 ## Aceptación
 
@@ -32,7 +33,7 @@ Cumplir la aceptación específica de la variante P04. En editable, G_SOURCE y G
 
 ## Dependencias
 
-Tareas: WS19. Gates: G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS19. Gates: G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
