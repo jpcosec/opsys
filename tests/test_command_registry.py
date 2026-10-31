@@ -112,6 +112,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
     ("runtime",),
     ("runtime", "init"),
     ("runtime", "stop"),
+    ("runtime", "template"),
 }
 
 
