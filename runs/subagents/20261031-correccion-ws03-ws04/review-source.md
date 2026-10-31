@@ -22,3 +22,11 @@ Hallazgo ADICIONAL SUSTANTIVO de revisión propia root: el resumen global «View
 - git ls-files confirma fuentes trackeadas; commits 0eb7dd7→b9ab83c→2a15356 (último 'Vistas (ViewDoc): ...resolve_documents...review-workbench la dibuja').
 
 WS03 puede decir con precisión que no hay evaluador dentro de su universo sldb/pron/spec2viz, pero §6 no debe concluir que WS18 necesitará construirlo sin consultar consumidor. WS04 omitió por completo proyección/evaluación/guardado ViewDoc en su base reutilizable (rg ViewDoc/projection_views/views_routes en ui.md no da nada). Añadir esa base y enlazar WS18/WS24 donde corresponda; corregir handoff global y dictamen de ausencia: ya existe consumidor en graph_ui con límites local-only y pruebas existentes no ejecutadas. Mantener distinción modelo vs evaluador vs renderer y notación, sin anunciar aceptación del producto ampliado. No tocar código/repos hermanos. Incorporar a misma tarea de corrección del checkpoint antes WS06.
+
+## Resultado de revisión inicial root, mensajes posteriores de Codex `w3Y:p2`, 2026-10-31
+
+- WS02 aceptado como inventario documental con límites declarados; commands.log reconstruido es bitácora orientativa, no evidencia ejecutable. De 192 filas, 189 archivos siguen presentes, 188 hashes actuales coinciden y el otro es Board cambiado por cierre; las 3 TaskDoc ausentes coinciden con 215bf624.
+- WS03 y WS04 no aprobados como insumo final para WS06 hasta esta corrección. Puede ser un único deliverable correctivo.
+- La ausencia de /app.js en frontends/workspace está respaldada estáticamente (serve.py sirve ese directorio, sin ruta JS ni fallback). «Sin dueño» significa sin reclamo en Board/TaskDoc observados, no autoría personal desconocida absoluta. No obliga a resolverlo antes de crear la matriz WS06; sí antes de adoptarlo como base ejecutable autorizada.
+- Pruebas de comportamiento futuras se planifican en sandbox propio, sin modificar repos hermanos; las auditorías no deben afirmar que son imposibles por el mero hecho de generar caches.
+- Handoff nuevo: commits, qué afirmaciones fueron sustituidas y evidencia estática verificable. WS06 pausado hasta esa revisión. No construir evaluador ViewDoc ni CAS de cero solo por el resumen anterior: mapear primero reutilización, límites, actor y contratos requeridos.
