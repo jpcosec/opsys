@@ -75,7 +75,98 @@ implementation_path: 'Executor independiente lee TaskDoc, pills 001/005/007 y ri
   Evidencia extra append-only en run previo permitida, resumen/receipts nuevos en
   run de esta tarea. No pedir concilio experto para salvar comprensión; supervisor
   consulta concilio final separado y Tester independiente al acabar. Executor NO commitea,
-  NO cierra ni cambia Board. Handoff incluye findings/disposiciones y limitaciones.'
+  NO cierra ni cambia Board. Handoff incluye findings/disposiciones y limitaciones.
+
+  Precisiones v2 (parte del encargo, no historial de review):
+
+  Pregunta 0: Para la primera entrega, ¿confirmamos extender el Mindmap existente
+  usando SLDB/pron y Deskops, sin migrar a Kimun, con lectura y operación manual primero
+  y Scion como ramal posterior?
+
+  Respuesta humana exacta: Sí, mantener esa base y Scion después
+
+  Pregunta 1: ¿Qué alcance de edición dejamos en el plan? En ambos casos: guardar
+  no hace commit; cierre y promoción respetan el workflow Deskops; con otro coordinador
+  escribiendo, la UI queda en lectura/handoff hasta contar con un canal de escritura
+  coordinado.
+
+  Respuesta humana exacta: Markdown editable tras probar API reversible, conflictos
+  y campos protegidos
+
+  Pregunta 2: ¿Quedas tú como responsable de producto y aceptación de deltas en graph_ui,
+  SLDB y spec2viz, y como participante de las pruebas de uso sobre el proyecto temporal
+  Taller? Los objetivos iniciales serían abrir/buscar ≤2 s, guardar ≤3 s y arrancar
+  ≤10 s; Scion se designa cuando abordemos ese ramal.
+
+  Respuesta humana exacta: Sí, yo; acepto Taller y esos objetivos iniciales
+
+  Actor: humano solicitante de esta sesión, identificable por call_387acc8d34de4f35bc4bafab9263bd58
+  ítems 0–2 y fecha 2026-10-31; owner-decisions.json guarda origen/literal. Mapeo
+  mínimo: respuesta0→P01(host),P02(stack), ramal E posterior; respuesta1→P03(concurrencia),P04(editable),P05(Git/cierre),P06(promoción
+  por workflow); respuesta2→responsables P01 y P08(Taller/objetivos). P07 es estado
+  local+lectura interdesk; P09 es ubicación de entradas en desk/README.md + mapa authored
+  en deskops, ambos defaults técnicos documentados por Executor al terminar plan y
+  revisables, sin requerir nueva firma humana. Suficiencia: cada decisión registra
+  resultado concreto, tipo humano/técnico, actor y fuente, nodos/gates afectados;
+  no inventa aprobación de APIs, código, actas de uso o Scion. Los 9 IDs ya existen
+  en decisiones.md y se actualizan, no hay decisiones de producto nuevas delegadas.
+
+  Mapear deltas es el entregable de reconciliación de esta tarea: fuentes/commits
+  exactos arriba; no se exige que reviewer lo haya auditado. Auditoría acotada read-only
+  de esas superficies sí es trabajo del Executor; no auditoría completa de todos los
+  repos. Primera capa preparable = nodos delivery cuyas dependencias están probadas
+  y gates satisfechos; si solo WS01 cumple, mostrarlo sin llamar ready a su paquete.
+  Candidatas existentes son fichas generadas en desk/drawer/tasks/workspace-documental/
+  desde tasks de dag.yaml; siguen status=candidate y execution_authorized=false en
+  DAG. No escribir TaskDoc por WS en esta tarea.
+
+  G_SOURCE tiene productor WS20 en sldb: API pública guarda fuente con revisión esperada,
+  extracción/validación/roundtrip, preserva campos protegidos y falla sin perder buffer
+  si revisión cambia; evidencia son contrato API y pruebas reales de roundtrip/conflicto/recuperación.
+  No se ejecuta WS20 ahora. Canal seguro = API con contrato y autoridad para coordinar
+  escritores CLI/agentes/UI, no lock solo UI; hasta verificarse, UI read-only/handoff
+  cuando otro coordinador escribe. Taller = corpus generado WS40 en graph_ui:.tmp/workspace-documental-ejemplo/,
+  dos desks y repo sin desk para escenarios UF; validacion-humana.md define guion/mediciones.
+  Aceptación por delta = acta con actor receptor designado, alcance concreto e IDs
+  cubiertos, fecha y evidencia en repo dueño; no requiere aceptar otras extensiones
+  para aceptar lector.
+
+  G_CLOSEOUT exige implementación/commit verificable y pruebas focalizadas del contrato
+  de evidencia declarada y autoría de cierre, no mera desaparición de task. Inspeccionar
+  tests/test_closeout_declared_evidence.py y tests/test_lifecycle_end_to_end.py existentes.
+  Si se propone satisfied, nuevo tester corre pytest focalizado (puede ser pytest
+  -q tests/test_closeout_declared_evidence.py tests/test_lifecycle_end_to_end.py -k
+  ''closeout'') y registra comandos/salida/exit/commit en run de esta tarea. Si evidencia
+  aún falta, añadir WS45 (owner_repo=deskops, delivery, validación no implementación)
+  para revalidar contrato con esos comandos, productor de G_CLOSEOUT; requiere cero
+  permiso de UI y no bloquea lector. Scope archivo test/código solo lectura. La prueba
+  debe comprobar autoría/relación task-commit real o dejar el escenario faltante bloqueado;
+  no se declara satisfied por solo contar tests.
+
+  Matriz invalidación = exactamente la que implementa context_review.py: nuevo input/contract
+  hash de nodo o fragmento suministrado invalida ese nodo; status calcula afectados,
+  runner --stale lanza solo esos. Si se cambia guide/brief/alcance/decisiones/cobertura
+  usados por todos, revisar todos. No mandar output/disposiciones previas al modelo.
+  Cada nuevo hijo, agrupador o WS45 se añade a all_nodes y recibe review real; contratos
+  arista suministrados cambian inputs según builder, la validación final exige cero
+  stale. Rúbrica: comparación identifica propósito/resultado/repo/límites, secuencia
+  y autoridad del dry-run, aceptación comprobable y ausencia de decisiones de encargo
+  sin dueño. Hallazgo descartado requiere cita real o razón verificable de trabajo
+  futuro asignado; no basta APTO.
+
+  Supervisor lanzará un nuevo Tester disponible por collaboration.spawn_agent fork_turns=none,
+  con TaskDoc, owner answers, handoff y fuentes/rutas explícitas; no participó en
+  Executor ni cambia plan. Evidencia nueva validation.log/result-summary.md; PASS/FAIL
+  con muestras de todos reviews nuevos y limitaciones. Concilio final son los 3 panes
+  expertos existentes de Herdr (Claude/DeepSeek/Gemini) consultados por supervisor
+  tras congelar plan; no modifican archivos ni acreditan cheap review, solo dictamen
+  separado con bloqueantes concretos. Supervisor cierra después. cierre.md es texto
+  authored redactado por Executor, no generado; README/fichas/spec/diagramas/validation
+  son proyecciones de helpers. Corregir incoherencia existente de build_plan.py: no
+  imprimir “Revisión barata pendiente” cuando status=reviewed. No tocar ritual oficial
+  ni código producto.
+
+  '
 validation:
 - python desk/drawer/plans/workspace-documental/build_plan.py --check
 - python desk/drawer/plans/workspace-documental/validate_plan.py --check

@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-finalizar-plan-workspace-documental.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Finalizar plan workspace reconciliado y revisado [draft] - Entregar un plan final coherente con decisiones humanas registradas, referencias externas actuales, deltas reales, ramales opcionales desacoplados y reviews baratos vigentes. No implementar producto.
