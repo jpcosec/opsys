@@ -291,6 +291,16 @@ Examples:
                 ),
                 A("--task-type", help="Workflow task type such as design, implementation, test, reflection, or closeout."),
                 A(
+                    "--evidence",
+                    action="extend",
+                    nargs="+",
+                    default=[],
+                    help="Closeout evidence this task must show, declared now: tests, commit, atom, materialization, "
+                    "document, external. Omitted, it is filled from --task-type "
+                    "(code: tests+commit+atom|materialization; docs|spec|design: commit+document; external: external). "
+                    "Without --evidence or --task-type the command fails.",
+                ),
+                A(
                     "--inherits-from",
                     action="extend",
                     nargs="+",

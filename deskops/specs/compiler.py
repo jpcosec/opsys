@@ -55,6 +55,7 @@ def compile_task_spec(
         "inherit_acceptance_context": bool(raw_payload.get("inherit_acceptance_context") or False),
         "atoms": _coerce_list(raw_payload.get("atoms") or []),
         "from_drawer": str(raw_payload.get("from_drawer") or ""),
+        "closeout_evidence": _coerce_list(raw_payload.get("closeout_evidence") or []),
     }
     task_payload["current_node"] = str(raw_payload.get("current_node") or entry_node)
     return CompiledTaskSpec(task_payload=task_payload)

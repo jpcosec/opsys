@@ -20,6 +20,7 @@ _ABSENT_FRONTMATTER_DEFAULTS = frozenset({
     "inherit_acceptance_context",
     "atoms",
     "from_drawer",
+    "closeout_evidence",
     "tags",
 })
 
@@ -52,6 +53,7 @@ inherits_from: ⸢optrev,list•inherits_from⸥
 inherit_acceptance_context: ⸢optrev•inherit_acceptance_context⸥
 atoms: ⸢optrev,list•atoms⸥
 from_drawer: ⸢optrev•from_drawer⸥
+closeout_evidence: ⸢optrev,list•closeout_evidence⸥
 ---
 
 # ⸢rev•title⸥
@@ -160,9 +162,20 @@ _Name the observable condition that makes the task complete._
         description="Repo-relative path of the desk/drawer/ file this task was authored from; empty when it was not.",
     )
 
+    closeout_evidence: list[str] = Field(
+        default_factory=list,
+        description=(
+            "Evidence the closeout gate requires, declared when the task is created. "
+            "Closed vocabulary: tests, commit, atom, materialization, document, external. "
+            "Empty means the task predates the field and is gated as code."
+        ),
+    )
+
     @model_serializer(mode="wrap")
-    def _omit_unset_from_drawer(self, handler):
-        """Serialize from_drawer only when it is set.
+    def _omit_unset_optional_fields(self, handler):
+        """Serialize from_drawer and closeout_evidence only when they are set.
+
+        The same holds for closeout_evidence: tasks that predate it stay byte-identical.
 
         A field that always serialized would add ``from_drawer: ''`` to every task
         that has no drawer origin. Omitting it when empty keeps those documents
@@ -173,4 +186,6 @@ _Name the observable condition that makes the task complete._
         data = handler(self)
         if not data.get("from_drawer"):
             data.pop("from_drawer", None)
+        if not data.get("closeout_evidence"):
+            data.pop("closeout_evidence", None)
         return data

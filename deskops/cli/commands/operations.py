@@ -11,6 +11,8 @@ from deskops.cli.render import render
 from deskops.cli.render import render_error
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
+from deskops.services.closeout_gates import CloseoutEvidenceError
+from deskops.services.closeout_gates import resolve_new_task_evidence
 
 
 class OperationsCLI:
@@ -20,6 +22,11 @@ class OperationsCLI:
 
         if args.command == "add" and args.subject == "task":
             payload = parse_task_input(args)
+            try:
+                payload["closeout_evidence"] = resolve_new_task_evidence(payload, require=True)
+            except CloseoutEvidenceError as exc:
+                print(f"Error: {exc}")
+                return 1
             drawer_selector = getattr(args, "from_drawer", None)
             if not drawer_selector:
                 raw_drawer = payload.get("from_drawer")
@@ -252,6 +259,8 @@ class OperationsCLI:
             lines.extend(f"- {item}" for item in task.inherits_from)
         if task.from_drawer:
             lines.append(f"From drawer: {task.from_drawer}")
+        if getattr(task, "closeout_evidence", None):
+            lines.append(f"Closeout evidence: {', '.join(task.closeout_evidence)}")
         if task.effective_pills:
             lines.append("Effective pills:")
             lines.extend(f"- {item}" for item in task.effective_pills)

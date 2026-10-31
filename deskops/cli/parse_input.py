@@ -33,6 +33,7 @@ def parse_task_input(args: Any) -> dict[str, Any]:
     if getattr(args, "validation", None): payload["validation"] = args.validation
     if getattr(args, "depends_on", None): payload["depends_on"] = args.depends_on
     if getattr(args, "task_type", None): payload["task_type"] = args.task_type
+    if getattr(args, "evidence", None): payload["closeout_evidence"] = args.evidence
     if getattr(args, "inherits_from", None): payload["inherits_from"] = args.inherits_from
     if getattr(args, "atom", None): payload["atoms"] = args.atom
     if getattr(args, "inherit_acceptance_context", False): payload["inherit_acceptance_context"] = True

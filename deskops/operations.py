@@ -43,6 +43,7 @@ from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.desk_paths import resolve_selector
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
 from deskops.paths import data_path
+from deskops.services import closeout_gates as closeout_gates_module
 from deskops.specs import compile_artifact_spec
 from deskops.specs import SpecRegistry
 from deskops.workspace import scaffold_desk
@@ -562,6 +563,7 @@ class DeskopsOperations:
             "inherit_acceptance_context": bool(payload.get("inherit_acceptance_context") or False),
             "atoms": self._coerce_list(payload.get("atoms") or []),
             "from_drawer": str(payload.get("from_drawer") or ""),
+            "closeout_evidence": self._declared_evidence_list(payload.get("closeout_evidence")),
         }
 
     def _coerce_list(self, value: Any) -> list[str]:
@@ -571,42 +573,148 @@ class DeskopsOperations:
             return []
         return [str(value)]
 
+    def _declared_evidence_list(self, value: Any) -> list[str]:
+        """The stored closeout_evidence as plain strings; vocabulary is checked where it is used."""
+        return [item.strip() for item in self._coerce_list(value) if item.strip()]
+
+    def _declared_closeout_evidence(self, payload: dict[str, Any]) -> tuple[list[str], bool]:
+        """Evidence the task declared, and whether it is the implicit-code migration.
+
+        A task without the field predates it: it is gated as code, with an alert.
+        """
+        declared = self._declared_evidence_list(payload.get("closeout_evidence"))
+        if declared:
+            return declared, False
+        return list(closeout_gates_module.CODE_EVIDENCE), True
+
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
         evidence = self._closeout_reference_evidence(payload)
-        return any(
-            bool(evidence[key])
-            for key in ("atom", "tests", "commit")
-        )
+        declared, _ = self._declared_closeout_evidence(payload)
+        probes = {
+            "tests": "tests",
+            "commit": "commit",
+            "atom": "atom",
+            "document": "document",
+            "external": "external",
+        }
+        return any(bool(evidence[probes[kind]]) for kind in declared if kind in probes)
 
     def verify_task_closeout(self, task_selector: str) -> dict[str, Any]:
         task_path = self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", task_selector)
         payload = self._resolve_task_payload(task_path.stem)
         reference_evidence = self._closeout_reference_evidence(payload)
         changed_files = self._coerce_list(payload.get("files") or [])
-        link_gate = self._closeout_link_gate(payload, changed_files, reference_evidence)
-        tests_gate = CloseoutGateReport(
-            ok=bool(reference_evidence["tests"]),
-            evidence=reference_evidence["tests"],
-            findings=[] if reference_evidence["tests"] else [{"code": "missing_tests_evidence", "message": "No resolvable test evidence reference found."}],
-        )
-        commit_gate = CloseoutGateReport(
-            ok=bool(reference_evidence["commit"]),
-            evidence=reference_evidence["commit"],
-            findings=[] if reference_evidence["commit"] else [{"code": "missing_commit_evidence", "message": "No resolvable commit reference found."}],
-        )
-        gate_dict = {
-            "tests": tests_gate.to_dict(),
-            "atom_or_materialization_link": link_gate.to_dict(),
-            "commit": commit_gate.to_dict(),
-        }
-        findings = [
-            *tests_gate.findings,
-            *link_gate.findings,
-            *commit_gate.findings,
-        ]
+        declared, implicit = self._declared_closeout_evidence(payload)
+
+        findings: list[dict[str, str]] = []
+        alerts: list[dict[str, str]] = []
+        unknown = [kind for kind in declared if kind not in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY]
+        for kind in unknown:
+            findings.append(
+                {
+                    "code": "unknown_closeout_evidence",
+                    "message": f"Declared closeout evidence '{kind}' is not in the vocabulary: "
+                    + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY),
+                }
+            )
+        declared = [kind for kind in declared if kind not in unknown]
+
+        if implicit:
+            alerts.append(
+                {
+                    "code": "closeout_evidence_not_declared",
+                    "message": "This task declares no closeout_evidence; it predates the field and is gated as code "
+                    "(tests, commit, atom|materialization). Declare it with: deskops edit task "
+                    f"{task_path.stem} closeout_evidence '[\"commit\", \"document\"]' (kinds: "
+                    + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY)
+                    + ").",
+                }
+            )
+        python_changes = [path for path in changed_files if str(path).endswith(".py")]
+        if python_changes and "tests" not in declared:
+            alerts.append(
+                {
+                    "code": "python_changes_without_declared_tests",
+                    "message": "The task changes Python files ("
+                    + ", ".join(python_changes)
+                    + ") but did not declare tests as closeout evidence; this does not block closeout.",
+                }
+            )
+
+        gate_dict: dict[str, Any] = {}
+        found: list[str] = []
+        ok = not unknown
+
+        def add_gate(name: str, gate: CloseoutGateReport, found_label: str | None) -> None:
+            nonlocal ok
+            gate_dict[name] = gate.to_dict()
+            findings.extend(gate.findings)
+            ok = ok and gate.ok
+            if found_label:
+                found.append(found_label)
+
+        if "tests" in declared:
+            tests = reference_evidence["tests"]
+            add_gate(
+                "tests",
+                CloseoutGateReport(
+                    ok=bool(tests),
+                    evidence=tests,
+                    findings=[] if tests else [{"code": "missing_tests_evidence", "message": "No resolvable test evidence reference found."}],
+                ),
+                "tests" if tests else None,
+            )
+        if "atom" in declared or "materialization" in declared:
+            link_gate = self._closeout_link_gate(payload, changed_files, reference_evidence)
+            real_links = [item for item in link_gate.evidence if not item.startswith("knowledge-coverage-exempt")]
+            label = None
+            if link_gate.ok and real_links:
+                label = "atom|materialization"
+            elif link_gate.ok:
+                label = "atom|materialization (exento: sin atoms locales)"
+            add_gate("atom_or_materialization_link", link_gate, label)
+        if "commit" in declared:
+            commits = reference_evidence["commit"]
+            add_gate(
+                "commit",
+                CloseoutGateReport(
+                    ok=bool(commits),
+                    evidence=commits,
+                    findings=[] if commits else [{"code": "missing_commit_evidence", "message": "No resolvable commit reference found."}],
+                ),
+                "commit" if commits else None,
+            )
+        if "document" in declared:
+            documents = reference_evidence["document"]
+            add_gate(
+                "document",
+                CloseoutGateReport(
+                    ok=bool(documents),
+                    evidence=documents,
+                    findings=[] if documents else [{"code": "missing_document_evidence", "message": "No existing document (a .md/.rst/.txt/.adoc/.yaml file outside tests/ and desk/tasks/) found in references or files."}],
+                ),
+                "document" if documents else None,
+            )
+        if "external" in declared:
+            urls = reference_evidence["external"]
+            add_gate(
+                "external",
+                CloseoutGateReport(
+                    ok=bool(urls),
+                    evidence=urls,
+                    findings=[] if urls else [{"code": "missing_external_evidence", "message": "No http(s) URL found in references."}],
+                ),
+                "external" if urls else None,
+            )
+
         report = {
             "task_id": str(payload.get("id") or task_path.stem),
-            "ok": tests_gate.ok and link_gate.ok and commit_gate.ok,
+            "ok": ok,
+            "declared": declared,
+            "found": found,
+            "summary": closeout_gates_module.gate_summary(declared, found),
+            "implicit_code": implicit,
+            "alerts": alerts,
             "gates": gate_dict,
             "findings": findings,
         }
@@ -988,6 +1096,7 @@ class DeskopsOperations:
             inherit_acceptance_context=bool(payload.get("inherit_acceptance_context") or False),
             atoms=list(payload.get("atoms") or []),
             from_drawer=payload.get("from_drawer") or "",
+            closeout_evidence=list(payload.get("closeout_evidence") or []),
             effective_references=list(payload.get("effective_references") or payload.get("references") or []),
             effective_pills=list(payload.get("effective_pills") or payload.get("pills") or []),
             effective_tags=list(payload.get("effective_tags") or payload.get("tags") or []),

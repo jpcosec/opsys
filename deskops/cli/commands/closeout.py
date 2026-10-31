@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import sys
 from typing import Any
 
 from deskops.operations import DeskopsOperations
@@ -64,6 +65,11 @@ class CloseoutCLI:
         root = Path(args.root).resolve()
         report = DeskopsOperations(root).verify_task_closeout(args.task)
         print(json.dumps(report, indent=2, sort_keys=True))
+        # The JSON stays machine-readable on stdout; the declared/found line and the
+        # alerts are always said aloud on stderr, never silently folded into the report.
+        print(f"Closeout gate: {report['summary']}", file=sys.stderr)
+        for alert in report.get("alerts") or []:
+            print(f"ALERTA {alert['code']}: {alert['message']}", file=sys.stderr)
         return 0 if report["ok"] else 1
 
     def _commit(self, args: Any) -> int:

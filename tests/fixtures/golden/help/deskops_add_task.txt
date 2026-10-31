@@ -6,6 +6,7 @@ usage: deskops add task [-h] [--from-yaml FROM_YAML] [--root ROOT]
                         [--validation VALIDATION [VALIDATION ...]]
                         [--depends-on DEPENDS_ON [DEPENDS_ON ...]]
                         [--task-type TASK_TYPE]
+                        [--evidence EVIDENCE [EVIDENCE ...]]
                         [--inherits-from INHERITS_FROM [INHERITS_FROM ...]]
                         [--atom ATOM [ATOM ...]]
                         [--inherit-acceptance-context]
@@ -40,6 +41,14 @@ options:
   --task-type TASK_TYPE
                         Workflow task type such as design, implementation,
                         test, reflection, or closeout.
+  --evidence EVIDENCE [EVIDENCE ...]
+                        Closeout evidence this task must show, declared now:
+                        tests, commit, atom, materialization, document,
+                        external. Omitted, it is filled from --task-type
+                        (code: tests+commit+atom|materialization;
+                        docs|spec|design: commit+document; external:
+                        external). Without --evidence or --task-type the
+                        command fails.
   --inherits-from INHERITS_FROM [INHERITS_FROM ...]
                         Task identifiers that provide inherited workflow
                         context; repeat or space-separate as needed.

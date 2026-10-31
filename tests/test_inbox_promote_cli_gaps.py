@@ -231,7 +231,7 @@ def _authored_task_argv(tmp_path: Path, *extra: str) -> list[str]:
     # --validation takes nargs="+", so it has to stay last.
     return [
         "add", "task", "--root", str(tmp_path),
-        "--title", "Authored From Drawer",
+        "--title", "Authored From Drawer", "--task-type", "docs",
         "--goal", "G.", "--scope", "S.", "--implementation-path", "I.", "--done-when", "D.",
         *extra,
         "--validation", "pytest",

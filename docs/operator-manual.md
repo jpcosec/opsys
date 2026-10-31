@@ -362,6 +362,7 @@ drawer file is kept for manual cleanup.
 ```bash runnable
 deskops add task --root . \
   --title "Close a manual task" \
+  --task-type docs \
   --why "Why." \
   --goal "Goal." \
   --scope "Scope." \

@@ -81,7 +81,7 @@ def test_local_graph_next_show_and_retirement_accept_portable_context(tmp_path, 
     }
     assert context_paths <= contained_paths
     assert main(['add', 'task', '--root', str(tmp_path), '--title', 'Portable context',
-                 '--goal', 'Check selectors', '--scope', 'Disposable fixture']) == 0
+                 '--goal', 'Check selectors', '--scope', 'Disposable fixture', '--task-type', 'docs']) == 0
     report = DeskopsOperations(tmp_path).next_action_report('task-portable-context')
     assert report['pills'] == PILLS
     for pill in PILLS:

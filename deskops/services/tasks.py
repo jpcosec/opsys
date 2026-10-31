@@ -20,6 +20,7 @@ from deskops.models import BoardDoc
 from deskops.models import TaskDoc
 from deskops.operations import TaskBundle
 from deskops.runtime import Task
+from deskops.services import closeout_gates
 from deskops.specs import compile_task_spec
 from deskops.workflow.next_actions import load_task_lifecycle_spec
 from deskops.workflow.next_actions import match_workflow_state
@@ -81,6 +82,8 @@ class TasksService:
         (deskops/lifecycle.py), so nothing else is written per task."""
         self.ensure_workspace()
         payload = self._normalize_task_payload(raw_payload)
+        # A new task states how it closes; one that names a task_type gets the type's evidence.
+        payload["closeout_evidence"] = closeout_gates.resolve_new_task_evidence(payload, require=False)
         spec = lifecycle.load_lifecycle_spec()
         compiled = compile_task_spec(self._ops.spec_registry, payload, entry_node=spec.entry_node)
         task_id = compiled.task_payload["id"]

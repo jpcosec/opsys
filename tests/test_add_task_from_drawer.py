@@ -32,7 +32,7 @@ def test_payload_and_flag_resolve_the_same_drawer_path(lifecycle_desk: Path) -> 
 
     flag = _cli(
         root, "add", "task",
-        "--title", "Flag drawer",
+        "--title", "Flag drawer", "--task-type", "docs",
         "--from-drawer", "rw-f0-x",
     )
     assert flag.returncode == 0, flag.stderr or flag.stdout
@@ -41,6 +41,7 @@ def test_payload_and_flag_resolve_the_same_drawer_path(lifecycle_desk: Path) -> 
         root,
         "yaml-payload.yml",
         "title: YAML drawer\n"
+        "task_type: docs\n"
         "id: task-yaml-drawer\n"
         "from_drawer: rw-f0-x\n",
     )
@@ -49,7 +50,7 @@ def test_payload_and_flag_resolve_the_same_drawer_path(lifecycle_desk: Path) -> 
 
     inline = _cli(
         root, "add", "task",
-        json.dumps({"title": "JSON drawer", "id": "task-json-drawer", "from_drawer": "rw-f0-x"}),
+        json.dumps({"title": "JSON drawer", "task_type": "docs", "id": "task-json-drawer", "from_drawer": "rw-f0-x"}),
     )
     assert inline.returncode == 0, inline.stderr or inline.stdout
 
@@ -69,7 +70,7 @@ def test_unknown_drawer_selector_in_json_payload_fails(lifecycle_desk: Path) -> 
 
     result = _cli(
         root, "add", "task",
-        json.dumps({"title": "Unknown drawer", "id": "task-unknown-drawer", "from_drawer": "no-such-stem"}),
+        json.dumps({"title": "Unknown drawer", "task_type": "docs", "id": "task-unknown-drawer", "from_drawer": "no-such-stem"}),
     )
 
     assert result.returncode == 1
@@ -86,7 +87,7 @@ def test_ambiguous_drawer_selector_in_json_payload_fails(lifecycle_desk: Path) -
 
     result = _cli(
         root, "add", "task",
-        json.dumps({"title": "Ambiguous drawer", "id": "task-ambiguous-drawer", "from_drawer": "rw-f0"}),
+        json.dumps({"title": "Ambiguous drawer", "task_type": "docs", "id": "task-ambiguous-drawer", "from_drawer": "rw-f0"}),
     )
 
     assert result.returncode == 1

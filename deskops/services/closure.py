@@ -66,6 +66,7 @@ class ClosureService:
         self._ops = operations
         self.root = operations.root
         self.desk_root = operations.desk_root
+        self._gate_notes: list[str] = []
 
     # ---------------------------------------------------------------- routes
     def close_manual(
@@ -381,6 +382,7 @@ class ClosureService:
         extra_stage_paths: list[str] | None = None,
         run_gates: bool = True,
     ) -> ClosureOutcome:
+        self._gate_notes = []
         task_path = task_path or self._task_path(task_id)
         task_rel = self._relative(task_path)
         board_path = self.desk_root / "tasks" / "Board.md"
@@ -530,18 +532,25 @@ class ClosureService:
                 raise
             commit = self._git("rev-parse", "HEAD")
             messages.append(f"Index: {index_path}")
+        messages = [*self._gate_notes, *messages] if run_gates else messages
         if success_line:
             messages.insert(0, success_line.format(commit=commit[:12]))
         return ClosureOutcome(0, messages)
 
     def _gate_outcome(self, task_id: str) -> ClosureOutcome | None:
+        """Run the declared-evidence gate; its declared/found line and alerts are always reported."""
+        self._gate_notes = []
         try:
             report = self._ops.verify_task_closeout(task_id)
         except Exception as exc:  # noqa: BLE001 - a gate that cannot run blocks closure
             return ClosureOutcome(1, [f"Closeout verify failed for {task_id}; the closing commit was not made.", f"- {exc}"])
+        notes = [f"Closeout gate: {report.get('summary', '')}"]
+        for alert in report.get("alerts") or []:
+            notes.append(f"ALERTA {alert.get('code', 'alert')}: {alert.get('message', '')}")
+        self._gate_notes = notes
         if report.get("ok"):
             return None
-        messages = [f"Closeout verify failed for {task_id}; the closing commit was not made."]
+        messages = [f"Closeout verify failed for {task_id}; the closing commit was not made.", *notes]
         for finding in report.get("findings") or []:
             code = finding.get("code", "finding")
             detail = finding.get("message") or finding.get("path") or ""

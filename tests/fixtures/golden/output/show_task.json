@@ -27,6 +27,7 @@
   "inherit_acceptance_context": false,
   "atoms": [],
   "from_drawer": "",
+  "closeout_evidence": [],
   "effective_references": [],
   "effective_pills": [
     "desk/contexts/pill-golden-rule.md"
