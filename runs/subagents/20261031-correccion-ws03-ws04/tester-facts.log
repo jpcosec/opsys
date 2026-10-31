@@ -1,0 +1,68 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+sha256 infraestructura.md 1e1fda815bf56e91f7e47aa13d11d90fc84f7b1f2d44458597add63e44e0d662
+sha256 ui.md b3272dc9586d88975bae7f92f4ed392411b83c0ca7b2932b382a287ce3c477a6
+
+$ git -C ../UIs/graph_ui log -1 --format="%h %ad %s" --date=short 0eb7dd7
+0eb7dd7 2026-10-19 views: graph_ui evalúa vistas de proyección con sldb.api.graph
+
+$ git -C ../UIs/graph_ui log -1 --format="%h %ad %s" --date=short b9ab83c
+b9ab83c 2026-10-19 views: las llamadas a sldb pasan por sldb_adapter
+
+$ git -C ../UIs/graph_ui log -1 --format="%h %ad %s" --date=short 2a15356
+2a15356 2026-10-20 Vistas (ViewDoc): la notación de la vista se aplica con resolve_documents y review-workbench la dibuja
+
+$ git -C ../UIs/graph_ui log -1 --format="%h %ad %s" --date=short f16fcd1
+f16fcd1 2026-10-31 closeout: task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto
+
+$ git -C ../UIs/graph_ui log -1 --format="%h %ad %s" --date=short 134a665
+134a665 2026-10-31 docs(board): reflejar cierre de task-workspace-multiproyeccion en notes
+
+$ git -C ../UIs/graph_ui show --stat --format= f16fcd1 | grep -E "desk/tasks|Board" | head
+desk/tasks/Board.md                                |  4 +-
+
+$ git -C ../UIs/graph_ui show --stat --format= 134a665 | head -6
+desk/tasks/Board.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+$ git -C ../UIs/graph_ui ls-files frontends/mindmap/projection_views.py frontends/mindmap/views_routes.py tests/test_projection_views.py tests/e2e_review_workbench_views.py
+frontends/mindmap/projection_views.py
+frontends/mindmap/views_routes.py
+tests/e2e_review_workbench_views.py
+tests/test_projection_views.py
+
+$ git -C ../UIs/graph_ui status --short frontends/mindmap/projection_views.py frontends/mindmap/views_routes.py
+
+
+$ git diff --stat -- desk/drawer/plans/workspace-documental/auditoria
+.../auditoria/infraestructura.md                   | 46 ++++++++++++----------
+ .../plans/workspace-documental/auditoria/ui.md     | 37 ++++++++++++-----
+ 2 files changed, 53 insertions(+), 30 deletions(-)
+
+$ git diff --unified=0 -- desk/drawer/plans/workspace-documental/auditoria | grep -E "^@@" | head -60
+@@ -2,0 +3,2 @@
+@@ -17 +19 @@ Universo: sldb, pron y spec2viz tal como están en esos HEAD. Los CLIs corridos
+@@ -28 +30 @@ Fuente = archivo Markdown en disco; payload = lo que una operación expuesta ent
+@@ -30 +32 @@ Fuente = archivo Markdown en disco; payload = lo que una operación expuesta ent
+@@ -49 +51 @@ Esta es la sección central. Cada fila describe qué protege, a qué granularida
+@@ -54 +56 @@ Esta es la sección central. Cada fila describe qué protege, a qué granularida
+@@ -97 +99 @@ Referencia documental = cualquier forma implementada de que un documento apunte
+@@ -112 +114 @@ Búsqueda expuesta = una operación (CLI, HTTP o función pública) o un índice
+@@ -119 +121 @@ Búsqueda expuesta = una operación (CLI, HTTP o función pública) o un índice
+@@ -138,0 +141,2 @@ Búsqueda expuesta = una operación (CLI, HTTP o función pública) o un índice
+@@ -147,4 +151,4 @@ Búsqueda exacta pedida: `grep -rIn ViewDoc` sobre las carpetas de los tres repo
+@@ -152 +156 @@ Búsqueda exacta pedida: `grep -rIn ViewDoc` sobre las carpetas de los tres repo
+@@ -158,3 +162,3 @@ Búsqueda exacta pedida: `grep -rIn ViewDoc` sobre las carpetas de los tres repo
+@@ -165,5 +169,5 @@ Búsqueda exacta pedida: `grep -rIn ViewDoc` sobre las carpetas de los tres repo
+@@ -2,0 +3,2 @@
+@@ -13 +15 @@ Fecha: 2026-10-31. Auditoría de solo lectura; el único archivo escrito en el r
+@@ -42 +44 @@ Observaciones: ninguno de los dos archivos de test que declaran los tickets (`te
+@@ -58 +60 @@ Columnas: ID | valor | path o símbolo | commit observado | nota (lo que falta o
+@@ -67 +69 @@ Columnas: ID | valor | path o símbolo | commit observado | nota (lo que falta o
+@@ -89,0 +92 @@ Columnas: ID | valor | path o símbolo | commit observado | nota (lo que falta o
+@@ -93,0 +97,16 @@ Nodos con "delta" cuya fila de `reconciliacion.md` los nombra: WS13/13.1, 13.2,
+@@ -130 +149 @@ graph_ui (`git status --short`, 4 líneas):
+@@ -139 +158 @@ graph_ui (`git status --short`, 4 líneas):
+@@ -165 +184 @@ Observaciones de la cabecera del SPEC (antes de `## 1`): dice plan de 44 candida
+@@ -172 +191 @@ Nota final, temas del plan que SPEC no menciona: gates G_* (UI_READ/WRITE, SLDB_
+@@ -174 +193 @@ Nota final, temas del plan que SPEC no menciona: gates G_* (UI_READ/WRITE, SLDB_

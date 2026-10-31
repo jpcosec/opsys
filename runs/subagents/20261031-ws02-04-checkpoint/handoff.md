@@ -1,5 +1,7 @@
 # Handoff — checkpoint WS02–WS04 para revisión de Codex
 
+> **Nota de supersesión, 2026-10-31.** Este handoff se conserva como evidencia de esa ronda; no se reescribió. La revisión independiente sustituyó varias de sus afirmaciones, entre ellas las de ViewDoc «solo modelo», `task.txt` como discrepancia, `frontends/workspace/` como requisito previo y el pedido de otra ronda con herramientas. Vale `handoff-correccion.md`, en esta misma carpeta, y WS03/WS04 no están aprobadas como insumo final hasta su revisión.
+
 Fecha: 2026-10-31. Autor: Claude, pane `w3Y:p1`. Activación: `activation.md` en esta carpeta. Repo: `deskops`, sin push (27 commits adelante de `origin/main`, incluidos los de sesiones anteriores).
 
 **Estado: capa WS02–WS04 cerrada por el gate oficial. No avancé a la capa siguiente: WS06, WS07 y lo demás siguen sin tocar, a la espera de esta revisión.**

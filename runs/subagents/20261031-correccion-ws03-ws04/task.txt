@@ -1,0 +1,9 @@
+Task: task-corregir-auditorías-ws03-y-ws04-tras-revisión-independiente
+Title: Corregir auditorías WS03 y WS04 tras revisión independiente
+Status: ready_for_testing
+Current node: ritual-closeout
+Task type: docs
+From drawer: desk/drawer/tasks/task-corregir-auditorias-ws03-y-ws04-tras-revision.md
+Closeout evidence: commit, document
+Lifecycle gates:
+- task_completes -> complete: open [status = "ready_for_testing" and has(closeout_evidence_verified)]

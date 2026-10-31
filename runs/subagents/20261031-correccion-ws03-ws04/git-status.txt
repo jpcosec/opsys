@@ -1,0 +1,20 @@
+ M desk/drawer/plans/workspace-documental/auditoria/infraestructura.md
+ M desk/drawer/plans/workspace-documental/auditoria/ui.md
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M "desk/tasks/task-corregir-auditor\303\255as-ws03-y-ws04-tras-revisi\303\263n-independiente.md"
+ M runs/subagents/20261031-ws02-04-checkpoint/handoff.md
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-correccion-ws03-ws04/board.txt
+?? runs/subagents/20261031-correccion-ws03-ws04/git-status.txt
+?? runs/subagents/20261031-correccion-ws03-ws04/result-summary.md
+?? runs/subagents/20261031-correccion-ws03-ws04/tester-facts.log
+?? runs/subagents/20261031-correccion-ws03-ws04/tester-input.md
+?? runs/subagents/20261031-correccion-ws03-ws04/tester-pane.txt
+?? runs/subagents/20261031-correccion-ws03-ws04/tester-receipt.json
+?? runs/subagents/20261031-correccion-ws03-ws04/tester-result-summary.md
+?? runs/subagents/20261031-correccion-ws03-ws04/tester.exit
+?? runs/subagents/20261031-correccion-ws03-ws04/tester.stderr
+?? runs/subagents/20261031-correccion-ws03-ws04/testing-handoff.md
+?? runs/subagents/20261031-correccion-ws03-ws04/validation.log
