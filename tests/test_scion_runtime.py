@@ -64,6 +64,7 @@ def test_claude_template_is_portable_and_loud_about_omissions(executor: dict, pr
     assert agent["schema_version"] == "1"
     assert agent["default_harness_config"] == "claude"
     assert agent["model"] == "medium"  # size alias, never the concrete RoleDoc model
+    assert agent["auth_selectedType"] == "oauth-token"  # never left to whatever credential the Hub finds
     assert agent["agent_instructions"] == "agents.md"
     assert agent["system_prompt"] == "system-prompt.md"
     assert agent["max_turns"] and agent["max_duration"]
@@ -83,6 +84,7 @@ def test_pi_template_targets_the_pi_harness_config(executor: dict, profiles: dic
     agent = yaml.safe_load(files["scion-agent.yaml"])
     assert agent["default_harness_config"] == "pi"
     assert agent["model"] == "small"
+    assert "auth_selectedType" not in agent
     assert "repository `sldb`" in files["agents.md"]
 
 

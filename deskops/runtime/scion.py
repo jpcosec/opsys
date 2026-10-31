@@ -54,6 +54,10 @@ DEFAULT_MAX_DURATION = "2h"
 COORDINATOR_MAX_TURNS = 1000
 COORDINATOR_MAX_DURATION = "24h"
 
+#: Without this the Hub picks whichever credential it finds; a stale
+#: ``CLAUDE_AUTH`` file beats a project token and the agent is not logged in.
+HARNESS_AUTH: dict[str, str] = {"claude": "oauth-token"}
+
 TEMPLATE_FILES: tuple[str, ...] = ("scion-agent.yaml", "system-prompt.md", "agents.md")
 
 
@@ -153,6 +157,8 @@ def scion_template_files(
             f"the harness-config '{harness}' resolves it to a concrete model (Scion local/templates.md)."
         )
     lines.append(f"model: {model_alias}")
+    if harness in HARNESS_AUTH:
+        lines.append(f"auth_selectedType: {HARNESS_AUTH[harness]}")
     coordinator = resolved_mode == "coordinator"
     lines.append(f"max_turns: {COORDINATOR_MAX_TURNS if coordinator else DEFAULT_MAX_TURNS}")
     lines.append(f"max_duration: {COORDINATOR_MAX_DURATION if coordinator else DEFAULT_MAX_DURATION}")
