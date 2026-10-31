@@ -26,7 +26,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones controladas) está pendiente del contrato WS12, que compara API SLDB existente, composición y eventual wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones controladas) está pendiente del contrato WS12, que compara API SLDB existente, composición de llamadas a esas API (no la Composición del glosario) y eventual wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 

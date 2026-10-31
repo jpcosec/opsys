@@ -31,7 +31,7 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Refinar el ticket de external_references.scion, sin segundo pipeline: intento no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes. WS32.1/32.2 validan identidad/registro/idempotencia local sin dispatch/reply de red; estados Hub reales se prueban y correlacionan en WS34/37 bajo G_EXEC, sin mocks ni eventos inventados.
+Refinar el candidato de drawer de external_references.scion (no es ticket del Board), sin segundo pipeline: intento no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes. WS32.1/32.2 validan identidad/registro/idempotencia local sin dispatch/reply de red; estados Hub reales se prueban y correlacionan en WS34/37 bajo G_EXEC, sin mocks ni eventos inventados.
 
 ## Aceptación
 

@@ -24,7 +24,7 @@ Base explícita: `sldb:repository_root/`. Concretar archivos exactos dentro de e
 
 ## Alcance
 
-Primero verificar capacidad existente. Un documento raw-source se extrae/valida y guarda por API pública con revisión y preservación de campos protegidos; no sobrescribir Markdown desde browser. Conserva solo raw-source, y la precondición de escritura de payload por campos es un hueco separado, producido por WS45 e independiente de source_mode.
+Primero verificar capacidad existente. Un documento raw-source se extrae/valida y guarda por API pública con revisión y preservación de campos protegidos; no sobrescribir Markdown desde browser. Conserva solo raw-source, y la precondición de escritura de payload por campos es un hueco separado, producido por WS45 e independiente de source_mode. Las pruebas de conflicto de WS20 usan la precondición de guardado raw-source que fije WS12 y no esperan a WS45.
 
 ## Aceptación
 

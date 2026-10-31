@@ -1,6 +1,14 @@
 id: deskops-workspace-documental
 revision: 9
-revision_note: 'Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta de autoria de ViewDoc/NotationDoc concretos (WS18), sin portabilidad generica ni evaluador nuevo; B) glosario de revision en tres conceptos y nuevo productor planificado WS45 (sldb, precondicion de escritura de payload, independiente de source_mode) con gate G_PAYLOAD_PRECONDITION, consumido por WS19, WS19.1, WS19.2 y WS21; C) captura a drawer como canal permitido pendiente de WS12 (comparacion API SLDB / composicion / eventual wrapper Deskops); D) WS06 clasifica sin ejecutar WS05, WS32/33 conservan dependencias y gates; recibos externos = acta del receptor P01 y WS11/12 como fuente de contrato. Nada implementado ni aceptado; execution_authorized=false.'
+revision_note: 'Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
+  de autoria de ViewDoc/NotationDoc concretos (WS18), sin portabilidad generica ni
+  evaluador nuevo; B) glosario de revision en tres conceptos y nuevo productor planificado
+  WS45 (sldb, precondicion de escritura de payload, independiente de source_mode)
+  con gate G_PAYLOAD_PRECONDITION, consumido por WS19, WS19.1, WS19.2 y WS21; C) captura
+  a drawer como canal permitido pendiente de WS12 (comparacion API SLDB / composicion
+  / eventual wrapper Deskops); D) WS06 clasifica sin ejecutar WS05, WS32/33 conservan
+  dependencias y gates; recibos externos = acta del receptor P01 y WS11/12 como fuente
+  de contrato. Nada implementado ni aceptado; execution_authorized=false.'
 status: final_plan_reviewed
 as_of: '2026-10-31'
 source: dag.yaml is canonical; generated README/table/task files/diagram must agree
@@ -45,8 +53,8 @@ gates:
     state: pending
     resolver: WS45
     produced_by: WS45
-    evidence: 'Inventario con path/simbolo/commit y pruebas reales focalizadas en sldb
-      de la precondicion de escritura de payload que fije el contrato WS12 (representacion,
+    evidence: 'Inventario con path/simbolo/commit y pruebas reales focalizadas en
+      sldb de la precondicion de escritura de payload que fije el contrato WS12 (representacion,
       operaciones, escritores alcanzados): estado previo obsoleto rechazado sin cambios
       y vigente aplicado, rechazo observable por el llamante; commit/blob verificable
       en sldb. Independiente de source_mode y de G_SOURCE. El `expected` por valor
@@ -498,10 +506,10 @@ tasks:
     WS32/33): WS06 puede clasificar y conservar esa descomposición sin ejecutar WS05;
     WS32 y WS33 conservan sus dependencias (incluida WS05) y gates canónicos. Registrar
     en reconciliacion.md la atomización propuesta, sin notificar, despachar ni modificar
-    el Board de graph_ui. Recibos externos: el receptor P01 produce el acta en su repo
-    al preparar cada delta; WS11 y WS12 son fuente de contrato y solo enlazan esas
-    actas. Sin firmas, gates ni recepción ficticia. «No designado en P01» para deskops
-    es un dato de esa tabla, no un permiso que frene trabajo local autorizado.'
+    el Board de graph_ui. Recibos externos: el receptor P01 produce el acta en su
+    repo al preparar cada delta; WS11 y WS12 son fuente de contrato y solo enlazan
+    esas actas. Sin firmas, gates ni recepción ficticia. «No designado en P01» para
+    deskops es un dato de esa tabla, no un permiso que frene trabajo local autorizado.'
   acceptance: Matriz con una fila por delta o capacidad propuesta, agrupada por repo
     dueño, no por nodo del DAG; correspondencia ticket/delta y responsable ya designado
     P01; operador Scion posterior solo para ramal E; no produce gates de aceptación
@@ -725,11 +733,11 @@ tasks:
   output_scope: contratos/operaciones.md
   scope: Whitelist de lectura/mutación por campo/modelo; adapter CLI/API público;
     policy coordinador, Git, workflow-protected fields, precondición de escritura
-    (before-image por valor, token publicado o CAS solo si el contrato lo fija)/locks, fallos parciales,
-    permisos y closeout fuera del servidor UI. Adapter = canal público existente (CLI/DeskopsOperations/API
-    sldb) por el que la UI invoca cada operación; si no existe, se registra hueco
-    y dueño, no se diseña uno aquí. Whitelist incluye campos protegidos definidos
-    por modelos/lifecycle auditados WS02 (status/current_node/history/closeout_evidence
+    (before-image por valor, token publicado o CAS solo si el contrato lo fija)/locks,
+    fallos parciales, permisos y closeout fuera del servidor UI. Adapter = canal público
+    existente (CLI/DeskopsOperations/API sldb) por el que la UI invoca cada operación;
+    si no existe, se registra hueco y dueño, no se diseña uno aquí. Whitelist incluye
+    campos protegidos definidos por modelos/lifecycle auditados WS02 (status/current_node/history/closeout_evidence
     entre otros que determine modelo), por modelo/operación; no lista universal inventada.
   acceptance: 'G_WRITE_POLICY registrado. Publicar whitelist por operación/campo/canal/actor/revisión/Git/efectos
     y estado existente comprobado/faltante. Mapear qué recibo receptor/prueba corresponde
@@ -745,20 +753,22 @@ tasks:
     no fuerza CAS en toda CLI ni un algoritmo, ni infiere frescura por CLI, y P03
     no cambia. Su productor es WS45 (sldb, independiente de source_mode) y su gate
     G_PAYLOAD_PRECONDITION. Captura directa a drawer: WS12 compara API SLDB existente
-    (`sldb.api.create_document`, DrawerService), composición y eventual wrapper Deskops,
-    sin aprobar ninguna ni crear API o modelo por reflejo; `message send` más `promote`
-    no queda aprobado (la promoción borra la nota y deja `why` apuntando a una ruta
-    borrada). Solo si falta conducta de workflow se registra un productor Deskops
-    explícito antes de WS25.2; si la composición cumple, se documenta prueba y contrato. Lock solo UI no coordina CLI/agentes: con otro coordinador
-    escritor, read-only/handoff hasta API pública con autoridad compartida probada.
-    WS12 solo escribe contrato y enlaces en deskops; no ejecuta mutaciones ni crea
-    actas interrepo. Contrastar inventarios WS02–04 y contrato WS11, citar path/símbolo/commit
-    observado; comprobado requiere evidencia real citada de API/prueba existente.
-    Cierra con matriz de capacidades/efectos y huecos asignados, no requiere habilitar
-    ninguna mutación. Receptor P01 en repo dueño produce acta por delta al prepararlo;
-    G_WRITE_CONTRACT admite requisito de API faltante solo para el nodo productor
-    de esa API (WS20 raw-source con G_SOURCE; WS45 precondición de payload con G_PAYLOAD_PRECONDITION),
-    manteniendo consumidor WS21 bloqueado por G_SOURCE y G_PAYLOAD_PRECONDITION.'
+    (`sldb.api.create_document`, DrawerService), composición de llamadas a esas API
+    (no la Composición del glosario) y eventual wrapper Deskops, sin aprobar ninguna
+    ni crear API o modelo por reflejo; `message send` más `promote` no queda aprobado
+    (la promoción borra la nota y deja `why` apuntando a una ruta borrada). Solo si
+    falta conducta de workflow se registra un productor Deskops explícito antes de
+    WS25.2; si esa composición de llamadas cumple, se documenta prueba y contrato.
+    Lock solo UI no coordina CLI/agentes: con otro coordinador escritor, read-only/handoff
+    hasta API pública con autoridad compartida probada. WS12 solo escribe contrato
+    y enlaces en deskops; no ejecuta mutaciones ni crea actas interrepo. Contrastar
+    inventarios WS02–04 y contrato WS11, citar path/símbolo/commit observado; comprobado
+    requiere evidencia real citada de API/prueba existente. Cierra con matriz de capacidades/efectos
+    y huecos asignados, no requiere habilitar ninguna mutación. Receptor P01 en repo
+    dueño produce acta por delta al prepararlo; G_WRITE_CONTRACT admite requisito
+    de API faltante solo para el nodo productor de esa API (WS20 raw-source con G_SOURCE;
+    WS45 precondición de payload con G_PAYLOAD_PRECONDITION), manteniendo consumidor
+    WS21 bloqueado por G_SOURCE y G_PAYLOAD_PRECONDITION.'
   estimate: M
   task_file: desk/drawer/tasks/workspace-documental/task-ws12.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -1204,20 +1214,20 @@ tasks:
     para selecciones y notación ya soportadas por spec2viz, y su comprobación sobre
     stores reales reutilizando el evaluador y las rutas de graph_ui (C-37) y la notación
     de spec2viz (C-49). ViewDoc es datos sin ruta de store y el evaluador recibe el
-    store por petición, así que no se pide portabilidad genérica, ni servicio, CLI o runtime
-    fuera de graph_ui, ni extraer o compartir el evaluador. No crear UI pages declarativas
-    ficticias.
-    Selecciones concretas y notación requerida vienen de catálogo WS09 y contrato
-    WS11, contrastados con capacidades WS03; si catálogo no fija selección mínima,
-    detener promoción y corregir ese contrato antes de elegir una. No inventar selección
-    aquí.
-  acceptance: Los ViewDoc y NotationDoc concretos definidos por WS09/WS11 se evalúan con
-    el camino existente de graph_ui sobre un store real, la selección coincide con
-    la declarada y el ViewDoc documenta qué selecciona; no se alega que una prueba
-    con dos stores demuestre el mismo payload completo (cambia filtros); tareas receptoras en spec2viz se promueven por dueño. Gate receptor
-    G_SPEC_VIEW requerido; este paquete documental deskops no escribe en spec2viz;
-    la futura TaskDoc de WS18 se promueve y ejecuta en spec2viz por su supervisor/Executor,
-    con recepción G_SPEC_VIEW para ese delta.
+    store por petición, así que no se pide portabilidad genérica, ni servicio, CLI
+    o runtime fuera de graph_ui, ni extraer o compartir el evaluador. No crear UI
+    pages declarativas ficticias. Selecciones concretas y notación requerida vienen
+    de catálogo WS09 y contrato WS11, contrastados con capacidades WS03; si catálogo
+    no fija selección mínima, detener promoción y corregir ese contrato antes de elegir
+    una. No inventar selección aquí.
+  acceptance: Los ViewDoc y NotationDoc concretos definidos por WS09/WS11 se evalúan
+    con el camino existente de graph_ui sobre un store real, la selección coincide
+    con la declarada y el ViewDoc documenta qué selecciona; no se alega que una prueba
+    con dos stores demuestre el mismo payload completo (cambia filtros); tareas receptoras
+    en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; este
+    paquete documental deskops no escribe en spec2viz; la futura TaskDoc de WS18 se
+    promueve y ejecuta en spec2viz por su supervisor/Executor, con recepción G_SPEC_VIEW
+    para ese delta.
   estimate: S
   task_file: desk/drawer/tasks/workspace-documental/task-ws18.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -1247,11 +1257,12 @@ tasks:
   owner_repo: graph_ui
   output_scope: 'Agregado: salidas de WS19.1, WS19.2'
   scope: Delta sobre workspace integrado a1b2b22 de edición; reutilizar editores y
-    API, precondición de escritura (WS45/WS12) y conflicto visible; workflow-protected fields no editables
-    por este canal. Incluir alta/baja de relaciones permitidas por contrato, usando
-    API real y before-image; no crear semántica de relaciones en componente. G_HUMAN_READ
-    habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden
-    avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+    API, precondición de escritura (WS45/WS12) y conflicto visible; workflow-protected
+    fields no editables por este canal. Incluir alta/baja de relaciones permitidas
+    por contrato, usando API real y before-image; no crear semántica de relaciones
+    en componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas
+    aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana
+    de lectura.
   acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
     aceptación. Sus dependientes siguen dependiendo de este ID.'
   estimate: M
@@ -1290,13 +1301,13 @@ tasks:
   owner_repo: graph_ui
   output_scope: frontends/mindmap/views/workspace/fields/; endpoints del contrato
     WS12 consumidos desde graph_ui sin cambios de contrato; tests/
-  scope: Edición de campos reutilizando editores y API, con precondición de
-    escritura de payload (la fija WS12 y la verifica WS45; `expected` por valor, token
-    `version`/`content_hash` o CAS según el contrato, sin asumir hash) y conflicto visible (mensaje de rechazo con el texto local
-    conservado); workflow-protected fields no editables por este canal. Delta sobre
-    workspace integrado a1b2b22 de edición. G_HUMAN_READ habilita uso de mutaciones
-    en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates
-    técnicos sin acta humana de lectura.
+  scope: Edición de campos reutilizando editores y API, con precondición de escritura
+    de payload (la fija WS12 y la verifica WS45; `expected` por valor, token `version`/`content_hash`
+    o CAS según el contrato, sin asumir hash) y conflicto visible (mensaje de rechazo
+    con el texto local conservado); workflow-protected fields no editables por este
+    canal. Delta sobre workspace integrado a1b2b22 de edición. G_HUMAN_READ habilita
+    uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con
+    sus contratos/gates técnicos sin acta humana de lectura.
   acceptance: Guardar/recargar confirma dato real; una escritura obsoleta no pierde
     texto local y el conflicto se muestra como tal. Mutación restringida a desk en
     modo manual exclusivo (P03); otros modos read-only hasta contrato.
@@ -1375,7 +1386,8 @@ tasks:
     y guarda por API pública con revisión y preservación de campos protegidos; no
     sobrescribir Markdown desde browser. Conserva solo raw-source, y la precondición
     de escritura de payload por campos es un hueco separado, producido por WS45 e
-    independiente de source_mode.
+    independiente de source_mode. Las pruebas de conflicto de WS20 usan la precondición
+    de guardado raw-source que fije WS12 y no esperan a WS45.
   acceptance: Reversible = guardar y volver a extraer conserva campos y secciones
     sin pérdida. En ambas ramas G_SOURCE exige API pública y tests de roundtrip, conflicto,
     recuperación tras fallo y campos protegidos. Si la capacidad existe, esos tests
@@ -1417,7 +1429,8 @@ tasks:
     solo la variante elegida por P04; Con pending no se prepara ni se promueve este
     nodo. Al alternar con cambios sin guardar se conserva el buffer; nunca se descarta
     sin confirmación explícita de la persona usuaria; si no confirma, el buffer se
-    conserva. No requiere G_SOURCE si el humano eligió fuente read_only; el guardado por campos exige G_PAYLOAD_PRECONDITION en ambas variantes.
+    conserva. No requiere G_SOURCE si el humano eligió fuente read_only; el guardado
+    por campos exige G_PAYLOAD_PRECONDITION en ambas variantes.
   acceptance: Cumplir la aceptación específica de la variante P04. En editable, G_SOURCE
     y G_WRITE_CONTRACT pasan y se prueba edición/conflicto/roundtrip. En read_only,
     fuente legible no editable y edición por campos probada; manual/WS30 no declaran
@@ -1674,10 +1687,10 @@ tasks:
     WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato
     de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones
     controladas) está pendiente del contrato WS12, que compara API SLDB existente,
-    composición y eventual wrapper Deskops; no se asume ninguno ni se crea API o
-    modelo por reflejo. G_HUMAN_READ habilita
-    uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con
-    sus contratos/gates técnicos sin acta humana de lectura.
+    composición de llamadas a esas API (no la Composición del glosario) y eventual
+    wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. G_HUMAN_READ
+    habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden
+    avanzar con sus contratos/gates técnicos sin acta humana de lectura.
   acceptance: 'UF02: una captura persiste tras recargar en el destino elegido, con
     origen y sin tarea implícita. Permisos del contrato aplicados. Origen = referencia
     tipada al soporte del que nace la captura (ruta o mensaje), con representación
@@ -2121,11 +2134,11 @@ tasks:
   - G_WRITE_CONTRACT
   owner_repo: deskops
   output_scope: 'Agregado: salidas de WS32.1, WS32.2'
-  scope: 'Refinar el ticket de external_references.scion, sin segundo pipeline: intento
-    no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes
-    e idempotentes. WS32.1/32.2 validan identidad/registro/idempotencia local sin
-    dispatch/reply de red; estados Hub reales se prueban y correlacionan en WS34/37
-    bajo G_EXEC, sin mocks ni eventos inventados.'
+  scope: 'Refinar el candidato de drawer de external_references.scion (no es ticket
+    del Board), sin segundo pipeline: intento no es slug, dispatch intent/confirmed
+    separado, manifiesto/RunDoc/cierre consistentes e idempotentes. WS32.1/32.2 validan
+    identidad/registro/idempotencia local sin dispatch/reply de red; estados Hub reales
+    se prueban y correlacionan en WS34/37 bajo G_EXEC, sin mocks ni eventos inventados.'
   acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
     aceptación. Sus dependientes siguen dependiendo de este ID.'
   estimate: M
@@ -2163,19 +2176,19 @@ tasks:
   - G_WRITE_CONTRACT
   owner_repo: deskops
   output_scope: deskops/runtime/scion.py; models/run.py; services/closure.py; tests/
-  scope: 'Refinar el ticket de external_references.scion, sin segundo pipeline: intento
-    no es slug; dispatch intent (intención local registrada) y confirmed (solo respuesta
-    Hub observada) como hechos separados del RunDoc; ambos se registran en el registro
-    por intento que WS32.2 vuelve manifiesto canónico. Confirmed = respuesta de la
-    API pública de Scion con la identidad que exponga, a comprobar en WS05/WS44. WS12
-    especifica contrato/ubicación del registro por intento (input de WS32.2), derivado
-    del runtime real inventariado WS05; WS32.1 materializa ese registro e identidades
-    según contrato, no inventa almacenamiento. Código models/run.py se cambia como
-    código de modelo con registro/validación SLDB; instancias RunDoc trackeadas se
-    crean/editan por API/CLI SLDB, sin ad hoc Markdown. Solo identidad/persistencia
-    mediante operaciones locales reales en store temporal, SIN dispatch/reply de red
-    ni evento Hub fingido. Registro local intent/no confirmado no afirma fallo/éxito
-    de Hub.'
+  scope: 'Refinar el candidato de drawer de external_references.scion (no es ticket
+    del Board), sin segundo pipeline: intento no es slug; dispatch intent (intención
+    local registrada) y confirmed (solo respuesta Hub observada) como hechos separados
+    del RunDoc; ambos se registran en el registro por intento que WS32.2 vuelve manifiesto
+    canónico. Confirmed = respuesta de la API pública de Scion con la identidad que
+    exponga, a comprobar en WS05/WS44. WS12 especifica contrato/ubicación del registro
+    por intento (input de WS32.2), derivado del runtime real inventariado WS05; WS32.1
+    materializa ese registro e identidades según contrato, no inventa almacenamiento.
+    Código models/run.py se cambia como código de modelo con registro/validación SLDB;
+    instancias RunDoc trackeadas se crean/editan por API/CLI SLDB, sin ad hoc Markdown.
+    Solo identidad/persistencia mediante operaciones locales reales en store temporal,
+    SIN dispatch/reply de red ni evento Hub fingido. Registro local intent/no confirmado
+    no afirma fallo/éxito de Hub.'
   acceptance: Dos intentos locales generan IDs distintos antes de dispatch y registro
     intent/no confirmado mediante operaciones reales del store temporal, sin simular
     respuesta Hub ni invocar red. Ningún no confirmado se etiqueta como fallo/aceptado
@@ -2872,9 +2885,9 @@ tasks:
     se rechaza sin cambios, una vigente se aplica y el rechazo es observable por el
     llamante. Si la capacidad existe, esas pruebas bastan y no se duplica código;
     si es parcial, se completa solo lo faltante y se vuelve a probar todo el contrato,
-    tras recibo G_SLDB_WRITE para este delta. G_PAYLOAD_PRECONDITION se satisface solo
-    con esa evidencia verificable. Este nodo es plan; no afirma que exista ni que
-    esté implementado o aceptado.
+    tras recibo G_SLDB_WRITE para este delta. G_PAYLOAD_PRECONDITION se satisface
+    solo con esa evidencia verificable. Este nodo es plan; no afirma que exista ni
+    que esté implementado o aceptado.
   estimate: M
   task_file: desk/drawer/tasks/workspace-documental/task-ws45.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -3106,13 +3119,14 @@ hierarchy:
       bloquea WS24.'
     acceptance: Abrir mismos documentos/soportes desde lista/tablero/dependencias,
       procedimiento y conocimiento; no escribir status desde renderer ni marcar pasos
-      por lectura; índices siguen fuentes. ViewDoc concreto prueba su selección solo
-      cuando se integra. Completitud sustantiva del paquete requiere salidas de sus
-      hijos e integración indicada; revisiones de comprensión no equivalen a producto
-      entregado. Describir validaciones futuras sin ejecutarlas; agrupación no autoriza
-      tareas ni añade aristas. Para revisar este macroencargo, dry-run debe describir
-      cómo se ejecutaría hipotéticamente el paquete por sus hijos/orden/aristas, qué
-      artefacto pasa a qué hijo y cómo se probaría resultado integrado; NO limitarse
+      por lectura; índices siguen fuentes. ViewDoc concreto (WS18, opcional) prueba
+      su selección en WS18 sobre un store real con el evaluador de graph_ui; sin WS18
+      el resto del paquete puede completarse. Completitud sustantiva del paquete requiere
+      salidas de sus hijos e integración indicada; revisiones de comprensión no equivalen
+      a producto entregado. Describir validaciones futuras sin ejecutarlas; agrupación
+      no autoriza tareas ni añade aristas. Para revisar este macroencargo, dry-run
+      debe describir cómo se ejecutaría hipotéticamente el paquete por sus hijos/orden/aristas,
+      qué artefacto pasa a qué hijo y cómo se probaría resultado integrado; NO limitarse
       a comprobar status/hashes/disposition. No ejecutar esos pasos ahora.
     children:
     - WS17
@@ -3139,26 +3153,27 @@ hierarchy:
       Agrupación de entregables sin ejecución propia; dry-run hipotético describe
       orden/aristas y transferencia entre hijos: WS12 contrato por delta alimenta
       WS19 campos, WS20 API fuente/G_SOURCE, WS45 precondición de payload/G_PAYLOAD_PRECONDITION
-      y WS21 fuente/render; WS25 captura, WS26
-      tareas, WS27 diff/evidencia, WS28 handoff y WS42 conocimiento; WS30 integra
-      pruebas humanas con entradas WS17. Orden parcial obligatorio de ejecución hipotética
-      (no simultaneidad de toda la lista): WS12→WS19 y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos y WS21; WS12→WS25
+      y WS21 fuente/render; WS25 captura, WS26 tareas, WS27 diff/evidencia, WS28 handoff
+      y WS42 conocimiento; WS30 integra pruebas humanas con entradas WS17. Orden parcial
+      obligatorio de ejecución hipotética (no simultaneidad de toda la lista): WS12→WS19
+      y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos y
+      WS21 (la arista WS12 y el gate se suman: el guardado espera ambos); WS12→WS25
       y sus hijos; WS13+WS12→WS27 y sus hijos; WS19+WS20/G_SOURCE→WS21 editable; WS22+WS12→WS26
       y sus hijos (WS26.1→WS26.2); WS19+WS24+WS12→WS42; WS27+WS12→WS28; todas las
       salidas WS17/21/22/23/24/25/26/28/42→WS30. Solo ejecutar en paralelo nodos ya
       ready con todos sus prerrequisitos satisfechos y sin solapamiento de archivos;
       WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22.'
-    acceptance: precondición de escritura/conflicto/buffer/protegidos probados; guardar sin commit; coordinador
-      escritor implica read-only/handoff; mostrar evidencia declarada/encontrada/verificada
-      distinta; cierre confirmado por commit/Deskops. Acta WS30 cubre UF02–05 y navegación;
-      uso UI espera G_HUMAN_READ, desarrollo API aislado no. Completitud sustantiva
-      del paquete requiere salidas de sus hijos e integración indicada; revisiones
-      de comprensión no equivalen a producto entregado. Describir validaciones futuras
-      sin ejecutarlas; agrupación no autoriza tareas ni añade aristas. Para revisar
-      este macroencargo, dry-run debe describir cómo se ejecutaría hipotéticamente
-      el paquete por sus hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo
-      se probaría resultado integrado; NO limitarse a comprobar status/hashes/disposition.
-      No ejecutar esos pasos ahora.
+    acceptance: precondición de escritura/conflicto/buffer/protegidos probados; guardar
+      sin commit; coordinador escritor implica read-only/handoff; mostrar evidencia
+      declarada/encontrada/verificada distinta; cierre confirmado por commit/Deskops.
+      Acta WS30 cubre UF02–05 y navegación; uso UI espera G_HUMAN_READ, desarrollo
+      API aislado no. Completitud sustantiva del paquete requiere salidas de sus hijos
+      e integración indicada; revisiones de comprensión no equivalen a producto entregado.
+      Describir validaciones futuras sin ejecutarlas; agrupación no autoriza tareas
+      ni añade aristas. Para revisar este macroencargo, dry-run debe describir cómo
+      se ejecutaría hipotéticamente el paquete por sus hijos/orden/aristas, qué artefacto
+      pasa a qué hijo y cómo se probaría resultado integrado; NO limitarse a comprobar
+      status/hashes/disposition. No ejecutar esos pasos ahora.
     children:
     - WS19
     - WS20
