@@ -1,0 +1,62 @@
+date -I
+git rev-parse HEAD; git status --short | wc -l
+git -C ../UIs/graph_ui rev-parse HEAD; git -C ../UIs/graph_ui status --short
+git -C /home/jp/proyectos/softfactory_spec rev-parse HEAD; git -C /home/jp/proyectos/softfactory_spec status --short | wc -l
+herdr pane list
+ls ../UIs/graph_ui/desk/tasks; wc -l ../UIs/graph_ui/desk/tasks/Board.md
+git status --short
+cat tasks, SPEC
+ls/find graph_ui frontends (read-only); git log
+git log --format=%h -- frontends/mindmap/workspace_routes.py
+git log --format=%h -- frontends/mindmap/views/workspace/node/workspace-view.js
+git log --format=%h -- frontends/mindmap/views/workspace/node/workspace.mjs
+git log --format=%h -- frontends/mindmap/views/workspace/node/workspace.css
+git log --format=%h -- tests/test_mindmap_workspace.py
+git log --format=%h -- tests/mindmap-workspace.test.mjs
+git log --format=%h -- tests/e2e_mindmap_workspace.py
+git log --format=%h -- docs/workspace-ui.md
+git log --format=%h -- frontends/mindmap/deskops_routes.py
+git log --format=%h -- frontends/mindmap/views/workflow/deskops/deskops-view.js
+git log --format=%h -- frontends/mindmap/views/workflow/deskops/deskops.mjs
+git log --format=%h -- frontends/mindmap/shell/registry.js
+git log --format=%h -- frontends/mindmap/persistence.py
+git log --format=%h -- frontends/mindmap/dialogs/conflict-dialog.js
+git log --format=%h -- frontends/mindmap/views/documents/map/document-dialog.js
+git log --format=%h -- frontends/mindmap/models_service.py
+git log --format=%h -- frontends/mindmap/dialogs/class-dialog.js
+git log --format=%h -- frontends/mindmap/views/models/diagram
+git log --format=%h -- frontends/mindmap/views/documents/map/quick-create-dialog.js
+git log --format=%h -- tests/e2e_mindmap_quick_capture.py
+git log --format=%h -- tests/test_mindmap_deskops.py
+git log --format=%h -- tests/test_mindmap_quick_capture.py
+git log --format=%h -- frontends/mindmap/source
+git log --format=%h -- frontends/mindmap/serve.py
+git log --format=%h -- frontends/mindmap/shared/document-ir.mjs
+git log --format=%h -- frontends/mindmap/views/documents/map/connect-dialog.js
+grep deskops desk/tasks for files/graph_ui claims
+git cat-file e80e8c0 8678aea; dag id listing; greps in plan for SPEC compare
+ls SPEC link targets; sha256 of plan and workspace files
+verification greps in graph_ui (read-only)
+sha256 drawer candidates graph_ui
+sha256 activation.md; grep P03
+git log --format=%h -S'filterCatalog'
+git log --format=%h -S'_check_problems_for_node'
+git log --format=%h -S'_build_graph_neighborhood'
+git log --format=%h -S'popstate'
+git log --format=%h -S'advance_task'
+git log --format=%h -S'def promote'
+git log --format=%h -S'viewRevision'
+git log --format=%h -S'ConnectDialog'
+git log --format=%h -S'quickCapturable'
+git log --format=%h -S'closeout_evidence'
+git log --format=%h -S'problems_report'
+git log --format=%h -S'_inspect_file_reference'
+grep RitualDoc|StepDoc|Materialization in frontends/mindmap
+2496605cdf1ad252dd8d907bdb7287c82e181f8044c94a91258672f001ca2351  desk/drawer/plans/workspace-documental/auditoria/ui.md
+test -e (desde softfactory_spec) ../kimun ../SLDB_1/deskops ../SLDB_1/UIs/graph_ui ../SLDB_1/sldb ../SLDB_1/scion ../SLDB_1/graph_ui conversation.md conversation.html mockup.html
+ls runs/subagents; ls -d runs/subagents/*workspace-documental-acceptance*; cat runs/subagents/20261031-workspace-ui/task.txt
+git log -1 --format="%h %ad %s" --date=short 087e516 e032a84 e107b48
+git log --format=%h -- frontends/mindmap/persistence.py frontends/mindmap/dialogs/conflict-dialog.js frontends/mindmap/views/documents/map/connect-dialog.js frontends/mindmap/models_service.py frontends/mindmap/dialogs/class-dialog.js frontends/mindmap/views/documents/map/quick-create-dialog.js frontends/mindmap/views/models/diagram (uno por path)
+git log --format=%h -S"def promote" -- frontends/mindmap/models_service.py
+grep -n merge frontends/mindmap/workspace_routes.py (0 coincidencias)
+8f4cc1caddda8160b0b80170e6f90eade0eaff199cbda94002d08a392c1727e8  desk/drawer/plans/workspace-documental/auditoria/ui.md

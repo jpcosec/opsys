@@ -1,0 +1,3 @@
+task-ws02-inventariar-superficies-y-operaciones-deskops | ready_for_testing | ritual-closeout
+task-ws03-inventariar-persistencia-consultas-y-notaciones | active | ritual-testing
+task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso | active | ritual-testing

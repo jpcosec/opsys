@@ -1,0 +1,34 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+$ sha256sum desk/drawer/plans/workspace-documental/auditoria/ui.md
+8f4cc1caddda8160b0b80170e6f90eade0eaff199cbda94002d08a392c1727e8
+
+$ cd /home/jp/proyectos/softfactory_spec && for p in ../SLDB_1/UIs/graph_ui conversation.md conversation.html mockup.html ../kimun ../SLDB_1/deskops ../SLDB_1/sldb ../SLDB_1/scion; do test -e "$p" && echo "ok $p" || echo "ROTO $p"; done
+ok ../SLDB_1/UIs/graph_ui
+ok conversation.md
+ok conversation.html
+ok mockup.html
+ok ../kimun
+ok ../SLDB_1/deskops
+ok ../SLDB_1/sldb
+ok ../SLDB_1/scion
+
+$ ls ../UIs/graph_ui/runs/subagents | sed -n "1p;$p"; ls ../UIs/graph_ui/runs/subagents | wc -l
+20260820-194417-task-build-kgdb-to-ui-graph-adapter
+23
+
+$ for c in 087e516 e032a84 e107b48 a1b2b22 f16fcd1 134a665 daa6400 2b801f2; do git -C ../UIs/graph_ui log -1 --format="%h %ad %s" --date=short $c; done
+087e516 2026-09-13 refactor(mindmap): shell + vistas registradas + diálogos de shell (fase C)
+e032a84 2026-09-21 refactor(models): /api/models/detail emite model_dump y el dialog lo consume
+e107b48 2026-09-10 feat(mindmap): close step 7 — class editor (CLI gateway, validate/promote, template edit, dialog) Task-Id: task-step7-class-editor
+a1b2b22 2026-10-31 feat(workspace): proyecciones document, graph, code y sidebar context
+f16fcd1 2026-10-31 closeout: task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto
+134a665 2026-10-31 docs(board): reflejar cierre de task-workspace-multiproyeccion en notes
+daa6400 2026-10-30 feat: añade vista operativa Deskops en Mindmap con gates reales
+2b801f2 2026-10-30 desk: cierra fase UI Deskops y concilia tablero y evidencia
+
+$ sha256sum ../UIs/graph_ui/desk/tasks/*.md /home/jp/proyectos/softfactory_spec/SPEC.md
+7ce6afbe9738587f328991e0fa2260c7b01b55acd9b36c418af0912f9d3f7e94  ../UIs/graph_ui/desk/tasks/Board.md
+ea6b71f2795eb5f944c75e83ced4c2ba770e260436efae5bbc19aa82192b50c6  ../UIs/graph_ui/desk/tasks/task-edicion-contextual-de-relaciones-y-campos-con-control-de-concurrencia.md
+433ecb51e6dc433b8bb94d0acecc6d508793ae743eae563283aa40c5f8e24377  ../UIs/graph_ui/desk/tasks/task-vista-changes-arbol-de-hashes-staleness-e-impacto-en-conocimiento.md
+373159eaae74c75aef105091f1c92d20331a60c5e9662db30256b1bd690ee789  /home/jp/proyectos/softfactory_spec/SPEC.md

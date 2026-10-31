@@ -1,0 +1,40 @@
+# Recolectado por el Supervisor, NO por el Tester: datos que un Tester sin bash no puede obtener. No es prueba independiente.
+
+$ sha256sum ../UIs/graph_ui/desk/tasks/*.md /home/jp/proyectos/softfactory_spec/SPEC.md
+7ce6afbe9738587f328991e0fa2260c7b01b55acd9b36c418af0912f9d3f7e94  ../UIs/graph_ui/desk/tasks/Board.md
+ea6b71f2795eb5f944c75e83ced4c2ba770e260436efae5bbc19aa82192b50c6  ../UIs/graph_ui/desk/tasks/task-edicion-contextual-de-relaciones-y-campos-con-control-de-concurrencia.md
+433ecb51e6dc433b8bb94d0acecc6d508793ae743eae563283aa40c5f8e24377  ../UIs/graph_ui/desk/tasks/task-vista-changes-arbol-de-hashes-staleness-e-impacto-en-conocimiento.md
+373159eaae74c75aef105091f1c92d20331a60c5e9662db30256b1bd690ee789  /home/jp/proyectos/softfactory_spec/SPEC.md
+
+$ git -C ../UIs/graph_ui log --format="%h %ad %s" --date=short -12
+134a665 2026-10-31 docs(board): reflejar cierre de task-workspace-multiproyeccion en notes
+f16fcd1 2026-10-31 closeout: task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto
+a1b2b22 2026-10-31 feat(workspace): proyecciones document, graph, code y sidebar context
+57c3699 2026-10-31 desk: activa tareas del Workspace en Board y define atomo y candidatos en drawer
+2b801f2 2026-10-30 desk: cierra fase UI Deskops y concilia tablero y evidencia
+daa6400 2026-10-30 feat: añade vista operativa Deskops en Mindmap con gates reales
+4c1f9da 2026-10-30 desk: concilia tablero y registra bloqueo CDN de la UI existente
+6561d2e 2026-10-30 desk: incorpora guardarraíles de revisión para UI Deskops
+8cbd9c2 2026-10-30 desk: precisa revisión concurrente y aceptación de UI Deskops
+333bb37 2026-10-30 desk: activa vista Deskops y fija límites de workflow y SLDB
+f241471 2026-10-30 desk: registra UI operativa de deskops sobre Mindmap
+33696ab 2026-10-20 drawer: el reporte r13 sin nombres de store externos
+
+$ git -C ../UIs/graph_ui status --short
+?? desk/inbox/20261020-113025-suggestion-sldb-cambia-la-salida-las-alertas-dejan-de-hacer-fallar-y-nunca-son-silenciosas.md
+?? desk/inbox/20261020-122513-suggestion-contrato-de-lectura-paquetes-uml-en-diagramas-de-clase-spec2viz-84686c3.md
+?? desk/inbox/20261020-135650-suggestion-sldb-en-main-procedencia-por-documento-pol-tica-por-store-y-alertas-que-no-fallan.md
+?? frontends/workspace/
+
+$ git -C ../UIs/graph_ui log --oneline -- frontends/workspace | head -5
+
+
+$ ls ../UIs/graph_ui/frontends/workspace; ls ../UIs/graph_ui/tests | grep -iE "edici|changes|contextual" 
+index.html
+__init__.py
+__pycache__
+serve.py
+styles.css
+
+$ python3 -c "import yaml;d=yaml.safe_load(open('desk/drawer/plans/workspace-documental/dag.yaml'));print(d['revision'],len(d['tasks']),[n['id'] for n in d['tasks'] if n.get('owner_repo')=='graph_ui'])"
+8 63 ['WS13', 'WS13.1', 'WS13.2', 'WS13.3', 'WS14', 'WS15', 'WS15.1', 'WS15.2', 'WS16', 'WS19', 'WS19.1', 'WS19.2', 'WS21', 'WS22', 'WS23', 'WS24', 'WS25', 'WS25.1', 'WS25.2', 'WS26', 'WS26.1', 'WS26.2', 'WS27', 'WS27.1', 'WS27.2', 'WS28', 'WS29', 'WS30', 'WS35', 'WS36', 'WS37', 'WS39', 'WS40', 'WS41', 'WS42']
