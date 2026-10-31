@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-ws06-proponer-correspondencia-de-alcance-con-repos-dueños.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- WS06: Proponer correspondencia de alcance con repos dueños [draft] - Agregar a desk/drawer/plans/workspace-documental/reconciliacion.md una matriz de correspondencia por capacidad o delta único, agrupada por repo dueño, con evidencia citada y sin aceptar nada.
