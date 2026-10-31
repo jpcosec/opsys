@@ -1,0 +1,26 @@
+$ python -m pytest -q tests -k 'closeout or add_task'   (deskops tool venv; pytest installed via uv)
+exit 0 (background) -> 2 failed, 111 passed, 1 skipped
+  FAILED test_lifecycle_end_to_end.py::test_closeout_amends_only_head_with_its_own_task_id  (add task without evidence; fixed: "task_type": "code" in payload)
+  FAILED e2e_agent first-task-to-closeout  (env: `pytest` not on PATH in sandbox)
+Re-runs after fix:
+$ pytest tests/test_lifecycle_end_to_end.py::test_closeout_amends_only_head_with_its_own_task_id -> passed
+$ PATH=<venv>/bin:$PATH pytest -q tests/e2e_agent/test_agent_scenarios.py -k first-task -> 2 passed, 1 skipped
+
+=== Full-suite validation (executor, 2026-10-31) ===
+Env: pytest 9.2.0 installed with uv into /home/scion/.local/share/uv/tools/deskops. That env ships a STALE installed deskops/sldb copy,
+so subprocess-based tests (cwd outside repo) need PYTHONPATH=/workspace/deskops to exercise the working tree.
+$ python -m pytest -v   (no PYTHONPATH)            -> exit 1: 12 failed, 626 passed, 3 skipped in 1139s
+   3 e2e_agent failures were purely the stale install (sldb stores check / model-unresolved) -> pass with PYTHONPATH.
+$ PYTHONPATH=/workspace/deskops python -m pytest <the 12 failing files>  -> exit 1: 9 failed, 15 passed, 3 skipped
+Fixes for failures caused by this diff (tests/docs/goldens only, no src changes):
+ - tests/test_lifecycle_end_to_end.py: removed erroneous `--task-type code` from two `add atom` calls -> 5 passed
+ - tests/test_cli.py::test_next_without_selector_lists_multiple_board_tasks: add `--task-type code` to the add-task calls
+ - docs/operator-manual.md runnable block 16: add `--task-type docs`
+ - tests/fixtures/golden/{help/deskops_add_task.txt,output/list_tasks.json,output/show_task.json}: regenerated with --update-golden (only --evidence help + `closeout_evidence: []`)
+Re-run after fixes: test_cli target + test_operator_manual + test_closeout_declared_evidence -> 23 passed; test_output_goldens -> 7 passed (exit 0).
+Remaining failures (NOT fixed):
+ - tests/test_model_contract_snapshot.py: TaskDoc hash changed because of the new closeout_evidence field (CAUSED BY THIS DIFF). New TaskDoc hash
+   9adfb625f52f6ab68e84d82e56d001755ed80377c4e678b591fecbfa5f4c172f ; fixture NOT updated (test says it needs a deliberate contract change/migration decision).
+ - tests/test_command_registry.py: ('runtime','template') undeclared mutating command - pre-existing/unrelated (runtime template, not touched by diff).
+ - tests/test_board_portable_references.py: desk/rituals/context-review.md unresolved - desk content, unrelated.
+ - tests/test_taskdoc_read_without_overlay.py: real drawer doc desk/drawer/tasks/task-correlacionar-intentos-... lacks id/status - desk content, unrelated.

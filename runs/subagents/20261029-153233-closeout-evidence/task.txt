@@ -1,0 +1,8 @@
+Task: task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo
+Title: Closeout: la evidencia exigida depende de lo que la tarea toca, no es la misma para todo
+Status: active
+Current node: ritual-testing
+Task type: 
+From drawer: desk/drawer/tasks/task-closeout-la-compuerta-tests-missing-tests-evidence-bloquea-tareas-que.md
+Lifecycle gates:
+- task_hands_to_closeout -> ritual-closeout: open [nonempty(validation)]

@@ -167,8 +167,6 @@ include:
   glob: desk/registry/*.md
 - model: RitualDoc
   paths:
-  - path: desk/rituals/closeout.md
-    name: ritual-closeout
   - path: desk/rituals/execution.md
     name: ritual-execution
   - path: desk/rituals/phase.md
@@ -177,6 +175,8 @@ include:
   - desk/rituals/ritual-knowledge-distillation-pass.md
   - path: desk/rituals/testing.md
     name: ritual-testing
+  - path: desk/rituals/closeout.md
+    name: ritual-closeout
   - desk/rituals/context-review.md
 - model: RoleDoc
   glob: desk/roles/*.md
@@ -194,6 +194,12 @@ include:
   - desk/materializations/materialization-graph-vocabulary-source-kind-update.md
   - desk/materializations/materialization-board-portable-context.md
   - desk/materializations/materialization-board-portable-references-regressions.md
+- model: RunDoc
+  paths:
+  - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
+    name: run-deskops-closeout-evidence
+  - path: runs/subagents/20261031-044028-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
+    name: run-deskops-closeout-suite
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
