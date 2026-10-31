@@ -5,7 +5,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-ws02-inventariar-superficies-y-operaciones-deskops.md
 - desk/tasks/task-ws03-inventariar-persistencia-consultas-y-notaciones.md
 - desk/tasks/task-ws04-inventariar-ui-y-reconciliar-trabajo-en-curso.md
 # List of pill-xxx paths
@@ -49,6 +48,5 @@ No active tasks routed.
 
 _Generated from the task references above._
 
-- WS02: Inventariar superficies y operaciones Deskops [draft] - Producir desk/drawer/plans/workspace-documental/auditoria/deskops.md como auditoría de solo lectura del estado actual, verificable fila por fila.
-- WS03: Inventariar persistencia, consultas y notaciones [draft] - Producir desk/drawer/plans/workspace-documental/auditoria/infraestructura.md como auditoría de solo lectura del estado actual, verificable fila por fila.
-- WS04: Inventariar UI y reconciliar trabajo en curso [draft] - Producir desk/drawer/plans/workspace-documental/auditoria/ui.md como auditoría de solo lectura del estado actual, verificable fila por fila.
+- WS03: Inventariar persistencia, consultas y notaciones [active] - Producir desk/drawer/plans/workspace-documental/auditoria/infraestructura.md como auditoría de solo lectura del estado actual, verificable fila por fila.
+- WS04: Inventariar UI y reconciliar trabajo en curso [ready_for_testing] - Producir desk/drawer/plans/workspace-documental/auditoria/ui.md como auditoría de solo lectura del estado actual, verificable fila por fila.

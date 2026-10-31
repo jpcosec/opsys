@@ -94,3 +94,4 @@
 {"task_id": "task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo", "run_id": null, "run_dir": "runs/subagents/20261029-153233-closeout-evidence", "session_sha256": null, "commit": null}
 {"task_id": "task-revisar-dag-workspace-con-agentes-baratos", "run_id": null, "run_dir": "runs/subagents/20261031-workspace-context-reviews", "session_sha256": null, "commit": null}
 {"task_id": "task-finalizar-plan-workspace-documental", "run_id": "20261031-finalizar-plan-workspace", "run_dir": "runs/subagents/20261031-finalizar-plan-workspace", "session_sha256": null, "commit": null}
+{"task_id": "task-ws02-inventariar-superficies-y-operaciones-deskops", "run_id": null, "run_dir": "runs/subagents/20261031-ws02-auditoria-deskops", "session_sha256": null, "commit": null}
