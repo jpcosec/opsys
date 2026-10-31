@@ -1,0 +1,86 @@
+[
+  {
+    "node": "WS32",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.scope",
+    "old": "Refinar el ticket de external_references.scion, sin segundo pipeline:",
+    "new": "Refinar lo propuesto en el ticket de external_references.scion, sin segundo pipeline; el entregable es el código de WS32.1/WS32.2, no una edición del ticket:",
+    "reason": "Promesa del scope sin cobertura: «refinar el ticket» no lo cubre ninguna aceptación, y el output_scope ya declara las salidas de los hijos. Se aclara que el ticket es referencia."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "un dispatch fallido (rechazo de la API o timeout, que deja confirmed desconocido hasta reconciliar) conservan identidades distintas",
+    "new": "un dispatch fallido (rechazo de la API o timeout) conservan identidades distintas",
+    "reason": "Resultado indefinido: «hasta reconciliar» introduce un proceso sin actor ni criterio. Se elimina la precisión; la aceptación sigue cubriendo el timeout."
+  },
+  {
+    "node": "WS33",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.depends_on",
+    "old": "",
+    "new": [
+      "WS32",
+      "WS33.1",
+      "WS33.2"
+    ],
+    "reason": "Dependencia que sobra: WS11 llega por WS32 → WS12 → WS11 y ningún hijo del agregado la usa directamente; un agregado termina con sus hijos."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "con la misma regla de deduplicación y procedencia.",
+    "new": "y se deduplican por Hub + proyecto + intento + id de fuente, conservando procedencia.",
+    "reason": "Resultado indefinido: «la misma regla» remitía a una clave de mensajes que un resultado puede no tener. Se fija la clave con campos que el propio scope ya nombra."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "La regla de desambiguación es detalle de implementación; la aceptación ya resuelve que los mensajes no vinculados quedan como hueco de procedencia. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS44",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "",
+    "new": "",
+    "reason": "El método de probe read-only de una capability de escritura es detalle del propio entregable; si no existe comprobación sin ejecutar, aplica la regla de hueco de alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS44",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "",
+    "new": "",
+    "reason": "Ruta y formato de la configuración del Hub son detalle de archivo/procedimiento que fija la promoción; el nodo ya nombra la fuente («la configuración existente»). context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS44",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "si no las mapea por nodo, WS44 se detiene",
+    "new": "si alguna no está mapeada por nodo, WS44 se detiene",
+    "reason": "Resultado indefinido ante mapeo parcial: no se sabía si el probe sigue con un subconjunto. Se fija que cualquier capability sin mapeo detiene el probe y registra el hueco."
+  }
+]

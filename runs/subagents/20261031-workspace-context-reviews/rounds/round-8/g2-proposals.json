@@ -1,0 +1,92 @@
+[
+  {
+    "node": "WS17",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El formato de parametrización (rutas, placeholders o reescritura) es convención de archivos fijada al promover. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS17",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación ya exige «cada plantilla resuelve el root/store de procedencia de los dos desks del manifiesto WS40»; ambos quedan cubiertos. El reparto de plantillas por desk es archivo del TaskDoc."
+  },
+  {
+    "node": "WS17",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El borde ya está en el scope: «sin copiar inventarios derivados» y «no duplicar el registry de deskops». La comprobación concreta es caso de prueba del TaskDoc."
+  },
+  {
+    "node": "WS22",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Aristas, dirección y agrupación de la vista de dependencias son diseño de pantalla. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS22",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación fija el equivalente: «estados y condiciones de lifecycle leídos de deskops (Board, lifecycle)»; «predicado» es esa condición. Su representación es detalle del TaskDoc."
+  },
+  {
+    "node": "WS22",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La matriz llega por WS22→WS13→WS11→WS09→WS07→WS06; WS12 es contrato hermano de WS13 y no aporta al Board de lectura. alcance.md: «Una dependencia transitiva cuenta como prerrequisito»."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Dirección y tipos de relación de la vecindad son detalle del algoritmo y del escenario de prueba. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya califica: «tags del documento cuando el modelo los declare»; un Markdown sin modelo no declara tipo ni tags. El modo de omitir la clasificación es detalle del TaskDoc."
+  },
+  {
+    "node": "WS24",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Promesa de scope sin cobertura: el filtro final manda error_reviewer. «Preservar» no pide implementación nueva; la evidencia de no regresión es caso de prueba del TaskDoc (context-review-guide.md: «casos de prueba detallados»)."
+  }
+]

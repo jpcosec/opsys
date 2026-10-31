@@ -2,6 +2,7 @@
 id: WS44
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS05
 - WS07
@@ -23,11 +24,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Responsable de instalación Scion, identificado por solicitante en WS07, realiza probe read-only de API con acceso ya autorizado; verifica capacidades/identidad necesarias para intento y mensajes. Sin crear agentes, enviar mensajes, cambiar config o mostrar secretos. Puede repetir el probe si el inventario WS05 terminó sin acceso.
+Responsable de instalación Scion, identificado por solicitante en WS07, realiza probe read-only de API con acceso ya autorizado; verifica capacidades/identidad necesarias para intento y mensajes. Sin crear agentes, enviar mensajes, cambiar config o mostrar secretos. Puede repetir el probe si el inventario WS05 terminó sin acceso. El solicitante registra en WS07 qué acceso read-only tiene el operador; sin ese registro no se ejecuta el probe. El operador indica el Hub desde la configuración existente. Las capabilities mínimas son las que auditoria/scion.md marque como requeridas por WS32/WS33; si no las mapea por nodo, WS44 se detiene y registra el hueco antes del probe.
 
 ## Aceptación
 
-G_SCION se satisface solo con respuesta pública real, identidad/fecha/capabilities y actor registrados. Si API o acceso no están, WS44 permanece bloqueada, no se cierra unverified ni se avanza WS32. Tras cambio de Hub/API/credencial, repetir y invalidar recibo previo.
+G_SCION se satisface solo con respuesta pública real, identidad del operador (actor del probe) y Hub, fecha y capabilities registrados. Si API o acceso no están, WS44 permanece bloqueada, no se cierra unverified ni se avanza WS32. Tras cambio de Hub/API/credencial, repetir y invalidar recibo previo.
 
 ## Dependencias
 
@@ -35,7 +36,7 @@ Tareas: WS05, WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS44/a0e42316021ed7927196050d9d4e5500beae1102afaa06e5245bded0a8213667/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

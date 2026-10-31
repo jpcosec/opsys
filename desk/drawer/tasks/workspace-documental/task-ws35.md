@@ -2,6 +2,7 @@
 id: WS35
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS33
 - WS27
@@ -24,11 +25,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Lectura tarea-intento-conversación-resultados-decisión usando fuente dueña y referencias documentales.
+Lectura tarea-intento-conversación-resultados-decisión: tarea de deskops, intento y decisión de WS32/WS33, mensajes de Scion por su API y resultados vinculados por WS33.1.
 
 ## Aceptación
 
-Intento correcto, enlaces origen, evidencia legible; completed no se traduce en aprobado/cerrado.
+Cada mensaje, resultado y decisión se muestra bajo su intento y tarea; cada uno enlaza a su fuente; la evidencia abre en el lector (WS13). completed no se traduce en aprobado/cerrado.
 
 ## Dependencias
 
@@ -36,7 +37,7 @@ Tareas: WS33, WS27. Gates: G_SCION, G_UI_READ. Ver estados/evidencia en dag.yaml
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS35/f54f386fb3e85631495a769ce44422d9ca528b8c2987475492d7e887e1567cd6/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

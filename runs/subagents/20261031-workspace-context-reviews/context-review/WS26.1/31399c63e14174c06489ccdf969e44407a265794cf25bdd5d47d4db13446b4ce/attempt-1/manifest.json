@@ -1,0 +1,115 @@
+{
+ "node_id": "WS26.1",
+ "role": "context-reviewer",
+ "attempt": 1,
+ "input_sha256": "31399c63e14174c06489ccdf969e44407a265794cf25bdd5d47d4db13446b4ce",
+ "ordered_sources": [
+  {
+   "path": "desk/drawer/plans/workspace-documental/context-review-guide.md",
+   "sha256": "d79bc6b11f5631aa6ee4ed5f9c5c9b39713f9da16f2eea936a25cbd9e2e63a8c",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/brief.md",
+   "sha256": "be95e2eb9c576ba7781e32449a4185b60b838be743107813b2a3e98eac600214",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/alcance.md",
+   "sha256": "087871ff0641bb073072c9295df6ea944bec04603342101690fc395dc77f13d9",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/decisiones.md",
+   "sha256": "4a98063c8eb1869b7665a0a23d7b3107772034447737866b2a1371f5ab9a28a5",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/cobertura.md",
+   "sha256": "da759798ae818c08d19c1f66b663fdfde7165b5f9c83071ffca3444389fe71ba",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#node:WS26.1",
+   "sha256": "6ef6eb37d1404e1f5018efe5b29e8503e114bbd822f5bdf347922a22c884243c",
+   "projection": "node_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS12",
+   "sha256": "3a41073ce663b328c7f5657427ded16d6ac73bf55359f8ffec180753ab49570d",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS22",
+   "sha256": "7f7d7319d08bfc12555ab10c37f5cfe4fcd7349f0732dd3f287c1a601fec2245",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS26",
+   "sha256": "d7d312ee99dbebf818ed3bf4554989118b95d5c385290500186e8a83c26e9b46",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS26.2",
+   "sha256": "4215c2be8d75e308c5c04275304fc278fc8bce107cfa719ff74925e8fc2650ac",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#gates",
+   "sha256": "13f514e79f6c9933192f1d8a395c6c2c4164030df3cbe4609e3e83dc86a3a8de",
+   "projection": "gate_contracts"
+  }
+ ],
+ "node_contract_sha256": "44950a35128e5532dc639b3402f51db28ae4164cb1ff173438d446026820aeca",
+ "edge_contracts": [
+  {
+   "id": "WS12",
+   "sha256": "893426e2ad9b01eba75343db23322dc83241898457d643568b3e040319f2519f"
+  },
+  {
+   "id": "WS22",
+   "sha256": "dcce473d62ad83a2360ac8c8f9fe49da62fdafd667fcd3b6d5ef5d93c6b4d679"
+  },
+  {
+   "id": "WS26",
+   "sha256": "48f83fc6cce698ba5ece208c3189cf2220ab78352fd60c4c995f7fd108535d2f"
+  },
+  {
+   "id": "WS26.2",
+   "sha256": "1f4f139444736973dd5b798f3da4a27cca5d175ff69e445298695e28f0e019ce"
+  }
+ ],
+ "provider": "deepseek",
+ "model": "deepseek-flash",
+ "thinking": "low",
+ "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review; no se afirma precio mínimo global",
+ "isolation_flags": [
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools"
+ ],
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/31399c63e14174c06489ccdf969e44407a265794cf25bdd5d47d4db13446b4ce/attempt-1/input.md"
+ ]
+}

@@ -2,6 +2,7 @@
 id: WS17
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS11
 - WS40
@@ -26,7 +27,7 @@ Escribir solo entradas/índices authored como plantillas versionadas bajo el paq
 
 ## Aceptación
 
-Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown sin UI; source versionado y destino temporal no son registros independientes. Resolver dos desks y procedencia; no duplicar registry.
+Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown sin UI; source versionado y destino temporal no son registros independientes. Verificar al regenerar que cada plantilla resuelve el root/store de procedencia de los dos desks del manifiesto WS40; no duplicar el registry de deskops.
 
 ## Dependencias
 
@@ -34,7 +35,7 @@ Tareas: WS11, WS40. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml;
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS17/57a71a2d06fca00c8f6d24b526706fc49a09287fbb05ec9b546b1e892a538278/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

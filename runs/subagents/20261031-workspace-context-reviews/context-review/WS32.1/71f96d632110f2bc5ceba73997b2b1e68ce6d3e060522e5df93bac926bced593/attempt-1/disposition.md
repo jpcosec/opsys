@@ -1,0 +1,5 @@
+# Disposición WS32.1, ronda 8
+
+Propuestas de un agente Pi DeepSeek, revisadas por el coordinador antes de aplicar.
+
+Sin hallazgos. Reformulación y dry-run aceptados contra la intención escrita.

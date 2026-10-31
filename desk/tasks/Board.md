@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-revisar-dag-workspace-con-agentes-baratos.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Revisar recursivamente DAG workspace con agentes baratos [draft] - Revisar realmente raíz, paquetes explícitos y cada candidata WS01–WS44; corregir los encargos y descomponer cuando haga falta, conservando evidencia y bloqueos honestos.

@@ -1,0 +1,112 @@
+[
+  {
+    "node": "WS28",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS28.output_scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «No commits automáticos ni closeout HTTP» y WS28.scope: «No commit/close desde HTTP en baseline». Los endpoints quedan para verificación/diagnóstico/handoff; el conjunto exacto es detalle delegado (guide: «casos de prueba detallados»)."
+  },
+  {
+    "node": "WS30",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo». Cadena: WS30→WS21→WS19→WS12→WS08; el guion es salida de WS08."
+  },
+  {
+    "node": "WS30",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS30.owner_repo y los owner_repo de sus dependencias (WS17, WS21–WS28, WS42) son graph_ui; «repo dueño» resuelve a graph_ui. Atribuir fallos de corpus/entorno es ejecución delegada (guide: «casos de prueba detallados»)."
+  },
+  {
+    "node": "WS31",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS31.scope",
+    "old": "",
+    "new": "",
+    "reason": "WS11/WS12.output_base es deskops:desk/drawer/plans/workspace-documental/, donde se produce contratos/, y borradores/manual.md vive en ese paquete. context-review-guide.md: una dependencia futura nombrada por su productor no es ambigüedad."
+  },
+  {
+    "node": "WS42",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Las pruebas de implementación usan un store temporal real creado en el test o el corpus WS40 cuando ya exista.» WS24 ya nombra MaterializationContractDoc; identidad y versión exactas del registro son detalle delegado (guide: «casos de prueba detallados»)."
+  },
+  {
+    "node": "WS42",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». El criterio de validez lo da el contrato del modelo SLDB; reglas y umbrales son detalle delegado."
+  },
+  {
+    "node": "WS42",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». El escenario que usa cada capability se determina al ejecutar UF03; la correspondencia exacta es detalle delegado."
+  },
+  {
+    "node": "WS42",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla... que el TaskDoc de promoción fijará». WS12.acceptance exige registrar «capability exacta (operación, canal, efectos)»; el contenido de la confirmación es detalle delegado."
+  },
+  {
+    "node": "WS43",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS43.scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso... La operación queda no disponible.» Un repo sin entrada validada no se enlaza: se declara el hueco, sin replicar el ejemplo."
+  },
+  {
+    "node": "WS43",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS43.scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso... La operación queda no disponible.» «Su entrada existente» ya excluye enlazar sin entrada; se declara el hueco."
+  },
+  {
+    "node": "WS43",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS43.requires",
+    "old": "",
+    "new": "",
+    "reason": "cobertura.md asocia G_CLOSEOUT a UF04/UF05 (promoción y revisión/cierre) y en UF01 lista «WS43 publicación real» sin ese gate. alcance.md: «No commits automáticos ni closeout HTTP»; el commit va por CLI externo."
+  }
+]

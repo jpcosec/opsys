@@ -1,0 +1,172 @@
+[
+  {
+    "node": "WS13.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS13.1.acceptance",
+    "old": "No depender de conocer un ID; no crear otro workspace independiente.",
+    "new": "La selección por documento/nodo fija el foco del documento abierto: seleccionar en Code, texto o graph actualiza ese foco y las demás representaciones del mismo documento lo comparten, sin abrir otra copia. No depender de conocer un ID; no crear otro workspace independiente.",
+    "reason": "«selección por documento/nodo» no tenía efecto observable; se define con el glosario de foco y se vuelve comprobable en la aceptación."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS13.3.acceptance",
+    "old": "Abrir dos documentos en divisiones, alternar foco y volver conservando origen e historia.",
+    "new": "Abrir, cambiar y cerrar pestañas; abrir dos documentos en divisiones, alternar el documento activo y volver conservando foco e historia.",
+    "reason": "La aceptación omitía pestañas exigidas por el scope; ahora cubre abrir, cambiar y cerrar."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS13.3.scope",
+    "old": "Foco es por documento; cambiar de pestaña cambia el documento activo, no el foco guardado de cada documento.",
+    "new": "Foco es el elemento seleccionado dentro de un documento; origen es su soporte y ruta real. Cambiar de pestaña o división cambia el documento activo sin alterar el foco guardado de cada documento; volver restaura documento, foco y origen.",
+    "reason": "«foco» y «origen» admitían dos lecturas; se fijan a las definiciones del glosario y a una acción observable."
+  },
+  {
+    "node": "WS14",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS14.acceptance",
+    "old": "según auditoria/infraestructura.md y contrato WS11",
+    "new": "según auditoria/infraestructura.md (producido por WS03) y contrato WS11",
+    "reason": "El nodo citaba un artefacto sin productor; WS03 tiene output_scope auditoria/infraestructura.md."
+  },
+  {
+    "node": "WS14",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS14.acceptance",
+    "old": "Sin resultados, error de backend y búsqueda degradada se ven como tres estados distintos",
+    "new": "Sin resultados; error de backend (la API no responde o falla y la UI lo declara sin mostrar vacío); y búsqueda degradada (la API responde con capacidad parcial, p. ej. sin semántica, y la UI declara qué no cubre) se ven como tres estados distintos",
+    "reason": "No se distinguía degradado de error; se usan la definición de modo degradado del brief y las capacidades del scope."
+  },
+  {
+    "node": "WS16",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS40.scope",
+    "old": "para que WS16 pruebe una entrada sin esperar índices ricos WS17.",
+    "new": "para que WS16 pruebe una entrada sin esperar índices ricos WS17. Incluir un tercer repo temporal sin desk para UF10.",
+    "reason": "El corpus solo define dos repos con desk; UF10 exige un proyecto sin desk y WS16 no puede crear corpus propio. Se corrige el productor único WS40."
+  },
+  {
+    "node": "WS18",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS18.output_scope",
+    "old": "sldb/views/ (nombres confirmados por contrato); tests/",
+    "new": "sldb/views/ (rutas confirmadas por el dueño de spec2viz al promover); tests/",
+    "reason": "«contrato» no estaba identificado; el propio nodo remite al dueño spec2viz para promover y aceptar G_SPEC_VIEW."
+  },
+  {
+    "node": "WS18",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS18.acceptance",
+    "old": "Vista portable evaluada sobre store real y documentación de qué selecciona;",
+    "new": "Vista portable renderiza sobre un store real la selección declarada, coincide con ella y el ViewDoc documenta qué selecciona;",
+    "reason": "«evaluada» no fijaba resultado ni criterio de paso/fallo; se define render más coincidencia de la selección."
+  },
+  {
+    "node": "WS23",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS23.scope",
+    "old": "obligaciones, transiciones y fuentes navegables",
+    "new": "pasos, transiciones y fuentes navegables",
+    "reason": "«obligaciones» no está definido ni se comprueba; el nodo trata RitualDoc/StepDoc y su aceptación habla de pasos."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "átomos/protoátomos/crossroads/materializaciones/pills",
+    "new": "átomos/protoátomos/crossroads (CrossroadDoc del árbol de dominio)/materializaciones/pills",
+    "reason": "crossroads no estaba en el glosario; CrossroadDoc existe en deskops/models/crossroad.py y los padres de dominio en deskops/domain_tree.py."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "Reutilizar gráfico actual y documento genérico para",
+    "new": "Reutilizar el gráfico actual y una vista de documento genérica única registrada en shell/registry.js para",
+    "reason": "«documento genérico» no identificaba componente; WS13 ya fija la reutilización del registro existente shell/registry.js."
+  },
+  {
+    "node": "WS24",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "Backlinks = relaciones entrantes calculadas por la API de grafo de sldb según auditoria/infraestructura.md.",
+    "new": "Backlinks = relaciones entrantes calculadas por la API de grafo de sldb según auditoria/infraestructura.md (producido por WS03).",
+    "reason": "Referencia normativa sin productor; WS03 produce ese archivo."
+  },
+  {
+    "node": "WS24",
+    "finding": 4,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.acceptance",
+    "old": "soporte no modelado visible.",
+    "new": "un soporte no modelado (Markdown sin modelo) es visible y navegable en la vista con su ruta de origen.",
+    "reason": "La aceptación no definía el soporte ni la evidencia de visibilidad; se ancla al glosario y a la ruta de origen."
+  },
+  {
+    "node": "WS24",
+    "finding": 5,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "preservar Code local de tarea actual.",
+    "new": "preservar Code local del ticket workspace en draft que identifique el acta WS11.",
+    "reason": "No se identificaba la tarea; el scope define Code local como proyección del ticket workspace y WS11 entrega el acta."
+  },
+  {
+    "node": "WS40",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS40.scope",
+    "old": "Crear dos repos temporales bajo .tmp/workspace-documental-ejemplo/ (o tmp_path en pruebas)",
+    "new": "Crear dos repos temporales bajo graph_ui:.tmp/workspace-documental-ejemplo/ (o tmp_path en pruebas)",
+    "reason": "Faltaba la base de .tmp; output_base es graph_ui:repository_root y así no se confunde con un desk real."
+  },
+  {
+    "node": "WS40",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS40.scope",
+    "old": "entrada mínima ecosistema/proyecto con enlaces al Board/FAQ/conocimiento creados dentro del corpus temporal",
+    "new": "entrada mínima ecosistema/proyecto con enlaces al Board del desk temporal, su FAQ Markdown y documentos de conocimiento, todos creados dentro del corpus temporal",
+    "reason": "No se distinguía dato de desk, Markdown o vista; validacion-humana fija Board/task reales y FAQ Markdown."
+  },
+  {
+    "node": "WS40",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS40.scope",
+    "old": "usa contratos/CLI reales, no servidor fake.",
+    "new": "usa el contrato WS11 y los CLI reales de deskops/sldb verificados en WS02/WS03, no servidor fake.",
+    "reason": "No se nombraba contrato ni CLI; WS11 es dependencia directa y WS02/WS03 inventarían las firmas públicas."
+  }
+]

@@ -2,6 +2,7 @@
 id: WS01
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on: []
 requires: []
 ---
@@ -20,11 +21,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Capturar acuerdos textuales y distinciones documento/nodo/vista/renderer/consulta/foco; ningún requisito remite a un chat invisible.
+Editar brief.md en sitio: acuerdos textuales y distinciones documento/nodo/vista/renderer/consulta/foco; ningún requisito remite a un chat invisible.
 
 ## Aceptación
 
-Leer brief y reformular producto sin historial; acuerdos separados de propuestas.
+Un review barato sin historial reformula el producto solo con brief.md. Cada acuerdo (cita o frase de autorización) de la sección «Encargo y acuerdos explícitos» cita al solicitante y cada propuesta del registro Pxx remite a decisiones.md.
 
 ## Dependencias
 
@@ -32,7 +33,7 @@ Tareas: ninguna. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS01/3a9efb5dd5e8a15aab4649cf0b9dd3cbd577b711abf23395fb010f18d0d53a23/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

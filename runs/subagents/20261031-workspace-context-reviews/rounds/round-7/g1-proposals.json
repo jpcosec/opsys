@@ -1,0 +1,242 @@
+[
+  {
+    "node": "PK03",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK03.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La frontera ya está en alcance.md: es externo lo que «debía producir una dependencia»; si el propio encargo no define el resultado, es ambigüedad propia. Cita: alcance.md, «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "PK03",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK03.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El esquema de disposition.md es formato de la evidencia de revisión, no un resultado del plan. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK04",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El input ya nombra el comprobador: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops»; el objeto hasheado es detalle de esa herramienta. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK04",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El criterio ya está en alcance.md: es externo lo que «debía producir una dependencia»; lo demás es ambigüedad propia del hijo. Cita: alcance.md, «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "PK04",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Contenido y formato del registro en disposition.md son detalle de la evidencia de revisión. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK07",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK07.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La clasificación ya la fija alcance.md: causa externa es lo que «debía producir una dependencia»; lo demás es ambigüedad propia. Cita: alcance.md, «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "PK07",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK07.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Campo y formato de la dependencia en disposition.md son detalle de la evidencia de revisión. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK07",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK07.scope",
+    "old": "",
+    "new": "",
+    "reason": "Alcance.md ya resuelve el límite: WS29 y WS39 «no se etiquetan disponibles por estar planeadas ni bloquean primer lector/manual básico». Cita: alcance.md, «Tienen pruebas y estado propios; no se etiquetan disponibles por estar planeadas ni bloquean primer lector/manual básico»."
+  },
+  {
+    "node": "WS04",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.scope",
+    "old": "",
+    "new": "",
+    "reason": "El universo ya es verificable en dag.yaml: los nodos que tocan graph_ui son los de `owner_repo: graph_ui`, que coinciden con todos los scope_nodes de G_UI_READ/G_UI_WRITE. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS04",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Path y hash de una entrada de Board sin archivo de tarea son formato de la auditoría, no un resultado indefinido. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS04",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La evidencia de reclamación de archivos es un caso de borde de la observación de sesiones. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS04",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La granularidad de la reconciliación con el SPEC es formato del informe. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS05",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS33 es un nodo del DAG (Vincular mensajes, resultados y decisiones) con scope propio; el ejecutor lo lee del plan. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS05",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "No hay contradicción: WS05 debe marcar capabilities por nodo y WS44 define el fallback si faltan («si no las mapea por nodo, WS44 se detiene y registra el hueco»). Cita: dag.yaml#edge:WS44, scope; dag.yaml#node:WS05, acceptance."
+  },
+  {
+    "node": "WS05",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.scope",
+    "old": "",
+    "new": "",
+    "reason": "La lectura ya está ordenada por el encargo: «Lee código y documentación en deskops y en el repo scion (../scion)»; alcance.md solo excluye «editar otros repos remotos», no leerlos. Cita: dag.yaml#node:WS05, scope; alcance.md, «editar otros repos remotos»."
+  },
+  {
+    "node": "WS07",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.scope",
+    "old": "",
+    "new": "",
+    "reason": "El input ya fija la forma mínima: «identidad explícita» y, en la aceptación, «con actor humano/fecha». El resto es formato. Cita: dag.yaml#node:WS07, scope y acceptance."
+  },
+  {
+    "node": "WS07",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.scope",
+    "old": "",
+    "new": "",
+    "reason": "WS44 ya fija el objeto del acceso: «El solicitante registra en WS07 qué acceso read-only tiene el operador» y su evidencia pide Hub/endpoint/identidad/capabilities. Cita: dag.yaml#edge:WS44, scope y acceptance."
+  },
+  {
+    "node": "WS07",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.scope",
+    "old": "",
+    "new": "",
+    "reason": "El actor ya está definido en decisiones.md: «Actor requerido: solicitante humano de esta sesión o persona que designe explícitamente». Cita: decisiones.md, encabezado del registro de decisiones."
+  },
+  {
+    "node": "WS08",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "cubrir manual, captura",
+    "new": "cubrir manual (recorridos UF01–UF10), captura",
+    "reason": "«Manual» no era una UF y output_scope solo admite user-flows: el ejecutor debía inventar si escribía un manual o fuera de su salida. Se ancla a los recorridos UF01–UF10 que ya cubre la aceptación."
+  },
+  {
+    "node": "WS09",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya manda inventariar «vistas existentes», no solo completar filas previas; la aceptación aplica la ficha a cada fila resultante. Cita: dag.yaml#node:WS09, scope y acceptance."
+  },
+  {
+    "node": "WS09",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La ficha de vistas.md define los campos; «aceptación mediante user-flow» se cubre con WS08, ya dependencia directa de WS09. El detalle de campos es de promoción. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS11",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Los huecos se derivan de las dependencias directas: user-flows de WS08 y catálogo de WS09, ambas en `depends_on`; no hay inventario separado que falte. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS11",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS11.output_scope",
+    "old": "contratos/navegacion.md; actas de aceptación de G_UI_READ y G_SPEC_VIEW en el repo receptor",
+    "new": "contratos/navegacion.md; enlaces a las actas de aceptación de G_UI_READ y G_SPEC_VIEW en el repo receptor",
+    "reason": "owner_repo es deskops y alcance.md excluye editar otros repos: WS11 no redacta las actas del receptor, solo las obtiene y enlaza. Así se separa autoría (receptor) de ubicación."
+  },
+  {
+    "node": "WS11",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.scope",
+    "old": "",
+    "new": "",
+    "reason": "Alcance.md ya acota Code: «Code local a 1–2 hops según soporte real ya en el ticket del workspace; no se promete navegación CST inexistente». Cita: alcance.md, Entrega L."
+  }
+]

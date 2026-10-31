@@ -2,6 +2,7 @@
 id: WS04
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS01
 requires: []
@@ -21,11 +22,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Leer graph_ui Board, tareas y código actuales; mapear nodos de este plan a deltas existentes; identificar sesiones y solapamientos sin cambiar sus tareas.
+Leer graph_ui (../UIs/graph_ui) Board, tareas y código actuales; mapear a deltas existentes los nodos de este plan que toquen graph_ui (tarea o entrada del Board de graph_ui, o commit que ya lo implementa), registrando la correspondencia en auditoria/ui.md; identificar sesiones y solapamientos sin cambiar sus tareas. SPEC externo = /home/jp/proyectos/softfactory_spec/SPEC.md. Sesión = trabajo en curso observable en Board, git status o paneles herdr.
 
 ## Aceptación
 
-Cada tarea externa con path, estado observado, hash y alcance; reconciliar también SPEC externo y cualquier encargo aportado al ejecutar.
+Cada tarea externa con path, estado observado, hash y alcance, y cada solapamiento (misma tarea o archivos reclamados por dos sesiones); reconciliar también el SPEC externo (coincidencias, discrepancias y ausencias frente a este plan, con path y hash) y cualquier encargo aportado al ejecutar. Hash = SHA256 del archivo de tarea. Encargo aportado = documento que el solicitante entregue explícitamente al ejecutor; si no hay, se registra que no hubo.
 
 ## Dependencias
 
@@ -33,7 +34,7 @@ Tareas: WS01. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un ar
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS04/84ab389514752ec1020c32a21bf172a6f796baabc15a575d891556fcfbb75b0e/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

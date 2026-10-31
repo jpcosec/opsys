@@ -1,0 +1,1 @@
+Reformulación fiel. Se corrigen rúbrica, vigencia hash/input, estabilidad IDs, alcance helpers, muestreo, transporte e identificación baseline/otra tarea en v2. La fecha es ID fijo de run; se explicita. No se descartan hallazgos por APTO. Reintento nuevo sin salida anterior.

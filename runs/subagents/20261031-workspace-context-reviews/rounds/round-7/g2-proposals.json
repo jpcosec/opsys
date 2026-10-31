@@ -1,0 +1,172 @@
+[
+  {
+    "node": "WS13.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La representación mínima y la prueba de «legible» son casos de prueba detallados. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "brief.md define «Foco: elemento seleccionado por una persona, compartido entre representaciones del mismo documento»; seleccionar el documento hace del documento el elemento seleccionado. El reflejo exacto en cada representación es detalle del TaskDoc."
+  },
+  {
+    "node": "WS13.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Si «aparece» exige recarga o refresco automático es comportamiento de interfaz. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La transición al cerrar la pestaña activa es un caso de borde. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Qué acciones apilan historia y cómo se deduplican es detalle del modelo de navegación y de sus pruebas. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El nodo promete «dos documentos lado a lado» y «abrir dos documentos en divisiones»; más divisiones no están prometidas ni hacen falta para cumplir la aceptación."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya resuelve el requisito: «Disposición por sesión de navegador; no se exige persistir tras recargar». Memoria o sessionStorage son implementación mientras no se exija persistencia."
+  },
+  {
+    "node": "WS17",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS17.acceptance",
+    "old": "Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown sin UI;",
+    "new": "Tras regenerar corpus WS40 con ejemplo/nav/, cubrir las entradas de UF01 y UF10 y recorrer sus links Markdown sin UI;",
+    "reason": "Promesa del scope sin cobertura: la aceptación solo exigía que los links resolvieran y un conjunto mínimo pasaba; cobertura.md asigna a WS17 índices para UF01 y UF10."
+  },
+  {
+    "node": "WS17",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La convención de rutas o marcadores entre plantillas y generador es formato de archivos. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Dirección y tipos de arista de la vecindad son detalle del algoritmo y del escenario de prueba. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.acceptance",
+    "old": "La vista muestra la clasificación (tipo y tags) y la vecindad de hasta 2 hops.",
+    "new": "La vista muestra la clasificación (tipo y tags) y la vecindad de hasta 2 hops; abrir el grafo conserva el Code local del ticket workspace.",
+    "reason": "Promesa del scope sin cobertura: «preservar Code local» no aparecía en la aceptación y nadie más la verifica tras integrar el grafo."
+  },
+  {
+    "node": "WS40",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "WS02/WS03 son ancestros transitivos: WS40→WS11→WS09→WS07→WS06→WS03 y WS02. alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo»."
+  },
+  {
+    "node": "WS40",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Autor, email y configuración git son formato del entorno de prueba. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS40",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya declara el root del entorno (graph_ui:.tmp/... o tmp_path) e incluye el tercer repo en el mismo corpus; su limpieza es detalle de prueba del TaskDoc."
+  },
+  {
+    "node": "WS40",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación exige «entorno aislado» y el scope declara la ubicación graph_ui:.tmp/...; si hace falta .gitignore es archivo concreto del TaskDoc: context-review-guide.md «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS41",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "cobertura.md advierte «Las filas definen cobertura esperada, no capacidades entregadas»; la aceptación de WS41 no incluye búsqueda, y reader/errores llegan por WS13. WS14/WS15 no son prerrequisitos de su aceptación."
+  },
+  {
+    "node": "WS41",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "WS41 solo consume el corpus: su scope exige «sin mutaciones cruzadas» y el reparto de archivos en tests/ lo fija el TaskDoc. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  }
+]

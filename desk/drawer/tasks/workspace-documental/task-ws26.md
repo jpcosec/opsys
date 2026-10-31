@@ -2,9 +2,15 @@
 id: WS26
 status: candidate
 owner_repo: graph_ui
+node_role: aggregate
+children:
+- WS26.1
+- WS26.2
 depends_on:
 - WS12
 - WS22
+- WS26.1
+- WS26.2
 requires:
 - G_CLOSEOUT
 - G_HUMAN_READ
@@ -20,7 +26,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: M.
 
-frontends/mindmap/views/workspace/task/; endpoints; tests/
+Agregado: salidas de WS26.1, WS26.2
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
@@ -30,15 +36,15 @@ Autoría explícita desde candidato, evidencia declarada, dependencias y context
 
 ## Aceptación
 
-UF04 con TaskDoc/Board reales; nunca editar status para avanzar. Si operación Git no tiene contrato/manual owner, mantener acción read-only/handoff explícito y gate humano no pasa hasta resolver.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS12, WS22. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS22, WS26.1, WS26.2. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26/cfc06f2a1adf94eed7850994c641ef00423802230e0aa428df1fc51ea35761d1/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

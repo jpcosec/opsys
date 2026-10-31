@@ -1,0 +1,292 @@
+[
+  {
+    "node": "PK02",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK02.acceptance",
+    "old": "`context_review.status=blocked`, que la sesión",
+    "new": "`context_review.status=blocked` por causa externa (ajena al encargo del propio hijo), que la sesión",
+    "reason": "La definición de «bloqueo explícito» no distingue causa y choca con la frase final. Se fija que el bloqueo aceptable es externo (ajeno al encargo del propio hijo); el texto es idéntico en ROOT/PK01–08 y debe aplicarse en bloque."
+  },
+  {
+    "node": "PK04",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide el algoritmo y la fuente exacta del hash. El propio input nombra el comprobador: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops»; el hash concreto es detalle de implementación que fija ese script, no el encargo. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK04",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "`context_review.status=blocked`, que la sesión",
+    "new": "`context_review.status=blocked` por causa externa (ajena al encargo del propio hijo), que la sesión",
+    "reason": "Ambos casos pueden acabar en blocked con responsable y dependencia; falta el discriminador de causa. Se añade «ajena al encargo del propio hijo», que separa ambigüedad propia de dependencia externa sin crear términos nuevos."
+  },
+  {
+    "node": "PK04",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "registra con responsable y dependencia",
+    "new": "registra con responsable (actor o repo que debe resolverla) y dependencia",
+    "reason": "«Responsable» no tiene referente y la aceptación depende de su registro; se define en una frase como el actor o repo que resuelve la dependencia."
+  },
+  {
+    "node": "PK05",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide el artefacto y algoritmo del hash. El input ya declara el comprobador: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops». Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK05",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK05.acceptance",
+    "old": "guardada en su intento",
+    "new": "guardada en el intento correspondiente a esos hashes",
+    "reason": "Con varios intentos no se sabe cuál cuenta; se ata el intento a los hashes ya exigidos por la misma frase."
+  },
+  {
+    "node": "PK05",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El input ya dice «Verdadera cuando cada hijo directo tiene revisión vigente», sin excepción por entrega: read_only excluye entregar WS20, no revisar su contrato. Cita: alcance.md, «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo», y el propio texto del nodo citado."
+  },
+  {
+    "node": "PK06",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK06.acceptance",
+    "old": "`context_review.status=blocked`, que la sesión",
+    "new": "`context_review.status=blocked` por causa externa (ajena al encargo del propio hijo), que la sesión",
+    "reason": "«Externo» no se define frente a la ambigüedad propia. Se acota a causa ajena al encargo del propio hijo; con ello el bloqueo externo con responsable queda admitido y el derivado de ambigüedad no."
+  },
+  {
+    "node": "PK06",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK06.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide la fuente del hash y del «contrato». El input nombra el comprobador: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops». Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS01",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS01.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide un umbral y un contenido mínimo de la reformulación; eso evalúa el producto, no el encargo. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS01",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS01.acceptance",
+    "old": "Cada acuerdo de la sección «Encargo y acuerdos explícitos» cita al solicitante",
+    "new": "Cada acuerdo (cita o frase de autorización) de la sección «Encargo y acuerdos explícitos» cita al solicitante",
+    "reason": "La sección mezcla blockquotes y prosa de autorización; se aclara que «acuerdo» cubre ambos sin enumerar la sección."
+  },
+  {
+    "node": "WS01",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS01.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide formato y cobertura de la remisión a decisiones.md. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)» y «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS02",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS02.scope",
+    "old": "",
+    "new": "",
+    "reason": "Pide el universo exhaustivo y la profundidad de archivos; es detalle de inventario que fija la promoción dentro de la aceptación. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS02",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS02.acceptance",
+    "old": "y operación expuesta, con estado comprobado",
+    "new": "y la operación expuesta (comando o método que la lee o muta, o «dato pasivo»), con estado comprobado",
+    "reason": "Para Markdown o datos pasivos no se sabe qué es «operación expuesta»; se define en una frase sin cambiar el alcance."
+  },
+  {
+    "node": "WS02",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS02.scope",
+    "old": "",
+    "new": "",
+    "reason": "Pide la lista exacta de comandos y efectos Git; la auditoría los descubre leyendo el CLI y esa enumeración es detalle de promoción. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»; el nodo ya acota a firmas públicas y lectura de solo lectura."
+  },
+  {
+    "node": "WS03",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS03.scope",
+    "old": "",
+    "new": "",
+    "reason": "Pide las dimensiones exactas del informe de conflictos y límites; es detalle de ejecución de la auditoría, no un resultado indefinido. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS03",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS03.scope",
+    "old": "referencias, búsquedas y alcance real ViewDoc",
+    "new": "referencias documentales, búsquedas (índices o consultas expuestas) y alcance real ViewDoc",
+    "reason": "«Referencias» y «búsquedas» admiten objetos distintos; se acotan a los que consume el workspace documental sin añadir nodos."
+  },
+  {
+    "node": "WS03",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS03.acceptance",
+    "old": "distinguir API comprobada, ausencia y hueco",
+    "new": "distinguir API comprobada (lectura citada del estado actual), ausencia y hueco",
+    "reason": "«Comprobada» no fija estándar ni snapshot y la aceptación depende de esa distinción; se ancla a lectura citada del estado actual, igual que WS02."
+  },
+  {
+    "node": "WS04",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide path y hash exactos para Board o commit. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS04",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "Cada tarea externa con path, estado observado, hash y alcance;",
+    "new": "Cada tarea externa con path, estado observado, hash y alcance, y cada solapamiento (misma tarea o archivos reclamados por dos sesiones);",
+    "reason": "El scope exige identificar solapamientos pero la aceptación no los incluía; se añade el criterio en una frase."
+  },
+  {
+    "node": "WS04",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS04.scope",
+    "old": "mapear nodos de este plan a deltas existentes",
+    "new": "mapear a deltas existentes los nodos de este plan que toquen graph_ui",
+    "reason": "El título y la salida son de UI, pero el alcance no limitaba el subconjunto y permitía exceder auditoria/ui.md; se acota a nodos con superficie graph_ui."
+  },
+  {
+    "node": "WS05",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "y capacidades que requieren API real.",
+    "new": "y capacidades que requieren API real; el inventario separa slug/agente/intento/dispatch/mensaje/conversación y permisos.",
+    "reason": "El scope exige separar las identidades y permisos, pero la aceptación no lo comprobaba; se añade esa condición sin ampliar el alcance."
+  },
+  {
+    "node": "WS05",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide precedencia y criterio para símbolos auxiliares exportados; es un caso de borde que el inventario registra al ejecutar. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»; el scope ya fija «endpoints/SDK documentados o exportados; no tablas ni funciones internas»."
+  },
+  {
+    "node": "WS07",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS07.scope",
+    "old": "y `baseline_proposal` de dag.yaml;",
+    "new": "y `baseline_proposal` de dag.yaml (propuesta de línea base, no aprobación del plan completo);",
+    "reason": "No se sabía qué se aprueba al confirmar esa clave; se aclara su efecto sin definir un esquema nuevo."
+  },
+  {
+    "node": "WS07",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS07.scope",
+    "old": "confirma o corrige P01–P09 de decisiones.md",
+    "new": "confirma o corrige P01–P09 de decisiones.md, leyendo validacion-humana.md para P08,",
+    "reason": "P08 remite a validacion-humana.md y WS07 no lo declaraba como lectura; se nombra la fuente de los presupuestos y el participante."
+  },
+  {
+    "node": "WS11",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La taxonomía de nodos admisibles es el contenido del contrato que produce WS11, no un dato de entrada; la aceptación ya fija la clasificación «Resolver cada hueco como instancia/vínculo/consulta/API/renderer». Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS11",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El delta lector ya está delimitado: G_UI_READ declara su `scope_nodes` (WS13, WS13.1, WS13.2, WS13.3, WS14, WS15, WS15.1, WS15.2, WS22, WS23, WS24, WS27, WS27.1, WS27.2, WS29, WS35, WS40, WS41) y la aceptación remite a esa lista. Cita del input: dag.yaml#gates G_UI_READ, `scope_nodes`."
+  },
+  {
+    "node": "WS11",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "El acta receptora enumera scope_nodes de G_UI_READ/G_SPEC_VIEW, incluidos corpus WS40 y multidesk WS41, para no dejar deltas sin recepción.",
+    "new": "El acta de G_UI_READ enumera sus scope_nodes, incluidos corpus WS40 y multidesk WS41; el acta de G_SPEC_VIEW enumera los suyos, para no dejar deltas sin recepción.",
+    "reason": "WS40/WS41 son scope_nodes solo de G_UI_READ; la redacción anterior los asignaba también a la recepción de spec2viz y contradecía dag.yaml#gates."
+  },
+  {
+    "node": "WS12",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS12.acceptance",
+    "old": "Aceptar deltas de escritura por graph_ui antes de cerrar;",
+    "new": "Aceptar el delta de escritura (operaciones de la whitelist sobre los scope_nodes de G_UI_WRITE) por graph_ui antes de cerrar;",
+    "reason": "No se fijaba si el delta abarca todas las operaciones de los scope_nodes o solo la whitelist; se define la unidad con los elementos ya existentes."
+  }
+]

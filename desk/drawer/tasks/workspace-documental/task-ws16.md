@@ -2,6 +2,7 @@
 id: WS16
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS14
 - WS15
@@ -25,11 +26,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Gate humano temprano para UF01/UF03 lectura/UF07 diagnóstico y UF08 lectura; desk ejemplo y protocolo en validacion-humana.md. Incluye UF10 arranque/ausencia de desk y UF08 lectura del segundo desk real, sin mutación interdesk.
+Gate humano temprano para UF01/UF03 lectura/UF07 diagnóstico y UF08 lectura; consume el manifiesto de WS40 y sigue el protocolo de validacion-humana.md, sin crear corpus propio. Incluye UF10 arranque/ausencia de desk y UF08 lectura del segundo desk real, sin mutación interdesk.
 
 ## Aceptación
 
-Humano real realiza recorrido; agente no sustituye aprobación. Fallos abren correcciones antes de edición. Reportar tiempos y pruebas técnicas por separado. Preparar corpus por WS40; G_HUMAN_READ es requisito de toda mutación del baseline. Renderizaciones read-only pueden desarrollarse en paralelo sin afirmar aceptación de usuario.
+Humano real realiza recorrido; agente no sustituye aprobación. Ante un fallo, WS16 lo registra y el responsable del repo dueño del nodo que falló abre la tarea de corrección antes de edición; WS16 no la implementa. Reportar tiempos y pruebas técnicas por separado. Preparar corpus por WS40; G_HUMAN_READ es requisito de toda mutación del baseline. Renderizaciones read-only pueden desarrollarse en paralelo sin afirmar aceptación de usuario. Mide aperturas y búsquedas; guardados no aplican hasta WS30.
 
 ## Dependencias
 
@@ -37,7 +38,7 @@ Tareas: WS14, WS15, WS08, WS40, WS41. Gates: ninguno adicional. Ver estados/evid
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS16/a339afc666a4fc6fd077496c52b5269cd237326c1e45b1ed85beb22da68a2901/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

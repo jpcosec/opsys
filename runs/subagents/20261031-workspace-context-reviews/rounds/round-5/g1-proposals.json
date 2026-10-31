@@ -1,0 +1,152 @@
+[
+  {
+    "node": "WS05",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS33 es un nodo del DAG con scope propio (referencias Hub/proyecto/conversación/mensaje/intento); WS05 delega en WS32/WS33 qué capabilities consumen y el ejecutor las lee de sus contratos. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS05",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide versión y precedencia entre documentación y SDK exportado; es un caso de borde del inventario, no un resultado indefinido. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»; el scope ya fija «endpoints/SDK documentados o exportados; no tablas ni funciones internas»."
+  },
+  {
+    "node": "WS05",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Las equivalencias slug/dispatch/conversación se obtienen al inventariar el runtime y la API de Scion, que el scope manda leer; no son términos del glosario del workspace. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS07",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.output_scope",
+    "old": "",
+    "new": "",
+    "reason": "El input ya dice «confirma o corrige P01–P09 ... y `baseline_proposal`» y lista esa clave en output_scope: se modifica, no solo se lee. Cita: dag.yaml#node:WS07, scope y output_scope; context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS07",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.output_scope",
+    "old": "",
+    "new": "",
+    "reason": "El registro ya está en output_scope («decisiones.md; `baseline_proposal` y parameters.source_mode en dag.yaml») y las variantes en dag.yaml. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»; el alcance del ajuste lo fija el humano en P04."
+  },
+  {
+    "node": "WS07",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS07.acceptance",
+    "old": "No cerrar sin registro de designación de responsables graph_ui/sldb/spec2viz y operador Scion en P01",
+    "new": "No cerrar sin registro de designación de responsables graph_ui/sldb/spec2viz y operador Scion, con su acceso read-only, en P01",
+    "reason": "El scope promete «registrar qué acceso read-only tiene» y WS44 depende de ese registro, pero la aceptación solo exigía identidad: promesa del scope sin aceptación y sin otro productor."
+  },
+  {
+    "node": "WS08",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación fija una ficha por UF («Cada UF tiene entrada/salida...») y cobertura.md asigna nodos y gates por UF, no por paso. El detalle por paso es de promoción. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS08",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Cobertura.md ya lista varios nodos y gates por flujo (p. ej. UF01 con WS13/14/15 y WS16/WS30/WS43); «nodo y gate humano» admite lista, no obliga a elegir uno. Cita: cobertura.md, filas UF01–UF10; context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS08",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "",
+    "new": "",
+    "reason": "«Manual» no crea una UF: cobertura.md cubre UF01–UF10 y sus recorridos son los del manual; el documento manual lo entregan WS10/WS31, no WS08. Cita: cobertura.md, filas UF01–UF10; context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS08",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Cobertura.md separa «Implementación o handoff» (nodo) de «Gate de aceptación» (gate humano), que es justo lo que replica la aceptación; no hay que inventar cuál es cuál. Cita: cobertura.md, cabecera y filas UF01–UF10."
+  },
+  {
+    "node": "WS09",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "No hay dos ejes en conflicto: WS10 aporta las definiciones («Definiciones verificables de disponible/propuesto/bloqueado») y auditoria/ui.md de WS04 aporta el dato observado; el nodo solo los combina. Cita: dag.yaml#edge:WS10, acceptance; dag.yaml#node:WS09, acceptance."
+  },
+  {
+    "node": "WS11",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La composición y resolución de identidad es el contenido del contrato que WS11 produce, no un dato que falte. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»; WS13.1 y WS41 consumen esa identidad según sus contratos de arista."
+  },
+  {
+    "node": "WS11",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La taxonomía consulta/API/renderer es el resultado del contrato; la aceptación ya fija la clasificación «Resolver cada hueco como instancia/vínculo/consulta/API/renderer». Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS11",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El procedimiento ya está fijado: alcance.md manda detenerse y registrar el hueco con repo dueño, sin crear sustituto; «acotada» se refiere a esa dependencia del repo identificado. Cita: alcance.md, «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS11",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La autorización multidesk es contenido del contrato WS11 que WS41 consume: WS41 pide «aliases/roots explícitamente autorizados en contrato WS11» y rechazar roots arbitrarios; definir esa política es el trabajo del contrato, no un dato previo. Cita: dag.yaml#edge:WS41, scope y acceptance."
+  }
+]

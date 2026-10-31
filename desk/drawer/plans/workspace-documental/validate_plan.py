@@ -13,13 +13,25 @@ B=Path(__file__).resolve().parent
 R=B.parents[3]
 d=yaml.safe_load((B/'dag.yaml').read_text())
 ts={t['id']:t for t in d['tasks']};gs=d['gates']
-# This revision records pending cheap comprehension, never fabricated approval.
-pending_review={'status':'pending','required_protocol':'ritual-context-review','evidence':[]}
-assert d['status']=='expert_reviewed_pending_cheap_context_reviews_and_decisions'
+# Cheap review state is checked against current inputs; pending is never reported as reviewed.
+sys.path.insert(0,str(B))
+import context_review as cr
+assert d['status'] in ('expert_reviewed_pending_cheap_context_reviews_and_decisions','cheap_context_reviewed_pending_decisions')
 assert d['execution_authorized'] is False
-assert d['hierarchy_context_review']==pending_review, 'root/hierarchy cheap review must remain pending'
+h=d['hierarchy'];pk={p['id']:p for p in h['packages']}
+assert h['root']['id']=='ROOT' and h['root']['children']==list(pk)
+members=[c for p in h['packages'] for c in p['children']]
+assert sorted(members)==sorted(f'WS{i:02d}' for i in range(1,45)),'package membership must be unique and cover WS01-WS44'
 for t in ts.values():
-    assert t['context_review']==pending_review, t['id']+': cheap review must remain pending'
+    assert t['node_role'] in ('delivery','aggregate'),t['id']
+    if t['node_role']=='aggregate':
+        assert t['children'] and set(t['children'])<=set(t['depends_on']),t['id']
+        assert all(ts[c]['parent_id']==t['id'] for c in t['children']),t['id']
+    if t.get('parent_id'):
+        assert t['id'] in ts[t['parent_id']]['children'] and t['parent_id'] not in t['depends_on'],t['id']
+review_problems=cr.stale_reviews(d)
+if d['status']=='cheap_context_reviewed_pending_decisions':
+    assert not review_problems,review_problems
 assert 'expert' in d['council_review']['scope'].lower() and 'cheap' in d['council_review']['scope'].lower()
 
 assert len(ts)==len(d['tasks']), 'duplicate task IDs'
@@ -84,10 +96,10 @@ for p in [B/'README.md',*B.glob('borradores/*.md'),*Path(R/'desk/drawer/tasks/wo
     for link in re.findall(r'\]\(([^)]+)\)',p.read_text()):
         if '://' in link or link.startswith('#'):continue
         assert (p.parent/link.split('#')[0]).exists(),f'broken link {p}: {link}'
-lines=['STRUCTURE/COHERENCE: PASS',f'{len(ts)} candidate deliveries; {len(gs)} explicit gates; no cycles (including gate producers).',
+review_counts={}
+for n in cr.all_nodes(d):review_counts[n['context_review']['status']]=review_counts.get(n['context_review']['status'],0)+1
+lines=['STRUCTURE/COHERENCE: PASS',f'Context review states: {review_counts}; stale or pending problems: {len(review_problems)}',f'{len(ts)} candidate deliveries; {len(gs)} explicit gates; no cycles (including gate producers).',
 'Generated README/table/task files/diagram spec match canonical YAML.',
-f'Cheap context reviews: 0/{len(ts)}; required_protocol=ritual-context-review; evidence=[] for each candidate.',
-'Root/hierarchy cheap context review: pending; required_protocol=ritual-context-review; evidence=[].',
 'Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.',
 'Planning candidates with no prerequisite: '+', '.join(ready),
 'Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.',

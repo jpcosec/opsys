@@ -2,6 +2,7 @@
 id: WS38
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS37
 - WS31
@@ -23,11 +24,11 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Añadir instrucciones runtime y revisión trazable, con lo que funciona y fallos demostrados.
+Añadir al manual operación de delegación y revisión trazable tal como quedó en WS37.
 
 ## Aceptación
 
-Capturas y operaciones reales; mantención de contratos y autorización documentadas.
+Cada paso remite al acta de WS37 y a operaciones reales; cada acuerdo durable deja su átomo vinculado; los fallos registrados en esa acta se documentan; se indica que G_EXEC es necesario para operar.
 
 ## Dependencias
 
@@ -35,7 +36,7 @@ Tareas: WS37, WS31. Gates: G_HUMAN_DELEGATE. Ver estados/evidencia en dag.yaml; 
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS38/876a25abfea893214befcad379c0bc36654471eecef40fc1b4d85859e7032f13/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

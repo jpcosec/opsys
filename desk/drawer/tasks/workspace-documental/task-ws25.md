@@ -2,9 +2,15 @@
 id: WS25
 status: candidate
 owner_repo: graph_ui
+node_role: aggregate
+children:
+- WS25.1
+- WS25.2
 depends_on:
 - WS12
 - WS16
+- WS25.1
+- WS25.2
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -19,7 +25,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: M.
 
-frontends/mindmap/views/workspace/intake/; endpoints; tests/
+Agregado: salidas de WS25.1, WS25.2
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
@@ -29,15 +35,15 @@ UI para mensaje/ack y captura interna de drawer/protoátomo mediante operaciones
 
 ## Aceptación
 
-UF02 pasa persistencia/recarga y origen; no tarea implícita ni cron de triage. Roles/permisos del contrato aplicados.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS12, WS16. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS16, WS25.1, WS25.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS25/72ce8631e30e15f58fe1a31d938443871e21ca8dcc66a2f9fdba8c540c62d7df/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

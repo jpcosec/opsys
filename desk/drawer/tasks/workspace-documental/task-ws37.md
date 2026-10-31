@@ -2,6 +2,7 @@
 id: WS37
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS36
 - WS30
@@ -24,11 +25,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-UF06 real: pregunta/intervención/corrección/evidencia/decisión y cierre vía autoridad, con actor humano.
+UF06 real: pregunta/intervención/corrección/evidencia/decisión y cierre por el handoff de WS28, con actor humano.
 
 ## Aceptación
 
-G_SCION/G_EXEC y protocolo; no sustituir integración por mocks ni completed por aprobación. No bloquea WS31.
+G_SCION/G_EXEC y protocolo de validacion-humana.md (guion, acta en runs/subagents/workspace-documental-acceptance/delegacion/); no sustituir integración por mocks ni completed por aprobación. No bloquea WS31.
 
 ## Dependencias
 
@@ -36,7 +37,7 @@ Tareas: WS36, WS30. Gates: G_EXEC, G_SCION. Ver estados/evidencia en dag.yaml; u
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS37/3e8b12975b69617766d6a0afed6c899047c4758cf450173ed9fbee17c30014de/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -2,6 +2,7 @@
 id: WS10
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS02
 - WS07
@@ -23,7 +24,7 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Índice y capítulos conceptuales, ejemplo fijo y etiqueta de disponibilidad; reutilizar manual CLI.
+Índice y capítulos conceptuales, ejemplo fijo y etiqueta de disponibilidad; reutilizar manual CLI. Usa auditoria WS02–WS04; WS03/WS04 llegan de forma transitiva por WS06/WS07.
 
 ## Aceptación
 
@@ -35,7 +36,7 @@ Tareas: WS02, WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS10/1a815c3a51d42fbe540fac61b0f7e9c5f5331fbf26ae474bc090733833670fa3/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

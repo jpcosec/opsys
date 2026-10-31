@@ -1,0 +1,34 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato del paquete expl\u00edcito. Reformula intenci\u00f3n, busca huecos/contradicciones y produce dry-run por roles con lecturas/cambios/validaciones SIN ejecutar. Solo material suministrado. Distingue revisi\u00f3n de candidatas de futura implementaci\u00f3n del producto. Respuesta m\u00e1xima 650 palabras.",
+    "--print",
+    "@runs/subagents/20261031-workspace-context-reviews/cold-input.md"
+  ],
+  "sources": [
+    "desk/drawer/tasks/task-revisar-dag-workspace-con-agentes-baratos.md",
+    "desk/contexts/pill-001-task-closure-commit.md",
+    "desk/contexts/pill-005-subagent-execution.md",
+    "desk/contexts/pill-007-phase-gated-task-flow.md",
+    "desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md",
+    "desk/rituals/context-review.md",
+    ".agents/skills/subagent-execution/SKILL.md"
+  ],
+  "sha256": "a27c378b56abb16203cb0aea799b9515884aeeda11fc4046ef010035a3e569aa",
+  "returncode": 0,
+  "fresh_process": true
+}

@@ -4,14 +4,14 @@ config:
   flowchart:
     curve: linear
 ---
-%% spec2viz: generated from desk/drawer/plans/workspace-documental/dag.diagram.yaml; do not edit, run `spec2viz diagram validate desk/drawer/plans/workspace-documental/dag.diagram.yaml` and re-render
+%% spec2viz: generated from dag.diagram.yaml; do not edit, run `spec2viz diagram validate dag.diagram.yaml` and re-render
 flowchart TD
     WS01["WS01: Fijar brief y glosario autosuficientes"]
     WS02["WS02: Inventariar superficies y operaciones Deskops"]
     WS03["WS03: Inventariar persistencia, consultas y notaciones"]
     WS04["WS04: Inventariar UI y reconciliar trabajo en curso"]
     WS05["WS05: Inventariar identidad y API Scion"]
-    WS06["WS06: Registrar acuerdos de alcance con repos dueños"]
+    WS06["WS06: Proponer correspondencia de alcance con repos dueños"]
     WS07["WS07: Resolver decisiones de producto y escritura"]
     WS08["WS08: Precisar user-flows y criterios observables"]
     WS09["WS09: Precisar catálogo de renderizaciones"]
@@ -19,27 +19,46 @@ flowchart TD
     WS11["WS11: Cerrar contrato de navegación e identidad"]
     WS12["WS12: Cerrar contrato de operaciones y escritura"]
     WS13["WS13: Integrar lector workspace con historia y foco"]
+    WS13.1["WS13.1: Leer documento, contexto y enlaces"]
+    WS13.2["WS13.2: Explorar documentos modelados y no modelados"]
+    WS13.3["WS13.3: Abrir documentos en pestañas y divisiones con historia"]
     WS14["WS14: Integrar búsqueda navegable del workspace"]
     WS15["WS15: Mostrar errores de lectura y modo degradado"]
+    WS15.1["WS15.1: Mostrar errores de lectura y modo degradado"]
+    WS15.2["WS15.2: Orientar proyecto sin desk"]
     WS16["WS16: Validar con humano lectura y descubrimiento"]
     WS17["WS17: Escribir entradas e índices del desk ejemplo"]
     WS18["WS18: Declarar proyecciones de grafo reutilizables"]
     WS19["WS19: Integrar edición de campos con conflicto"]
-    WS20["WS20: Probar o completar guardado fuente reversible"]
-    WS21["WS21: Integrar fuente y renderizado editables"]
+    WS19.1["WS19.1: Editar campos con conflicto visible"]
+    WS19.2["WS19.2: Editar relaciones permitidas por contrato"]
+    WS20["WS20: Comprobar o completar guardado fuente reversible"]
+    WS21["WS21: Integrar fuente y renderizado según source_mode"]
     WS22["WS22: Renderizar Board como trabajo navegable"]
     WS23["WS23: Renderizar rituales y pasos como procedimiento"]
     WS24["WS24: Integrar conocimiento y grafo local"]
     WS25["WS25: Integrar captura y triage en UI"]
+    WS25.1["WS25.1: Leer inbox y registrar ack o respuesta local"]
+    WS25.2["WS25.2: Capturar en drawer o protoátomo"]
     WS26["WS26: Integrar autoría y contexto de tareas"]
+    WS26.1["WS26.1: Autorar tarea, evidencia y contexto"]
+    WS26.2["WS26.2: Enrutar en Board y mostrar capa lista"]
     WS27["WS27: Integrar revisión de cambios y evidencia"]
+    WS27.1["WS27.1: Mostrar diff Git por repo y tarea"]
+    WS27.2["WS27.2: Mostrar evidencia declarada, encontrada y verificada"]
     WS28["WS28: Integrar verificación y handoff de cierre"]
     WS29["WS29: Integrar Changes e impacto comprobable"]
     WS30["WS30: Validar autoría y revisión manual completas"]
     WS31["WS31: Publicar manual documental básico probado"]
     WS32["WS32: Unificar identidad de intento y cierre Scion"]
+    WS32.1["WS32.1: Separar identidad de intento y dispatch"]
+    WS32.2["WS32.2: Hacer idempotente manifiesto y cierre"]
     WS33["WS33: Vincular mensajes, resultados y decisiones"]
+    WS33.1["WS33.1: Vincular mensajes y resultados al intento"]
+    WS33.2["WS33.2: Registrar decisión humana explícita"]
     WS34["WS34: Exponer despacho y respuesta Scion autorizados"]
+    WS34.1["WS34.1: Exponer dispatch autorizado"]
+    WS34.2["WS34.2: Exponer respuesta autorizada"]
     WS35["WS35: Mostrar ejecución y trazabilidad en workspace"]
     WS36["WS36: Integrar delegación e intervención humanas"]
     WS37["WS37: Validar delegación con agente real"]
@@ -76,6 +95,8 @@ flowchart TD
     WS07 -->|"prerequisite"| WS08
     G_PRODUCT -->|"prerequisite"| WS08
     WS07 -->|"prerequisite"| WS09
+    WS10 -->|"prerequisite"| WS09
+    WS08 -->|"prerequisite"| WS09
     G_PRODUCT -->|"prerequisite"| WS09
     WS02 -->|"prerequisite"| WS10
     WS07 -->|"prerequisite"| WS10
@@ -87,11 +108,28 @@ flowchart TD
     WS08 -->|"prerequisite"| WS12
     G_WRITE_POLICY -->|"prerequisite"| WS12
     WS11 -->|"prerequisite"| WS13
+    WS13.1 -->|"prerequisite"| WS13
+    WS13.2 -->|"prerequisite"| WS13
+    WS13.3 -->|"prerequisite"| WS13
     G_UI_READ -->|"prerequisite"| WS13
+    WS11 -->|"prerequisite"| WS13.1
+    G_UI_READ -->|"prerequisite"| WS13.1
+    WS11 -->|"prerequisite"| WS13.2
+    WS13.1 -->|"prerequisite"| WS13.2
+    G_UI_READ -->|"prerequisite"| WS13.2
+    WS11 -->|"prerequisite"| WS13.3
+    WS13.1 -->|"prerequisite"| WS13.3
+    G_UI_READ -->|"prerequisite"| WS13.3
     WS13 -->|"prerequisite"| WS14
     G_UI_READ -->|"prerequisite"| WS14
     WS13 -->|"prerequisite"| WS15
+    WS15.1 -->|"prerequisite"| WS15
+    WS15.2 -->|"prerequisite"| WS15
     G_UI_READ -->|"prerequisite"| WS15
+    WS13 -->|"prerequisite"| WS15.1
+    G_UI_READ -->|"prerequisite"| WS15.1
+    WS13 -->|"prerequisite"| WS15.2
+    G_UI_READ -->|"prerequisite"| WS15.2
     WS14 -->|"prerequisite"| WS16
     WS15 -->|"prerequisite"| WS16
     WS08 -->|"prerequisite"| WS16
@@ -104,9 +142,21 @@ flowchart TD
     G_SPEC_VIEW -->|"prerequisite"| WS18
     WS12 -->|"prerequisite"| WS19
     WS16 -->|"prerequisite"| WS19
+    WS19.1 -->|"prerequisite"| WS19
+    WS19.2 -->|"prerequisite"| WS19
     G_HUMAN_READ -->|"prerequisite"| WS19
     G_UI_WRITE -->|"prerequisite"| WS19
     G_WRITE_CONTRACT -->|"prerequisite"| WS19
+    WS12 -->|"prerequisite"| WS19.1
+    WS16 -->|"prerequisite"| WS19.1
+    G_HUMAN_READ -->|"prerequisite"| WS19.1
+    G_UI_WRITE -->|"prerequisite"| WS19.1
+    G_WRITE_CONTRACT -->|"prerequisite"| WS19.1
+    WS12 -->|"prerequisite"| WS19.2
+    WS16 -->|"prerequisite"| WS19.2
+    G_HUMAN_READ -->|"prerequisite"| WS19.2
+    G_UI_WRITE -->|"prerequisite"| WS19.2
+    G_WRITE_CONTRACT -->|"prerequisite"| WS19.2
     WS12 -->|"prerequisite"| WS20
     G_SLDB_WRITE -->|"prerequisite"| WS20
     G_WRITE_CONTRACT -->|"prerequisite"| WS20
@@ -124,18 +174,53 @@ flowchart TD
     G_UI_READ -->|"prerequisite"| WS24
     WS12 -->|"prerequisite"| WS25
     WS16 -->|"prerequisite"| WS25
+    WS25.1 -->|"prerequisite"| WS25
+    WS25.2 -->|"prerequisite"| WS25
     G_HUMAN_READ -->|"prerequisite"| WS25
     G_UI_WRITE -->|"prerequisite"| WS25
     G_WRITE_CONTRACT -->|"prerequisite"| WS25
+    WS12 -->|"prerequisite"| WS25.1
+    WS16 -->|"prerequisite"| WS25.1
+    G_HUMAN_READ -->|"prerequisite"| WS25.1
+    G_UI_WRITE -->|"prerequisite"| WS25.1
+    G_WRITE_CONTRACT -->|"prerequisite"| WS25.1
+    WS12 -->|"prerequisite"| WS25.2
+    WS16 -->|"prerequisite"| WS25.2
+    G_HUMAN_READ -->|"prerequisite"| WS25.2
+    G_UI_WRITE -->|"prerequisite"| WS25.2
+    G_WRITE_CONTRACT -->|"prerequisite"| WS25.2
     WS12 -->|"prerequisite"| WS26
     WS22 -->|"prerequisite"| WS26
+    WS26.1 -->|"prerequisite"| WS26
+    WS26.2 -->|"prerequisite"| WS26
     G_CLOSEOUT -->|"prerequisite"| WS26
     G_HUMAN_READ -->|"prerequisite"| WS26
     G_UI_WRITE -->|"prerequisite"| WS26
     G_WRITE_CONTRACT -->|"prerequisite"| WS26
+    WS12 -->|"prerequisite"| WS26.1
+    WS22 -->|"prerequisite"| WS26.1
+    G_CLOSEOUT -->|"prerequisite"| WS26.1
+    G_HUMAN_READ -->|"prerequisite"| WS26.1
+    G_UI_WRITE -->|"prerequisite"| WS26.1
+    G_WRITE_CONTRACT -->|"prerequisite"| WS26.1
+    WS12 -->|"prerequisite"| WS26.2
+    WS22 -->|"prerequisite"| WS26.2
+    WS26.1 -->|"prerequisite"| WS26.2
+    G_CLOSEOUT -->|"prerequisite"| WS26.2
+    G_HUMAN_READ -->|"prerequisite"| WS26.2
+    G_UI_WRITE -->|"prerequisite"| WS26.2
+    G_WRITE_CONTRACT -->|"prerequisite"| WS26.2
     WS13 -->|"prerequisite"| WS27
     WS12 -->|"prerequisite"| WS27
+    WS27.1 -->|"prerequisite"| WS27
+    WS27.2 -->|"prerequisite"| WS27
     G_UI_READ -->|"prerequisite"| WS27
+    WS13 -->|"prerequisite"| WS27.1
+    WS12 -->|"prerequisite"| WS27.1
+    G_UI_READ -->|"prerequisite"| WS27.1
+    WS13 -->|"prerequisite"| WS27.2
+    WS12 -->|"prerequisite"| WS27.2
+    G_UI_READ -->|"prerequisite"| WS27.2
     WS27 -->|"prerequisite"| WS28
     WS12 -->|"prerequisite"| WS28
     G_CLOSEOUT -->|"prerequisite"| WS28
@@ -160,17 +245,50 @@ flowchart TD
     G_HUMAN_MANUAL -->|"prerequisite"| WS31
     WS05 -->|"prerequisite"| WS32
     WS12 -->|"prerequisite"| WS32
+    WS32.1 -->|"prerequisite"| WS32
+    WS32.2 -->|"prerequisite"| WS32
     G_CLOSEOUT -->|"prerequisite"| WS32
     G_SCION -->|"prerequisite"| WS32
     G_WRITE_CONTRACT -->|"prerequisite"| WS32
+    WS05 -->|"prerequisite"| WS32.1
+    WS12 -->|"prerequisite"| WS32.1
+    G_CLOSEOUT -->|"prerequisite"| WS32.1
+    G_SCION -->|"prerequisite"| WS32.1
+    G_WRITE_CONTRACT -->|"prerequisite"| WS32.1
+    WS05 -->|"prerequisite"| WS32.2
+    WS12 -->|"prerequisite"| WS32.2
+    WS32.1 -->|"prerequisite"| WS32.2
+    G_CLOSEOUT -->|"prerequisite"| WS32.2
+    G_SCION -->|"prerequisite"| WS32.2
+    G_WRITE_CONTRACT -->|"prerequisite"| WS32.2
     WS32 -->|"prerequisite"| WS33
     WS11 -->|"prerequisite"| WS33
+    WS33.1 -->|"prerequisite"| WS33
+    WS33.2 -->|"prerequisite"| WS33
     G_SCION -->|"prerequisite"| WS33
+    WS32 -->|"prerequisite"| WS33.1
+    G_SCION -->|"prerequisite"| WS33.1
+    WS32 -->|"prerequisite"| WS33.2
+    WS33.1 -->|"prerequisite"| WS33.2
+    G_SCION -->|"prerequisite"| WS33.2
     WS33 -->|"prerequisite"| WS34
     WS12 -->|"prerequisite"| WS34
+    WS34.1 -->|"prerequisite"| WS34
+    WS34.2 -->|"prerequisite"| WS34
     G_EXEC -->|"prerequisite"| WS34
     G_SCION -->|"prerequisite"| WS34
     G_WRITE_CONTRACT -->|"prerequisite"| WS34
+    WS33 -->|"prerequisite"| WS34.1
+    WS12 -->|"prerequisite"| WS34.1
+    G_EXEC -->|"prerequisite"| WS34.1
+    G_SCION -->|"prerequisite"| WS34.1
+    G_WRITE_CONTRACT -->|"prerequisite"| WS34.1
+    WS33 -->|"prerequisite"| WS34.2
+    WS12 -->|"prerequisite"| WS34.2
+    WS34.1 -->|"prerequisite"| WS34.2
+    G_EXEC -->|"prerequisite"| WS34.2
+    G_SCION -->|"prerequisite"| WS34.2
+    G_WRITE_CONTRACT -->|"prerequisite"| WS34.2
     WS33 -->|"prerequisite"| WS35
     WS27 -->|"prerequisite"| WS35
     G_SCION -->|"prerequisite"| WS35

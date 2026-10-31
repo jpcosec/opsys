@@ -2,8 +2,11 @@
 id: WS09
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS07
+- WS10
+- WS08
 requires:
 - G_PRODUCT
 ---
@@ -26,15 +29,15 @@ Inventariar fuente, queries, Board, ritual, conocimiento/crossroads, issues, FAQ
 
 ## Aceptación
 
-Cada fila tiene origen, contrato, renderer, acción/dueño, error y estado. Distinguir authored/derivado/preferencia local.
+Cada fila tiene origen, contrato (o «sin contrato» si el soporte no lo tiene), renderer, acción/dueño, error y estado. Distinguir authored/derivado/preferencia local. Aplica a cada fila de las tablas de vistas.md y completa la ficha por fila. Estado = disponible/propuesto/bloqueado según WS10; disponibilidad actual viene de auditoria/ui.md (WS04); error = fallo visible esperado para esa fila.
 
 ## Dependencias
 
-Tareas: WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS07, WS10, WS08. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS09/f34d622aae8d8e6ff0cefe588870edb4a400ddf9930fa957accc1dd59be06453/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

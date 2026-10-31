@@ -1,0 +1,112 @@
+# validation.log — tester independiente
+# Fecha: 2026-10-31
+# Repo: /home/jp/proyectos/SLDB_1/deskops
+# Rol: tester independiente (sin fork del Executor/coordinador). No se editó plan, desk ni código.
+
+## Comandos obligatorios (desde la raíz)
+
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+EXIT=0
+
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+STRUCTURE/COHERENCE: PASS
+Context review states: {'reviewed': 72}; stale or pending problems: 0
+63 candidate deliveries; 15 explicit gates; no cycles (including gate producers).
+Generated README/table/task files/diagram spec match canonical YAML.
+Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
+Planning candidates with no prerequisite: WS01
+Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
+Currently blocked candidates: 62
+G_HUMAN_READ: receipt location versionable under current gitignore
+G_HUMAN_MANUAL: receipt location versionable under current gitignore
+G_HUMAN_DELEGATE: receipt location versionable under current gitignore
+G_HUMAN_MODEL: receipt location versionable under current gitignore
+workspace: CHANGED/MISSING; reconcile before promotion
+editing: CHANGED/MISSING; reconcile before promotion
+changes: CHANGED/MISSING; reconcile before promotion
+scion: observed path/hash unchanged
+kimun_reference_only: observed path/hash unchanged
+closeout: CHANGED/MISSING; reconcile before promotion
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+EXIT=0
+
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+EXIT=0
+
+Nota: validate_plan.py marca CHANGED/MISSING en referencias externas workspace, editing, changes y closeout. Se registran como referencias externas, no como fallo de esta revisión.
+
+## Cobertura (script de solo lectura sobre dag.yaml)
+
+- ROOT presente; 8 paquetes PK01–PK08; 63 entradas en tasks: WS01–WS44 (44 originales) + 19 hijos (WS13.1–3, WS15.1–2, WS19.1–2, WS25.1–2, WS26.1–2, WS27.1–2, WS32.1–2, WS33.1–2, WS34.1–2).
+- IDs únicos; WS01–WS44 completos.
+- Cada candidata original aparece exactamente una vez en packages[].children; ningún hijo aparece en un paquete.
+- Ningún hijo depende de su padre; cada padre dividido es node_role=aggregate e incluye a sus hijos en depends_on; los no divididos son delivery.
+- 72 nodos con context_review.status=reviewed y directorio de evidencia existente.
+- 63 tareas con status=candidate (cero excepciones).
+- 15 gates: pending/blocked/unverified; ninguno en satisfied.
+- execution_authorized=false; parameters.source_mode=pending.
+- decisiones.md: Estado general PENDING_OWNER; tabla P01–P09 sin estados accepted/rejected/revised.
+
+## Integridad de evidencia (todos los 72 nodos)
+
+Verificado para cada nodo con evidencia en dag.yaml:
+- input.md, manifest.json, contract.json, output.md, stderr.log, receipt.json, disposition.md: presentes (7/7).
+- SHA256(input.md) == nombre de carpeta del bundle == context_review.input_sha256 == receipt.input_sha256 == manifest.input_sha256.
+- SHA256(contract.json) == context_review.contract_sha256 == manifest.node_contract_sha256.
+- contract.json == JSON canónico del nodo excluyendo solo context_review (sort_keys=True, separators=(',',':'), ensure_ascii=False).
+- SHA256(output.md) == receipt.output_sha256.
+- technical_failure=false y returncode=0 en los 72 receipts usados como evidencia.
+- Resultado: 0 problemas.
+
+## Aislamiento
+
+- argv de los 72 receipts incluye --offline --no-session --no-context-files --no-skills --no-extensions --no-prompt-templates --no-tools y --print.
+- provider=deepseek, model=deepseek-flash, thinking=low en argv y manifest.
+- Sin --continue ni --resume.
+- input.md de los 72 nodos: sin marcadores REFORMULACION/AMBIGUEDADES/DRY-RUN/error_reviewer/"Propuestas de un agente"/"Sin hallazgos"/"ronda N".
+- Barrido de ventanas de 80+ caracteres de todos los output.md/disposition.md del run-dir contra los input.md actuales: solo coinciden frases que ya son texto fuente del plan (p. ej. texto de aceptación citado por la disposición); 0 inyecciones de review previo.
+- Resultado: 0 problemas.
+
+## Límites frente a HEAD
+
+$ git show HEAD:desk/drawer/plans/workspace-documental/dag.yaml > /tmp/dag-head.yaml
+Comparación YAML:
+- 15 gates en HEAD y en actual; mismos campos salvo scope_nodes.
+- Únicos cambios: G_UI_READ y G_UI_WRITE amplían scope_nodes con hijos nuevos; resto de campos idénticos.
+- execution_authorized=false en ambos.
+
+$ git status --short
+- Cambios en desk/drawer/plans/workspace-documental/ (plan y generados), desk/drawer/tasks/workspace-documental/task-ws*.md, desk/tasks/task-revisar-dag-workspace-con-agentes-baratos.md y runs/subagents/20261031-workspace-context-reviews/: esperados.
+- Ajenos: desk/inbox/20261029-*.md (closed/acknowledged del 2026-10-29), desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md (deferred, 2026-10-31 00:17) y desk/inbox/20261029-213633-unclear-advance... (2026-10-29): no forman parte del cambio revisado.
+
+## Rúbrica (muestras leídas de output.md, disposition.md, contract.json e input.md)
+
+Nodos muestreados (42): ROOT, PK01–PK08, los 19 hijos WSxx.n y WS01, WS07, WS11, WS12, WS16, WS20, WS21, WS28, WS30, WS32, WS40, WS41, WS43, WS44.
+
+- Reformulación con propósito, resultado, repo y límites: presente en los 42. Los PK sin owner_repo declaran agrupación y anclan la comprobación a deskops.
+- Dry-run sin ejecución, con autoridad y secuencia de dependencias: presente en los 42; los gates pendientes se tratan como intencionales y no como satisfechos.
+- Aceptación comprobable: reformulada o cuestionada con evidencia en los 42.
+- Disposiciones: el número de hallazgos numerados de cada output.md coincide con el de su disposition.md en los 42 (incluidos los "ninguna"/"Sin hallazgos").
+- Citas: todas las comillas «...» y '...' de las líneas error_reviewer / "rechazado por el revisor" existen en el input.md del propio nodo (comparación sin distinguir mayúsculas, ignorando markdown/backticks y admitiendo elisiones con ...). 0 citas ausentes.
+- Argumentos verificables comprobados: WS33.1→WS32→WS12→WS11 (WS12.depends_on incluye WS11); WS40→WS11→WS09→WS07→WS06→WS02/WS03; WS30→WS21→WS19→WS12→WS08; WS43→WS30→WS26/WS28 (ambos require G_CLOSEOUT); WS20.requires incluye G_SLDB_WRITE producido por WS12; WS40/WS41/WS43/WS27.1 citan texto de cobertura/nodos existente.
+- Observaciones no bloqueantes: WS11 etiqueta dos disposiciones como "rechazado por el revisor" en vez de "error_reviewer" (ambas con cita real y justificación); WS43 usa "error_reviewer con razón del revisor"; algunas citas usan elisión "..." (fragmentos verificados). WS30 responde la duda de dependencia por cadena transitiva; el input sí incluye borradores/user-flows.md.
+
+## Evidencia de fallos técnicos
+
+$ grep/contaje sobre receipts: 667 receipts totales; 216 technical_failure=true, todos returncode=-9 y stdin distinto de devnull; 0 fallos con stdin=devnull.
+- rounds/technical-failure-root-cause.md explica los 216 como runner esperando stdin heredado, corregido con stdin=subprocess.DEVNULL; no llegaron al modelo.
+- Ninguno de los 216 se referencia como evidencia en dag.yaml: los 72 receipts usados tienen technical_failure=false.
+- Máximo de fallos por input: 3; todo input con review tiene al menos un intento respondido.
+
+## pytest
+
+$ timeout 480 python -m pytest -q
+- No terminó en 8 minutos; fue terminado por timeout (EXIT=124) al 44% de la suite. Antes del corte mostró 1 F (~11%) y 1 E (~44%).
+- Para identificar el primer fallo: timeout 300 python -m pytest -x -q --tb=short
+  FAILED tests/test_board_portable_references.py::test_linked_board_context_belongs_to_provider_despite_consumer_path_collisions (1 failed, 52 passed, 3 skipped in 156 s)
+  Detalle: referencia portable provider:BoardDoc:Board con target desk/rituals/context-review.md y reason=unknown_path. Board.md y desk/rituals/ no están modificados por esta tarea (git status), por lo que se registra como fallo ajeno/prebaseline, sin arreglar.
+- El error adicional al 44% no se pudo diagnosticar: el proceso fue interrumpido por el timeout de 8 minutos.
+- No se repitió la suite completa: excede el límite del handoff y no hay evidencia nueva que lo justifique.

@@ -1,0 +1,292 @@
+[
+  {
+    "node": "WS19.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS19.1.output_scope",
+    "old": "frontends/mindmap/views/workspace/fields/; endpoints autorizados por el contrato WS12; tests/",
+    "new": "frontends/mindmap/views/workspace/fields/; endpoints del contrato WS12 consumidos desde graph_ui sin cambios de contrato; tests/",
+    "reason": "El nodo reutiliza editores y API; los endpoints son del contrato WS12 y no se modifican aquí ni en otro repo."
+  },
+  {
+    "node": "WS21",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS21.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "dag.yaml parameters.variant_rule: «Una variante añade sus depends_on/requires a los del nodo base; nunca los quita. Listas vacías significan que no añade nada.» La variante read_only con requires: [] no quita nada: siguen G_UI_WRITE y G_WRITE_CONTRACT del base. G_SOURCE nunca está en el base, solo lo añade editable, así que «No requiere G_SOURCE… read_only» no contradice."
+  },
+  {
+    "node": "WS21",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS21.scope",
+    "old": "nunca se descarta sin confirmación.",
+    "new": "nunca se descarta sin confirmación explícita de la persona usuaria; si no confirma, el buffer se conserva.",
+    "reason": "Faltaba actor y resultado de la confirmación; así el ejecutor no inventa quién confirma ni qué pasa si no hay confirmación."
+  },
+  {
+    "node": "WS21",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS21.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS21.scope: «Con pending no se prepara ni se promueve este nodo.» Con pending no hay ejecución ni aceptación que verificar; P04/WS07 resuelve el valor y WS12 acceptance añade «Tras WS07 source_mode ya no vale pending»."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS25.2.scope",
+    "old": "Captura interna de drawer/protoátomo mediante operaciones permitidas por contrato, sin exigir tarea.",
+    "new": "Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado.",
+    "reason": "Fija que son dos destinos alternativos con elección explícita y que la aceptación aplica al destino elegido."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS25.2.acceptance",
+    "old": "Origen = ruta o mensaje del que nace la captura.",
+    "new": "Origen = referencia tipada al soporte del que nace la captura (ruta o mensaje), con representación fijada por el contrato WS12; ambos tipos se registran y se muestran tras recargar.",
+    "reason": "Define que se soportan ambos orígenes y que el contrato WS12 fija su representación, sin inventar el modelo."
+  },
+  {
+    "node": "WS26.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS26.1.acceptance",
+    "old": "UF04 sobre TaskDoc real; nunca editar status para avanzar.",
+    "new": "UF04 sobre TaskDoc real: el candidato queda autorado con evidencia declarada, dependencias y pills de contexto vinculadas y visibles tras recargar; nunca editar status para avanzar.",
+    "reason": "La aceptación solo cubría UF04; añade el resultado observable de evidencia, dependencias y binding que el scope ya promete."
+  },
+  {
+    "node": "WS26.1",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS26.1.acceptance",
+    "old": "Si una operación Git no tiene contrato o dueño, la acción queda en handoff explícito y G_HUMAN_MANUAL no pasa hasta que el dueño de esa operación la resuelva.",
+    "new": "Si una operación Git no tiene contrato o dueño, la acción queda en handoff explícito y se declara no disponible.",
+    "reason": "G_HUMAN_MANUAL lo produce WS30 y no es dependencia de WS26.1; se elimina la referencia a un gate ajeno y se conserva el límite de handoff."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS26.2.scope",
+    "old": "Capa lista = tareas sin dependencias pendientes y sin archivos solapados, como define el ritual de fase.",
+    "new": "Capa lista = tareas sin dependencias pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc y el ritual de fase.",
+    "reason": "El ritual de fase no fija el conjunto ni el algoritmo; los `files` del TaskDoc son la fuente declarada y ya prevista por el plan."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS27.1.acceptance",
+    "old": "Diff real acotado al repo y tarea (la asociación a intento se añade en WS35)",
+    "new": "Diff real e historial read-only acotados al repo y tarea (la asociación a intento se añade en WS35)",
+    "reason": "El scope promete historial read-only y la aceptación solo comprobaba diff."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS27.1.scope",
+    "old": "Base: commits de TaskDoc.references; sin ellos, working tree contra HEAD limitado a TaskDoc.files.",
+    "new": "Base: commits listados en TaskDoc.references y rutas en TaskDoc.files (campos del modelo TaskDoc de deskops, autorados en WS26.1); sin commits, working tree contra HEAD limitado a esas rutas.",
+    "reason": "Nombra la fuente de los campos (modelo TaskDoc de deskops, autoría WS26.1) y el fallback sin commits."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS27.1.acceptance",
+    "old": "que son de WS29.",
+    "new": "que son de WS29. Se muestra una sección por cada repo alcanzado por las rutas del contrato WS11, con el repo declarado.",
+    "reason": "TaskDoc.files puede abarcar varios repos; las rutas del contrato WS11 ya son la fuente declarada del nodo."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "encontrada = artefactos hallados;",
+    "new": "encontrada = artefactos resolubles en las references/files de la TaskDoc;",
+    "reason": "Define el universo de búsqueda igual a lo que `deskops closeout verify` resuelve, sin búsqueda libre ni invención."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "una evidencia ausente se ve como ausente.",
+    "new": "una evidencia ausente se ve como ausente; declarada sin artefacto, artefacto no declarado y verificación fallida se muestran como estados distintos, sin colapsarlos.",
+    "reason": "Cubre las discrepancias entre declarada, encontrada y verificada en vez de solo el caso ausente."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "Abrir soporte = abrir el artefacto en el lector.",
+    "new": "Abrir soporte = abrir el artefacto en el lector si es Markdown dentro del workspace; fuera de ese caso se muestra la ruta y se declara no soportado (alcance.md).",
+    "reason": "Fija lector y límite para binarios o rutas fuera del workspace, coherente con alcance.md."
+  },
+  {
+    "node": "WS29",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS29.acceptance",
+    "old": "relaciones alcanzadas y errores.",
+    "new": "relaciones alcanzadas (entrantes y salientes a 1 hop del documento afectado, según la API de grafo de sldb) y errores.",
+    "reason": "Define origen, dirección y profundidad del impacto; la API de grafo ya es la fuente usada en WS24."
+  },
+  {
+    "node": "WS29",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS29.scope",
+    "old": "stores check/doctor/drift y relaciones comprobadas.",
+    "new": "stores check/doctor/drift y relaciones comprobadas; errores = hallazgos de esos tres comandos, agrupados por comando.",
+    "reason": "Acota la taxonomía y el origen de «errores» a los tres comandos que el propio scope enumera."
+  },
+  {
+    "node": "WS29",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS29.acceptance",
+    "old": "la vista enlaza al comando documentado.",
+    "new": "la vista enlaza al comando documentado que corresponde a cada hallazgo (`sldb stores check`, `deskops doctor` o `deskops drift check`), en la documentación de su repo dueño.",
+    "reason": "Identifica el comando por hallazgo y el destino de la documentación."
+  },
+  {
+    "node": "WS29",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS29.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El nodo ya delega el receptor: «integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva por WS11/WS12; never_parallel_duplicate», más overlap_with: changes y external_references.changes.path=../UIs/graph_ui/desk/tasks/task-vista-changes-arbol-de-hashes-staleness-e-impacto-en-conocimiento.md. alcance.md: la implementación puede vincular/sustituir el alcance en la tarea receptora aceptada."
+  },
+  {
+    "node": "WS31",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS31.acceptance",
+    "old": "un átomo por acuerdo durable de decisiones.md y contratos/;",
+    "new": "un átomo por acuerdo durable ya aceptado por humano en decisiones.md y por cada contrato en contratos/ (navegacion.md, operaciones.md u otros de WS11/WS12); las propuestas Pxx pendientes no se atomizan;",
+    "reason": "decisiones.md solo tiene Pxx pendientes; los contratos son los producidos por WS11/WS12 en el paquete del plan. Así el universo queda fijado."
+  },
+  {
+    "node": "WS31",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS31.output_scope",
+    "old": "docs/workspace-user-manual.md; desk/atoms/ vinculados",
+    "new": "docs/workspace-user-manual.md; docs/assets/workspace-user-manual/; desk/atoms/ vinculados",
+    "reason": "Autoriza la ubicación de las capturas que el scope exige incorporar, sin añadir alcance excluido."
+  },
+  {
+    "node": "WS31",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS31.acceptance",
+    "old": "Cada instrucción remite a un acta o prueba de la versión publicada;",
+    "new": "Cada instrucción remite al acta de WS30 o al acta de publicación de WS43 de la versión publicada;",
+    "reason": "Nombra las actas existentes que cubren la versión publicada, ambas dependencias de WS31."
+  },
+  {
+    "node": "WS39",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS39.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "borradores/manual.md fija «15. Personalizar modelos, vistas y configuración mediante contratos soportados.» y WS31 publica docs/workspace-user-manual.md. «disponible» está definido en validacion-humana.md: versión/commit implementado, pruebas verdes, recorrido aceptado y pasos del manual verificados."
+  },
+  {
+    "node": "WS39",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS39.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "validacion-humana.md: «Participante: solicitante humano de esta sesión o persona explícitamente designada.» y «Agente de pruebas prepara entorno y observa; no firma como usuario humano». P08 tiene actor (solicitante) y default propuesto; no exige inventar designación."
+  },
+  {
+    "node": "WS42",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "UF03 dividir/reunir/tipar con persistencia, referencias y conflictos reales;",
+    "new": "UF03 dividir/reunir/tipar con persistencia, referencias y conflictos reales; las materializaciones existentes se inspeccionan y validan contra el modelo SLDB vigente, sin crear destinos;",
+    "reason": "La aceptación recoge el comportamiento de inspección/validación que el scope ya promete."
+  },
+  {
+    "node": "WS42",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "bloquea ese escenario, no se simula.",
+    "new": "bloquea solo el escenario de UF03 que la usa y su etiqueta de disponibilidad, no se simula.",
+    "reason": "Delimita el efecto del bloqueo a la capability y su escenario, sin extenderlo a todo el gate."
+  },
+  {
+    "node": "WS43",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "validacion-humana.md: «Participante: solicitante humano de esta sesión o persona explícitamente designada.»; el acta de WS43 ya está ubicada en deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md y «incluirla explícitamente en el commit atómico de la tarea de validación del repo dueño» define quién commitea."
+  },
+  {
+    "node": "WS43",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.scope",
+    "old": "Repos a enlazar = `deskops list repositories`.",
+    "new": "Repos a enlazar = los de `deskops list repositories` con tarea de repo y acuerdo de alcance; los demás se listan como no enlazados.",
+    "reason": "Armoniza el inventario con la aceptación, que exige tarea de repo y acuerdo de alcance por proyecto adicional."
+  },
+  {
+    "node": "WS43",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "links/roots verificables",
+    "new": "links/roots verificables (root = alias/root autorizado por el contrato de navegación; un enlace es verificable si resuelve a un path existente del repo enlazado)",
+    "reason": "Define root y el criterio de verificación del enlace."
+  }
+]

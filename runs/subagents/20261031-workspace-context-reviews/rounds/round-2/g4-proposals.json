@@ -1,0 +1,192 @@
+[
+  {
+    "node": "WS32.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.1.scope",
+    "old": "dispatch intent (intención registrada) y confirmed (Scion aceptó)\n    como hechos separados del RunDoc.",
+    "new": "dispatch intent (intención registrada) y confirmed (Scion aceptó)\n    como hechos separados del RunDoc; ambos se registran en el registro por intento\n    que WS32.2 vuelve manifiesto canónico, y confirmed = respuesta de la API pública\n    de Scion con identidad de run.",
+    "reason": "Fija dónde se registra cada hecho y el evento que cuenta como «Scion aceptó», sin crear un segundo pipeline."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "cambios de RunDoc por el flujo de modelos SLDB.",
+    "new": "cambios de RunDoc por el flujo SLDB de modelos (registro y edición de documento\n    trackeado con CLI sldb), no edición ad hoc.",
+    "reason": "Define el flujo SLDB como canal autorizado de cambio de modelo/campos y su comprobación."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "Dos intentos del mismo agente y un dispatch fallido conservan identidades\n    distintas;",
+    "new": "Dos intentos del mismo agente y un dispatch fallido (rechazo o timeout de la API)\n    conservan identidades distintas, evidenciadas por ids de intento propios;",
+    "reason": "Acota los fallos cubiertos y la evidencia observable de identidad distinta."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "sobre el intento\n    correcto.",
+    "new": "sobre el intento\n    correcto (el identificado por el id de intento que cita el cierre, nunca por\n    agente o slug).",
+    "reason": "Fija la regla de selección del intento entre varios del mismo agente o tras un dispatch fallido."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "según el ticket de external_references.scion.",
+    "new": "según el ticket de external_references.scion (campos mínimos = id de intento,\n    identidad de agente, identidad de run reportada por la API, timestamps, evidencia\n    y commit de cierre).",
+    "reason": "El ticket no se suministra al revisor; el nodo enumera los campos que declara para no inventarlos. La identidad de run expuesta por la API queda como hipótesis a auditar en WS44."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.2.acceptance",
+    "old": "Una finalización repetida sobre el mismo id de intento conserva identidad\n    y evidencia sin crear registros nuevos.",
+    "new": "Una finalización repetida sobre el mismo id de intento conserva identidad\n    y evidencia sin crear registros nuevos; manifiesto, RunDoc e índice de cierre\n    coinciden en id de intento, hash de sesión y evidencia.",
+    "reason": "Añade la comprobación de consistencia entre los tres registros, no solo la idempotencia."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "Clave\n    de deduplicación: Hub + proyecto + id de mensaje.",
+    "new": "Clave\n    de deduplicación: Hub + proyecto + id de mensaje; los resultados se identifican\n    por intento + id de resultado de la fuente y usan la misma regla de dedup y\n    procedencia.",
+    "reason": "Define identidad y deduplicación de los resultados, que la clave de mensaje no cubre."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "Solo se vinculan mensajes y\n    resultados con referencia al intento.'",
+    "new": "Solo se vinculan mensajes y\n    resultados con referencia a un id de intento existente; un mensaje con varios\n    intentos o sin intento resoluble no se vincula y registra la procedencia como\n    hueco.'",
+    "reason": "Fija qué es una referencia válida y el tratamiento de mensajes ambiguos o sin intento."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.acceptance",
+    "old": "Con contrato público real, una importación repetida no duplica ni atribuye\n    una conversación completa a un intento.",
+    "new": "Con contrato público real, una importación repetida (mismo Hub/proyecto y conversación,\n    con checkpoint) no duplica mensajes ni resultados ni atribuye una conversación\n    completa a un intento.",
+    "reason": "Define la unidad de importación y extiende la no duplicación a resultados."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 4,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.depends_on",
+    "old": "- id: WS33.1\n  title: Vincular mensajes y resultados al intento\n  status: candidate\n  kind: implementation\n  depends_on:\n  - WS32\n  - WS11",
+    "new": "- id: WS33.1\n  title: Vincular mensajes y resultados al intento\n  status: candidate\n  kind: implementation\n  depends_on:\n  - WS32",
+    "reason": "WS11 llega de forma transitiva por WS32 → WS12 → WS11 y el scope no consume navegación ni identidad documental; la arista directa no aporta requisito y confunde al ejecutor. Mantiene la regla de alcance.md sobre dependencias transitivas."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.scope",
+    "old": "con actor, asociada\n    a tarea/intento.",
+    "new": "con actor, asociada\n    al intento y, por él, a su tarea.",
+    "reason": "El intento es la clave obligatoria y la tarea se deriva; alinea scope con la aceptación."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.acceptance",
+    "old": "Una decisión humana queda registrada con actor y referencia al intento;\n    completed del agente nunca se registra como aprobado.",
+    "new": "Una decisión humana queda registrada con actor, referencia al intento y resultado\n    explícito aprobar o pedir corrección (esta exige el texto de la corrección);\n    completed del agente nunca se registra como aprobado.",
+    "reason": "Fija el vocabulario de resultado y exige contenido en la corrección, hoy fuera de la aceptación."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.scope",
+    "old": "Completado lo reporta Scion, validado y cerrado los lee de deskops;\n    este nodo solo escribe la decisión.",
+    "new": "Completado lo reporta Scion; validado y cerrado los leen los consumidores (cierre\n    de deskops y WS35/WS36) desde el registro de decisión de deskops; este nodo solo\n    escribe la decisión.",
+    "reason": "Nombra lectores y el dato exacto que consumen, sin exigir a este nodo un contrato de lectura propio."
+  },
+  {
+    "node": "WS34.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS34.1.output_scope",
+    "old": "  owner_repo: deskops\n  output_scope: runtime/; cli/commands/runtime.py o API definida; tests/\n  scope: Adaptador público restringido para dispatch,",
+    "new": "  owner_repo: deskops\n  output_scope: runtime/; cli/commands/runtime.py o API pública existente definida\n    por el contrato WS12; tests/\n  scope: Adaptador público restringido para dispatch,",
+    "reason": "Aclara que el canal es público y existente, fijado por WS12, no una API que este nodo diseñe; coincide con la regla de WS12/alcance.md."
+  },
+  {
+    "node": "WS34.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS34.2.acceptance",
+    "old": "G_SCION/G_EXEC pasan; agente real demuestra respuesta vinculada al intento\n    correcto.",
+    "new": "G_SCION/G_EXEC pasan; agente real demuestra respuesta vinculada al intento\n    correcto y un timeout se reporta como fallo sin confirmación, con el umbral\n    del contrato WS12.",
+    "reason": "Da comportamiento observable a timeout/errores sin inventar el umbral, que fija WS12."
+  },
+  {
+    "node": "WS35",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS35.scope",
+    "old": "intento y decisión de WS32/WS33, mensajes de Scion por su API.'",
+    "new": "intento y decisión de WS32/WS33, mensajes de Scion por su API y resultados\n    vinculados por WS33.1.'",
+    "reason": "Identifica el origen de «resultado»: el registro que produce WS33.1."
+  },
+  {
+    "node": "WS36",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS36.acceptance",
+    "old": "Respuesta vinculada al intento y operación confirmada; ausencia de API\n    o permisos se muestra como error en la pantalla y lo cubre un test.",
+    "new": "Respuesta vinculada al intento y operación confirmada; la revisión muestra actor\n    humano y evidencia enlazada de WS33.1/WS33.2, cubierto por test; ausencia de\n    API o permisos se muestra como error en la pantalla y lo cubre un test.",
+    "reason": "Define actor y evidencia y los incorpora a la aceptación comprobable."
+  },
+  {
+    "node": "WS36",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS36.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «Una dependencia futura que debe producir un contrato, API o inventario no es ambigüedad si el encargo nombra quién lo produce y qué hacer si falta». El nodo nombra WS33.2 como productor. Además alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo»; WS33.2 ya es prerrequisito por WS34 → WS33 → WS33.2."
+  },
+  {
+    "node": "WS37",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS37.acceptance",
+    "old": "G_SCION/G_EXEC y protocolo; no sustituir integración por mocks ni completed\n    por aprobación.",
+    "new": "G_SCION/G_EXEC y protocolo de validacion-humana.md (guion, acta en\n    runs/subagents/workspace-documental-acceptance/delegacion/); no sustituir\n    integración por mocks ni completed por aprobación.",
+    "reason": "Identifica el protocolo suministrado y su evidencia, sin inventar pasos nuevos."
+  }
+]

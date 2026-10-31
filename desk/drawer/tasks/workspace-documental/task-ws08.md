@@ -2,6 +2,7 @@
 id: WS08
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS07
 requires:
@@ -22,11 +23,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Mapear UF a operaciones de WS02/03/04; cubrir manual, captura, revisión, cambios, arranque, multidesk, schemas y modo degradado. UF02 responder significa dentro del desk/contexto autorizado local; ack local disponible según contrato. UF08 es lectura; envío interdesk fuera de baseline, sin excepción implícita a P07.
+Mapear UF a operaciones de WS02/03/04; cubrir manual, captura, revisión, cambios (UF07/WS29), arranque, multidesk, schemas y modo degradado (UF07, fallo de backend/dependencia). UF02 responder significa dentro del desk/contexto autorizado local; ack local: operación pendiente de confirmar en el contrato WS12; no se da por disponible. UF08 es lectura; envío interdesk fuera de baseline, sin excepción implícita a P07. Las operaciones vienen de auditoria/{deskops,infraestructura,ui}.md, disponibles por dependencia transitiva vía WS06/WS07.
 
 ## Aceptación
 
-Cada UF tiene entrada/salida, operación, error, nodo y gate humano; no prometer función fuera de alcance.
+Cada UF tiene entrada/salida, operación, error, nodo y gate humano; no prometer función fuera de alcance. Nodo = ID del DAG. Una operación ausente se marca hueco, sin inventarla.
 
 ## Dependencias
 
@@ -34,7 +35,7 @@ Tareas: WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un archivo pr
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS08/73d611c0c5e259e0ca9e59650185e0275a59e169693913c3bf6c34b0ac10739c/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -2,6 +2,7 @@
 id: WS05
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS01
 requires: []
@@ -21,11 +22,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Leer runtime/templates/RunDoc y API pública de Scion; separar slug/agente/intento/dispatch/mensaje/conversación y permisos. Puede registrar observaciones de API ya disponibles sin crear un segundo recibo: solo el probe de WS44 es evidencia de G_SCION. Sin agentes/mensajes/config ni mostrar tokens. WS05 no produce G_SCION; el probe y sus reintentos son responsabilidad explícita de WS44, incluso si el inventario aporta observaciones.
+Leer runtime/templates/RunDoc y API pública de Scion (endpoints/SDK documentados o exportados; no tablas ni funciones internas); separar slug/agente/intento/dispatch/mensaje/conversación y permisos (roles, scopes y operaciones autorizadas según la API pública). Lee código y documentación en deskops y en el repo scion (../scion); no contacta endpoints vivos ni usa credenciales: solo el probe de WS44 es evidencia de G_SCION. Sin crear agentes, enviar mensajes ni modificar configuración; puede leer configuración sin secretos y no muestra tokens. WS05 no produce G_SCION; el probe y sus reintentos son responsabilidad explícita de WS44, incluso si el inventario aporta observaciones.
 
 ## Aceptación
 
-No usar tablas internas como interfaz; señalar campos internos no expuestos y capacidades que requieren API real.
+No usar tablas internas como interfaz; señalar los campos internos que no figuren en la API pública definida en el scope y capacidades que requieren API real; el inventario separa slug/agente/intento/dispatch/mensaje/conversación y permisos; marca qué capabilities requieren WS32 y WS33.
 
 ## Dependencias
 
@@ -33,7 +34,7 @@ Tareas: WS01. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un ar
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS05/10bfb0aa655e335df14ee2b043dd36d62468bba62a83f65ea4b76f38ea6eb63c/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

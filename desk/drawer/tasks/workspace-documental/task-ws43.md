@@ -2,6 +2,7 @@
 id: WS43
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS17
 - WS30
@@ -25,11 +26,11 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Aplicar entradas/índices authored validados en Taller al deskops real, por operaciones autorizadas y preservando registry como inventario derivable. Enlazar repos conocidos por identidad/origen y su entrada existente; no modificar repos hermanos ni imponer nuevos modelos. Registrar conocimiento durable en átomos antes de docs.
+Aplicar entradas/índices authored validados en Taller al deskops real, por operaciones autorizadas y preservando registry como inventario derivable. Enlazar repos conocidos por identidad/origen y su entrada existente; no modificar repos hermanos ni imponer nuevos modelos. Registrar conocimiento durable en átomos antes de docs. Repos a enlazar = todos los de `deskops list repositories`: enlazar no escribe en ellos. Escribir una entrada dentro de otro repo requiere su tarea y acuerdo de alcance. Contrato = contratos/navegacion.md (WS11, transitivo).
 
 ## Aceptación
 
-P09 y contrato fijan ubicación/modelo opcional. Persona designada recorre Markdown y UI real, links/roots verificables, acta deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md y commit; no publicar solo ejemplo como si fuera ecosistema real. Cada proyecto adicional requiere su tarea de repo y acuerdo de alcance.
+P09 y contrato fijan ubicación/modelo opcional; los acuerdos durables aplicados al mapa (Pxx aceptadas y contratos navegacion.md/operaciones.md de WS11/WS12) quedan en átomos enlazados desde él. El participante que fija P08 recorre Markdown y UI real, links/roots verificables (root = alias/root autorizado por el contrato de navegación; un enlace es verificable si resuelve a un path existente del repo enlazado), commit por `deskops closeout commit`, acta deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md y commit; no publicar solo ejemplo como si fuera ecosistema real y el mapa publicado corresponde a las entradas/índices validados en Taller. Escribir una entrada en un proyecto adicional requiere su tarea de repo y acuerdo de alcance.
 
 ## Dependencias
 
@@ -37,7 +38,7 @@ Tareas: WS17, WS30. Gates: G_HUMAN_MANUAL, G_PRODUCT, G_WRITE_CONTRACT. Ver esta
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS43/0a10feb9fdb122c06e668909e323edb316631df2ecc44c36d5b18cb853d6f6c7/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

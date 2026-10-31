@@ -2,6 +2,7 @@
 id: WS22
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS13
 - WS09
@@ -23,11 +24,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Representar Board real como lista/tablero y dependencias, abriendo los mismos TaskDoc/contextos. No reemplazar workflow con drag-and-drop de status.
+Representar Board real como lista, como tablero agrupado por estado y con las dependencias declaradas en el TaskDoc, abriendo en el lector los mismos TaskDoc y sus pills/átomos referenciados. No reemplazar workflow con drag-and-drop de status.
 
 ## Aceptación
 
-Selección y links comunes con lector; estados/gates reales; no duplicar tareas ni presentar predicado satisfecho como test aprobado.
+Las tres representaciones (lista, tablero y dependencias) abren el mismo TaskDoc; selección y links comunes con lector; estados y condiciones de lifecycle leídos de deskops (Board, lifecycle), no de dag.yaml; no duplicar tareas ni presentar predicado satisfecho como test aprobado.
 
 ## Dependencias
 
@@ -37,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS22/1a24968ab880326bc6df3c390667f3a23582a6ca71e0586f03678acb7d8b1d9d/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

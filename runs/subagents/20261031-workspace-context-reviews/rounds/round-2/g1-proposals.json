@@ -1,0 +1,332 @@
+[
+  {
+    "node": "PK04",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "Un hijo con ambigüedad sin resolver queda pending o blocked, y entonces esta",
+    "new": "Un hijo con ambigüedad de su propio encargo sin resolver queda pending o blocked por esa causa, y entonces esta",
+    "reason": "La aceptación admite «bloqueo explícito con responsable» y luego invalida todo hijo blocked, sin distinguir causa. Se precisa que lo que invalida es el blocked causado por ambigüedad del propio encargo; el bloqueo externo con responsable sigue admitido. El texto es idéntico en ROOT/PK01–03/07: aplicar en bloque."
+  },
+  {
+    "node": "PK04",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK04.acceptance",
+    "old": "que el coordinador registra con responsable y dependencia en esa disposition.md",
+    "new": "que la sesión de coordinación que ejecuta context_review.py registra con responsable y dependencia en esa disposition.md",
+    "reason": "«El coordinador» no está definido en las fuentes del reviewer y colisiona con el coordinador escritor de P03. Se nombra al actor que ejecuta context_review.py y guarda disposition.md."
+  },
+  {
+    "node": "PK05",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK05.acceptance",
+    "old": "Un hijo con ambigüedad sin resolver queda pending o blocked, y entonces esta",
+    "new": "Un hijo con ambigüedad de su propio encargo sin resolver queda pending o blocked por esa causa, y entonces esta",
+    "reason": "La aceptación admite «bloqueo explícito con responsable» y luego invalida todo hijo blocked, sin distinguir causa. Se precisa que lo que invalida es el blocked causado por ambigüedad del propio encargo; el bloqueo externo con responsable sigue admitido. El texto es idéntico en ROOT/PK01–03/07: aplicar en bloque."
+  },
+  {
+    "node": "PK06",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK06.acceptance",
+    "old": "Un hijo con ambigüedad sin resolver queda pending o blocked, y entonces esta",
+    "new": "Un hijo con ambigüedad de su propio encargo sin resolver queda pending o blocked por esa causa, y entonces esta",
+    "reason": "La aceptación admite «bloqueo explícito con responsable» y luego invalida todo hijo blocked, sin distinguir causa. Se precisa que lo que invalida es el blocked causado por ambigüedad del propio encargo; el bloqueo externo con responsable sigue admitido. El texto es idéntico en ROOT/PK01–03/07: aplicar en bloque."
+  },
+  {
+    "node": "PK06",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK06.acceptance",
+    "old": "que el coordinador registra con responsable y dependencia en esa disposition.md",
+    "new": "que la sesión de coordinación que ejecuta context_review.py registra con responsable y dependencia en esa disposition.md",
+    "reason": "«El coordinador» no está definido en las fuentes del reviewer y colisiona con el coordinador escritor de P03. Se nombra al actor que ejecuta context_review.py y guarda disposition.md."
+  },
+  {
+    "node": "PK08",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK08.acceptance",
+    "old": "Un hijo con ambigüedad sin resolver queda pending o blocked, y entonces esta",
+    "new": "Un hijo con ambigüedad de su propio encargo sin resolver queda pending o blocked por esa causa, y entonces esta",
+    "reason": "La aceptación admite «bloqueo explícito con responsable» y luego invalida todo hijo blocked, sin distinguir causa. Se precisa que lo que invalida es el blocked causado por ambigüedad del propio encargo; el bloqueo externo con responsable sigue admitido. El texto es idéntico en ROOT/PK01–03/07: aplicar en bloque."
+  },
+  {
+    "node": "PK08",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "PK08.acceptance",
+    "old": "que el coordinador registra con responsable y dependencia en esa disposition.md",
+    "new": "que la sesión de coordinación que ejecuta context_review.py registra con responsable y dependencia en esa disposition.md",
+    "reason": "«El coordinador» no está definido en las fuentes del reviewer y colisiona con el coordinador escritor de P03. Se nombra al actor que ejecuta context_review.py y guarda disposition.md."
+  },
+  {
+    "node": "WS01",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS01.scope",
+    "old": "distinciones documento/nodo/vista/renderer/consulta/foco",
+    "new": "distinciones documento/nodo/vista/renderer/consulta/foco, con «renderer» definido en el glosario como la pieza que materializa una representación",
+    "reason": "brief.md no define «renderer»; sin definición el ejecutor debe inventar si crea término, renombra o lo asume sinónimo."
+  },
+  {
+    "node": "WS01",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS01.acceptance",
+    "old": "Cada acuerdo cita al solicitante y cada propuesta remite a decisiones.md.",
+    "new": "Cada acuerdo de la sección «Encargo y acuerdos explícitos» cita al solicitante y cada propuesta del registro Pxx remite a decisiones.md.",
+    "reason": "No se delimita qué afirmaciones del brief cuentan como acuerdo ni qué es propuesta; se ancla a la sección existente y a las filas Pxx."
+  },
+  {
+    "node": "WS02",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS02.scope",
+    "old": "Modelos y Markdown no modelado; inbox/drawer/issues/FAQ/crossroads/pills/fases/rituales/registry/roles/runs;",
+    "new": "Superficie = cada archivo, comando público o modelo registrado concreto de las categorías enumeradas; una fila por superficie. Modelos y Markdown no modelado; inbox/drawer/issues/FAQ/crossroads/pills/fases/rituales/registry/roles/runs;",
+    "reason": "«Superficie» no tiene unidad; se fija una fila por item concreto de las categorías ya enumeradas, sin ampliar el alcance."
+  },
+  {
+    "node": "WS02",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS02.acceptance",
+    "old": "Cada fila incluye archivo/código/operación y estado comprobado",
+    "new": "Cada fila incluye ubicación (archivo o símbolo de código) y operación expuesta, con estado comprobado",
+    "reason": "Las barras no aclaran si se exigen los tres campos o uno; se fija ubicación más operación para que la aceptación sea comprobable."
+  },
+  {
+    "node": "WS02",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS02.acceptance",
+    "old": "lo no comprobado se marca así.",
+    "new": "lo no comprobado se marca «no comprobado» con causa (ausente, inaccesible o no encontrado).",
+    "reason": "Sin vocabulario de estados el ejecutor puede declarar «no comprobado» algo inexistente; se exige causa distinguible."
+  },
+  {
+    "node": "WS03",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS03.scope",
+    "old": "y límites de locks, referencias",
+    "new": "y límites de locks (control de concurrencia real de sldb/pron: CAS por revisión/hash, locks de archivo o DB; a auditar), referencias",
+    "reason": "No se identifica el mecanismo de bloqueo ni qué cuenta como conflicto; se acota a lo observable en sldb/pron y se marca como hipótesis a auditar, no como API inventada."
+  },
+  {
+    "node": "WS04",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS04.scope",
+    "old": "Leer graph_ui Board, tareas y código actuales;",
+    "new": "Leer graph_ui (../UIs/graph_ui) Board, tareas y código actuales;",
+    "reason": "El nodo no da ruta y el reviewer no recibe repo_roots; se añade la ruta ya declarada en dag.yaml para evitar inventarla."
+  },
+  {
+    "node": "WS04",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS04.scope",
+    "old": "a deltas existentes;",
+    "new": "a deltas existentes (tarea o entrada del Board de graph_ui, o commit que ya lo implementa), registrando la correspondencia en auditoria/ui.md;",
+    "reason": "No se define qué es un delta existente ni dónde queda el mapa; se fija el universo (tarea/Board/commit) y el artefacto de evidencia."
+  },
+  {
+    "node": "WS04",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "también SPEC externo y cualquier encargo aportado al ejecutar.",
+    "new": "también el SPEC externo (coincidencias, discrepancias y ausencias frente a este plan, con path y hash) y cualquier encargo aportado al ejecutar.",
+    "reason": "La aceptación exige reconciliar el SPEC pero no fija qué comparar ni qué registrar; se reutilizan los campos path/hash ya exigidos a tareas externas."
+  },
+  {
+    "node": "WS05",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS05.scope",
+    "old": "Leer runtime/templates/RunDoc y API pública de Scion;",
+    "new": "Leer runtime/templates/RunDoc y API pública de Scion (endpoints/SDK documentados o exportados; no tablas ni funciones internas);",
+    "reason": "«API pública» no tiene fuente de verdad; se fija la superficie documentada/exportada y se excluyen tablas y funciones internas."
+  },
+  {
+    "node": "WS05",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS05.scope",
+    "old": "y permisos. Lee código",
+    "new": "y permisos (roles, scopes y operaciones autorizadas según la API pública). Lee código",
+    "reason": "«Permisos» podía ser roles, scopes o autorización de operaciones; se enumera la taxonomía para que el inventario sea comparable con WS32/33."
+  },
+  {
+    "node": "WS05",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS05.scope",
+    "old": "Sin agentes/mensajes/config ni mostrar tokens.",
+    "new": "Sin crear agentes, enviar mensajes ni modificar configuración; puede leer configuración sin secretos y no muestra tokens.",
+    "reason": "La compresión «agentes/mensajes/config» no distingue prohibición de leer o de cambiar; se prohíbe crear/enviar/modificar y se permite leer sin secretos."
+  },
+  {
+    "node": "WS05",
+    "finding": 4,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "señalar campos internos no expuestos",
+    "new": "señalar los campos internos que no figuren en la API pública definida en el scope",
+    "reason": "No se fija respecto de qué superficie un campo está «no expuesto»; se remite a la API pública ya definida en el scope."
+  },
+  {
+    "node": "WS06",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "nuevo delta. Registrar en reconciliacion.md",
+    "new": "nuevo delta. La fila Scion RunDoc/cierre de reconciliacion.md conserva el tratamiento ya registrado (descomposición en WS32/33) sin requerir WS05. Registrar en reconciliacion.md",
+    "reason": "La matriz toca la línea Scion pero WS06 no depende de WS05; se fija el tratamiento ya observado en reconciliacion.md y se excluye la auditoría de API de este nodo."
+  },
+  {
+    "node": "WS06",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "ya cubierto, extender ticket existente o",
+    "new": "ya cubierto (capacidad observable en código o en el Board, con referencia), extender ticket existente o",
+    "reason": "«Ya cubierto» no tiene criterio; se exige referencia observable para no inventar la clasificación."
+  },
+  {
+    "node": "WS06",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS06.acceptance",
+    "old": "Matriz propuesta con correspondencia ticket/delta y responsable por",
+    "new": "Matriz con una fila por delta o capacidad propuesta, agrupada por repo dueño, no por nodo del DAG; correspondencia ticket/delta y responsable por",
+    "reason": "No se fija la unidad de fila; se elige delta/capacidad por repo para que la matriz no dependa de la numeración del DAG."
+  },
+  {
+    "node": "WS07",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS07.output_scope",
+    "old": "decisiones.md; parameters.source_mode en dag.yaml",
+    "new": "decisiones.md; `baseline_proposal` y parameters.source_mode en dag.yaml",
+    "reason": "El scope manda confirmar `baseline_proposal`, pero output_scope no incluía esa clave; se alinea la salida con la instrucción."
+  },
+  {
+    "node": "WS07",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS07.scope",
+    "old": "alcance según P04.",
+    "new": "alcance según P04 dentro de las variantes ya declaradas en dag.yaml, sin editar nodos aquí; un cambio de nodos sigue la regla de alcance.md.",
+    "reason": "«Reconsiderar alcance» no decía si implicaba editar nodos o solo registrarlo; se limita a las variantes existentes y se remite la regla ya escrita en alcance.md."
+  },
+  {
+    "node": "WS08",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "cambios, arranque, multidesk, schemas y modo degradado",
+    "new": "cambios (UF07/WS29), arranque, multidesk, schemas y modo degradado (UF07, fallo de backend/dependencia)",
+    "reason": "«Cambios» y «modo degradado» no tenían UF asignada; se anclan a las filas ya existentes de cobertura.md y validacion-humana.md."
+  },
+  {
+    "node": "WS08",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "ack local disponible según contrato.",
+    "new": "ack local disponible solo si el contrato de operaciones de WS12 lo comprueba; si no existe, se marca hueco.",
+    "reason": "El contrato no se nombra y WS12 depende de WS08; se evita suponer una operación no verificada y se aplica la regla de hueco."
+  },
+  {
+    "node": "WS08",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "",
+    "new": "",
+    "reason": "El propio scope fija la fuente: «Las operaciones vienen de auditoria/{deskops,infraestructura,ui}.md, disponibles por dependencia transitiva vía WS06/WS07»; «Mapear UF a operaciones de WS02/03/04» nombra a los productores de esos mismos archivos. No hay dos autoridades que elegir: se cita el archivo de auditoría que contenga la operación."
+  },
+  {
+    "node": "WS09",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "disponibilidad actual viene de auditoria/ui.md",
+    "new": "disponibilidad actual viene de auditoria/ui.md (WS04)",
+    "reason": "La aceptación usa un artefacto sin nombrar su productor; se identifica el nodo dueño ya declarado en dag.yaml."
+  },
+  {
+    "node": "WS09",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS09.depends_on",
+    "old": "- WS07\n  requires:\n  - G_PRODUCT\n  owner_repo: deskops\n  output_scope: borradores/vistas.md",
+    "new": "- WS07\n  - WS10\n  requires:\n  - G_PRODUCT\n  owner_repo: deskops\n  output_scope: borradores/vistas.md",
+    "reason": "La aceptación somete el estado a las definiciones de WS10, que no era dependencia; se añade WS10 (sin ciclo: WS10 depende de WS02/WS07)."
+  },
+  {
+    "node": "WS10",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS10.scope",
+    "old": "por WS07.",
+    "new": "por WS06/WS07.",
+    "reason": "La cadena real es WS07→WS06→WS03/WS04; nombrar solo WS07 oculta el eslabón y el reviewer no puede verificarla."
+  },
+  {
+    "node": "WS12",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS12.acceptance",
+    "old": "la capacidad raw-source faltante se diseña y queda gated por G_SOURCE.",
+    "new": "la capacidad raw-source faltante se especifica como requisito (operación y efectos) y queda gated por G_SOURCE; su diseño e implementación pertenecen a WS20.",
+    "reason": "Scope dice «no se diseña uno aquí» y la aceptación decía «se diseña»; se separa requisito contractual (WS12) de diseño/implementación (WS20)."
+  },
+  {
+    "node": "WS12",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS12.acceptance",
+    "old": "WS19, WS20, WS25, WS26,",
+    "new": "WS19, WS20, WS21, WS25, WS26,",
+    "reason": "G_UI_WRITE incluye WS21 y WS21 muta fuente desde UI; sin capability en la whitelist el ejecutor debe decidir si queda fuera del contrato."
+  }
+]

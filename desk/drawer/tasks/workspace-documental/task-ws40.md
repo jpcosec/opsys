@@ -2,6 +2,7 @@
 id: WS40
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS11
 - WS08
@@ -23,11 +24,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Versionar un generador en graph_ui que usa contratos/CLI reales, no servidor fake. Crear dos repos temporales bajo .tmp/workspace-documental-ejemplo/ (o tmp_path en pruebas), sus stores y documentos, incluyendo Markdown no modelado, Code local y referencia rota. Aceptar opcionalmente plantillas de navegación WS17. Generar instrucciones de instalación/arranque del ejemplo y entrada mínima ecosistema/proyecto con enlaces al Board/FAQ/conocimiento reales creados, para que WS16 pruebe una entrada sin esperar índices ricos WS17.
+Versionar un generador en graph_ui que usa el contrato WS11 y los CLI reales de deskops/sldb verificados en WS02/WS03, no servidor fake. Crear dos repos temporales bajo graph_ui:.tmp/workspace-documental-ejemplo/ (o tmp_path en pruebas), sus stores y documentos, incluyendo Markdown no modelado, Code local y referencia rota. Parámetro opcional con la ruta de plantillas WS17: WS40 cierra sin ellas, y WS17 regenera con ellas después. Generar instrucciones de instalación/arranque del ejemplo y entrada mínima ecosistema/proyecto con enlaces al Board del desk temporal, su FAQ Markdown y documentos de conocimiento, todos creados dentro del corpus temporal, para que WS16 pruebe una entrada sin esperar índices ricos WS17. Incluir un tercer repo temporal sin desk para UF10 y enlaces authored entre los dos desks con desk para UF08.
 
 ## Aceptación
 
-Un comando crea/recrea entorno aislado, registra datos/commits/roots y nunca toca desk real; los paths se devuelven como manifiesto. Es productor único de corpus para WS16/30; WS17 solo aporta contenido authored. Entrada mínima y README de arranque reproducibles, manifiesto de ubicación y segundo desk; WS17 enriquece navegación posteriormente.
+Un comando crea/recrea entorno aislado, hace commits git reales en los repos temporales y nunca toca desk real; imprime un manifiesto JSON con roots, stores, commits y documentos clave. Es productor único de corpus para WS16/30; WS17 solo aporta contenido authored. Entrada mínima y README de arranque reproducibles, manifiesto de ubicación y segundo desk; WS17 enriquece navegación posteriormente.
 
 ## Dependencias
 
@@ -35,7 +36,7 @@ Tareas: WS11, WS08. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS40/8e908b777a29586cf8426daeb003469b47db449eb781dc6a415b25a4794bcb05/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

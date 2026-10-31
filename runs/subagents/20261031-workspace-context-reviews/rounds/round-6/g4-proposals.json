@@ -1,0 +1,42 @@
+[
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "La composición exacta de la clave de resultados depende del identificador que exponga la fuente, dato remitido a WS05/WS44; fijarla ahora inventaría la API. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.acceptance",
+    "old": "no duplica mensajes ni resultados ni atribuye una conversación completa a un intento.",
+    "new": "no duplica mensajes ni resultados ni atribuye una conversación completa a un intento; los mensajes no vinculados quedan como hueco de procedencia.",
+    "reason": "Promesa del scope sin cobertura en la aceptación: el registro de procedencia como hueco no se comprobaba. El artefacto y sus campos siguen siendo detalle de promoción."
+  },
+  {
+    "node": "WS44",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS44.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Quién repite el probe ya está definido en el scope: el responsable de instalación Scion designado en WS07. La vigilancia o disparador concreto es detalle de operación. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS44",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS44.acceptance",
+    "old": "identidad del operador y Hub, fecha, capabilities y actor registrados.",
+    "new": "identidad del operador (actor del probe) y Hub, fecha y capabilities registrados.",
+    "reason": "Actor indefinido: la aceptación pedía identidad del operador y actor sin decir si eran el mismo dato; G_SCION registra el actor de WS44, que es el operador del probe."
+  }
+]

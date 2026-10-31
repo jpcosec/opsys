@@ -2,6 +2,7 @@
 id: WS14
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS13
 requires:
@@ -22,11 +23,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Texto/campos/semántica solo según API real; resultados enlazan identidad y contexto. Búsqueda vacía/error/degradación diferenciados.
+Texto/campos/semántica solo según API real; resultados abren el documento con su identidad y ruta de origen. Sin resultados/error/degradación diferenciados.
 
 ## Aceptación
 
-Usar find público, no parser propio. Teclado y abrir/volver conservan consulta y foco; no cargar todo grafo en cada tecla.
+Usar `sldb find` o su ruta en `sldb serve`, según auditoria/infraestructura.md (producido por WS03) y contrato WS11; no parser propio. Con teclado: buscar, abrir un resultado y volver conserva consulta y foco. Sin resultados; error de backend (la API no responde o falla y la UI lo declara sin mostrar vacío); y búsqueda degradada (la API responde con capacidad parcial, p. ej. sin semántica, y la UI declara qué no cubre) se ven como tres estados distintos; no cargar todo grafo en cada tecla.
 
 ## Dependencias
 
@@ -36,7 +37,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS14/2b4778233aa3a3c4b2b4f815f3ae0c60ac89d9d25452e0035e71738e251bc8db/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

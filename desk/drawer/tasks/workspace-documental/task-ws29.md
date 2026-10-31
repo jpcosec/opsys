@@ -2,6 +2,7 @@
 id: WS29
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS15
 - WS24
@@ -17,17 +18,17 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: M.
 
-frontends/mindmap/views/workspace/changes/; rutas integridad; tests/
+frontends/mindmap/views/workspace/changes/; rutas de integridad definidas por contrato WS11; tests/
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-Delta sobre tarea Changes actual; stores check/doctor/drift y relaciones comprobadas. No CST ni árbol Kimun supuesto.
+Delta sobre tarea Changes actual; stores check/doctor/drift y relaciones comprobadas; errores = hallazgos de esos tres comandos, agrupados por comando. No CST ni árbol Kimun supuesto. Comandos: `sldb stores check`, `deskops doctor`, `deskops drift check`. Pruebas sobre store temporal real.
 
 ## Aceptación
 
-Mutaciones reales muestran soporte/alcance/errores. Reparar no es automático: acción documentada o tarea explícita. Esta extensión no bloquea lector/manual básico.
+Una mutación real en el store temporal muestra documento afectado, relaciones alcanzadas (entrantes y salientes a 1 hop del documento afectado, según la API de grafo de sldb) y errores. Reparar no es automático: la vista enlaza al comando documentado que corresponde a cada hallazgo (`sldb stores check`, `deskops doctor` o `deskops drift check`), en la documentación de su repo dueño. Esta extensión no bloquea lector/manual básico.
 
 ## Dependencias
 
@@ -37,7 +38,7 @@ Solapamiento: `changes` en external_references. Solo delta o ticket existente tr
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS29/372d14d45991520f6c6f4407bfac612db51972be89fe613c651dacbbe12127ca/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

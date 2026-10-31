@@ -2,8 +2,16 @@
 id: WS13
 status: candidate
 owner_repo: graph_ui
+node_role: aggregate
+children:
+- WS13.1
+- WS13.2
+- WS13.3
 depends_on:
 - WS11
+- WS13.1
+- WS13.2
+- WS13.3
 requires:
 - G_UI_READ
 ---
@@ -16,27 +24,27 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: M.
 
-frontends/mindmap/views/workspace/; shell/router.js; rutas de lectura
+Agregado: salidas de WS13.1, WS13.2, WS13.3
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-Implementación o delta conciliado sobre ticket workspace en draft: documento/fuente solo lectura, contexto, enlaces, tabs/historia y selección por documento/nodo. Mantener Code local y rutas del host; no requerir índices nuevos. Incluir explorador de documentos modelados/no modelados, dos documentos lado a lado y tabs/historia. Registro de renderer en código permitido; organización de contenido procede de documentos/consultas.
+Implementación o delta conciliado sobre ticket workspace en draft: documento/fuente solo lectura, contexto, enlaces, tabs/historia y selección por documento/nodo. Mantener Code local y rutas del host; no requerir índices nuevos. Incluir explorador de documentos modelados/no modelados, dos documentos lado a lado y tabs/historia. Se reutiliza el registro de vistas existente en shell/registry.js; organización de contenido procede de documentos/consultas.
 
 ## Aceptación
 
-Abrir dos documentos, cambiar texto/graph/code donde soporte existe y volver preserva origen. Markdown sin modelo legible; sin crear otro workspace independiente. Desde explorador abrir dos documentos en divisiones, alternar foco y volver; no depender de conocer un ID ni de índices nuevos. Si el acta de WS11 eligió integrar ticket draft, su cierre/evidencia sustituye ese delta; no suponer una base workspace ya implementada.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS11. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS11, WS13.1, WS13.2, WS13.3. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `workspace` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13/0d84ea2ec396c934ded39716e9e8fb4b94bd68571c00da760c149f27d0a1f361/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

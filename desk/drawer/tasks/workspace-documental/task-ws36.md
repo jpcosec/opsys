@@ -2,6 +2,7 @@
 id: WS36
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS34
 - WS35
@@ -20,17 +21,17 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: M.
 
-frontends/mindmap/views/workspace/execution/; endpoints; tests/
+frontends/mindmap/views/workspace/execution/; ruta fina hacia el adaptador WS34 autorizada por contrato WS12; tests/
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-Invocar solo adaptador autorizado para dispatch/reply y solicitud de decisión; revisión con actor/evidencia visible.
+Invocar solo el adaptador WS34 para dispatch/reply y registrar decisiones con WS33.2; revisión con actor/evidencia visible.
 
 ## Aceptación
 
-Respuesta vinculada al intento y operación confirmada; ausencia de API/permisos visible. No autoaprobación ni simulación.
+Respuesta vinculada al intento y operación confirmada; la revisión muestra actor humano y evidencia enlazada de WS33.1/WS33.2, cubierto por test; ausencia de API o permisos se muestra como error en la pantalla y lo cubre un test. No autoaprobación ni simulación.
 
 ## Dependencias
 
@@ -38,7 +39,7 @@ Tareas: WS34, WS35. Gates: G_EXEC, G_SCION, G_UI_WRITE, G_WRITE_CONTRACT. Ver es
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS36/1829669bb54003e6e328c53bbfc5ad5df23f47c7f1bb0f0524e99966da8e4e0d/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

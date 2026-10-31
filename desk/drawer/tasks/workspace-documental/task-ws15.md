@@ -2,8 +2,14 @@
 id: WS15
 status: candidate
 owner_repo: graph_ui
+node_role: aggregate
+children:
+- WS15.1
+- WS15.2
 depends_on:
 - WS13
+- WS15.1
+- WS15.2
 requires:
 - G_UI_READ
 ---
@@ -16,27 +22,27 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: S.
 
-frontends/mindmap/views/workspace/; tests/
+Agregado: salidas de WS15.1, WS15.2
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-Referencia rota, documento ausente, modelo no importable, backend caído y fuente no editable; error localizado sin borrar historial ni fingir vacío. UF10: proyecto sin desk muestra orientación, destino explícito e init CLI; nunca inicializar por GET. Tras init externo real, refrescar lectura. Incluye errores de instalación/CDN como límites visibles.
+Agregado: errores de lectura (WS15.1) y orientación sin desk (WS15.2).
 
 ## Aceptación
 
-Leer Markdown existente cuando soporte permita, informar límites reales, recuperar conexión sin perder contexto. CDN actual diagnosticado; empaquetado offline queda fuera.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS13. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS13, WS15.1, WS15.2. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `workspace` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15/f731b58e91047c52868355b1d1acb0b3587306c9fb8e4577956e655771ed13dc/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

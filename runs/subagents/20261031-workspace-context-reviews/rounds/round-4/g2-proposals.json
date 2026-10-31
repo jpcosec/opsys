@@ -1,0 +1,162 @@
+[
+  {
+    "node": "WS13.3",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El conjunto exacto de acciones que apilan historia es un caso de prueba detallado. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El modelo de pestañas por división o global es detalle de interfaz. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Qué documento queda activo al cerrar la última pestaña es un caso de borde. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS14",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "No hay contradicción: scope dice «Sin resultados/error/degradación diferenciados» y acceptance «se ven como tres estados distintos»; ambos exigen diferenciar los mismos tres estados."
+  },
+  {
+    "node": "WS14",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El umbral e instrumentación de «no cargar todo grafo en cada tecla» son detalle de prueba. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS16",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS16.acceptance",
+    "old": "Fallos abren tarea de corrección en el repo dueño antes de edición; WS16 no la implementa.",
+    "new": "Ante un fallo, WS16 lo registra y el responsable del repo dueño del nodo que falló abre la tarea de corrección antes de edición; WS16 no la implementa.",
+    "reason": "Actor indefinido: la frase pasiva no decía quién abre la tarea; se nombra al responsable del repo del nodo que falló y se mantiene que WS16 no implementa."
+  },
+  {
+    "node": "WS17",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación ya fija «los dos desks del manifiesto WS40» y WS40 dice «un tercer repo temporal sin desk»; el tercero no es desk y no requiere plantillas. El título singular no contradice ese alcance."
+  },
+  {
+    "node": "WS17",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "WS40 incluye la «referencia rota» de forma deliberada; WS17 no debe corregirla. El comportamiento esperado del recorrido es escenario del TaskDoc: context-review-guide.md «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS17",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Dónde se materializa la procedencia (plantillas, acta o salida) es formato/archivo exacto del TaskDoc. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS18",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS18.acceptance",
+    "old": "Vista portable renderiza sobre un store real la selección declarada",
+    "new": "Vista portable (el mismo ViewDoc sin código específico del host) renderiza sobre un store real la selección declarada",
+    "reason": "Resultado indefinido: «portable» no tenía criterio; se define en una frase como el mismo ViewDoc sin código específico del host."
+  },
+  {
+    "node": "WS18",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS18.scope",
+    "old": "para selecciones y notación ya soportadas",
+    "new": "para selecciones y notación ya soportadas por spec2viz",
+    "reason": "Resultado indefinido: no se fijaba la autoridad del conjunto ya soportado; se nombra spec2viz, dueño del repo y de la aceptación G_SPEC_VIEW."
+  },
+  {
+    "node": "WS22",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS22.acceptance",
+    "old": "estados y gates leídos de deskops (Board, lifecycle), no de dag.yaml",
+    "new": "estados y condiciones de lifecycle leídos de deskops (Board, lifecycle), no de dag.yaml",
+    "reason": "Resultado indefinido: «gates» solo se define como G_* de dag.yaml, que la frase excluye; se usa el lifecycle de deskops, que sí expone esas condiciones."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.acceptance",
+    "old": "No un renderer nuevo obligatorio por cada clase.",
+    "new": "La vista muestra la clasificación (tipo y tags) y la vecindad de hasta 2 hops. No un renderer nuevo obligatorio por cada clase.",
+    "reason": "Promesa del scope sin aceptación: clasificación y vecindad no se comprobaban en este nodo ni las entrega otro."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El propio scope remite a «inventariados en WS02 y catalogados en WS09»; llega transitivamente WS24→WS13→WS11→WS09→WS07→WS06→WS02. alcance.md: «Una dependencia transitiva cuenta como prerrequisito»."
+  },
+  {
+    "node": "WS24",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope dice «preservar Code local del ticket workspace en draft»: preservar no es implementar, y Code local lo entrega WS13.1. No hay promesa sin cobertura."
+  },
+  {
+    "node": "WS40",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Nombres de campos, tipos y rutas del manifiesto son formato de intercambio fijado al promover. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  }
+]

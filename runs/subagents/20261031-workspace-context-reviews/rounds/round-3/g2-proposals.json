@@ -1,0 +1,232 @@
+[
+  {
+    "node": "WS13.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS13.1.acceptance",
+    "old": "la matriz de WS09 y el contrato WS11",
+    "new": "el catálogo WS09 (borradores/vistas.md) y el contrato WS11",
+    "reason": "WS09 produce el catálogo de renderizaciones, no una matriz; la matriz de alcance es WS06. Se elimina la contradicción con integration_mode."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Pide el conjunto exacto de eventos de historia: caso de prueba detallado. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará dentro de la aceptación del nodo»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Regla de borde al cerrar la pestaña activa: caso de prueba detallado. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS13.3",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La apertura ya tiene entrada real por los enlaces de WS13.1, dependencia directa; WS13.2 no es prerrequisito. La interfaz de apertura es caso de prueba: context-review-guide.md «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS14",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS14.scope",
+    "old": "resultados enlazan identidad y contexto",
+    "new": "resultados abren el documento con su identidad y ruta de origen",
+    "reason": "«identidad y contexto» no se comprobaba; se alinea con la aceptación y el glosario de origen."
+  },
+  {
+    "node": "WS14",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS14.scope",
+    "old": "Búsqueda vacía/error/degradación diferenciados",
+    "new": "Sin resultados/error/degradación diferenciados",
+    "reason": "«vacía» contradecía los tres estados de la aceptación; se usa el mismo término."
+  },
+  {
+    "node": "WS15.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El disparador y mecanismo de refresco son detalle de interfaz. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS15.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La representación de «destino» es texto de pantalla. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS15.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El algoritmo de detección de ausencia de desk es detalle de implementación; el resultado exigido ya es observable. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS16",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS16.acceptance",
+    "old": "Fallos abren correcciones antes de edición.",
+    "new": "Fallos abren tarea de corrección en el repo dueño antes de edición; WS16 no la implementa.",
+    "reason": "Faltaba actor y límite: sin la frase, el ejecutor de la validación podría implementar correcciones fuera de su alcance."
+  },
+  {
+    "node": "WS17",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS17.acceptance",
+    "old": "Resolver dos desks y procedencia;",
+    "new": "Mostrar el root/store de procedencia al resolver los dos desks del manifiesto WS40;",
+    "reason": "«resolver» y «procedencia» no fijaban evidencia; se ancla al manifiesto de WS40 y a root/store."
+  },
+  {
+    "node": "WS17",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS17.acceptance",
+    "old": "no duplicar registry.",
+    "new": "no duplicar el registry de deskops.",
+    "reason": "No se identificaba el registry; deskops es el repo del registry de repositorios que el plan reutiliza."
+  },
+  {
+    "node": "WS17",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "validacion-humana.md ya nombra los dos: «Proyecto Taller bajo graph_ui:.tmp/workspace-documental-ejemplo/...» y «Segundo desk temporal para UF08»; las rutas exactas las fija el manifiesto WS40."
+  },
+  {
+    "node": "WS18",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS18.scope",
+    "old": "ViewDoc/NotationDoc para selecciones y notación ya soportadas",
+    "new": "ViewDoc para selecciones y notación ya soportadas",
+    "reason": "NotationDoc no está definido en las fuentes; el glosario asigna notación/layout a ViewDoc, que además es lo único que la aceptación comprueba."
+  },
+  {
+    "node": "WS22",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS22.acceptance",
+    "old": "Selección y links comunes con lector;",
+    "new": "Las tres representaciones (lista, tablero y dependencias) abren el mismo TaskDoc; selección y links comunes con lector;",
+    "reason": "El scope exige tres representaciones y la aceptación no decía si eran obligatorias ni cómo comprobarlas."
+  },
+  {
+    "node": "WS22",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS22.scope",
+    "old": "Representar Board real como lista, como tablero y con dependencias",
+    "new": "Representar Board real como lista, como tablero agrupado por estado y con las dependencias declaradas en el TaskDoc",
+    "reason": "No se fijaba agrupación ni fuente de dependencias; ambas existen en el TaskDoc (status, depends_on)."
+  },
+  {
+    "node": "WS23",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS23.scope",
+    "old": "pasos, transiciones y fuentes navegables",
+    "new": "pasos y fuentes navegables; transiciones solo representadas, no accionables",
+    "reason": "No se sabía si había mutación; el nodo solo tiene G_UI_READ y no declara contrato de escritura."
+  },
+  {
+    "node": "WS23",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La selección del procedimiento y el tratamiento de referencia ausente son detalle de implementación; una API faltante la resuelve alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso... detenerse, registrar el hueco con repo dueño». context-review-guide.md delega «casos de prueba detallados» al TaskDoc."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "crossroads (CrossroadDoc del árbol de dominio)",
+    "new": "crossroads (inventariados en WS02 y catalogados en WS09)",
+    "reason": "El paréntesis introducía términos aún no definidos; se remite a los inventarios que sí los cubren."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "materializaciones",
+    "new": "materializaciones (MaterializationContractDoc; modelo en deskops/models/materialization.py)",
+    "reason": "No había contrato de origen; el modelo existe y se verifica en el repo."
+  },
+  {
+    "node": "WS24",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "Clasificación = tipo y tags.",
+    "new": "Clasificación = tipo del modelo y tags del documento cuando el modelo los declare.",
+    "reason": "No se decía la autoridad de los tags; ahora son campos del modelo, y los modelos sin tags no inventan uno."
+  },
+  {
+    "node": "WS24",
+    "finding": 4,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "Vecindad = 1–2 hops.",
+    "new": "Vecindad = hasta 2 hops.",
+    "reason": "El rango no fijaba comportamiento ni criterio; se conserva el máximo declarado."
+  },
+  {
+    "node": "WS41",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS40.scope",
+    "old": "Incluir un tercer repo temporal sin desk para UF10.",
+    "new": "Incluir un tercer repo temporal sin desk para UF10 y enlaces authored entre los dos desks con desk para UF08.",
+    "reason": "WS41 debe seguir enlaces entre desks y no puede crearlos sin invadir el corpus; se corrige el productor único WS40."
+  }
+]

@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato aislado. Eval\u00faa comprensi\u00f3n del encargo de revisi\u00f3n, no audites producto futuro. Reformula objetivo/resultado/l\u00edmites, se\u00f1ala ambig\u00fcedades de ejecuci\u00f3n del encargo si quedan y da dry-run por roles SIN ejecutar. Solo input expl\u00edcito. M\u00e1ximo 450 palabras.",
+    "--print",
+    "@runs/subagents/20261031-workspace-context-reviews/preflight-input-v3.md"
+  ],
+  "sha256": "e148f4cd2db9bb10498297b3e70c77466b2d8092e550d7ba07a901fc340e28ac",
+  "returncode": 0,
+  "fresh_process": true
+}

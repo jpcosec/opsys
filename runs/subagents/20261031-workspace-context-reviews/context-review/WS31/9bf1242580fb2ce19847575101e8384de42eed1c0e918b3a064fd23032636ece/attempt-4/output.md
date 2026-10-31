@@ -1,0 +1,13 @@
+## REFORMULACION
+**Propósito:** publicar un manual documental básico que refleje navegación, edición, captura, trabajo manual y revisión ya demostrados. **Resultado:** `docs/workspace-user-manual.md` y átomos vinculados en `desk/atoms/`. **Repo dueño:** deskops. **Límites:** depende de WS30, WS10 y WS43; requiere G_HUMAN_MANUAL. Scion solo como capítulo propuesto hasta WS38; personalización/impacto solo con G_HUMAN_MODEL/WS29 o etiqueta propuesta; no bloquear el manual básico por esos extras.
+
+## AMBIGUEDADES
+1. **Universo de átomos indeterminado.** Cita: «un átomo por acuerdo durable de decisiones.md y contratos/». `decisiones.md` declara «No consta aún decisión humana sobre las propuestas» y solo contiene Pxx pendientes; `contratos/` no enumera aquí qué contratos existen ni en qué repo. Obliga a inventar qué acuerdos son “durables”, si se atomizan propuestas Pxx o si el conjunto es vacío.
+2. **Soporte y ubicación de capturas.** Cita: «incorporar el índice de borradores/manual.md, capturas y limitaciones a docs/workspace-user-manual.md». `output_scope` solo autoriza el Markdown y átomos; no define dónde viven las imágenes ni si crear assets queda dentro del alcance. Obliga a inventar rutas/formato o a decidir omitir capturas, contra el enunciado.
+3. **Referente de «versión publicada».** Cita: «Cada instrucción remite a un acta o prueba de la versión publicada». No queda claro si es el acta de WS30 en graph_ui, el acta de publicación de WS43 en deskops, o una prueba nueva contra el manual final. Obliga a inventar la fuente de evidencia y, eventualmente, una verificación no prevista en dependencias.
+
+## DRY-RUN
+**Lecturas previstas:** guía, `dag.yaml` (WS31 y gates), brief, alcance, decisiones, cobertura, `borradores/manual.md`, acta/evidencia de WS30-G_HUMAN_MANUAL, salida de WS10 y WS43, contratos disponibles. **Cambios previstos:** redactar/actualizar `docs/workspace-user-manual.md`; crear átomos vinculados; incorporar índice y limitaciones; capturas solo si se resuelve su ubicación. **Dependencias:** WS30, WS10, WS43 y G_HUMAN_MANUAL; WS29/G_HUMAN_MODEL solo condicional. **Validaciones futuras:** cada instrucción con referencia a acta/prueba; etiquetas disponible/propuesto/bloqueado; links y atom→doc verificados; capítulo Scion marcado propuesto; extras de personalización/impacto etiquetados o comprobados. Sin ejecución.
+
+## FUTURO
+WS30 produce el acta y resuelve G_HUMAN_MANUAL; WS43 publica navegación real y su acta; WS10 entrega índice/convención; WS11/contratos aportan contratos transitivos; WS38 añade delegación; WS29/G_HUMAN_MODEL habilitan extras. El humano resuelve Pxx y aprueba el manual; nada de eso se decide en este nodo.

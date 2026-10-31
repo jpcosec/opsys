@@ -1,0 +1,5 @@
+{
+  "sha256": "38121d50daf9715941eb6e93a43fccb304b8da90e43c6139c65f708ea5e19af3",
+  "backup": "/tmp/workspace-context-store-before.yaml",
+  "reason": "preserve unrelated dirty store configuration during official closeout"
+}

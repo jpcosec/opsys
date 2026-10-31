@@ -1,0 +1,102 @@
+[
+  {
+    "node": "WS19",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS19.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS19.node_role: aggregate y WS19.acceptance: «Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación.» No produce artefactos propios; `kind` no cambia esa semántica, igual que en WS25/WS26/WS27."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS25.2.acceptance",
+    "old": "UF02: una captura persiste tras recargar con origen y sin tarea implícita.",
+    "new": "UF02: una captura persiste tras recargar en el destino elegido, con origen y sin tarea implícita.",
+    "reason": "El scope promete destino elegido explícitamente y la aceptación no lo comprobaba."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS25.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS25.2.scope: «cada destino se prueba por separado» exige probar drawer y protoátomo; no hay criterio de cierre por inventar."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». El conjunto contra el que se evalúa el solapamiento es detalle delegado; el ritual de fase ya define capa lista."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse... La operación queda no disponible.» Sin contrato de promoción se declara handoff/no disponible; «estado real» es detalle de verificación delegado."
+  },
+  {
+    "node": "WS29",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS29.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». El filtro de hallazgos por documento es detalle de implementación delegado."
+  },
+  {
+    "node": "WS30",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo». Cadena: WS30→WS21→WS19→WS12→WS08; el guion de teclado es salida de WS08."
+  },
+  {
+    "node": "WS39",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS39.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "decisiones.md: «read_only excluye WS20 de la entrega y usa la variante explícita de WS21.» El «delta en sldb» que WS12 condiciona es el de WS20; WS39 es graph_ui con G_UI_WRITE y no depende de source_mode."
+  },
+  {
+    "node": "WS43",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "los acuerdos durables aplicados al mapa quedan en átomos enlazados desde él.",
+    "new": "los acuerdos durables aplicados al mapa (Pxx aceptadas y contratos aplicables) quedan en átomos enlazados desde él.",
+    "reason": "El conjunto de átomos quedaba indefinido; se acota con la misma regla que ya usa WS31, sin crear dependencia."
+  },
+  {
+    "node": "WS43",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)» y alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide». Qué parte de la plantilla se reescribe es contenido delegado."
+  }
+]

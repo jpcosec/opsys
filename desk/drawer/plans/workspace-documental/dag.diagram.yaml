@@ -20,7 +20,7 @@ data:
       label: 'WS05: Inventariar identidad y API Scion'
       kind: core
     WS06:
-      label: 'WS06: Registrar acuerdos de alcance con repos dueños'
+      label: 'WS06: Proponer correspondencia de alcance con repos dueños'
       kind: core
     WS07:
       label: 'WS07: Resolver decisiones de producto y escritura'
@@ -43,11 +43,26 @@ data:
     WS13:
       label: 'WS13: Integrar lector workspace con historia y foco'
       kind: core
+    WS13.1:
+      label: 'WS13.1: Leer documento, contexto y enlaces'
+      kind: core
+    WS13.2:
+      label: 'WS13.2: Explorar documentos modelados y no modelados'
+      kind: core
+    WS13.3:
+      label: 'WS13.3: Abrir documentos en pestañas y divisiones con historia'
+      kind: core
     WS14:
       label: 'WS14: Integrar búsqueda navegable del workspace'
       kind: core
     WS15:
       label: 'WS15: Mostrar errores de lectura y modo degradado'
+      kind: core
+    WS15.1:
+      label: 'WS15.1: Mostrar errores de lectura y modo degradado'
+      kind: core
+    WS15.2:
+      label: 'WS15.2: Orientar proyecto sin desk'
       kind: core
     WS16:
       label: 'WS16: Validar con humano lectura y descubrimiento'
@@ -61,11 +76,17 @@ data:
     WS19:
       label: 'WS19: Integrar edición de campos con conflicto'
       kind: core
+    WS19.1:
+      label: 'WS19.1: Editar campos con conflicto visible'
+      kind: core
+    WS19.2:
+      label: 'WS19.2: Editar relaciones permitidas por contrato'
+      kind: core
     WS20:
-      label: 'WS20: Probar o completar guardado fuente reversible'
+      label: 'WS20: Comprobar o completar guardado fuente reversible'
       kind: core
     WS21:
-      label: 'WS21: Integrar fuente y renderizado editables'
+      label: 'WS21: Integrar fuente y renderizado según source_mode'
       kind: core
     WS22:
       label: 'WS22: Renderizar Board como trabajo navegable'
@@ -79,11 +100,29 @@ data:
     WS25:
       label: 'WS25: Integrar captura y triage en UI'
       kind: core
+    WS25.1:
+      label: 'WS25.1: Leer inbox y registrar ack o respuesta local'
+      kind: core
+    WS25.2:
+      label: 'WS25.2: Capturar en drawer o protoátomo'
+      kind: core
     WS26:
       label: 'WS26: Integrar autoría y contexto de tareas'
       kind: core
+    WS26.1:
+      label: 'WS26.1: Autorar tarea, evidencia y contexto'
+      kind: core
+    WS26.2:
+      label: 'WS26.2: Enrutar en Board y mostrar capa lista'
+      kind: core
     WS27:
       label: 'WS27: Integrar revisión de cambios y evidencia'
+      kind: core
+    WS27.1:
+      label: 'WS27.1: Mostrar diff Git por repo y tarea'
+      kind: core
+    WS27.2:
+      label: 'WS27.2: Mostrar evidencia declarada, encontrada y verificada'
       kind: core
     WS28:
       label: 'WS28: Integrar verificación y handoff de cierre'
@@ -100,11 +139,29 @@ data:
     WS32:
       label: 'WS32: Unificar identidad de intento y cierre Scion'
       kind: core
+    WS32.1:
+      label: 'WS32.1: Separar identidad de intento y dispatch'
+      kind: core
+    WS32.2:
+      label: 'WS32.2: Hacer idempotente manifiesto y cierre'
+      kind: core
     WS33:
       label: 'WS33: Vincular mensajes, resultados y decisiones'
       kind: core
+    WS33.1:
+      label: 'WS33.1: Vincular mensajes y resultados al intento'
+      kind: core
+    WS33.2:
+      label: 'WS33.2: Registrar decisión humana explícita'
+      kind: core
     WS34:
       label: 'WS34: Exponer despacho y respuesta Scion autorizados'
+      kind: core
+    WS34.1:
+      label: 'WS34.1: Exponer dispatch autorizado'
+      kind: core
+    WS34.2:
+      label: 'WS34.2: Exponer respuesta autorizada'
       kind: core
     WS35:
       label: 'WS35: Mostrar ejecución y trazabilidad en workspace'
@@ -226,6 +283,14 @@ data:
     to: WS09
     relation: prerequisite
     label: ''
+  - from: WS10
+    to: WS09
+    relation: prerequisite
+    label: ''
+  - from: WS08
+    to: WS09
+    relation: prerequisite
+    label: ''
   - from: G_PRODUCT
     to: WS09
     relation: prerequisite
@@ -270,10 +335,54 @@ data:
     to: WS13
     relation: prerequisite
     label: ''
+  - from: WS13.1
+    to: WS13
+    relation: prerequisite
+    label: ''
+  - from: WS13.2
+    to: WS13
+    relation: prerequisite
+    label: ''
+  - from: WS13.3
+    to: WS13
+    relation: prerequisite
+    label: ''
   - from: G_UI_READ
     to: WS13
     relation: prerequisite
     label: ''
+  - from: WS11
+    to: WS13.1
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS13.1
+    relation: prerequisite
+    label: ''
+  - from: WS11
+    to: WS13.2
+    relation: prerequisite
+    label: ''
+  - from: WS13.1
+    to: WS13.2
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS13.2
+    relation: prerequisite
+    label: ''
+  - from: WS11
+    to: WS13.3
+    relation: prerequisite
+    label: ''
+  - from: WS13.1
+    to: WS13.3
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS13.3
+    relation: prerequisite
+    label: ''
   - from: WS13
     to: WS14
     relation: prerequisite
@@ -286,8 +395,32 @@ data:
     to: WS15
     relation: prerequisite
     label: ''
+  - from: WS15.1
+    to: WS15
+    relation: prerequisite
+    label: ''
+  - from: WS15.2
+    to: WS15
+    relation: prerequisite
+    label: ''
   - from: G_UI_READ
     to: WS15
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS15.1
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS15.1
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS15.2
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS15.2
     relation: prerequisite
     label: ''
   - from: WS14
@@ -338,6 +471,14 @@ data:
     to: WS19
     relation: prerequisite
     label: ''
+  - from: WS19.1
+    to: WS19
+    relation: prerequisite
+    label: ''
+  - from: WS19.2
+    to: WS19
+    relation: prerequisite
+    label: ''
   - from: G_HUMAN_READ
     to: WS19
     relation: prerequisite
@@ -348,6 +489,46 @@ data:
     label: ''
   - from: G_WRITE_CONTRACT
     to: WS19
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS19.1
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS19.1
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS19.1
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS19.1
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS19.1
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS19.2
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS19.2
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS19.2
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS19.2
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS19.2
     relation: prerequisite
     label: ''
   - from: WS12
@@ -418,6 +599,14 @@ data:
     to: WS25
     relation: prerequisite
     label: ''
+  - from: WS25.1
+    to: WS25
+    relation: prerequisite
+    label: ''
+  - from: WS25.2
+    to: WS25
+    relation: prerequisite
+    label: ''
   - from: G_HUMAN_READ
     to: WS25
     relation: prerequisite
@@ -431,10 +620,58 @@ data:
     relation: prerequisite
     label: ''
   - from: WS12
+    to: WS25.1
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS25.1
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS25.1
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS25.1
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS25.1
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: WS16
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: WS12
     to: WS26
     relation: prerequisite
     label: ''
   - from: WS22
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: WS26.1
+    to: WS26
+    relation: prerequisite
+    label: ''
+  - from: WS26.2
     to: WS26
     relation: prerequisite
     label: ''
@@ -454,6 +691,58 @@ data:
     to: WS26
     relation: prerequisite
     label: ''
+  - from: WS12
+    to: WS26.1
+    relation: prerequisite
+    label: ''
+  - from: WS22
+    to: WS26.1
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS26.1
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS26.1
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS26.1
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS26.1
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: WS22
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: WS26.1
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: G_HUMAN_READ
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS26.2
+    relation: prerequisite
+    label: ''
   - from: WS13
     to: WS27
     relation: prerequisite
@@ -462,8 +751,40 @@ data:
     to: WS27
     relation: prerequisite
     label: ''
+  - from: WS27.1
+    to: WS27
+    relation: prerequisite
+    label: ''
+  - from: WS27.2
+    to: WS27
+    relation: prerequisite
+    label: ''
   - from: G_UI_READ
     to: WS27
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS27.1
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS27.1
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS27.1
+    relation: prerequisite
+    label: ''
+  - from: WS13
+    to: WS27.2
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS27.2
+    relation: prerequisite
+    label: ''
+  - from: G_UI_READ
+    to: WS27.2
     relation: prerequisite
     label: ''
   - from: WS27
@@ -562,6 +883,14 @@ data:
     to: WS32
     relation: prerequisite
     label: ''
+  - from: WS32.1
+    to: WS32
+    relation: prerequisite
+    label: ''
+  - from: WS32.2
+    to: WS32
+    relation: prerequisite
+    label: ''
   - from: G_CLOSEOUT
     to: WS32
     relation: prerequisite
@@ -574,6 +903,50 @@ data:
     to: WS32
     relation: prerequisite
     label: ''
+  - from: WS05
+    to: WS32.1
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS32.1
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS32.1
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS32.1
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS32.1
+    relation: prerequisite
+    label: ''
+  - from: WS05
+    to: WS32.2
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS32.2
+    relation: prerequisite
+    label: ''
+  - from: WS32.1
+    to: WS32.2
+    relation: prerequisite
+    label: ''
+  - from: G_CLOSEOUT
+    to: WS32.2
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS32.2
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS32.2
+    relation: prerequisite
+    label: ''
   - from: WS32
     to: WS33
     relation: prerequisite
@@ -582,8 +955,36 @@ data:
     to: WS33
     relation: prerequisite
     label: ''
+  - from: WS33.1
+    to: WS33
+    relation: prerequisite
+    label: ''
+  - from: WS33.2
+    to: WS33
+    relation: prerequisite
+    label: ''
   - from: G_SCION
     to: WS33
+    relation: prerequisite
+    label: ''
+  - from: WS32
+    to: WS33.1
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS33.1
+    relation: prerequisite
+    label: ''
+  - from: WS32
+    to: WS33.2
+    relation: prerequisite
+    label: ''
+  - from: WS33.1
+    to: WS33.2
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS33.2
     relation: prerequisite
     label: ''
   - from: WS33
@@ -591,6 +992,14 @@ data:
     relation: prerequisite
     label: ''
   - from: WS12
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: WS34.1
+    to: WS34
+    relation: prerequisite
+    label: ''
+  - from: WS34.2
     to: WS34
     relation: prerequisite
     label: ''
@@ -604,6 +1013,50 @@ data:
     label: ''
   - from: G_WRITE_CONTRACT
     to: WS34
+    relation: prerequisite
+    label: ''
+  - from: WS33
+    to: WS34.1
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS34.1
+    relation: prerequisite
+    label: ''
+  - from: G_EXEC
+    to: WS34.1
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS34.1
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS34.1
+    relation: prerequisite
+    label: ''
+  - from: WS33
+    to: WS34.2
+    relation: prerequisite
+    label: ''
+  - from: WS12
+    to: WS34.2
+    relation: prerequisite
+    label: ''
+  - from: WS34.1
+    to: WS34.2
+    relation: prerequisite
+    label: ''
+  - from: G_EXEC
+    to: WS34.2
+    relation: prerequisite
+    label: ''
+  - from: G_SCION
+    to: WS34.2
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS34.2
     relation: prerequisite
     label: ''
   - from: WS33

@@ -2,9 +2,15 @@
 id: WS34
 status: candidate
 owner_repo: deskops
+node_role: aggregate
+children:
+- WS34.1
+- WS34.2
 depends_on:
 - WS33
 - WS12
+- WS34.1
+- WS34.2
 requires:
 - G_EXEC
 - G_SCION
@@ -19,7 +25,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `deskops`. Tamaño relativo: M.
 
-runtime/; cli/commands/runtime.py o API definida; tests/
+Agregado: salidas de WS34.1, WS34.2
 
 Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
@@ -29,15 +35,15 @@ Un adaptador público restringido para dispatch/reply, con confirmación, identi
 
 ## Aceptación
 
-G_SCION/G_EXEC pasan; agente real demuestra aceptación/fallo/respuesta. No shell arbitrario, no duplicar transporte ni mandar mensajes en la tarea de planificación.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS33, WS12. Gates: G_EXEC, G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS33, WS12, WS34.1, WS34.2. Gates: G_EXEC, G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS34/25ec4d2b543c2af937173b7e5435a8f5d27d3b2fd24a76680a5bb725be78ae6c/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

@@ -1,0 +1,142 @@
+[
+  {
+    "node": "PK08",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El input ya nombra el comprobador: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops»; el objeto hasheado es detalle de esa herramienta. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "PK08",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El criterio ya está escrito en la propia frase: «por causa externa (ajena al encargo del propio hijo)»; afinar más el límite es caso de borde. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "PK08",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La vigencia ya se exige en la definición: «Revisión vigente: `context_review` del hijo ... cuyo hash ... coincide con los actuales y que tiene disposition.md», y el bloqueo explícito es un `context_review.status=blocked` registrado en esa disposition. El «o» alterna el estado de la revisión vigente, no exime de tenerla. Cita: dag.yaml#node:PK08, acceptance."
+  },
+  {
+    "node": "WS06",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "",
+    "new": "",
+    "reason": "Una matriz por implementación con filas agrupadas por repo dueño es formato de entrega; la aceptación ya fija «una fila por delta o capacidad propuesta, agrupada por repo dueño». Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS06",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "ya cubierto (capacidad observable en código o en el Board, con referencia), extender ticket existente o nuevo delta",
+    "new": "ya cubierto (capacidad observable en código implementado, con referencia), extender ticket existente (incluido un draft del Board) o nuevo delta",
+    "reason": "Contradicción con reconciliacion.md: las tareas draft «No equivalen a trabajo implementado». Un draft es «extender ticket existente», no «ya cubierto»."
+  },
+  {
+    "node": "WS06",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación ya excluye el universo por nodo: «una fila por delta o capacidad propuesta, agrupada por repo dueño, no por nodo del DAG»; el resto es granularidad de entrega. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS09",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "Cada fila tiene origen, contrato, renderer, acción/dueño, error y estado.",
+    "new": "Cada fila tiene origen, contrato (o «sin contrato» si el soporte no lo tiene), renderer, acción/dueño, error y estado.",
+    "reason": "Contradicción con brief.md («puede tener contrato estructurado o no») y con las filas de vistas.md sin modelo (Issue Markdown): exigir contrato a toda fila obliga a inventarlo o a incumplir la aceptación."
+  },
+  {
+    "node": "WS09",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La clase y fuente del fallo visible por fila es contenido del catálogo, no un dato que deba aportar otro nodo; vistas.md ya pide «conflictos/errores» por vista. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS11",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La autorización multidesk es contenido del contrato WS11 y WS41 ya declara el criterio: «aliases/roots explícitamente autorizados en contrato WS11» y rechazar roots arbitrarios. Cita: dag.yaml#edge:WS41, scope y acceptance."
+  },
+  {
+    "node": "WS11",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "«Sin modelos hipotéticos» significa no proponer modelos no registrados; brief.md ya admite documento con o sin contrato estructurado, y clasificar el hueco es el trabajo del contrato. Cita: brief.md, «puede tener contrato estructurado o no»; context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS11",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS11.output_scope",
+    "old": "contratos/navegacion.md",
+    "new": "contratos/navegacion.md; actas de aceptación de G_UI_READ y G_SPEC_VIEW en el repo receptor",
+    "reason": "La aceptación exige dos actas que producen G_UI_READ/G_SPEC_VIEW, pero output_scope era la autoridad de ubicación y solo listaba el contrato; sin ellas el resultado y su ubicación quedaban indefinidos."
+  },
+  {
+    "node": "WS12",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS12.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El acto de aceptación ya está fijado por G_UI_WRITE: «Acta de aceptación del delta definido por contrato, con identidad/fecha ...; task receptora y no solapamiento confirmados», y WS11 ya resuelve la ausencia: «si no hay recepción, el contrato queda pendiente». Cita: dag.yaml#gates G_UI_WRITE y dag.yaml#edge:WS11, acceptance."
+  },
+  {
+    "node": "WS12",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS12.acceptance",
+    "old": "operaciones de autoría/cierre quedan bloqueadas por G_CLOSEOUT hasta evidencia",
+    "new": "operaciones de autoría de tareas/cierre quedan bloqueadas por G_CLOSEOUT hasta evidencia",
+    "reason": "«Autoría» podía ser edición de fuente (WS20/21, gated por G_SOURCE) o autoría de tareas (WS26); se acota a esta última para que G_CLOSEOUT no bloquee de más."
+  },
+  {
+    "node": "WS12",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS12.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El baremo de «comprobada» es parte de la verificación que produce el contrato; fijarlo en el plan es detalle de promoción. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  }
+]

@@ -2,6 +2,7 @@
 id: WS20
 status: candidate
 owner_repo: sldb
+node_role: delivery
 depends_on:
 - WS12
 requires:
@@ -9,7 +10,7 @@ requires:
 - G_WRITE_CONTRACT
 ---
 
-# Probar o completar guardado fuente reversible
+# Comprobar o completar guardado fuente reversible
 
 Candidata de planificación; no TaskDoc activa ni autorización de ejecución. Fuente: [dag.yaml](../../plans/workspace-documental/dag.yaml).
 
@@ -27,7 +28,7 @@ Primero verificar capacidad existente. Un documento raw-source se extrae/valida 
 
 ## Aceptación
 
-Si capacidad existe: evidencia de contrato suficiente, no código duplicado. Si falta: intake/tarea sldb propia y roundtrip, conflicto y recuperación reales antes de cerrar G_SOURCE.
+Reversible = guardar y volver a extraer conserva campos y secciones sin pérdida. En ambas ramas G_SOURCE exige API pública y tests de roundtrip, conflicto, recuperación tras fallo y campos protegidos. Si la capacidad existe, esos tests bastan y no se duplica código. Si falta, se implementa en sldb mediante tarea propia aceptada en G_SLDB_WRITE.
 
 ## Dependencias
 
@@ -41,7 +42,7 @@ enabled_when:
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS20/ea3dd3d1769edb6f19b5d03834decf3ce1f8c227c7a694ee1f0157536b77863a/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

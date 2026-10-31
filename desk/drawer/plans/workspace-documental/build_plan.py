@@ -12,7 +12,7 @@ args = parser.parse_args()
 outputs = {}
 rows = []
 for t in D['tasks']:
-    outputs[ROOT / t['task_file']] = ('---\n' + yaml.safe_dump({k: t[k] for k in ('id', 'status', 'owner_repo', 'depends_on', 'requires')}, allow_unicode=True, sort_keys=False)
+    outputs[ROOT / t['task_file']] = ('---\n' + yaml.safe_dump({k: t[k] for k in ('id', 'status', 'owner_repo', 'node_role', 'parent_id', 'children', 'depends_on', 'requires') if k in t}, allow_unicode=True, sort_keys=False)
         + '---\n\n# ' + t['title'] + '\n\nCandidata de planificación; no TaskDoc activa ni autorización de ejecución. Fuente: [dag.yaml](../../plans/workspace-documental/dag.yaml).\n\n'
         + '## Entregable y archivos previstos\n\nRepo único: `' + t['owner_repo'] + '`. Tamaño relativo: ' + t['estimate'] + '.\n\n' + t['output_scope']
         + '\n\nBase explícita: `' + t['output_base'] + '`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.\n\n## Alcance\n\n' + t['scope'] + '\n\n## Aceptación\n\n' + t['acceptance']
@@ -21,15 +21,27 @@ for t in D['tasks']:
         + ('\n## Variante\n\n' + yaml.safe_dump({k:t[k] for k in ('enabled_when','variants') if k in t},allow_unicode=True,sort_keys=False) if ('enabled_when' in t or 'variants' in t) else '')
         + '\n## Review barato de comprensión\n\nEstado: `' + t['context_review']['status'] + '`. Protocolo requerido: `' + t['context_review']['required_protocol'] + '`. Evidencia: ' + str(t['context_review']['evidence']) + '. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.\n'
         + '\n## Gate de promoción\n\nAuthorar TaskDoc completa en repo dueño, fijar archivos, operaciones, pills/átomos y evidencia; confirmar no solapamiento y dependencias/gates; ejecutar revisión de comprensión con contexto limpio. Para código: pruebas reales específicas y suite requerida del repo (pytest/Node/Playwright según superficie). Para UX: gate humano correspondiente; para docs: links y hechos comprobados. Ritual/commit de task y fase obligatorios. Esta candidata no está lista para un ejecutor de código por sí sola.\n')
-    rows.append('| ' + t['id'] + ' | [' + t['title'] + '](../../tasks/workspace-documental/task-' + t['id'].lower() + '.md) | ' + (', '.join(t['depends_on']) or '—') + ' | ' + (', '.join(t['requires']) or '—') + ' | ' + t['owner_repo'] + ' | ' + t['estimate'] + ' |')
+    rows.append('| ' + t['id'] + ' | [' + t['title'] + '](../../tasks/workspace-documental/' + Path(t['task_file']).name + ') | ' + (', '.join(t['depends_on']) or '—') + ' | ' + (', '.join(t['requires']) or '—') + ' | ' + t['owner_repo'] + ' | ' + t['estimate'] + ' |')
+_nodes = [D['hierarchy']['root']] + D['hierarchy']['packages'] + D['tasks']
+_counts = {}
+for _n in _nodes:
+    _counts[_n['context_review']['status']] = _counts.get(_n['context_review']['status'], 0) + 1
+review_summary = ', '.join(f'{k}: {v}' for k, v in sorted(_counts.items()))
+hierarchy_rows = ['- **' + p['id'] + ' ' + p['title'] + '**: ' + ', '.join(p['children']) for p in D['hierarchy']['packages']]
 gate_rows = ['| ' + k + ' | ' + v['state'] + ' | ' + v['title'] + ' | ' + v['resolver'] + ' |' for k, v in D['gates'].items()]
 outputs[B / 'README.md'] = '''# Workspace documental — plan revisado por concilio
 
 Revisión ''' + str(D['revision']) + '''. Estado: ''' + D['status'] + '''. Propuesta de planificación, no activación ni ejecución de producto.
 
-## Reviews baratos pendientes
+## Reviews baratos
 
-El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Raíz/jerarquía: estado `''' + D['hierarchy_context_review']['status'] + '''`, protocolo `''' + D['hierarchy_context_review']['required_protocol'] + '''`, evidencia ''' + str(D['hierarchy_context_review']['evidence']) + '''. Las ''' + str(len(D['tasks'])) + ''' candidatas están pendientes del mismo protocolo. Revisar raíz, paquetes, hojas y aristas recursivamente antes de promoción/ejecución; no se hicieron ni simularon esos reviews en esta actualización. `execution_authorized=false`.
+El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): ''' + review_summary + '''. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
+
+## Jerarquía de revisión
+
+ROOT y PK agrupan la revisión; no son dependencias. Un nodo `aggregate` no se ejecuta y termina con sus hijos.
+
+''' + '\n'.join(hierarchy_rows) + '''
 
 ## Entrada
 

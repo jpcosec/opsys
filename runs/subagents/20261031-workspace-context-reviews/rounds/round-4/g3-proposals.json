@@ -1,0 +1,262 @@
+[
+  {
+    "node": "WS25.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS25.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». La obligatoriedad y el caso sin origen son casos de borde delegados."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS25.2.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto. La operación queda no disponible.» Si la selección de mensaje no está disponible, se declara; no se inventa dependencia."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS25.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS25.2.scope: «cada destino se prueba por separado» exige probar ambos destinos en el cierre; no queda criterio por inventar."
+  },
+  {
+    "node": "WS26.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará». Evidencia declarada usa el campo closeout_evidence del TaskDoc; formato y validación quedan delegados."
+  },
+  {
+    "node": "WS26.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)». depends_on, pills y atoms son campos del TaskDoc; el modelo y su validación quedan delegados."
+  },
+  {
+    "node": "WS26.1",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Alcance exacto de la recarga es detalle de prueba delegado."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla... que el TaskDoc de promoción fijará». El mapeo estado de deskops→representación visual es detalle delegado; WS22 ya lee estados de Board/lifecycle."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». La semántica exacta de comparación de rutas es algoritmo delegado."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Formato de declaración y resolución ruta→repo son detalle delegado; las rutas vienen del contrato WS11."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará». Conjunto y presentación del historial son detalle delegado."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "El contenedor es la propia vista del nodo (output_scope views/workspace/diff/) y WS13 abre TaskDoc como documento. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla»."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». La regla de identidad declarada→artefacto es detalle delegado."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Agregación del veredicto por evidencia o por TaskDoc es detalle delegado."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "WS13 provee selección/foco del documento y el nodo monta la evidencia en su vista. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla»."
+  },
+  {
+    "node": "WS28",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS28.output_scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso... La operación queda no disponible.» Los endpoints son los que fije WS12; cierre HTTP queda excluido por «No commits automáticos ni closeout HTTP»."
+  },
+  {
+    "node": "WS28",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS28.scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «No commits automáticos ni closeout HTTP.» El nodo prepara handoff y refresco, no ejecuta la escritura; G_HUMAN_READ sigue en requires por el baseline."
+  },
+  {
+    "node": "WS30",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo». Cadena: WS30→WS21→WS19→WS12→WS08."
+  },
+  {
+    "node": "WS30",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará» y «Un nodo aggregate no se ejecuta: termina cuando terminan sus hijos». Identificar el nodo culpable es ejecución delegada."
+  },
+  {
+    "node": "WS31",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS31.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «Una dependencia futura que debe producir un contrato, API o inventario no es ambigüedad si el encargo nombra quién lo produce y qué hacer si falta.» WS11/WS12 producen navegacion.md y operaciones.md y se alcanzan por WS30→WS21→WS19→WS12."
+  },
+  {
+    "node": "WS31",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS31.acceptance",
+    "old": "un átomo por acuerdo durable ya aceptado por humano en decisiones.md",
+    "new": "un átomo por cada Pxx ya aceptado por humano en decisiones.md",
+    "reason": "«Acuerdo durable» no tenía referente; las aceptaciones de decisiones.md son Pxx, ya nombrados por el plan."
+  },
+  {
+    "node": "WS31",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS31.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «WS29 ... Tienen pruebas y estado propios; no se etiquetan disponibles por estar planeadas ni bloquean primer lector/manual básico.» Comprobar es su prueba propia o el gate G_HUMAN_MODEL; si no, etiqueta propuesta."
+  },
+  {
+    "node": "WS42",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)». WS24 ya nombra MaterializationContractDoc y deskops/models/materialization.py; identidad y versión exactas quedan delegadas."
+  },
+  {
+    "node": "WS42",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla... que el TaskDoc de promoción fijará». La aceptación ya exige confirmación con alcance y procedencia; campos y registro son detalle delegado."
+  },
+  {
+    "node": "WS43",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "P09 y contrato fijan ubicación/modelo opcional.",
+    "new": "P09 y contrato fijan ubicación/modelo opcional; los acuerdos durables aplicados al mapa quedan en átomos enlazados desde él.",
+    "reason": "El scope promete registrar conocimiento durable en átomos y la aceptación no lo comprobaba."
+  },
+  {
+    "node": "WS43",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "no publicar solo ejemplo como si fuera ecosistema real.",
+    "new": "no publicar solo ejemplo como si fuera ecosistema real y el mapa publicado corresponde a las entradas/índices validados en Taller.",
+    "reason": "El scope promete aplicar lo validado en Taller y la aceptación no comprobaba equivalencia."
+  },
+  {
+    "node": "WS43",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "Cada proyecto adicional requiere su tarea de repo y acuerdo de alcance.",
+    "new": "Escribir una entrada en un proyecto adicional requiere su tarea de repo y acuerdo de alcance.",
+    "reason": "Contradice el scope: enlazar todos los repos no escribe en ellos; solo escribir una entrada requiere tarea y acuerdo."
+  }
+]

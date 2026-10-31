@@ -1,0 +1,62 @@
+[
+  {
+    "node": "WS17",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS17.acceptance",
+    "old": "Registrar el root/store de procedencia al resolver los dos desks del manifiesto WS40; no duplicar el registry de deskops.",
+    "new": "Verificar al regenerar que cada plantilla resuelve el root/store de procedencia de los dos desks del manifiesto WS40; no duplicar el registry de deskops.",
+    "reason": "Resultado indefinido y contradictorio: un root temporal no puede fijarse en plantillas versionadas; la comprobación se hace en la regeneración, sin artefacto nuevo."
+  },
+  {
+    "node": "WS18",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El actor ya está definido: la aceptación dice «tareas receptoras en spec2viz se promueven por dueño» y exige «Gate receptor G_SPEC_VIEW»; «no modificar su repo desde este plan» se refiere a la fase de planificación, no a la tarea promovida."
+  },
+  {
+    "node": "WS18",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El medio de renderizado y el harness de prueba son archivos y escenarios del TaskDoc. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Dirección y tipos de arista de la vecindad son detalle del algoritmo y de los escenarios de prueba. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La fuente de la ruta ya está definida en brief.md: «Soporte / origen: archivo o dato real que respalda una representación, y su ruta o referencia». El fallback es caso de borde del TaskDoc."
+  },
+  {
+    "node": "WS24",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope califica la clasificación: «tags del documento cuando el modelo los declare»; un Markdown sin modelo no declara tipo ni tags, así que no hay clasificación que mostrar. El modo de omitirla es detalle del TaskDoc."
+  }
+]

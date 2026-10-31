@@ -1,0 +1,32 @@
+{
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/WS14/02f40e3c4b5b782afd9c62ce26ecfa4940bfdc46abf2749039d6377380d43aea/attempt-1/input.md"
+ ],
+ "cwd": "/home/jp/proyectos/SLDB_1/deskops",
+ "stdin": "devnull",
+ "pi_version": "",
+ "start": "2026-10-31T08:00:46.027402+00:00",
+ "end": "2026-10-31T08:01:12.629993+00:00",
+ "pid": 1002180,
+ "returncode": 0,
+ "input_sha256": "02f40e3c4b5b782afd9c62ce26ecfa4940bfdc46abf2749039d6377380d43aea",
+ "output_sha256": "24a50b87934ae19af0d641d49bd6b7052289d3ab6b3b4acbb68a17cc0654c214",
+ "technical_failure": false
+}

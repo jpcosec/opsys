@@ -1,0 +1,128 @@
+{
+ "node_id": "PK07",
+ "role": "context-reviewer",
+ "attempt": 1,
+ "input_sha256": "9d4fc35532a235443ebcb582fe84746abdf95bde3b87bbbad86ce3074c424524",
+ "ordered_sources": [
+  {
+   "path": "desk/drawer/plans/workspace-documental/context-review-guide.md",
+   "sha256": "d79bc6b11f5631aa6ee4ed5f9c5c9b39713f9da16f2eea936a25cbd9e2e63a8c",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/brief.md",
+   "sha256": "be95e2eb9c576ba7781e32449a4185b60b838be743107813b2a3e98eac600214",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/alcance.md",
+   "sha256": "087871ff0641bb073072c9295df6ea944bec04603342101690fc395dc77f13d9",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/decisiones.md",
+   "sha256": "4a98063c8eb1869b7665a0a23d7b3107772034447737866b2a1371f5ab9a28a5",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/cobertura.md",
+   "sha256": "da759798ae818c08d19c1f66b663fdfde7165b5f9c83071ffca3444389fe71ba",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#node:PK07",
+   "sha256": "3187c34dc39a2e6fad6e9c306d716ce99e214e272e89d6194d92fa5977256934",
+   "projection": "node_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS29",
+   "sha256": "29b35ef59d68bb02cea0911565207d5dd9c192242e693f84160298a89fb03ef4",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS39",
+   "sha256": "f45bdd21dcb52f87a1d8811f5704a3adfb7790027eba7cecf9ae317e453c9504",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS15",
+   "sha256": "c8b644d16dc65c6351d434d8184c6018576fe6efd771b99a8511ca978dbd7d83",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS24",
+   "sha256": "c8d3f397780a3150bb08b07e77b31d9b176be9f6192543ea31d794c89123d133",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS12",
+   "sha256": "3120bbfb601b96f7a26114d070563674600bddaa1980b324cf26223c585c628e",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS16",
+   "sha256": "b034ccd938dfe4cea148eb593a0cb452cb296e2135a8e99437599e9e5eb907ea",
+   "projection": "edge_contract"
+  }
+ ],
+ "node_contract_sha256": "8d1e700ecbfd660fbd6e08c18d2b22ac9487f847e7e65b01046d5bba8d4084e8",
+ "edge_contracts": [
+  {
+   "id": "WS29",
+   "sha256": "5d6f48c440b3a0454b589a037b2bc5f22a1d85f892dd7ef79a4e0a6d6e4af07d"
+  },
+  {
+   "id": "WS39",
+   "sha256": "4fc6cdada5ae1e4f7e3d29e46a5d2a25367b68e77e8a57d3dda8e5a2d66ac070"
+  },
+  {
+   "id": "WS15",
+   "sha256": "17705b8dc6d9b2ebdc2f9440637b646663fdae8ac74510dd70f5d54e21155714"
+  },
+  {
+   "id": "WS24",
+   "sha256": "df45dd93ff3578d9e8402d624938d52e507d8a32e118719aa82ba9871c10812c"
+  },
+  {
+   "id": "WS12",
+   "sha256": "5634a36f69d6ea6691e6cdc5627959d20503916ee824366dfdd256f1012dd919"
+  },
+  {
+   "id": "WS16",
+   "sha256": "f14b67e99cffad0453f3c4e712f072a35082ee97b8e2a6578088f57b61868c94"
+  }
+ ],
+ "provider": "deepseek",
+ "model": "deepseek-flash",
+ "thinking": "low",
+ "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review; no se afirma precio mínimo global",
+ "isolation_flags": [
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools"
+ ],
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/PK07/9d4fc35532a235443ebcb582fe84746abdf95bde3b87bbbad86ce3074c424524/attempt-1/input.md"
+ ]
+}

@@ -1,0 +1,192 @@
+[
+  {
+    "node": "WS20",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS20.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «Un gate pendiente es intencional» y «Una variante añade dependencias y gates a los del nodo base; nunca los quita». «Esos tests bastan» es evidencia de G_SOURCE; G_SLDB_WRITE (producido por WS12) sigue en requires."
+  },
+  {
+    "node": "WS20",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS20.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS20.owner_repo es sldb y la aceptación dice «se implementa en sldb mediante tarea propia aceptada en G_SLDB_WRITE». alcance.md: «La implementación puede vincular/sustituir alcance en la tarea receptora aceptada»."
+  },
+  {
+    "node": "WS20",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS20.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Tipos de fallo y evidencia de recuperación son detalle delegado."
+  },
+  {
+    "node": "WS20",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS20.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación acota «conserva campos y secciones sin pérdida», no bytes, orden ni comentarios. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS25.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "brief.md define protoátomo como «átomo libre con título y contenido, aún sin clasificar»; «libre» no exime de origen. La aceptación exige origen para toda captura."
+  },
+  {
+    "node": "WS25.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS25.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla... que el TaskDoc de promoción fijará». Cómo se elige el destino y qué pasa sin elección es comportamiento de UI delegado."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Ruta exacta, carpeta, prefijo o glob es algoritmo delegado."
+  },
+  {
+    "node": "WS26.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS26.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso... La operación queda no disponible.» Sin canal de promoción se declara; la comprobación exacta de commits/estado es detalle delegado (guide: «casos de prueba detallados»)."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará». Campo, formato y derivación del repo son detalle delegado."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Distinguir hashes de otras referencias es detalle de implementación."
+  },
+  {
+    "node": "WS27.1",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Rango y contenido del historial son detalle delegado."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». Estado ante verificación no ejecutada y unidad por evidencia o TaskDoc son detalle delegado."
+  },
+  {
+    "node": "WS27.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS27.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla... que el TaskDoc de promoción fijará». Lista, estado agregado o contadores es representación delegada."
+  },
+  {
+    "node": "WS28",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS28.scope",
+    "old": "",
+    "new": "",
+    "reason": "validacion-humana.md: «Las mutaciones de baseline requieren G_HUMAN_READ»; WS16.acceptance: «G_HUMAN_READ es requisito de toda mutación del baseline». No hace falta otra aprobación."
+  },
+  {
+    "node": "WS30",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo». Cadena: WS30→WS21→WS19→WS12→WS08; el guion es salida de WS08."
+  },
+  {
+    "node": "WS30",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS30.acceptance",
+    "old": "un fallo de guion bloquea el gate y abre tarea en el nodo que lo causó",
+    "new": "un fallo de guion bloquea el gate y el responsable del repo dueño abre tarea en el nodo que lo causó",
+    "reason": "El actor y el repo de la tarea no estaban definidos; se alinea con WS16.acceptance, que ya nombra al responsable del repo dueño."
+  },
+  {
+    "node": "WS39",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS39.scope",
+    "old": "",
+    "new": "",
+    "reason": "WS13 provee el lector de documento y WS24.output_scope incluye «Context»; ambos son superficies existentes. context-review-guide.md: «detalles que el nodo delega a su promoción»."
+  },
+  {
+    "node": "WS42",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará». WS24 ya nombra MaterializationContractDoc y deskops/models/materialization.py; registro, versión y regla de validación son detalle delegado."
+  },
+  {
+    "node": "WS42",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «textos exactos de pantalla... que el TaskDoc de promoción fijará». WS12.acceptance exige registrar «capability exacta (operación, canal, efectos)»; el contenido mínimo de la confirmación es detalle delegado."
+  }
+]

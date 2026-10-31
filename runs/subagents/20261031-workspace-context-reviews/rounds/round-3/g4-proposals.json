@@ -1,0 +1,162 @@
+[
+  {
+    "node": "WS32.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "timestamps, evidencia y commit de cierre).",
+    "new": "timestamps, hash de sesión, evidencia y commit de cierre).",
+    "reason": "La aceptación exige que los tres registros coincidan en hash de sesión y el scope lo omitía de los campos mínimos; el hash ya lo produce el cierre existente, solo se alinean los textos."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.2.acceptance",
+    "old": "RunDoc e índice de cierre coinciden",
+    "new": "RunDoc y registros de closeout coinciden",
+    "reason": "«índice de cierre» y «registros de closeout» eran dos nombres para el mismo artefacto; se usa el término que ya emplea el scope."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide un caso de borde de implementación. La aceptación ya fija la regla al exigir que la repetición «conserva identidad y evidencia sin crear registros nuevos», y el caso de evidencia distinta es escenario de prueba, no requisito del plan. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.acceptance",
+    "old": "conversación, con checkpoint) no duplica",
+    "new": "conversación) no duplica",
+    "reason": "«checkpoint» no tenía productor ni definición en el nodo ni en sus dependencias; sin él la aceptación sigue siendo comprobable y no se inventa mecanismo."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "La clave exacta de resultados depende del identificador que exponga la fuente, dato que el propio scope remite a WS05/WS44; fijarla ahora inventaría la API. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.scope",
+    "old": "Este nodo solo escribe la decisión.",
+    "new": "Este nodo solo escribe la decisión por la operación que fije el contrato WS12 (si falta, hueco con dueño).",
+    "reason": "El nodo no nombraba canal de escritura de la decisión; WS12 es el productor del contrato de operaciones y ya cubre el caso de canal ausente."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.scope",
+    "old": "(aprobar o pedir corrección) con actor, asociada",
+    "new": "(aprobar o pedir corrección) con actor humano identificado por el contrato WS12, asociada",
+    "reason": "Define el actor exigido por la aceptación y remite su identificación al contrato que ya fija canal y actor por operación."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "El vínculo intento→tarea ya lo registra RunDoc con `task_id` en el manifiesto de WS32, y el caso de un intento sin tarea es borde de implementación. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS34.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS34.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide umbral, política y formato de error: detalles de implementación, no resultado ni aceptación. La aceptación ya es comprobable con un dispatch rechazado o vencido. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS34.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS34.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "Pide formato y unicidad de la identidad de intento, que produce WS32 y consume este nodo por dependencia; el formato es detalle de implementación. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS35",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS35.acceptance",
+    "old": "Cada mensaje y resultado se muestra bajo su intento; cada uno enlaza a su fuente;",
+    "new": "Cada mensaje, resultado y decisión se muestra bajo su intento y tarea; cada uno enlaza a su fuente;",
+    "reason": "El scope incluye tarea y decisión y la aceptación no las comprobaba; se alinea la aceptación sin añadir pantallas ni jerarquías."
+  },
+  {
+    "node": "WS35",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS35.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide el tratamiento de mensajes sin intento, ya fijado por la dependencia WS33.1: no se vinculan y la procedencia queda como hueco. El resto es caso de borde de prueba. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS35",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS35.acceptance",
+    "old": "la evidencia abre en el lector.",
+    "new": "la evidencia abre en el lector (WS13).",
+    "reason": "«El lector» no identificaba destino; WS13 es el contrato de lector y llega de forma transitiva por WS27."
+  },
+  {
+    "node": "WS44",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "Las capabilities mínimas son las que auditoria/scion.md marque como requeridas por WS32/WS33.",
+    "new": "Las capabilities mínimas son las que auditoria/scion.md marque como requeridas por WS32/WS33; si no las mapea por nodo, WS44 se detiene y registra el hueco antes del probe.",
+    "reason": "WS05 no se obliga a mapear por nodo; se aplica la regla de hueco de alcance.md en vez de inventar la lista."
+  },
+  {
+    "node": "WS44",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "El solicitante registra en WS07 qué acceso read-only tiene el operador.",
+    "new": "El solicitante registra en WS07 qué acceso read-only tiene el operador; sin ese registro no se ejecuta el probe.",
+    "reason": "El nodo dependía de un registro que WS07 no obliga a producir; se fija el efecto observable de su ausencia sin invadir WS07."
+  },
+  {
+    "node": "WS44",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS44.acceptance",
+    "old": "G_SCION se satisface solo con respuesta pública real, identidad/fecha/capabilities y actor registrados.",
+    "new": "G_SCION se satisface solo con respuesta pública real, identidad del operador y Hub, fecha, capabilities y actor registrados.",
+    "reason": "«identidad» admitía operador, Hub, agente o principal de API; el scope ya pide Hub y operador, así que se fija esa evidencia."
+  }
+]

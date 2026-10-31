@@ -2,9 +2,15 @@
 id: WS19
 status: candidate
 owner_repo: graph_ui
+node_role: aggregate
+children:
+- WS19.1
+- WS19.2
 depends_on:
 - WS12
 - WS16
+- WS19.1
+- WS19.2
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -19,7 +25,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: M.
 
-frontends/mindmap/views/workspace/; source/; endpoints; tests/
+Agregado: salidas de WS19.1, WS19.2
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
@@ -29,17 +35,17 @@ Delta sobre ticket draft de edición; reutilizar editores y API, revisión esper
 
 ## Aceptación
 
-Guardar/recargar confirma dato real; stale no pierde texto local. Mutación restringida a desk en modo manual coordinado; otros modos read-only hasta contrato.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS12, WS16. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS16, WS19.1, WS19.2. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS19/b6313253bf754241092be0d5d99d22d49baeedcf5de4778b88a5fa915a25bbc2/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

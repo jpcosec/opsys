@@ -1,0 +1,25 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato sin contexto. Solo texto expl\u00edcito. Reformula, detecta ambig\u00fcedades del propio encargo y da dry-run por roles SIN ejecutar. No inventes archivos/APIs. Distingue decisiones rutinarias delegadas de huecos que impiden entender tarea. Responde en espa\u00f1ol, m\u00e1ximo 650 palabras.",
+    "--print",
+    "@runs/subagents/20261031-workspace-context-reviews/preflight-input-v2.md"
+  ],
+  "sha256": "43025ff90aa14573be068917720ff5c4462fe35b2c47dd0e18db311bf7b212e7",
+  "returncode": 0,
+  "fresh_process": true
+}

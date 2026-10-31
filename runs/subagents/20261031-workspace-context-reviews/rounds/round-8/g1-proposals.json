@@ -1,0 +1,32 @@
+[
+  {
+    "node": "PK08",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide el algoritmo y el objeto exacto del hash; es detalle de implementación y el propio input nombra el comprobador: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops». Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS05",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS33 existe en el DAG (Vincular mensajes, resultados y decisiones) con scope propio que define lo que consume; el ejecutor no inventa su alcance, lo lee del plan. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS05",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.scope",
+    "old": "",
+    "new": "",
+    "reason": "La precedencia cuando documentación y exports discrepan, y el borde de un símbolo auxiliar exportado, son casos de borde del inventario; el scope ya fija el criterio «endpoints/SDK documentados o exportados; no tablas ni funciones internas». Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  }
+]

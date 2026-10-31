@@ -1,0 +1,172 @@
+[
+  {
+    "node": "WS14",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "No hay contradicción literal: scope «Sin resultados/error/degradación diferenciados» y acceptance «se ven como tres estados distintos» enumeran los mismos tres estados; no hay un cuarto que inventar."
+  },
+  {
+    "node": "WS14",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Identidad y ruta las entrega la dependencia transitiva WS14→WS13→WS13.1, cuya aceptación exige «el panel de contexto muestra identidad... y la ruta de origen reales». alcance.md: «Una dependencia transitiva cuenta como prerrequisito»."
+  },
+  {
+    "node": "WS14",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El umbral e instrumentación de «no cargar todo grafo en cada tecla» son detalle de prueba. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS17",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS17.acceptance",
+    "old": "Mostrar el root/store de procedencia al resolver los dos desks del manifiesto WS40;",
+    "new": "Registrar el root/store de procedencia al resolver los dos desks del manifiesto WS40;",
+    "reason": "Resultado indefinido: «mostrar» podía ubicar la procedencia en UI; el nodo es documentation y sus salidas son plantillas Markdown."
+  },
+  {
+    "node": "WS17",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Método y umbral del recorrido (manual/script, qué enlaces) son casos de prueba detallados. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS17",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La observación de no duplicación (contenido, hash o recuento) es detalle de prueba. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS22",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Aristas, dirección, profundidad y layout de la vista de dependencias son diseño de pantalla. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS22",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El criterio de átomo referenciado es el campo del TaskDoc que se resuelve al promover; no falta contrato ni dependencia. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS22",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La propia aceptación dice «Las tres representaciones (lista, tablero y dependencias) abren el mismo TaskDoc», de modo que «no duplicar tareas» solo puede prohibir registros duplicados."
+  },
+  {
+    "node": "WS22",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "La fuente ya está fijada: acceptance «estados y condiciones de lifecycle leídos de deskops (Board, lifecycle)». El canal exacto es detalle de implementación; si falta API, alcance.md manda detenerse y registrar el hueco."
+  },
+  {
+    "node": "WS24",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya resuelve el caso: «tags del documento cuando el modelo los declare»; si no los declara, no hay clasificación que mostrar. El modo de omitirla es detalle del TaskDoc."
+  },
+  {
+    "node": "WS24",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.scope",
+    "old": "Code local = proyección Code del ticket workspace.",
+    "new": "Code local = proyección Code del ticket workspace. El grafo consume los ViewDoc de WS18 para las selecciones declaradas.",
+    "reason": "Resultado indefinido: con depends_on WS18 no se decía qué salida consume el grafo; sin eso la dependencia podía ignorarse o sobrar."
+  },
+  {
+    "node": "WS24",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS24.acceptance",
+    "old": "es visible y navegable en la vista con su ruta de origen",
+    "new": "es visible y navegable en la vista de documento genérica con su ruta de origen",
+    "reason": "Resultado indefinido: «la vista» no decía si era el grafo local o la vista de documento genérica reutilizada; la aceptación no era ubicable."
+  },
+  {
+    "node": "WS40",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "Identidad, rama y mensaje de commit son formato de prueba. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS40",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El conjunto de «documentos clave» es contenido del manifiesto fijado al promover. context-review-guide.md: «nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS40",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "No hay contradicción: el scope dice «Versionar un generador» y usa «.tmp... (o tmp_path en pruebas)» solo como salida efímera; output_scope versiona generador y tests en tests/fixtures/workspace_documental/."
+  },
+  {
+    "node": "WS40",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya exige «CLI reales ... no servidor fake», de modo que el Board se crea por CLI; qué tareas contiene es contenido de prueba. context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará»."
+  }
+]

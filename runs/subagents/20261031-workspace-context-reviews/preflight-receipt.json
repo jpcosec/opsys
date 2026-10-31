@@ -1,0 +1,27 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato sin contexto. Solo texto explícito. Reformula objetivo, encuentra ambigüedades del encargo y detalla cómo se ejecutaría por roles SIN ejecutar. No código, herramientas ni acceso a archivos. No evaluar producto futuro como si esta tarea lo implementara. Sé concreto y conciso.",
+    "--print",
+    "@runs/subagents/20261031-workspace-context-reviews/preflight-input.md"
+  ],
+  "sha256": "ab82a222599409dfbfa1862beae6a974ffc55bc86c55cc0e9e0c7a5d30230a47",
+  "returncode": 0,
+  "model": "deepseek-flash",
+  "selection": "perfil flash barato disponible",
+  "fresh_process": true
+}

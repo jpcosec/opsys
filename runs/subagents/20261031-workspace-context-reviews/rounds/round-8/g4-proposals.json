@@ -1,0 +1,62 @@
+[
+  {
+    "node": "WS32.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Política de conflicto ante evidencia distinta es caso de borde de implementación y no impide ejecutar la aceptación. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "Origen y cálculo del hash son detalle de implementación; el cierre existente ya produce el hash de sesión (`deskops/services/closure.py`). alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "El ticket es un artefacto del repo con ruta y hash en external_references; sus campos adicionales se leen al ejecutar y no hay resultado indefinido. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "No es dependencia sobrante: llega de forma transitiva por WS33 → WS32 → WS12 → WS11, y alcance.md establece «Una dependencia transitiva cuenta como prerrequisito aunque no figure en `depends_on` directo». La arista directa no deja resultado ni actor indefinidos."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "Caso de borde de importación no cubierto por el scope; la falta de un dato se resuelve con la regla de hueco. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "La duda se resuelve con la cadena real: WS33.1 → WS32 → WS12 → WS11; WS12 declara WS11 en `depends_on`. alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en `depends_on` directo»."
+  }
+]

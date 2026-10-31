@@ -2,6 +2,7 @@
 id: WS23
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS13
 - WS09
@@ -23,11 +24,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-RitualDoc/StepDoc/lifecycle sobre referencias reales; obligaciones, transiciones y fuentes navegables.
+RitualDoc/StepDoc/lifecycle sobre referencias reales; pasos y fuentes navegables; transiciones solo representadas, no accionables. Pruebas sobre corpus WS40 o store temporal real.
 
 ## Aceptación
 
-Un procedimiento abre sus documentos y soporte; no auto-marcar pasos como realizados por leerlos.
+Un procedimiento abre sus documentos y soporte; no auto-marcar pasos como realizados por leerlos. El estado de un paso solo viene de deskops; esta vista no lo escribe.
 
 ## Dependencias
 
@@ -37,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS23/e27a5dc27bc7233e1e95acee05a87bef6efc5b0ddc0ebc317ec6ef916cb9440c/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

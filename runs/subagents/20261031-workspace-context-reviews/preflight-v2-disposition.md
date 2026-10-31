@@ -1,0 +1,1 @@
+Se corrigen fuentes/ruta/esquema inicial sin jerarquía, definición de roles, proyección, mínimos de receipt, independencia tester y frase de brief. Pedir contenido completo del DAG para comprender la tarea de revisión confunde lectura futura con input de review: la tarea exige leerlo y no certificarlo ahora. Se deja explícita esa distinción. No se reutilizan salidas en reintento.

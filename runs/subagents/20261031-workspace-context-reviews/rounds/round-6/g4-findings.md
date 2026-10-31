@@ -1,0 +1,7 @@
+### WS33.1 [2]
+1. «Los resultados se identifican por intento y por el identificador que exponga la fuente… con la misma regla de deduplicación y procedencia». La única clave explícita es «Hub + proyecto + conversación + id de mensaje», aplicable a mensajes, no a resultados. El ejecutor tendría que inventar la clave de deduplicación de resultados o asumir que el identificador de fuente sustituye al de mensaje.
+2. «un mensaje con varios intentos o sin intento resoluble no se vincula y registra la procedencia como hueco». No se define qué artefacto, campos ni comprobación materializan ese «hueco»; la aceptación solo cubre deduplicación y no atribuir una conversación completa. El ejecutor tendría que inventar el modelo/reporte de hueco y su evidencia.
+
+### WS44 [2]
+1. «Tras cambio de Hub/API/credencial, repetir y invalidar recibo previo.» No se nombra quién detecta el cambio ni con qué mecanismo, ni cuándo ese control deja de ser responsabilidad del operador. El ejecutor tendría que inventar una vigilancia o un disparador de revalidación. Cita: «Tras cambio de Hub/API/credencial, repetir y invalidar recibo previo.»
+2. «identidad del operador y Hub, fecha, capabilities y actor registrados.» «Actor» e «identidad del operador» pueden ser el mismo dato; la aceptación no distingue si el actor es quien ejecuta el probe o quien autoriza el acceso. Obligaría a decidir por cuenta propia qué campo distinto registrar. Cita: «identidad del operador y Hub, fecha, capabilities y actor registrados.»

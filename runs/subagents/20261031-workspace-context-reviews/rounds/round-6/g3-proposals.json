@@ -1,0 +1,62 @@
+[
+  {
+    "node": "WS30",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.depends_on",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Una dependencia transitiva cuenta como prerrequisito aunque no figure en depends_on directo». Cadena: WS30→WS21→WS19→WS12→WS08; el guion es salida de WS08."
+  },
+  {
+    "node": "WS30",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS30.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará» y «Un nodo aggregate no se ejecuta: termina cuando terminan sus hijos». Atribuir el fallo es ejecución delegada."
+  },
+  {
+    "node": "WS42",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "tras confirmación que muestra alcance y procedencia",
+    "new": "tras confirmación que muestra el origen y el efecto de la operación",
+    "reason": "«Alcance» y «procedencia» no tenían referente y hacían la aceptación no comprobable; origen y efecto son términos ya usados por el plan y el contrato WS12."
+  },
+  {
+    "node": "WS42",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS42.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "context-review-guide.md: «casos de prueba detallados que el TaskDoc de promoción fijará» y alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba...». WS24 ya nombra MaterializationContractDoc y deskops/models/materialization.py; registro, versión y reglas exactas son detalle delegado."
+  },
+  {
+    "node": "WS43",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS43.scope",
+    "old": "",
+    "new": "",
+    "reason": "alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto. La operación queda no disponible.» Sin entrada existente, el repo no se enlaza y se declara el hueco."
+  },
+  {
+    "node": "WS43",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS43.acceptance",
+    "old": "(Pxx aceptadas y contratos aplicables)",
+    "new": "(Pxx aceptadas y contratos navegacion.md/operaciones.md de WS11/WS12)",
+    "reason": "«Contratos aplicables» no tenía lista y el conjunto de átomos quedaba indefinido."
+  }
+]

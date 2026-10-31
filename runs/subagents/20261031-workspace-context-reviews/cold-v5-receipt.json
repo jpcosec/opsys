@@ -1,0 +1,27 @@
+{
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado. Reformula intención, busca ambigüedades del encargo que exigirían inventar y da dry-run por roles SIN ejecutar. Distingue decisiones rutinarias delegadas y trabajo futuro de ambigüedades. Solo input explícito. Máximo 400 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/cold-input-v5.md"
+ ],
+ "sha256": "62fe075127f3056cfab068d80e64a69a946c9db2b674a0abf63c03e49d5969ad",
+ "returncode": 0,
+ "fresh_process": true,
+ "start": "2026-10-31T05:09:34.802340Z",
+ "end": "2026-10-31T05:09:55.894533Z"
+}

@@ -1,0 +1,102 @@
+[
+  {
+    "node": "WS32.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Proceso y estado final de la reconciliación son caso de borde de implementación; la aceptación solo exige identidades distintas. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "El nodo ya fija el límite: WS32.1 escribe ambos hechos «en el registro por intento que WS32.2 vuelve manifiesto canónico», y WS32.2 depende de WS32.1. No hay que elegir entre crear o materializar."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La cardinalidad del caso de prueba es escenario de promoción, no resultado del nodo. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "Origen y cálculo del hash son detalle de implementación y el cierre existente ya lo produce; si la fuente fuera la API, WS05/WS44 lo auditan. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La política con evidencia distinta es caso de borde de prueba; la aceptación ya exige que la repetición no cree registros nuevos. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "El soporte concreto del manifiesto es formato de archivo/modelo, que fija la promoción dentro del output_scope de runtime, modelos y cierre. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "Clave de deduplicación: Hub + proyecto + id de mensaje.",
+    "new": "Clave de deduplicación: Hub + proyecto + conversación + id de mensaje.",
+    "reason": "Contradicción literal: el scope fija la clave sin conversación y la aceptación repite la importación por conversación; incluirla en la clave la resuelve con un campo que el propio scope ya nombra."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "La composición exacta de la clave de resultados depende del identificador que exponga la fuente, dato remitido a WS05/WS44; fijarla ahora inventaría la API. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El criterio de «conversación completa» es escenario de prueba; el scope ya limita el vínculo a mensajes con id de intento existente. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS38",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS38.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La selección de acuerdos durables y la lista de átomos es contenido que fija la promoción; el acta de WS37 enumerará los acuerdos del recorrido. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  }
+]

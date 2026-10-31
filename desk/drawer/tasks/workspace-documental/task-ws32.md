@@ -2,9 +2,15 @@
 id: WS32
 status: candidate
 owner_repo: deskops
+node_role: aggregate
+children:
+- WS32.1
+- WS32.2
 depends_on:
 - WS05
 - WS12
+- WS32.1
+- WS32.2
 requires:
 - G_CLOSEOUT
 - G_SCION
@@ -19,27 +25,27 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `deskops`. Tamaño relativo: M.
 
-deskops/runtime/scion.py; models/run.py; services/closure.py; tests/
+Agregado: salidas de WS32.1, WS32.2
 
 Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-Refinar ticket existente, sin segundo pipeline: intento no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes.
+Refinar el ticket de external_references.scion, sin segundo pipeline: intento no es slug, dispatch intent/confirmed separado, manifiesto/RunDoc/cierre consistentes e idempotentes.
 
 ## Aceptación
 
-G_CLOSEOUT pasa; dos intentos mismo agente, dispatch fallido y finalización repetida conservan identidades/evidencia; schema mediante SLDB.
+Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación. Sus dependientes siguen dependiendo de este ID.
 
 ## Dependencias
 
-Tareas: WS05, WS12. Gates: G_CLOSEOUT, G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS05, WS12, WS32.1, WS32.2. Gates: G_CLOSEOUT, G_SCION, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `scion` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS32/008e0d1f049bf9dec37ce031ce6b1afb90ccfdd520f4b9b4735e8e1cd51f58fb/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

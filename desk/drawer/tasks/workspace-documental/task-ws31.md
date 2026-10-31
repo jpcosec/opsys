@@ -2,6 +2,7 @@
 id: WS31
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS30
 - WS10
@@ -18,17 +19,17 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `deskops`. Tamaño relativo: M.
 
-docs/workspace-user-manual.md; desk/atoms/ vinculados
+docs/workspace-user-manual.md; docs/assets/workspace-user-manual/; desk/atoms/ vinculados
 
 Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 
 ## Alcance
 
-Publicar navegación, edición, captura, trabajo manual y revisión demostradas; actualizar índice/capturas/limitaciones.
+Publicar navegación, edición, captura, trabajo manual y revisión demostradas; incorporar el índice de borradores/manual.md, capturas y limitaciones a docs/workspace-user-manual.md.
 
 ## Aceptación
 
-Cada instrucción tiene evidencia vigente; etiquetas, links y atom->doc verificados. Scion solo capítulo marcado propuesto hasta WS38. Para capítulos que mencionen personalización o impacto, comprobar G_HUMAN_MODEL/WS29 o mantener etiqueta propuesta; no bloquear manual básico por esos extras.
+Cada instrucción remite al acta de WS30 o al acta de publicación de WS43 de la versión publicada; un átomo por cada Pxx ya aceptado por humano en decisiones.md y por cada contrato en contratos/ (navegacion.md, operaciones.md u otros de WS11/WS12); las propuestas Pxx pendientes no se atomizan; etiquetas, links y atom->doc verificados. Scion se incluye solo como capítulo marcado propuesto hasta WS38. Para capítulos que mencionen personalización o impacto, comprobar G_HUMAN_MODEL/WS29 o mantener etiqueta propuesta; no bloquear manual básico por esos extras.
 
 ## Dependencias
 
@@ -36,7 +37,7 @@ Tareas: WS30, WS10, WS43. Gates: G_HUMAN_MANUAL. Ver estados/evidencia en dag.ya
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS31/7b324eb249ff393a0e13b1ecfc2929615c6e3ff2ff67126a3b6ca12d614497af/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

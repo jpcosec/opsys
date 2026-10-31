@@ -2,6 +2,7 @@
 id: WS03
 status: candidate
 owner_repo: deskops
+node_role: delivery
 depends_on:
 - WS01
 requires: []
@@ -21,11 +22,11 @@ Base explícita: `deskops:desk/drawer/plans/workspace-documental/`. Concretar ar
 
 ## Alcance
 
-Auditoría de solo lectura de sldb/pron/spec2viz: fuente/payload, conflictos y límites de locks, referencias, búsquedas y alcance real ViewDoc. Kimun solo referencia.
+Auditoría de solo lectura de sldb/pron/spec2viz: fuente/payload, conflictos y límites de locks (control de concurrencia real de sldb/pron: CAS por revisión/hash, locks de archivo o DB; a auditar), referencias documentales, búsquedas (índices o consultas expuestas) y alcance real ViewDoc. Kimun solo referencia.
 
 ## Aceptación
 
-Una salida documental, sin cambios interrepo; distinguir API comprobada, ausencia y hueco.
+Una salida documental, sin cambios interrepo; distinguir API comprobada (lectura citada del estado actual), ausencia y hueco.
 
 ## Dependencias
 
@@ -33,7 +34,7 @@ Tareas: WS01. Gates: ninguno adicional. Ver estados/evidencia en dag.yaml; un ar
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS03/f5662403884ad5dd0d8f215f737d0d263bd0ad85173ba35b590fd1fa978241be/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

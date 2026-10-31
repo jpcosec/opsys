@@ -1,0 +1,296 @@
+[
+  {
+    "node": "PK06",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "PK06.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El propio input delega el objeto hasheado a la herramienta: «lo comprueba `python desk/drawer/plans/workspace-documental/context_review.py status` desde la raíz de deskops». Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS01",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS01.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide formato y cobertura de la remisión a decisiones.md; es detalle de redacción, no un resultado indefinido. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS01",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS01.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide un umbral de suficiencia del glosario; la aceptación ya nombra la prueba (un review barato sin historial). Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS02",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS02.scope",
+    "old": "",
+    "new": "",
+    "reason": "La unidad ya está fijada en el propio scope: «Superficie = cada archivo, comando público o modelo registrado concreto de las categorías enumeradas; una fila por superficie». La profundidad exacta es detalle de promoción: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS02",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS02.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya declara superficie inventariable a «Modelos y Markdown no modelado» y define «Markdown no modelado = el resto»; no hay que decidir si genera fila. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates» y «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS02",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS02.scope",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya fija «Superficie = cada archivo, comando público o modelo registrado concreto»; una firma pública es comando y por tanto fila propia. La granularidad restante es detalle de promoción: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS03",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS03.scope",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya acota el objeto a «referencias documentales, búsquedas (índices o consultas expuestas)»; enumerar cada referencia o índice es contenido de la auditoría. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS03",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS03.scope",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya limita «notaciones» a «alcance real ViewDoc»; el título no crea otro universo. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS03",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS03.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La frontera fina entre ausencia y hueco es clasificación de la auditoría, no un resultado indefinido: alcance.md ya manda «registrar el hueco con repo dueño y no crear sustituto» cuando falta un dato. Cita: alcance.md, «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS03",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS03.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El estado a citar es el que observa la propia auditoría de solo lectura; fijar revisión o snapshot es detalle de ejecución. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS04",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El mapeo nodo→delta lo entrega WS06, cuyo contrato es input de este nodo: «Una matriz por implementación: ya cubierto ..., extender ticket existente o nuevo delta» y «Matriz con una fila por delta o capacidad propuesta ... correspondencia ticket/delta». WS04 solo registra tareas externas, solapamientos, SPEC y encargo; no falta aceptación ni dependencia. Cita: dag.yaml#edge:WS06."
+  },
+  {
+    "node": "WS04",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS04.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide categorías y comparación del encargo aportado; es un caso de borde de ejecución. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS05",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide precedencia cuando documentación y exports discrepan y criterio para símbolos auxiliares; es caso de borde del inventario. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»; el scope ya fija «endpoints/SDK documentados o exportados; no tablas ni funciones internas»."
+  },
+  {
+    "node": "WS05",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "WS33 es un nodo del DAG (Vincular mensajes, resultados y decisiones), no un actor ausente; WS05 delega en WS32/WS33 qué capabilities consumen. Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS05",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.scope",
+    "old": "",
+    "new": "",
+    "reason": "Pide rutas admisibles, claves secretas y evidencia de redacción; es detalle de ejecución del inventario. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS05",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS05.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La frontera conversación/mensaje se obtiene al inventariar el runtime de Scion, que el scope manda leer; no es un término del glosario del workspace. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS06",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "",
+    "new": "",
+    "reason": "El scope ya define las tres categorías; el umbral restante es juicio de la matriz, no un resultado indefinido. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS06",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS06.scope",
+    "old": "",
+    "new": "",
+    "reason": "El scope admite ambas fuentes con referencia: «capacidad observable en código o en el Board, con referencia»; no hay una autoridad que elegir de antemano. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS06",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS06.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "La granularidad es formato de la matriz; la aceptación ya fija «una fila por delta o capacidad propuesta, agrupada por repo dueño». Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS07",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.output_scope",
+    "old": "",
+    "new": "",
+    "reason": "El objeto ya existe en dag.yaml y el scope lo acota a «propuesta de línea base, no aprobación del plan completo»; contenido y estructura son el texto que el humano confirma o corrige. Cita: context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción (archivos exactos, TaskDoc, pills)»."
+  },
+  {
+    "node": "WS07",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS07.output_scope",
+    "old": "",
+    "new": "",
+    "reason": "El artefacto ya está en output_scope: «decisiones.md; `baseline_proposal` y parameters.source_mode en dag.yaml», y el scope limita la reconsideración a «las variantes ya declaradas en dag.yaml». Cita: context-review-guide.md, «dag.yaml es la fuente de IDs, aristas y gates»."
+  },
+  {
+    "node": "WS08",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El singular de «nodo y gate humano» es formato de la fila por UF; cobertura.md ya lista varios nodos/gates por flujo. Cita: context-review-guide.md, «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS08",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "",
+    "new": "",
+    "reason": "La aceptación exige «Cada UF» y cobertura.md cubre UF01–UF10; «manual» no añade un flujo: el manual es índice/capítulos de WS10/WS31 sobre esos mismos recorridos. Cita: cobertura.md, filas UF01–UF10; context-review-guide.md, «No cuentan: ... detalles que el nodo delega a su promoción»."
+  },
+  {
+    "node": "WS08",
+    "finding": 3,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "UF06 no falta: la aceptación dice «Cada UF tiene entrada/salida...» y cobertura.md incluye «UF06 delegar/intervenir»; el scope enumera temas, no la lista cerrada de UFs. Cita: cobertura.md, fila UF06; dag.yaml#node:WS08, acceptance."
+  },
+  {
+    "node": "WS08",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS08.scope",
+    "old": "",
+    "new": "",
+    "reason": "El propio scope ya asigna el modo degradado a UF07: «modo degradado (UF07, fallo de backend/dependencia)»; no hay que decidir entre variante por flujo o UF separada. Cita: dag.yaml#node:WS08, scope."
+  },
+  {
+    "node": "WS09",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS09.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El fallo esperado por fila es contenido del catálogo, no un dato que deba aportar otro nodo; vistas.md ya incluye «conflictos/errores» en la ficha. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  },
+  {
+    "node": "WS09",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS09.depends_on",
+    "old": "",
+    "new": [
+      "WS07",
+      "WS10",
+      "WS08"
+    ],
+    "reason": "Falta una dependencia real: la aceptación manda «completa la ficha por fila» y la ficha de vistas.md incluye «aceptación mediante user-flow», que produce WS08. Sin WS08 el vínculo fila→UF se inventaría. WS08 no depende de WS09, no hay ciclo."
+  },
+  {
+    "node": "WS10",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS10.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Las definiciones y su evidencia son el resultado del nodo; manual.md ya fija «Etiquetar cada capacidad como disponible y comprobada, propuesta o bloqueada». Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»; alcance.md, «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS11",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS11.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "El universo y el criterio de cierre son el contrato que WS11 produce; la aceptación ya fija la clasificación «Resolver cada hueco como instancia/vínculo/consulta/API/renderer» y WS08/WS09 son sus dependencias. Cita: context-review-guide.md, «No evalúas si el producto es bueno ni ejecutas nada»."
+  }
+]

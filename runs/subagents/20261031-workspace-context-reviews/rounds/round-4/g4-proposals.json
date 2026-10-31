@@ -1,0 +1,155 @@
+[
+  {
+    "node": "WS32.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "El propio nodo ya fija la ubicación en la cláusula siguiente: «ambos se registran en el registro por intento que WS32.2 vuelve manifiesto canónico». No hay que elegir entre fuera o dentro del RunDoc."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "evidenciadas por ids de intento propios",
+    "new": "evidenciadas por ids de intento propios, generados por deskops antes del dispatch",
+    "reason": "La autoridad que genera el id de intento estaba indefinida y el ejecutor debía inventarla; el registro local previo al dispatch ya es el modelo del nodo."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 3,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "un dispatch fallido (rechazo o timeout de la API) conservan identidades distintas",
+    "new": "un dispatch fallido (rechazo de la API o timeout, que deja confirmed desconocido hasta reconciliar) conservan identidades distintas",
+    "reason": "Un timeout no equivale a rechazo y el estado de confirmed quedaba indefinido; se fija sin cambiar la cobertura de la aceptación."
+  },
+  {
+    "node": "WS32.1",
+    "finding": 4,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.1.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide el criterio observable de «no ad hoc»: escenario de prueba, que la promoción fija dentro de la aceptación. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.scope",
+    "old": "",
+    "new": "",
+    "reason": "Pide cálculo y comparación del hash de sesión; es detalle de implementación y el cierre existente ya lo produce. alcance.md: «El TaskDoc de promoción fija archivos, escenarios de prueba y textos de pantalla dentro de lo que la aceptación del nodo pide»."
+  },
+  {
+    "node": "WS32.2",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS32.2.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide la política de conflicto con evidencia distinta: caso de borde de implementación, no requisito del plan. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "La clave ya es explícita y no incluye conversación; si los ids se repiten entre conversaciones es un dato de la API a comprobar en WS05/WS44. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33.1",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS33.1.scope",
+    "old": "",
+    "new": "",
+    "reason": "La clave exacta depende del identificador que exponga la fuente, dato remitido a WS05/WS44; fijarla ahora inventaría la API. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.acceptance",
+    "old": "Una decisión humana queda registrada con actor, referencia al intento y resultado explícito",
+    "new": "Una decisión humana queda registrada con actor, referencia al intento y a su tarea, y resultado explícito",
+    "reason": "El scope promete la asociación a la tarea y la aceptación no la cubría; se comprueba sin definir campo ni consulta nuevos."
+  },
+  {
+    "node": "WS33.2",
+    "finding": 2,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS33.2.depends_on",
+    "old": "",
+    "new": [
+      "WS32",
+      "WS33.1"
+    ],
+    "reason": "WS11 sobra: llega de forma transitiva por WS32 → WS12 → WS11 y ningún artefacto de navegación o identidad documental aparece en el scope."
+  },
+  {
+    "node": "WS35",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS35.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Es un caso de borde ya resuelto por WS33.1: los mensajes sin intento no se vinculan y la procedencia queda como hueco. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS35",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS35.acceptance",
+    "old": "",
+    "new": "",
+    "reason": "Pide un fallback para evidencia no legible: caso de borde y representación de pantalla, que la promoción fija dentro de la aceptación. context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  },
+  {
+    "node": "WS38",
+    "finding": 1,
+    "decision": "corregir",
+    "file": "dag.yaml",
+    "target": "WS38.acceptance",
+    "old": "Cada paso remite al acta de WS37 y a operaciones reales;",
+    "new": "Cada paso remite al acta de WS37 y a operaciones reales; cada acuerdo durable deja su átomo vinculado;",
+    "reason": "output_scope promete átomos y ninguna aceptación del nodo los cubría; se fija el criterio sin enumerar átomos, que es tarea de la promoción."
+  },
+  {
+    "node": "WS44",
+    "finding": 1,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "",
+    "new": "",
+    "reason": "El método de probe de una capability de escritura sin ejecutarla es detalle de implementación del propio entregable. alcance.md: «Si al llegar a un nodo falta un contrato, API, dato o permiso que debía producir una dependencia: detenerse, registrar el hueco con repo dueño y no crear sustituto»."
+  },
+  {
+    "node": "WS44",
+    "finding": 2,
+    "decision": "error_reviewer",
+    "file": "dag.yaml",
+    "target": "WS44.scope",
+    "old": "",
+    "new": "",
+    "reason": "Ubicación y formato del Hub en la configuración existente son detalle de archivo/procedimiento que fija la promoción; el nodo ya nombra la fuente autoritativa («la configuración existente»). context-review-guide.md: «textos exactos de pantalla, nombres de archivo y casos de prueba detallados que el TaskDoc de promoción fijará»."
+  }
+]

@@ -2,6 +2,7 @@
 id: WS24
 status: candidate
 owner_repo: graph_ui
+node_role: delivery
 depends_on:
 - WS13
 - WS18
@@ -23,11 +24,11 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Reutilizar gráfico actual y documento genérico para átomos/protoátomos/crossroads/materializaciones/pills, clasificación y vecindad; preservar Code local de tarea actual.
+Reutilizar el gráfico actual y una vista de documento genérica única registrada en shell/registry.js para átomos/protoátomos/crossroads (inventariados en WS02 y catalogados en WS09)/materializaciones (MaterializationContractDoc; modelo en deskops/models/materialization.py)/pills, clasificación y vecindad; preservar Code local del ticket workspace en draft que identifique el acta WS11. Backlinks = relaciones entrantes calculadas por la API de grafo de sldb según auditoria/infraestructura.md (producido por WS03). Clasificación = tipo del modelo y tags del documento cuando el modelo los declare. Vecindad = hasta 2 hops. Code local = proyección Code del ticket workspace. El grafo consume los ViewDoc de WS18 para las selecciones declaradas.
 
 ## Aceptación
 
-Navegación ida/vuelta por fuentes y backlinks derivados; soporte no modelado visible. No un renderer nuevo obligatorio por cada clase.
+Navegación ida/vuelta por fuentes y backlinks derivados; un soporte no modelado (Markdown sin modelo) es visible y navegable en la vista de documento genérica con su ruta de origen. La vista muestra la clasificación (tipo y tags) y la vecindad de hasta 2 hops. No un renderer nuevo obligatorio por cada clase.
 
 ## Dependencias
 
@@ -37,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS24/a3f199736ea4f91fe8eaca31f92b56e7cebe59c3ad655b9c53efdfdbd24caef9/attempt-1']. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 
