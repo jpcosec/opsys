@@ -1,0 +1,28 @@
+{
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato aislado de este encargo. Solo texto explícito, sin herramientas ni historial. No ejecutas nada. Responde en español con secciones exactas: REFORMULACION (objetivo, alcance, repo, límites), AMBIGUEDADES (numeradas, con cita textual y qué obligaría a inventar; \"ninguna\" si no hay), DRY-RUN (fuentes que leerías, entregable, comandos que correrías después y resultado esperado; sin ejecutar). Distingue tareas futuras asignadas de lagunas. Máximo 450 palabras.",
+    "--print",
+    "@runs/subagents/20261031-ws02-auditoria-deskops/cold-input.md"
+  ],
+  "input_sha256": "36c06e4145ee9e2e3fdfa12edf1abc993166c764f8fb40739be6208a8b36f2c0",
+  "returncode": 0,
+  "fresh_process": true,
+  "stdin": "devnull",
+  "at": "2026-10-31T22:19:33.956371+00:00",
+  "selection": "deepseek-flash low: perfil barato verificado por ritual-context-review"
+}
