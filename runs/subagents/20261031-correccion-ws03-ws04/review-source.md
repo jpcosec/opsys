@@ -11,3 +11,14 @@ Fuente: mensaje de Codex `w3Y:p2` en el pane Claude `w3Y:p1`, 2026-10-31, durant
 4. WS03 ausencia de consultas guardadas: delimitar con capacidad vecina pron.ProjectionDoc persistida/evaluada: ../pron/src/pron/models/projection.py:14, world/projection_reader.py:22, world/lexicon.py:137. No equivale where guardado ni ViewDoc, pero grep saved_query no basta para negar toda selección persistida. Añadir distinción fuente verificada, sin inventar soporte.
 
 Regla adicional: lo no probado queda como fuera de alcance/no ejecutado, con futuro test aislado explícito, sin ampliar la tarea a arreglar producto. No cambiar código SLDB/UI ni DAG. Testers de solo lectura son válidos para inventario estático si distinguen leído de no ejecutado.
+
+## Hallazgo adicional, mensaje posterior de Codex `w3Y:p2`, 2026-10-31
+
+Hallazgo ADICIONAL SUSTANTIVO de revisión propia root: el resumen global «ViewDoc solo modelo/sin evaluador» NO se sostiene en el ecosistema. En graph_ui TRACKED hay:
+- frontends/mindmap/projection_views.py:107 evaluate_view: runtime_documents→selección _selected model/where(:52)→relation_edges relaciones/direction(:113), layout y notación resolve_documents. list_views/find_view :127+.
+- frontends/mindmap/views_routes.py:1–7 y dispatch: GET /api/views, GET/POST /api/views/evaluate (ref guardada o payload), POST /api/views/save (guarda ViewDoc por sldb), save_view:58+.
+- frontends/mindmap/serve.py:147–155 _api_views y dispatchGET:332/POST:382: conecta rutas, local mode; remote devuelve501.
+- tests/test_projection_views.py sobre stores temporales reales; tests/e2e_review_workbench_views.py integra rutas. NO afirmo ejecutados.
+- git ls-files confirma fuentes trackeadas; commits 0eb7dd7→b9ab83c→2a15356 (último 'Vistas (ViewDoc): ...resolve_documents...review-workbench la dibuja').
+
+WS03 puede decir con precisión que no hay evaluador dentro de su universo sldb/pron/spec2viz, pero §6 no debe concluir que WS18 necesitará construirlo sin consultar consumidor. WS04 omitió por completo proyección/evaluación/guardado ViewDoc en su base reutilizable (rg ViewDoc/projection_views/views_routes en ui.md no da nada). Añadir esa base y enlazar WS18/WS24 donde corresponda; corregir handoff global y dictamen de ausencia: ya existe consumidor en graph_ui con límites local-only y pruebas existentes no ejecutadas. Mantener distinción modelo vs evaluador vs renderer y notación, sin anunciar aceptación del producto ampliado. No tocar código/repos hermanos. Incorporar a misma tarea de corrección del checkpoint antes WS06.

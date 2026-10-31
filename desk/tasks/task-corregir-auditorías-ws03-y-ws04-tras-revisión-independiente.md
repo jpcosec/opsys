@@ -61,6 +61,10 @@ Roles: el Executor edita solo esos dos archivos y escribe evidencia en runs/suba
 
 Fuera de alcance: código de sldb, pron, spec2viz o graph_ui, dag.yaml, reconciliacion.md, brief.md, WS02, WS06, las demás filas, y reabrir cierres previos. Si algo no se puede comprobar leyendo, queda «no ejecutado» o «fuera de alcance», nombrando el test aislado futuro que lo probaría, sin diseñarlo. Si la fuente contradice un punto de la revisión, no lo corrijas a ciegas: repórtalo con cita en result-summary.md.
 
+Punto 5, ViewDoc, en desk/drawer/plans/workspace-documental/auditoria/infraestructura.md §5.2 y §6 y en desk/drawer/plans/workspace-documental/auditoria/ui.md: el dictamen «solo modelo, sin evaluador» es válido únicamente dentro del universo sldb, pron y spec2viz de WS03, y eso debe decirse así. §6 no concluye que WS18 deba construir un evaluador: remite a que graph_ui ya tiene un consumidor. En ui.md, agregar como base reutilizable lo que exista en ../UIs/graph_ui: frontends/mindmap/projection_views.py (evaluate_view, selección, relation_edges, list_views, find_view), views_routes.py (GET /api/views, GET y POST /api/views/evaluate, POST /api/views/save), su conexión en serve.py incluido el límite local-only (remote 501), tests/test_projection_views.py y tests/e2e_review_workbench_views.py como pruebas existentes no ejecutadas, y los commits 0eb7dd7, b9ab83c y 2a15356. Abrir cada archivo y citar las líneas reales. Enlazar WS18 y WS24 donde corresponda; WS18 no está en la lista de 35 nodos graph_ui de ui.md, así que se agrega como nota o fila solo referencia indicando que su dueño es otro repo. Mantener separados modelo, evaluador, renderer y notación. No anunciar aceptación del producto ampliado.
+
+Precisiones. Los repos de los commits f16fcd1, 134a665, 0eb7dd7, b9ab83c y 2a15356 son ../UIs/graph_ui. Las auditorías son fuentes authored, no generadas: build_plan.py no las reescribe. «Resumen» = secciones de la propia auditoría que repitan la afirmación corregida, incluida §6 de infraestructura.md. «Filas de cache» = filas de §1 y §2.1 que mencionen runtime_cache, cache o frescura. Línea de encabezado: una línea de texto bajo el título, con «Corrección 2026-10-31» y motivo. Nota de supersesión: párrafo fechado 2026-10-31 al inicio de handoff.md. Este PASS del Tester es requisito de closeout.
+
 ## Implementation Path
 
 _Outline the expected implementation route or affected surface._
@@ -76,7 +80,7 @@ _List the checks required before this task can close._
 - python desk/drawer/plans/workspace-documental/build_plan.py --check
 - python desk/drawer/plans/workspace-documental/validate_plan.py --check
 - python desk/drawer/plans/workspace-documental/context_review.py status
-- git diff --stat 2286b976..HEAD sobre deskops, tests, dag.yaml y reconciliacion.md vacío
+- git diff --stat 2286b976..HEAD -- deskops/ tests/ docs/ desk/drawer/plans/workspace-documental/dag.yaml desk/drawer/plans/workspace-documental/reconciliacion.md queda vacío (deskops/ es el paquete de código, no el repo)
 - Tester independiente de solo lectura deja runs/subagents/20261031-correccion-ws03-ws04/tester-result-summary.md
 
 ## Done When
