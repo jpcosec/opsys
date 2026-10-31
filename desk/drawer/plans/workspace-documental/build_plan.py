@@ -19,12 +19,17 @@ for t in D['tasks']:
         + '\n\n## Dependencias\n\nTareas: ' + (', '.join(t['depends_on']) or 'ninguna') + '. Gates: ' + (', '.join(t['requires']) or 'ninguno adicional') + '. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.\n'
         + ('\nSolapamiento: `' + t['overlap_with'] + '` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.\n' if t.get('overlap_with') else '')
         + ('\n## Variante\n\n' + yaml.safe_dump({k:t[k] for k in ('enabled_when','variants') if k in t},allow_unicode=True,sort_keys=False) if ('enabled_when' in t or 'variants' in t) else '')
+        + '\n## Review barato de comprensión\n\nEstado: `' + t['context_review']['status'] + '`. Protocolo requerido: `' + t['context_review']['required_protocol'] + '`. Evidencia: ' + str(t['context_review']['evidence']) + '. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.\n'
         + '\n## Gate de promoción\n\nAuthorar TaskDoc completa en repo dueño, fijar archivos, operaciones, pills/átomos y evidencia; confirmar no solapamiento y dependencias/gates; ejecutar revisión de comprensión con contexto limpio. Para código: pruebas reales específicas y suite requerida del repo (pytest/Node/Playwright según superficie). Para UX: gate humano correspondiente; para docs: links y hechos comprobados. Ritual/commit de task y fase obligatorios. Esta candidata no está lista para un ejecutor de código por sí sola.\n')
     rows.append('| ' + t['id'] + ' | [' + t['title'] + '](../../tasks/workspace-documental/task-' + t['id'].lower() + '.md) | ' + (', '.join(t['depends_on']) or '—') + ' | ' + (', '.join(t['requires']) or '—') + ' | ' + t['owner_repo'] + ' | ' + t['estimate'] + ' |')
 gate_rows = ['| ' + k + ' | ' + v['state'] + ' | ' + v['title'] + ' | ' + v['resolver'] + ' |' for k, v in D['gates'].items()]
 outputs[B / 'README.md'] = '''# Workspace documental — plan revisado por concilio
 
 Revisión ''' + str(D['revision']) + '''. Estado: ''' + D['status'] + '''. Propuesta de planificación, no activación ni ejecución de producto.
+
+## Reviews baratos pendientes
+
+El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Raíz/jerarquía: estado `''' + D['hierarchy_context_review']['status'] + '''`, protocolo `''' + D['hierarchy_context_review']['required_protocol'] + '''`, evidencia ''' + str(D['hierarchy_context_review']['evidence']) + '''. Las ''' + str(len(D['tasks'])) + ''' candidatas están pendientes del mismo protocolo. Revisar raíz, paquetes, hojas y aristas recursivamente antes de promoción/ejecución; no se hicieron ni simularon esos reviews en esta actualización. `execution_authorized=false`.
 
 ## Entrada
 

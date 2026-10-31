@@ -1,8 +1,17 @@
 ---
+sldb:
+  by: agent
+  at: '2026-10-31T04:05:20Z'
+  authority: generated
+  via: update_document
 # ritual-xxx
 id: ritual-phase
 # Ordered prose steps; not document references
 steps:
+- 1. Apply [ritual-context-review](context-review.md) cheaply and recursively to the
+  root, packages and every leaf with their dependency interfaces. Compare reformulation,
+  ambiguities and detailed non-executing dry-run with intent; correct briefs and split
+  large nodes into children and edges before selecting ready leaves.
 - 1. Identify the ready dependency layer of tasks whose prerequisites are satisfied
   and whose planned changes do not overlap operationally.
 - '1. Confirm each task has a fresh execution context bundle: the task doc, board-routed
@@ -35,13 +44,13 @@ tags:
 
 _Explain why this ritual exists._
 
-Run one horizontal dependency layer of tasks as the workflow unit above individual task execution, then close that layer with integration validation, pill reconciliation, and next-phase preparation.
+Run one horizontal dependency layer of tasks as the workflow unit above individual task execution, then close that layer with integration validation, pill reconciliation, and next-phase preparation. Review decomposition under [ritual-context-review](context-review.md) before selecting leaves; this adds no lifecycle state.
 
 ## Trigger
 
 _State when this ritual should start._
 
-Start when the board has one ready set of tasks whose dependencies are satisfied and whose execution can proceed without overlapping operational changes.
+Start during decomposition of the multilevel DAG, before promotion or selection of a ready non-overlapping layer; close the layer only after every task closes.
 
 ## Preconditions
 
@@ -52,6 +61,7 @@ _List the conditions that must hold before running the ritual._
 - Each task has a named context bundle and validation target.
 - Phase-level validation expectations are known.
 - A pill reconciliation pass is planned for phase closeout.
+- Ready leaves and their governing root/package contracts have current accepted cheap context reviews; expert council verdicts and topological order do not satisfy this gate.
 
 ## Validation
 
@@ -65,6 +75,7 @@ _List the checks that prove the ritual was performed correctly._
 - Durable residue from pills was promoted into atoms and materializations when needed.
 - Newly discovered work for later phases was captured explicitly.
 - The phase closeout has its own descriptive commit.
+- Cheap reviews are evidenced by node/input/attempt under ritual-context-review; changed inputs or dependency contracts invalidated affected reviews and retries used new processes.
 
 ## Failure Modes
 
@@ -76,6 +87,7 @@ _List common mistakes this ritual prevents._
 - Advancing to the next phase after isolated task tests without integration validation.
 - Carrying stale or overlapping pills forward because each task closed independently.
 - Hiding phase-level regressions inside later task commits instead of closing the layer explicitly.
+- Selecting leaves from a root-only or expert-reviewed plan without recursive cheap reviews; treating hierarchy or structural PASS as execution authorization.
 
 ## Completion
 

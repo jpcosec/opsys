@@ -1,0 +1,15 @@
+Missing graph references:
+- missing_declared_target: task:task-oficializar-context-review-barato-recursivo -> desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md
+  provenance: desk/tasks/task-oficializar-context-review-barato-recursivo.md:line:27:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-oficializar-context-review-barato-recursivo -> desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md
+  provenance: desk/tasks/task-oficializar-context-review-barato-recursivo.md:line:71:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-oficializar-context-review-barato-recursivo -> desk/rituals/context-review.md
+  provenance: desk/tasks/task-oficializar-context-review-barato-recursivo.md:line:28:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-oficializar-context-review-barato-recursivo -> desk/rituals/context-review.md
+  provenance: desk/tasks/task-oficializar-context-review-barato-recursivo.md:line:72:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+4 missing, 0 informational
+

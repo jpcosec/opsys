@@ -177,6 +177,7 @@ include:
   - desk/rituals/ritual-knowledge-distillation-pass.md
   - path: desk/rituals/testing.md
     name: ritual-testing
+  - desk/rituals/context-review.md
 - model: RoleDoc
   glob: desk/roles/*.md
 - model: RuntimeProfileDoc

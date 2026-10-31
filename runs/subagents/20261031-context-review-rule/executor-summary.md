@@ -1,0 +1,15 @@
+# Executor handoff to independent testing
+
+Implemented the authorized documentary policy only. Created durable AtomDoc before new RitualDoc via SLDB; updated modeled execution/phase rituals via complete extracted payloads and SLDB docs update. Tracking inspection showed workflow-policy-reference.md and the local Pi lifecycle skill are not modeled, so edited them as text. No lifecycle state, runtime enforcement, product code, Board/task change or commit by this executor.
+
+Rule covers cheap ephemeral no-tools reformulation/ambiguities/detailed non-executing dry-run; fresh retry with exact UTF-8 input hash; coordinator comparison; recursive root/package/leaf and interface decomposition; separate TaskDoc-only preflight, cold-bundle coverage, expert council, Executor and independent Tester. Technical failures remain separate. Existing supervisor preflight/cold evidence was used; no new LLM call or fabricated node evidence.
+
+Plan dag.yaml contains exact pending context_review metadata for all 44 tasks and hierarchy_context_review for root. Expert APTO remains expert evidence only. Status updated as requested; execution_authorized=false. Projection helpers regenerate README and all 44 candidate sheets. Structural plan checks report 0/44 cheap reviews. Semantic comparison against HEAD proved no product fields, edges or decisions changed beyond authorized review metadata. Diagram regeneration ran through existing spec2viz helper; no diagram content diff.
+
+Executor checks PASS: AtomDoc and context-review/execution/phase RitualDoc sldb validate; local Pi skill quick_validate; build_plan.py --check; validate_plan.py --check; render_diagram.py; local Markdown links for all changed policy/skill sources. Full commands/output: executor-validation.log; SLDB write stdout/stderr: stdout.log, stderr.log.
+
+Independent Tester must repeat model/skill/plan/link checks, inspect consistency and run the required pytest gate because plan helper .py files changed. Tester owns validation.log and result-summary.md; executor does not overwrite those independent artifacts. Guardrails: pill-001 dedicated closure commit remains coordinator responsibility; pill-005 fresh-role separation; pill-007 preserve testing/closeout and leave current phase open while the other task remains active.
+
+Source scope: desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md; desk/rituals/{context-review,execution,phase}.md; docs/workflow-policy-reference.md; .pi/skills/deskops-task-lifecycle/SKILL.md; desk/drawer/plans/workspace-documental/{dag.yaml,build_plan.py,validate_plan.py,README.md,validation.txt}; generated desk/drawer/tasks/workspace-documental/task-ws01.md through task-ws44.md; this run evidence. Local .pi is gitignored, so coordinator must deliberately include the authorized skill with force if closing commit should version it. Existing unrelated dirty store/code/closeout/inbox/test files were not cleaned or staged; SLDB added its normal tracked atom/ritual metadata to the already-dirty store.
+
+Closeout verify and official commit remain coordinator gates. No material blocker found.

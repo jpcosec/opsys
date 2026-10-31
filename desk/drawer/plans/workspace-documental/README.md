@@ -1,6 +1,10 @@
 # Workspace documental — plan revisado por concilio
 
-Revisión 5. Estado: reviewed_plan_pending_decisions. Propuesta de planificación, no activación ni ejecución de producto.
+Revisión 5. Estado: expert_reviewed_pending_cheap_context_reviews_and_decisions. Propuesta de planificación, no activación ni ejecución de producto.
+
+## Reviews baratos pendientes
+
+El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Raíz/jerarquía: estado `pending`, protocolo `ritual-context-review`, evidencia []. Las 44 candidatas están pendientes del mismo protocolo. Revisar raíz, paquetes, hojas y aristas recursivamente antes de promoción/ejecución; no se hicieron ni simularon esos reviews en esta actualización. `execution_authorized=false`.
 
 ## Entrada
 

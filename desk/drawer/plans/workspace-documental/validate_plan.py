@@ -13,6 +13,15 @@ B=Path(__file__).resolve().parent
 R=B.parents[3]
 d=yaml.safe_load((B/'dag.yaml').read_text())
 ts={t['id']:t for t in d['tasks']};gs=d['gates']
+# This revision records pending cheap comprehension, never fabricated approval.
+pending_review={'status':'pending','required_protocol':'ritual-context-review','evidence':[]}
+assert d['status']=='expert_reviewed_pending_cheap_context_reviews_and_decisions'
+assert d['execution_authorized'] is False
+assert d['hierarchy_context_review']==pending_review, 'root/hierarchy cheap review must remain pending'
+for t in ts.values():
+    assert t['context_review']==pending_review, t['id']+': cheap review must remain pending'
+assert 'expert' in d['council_review']['scope'].lower() and 'cheap' in d['council_review']['scope'].lower()
+
 assert len(ts)==len(d['tasks']), 'duplicate task IDs'
 assert not set(ts)&set(gs), 'task/gate collision'
 subprocess.run([sys.executable,str(B/'build_plan.py'),'--check'],check=True)
@@ -77,6 +86,9 @@ for p in [B/'README.md',*B.glob('borradores/*.md'),*Path(R/'desk/drawer/tasks/wo
         assert (p.parent/link.split('#')[0]).exists(),f'broken link {p}: {link}'
 lines=['STRUCTURE/COHERENCE: PASS',f'{len(ts)} candidate deliveries; {len(gs)} explicit gates; no cycles (including gate producers).',
 'Generated README/table/task files/diagram spec match canonical YAML.',
+f'Cheap context reviews: 0/{len(ts)}; required_protocol=ritual-context-review; evidence=[] for each candidate.',
+'Root/hierarchy cheap context review: pending; required_protocol=ritual-context-review; evidence=[].',
+'Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.',
 'Planning candidates with no prerequisite: '+', '.join(ready),
 'Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.',
 'Currently blocked candidates: '+str(len(blocked)),*evidence_checks,*refs,

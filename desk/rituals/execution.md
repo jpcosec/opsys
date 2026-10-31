@@ -1,7 +1,12 @@
 ---
+sldb:
+  by: agent
+  at: '2026-10-31T04:05:19Z'
+  authority: generated
+  via: update_document
 # ritual-xxx
 id: ritual-execution
-# List of step-xxx paths
+# Ordered prose steps; not document references
 steps:
 - 1. Confirm the current phase is explicit and that this task belongs to the ready
   dependency layer being executed.
@@ -9,17 +14,20 @@ steps:
   and validation targets explicit.
 - 1. Atomize the work into one coherent deliverable.
 - 1. Audit code, docs, tests, and git state before changing anything.
-- '1. Run a zero-context preflight comprehension gate: give one fresh subagent only
-  the TaskDoc and require it to restate the intended work step by step plus every
-  ambiguity it sees.'
+- '1. Run cheap TaskDoc-only preflight under [ritual-context-review](context-review.md)
+  in a fresh ephemeral no-tools process: restate objective, list ambiguities and give
+  a detailed non-executing dry-run.'
 - 1. Store that TaskDoc-only reformulation at `runs/subagents/<run-dir>/preflight.md`.
 - 1. Pass the preflight only when the reformulation reproduces the task intent closely
   enough to execute without guesswork; if the subagent reports any ambiguity or misses
   the intended work, fix the TaskDoc before dispatching any Executor.
-- 1. Send one fresh subagent with no prior task context to review the task, board-routed
-  instructions, bound pills, linked atoms, linked files, and planned validation only
-  for ambiguity, missing guardrails, and likely missed pills.
-- 1. Resolve or record the cold-review findings before implementation starts.
+- '1. Run a separate cheap cold-bundle coverage review under [ritual-context-review](context-review.md):
+  explicitly supply task, routed instructions/rituals, bound pills, linked atoms/files
+  and validation. Require reformulation, ambiguities and detailed dry-run; no commands
+  or source edits.'
+- 1. The coordinator compares both outputs with owner intent. Fix the written brief,
+  split oversized nodes and retry changed input in a new isolated process. Resolve
+  cold-review findings before implementation; unresolved ambiguity blocks dispatch.
 - 1. Sweep the board-routed pills and any task-local pills against the task scope,
   touched files, implementation path, and planned validation.
 - 1. Bind every pill whose `when`, `where`, or `how_not` matches a plausible part
@@ -47,7 +55,7 @@ tags:
 
 _Explain why this ritual exists._
 
-Carry one active desk task through scoped implementation inside an explicit phase with task and pill binding, including a zero-context TaskDoc comprehension gate and a fresh-context coverage check strong enough to catch missing guardrails before implementation starts.
+Carry one active desk task through scoped implementation inside an explicit phase with task and pill binding, including a zero-context TaskDoc comprehension gate and a fresh-context coverage check strong enough to catch missing guardrails before implementation starts. Apply the [context-review ritual](context-review.md) as the cheap non-executing brief-quality gate; expert review, Executor work and independent Tester validation remain distinct.
 
 ## Trigger
 
@@ -67,18 +75,19 @@ _List the conditions that must hold before running the ritual._
 - The active board pills are visible to the executor.
 - The initialization gate is still open.
 - The TaskDoc is specific enough for a fresh-context subagent to restate the work without guessing.
+- Required root/package/leaf and dependency-interface reviews have passed the coordinator comparison under [ritual-context-review](context-review.md).
 
 ## Validation
 
 _List the checks that prove the ritual was performed correctly._
 
 - The active task is explicit.
-- A fresh-context subagent ran the TaskDoc-only preflight comprehension gate before any Executor was dispatched.
+- A cheap isolated reviewer completed TaskDoc-only preflight before Executor dispatch; provider/model/profile, exact input/hash, output and coordinator disposition are traceable under ritual-context-review.
 - The preflight reformulation was stored at `runs/subagents/<run-dir>/preflight.md`.
 - The preflight passed only because the subagent's reformulation reproduced the intended work and surfaced no unresolved ambiguity.
-- A fresh-context subagent reviewed the task bundle before implementation.
+- A separate cheap isolated cold-bundle reviewer completed comprehension and guardrail coverage; expert council review does not satisfy either cheap gate.
 - Required pills are named in the task.
-- Cold-review ambiguities were resolved, tracked, or converted into pill updates before code changes.
+- Cold-review ambiguities were resolved in the written contract and rerun when affected input changed; no unresolved finding was merely recorded as permission to execute.
 - Each changed surface is either covered by a named pill or explicitly judged to need no pill.
 - No active board pill was skipped just because it looked generic or already familiar.
 - Implementation did not start before the initialization gate was satisfied.
@@ -99,6 +108,7 @@ _List common mistakes this ritual prevents._
 - Binding only the most obvious pill while ignoring pills implied by `when`, `where`, or `how_not`.
 - Starting code changes before the initialization gate is closed.
 - Handing work to closeout directly from execution without a testing gate.
+- Using expert approval, a verdict token, reviewer execution, or implementation tests as a substitute for cheap non-executing comprehension.
 
 ## Completion
 

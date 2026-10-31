@@ -1,6 +1,6 @@
 id: deskops-workspace-documental
 revision: 5
-status: reviewed_plan_pending_decisions
+status: expert_reviewed_pending_cheap_context_reviews_and_decisions
 as_of: '2026-10-31'
 source: dag.yaml is canonical; generated README/table/task files/diagram must agree
 baseline_proposal: Current sldb/pron + graph_ui/Mindmap. Kimun is reference only;
@@ -214,6 +214,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: &id001 []
 - id: WS02
   title: Inventariar superficies y operaciones Deskops
   status: candidate
@@ -232,6 +236,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS03
   title: Inventariar persistencia, consultas y notaciones
   status: candidate
@@ -251,6 +259,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS04
   title: Inventariar UI y reconciliar trabajo en curso
   status: candidate
@@ -269,6 +281,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS05
   title: Inventariar identidad y API Scion
   status: candidate
@@ -290,6 +306,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS06
   title: Registrar acuerdos de alcance con repos dueños
   status: candidate
@@ -312,6 +332,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS07
   title: Resolver decisiones de producto y escritura
   status: candidate
@@ -339,6 +363,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS08
   title: Precisar user-flows y criterios observables
   status: candidate
@@ -361,6 +389,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS09
   title: Precisar catálogo de renderizaciones
   status: candidate
@@ -380,6 +412,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS10
   title: Precisar índice y convención del manual
   status: candidate
@@ -400,6 +436,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS11
   title: Cerrar contrato de navegación e identidad
   status: candidate
@@ -426,6 +466,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS12
   title: Cerrar contrato de operaciones y escritura
   status: candidate
@@ -455,6 +499,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS13
   title: Integrar lector workspace con historia y foco
   status: candidate
@@ -484,6 +532,10 @@ tasks:
   overlap_with: workspace
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS14
   title: Integrar búsqueda navegable del workspace
   status: candidate
@@ -505,6 +557,10 @@ tasks:
   overlap_with: workspace
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS15
   title: Mostrar errores de lectura y modo degradado
   status: candidate
@@ -530,6 +586,10 @@ tasks:
   overlap_with: workspace
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS16
   title: Validar con humano lectura y descubrimiento
   status: candidate
@@ -556,6 +616,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS17
   title: Escribir entradas e índices del desk ejemplo
   status: candidate
@@ -579,6 +643,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS18
   title: Declarar proyecciones de grafo reutilizables
   status: candidate
@@ -600,6 +668,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: spec2viz:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS19
   title: Integrar edición de campos con conflicto
   status: candidate
@@ -626,6 +698,10 @@ tasks:
   overlap_with: editing
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS20
   title: Probar o completar guardado fuente reversible
   status: candidate
@@ -651,6 +727,10 @@ tasks:
     parameter: source_mode
     equals: editable
   output_base: sldb:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS21
   title: Integrar fuente y renderizado editables
   status: candidate
@@ -695,6 +775,10 @@ tasks:
       buffer/foco, ocultar guardado fuente; manual y WS30 etiquetan este alcance sin
       afirmar edición fuente completa.
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS22
   title: Renderizar Board como trabajo navegable
   status: candidate
@@ -717,6 +801,10 @@ tasks:
   overlap_with: workspace
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS23
   title: Renderizar rituales y pasos como procedimiento
   status: candidate
@@ -739,6 +827,10 @@ tasks:
   overlap_with: workspace
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS24
   title: Integrar conocimiento y grafo local
   status: candidate
@@ -761,6 +853,10 @@ tasks:
   overlap_with: workspace
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS25
   title: Integrar captura y triage en UI
   status: candidate
@@ -783,6 +879,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS26
   title: Integrar autoría y contexto de tareas
   status: candidate
@@ -810,6 +910,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS27
   title: Integrar revisión de cambios y evidencia
   status: candidate
@@ -831,6 +935,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS28
   title: Integrar verificación y handoff de cierre
   status: candidate
@@ -855,6 +963,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS29
   title: Integrar Changes e impacto comprobable
   status: candidate
@@ -878,6 +990,10 @@ tasks:
   overlap_with: changes
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS30
   title: Validar autoría y revisión manual completas
   status: candidate
@@ -906,6 +1022,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS31
   title: Publicar manual documental básico probado
   status: candidate
@@ -929,6 +1049,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS32
   title: Unificar identidad de intento y cierre Scion
   status: candidate
@@ -953,6 +1077,10 @@ tasks:
   overlap_with: scion
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: deskops:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS33
   title: Vincular mensajes, resultados y decisiones
   status: candidate
@@ -975,6 +1103,10 @@ tasks:
   overlap_with: scion
   integration_mode: delta_or_existing_ticket_only_after_WS06; never_parallel_duplicate
   output_base: deskops:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS34
   title: Exponer despacho y respuesta Scion autorizados
   status: candidate
@@ -998,6 +1130,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS35
   title: Mostrar ejecución y trazabilidad en workspace
   status: candidate
@@ -1019,6 +1155,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS36
   title: Integrar delegación e intervención humanas
   status: candidate
@@ -1042,6 +1182,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS37
   title: Validar delegación con agente real
   status: candidate
@@ -1063,6 +1207,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS38
   title: Publicar capítulos verificados de delegación
   status: candidate
@@ -1083,6 +1231,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: deskops:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS39
   title: Integrar inspección y edición de modelos existente
   status: candidate
@@ -1108,6 +1260,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS40
   title: Crear generador reproducible del corpus Taller
   status: candidate
@@ -1136,6 +1292,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS41
   title: Implementar lectura segura entre desks
   status: candidate
@@ -1160,6 +1320,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS42
   title: Integrar operaciones de conocimiento existentes
   status: candidate
@@ -1186,6 +1350,10 @@ tasks:
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
     preflight required
   output_base: graph_ui:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS43
   title: Publicar navegación documental del desk real
   status: candidate
@@ -1214,6 +1382,10 @@ tasks:
   promotion: not_authorized; require exact paths, model/contract, pills/atoms, evidence
     and cold preflight
   output_base: deskops:repository_root/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 - id: WS44
   title: Comprobar y revalidar acceso público a Scion
   status: candidate
@@ -1239,6 +1411,10 @@ tasks:
   promotion: not_authorized; appoint responsible operator and confirm read-only permission
     before probe
   output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    status: pending
+    required_protocol: ritual-context-review
+    evidence: *id001
 legacy_mapping:
   A1: WS02–WS05
   A2: WS01/WS07
@@ -1283,5 +1459,10 @@ council_review:
     claude: APTO COMO PLAN
     deepseek: APTO COMO PLAN
     gemini: APTO COMO PLAN
-  scope: planning only; does not authorize implementation, approve Pxx or satisfy
-    any gate
+  scope: Expert planning review only; APTO COMO PLAN is retained as expert evidence
+    and does not credit cheap zero-context reviews of root, packages or leaves, authorize
+    implementation, approve Pxx or satisfy any gate.
+hierarchy_context_review:
+  status: pending
+  required_protocol: ritual-context-review
+  evidence: *id001

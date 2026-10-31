@@ -1,0 +1,110 @@
+{
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "thinking": "low",
+  "selection": "perfil barato flash disponible configurado; no se afirmó precio mínimo global",
+  "isolation_flags": [
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--offline",
+    "--system-prompt explícito"
+  ],
+  "sessions": "fresh ephemeral process per attempt; no resume or inherited chat",
+  "inputs": [
+    {
+      "path": "preflight-input.md",
+      "sha256": "f9e60c69f54be61ab13c2c48b6bad0a26b280cb2cb42619f366f3004bbfcb63c"
+    },
+    {
+      "path": "preflight-input-v2.md",
+      "sha256": "feef9276bbb5090da3b2c65c846db2b8c3d7e6fb1cf88a4e7b250e8347b84ca0"
+    },
+    {
+      "path": "preflight-input-v3.md",
+      "sha256": "1da5ff774037b7521e9076c264c120cd771bbeba8df19dd136165ff1bef0898d"
+    },
+    {
+      "path": "cold-input.md",
+      "sha256": "0ac11e1e158a76291b40ea080dcf1431fdef8f1c09dd6e48dd6e45a46db4a549"
+    },
+    {
+      "path": "cold-input-v4.md",
+      "sha256": "73167d53ec1dbd069a1ef1d93cb0fb06593419290789fb736af2483924267eb8"
+    },
+    {
+      "path": "taskdoc-v4.md",
+      "sha256": "2b6b93637f41ba696d2267578b0803fdeb1aaab7033451cdca4321d682ff940e",
+      "use": "TaskDoc-only v4 prompt file, preflight-v4.md"
+    }
+  ],
+  "outputs": [
+    "preflight-v1.md",
+    "preflight-v2.md",
+    "preflight-v3.md",
+    "preflight-v4.md",
+    "cold-review-v4.md"
+  ],
+  "disposition": "ver preflight-v1/v2/v3-disposition y preflight-disposition.md; cold-input previo obsoleto no acredita revisión vigente",
+  "command": [
+    {
+      "role": "TaskDoc-only v4",
+      "cwd": "/home/jp/proyectos/SLDB_1/deskops",
+      "argv": [
+        "pi",
+        "--provider",
+        "deepseek",
+        "--model",
+        "deepseek-flash",
+        "--thinking",
+        "low",
+        "--offline",
+        "--no-session",
+        "--no-context-files",
+        "--no-skills",
+        "--no-extensions",
+        "--no-prompt-templates",
+        "--no-tools",
+        "--system-prompt",
+        "Revisor barato de comprensión; solo TaskDoc explícita. Reformula objetivo, señala ambigüedades reales y detalla dry-run por rol. No ejecutes. No exijas texto editorial literal ni contenido completo de archivos que se leerán. Respuesta breve.",
+        "--print",
+        "@desk/tasks/task-oficializar-context-review-barato-recursivo.md"
+      ],
+      "frozen_input_copy": "taskdoc-v4.md",
+      "output": "preflight-v4.md"
+    },
+    {
+      "role": "cold bundle v4",
+      "cwd": "/home/jp/proyectos/SLDB_1/deskops",
+      "argv": [
+        "pi",
+        "--provider",
+        "deepseek",
+        "--model",
+        "deepseek-flash",
+        "--thinking",
+        "low",
+        "--offline",
+        "--no-session",
+        "--no-context-files",
+        "--no-skills",
+        "--no-extensions",
+        "--no-prompt-templates",
+        "--no-tools",
+        "--system-prompt",
+        "Solo revisión barata del paquete explícito, sin ejecutar. No memoria ni contexto de otros intentos.",
+        "--print",
+        "@runs/subagents/20261031-context-review-rule/cold-input-v4.md"
+      ],
+      "output": "cold-review-v4.md"
+    }
+  ],
+  "output_paths": [
+    "preflight-v4.md",
+    "cold-review-v4.md",
+    "preflight-disposition.md"
+  ]
+}

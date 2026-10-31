@@ -1,5 +1,7 @@
 ---
 atoms:
+- id: atom-cheap-zero-context-reviews-test-the-brief-recursively
+  role: documents
 - id: atom-docs-are-human-facing-atom-materializations
   role: documents
 - id: atom-phase-gates-prevent-agent-skipping
@@ -38,6 +40,7 @@ This reference summarizes the current workflow policy used by `deskops`.
 - [Task Management](../desk/tasks/Board.md) - Active tasks
 - [Pills Reference](../desk/contexts/pills.md) - Context pill format
 - [Deferred Work](../desk/drawer/README.md) - Waiting items
+- [Context Review Ritual](../desk/rituals/context-review.md) - Cheap recursive brief comprehension
 - [Phase Ritual](../desk/rituals/phase.md) - Dependency-layer execution and closeout
 
 ---
@@ -76,20 +79,17 @@ The board is the routing surface for active work.
 
 ---
 
-## Fresh Subagent Rule
+## Cheap Context Review and Fresh Subagents
 
-Each active task should execute through one fresh subagent context bundle containing only what the task needs:
+Before promoting or executing a draft, plan, package or leaf, run the [context-review ritual](../desk/rituals/context-review.md). It tests the quality of the written question with a cheap reviewer: faithful reformulation, explicit ambiguities and a detailed dry-run of proposed readings, changes, validation and dependencies. The reviewer names intended commands without executing them or editing sources.
 
-- the task doc
-- board-routed instructions and rituals
-- bound pills
-- linked atoms
-- linked files
-- validation targets
+Supply the exact versioned brief and only necessary explicit references. Use a new ephemeral process for every attempt, without chat history, earlier reviews, oral fixes, persistent memory, automatic context/skills or tools. Record the chosen cheap provider/model/profile and reason; an expert cannot rescue a failed cheap comprehension gate. The ritual specifies the verified Pi isolation profile and per-node evidence layout.
 
-The coordinator session integrates outputs, runs shared validation, and enforces task and phase closeout.
+The coordinator compares understanding with intent, corrects the written brief and recursively decomposes large nodes into children and explicit edges. Review root, packages, every leaf and dependency interfaces before selecting ready leaves. A root-only review does not cover descendants. Unresolved ambiguity blocks execution. Changed input or a changed dependency contract invalidates affected reviews; retries use a new process. Technical transport/quota failures are recorded separately from ambiguity.
 
-Do not carry multiple unrelated tasks through one long-lived context.
+Before Executor dispatch, preserve two distinct cheap roles: TaskDoc-only preflight (also saved in `runs/subagents/<run-dir>/preflight.md`) and cold-bundle coverage. The explicit execution bundle contains task, board-routed instructions/rituals, bound pills, linked atoms/files and validation targets. Neither review executes implementation. Expert council review, Executor work, independent Tester validation and human product approval remain separate gates; a word such as APTO or structural PASS grants none of them.
+
+Evidence lives at `runs/subagents/<run-dir>/context-review/<node-id>/<bundle-sha256>/attempt-<n>/`: exact input bytes/hash, model/profile/selection, command/isolation, reformulation/ambiguities/dry-run, coordinator comparison and required edits. These are process records, not runtime enforcement or a new lifecycle state. Each active task then executes in its own fresh context, and an independent Tester validates implementation. The coordinator integrates outputs and enforces task/phase closeout. Do not carry unrelated tasks through one long-lived context.
 
 ---
 
@@ -122,7 +122,8 @@ Do not let durable knowledge remain pill-only once it stabilizes. Do not create 
 Before starting a ready dependency layer:
 
 ```text
-1. IDENTIFY -> Find the ready non-overlapping dependency layer.
+0. REVIEW   -> Review root/packages/leaves and edges cheaply; correct briefs and decompose.
+1. IDENTIFY -> Select reviewed ready non-overlapping leaves.
 2. BUNDLE   -> Confirm each task has its fresh context bundle.
 3. EXECUTE  -> Run the execution ritual per task.
 4. CLOSE    -> Require each task to close with tests and a task commit.
@@ -139,7 +140,7 @@ For each task in the phase:
 
 ```text
 1. INIT   -> Confirm task scope, files, pills, and validation.
-2. REVIEW -> Run one fresh-context ambiguity review.
+2. REVIEW -> Accept cheap TaskDoc-only preflight, then separate cheap cold-bundle coverage.
 3. BIND   -> Bind every relevant pill.
 4. IMPLEMENT -> Make only task-scoped changes.
 5. HANDOFF   -> Open an explicit testing handoff.

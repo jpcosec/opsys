@@ -1,0 +1,11 @@
+Board: board-001
+Title: Desk Board
+status: 
+summary: 
+scope: desk
+purpose: Route the active execution set for deskops.
+tasks: desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md, desk/tasks/task-oficializar-context-review-barato-recursivo.md
+pills: pill-001-task-closure-commit, pill-005-subagent-execution, pill-007-phase-gated-task-flow, pill-durable-pill-knowledge-graduates-to-atoms-at-closeout, pill-phase-closeout-reconciles-pills-and-surfaces-next-work, pill-ready-phases-prove-dependencies-and-non-overlap, pill-board-routed-pills-stay-minimal-and-reusable
+rituals: ritual-phase, ritual-execution, ritual-closeout, ritual-testing
+notes: No active tasks routed.
+

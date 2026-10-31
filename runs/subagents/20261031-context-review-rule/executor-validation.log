@@ -1,0 +1,56 @@
+$ sldb validate deskops.models:AtomDoc --input desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md --pythonpath .
+PASS: model is idempotent in input mode
+
+exit=0
+$ sldb validate deskops.models:RitualDoc --input desk/rituals/context-review.md --pythonpath .
+PASS: model is idempotent in input mode
+
+exit=0
+$ sldb validate deskops.models:RitualDoc --input desk/rituals/execution.md --pythonpath .
+PASS: model is idempotent in input mode
+
+exit=0
+$ sldb validate deskops.models:RitualDoc --input desk/rituals/phase.md --pythonpath .
+PASS: model is idempotent in input mode
+
+exit=0
+$ /home/jp/anaconda3/bin/python /home/jp/.codex/skills/.system/skill-creator/scripts/quick_validate.py .pi/skills/deskops-task-lifecycle
+Skill is valid!
+
+exit=0
+$ /home/jp/anaconda3/bin/python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+
+exit=0
+$ /home/jp/anaconda3/bin/python desk/drawer/plans/workspace-documental/validate_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+STRUCTURE/COHERENCE: PASS
+44 candidate deliveries; 15 explicit gates; no cycles (including gate producers).
+Generated README/table/task files/diagram spec match canonical YAML.
+Cheap context reviews: 0/44; required_protocol=ritual-context-review; evidence=[] for each candidate.
+Root/hierarchy cheap context review: pending; required_protocol=ritual-context-review; evidence=[].
+Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
+Planning candidates with no prerequisite: WS01
+Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
+Currently blocked candidates: 43
+G_HUMAN_READ: receipt location versionable under current gitignore
+G_HUMAN_MANUAL: receipt location versionable under current gitignore
+G_HUMAN_DELEGATE: receipt location versionable under current gitignore
+G_HUMAN_MODEL: receipt location versionable under current gitignore
+workspace: observed path/hash unchanged
+editing: observed path/hash unchanged
+changes: observed path/hash unchanged
+scion: observed path/hash unchanged
+kimun_reference_only: observed path/hash unchanged
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+
+exit=0
+$ /home/jp/anaconda3/bin/python desk/drawer/plans/workspace-documental/render_diagram.py
+Generated table/task files/diagram spec match dag.yaml
+dag.diagram.yaml: OK
+Rendered dag.diagram.yaml -> /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.mmd
+Rendered dag.diagram.yaml -> /home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/dag.diagram.graph.html
+
+exit=0
+All local Markdown links in changed policy/skill sources resolve.

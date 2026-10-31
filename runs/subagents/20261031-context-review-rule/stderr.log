@@ -1,0 +1,4 @@
+$ sldb docs create --model AtomDoc -o /home/jp/proyectos/SLDB_1/deskops/desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md /tmp/context-policy-atom.yaml --store .sldb --pythonpath .
+$ sldb docs create --model RitualDoc -o /home/jp/proyectos/SLDB_1/deskops/desk/rituals/context-review.md /tmp/context-policy-ritual.yaml --store .sldb --pythonpath .
+$ sldb docs update desk/rituals/execution.md /tmp/context-policy-execution.yaml --store .sldb --pythonpath .
+$ sldb docs update desk/rituals/phase.md /tmp/context-policy-phase.yaml --store .sldb --pythonpath .

@@ -1,0 +1,1 @@
+REVISE: fijar schema de anotación pendiente (sin nuevos contratos runtime), input mínimo y hash exacto, bootstrap de evidencia propia, paths de cierre y comandos de validación. Inspeccionar archivos listados es parte normal del trabajo posterior, no exige incluir repo completo en TaskDoc. Reintento limpio, sin entregar al reviewer su salida ni esta disposición.

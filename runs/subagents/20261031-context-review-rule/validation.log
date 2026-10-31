@@ -1,0 +1,68 @@
+
+$ sldb validate deskops.models:AtomDoc --input desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md --pythonpath .
+PASS: model is idempotent in input mode
+EXIT 0
+
+$ sldb validate deskops.models:RitualDoc --input desk/rituals/context-review.md --pythonpath .
+PASS: model is idempotent in input mode
+EXIT 0
+
+$ sldb validate deskops.models:RitualDoc --input desk/rituals/execution.md --pythonpath .
+PASS: model is idempotent in input mode
+EXIT 0
+
+$ sldb validate deskops.models:RitualDoc --input desk/rituals/phase.md --pythonpath .
+PASS: model is idempotent in input mode
+EXIT 0
+
+$ /home/jp/anaconda3/bin/python /home/jp/.codex/skills/.system/skill-creator/scripts/quick_validate.py .pi/skills/deskops-task-lifecycle
+Skill is valid!
+EXIT 0
+
+$ /home/jp/anaconda3/bin/python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+EXIT 0
+
+$ /home/jp/anaconda3/bin/python desk/drawer/plans/workspace-documental/validate_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+STRUCTURE/COHERENCE: PASS
+44 candidate deliveries; 15 explicit gates; no cycles (including gate producers).
+Generated README/table/task files/diagram spec match canonical YAML.
+Cheap context reviews: 0/44; required_protocol=ritual-context-review; evidence=[] for each candidate.
+Root/hierarchy cheap context review: pending; required_protocol=ritual-context-review; evidence=[].
+Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
+Planning candidates with no prerequisite: WS01
+Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
+Currently blocked candidates: 43
+G_HUMAN_READ: receipt location versionable under current gitignore
+G_HUMAN_MANUAL: receipt location versionable under current gitignore
+G_HUMAN_DELEGATE: receipt location versionable under current gitignore
+G_HUMAN_MODEL: receipt location versionable under current gitignore
+workspace: observed path/hash unchanged
+editing: observed path/hash unchanged
+changes: observed path/hash unchanged
+scion: observed path/hash unchanged
+kimun_reference_only: observed path/hash unchanged
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+EXIT 0
+
+$ /home/jp/anaconda3/bin/python runs/subagents/20261031-context-review-rule/tester_check.py
+PASS model extraction/render/extraction equality: desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md
+PASS model extraction/render/extraction equality: desk/rituals/context-review.md
+PASS model extraction/render/extraction equality: desk/rituals/execution.md
+PASS model extraction/render/extraction equality: desk/rituals/phase.md
+PASS local Markdown links: desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md
+PASS local Markdown links: desk/rituals/context-review.md
+PASS local Markdown links: desk/rituals/execution.md
+PASS local Markdown links: desk/rituals/phase.md
+PASS local Markdown links: docs/workflow-policy-reference.md
+PASS local Markdown links: .pi/skills/deskops-task-lifecycle/SKILL.md
+PASS root + 44 task reviews remain pending without invented evidence
+PASS all product decisions, task scopes, dependencies and gates unchanged
+PASS all 44 generated task sheets materialize pending protocol
+PASS real cheap-review saved inputs match receipt hashes and isolation flags
+EXIT 0
+
+FULL SUITE BASELINE (started before implementation): INTERRUPTED per coordinator; exit 2; 2 failed, 221 passed, 3 skipped / 640 collected. NOT GREEN; NOT COMPLETED. See baseline.log. Second failure caused by KeyboardInterrupt during CLI repair.
+EXACT BASELINE FAILURE REPRO: pytest tests/test_cli.py::test_next_without_selector_lists_multiple_board_tasks -q; exit 1; 1 failed in 4.65s. See baseline-failure.log and baseline-dirty-cli.diff. Missing task closeout-evidence declaration hits pre-existing dirty CLI require=True; outside documentary scope.

@@ -33,6 +33,10 @@ G_WRITE_POLICY verificado; registrar capability exacta para cada acción. No asu
 
 Tareas: WS11, WS08. Gates: G_WRITE_POLICY. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
+## Review barato de comprensión
+
+Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; APTO del concilio es experto y no satisface este gate.
+
 ## Gate de promoción
 
 Authorar TaskDoc completa en repo dueño, fijar archivos, operaciones, pills/átomos y evidencia; confirmar no solapamiento y dependencias/gates; ejecutar revisión de comprensión con contexto limpio. Para código: pruebas reales específicas y suite requerida del repo (pytest/Node/Playwright según superficie). Para UX: gate humano correspondiente; para docs: links y hechos comprobados. Ritual/commit de task y fase obligatorios. Esta candidata no está lista para un ejecutor de código por sí sola.

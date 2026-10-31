@@ -1,0 +1,1 @@
+REVISE: explicitar evidencia por nodo/revisión, cambios por superficie, operaciones SLDB, roles/aislamiento, anotaciones del plan y separación de la tarea closeout ajena. Estado draft corregido. Campos summary/history vacíos no son requisitos universales; mensaje/rama no son decisiones del executor. Nueva prueba sobre TaskDoc corregida, sin historial.

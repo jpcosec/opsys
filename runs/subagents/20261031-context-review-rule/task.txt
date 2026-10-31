@@ -1,0 +1,14 @@
+Task: task-oficializar-context-review-barato-recursivo
+Title: Oficializar context review barato recursivo
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/task-oficializar-context-review-barato-recursivo.md
+Closeout evidence: commit, document
+Effective pills:
+- pill-001
+- pill-005
+- pill-007
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
+

@@ -1,0 +1,9 @@
+$ sldb docs create --model AtomDoc -o /home/jp/proyectos/SLDB_1/deskops/desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md /tmp/context-policy-atom.yaml --store .sldb --pythonpath .
+Created and tracked 'atom-cheap-zero-context-reviews-test-the-brief-recursively'
+$ sldb docs create --model RitualDoc -o /home/jp/proyectos/SLDB_1/deskops/desk/rituals/context-review.md /tmp/context-policy-ritual.yaml --store .sldb --pythonpath .
+Created and tracked 'context-review'
+$ sldb docs update desk/rituals/execution.md /tmp/context-policy-execution.yaml --store .sldb --pythonpath .
+Updated 'ritual-execution'
+$ sldb docs update desk/rituals/phase.md /tmp/context-policy-phase.yaml --store .sldb --pythonpath .
+Updated 'ritual-phase'
+Generated 46 plan projections from dag.yaml; validate_plan.py PASS with cheap reviews 0/44 and root pending. Regenerated diagram via render_diagram.py. Semantic DAG comparison against HEAD PASS: only allowed metadata changed. See executor-validation.log for complete check output.

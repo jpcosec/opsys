@@ -1,0 +1,40 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+____________ test_next_without_selector_lists_multiple_board_tasks _____________
+
+tmp_path = PosixPath('/tmp/pytest-of-jp/pytest-10/test_next_without_selector_lis0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7feb36c99160>
+
+    def test_next_without_selector_lists_multiple_board_tasks(tmp_path: Path, capsys) -> None:
+        assert main(["init", str(tmp_path)]) == 0
+        capsys.readouterr()
+        for title in ("First routed task", "Second routed task"):
+            created = main(
+                [
+                    "add",
+                    "task",
+                    "--root",
+                    str(tmp_path),
+                    "--title",
+                    title,
+                    "--goal",
+                    "Exercise multi-task guidance.",
+                    "--scope",
+                    "Read-only next guidance.",
+                    "--implementation-path",
+                    "No implementation.",
+                    "--done-when",
+                    "Next guidance names both tasks.",
+                    "--validation",
+                    "pytest",
+                ]
+            )
+>           assert created == 0
+E           assert 1 == 0
+
+tests/test_cli.py:953: AssertionError
+----------------------------- Captured stdout call -----------------------------
+Error: This task declares no closeout evidence. Declare how this task closes: pass --evidence <kind>... (kinds: tests, commit, atom, materialization, document, external) or --task-type (code, implementation, test, docs, spec, design, external) so the evidence is filled from the type (code: tests+commit+atom|materialization; docs|spec|design: commit+document; external: external).
+=========================== short test summary info ============================
+FAILED tests/test_cli.py::test_next_without_selector_lists_multiple_board_tasks
+1 failed in 4.65s

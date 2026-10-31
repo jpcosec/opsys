@@ -1,6 +1,9 @@
 STRUCTURE/COHERENCE: PASS
 44 candidate deliveries; 15 explicit gates; no cycles (including gate producers).
 Generated README/table/task files/diagram spec match canonical YAML.
+Cheap context reviews: 0/44; required_protocol=ritual-context-review; evidence=[] for each candidate.
+Root/hierarchy cheap context review: pending; required_protocol=ritual-context-review; evidence=[].
+Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
 Planning candidates with no prerequisite: WS01
 Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
 Currently blocked candidates: 43
