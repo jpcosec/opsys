@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-ws03-inventariar-persistencia-consultas-y-notaciones.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- WS03: Inventariar persistencia, consultas y notaciones [active] - Producir desk/drawer/plans/workspace-documental/auditoria/infraestructura.md como auditoría de solo lectura del estado actual, verificable fila por fila.
