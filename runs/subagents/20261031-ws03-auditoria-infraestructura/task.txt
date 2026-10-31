@@ -1,0 +1,14 @@
+Task: task-ws03-inventariar-persistencia-consultas-y-notaciones
+Title: WS03: Inventariar persistencia, consultas y notaciones
+Status: active
+Current node: ritual-testing
+Task type: docs
+From drawer: desk/drawer/tasks/workspace-documental/task-ws03.md
+Closeout evidence: commit, document
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
+Lifecycle gates:
+- task_hands_to_closeout -> ritual-closeout: open [nonempty(validation)]

@@ -1,0 +1,1 @@
+{"argv":"pi --provider deepseek --model deepseek-flash --thinking low --no-session --no-context-files --no-skills --no-extensions --no-prompt-templates --tools read,grep,find,ls --print @runs/subagents/20261031-ws03-auditoria-infraestructura/tester-v3-input.md","stdin":"devnull","pane":"w3Y:pA","tools":"read,grep,find,ls","attempt":3}

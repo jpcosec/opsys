@@ -1,0 +1,28 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+$ sha256sum desk/drawer/plans/workspace-documental/auditoria/infraestructura.md
+8b3fed6a21548c5e6de8b21b7d92a22c4c42fd2fe3ad8302fa62cdf5ad713bc1
+
+$ sldb docs update --help | head -14
+usage: sldb docs update [-h] [--store STORE] [--pythonpath PYTHONPATH]
+                        [--format {text,json,yaml}]
+                        doc payload
+
+positional arguments:
+  doc                   Doc name or path
+  payload               Data file or inline YAML/JSON
+
+options:
+  -h, --help            show this help message and exit
+  --store STORE         Store path
+  --pythonpath PYTHONPATH
+                        Project path
+  --format {text,json,yaml}
+
+$ git -C ../sldb status --short | wc -l; git -C ../pron status --short | wc -l; git -C ../spec2viz status --short | wc -l
+4
+0
+0
+
+$ git status --short | wc -l
+41

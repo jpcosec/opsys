@@ -1,0 +1,1 @@
+task-ws03-inventariar-persistencia-consultas-y-notaciones | active | ritual-testing

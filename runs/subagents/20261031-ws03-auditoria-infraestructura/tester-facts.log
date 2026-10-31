@@ -1,0 +1,16 @@
+# Recolectado por el Supervisor, NO por el Tester: datos que un Tester sin bash no puede obtener. No es prueba independiente.
+
+$ grep -rIl "class ViewDoc" ../spec2viz/spec2viz ../sldb/src ../pron --include=*.py --exclude-dir=.venv
+../spec2viz/spec2viz/sldb_models.py
+
+$ grep -rIn "ViewDoc" ../spec2viz/spec2viz --include=*.py | head -20
+../spec2viz/spec2viz/notation_view.py:238:    Sirve, por ejemplo, para evaluar una `ViewDoc`: la superficie elige los documentos y las
+../spec2viz/spec2viz/sldb_sync.py:39:    "ViewDoc": "spec2viz.sldb_models:ViewDoc",
+../spec2viz/spec2viz/sldb_models.py:348:class ViewDoc(StructuredNLDoc):
+../spec2viz/spec2viz/sldb_models.py:380:    id: str = Field(description="Nombre de la vista; nombre del documento (`ViewDoc:<name>`).")
+../spec2viz/spec2viz/sldb_models.py:433:__all__ = ["SpecDoc", "SpecNodeDoc", "NotationDoc", "GlyphDoc", "LinkDoc", "PaletteDoc", "ViewDoc"]
+
+$ git -C ../sldb rev-parse HEAD; git -C ../pron rev-parse HEAD; git -C ../spec2viz rev-parse HEAD
+77bd6d0097f46efdec5e7eeb0e58d71d70b98be5
+e1e9df0caf7ade40fcc3d8bbebe0d3fa4ab0d339
+10df4f0893efde77fdd0e1d5794644e95a723731

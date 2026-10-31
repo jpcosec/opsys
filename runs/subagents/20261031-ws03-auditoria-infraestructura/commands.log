@@ -1,0 +1,31 @@
+cd /home/jp/proyectos/SLDB_1/deskops
+deskops show task task-ws03-inventariar-persistencia-consultas-y-notaciones --root .   (leído como archivo desk/tasks/task-ws03-...md)
+cat runs/subagents/20261031-ws03-auditoria-infraestructura/preflight-disposition.md
+sed -n 1,80p desk/drawer/plans/workspace-documental/brief.md
+git -C ../sldb rev-parse HEAD ; git -C ../sldb status --short | wc -l   (idem pron, spec2viz)
+export PYTHONDONTWRITEBYTECODE=1
+grep -rIn ViewDoc sldb pron spec2viz --exclude-dir=.venv --exclude-dir=node_modules --exclude-dir=.git   (por repo, desde /home/jp/proyectos/SLDB_1)
+grep -rIni viewdoc sldb pron spec2viz --exclude-dir=.venv --exclude-dir=node_modules --exclude-dir=.git   (por repo)
+grep -rInE "fcntl|flock|filelock|FileLock|portalocker|O_EXCL|os.replace|atomic|.lock|lockfile|sqlite|expected_(hash|revision|sha)|base_(hash|sha|revision)|before_(hash|image)|If-Match|etag|ETag|stale|compare.and.swap|cas" <repo>/src|sldb|spec2viz --include=*.py
+grep -rn "fcntl\.\|flock" --include=*.py (en ../sldb/src/sldb)
+grep -rnE "expected_(hash|revision|sha)|If-Match|etag|sqlite" --include=*.py sldb/src pron/src spec2viz/spec2viz
+grep -rniE "raw.?source|raw_source" sldb/src/sldb/api
+grep -rniE "saved.?quer|consulta guardada|saved_view" sldb/src pron/src spec2viz/spec2viz
+grep -rnE "fcntl|flock|filelock" pron/src
+grep -rnE "fcntl|flock|filelock|threading\.(R)?Lock" spec2viz/spec2viz
+grep -rn "wait=" --include=*.py sldb/src/sldb
+grep -rn "RelationFilter" --include=*.py sldb/src/sldb
+grep -rn "__references__" --include=*.py sldb/src/sldb
+grep -rn "resolve_documents|resolve_view|notation_view|view_mermaid" --include=*.py spec2viz/spec2viz
+grep -rn "MODEL_REFS" spec2viz/spec2viz
+ls ../sldb/.sldb/runtime ; ls ../sldb/.sldb/runtime/journal ; ls ../spec2viz/.sldb/core/documents ; ls ../spec2viz/.sldb/core/documents/ViewDoc*
+cat -A ../spec2viz/.sldb/core/models/ViewDoc.yaml
+Read (solo lectura) de: sldb/store/io/lock.py, utils.py, __init__.py; journal/lock.py, append.py, layout.py; api/documents/payload_save.py, payload_save_steps.py, create_document.py, delete_document.py, provenance_stamp.py; cli/serve/{save_routes,save_plan,save_single,routes,http_server,docs_routes,docs_create_route,auth,corpus_routes,similar_routes}.py; cli/selfdoc_write.py; store/{ops,query,runtime_cache,runtime_cache_signature}.py; links/*.py; api/search.py; pron kernel/kernel.py, kernel/actions/*, serve.py, world/storage/{payload_editor,document_reader}.py, mcp/{read_tools,write_tools,tool_table,ranked_search}.py, sexpr/resolving/edge_assertion.py; spec2viz sldb_models.py, notation_view.py, sldb_sync.py, catalog_views.py, renderers/{__init__,view_mermaid}.py, cli.py
+sldb --help ; sldb docs --help ; sldb fields --help ; sldb sections --help ; sldb find --help ; sldb ast --help ; sldb edges --help ; sldb graph --help ; sldb journal --help ; sldb explore --help ; sldb stores --help ; sldb predicates --help
+sldb docs update --help ; sldb docs create --help ; sldb docs track --help ; sldb fields update --help ; sldb docs compose --help ; sldb docs recover --help ; sldb fields query --help ; sldb edges show --help
+sldb links --help (error: invalid choice) ; sldb anchors --help ; sldb selfdoc --help ; sldb semantic --help ; sldb lint --help ; sldb serve --help
+pron --help ; pron lexicon --help ; pron say --help ; pron eval --help ; pron check --help ; pron mcp --help
+spec2viz --help ; spec2viz notation --help ; spec2viz diagram --help ; spec2viz catalog --help ; spec2viz palette --help ; spec2viz render --help
+spec2viz notation list ; spec2viz notation view --help ; spec2viz diagram render --help ; spec2viz diagram schema --help
+python -c "import sldb; print(sldb.__file__)" (idem pron, spec2viz)
+git -C ../sldb status --short ; (idem pron, spec2viz)   (repetido al final: 4 / 0 / 0)
