@@ -103,3 +103,4 @@
 {"task_id": "task-corregir-revisi\u00f3n-9-del-plan-workspace-tras-revisi\u00f3n-root", "run_id": null, "run_dir": "runs/subagents/20261031-correccion-revision9", "session_sha256": null, "commit": null}
 {"task_id": "task-reparar-helper-context-review-py-del-plan-workspace", "run_id": null, "run_dir": "runs/subagents/20261031-helper-context-review", "session_sha256": null, "commit": null}
 {"task_id": "task-cerrar-correcci\u00f3n-de-la-revisi\u00f3n-9-del-plan-workspace", "run_id": null, "run_dir": "runs/subagents/20261031-cierre-revision9", "session_sha256": null, "commit": null}
+{"task_id": "task-ws07-mantener-registro-trazado-de-decisiones-acordadas", "run_id": null, "run_dir": "runs/subagents/20261031-ws07-decisiones", "session_sha256": null, "commit": null}
