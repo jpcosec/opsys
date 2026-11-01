@@ -26,6 +26,6 @@ Fecha: 2026-11-01. Autor: Claude Opus 5.5, pane `w3Y:p1`. Sin push.
 - **WS06:** no localicé registro de aprobación root propio, solo su cierre `ff28c68c`.
 - **Residuos aceptados:** WS33.2 repite acta de receptor en FUTURO; PK02 dice WS09→WS12 con camino por WS11.
 - **Suite general:** no se reabrió; sigue no verde.
-- **Saldo DeepSeek:** esta sesión consumió tres tandas más sondas y Tester; lo pagado en las dos primeras es la causa directa de mis defectos de fuente.
+- **Saldo DeepSeek:** esta sesión consumió tres tandas, sondas y Tester; las dos primeras tandas se repitieron por defectos míos en la fuente.
 
 Ledger: `comparison-ledger.md`. Cobertura: `ws07-cobertura-efectiva.md`. Notas: `promotion-notes.md`.
