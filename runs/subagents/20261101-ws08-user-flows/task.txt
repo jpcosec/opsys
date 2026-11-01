@@ -1,0 +1,9 @@
+Task: task-ws08-precisar-user-flows-y-criterios-observables
+Title: WS08: Precisar user-flows y criterios observables
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/workspace-documental/task-ws08.md
+Closeout evidence: commit, document
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

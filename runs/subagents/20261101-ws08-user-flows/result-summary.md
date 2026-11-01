@@ -38,4 +38,4 @@ Claude Opus 5.5, pane `w3Y:p1`, corrigió tres puntos que el Tester marcó como 
 - UF07: `ui.md:60` no cubre backend caído ni modelo no importable; ahora lo declara.
 - UF04: faltaba el hueco de vincular rituales.
 
-Las revisiones de la primera renovación quedan en `renovacion-1/` como historia.
+Los registros de la primera renovación quedan en `renovacion-1/` como historia; sus outputs siguen en `runs/subagents/20261031-workspace-context-reviews/context-review/`.

@@ -1,0 +1,7 @@
+DATOS DEL SUPERVISOR, no verificación tuya.
+HEAD 3201ef2a
+all reviews current
+Generated table/task files/diagram spec match dag.yaml
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+13 passed in 1.37s
+dag.yaml: 0 líneas fuera de evidence e input_sha256.
