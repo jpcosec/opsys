@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: ejecutar el gate humano temprano de lectura/descubrimiento para UF01, UF03 lectura, UF07 diagnóstico, UF08 lectura y UF10 arranque. Resultado: acta humana del recorrido, con tiempos y pruebas técnicas separadas, y evidencia para G_HUMAN_READ. Repo dueño: graph_ui; salida en `runs/subagents/workspace-documental-acceptance/lectura/`. Límites: no crea corpus propio (consume manifiesto WS40), no implementa correcciones, no muta entre desks y no prueba guardados (WS30). Depende de WS08, WS14, WS15, WS40 y WS41. Es un nodo de validación ejecutable, no un agregado.
+
+AMBIGUEDADES
+1. «supervisor del repo receptor atribuye el fallo por evidencia»: el input no identifica quién es ese supervisor ni cómo se determina el repo receptor cuando el fallo afecta a graph_ui, deskops o sldb; el ejecutor tendría que inventar responsable y criterio de atribución.
+
+DRY-RUN
+Lecturas: `dag.yaml`, `validacion-humana.md`, `cobertura.md`, `borradores/user-flows.md`, `alcance.md` y manifiesto de WS40. Comprobaría que existen corpus, segundo desk y lectura multidesk de WS41; si faltan, pararía y registraría el hueco con repo dueño, sin crear sustituto. Prepararía sesión humana, grabaría recorrido y ejecutaría UF01/UF03 lectura/UF07/UF08/UF10 sobre el corpus: abrir/buscar, volver, cambiar representación, diagnosticar link roto y backend ausente, leer segundo desk y retornar, arrancar y orientar sin desk. Mediría al menos 20 aperturas, 10 búsquedas y arranque; no guardados. Ante fallo, registraría evidencia, mantendría G_HUMAN_READ pendiente y abriría incidente/diagnóstico antes de asignar corrección. Cambios previstos: crear `acta.md` en graph_ui, incluirla en commit atómico y enlazar commit/blob en el recibo del gate. Validación esperada: persona completa el guion sin rutas memorizadas; objetivos P08 medidos; errores visibles; acta versionada y enlazada.
+
+FUTURO
+El supervisor o repo receptor atribuye fallos y abre correcciones; WS30 prueba edición/guardado y umbrales de guardado; WS43 publica navegación real; WS17 enriquece el corpus sin ser necesario para WS16. El acta satisfecha habilita G_HUMAN_READ para uso de mutaciones en UI, no acredita implementación ni otras aceptaciones.

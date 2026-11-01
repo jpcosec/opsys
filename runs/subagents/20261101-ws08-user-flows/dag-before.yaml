@@ -599,8 +599,8 @@ tasks:
   context_review:
     contract_sha256: 708dae1414df5ab962378be3c1c0248b852b371be2ec8c9e08b2a172f9b25c72
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS08/532b9d780da46a4084f4f97d0e002374b1f9ad2305faeae6b075b57c121aff36/attempt-1
-    input_sha256: 532b9d780da46a4084f4f97d0e002374b1f9ad2305faeae6b075b57c121aff36
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS08/dfa95bfa025f5b2fceca2fddc3ebcd7a00bd9200f0e722d83f080bca2ac2d1d1/attempt-1
+    input_sha256: dfa95bfa025f5b2fceca2fddc3ebcd7a00bd9200f0e722d83f080bca2ac2d1d1
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -673,8 +673,8 @@ tasks:
   context_review:
     contract_sha256: f0f30c78744136e9bad45ab5bf9e361c419709436ca3876e3425f75a5e592664
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS10/8fa026d176979b4aa748a75b17d8867e3797e0383fc90836bd0ffda134aa8d6b/attempt-1
-    input_sha256: 8fa026d176979b4aa748a75b17d8867e3797e0383fc90836bd0ffda134aa8d6b
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS10/22d8718a59f3007624f6a9d58611d3e5bfebcbdfffcd8902e52a6dd302ffd154/attempt-1
+    input_sha256: 22d8718a59f3007624f6a9d58611d3e5bfebcbdfffcd8902e52a6dd302ffd154
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -1162,8 +1162,8 @@ tasks:
   context_review:
     contract_sha256: 087f1fc9ab626cd2a62d5272b8b67b93d46aa95e777abcda8b76fdc9aca7f3c6
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS16/85f641442b323c36066a66d89cd239dd911279fea16d8c6425201c7298cf1664/attempt-2
-    input_sha256: 85f641442b323c36066a66d89cd239dd911279fea16d8c6425201c7298cf1664
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS16/3aa41b4971f9bf85322f953711a92c7c85c00a920c2907c968d99b9926f3044d/attempt-1
+    input_sha256: 3aa41b4971f9bf85322f953711a92c7c85c00a920c2907c968d99b9926f3044d
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -2087,8 +2087,8 @@ tasks:
   context_review:
     contract_sha256: bff9e3fa419e52da3c539a79ca668fdab834cac90c5af219a4f5337c1dba0f70
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/3ae1d2fddc8d1254113f2f32ae1a4c7fbe792485506b5ad8245d08e37b2c898c/attempt-1
-    input_sha256: 3ae1d2fddc8d1254113f2f32ae1a4c7fbe792485506b5ad8245d08e37b2c898c
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/0414bed884541f66fe0354732922027127222aa385fdbbd82ab4f626a12531b1/attempt-1
+    input_sha256: 0414bed884541f66fe0354732922027127222aa385fdbbd82ab4f626a12531b1
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -2128,8 +2128,8 @@ tasks:
   context_review:
     contract_sha256: d83f387ee2dc0cdb2e986c092985901b14b641e501469d942b74445a9fd6b7f7
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS31/292a58b04129ce1da6d2cd401ecf590f471378aeab645a01807f483abd74d67b/attempt-1
-    input_sha256: 292a58b04129ce1da6d2cd401ecf590f471378aeab645a01807f483abd74d67b
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS31/b65a19cad5716e0113900585d98f2529537d509f705441406c87ef3a24fddf7e/attempt-1
+    input_sha256: b65a19cad5716e0113900585d98f2529537d509f705441406c87ef3a24fddf7e
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -2589,8 +2589,8 @@ tasks:
   context_review:
     contract_sha256: 8104372dd24612f2043c7e94f78a4e7313186d850ce89c0cdb5aa6396a1da998
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS37/29fa5c3ef663b690138fff4ed26a98027ccbe3098d2d51c7740d69e731ccbbba/attempt-2
-    input_sha256: 29fa5c3ef663b690138fff4ed26a98027ccbe3098d2d51c7740d69e731ccbbba
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS37/ee23cd267c23e03a8aeb2d6a9b0876c8a3d517998f5b5c1477e50f0eb3e17241/attempt-1
+    input_sha256: ee23cd267c23e03a8aeb2d6a9b0876c8a3d517998f5b5c1477e50f0eb3e17241
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -2622,8 +2622,8 @@ tasks:
   context_review:
     contract_sha256: 7eefb0fe78c3f226e2fde0b77ea89800fb995be7013874d8018d8e40fb442392
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS38/c23a36292468dfee29eb69567ba10401e43f742640a961bbd6b76af0ba720715/attempt-1
-    input_sha256: c23a36292468dfee29eb69567ba10401e43f742640a961bbd6b76af0ba720715
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS38/6f601e24f455565e5d408590a743b4a2ba689593d9222c6053db65efb447ebeb/attempt-1
+    input_sha256: 6f601e24f455565e5d408590a743b4a2ba689593d9222c6053db65efb447ebeb
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -2873,8 +2873,8 @@ tasks:
   context_review:
     contract_sha256: 3bae5491475120da3f0a59acf8d767b07790454ddd2433fc0be2bf3f688354d6
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS44/dada2d5f2a817ba21f74361bdc9297fca71560f014ce0c61a9ffeeb90a902b1b/attempt-1
-    input_sha256: dada2d5f2a817ba21f74361bdc9297fca71560f014ce0c61a9ffeeb90a902b1b
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS44/a6aa749531a1a4702cad63d174a4548d5876cae9c7b4e155ff550e8171476703/attempt-1
+    input_sha256: a6aa749531a1a4702cad63d174a4548d5876cae9c7b4e155ff550e8171476703
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery
@@ -3244,8 +3244,8 @@ hierarchy:
     context_review:
       contract_sha256: 7b5eae1b3618195e2ae355984e0310546664222b4d56d444ea52fbdf14b754c0
       evidence:
-      - runs/subagents/20261031-workspace-context-reviews/context-review/PK06/d404f1bd37e69639908840494d98b02e98a73af98ba34f46c49dd1ed947bddaa/attempt-1
-      input_sha256: d404f1bd37e69639908840494d98b02e98a73af98ba34f46c49dd1ed947bddaa
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK06/939b8ce02e15f07c5a59ba7fcb5628ac68c3a601ce2d7e38064a0eb3fd04fc6e/attempt-2
+      input_sha256: 939b8ce02e15f07c5a59ba7fcb5628ac68c3a601ce2d7e38064a0eb3fd04fc6e
       required_protocol: ritual-context-review
       status: reviewed
     review_completion:

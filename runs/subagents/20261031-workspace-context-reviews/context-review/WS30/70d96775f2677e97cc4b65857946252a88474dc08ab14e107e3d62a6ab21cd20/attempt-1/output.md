@@ -1,0 +1,12 @@
+REFORMULACION
+WS30 valida, con una persona, la autoría y revisión manual completas sobre el corpus Taller. Produce un acta en `graph_ui:runs/subagents/workspace-documental-acceptance/manual/` que registra UF01 con entradas WS17 materializadas, UF02, UF03 edición, UF04 y UF05, incluidos errores, conflicto en dos ventanas y navegación por teclado, con versiones, recorridos y paths/hashes de plantillas/entradas. Repo dueño: graph_ui. Límites: no declarar ready por tests; una observación solo se registra; un fallo bloquea el gate y abre tarea en el nodo causante; si la causa no se aísla, se registra incidente y el supervisor receptor autoriza diagnóstico antes de atribuir; no corregir otro repo ni inventar causalidad.
+
+AMBIGUEDADES
+1. «los escenarios de error, conflicto en dos ventanas y navegación por teclado del guion de WS08 y validacion-humana.md». WS30 cita el guion de WS08 como insumo, pero WS08 no figura en `depends_on`. Obliga a decidir si el ejecutor debe obtenerlo fuera del DAG, si puede reconstruir esos escenarios o si el gate espera otra entrega; inventaría fuente o secuencia.
+2. «Acta enumera plantillas/entradas WS17 validadas, paths/hashes y recorridos». No precisa si los hashes corresponden a las plantillas fuente versionadas o a las entradas materializadas en el corpus temporal. Obliga a inventar el objeto hasheado y el criterio de correspondencia que WS43 usará para trazar publicación.
+
+DRY-RUN
+Un ejecutor futuro verificaría commits/versiones de WS17, WS21, WS22, WS23, WS24, WS25, WS26, WS28 y WS42, y el corpus WS40 materializado desde `ejemplo/nav/`. Prepararía Taller con su git/store temporal, reuniría el guion aplicable y el protocolo de validacion-humana.md, y recorrería UF01 con entradas authored, UF02, UF03 edición, UF04 y UF05. Registraría observaciones, errores, conflicto en dos ventanas, teclado y métricas previstas (20 aperturas, 10 búsquedas, 10 guardados), sin instrucciones verbales correctivas. Escribiría el acta con actor, versión/commit, corpus, paths/hashes y resultado explícito, la incluiría en el commit atómico de graph_ui y resolvería G_HUMAN_MANUAL. Un fallo bloquearía el gate y abriría tarea en el repo del nodo causante; una causa no aislada quedaría como incidente. Si falta un contrato o corpus, se detendría y registraría el hueco, sin sustituirlo.
+
+FUTURO
+El participante humano firma la decisión del acta. WS43 contrasta paths/hashes y publica navegación real; WS31 cita el acta en el manual; G_HUMAN_MANUAL queda resuelto por WS30.

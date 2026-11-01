@@ -1,0 +1,29 @@
+diff --git a/desk/drawer/plans/workspace-documental/dag.yaml b/desk/drawer/plans/workspace-documental/dag.yaml
+index 1787304f..37322a2a 100644
+--- a/desk/drawer/plans/workspace-documental/dag.yaml
++++ b/desk/drawer/plans/workspace-documental/dag.yaml
+@@ -602,2 +602,2 @@ tasks:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS08/dfa95bfa025f5b2fceca2fddc3ebcd7a00bd9200f0e722d83f080bca2ac2d1d1/attempt-1
+-    input_sha256: dfa95bfa025f5b2fceca2fddc3ebcd7a00bd9200f0e722d83f080bca2ac2d1d1
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS08/17d0a5930394dd650baeb2866790254a0f0b412fe1b72ca3b9be5924170d3d3c/attempt-1
++    input_sha256: 17d0a5930394dd650baeb2866790254a0f0b412fe1b72ca3b9be5924170d3d3c
+@@ -1165,2 +1165,2 @@ tasks:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS16/3aa41b4971f9bf85322f953711a92c7c85c00a920c2907c968d99b9926f3044d/attempt-1
+-    input_sha256: 3aa41b4971f9bf85322f953711a92c7c85c00a920c2907c968d99b9926f3044d
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS16/84c91136a9c37bc3157e3fb6e1b57fa1ec25ce8dc24465900545432ac379f8c1/attempt-1
++    input_sha256: 84c91136a9c37bc3157e3fb6e1b57fa1ec25ce8dc24465900545432ac379f8c1
+@@ -2090,2 +2090,2 @@ tasks:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/0414bed884541f66fe0354732922027127222aa385fdbbd82ab4f626a12531b1/attempt-1
+-    input_sha256: 0414bed884541f66fe0354732922027127222aa385fdbbd82ab4f626a12531b1
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/70d96775f2677e97cc4b65857946252a88474dc08ab14e107e3d62a6ab21cd20/attempt-1
++    input_sha256: 70d96775f2677e97cc4b65857946252a88474dc08ab14e107e3d62a6ab21cd20
+@@ -2592,2 +2592,2 @@ tasks:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS37/ee23cd267c23e03a8aeb2d6a9b0876c8a3d517998f5b5c1477e50f0eb3e17241/attempt-1
+-    input_sha256: ee23cd267c23e03a8aeb2d6a9b0876c8a3d517998f5b5c1477e50f0eb3e17241
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS37/9202a41fd0e5621266781e7393ee37ef61e10fe5b4fa95467e4493cd93b9677e/attempt-1
++    input_sha256: 9202a41fd0e5621266781e7393ee37ef61e10fe5b4fa95467e4493cd93b9677e
+@@ -2876,2 +2876,2 @@ tasks:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS44/a6aa749531a1a4702cad63d174a4548d5876cae9c7b4e155ff550e8171476703/attempt-1
+-    input_sha256: a6aa749531a1a4702cad63d174a4548d5876cae9c7b4e155ff550e8171476703
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS44/a4d732422b1594ff7cda58ccde05d15a0a9a69b8bb36c96b009e2b57261f3014/attempt-1
++    input_sha256: a4d732422b1594ff7cda58ccde05d15a0a9a69b8bb36c96b009e2b57261f3014
