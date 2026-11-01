@@ -1,0 +1,107 @@
+{
+ "node_id": "WS19.1",
+ "role": "context-reviewer",
+ "attempt": 1,
+ "input_sha256": "a8b2b57c2b46e1a69ae0dbcb5946ad7382e9114b7af81216548fe19c8d8ac862",
+ "ordered_sources": [
+  {
+   "path": "desk/drawer/plans/workspace-documental/context-review-guide.md",
+   "sha256": "3150ef714004d5beb58dc4a55e7894513b3b3aafd337a51d7a90e31f8b1443c7",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/brief.md",
+   "sha256": "c36f08057d0995449a83b24d6439bed1e20b7a0fd2baffafc3706561c3f22abc",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/alcance.md",
+   "sha256": "203ef33a2a98706a6746f93d1912bd518c27ba88768c0d2181d553dbb802eba2",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/decisiones.md",
+   "sha256": "9691ea6ee22961c766b99d13739550621dc18ed5a47593cdcac246ca72cda5f4",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/cobertura.md",
+   "sha256": "da759798ae818c08d19c1f66b663fdfde7165b5f9c83071ffca3444389fe71ba",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/reconciliacion.md",
+   "sha256": "e661d634d6bd1d8dff752e1a035dfe9fe7a4160324d9e437b59f993910e82c85",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#external_reference:editing",
+   "sha256": "43267eba752131932a82aca4b0ed03ef959f651881c5d579489f874b2d7fef27",
+   "projection": "external_reference"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#node:WS19.1",
+   "sha256": "a77f53226be384650d5e4cd17df9d002b09341ce8393aa4157dc1762368f17bc",
+   "projection": "node_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS12",
+   "sha256": "4f2766fbaa15d544d5da995ea1de6e62ced9ad4b51e6c9fc8810ecc5ccf75a1c",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS19",
+   "sha256": "f81b289ce53c9451025d669c044769c0cbefba4e21a4df63b4c0f79ae962556f",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#gates",
+   "sha256": "ce60a6c8e0ce31a0d8b3c681aaa341a9b0b4db4da4535693d7df2bd9107d445f",
+   "projection": "gate_contracts"
+  }
+ ],
+ "node_contract_sha256": "7628edb78f2b21261907be496abf8485d18002b0e98e3d75807cf35d316cd607",
+ "edge_contracts": [
+  {
+   "id": "WS12",
+   "sha256": "de35b35b2fe4f669314cfe2de909ec53177620860bb057086eaa1f9de32398c1"
+  },
+  {
+   "id": "WS19",
+   "sha256": "d42cfe84b6c80269f8d8d1f3c03add12560e742c57abe0118ece9336666d02ba"
+  }
+ ],
+ "provider": "deepseek",
+ "model": "deepseek-flash",
+ "thinking": "low",
+ "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review; no se afirma precio mínimo global",
+ "isolation_flags": [
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools"
+ ],
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/a8b2b57c2b46e1a69ae0dbcb5946ad7382e9114b7af81216548fe19c8d8ac862/attempt-1/input.md"
+ ]
+}

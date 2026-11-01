@@ -756,7 +756,8 @@ tasks:
     (`sldb.api.create_document`, DrawerService), composición de llamadas a esas API
     (no la Composición del glosario) y eventual wrapper Deskops, sin aprobar ninguna
     ni crear API o modelo por reflejo; `message send` más `promote` no queda aprobado
-    (la promoción borra la nota y deja `why` apuntando a una ruta borrada). Solo si
+    (la promoción borra la nota y deja `why` apuntando a una ruta borrada). La captura
+    a protoátomo entra en la whitelist con su canal o con su hueco y dueño. Solo si
     falta conducta de workflow se registra un productor Deskops explícito antes de
     WS25.2; si esa composición de llamadas cumple, se documenta prueba y contrato.
     Lock solo UI no coordina CLI/agentes: con otro coordinador escritor, read-only/handoff
@@ -778,8 +779,8 @@ tasks:
     E, este contrato asume producir, como sección por delta de WS34.1 y WS34.2, la
     política y el umbral de timeout de dispatch y reply y su clasificación observable
     (al menos aceptado, rechazado y vencido sin confirmación). La duración no se elige
-    aquí: se fija al preparar esos deltas, y su ausencia no impide cerrar el contrato
-    núcleo de las Entregas L y M.'
+    ahora: esa sección del contrato WS12 la fija al preparar esos deltas, no WS34,
+    y su ausencia no impide cerrar el contrato núcleo de las Entregas L y M.'
   estimate: M
   task_file: desk/drawer/tasks/workspace-documental/task-ws12.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -2761,12 +2762,13 @@ tasks:
     de la operación antes de ejecutar; materializaciones se inspeccionan/validan,
     no se generan destinos arbitrarios. G_HUMAN_READ habilita uso de mutaciones en
     UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates
-    técnicos sin acta humana de lectura. Operaciones split/merge/proto typing vienen
-    del inventario Deskops WS02 y APIs SLDB WS03, concretadas por WS12; si faltan,
-    WS12 registra productor/hueco y UI no disponible. Materializaciones: modelo MaterializationContractDoc
-    de deskops/models/materialization.py registrado en el store temporal real seleccionado
-    por TaskDoc (o manifiesto Taller WS40), versión/commit registrados; validar por
-    API pública SLDB contra ese modelo, no renderer propio.'
+    técnicos sin acta humana de lectura. Operaciones split/merge/proto typing y la
+    validación de materializaciones vienen del inventario Deskops WS02 y APIs SLDB
+    WS03, concretadas por WS12; si faltan, WS12 registra productor/hueco y UI no disponible.
+    Materializaciones: modelo MaterializationContractDoc de deskops/models/materialization.py
+    registrado en el store temporal real seleccionado por TaskDoc (o manifiesto Taller
+    WS40), versión/commit registrados; validar por API pública SLDB contra ese modelo,
+    no renderer propio.'
   acceptance: UF03 dividir/reunir/tipar con persistencia, referencias y conflictos
     reales, tras confirmación que muestra el origen y el efecto de la operación; las
     materializaciones existentes se inspeccionan y validan contra el modelo SLDB registrado
