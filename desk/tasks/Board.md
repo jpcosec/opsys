@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-ws07-mantener-registro-trazado-de-decisiones-acordadas.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- WS07: Mantener registro trazado de decisiones acordadas [draft] - Determinar con evidencia si el registro P01-P09 de desk/drawer/plans/workspace-documental/decisiones.md cumple la aceptación de WS07, y dejar el resultado en runs/subagents/20261031-ws07-decisiones/coverage-report.md. Si está cubierto, no se reescribe nada.
