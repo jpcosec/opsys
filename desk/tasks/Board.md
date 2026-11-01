@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-separar-procedencia-humana-y-técnica-en-el-registro-de-decisiones.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Separar procedencia humana y técnica en el registro de decisiones [draft] - Dejar desk/drawer/plans/workspace-documental/decisiones.md con procedencia humana y técnica explícita y fuentes reales en P01, P03 a P07 y P09, sin cambiar ninguna decisión, y las 73 revisiones renovadas.
