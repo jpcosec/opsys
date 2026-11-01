@@ -106,3 +106,4 @@
 {"task_id": "task-ws07-mantener-registro-trazado-de-decisiones-acordadas", "run_id": null, "run_dir": "runs/subagents/20261031-ws07-decisiones", "session_sha256": null, "commit": null}
 {"task_id": "task-separar-procedencia-humana-y-t\u00e9cnica-en-el-registro-de-decisiones", "run_id": null, "run_dir": "runs/subagents/20261031-atribucion-decisiones", "session_sha256": null, "commit": null}
 {"task_id": "task-ws10-precisar-\u00edndice-y-convenci\u00f3n-del-manual", "run_id": null, "run_dir": "runs/subagents/20261101-ws10-manual", "session_sha256": null, "commit": null}
+{"task_id": "task-ws08-precisar-user-flows-y-criterios-observables", "run_id": null, "run_dir": "runs/subagents/20261101-ws08-user-flows", "session_sha256": null, "commit": null}
