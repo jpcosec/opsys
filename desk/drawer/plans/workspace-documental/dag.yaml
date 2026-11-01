@@ -768,13 +768,18 @@ tasks:
     dueño produce acta por delta al prepararlo; G_WRITE_CONTRACT admite requisito
     de API faltante solo para el nodo productor de esa API (WS20 raw-source con G_SOURCE;
     WS45 precondición de payload con G_PAYLOAD_PRECONDITION), manteniendo consumidor
-    WS21 bloqueado por G_SOURCE y G_PAYLOAD_PRECONDITION. Elegir la representación
-    de la precondición es entregable de este contrato, justificado por operaciones
-    y escritores alcanzados y reutilizando lo existente; WS45 la verifica. «Receptor
-    P01» aplica a graph_ui, sldb y spec2viz: en deltas de deskops no se crea recepción
-    nueva y rige la autorización de trabajo local. Falta conducta de workflow cuando
-    ni la API ni su composición de llamadas pueden, con prueba real, preservar origen,
-    no crear tarea activa y controlar colisiones.'
+    WS21 bloqueado por G_PAYLOAD_PRECONDITION y, solo en variante editable, G_SOURCE.
+    Elegir la representación de la precondición es entregable de este contrato, justificado
+    por operaciones y escritores alcanzados y reutilizando lo existente; WS45 la verifica.
+    «Receptor P01» aplica a graph_ui, sldb y spec2viz: en deltas de deskops no se
+    crea recepción nueva y rige la autorización de trabajo local. Falta conducta de
+    workflow cuando ni la API ni su composición de llamadas pueden, con prueba real,
+    preservar origen, no crear tarea activa y controlar colisiones. Para el ramal
+    E, este contrato asume producir, como sección por delta de WS34.1 y WS34.2, la
+    política y el umbral de timeout de dispatch y reply y su clasificación observable
+    (al menos aceptado, rechazado y vencido sin confirmación). La duración no se elige
+    aquí: se fija al preparar esos deltas, y su ausencia no impide cerrar el contrato
+    núcleo de las Entregas L y M.'
   estimate: M
   task_file: desk/drawer/tasks/workspace-documental/task-ws12.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -2437,7 +2442,9 @@ tasks:
     rechazado o vencido por timeout. No shell arbitrario ni duplicar transporte. Dispatch
     real aceptado y rechazado/timeout se correlacionan al id de intento local previo
     WS32.1 y registros WS32.2; confirmed solo con respuesta observada Hub, sin convertir
-    ausencia de confirmación en éxito/fallo remoto no observado.
+    ausencia de confirmación en éxito/fallo remoto no observado. Solo avanza con la
+    política de timeout de este delta en el contrato WS12, verificada en G_WRITE_CONTRACT;
+    sin ella se detiene y registra el hueco, sin elegir un umbral propio.
   estimate: M
   task_file: desk/drawer/tasks/workspace-documental/task-ws34-1.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -2469,8 +2476,11 @@ tasks:
   scope: Adaptador público restringido para reply vinculado al intento, con timeout/errores
     y autoridad del coordinador.
   acceptance: G_SCION/G_EXEC pasan; agente real demuestra respuesta vinculada al intento
-    correcto y un timeout se reporta como fallo sin confirmación, con el umbral del
-    contrato WS12. No mandar mensajes en la tarea de planificación.
+    correcto y un timeout se reporta como fallo sin confirmación, con el umbral de
+    la política de timeout que WS12 produce para este delta. No mandar mensajes en
+    la tarea de planificación. Solo avanza con esa política en el contrato WS12, verificada
+    en G_WRITE_CONTRACT; sin ella se detiene y registra el hueco, sin elegir un umbral
+    propio.
   estimate: S
   task_file: desk/drawer/tasks/workspace-documental/task-ws34-2.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only

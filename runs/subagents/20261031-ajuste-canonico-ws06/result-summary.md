@@ -47,3 +47,5 @@ Todos pasan a `requires` G_PAYLOAD_PRECONDITION. No se conectó ningún lector. 
 - `context_review.py status | wc -l`: 73 líneas: 72 nodos con `input changed` (todos los reviews existentes quedan vencidos por el cambio de brief.md, que es base común) y WS45 pending.
 - `validate_plan.py --check`: falla solo por reviews vencidos (`assert not review_problems`). Ejecutado con esa aserción y la de `validation.txt` omitidas en una copia en memoria, el resto pasa (estructura, gates, ciclos, hashes de evidencia WS01, enlaces). El único otro motivo hallado fue el hash de WS01 sobre `brief.md`, ya corregido. `validation.txt` no se regeneró.
 - Decisiones abiertas: ninguna; no se creó `open-decisions.md`.
+
+> **Nota de corrección, 2026-10-31.** La frase que incluye a WS42 entre los nodos que «no guardan payload por campos» es falsa: WS42 sí modifica payload. Queda fuera de G_PAYLOAD_PRECONDITION por tener guardas y contrato específico y por depender transitivamente de WS19, no por no escribir payload. Fuente: revisión root en `runs/subagents/20261031-correccion-revision9/review-source.md`. El texto original se conserva arriba.

@@ -32,7 +32,7 @@ Adaptador público restringido para reply vinculado al intento, con timeout/erro
 
 ## Aceptación
 
-G_SCION/G_EXEC pasan; agente real demuestra respuesta vinculada al intento correcto y un timeout se reporta como fallo sin confirmación, con el umbral del contrato WS12. No mandar mensajes en la tarea de planificación.
+G_SCION/G_EXEC pasan; agente real demuestra respuesta vinculada al intento correcto y un timeout se reporta como fallo sin confirmación, con el umbral de la política de timeout que WS12 produce para este delta. No mandar mensajes en la tarea de planificación. Solo avanza con esa política en el contrato WS12, verificada en G_WRITE_CONTRACT; sin ella se detiene y registra el hueco, sin elegir un umbral propio.
 
 ## Dependencias
 

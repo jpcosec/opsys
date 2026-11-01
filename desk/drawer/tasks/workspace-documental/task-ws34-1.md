@@ -31,7 +31,7 @@ Adaptador público restringido para dispatch, con confirmación, identidad de in
 
 ## Aceptación
 
-G_SCION/G_EXEC pasan; agente real demuestra un dispatch aceptado y uno rechazado o vencido por timeout. No shell arbitrario ni duplicar transporte. Dispatch real aceptado y rechazado/timeout se correlacionan al id de intento local previo WS32.1 y registros WS32.2; confirmed solo con respuesta observada Hub, sin convertir ausencia de confirmación en éxito/fallo remoto no observado.
+G_SCION/G_EXEC pasan; agente real demuestra un dispatch aceptado y uno rechazado o vencido por timeout. No shell arbitrario ni duplicar transporte. Dispatch real aceptado y rechazado/timeout se correlacionan al id de intento local previo WS32.1 y registros WS32.2; confirmed solo con respuesta observada Hub, sin convertir ausencia de confirmación en éxito/fallo remoto no observado. Solo avanza con la política de timeout de este delta en el contrato WS12, verificada en G_WRITE_CONTRACT; sin ella se detiene y registra el hueco, sin elegir un umbral propio.
 
 ## Dependencias
 
