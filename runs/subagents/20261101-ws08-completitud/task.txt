@@ -1,0 +1,9 @@
+Task: task-completar-productores-en-los-campos-nodo-de-ws08
+Title: Completar productores en los campos Nodo de WS08
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/task-completar-productores-en-ws08.md
+Closeout evidence: commit, document
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
