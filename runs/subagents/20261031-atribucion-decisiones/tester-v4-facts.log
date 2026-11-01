@@ -1,0 +1,14 @@
+DATOS DEL SUPERVISOR. El Tester no pudo ejecutarlos: son declaraciones, no verificación suya.
+
+HEAD: 718dffb4
+$ context_review.py status
+all reviews current
+exit 0
+Generated table/task files/diagram spec match dag.yaml
+build exit 0
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+
+13 passed in 1.42s
+f2d4b58f41587ff91d511e801a21a11795b3ad54ec59b91edcc2c3e4a12bd72d  desk/drawer/plans/workspace-documental/decisiones.md
+dec1766a708b1fdfea8af1233c8f2fbe5aa03ce5d7c07e431082bf9d00975d0e  desk/drawer/plans/workspace-documental/context-review-guide.md
+Comparación dag antes/después del registro: igual salvo evidence e input_sha256; contract_sha256 iguales; 0 líneas fuera.

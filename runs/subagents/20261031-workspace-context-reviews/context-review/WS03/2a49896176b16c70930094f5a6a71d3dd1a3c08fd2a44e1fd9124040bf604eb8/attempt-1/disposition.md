@@ -6,7 +6,7 @@ Supervisor Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01. Leí `output.md` completo
 
 **Ambigüedades.**
 
-1. «Auditoría de solo lectura de sldb/pron/spec2viz» y «alcance real ViewDoc»: el glosario sitúa el evaluador, las rutas de evaluación/guardado y el rend… Clase: `detalle de promoción`. Nodo ya ejecutado y aprobado por root; el alcance sobre ViewDoc quedó en la auditoría.
-2. «referencias documentales»: no precisa qué relaciones deben inventariarse (enlaces, citas, referencias entre documentos, referencias API-documento) ni… Clase: `detalle de promoción`. Nodo ya ejecutado y aprobado por root; el universo quedó en la auditoría.
+1. «Auditoría de solo lectura de sldb/pron/spec2viz» y «alcance real ViewDoc»: el glosario sitúa el evaluador, las rutas de evaluación/guardado y el rend… Clase: `detalle de promoción`. Nodo ya ejecutado; su checkpoint consta aprobado como inventario documental en `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, abierto al corregir esta disposición; el alcance sobre ViewDoc quedó en la auditoría.
+2. «referencias documentales»: no precisa qué relaciones deben inventariarse (enlaces, citas, referencias entre documentos, referencias API-documento) ni… Clase: `detalle de promoción`. Nodo ya ejecutado; su checkpoint consta aprobado como inventario documental en `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, abierto al corregir esta disposición; el universo quedó en la auditoría.
 
 **Disposición.** Aceptada como comprensión del encargo, sin cambio de contrato.

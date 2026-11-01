@@ -6,8 +6,8 @@ Supervisor Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01. Leí `output.md` completo
 
 **Ambigüedades.**
 
-1. «Cada tarea externa con path, estado observado, hash y alcance» frente a «mapear a deltas existentes los nodos de este plan que toquen graph_ui»: no q… Clase: `detalle de promoción`. Nodo ya ejecutado y aprobado por root; el universo quedó en auditoria/ui.md.
-2. «SPEC externo = /home/jp/proyectos/softfactory_spec/SPEC.md» y «reconciliar también el SPEC externo ... con path y hash»: no indica qué hacer si el ar… Clase: `detalle de promoción`. Nodo ya ejecutado y aprobado por root; la regla común es registrar el hueco.
-3. «cada nodo graph_ui» / «nodos de este plan que toquen graph_ui»: no define si incluye nodos con `owner_repo` graph_ui, nodos que producen deltas UI de… Clase: `detalle de promoción`. Nodo ya ejecutado y aprobado por root; el criterio quedó en auditoria/ui.md.
+1. «Cada tarea externa con path, estado observado, hash y alcance» frente a «mapear a deltas existentes los nodos de este plan que toquen graph_ui»: no q… Clase: `detalle de promoción`. Nodo ya ejecutado; su checkpoint consta aprobado como inventario documental en `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, abierto al corregir esta disposición; el universo quedó en auditoria/ui.md.
+2. «SPEC externo = /home/jp/proyectos/softfactory_spec/SPEC.md» y «reconciliar también el SPEC externo ... con path y hash»: no indica qué hacer si el ar… Clase: `detalle de promoción`. Nodo ya ejecutado; su checkpoint consta aprobado como inventario documental en `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, abierto al corregir esta disposición; la regla común es registrar el hueco.
+3. «cada nodo graph_ui» / «nodos de este plan que toquen graph_ui»: no define si incluye nodos con `owner_repo` graph_ui, nodos que producen deltas UI de… Clase: `detalle de promoción`. Nodo ya ejecutado; su checkpoint consta aprobado como inventario documental en `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, abierto al corregir esta disposición; el criterio quedó en auditoria/ui.md.
 
 **Disposición.** Aceptada como comprensión del encargo, sin cambio de contrato.

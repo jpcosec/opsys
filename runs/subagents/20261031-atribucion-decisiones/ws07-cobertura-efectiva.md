@@ -5,7 +5,7 @@ Fecha: 2026-11-01. Autor: Claude Opus 5.5, pane `w3Y:p1`. Sustituye al dictamen 
 | Aceptación WS07 | Estado | Evidencia |
 |---|---|---|
 | Registro de cada Pxx con tipo, actor, fuente y nodos/gates | Cubierto | `decisiones.md` 25-33 y tabla «Procedencia técnica» |
-| Respuestas literales 0–2 | Cubierto | Iguales a `owner-decisions.json`; líneas 1-22 iguales a `7b045a6f` |
+| Respuestas literales 0–2 | Cubierto | Iguales a `runs/subagents/20261031-finalizar-plan-workspace/owner-decisions.json`, comprobado por programa; líneas 1-22 iguales a `7b045a6f` |
 | P07/P09 sin firma humana | Cubierto | Actor técnico registrado, distinto de la autoría inicial |
 | Sin repetir preguntas ni inferir API, UI o Scion | Cubierto | Sin preguntas nuevas; `dag.yaml` solo cambia en evidencia |
 | `baseline_proposal` y `source_mode` | Sin cambio | Comparación estructural de `dag.yaml` |

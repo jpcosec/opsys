@@ -61,3 +61,16 @@ Efecto de la corrección: WS07 sin ambigüedad de actor; WS19.1 sin ambigüedad 
 - WS13.3: conducta al cerrar pestañas y frontera con `workspace.mjs`.
 - WS35: tratamiento de mensajes-hueco, con productor TaskDoc.
 - WS45: sin la frase de WS20 sobre convertirse en la tarea propia en sldb.
+
+## Adenda 2026-11-01, tras Tester v4 FAIL
+
+Hallazgos aceptados:
+
+- Cuatro disposiciones (WS02, WS03, WS04, WS06) decían «aprobado por root» sin cita, y eso excedía lo que declaraban haber leído. Corregidas: WS02–WS04 citan `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, que abrí; WS06 cita su cierre `ff28c68c` y declara que no localicé aprobación root propia.
+- La cobertura no daba la ruta completa de `owner-decisions.json`. Corregida.
+
+Hallazgos que no acepto, con motivo:
+
+- WS26 «sus aristas WS12/WS22/WS30» no es defecto: WS30 depende de WS26, así que la arista existe, saliente.
+- «`owner-decisions.json` no existe»: existe y está versionado. El Tester no lo halló porque la cobertura no daba la ruta.
+- El Tester dice que hubo cambio de fuente: es la corrección autorizada, no un hallazgo nuevo.

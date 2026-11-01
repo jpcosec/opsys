@@ -6,6 +6,6 @@ Supervisor Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01. Leí `output.md` completo
 
 **Ambigüedades.**
 
-1. «firmas públicas, efectos Git y cierre»: se enumera «efectos Git» como categoría de superficie, pero no se define qué efectos cuentan (commits, índice… Clase: `detalle de promoción`. Nodo ya ejecutado y aprobado por root; el criterio quedó en la auditoría.
+1. «firmas públicas, efectos Git y cierre»: se enumera «efectos Git» como categoría de superficie, pero no se define qué efectos cuentan (commits, índice… Clase: `detalle de promoción`. Nodo ya ejecutado; su checkpoint consta aprobado como inventario documental en `runs/subagents/20261031-ws02-04-checkpoint/approval.md`, abierto al corregir esta disposición; el criterio quedó en la auditoría.
 
 **Disposición.** Aceptada como comprensión del encargo, sin cambio de contrato.
