@@ -1,0 +1,12 @@
+REFORMULACION
+Propósito: que el lector workspace de graph_ui muestre errores de lectura y modo degradado sin confundirlos con vacío ni pérdida de contexto. Resultado: en el panel afectado se ven referencia rota, documento ausente, modelo no importable y backend caído; se conserva historial; una fuente sin permiso/capacidad de edición se declara límite read-only; el fallo CDN se declara límite actual, sin prometer offline; el reintento tras restaurar backend recupera lectura conservando pestañas/foco/historia. Repo dueño: graph_ui, con salidas en `frontends/mindmap/views/workspace/errors/`, rutas de lectura del contrato WS11 y `tests/`. Límites: reutilizar la lectura Markdown de WS13.1; no implementar otro lector ni guardado; empaquetado offline fuera. Depende de WS13 y del gate per_delta G_UI_READ, con contrato WS11.
+
+AMBIGUEDADES
+1. «Fuente sin permiso/capacidad de edición es límite read-only visible, no fallo de lectura.» El input no define qué señal distingue “sin permiso” de “sin capacidad” ni cómo comprobar que es límite y no fallo; WS11 solo se invoca para errores de API y estados de red, incluido CDN. Obliga a inventar detección, representación y prueba de ese estado.
+2. «pruebas distinguen ambos sin inventar respuesta del backend ausente.» “Ambos” puede referir a errores de API frente a estados de red, o a backend ausente frente a fallo CDN. Obliga a elegir el par y, con ello, los casos de prueba.
+
+DRY-RUN
+Lecturas: guía, brief, alcance, decisiones, cobertura, reconciliación, nodo WS15.1, aristas WS13/WS15, gates y referencia externa. Cambios previstos: UI de errores/degradación en graph_ui y pruebas; reutilización de lectura WS13.1; ningún guardado ni lector nuevo. Dependencias: WS13 vía WS13.1 (lectura) y WS13.3 (pestañas/foco/historia); contrato WS11 para errores, red y CDN; G_UI_READ pendiente por delta. Validaciones futuras: distinguir API/red de backend ausente; diagnóstico CDN sin recuperación offline; reintento que preserve pestañas/foco/historia; límite read-only visible; ausencia de lector/guardado duplicados. No se ejecuta nada.
+
+FUTURO
+WS11 debe fijar los estados y rutas de error que este nodo consume. WS13.1/WS13.3 aportan lectura Markdown y conservación de pestañas/foco/historia. El receptor P01 produce el acta G_UI_READ del delta concreto. La promoción fijará archivos, textos y casos de prueba en el TaskDoc. La aceptación humana y el cierre del agregado WS15 corresponden a otros nodos/gates.

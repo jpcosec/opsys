@@ -1,0 +1,12 @@
+## REFORMULACION
+Encargo de planificación para hacer idempotentes el manifiesto, el RunDoc y el cierre asociados a un mismo id de intento en `deskops`. Resultado: código y pruebas locales en store temporal que, al repetir la finalización, conserven identidad y evidencia sin crear registros nuevos, con coincidencia de id de intento, hash de sesión y evidencia. Repo dueño: `deskops`; salidas: `deskops/runtime/scion.py`, `models/run.py`, `services/closure.py`, `tests/`. Límites: sin dispatch/reply de red, sin simular eventos Hub; correlación real queda en WS34/37 bajo G_EXEC; si falta artefacto/contrato de hash, registrar hueco con WS12/WS05 y bloquear esa coincidencia.
+
+## AMBIGUEDADES
+1. «Una finalización repetida sobre el mismo id de intento conserva identidad y evidencia sin crear registros nuevos»: no se nombra la operación ni el canal que constituye la «finalización» (¿`close_from_run`, comando CLI u otra ruta?) ni cómo invocarla en el store temporal. El ejecutor tendría que inventar el punto de entrada y qué cuenta exactamente como «registro nuevo».
+2. «manifiesto, RunDoc y registros de closeout coinciden en id de intento, hash de sesión y evidencia»: «evidencia» no se define aquí; no se indica qué campo, artefacto o representación se compara. Aunque el nodo requiere G_CLOSEOUT, no declara que ese contrato fije la forma de evidencia ni el criterio de igualdad, por lo que la aceptación de esa coincidencia obligaría a inventarlo.
+
+## DRY-RUN
+Lecturas previstas: nodo WS32.2, guía, brief, alcance, decisiones, cobertura, reconciliación y referencia externa Scion. Cambios previstos: identidad/registro en `scion.py` y `models/run.py`; idempotencia y cierre en `closure.py`; pruebas en `tests/`. Dependencias: WS05 (inventario de identidad/API), WS12 (contrato del registro y precondición), WS32.1 (registro por intento). Gates: G_CLOSEOUT satisfecho; G_SCION no verificado; G_WRITE_CONTRACT per_delta. Validaciones futuras: crear store temporal real, repetir finalización, contar registros y comparar identidad/hash/evidencia; verificar que no hay red ni Hub simulado; registrar hueco si falta artefacto de sesión. Nada se ejecuta.
+
+## FUTURO
+WS05 debe identificar el artefacto de sesión/log y sus campos; WS12 debe fijar contrato, ubicación y representación; WS32.1 debe materializar el registro por intento. WS34/37 probarán correlación real con Hub bajo G_EXEC; WS44 resolverá G_SCION. La promoción y el TaskDoc con archivos, pruebas y evidencia concretas requieren autorización humana posterior.

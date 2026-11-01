@@ -1,11 +1,11 @@
 STRUCTURE/COHERENCE: PASS
-Context review states: {'reviewed': 72}; stale or pending problems: 0
-63 candidate nodes; 15 explicit gates; no cycles (including gate producers).
+Context review states: {'reviewed': 73}; stale or pending problems: 0
+64 candidate nodes; 16 explicit gates; no cycles (including gate producers).
 Generated README/table/task files/diagram spec match canonical YAML.
 Council APTO is expert planning review only; structural PASS is not execution-ready. execution_authorized=false.
 Planning candidates preparable after documentary coverage verification: WS02, WS03, WS04, WS05
 Execution authorized: NONE. Pending decisions and external/human gates do not pass by file existence.
-Currently blocked candidates: 58
+Currently blocked candidates: 59
 G_HUMAN_READ: receipt location versionable under current gitignore
 G_HUMAN_MANUAL: receipt location versionable under current gitignore
 G_HUMAN_DELEGATE: receipt location versionable under current gitignore

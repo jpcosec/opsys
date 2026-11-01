@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: PK07 es una agrupación de revisión, no una tarea ejecutable. Resultado sustantivo: paquete que integra dos extensiones independientes en el workspace documental: (a) Changes/impacto sobre store temporal real, con documento afectado, relaciones entrantes/salientes a 1 hop vía API de grafo de sldb, hallazgos de `sldb stores check`, `deskops doctor` y `deskops drift check`, sin reparación automática y con enlaces a comandos; (b) inspección/edición de Schema/modelos existentes desde el Context del lector, usando draft/validate/promote de sldb, con prueba API y acta humana. El manual etiqueta cada extensión según evidencia, sin presumir CST/Kimun. Repo dueño de la agrupación: deskops; hijos en graph_ui. Límites: no ejecutar, no crear tareas/aristas, no reimplementar modelos, no reparar automáticamente, no bloquear lector/manual básico; gates pendientes son intencionales.
+
+AMBIGUEDADES
+1. «dry-run hipotético describe orden/aristas y transferencia entre hijos: WS29 consume lectura/vecindad WS15/24...; WS39 consume contrato WS12...» y «qué artefacto pasa a qué hijo». WS29 y WS39 no tienen arista entre sí ni artefacto compartido; el texto parece exigir una transferencia inexistente. Obligaría a inventar un entregable o dependencia WS29→WS39 que el DAG no declara.
+
+DRY-RUN
+Sin ejecutar: WS29 parte de salidas WS15/24 (errores/degradado y grafo/vecindad), implementa la vista Changes y prueba mutación real, relaciones 1-hop y hallazgos agrupados; entrega código/tests/evidencia. WS39 parte de WS12 (whitelist/precondición) y WS13 (Context), con inventario WS04 transitivo; conecta documento activo→Schema/clase→editor existente, prueba API aislada y recoge acta humana; entrega shell/dialogs.js, views/models/, tests y acta. Al no haber arista, el orden es paralelo; no hay artefacto WS29→WS39. La integración se valida en el mismo workspace/corpus temporal: Changes muestra impacto y modelos se abren desde Context; el manual etiqueta ambos. PK07 cierra por aceptación de hijos y evidencia, no por status/hashes.
+
+FUTURO
+WS15/24, WS12/13 y WS04 producen entradas; WS31 publica el etiquetado del manual; el participante P08 firma el acta de modelos; recepción humana/G_UI_WRITE/G_WRITE_CONTRACT/G_HUMAN_MODEL decide disponibilidad. Nada de esto se ejecuta aquí.
