@@ -105,3 +105,7 @@ Puntos que no son defectos del plan, pero que el TaskDoc de cada nodo debe fijar
 ## Adenda 2026-11-01, corrección de procedencia
 
 Lista completa en `runs/subagents/20261031-atribucion-decisiones/comparison-ledger.md`, sección «Para la promoción». Lo principal: el TaskDoc de WS12 debe citar T-P03.1, porque su aceptación no enumera la definición operativa de «modo manual exclusivo». Revisar además `output_scope` de WS36 y WS24, frontera de WS13.3 con `workspace.mjs`, y el caso de WS45.
+
+## Adenda 2026-11-01, tanda sobre el parche de WS08
+
+Lista en `runs/subagents/20261101-ws08-completitud/comparison-ledger.md`. Añade: WS09, productor por tipo cuando el campo diga «futura implementación»; WS13.1, foco en Code solo donde WS11 defina correspondencia; WS27.1, canal Git por WS12; WS39, documento sin Schema; WS31, «Pxx» son P01–P09 y T-Pxx se citan como fuente.
