@@ -1,6 +1,6 @@
 # Separar atribución humana y técnica en decisiones P01-P06
 
-Estado: candidato capturado directamente en drawer, 2026-10-31. Trabajo local de deskops. No promovido ni autorizado.
+Estado: candidato capturado directamente en drawer, 2026-10-31. Trabajo local de deskops. Promoción autorizada por revisión root, opción A: `runs/subagents/20261031-atribucion-decisiones/review-source.md`.
 
 ## Origen
 
@@ -13,3 +13,5 @@ La fila P03 de `desk/drawer/plans/workspace-documental/decisiones.md` está marc
 ## Alcance propuesto
 
 Separar en esas filas lo que dijo el solicitante de la precisión técnica de planificación, sin cambiar decisiones. `decisiones.md` es input de todos los nodos: editarlo invalida 73 revisiones.
+
+La autorización agrega completar las fuentes de P07 y P09 en esta misma pasada.
