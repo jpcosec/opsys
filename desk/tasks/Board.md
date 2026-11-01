@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-completar-productores-en-los-campos-nodo-de-ws08.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Completar productores en los campos Nodo de WS08 [draft] - Que cada operación o error con productor necesario tenga ese productor en Nodo y en cobertura.md, con matriz que lo demuestre.
