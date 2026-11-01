@@ -42,3 +42,14 @@ Script `python3 -I` con `owner-decisions.json` y `decisiones.md` (bytes UTF-8): 
 - No existe registro de autor de la Tabla inicial (35543965) más allá del commit; no se atribuye a persona.
 - PIv2, PI y TF son encargo técnico, no aprobación humana.
 - No se tocó dag.yaml, helper, validadores ni gates; no se corrió `context_review.py run`; sin commits.
+
+## Adenda 2026-10-31, revisión del Supervisor antes de congelar
+
+Claude Opus 5.5, pane `w3Y:p1`, abrió cada rango de `dag.yaml` citado y corrigió tres celdas de `decisiones.md` directamente, sin Executor. Las filas anteriores de este mapa quedan como se escribieron; donde difieran, vale esto:
+
+- T-P01: 164-167 está en G_UI_READ, no en G_SLDB_WRITE. Vigente: 161-167 (G_UI_READ) y 225-233 (G_SLDB_WRITE).
+- T-P05: 1980-1984 y 1980-1981 caen en la lista de gates de WS28. Vigente: 1984-1987 (scope) y 1991-1994 (acceptance).
+- «Refresco verificable»: era falso que no tuviera respaldo vigente. WS28 acceptance dice que `deskops show task` y el commit de closeout confirman el cierre y que se refresca el estado desde deskops. Lo que no aparece es esa frase literal.
+- T-P07: se agrega 945-946 (WS13.3), respaldo directo de la disposición local.
+
+Las demás citas a `dag.yaml` se abrieron y coinciden. «Canal completo» sigue sin frase vigente.
