@@ -1,0 +1,21 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+commit 83b8be66
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check | tail -1
+Generated table/task files/diagram spec match dag.yaml
+
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check >/dev/null; echo exit=$?
+exit=0
+
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+
+$ git diff --name-only 5f05281c..HEAD -- deskops/ tests/ docs/ desk/drawer/plans/workspace-documental/decisiones.md desk/drawer/plans/workspace-documental/auditoria/ desk/drawer/plans/workspace-documental/validate_plan.py desk/drawer/plans/workspace-documental/build_plan.py desk/drawer/plans/workspace-documental/context_review.py | wc -l
+0
+
+$ git log --format="%h %s" 5f05281c..HEAD | cut -c1-78
+83b8be66 desk: registra comparacion real de 73 nodos y ledger de la revision 9
+4c1b4bd3 desk: congela fuentes finales tras la comparacion nodo por nodo
+deef3c40 desk: congela correcciones de WS12 y WS34 de la revision 9
+3a201e28 desk: activa correccion de la revision 9
+2295acf0 desk: captura en drawer la correccion de la revision 9

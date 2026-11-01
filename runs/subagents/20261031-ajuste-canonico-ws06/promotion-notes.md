@@ -92,3 +92,8 @@ Puntos que no son defectos del plan, pero que el TaskDoc de cada nodo debe fijar
 
 ## WS44
 - El solicitante designa al operador y registra su acceso en `autorizaciones/scion.md` antes del probe; fijar cómo se elige el Hub si hay varios.
+
+## Añadido 2026-10-31 tras el Tester de la corrección
+
+- WS22: fijar si «selección y links comunes con lector» exige tocar archivos fuera de board/, y cómo se abren pills y átomos.
+- WS13.1: fijar la ruta de apertura sin ID, porque el explorador WS13.2 depende de este nodo.

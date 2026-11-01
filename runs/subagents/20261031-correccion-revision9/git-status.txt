@@ -1,0 +1,17 @@
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M "desk/tasks/task-corregir-revisi\303\263n-9-del-plan-workspace-tras-revisi\303\263n-root.md"
+ M runs/subagents/20261031-ajuste-canonico-ws06/promotion-notes.md
+ M runs/subagents/20261031-correccion-revision9/comparison-ledger.md
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-correccion-revision9/board.txt
+?? runs/subagents/20261031-correccion-revision9/git-status.txt
+?? runs/subagents/20261031-correccion-revision9/tester-facts.log
+?? runs/subagents/20261031-correccion-revision9/tester-input.md
+?? runs/subagents/20261031-correccion-revision9/tester-pane.txt
+?? runs/subagents/20261031-correccion-revision9/tester-receipt.json
+?? runs/subagents/20261031-correccion-revision9/tester-result-summary.md
+?? runs/subagents/20261031-correccion-revision9/tester.exit
+?? runs/subagents/20261031-correccion-revision9/tester.stderr
+?? runs/subagents/20261031-correccion-revision9/validation.log

@@ -24,6 +24,16 @@ Estos defectos no aparecían en las listas de ambigüedades.
 
 34 nodos corrieron con la instrucción de `final-instruction.txt`, que amplía el SYSTEM de context_review.py para pedir ejecución hipotética del nodo. Ese archivo no se modificó: se reemplazó ARGV en memoria y el argv queda en cada manifest o receipt. WS12, WS19.1 y WS37 tienen intentos fuera del runner, con receipt propio. WS33 reutilizó un intento previo porque su input coincide. Los otros 39 usan la instrucción original y sus dry-run sí describen el trabajo según lo que leí.
 
+## Correcciones tras el Tester, 2026-10-31
+
+El Tester adversarial encontró tres defectos en lo que yo había aceptado. Las disposiciones y manifiestos no se reescriben; rige lo siguiente.
+
+- WS22: la disposición clasifica como «no es ambigüedad» que «comunes» significa no modificar el lector, y que abrir pills y átomos no pide renderer. El contrato no lo resuelve: lo reclasifico como detalle de promoción abierto.
+- WS13.1: la disposición atribuye a la aceptación «rutas de lectura contrato WS11», que está en output_scope. La ruta de apertura sin ID queda como detalle de promoción abierto, no como «no es ambigüedad».
+- WS12 y WS37 attempt-2: manifest.json es copia del attempt-1, por lo que dice attempt 1 y apunta a su input. Para esos intentos vale receipt.json; input.md es idéntico.
+
+El Tester no pudo verificar que comparé los 73 nodos ni recomputar las 73 filas: eso sigue siendo atestación mía y hashes verificables por root.
+
 ## Filas
 
 | Nodo | Rol | Intento | input sha256 | output sha256 | disposition sha256 | Redactó disposición | Comparó y acepta | Fecha |
