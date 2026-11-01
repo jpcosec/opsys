@@ -1,0 +1,27 @@
+{
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de este encargo. Solo texto expl\u00edcito, sin herramientas ni historial. No ejecutas nada. Responde en espa\u00f1ol con secciones exactas: REFORMULACION (encargo: objetivo, alcance, repo, l\u00edmites), AMBIGUEDADES (numeradas, con cita textual y qu\u00e9 obligar\u00eda a inventar; \"ninguna\" si no hay), DRY-RUN (c\u00f3mo lo ejecutar\u00eda un ejecutor futuro: archivos, cambios concretos, errores y resultado esperado; t\u00fa no ejecutas nada). M\u00e1ximo 400 palabras.",
+  "--print",
+  "@runs/subagents/20261101-ws10-manual/preflight-input.md"
+ ],
+ "input_sha256": "57b9ee9258242880bdb06a3f1e9ffd430a9a8abe9665fb87c436b7393fd25df9",
+ "returncode": 0,
+ "fresh_process": true,
+ "stdin": "devnull",
+ "at": "2026-11-01T23:17:23.057763+00:00"
+}
