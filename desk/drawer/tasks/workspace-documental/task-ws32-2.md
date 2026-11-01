@@ -28,7 +28,7 @@ Base explícita: `deskops:repository_root/`. Concretar archivos exactos dentro d
 
 ## Alcance
 
-Manifiesto, RunDoc y cierre consistentes e idempotentes sobre el intento correcto (el identificado por el id de intento que cita el cierre, nunca por agente o slug). Manifiesto = registro canónico por intento que materializa RunDoc y registros de closeout, según el ticket de external_references.scion (campos mínimos: id de intento, identidad de agente, identidad de run si la API la expone, timestamps, hash de sesión, evidencia y commit de cierre). Idempotencia de persistencia local por operaciones reales del store temporal, sin dispatch/reply de red ni confirmar evento Hub no observado; prueba runtime con Hub y correlación es WS34/37 bajo G_EXEC.
+Manifiesto, RunDoc y cierre consistentes e idempotentes sobre el intento correcto (el identificado por el id de intento que cita el cierre, nunca por agente o slug). Manifiesto = registro canónico por intento que materializa RunDoc y registros de closeout, según el candidato de drawer de external_references.scion (campos mínimos: id de intento, identidad de agente, identidad de run si la API la expone, timestamps, hash de sesión, evidencia y commit de cierre). Idempotencia de persistencia local por operaciones reales del store temporal, sin dispatch/reply de red ni confirmar evento Hub no observado; prueba runtime con Hub y correlación es WS34/37 bajo G_EXEC.
 
 ## Aceptación
 

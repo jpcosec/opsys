@@ -768,7 +768,13 @@ tasks:
     dueño produce acta por delta al prepararlo; G_WRITE_CONTRACT admite requisito
     de API faltante solo para el nodo productor de esa API (WS20 raw-source con G_SOURCE;
     WS45 precondición de payload con G_PAYLOAD_PRECONDITION), manteniendo consumidor
-    WS21 bloqueado por G_SOURCE y G_PAYLOAD_PRECONDITION.'
+    WS21 bloqueado por G_SOURCE y G_PAYLOAD_PRECONDITION. Elegir la representación
+    de la precondición es entregable de este contrato, justificado por operaciones
+    y escritores alcanzados y reutilizando lo existente; WS45 la verifica. «Receptor
+    P01» aplica a graph_ui, sldb y spec2viz: en deltas de deskops no se crea recepción
+    nueva y rige la autorización de trabajo local. Falta conducta de workflow cuando
+    ni la API ni su composición de llamadas pueden, con prueba real, preservar origen,
+    no crear tarea activa y controlar colisiones.'
   estimate: M
   task_file: desk/drawer/tasks/workspace-documental/task-ws12.md
   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -1212,18 +1218,20 @@ tasks:
     textual no cambia el dueño); tests/
   scope: Autoría de ViewDoc y NotationDoc concretos (la notación que el ViewDoc referencia)
     para selecciones y notación ya soportadas por spec2viz, y su comprobación sobre
-    stores reales reutilizando el evaluador y las rutas de graph_ui (C-37) y la notación
-    de spec2viz (C-49). ViewDoc es datos sin ruta de store y el evaluador recibe el
-    store por petición, así que no se pide portabilidad genérica, ni servicio, CLI
-    o runtime fuera de graph_ui, ni extraer o compartir el evaluador. No crear UI
-    pages declarativas ficticias. Selecciones concretas y notación requerida vienen
-    de catálogo WS09 y contrato WS11, contrastados con capacidades WS03; si catálogo
-    no fija selección mínima, detener promoción y corregir ese contrato antes de elegir
-    una. No inventar selección aquí.
+    stores reales reutilizando el evaluador evaluate_view y las rutas /api/views de
+    graph_ui (fila C-37 de reconciliacion.md) y la notación de spec2viz resolve_documents
+    (fila C-49). ViewDoc es datos sin ruta de store y el evaluador recibe el store
+    por petición, así que no se pide portabilidad genérica, ni servicio, CLI o runtime
+    fuera de graph_ui, ni extraer o compartir el evaluador. No crear UI pages declarativas
+    ficticias. Selecciones concretas y notación requerida vienen de catálogo WS09
+    y contrato WS11, contrastados con capacidades WS03; si catálogo no fija selección
+    mínima, detener promoción y corregir ese contrato antes de elegir una. No inventar
+    selección aquí.
   acceptance: Los ViewDoc y NotationDoc concretos definidos por WS09/WS11 se evalúan
     con el camino existente de graph_ui sobre un store real, la selección coincide
-    con la declarada y el ViewDoc documenta qué selecciona; no se alega que una prueba
-    con dos stores demuestre el mismo payload completo (cambia filtros); tareas receptoras
+    con la declarada en catálogo WS09 y contrato WS11, que son la fuente; el ViewDoc
+    la repite y el ViewDoc documenta qué selecciona; no se alega que una prueba con
+    dos stores demuestre el mismo payload completo (cambia filtros); tareas receptoras
     en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; este
     paquete documental deskops no escribe en spec2viz; la futura TaskDoc de WS18 se
     promueve y ejecuta en spec2viz por su supervisor/Executor, con recepción G_SPEC_VIEW
@@ -1259,10 +1267,10 @@ tasks:
   scope: Delta sobre workspace integrado a1b2b22 de edición; reutilizar editores y
     API, precondición de escritura (WS45/WS12) y conflicto visible; workflow-protected
     fields no editables por este canal. Incluir alta/baja de relaciones permitidas
-    por contrato, usando API real y before-image; no crear semántica de relaciones
-    en componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas
-    aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana
-    de lectura.
+    por contrato, usando API real y la precondición de escritura que fije WS12; no
+    crear semántica de relaciones en componente. G_HUMAN_READ habilita uso de mutaciones
+    en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates
+    técnicos sin acta humana de lectura.
   acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
     aceptación. Sus dependientes siguen dependiendo de este ID.'
   estimate: M
@@ -1345,10 +1353,10 @@ tasks:
   owner_repo: graph_ui
   output_scope: frontends/mindmap/views/workspace/relations/; endpoints autorizados
     por el contrato WS12; tests/
-  scope: Alta/baja de relaciones permitidas por contrato, usando API real y before-image;
-    no crear semántica de relaciones en el componente. G_HUMAN_READ habilita uso de
-    mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus
-    contratos/gates técnicos sin acta humana de lectura.
+  scope: Alta/baja de relaciones permitidas por contrato, usando API real y la precondición
+    de escritura que fije WS12; no crear semántica de relaciones en el componente.
+    G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de
+    API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
   acceptance: Alta y baja persisten y se confirman tras recargar; una relación no
     permitida o una revisión obsoleta se rechaza con error visible.
   estimate: M
@@ -2229,12 +2237,12 @@ tasks:
   scope: 'Manifiesto, RunDoc y cierre consistentes e idempotentes sobre el intento
     correcto (el identificado por el id de intento que cita el cierre, nunca por agente
     o slug). Manifiesto = registro canónico por intento que materializa RunDoc y registros
-    de closeout, según el ticket de external_references.scion (campos mínimos: id
-    de intento, identidad de agente, identidad de run si la API la expone, timestamps,
-    hash de sesión, evidencia y commit de cierre). Idempotencia de persistencia local
-    por operaciones reales del store temporal, sin dispatch/reply de red ni confirmar
-    evento Hub no observado; prueba runtime con Hub y correlación es WS34/37 bajo
-    G_EXEC.'
+    de closeout, según el candidato de drawer de external_references.scion (campos
+    mínimos: id de intento, identidad de agente, identidad de run si la API la expone,
+    timestamps, hash de sesión, evidencia y commit de cierre). Idempotencia de persistencia
+    local por operaciones reales del store temporal, sin dispatch/reply de red ni
+    confirmar evento Hub no observado; prueba runtime con Hub y correlación es WS34/37
+    bajo G_EXEC.'
   acceptance: Una finalización repetida sobre el mismo id de intento conserva identidad
     y evidencia sin crear registros nuevos; manifiesto, RunDoc y registros de closeout
     coinciden en id de intento, hash de sesión y evidencia. Sesión aquí = artefacto

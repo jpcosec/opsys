@@ -27,7 +27,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Alta/baja de relaciones permitidas por contrato, usando API real y before-image; no crear semántica de relaciones en el componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+Alta/baja de relaciones permitidas por contrato, usando API real y la precondición de escritura que fije WS12; no crear semántica de relaciones en el componente. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
