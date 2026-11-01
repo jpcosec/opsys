@@ -1,0 +1,11 @@
+REFORMULACION  
+WS26.2 es un encargo de implementación en `graph_ui` para añadir enrutamiento explícito en el Board mediante la operación pública definida por WS12 y representar la capa lista según dependencias pendientes y solapamiento de `files`. Resultado esperado: tras enrutar, `deskops show board` muestra la tarea y la UI la distingue de una tarea en ejecución; la capa lista aparece separada de tareas en ejecución, con dependencias pendientes o archivos solapados. Repo dueño: `graph_ui`; salida limitada a `frontends/mindmap/views/workspace/routing/`, endpoints autorizados por WS12 y `tests/`. Límites: no implementar promoción nueva ni operaciones de workflow; si falta la operación completa de WS12, preparar handoff y mostrar pendiente, no promoción terminada.
+
+AMBIGUEDADES  
+ninguna
+
+DRY-RUN  
+Un ejecutor futuro leería el contrato WS12, la representación Board de WS22, la autoría de WS26.1 y el ritual de fase vigente. Cambiaría únicamente archivos de routing y tests en `graph_ui`: acción de enrutar que invoca la operación pública WS12 para añadir la tarea a `tasks` del BoardDoc; vista/estado que separa capa lista; cálculo de solapamiento con rutas normalizadas/expansión documentadas, tratando igualdad o contención de directorio como solapamiento y glob/no-resolución dudosa como no comprobado. Consumiría WS12 para canal, campos, errores y precondición; WS22 para leer el Board; WS26.1 para contexto autorado. Gates: `G_WRITE_CONTRACT` y `G_UI_WRITE` por delta; `G_HUMAN_READ` antes de habilitar mutaciones en UI, sin bloquear pruebas aisladas de API; `G_CLOSEOUT` ya satisfecho. Errores: operación ausente → handoff y pendiente; contrato/dato faltante → detener y registrar hueco con repo dueño; solapamiento no comprobado → revisión supervisor antes de marcar lista. Validación esperada: `deskops show board` muestra la tarea enrutada, la UI la distingue de ejecución y la capa lista no incluye tareas pendientes o solapadas.
+
+FUTURO  
+WS12 publica la operación pública, normalización/expansión y precondición aplicables; WS22 entrega el Board navegable; WS26.1 aporta autoría/contexto; el TaskDoc de promoción fija archivos, textos y pruebas; P01 humano acepta el delta concreto de `G_UI_WRITE`; WS16 produce el acta de `G_HUMAN_READ`.

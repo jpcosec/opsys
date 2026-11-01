@@ -12,7 +12,7 @@ Puntos que no son defectos del plan, pero que el TaskDoc de cada nodo debe fijar
 - Nombrar el revisor y la evidencia del «contrato básico revisado».
 
 ## WS12
-- Incluir el umbral de timeout de dispatch/reply: WS34.2 cita «el umbral del contrato WS12» y la aceptación de WS12 no lo nombra (WS34.1 depende de lo mismo).
+- Incluir el umbral de timeout de dispatch/reply: WS34.2 cita «el umbral del contrato WS12» y la aceptación de WS12 no lo nombra (WS34.1 depende de lo mismo). **Resuelto 2026-10-31:** WS12 asume esa sección por delta en su aceptación; una nota no cerraba la interfaz.
 - Escribir el valor por defecto de la captura directa a drawer: sin prueba existente citada, la composición de llamadas es hueco con productor Deskops explícito antes de WS25.2, porque WS12 no ejecuta mutaciones.
 - Decir quién ejecuta la «prueba real del canal de captura» (el dry-run del revisor la lista sin dueño).
 

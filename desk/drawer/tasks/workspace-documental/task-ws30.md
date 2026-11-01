@@ -42,7 +42,7 @@ Tareas: WS17, WS21, WS22, WS23, WS24, WS25, WS26, WS28, WS42. Gates: ninguno adi
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS30/323f175360a172bfca4bae5c2c195ffe34a76a505ccb824bd5b4e60b7fde0566/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS30/019edfcd3bd667768686c61b0f9fe54d7c31d7d185f3511c3c80e7374ff6da41/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 
