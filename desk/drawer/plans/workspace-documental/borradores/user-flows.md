@@ -81,7 +81,7 @@ Aceptación: fuente y representación apuntan al mismo documento; las composicio
 - 409 por `expected` en `POST /save`; compara el payload completo, no un hash (`infraestructura.md:51,163`); la forma legacy `POST /save {doc,payload}` no verifica: última escritura gana (`infraestructura.md:53`); lote parcial responde 500 con `completed` y sin rollback (`infraestructura.md:52`); editor externo del Markdown no detectado por el guardado (`infraestructura.md:56`).
 - `atoms delete` rechaza si hay referencias entrantes (`deskops.md:115`); diálogo de conflicto del KB map (`ui.md:64`).
 - no definido: contrato de fallos parciales, permisos y conflicto para la UI del workspace; productor WS12.
-**Nodo:** WS02, WS03, WS09, WS11, WS12 (preparación/contrato); WS13, WS14, WS19, WS21, WS24, WS42 (implementación); WS20, WS45 (precondiciones de escritura citadas arriba); WS16 (lectura), WS30 (edición).
+**Nodo:** WS02, WS03, WS09, WS11, WS12 (preparación/contrato); WS13, WS14, WS19, WS21, WS24, WS42 (implementación); WS20, WS45 (precondiciones de escritura citadas arriba); WS29 (extensión de impacto/Changes; no es prerrequisito del lector ni del manual básico); WS16 (lectura), WS30 (edición).
 **Gate humano:** WS16 (lectura); WS30 (edición).
 
 ## UF04 — Preparar trabajo activo
@@ -117,7 +117,7 @@ Aceptación: ninguna acción usa edición arbitraria de status para saltarse gat
 **Entrada:** tarea abierta con contexto y procedimiento; cambios y evidencia reunidos; correcciones pedidas.
 **Salida:** estado de la tarea con evidencia declarada, encontrada y verificada; diff comparable con el contrato; cierre ejecutado por Deskops fuera de HTTP y refresco que lo verifica; conocimiento durable y fase revisados.
 **Operación:**
-- Abrir tarea y siguiente paso: `deskops show task`, `next` (`deskops.md:87,74`); procedimiento: `list ritual`/`show ritual` (`deskops.md:78,89`).
+- Abrir tarea y siguiente paso: `deskops show task`, `next` (`deskops.md:87,74`); procedimiento: `deskops list rituals`/`show ritual` (`deskops.md:78,89`).
 - Preparar corrida/registro: `deskops runtime template --task --agent` escribe un RunDoc (`deskops.md:142`); el cierre con `--run-dir` exige `board.txt`, `task.txt`, `git-status.txt` y `result-summary.md` (`deskops.md:131`).
 - Verificar evidencia: `deskops closeout verify` (declarada vs references/files; informe con `declared`, `found`, `alerts`, `gates`, `findings`; `deskops.md:134,171,259`).
 - Cerrar: `deskops closeout commit` (rutas `--run-dir` o `--no-run --reason`, `deskops.md:131,260`); `closeout supersede`, `closeout retire` (`deskops.md:132-133`); `advance task` sin `--to` sigue el grafo de lifecycle y llegar a `complete` no se persiste (`deskops.md:98`).
@@ -126,11 +126,12 @@ Aceptación: ninguna acción usa edición arbitraria de status para saltarse gat
 - hueco: evidencia encontrada y verificada en UI, apertura de soporte (`ui.md:78`); dueño graph_ui, productor WS27.2.
 - hueco: `closeout verify` por UI, handoff de cierre y refresco tras cierre externo (`ui.md:79`); dueño graph_ui, productor WS28.
 - hueco: reabrir enlaces sin perder el encargo (`ui.md:57`, historia/pestañas); dueño graph_ui, productor WS13.3.
+- hueco: renderer de RitualDoc/StepDoc y procedimientos (`ui.md:68`); dueño graph_ui, productor WS23.
 **Error:**
 - `closeout verify` emite alertas y findings; exit 0 solo si ok (`deskops.md:134`); `closeout commit` exige evidencia según la ruta elegida (`deskops.md:260`); evidencia fuera del vocabulario cerrado `tests, commit, atom, materialization, document, external` (`deskops.md:259`).
 - `advance task --to` fuerza status o `current_node` (`deskops.md:98`) y `edit task` cambia campos (`deskops.md:62`): la aceptación de la UF exige no usarlos para saltarse gates; la whitelist de campos protegidos la define WS12 (`dag.yaml`, nodo WS12).
 - no definido: contrato de error de cierre y de handoff para la UI; productor WS12 (UI: WS28).
-**Nodo:** WS02, WS08, WS12 y G_CLOSEOUT (preparación/contrato); WS27 (WS27.1, WS27.2), WS28 (implementación); closeout CLI/coordinador externo; WS30 (aceptación). No se promete cierre HTTP.
+**Nodo:** WS02, WS08, WS12 y G_CLOSEOUT (preparación/contrato); WS13.3, WS23, WS27 (WS27.1, WS27.2), WS28 (implementación); closeout CLI/coordinador externo; WS30 (aceptación). No se promete cierre HTTP.
 **Gate humano:** WS30.
 
 ## UF06 — Delegar e intervenir
@@ -154,7 +155,7 @@ Aceptación: cada mensaje/resultado corresponde al intento correcto; completado 
 **Error:**
 - no definido: fallos de dispatch, intento duplicado/no idempotente, respuesta a intento equivocado; productor WS32, WS33, WS34.
 - no definido: fallo de acceso a Scion; productor WS44.
-**Nodo:** WS05, WS11, WS12 y G_SCION/G_EXEC (preparación/contrato); WS32, WS33, WS34, WS35, WS36 (implementación); WS37 (aceptación); WS38 (publicación de capítulos verificados).
+**Nodo:** WS05, WS11, WS12, WS44 y G_SCION/G_EXEC (preparación/contrato); WS32, WS33, WS34, WS35, WS36 (implementación); WS37 (aceptación); WS38 (publicación de capítulos verificados).
 **Gate humano:** WS37 (requiere G_EXEC; no se ejecuta solo porque el DAG esté revisado).
 
 ## UF07 — Diagnosticar y mantener
@@ -178,7 +179,7 @@ Aceptación: se distingue error, conflicto, cambio y pérdida de soporte. Las op
 - `sldb stores check` puede escribir caché o journal: no se leyó (`deskops.md:265`); `desk update` y `atoms validate` pueden crear andamiaje (`deskops.md:266`); `anchors` requiere el extra `[code]` (`infraestructura.md:94`).
 - Escritor externo no detectado por el guardado (`infraestructura.md:56`); `drift check` termina con exit 1 si hay hallazgos (`deskops.md:129`).
 - no definido: errores de API y estados de red para backend ausente; productor WS11. no definido: fallos parciales de una reparación; productor WS12.
-**Nodo:** WS03, WS08, WS11 (preparación/contrato); WS15 (WS15.1, WS15.2), WS29 (implementación); reparación externa documentada; WS16 (aceptación del diagnóstico).
+**Nodo:** WS03, WS08, WS11, WS12 (preparación/contrato); WS15 (WS15.1, WS15.2), WS29 (implementación); reparación externa documentada; WS16 (aceptación del diagnóstico).
 **Gate humano:** WS16 (diagnóstico de link roto y backend ausente). WS29 es prueba técnica propia (mutación real en store temporal) y su ausencia no bloquea el manual básico; no es gate humano.
 
 ## UF08 — Cambiar de proyecto
@@ -214,7 +215,7 @@ Desde un documento -> abrir Schema/clase origen -> inspeccionar campos/referenci
 - Impacto: ver UF07 (`sldb edges check`, `deskops drift check`; `infraestructura.md:92`, `deskops.md:129`); hueco: Changes/impacto avanzado (`ui.md:80`), productor WS29.
 **Error:**
 - no definido: efectos y errores de draft/validate/promote ante autoridad faltante; productor WS12 (contrato) y WS39 (prueba); WS39 no habilita promover si la API o la autoridad falta (`dag.yaml`, nodo WS39, acceptance).
-**Nodo:** WS03, WS04, WS09, WS12 (preparación/contrato); WS39 (reutiliza Schema/editar clases; requiere WS12, WS13, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT); no bloquea WS31.
+**Nodo:** WS03, WS04, WS09, WS12 (preparación/contrato); WS39 (reutiliza Schema/editar clases; requiere WS12, WS13, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT); WS29 (impacto avanzado, opcional y propuesto según evidencia); no bloquea WS31.
 **Gate humano:** WS39 (prueba humana específica; G_HUMAN_MODEL).
 
 ## UF10 — Arranque y ausencia de desk
@@ -233,7 +234,7 @@ Seguir instrucciones reproducibles de instalación/arranque -> abrir ejemplo Tal
 **Error:**
 - `deskops init` exige destino de directorio resoluble (`deskops.md:35`); `bootstrap`/`init` tocan la máquina (`~/.sldb`, `deskops.md:34-35`): no se invocan desde una lectura.
 - no definido: error mostrado al fallar la inicialización o el arranque; productor WS11 (lectura) y WS15.2 (orientación).
-**Nodo:** WS02, WS04, WS08 (preparación/contrato); WS15 (WS15.2), WS40, WS17 (implementación); WS43 (publicación real); WS16 (aceptación).
+**Nodo:** WS02, WS04, WS08, WS11 (preparación/contrato); WS15 (WS15.2), WS40, WS17 (implementación); WS43 (publicación real); WS16 (aceptación).
 **Gate humano:** WS16 (arranque).
 
 ## Precisiones de revisión
