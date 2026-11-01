@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-cerrar-corrección-de-la-revisión-9-del-plan-workspace.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Cerrar corrección de la revisión 9 del plan workspace [draft] - Dar crédito operativo completo a los cinco nodos pendientes, corregir por supersesión WS35 y el conteo de instrucciones, y dejar build --check, validate --check y status en verde.
