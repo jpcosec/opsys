@@ -101,3 +101,7 @@ Puntos que no son defectos del plan, pero que el TaskDoc de cada nodo debe fijar
 ## Añadido 2026-10-31 tras la revisión root de d9877e86
 
 - WS35: decisión de presentación pendiente, no ambigüedad resuelta. La TaskDoc de WS35 fija si los mensajes sin intento resoluble se muestran como hueco de procedencia o se excluyen, y su aceptación, antes de ejecutar.
+
+## Adenda 2026-11-01, corrección de procedencia
+
+Lista completa en `runs/subagents/20261031-atribucion-decisiones/comparison-ledger.md`, sección «Para la promoción». Lo principal: el TaskDoc de WS12 debe citar T-P03.1, porque su aceptación no enumera la definición operativa de «modo manual exclusivo». Revisar además `output_scope` de WS36 y WS24, frontera de WS13.3 con `workspace.mjs`, y el caso de WS45.
