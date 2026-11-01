@@ -99,6 +99,7 @@ Aceptación: distinguir pendiente de activo y de listo para ejecutar. No convert
 - Enrutar y leer capa: `deskops add board`/`edit board` (`deskops.md:54,65`); `deskops next` y `next_action_report` (`deskops.md:74,163`); `advance task` (`deskops.md:98`).
 - Lectura en UI: `GET /api/desk/board`, `/api/desk/task` (`ui.md:67`, base parcial).
 - hueco: autoría de tarea, evidencia y contexto desde la UI, enrutado en Board y capa lista sin solapamiento (`ui.md:73-75` ausente); `deskops.md` no audita un cálculo de «capa lista sin solapamiento». Dueño graph_ui, productor WS26 (WS26.1, WS26.2), sobre contrato WS12.
+- hueco: vincular rituales a una tarea. `deskops bind` solo audita `bind pill` (`deskops.md:72-73`); no se afirma operación de vínculo de rituales. Dueño deskops, productor WS12.
 - hueco: tablero agrupado, dependencias navegables, apertura de TaskDoc en el lector (`ui.md:67`); dueño graph_ui, productor WS22.
 **Error:**
 - `add task` falla sin evidencia declarada o inferible (`deskops.md:51`); `edit task`: id inmutable (`deskops.md:62`); `drawer remove` rechaza fragmentos ya referenciados por `from_drawer` (`deskops.md:45`).
@@ -144,7 +145,7 @@ Aceptación: cada mensaje/resultado corresponde al intento correcto; completado 
 **Operación:**
 - Auditadas, solo soporte local, no dispatch Scion: `deskops runtime template` (plantilla de agente y RunDoc, `deskops.md:142`), `runtime workers` (`deskops.md:140`), `runtime supervise` (bloquea sobre un agente e informa; nunca responde ni avanza tareas, `deskops.md:141`).
 - UI: trazabilidad tarea-intento-mensaje, adaptador de despacho e intervención ausentes (`ui.md:82-84`); el panel de workers adyacente no se afirma que cubra el alcance (`ui.md:82`).
-- hueco: preparar bundle (término no localizado en el DAG ni en las tres auditorías); dueño deskops, sin productor en el DAG.
+- hueco: preparar el bundle de contexto para delegar. `create_task_bundle` existe, pero escribe y rutea una tarea (`deskops.md:51,154`), no un bundle de delegación; el DAG no nombra uno. Dueño deskops, sin productor en el DAG.
 - hueco: identidad de intento y dispatch confirmado; dueño deskops, productor WS32 (WS32.1, WS32.2).
 - hueco: vincular mensajes, resultados y decisión humana al intento; dueño deskops, productor WS33 (WS33.1, WS33.2).
 - hueco: exponer dispatch y respuesta autorizados; dueño deskops, productor WS34 (WS34.1, WS34.2).
@@ -168,7 +169,7 @@ Aceptación: se distingue error, conflicto, cambio y pérdida de soporte. Las op
 - Diagnóstico: `deskops doctor` (`mutates=True`; usa `sldb stores check`), `deskops status` (alias deprecado) (`deskops.md:31-32`); `deskops drift check` (`deskops.md:129`); `deskops desk update` (informe sin `--apply`, `deskops.md:107`); `deskops graph missing` (`deskops.md:125`); `deskops atoms validate` (`deskops.md:113`).
 - Enlaces y aristas: `sldb docs recover --all`, `GET /lint` (`infraestructura.md:88,91`); `sldb edges check|unresolved` (`infraestructura.md:92`); anclas: `sldb anchors check` (`infraestructura.md:94`); historia: `sldb docs history` (`infraestructura.md:60`).
 - Cambios e impacto (WS29): `sldb stores check`, `deskops doctor`, `deskops drift check` y relaciones a 1 salto (`dag.yaml`, nodo WS29, scope/acceptance); en UI hay problemas por nodo (`WR._check_problems_for_node`, `ui.md:60,80`). hueco: vista Changes/Integrity (`ui.md:80`); dueño graph_ui, productor WS29.
-- Modo degradado: errores de catálogo/nodo/proyección (`ui.md:60`); 503 de store no disponible (`ui.md:61`). hueco: backend caído, modelo no importable y fallo CDN con diagnóstico visible y reintento que conserve foco/historia (`ui.md:60`); dueño graph_ui, productor WS15.1.
+- Modo degradado: errores de catálogo/nodo/proyección (`ui.md:60`); 503 de store no disponible (`ui.md:61`). hueco: diagnóstico de fallo CDN y reintento que conserve foco/historia (`ui.md:60`); backend caído y modelo no importable, exigidos por WS15.1 (`dag.yaml`, nodo WS15.1), sin línea de auditoría que los cubra. Dueño graph_ui, productor WS15.1.
 - Inspeccionar soporte: `deskops show task`/`show atom`, `list tasks` (`deskops.md:87,91,76`); `sldb docs show` (`infraestructura.md:30`).
 - Reparación por operaciones existentes, sin botón universal: `sldb edges rebuild` (`infraestructura.md:116`), `sldb anchors record` (`infraestructura.md:94`), `deskops desk update --apply`, `desk migrate`, `desk replace`, `retire` (`deskops.md:107,105,106,46`), `edit task`/`edit atom` (`deskops.md:62,66`). Registrar trabajo de corrección: `deskops add task` (`deskops.md:51`).
 - Archivo no modelado no es corrupción: el universo tiene 118 archivos no modelados, p. ej. `desk/contexts/README.md` (`deskops.md:218,226`).

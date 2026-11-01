@@ -29,3 +29,13 @@
 
 ## Resumen
 Diez UF completas con seis campos, citas a auditorías y huecos con dueño y productor; texto original intacto.
+
+## Ajuste del Supervisor tras Tester v1 PASS
+
+Claude Opus 5.5, pane `w3Y:p1`, corrigió tres puntos que el Tester marcó como menores, sin Executor, porque este borrador alimenta WS09, WS11 y WS12:
+
+- UF06: decía que «bundle» no se localiza en las auditorías; sí aparece `create_task_bundle` (`deskops.md:51,154`). Sigue siendo hueco: esa operación escribe una tarea.
+- UF07: `ui.md:60` no cubre backend caído ni modelo no importable; ahora lo declara.
+- UF04: faltaba el hueco de vincular rituales.
+
+Las revisiones de la primera renovación quedan en `renovacion-1/` como historia.
