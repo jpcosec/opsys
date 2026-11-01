@@ -55,3 +55,9 @@ Sin cambio de contrato ahora:
 - WS22: selección y enlaces comunes pueden vivir fuera de `board/`.
 - WS13.3: conducta al cerrar pestañas, activa o no, con historia.
 - WS35: sigue vigente la clasificación del cierre anterior.
+
+## Adenda 2026-10-31: esta comparación queda sustituida
+
+El Tester v1 dio FAIL con defectos reales en `decisiones.md` (ver adenda 2 de `attribution-map.md`). La corrección cambia el input de los 73, así que esta tanda y `47b9e38b` quedan como historia y no como evidencia vigente.
+
+Corrección de una afirmación mía de este ledger: dije que «modo manual exclusivo» estaba «sin antecedente en el intento previo» y «solo» en la tabla inicial y `dag.yaml:1327`. Es incorrecto: el `output.md` anterior de WS19.1 contiene la frase, y yo había abierto solo su ambigüedad y disposición, recortadas. Lo cierto y verificado con `grep`: en `decisiones.md`, `brief.md`, `alcance.md` y `cobertura.md` no está, y en `dag.yaml` solo en esa línea. La conclusión de no regresión no cambia.

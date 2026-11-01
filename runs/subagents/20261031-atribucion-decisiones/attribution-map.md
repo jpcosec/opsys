@@ -53,3 +53,14 @@ Claude Opus 5.5, pane `w3Y:p1`, abrió cada rango de `dag.yaml` citado y corrigi
 - T-P07: se agrega 945-946 (WS13.3), respaldo directo de la disposición local.
 
 Las demás citas a `dag.yaml` se abrieron y coinciden. «Canal completo» sigue sin frase vigente.
+
+## Adenda 2 — 2026-10-31, tras Tester FAIL
+
+Claude Opus 5.5, pane `w3Y:p1`, corrigió `decisiones.md` directamente. Donde difiera, vale esto:
+
+- P01: la fila decía «Operador Scion se designa después»; el ítem 2 dice «Scion se designa cuando abordemos ese ramal». «Operador» pasa a T-P01, con fuente. Esto no lo marcó el Tester: lo vi al releer.
+- P03: vuelve al texto de la pregunta, «con otro coordinador escribiendo, la UI queda en lectura/handoff». No cambia el sentido; quita paráfrasis.
+- P04: era falso que se hubiera quitado «solo». Ahora la fila dice «Markdown editable tras probar…», como la respuesta. `source_mode=editable` se conserva como parámetro de baseline.
+- P06: la corrección anterior perdió la condición «con otro coordinador escribiendo», y la fila Humana afirmaba más de lo aceptado. Recuperada. T-P06 conserva la precisión técnica.
+
+El Tester también señaló como no literales P05 y lo que queda de P01. El criterio de root es «conserva solo lo aceptado», no copia literal; esas omisiones no agregan nada. El Tester las marcó porque mi brief pedía «literalmente», más estricto que el contrato.

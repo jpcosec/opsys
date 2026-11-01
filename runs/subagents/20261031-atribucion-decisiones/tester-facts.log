@@ -1,0 +1,26 @@
+DATOS DEL SUPERVISOR. El Tester no pudo ejecutarlos: son declaraciones, no verificación suya.
+
+HEAD: 47b9e38b
+
+$ git diff --stat eaa70908 f76c2586 -- desk/drawer/plans/workspace-documental/decisiones.md
+ .../plans/workspace-documental/decisiones.md       | 28 ++++++++++++++++------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
+
+$ context_review.py status
+all reviews current
+exit 0
+
+$ build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+
+$ validate_plan.py --check (últimas líneas)
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+
+$ pytest tests/test_context_review_helper.py
+13 passed in 1.35s
+
+Comparación dag.yaml antes/después del registro, por programa: igual salvo context_review.evidence e input_sha256 de los 73; contract_sha256 iguales. Líneas del diff fuera de rutas de evidencia e input_sha256: 0.
+
+Tabla de filas fuera de la tabla P01-P09 borradas por el parche: ninguna. Columna nodos/gates P01-P09 igual antes y después.
