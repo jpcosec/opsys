@@ -4,7 +4,9 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-ws08-precisar-user-flows-y-criterios-observables.md
+- desk/tasks/task-ws10-precisar-índice-y-convención-del-manual.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +47,6 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- WS08: Precisar user-flows y criterios observables [draft] - Completar desk/drawer/plans/workspace-documental/borradores/user-flows.md para que UF01-UF10 tengan entrada, salida, operación, error, nodo y gate humano, con operaciones citadas de las auditorías WS02-WS04 y huecos marcados.
+- WS10: Precisar índice y convención del manual [draft] - Completar desk/drawer/plans/workspace-documental/borradores/manual.md con esquema de capítulos, ejemplo fijo y definiciones de disponibilidad, contrastados con las auditorías WS02-WS04, sin redactar el manual.
