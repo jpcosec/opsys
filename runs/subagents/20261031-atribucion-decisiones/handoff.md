@@ -28,4 +28,4 @@ Fecha: 2026-11-01. Autor: Claude Opus 5.5, pane `w3Y:p1`. Sin push.
 - **Suite general:** no se reabrió; sigue no verde.
 - **Saldo DeepSeek:** esta sesión consumió tres tandas, sondas y Tester; las dos primeras tandas se repitieron por defectos míos en la fuente.
 
-Ledger: `comparison-ledger.md`. Cobertura: `ws07-cobertura-efectiva.md`. Notas: `promotion-notes.md`.
+Ledger: `comparison-ledger.md`. Cobertura: `ws07-cobertura-efectiva.md`. Notas: `runs/subagents/20261031-ajuste-canonico-ws06/promotion-notes.md`.

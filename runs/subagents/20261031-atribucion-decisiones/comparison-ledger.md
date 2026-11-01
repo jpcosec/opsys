@@ -78,3 +78,11 @@ Hallazgos que no acepto, con motivo:
 ## Adenda 2026-11-01, tras Tester v5 FAIL
 
 El Tester v5 pasó todos los puntos salvo uno: «distinto de la autoría inicial» podía leerse como que son personas distintas, sin fuente que lo sostenga. Corregí esa frase en la cobertura y en la adenda 3 del mapa: ahora dice que el actor registrado no prueba la autoría inicial. Sin Tester posterior: es un cambio de redacción sobre dos archivos fuera de los bundles, y lo comprobé con `grep`.
+
+## Adenda 2026-11-01, tras aprobación root
+
+Corrijo el criterio de la sección «Regla de rechazo». Escribí «una vez por nodo» y lo usé para no pedir un tercer intento a WS33.2. Ese límite no vale como motivo: ningún presupuesto ni número de intentos autoriza aceptar una contradicción material. Ante un fallo real, se aclara o descompone el brief según el ritual, sin rescate experto. WS33.2 sigue aceptado, pero por otra razón: leído completo, su FUTURO no asigna el acta a su propio delta, según el Tester root.
+
+Precisión: en la adenda tras Tester v4 dije que la arista WS26–WS30 es «saliente»; es arista incidente a WS26, con WS30 como dependiente.
+
+Corrección del Tester final: el reporte de `root-approval-20261101.md` es posterior al closeout `6ac96c80`. Ese closeout ocurrió sin PASS final de Tester.
