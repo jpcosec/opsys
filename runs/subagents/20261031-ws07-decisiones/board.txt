@@ -1,0 +1,1 @@
+task-ws07-mantener-registro-trazado-de-decisiones-acordadas | ready_for_testing | ritual-closeout

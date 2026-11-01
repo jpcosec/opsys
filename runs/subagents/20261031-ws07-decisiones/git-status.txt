@@ -1,0 +1,22 @@
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M desk/tasks/task-ws07-mantener-registro-trazado-de-decisiones-acordadas.md
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/drawer/tasks/task-separar-atribucion-en-decisiones-p01-p06.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-ws07-decisiones/board.txt
+?? runs/subagents/20261031-ws07-decisiones/coverage-report.md
+?? runs/subagents/20261031-ws07-decisiones/git-status.txt
+?? runs/subagents/20261031-ws07-decisiones/handoff.md
+?? runs/subagents/20261031-ws07-decisiones/result-summary.md
+?? runs/subagents/20261031-ws07-decisiones/tester-input.md
+?? runs/subagents/20261031-ws07-decisiones/tester-pane.txt
+?? runs/subagents/20261031-ws07-decisiones/tester-receipt.json
+?? runs/subagents/20261031-ws07-decisiones/tester-result-summary.md
+?? runs/subagents/20261031-ws07-decisiones/tester-v1-result-summary.md
+?? runs/subagents/20261031-ws07-decisiones/tester-v2-input.md
+?? runs/subagents/20261031-ws07-decisiones/tester-v2-receipt.json
+?? runs/subagents/20261031-ws07-decisiones/tester-v2.stderr
+?? runs/subagents/20261031-ws07-decisiones/tester.exit
+?? runs/subagents/20261031-ws07-decisiones/tester.stderr
+?? runs/subagents/20261031-ws07-decisiones/validation.log
