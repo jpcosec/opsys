@@ -43,3 +43,11 @@ Claude Opus 5.5, pane `w3Y:p1`, corrigió `decisiones.md` y `context-review-guid
 - P07 y P09: mi parche quitó «Executor por encargo TaskDoc v2» y este mapa no lo declaró. Fue una omisión mía contra la orden de mantener actores. No la detectaron ni la revisión del Supervisor ni los Tester v1 y v2. La levantó el revisor de WS07 en la tanda 2. Restituido como actor técnico registrado, distinto de la autoría inicial, que sigue sin localizar.
 - T-P03.1, nueva: WS12 produce la definición operativa de «modo manual exclusivo». Origen: revisión root 2026-11-01, no el ítem 1.
 - Guía: núcleo humano frente a derivaciones técnicas, y dry-run por aristas reales.
+
+## Resultado final — 2026-11-01
+
+Fuente vigente: `b2720ae2`, aprobada de forma focal por root por sus bytes (`root-focal-approval-20261101.md`). `decisiones.md` separa lo humano de T-Pxx, restituye el actor de P07/P09 y añade T-P03.1. `context-review-guide.md` separa núcleo humano y dry-run por aristas reales.
+
+73 revisiones v2 registradas, 67 attempt-1 y 6 attempt-2; comparación y límites en `comparison-ledger.md`. `dag.yaml` cambió solo en evidencia y hash de entrada. Cobertura: `ws07-cobertura-efectiva.md`. Tanda 1 y tanda 2 quedan como historia.
+
+Tester: v1 FAIL real, v2 PASS focal, v3 PASS de fuente, v4 FAIL de atribución, v5 FAIL por una frase. Corregidos. Sin Tester posterior a esa última frase. Ver adendas del ledger.

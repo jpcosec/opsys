@@ -69,6 +69,6 @@ El Tester también señaló como no literales P05 y lo que queda de P01. El crit
 
 Claude Opus 5.5, pane `w3Y:p1`, corrigió `decisiones.md` y `context-review-guide.md` directamente, por `root-decision-20261101.md`. Donde difiera, vale esto:
 
-- P07 y P09: mi parche quitó «Executor por encargo TaskDoc v2» y este mapa no lo declaró. Fue una omisión mía contra la orden de mantener actores. No la detectaron ni la revisión del Supervisor ni los Tester v1 y v2. La levantó el revisor de WS07 en la tanda 2. Restituido como actor técnico registrado, distinto de la autoría inicial, que sigue sin localizar.
+- P07 y P09: mi parche quitó «Executor por encargo TaskDoc v2» y este mapa no lo declaró. Fue una omisión mía contra la orden de mantener actores. No la detectaron ni la revisión del Supervisor ni los Tester v1 y v2. La levantó el revisor de WS07 en la tanda 2. Restituido como actor técnico registrado, que no prueba la autoría inicial, sin localizar.
 - T-P03.1, nueva: WS12 produce la definición operativa de «modo manual exclusivo». Origen: revisión root 2026-11-01, no el ítem 1.
 - Guía: núcleo humano frente a derivaciones técnicas, y dry-run por aristas reales.

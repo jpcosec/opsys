@@ -74,3 +74,7 @@ Hallazgos que no acepto, con motivo:
 - WS26 «sus aristas WS12/WS22/WS30» no es defecto: WS30 depende de WS26, así que la arista existe, saliente.
 - «`owner-decisions.json` no existe»: existe y está versionado. El Tester no lo halló porque la cobertura no daba la ruta.
 - El Tester dice que hubo cambio de fuente: es la corrección autorizada, no un hallazgo nuevo.
+
+## Adenda 2026-11-01, tras Tester v5 FAIL
+
+El Tester v5 pasó todos los puntos salvo uno: «distinto de la autoría inicial» podía leerse como que son personas distintas, sin fuente que lo sostenga. Corregí esa frase en la cobertura y en la adenda 3 del mapa: ahora dice que el actor registrado no prueba la autoría inicial. Sin Tester posterior: es un cambio de redacción sobre dos archivos fuera de los bundles, y lo comprobé con `grep`.

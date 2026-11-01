@@ -1,0 +1,7 @@
+DATOS DEL SUPERVISOR, no verificación tuya.
+HEAD: f2982fe3
+$ git diff --stat 47b9e38b b2720ae2 -- dag.yaml: (vacío)
+$ git ls-files owner-decisions
+runs/subagents/20261031-finalizar-plan-workspace/owner-decisions.json
+$ git log -1 ff28c68c
+ff28c68c desk: cierra WS06 correspondencia de alcance
