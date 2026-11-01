@@ -1,0 +1,15 @@
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M "desk/tasks/task-consolidar-ajuste-can\303\263nico-del-plan-workspace-tras-ws06.md"
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-ajuste-canonico-ws06/board.txt
+?? runs/subagents/20261031-ajuste-canonico-ws06/git-status.txt
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester-facts.log
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester-input.md
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester-pane.txt
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester-receipt.json
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester-result-summary.md
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester.exit
+?? runs/subagents/20261031-ajuste-canonico-ws06/tester.stderr
+?? runs/subagents/20261031-ajuste-canonico-ws06/validation.log

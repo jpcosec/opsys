@@ -1,0 +1,1 @@
+task-consolidar-ajuste-canónico-del-plan-workspace-tras-ws06 | ready_for_testing | ritual-closeout

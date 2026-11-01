@@ -1,0 +1,32 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+commit 456e96f4
+sha256 brief.md c36f08057d0995449a83b24d6439bed1e20b7a0fd2baffafc3706561c3f22abc
+sha256 dag.yaml 8e128dd9a0a36adc2e4337a128be7e1a63fc4401f177adf00ed06a7c1324881f
+sha256 reconciliacion.md e661d634d6bd1d8dff752e1a035dfe9fe7a4160324d9e437b59f993910e82c85
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check | tail -1
+Generated table/task files/diagram spec match dag.yaml
+
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check >/dev/null; echo exit=$?
+exit=0
+
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+
+$ sed -n 1,4p desk/drawer/plans/workspace-documental/validation.txt
+STRUCTURE/COHERENCE: PASS
+Context review states: {'reviewed': 73}; stale or pending problems: 0
+64 candidate nodes; 16 explicit gates; no cycles (including gate producers).
+Generated README/table/task files/diagram spec match canonical YAML.
+
+$ git diff --name-only 6d41f301..HEAD -- deskops/ tests/ docs/ desk/drawer/plans/workspace-documental/decisiones.md desk/drawer/plans/workspace-documental/auditoria/ desk/drawer/plans/workspace-documental/validate_plan.py desk/drawer/plans/workspace-documental/build_plan.py desk/drawer/plans/workspace-documental/context_review.py | wc -l
+0
+
+$ git log --format="%h %s" 6d41f301..HEAD | cut -c1-80
+456e96f4 desk: registra 73 revisiones baratas de la revision 9 del plan
+ee57a457 desk: fuentes finales de revision 9 tras segunda ronda de revisiones
+9e0d7694 desk: corrige contratos tras revisiones baratas de la revision 9
+6353ecc6 desk: congela consolidacion canonica del plan workspace, revision 9
+bf617848 desk: disposicion de revisiones de la consolidacion canonica
+22ce15f6 desk: activa consolidacion canonica tras WS06 con decision root
+e6529362 desk: handoff de WS06 para revision root
