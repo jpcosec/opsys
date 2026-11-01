@@ -121,3 +121,20 @@ Firma: Claude Opus 5.5, coordinador. Lo anterior se conserva; donde difiera, rig
 - **WS35.** La disposición `WS35/1ee9ece.../attempt-1/disposition.md` clasificó como «no es ambigüedad» qué hace la vista con mensajes sin intento, y yo la acepté al leerla. Fue extrapolación: el scope distingue mensajes por API de resultados vinculados por WS33.1. Clasificación vigente: decisión de presentación pendiente al promover. Productor: TaskDoc de WS35, que fija mostrar o excluir esos mensajes y su aceptación antes de ejecutar. No cambia contrato ni pide decisión de producto hoy.
 - **WS33, WS13 y WS15.** Las acepté como fieles aunque su dry-run no recorría hijos. Ese juicio fue insuficiente y se reemplaza con los intentos nuevos.
 
+## Filas vigentes tras la adenda, 2026-10-31
+
+Sustituyen a las filas de arriba de esos cinco nodos, que quedan como historia.
+
+| Nodo | Intento | input sha256 | output sha256 | disposition sha256 | Redactó | Comparó y acepta | Fecha |
+|---|---|---|---|---|---|---|---|
+| WS12 | `attempt-3` | `bb6a2868ffb1` | `bec3484bbdd2` | `19cd36d96553` | Claude Opus 5.5 | Claude Opus 5.5, coordinador: contrato completo y output leídos | 2026-10-31 |
+| WS13 | `attempt-2` | `3d32236a4e1b` | `d97771811ba0` | `25c8c59700ca` | Claude Opus 5.5 | Claude Opus 5.5, coordinador: contrato completo y output leídos | 2026-10-31 |
+| WS15 | `attempt-2` | `add171863adf` | `66b63fe5d046` | `d90e80aa1a0a` | Claude Opus 5.5 | Claude Opus 5.5, coordinador: contrato completo y output leídos | 2026-10-31 |
+| WS33 | `attempt-2` | `1b03f9b321ff` | `d9a9a9e23f5a` | `f35c8d1887d3` | Claude Opus 5.5 | Claude Opus 5.5, coordinador: contrato completo y output leídos | 2026-10-31 |
+| WS37 | `attempt-3` | `3c322cc30808` | `8e20211bd26b` | `a3684730afdc` | Claude Opus 5.5 | Claude Opus 5.5, coordinador: contrato completo y output leídos | 2026-10-31 |
+
+Instrucción por intento vigente, leída del argv de cada recibo: {'original': 37, 'ampliada en memoria': 31, 'v2 durable': 5}. El cambio de helper no invalida los otros 68: siguen vigentes con su versión declarada, sin afirmar que se repitieron.
+
+Recibos incompletos históricos, sin crédito y no registrados como evidencia: 84.
+
+Esos recibos incompletos históricos no son todos manuales. Por campos faltantes: 77 sin stdin; 4 sin cwd, pi_version, start, end, pid, input_sha256, output_sha256, technical_failure; 3 sin cwd, pi_version, start, end, pid, output_sha256, technical_failure. Los que omiten technical_failure son los intentos manuales; el resto viene de rondas con esquema anterior del runner. Ninguno es evidencia registrada, y no se rellenó ninguno.
