@@ -1,6 +1,6 @@
 # Ledger de comparación, tanda sobre 023a05e3
 
-Fecha: 2026-11-01. Rol: Supervisor. Actor: Claude Opus 5.5, pane `w3Y:p1`. Revisores: `pi`, deepseek-flash, thinking low, por `context_review.py`, instrucción `v2-ejecucion-hipotetica`. Vigente. Sustituye como evidencia a la renovación de WS08/WS10 y a la tanda sobre `b2720ae2`, que quedan como historia; tampoco se tocó WS10 ni `manual.md`.
+Fecha: 2026-11-01. Rol: Supervisor. Actor: Claude Opus 5.5, pane `w3Y:p1`. Revisores: `pi`, deepseek-flash, thinking low, por `context_review.py`, instrucción `v2-ejecucion-hipotetica`. Vigente. Sustituye como evidencia a la renovación de WS08/WS10 y a la tanda sobre `b2720ae2`, que quedan como historia. Las revisiones de WS10 se renuevan por la fuente común; `manual.md` no cambió.
 
 Fuente aprobada de forma focal por root, por bytes: `root-focal-approval.md`. Esa aprobación no cubre estos outputs ni el cierre de fase.
 
