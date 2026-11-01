@@ -1,0 +1,12 @@
+## REFORMULACION
+Publicar en el deskops real la navegación documental validada en Taller: aplicar entradas/índices authored de WS17, enlazar por identidad/origen todos los repos de `deskops list repositories` y reutilizar registry como inventario derivable. Resultado: `desk/README.md`, mapa de ecosistema/índices según P09 y contrato WS11, átomos de acuerdos durables enlazados y acta en `runs/subagents/workspace-documental-acceptance/publicacion/acta.md` con commit vía `deskops closeout commit`. Repo dueño: deskops. Límites: no escribe ni modifica repos hermanos —salvo tarea y acuerdo de alcance—, no impone modelos nuevos, no publica solo el ejemplo WS40 como ecosistema real y no omite repos sin entrada.
+
+## AMBIGUEDADES
+1. «P03–06 solo si mapa expone operaciones»: no se define qué cuenta como “exponer operaciones” (mencionar, enlazar o documentar una operación). Obliga a inventar el criterio que decide si se crean átomos P03–P06 y, por tanto, parte del contenido del mapa.
+2. «P08 remite a protocolo»: no se nombra el protocolo ni su ruta. Obliga a inventar el destino de la remisión de P08 en el mapa.
+
+## DRY-RUN
+WS43 no es agregado: es documentación ejecutable. Lecturas: `decisiones.md` (P01/P02/P07/P08/P09), `contratos/navegacion.md` de WS11 y `operaciones.md` de WS12, plantillas WS17 en `ejemplo/nav/`, acta WS30 con plantillas/paths/hashes validados, `desk/registry/repo-*.md`, `deskops list repositories` y átomos existentes. Cambios previstos: escribir/actualizar `desk/README.md` y el mapa/índices authored en deskops; crear átomos de acuerdos durables y enlazarlos desde el mapa; crear la acta de publicación y commitear con `deskops closeout commit`. Dependencias/gates: consume WS17 y WS30 (con `G_HUMAN_MANUAL`), contratos WS11/WS12, `G_PRODUCT` satisfecho y `G_WRITE_CONTRACT` per_delta de WS43; si falta alias/root o contrato, detenerse y registrar hueco. Errores: repo sin entrada authored → enlazar registry y follow-up; no omitir ni fabricar entrada. Validación: enlaces resuelven a paths existentes, roots autorizados, mapa contrastado con lista WS30, todos los repos cubiertos y acta+commit.
+
+## FUTURO
+WS31 consume el acta de publicación y los átomos para el manual. El participante P08 recorre la publicación real y queda registrado en acta. La promoción fijará paths/modelo exactos. WS12/humano actualizarán `accepted_scope_nodes` de `G_WRITE_CONTRACT` para WS43; no hay nueva decisión de producto.

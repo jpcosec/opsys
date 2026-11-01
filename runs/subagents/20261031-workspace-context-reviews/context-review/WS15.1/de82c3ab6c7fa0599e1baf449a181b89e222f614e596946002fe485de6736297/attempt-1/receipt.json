@@ -1,0 +1,32 @@
+{
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada: archivos, cambios concretos, consumo de dependencias y gates, errores y validación esperada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto; no basta listar prerrequisitos ni verificar aceptaciones. Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/de82c3ab6c7fa0599e1baf449a181b89e222f614e596946002fe485de6736297/attempt-1/input.md"
+ ],
+ "cwd": "/home/jp/proyectos/SLDB_1/deskops",
+ "stdin": "devnull",
+ "pi_version": "0.67.3",
+ "start": "2026-11-01T22:56:41.925466+00:00",
+ "end": "2026-11-01T22:57:37.271948+00:00",
+ "pid": 2756558,
+ "returncode": 0,
+ "input_sha256": "de82c3ab6c7fa0599e1baf449a181b89e222f614e596946002fe485de6736297",
+ "output_sha256": "f2164a79dc31b6a290c5cfe7346cd77ae073223036bdd2596b5273a6d4f74502",
+ "technical_failure": false
+}

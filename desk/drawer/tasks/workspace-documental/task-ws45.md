@@ -36,7 +36,7 @@ Tareas: WS12. Gates: G_SLDB_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en da
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS45/17c4a573968407ae1525289e942ee5cc47fca483abb3719b62c5bc097f583961/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS45/c47ece5eaac555fd461f00f4f35c1f690f9041ae89fc6778fc98f00a56ff41cf/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

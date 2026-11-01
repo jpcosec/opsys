@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: validar de punta a punta UF06 (delegar e intervenir) con un agente Scion real y un actor humano: pregunta, intervención, corrección, evidencia, decisión y cierre mediante el handoff de WS28. Resultado: acta humana y recibo del gate G_HUMAN_DELEGATE, guardados/commiteados en `graph_ui:runs/subagents/workspace-documental-acceptance/delegacion/`. Repo dueño: graph_ui (`output_base: repository_root/`). Límites: nodo de validación, no de implementación; no sustituye integración por mocks ni “completed” por aprobación; exige G_EXEC y G_SCION; no bloquea WS31; no autoriza dispatch ni permisos.
+
+AMBIGUEDADES
+1. «protocolo de validacion-humana.md (guion, acta en runs/subagents/workspace-documental-acceptance/delegacion/)». El guion de UF06 no tiene productor nombrado en `depends_on`: cobertura.md atribuye el guion a WS08, pero ni WS36 ni WS30 lo producen ni lo declaran como entrada. Obligaría a inventar pasos, escenarios de error y criterios del guion, o a suponer sin dependencia que se reutiliza el de WS08.
+
+DRY-RUN
+No es agregado: es validación ejecutable por equipo humano/técnico. Lecturas: `dag.yaml` (WS37 y gates), validacion-humana.md, cobertura.md, decisiones.md (P08), brief/alcance, acta WS30, contratos WS12/WS28, salida WS36 en `frontends/mindmap/views/workspace/execution/`, registros WS33.1/33.2, `auditoria/scion-probe.md` (WS44), `autorizaciones/scion.md` y corpus WS40. Cambios: crear y commitear `acta.md`, guion/evidencia y recibo G_HUMAN_DELEGATE en graph_ui; sin código funcional salvo scripts de prueba que fije el TaskDoc. Dependencias: G_EXEC (permiso externo), G_SCION (WS44 y operador), WS36, WS30, WS28, WS12 y WS40. Errores: si falta G_EXEC/G_SCION/actor, detener y registrar hueco con repo dueño; un fallo de recorrido bloquea el gate y abre tarea en el nodo causal; causa no aislada → incidente con repo/superficie, sin inventar causalidad. Validación: persona completa UF06 sin rutas memorizadas ni ayudas no registradas; acta con actor/versión/guion/resultado/soportes y commit/blob enlazados; el gate solo se emite con esa acta, sin aprobación simulada.
+
+FUTURO
+WS38 consume el acta para publicar los capítulos de delegación. El solicitante/designee emite G_EXEC; WS44 designa operador y produce G_SCION. WS31 no se bloquea. Si hay incidente no aislado, el supervisor receptor decide el diagnóstico.

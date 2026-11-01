@@ -40,7 +40,7 @@ Solapamiento: `scion` en external_references. Solo delta o ticket existente tras
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/3f1cffd8b8037a9fa8aaf26c0c01d9b736569067609a9364046b36ed84889f4f/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/0b28781a4ea990bdc739bbdad91d50840f7e9b112fafd97a32c24b41bff04f21/attempt-2']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

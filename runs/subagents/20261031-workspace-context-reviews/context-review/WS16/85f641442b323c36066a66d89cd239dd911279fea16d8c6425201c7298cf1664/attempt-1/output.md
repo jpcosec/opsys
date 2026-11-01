@@ -1,0 +1,12 @@
+## REFORMULACION
+WS16 es un nodo de validación (gate humano temprano) en `graph_ui`, que produce `runs/subagents/workspace-documental-acceptance/lectura/acta.md` y resuelve `G_HUMAN_READ` (habilitar uso de mutaciones en UI). Propósito: que una persona real recorra UF01, UF03 lectura, UF07 diagnóstico, UF08 lectura y UF10 arranque sobre el corpus de WS40, sin sustituto agente. Límites: no crea corpus propio, no implementa correcciones, no muta entre desks, no mide guardados (WS30), no habilita mutaciones por sí mismo; el acta se guarda/commitea en repo dueño, no en deskops.
+
+## AMBIGUEDADES
+1. «supervisor del repo receptor atribuye el fallo por evidencia» — no se identifica nominalmente al supervisor ni el repo receptor concreto (¿graph_ui por `owner_repo`?), lo que obligaría a inventar el actor que atribuye y acepta el incidente. Cita: «supervisor del repo receptor atribuye el fallo por evidencia».
+2. «registra incidente/diagnóstico en repo/superficie» — «superficie» no define ubicación ni formato del registro; el ejecutor tendría que inventar dónde asentar el incidente antes de asignar nodo. Cita: «registra incidente/diagnóstico en repo/superficie antes de asignar nodo».
+
+## DRY-RUN
+Lecturas: `dag.yaml` (WS16 y vecinos), `validacion-humana.md`, `cobertura.md`, `borradores/user-flows.md`, manifiesto JSON de WS40, contrato WS11/WS41, `auditoria/*.md` vía WS08. Cambios previstos: crear `acta.md` con guion, versiones/commits, comandos públicos, timestamps, resultados, observaciones y decisión explícita del participante; si hay fallo, acta + incidente en repo dueño, sin tocar código. Dependencias consumidas: WS14 (búsqueda abierta por identidad), WS15 (errores/degradado), WS40 (dos desks, tercer repo sin desk, README, enlaces rotos), WS41 (lectura multidesk), WS08 (matriz UF→nodo/gate). Gates: `G_UI_READ` requerido; `G_HUMAN_READ` queda pendiente hasta acta válida, no bloquea pruebas aisladas de API. Validación esperada: recorrido completo sin rutas memorizadas, 20 aperturas y 10 búsquedas con p95 ≤2 s, arranque ≤10 s, error visible de backend/link roto, UF08 sin mutación; si se excede objetivo, registrar y mantener gate pendiente. Commit atómico del acta y enlace commit/blob en el recibo.
+
+## FUTURO
+Deciden/producen otros: el participante humano ejecuta y firma el acta; el supervisor del repo atribuye fallos y abre corrección; promoción y autorización de ejecución vía TaskDoc/`deskops`; WS17 enriquece navegación después; WS30 consume `G_HUMAN_READ` para edición.

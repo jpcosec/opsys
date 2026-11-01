@@ -1,0 +1,118 @@
+{
+ "node_id": "WS23",
+ "role": "context-reviewer",
+ "attempt": 1,
+ "input_sha256": "f3f89bf90458de154b725724e5699ff5bf9fad21f3396202ae9137c536bea457",
+ "ordered_sources": [
+  {
+   "path": "desk/drawer/plans/workspace-documental/context-review-guide.md",
+   "sha256": "dec1766a708b1fdfea8af1233c8f2fbe5aa03ce5d7c07e431082bf9d00975d0e",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/brief.md",
+   "sha256": "c36f08057d0995449a83b24d6439bed1e20b7a0fd2baffafc3706561c3f22abc",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/alcance.md",
+   "sha256": "203ef33a2a98706a6746f93d1912bd518c27ba88768c0d2181d553dbb802eba2",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/decisiones.md",
+   "sha256": "f2d4b58f41587ff91d511e801a21a11795b3ad54ec59b91edcc2c3e4a12bd72d",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/cobertura.md",
+   "sha256": "da759798ae818c08d19c1f66b663fdfde7165b5f9c83071ffca3444389fe71ba",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/reconciliacion.md",
+   "sha256": "e661d634d6bd1d8dff752e1a035dfe9fe7a4160324d9e437b59f993910e82c85",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#external_reference:workspace",
+   "sha256": "01941fa802226c22f1d7e6c8af13a5ffd1eabace5e40c370b4320596ef29c466",
+   "projection": "external_reference"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#node:WS23",
+   "sha256": "767fae9b35a88ffd9352c5edfb2b3e8ef0641f2dc80ba2a31e00dfa6a7140960",
+   "projection": "node_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS13",
+   "sha256": "d64dca9749b799a684b432a136a9bd1e925c6fc72ca9cf88ddb367cfe135b3d8",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS09",
+   "sha256": "1e7c00e3b93de6cbbc88e6b5e7e7b40f542ebfbc70932af77eca121288204482",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS30",
+   "sha256": "ff76bc951fd4b08197a9d8fd6135badaa6aece6fb1a41621b26c969ca2032630",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#gates",
+   "sha256": "2625f2a58fc0b21a8218357803f4c39670fc1b64efc96b9f6eb103239cbe1bbd",
+   "projection": "gate_contracts"
+  }
+ ],
+ "node_contract_sha256": "055c99436a4e54a1214de258a398c4b24d000e4aeac3867898fefc9edefd4971",
+ "edge_contracts": [
+  {
+   "id": "WS13",
+   "sha256": "3c1b922ac5269c1cff3e7f58c0e1277d95d4daee3ca00cfdedb4b95a31291396"
+  },
+  {
+   "id": "WS09",
+   "sha256": "db63604050fba77fca8130958b185656c0e634f791c40645e296f674dca529b8"
+  },
+  {
+   "id": "WS30",
+   "sha256": "bff9e3fa419e52da3c539a79ca668fdab834cac90c5af219a4f5337c1dba0f70"
+  }
+ ],
+ "provider": "deepseek",
+ "model": "deepseek-flash",
+ "thinking": "low",
+ "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review; no se afirma precio mínimo global",
+ "isolation_flags": [
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools"
+ ],
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada: archivos, cambios concretos, consumo de dependencias y gates, errores y validación esperada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto; no basta listar prerrequisitos ni verificar aceptaciones. Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/WS23/f3f89bf90458de154b725724e5699ff5bf9fad21f3396202ae9137c536bea457/attempt-1/input.md"
+ ],
+ "instruction_version": "v2-ejecucion-hipotetica",
+ "system_prompt_sha256": "9fce4f529ed487c05bb6a6cc9b7df60910578fde80bff1375dcd2a06caa41a29"
+}

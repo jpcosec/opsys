@@ -36,7 +36,7 @@ Tareas: WS05, WS07. Gates: G_PRODUCT. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS44/d7979a413a247af96dffb4ba50b711d61cf3e4992cb152e07ab5dc91b997c6b4/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS44/dada2d5f2a817ba21f74361bdc9297fca71560f014ce0c61a9ffeeb90a902b1b/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

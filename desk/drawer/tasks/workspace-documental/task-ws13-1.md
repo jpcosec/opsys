@@ -38,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente 
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/d7f685918701d2aedda10184951c4b0fb9f38cb9b86a43d0e1b586714c17297e/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/31f6affbe39ee01dc084f2cfb22f775d066a890c15bd08a2a6f77125f569f262/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

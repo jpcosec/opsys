@@ -1,0 +1,11 @@
+## REFORMULACION
+WS35 es un nodo ejecutable de implementación en `graph_ui`: construir en el workspace una vista de solo lectura que muestre la trazabilidad tarea de deskops → intento → conversación/mensajes → resultados → decisión. Cada mensaje, resultado y decisión debe quedar bajo su intento y tarea, enlazar a su fuente, y la evidencia debe abrir en el lector WS13. `completed` no puede mostrarse como aprobado/cerrado. Resultado previsto: componentes en `frontends/mindmap/views/workspace/execution/` y `tests/`. Límites: no ejecutar, no escribir, no aprobar ni cerrar, no tocar tablas Scion; depende de WS33 y WS27 y requiere G_SCION y G_UI_READ; promoción no autorizada.
+
+## AMBIGUEDADES
+1. Cita: «mensajes de Scion por su API» y «cada mensaje, resultado y decisión se muestra bajo su intento y tarea». El contrato vecino WS33.1 establece que «un mensaje con varios intentos o sin intento resoluble no se vincula y registra la procedencia como hueco». WS35 no define si esos mensajes-hueco se muestran, se filtran o dónde se ubican; obliga a inventar su tratamiento y si la aceptación les aplica.
+
+## DRY-RUN
+Un ejecutor futuro leería `dag.yaml`, el TaskDoc promovido, los contratos/salidas de WS33.1/WS33.2 y WS27.1/WS27.2, el contrato del lector WS13 y la estructura existente de `graph_ui`. Crearía componentes de vista y adaptadores de lectura en `execution/`, más pruebas en `tests/`: agrupación por intento y tarea, enlaces a procedencia, apertura de evidencia en WS13 y ausencia de traducción `completed`→aprobado/cerrado. Consumiría WS33 y WS27 como agregados ya cumplidos; comprobaría G_SCION verificado por WS44 y el recibo per-delta de G_UI_READ para WS35. Si falta gate, contrato o API, se detendría y registraría el hueco con repo dueño, sin sustituto. Validaría con tests de agrupación, enlaces, lector y no autoaprobación, y con el recibo de aceptación del delta.
+
+## FUTURO
+WS36 consumirá esta vista para integrar delegación e intervención. El receptor de `graph_ui`/P01 emitirá el acta G_UI_READ específica de WS35. WS44 verificará G_SCION. WS33.1/WS33.2 y WS27.1/WS27.2 producirán los datos y evidencias que WS35 solo muestra. La promoción fijará archivos, textos y pruebas concretas.

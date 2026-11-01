@@ -1,0 +1,11 @@
+## REFORMULACION
+PK03 es un agregado de revisión, no una tarea ejecutable: termina cuando terminan WS13, WS14, WS15, WS16, WS40 y WS41. Su propósito es constituir el lector útil inicial y el descubrimiento sin ID del workspace documental, con aceptación humana temprana. El resultado sustantivo es un paquete integrado en `graph_ui`: abrir documentos modelados y no modelados, conservar foco/historia, ver Code/grafo, buscar con estados honestos y mostrar errores/degradación sobre el corpus Taller —dos desks y un repo sin desk—, además de lectura segura entre desks. Repo dueño: `deskops`; la implementación corresponde a `graph_ui`. Límites: sin edición, Changes ni Scion; PK03 no crea tareas ni aristas.
+
+## AMBIGUEDADES
+Ninguna. Los términos operativos («descubrimiento sin ID», «soporte modelado/no modelado», «mediciones P08») quedan delimitados por los hijos y por las fuentes suministradas; no obligan al ejecutor de PK03 a inventar resultado, aceptación, repo, dependencia ni límite.
+
+## DRY-RUN
+Prerrequisitos externos: WS11 entrega el contrato de navegación e identidad; WS08, los user-flows. WS13 ejecuta sus hijos WS13.1–WS13.3 y entrega lector integrado, Code/grafo, dos documentos lado a lado, tabs/historia y foco. WS40 puede ejecutarse en paralelo tras WS11/WS08 y produce un manifiesto JSON con roots, stores, commits y documentos clave, más dos repos con desk y uno sin desk. WS14 consume WS13 y añade búsqueda con resultados navegables y tres estados —sin resultados, error y degradación—. WS15 consume WS13, ejecuta WS15.1–WS15.2 y añade errores de lectura y orientación sin desk. WS41 consume WS13 y WS40 para lectura multidesk con aliases autorizados, errores de path y vuelta por historia. WS16, último, consume WS14, WS15, WS40, WS41 y WS08; el humano recorre el corpus, mide apertura/búsqueda/arranque P08, registra fallos y no mide guardado. Validación conjunta: pruebas técnicas por hijo más acta humana WS16; si falta una salida o contrato, se detiene y registra el hueco sin sustituto. `G_UI_READ` debe estar disponible para los hijos que lo requieren; su pendiente no es defecto.
+
+## FUTURO
+WS11/WS08 producen los contratos previos; WS16 decide la aceptación humana y el supervisor de `graph_ui` atribuye fallos; WS17 enriquece después el corpus; WS30 aborda guardado; recibos por delta y permisos Scion quedan fuera de PK03.

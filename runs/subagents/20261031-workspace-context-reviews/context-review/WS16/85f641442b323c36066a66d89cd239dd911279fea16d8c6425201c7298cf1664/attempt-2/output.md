@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: ejecutar el gate humano temprano de lectura y descubrimiento sobre el corpus Taller. Resultado: acta en `graph_ui:runs/subagents/workspace-documental-acceptance/lectura/acta.md` con recorrido humano real, tiempos y evidencias; habilita G_HUMAN_READ solo para uso de UI, no para desarrollo/pruebas API. Repo dueño: `graph_ui`. Límites: consume el manifiesto de WS40 y no crea corpus propio; no muta el baseline ni entre desks; no implementa correcciones; no mide guardados hasta WS30; el agente no sustituye la aprobación humana.
+
+AMBIGUEDADES
+1. «supervisor del repo receptor atribuye el fallo por evidencia»: no se define quién es ese supervisor, cómo recibe el fallo ni con qué criterio atribuye; el ejecutor tendría que inventar actor y canal para cerrar el camino de fallo.
+
+DRY-RUN
+Nodo no agregado: se ejecuta como validación humana. Lecturas: `dag.yaml` (WS16 y vecinos), `validacion-humana.md`, `cobertura.md`, `brief.md`, `alcance.md`, manifiesto JSON de WS40, contrato WS11 y salidas de WS14, WS15 y WS41. Cambios previstos: crear/actualizar el acta en `graph_ui:runs/subagents/workspace-documental-acceptance/lectura/` y, si hay fallo, registrar incidente; incluir el acta en commit atómico del repo dueño; no tocar código ni corpus. Dependencias: WS40 aporta roots, stores, commits, documentos clave, entrada mínima, segundo desk y tercer repo sin desk; WS41 permite lectura del segundo desk; WS14 aporta búsqueda; WS15 errores/orientación; WS08 mapea UF a operaciones. Gates: G_HUMAN_READ permanece `pending` hasta acta humana verificable; no habilita mutaciones UI. Errores: manifiesto o corpus ausente → detener y registrar hueco con repo dueño; fallo de recorrido → registrar sin corregir; umbral P08 excedido → registrar y mantener gate pendiente sin rebajar. Validación esperada: humano completa UF01, UF03 lectura, UF07 diagnóstico, UF08 lectura y UF10 sin rutas memorizadas; al menos 20 aperturas y 10 búsquedas; arranque ≤10 s y p95 de apertura/búsqueda ≤2 s; errores de link roto y backend ausente distinguidos.
+
+FUTURO
+El participante humano ejecuta el recorrido y firma el acta; el supervisor atribuye fallos; un nodo de corrección posterior los implementa; WS30 mide guardados y edición; WS17 enriquece índices; el humano puede revisar explícitamente un objetivo P08 con razón y evidencia; WS43 publica navegación real.

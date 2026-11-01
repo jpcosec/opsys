@@ -44,7 +44,7 @@ Tareas: WS12, WS22, WS26.1, WS26.2. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE,
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26/b6e9a137bf6f64f0825508337d3e505129dd490ff876363a2f0b4fee4505bfae/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS26/713b75994aa88a7834a1fab4e20a1a55a2b915e7e95f1ee8af0967f19b450188/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

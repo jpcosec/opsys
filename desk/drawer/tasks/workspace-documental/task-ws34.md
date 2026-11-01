@@ -43,7 +43,7 @@ Tareas: WS33, WS12, WS34.1, WS34.2. Gates: G_EXEC, G_SCION, G_WRITE_CONTRACT. Ve
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS34/94322813f0fb8359977ca687c366e3c52fd30010d35be37b043a383b2c985c35/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS34/717aa140db2be0744df15ed37c48421663847e505fe1d5e2f3ccd0858365919e/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

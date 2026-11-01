@@ -1,0 +1,11 @@
+REFORMULACION
+WS34 es un agregado no ejecutable de implementación en deskops. Propósito: exponer un adaptador público restringido para dispatch y reply de Scion, con confirmación, identidad de intento, timeout/errores y autoridad del coordinador. Resultado: cierre conjunto de WS34.1 (dispatch) y WS34.2 (reply); WS34 no produce artefacto propio y sus dependientes siguen apuntando a su ID. Repo dueño: deskops. Límites: solo adaptador público; nada de shell arbitrario ni duplicar transporte; no enviar mensajes en planificación; no elegir umbral de timeout propio; implementación sujeta a promoción no autorizada y a G_EXEC, G_SCION y G_WRITE_CONTRACT por delta. Depende de WS33 y WS12, además de sus hijos.
+
+AMBIGUEDADES
+ninguna.
+
+DRY-RUN
+Al ser aggregate, WS34 no se ejecuta. Un ejecutor futuro recorrería: (1) WS34.1 lee salidas de WS33 (referencias de conversación/mensaje/intento y decisión) y la sección de WS12 para dispatch (política/umbral de timeout y autoridad del coordinador); comprueba G_WRITE_CONTRACT de WS34.1 y G_SCION/G_EXEC; implementa el adaptador en `runtime/`, `cli/commands/runtime.py` o API fijada, y `tests/`; correlaciona el dispatch con el id de intento local WS32.1 y registros WS32.2; valida un dispatch aceptado y uno rechazado/vencido. Si falta la política, se detiene y registra hueco. (2) WS34.2, tras WS34.1, reutiliza WS33 y la política de reply de WS12; implementa reply vinculado al intento; valida intento correcto y timeout como fallo sin confirmación. La integración conjunta exige que ambos adaptadores compartan identidad de intento y política, que WS34.1 no convierta ausencia de confirmación en éxito/fallo y que WS34.2 no envíe fuera del intento. WS34 valida el conjunto cuando ambos hijos aceptan: gates reales, agente real, aceptado/rechazado/timeout y reply correcto; sin duplicar transporte ni shell.
+
+FUTURO
+WS12 produce la política y umbral de timeout por delta y la autoridad del coordinador; WS33 entrega referencias/procedencia; WS44/operador designado produce G_SCION; el humano otorga G_EXEC. La promoción decidirá archivos, pills, átomos y preflight; G_WRITE_CONTRACT registrará recibos per_delta. WS36 consumirá WS34 solo tras su cierre. WS34 no decide aprobaciones, API ni permisos Scion.

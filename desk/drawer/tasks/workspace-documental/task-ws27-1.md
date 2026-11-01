@@ -37,7 +37,7 @@ Tareas: WS13, WS12. Gates: G_UI_READ. Ver estados/evidencia en dag.yaml; un arch
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/fe84fa907657259b0a513f4935f8c9a85e375a50585604a9862902e3ef6063dc/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/ddc6fd62bc8e09132c01adb6086134293e17a9268605ea5dab31805bab0f2d7e/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 
