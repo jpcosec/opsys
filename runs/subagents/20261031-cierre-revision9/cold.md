@@ -1,0 +1,14 @@
+## REFORMULACION
+Objetivo: cerrar la corrección de la revisión 9 dando crédito operativo a WS13, WS15, WS33, WS12 y WS37; reclasificar WS35 por supersesión; corregir el conteo 40/33; dejar build, validate y status en verde. Alcance: planificación en el repo `deskops`, evidencia bajo `runs/subagents/20261031-cierre-revision9/`, `desk/drawer/plans/workspace-documental/dag.yaml` solo en `context_review` de nodos repetidos y proyecciones, ledger con adenda, notas de WS35 y nuevos intentos/disposiciones. Límites: no tocar WS07, WS08-12, código de producto, Scion, push ni decisiones de producto; no reabrir correcciones aceptadas ni revisar los otros 68; preservar cuatro rutas sucias ajenas.
+
+## AMBIGUEDADES
+1. «que ningún intento registrado tenga recibo incompleto» contradice «Sus intentos manuales quedan como evidencia histórica declarada, con recibo incompleto; no se rellenan». Obliga a inventar si los recibos históricos son excepción admitida, si deben desregistrarse o si el check fallará.
+2. «clasificación pasa a decisión de presentación pendiente al promover» y «con aceptación de ese caso antes de ejecutar» no fijan valor exacto, campo, formato ni quién firma la aceptación. Obliga a inventar el enum y el registro de aceptación.
+3. «ya con instrucción durable» y `--reason <razón>` no reproducen el texto durable ni la razón. Obliga a inventar wording que cambia el hash del input y las revisiones.
+4. «La disposición original se conserva» no dice cómo representar simultáneamente la disposición antigua y la supersesión fechada. Obliga a inventar el mecanismo documental.
+5. «adenda fechada» no fija fecha ni ruta exacta. Obliga a elegir fecha y ubicación no especificadas.
+
+## DRY-RUN
+Leería tarea, `review-source.md`, rituales, `comparison-ledger.md`, `dag.yaml`, `promotion-notes.md` de WS06 y artefactos actuales de `context-review/`; verificaría hashes, intentos y estado. Editaría: adenda en el ledger, disposición fechada de WS35, entradas `context_review` de los cinco nodos y proyecciones generadas. Luego lanzaría intentos frescos con `context_review.py run ... --new-attempt --reason ...`, conservando previos; compararía contrato completo y firmaría lecturas; actualizaría ledger sin reescribir evidencia. Ejecutaría `build_plan.py --check`, `validate_plan.py --check`, `context_review.py status`, `pytest -q tests/test_context_review_helper.py` y encargaría tester de solo lectura.
+
+Errores esperables: `KeyError 'technical_failure'` o recibos incompletos; hashes/estado no coincidentes; ambigüedad real del revisor; fallo de build/validate/status. No rellenaría PIDs ni fechas. Resultado esperado: cinco intentos frescos con recibo completo y dry-run sustantivo, WS35 supersedido, conteo corregido, checks en 0, status `all current` y `tester-result-summary.md` con PASS.

@@ -111,3 +111,13 @@ El Tester no pudo verificar que comparé los 73 nodos ni recomputar las 73 filas
 | WS43 | delivery | `attempt-1` | `b95504ec7e04` | `fb2785ecb4d7` | `f3d4e98a6c77` | Claude Sonnet, agente preparatorio; atribución corregida aquí | Claude Opus 5.5, coordinador: leído y comparado | 2026-10-31 |
 | WS44 | delivery | `attempt-1` | `a3a9ea212399` | `803d28941d6c` | `f650d4339484` | Claude Sonnet, agente preparatorio; atribución corregida aquí | Claude Opus 5.5, coordinador: leído y comparado | 2026-10-31 |
 | WS45 | delivery | `attempt-1` | `32ee1060c471` | `f42df0ad98ab` | `75533c7a8842` | Claude Opus 5.5, coordinador | Claude Opus 5.5, coordinador: leído y comparado | 2026-10-31 |
+
+## Adenda 2026-10-31, tras la revisión root de d9877e86
+
+Firma: Claude Opus 5.5, coordinador. Lo anterior se conserva; donde difiera, rige esta adenda.
+
+- **Conteo.** Este ledger dijo 39 y 34 revisiones. Según el recuento root sobre argv, fueron 40 con SYSTEM original y 33 con SYSTEM ampliado. La afirmación anterior era incorrecta.
+- **Recibos.** Dije que los intentos manuales de WS12 y WS37 valían por su `receipt.json`. Eso sobrestimaba: omiten technical_failure, output_sha256, pid y otros campos, y hacían fallar `attempts()`. Quedan como evidencia histórica declarada, con recibo incompleto, sin rellenar y sin crédito operativo.
+- **WS35.** La disposición `WS35/1ee9ece.../attempt-1/disposition.md` clasificó como «no es ambigüedad» qué hace la vista con mensajes sin intento, y yo la acepté al leerla. Fue extrapolación: el scope distingue mensajes por API de resultados vinculados por WS33.1. Clasificación vigente: decisión de presentación pendiente al promover. Productor: TaskDoc de WS35, que fija mostrar o excluir esos mensajes y su aceptación antes de ejecutar. No cambia contrato ni pide decisión de producto hoy.
+- **WS33, WS13 y WS15.** Las acepté como fieles aunque su dry-run no recorría hijos. Ese juicio fue insuficiente y se reemplaza con los intentos nuevos.
+
