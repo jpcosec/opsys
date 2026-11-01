@@ -38,7 +38,7 @@ Tareas: WS14, WS15, WS08, WS40, WS41. Gates: ninguno adicional. Ver estados/evid
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS16/85f641442b323c36066a66d89cd239dd911279fea16d8c6425201c7298cf1664/attempt-2']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS16/3aa41b4971f9bf85322f953711a92c7c85c00a920c2907c968d99b9926f3044d/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

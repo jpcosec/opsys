@@ -37,7 +37,7 @@ Tareas: WS30, WS10, WS43. Gates: G_HUMAN_MANUAL. Ver estados/evidencia en dag.ya
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS31/292a58b04129ce1da6d2cd401ecf590f471378aeab645a01807f483abd74d67b/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS31/b65a19cad5716e0113900585d98f2529537d509f705441406c87ef3a24fddf7e/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

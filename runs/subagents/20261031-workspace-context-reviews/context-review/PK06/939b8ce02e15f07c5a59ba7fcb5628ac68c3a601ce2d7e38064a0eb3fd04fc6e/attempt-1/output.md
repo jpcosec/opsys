@@ -1,0 +1,13 @@
+REFORMULACION
+PK06 es un agregado de planificación, no ejecutable, cuyo propósito es publicar la entrega básica: manual versionado y entradas/mapa del desk real sobre recorridos ya demostrados. Resultado: `docs/workspace-user-manual.md` con actas/versiones y límites, `desk/README.md`/mapa de ecosistema con links/roots verificables, átomos de decisiones/contratos y provenance atom→doc. Repo dueño: deskops. Límites: no ejecuta, no autoriza tareas ni añade aristas; no sustituye actas humanas ni convierte en disponibles Scion/modelos/Changes, que siguen propuestos. Termina cuando WS43 y WS31 completan sus aceptaciones e integración.
+
+AMBIGUEDADES
+1. «entradas desk/README.md y mapa authored probadas» no aclara si todo repo listado debe tener entrada authored; WS43 admite «Repo listado sin entrada authored: enlazar registro existente y mostrar entrada ausente con follow-up». Obliga a inventar si ese caso satisface o bloquea la aceptación del paquete.
+2. «links/provenance atom→doc verificadas» no delimita si cubre solo átomos de WS31, los de WS43 o ambos, ni quién verifica el conjunto; WS31 asigna Tester y WS43 al participante P08. Obliga a inventar actor y alcance de la verificación integrada.
+3. «Cada instrucción enlaza acta/versión y límites» no precisa si «instrucción» incluye las entradas del mapa real; WS43 no exige acta/versión por entrada. Obliga a inventar una obligación nueva para WS43 o a excluirla.
+
+DRY-RUN
+Hipotético: WS10 (índice) y WS17 (plantillas `ejemplo/nav/`) llegan antes; WS30 produce acta humana en graph_ui tras validar WS17 y WS21–28/42. WS43 se ejecuta primero: lee plantillas y acta WS30, aplica entradas/índices al deskops real, escribe `desk/README.md`, mapa y átomos, enlaza repos por root/alias, trata entradas ausentes con registry+follow-up, crea `runs/subagents/workspace-documental-acceptance/publicacion/acta.md` y commit de closeout. Consume G_HUMAN_MANUAL, G_PRODUCT y G_WRITE_CONTRACT; si falta contrato/acta, se detiene y registra hueco. Después WS31: lee índice WS10, acta WS30 y mapa/acta WS43; publica manual y assets, crea un átomo por Pxx/contrato, cita acta WS30 o WS43 por instrucción, mantiene Scion propuesto y verifica links/etiquetas/atom→doc con Tester independiente. Integración: comprobar que instrucciones del manual resuelven a entradas reales y actas/commits citados, que el mapa no fabrica entradas y que atom→doc tiene fuente. Fallos de plantilla vuelven a WS17; fallo humano bloquea WS30/WS43; link roto abre tarea al repo dueño.
+
+FUTURO
+WS17, WS30, WS10 y WS40 producen insumos; WS43 y WS31 producen entregables; el humano decide G_HUMAN_MANUAL (y G_PRODUCT/G_WRITE_CONTRACT); Tester y participante P08 validan. WS38/WS29/G_HUMAN_MODEL quedan fuera.
