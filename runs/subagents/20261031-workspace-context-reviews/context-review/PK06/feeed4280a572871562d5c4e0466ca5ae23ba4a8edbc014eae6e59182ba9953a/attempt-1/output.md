@@ -1,0 +1,11 @@
+## REFORMULACION
+PK06 es un agregado de publicación, no una tarea ejecutable: termina cuando terminan sus hijos WS31 y WS43. Su propósito es publicar el manual básico y las entradas del desk real sobre recorridos ya demostrados. El resultado sustantivo es un manual versionado en `docs/workspace-user-manual.md` con instrucciones enlazadas a actas, versión y límites, más `desk/README.md` y mapa/índices publicados, con átomos que preservan acuerdos durables y procedencia documento→átomo. Repo dueño: `deskops`. Límites: no autoriza tareas ni añade aristas; no escribe repos hermanos; Scion, modelos y Changes no demostrados quedan propuestos y no bloquean el manual básico; el gate de comprensión no mide completitud sustantiva.
+
+## AMBIGUEDADES
+Ninguna.
+
+## DRY-RUN
+Hipotéticamente, WS17 produce plantillas `ejemplo/nav/` que enlazan por roots/aliases del manifiesto WS40. WS30 recorre esas entradas en Taller, valida edición/operación y deja acta con plantillas, paths, hashes y recorridos; un fallo de guion bloquea el gate y se abre tarea en el nodo causante. WS30 transfiere esa acta a WS43, que también consume WS17 y el contrato `contratos/navegacion.md` de WS11. WS43 aplica las entradas validadas al desk real: escribe `desk/README.md`, mapa/índices según P09, átomos enlazados y `runs/subagents/workspace-documental-acceptance/publicacion/acta.md`; enlaza todos los repos de `deskops list repositories`, y si falta entrada authored enlaza el registro existente y registra follow-up sin fabricarla. Consume `G_HUMAN_MANUAL`, `G_PRODUCT` y `G_WRITE_CONTRACT`; si falta alguno, se detiene y registra el hueco. WS10 aporta índice y convención desde `borradores/manual.md`. WS31 consume WS10, acta WS30 y acta/commit WS43, escribe manual, assets y átomos, verifica links resolubles, etiquetas y atom→doc; un tester independiente comprueba antes del cierre. La validación conjunta exige que cada instrucción remita a acta/versión, que las entradas reales estén probadas y que Scion/modelos/Changes sin prueba sigan propuestos.
+
+## FUTURO
+El participante P08 recorre y firma actas humanas; WS11/WS12 producen contratos; WS17/WS40 generan plantillas y corpus; WS30 y WS43 reciben actas y commits; un tester independiente valida WS31. Nada de eso se ejecuta aquí ni se presume aprobado.

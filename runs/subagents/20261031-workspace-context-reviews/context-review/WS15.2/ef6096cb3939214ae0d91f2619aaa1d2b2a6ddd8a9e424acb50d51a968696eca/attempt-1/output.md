@@ -1,0 +1,11 @@
+REFORMULACION
+WS15.2 es un nodo delivery de graph_ui: estado de orientación del lector cuando el proyecto no tiene desk. Debe mostrar la ruta absoluta del proyecto como destino y el comando `deskops init <ruta>`, sin inicializar desde la UI ni mutar el proyecto; tras un init externo y refresco, la lectura debe mostrar el desk real. Salida en `frontends/mindmap/views/workspace/orientation/` y `tests/`, con rutas de lectura del contrato WS11. Límite: solo orientación/handoff; no crea desks. Depende de WS13 y de G_UI_READ por delta; promoción no autorizada.
+
+AMBIGUEDADES
+1. «un proyecto sin desk muestra orientación» / «Abrir un proyecto sin desk»: no se define qué señal identifica “sin desk” —ausencia de `desk/`, de store, de Board o de configuración— ni si equivale al error de «store inexistente» que reutiliza reconciliación. El ejecutor tendría que inventar el criterio de detección y el estado que dispara la pantalla, con riesgo de confundir un fallo de store con un proyecto sin desk.
+
+DRY-RUN
+Lecturas: nodo, contratos WS11/WS13, `workspace_routes.py`, `workspace-view.js`, reconciliación C-06/C-12/C-62 y reglas de alcance. Cambios: crear el estado/vista bajo `frontends/mindmap/views/workspace/orientation/`, engancharlo al host del lector cuando la lectura indique ausencia de desk, mostrar ruta absoluta y comando, sin endpoint de inicialización; pruebas en `tests/` con proyecto temporal sin desk. Dependencias/gates: consume WS13 y rutas de WS11; G_UI_READ sigue pendiente y es per_delta: se consume el acta del delta concreto al preparar/promover, no la aceptación global. Errores: si falta la señal de “sin desk” o la fuente de la ruta, detenerse y registrar el hueco con repo dueño; no crear store sustituto ni inicializar desde la UI. Validación: abrir sin desk y comprobar orientación, ruta y comando sin mutar; ejecutar `deskops init` fuera de la UI; refrescar y comprobar el desk real.
+
+FUTURO
+WS11 fija las rutas de lectura; WS13 aporta el lector; un humano u operador ejecuta `deskops init` fuera de la UI; el receptor P01 emite el acta G_UI_READ del delta; WS16/WS40 validan con corpus; el TaskDoc de promoción fija archivos, textos y casos de prueba; WS15 cierra cuando sus hijos cumplen.

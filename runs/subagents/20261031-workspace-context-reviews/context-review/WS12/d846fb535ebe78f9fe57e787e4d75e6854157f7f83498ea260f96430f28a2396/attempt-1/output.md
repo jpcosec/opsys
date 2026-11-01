@@ -1,0 +1,12 @@
+## REFORMULACION
+WS12 es un nodo de planificación en `deskops` que debe cerrar el contrato de operaciones y escritura en `contratos/operaciones.md`. Propósito: fijar whitelist por operación/campo/canal/actor/revisión/Git/efectos, adapter público, política de coordinador, campos protegidos, representación de precondición de escritura, comparación del canal de captura a drawer, captura a protoátomo y sección de timeout de dispatch/reply por delta. Resultado: contrato con matriz de capacidades/efectos y huecos con productor. Límites: solo escribe contrato y enlaces en deskops; no ejecuta mutaciones, no crea actas interrepo, no aprueba API/modelo y no inventa canal. Consume WS11, WS08 y G_WRITE_POLICY (satisfied).
+
+## AMBIGUEDADES
+1. «producir… la política y el umbral de timeout de dispatch y reply» frente a «La duración no se elige ahora: esa sección del contrato WS12 la fija al preparar esos deltas». Obliga a decidir si WS12 cierra con un umbral concreto o con una sección diferida, y quién la completa después; ambas lecturas son defendibles.
+2. «precondición de escritura…/locks» sin definir qué debe contener la política de locks ni si es requisito de cierre. Aunque P03 aclara que «lock solo UI no coordina CLI/agentes», el ejecutor debería inventar el alcance mínimo (proceso, store, coordinador) para publicar esa parte.
+
+## DRY-RUN
+Lecturas: brief, alcance, decisiones, dag, contrato WS11, user-flows WS08, inventarios WS02–04, modelos/lifecycle de deskops, API/CLI sldb citadas. Cambios previstos: crear/actualizar `contratos/operaciones.md` bajo `output_base`; enlaces internos; sin tocar código ni actas. Dependencias: contrato WS11 cerrado y G_WRITE_POLICY satisfecho; si falta inventario o API citada, registrar hueco con repo dueño y parar esa operación, sin sustituto. Gates: WS12 produce evidencia para G_WRITE_CONTRACT por delta; G_UI_WRITE/G_SLDB_WRITE siguen externos y no se autoaceptan. Errores esperados: operación sin adapter, campo protegido sin modelo auditado, captura sin conducta de workflow, timeout sin política. Validación futura: revisor comprueba whitelist completa, evidencia citada por path/símbolo/commit, matriz de huecos y mapeo de recibos; no exige habilitar mutaciones.
+
+## FUTURO
+P01/repos receptores emiten actas por delta; WS45 verifica la precondición; WS34.1/34.2 consumen la política de timeout; WS25.2 consume el canal de captura; WS20/G_SOURCE cubre raw-source. G_WRITE_CONTRACT se acepta por IDs/efecto, no conjuntamente.

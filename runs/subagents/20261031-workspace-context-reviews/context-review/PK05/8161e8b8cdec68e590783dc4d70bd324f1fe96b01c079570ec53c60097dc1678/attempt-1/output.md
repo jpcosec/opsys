@@ -1,0 +1,11 @@
+## REFORMULACION
+PK05 es una agrupación de planificación/entrega M: autoría manual segura, intake/trabajo y revisión/cierre por handoff verificables. No ejecuta nada; ordena y transfiere resultados entre hijos. Resultado sustantivo: contrato por delta WS12; edición de campos/conflicto WS19; guardado fuente reversible WS20/G_SOURCE; precondición de payload WS45/G_PAYLOAD_PRECONDITION; fuente/render WS21; captura WS25; tareas WS26; diff/evidencia WS27; handoff de cierre WS28; conocimiento WS42; validación humana WS30 sobre UF02–05 y navegación. Repo dueño de la agrupación: deskops; los hijos producen en graph_ui/sldb según su alcance. Límites: no autoriza tareas ni añade aristas, no implementa UI, no modifica otros repos ni sustituye gates; uso de mutaciones UI espera G_HUMAN_READ.
+
+## AMBIGUEDADES
+Ninguna. El nodo declara “Agrupación de entregables sin ejecución propia” y su aceptación remite a hijos, orden, gates y validación; no obliga al ejecutor de PK05 a inventar resultado, repo, dependencia ni aceptación.
+
+## DRY-RUN
+Hipotéticamente, un ejecutor no corre PK05: prepara hijos cuando sus prerrequisitos estén satisfechos. WS12 produce contrato/whitelist y habilita WS19, WS20 y WS45. WS45 entrega inventario y pruebas de precondición; G_PAYLOAD_PRECONDITION alimenta WS19 y WS21. WS20 entrega API fuente y G_SOURCE; WS12+WS19/WS20/G_SOURCE habilitan WS21 editable. WS13+WS12 alimentan WS27; WS27+WS12 alimentan WS28. WS22+WS12 alimentan WS26; WS19+WS24+WS12 alimentan WS42. WS12 alimenta WS25. Salidas de WS17/21/22/23/24/25/26/28/42 alimentan WS30. Se transfieren contrato, inventario/pruebas, API/tests, componentes/tests, evidencia y acta. Gates consumidos: G_SOURCE, G_PAYLOAD_PRECONDITION, G_WRITE_CONTRACT/G_UI_WRITE por delta, G_HUMAN_READ y G_CLOSEOUT. Si falta contrato/API/permiso: detener y registrar hueco con repo dueño, sin sustituto. Validación integrada: WS30 recorre UF02–05 y navegación; distingue evidencia declarada/encontrada/verificada; guardar sin commit; cierre confirmado por commit/Deskops; acta en repo dueño.
+
+## FUTURO
+WS12 publica el contrato; WS45 produce inventario/pruebas y G_PAYLOAD_PRECONDITION; WS20 produce G_SOURCE; WS30 produce acta humana; la persona responsable acepta deltas por repo y G_HUMAN_READ se resuelve en WS16.
