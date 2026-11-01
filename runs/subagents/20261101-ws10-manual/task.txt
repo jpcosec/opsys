@@ -1,0 +1,9 @@
+Task: task-ws10-precisar-índice-y-convención-del-manual
+Title: WS10: Precisar índice y convención del manual
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/workspace-documental/task-ws10.md
+Closeout evidence: commit, document
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
