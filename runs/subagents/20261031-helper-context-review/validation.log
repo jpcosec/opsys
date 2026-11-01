@@ -1,0 +1,7 @@
+2026-10-31T21:52:12-03:00
+13 passed in 1.37s
+build --check -> exit 0
+validate --check -> exit 1 (ESPERADO: AssertionError: ['WS12: receipt incomplete', 'WS37: receipt incomplete'])
+status -> WS12: receipt incomplete;WS37: receipt incomplete;
+git diff validadores: 0 archivos
+Tester v1 FAIL, corregido; Tester v2: RESULTADO: PASS

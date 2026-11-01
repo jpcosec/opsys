@@ -1,0 +1,12 @@
+# Recolectado por el Supervisor, NO por el Tester. No es prueba independiente.
+
+$ python -m pytest -q -p no:cacheprovider tests/test_context_review_helper.py | tail -2
+.............                                                            [100%]
+13 passed in 1.36s
+
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+WS12: receipt incomplete
+WS37: receipt incomplete
+
+$ git diff --name-only 6d41f301 -- desk/drawer/plans/workspace-documental/validate_plan.py desk/drawer/plans/workspace-documental/build_plan.py | wc -l
+0

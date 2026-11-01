@@ -1,0 +1,22 @@
+ M desk/drawer/plans/workspace-documental/context_review.py
+ M desk/inbox/20261029-122044-suggestion-declare-write-ya-conserva-los-globs-autorados.md
+ M desk/inbox/20261029-122115-suggestion-traspaso-de-sesi-n-scion-piloto-coordinador-de-deskops-en-marcha.md
+ M desk/tasks/task-reparar-helper-context-review-py-del-plan-workspace.md
+?? desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+?? desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md
+?? runs/subagents/20261031-helper-context-review/board.txt
+?? runs/subagents/20261031-helper-context-review/git-status.txt
+?? runs/subagents/20261031-helper-context-review/result-summary.md
+?? runs/subagents/20261031-helper-context-review/tester-facts.log
+?? runs/subagents/20261031-helper-context-review/tester-input.md
+?? runs/subagents/20261031-helper-context-review/tester-pane.txt
+?? runs/subagents/20261031-helper-context-review/tester-receipt.json
+?? runs/subagents/20261031-helper-context-review/tester-result-summary.md
+?? runs/subagents/20261031-helper-context-review/tester-v1-result-summary.md
+?? runs/subagents/20261031-helper-context-review/tester-v2-input.md
+?? runs/subagents/20261031-helper-context-review/tester-v2-receipt.json
+?? runs/subagents/20261031-helper-context-review/tester-v2.stderr
+?? runs/subagents/20261031-helper-context-review/tester.exit
+?? runs/subagents/20261031-helper-context-review/tester.stderr
+?? runs/subagents/20261031-helper-context-review/validation.log
+?? tests/test_context_review_helper.py

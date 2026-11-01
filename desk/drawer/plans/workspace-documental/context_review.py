@@ -28,8 +28,15 @@ SYSTEM = (
     'secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, '
     'cada una con cita textual del input y qué obligaría a inventar; escribe "ninguna" si no hay), '
     'DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), '
-    'FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). Máximo 350 palabras.'
+    'FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). '
+    'REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría '
+    'un ejecutor futuro, hipotéticamente y sin ejecutar nada: archivos, cambios concretos, consumo de '
+    'dependencias y gates, errores y validación esperada. Si el nodo es un agregado o paquete no '
+    'ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente '
+    'y cómo se valida el resultado conjunto; no basta listar prerrequisitos ni verificar aceptaciones. '
+    'Máximo 350 palabras.'
 )
+INSTRUCTION_VERSION = 'v2-ejecucion-hipotetica'  # Attempts without this field used the original SYSTEM.
 ARGV = ['pi', '--provider', 'deepseek', '--model', 'deepseek-flash', '--thinking', 'low', '--offline',
         '--no-session', '--no-context-files', '--no-skills', '--no-extensions', '--no-prompt-templates',
         '--no-tools', '--system-prompt', SYSTEM, '--print']
@@ -145,44 +152,61 @@ def utc() -> str:
     return datetime.datetime.now(datetime.UTC).isoformat()
 
 
+RECEIPT_FIELDS = ('argv', 'cwd', 'stdin', 'pi_version', 'start', 'end', 'pid', 'returncode', 'input_sha256',
+                  'output_sha256', 'technical_failure')
+
+
+def receipt_state(receipt: dict) -> tuple:
+    """Classify a receipt as complete, incomplete or technical_failure, with its missing fields."""
+    missing = [k for k in RECEIPT_FIELDS if k not in receipt]
+    if receipt.get('technical_failure') is True:
+        return 'technical_failure', missing
+    return ('incomplete' if missing else 'complete'), missing
+
+
 def attempts(nid: str, input_sha: str) -> tuple:
-    """Count this input's technical failures and return its latest answered attempt, if any."""
+    """Count this input's technical failures and return its latest complete answered attempt, if any."""
     failed, answered = 0, None
     base = RUN / nid / input_sha
     for path in sorted(base.glob('attempt-*/receipt.json'), key=lambda p: int(p.parent.name.split('-')[1])):
         receipt = json.loads(path.read_text())
-        if not receipt['technical_failure']:
+        state = receipt_state(receipt)[0]
+        if state == 'complete':
             answered = path.parent
-        elif receipt.get('stdin') == 'devnull':  # Earlier receipts never reached the model.
+        elif state == 'technical_failure' and receipt.get('stdin') == 'devnull':  # Earlier receipts never reached the model.
             failed += 1
     return failed, answered
 
 
-def review(d: dict, node: dict) -> dict:
+def review(d: dict, node: dict, reason: str = '') -> dict:
     data, records = bundle(d, node)
     input_sha = sha(data)
     failed, answered = attempts(node['id'], input_sha)
-    if answered:
+    if answered and not reason:
         return {'id': node['id'], 'attempt': str(answered.relative_to(ROOT)), 'ok': True}
-    if failed >= MAX_TECHNICAL:
+    if failed >= MAX_TECHNICAL and not reason:
         return {'id': node['id'], 'attempt': str((RUN / node['id'] / input_sha).relative_to(ROOT)), 'ok': False}
     version_proc = subprocess.run(['pi', '--version'], stdin=subprocess.DEVNULL, capture_output=True, text=True)
     version = (version_proc.stdout or version_proc.stderr).strip()
-    for _ in range(MAX_TECHNICAL - failed):
+    for i in range(max(1, MAX_TECHNICAL - failed)):
         out = attempt_dir(node['id'], input_sha)
+        prev = sorted(out.parent.glob('attempt-*'), key=lambda p: int(p.name.split('-')[1]))[-1:]
         out.mkdir(parents=True)
         (out / 'input.md').write_bytes(data)
         text = canonical(node)
         (out / 'contract.json').write_text(text)
         rel = str((out / 'input.md').relative_to(ROOT))
         argv = ARGV + ['@' + rel]
+        extra = {'instruction_version': INSTRUCTION_VERSION,
+                 'system_prompt_sha256': sha(argv[argv.index('--system-prompt') + 1].encode())}
+        retry = {'retry_reason': reason, 'retry_of': str(prev[0].relative_to(ROOT)) if prev else None} if reason else {}
         neigh, _gates = neighbours(d, node)
         (out / 'manifest.json').write_text(json.dumps({
             'node_id': node['id'], 'role': 'context-reviewer', 'attempt': int(out.name.split('-')[1]),
             'input_sha256': input_sha, 'ordered_sources': records, 'node_contract_sha256': sha(text.encode()),
             'edge_contracts': [{'id': n['id'], 'sha256': sha(canonical(n).encode())} for n in neigh],
             'provider': 'deepseek', 'model': 'deepseek-flash', 'thinking': 'low', 'selection_reason': SELECTION,
-            'isolation_flags': ARGV[7:14], 'argv': argv}, ensure_ascii=False, indent=1))
+            'isolation_flags': ARGV[7:14], 'argv': argv, **extra, **retry}, ensure_ascii=False, indent=1))
         start = utc()
         proc = subprocess.Popen(argv, cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
         timed_out = False
@@ -198,7 +222,7 @@ def review(d: dict, node: dict) -> dict:
         (out / 'receipt.json').write_text(json.dumps({
             'argv': argv, 'cwd': str(ROOT), 'stdin': 'devnull', 'pi_version': version, 'start': start, 'end': utc(), 'pid': proc.pid,
             'returncode': proc.returncode, 'input_sha256': input_sha, 'output_sha256': sha(stdout.encode()),
-            'technical_failure': technical}, ensure_ascii=False, indent=1))
+            'technical_failure': technical, **retry}, ensure_ascii=False, indent=1))
         if not technical:
             return {'id': node['id'], 'attempt': str(out.relative_to(ROOT)), 'ok': True}
     return {'id': node['id'], 'attempt': str(out.relative_to(ROOT)), 'ok': False}
@@ -218,6 +242,11 @@ def stale_reviews(d: dict) -> list:
             problems.append(f'{node["id"]}: contract changed')
         elif not (ROOT / cr['evidence'][0] / 'disposition.md').is_file():
             problems.append(f'{node["id"]}: disposition missing')
+        else:
+            path = ROOT / cr['evidence'][0] / 'receipt.json'
+            state = receipt_state(json.loads(path.read_text()))[0] if path.is_file() else 'incomplete'
+            if state != 'complete':
+                problems.append(f'{node["id"]}: receipt ' + state.replace('_', ' '))
     return problems
 
 
@@ -227,7 +256,13 @@ def main() -> None:
     parser.add_argument('ids', nargs='*')
     parser.add_argument('--stale', action='store_true', help='run only nodes whose review is pending or stale')
     parser.add_argument('--jobs', type=int, default=4)
+    parser.add_argument('--new-attempt', action='store_true', help='force a new attempt after a semantic rejection')
+    parser.add_argument('--reason', default='', help='why the new attempt is needed')
     args = parser.parse_args()
+    if args.new_attempt and (args.command != 'run' or not args.ids or not args.reason.strip() or args.stale):
+        parser.error('--new-attempt needs run, explicit ids, a non-empty --reason and no --stale')
+    if args.reason and not args.new_attempt:
+        parser.error('--reason requires --new-attempt')
     d = yaml.safe_load((B / 'dag.yaml').read_text())
     if args.command == 'status':
         problems = stale_reviews(d)
@@ -240,7 +275,7 @@ def main() -> None:
         stale = {p.split(':')[0] for p in stale_reviews(d)}
         nodes = [n for n in nodes if n['id'] in stale]
     with concurrent.futures.ThreadPoolExecutor(args.jobs) as pool:
-        for result in pool.map(lambda n: review(d, n), nodes):
+        for result in pool.map(lambda n: review(d, n, args.reason.strip()), nodes):
             print(result['id'], 'ok' if result['ok'] else 'TECHNICAL_FAILURE', result['attempt'], flush=True)
 
 
