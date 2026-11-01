@@ -1,0 +1,13 @@
+Task: task-reparar-helper-context-review-py-del-plan-workspace
+Title: Reparar helper context_review.py del plan workspace
+Status: ready_for_testing
+Current node: ritual-closeout
+Task type: implementation
+From drawer: desk/drawer/tasks/task-reparar-helper-context-review.md
+Closeout evidence: tests, commit
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+Lifecycle gates:
+- task_completes -> complete: open [status = "ready_for_testing" and has(closeout_evidence_verified)]

@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-reparar-helper-context-review-py-del-plan-workspace.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Reparar helper context_review.py del plan workspace [draft] - Dejar desk/drawer/plans/workspace-documental/context_review.py con instrucción durable, intento nuevo tras rechazo semántico, recibo y manifest propios coherentes, y recibos históricos incompletos reconocidos sin crash, con pruebas en tests/test_context_review_helper.py.
