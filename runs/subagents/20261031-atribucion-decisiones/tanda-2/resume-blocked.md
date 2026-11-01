@@ -13,3 +13,7 @@ Luego: comparar los 73 outputs, disposiciones, registrar, Tester, closeout de la
 ## Actualización 2026-11-01
 
 WS27.1 reprobado: 402, `attempt-4`, request `2128c419-ed51-48dc-a494-d57ecf19e7c5`. No relanzar los 26 sin resolver antes el actor de P07/P09 (ver `comparison-ledger.md`): si root aprueba corregirlo, el input cambia y corresponde `run --stale` de los 73, no este comando. WS13 y WS19 también requieren intento nuevo si la fuente no cambia.
+
+## Sustituido 2026-11-01
+
+Este archivo ya no es ruta de reanudación. Crédito confirmado por el humano; el comando de 26 nodos queda sin efecto. La tanda de 73 se lanza sobre la fuente nueva, tras la comprobación focal de root.

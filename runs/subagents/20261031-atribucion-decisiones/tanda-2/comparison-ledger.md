@@ -43,3 +43,11 @@ WS19.1 volvió a levantar «modo manual exclusivo». Reproducido en dos tandas y
 ## Límites
 
 Las clases son juicio del Supervisor. No hubo Tester sobre esta tanda: usa el mismo proveedor sin saldo. `validate_plan.py --check` falla con 73 `input changed`, y `context_review.py status` también: es lo esperable sin registrar, no verde. `build_plan.py --check` 0 y pruebas del helper 13 passed.
+
+## Adenda 2026-11-01: fuente sustituida por decisión root
+
+Root confirmó el defecto de actor y que también lo pasó por alto. Cuando se congele la fuente corregida, estas 47 respuestas pasan a historia. Sus hallazgos sirven como antecedente, no como evidencia vigente: nada de esta tanda se registra.
+
+Corrección de una afirmación mía: atribuí los rechazos de WS13 y WS19 solo a los revisores. Root señala una causa posible en la instrucción v2, «qué transfiere cada uno al siguiente», que sugiere secuencia. Yo no la consideré. Puede que el rechazo fuera correcto y la causa fuera la instrucción.
+
+También: mi conclusión sobre WS19.1, `futuro asignado`, queda sustituida por T-P03.1.

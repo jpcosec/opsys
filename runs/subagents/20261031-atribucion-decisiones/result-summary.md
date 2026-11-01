@@ -35,3 +35,11 @@ Claude Opus 5.5, pane `w3Y:p1`, corrigió `decisiones.md` directamente. Donde di
 - P06: la corrección anterior perdió la condición «con otro coordinador escribiendo», y la fila Humana afirmaba más de lo aceptado. Recuperada. T-P06 conserva la precisión técnica.
 
 El Tester también señaló como no literales P05 y lo que queda de P01. El criterio de root es «conserva solo lo aceptado», no copia literal; esas omisiones no agregan nada. El Tester las marcó porque mi brief pedía «literalmente», más estricto que el contrato.
+
+## Adenda 3 — 2026-11-01, decisión root
+
+Claude Opus 5.5, pane `w3Y:p1`, corrigió `decisiones.md` y `context-review-guide.md` directamente, por `root-decision-20261101.md`. Donde difiera, vale esto:
+
+- P07 y P09: mi parche quitó «Executor por encargo TaskDoc v2» y este mapa no lo declaró. Fue una omisión mía contra la orden de mantener actores. No la detectaron ni la revisión del Supervisor ni los Tester v1 y v2. La levantó el revisor de WS07 en la tanda 2. Restituido como actor técnico registrado, distinto de la autoría inicial, que sigue sin localizar.
+- T-P03.1, nueva: WS12 produce la definición operativa de «modo manual exclusivo». Origen: revisión root 2026-11-01, no el ítem 1.
+- Guía: núcleo humano frente a derivaciones técnicas, y dry-run por aristas reales.
