@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: ejecutar el gate humano temprano de lectura/descubrimiento sobre el corpus Taller. Resultado: acta versionada en graph_ui y G_HUMAN_READ resuelto solo con recorrido humano real. Repo dueño: graph_ui. Límites: no crear corpus propio (usa manifiesto WS40), no mutar el desk de desarrollo, no implementar correcciones, no sustituir la aprobación humana, no medir guardados ni habilitar por sí mismo mutaciones.
+
+AMBIGUEDADES
+1. Cita: «supervisor del repo receptor atribuye el fallo por evidencia» y «registra incidente/diagnóstico en repo/superficie antes de asignar nodo y abrir corrección». No se identifica al supervisor ni qué repo/superficie recibe el incidente cuando el fallo está en una dependencia (deskops/sldb/spec2viz) fuera de output_scope; tampoco se fija cuándo se considera «aún no se aísla causa». Obligaría a inventar destinatario y ubicación de escritura, o a asumir que todo incidente va al acta de graph_ui.
+
+DRY-RUN
+Lecturas: validacion-humana.md, manifiesto JSON de WS40, commits/versiones de WS14/15/41/08 y contratos de evidencia. Cambios previstos: crear/actualizar graph_ui:runs/subagents/workspace-documental-acceptance/lectura/acta.md con guion, versiones/commits, corpus, comandos públicos, timestamps, tiempos, ayudas, fallos y decisión; commit atómico en graph_ui; enlazar G_HUMAN_READ a commit/blob. Dependencias: corpus y segundo desk de WS40; búsqueda WS14; error/degradado WS15; lectura multidesk WS41; mapa UF WS08. Ejecución hipotética: preparar sesión con el participante P08 sin instrucciones verbales correctivas; recorrer UF01, UF03 lectura, UF07 diagnóstico, UF08 lectura y UF10; medir al menos 20 aperturas y 10 búsquedas, p95 ≤2 s y primer arranque ≤10 s; no guardar. Gates: G_HUMAN_READ sigue pending hasta acta y aprobación; no se habilitan mutaciones. Errores: si falla, registrar incidente/diagnóstico y mantener el gate pendiente; no corregir. Validación esperada: acta legible, evidencia enlazada, recorrido completo sin rutas memorizadas y tiempos registrados.
+
+FUTURO
+El participante humano decide la aprobación; el supervisor del repo receptor atribuye fallos y abre corrección; graph_ui versiona el acta; WS30 medirá guardados; WS17 enriquecerá índices; una revisión humana puede cambiar objetivos P08 con razón/evidencia. Nada de eso es ambigüedad del encargo.

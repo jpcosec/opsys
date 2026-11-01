@@ -1,0 +1,12 @@
+REFORMULACION
+Encargo: implementar en `deskops` un adaptador público restringido para enviar una respuesta (`reply`) vinculada a un intento Scion existente, con timeout/errores y autoridad del coordinador. Resultado: código en `runtime/`, `cli/commands/runtime.py` o la API que fije WS12, y tests; una respuesta real debe quedar asociada al intento correcto y un timeout debe reportarse como fallo sin confirmación, usando el umbral que WS12 produzca para este delta. Repo dueño: `deskops`. Límites: no enviar mensajes durante planificación, no elegir umbral propio; sin política WS12 se detiene y registra el hueco. Depende de WS33, WS12 y WS34.1; requiere G_EXEC, G_SCION y G_WRITE_CONTRACT.
+
+AMBIGUEDADES
+1. «con timeout/errores y autoridad del coordinador». La aceptación no prueba ningún caso de autorización y WS34.2 no remite expresamente a WS12, mientras la sección E de WS12 solo promete política/umbral/clasificación de timeout. Obligaría a inventar quién es coordinador, qué autorización habilita `reply` y si debe probarse un rechazo.
+2. «un timeout se reporta como fallo sin confirmación», frente a la clasificación de WS12 «vencido sin confirmación» y a la regla de WS34.1 de no convertir la ausencia de confirmación en fallo remoto no observado. Obligaría a inventar si «fallo» es local o remoto y qué estado queda para el intento.
+
+DRY-RUN
+Lecturas: contrato WS12 para `reply` (canal, actor, errores, umbral), referencias de WS33, identidad de intento de WS34.1, runtime/CLI/tests existentes y evidencias de gates. Cambios previstos: adaptador en `runtime/`, comando/API en `cli/commands/runtime.py` o la API fijada, tests con doble de Scion y agente real. Dependencias: umbral/clasificación de WS12, intento/mensaje de WS33, dispatch/intento de WS34.1. Gates: G_EXEC exige autorización humana; G_SCION exige probe WS44; G_WRITE_CONTRACT se evalúa por delta. Errores: contrato o gate ausente → detenerse y registrar hueco con dueño; timeout → fallo sin confirmación; autorización no definida → no inventar. Validación: respuesta real vinculada al intento correcto y timeout con el umbral de WS12, sin mensajes en planificación.
+
+FUTURO
+WS12 produce la sección por delta y G_WRITE_CONTRACT; WS44/operador produce G_SCION; el humano autoriza G_EXEC; WS34.1 aporta identidad de intento; WS33 aporta referencias; la promoción fija archivos y pruebas; WS34 cierra cuando WS34.1 y WS34.2 aceptan.

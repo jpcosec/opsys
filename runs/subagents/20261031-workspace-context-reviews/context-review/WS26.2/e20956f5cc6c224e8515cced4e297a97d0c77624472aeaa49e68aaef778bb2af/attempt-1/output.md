@@ -1,0 +1,12 @@
+REFORMULACION
+Propósito: que graph_ui permita enrutar explícitamente una tarea al Board y mostrar una capa lista fiable. Resultado: acción de UI que añade la tarea a la lista tasks del BoardDoc mediante la operación pública del contrato WS12, más una representación separada de la capa lista (sin dependencias pendientes ni archivos solapados) y pruebas. Repo dueño: graph_ui, en frontends/mindmap/views/workspace/routing/ y tests/. Límites: no implementar promoción nueva; solo invocar la operación completa ya admitida por WS12 o dejar handoff/pendiente; no sustituir el workflow por drag-and-drop ni editar status; el desarrollo y las pruebas aisladas de API pueden avanzar, pero G_HUMAN_READ se exige para habilitar mutaciones en UI.
+
+AMBIGUEDADES
+1. «glob/no-resolución dudosa implica no comprobado y revisión supervisor antes de marcar lista». No se define qué hace dudosa una expansión (glob parcial, `files` vacío o ausente) ni quién es el supervisor, cómo registra la revisión o si bloquea. El ejecutor tendría que inventar el umbral, el actor y la evidencia.
+2. «Tras enrutar, `deskops show board` muestra la tarea». La aceptación se apoya en un comando externo cuyo productor o contrato no consta en depends_on; si no existe o no lista BoardDocs, el ejecutor debe inventar una verificación equivalente o declarar un hueco no previsto.
+
+DRY-RUN
+Ejecutor futuro (hipotético): leería WS12 (operación de enrutado/promoción), WS22 (Board/lector), WS26.1 (autoría), BoardDoc/TaskDocs reales y ritual/lifecycle de deskops; comprobaría recibos G_UI_WRITE/G_WRITE_CONTRACT de este delta y G_CLOSEOUT. Cambios: en routing/ cablear «enrutar» contra la operación pública WS12 (añadir a tasks), calcular capa lista normalizando/expandiendo `files` (igualdad o contención de directorio = solapamiento; glob dudoso = no comprobado), renderizar la separación y añadir tests. Consumo: operación WS12, modelo/lector WS22, candidato autorado WS26.1. Errores: si falta la operación, handoff/pendiente sin promoción; si falta recibo por delta, no habilitar mutación UI; si `files` no resuelve, no marcar lista. Validación: `deskops show board` muestra la tarea, la UI la distingue de ejecución y la capa lista queda separada; pruebas en tests/.
+
+FUTURO
+Producen/deciden otros: WS12 fija la operación, precondición y errores; WS22 aporta Board y lector; WS26.1 la autoría previa; el receptor P01 emite acta G_UI_WRITE por este delta; WS16/G_HUMAN_READ habilita el uso de mutaciones; el TaskDoc de promoción fija archivos, escenarios y textos.

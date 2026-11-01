@@ -1,0 +1,11 @@
+**REFORMULACION**
+WS17 es un nodo de documentación: escribir entradas e índices authored del desk ejemplo como plantillas Markdown versionadas en `deskops:desk/drawer/plans/workspace-documental/ejemplo/nav/`. Resultado: plantillas que el generador WS40 materializa en sus dos desks temporales. Repo dueño: `deskops`. Límites: no producir el corpus, no escribir repos reales, no duplicar el registry, no editar/commitear el destino generado y no depender del checkout real.
+
+**AMBIGUEDADES**
+Ninguna. La posible tensión entre “cada plantilla resuelve” y “conjunto de plantillas cubre ambos desks, no cada plantilla individual” queda resuelta en la propia aceptación: la cobertura es del conjunto y cada enlace debe resolver según WS11 contra el manifiesto WS40.
+
+**DRY-RUN**
+Leería `dag.yaml` (WS17 y aristas WS11/WS40/WS30/WS43), la guía, `contratos/navegacion.md` de WS11, el generador y manifiesto de WS40 y el inventario WS02 citado; no usaría el registry real como fuente del conjunto temporal. Cambios previstos: crear/editar solo plantillas Markdown bajo `ejemplo/nav/`; no tocar `dag.yaml`, WS40, `desk/registry` ni commits generados. Dependencias: contrato WS11 con identidad/root/store/aliases; generador WS40 con parámetro de ruta y manifiesto de dos desks. El `G_UI_READ` de WS40 condiciona esa dependencia, no hay gate propio en WS17. Si falta contrato, generador, root o alias: detenerse y registrar el hueco con repo dueño, sin crear sustituto. Errores esperados: enlace sin root/alias, plantilla que enlaza al checkout real, duplicación del registry o destino temporal tratado como registro independiente. Validación futura: regenerar el corpus con las plantillas, inspeccionar el manifiesto, recorrer links Markdown sin UI y resolver cada uno contra WS40; comprobar cobertura de ambos desks y que el destino temporal se regenera, no se edita ni commitea como registro competidor.
+
+**FUTURO**
+WS30 valida las plantillas y registra paths/hashes; WS43 las aplica al desk real. La promoción a TaskDoc y la autorización de ejecución quedan fuera de WS17. Si WS40 no admite la ruta de plantillas o el manifiesto no permite resolver links, decide y corrige el dueño de WS40; si falta identidad/alias, WS11.

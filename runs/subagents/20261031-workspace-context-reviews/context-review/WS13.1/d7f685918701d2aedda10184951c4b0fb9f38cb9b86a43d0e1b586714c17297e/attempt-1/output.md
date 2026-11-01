@@ -1,0 +1,11 @@
+## REFORMULACION
+WS13.1 encarga, en `graph_ui`, un delta de lectura sobre el workspace integrado a1b2b22: abrir documento y fuente cruda, panel de contexto con identidad/relaciones/origen, enlaces y Code local, con foco compartido entre representaciones del mismo documento. El resultado es lectura verificable de Markdown modelado y no modelado sin crear otro workspace ni exigir índices nuevos. Límites: solo lectura; contrato de navegación WS11; rutas del host y componentes existentes; no inventar correspondencia texto→código; cierre condicionado a evidencia propia y recibo G_UI_READ del delta.
+
+## AMBIGUEDADES
+Ninguna. Las referencias al contrato WS11 y al catálogo WS09 nombran productores y el encargo remite a ellos; WS09 llega transitivamente por WS11. La ausencia o insuficiencia de esos contratos se resuelve con la regla común de detenerse y registrar el hueco, no inventando. La noción de copia queda definida en la propia aceptación ("Una copia es instancia documental con mismo origen, no cada representación").
+
+## DRY-RUN
+Un ejecutor futuro leería `workspace-view.js`, `workspace.mjs`, `workspace_routes.py`, `docs/workspace-ui.md`, el contrato WS11 y el catálogo WS09; comprobaría el recibo G_UI_READ de este delta. Cambios previstos: ruta segura de lectura de fuente propia y Markdown no modelado; panel de contexto con identidad, relaciones y origen; manejo de enlaces; sincronización de foco entre texto, graph y Code; pruebas en `tests/`. Dependencias consumidas: WS11 para identidad, origen, enlaces y foco; G_UI_READ por delta. Si falta el contrato o el recibo, se detiene y registra el hueco en graph_ui; no se sustituye. Validación esperada: store temporal real —corpus WS40 cuando exista—, documento modelado y Markdown no modelado abiertos sin conocer ID, render y fuente íntegra con mismo origen, enlace seguido, alternancia de representaciones y foco conservado sin abrir copia, sin workspace independiente.
+
+## FUTURO
+El receptor P01 emite el acta G_UI_READ del delta en graph_ui. WS13.2 y WS13.3 consumen identidad, foco y disposición; WS14 y dependientes reutilizan la lectura. WS11 y WS09 producen los contratos/catálogo citados. La aceptación conjunta de WS13 queda para cuando sus hijos cierren.

@@ -1,0 +1,11 @@
+REFORMULACION
+WS10 debe precisar, en `deskops:desk/drawer/plans/workspace-documental/borradores/manual.md`, el índice y la convención editorial del manual documental: capítulos conceptuales con propósito/entradas/salidas, ejemplo fijo y etiqueta de disponibilidad. El resultado es un borrador planificado, no el manual completo ni una UI. Debe contrastar el estado con las auditorías WS02–WS04, reutilizar el manual CLI existente y tratar el ejemplo P08 —Taller, `graph_ui:.tmp/workspace-documental-ejemplo/`, productor WS40— como corpus futuro mientras no exista. Límites: no redactar pasos ni capturas ficticios, no crear el corpus, no implementar ni promocionar; `promotion: not_authorized`.
+
+AMBIGUEDADES
+Ninguna. El resultado, el repo, el archivo de salida, las etiquetas y el tratamiento del ejemplo están definidos; las auditorías y el corpus tienen productores nombrados, y la regla común de alcance cubre su ausencia.
+
+DRY-RUN
+Un ejecutor futuro leería `borradores/manual.md`, `auditoria/deskops.md` (WS02), las auditorías WS03/WS04 disponibles por la vía transitiva indicada, `decisiones.md`, `brief.md`, `alcance.md`, `cobertura.md`, el manual CLI `docs/operator-manual.md` y su TaskDoc de promoción. Editaría solo `borradores/manual.md`: conservaría o ajustaría el índice 1–17, añadiría por capítulo propósito/entradas/salidas, fijaría el ejemplo Taller/WS40 como corpus futuro, definiría “disponible” (versión/commit implementado + pruebas + acta humana de recorrido), “propuesto” y “bloqueado”, enlazaría el manual CLI y eliminaría pasos/capturas no verificados. Consumiría G_PRODUCT ya satisfecho por WS07 y las auditorías WS02–04; no consumiría el corpus WS40 ni actas humanas futuras. Si falta una auditoría, se detendría y registraría el hueco con repo dueño, sin sustituirla. Validaría que cada capítulo tenga propósito/entradas/salidas, que las etiquetas citen evidencia o queden como propuesto/bloqueado, que el ejemplo y las referencias resuelvan y que no haya contenido ficticio. La promoción exigiría TaskDoc y preflight.
+
+FUTURO
+WS40 generará el corpus Taller; WS03/WS04 producirán sus auditorías; WS30/WS16 aportarán actas humanas; WS31 publicará el manual probado; WS38 añadirá Scion; WS43 publicará entradas reales. La autorización de promoción y la aceptación de producto corresponden al humano.

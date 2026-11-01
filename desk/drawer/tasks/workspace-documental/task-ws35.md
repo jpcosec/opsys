@@ -37,7 +37,7 @@ Tareas: WS33, WS27. Gates: G_SCION, G_UI_READ. Ver estados/evidencia en dag.yaml
 
 ## Review barato de comprensión
 
-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS35/1ee9ece7e3b114ed062f995c8d22e025f459fa94004bd83fa73463ba3f81acc6/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS35/7b1e3221a230f5f61f50d32e63486f67ded5f78450554d8ddef31bbcbc6c9fd5/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 
