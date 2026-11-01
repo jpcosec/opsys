@@ -36,7 +36,7 @@ Ambos necesitan intento nuevo, imposible hoy por saldo.
 
 ## Clases
 
-25 ambigüedades en intentos vigentes: 1 real (WS07), 13 `detalle de promoción` incluidas tres de WS13.3, 8 `futuro asignado`, 3 `no es ambigüedad`.
+25 ambigüedades en intentos vigentes, contadas por script: 1 real (WS07), 12 `detalle de promoción`, 8 `futuro asignado`, 4 `no es ambigüedad`.
 
 WS19.1 volvió a levantar «modo manual exclusivo». Reproducido en dos tandas y no definido en brief, alcance, decisiones ni dag: lo clasifico `futuro asignado` a la policy coordinador de WS12, pero es la clasificación más discutible.
 
