@@ -1,0 +1,12 @@
+REFORMULACION
+WS15.1 es un nodo de implementación de graph_ui: mostrar errores de lectura y modo degradado —referencia rota, documento ausente, modelo no importable y backend caído— en el panel afectado, sin borrar historial ni fingir vacío; una fuente sin permiso/capacidad de edición es límite read-only visible, no fallo. Debe reutilizar la lectura Markdown de WS13.1 y las rutas/errores que fije WS11, sin otro lector ni guardado. Resultado: estados de error por panel, reintento tras restaurar backend conservando pestañas/foco/historia y diagnóstico de fallo CDN con prueba de no carga, sin prometer offline. Repo dueño graph_ui; depende de WS13 y requiere G_UI_READ. Límites: empaquetado offline fuera; no implementar guardado.
+
+AMBIGUEDADES
+1. «modelo no importable»: no se define qué hace inimportable un modelo ni qué API/registro produce ese error; obligaría a inventar la condición y su detección. Además la aceptación no fija prueba para ese caso.
+2. «Reintentar backend tras restaurarlo recupera lectura conservando pestañas/foco/historia»: no se fija si el reintento es acción humana, automática o recarga; obligaría a inventar el disparador y su control.
+
+DRY-RUN
+Lecturas: contrato WS11 (transitivo por WS13), fuente de lectura Markdown de WS13.1, manejo actual de errores en workspace-view.js/workspace.mjs/workspace_routes.py y convenciones de tests. Cambios previstos: módulo de errores bajo frontends/mindmap/views/workspace/errors/; estados de error de catálogo/nodo/proyección/fuente; diagnóstico CDN; reintento que conserva pestañas/foco/historia; tests. No crear otro lector ni guardado. Dependencias: WS13 completo (incluye WS13.1), contrato WS11 disponible y recibo G_UI_READ por delta de WS15.1 en graph_ui. Si falta contrato/API/permiso: detenerse, registrar hueco con repo dueño y dejar la operación no disponible. WS15.2 no entrega nada a WS15.1; la integración se valida al completar WS15 con ambos hijos. Validación esperada: pruebas distinguen backend ausente de fallo CDN sin inventar respuesta del backend; referencia rota, ausente, modelo no importable y backend caído muestran panel sin borrar historial; reintento recupera lectura; CDN muestra diagnóstico y no carga, sin exigir offline; acta G_UI_READ.
+
+FUTURO
+WS11 fija rutas y errores de API/red; WS13.1 entrega la lectura Markdown; el receptor P01 emite el acta G_UI_READ por delta en graph_ui; WS16 valida en Taller; el TaskDoc de promoción fija archivos, escenarios y textos de pantalla; WS15 termina cuando WS15.1 y WS15.2 cumplen.

@@ -1,0 +1,12 @@
+REFORMULACION
+WS12 es un nodo de planificación, repo deskops, salida `contratos/operaciones.md`: cerrar el contrato de operaciones y escritura. Debe producir la whitelist por operación/campo/canal/actor/revisión/Git/efectos, el adapter público existente o hueco con dueño, la policy de coordinador, campos protegidos, representación de la precondición de payload, fallos parciales, permisos y closeout fuera del servidor UI, más matriz de capacidades y huecos asignados. Límites: solo contrato y enlaces en deskops; no mutaciones, actas interrepo, APIs/modelos nuevos ni aprobaciones; depende de WS11/WS08 y requiere G_WRITE_POLICY (satisfecho); promoción no autorizada.
+
+AMBIGUEDADES
+1. ««Modo manual exclusivo»: WS12 produce su definición operativa, las formas de comprobarla y la respuesta ante ausencia de evidencia, antes de habilitar a sus consumidores» (decisiones.md, T-P03.1). WS12 solo dice «Lock solo UI no coordina CLI/agentes» y no incluye esa definición, comprobación ni respuesta. El ejecutor tendría que inventar si forma parte de la salida y cómo condiciona a consumidores como WS19.1.
+2. «la política y el umbral de timeout... La duración no se elige ahora: esa sección del contrato WS12 la fija al preparar esos deltas» (WS12). Es contradictorio entregar ahora «política y umbral» y diferir la duración; el ejecutor debe inventar si deja sección, hueco o la omite y si eso afecta el cierre del contrato núcleo.
+
+DRY-RUN
+Leería auditorías WS02–04, contrato WS11, user-flows WS08 y evidencia de G_WRITE_POLICY. Redactaría `contratos/operaciones.md` y enlaces en deskops, sin código ni mutaciones. Por operación/efecto contrastaría APIs reales (`sldb.api.create_document`, DrawerService, CLI/DeskopsOperations), citando path/símbolo/commit; clasificaría comprobado/faltante y dueño. Fijaría precondición (expected/token/CAS) justificada, campos protegidos, policy de coordinador/read-only, closeout externo y captura drawer/protoátomo. Validaría que G_WRITE_POLICY esté registrado, whitelist completa, matriz y huecos asignados, y que no haya actas ni mutaciones. Si falta WS11 o evidencia real, se detendría y registraría el hueco, sin sustituirlo.
+
+FUTURO
+WS20/G_SOURCE y WS45/G_PAYLOAD_PRECONDITION producen capacidades; el receptor P01 emite actas G_WRITE_CONTRACT/G_UI_WRITE/G_SLDB_WRITE por delta; WS25.2 consume el contrato de captura y WS34.1/2 la sección de timeout. Nada de eso es ambigüedad de WS12.

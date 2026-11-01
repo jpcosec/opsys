@@ -1,0 +1,11 @@
+## REFORMULACION
+Propósito: comprobar si sldb ya guarda de forma reversible documentos raw-source y, si falta, completar solo lo faltante. Resultado: API pública que extrae/valida y guarda raw-source con revisión esperada y campos protegidos, más pruebas de roundtrip, conflicto, recuperación y protección. Repo dueño: `sldb`; `output_scope`: `src/sldb/api/documents/`, `src/sldb/cli/serve/`, `tests/`. Límites: solo raw-source; no sobrescribir Markdown desde browser; la precondición de escritura de payload por campos es de WS45, no de WS20; no duplicar código si la capacidad existe; WS20 no crea un segundo productor; promoción no autorizada. Se habilita solo con `source_mode=editable`.
+
+## AMBIGUEDADES
+ninguna
+
+## DRY-RUN
+Lecturas: contrato WS12 —en especial la precondición de guardado raw-source—, código e inventario de sldb en los paths declarados, tests existentes y recibo `G_SLDB_WRITE` del delta. Cambios previstos: si la capacidad satisface `G_SOURCE`, solo añadir/ajustar tests; si es parcial, implementar únicamente lo faltante en `src/sldb/api/documents/` y, si aplica, `src/sldb/cli/serve/`, con tests en `tests/`. Dependencias: WS12 debe fijar la precondición; `G_WRITE_CONTRACT` y `G_SLDB_WRITE` deben estar recibidos para el delta. Si falta contrato, API, dato o permiso, detenerse y registrar el hueco con repo dueño, sin crear sustituto. Validaciones futuras: API pública; roundtrip sin pérdida de campos/secciones; conflicto según la precondición WS12; recuperación tras fallo; campos protegidos. Ejecutar tests y comprobar que no hay commit ni escritura desde browser. Errores esperados: gate/recibo ausente o contrato incompleto implica no ejecutar; fallo de roundtrip, conflicto, recuperación o protección implica no declarar `G_SOURCE`.
+
+## FUTURO
+WS12 produce y fija el contrato y la precondición raw-source; el receptor P01 emite el acta `G_SLDB_WRITE` por delta. WS45 produce la precondición de payload por campos, independiente de WS20. La promoción/TaskDoc fija archivos, pills y casos exactos, y un humano autoriza la promoción. WS21 consume después y queda bloqueado por `G_PAYLOAD_PRECONDITION` y, en editable, `G_SOURCE`. WS16 valida uso. Los gates pendientes no se satisfacen aquí.

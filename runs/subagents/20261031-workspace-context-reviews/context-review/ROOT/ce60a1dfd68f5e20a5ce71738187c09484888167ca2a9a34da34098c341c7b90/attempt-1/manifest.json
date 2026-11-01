@@ -1,0 +1,153 @@
+{
+ "node_id": "ROOT",
+ "role": "context-reviewer",
+ "attempt": 1,
+ "input_sha256": "ce60a1dfd68f5e20a5ce71738187c09484888167ca2a9a34da34098c341c7b90",
+ "ordered_sources": [
+  {
+   "path": "desk/drawer/plans/workspace-documental/context-review-guide.md",
+   "sha256": "dec1766a708b1fdfea8af1233c8f2fbe5aa03ce5d7c07e431082bf9d00975d0e",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/brief.md",
+   "sha256": "c36f08057d0995449a83b24d6439bed1e20b7a0fd2baffafc3706561c3f22abc",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/alcance.md",
+   "sha256": "203ef33a2a98706a6746f93d1912bd518c27ba88768c0d2181d553dbb802eba2",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/decisiones.md",
+   "sha256": "f2d4b58f41587ff91d511e801a21a11795b3ad54ec59b91edcc2c3e4a12bd72d",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/cobertura.md",
+   "sha256": "1104a1f134364cb16d9113768b70de6304252227935d3ec3ccb93abf6d64a4a9",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/borradores/vision.md",
+   "sha256": "5a994564c283c8304e1e2bb13e009b5e87577eafa4cdf90a884da1edb1ba001a",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#node:ROOT",
+   "sha256": "f82efe84845b119b5fe2236f20d32325eed9764c9e08198099791812745ffc6b",
+   "projection": "node_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK01",
+   "sha256": "57ddc36a5abd02c40a3f1635a6994362888ac5c6cb28964780bf7763df0e043f",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK02",
+   "sha256": "054977bdcca385301433e4f7bb6dce533e9ee9f7b068dce7ce3aedb88999e3f7",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK03",
+   "sha256": "21540a89fd101ac706f57285bdb8bf249bde5cf309185f9e6425ce34dffbe5aa",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK04",
+   "sha256": "2e2731fa9a900329027abfdbae8ab3a4d00f8991f5f6aca6e5f06250b902c737",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK05",
+   "sha256": "abd0e8402d2c8134e40e437d438c6de3711298538b945142e91886c8043980f6",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK06",
+   "sha256": "8020e101d07f8f87c91a04a282d7d5478b25d1b5083013491785405f542aa234",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK07",
+   "sha256": "7c549c2703de0f15e51365ec0c6775fcb4a4501542addce37771201d3864ce02",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:PK08",
+   "sha256": "00cc9bdf8c514bc83e4fe9efee9e2a3ef3b116cbf3871942a7027a68cc2f493a",
+   "projection": "edge_contract"
+  }
+ ],
+ "node_contract_sha256": "05d398b125697238e3c4644a5cf23bb9193ca16c2f00078dddcd4d1d7fbeef58",
+ "edge_contracts": [
+  {
+   "id": "PK01",
+   "sha256": "6239ca4debb210729625cbcaa2dd2686aed6726fc1922e8c2ea5c71b429da666"
+  },
+  {
+   "id": "PK02",
+   "sha256": "99c0d0c30c594053cb1554288398d947b05fe81b56e26df13be1fa49b4446341"
+  },
+  {
+   "id": "PK03",
+   "sha256": "49d924cdc5fca124c128f00e64f1fcb9e1846f2c152d42b2e13ae74a4eaf83b1"
+  },
+  {
+   "id": "PK04",
+   "sha256": "8e9d1c9b783e5af5769429702741d2873a866f6da976cbdd48a5b05bf212d268"
+  },
+  {
+   "id": "PK05",
+   "sha256": "94536c97a438316a262fd267838b1be35bb37897cfa439f807f65e9ad7aac23a"
+  },
+  {
+   "id": "PK06",
+   "sha256": "7b5eae1b3618195e2ae355984e0310546664222b4d56d444ea52fbdf14b754c0"
+  },
+  {
+   "id": "PK07",
+   "sha256": "255f2db61c0141671924f335c7dfc2c5f7146ce6b983aeb17de6d8774012b65d"
+  },
+  {
+   "id": "PK08",
+   "sha256": "2298b47f55bb84413606928c22661fda3526dfc2f503dc5cee0432d330c85835"
+  }
+ ],
+ "provider": "deepseek",
+ "model": "deepseek-flash",
+ "thinking": "low",
+ "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review; no se afirma precio mínimo global",
+ "isolation_flags": [
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools"
+ ],
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada: archivos, cambios concretos, consumo de dependencias y gates, errores y validación esperada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto; no basta listar prerrequisitos ni verificar aceptaciones. Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/ce60a1dfd68f5e20a5ce71738187c09484888167ca2a9a34da34098c341c7b90/attempt-1/input.md"
+ ],
+ "instruction_version": "v2-ejecucion-hipotetica",
+ "system_prompt_sha256": "9fce4f529ed487c05bb6a6cc9b7df60910578fde80bff1375dcd2a06caa41a29"
+}

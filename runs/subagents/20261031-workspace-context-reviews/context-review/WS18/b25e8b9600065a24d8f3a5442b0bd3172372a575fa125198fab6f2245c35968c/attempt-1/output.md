@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: declarar proyecciones de grafo reutilizables en spec2viz para selecciones y notación ya soportadas. Resultado: ViewDoc y NotationDoc concretos, más pruebas sobre store real que reutilizan `evaluate_view`, `/api/views` de graph_ui y `resolve_documents`. Repo dueño: spec2viz (salida `sldb/views/` y `tests/`, con ruta/registro a confirmar al promover). Límites: no servicio/CLI/runtime fuera de graph_ui, no extraer ni compartir el evaluador, no UI declarativa ficticia, no inventar selección; selección y notación vienen de WS09/WS11 contrastadas con WS03; si falta selección mínima, detener y corregir contrato. Exige G_SPEC_VIEW por delta; deskops no escribe en spec2viz. Es un nodo de implementación, no un agregado; su promoción no está autorizada.
+
+AMBIGUEDADES
+Ninguna.
+
+DRY-RUN
+Un ejecutor futuro, solo tras promover la TaskDoc en spec2viz, leería WS09 (`vistas.md`), WS11 (`navegacion.md`), auditorías/capacidades WS03, filas C-37/C-49 de `reconciliacion.md`, el código de `evaluate_view`, `/api/views` y `resolve_documents`, y el esquema existente de ViewDoc/NotationDoc. Confirmaría ruta y registro según el contrato de promoción. Crearía los ViewDoc/NotationDoc concretos bajo `spec2viz/sldb/views/` —o ruta confirmada— y tests en spec2viz; no tocaría el evaluador ni añadiría servicio/CLI. Consumiría WS09/WS11 como fuente y el acta G_SPEC_VIEW del delta (P01, alcance/IDs, efecto, task, commit) antes de promover. Errores: sin selección mínima en WS09/WS11, detener y corregir contrato; sin G_SPEC_VIEW, no promover; ruta/registro no confirmados o contrato/API ausente, registrar hueco y no crear sustituto. Validaría ejecutando `evaluate_view` vía `/api/views` sobre un store real, comparando selección/relaciones/dirección/notación con WS09/WS11, comprobando `resolve_documents` y que el ViewDoc documenta su selección; no alegaría equivalencia de payload entre dos stores. Evidencia: tests y commit/blob en spec2viz.
+
+FUTURO
+WS09 y WS11 deben producir catálogo y contrato; WS03 aporta capacidades. P01/receptor emite el acta G_SPEC_VIEW por delta en spec2viz. El supervisor/Executor de spec2viz promueve y ejecuta la TaskDoc; deskops solo enlaza. WS18 es opcional y no bloquea WS24 ni el manual.

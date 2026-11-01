@@ -1,0 +1,12 @@
+REFORMULACION
+Cerrar, como encargo de planificación en `deskops`, el contrato básico de navegación e identidad del workspace documental: identidad/ruta/modelo opcional de documentos, resolución repo/store, foco, enlaces/historia y lectura multidesk read-only, con APIs reales citadas desde auditorías. El resultado es `contratos/navegacion.md` más el mapa de deltas que requieren recepción G_UI_READ y, opcionalmente, G_SPEC_VIEW. Límites: no implementa UI, no produce actas interrepo ni recibos, no afirma recepción alguna y puede cerrar sin acta receptora. Depende de WS09 y WS08; G_PRODUCT ya está satisfecho; WS02–04 son prerrequisitos transitivos.
+
+AMBIGUEDADES
+1. Criterio de clasificación incompleto. Cita: «cada hueco clasificado instancia/vínculo/consulta/API/renderer y productor dueño antes de code». Solo se definen «Instancia = documento concreto que falta escribir» y «Vínculo = referencia o enlace que falta entre documentos existentes». El ejecutor tendría que inventar el límite entre hueco de consulta, API y renderer para clasificar cada caso.
+2. Revisión sin actor ni criterio. Cita: «WS11 cierra con contrato básico revisado». No se indica quién revisa ni qué convierte el contrato en «revisado»; el ejecutor tendría que inventar si basta autocomprobación o hace falta otro actor.
+
+DRY-RUN
+Un ejecutor futuro leería brief, alcance, decisiones, `dag.yaml`, `borradores/vistas.md` (WS09), `borradores/user-flows.md` (WS08) y las auditorías WS02–04 citadas transitivamente. Crearía `contratos/navegacion.md` con: identidad/origen de documentos y otros nodos; resolución repo/store; foco; enlaces/historia; multidesk read-only con rutas/aliases; tabla de huecos clasificados con productor dueño; mapa de deltas de graph_ui con IDs, efecto y actor P01, enlazando actas solo si ya existen. Consumiría G_PRODUCT satisfecho; G_UI_READ pendiente por delta no bloquearía el cierre base; G_SPEC_VIEW no sería requisito. Validaría que cada hueco tenga categoría y productor, que toda API citada tenga path/símbolo/commit y que ningún recibo se declare recibido. Si falta una auditoría o contrato, se detendría y registraría el hueco con repo dueño, sin sustituto. No ejecutaría mutaciones ni escribiría actas.
+
+FUTURO
+El receptor P01 produce las actas G_UI_READ por delta al preparar cada nodo; G_SPEC_VIEW se obtiene al preparar WS18. WS12 consume este contrato; WS13, WS17, WS40 y WS41 usan sus definiciones.

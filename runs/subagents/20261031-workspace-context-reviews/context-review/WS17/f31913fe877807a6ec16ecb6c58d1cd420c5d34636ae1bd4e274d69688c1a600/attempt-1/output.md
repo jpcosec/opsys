@@ -1,0 +1,11 @@
+REFORMULACION
+WS17 encarga, en deskops, escribir las plantillas Markdown de entradas e índices authored del desk ejemplo bajo `ejemplo/nav/` del paquete del plan. El resultado es un conjunto versionado que cubre los dos desks del manifiesto WS40 y cuyos enlaces resuelven por identidad/root/store/aliases del contrato WS11 contra ese manifiesto. Límites: no genera el corpus, no escribe repos reales, no copia inventarios derivados ni edita/commitea el destino temporal; WS40 lo materializa y WS30 lo integra.
+
+AMBIGUEDADES
+1. «Verificar al regenerar que cada plantilla resuelve el root/store de procedencia de los dos desks del manifiesto WS40» contradice «conjunto de plantillas cubre ambos desks, no cada plantilla individual». Obliga a decidir si la validación es por plantilla —cada una enlazando ambos desks— o por conjunto; ambas lecturas no pueden cumplirse a la vez.
+
+DRY-RUN
+Nodo ejecutable de documentación, no agregado; sin gates propios. Lecturas: contrato `contratos/navegacion.md` de WS11, manifiesto/generador de WS40, inventario `desk/registry/repo-*.md` de WS02 y documentos del corpus. Cambios: crear plantillas Markdown en `deskops:desk/drawer/plans/workspace-documental/ejemplo/nav/` con índices/entradas y enlaces por aliases; no tocar graph_ui, no copiar registry, no escribir repos reales. Dependencias: WS11 cerrado y WS40 ejecutado con manifiesto; si falta contrato, root, store o alias, detenerse y registrar el hueco con repo dueño. Validación: regenerar el corpus WS40 con la ruta de plantillas, recorrer enlaces sin UI y comprobar que resuelven a paths existentes del root/store correcto, que no apuntan al checkout real, que no duplican el registry y que el conjunto cubre ambos desks; el destino temporal no se edita. Errores esperados: enlace/alias no resuelto, root/store ausente, duplicación de registry o divergencia plantilla-destino; corregir en la plantilla.
+
+FUTURO
+WS11 produce el contrato de navegación. WS40 produce el generador, el manifiesto JSON y la materialización temporal. WS30 valida humanamente y enumera plantillas/paths/hashes y recorridos. WS43 publica en el desk real reutilizando las plantillas. La promoción de WS17 está `not_authorized`: un humano debe autorizarla antes de ejecutar.
