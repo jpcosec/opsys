@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-corregir-revisión-9-del-plan-workspace-tras-revisión-root.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Corregir revisión 9 del plan workspace tras revisión root [draft] - Corregir esos cuatro puntos con evidencia sincera y dejar el plan con build --check, validate --check y status en verde, sin implementar nada.

@@ -1,0 +1,14 @@
+Task: task-corregir-revisión-9-del-plan-workspace-tras-revisión-root
+Title: Corregir revisión 9 del plan workspace tras revisión root
+Status: ready_for_testing
+Current node: ritual-closeout
+Task type: docs
+From drawer: desk/drawer/tasks/task-corregir-revision-9-del-plan-tras-revision-root.md
+Closeout evidence: commit, document
+Effective pills:
+- desk/contexts/pill-001-task-closure-commit.md
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-007-phase-gated-task-flow.md
+- desk/contexts/pill-ready-phases-prove-dependencies-and-non-overlap.md
+Lifecycle gates:
+- task_completes -> complete: open [status = "ready_for_testing" and has(closeout_evidence_verified)]

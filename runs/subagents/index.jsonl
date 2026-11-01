@@ -100,3 +100,4 @@
 {"task_id": "task-corregir-auditor\u00edas-ws03-y-ws04-tras-revisi\u00f3n-independiente", "run_id": null, "run_dir": "runs/subagents/20261031-correccion-ws03-ws04", "session_sha256": null, "commit": null}
 {"task_id": "task-ws06-proponer-correspondencia-de-alcance-con-repos-due\u00f1os", "run_id": null, "run_dir": "runs/subagents/20261031-ws06-reconciliacion", "session_sha256": null, "commit": null}
 {"task_id": "task-consolidar-ajuste-can\u00f3nico-del-plan-workspace-tras-ws06", "run_id": null, "run_dir": "runs/subagents/20261031-ajuste-canonico-ws06", "session_sha256": null, "commit": null}
+{"task_id": "task-corregir-revisi\u00f3n-9-del-plan-workspace-tras-revisi\u00f3n-root", "run_id": null, "run_dir": "runs/subagents/20261031-correccion-revision9", "session_sha256": null, "commit": null}
