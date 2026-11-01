@@ -1,0 +1,14 @@
+## REFORMULACION
+
+Objetivo: dejar `desk/drawer/plans/workspace-documental/decisiones.md` con procedencia humana y técnica explícita en P01, P03–P07 y P09, sin alterar ninguna decisión, y producir `runs/subagents/20261031-atribucion-decisiones/attribution-map.md`. La afirmación humana conserva solo lo aceptado en ítems 0–2; las precisiones técnicas pasan a una derivación técnica rotulada con fuente exacta existente (path/sección/commit). P07/P09 siguen técnicas, sin firma humana, sustituyendo la fuente sin ruta por la real. Alcance: parche único en `decisiones.md` más el mapa; el Executor no commitea. Repo: `/home/jp/proyectos/SLDB_1/deskops`. Límites: no cambiar IDs P01–P09, literales de pregunta/respuesta, `source_tool_call`, decisiones sustantivas, restricciones, actores, nodos/gates, bundle, helper, validadores, código ni O1–O5/WS45/WS08-12. Las 73 revisiones se renuevan (whole-file, v2).
+
+## AMBIGUEDADES
+
+1. «Forma: el Executor elige la mínima que mantenga legible el registro; puede ser separar en la celda o agregar una sección de procedencia». Obliga a inventar el criterio de "legibilidad" y el formato exacto (columna, subfilas, sección); dos ejecutores producirían parches distintos.
+2. «Buscar el registro técnico histórico de rutas/aliases, registry y WS43 tras validación en git log de decisiones.md y en los runs previos del plan». No nombra rutas ni commits concretos; obliga a decidir qué evidencia cuenta como "registro histórico" frente a "regla técnica vigente". El guardrail «sin inventar autor, fecha ni fuente» mitiga, pero no fija el criterio de selección.
+3. «Si un detalle solo tiene respaldo derivado, se etiqueta así y se declara el límite». No define el vocabulario de etiqueta ni dónde se declara el límite (celda, nota o mapa), forzando a inventar convención.
+4. «las 73 revisiones renovadas» / «la tanda de 73 con v2» no especifica comando ni agrupación; el Supervisor podría asumir una invocación no documentada.
+
+## DRY-RUN
+
+Leería `review-source.md`, `coverage-report.md`, `owner-decisions.json`, `decisiones.md` y `git log -- decisions.md` más los runs previos del plan para localizar rutas/aliases, registry y WS43. Editaría solo `desk/drawer/plans/workspace-documental/decisiones.md`: P01/P03/P04/P05/P06 separando afirmación humana (citando ítem 0/1/2) de derivación técnica con fuente; P07/P09 sustituyendo «Executor por encargo TaskDoc v2» por fuente real o etiqueta de límite. Escribiría `attribution-map.md` (fragmento, tipo, fuente, límite) y `result-summary.md`. No commitearía. Errores esperados: fuente histórica no localizable → declarar límite sin inventar; diff accidental en literales/IDs → revertir. Luego el Supervisor congelaría, correría `context_review.py run --stale` sobre 73 bundles v2 y validaría. Resultado esperado: `build_plan.py --check`, `validate_plan.py --check`, `context_review.py status` en verde; diff vacío en helper/validadores/código; mapa no vacío; 73 recibos y Tester PASS.
