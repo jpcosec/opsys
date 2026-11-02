@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-ws09-precisar-catálogo-de-renderizaciones.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- WS09: Precisar catálogo de renderizaciones [draft] - Completar desk/drawer/plans/workspace-documental/borradores/vistas.md con una ficha por fila: origen, contrato, renderer, acción/dueño, error, estado y clase, con evidencia de auditorías WS02-04 y UF01-UF10.
