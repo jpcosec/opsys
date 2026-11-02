@@ -1,0 +1,8 @@
+DATOS DEL SUPERVISOR, no verificación tuya.
+HEAD d17d5d04
+all reviews current
+Generated table/task files/diagram spec match dag.yaml
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+13 passed in 1.38s
+d257d300e8db3a1f21dfc606d077bf0e55f82b46ccda2727e29bdf77c6598c7a  desk/drawer/plans/workspace-documental/borradores/vistas.md
+dag.yaml: 0 líneas fuera de evidence e input_sha256.
