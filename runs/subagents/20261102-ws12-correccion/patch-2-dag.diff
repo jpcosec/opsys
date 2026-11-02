@@ -1,5 +1,5 @@
 diff --git a/desk/drawer/plans/workspace-documental/dag.yaml b/desk/drawer/plans/workspace-documental/dag.yaml
-index 458bb338..bf307eb9 100644
+index 458bb338..3e56a8f0 100644
 --- a/desk/drawer/plans/workspace-documental/dag.yaml
 +++ b/desk/drawer/plans/workspace-documental/dag.yaml
 @@ -1,6 +1,6 @@
@@ -150,7 +150,16 @@ index 458bb338..bf307eb9 100644
      deshabilitada y se ofrece handoff. Con evidencia contraria, o con la herramienta
      de evidencia ausente o con error, lectura o handoff con su causa y el buffer conservado.
      Con afirmación y sin evidencia contraria se admite sin afirmar exclusividad comprobada.
-@@ -3337,7 +3370,7 @@ hierarchy:
+@@ -3330,14 +3363,14 @@ hierarchy:
+       y WS21 fuente/render; WS25 captura, WS26 tareas, WS27 diff/evidencia, WS28 handoff
+       y WS42 conocimiento; WS30 integra pruebas humanas con entradas WS17. Orden parcial
+       obligatorio de ejecución hipotética (no simultaneidad de toda la lista): WS12→WS19
+-      y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos y
+-      WS21 (la arista WS12 y el gate se suman: el guardado espera ambos); WS12→WS25
++      y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos,
++      WS21 y WS26.1 (la arista WS12 y el gate se suman: el guardado espera ambos); WS12→WS25
+       y sus hijos; WS13+WS12→WS27 y sus hijos; WS19+WS20/G_SOURCE→WS21 editable; WS22+WS12→WS26
+       y sus hijos (WS26.1→WS26.2); WS19+WS24+WS12→WS42; WS27+WS12→WS28; todas las
        salidas WS17/21/22/23/24/25/26/28/42→WS30. Solo ejecutar en paralelo nodos ya
        ready con todos sus prerrequisitos satisfechos y sin solapamiento de archivos;
        WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22. Revisión 10
