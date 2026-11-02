@@ -11,3 +11,7 @@ Revisión del Supervisor sobre el entregable: leí las 23 fichas completas. Comp
 ## Adenda: Tester v1 FAIL
 
 El Tester halló defectos reales que mi revisión no vio: tres estados que contradecían la disposición, una contradicción en F18a, un productor mal atribuido en F11b y WS11 usado como productor de implementación. Corregidos en una pasada. Esta revisión y su registro quedan como historia; la renovación vigente va abajo cuando exista.
+
+## Renovación vigente
+
+Fuente `8c3a06be`. `status` marcó 1 de 73. attempt-1 de la carpeta de hash nueva, recibo completo, v2, sin ambigüedades. Leí `output.md` completo junto al contrato.

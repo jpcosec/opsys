@@ -1,0 +1,85 @@
+diff --git a/desk/drawer/plans/workspace-documental/borradores/vistas.md b/desk/drawer/plans/workspace-documental/borradores/vistas.md
+index 7bd4214d..62851a0c 100644
+--- a/desk/drawer/plans/workspace-documental/borradores/vistas.md
++++ b/desk/drawer/plans/workspace-documental/borradores/vistas.md
+@@ -49,7 +49,7 @@ El registro estático de renderizadores/capacidades del shell puede existir en c
+ 
+ Una ficha por fila de las dos tablas, F01-F12 (tabla «Fuente / selección») y F13-F20 (tabla «Filas que faltaban»), en el orden de las tablas. Los sufijos a/b separan solo un componente con evidencia o estado distinto (F11, F18, F19). Los campos son los de la TaskDoc de WS09; la sección «Ficha de cada vista» queda como la lista original.
+ 
+-Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son líneas de `../auditoria/deskops.md`, `../auditoria/infraestructura.md` y `../auditoria/ui.md`; `user-flows.md:N` y `manual.md:N` son de este directorio; `reconciliacion.md:N`, `decisiones.md:N` y `dag.yaml:N` son de `../`. `dag.yaml` se cita para verificar IDs y alcance de nodo. «base existente» = renderer o capacidad citada en una auditoría; no prueba aceptación. Productor de contrato = WS11 o WS12; productor de implementación = nodo del DAG, o «sin productor en el DAG» con repo dueño (`owner_repo` del nodo más cercano o repo de la capacidad en la auditoría). Clases: authored = texto o estructura escrita por una persona o agente como fuente; derivado = calculado desde otras fuentes; preferencia local = estado de sesión o disposición, no documento compartido (P07, `decisiones.md:31`). Estado según `manual.md:41-49`: hoy no hay actas humanas (`manual.md:45`), así que ninguna ficha es disponible; propuesto = sin dependencia ni contrato identificado pendiente y sin evidencia completa; bloqueado = nodo del DAG o contrato WS11/WS12 pendiente que la fila necesita. Lo que WS11 debe precisar se señala sin inventar mapeo (`dag.yaml:693-700`, `dag.yaml:857-859`). Nada de esta sección crea workspace, API, renderer, pasos ni capturas: reutiliza el host Mindmap y su registro (`dag.yaml:1574-1590`, `reconciliacion.md:49`).
++Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son líneas de `../auditoria/deskops.md`, `../auditoria/infraestructura.md` y `../auditoria/ui.md`; `user-flows.md:N` y `manual.md:N` son de este directorio; `reconciliacion.md:N`, `decisiones.md:N` y `dag.yaml:N` son de `../`. `dag.yaml` se cita para verificar IDs y alcance de nodo. «base existente» = renderer o capacidad citada en una auditoría; no prueba aceptación. Productor de contrato = WS11 o WS12; productor de implementación = nodo del DAG, o «sin productor en el DAG» con repo dueño (`owner_repo` del nodo más cercano o repo de la capacidad en la auditoría). Clases: authored = texto o estructura escrita por una persona o agente como fuente; derivado = calculado desde otras fuentes; preferencia local = estado de sesión o disposición, no documento compartido (P07, `decisiones.md:31`). Estado según `manual.md:41-49`: hoy no hay actas humanas (`manual.md:45`), así que ninguna ficha es disponible; propuesto = sin dependencia ni contrato identificado pendiente y sin evidencia completa; bloqueado = nodo del DAG o contrato WS11/WS12 pendiente que la fila necesita. Hoy las 23 fichas son bloqueado: todas dependen de un contrato o nodo pendiente, aunque tengan base existente. Lo que WS11 debe precisar se señala sin inventar mapeo (`dag.yaml:693-700`, `dag.yaml:857-859`). Nada de esta sección crea workspace, API, renderer, pasos ni capturas: reutiliza el host Mindmap y su registro (`dag.yaml:1574-1590`, `reconciliacion.md:49`).
+ 
+ ### F01 — Entrada ecosistema/proyecto, índice o mapa
+ 
+@@ -58,7 +58,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Identidad**: no definido para entrada y mapa; productor WS11 (`dag.yaml:693-694`). El repo se identifica con `deskops repo whoami` (`deskops.md:101`).
+ - **Contrato**: sin contrato. Ninguno de los 17 modelos registrados es de entrada o índice (`deskops.md:185-201`); P09 los define como documentos authored (`decisiones.md:33`).
+ - **Campos y relaciones**: enlaces `[[doc]]` y `[[doc#Sección]]` (`infraestructura.md:88`) y aristas por campo (`infraestructura.md:92`). Campos de RepositoryDoc: no leídos en las auditorías; productor WS11.
+-- **Renderer existente o requerido**: base existente: panel de nodo y vecindad 1-2 saltos para documentos del store (`ui.md:54-55,69`). Requerido para Markdown no modelado: ausente (`ui.md:55`), productor WS13.1 y WS13.2 (graph_ui; `dag.yaml:841,892`). Lista enlazada de entradas: no definido; productor WS11.
++- **Renderer existente o requerido**: base existente: panel de nodo y vecindad 1-2 saltos para documentos del store (`ui.md:54-55,69`). Requerido para Markdown no modelado: ausente (`ui.md:55`), productor WS13.1 y WS13.2 (graph_ui; `dag.yaml:841,892`). Lista enlazada de entradas: no definido; contrato WS11, implementación WS13.1 y WS13.2.
+ - **Navegación**: abrir destinos; URL/`popstate` y tarjetas que reorientan (`ui.md:57,69`); resolver origen y proyecto lo fija WS11 (`dag.yaml:693-697`); otro desk: WS41 (`ui.md:87`).
+ - **Acción/dueño**: solo lectura. Dueño de las entradas authored: deskops, productor WS17.
+ - **Destino de escritura**: la UI no escribe. Las plantillas viven en `ejemplo/nav/` del paquete del plan (`dag.yaml:1179`).
+@@ -228,12 +228,12 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Identidad**: `Model:name` en el lector: no definido; productor WS11.
+ - **Contrato**: RoleDoc y RuntimeProfileDoc; ningún comando de deskops los crea o edita (`deskops.md:197,199`).
+ - **Campos y relaciones**: no leídos en las auditorías; no definido; productor WS11.
+-- **Renderer existente o requerido**: lector genérico de documentos del store (`reconciliacion.md:18`); renderer específico: no definido; productor WS11.
++- **Renderer existente o requerido**: lector genérico de documentos del store (`reconciliacion.md:18`); renderer específico: sin productor en el DAG, repo dueño graph_ui.
+ - **Navegación**: no definido; productor WS11.
+ - **Acción/dueño**: lectura. `materialize`, `drift check` y `runtime template` los leen (`deskops.md:127,129,142`). No se promete edición desde UF09 (`user-flows.md:214`): dueño deskops, sin productor en el DAG.
+ - **Destino de escritura**: ninguno disponible; sin productor en el DAG, repo dueño deskops (`deskops.md:197,199`).
+ - **Error**: no definido; productor WS11.
+-- **Estado**: propuesto. Ningún nodo ni contrato pendiente identificado necesita la lectura de estos documentos y la evidencia no es completa.
++- **Estado**: bloqueado. Necesita el contrato WS11 para identidad, campos y navegación en el lector.
+ - **Clase**: authored.
+ - **UF**: UF06 (solo `runtime template`, `user-flows.md:147`); UF09 como exclusión (`user-flows.md:214`).
+ - **Evidencia**: `deskops.md:127,129,142,197,199,221-222`; `user-flows.md:147,214`.
+@@ -241,12 +241,12 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ ### F11b — RunDoc y conversación vinculada
+ 
+ - **Propósito humano**: seguir un intento de ejecución, su conversación y evidencia, y revisarlo; completado por agente no implica aprobado (`user-flows.md:141`).
+-- **Origen**: RunDoc (2 en el índice, `deskops.md:198`), escrito por `runtime template --task --agent` (`deskops.md:142`). La conversación Scion: no auditada (`user-flows.md:154`); no definido; productor WS44 (`dag.yaml:2842`, deskops).
++- **Origen**: RunDoc (2 en el índice, `deskops.md:198`), escrito por `runtime template --task --agent` (`deskops.md:142`). La conversación Scion no está auditada (`user-flows.md:154`). Acceso y contrato público: no definido; productor WS44 (`dag.yaml:2842`, deskops). Vínculo de mensajes al intento: productor WS33 (`dag.yaml:2276`).
+ - **Identidad**: identidad de intento: no definido; productor WS32 (`user-flows.md:150`; `dag.yaml:2136`, deskops).
+ - **Contrato**: RunDoc; `closeout commit --run-dir` no usa RunDoc sino `run.yaml` (`deskops.md:198`).
+ - **Campos y relaciones**: vínculo de mensajes, resultados y decisión humana al intento: no definido; productor WS33 (`user-flows.md:151`; `dag.yaml:2276`).
+ - **Renderer existente o requerido**: ausente (`ui.md:82-84`); el panel de workers adyacente no se afirma que cubra el alcance (`ui.md:82`); productor WS35 (`dag.yaml:2499`, graph_ui).
+-- **Navegación**: conversación vinculada: no definido; productor WS33 y WS44.
++- **Navegación**: conversación vinculada: no definido; productor WS33 (vínculo) y WS35 (lectura).
+ - **Acción/dueño**: preparar y revisar; despacho y respuesta autorizados: WS34 (`dag.yaml:2390`) y UI WS36 (`dag.yaml:2532`). `runtime supervise` nunca responde ni avanza tareas (`deskops.md:141`). Dueño: deskops. G_SCION y G_EXEC pendientes (`user-flows.md:145`). El estado operativo procede del runtime y no es documento compartido (línea 27 de este archivo).
+ - **Destino de escritura**: RunDoc por `runtime template` (`deskops.md:142`); resto: no definido; productor WS32, WS33, WS34.
+ - **Error**: no definido; productor WS32, WS33, WS34 y WS44 (`user-flows.md:156-157`).
+@@ -296,7 +296,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Identidad**: ruta del archivo; sin `Model:name`. Identidad en el lector: no definido; productor WS11.
+ - **Contrato**: sin contrato; la visión los define deliberadamente no modelados (`vision.md:36`, leída solo esa línea por búsqueda de texto).
+ - **Campos y relaciones**: `status` y resolución con fecha, razón y refs (`deskops.md:48`). Otros: no definido; productor WS11.
+-- **Renderer existente o requerido**: Markdown fuente/render sin modelo: ausente (`ui.md:55`); productor WS13.1 (`dag.yaml:860`). Lista por `issue list` en la UI: no definido; productor WS11.
++- **Renderer existente o requerido**: Markdown fuente/render sin modelo: ausente (`ui.md:55`); productor WS13.1 (`dag.yaml:860`). Lista por `issue list` en la UI: sin productor en el DAG, repo dueño graph_ui; contrato de lectura WS11.
+ - **Navegación**: no definido; productor WS11.
+ - **Acción/dueño**: `issue list` y `issue close` (`--force` reabre) por autoridad deskops (`deskops.md:48-49`; tabla 2).
+ - **Destino de escritura**: el archivo del issue, reescrito por `issue close` (`deskops.md:48`). Desde UI: no definido; productor WS12.
+@@ -364,12 +364,12 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Identidad**: `Model:name`; SpecDoc con `sha256` del spec (`infraestructura.md:35`).
+ - **Contrato**: SpecDoc y NotationDoc registrados por `diagram sync` y `notation sync` (`infraestructura.md:100`). SurfaceDoc no es una pantalla (línea 22 de este archivo).
+ - **Campos y relaciones**: campo `notation` del SpecDoc, glifos y links (`infraestructura.md:100`).
+-- **Renderer existente o requerido**: renderers de spec2viz por CLI: 9 (`infraestructura.md:134`). La vista Specs de Mindmap la nombra la visión (`vision.md:36`, leída solo esa línea por búsqueda de texto) y no tiene fila en `ui.md`: no definido; productor WS11.
++- **Renderer existente o requerido**: renderers de spec2viz por CLI: 9 (`infraestructura.md:134`). La vista Specs de Mindmap la nombra la visión (`vision.md:36`, leída solo esa línea por búsqueda de texto) y no tiene fila en `ui.md`: sin productor en el DAG, repo dueño graph_ui; si entra al lector, contrato WS11.
+ - **Navegación**: no definido; productor WS11.
+ - **Acción/dueño**: reutilizar Specs; render y validación por `spec2viz`; dueño spec2viz.
+ - **Destino de escritura**: sync escribe por `sldb.api` (`infraestructura.md:35`). Desde UI: no definido; productor WS12.
+ - **Error**: no definido; productor WS11.
+-- **Estado**: propuesto. Ningún nodo del DAG necesita mostrar SpecDoc ni NotationDoc existentes (WS18 solo crea ViewDoc y NotationDoc concretos, `dag.yaml:1225`); sin evidencia completa ni contrato.
++- **Estado**: bloqueado. Necesita el contrato WS11 para navegación y para decidir si la vista Specs entra en el lector. Tiene contrato de modelo, no de UI. WS18 solo crea ViewDoc y NotationDoc concretos (`dag.yaml:1225`).
+ - **Clase**: authored (spec YAML, SpecDoc, NotationDoc); derivado (render y gráfico).
+ - **UF**: ninguna: `user-flows.md` no menciona specs ni notaciones (búsqueda de texto sin coincidencias).
+ - **Evidencia**: `infraestructura.md:35,100,132,134`; `dag.yaml:1225`; `user-flows.md` sin referencia.
+@@ -403,7 +403,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Acción/dueño**: draft, validate y promote públicos de sldb (tabla 2); dueño sldb.
+ - **Destino de escritura**: el draft del modelo en el store por la API de modelos (`ui.md:85`).
+ - **Error**: no definido; productor WS12 (efectos y errores de draft/validate/promote, `user-flows.md:217`).
+-- **Estado**: propuesto. Es base existente sin contrato y ningún nodo pendiente la necesita tal como está; el acceso desde el lector y la promoción con autoridad van en F19b.
++- **Estado**: bloqueado. Necesita el contrato WS12 para efectos y errores de draft, validate y promote. El capítulo 15 conserva su etiqueta propuesta, fijada por el plan (`manual.md:163`); esta ficha mide la fila. El acceso desde el lector va en F19b.
+ - **Clase**: authored (clase, template, draft); derivado (inventario de modelos).
+ - **UF**: UF09 (`user-flows.md:211-212`).
+ - **Evidencia**: `ui.md:85`; `deskops.md:181`; `reconciliacion.md:78`; `user-flows.md:206,211-212,217`.
