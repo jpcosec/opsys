@@ -1,5 +1,5 @@
 diff --git a/desk/drawer/plans/workspace-documental/dag.yaml b/desk/drawer/plans/workspace-documental/dag.yaml
-index 355380c0..458bb338 100644
+index 355380c0..bf307eb9 100644
 --- a/desk/drawer/plans/workspace-documental/dag.yaml
 +++ b/desk/drawer/plans/workspace-documental/dag.yaml
 @@ -1,6 +1,6 @@
@@ -7,7 +7,7 @@ index 355380c0..458bb338 100644
 -revision: 9
 -revision_note: 'Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
 +revision: 10
-+revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de revision root; no es aprobacion humana): productores minimos WS46 (captura a drawer y protoatomo con origen, deskops), WS47 (guarda de contenido no declarado en la edicion por campos de /save, sldb) y WS48 (admision comun de escritura en modo manual exclusivo, graph_ui); dependencias de WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42; WS19.2 distingue baja de RelationDoc de quitar una referencia de campo; scope_nodes de G_WRITE_CONTRACT, G_UI_WRITE y G_SLDB_WRITE actualizados. Las revisiones baratas de los nodos tocados y de sus vecinos quedan obsoletas hasta renovarse. Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
++revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de revision root; no es aprobacion humana; segunda pasada con siete ajustes de root del congelado 2da226ed: admision de la ruta en uso /api/desk/advance en WS48, WS26.1 con WS47 y G_PAYLOAD_PRECONDITION y preparacion de candidato separada de la creacion activa de WS26.2, F1 por configuracion externa sin registro nuevo, guarda de WS47 sobre archivo previo): productores minimos WS46 (captura a drawer y protoatomo con origen, deskops), WS47 (guarda de contenido no declarado en la edicion por campos de /save, sldb) y WS48 (admision comun de escritura en modo manual exclusivo, graph_ui); dependencias de WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42; WS19.2 distingue baja de RelationDoc de quitar una referencia de campo; scope_nodes de G_WRITE_CONTRACT, G_UI_WRITE y G_SLDB_WRITE actualizados. Las revisiones baratas de los nodos tocados y de sus vecinos quedan obsoletas hasta renovarse. Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
    de autoria de ViewDoc/NotationDoc concretos (WS18), sin portabilidad generica ni
    evaluador nuevo; B) glosario de revision en tres conceptos y nuevo productor planificado
    WS45 (sldb, precondicion de escritura de payload, independiente de source_mode)
@@ -136,15 +136,51 @@ index 355380c0..458bb338 100644
    estimate: S
    task_file: desk/drawer/tasks/workspace-documental/task-ws25-2.md
    promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
-@@ -1775,6 +1799,7 @@ tasks:
+@@ -1775,22 +1799,35 @@ tasks:
    depends_on:
    - WS12
    - WS22
++  - WS47
 +  - WS48
    requires:
    - G_CLOSEOUT
    - G_HUMAN_READ
-@@ -1813,6 +1838,7 @@ tasks:
++  - G_PAYLOAD_PRECONDITION
+   - G_UI_WRITE
+   - G_WRITE_CONTRACT
+   owner_repo: graph_ui
+   output_scope: frontends/mindmap/views/workspace/authoring/; endpoints autorizados
+     por el contrato WS12; tests/
+-  scope: Autoría explícita desde candidato, evidencia declarada, dependencias y binding
+-    de contexto/pills. Candidato = archivo del drawer. G_HUMAN_READ habilita uso de
+-    mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus
+-    contratos/gates técnicos sin acta humana de lectura.
+-  acceptance: 'UF04 sobre TaskDoc real: el candidato queda autorado con evidencia
+-    declarada, dependencias y pills de contexto vinculadas y visibles tras recargar;
+-    nunca editar status para avanzar. Si una operación Git no tiene contrato o dueño,
+-    la acción queda en handoff explícito y se declara no disponible.'
++  scope: 'Preparación del candidato en el drawer (UF04, paso preparar): evidencia declarada,
++    dependencias y contexto/pills como campos autorables de un candidato (archivo del
++    drawer), guardados por update con la precondición expected y las guardas elegidas
++    por el contrato WS12 (campos protegidos, guarda de contenido de WS47, admisión de
++    WS48). No crea la tarea activa ni dispara el Board como efecto oculto: la creación
++    activa con Board es una operación conjunta de WS26.2. No inventa API de promoción.
++    Si la interfaz pública no permite persistir un caso (candidato no rastreado, evidencia
++    sin validación de vocabulario, pills como lista entera), el contrato WS12 declara
++    el gap exacto y no se inventa capacidad. G_HUMAN_READ habilita uso de mutaciones
++    en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates
++    técnicos sin acta humana de lectura.'
++  acceptance: 'UF04 preparar sobre un candidato real del drawer: evidencia declarada,
++    dependencias y pills de contexto persisten en el candidato y son visibles tras recargar;
++    un guardado obsoleto se rechaza sin perder el texto local; nunca editar status;
++    no se crea tarea activa ni ruta en el Board. Cada caso que la interfaz pública no
++    persista se declara no disponible con el gap exacto del contrato. Si una operación
++    Git no tiene contrato o dueño, la acción queda en handoff explícito y se declara
++    no disponible.'
+   estimate: M
+   task_file: desk/drawer/tasks/workspace-documental/task-ws26-1.md
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+@@ -1813,6 +1850,7 @@ tasks:
    - WS12
    - WS22
    - WS26.1
@@ -152,7 +188,32 @@ index 355380c0..458bb338 100644
    requires:
    - G_CLOSEOUT
    - G_HUMAN_READ
-@@ -1976,6 +2002,7 @@ tasks:
+@@ -1821,13 +1859,18 @@ tasks:
+   owner_repo: graph_ui
+   output_scope: frontends/mindmap/views/workspace/routing/; endpoints autorizados
+     por el contrato WS12; tests/
+-  scope: Enrutamiento explícito en Board y representación de capa lista por dependencias/no
++  scope: 'Enrutamiento explícito en Board y representación de capa lista por dependencias/no
+     solapamiento; promoción solo cuando el contrato resuelve commits previos por canal
+-    autorizado. Enrutar = añadir la tarea a la lista tasks del BoardDoc por operación
+-    pública. Capa lista = tareas sin dependencias pendientes y sin archivos solapados
+-    según los `files` declarados en cada TaskDoc y el ritual de fase. G_HUMAN_READ
+-    habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden
+-    avanzar con sus contratos/gates técnicos sin acta humana de lectura.
++    autorizado. Autorizar, crear la tarea activa y enrutarla en el Board es una operación
++    conjunta (W01 del contrato WS12: crea el TaskDoc y lo añade al Board), posterior
++    a la preparación del candidato en WS26.1 y a la autorización de la persona; nunca
++    una operación parcial ni un efecto oculto de WS26.1. Los commits previos y la promoción
++    van en handoff cuando el contrato no ofrece canal. Enrutar un TaskDoc ya existente
++    no tiene operación pública con precondición (HO-12). Capa lista = tareas sin dependencias
++    pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc
++    y el ritual de fase. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y
++    pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta
++    humana de lectura.'
+   acceptance: 'Tras enrutar, `deskops show board` muestra la tarea y la UI la distingue
+     de una tarea en ejecución; el canal de promoción respeta commits previos y estado
+     real; la capa lista se muestra separada de tareas en ejecución y de tareas con
+@@ -1976,6 +2019,7 @@ tasks:
    depends_on:
    - WS27
    - WS12
@@ -160,7 +221,7 @@ index 355380c0..458bb338 100644
    requires:
    - G_CLOSEOUT
    - G_HUMAN_READ
-@@ -2636,6 +2663,7 @@ tasks:
+@@ -2636,6 +2680,7 @@ tasks:
    depends_on:
    - WS12
    - WS13
@@ -168,7 +229,7 @@ index 355380c0..458bb338 100644
    requires:
    - G_HUMAN_READ
    - G_UI_WRITE
-@@ -2752,6 +2780,7 @@ tasks:
+@@ -2752,6 +2797,7 @@ tasks:
    - WS19
    - WS24
    - WS12
@@ -176,7 +237,7 @@ index 355380c0..458bb338 100644
    requires:
    - G_HUMAN_READ
    - G_UI_WRITE
-@@ -2923,6 +2952,126 @@ tasks:
+@@ -2923,6 +2969,142 @@ tasks:
      required_protocol: ritual-context-review
      status: reviewed
    node_role: delivery
@@ -238,17 +299,25 @@ index 355380c0..458bb338 100644
 +    Canal elegido por el contrato, la edición por campos que termina en save_document_payload
 +    (POST /save update y update de graph_ui local). Primero inventario con ruta, símbolo
 +    y commit de refuse_structural_noise y refuse_undeclared_frontmatter, que create_document
-+    y track_document_file ya aplican, y reutilizar antes de crear. No amplía WS45,
++    y track_document_file ya aplican al Markdown que se crea, y de la guarda de deskops
++    edit sobre el archivo previo; la guarda de este nodo inspecciona el archivo previo
++    y el efecto de reescribirlo, no solo el render nuevo, y reutiliza ese criterio antes
++    de crear otro. No amplía WS45,
 +    no cambia la creación, no resuelve el gap de prevalidación de update capturado
 +    en el inbox de sldb (si toca el mismo código, las ediciones van en serie) y no
 +    se sustituye con un workaround de Deskops.
 +  acceptance: Pruebas reales focalizadas en sldb sobre el canal elegido, tras recibo
-+    G_SLDB_WRITE para este delta. Un update con expected vigente que borraría contenido
-+    no declarado del archivo se rechaza con error observable y sin cambios; el que
-+    conserva ese contenido se aplica; un expected obsoleto sigue dando 409; la creación
-+    no cambia. Hasta que pasen, WS19.1 y WS19.2 no habilitan la edición de documentos
-+    con contenido no declarado. Este nodo es plan; no afirma que exista ni que esté
-+    implementado o aceptado.
++    G_SLDB_WRITE para este delta. La guarda inspecciona el archivo previo y el efecto
++    de reescribirlo, no solo el render nuevo, con el criterio de la guarda de deskops
++    edit y de refuse_structural_noise y refuse_undeclared_frontmatter leído en fuente,
++    sin inventar otro; si no alcanza a definir pérdida, el residuo se declara. Un update
++    con expected vigente que perdería contenido no declarado del archivo se rechaza
++    con error observable y sin cambios; un update seguro, cuyo render no pierde contenido
++    (incluido un documento limpio), se aplica; un expected obsoleto sigue dando 409;
++    la creación no cambia. No promete editar todo documento con ruido ni un merge preservador.
++    Hasta que pasen, WS19.1, WS19.2 y WS26.1 no habilitan la edición de documentos con
++    contenido no declarado. Este nodo es plan; no afirma que exista ni que esté implementado
++    o aceptado.
 +  estimate: S
 +  task_file: desk/drawer/tasks/workspace-documental/task-ws47.md
 +  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
@@ -271,18 +340,26 @@ index 355380c0..458bb338 100644
 +  owner_repo: graph_ui
 +  output_scope: frontends/mindmap/ (módulo común de admisión de escritura; archivo
 +    exacto en el TaskDoc); tests/
-+  scope: Productor común de la evidencia de modo manual exclusivo (T-P03.1, HO-03;
++  scope: 'Productor común de la evidencia de modo manual exclusivo (T-P03.1, HO-03;
 +    contrato WS12, secciones 5 y 5.9), previo a toda mutación habilitada en la UI y
-+    no contenido en WS19.1, para que ack y captura no dependan de WS19.1. Un único
-+    punto de admisión que toda ruta de escritura consulta antes de invocar su canal,
-+    con una afirmación vigente suministrada fuera de la petición (configuración confiable
-+    del operador, sin valores reales en el repo) y la consulta de la evidencia contraria
-+    disponible. Salidas, admitida con el texto declarado sin evidencia contraria a
-+    una hora, o lectura/handoff con su causa. La ausencia de evidencia contraria no
-+    prueba exclusividad, y con otro coordinador escritor la UI queda en lectura o handoff
-+    (P03). No crea servicio de identidad, autenticación ni coordinación distribuida,
-+    ni lock, ni CAS universal, ni un 409 donde el canal no ofrece precondición.
-+  acceptance: Pruebas en un store temporal. Sin afirmación vigente la mutación queda
++    no contenido en WS19.1, para que ack y captura no dependan de WS19.1. Un único punto
++    de admisión que toda ruta de escritura de la UI, existente o nueva, consulta antes
++    de invocar su canal, con una afirmación vigente suministrada fuera de la petición
++    (configuración confiable del responsable del desk, cargada por este nodo y sin valores
++    reales en el repo) y consultas públicas existentes para la evidencia contraria;
++    no hay registro nuevo del coordinador en Deskops y el prompt de Scion no es señal
++    consultable. Salidas, admitida con el texto declarado sin evidencia contraria a
++    una hora, o lectura/handoff con su causa. Cubre la ruta ya en uso POST /api/desk/advance
++    (el botón Avanzar de views/workflow/deskops/deskops-view.js): rechazo en el servidor
++    antes de advance_task cuando falta la afirmación o la evidencia, y estado y mensaje
++    del botón; se conservan revision, gates y rechazos existentes y no se crea una operación
++    nueva de lifecycle. La ausencia de evidencia contraria no prueba exclusividad, y
++    con otro coordinador escritor la UI queda en lectura o handoff (P03). No crea servicio
++    de identidad, autenticación ni coordinación distribuida, ni lock, ni CAS universal,
++    ni un 409 donde el canal no ofrece precondición. No exige G_HUMAN_READ para desarrollar
++    y probar el mecanismo; la habilitación real de los consumidores sigue requiriendo
++    los gates humanos correspondientes y esto no permite usar escrituras en el producto.'
++  acceptance: Pruebas en un store temporal. POST /api/desk/advance sin afirmación vigente o sin evidencia se rechaza en el servidor antes de invocar advance_task, y el botón Avanzar muestra su estado deshabilitado y el mensaje de la causa; con admisión, la ruta conserva revision, gates y rechazos existentes. Sin afirmación vigente la mutación queda
 +    deshabilitada y se ofrece handoff. Con evidencia contraria, o con la herramienta
 +    de evidencia ausente o con error, lectura o handoff con su causa y el buffer conservado.
 +    Con afirmación y sin evidencia contraria se admite sin afirmar exclusividad comprobada.
@@ -303,19 +380,19 @@ index 355380c0..458bb338 100644
  legacy_mapping:
    A1: WS02–WS05
    A2: WS01/WS07
-@@ -3187,7 +3336,10 @@ hierarchy:
+@@ -3187,7 +3369,10 @@ hierarchy:
        y sus hijos (WS26.1→WS26.2); WS19+WS24+WS12→WS42; WS27+WS12→WS28; todas las
        salidas WS17/21/22/23/24/25/26/28/42→WS30. Solo ejecutar en paralelo nodos ya
        ready con todos sus prerrequisitos satisfechos y sin solapamiento de archivos;
 -      WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22.'
 +      WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22. Revisión 10
-+      (propuesta): WS12→WS46→WS25.2 (captura con origen), WS12→WS47→WS19.1 y WS19.2
++      (propuesta): WS12→WS46→WS25.2 (captura con origen), WS12→WS47→WS19.1, WS19.2 y WS26.1
 +      (guarda de contenido) y WS12→WS48→WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2,
 +      WS28, WS39 y WS42 (admisión de escritura).'
      acceptance: precondición de escritura/conflicto/buffer/protegidos probados; guardar
        sin commit; coordinador escritor implica read-only/handoff; mostrar evidencia
        declarada/encontrada/verificada distinta; cierre confirmado por commit/Deskops.
-@@ -3204,6 +3356,9 @@ hierarchy:
+@@ -3204,6 +3389,9 @@ hierarchy:
      - WS20
      - WS21
      - WS45
