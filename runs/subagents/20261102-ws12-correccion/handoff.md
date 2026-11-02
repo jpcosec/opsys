@@ -54,3 +54,7 @@ Revisiones de contrato: `contrato-review-disposition.md`, las tres rondas finale
 2. WS26.1: el recorrido B no usa WS47 ni WS48 pero el nodo depende de ambos. Lo dejé así: es un nodo.
 3. WS21 frente a C-15 por `read_only`: sin efecto con P04, no tocado.
 4. WS47 y el gap de `update_target` tocan código vecino: si sldb lo repara, van en serie.
+
+## Adenda de cierre, 2026-11-02
+
+Root aprobó para planificación (`review-source-4.md`) y su auditoría de las 38 salidas completas halló un error que yo no vi: FUTURO de WS12 attempt-1 transfería el umbral a WS34. Mi afirmación anterior de «sin contradicción sin resolver» estaba limitada a lo que leí, y no alcanzaba. Rechazado en `disposition-correctiva.md`; WS12 attempt-2 aceptado, salida leída completa. dag sha256 final `e905d71ab7c863365a2ef0756a8fe4abaf02c96b06f7c3e55ca9c7d90ad7f1c0`. Los otros 37 y las tres revisiones de contrato conservan sus inputs.
