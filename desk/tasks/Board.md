@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-ws12-cerrar-contrato-de-operaciones-y-escritura.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- WS12: Cerrar contrato de operaciones y escritura [draft] - Crear desk/drawer/plans/workspace-documental/contratos/operaciones.md con la matriz por operación, modelo, campo, canal, actor, revisión, Git y efectos, separando lo existente con evidencia citable de los huecos con dueño y productor.

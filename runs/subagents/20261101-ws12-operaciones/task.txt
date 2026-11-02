@@ -1,0 +1,12 @@
+Task: task-ws12-cerrar-contrato-de-operaciones-y-escritura
+Title: WS12: Cerrar contrato de operaciones y escritura
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/workspace-documental/task-ws12.md
+Closeout evidence: commit, document
+Effective pills:
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-001-task-closure-commit.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
