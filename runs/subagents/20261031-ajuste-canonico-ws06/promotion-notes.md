@@ -133,3 +133,7 @@ Contrato aprobado para planificación: `contratos/navegacion.md`, nota en `contr
 ## Adenda 2026-11-02, cierre de WS12
 
 Contrato aprobado para planificación: `contratos/operaciones.md`, nota en `contratos/operaciones-aprobacion.md`. Los bundles del helper no lo contienen: preflight y cold de cada consumidor deben traerlo enlazado. Nodos nuevos: WS46 (captura, antes de WS25.2), WS47 (guarda de contenido, antes de WS19.1, WS19.2, WS26.1), WS48 (admisión, antes de toda escritura de UI, incluido `POST /api/desk/advance`). WS26.1 prepara en drawer con dos recorridos, entregados juntos; WS26.2 crea y enruta. HO-04, HO-06, HO-09 y HO-12 quedan sin productor; HO-19 lo fija una corrección documental al preparar WS34.1 y WS34.2, no WS34. Intake en sldb sin atender: prevalidación de `update` y atomicidad de `/save`; si se repara, va en serie con WS47.
+
+## Adenda 2026-11-02, WS13.1 en graph_ui
+
+Delta en `bf55151` y corrección `b398d54`; root no lo aceptó aún. Nuevo trabajo sin nodo en el DAG: render Markdown legible del lector, `desk/drawer/tasks/task-render-markdown-legible-del-lector.md` en graph_ui, antes de WS16. Productor por reconciliar. Limitación de sldb observada: `EdgeIndex.stale` no marca una edición externa ni un campo nuevo de `__references__`.
