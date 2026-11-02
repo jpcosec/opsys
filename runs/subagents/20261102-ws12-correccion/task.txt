@@ -1,0 +1,12 @@
+Task: task-corregir-contrato-de-operaciones-de-ws12-tras-revisión-root
+Title: Corregir contrato de operaciones de WS12 tras revisión root
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/task-corregir-contrato-ws12.md
+Closeout evidence: commit, document
+Effective pills:
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-001-task-closure-commit.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
