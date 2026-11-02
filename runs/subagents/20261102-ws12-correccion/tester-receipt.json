@@ -1,0 +1,14 @@
+{
+  "role": "tester",
+  "launcher": "herdr",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "thinking": "low",
+  "tools": "read,grep,find,ls",
+  "pid": 3146207,
+  "exit": 0,
+  "input_sha256": "1ab2a1c526694b88ca654e5d640f9fdf609d05bbc78fa5426d862dbfd2481ab3",
+  "output_sha256": "689a570443f32f2da8a33ca8fa7d89c134af9ed2c2278f8ca25a5e4a8804ded8",
+  "contract_sha256": "754546d60c5ec47b369c8a8b3d47124615659481403939855bb1ff76b4ce9f39",
+  "result": "PASS focal, ultima frase de WS47; cobertura incremental en freeze-final.md"
+}
