@@ -1,0 +1,14 @@
+HEAD deskops: fa24ec7a
+sha256 operaciones.md: fa965612dae6d0d76c40c802fcace7b5ad46e472ddfa5bfd977d9206085ee085
+$ test -s desk/drawer/plans/workspace-documental/contratos/operaciones.md
+exit 0
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+exit 0
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+exit 0
