@@ -1,0 +1,11 @@
+REFORMULACION
+PK05 es un agregado/paquete no ejecutable: reúne autoría y operación manual segura —edición por campos, fuente/render, intake, tareas, revisión/evidencia y cierre por handoff—, sin ejecutar. Resultado sustantivo: capacidades integradas y probadas por sus hijos. Repo dueño: deskops; hijos en graph_ui/sldb/deskops. Límites: no autoriza tareas ni añade aristas; gates pendientes intencionales; WS42 no paralelo con WS19; WS26 no precede WS22.
+
+AMBIGUEDADES
+1. «Revisión 10 (propuesta): WS12→WS46→WS25.2». La marca «propuesta» no aclara si esas guardas/aristas son exigibles o informativas; el ejecutor tendría que inventar su vigencia y si WS46/47/48 bloquean a sus consumidores.
+
+DRY-RUN
+Hipótetico, sin ejecutar. PK05 no se ejecuta: termina cuando terminan sus hijos. WS12 (externo) entrega contratos/operaciones.md. Solo nodos ready y sin solape: WS45 consume WS12→inventario/pruebas→G_PAYLOAD_PRECONDITION; WS20 consume WS12→API/tests raw-source→G_SOURCE; WS46 consume WS12→pruebas captura drawer/proto→WS25.2; WS47 consume WS12→guarda de contenido no declarado→WS19.1/19.2/26.1; WS48 consume WS12→admisión común→WS19/21/25/26/28/42. WS19.1/19.2 consumen WS12, G_PAYLOAD_PRECONDITION, WS47 y WS48→edición de campos/conflicto/relaciones. WS21 consume WS19, WS48 y, en editable, G_SOURCE→fuente/render y buffer. WS25.1/25.2 consumen WS48 y WS46→captura/triage. WS26.1/26.2 consumen WS22 externo, WS12, G_PAYLOAD_PRECONDITION, WS47 y WS48→autoría/contexto/Board. WS27.1/27.2 consumen WS13 externo y WS12→diff/evidencia. WS42 consume WS19, WS24 externo, WS12 y WS48→split/merge/tipado y materializaciones. WS28 consume WS27, WS12 y WS48→verify/handoff. WS30 consume salidas WS17/21/22/23/24/25/26/28/42→acta humana UF01–05 y navegación; fallo bloquea gate y abre tarea en repo dueño. Validación: aceptación de cada hijo, gates por delta y acta WS30; G_HUMAN_READ solo para uso UI.
+
+FUTURO
+Producen otros nodos: WS12 (contrato), WS13/WS17/WS22/WS23/WS24. Deciden humanos: acta WS30/G_HUMAN_READ y aceptación de deltas; G_SOURCE, G_PAYLOAD_PRECONDITION, G_CLOSEOUT, G_UI_WRITE y G_WRITE_CONTRACT se reciben por delta. El TaskDoc de promoción fija archivos, textos y pruebas. P01/P03–P06 ya resueltas no se re-piden.
