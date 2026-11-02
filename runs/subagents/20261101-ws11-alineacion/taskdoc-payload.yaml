@@ -1,0 +1,36 @@
+title: Alinear contrato WS11 en transporte, alias canónico, preparación y WS15.1
+why: 'La revisión root final aceptó los puntos A-F, pero el fallback local no dice cómo viaja, la configuración admitiría sinónimos, §5.4 no nombra quién prepara los stores y shell/api.js queda fuera del output_scope de WS15.1.'
+goal: Aplicar en una pasada las cuatro precisiones de root en contratos/navegacion.md y en el output_scope de WS15.1, regenerar derivados y renovar solo las revisiones medidas como afectadas.
+scope: |-
+  Autoridad: runs/subagents/20261101-ws11-alineacion/review-source.md, que prevalece sobre este resumen. Lista cerrada.
+
+  1. Serialización: el local del desk del proceso sin alias configurado se serializa como ausencia del parámetro alias; sin excepción ?alias=local. URL e historia conocen la equivalencia. En el texto, local: sigue siendo el desk del documento origen. Un alias configurado para el desk del proceso es el canónico.
+  2. Alias canónico: WS41 valida que no haya dos entradas para el mismo (root.resolve(), store.resolve()). Sin sinónimos en el baseline. Sin modelo ni nodo.
+  3. §5.4: quién prepara stores fuera del request: generador de WS40, Executor del consumidor en sus pruebas, operador o responsable del desk en uso real. La UI no migra por una petición. Sin comando inventado ni productor automático.
+  4. output_scope de WS15.1 incorpora frontends/mindmap/shell/api.js para conservar estado HTTP y tipificar errores HTTP/red/JSON, manteniendo error.body y compatibilidad. Sin implementar, sin dependencias ni gates, sin cambiar aceptación. WS13.1 consume y no implementa.
+
+  Superficies: contratos/navegacion.md, output_scope de WS15.1 en dag.yaml, derivados de build_plan y render_diagram, punteros de context_review de lo medido como stale.
+
+  No tocar: vistas.md, guía, decisiones, helper, validadores, código, repos hermanos, rutas ajenas. Sin cerrar fase, WS12, UI, Scion, push ni suite general.
+implementation_path: 1. Editar contrato y DAG. 2. Regenerar derivados y medir staleness. 3. Congelar. 4. Tester focal con no regresión de A-F. 5. Revisión fresca WS13.1 y WS41. 6. Renovar lo medido, disposición contra contratos completos. 7. Checks, closeout y checkpoint root.
+done_when: 'Acceptance: las cuatro precisiones aplicadas y ninguna más; Tester focal PASS sobre bytes congelados con no regresión de A-F; revisión fresca WS13.1 y WS41 sobre el contrato final; solo se renueva lo medido; build --check, validate --check y status en verde; contrato en borrador.'
+validation:
+- test -s desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- python desk/drawer/plans/workspace-documental/build_plan.py --check
+- python desk/drawer/plans/workspace-documental/validate_plan.py --check
+- python desk/drawer/plans/workspace-documental/context_review.py status
+- Tester independiente de solo lectura deja runs/subagents/20261101-ws11-alineacion/tester-result-summary.md
+task_type: docs
+closeout_evidence:
+- commit
+- document
+from_drawer: desk/drawer/tasks/task-alinear-contrato-ws11.md
+references:
+- desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- desk/drawer/plans/workspace-documental/dag.yaml
+- runs/subagents/20261101-ws11-alineacion/review-source.md
+- runs/subagents/20261101-ws11-correccion/freeze-final.md
+- desk/rituals/context-review.md
+files:
+- desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- desk/drawer/plans/workspace-documental/dag.yaml

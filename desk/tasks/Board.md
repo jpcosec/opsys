@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-alinear-contrato-ws11-en-transporte-alias-canónico-preparación-y-ws15-1.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Alinear contrato WS11 en transporte, alias canónico, preparación y WS15.1 [draft] - Aplicar en una pasada las cuatro precisiones de root en contratos/navegacion.md y en el output_scope de WS15.1, regenerar derivados y renovar solo las revisiones medidas como afectadas.
