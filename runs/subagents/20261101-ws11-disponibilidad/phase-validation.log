@@ -1,0 +1,9 @@
+$ context_review.py status
+all reviews current
+exit 0
+Generated table/task files/diagram spec match dag.yaml
+build exit 0
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+validate exit 0
+13 passed in 1.37s
+sha256 navegacion.md: 6a4f8518f3d69de6118550b3077921db4bbb46bc9123c26980c6c8fc5f62361e
