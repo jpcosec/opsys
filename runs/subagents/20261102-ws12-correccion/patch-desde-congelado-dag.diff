@@ -1,0 +1,654 @@
+diff --git a/desk/drawer/plans/workspace-documental/dag.yaml b/desk/drawer/plans/workspace-documental/dag.yaml
+index 458bb338..b0999a04 100644
+--- a/desk/drawer/plans/workspace-documental/dag.yaml
++++ b/desk/drawer/plans/workspace-documental/dag.yaml
+@@ -1,6 +1,6 @@
+ id: deskops-workspace-documental
+ revision: 10
+-revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de revision root; no es aprobacion humana): productores minimos WS46 (captura a drawer y protoatomo con origen, deskops), WS47 (guarda de contenido no declarado en la edicion por campos de /save, sldb) y WS48 (admision comun de escritura en modo manual exclusivo, graph_ui); dependencias de WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42; WS19.2 distingue baja de RelationDoc de quitar una referencia de campo; scope_nodes de G_WRITE_CONTRACT, G_UI_WRITE y G_SLDB_WRITE actualizados. Las revisiones baratas de los nodos tocados y de sus vecinos quedan obsoletas hasta renovarse. Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
++revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de revision root; no es aprobacion humana; tercera pasada: WS26.1 con recorrido rastreado por S02 y recorrido no rastreado por propuesta, handoff y refresco, y G_PAYLOAD_PRECONDITION tambien en el agregado WS26; segunda pasada con siete ajustes de root del congelado 2da226ed: admision de la ruta en uso /api/desk/advance en WS48, WS26.1 con WS47 y G_PAYLOAD_PRECONDITION y preparacion de candidato separada de la creacion activa de WS26.2, F1 por configuracion externa sin registro nuevo, guarda de WS47 sobre archivo previo): productores minimos WS46 (captura a drawer y protoatomo con origen, deskops), WS47 (guarda de contenido no declarado en la edicion por campos de /save, sldb) y WS48 (admision comun de escritura en modo manual exclusivo, graph_ui); dependencias de WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42; WS19.2 distingue baja de RelationDoc de quitar una referencia de campo; scope_nodes de G_WRITE_CONTRACT, G_UI_WRITE y G_SLDB_WRITE actualizados. Las revisiones baratas de los nodos tocados y de sus vecinos quedan obsoletas hasta renovarse. Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
+   de autoria de ViewDoc/NotationDoc concretos (WS18), sin portabilidad generica ni
+   evaluador nuevo; B) glosario de revision en tres conceptos y nuevo productor planificado
+   WS45 (sldb, precondicion de escritura de payload, independiente de source_mode)
+@@ -9,7 +9,7 @@ revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de r
+   / eventual wrapper Deskops); D) WS06 clasifica sin ejecutar WS05, WS32/33 conservan
+   dependencias y gates; recibos externos = acta del receptor P01 y WS11/12 como fuente
+   de contrato. Nada implementado ni aceptado; execution_authorized=false.'
+-status: final_plan_pending_current_reviews
++status: final_plan_reviewed
+ as_of: '2026-10-31'
+ source: dag.yaml is canonical; generated README/table/task files/diagram must agree
+ baseline_proposal: 'Base acordada 2026-10-31: Mindmap existente + SLDB/pron + Deskops,
+@@ -794,8 +794,8 @@ tasks:
+   context_review:
+     contract_sha256: 9d3757a9474621df598ca8deda9f048c203aab61682aadbb3316908e0347683b
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS12/7b1db1d8750ae6573cc3e7bd49ed10f9b5b68ed7fef60899d1c19c2000dd2d9f/attempt-1
+-    input_sha256: 7b1db1d8750ae6573cc3e7bd49ed10f9b5b68ed7fef60899d1c19c2000dd2d9f
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS12/86a693d1cb4c970b1f0996e569fee2b6fc60730a01764c65449318842a60cf46/attempt-1
++    input_sha256: 86a693d1cb4c970b1f0996e569fee2b6fc60730a01764c65449318842a60cf46
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -831,8 +831,8 @@ tasks:
+   context_review:
+     contract_sha256: 3c1b922ac5269c1cff3e7f58c0e1277d95d4daee3ca00cfdedb4b95a31291396
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13/85e49703703387435b16bfb98625c8b7e3614cae13c8061fc0090335cf77e87b/attempt-1
+-    input_sha256: 85e49703703387435b16bfb98625c8b7e3614cae13c8061fc0090335cf77e87b
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13/4eb4f492bcda723dd191f130552188ae360364b556198d2df711214d79617060/attempt-1
++    input_sha256: 4eb4f492bcda723dd191f130552188ae360364b556198d2df711214d79617060
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -1297,8 +1297,8 @@ tasks:
+   context_review:
+     contract_sha256: d42cfe84b6c80269f8d8d1f3c03add12560e742c57abe0118ece9336666d02ba
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19/97fa5b79c7ed24f3434b8c0c89e6df795eee8134746a03c5417daa921fc79d14/attempt-1
+-    input_sha256: 97fa5b79c7ed24f3434b8c0c89e6df795eee8134746a03c5417daa921fc79d14
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19/b3b853bd217dbde797c594db413bbea8ed828e0cd889fbb129fd125945bf6517/attempt-1
++    input_sha256: b3b853bd217dbde797c594db413bbea8ed828e0cd889fbb129fd125945bf6517
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -1342,10 +1342,10 @@ tasks:
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 7628edb78f2b21261907be496abf8485d18002b0e98e3d75807cf35d316cd607
++    contract_sha256: 0509a9edef215026f151e9dbbf6fcaedc63f62e1bc41ee6ece41829cd1c12e94
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/208a2371845a77a3602fe173f9cfb2f5dc2e7443374137b2caf00ebfe8332b1b/attempt-1
+-    input_sha256: 208a2371845a77a3602fe173f9cfb2f5dc2e7443374137b2caf00ebfe8332b1b
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/cdb85d8eabc8c27f0788b703f9228ed3f4ea0721fbca0342deefd16ecd539159/attempt-1
++    input_sha256: cdb85d8eabc8c27f0788b703f9228ed3f4ea0721fbca0342deefd16ecd539159
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+@@ -1390,10 +1390,10 @@ tasks:
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 763c837367f86466714a3692c833895c490b7a5630f70e96cafdf7957345d2bd
++    contract_sha256: e4d947956e01f9e7eaabc4e7d7c9de8072393ae8a8dac47ad3cf21b0ae8f34da
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/72b8e51df1fffdaa9f282c1b886cc4f797cfb381461d91e775347877cbb8c1b8/attempt-1
+-    input_sha256: 72b8e51df1fffdaa9f282c1b886cc4f797cfb381461d91e775347877cbb8c1b8
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/ef95de039ef4b4fe646bdaffb405335ec3df599824fe99861fdeac96a9fb6ad4/attempt-1
++    input_sha256: ef95de039ef4b4fe646bdaffb405335ec3df599824fe99861fdeac96a9fb6ad4
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+@@ -1441,8 +1441,8 @@ tasks:
+   context_review:
+     contract_sha256: 6d01928427980136727ca7d142055e57ac2b467653828666ffb7eb8fcccd4362
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS20/ab4aa273c582bedca02cf440cff61facf3db231c98710323f1bac531858cd71e/attempt-1
+-    input_sha256: ab4aa273c582bedca02cf440cff61facf3db231c98710323f1bac531858cd71e
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS20/24f5505c20beb41b488486ce97de872ef66aca914e73bb427839bd3fe683bea2/attempt-1
++    input_sha256: 24f5505c20beb41b488486ce97de872ef66aca914e73bb427839bd3fe683bea2
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -1499,10 +1499,10 @@ tasks:
+       afirmar edición fuente completa.
+   output_base: graph_ui:repository_root/
+   context_review:
+-    contract_sha256: 2a7400817da362555c7877c468a2f8d7c4fd5dd3c58eef0ef38110b10d947db8
++    contract_sha256: 49392783e68c78fa5758b24d2c005ad155fc1f59a8c682623de81d7261dc6eb3
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS21/ff4a233001993117751ccf66679709e6fed8a944aa4034d17689e4fe4d53b217/attempt-1
+-    input_sha256: ff4a233001993117751ccf66679709e6fed8a944aa4034d17689e4fe4d53b217
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS21/25b5b7d617f386fecc632517a48c0ec1631d5ad08c97239668d2f0a0bd6f281e/attempt-1
++    input_sha256: 25b5b7d617f386fecc632517a48c0ec1631d5ad08c97239668d2f0a0bd6f281e
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -1536,8 +1536,8 @@ tasks:
+   context_review:
+     contract_sha256: 155328756ad4a011c5cf59c0150c54f7e939a82ca12c7e71ea29606112e374b0
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS22/e50eb7176b7f4ed164687d833e1b2d3937de6ec4497fb8c68747d49f2e1e8c67/attempt-1
+-    input_sha256: e50eb7176b7f4ed164687d833e1b2d3937de6ec4497fb8c68747d49f2e1e8c67
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS22/c405c90b55d8d6d81dd0890edbf840a9cd05b9e1da84ba0ed1af033bf499d770/attempt-1
++    input_sha256: c405c90b55d8d6d81dd0890edbf840a9cd05b9e1da84ba0ed1af033bf499d770
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -1626,8 +1626,8 @@ tasks:
+   context_review:
+     contract_sha256: 11e5d94d0a511240cd3b35630a40c12994e35f1b304a845f0b03311d0c82e061
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS24/25a9a2d3fd42d56383e571e58be211e753dfc4b25d8811ae418f5ae39e52ffd2/attempt-1
+-    input_sha256: 25a9a2d3fd42d56383e571e58be211e753dfc4b25d8811ae418f5ae39e52ffd2
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS24/fb7bfe4d6eed9523e00ec2a3b350f4cd281da0952d7191b63049d47a4c753123/attempt-1
++    input_sha256: fb7bfe4d6eed9523e00ec2a3b350f4cd281da0952d7191b63049d47a4c753123
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -1662,8 +1662,8 @@ tasks:
+   context_review:
+     contract_sha256: 34b262ef7dd03fe4a65adcd88a98252f1f700d30df0b6865552299ea96730bbb
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25/354ffe9305d50479b164a0b69603c845e7ec9c9c02c79c2a95ed0d3e3cb4b687/attempt-1
+-    input_sha256: 354ffe9305d50479b164a0b69603c845e7ec9c9c02c79c2a95ed0d3e3cb4b687
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25/15e6d2ee8f9f5928b3e5feaedfd98043d1a04a71019efb9e3e4264a7bfa9321b/attempt-1
++    input_sha256: 15e6d2ee8f9f5928b3e5feaedfd98043d1a04a71019efb9e3e4264a7bfa9321b
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -1696,10 +1696,10 @@ tasks:
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 1c04ff2e05576469bbd264351e3c837eb2e403c22a408edf701368a52d4903fe
++    contract_sha256: 023acba53856912abc832b5f8f015b60484a53650778264aea022ca522e10608
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/d3048f281f05b5ddb9ff743eb783726b988820962745f9a61dd365adf8d5b571/attempt-1
+-    input_sha256: d3048f281f05b5ddb9ff743eb783726b988820962745f9a61dd365adf8d5b571
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/ed7c5aaef51c6b2af47cdee04c6470afa2b9b35725e13604c7cd63f2462e2a77/attempt-1
++    input_sha256: ed7c5aaef51c6b2af47cdee04c6470afa2b9b35725e13604c7cd63f2462e2a77
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+@@ -1742,10 +1742,10 @@ tasks:
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 5eaa372348be21c1838175c1e208e1610696fea94affdb7a1a5c2de461770f84
++    contract_sha256: 39d2811f94e9e0e40b637311ae33c2b5ce76eb0084c413c9daca004ef5e39cac
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/07b626976308425a2be021541d5555fe7f6dae9c4a4683bd854087303cb87fa0/attempt-1
+-    input_sha256: 07b626976308425a2be021541d5555fe7f6dae9c4a4683bd854087303cb87fa0
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/71dcebc70eee2299393f23e009dd8f306bc1882281c2a704ed361a409c0c5588/attempt-1
++    input_sha256: 71dcebc70eee2299393f23e009dd8f306bc1882281c2a704ed361a409c0c5588
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+@@ -1763,6 +1763,7 @@ tasks:
+   requires:
+   - G_CLOSEOUT
+   - G_HUMAN_READ
++  - G_PAYLOAD_PRECONDITION
+   - G_UI_WRITE
+   - G_WRITE_CONTRACT
+   owner_repo: graph_ui
+@@ -1782,10 +1783,10 @@ tasks:
+     preflight required
+   output_base: graph_ui:repository_root/
+   context_review:
+-    contract_sha256: 316947debc5c42056ffd12e91781b48315251bcd1ef3f641d2e86642ed7af7ef
++    contract_sha256: c92e4d708a218fb73f429df8caedb9192711aed09cdf87f4e9cf9e9a53efb41f
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26/6e414f0800298f6c4cd1d8e0cd556836f4485591814878b68db2289249c3dadf/attempt-1
+-    input_sha256: 6e414f0800298f6c4cd1d8e0cd556836f4485591814878b68db2289249c3dadf
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26/265d2371dbb5e8880d036e07d51081e5512ddeec2d5dbc90cb1a9199213b22c3/attempt-1
++    input_sha256: 265d2371dbb5e8880d036e07d51081e5512ddeec2d5dbc90cb1a9199213b22c3
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -1799,32 +1800,51 @@ tasks:
+   depends_on:
+   - WS12
+   - WS22
++  - WS47
+   - WS48
+   requires:
+   - G_CLOSEOUT
+   - G_HUMAN_READ
++  - G_PAYLOAD_PRECONDITION
+   - G_UI_WRITE
+   - G_WRITE_CONTRACT
+   owner_repo: graph_ui
+   output_scope: frontends/mindmap/views/workspace/authoring/; endpoints autorizados
+     por el contrato WS12; tests/
+-  scope: Autoría explícita desde candidato, evidencia declarada, dependencias y binding
+-    de contexto/pills. Candidato = archivo del drawer. G_HUMAN_READ habilita uso de
+-    mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus
+-    contratos/gates técnicos sin acta humana de lectura.
+-  acceptance: 'UF04 sobre TaskDoc real: el candidato queda autorado con evidencia
+-    declarada, dependencias y pills de contexto vinculadas y visibles tras recargar;
+-    nunca editar status para avanzar. Si una operación Git no tiene contrato o dueño,
+-    la acción queda en handoff explícito y se declara no disponible.'
++  scope: 'Preparación del candidato en el drawer (UF04, paso preparar), con dos recorridos
++    separados que el contrato WS12 (sección 4.4) distingue por la ruta y el store reales.
++    Rastreado: escritura directa por update con la precondición expected (S02), guarda
++    de contenido de WS47, admisión de WS48 y G_PAYLOAD_PRECONDITION; solo campos autorables (título y demás contenido, dependencias, files, references, tags, pills y closeout_evidence validada
++    con el vocabulario cerrado existente), nunca id, status, current_node, history ni
++    from_drawer. No rastreado: propuesta, handoff explícito a deskops edit task y refresco
++    posterior que comprueba lo escrito, sin escritura desde HTTP, sin marcar aplicado
++    por generar el comando; no disponible significa no guardar directamente desde la
++    UI. Pills: reemplazo de la lista entera con la actual y la propuesta visibles, referencias
++    validadas (navegación autorizada, existencia, tipo PillDoc) y conservadas salvo
++    eliminación explícita. El handoff se ofrece solo si una comprobación previa confirma
++    que el selector no resuelve a una tarea activa. No crea la tarea activa ni añade
++    al Board (eso es WS26.2), no rastrea por reflejo, no amplía S06 ni inventa API.
++    G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de
++    API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.'
++  acceptance: 'Recorrido rastreado: evidencia declarada, dependencias y pills persisten
++    y son visibles tras recargar; un guardado obsoleto se rechaza con 409 sin perder
++    el texto local. Recorrido no rastreado: la prueba muestra propuesta y handoff correctos,
++    ninguna escritura desde HTTP y una lectura posterior que refleja la preparación
++    hecha fuera de la UI; no hay prueba de guardado obsoleto para el CLI ni se marca
++    aplicado por generar el comando; un botón deshabilitado no cumple. Caso con una
++    tarea activa y un candidato de selector coincidente (nombre idéntico y prefijo):
++    no se ofrece el comando. El candidato puede conservar evidencia vacía o incompleta como pendiente; la creación activa de WS26.2 la exige no vacía y validada. Nunca editar
++    status; no se crea tarea activa ni ruta en el Board. Si una operación Git no tiene
++    contrato o dueño, la acción queda en handoff explícito y se declara no disponible.'
+   estimate: M
+   task_file: desk/drawer/tasks/workspace-documental/task-ws26-1.md
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 321789eeb24c6eb32d74407448bcc8c5b8d73ae842a9b004c543e0f597d9fb5a
++    contract_sha256: 237a6a39c8baa88eb476ef5e2780ce7e76330880958afd72c034b974a6605354
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/37383ce7c164eb1d393fb9fc76a91cbebdb2058e9cac2b5251ed3778ec45192d/attempt-1
+-    input_sha256: 37383ce7c164eb1d393fb9fc76a91cbebdb2058e9cac2b5251ed3778ec45192d
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/03761d48f8229cbb4671f4bdc6875fdc1c6e29fe2426bbbb14fe297a71110e22/attempt-1
++    input_sha256: 03761d48f8229cbb4671f4bdc6875fdc1c6e29fe2426bbbb14fe297a71110e22
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+@@ -1847,13 +1867,18 @@ tasks:
+   owner_repo: graph_ui
+   output_scope: frontends/mindmap/views/workspace/routing/; endpoints autorizados
+     por el contrato WS12; tests/
+-  scope: Enrutamiento explícito en Board y representación de capa lista por dependencias/no
++  scope: 'Enrutamiento explícito en Board y representación de capa lista por dependencias/no
+     solapamiento; promoción solo cuando el contrato resuelve commits previos por canal
+-    autorizado. Enrutar = añadir la tarea a la lista tasks del BoardDoc por operación
+-    pública. Capa lista = tareas sin dependencias pendientes y sin archivos solapados
+-    según los `files` declarados en cada TaskDoc y el ritual de fase. G_HUMAN_READ
+-    habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden
+-    avanzar con sus contratos/gates técnicos sin acta humana de lectura.
++    autorizado. Autorizar, crear la tarea activa y enrutarla en el Board es una operación
++    conjunta (W01 del contrato WS12: crea el TaskDoc y lo añade al Board), posterior
++    a la preparación del candidato en WS26.1 y a la autorización de la persona; nunca
++    una operación parcial ni un efecto oculto de WS26.1. Los commits previos y la promoción
++    van en handoff cuando el contrato no ofrece canal. Enrutar un TaskDoc ya existente
++    no tiene operación pública con precondición (HO-12). Capa lista = tareas sin dependencias
++    pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc
++    y el ritual de fase. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y
++    pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta
++    humana de lectura.'
+   acceptance: 'Tras enrutar, `deskops show board` muestra la tarea y la UI la distingue
+     de una tarea en ejecución; el canal de promoción respeta commits previos y estado
+     real; la capa lista se muestra separada de tareas en ejecución y de tareas con
+@@ -1868,10 +1893,10 @@ tasks:
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 9d9393abafc2aab6207efa570e52e92be62e3f493c60ea38b7f5ea7a57b19adc
++    contract_sha256: 93ce3c123aaa28ef94dc3a008d5e70e349283efa2cc8d9e3b75224f724b20a1c
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/51a584beb40ddfafd8b5213eb797ef42a6a4395a8156b3439ef255a27affc982/attempt-1
+-    input_sha256: 51a584beb40ddfafd8b5213eb797ef42a6a4395a8156b3439ef255a27affc982
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/56d2aa419199c8f3a41dc4fd8d32bb6f3e4123b4fc8b6261d2a590003a2c200b/attempt-1
++    input_sha256: 56d2aa419199c8f3a41dc4fd8d32bb6f3e4123b4fc8b6261d2a590003a2c200b
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+@@ -1901,8 +1926,8 @@ tasks:
+   context_review:
+     contract_sha256: 047a6a896d4a0b3dae8e4568c3bcb04c926feb2131e0df2e98ca635d3d962917
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS27/d4f2ca871299fd850933ef936c3854ac329c8cfa80d1ed3def09b22d7a441f25/attempt-1
+-    input_sha256: d4f2ca871299fd850933ef936c3854ac329c8cfa80d1ed3def09b22d7a441f25
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS27/50d39108d547b4fdf8a87cde582ee06e737b44235014f3d347694e426e37f536/attempt-1
++    input_sha256: 50d39108d547b4fdf8a87cde582ee06e737b44235014f3d347694e426e37f536
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -2027,10 +2052,10 @@ tasks:
+     preflight required
+   output_base: graph_ui:repository_root/
+   context_review:
+-    contract_sha256: 1e156a4b09ede5b5f34e4d066057cfa97645bf3d56fb4dc26c7e3f658706d54e
++    contract_sha256: eb475a3ea6a94d05ed46ec854e2bc29868765195f6275a546ea28bebd4f7f541
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS28/6abba704b40972047220fb3d628978cdb52e2a79eeb2516e03639dded30a7828/attempt-1
+-    input_sha256: 6abba704b40972047220fb3d628978cdb52e2a79eeb2516e03639dded30a7828
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS28/f820a845a9aa6309cf58c4b2482a3e97ea908404a77a8b1239799984f458b249/attempt-1
++    input_sha256: f820a845a9aa6309cf58c4b2482a3e97ea908404a77a8b1239799984f458b249
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2116,8 +2141,8 @@ tasks:
+   context_review:
+     contract_sha256: bff9e3fa419e52da3c539a79ca668fdab834cac90c5af219a4f5337c1dba0f70
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/2aacf3fc974fde915e65362d165e782345cf8ba9d27a91add7540971e2fc1623/attempt-1
+-    input_sha256: 2aacf3fc974fde915e65362d165e782345cf8ba9d27a91add7540971e2fc1623
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/c4245a353f70ec202553816bb82049991652f51821066fec6c0ab78bd00542c9/attempt-1
++    input_sha256: c4245a353f70ec202553816bb82049991652f51821066fec6c0ab78bd00542c9
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2195,8 +2220,8 @@ tasks:
+   context_review:
+     contract_sha256: 3ba9b8f2e4c3ab71f71a5f985d7a996b5309be12df1613db65d2644f93be35e0
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32/c1bae598f238fa4a110a9518b68338d881a41b749e4a55298bf06534a3bd222d/attempt-1
+-    input_sha256: c1bae598f238fa4a110a9518b68338d881a41b749e4a55298bf06534a3bd222d
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32/28247a4d1d608050250d3dbc2f305e5d393f514f85bbf9f487bc2f4fd0c09fb9/attempt-1
++    input_sha256: 28247a4d1d608050250d3dbc2f305e5d393f514f85bbf9f487bc2f4fd0c09fb9
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -2245,8 +2270,8 @@ tasks:
+   context_review:
+     contract_sha256: f121c027c1148a35343ab34bc6cdc05ff90fc7db2de49fd769dc293de2b8b2b9
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/2f8c97a1a06c923189f499133985e1e9a5d09422f783f6de91d299e23f8a6bcb/attempt-1
+-    input_sha256: 2f8c97a1a06c923189f499133985e1e9a5d09422f783f6de91d299e23f8a6bcb
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/420cc2da031c2cc0c9383d59ae89b1980655919c96826e8a52df5c3f2dfe8a37/attempt-1
++    input_sha256: 420cc2da031c2cc0c9383d59ae89b1980655919c96826e8a52df5c3f2dfe8a37
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: deskops:repository_root/
+@@ -2292,8 +2317,8 @@ tasks:
+   context_review:
+     contract_sha256: 54dfcb27395e7ec9648622b57fcdc88856f2b51d25cd732307c799adcf4313f9
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/a6860f3a28e76c6f54fa1b52683ffa60b735577939f459684211b407ae9dff48/attempt-1
+-    input_sha256: a6860f3a28e76c6f54fa1b52683ffa60b735577939f459684211b407ae9dff48
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/07a7aceb7a0b8bae67c9a5a47cff4baeff12032e1a71f15d6edcc4f041c11a0a/attempt-1
++    input_sha256: 07a7aceb7a0b8bae67c9a5a47cff4baeff12032e1a71f15d6edcc4f041c11a0a
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: deskops:repository_root/
+@@ -2331,8 +2356,8 @@ tasks:
+   context_review:
+     contract_sha256: f9c2bcb8f1acae3225bd04e1bfe65dd0f8c9c1cd61b8500eba4f943215228082
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33/0e831261b9e7bc58b4c3088e2ef685a3b57135ab388bd134e446c96deac11522/attempt-1
+-    input_sha256: 0e831261b9e7bc58b4c3088e2ef685a3b57135ab388bd134e446c96deac11522
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33/a03efa853e42eb719dc622ac1abe2e6bf2eef30ab2658f449c087b85da03746e/attempt-1
++    input_sha256: a03efa853e42eb719dc622ac1abe2e6bf2eef30ab2658f449c087b85da03746e
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -2369,8 +2394,8 @@ tasks:
+   context_review:
+     contract_sha256: 7f6d0d5677e11419435cdbb8af0cfded0341ffdedffb6e15352e6a5c30e966f0
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/f63e8e46bff59fc9e11e126017524d51816b546e6d75f3bb7f84c9ac96755dc3/attempt-1
+-    input_sha256: f63e8e46bff59fc9e11e126017524d51816b546e6d75f3bb7f84c9ac96755dc3
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/cf06cc0024799c3593c246a55f72f125e883e937efab0262b41ba582a936bb33/attempt-1
++    input_sha256: cf06cc0024799c3593c246a55f72f125e883e937efab0262b41ba582a936bb33
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: deskops:repository_root/
+@@ -2406,8 +2431,8 @@ tasks:
+   context_review:
+     contract_sha256: a34e72095bcd7f0f1a95e537d5feb8277e1ee93a900bc98288fb5369335c16d5
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/3cd94d292ec9fe06772c03254e44ffc47b1b595f58ffb68c27e8b194f740462d/attempt-1
+-    input_sha256: 3cd94d292ec9fe06772c03254e44ffc47b1b595f58ffb68c27e8b194f740462d
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/46b5e8462dff8bb429585cb4580aca385ed4f0329c443f51d4fcdceca6730078/attempt-1
++    input_sha256: 46b5e8462dff8bb429585cb4580aca385ed4f0329c443f51d4fcdceca6730078
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: deskops:repository_root/
+@@ -2443,8 +2468,8 @@ tasks:
+   context_review:
+     contract_sha256: bc6cfdab8d63960ed4683c86bb90c26616e41efdb747efd49d2869227a548206
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34/148985ca894f2178164f643e2d1c4120fbcc809d26e81e0e99f0cd238309bb14/attempt-1
+-    input_sha256: 148985ca894f2178164f643e2d1c4120fbcc809d26e81e0e99f0cd238309bb14
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34/c41f767a6a4f9a39b9d0f896b9ec88ed298969050ea6abbd4535a95f1c15d632/attempt-1
++    input_sha256: c41f767a6a4f9a39b9d0f896b9ec88ed298969050ea6abbd4535a95f1c15d632
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -2482,8 +2507,8 @@ tasks:
+   context_review:
+     contract_sha256: 6937ad3c21ee9f29323e46a8feddd0b5fe64906bacdbe1a434853a1fbc13811e
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/20df3d0605358ff23bf5a3e673c78d20e5351f386bdcfd0e97529cb28eceda5b/attempt-1
+-    input_sha256: 20df3d0605358ff23bf5a3e673c78d20e5351f386bdcfd0e97529cb28eceda5b
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/e6b5830cb0ca9ce4c56d682a15d4f84c50ceef8dee1ed704bb220f3df6e95a53/attempt-1
++    input_sha256: e6b5830cb0ca9ce4c56d682a15d4f84c50ceef8dee1ed704bb220f3df6e95a53
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: deskops:repository_root/
+@@ -2518,8 +2543,8 @@ tasks:
+   context_review:
+     contract_sha256: 7be5432fec2fae547c7a45880beb1427592581c4acba24044a4655399b5e730f
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/611a9ea0c549a18762cd41706fd0eebe2e635ca9acc11a6c0bcb48c49242b367/attempt-1
+-    input_sha256: 611a9ea0c549a18762cd41706fd0eebe2e635ca9acc11a6c0bcb48c49242b367
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/bcfac3fef8a338d845a967d914d071a6b4ff7e2bea85ff937da3813baa281261/attempt-1
++    input_sha256: bcfac3fef8a338d845a967d914d071a6b4ff7e2bea85ff937da3813baa281261
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: deskops:repository_root/
+@@ -2587,8 +2612,8 @@ tasks:
+   context_review:
+     contract_sha256: 770522edc8d0871640d44a2c3e43c8873a7a8cb8a8b958a511dc231ca1526104
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS36/535ced27afa01075ee2712a68dc43f5458604a6626c595cbf0e9e4c02b68c946/attempt-1
+-    input_sha256: 535ced27afa01075ee2712a68dc43f5458604a6626c595cbf0e9e4c02b68c946
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS36/e553642bb06ec22ee7a40a743acfa366934e293ff4c202c5968b487103da34ae/attempt-1
++    input_sha256: e553642bb06ec22ee7a40a743acfa366934e293ff4c202c5968b487103da34ae
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2692,10 +2717,10 @@ tasks:
+     preflight required
+   output_base: graph_ui:repository_root/
+   context_review:
+-    contract_sha256: 641afa4e202520bda56b44616a2dde1c188c08a84c004ba1087671dbef7afdb6
++    contract_sha256: cf65502740578d9ac0994ee38c2ade9e69bee1860521e85f56e2ce169652c01f
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS39/32cb6ad45ac4bbc10a2393596f84b1ccc72bcb7db9f44e7f04ab59aaffccd57a/attempt-1
+-    input_sha256: 32cb6ad45ac4bbc10a2393596f84b1ccc72bcb7db9f44e7f04ab59aaffccd57a
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS39/6cc0a76ce9bb163ba2b5890ed0399496bbc12274de6fe4a9abeea41cc406f8bc/attempt-1
++    input_sha256: 6cc0a76ce9bb163ba2b5890ed0399496bbc12274de6fe4a9abeea41cc406f8bc
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2813,10 +2838,10 @@ tasks:
+     preflight required
+   output_base: graph_ui:repository_root/
+   context_review:
+-    contract_sha256: 3dc73154cc9e115f0a91eb11849026e09c89a5886f83144a106ccd7c0745d324
++    contract_sha256: fadec0a4d2bba926024b5598173ed801f609bbc0e1bd4e434994a836ea46e7fa
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS42/40bb275e81fd68b1115f7e392addab624e979a52d457f7616ff76641d5d6d23b/attempt-2
+-    input_sha256: 40bb275e81fd68b1115f7e392addab624e979a52d457f7616ff76641d5d6d23b
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS42/7c0d205c19a5abc8586776ee2f3dfbb59da6c1480c5b3c80f18b6eb98787efbc/attempt-1
++    input_sha256: 7c0d205c19a5abc8586776ee2f3dfbb59da6c1480c5b3c80f18b6eb98787efbc
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2865,8 +2890,8 @@ tasks:
+   context_review:
+     contract_sha256: abf53d5e1b2d1c7407971120cfff3eb8360450de537293e48cd20afaf9839033
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS43/a2e719d9ee63bdec74a650bc99cb6606460f058dd033eb0438f75ad9977679a0/attempt-1
+-    input_sha256: a2e719d9ee63bdec74a650bc99cb6606460f058dd033eb0438f75ad9977679a0
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS43/aa567c4f226b175abb8741db26664df4242c989c335a39b96f9a7fe8b6fb43fd/attempt-1
++    input_sha256: aa567c4f226b175abb8741db26664df4242c989c335a39b96f9a7fe8b6fb43fd
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2947,8 +2972,8 @@ tasks:
+   context_review:
+     contract_sha256: d6d5820fe44eb5bb9148a3e8480c38e448dad47b51eea5226b39c680605fd44b
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS45/2ca958e942afe41dbbe26a2e6d5af72437363035b575f0c5a60596430832bbfa/attempt-1
+-    input_sha256: 2ca958e942afe41dbbe26a2e6d5af72437363035b575f0c5a60596430832bbfa
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS45/6522c21f4608e30f16b18b0cdf20b42140d5f75264831de50e049714c06e9233/attempt-1
++    input_sha256: 6522c21f4608e30f16b18b0cdf20b42140d5f75264831de50e049714c06e9233
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: delivery
+@@ -2988,9 +3013,12 @@ tasks:
+     preflight required
+   output_base: deskops:repository_root/
+   context_review:
+-    evidence: []
++    contract_sha256: 9173cd49fb03e6ad568e8f705b14d877558d5e6a0e8881510a4b51aa8a9e6c1b
++    evidence:
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS46/6fa5dadbde672a72f8530b6a661a4ac3b75893ce8ff8d3aabbac0a27ff2fd997/attempt-1
++    input_sha256: 6fa5dadbde672a72f8530b6a661a4ac3b75893ce8ff8d3aabbac0a27ff2fd997
+     required_protocol: ritual-context-review
+-    status: pending
++    status: reviewed
+   node_role: delivery
+ - id: WS47
+   title: Proteger contenido no declarado en la edición por campos de /save
+@@ -3010,26 +3038,37 @@ tasks:
+     Canal elegido por el contrato, la edición por campos que termina en save_document_payload
+     (POST /save update y update de graph_ui local). Primero inventario con ruta, símbolo
+     y commit de refuse_structural_noise y refuse_undeclared_frontmatter, que create_document
+-    y track_document_file ya aplican, y reutilizar antes de crear. No amplía WS45,
++    y track_document_file ya aplican al Markdown que se crea, y de la guarda de deskops
++    edit sobre el archivo previo; la guarda de este nodo inspecciona el archivo previo
++    y el efecto de reescribirlo, no solo el render nuevo, y reutiliza ese criterio antes
++    de crear otro. No amplía WS45,
+     no cambia la creación, no resuelve el gap de prevalidación de update capturado
+     en el inbox de sldb (si toca el mismo código, las ediciones van en serie) y no
+     se sustituye con un workaround de Deskops.
+   acceptance: Pruebas reales focalizadas en sldb sobre el canal elegido, tras recibo
+-    G_SLDB_WRITE para este delta. Un update con expected vigente que borraría contenido
+-    no declarado del archivo se rechaza con error observable y sin cambios; el que
+-    conserva ese contenido se aplica; un expected obsoleto sigue dando 409; la creación
+-    no cambia. Hasta que pasen, WS19.1 y WS19.2 no habilitan la edición de documentos
+-    con contenido no declarado. Este nodo es plan; no afirma que exista ni que esté
+-    implementado o aceptado.
++    G_SLDB_WRITE para este delta. La guarda inspecciona el archivo previo y el efecto
++    de reescribirlo, no solo el render nuevo, con un piso de detección, que son las comprobaciones de la guarda de deskops edit (_write_doc) leídas en fuente, que no se rebaja y que solo se amplía si el inventario lo justifica; refuse_structural_noise y refuse_undeclared_frontmatter se reutilizan donde apliquen. La aceptación declara qué pérdida detecta, qué casos no detecta
++    y qué casos quedan deshabilitados; un residuo declarado no aprueba una pérdida conocida
++    dentro del alcance que el nodo pretende habilitar. Un update con expected vigente
++    que perdería contenido no declarado del archivo se rechaza con error observable
++    y sin cambios; un update seguro, cuyo render no pierde contenido (incluido un documento
++    limpio), se aplica; un expected obsoleto sigue dando 409; la creación no cambia.
++    Sin merge ni restauración, y sin prometer editar todo documento con ruido. Hasta
++    que pasen, WS19.1, WS19.2 y el recorrido directo de WS26.1 no habilitan la edición
++    de documentos con contenido no declarado. Este nodo es plan; no afirma que exista
++    ni que esté implementado o aceptado.
+   estimate: S
+   task_file: desk/drawer/tasks/workspace-documental/task-ws47.md
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   output_base: sldb:repository_root/
+   context_review:
+-    evidence: []
++    contract_sha256: 80112c0425f199777e6870daea1d65f0e891c7577d52ec4ab5b5032f2d43ba66
++    evidence:
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS47/00e0bcc7426f7fd22e7e1022c896b5771337173c28dd0ef84c4e63c9b9b7d6b3/attempt-1
++    input_sha256: 00e0bcc7426f7fd22e7e1022c896b5771337173c28dd0ef84c4e63c9b9b7d6b3
+     required_protocol: ritual-context-review
+-    status: pending
++    status: reviewed
+   node_role: delivery
+ - id: WS48
+   title: Admitir escrituras de la UI en modo manual exclusivo
+@@ -3043,18 +3082,23 @@ tasks:
+   owner_repo: graph_ui
+   output_scope: frontends/mindmap/ (módulo común de admisión de escritura; archivo
+     exacto en el TaskDoc); tests/
+-  scope: Productor común de la evidencia de modo manual exclusivo (T-P03.1, HO-03;
++  scope: 'Productor común de la evidencia de modo manual exclusivo (T-P03.1, HO-03;
+     contrato WS12, secciones 5 y 5.9), previo a toda mutación habilitada en la UI y
+-    no contenido en WS19.1, para que ack y captura no dependan de WS19.1. Un único
+-    punto de admisión que toda ruta de escritura consulta antes de invocar su canal,
+-    con una afirmación vigente suministrada fuera de la petición (configuración confiable
+-    del operador, sin valores reales en el repo) y la consulta de la evidencia contraria
+-    disponible. Salidas, admitida con el texto declarado sin evidencia contraria a
+-    una hora, o lectura/handoff con su causa. La ausencia de evidencia contraria no
+-    prueba exclusividad, y con otro coordinador escritor la UI queda en lectura o handoff
+-    (P03). No crea servicio de identidad, autenticación ni coordinación distribuida,
+-    ni lock, ni CAS universal, ni un 409 donde el canal no ofrece precondición.
+-  acceptance: Pruebas en un store temporal. Sin afirmación vigente la mutación queda
++    no contenido en WS19.1, para que ack y captura no dependan de WS19.1. Un único punto
++    de admisión que toda ruta de escritura de la UI, existente o nueva, consulta antes
++    de invocar su canal, con una afirmación vigente suministrada fuera de la petición
++    (configuración confiable del responsable del desk, cargada por este nodo y sin valores reales en el repo; su formato, ubicación y vigencia los fija este nodo en su TaskDoc, no WS12, con las condiciones del contrato WS12, sección 5.9) y consultas públicas existentes para la evidencia contraria;
++    no hay registro nuevo del coordinador en Deskops y el prompt de Scion no es señal
++    consultable. Salidas: admitida, con el texto declarado sin evidencia contraria a las <hora de la consulta>, o lectura/handoff con su causa. Cubre la ruta ya en uso POST /api/desk/advance
++    (el botón Avanzar de views/workflow/deskops/deskops-view.js): rechazo en el servidor antes de advance_task cuando falta la afirmación vigente, hay evidencia contraria o la consulta de evidencia falla, y estado y mensaje
++    del botón; se conservan revision, gates y rechazos existentes y no se crea una operación
++    nueva de lifecycle. La ausencia de evidencia contraria no prueba exclusividad, y
++    con otro coordinador escritor la UI queda en lectura o handoff (P03). No crea servicio
++    de identidad, autenticación ni coordinación distribuida, ni lock, ni CAS universal,
++    ni un 409 donde el canal no ofrece precondición. No exige G_HUMAN_READ para desarrollar
++    y probar el mecanismo; la habilitación real de los consumidores sigue requiriendo
++    los gates humanos correspondientes y esto no permite usar escrituras en el producto.'
++  acceptance: Pruebas en un store temporal. POST /api/desk/advance sin afirmación vigente, con evidencia contraria o con la consulta de evidencia fallida se rechaza en el servidor antes de invocar advance_task, y el botón Avanzar muestra su estado deshabilitado y el mensaje de la causa; con admisión, la ruta conserva revision, gates y rechazos existentes. Sin afirmación vigente la mutación queda
+     deshabilitada y se ofrece handoff. Con evidencia contraria, o con la herramienta
+     de evidencia ausente o con error, lectura o handoff con su causa y el buffer conservado.
+     Con afirmación y sin evidencia contraria se admite sin afirmar exclusividad comprobada.
+@@ -3068,9 +3112,12 @@ tasks:
+     preflight required
+   output_base: graph_ui:repository_root/
+   context_review:
+-    evidence: []
++    contract_sha256: 0a85459be681048bc54d9d8b1b594d5ff11bcda8b7bb7d9758265437e285ea33
++    evidence:
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS48/4ff520f32c0cad6e97634533938dc69007e84c9acbd2405f16d1d29ab28cb1de/attempt-1
++    input_sha256: 4ff520f32c0cad6e97634533938dc69007e84c9acbd2405f16d1d29ab28cb1de
+     required_protocol: ritual-context-review
+-    status: pending
++    status: reviewed
+   node_role: delivery
+ legacy_mapping:
+   A1: WS02–WS05
+@@ -3157,8 +3204,8 @@ hierarchy:
+     context_review:
+       contract_sha256: 05d398b125697238e3c4644a5cf23bb9193ca16c2f00078dddcd4d1d7fbeef58
+       evidence:
+-      - runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/ce60a1dfd68f5e20a5ce71738187c09484888167ca2a9a34da34098c341c7b90/attempt-1
+-      input_sha256: ce60a1dfd68f5e20a5ce71738187c09484888167ca2a9a34da34098c341c7b90
++      - runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/8eb72446c12defd7ec402c5bf92ab3264b8374e1d6bff76a6b7cf14704bb51d7/attempt-1
++      input_sha256: 8eb72446c12defd7ec402c5bf92ab3264b8374e1d6bff76a6b7cf14704bb51d7
+       required_protocol: ritual-context-review
+       status: reviewed
+     review_completion:
+@@ -3330,14 +3377,14 @@ hierarchy:
+       y WS21 fuente/render; WS25 captura, WS26 tareas, WS27 diff/evidencia, WS28 handoff
+       y WS42 conocimiento; WS30 integra pruebas humanas con entradas WS17. Orden parcial
+       obligatorio de ejecución hipotética (no simultaneidad de toda la lista): WS12→WS19
+-      y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos y
+-      WS21 (la arista WS12 y el gate se suman: el guardado espera ambos); WS12→WS25
++      y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos,
++      WS21 y WS26.1 (la arista WS12 y el gate se suman: el guardado espera ambos); WS12→WS25
+       y sus hijos; WS13+WS12→WS27 y sus hijos; WS19+WS20/G_SOURCE→WS21 editable; WS22+WS12→WS26
+       y sus hijos (WS26.1→WS26.2); WS19+WS24+WS12→WS42; WS27+WS12→WS28; todas las
+       salidas WS17/21/22/23/24/25/26/28/42→WS30. Solo ejecutar en paralelo nodos ya
+       ready con todos sus prerrequisitos satisfechos y sin solapamiento de archivos;
+       WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22. Revisión 10
+-      (propuesta): WS12→WS46→WS25.2 (captura con origen), WS12→WS47→WS19.1 y WS19.2
++      (propuesta): WS12→WS46→WS25.2 (captura con origen), WS12→WS47→WS19.1, WS19.2 y WS26.1
+       (guarda de contenido) y WS12→WS48→WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2,
+       WS28, WS39 y WS42 (admisión de escritura).'
+     acceptance: precondición de escritura/conflicto/buffer/protegidos probados; guardar
+@@ -3366,10 +3413,10 @@ hierarchy:
+     - WS30
+     - WS42
+     context_review:
+-      contract_sha256: 94536c97a438316a262fd267838b1be35bb37897cfa439f807f65e9ad7aac23a
++      contract_sha256: 8aa749d1b7779fc8c5228cc8bec8b52a0a97840c66c857ed39dcffd2028d2ccd
+       evidence:
+-      - runs/subagents/20261031-workspace-context-reviews/context-review/PK05/d36fb03a9dd26e142fcaeb892aec3d59c61689aa5f57008a2b97f21b07f10e93/attempt-1
+-      input_sha256: d36fb03a9dd26e142fcaeb892aec3d59c61689aa5f57008a2b97f21b07f10e93
++      - runs/subagents/20261031-workspace-context-reviews/context-review/PK05/cc4a1acf1e96f9057763a1f8f1c7c8b04c4ad6b7022e49d6f9f11dbe79ed79c8/attempt-1
++      input_sha256: cc4a1acf1e96f9057763a1f8f1c7c8b04c4ad6b7022e49d6f9f11dbe79ed79c8
+       required_protocol: ritual-context-review
+       status: reviewed
+     review_completion:
+@@ -3434,8 +3481,8 @@ hierarchy:
+     context_review:
+       contract_sha256: 255f2db61c0141671924f335c7dfc2c5f7146ce6b983aeb17de6d8774012b65d
+       evidence:
+-      - runs/subagents/20261031-workspace-context-reviews/context-review/PK07/00977edfa821d0feca64832ffca084837102ef1818e55405d795499277dc6161/attempt-1
+-      input_sha256: 00977edfa821d0feca64832ffca084837102ef1818e55405d795499277dc6161
++      - runs/subagents/20261031-workspace-context-reviews/context-review/PK07/d1d95798e435540340db4e0659dd03224f23b5c07bd95e9adb4f0ffe4ee8062f/attempt-1
++      input_sha256: d1d95798e435540340db4e0659dd03224f23b5c07bd95e9adb4f0ffe4ee8062f
+       required_protocol: ritual-context-review
+       status: reviewed
+     review_completion:
