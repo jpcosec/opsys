@@ -30,7 +30,7 @@ Detalle completo con sección en `operaciones.md` 13.1 (línea 652). Resumen: (1
 
 ## Conteos y decisiones del contrato
 
-Matriz (65 filas): COMP 39, LEC 12, NOAC 6, HUE 8. Ninguna fila está aceptada por acta. Los conteos se recalcularon con un script de lectura sobre la propia tabla.
+Matriz (65 filas): COMP 38, LEC 13, NOAC 6, HUE 8 (tras la corrección de abajo; antes 39/12/6/8). Ninguna fila está aceptada por acta. Los conteos se recalcularon con un script de lectura sobre la propia tabla.
 
 Representación de la precondición: **before-image por valor (`expected`, 409)** para toda escritura de payload por campos desde la UI, por `changes[]` de `POST /save`. Motivo: es la única precondición que existe en un escritor público con rechazo sin cambios, 409 observable y pruebas en dos repos (`SL:tests/test_serve.py::test_batch_save_stale_expected_conflict:213`; `GU:tests/test_mindmap_persistence.py::test_conflict_and_untrack_preserves_file:54`). El token `version` se publica pero ningún escritor lo consume (la docstring de `document_serialization.py:25-28` promete lo contrario). No hay precondición compartida entre escritores. Para raw-source (6.6) se fijan requisitos observables sobre el texto íntegro, sin mecanismo.
 
@@ -75,3 +75,41 @@ Código abierto: de deskops, `operations.py` entero, `cli/registry.py` (por scri
 ## Revisión del Supervisor antes de congelar
 
 Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01, sin Executor. Leí §1 y §5 a §7 completos y la estructura del resto. **No leí completas las secciones 2 a 4 ni 8 a 13**: las cubren los tres Testers. Comprobé por grep y lectura: `expected` solo en `save_plan.py:50,58` entre escritores de sldb; `doc_version` sin consumo en guardado; `/api/workers` con `workers: []` y `error`; guarda de `Origin` local en `serve.py:431`; `.deskops.log` versionado en sldb y spec2viz. No edité el contrato.
+
+
+## Corrección tras Testers
+
+Contrato congelado en `92ed7ed6`. Cada hallazgo se verificó abriendo la fuente antes de decidir. Los números de línea son de `operaciones.md` tras la corrección salvo que se indique.
+
+| # | Hallazgo (Tester) | Veredicto | Evidencia abierta | Cambio |
+|---|---|---|---|---|
+| 1 | 1.3: commit `826ca4a0` distinto del HEAD `92ed7ed6` (A, C) | Falso | `92ed7ed6` es el commit del propio contrato, posterior al despacho; `preflight-disposition.md` fija el HEAD de despacho | Nota en 1.3 que lo aclara |
+| 2 | 1.5: `G_SOURCE` sí está en `requires` (A) | Real | `dag.yaml:1462-1472` (variante editable de WS21) | 1.5 corregido |
+| 3 | R02: `ARTIFACT_MODELS` tiene 10 entradas, líneas 61-72 (A) | Real | `operations.py:61-72` | R02 corregido |
+| 4 | `from_drawer`: la guarda está en `drawer.py:155-163` (A) | Real | `drawer.py:150-165` | Cita corregida |
+| 5 | X01: el grep de `reply` no da «prosa en scion.py» (A) | Real | `grep -rn "reply\|in_reply_to\|thread" deskops --include=*.py`: sin salida | Frase eliminada |
+| 6 | «Ningún estado editable por payload» presentado como propiedad (A) | Real | `operations.py:277-278`, `tasks.py:184-187`, `specs/compiler.py:40`, `payload_save.py:16` | 3.1 dice que hoy el código sí lo permite y que es una regla para la UI |
+| 7 | 5.1: cita `dag.yaml:1306` (B) | Real | `dag.yaml:1327-1329` | Cita corregida |
+| 8 | 5.6: hay un segundo lock entre procesos, el del journal (B) | Real | `sldb/store/journal/lock.py:14-27`, `append.py:27` | 5.6 corregido |
+| 9 | 6.3: «única precondición» y pron sin precondición (B) | Real | `pron/kernel/kernel.py:49-63`, `kernel/actions/*_verb.py` (`_guard`), `sexpr/execution/action_executor.py:75` | Acotada a «por valor en los escritores que la UI alcanza»; fila de pron separada. **La representación elegida no cambia**: la UI no pasa por el kernel de pron, su token es interno de la jugada y no se publica; sí indica que un token `hash_c` es viable (se anota para HO-04) |
+| 10 | 6.4: lista de «sin precondición» incluye órdenes con guarda de estado o gate (B) | Real | `tasks.py:179-191`, `operations.py:284-300`, `message.py:172-173`, `closure.py:540` | 6.4 distingue «sin `expected` ni CAS» de las guardas de estado y de gate |
+| 11 | 7.1: cita `dag.yaml:723` (B) | Real | `dag.yaml:777-778` | Cita corregida |
+| 12 | 7.3 B: «no crea tarea activa: Ídem A» (B) | Real | `docs_routes.py:105-112`, `operations.py:list_tasks` | Condicionado a que el adaptador fije el `path` |
+| 13 | 9.4: `promote` COMP sin prueba de restauración (B) | Real | `test_inbox_promote_cli_gaps.py:120-139,153-160` no fuerzan fallo | Baja a LEC en 9.4 (la fila W11 ya era NOAC) |
+| 14 | 9.5: `Origin` solo actúa si el header llega (B) | Real | `deskops_routes.py:96-98`, `serve.py:382-384,431-435` | 9.5 corregido y declarado como hallazgo de seguridad en HO-15 |
+| 15 | 10.1/WS43: prueba «de tests/» (C) | Real | `dag.yaml:2815-2822` | WS43 exceptuado: acta y commit de cierre |
+| 16 | 10.2/WS20: `G_SOURCE` como consumido (C) | Real | `dag.yaml:44-49`, `1390-1397` | Pasa a «produce» |
+| 17 | HO-19: formato de productor (C) | Real | No existe nodo | «sin productor en el DAG» más la nota |
+| 18 | 13.1: falta la frase `dag.yaml:769` (C) | Real | `dag.yaml:769` | Fila 21b |
+| 19 | 13.2: «cada delta cita 5.7» (C) | Real | 10.2 solo cita 5.7 en WS19.1 | Regla en 10.1 y texto de 13.2 corregidos |
+| 20 | 13.3: `stores check`, WS33.2/WS32.x, WS39 no constan en `promotion-notes.md` (C) | Real | `grep "stores check"` en `promotion-notes.md`: sin salida; la fuente es `preflight-disposition.md` y `20261101-ws09-correccion/preflight-input.md:60`; los otros dos vienen de `dag.yaml` | Las tres filas reatribuidas |
+| 21 | 13.4: §3.2 generalizado (C) | Real | `navegacion.md:93` | Texto exacto de §3.2 y aviso de MIG |
+| 22 | Mi barrido: D02 COMP sin test de la rama de andamiaje | Real | `test_cli.py:245-272`, `test_doctor_model_registration.py:130` | D02 pasa a LEC |
+| 23 | Mi barrido: «único timeout de graph_ui» | Real | `serve.py:100,111,124,175`, `workspace_routes.py:471` | Reescrito |
+| 24 | Mi barrido: segundo ack y fallo a mitad de U01 sin test | Real (rótulo) | no hay test de segundo ack ni de fallo a mitad | Marcados [L] en W13 y U01; el estado de la fila no cambia |
+
+Reales: 23. Falsos: 1 (el commit). Filas de la matriz que cambiaron de estado: D02 (COMP a LEC). Conteos nuevos de 2.7: COMP 38, LEC 13, NOAC 6, HUE 8 (65 filas). La representación elegida no cambió. No se ejecutó nada; solo lectura y edición de estos dos archivos.
+
+## Revisión del Supervisor de la corrección
+
+Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01. Evidencia de los Testers v1 en `renovacion-1/`. Leí el informe del Executor y una parte del diff. El cotejo de la corrección lo hacen los Testers v2.
