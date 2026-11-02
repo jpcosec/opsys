@@ -118,3 +118,7 @@ Decisiones de encaje reflejadas: gates conservados con sus `scope_nodes` (verifi
 6. **Compromisos humanos afectados: ninguno.** P03 y T-P03.1 intactos; F1 sigue siendo la afirmación del responsable. **Productor ausente: ninguno nuevo**; los gaps 1 a 3 son huecos de interfaz pública declarados, sin nodo propuesto.
 
 No pude verificar: reproducción en runtime de nada; que un test ejerza `bind pill` sobre candidato; el estado de rastreo real de los candidatos del desk. Nodos tocados en el DAG: WS26.1, WS26.2, WS47, WS48, PK05 (más el texto de `revision_note`). Derivados, hashes y medición oficial de invalidación los regenera y mide el Supervisor; no corrí `build_plan.py`.
+
+## Ajuste del Supervisor tras Tester de los siete
+
+Claude Opus 5.5, sin Executor. Evidencia en `renovacion-4/`. Reales y corregidos: W01 atribuía la invocación de la API a WS26.1 (ahora WS26.2); §3.3 PillDoc decía que WS26.1 vincula; la jerarquía de PK05 en `dag.yaml` omitía WS26.1 como consumidor del gate. Queda sin tocar la mención de la línea 7 de `dag.yaml`, que es historia de Rev 9.
