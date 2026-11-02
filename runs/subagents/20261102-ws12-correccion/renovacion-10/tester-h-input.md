@@ -1,0 +1,5 @@
+Eres un Tester independiente, en el directorio actual, raíz del repo deskops. Responde en español. Solo puedes leer. No ejecutaste nada. Separa LECTURA PROPIA de DATO DEL SUPERVISOR (runs/subagents/20261102-ws12-correccion/tester-h-facts.log).
+
+Lee runs/subagents/20261102-ws12-correccion/patch-7-dag.diff y el nodo WS47 en desk/drawer/plans/workspace-documental/dag.yaml. 1) ¿El diff cambia una sola frase más derivados? 2) ¿Queda coherente y sin antecedentes rotos? 3) ¿Contradice §6.7 de desk/drawer/plans/workspace-documental/contratos/operaciones.md, el punto 7 de runs/subagents/20261102-ws12-correccion/review-source-2.md o la decisión 5 de runs/subagents/20261102-ws12-correccion/review-source-3.md? 4) ¿Se conserva lo demás de tu ronda anterior, runs/subagents/20261102-ws12-correccion/renovacion-9/tester-result-summary.md, sobre WS48 y WS47?
+
+Informe: tabla con objeto, evidencia real archivo:línea, PASS o FAIL. Última línea exacta `RESULTADO: PASS` o `RESULTADO: FAIL`.
