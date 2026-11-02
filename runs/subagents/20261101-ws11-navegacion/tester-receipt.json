@@ -1,0 +1,19 @@
+{
+  "role": "tester",
+  "launcher": "herdr",
+  "pane": "w3Y:p13",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "thinking": "low",
+  "tools": "read,grep,find,ls",
+  "exit": 0,
+  "input_sha256": "372a1d69a1df33fa17eea83ce9c0dc8528cfe10cca4cddfa6ddbb0550e497434",
+  "output_sha256": "27d5990649ea8de1f44341fb9e87bedb797f04e40c7cca6a792315f177f3adf3",
+  "contract_sha256": "ca537c71d585a86032a1bf3817705f00af4904139e50534f0f5b70416b3597df",
+  "result": "PASS",
+  "rounds": {
+    "v1": "FAIL renovacion-1",
+    "v2": "FAIL renovacion-2",
+    "v3": "PASS"
+  }
+}
