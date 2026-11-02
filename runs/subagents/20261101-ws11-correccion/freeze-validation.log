@@ -1,0 +1,15 @@
+$ test -s desk/drawer/plans/workspace-documental/contratos/navegacion.md
+exit 0
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+Traceback (most recent call last):
+  File "/home/jp/proyectos/SLDB_1/deskops/desk/drawer/plans/workspace-documental/validate_plan.py", line 34, in <module>
+    assert not review_problems,review_problems
+           ^^^^^^^^^^^^^^^^^^^
+AssertionError: ['WS09: input changed']
+exit 1
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+WS09: input changed
+exit 0
