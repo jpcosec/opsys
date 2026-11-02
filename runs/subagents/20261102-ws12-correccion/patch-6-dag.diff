@@ -1,0 +1,24 @@
+diff --git a/desk/drawer/plans/workspace-documental/dag.yaml b/desk/drawer/plans/workspace-documental/dag.yaml
+index e9686767..1420b30e 100644
+--- a/desk/drawer/plans/workspace-documental/dag.yaml
++++ b/desk/drawer/plans/workspace-documental/dag.yaml
+@@ -3044,8 +3044,7 @@ tasks:
+     se sustituye con un workaround de Deskops.
+   acceptance: Pruebas reales focalizadas en sldb sobre el canal elegido, tras recibo
+     G_SLDB_WRITE para este delta. La guarda inspecciona el archivo previo y el efecto
+-    de reescribirlo, no solo el render nuevo, con el criterio de la guarda de deskops
+-    edit y de refuse_structural_noise y refuse_undeclared_frontmatter leído en fuente,
++    de reescribirlo, no solo el render nuevo, como mínimo con las comprobaciones de la guarda de deskops edit (_write_doc), que fijan el piso de detección, y de refuse_structural_noise y refuse_undeclared_frontmatter leído en fuente,
+     sin inventar otro. La aceptación declara qué pérdida detecta, qué casos no detecta
+     y qué casos quedan deshabilitados; un residuo declarado no aprueba una pérdida conocida
+     dentro del alcance que el nodo pretende habilitar. Un update con expected vigente
+@@ -3083,8 +3082,7 @@ tasks:
+     no contenido en WS19.1, para que ack y captura no dependan de WS19.1. Un único punto
+     de admisión que toda ruta de escritura de la UI, existente o nueva, consulta antes
+     de invocar su canal, con una afirmación vigente suministrada fuera de la petición
+-    (configuración confiable del responsable del desk, cargada por este nodo y sin valores
+-    reales en el repo) y consultas públicas existentes para la evidencia contraria;
++    (configuración confiable del responsable del desk, cargada por este nodo y sin valores reales en el repo; su formato, ubicación y vigencia los fija este nodo en su TaskDoc, no WS12, con las condiciones del contrato WS12, sección 5.9) y consultas públicas existentes para la evidencia contraria;
+     no hay registro nuevo del coordinador en Deskops y el prompt de Scion no es señal
+     consultable. Salidas: admitida, con el texto declarado sin evidencia contraria a las <hora de la consulta>, o lectura/handoff con su causa. Cubre la ruta ya en uso POST /api/desk/advance
+     (el botón Avanzar de views/workflow/deskops/deskops-view.js): rechazo en el servidor antes de advance_task cuando falta la afirmación vigente, hay evidencia contraria o la consulta de evidencia falla, y estado y mensaje
