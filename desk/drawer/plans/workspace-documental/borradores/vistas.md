@@ -91,7 +91,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 - **Origen**: BoardDoc `desk/tasks/Board.md` y los TaskDoc que referencia (`deskops.md:186,223`); en otros repos, `deskops list tasks --include-repos` (`deskops.md:76`); lectura UI: `GET /api/desk/board` (`ui.md:67`).
 - **Identidad**: ruta del Board (`deskops.md:223`); identidad en el lector: no definido; productor WS11.
 - **Contrato**: BoardDoc (`deskops.md:186`) y TaskDoc (`deskops.md:201`). El Board contiene referencias, no una copia de cada tarea (línea 23 de este archivo).
-- **Campos y relaciones**: rutas de tareas del Board; en la tarea, `depends_on`, `files`, `closeout_evidence`, pills (`deskops.md:51,73`; `dag.yaml:1497-1501`). Capa lista sin solapamiento: ningún comando la calcula (`user-flows.md:101`); se propone derivarla en lectura (`reconciliacion.md:71`); contrato WS12.
+- **Campos y relaciones**: rutas de tareas del Board; en la tarea, `depends_on`, `files`, `closeout_evidence`, pills (`deskops.md:51,73`; `dag.yaml:1497-1501`). Capa lista sin solapamiento: entre lo auditado no se encontró un comando que la calcule (`user-flows.md:101` dice que `deskops.md` no audita ese cálculo); se propone derivarla en lectura (`reconciliacion.md:71`); contrato WS12.
 - **Renderer existente o requerido**: base existente: vista Deskops con lista filtrada por estado y detalle con gates (`ui.md:67`, commit daa6400), fuera del lector workspace. Requerido: tablero agrupado, dependencias navegables y apertura de TaskDoc en el lector, ausentes (`ui.md:67`); productor WS22 (`dag.yaml:1488`, graph_ui).
 - **Navegación**: abrir tareas, contexto y rituales; la apertura en el lector es parte de WS22 (`ui.md:67`).
 - **Acción/dueño**: enrutar con `add task`, `edit board`, `advance task` (`deskops.md:51,65,98`). La UI avanza con `POST /api/desk/advance` y 409 (`ui.md:79`). Dueño: deskops; la autoría y el enrutado desde UI son WS26.2 (`ui.md:73-75`; `dag.yaml:1819`). El lock de la UI no coordina escritores CLI/agentes (`reconciliacion.md:21`).
@@ -122,19 +122,19 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 ### F05 — Ritual, pasos y lifecycle
 
 - **Propósito humano**: consultar obligaciones y condiciones del procedimiento aplicable (fila de la tabla 1; `manual.md:125-129`).
-- **Origen**: RitualDoc (7 en `desk/rituals`, `deskops.md:196,219`); grafo de lifecycle en `desk/lifecycle` (RelationDoc 3 y RelationTypeDoc 3, `deskops.md:193-194,224`); StepDoc: 0 documentos (`deskops.md:200`); transiciones con `show task` (`deskops.md:87`).
+- **Origen**: RitualDoc (7 en `desk/rituals`, `deskops.md:196,219`); grafo de lifecycle en `desk/lifecycle` (RelationDoc 3 y RelationTypeDoc 3, `deskops.md:193-194,224`); StepDoc: 0 documentos (`deskops.md:200`); transiciones con `show task` (`deskops.md:87`). Los pasos de un RitualDoc son prosa inline del campo `steps`, no referencias a documentos (`deskops/models/ritual.py:65-67`; `desk/rituals/testing.md` y `desk/rituals/execution.md`, campo `steps`).
 - **Identidad**: RitualDoc con id propio (p. ej. `ritual-phase`, `deskops.md:235`). Identidad en el lector: no definido; productor WS11.
 - **Contrato**: RitualDoc, StepDoc, RelationDoc y RelationTypeDoc (`deskops.md:193-200`).
-- **Campos y relaciones**: los nodos del lifecycle son RitualDocs (`deskops.md:196`); transiciones con origen, destino y condición declarados (`dag.yaml:1537-1546`). Progreso de paso: solo si WS02/WS09/WS11 identifican un campo o API real de deskops (`dag.yaml:1540-1546`); ninguno está identificado, por eso no definido; productor WS11.
+- **Campos y relaciones**: `RitualDoc.steps`: pasos de prosa ordenados, no referencias a documentos (`deskops/models/ritual.py:65-67`). Los nodos del lifecycle son RitualDocs (`deskops.md:196`); transiciones con origen, destino y condición declarados (`dag.yaml:1537-1546`). Progreso de paso: solo si WS02/WS09/WS11 identifican un campo o API real de deskops (`dag.yaml:1540-1546`); ninguno está identificado, por eso no definido; productor WS11.
 - **Renderer existente o requerido**: base existente mínima: payload/lifecycle navegables como documentos y gates con `holds` y condición en la vista Deskops (`ui.md:68`). Requerido: renderer de RitualDoc/StepDoc/pasos, ausente (`ui.md:68`); productor WS23 (graph_ui, `dag.yaml:1526`).
 - **Navegación**: un procedimiento abre sus documentos y soporte; no marca pasos como realizados por leerlos (`dag.yaml:1540-1546`).
 - **Acción/dueño**: consultar. Edición del contrato soportado: `edit ritual` (`deskops.md:64`), dueño deskops. WS23 es solo lectura, sin controles de avance (`dag.yaml:1540-1546`); el botón Avanzar existente pertenece a la vista Deskops (`ui.md:68`).
 - **Destino de escritura**: RitualDoc por `edit ritual`; `add ritual` no lo trackea en el acto (`deskops.md:53`). Desde UI: no definido; productor WS12.
-- **Error**: no definido; productor de contrato WS12 y de implementación WS23. Condicionado: con 0 StepDoc el procedimiento carece de pasos que mostrar (`deskops.md:200`).
+- **Error**: no definido; productor de contrato WS12 y de implementación WS23. Condicionado: que no existan instancias StepDoc (`deskops.md:200`) no implica ausencia de pasos: `RitualDoc.steps` son pasos de prosa inline, no referencias a documentos (`deskops/models/ritual.py:65-67`; `desk/rituals/testing.md` y `desk/rituals/execution.md`, campo `steps`).
 - **Estado**: bloqueado. Necesita WS23.
 - **Clase**: authored (RitualDoc, StepDoc, definición del lifecycle); derivado (condición evaluada de las transiciones); preferencia local (foco).
 - **UF**: UF05 (`user-flows.md:129`), UF04 (`user-flows.md:97`), UF01 (`user-flows.md:22`).
-- **Evidencia**: `ui.md:68`; `deskops.md:53,64,87,193-200,219,224,235`; `dag.yaml:1526-1546`; `user-flows.md:22,97,129`.
+- **Evidencia**: `ui.md:68`; `deskops.md:53,64,87,193-200,219,224,235`; `deskops/models/ritual.py:11,65-67`; `desk/rituals/testing.md`; `desk/rituals/execution.md`; `dag.yaml:1526-1546`; `user-flows.md:22,97,129`.
 
 ### F06 — Átomos, protoátomos y fuentes
 
@@ -259,18 +259,18 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 
 - **Propósito humano**: encontrar documentos y entender qué falla o cambió, abriendo el origen sin duplicar contenido (fila de la tabla 1).
 - **Origen**: búsqueda por consulta: `sldb find`, `fields query`, `sections find`, `explore` (`infraestructura.md:110-113`), `graph query` (`infraestructura.md:114`). Diagnóstico: `deskops doctor`, `drift check`, `graph missing`, `atoms validate`, `docs recover`, `edges check` (`deskops.md:31,129,125,113`; `infraestructura.md:88,92`).
-- **Identidad**: resultado = documento `Model:name` (`reconciliacion.md:5`). Consulta guardada: ausente (`infraestructura.md:121`); sin productor en el DAG (no figura en `dag.yaml`), repo dueño sldb.
+- **Identidad**: resultado = documento `Model:name` (`reconciliacion.md:5`). Consulta guardada con `where`: ausente (`infraestructura.md:121`); eso no niega toda selección persistida: `ProjectionDoc` es una capacidad vecina distinta, no equivalente a un `where` guardado (`infraestructura.md:121`). Sin productor en el DAG (no figura en `dag.yaml`), repo dueño sldb.
 - **Contrato**: sin contrato de consulta de UI. ViewDoc de grafo no es contrato universal de UI (línea 22 de este archivo).
 - **Campos y relaciones**: según la operación, p. ej. campos y secciones (`infraestructura.md:111-112`). Criterio que separe error, conflicto, cambio y pérdida de soporte: no auditado (`user-flows.md:177`); no definido; productor WS11 (contrato) con WS15.1 y WS29.
 - **Renderer existente o requerido**: base existente: filtro local del catálogo (`ui.md:58`), vecindad (`ui.md:69`), problemas por nodo (`ui.md:60`). Ausente: búsqueda por API con estados distintos (WS14, `dag.yaml:974`) y vista Changes/Integrity (`ui.md:80`, WS29, `dag.yaml:2011`).
 - **Navegación**: afinar la selección y abrir el origen.
-- **Acción/dueño**: lectura. Reparación solo por operaciones existentes, sin botón universal (`user-flows.md:175`). Búsqueda por significado: hueco, `Corpus.rank` sin CLI (`infraestructura.md:115`), dueño sldb, sin productor en el DAG.
-- **Destino de escritura**: ninguno de la vista. `sldb stores check` puede escribir caché o journal, no leído (`deskops.md:265`).
+- **Acción/dueño**: la vista lee resultados. Ejecutar un comando de diagnóstico se clasifica por sus efectos: no es lectura segura ni GET por ser diagnóstico. Efecto conocido: `atoms validate` llama `ensure_workspace` y puede crear andamiaje y `tag-namespaces.yaml` (`deskops.md:113,266`; `user-flows.md:179`); WS12 debe considerarlo. No se asume que la UI invoque el comando. Reparación solo por operaciones existentes, sin botón universal (`user-flows.md:175`). Búsqueda por significado: `Corpus.rank` y `GET /corpus/rank` existen, sin CLI; responden 409 si falta el índice y usan `difflib` como fallback; embedder instalado no comprobado (`infraestructura.md:115`). WS14 admite capacidad parcial o degradada; no se promete semántica. Dueño sldb, sin productor en el DAG.
+- **Destino de escritura**: ninguno de la vista como lectura de resultados; un comando de diagnóstico se clasifica por sus efectos: `atoms validate` puede crear andamiaje y `tag-namespaces.yaml` (`deskops.md:113,266`; `user-flows.md:179`), a considerar por WS12. `sldb stores check` puede escribir caché o journal, no corroborado: no se leyó (`deskops.md:265`; `user-flows.md:179`).
 - **Error**: condicionado a WS14, WS15.1 y WS29: estados sin resultado, error y degradado distintos (`ui.md:58`); store no disponible 503 y errores de catálogo/nodo/proyección (`ui.md:60-61`); backend caído y fallo CDN: no definido; productor WS11 y WS15.1 (`user-flows.md:173,181`).
 - **Estado**: bloqueado. Necesita WS14, WS15.1 y WS29.
 - **Clase**: derivado; preferencia local (consulta y filtro activos).
 - **UF**: UF03 (`user-flows.md:68-70`), UF07 (`user-flows.md:161-183`), UF01 (`user-flows.md:27-29`).
-- **Evidencia**: `infraestructura.md:88,92,110-115,121`; `deskops.md:31,113,125,129,265`; `ui.md:58,60-61,69,80`; `user-flows.md:68-70,173,175,177`.
+- **Evidencia**: `infraestructura.md:88,92,110-115,121`; `deskops.md:31,113,125,129,265,266`; `ui.md:58,60-61,69,80`; `user-flows.md:68-70,173,175,177,179`.
 
 ### F13 — CrossroadDoc y namespace
 
@@ -334,11 +334,11 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 - **Navegación**: contexto vinculado desde la tarea o el procedimiento: no definido; productor WS11.
 - **Acción/dueño**: `list/show/add/edit pill`, `bind pill`, `list/show/add/edit step` (`deskops.md:52,63,73,77,85,88,96`); dueño deskops.
 - **Destino de escritura**: el documento de pill o paso, y `task.pills` por `bind pill` (`deskops.md:73`). Desde UI: no definido; productor WS12.
-- **Error**: no definido; productor WS23 (pasos) y WS24 (pills). Condicionado: con 0 StepDoc no hay pasos que mostrar.
+- **Error**: no definido; productor WS23 (pasos) y WS24 (pills). Condicionado: 0 StepDoc (`deskops.md:200`) solo niega esas instancias, no los pasos de prosa de `RitualDoc.steps` (`deskops/models/ritual.py:65-67`; `desk/rituals/testing.md` y `desk/rituals/execution.md`, campo `steps`).
 - **Estado**: bloqueado. Necesita WS23 y WS24.
 - **Clase**: authored (pill, paso); derivado (pills vinculadas a una tarea, resultado de la referencia).
 - **UF**: UF04 (`user-flows.md:97-98`), UF02 (`user-flows.md:44`), UF05 (renderer de StepDoc, `user-flows.md:129`).
-- **Evidencia**: `deskops.md:52,63,73,77,85,88,96,191,200,218`; `ui.md:68`; `dag.yaml:1526,1565`; `user-flows.md:44,97-98,129`.
+- **Evidencia**: `deskops.md:52,63,73,77,85,88,96,191,200,218`; `ui.md:68`; `deskops/models/ritual.py:65-67`; `desk/rituals/testing.md`; `desk/rituals/execution.md`; `dag.yaml:1526,1565`; `user-flows.md:44,97-98,129`.
 
 ### F17 — Código local referenciado
 
@@ -360,7 +360,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 ### F18a — SpecDoc y NotationDoc
 
 - **Propósito humano**: leer una especificación y su notación como documento o gráfico soportado, reutilizando Specs.
-- **Origen**: SpecDoc/SpecNodeDoc materializados por `spec2viz diagram sync`; la fuente es un spec YAML (`infraestructura.md:35`); NotationDoc: 8 builtin (`infraestructura.md:132`).
+- **Origen**: SpecDoc/SpecNodeDoc materializados por `spec2viz diagram sync`; la fuente es un spec YAML (`infraestructura.md:35`); NotationDoc: 8 notaciones builtin definidas en `s2v/notations/*.yml` (`infraestructura.md:132`).
 - **Identidad**: `Model:name`; SpecDoc con `sha256` del spec (`infraestructura.md:35`).
 - **Contrato**: SpecDoc y NotationDoc registrados por `diagram sync` y `notation sync` (`infraestructura.md:100`). SurfaceDoc no es una pantalla (línea 22 de este archivo).
 - **Campos y relaciones**: campo `notation` del SpecDoc, glifos y links (`infraestructura.md:100`).
@@ -370,7 +370,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 - **Destino de escritura**: sync escribe por `sldb.api` (`infraestructura.md:35`). Desde UI: no definido; productor WS12.
 - **Error**: no definido; productor WS11.
 - **Estado**: bloqueado. Necesita el contrato WS11 para navegación y para decidir si la vista Specs entra en el lector. Tiene contrato de modelo, no de UI. WS18 solo crea ViewDoc y NotationDoc concretos (`dag.yaml:1225`).
-- **Clase**: authored (spec YAML, SpecDoc, NotationDoc); derivado (render y gráfico).
+- **Clase**: authored: el spec YAML fuente (`infraestructura.md:35`) y la definición de notación en `s2v/notations/*.yml` (`infraestructura.md:132`). Derivado regenerable, no fuente a editar: SpecDoc y SpecNodeDoc materializados por `diagram sync` (`infraestructura.md:35`). NotationDoc en el store: derivado regenerable desde su definición no comprobado; `infraestructura.md:100,132` nombran `notation sync` pero no dicen qué escribe. Derivado también: render y gráfico.
 - **UF**: ninguna: `user-flows.md` no menciona specs ni notaciones (búsqueda de texto sin coincidencias).
 - **Evidencia**: `infraestructura.md:35,100,132,134`; `dag.yaml:1225`; `user-flows.md` sin referencia.
 
@@ -384,12 +384,12 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 - **Renderer existente o requerido**: base existente: `evaluate_view`, `GET /api/views`, `POST /api/views/evaluate`, `POST /api/views/save` (`ui.md:104-105`) y el dibujo en `apps/review-workbench`, no leído (`ui.md:108`). Ningún renderer de spec2viz lo consume (`infraestructura.md:153`).
 - **Navegación**: no definido; productor WS11. Su extensión al grafo del workspace es opcional y posterior a G_SPEC_VIEW (`dag.yaml:1574-1590`).
 - **Acción/dueño**: evaluar y guardar vistas en graph_ui; autoría de ViewDoc y NotationDoc concretos: WS18 (`dag.yaml:1212-1244`, owner_repo spec2viz).
-- **Destino de escritura**: `save_view` por la API de sldb, sin `expected` (`ui.md:105`); ruta `sldb/views/` confirmada por WS18 (`dag.yaml:1222`).
+- **Destino de escritura**: `save_view` por la API de sldb, sin `expected` (`ui.md:105`); ruta `sldb/views/` prevista, pendiente de confirmación y registro en WS18 al promover (`dag.yaml:1222-1224`); no está confirmada. Repo owner spec2viz según el nodo WS18 (`dag.yaml:1212-1244`); el prefijo de la ruta no determina el repo, y no se afirma que `save_view` de graph_ui escriba en spec2viz.
 - **Error**: condicionado a WS18: en modo remote responde 501 «Las vistas solo existen en modo local» (`ui.md:106`); sin spec2viz instalado, `notation.error` lo dice (`ui.md:107`). Contrato de error de UI: no definido; productor WS11.
 - **Estado**: bloqueado. Necesita WS18 (G_SPEC_VIEW) y el contrato WS11.
 - **Clase**: authored (definición del ViewDoc); derivado (resultado evaluado, subgrafo); preferencia local (disposición del gráfico).
 - **UF**: ninguna: `user-flows.md` no menciona ViewDoc (búsqueda de texto sin coincidencias).
-- **Evidencia**: `infraestructura.md:99,149-153`; `ui.md:104-108`; `dag.yaml:1212-1244,1574-1590`; `user-flows.md` sin referencia.
+- **Evidencia**: `infraestructura.md:99,149-153`; `ui.md:104-108`; `dag.yaml:1212-1244,1222-1224,1574-1590`; `user-flows.md` sin referencia.
 
 ### F19a — Schema y edición de clase existentes
 
@@ -441,3 +441,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 - **Clase**: derivado.
 - **UF**: UF05 (diff comparable con el contrato, `user-flows.md:118,125`), UF07 (`sldb docs history`, `user-flows.md:171`).
 - **Evidencia**: `infraestructura.md:60`; `ui.md:77,158`; `reconciliacion.md:72,77`; `dag.yaml:1887,2011`; `user-flows.md:118,125,171`.
+
+## Candidaturas sin productor
+
+Consulta guardada, búsqueda por significado, edición de RoleDoc y RuntimeProfileDoc (excluida por UF09), navegación de FAQ, lista de issues en UI, renderer de roles y vista Specs embebida: candidaturas sin productor en el DAG. No son prerrequisito del lector ni capacidades comprometidas. La lectura básica de FAQ, issues y roles reutiliza el lector Markdown o modelado. Se conservan para que WS11 las clasifique. Si se adoptan, exigen alcance y productor real. No crean nodos nuevos.
