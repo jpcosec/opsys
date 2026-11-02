@@ -1,0 +1,14 @@
+{
+  "role": "tester",
+  "launcher": "herdr",
+  "provider": "deepseek",
+  "model": "deepseek-flash",
+  "thinking": "low",
+  "tools": "read,grep,find,ls",
+  "pid": 2951444,
+  "exit": 0,
+  "input_sha256": "4b33a9977bd612ea0f1fa67f4069d65ac6f2c1ac6f4372d0af669591f786bd90",
+  "output_sha256": "84fa3534b0585d5e685527754610b1fb81651b3ca700f9c2cc39650b2b9565d6",
+  "contract_sha256": "6a4f8518f3d69de6118550b3077921db4bbb46bc9123c26980c6c8fc5f62361e",
+  "result": "PASS focal"
+}
