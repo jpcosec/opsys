@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-corregir-contrato-de-operaciones-de-ws12-tras-revisión-root.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Corregir contrato de operaciones de WS12 tras revisión root [draft] - Aplicar los ocho hallazgos y las decisiones técnicas A a E en contratos/operaciones.md, y proponer en dag.yaml los productores, dependencias, aceptaciones y gates mínimos, congelando antes de cualquier renovación de revisiones.
