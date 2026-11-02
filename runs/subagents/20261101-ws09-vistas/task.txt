@@ -1,0 +1,9 @@
+Task: task-ws09-precisar-catálogo-de-renderizaciones
+Title: WS09: Precisar catálogo de renderizaciones
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/workspace-documental/task-ws09.md
+Closeout evidence: commit, document
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
