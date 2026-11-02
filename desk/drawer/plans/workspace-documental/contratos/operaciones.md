@@ -1,0 +1,729 @@
+# Contrato de operaciones y escritura del workspace documental (WS12)
+
+Estado: borrador del Executor de WS12, 2026-11-01. No está revisado: falta el Tester independiente de solo lectura, los checks del plan y el checkpoint root. `G_WRITE_CONTRACT` sigue `pending` con `accepted_scope_nodes: []` (`dag.yaml:122-160`); este documento no marca ningún ID como comprobado. `execution_authorized` global sigue en `false`; el documento no autoriza implementación, mutaciones, actas, escritura en repos hermanos ni Scion. No se ejecutó nada: todo lo que sigue sale de abrir código y tests en los commits de 1.3; las pruebas citadas no se corrieron.
+
+## 1. Alcance y estado
+
+### 1.1 Qué fija
+
+Para cada operación de lectura, mutación y diagnóstico que el workspace documental podría invocar: su modelo y campos, su canal público, el actor que queda registrado, la precondición de revisión, el efecto Git y los efectos (incluidos los transitivos), con su estado de evidencia (sección 2); los campos protegidos por modelo y operación (3); el adaptador existente o el hueco (4); la política de coordinador y la definición operativa de «modo manual exclusivo» (5, T-P03.1); la representación de la precondición de escritura (6); la captura a drawer y a protoátomo (7); el ack y la respuesta local de inbox (8); Git, cierre, fallos parciales y permisos (9); el recibo o prueba por delta (10); las secciones del ramal E (11); los huecos con dueño y productor (12); y la trazabilidad (13).
+
+### 1.2 Qué no fija
+
+- No habilita ninguna mutación. La whitelist de las secciones 2 y 3 es el contrato que cada delta deberá cumplir; nada se enciende por estar listado. Cada delta de UI exige además su recibo por ID (sección 10) y la evidencia de 5.
+- No crea actas, no registra recepciones y no toca `accepted_scope_nodes`. Las actas de los deltas de `graph_ui`, `sldb` y `spec2viz` las registra el receptor P01 en su repo (`decisiones.md`, P01/T-P01; `dag.yaml:195-224`).
+- No fija valores de timeout (sección 11), ni mecanismo de lock o de detección de escritores (sección 5), ni API nueva, ni modelo nuevo.
+- No cambia P03 ni P05. No edita `contratos/navegacion.md` (aprobado, sha256 `6a4f8518…361e`, `contratos/navegacion-aprobacion.md`).
+- No usa `../UIs/graph_ui/frontends/workspace/` (sin commit) como base ni como evidencia.
+- `G_WRITE_POLICY` está `satisfied` (resuelto por WS07, `dag.yaml:113-121`); no se registra de nuevo (`runs/subagents/20261101-ws12-operaciones/preflight-disposition.md`).
+
+### 1.3 Commits observados
+
+| Repo | Commit observado | Árbol | Qué se abrió |
+|---|---|---|---|
+| deskops (`DK/`) | `826ca4a0c73fd78b0c6501bea3998020a7c88ce0` (HEAD del despacho) | Sucio solo en `desk/` (2 notas de inbox modificadas, 2 archivos sin seguir: `git status --short`); `deskops/` y `tests/` limpios. `git diff --stat 215bf624 826ca4a0 -- deskops tests desk/lifecycle pyproject.toml`: solo añade `tests/test_context_review_helper.py`, de modo que el código es el que auditó WS02 | `deskops/operations.py`, `cli/registry.py` (`command_registry()`, 113 entradas = 17 agregadores + 96 hojas, listadas leyendo `Command.path` y `Command.mutates`), `cli/main.py`, `cli/model_introspection.py`, `cli/commands/{operations,closeout,message,promote,drawer,issue,retire,atoms,core,doctor,graph,drift,materialize,runtime}.py`, `services/{tasks,closure,closeout_gates,drawer,issues}.py`, `services/atoms.py` (encabezados y los tramos citados), `lifecycle.py`, `doc_io.py`, `domain_tree.py`, `workspace.py` (`scaffold_desk`), `specs/compiler.py`, `models/*.py`, `runtime/{supervise,scion}.py`, `desk/lifecycle/*.md`, `deskops/spec/workflows/task_lifecycle.yaml` |
+| sldb (`SL/` = `../sldb/src/sldb/`) | `77bd6d0097f46efdec5e7eeb0e58d71d70b98be5` | `src/` limpio; sucios `.deskops.log`, `.sldb/store.yaml` y un archivo sin seguir | `cli/serve/{save_routes,save_plan,save_single,docs_routes,docs_create_route,routes,auth,fields_routes,document_routes,models_routes}.py`, `api/documents/{payload_save,payload_save_steps,create_document,document_serialization,track_document_file}.py`, `api/stores/{open_store,store_check,scan_cache}.py`, `api/edges/edge_reading.py`, `api/actor.py`, `store/{ops,migration}.py`, `store/io/lock.py`, `cli/commands/{serve,store_check,store_check_apply,fields_save,fields_mutate}.py` |
+| graph_ui (`GU/` = `../UIs/graph_ui/frontends/mindmap/`) | `134a6653b8b44423cb0a58ab329383841a9e706f` | Solo archivos sin seguir (entre ellos `frontends/workspace/`, excluido) | `deskops_routes.py`, `persistence.py`, `sldb_adapter.py`, `views_routes.py`, `serve.py` (rutas de lectura/escritura y workers), `models_service.py` (encabezados), `workspace_routes.py` (solo búsqueda de escrituras) |
+| pron | `e1e9df0caf7ade40fcc3d8bbebe0d3fa4ab0d339` | Igual que en la auditoría WS03 | `kernel/kernel.py` (guarda `hash_c`), `world/storage/payload_editor.py` |
+| spec2viz | `10df4f0893efde77fdd0e1d5794644e95a723731` | — | No se abrió en esta corrida; sus escritores se citan por `infraestructura.md:76` y no se verificaron aquí |
+
+Los commits no cambiaron durante la corrida. Si uno se mueve antes de la revisión, quien revise debe declararlo (instrucción del Supervisor, `preflight-disposition.md`).
+
+**Contraste con los inventarios y el contrato WS11.** (a) `auditoria/deskops.md` se midió en `215bf624`; el diff de código hasta `826ca4a0` es vacío (arriba). (b) Confirmado por lectura lo que la adenda de `promotion-notes.md` anticipaba: `atoms validate` figura con `mutates=False` pero escribe andamiaje (D03). (c) `infraestructura.md:51,53,57` coincide con `save_plan.py`, `save_single.py` y `create_document.py` leídos hoy. (d) Hallazgo nuevo respecto de WS03: `document_serialization.py:25-28` dice que `version` es el token que el cliente «devuelve al guardar», pero ningún escritor de sldb lo lee (6.2). (e) Hallazgo nuevo respecto de WS04: en el código de `deskops_routes.py` y `serve.py`, la ruta remota de `/api/save` no tiene la guarda de `Origin` que tiene la local (9.5). (f) `navegacion.md` §5.4 y §3.1 sobre `open_store` que migra: se confirma y se extiende a `show task` y `advance task` (R03, W04).
+
+### 1.4 Convenciones de evidencia
+
+- Cada cita es `ruta:línea` o `ruta:símbolo`, con prefijo `DK/`, `SL/`, `GU/` (arriba) o `PR/` (`../pron/src/pron/`). Un test se cita `DK:tests/archivo.py::nombre:línea` (o `SL:`/`GU:`). **Ningún test se ejecutó**: «comprobado» significa que existe una prueba citada cuyo cuerpo se leyó, no que se corriera.
+- **Estados** (una fila, un estado):
+  - **COMP** — existente comprobado: la capacidad que nombra la fila tiene una prueba citada en `tests/` del repo dueño.
+  - **LEC** — existente por lectura estática, sin prueba: el código lo muestra; no hay test que lo ejerza. Lectura estática no es prueba de runtime.
+  - **NOAC** — existente pero no aceptado como canal por este contrato: existe (a veces con tests) y se excluye de la whitelist o se admite solo condicionada, por una razón escrita en la fila.
+  - **HUE** — faltante: no existe la operación o la propiedad requerida; lleva dueño y productor en la sección 12.
+- **Ninguna fila está «aceptada»**: no hay actas de recepción (G_UI_WRITE, G_SLDB_WRITE, G_UI_READ siguen `pending`, `accepted_scope_nodes: []`). Existir, estar probado y estar aceptado son tres cosas distintas.
+- El estado se refiere a la capacidad nombrada en «Operación». Los efectos transitivos llevan su propio rótulo: **[P]** con prueba citada, **[L]** por lectura.
+- **Leer, escribir, exponer, devolver** (como en `navegacion.md` §0): «lee» = el código abre el archivo o el índice; «escribe» = cambia archivos o índices; «expone» = entrega a otra capa datos derivados; «devuelve» = entrega el texto. Una negación sobre uno no se extiende a los otros.
+- **Negaciones**: cada una lleva el patrón y las rutas de su búsqueda («en estas rutas»). Nunca se afirma por conteo de instancias.
+- **ALOG**: el constructor de `DeskopsOperations` abre o crea `<root>/.deskops.log` (`DK/deskops/operations.py:214-223`, `logging.FileHandler` en `:219`) [L]. Afecta a toda orden que construye `DeskopsOperations`: todo `add/edit/bind/next/list/show/advance`, todo `atoms *`, todo `closeout *`, `retire` (`DK/deskops/services/retire.py:200`) y `runtime init` (`DK/deskops/runtime/initializer.py:28`). No afecta a `message *`, `promote`, `drawer remove`, `issue *`, `doctor`, `status`, `repo *`, `desk *`, `graph *`, `drift` ni `materialize` (búsqueda de `DeskopsOperations(` en `DK/deskops/**/*.py`: solo `operations.py`, `services/{tasks,closure,atoms,retire}.py`, `domain_tree.py`, `runtime/initializer.py` y `cli/commands/{operations,closeout,atoms}.py`). `.deskops.log` está ignorado en deskops y en graph_ui (`.gitignore`), pero **está versionado** en sldb y en spec2viz (`git ls-files .deskops.log` en cada repo lista el archivo; `git status` de sldb lo muestra modificado): una orden de lectura de deskops con raíz en esos repos ensucia su árbol.
+- **ASC** (andamiaje): `DeskopsOperations.ensure_workspace()` (`DK/deskops/operations.py:231-241`) llama a `scaffold_desk` (`DK/deskops/workspace.py:166`; crea subdirectorios y `config.json`, `Board.md`, `pills.md`, rituales, `README` del drawer y `atoms/tag-namespaces.yaml` **si faltan**, `_write_if_missing` en `:251`), crea `atoms/`, `materializations/`, `steps/`, `registry/`, `faq/` y `ensure_default_namespaces` (`DK/deskops/atom_tags.py:45-49`). Lo invocan `create_artifact`, `edit_artifact_field`, `bind_pill_to_task`, `create_task_bundle`, `DomainTree.*` y varios métodos de `AtomsService` (`DK/deskops/services/atoms.py:51,109,155,168,195,266,329`). Sobre un desk completo es un no-op; sobre uno incompleto escribe aunque la orden falle después.
+- **MIG** (migración de store): `sldb.api.open_store` migra el layout si el store existe y no es canónico (`SL/api/stores/open_store.py:37-38` → `SL/store/migration.py:72-80`). Lo alcanzan, entre otras, las lecturas del lifecycle (`edges_from` → `load_edge_index` → `open_store(…, mode="readonly")`, `SL/api/edges/edge_reading.py:28`; `navegacion.md` §3.1 y §5.4).
+
+### 1.5 Gates que este contrato consume
+
+`G_WRITE_POLICY` (`satisfied`, P03–P06); `G_CLOSEOUT` (`satisfied`: `dag.yaml:33-43`; implementación `59244c9`, cierre `1fefa97`, pruebas `DK:tests/test_closeout_declared_evidence.py` y `DK:tests/test_lifecycle_end_to_end.py`, 23 passed según el recibo del run `20261031-finalizar-plan-workspace`); `G_SOURCE`, `G_PAYLOAD_PRECONDITION`, `G_WRITE_CONTRACT`, `G_UI_WRITE`, `G_SLDB_WRITE`, `G_HUMAN_READ`, `G_SCION`, `G_EXEC` (`pending`/`unverified`). Quién `requires` qué (calculado leyendo `requires` de cada tarea): `G_CLOSEOUT` → WS26, WS26.1, WS26.2, WS28, WS32, WS32.1, WS32.2; `G_PAYLOAD_PRECONDITION` → WS19, WS19.1, WS19.2, WS21; `G_SOURCE` → ninguna tarea lo declara en `requires` (WS21 lo cita en su aceptación; lo produce WS20); `G_UI_WRITE`: `scope_nodes` del gate (14 IDs, sección 10); `G_SLDB_WRITE` → WS20, WS45.
+
+## 2. Matriz de operaciones
+
+Columnas: **ID** · **Operación y canal público** · **Modelo y campos que escribe** · **Actor registrado** · **Revisión o precondición** (P0 ninguna; PE guarda de estado: el writer rechaza por el estado actual; PV before-image por valor `expected` con 409; PT token publicado que compara la propia ruta; ninguna fila tiene una precondición compartida entre escritores, ver 6) · **Git** · **Efectos** · **Estado** · **Evidencia**.
+
+«Sin Git» significa que la operación no ejecuta `git add`, `commit`, `amend`, `rm`, `restore` ni `push` (búsqueda en 9.1). «Actor: ninguno» significa que el documento no lleva autor.
+
+### 2.1 Lecturas
+
+| ID | Operación y canal | Modelo / campos | Actor | Precond. | Git | Efectos | Estado | Evidencia |
+|---|---|---|---|---|---|---|---|---|
+| R01 | `deskops list tasks [--include-repos]`; `DeskopsOperations.list_tasks`, `list_repo_task_routes` | Lee TaskDoc de `desk/tasks/`; con la bandera, BoardDoc y TaskDoc de los repos del registro | n/a | P0 | Sin Git | Lee y devuelve id/estado/nodo. ALOG [L] | COMP | `DK/deskops/operations.py:list_tasks`; `DK:tests/test_cli.py::test_list_tasks_warns_on_malformed_artifact:986`, `::test_list_tasks_include_repos_routes_registered_repo_board:998` |
+| R02 | `deskops list <pills\|rituals\|boards\|atoms\|materializations\|repositories\|inbox-notes\|faq-docs\|steps>` y `atoms list` (alias); `DeskopsOperations.list_artifacts` | Lee los 9 modelos de `ARTIFACT_MODELS` (`DK/deskops/operations.py:55-66`) | n/a | P0 | Sin Git | Lee y devuelve los payloads; ALOG [L]. No migra (no pasa por sldb) | COMP | `DK/deskops/operations.py:396`; `DK:tests/test_cli.py::test_list_and_show_artifact_support_json_output:1975` |
+| R03 | `deskops show task <id>`; `DeskopsOperations.show_task` | TaskDoc + compuertas de lifecycle | n/a | P0 | Sin Git | Lee el TaskDoc y devuelve las transiciones con `holds`. **Transitivo**: `_lifecycle_gates` → `lifecycle.transitions_from` → `sldb.api.edges_from` → `open_store` → MIG; ALOG [L] | COMP | `DK/deskops/operations.py:412,422`; `DK/deskops/lifecycle.py:123-151`; `SL/api/edges/edge_reading.py:28`; `DK:tests/test_cli.py::test_show_task_json_resolves_inherited_workflow_context:1681`, `::test_show_list_and_advance_task_uses_operational_runtime:1817`, `::test_list_and_show_task_support_json_output:1929`. La migración no tiene prueba [L] |
+| R04 | `deskops show <pill\|ritual\|board\|atom\|materialization\|repository\|inbox-note\|faq-doc\|step>` y `atoms show` (alias); `show_artifact` | Lee el documento del modelo | n/a | P0 | Sin Git | Lee y devuelve. ALOG [L] | COMP | `DK/deskops/operations.py:452`; `DK:tests/test_cli.py::test_show_atom_finds_nested_atom:2391`, `::test_list_and_show_artifact_support_json_output:1975` |
+| R05 | `deskops next [<task>] [--why] [--diagram]`; `DeskopsOperations.next_action_report` | Lee Board, TaskDoc y `task_lifecycle.yaml`; no usa el store | n/a | P0 | Sin Git | Lee y devuelve acciones/fuentes. ALOG [L] | COMP | `DK/deskops/services/tasks.py:98`; `DK:tests/test_cli.py::test_next_task_reports_current_workflow_action_without_mutating:829` (comprueba que los bytes del TaskDoc no cambian; no mira el resto del árbol, ni `.deskops.log`), `::test_next_task_why_explains_selection_without_mutating:872`, `::test_next_without_selector_guides_when_board_routes_no_tasks:911`, `::test_next_without_selector_lists_multiple_board_tasks:929` |
+| R06 | `deskops message list`, `message read <sel>` y `inbox --list/--show` (alias deprecado) | Lee InboxNoteDoc de `desk/inbox/` | n/a | P0 | Sin Git | Lee y devuelve; no construye `DeskopsOperations` (sin ALOG) | COMP | `DK/deskops/cli/commands/message.py:145,150`; `DK:tests/test_message_cli.py::test_message_send_list_read_ack_roundtrip:97`, `::test_message_list_reports_empty_inbox:146`, `::test_message_list_uses_store_when_no_root_is_given:221` |
+| R07 | `deskops issue list` | Lee Markdown de `desk/issues/` y `desk/drawer/issues/` (no modelado) | n/a | P0 | Sin Git | Lee y devuelve; sin ALOG | COMP | `DK/deskops/services/issues.py:list_issues`; `DK:tests/test_issue_cli.py::test_list_reports_id_status_and_title:127` |
+| R08 | `deskops closeout verify --task <id>`; `DeskopsOperations.verify_task_closeout` | Lee TaskDoc (`closeout_evidence`, `references`, `files`), documentos, git | n/a | P0 | Lee: `git rev-parse --verify` y `git merge-base --is-ancestor` (`DK/deskops/services/closeout_gates.py:208-221`); no escribe | Devuelve JSON `{task_id, ok, declared, found, summary, implicit_code, alerts, gates, findings}`; exit 1 si `ok` es falso. Arma un grafo en memoria (`closeout_gates.py:231-249`), no lo escribe. ALOG [L] | COMP | `DK/deskops/operations.py:602`; `DK/deskops/cli/commands/closeout.py:_verify`; `DK:tests/test_closeout.py::test_closeout_verify_passes_with_complete_evidence:392`, `::test_closeout_verify_rejects_loose_commit_and_test_references:418`, `::test_closeout_verify_fails_non_zero_when_required_gate_is_missing:476`, `::test_closeout_verify_reports_structured_generated_artifact_findings:499`; `DK:tests/test_closeout_declared_evidence.py` completo (G_CLOSEOUT) |
+| R09 | `deskops about`, `deskops faq`, `deskops repo whoami` | Informativas; sin documento | n/a | P0 | Sin Git | `about` imprime texto (`DK/deskops/cli/commands/core.py:11-16`). `faq` y `repo whoami`: cuerpos no abiertos | LEC | Solo `core.py:AboutCLI`; el resto no se abrió |
+| R10 | `deskops atoms tree`, `graph neighbors`, `graph missing`, `runtime status`, `runtime attach`, `runtime workers`, `runtime supervise` | Lecturas de átomos, snapshot de grafo, agentes Herdr | n/a | P0 | Sin Git | `atoms tree`: ALOG (vía `DomainTree`). `graph neighbors` lee el snapshot; `graph missing` extrae del repo; `runtime workers` lista agentes Herdr de la máquina (`DK/deskops/cli/commands/runtime.py:157-182`); `runtime supervise` es observacional (`DK/deskops/runtime/supervise.py:44-66`). `status`/`attach`: no abiertos. Fuera de la whitelist | LEC | `DK/deskops/cli/commands/graph.py:53-106`; `DK/deskops/domain_tree.py:tree`; `runtime.py` y `supervise.py` citados |
+| R11 | `GET /api/desk/board` y `GET /api/desk/task?id=` (graph_ui) | Lee Board, TaskDoc, gates y `next` | n/a | P0; **expone** `revision` = sha256(bytes de Board + `\0` + bytes del TaskDoc), `GU/deskops_routes.py:79` | Sin Git | Construye `DeskopsOperations` por petición (ALOG) y usa métodos con guion bajo (`ops._read_doc`, `ops._resolve_glob`, `GU/deskops_routes.py:34,41,46,67`); `detail` llama `show_task` (MIG) y `lifecycle.transitions_from` | COMP | `GU:tests/test_mindmap_deskops.py::test_board_routing_errors_empty_and_orphans:63`, `::test_real_advance_stale_origin_and_types:77`, `::test_blocked_and_missing_lifecycle:109`, `::test_duplicate_routes_and_configuration:125`. MIG y ALOG por lectura [L] |
+| R12 | Lectura del payload y de `version` para armar `expected`: `GET /graph`, `GET /document?id=` de `sldb serve` (remote) o `/api/graph`, `/api/document` de graph_ui (local) | Cualquier documento rastreado: `payload`; `version` solo en `/graph` y en las respuestas de `/docs*` | n/a | P0 | Sin Git | Lee y devuelve el payload tal como lo ve el proceso servidor (carga runtime con caché, `infraestructura.md:51`; frescura ante edición externa: deducida por lectura, no probada). `version` = `hash_d` del payload (`SL/api/documents/document_serialization.py:8-9,24-32`) | COMP | `SL:tests/test_serve.py:66,84-85` (versión en `/graph`), `::test_docs_create_tracks_and_returns_version:616`; `GU:tests/test_mindmap_endpoints.py::test_document_shape_matches_sldb_serve_no_version:294` (el `/document` local no publica `version`) |
+
+### 2.2 Diagnósticos (clasificados por efectos)
+
+Un diagnóstico puede escribir. La columna «Efectos» separa lo que **lee**, lo que **escribe** y lo que **devuelve**.
+
+| ID | Operación y canal | Modelo / campos | Actor | Precond. | Git | Efectos | Estado | Evidencia |
+|---|---|---|---|---|---|---|---|---|
+| D01 | `deskops doctor` y `deskops status` (alias deprecado), sin `--repair`; `DoctorCLI.run` | Lee desk, TaskDoc/Board/modelos y el resultado de `sldb stores check` | n/a | P0 | Sin Git | Lee estructura y documentos. **Lanza el subproceso** `python -m sldb stores check --store .sldb --format json` (`DK/deskops/cli/commands/doctor.py:_store_check`), que abre el store con `open_store` (**MIG**) y puede escribir la caché de escaneos en el directorio de caché del usuario (`SL/api/stores/scan_cache.py:_save`, fuera del repo y del store). Devuelve errores y alertas; exit 1 solo con errores. El registry lo marca `mutates=True` para `doctor` y `False` para `status`, siendo el mismo handler | LEC | `DK/deskops/cli/commands/doctor.py`; `SL/cli/commands/store_check.py:19-29`; `SL/api/stores/open_store.py:37-38`. Hay tests del informe (`DK:tests/test_cli.py:214-270,2652,2690`), ninguno asevera ausencia de escrituras |
+| D02 | `deskops doctor --repair` | Desk y store: andamiaje y registro de modelos faltantes | n/a | P0 | Sin Git | Escribe: `scaffold_desk` y `SLDBBootstrap.init_local_store` (modelos), solo sobre errores, no sobre alertas (`doctor.py:_check_structure`, `_check_models`, `_register_models`) | COMP | `DK:tests/test_cli.py::test_doctor_repair_does_not_scaffold_a_repository_with_no_desk:245`, `::test_doctor_still_reports_a_partial_desk:258`; `DK:tests/test_doctor_model_registration.py` (nombre; cuerpo no abierto) |
+| D03 | `deskops atoms validate [<id>\|--all]`; `AtomsService.validate_atoms` | Lee átomos y, con `--all`, el árbol de dominio | n/a | P0 | Sin Git | **Escribe ASC aunque el registry diga `mutates=False`**: `validate_atoms` empieza por `self.ensure_workspace()` (`DK/deskops/services/atoms.py:154-155`). Devuelve registros y errores; exit 1 si hay errores. ALOG | LEC | `DK/deskops/services/atoms.py:154-155`; `DK/deskops/cli/commands/atoms.py` (`validate`). Los tests validan el resultado (`DK:tests/test_atoms_cli.py::test_atoms_validate_accepts_valid_atom:34`, `::test_atoms_validate_all_reports_slug_namespace_and_provenance_errors:47`), no el andamiaje |
+| D04 | `deskops drift check` | Lee roles, perfiles de runtime, superficies de conocimiento | n/a | P0 | Sin Git | Lee y devuelve hallazgos; exit 1 si hay. El cuerpo de `drift_check_knowledge_surfaces` no se abrió: sus efectos no están clasificados | LEC | `DK/deskops/cli/commands/drift.py`; `DK:tests/test_cli.py::test_drift_check_reports_knowledge_surface_findings:2785`, `::test_drift_check_is_quiet_on_a_fresh_desk:2808` (informe, no efectos) |
+| D05 | `sldb stores check [--apply]` (CLI de sldb) | Lee índices y documentos del store | n/a | P0 | Sin Git | Sin `--apply`: **MIG** (`get_store_context` → `open_store`, `SL/cli/store_context.py:19-24`) y caché de escaneos del usuario. Con `--apply`: ejecuta las respuestas de la política (reindex, hooks) y **escribe** (`SL/cli/commands/store_check_apply.py:12-20`) | LEC | Citas anteriores; deskops lo usa sin `--apply` (`doctor.py`, `workspace.py:_inspect_surface_store_health`) |
+
+### 2.3 Mutaciones por Deskops
+
+| ID | Operación y canal | Modelo / campos | Actor | Precond. | Git | Efectos | Estado | Evidencia |
+|---|---|---|---|---|---|---|---|---|
+| W01 | `deskops add task` (`--evidence`/`--task-type` obligatorio; `--from-drawer`); `DeskopsOperations.create_task_bundle` | TaskDoc nuevo (todos los campos del modelo); BoardDoc `tasks` (añade la ruta) | Ninguno en el archivo; `from_drawer` registra el origen | PE: `FileExistsError` si el archivo existe (`DK/deskops/operations.py:1330`); evidencia declarada obligatoria (`DK/deskops/services/closeout_gates.py:77-98`) | Sin Git | Escribe `desk/tasks/<id>.md`, rastrea el TaskDoc, añade al Board (`operations.py:527`) en **una** `DocTransaction` con rollback. ASC. ALOG. Por payload (`--from-yaml`/posicional) la orden acepta `status`, `current_node`, `history` (`DK/deskops/specs/compiler.py:35-60`), por flags no (`DK/deskops/cli/model_introspection.py:183-210`) | COMP | `DK/deskops/services/tasks.py:80`; `DK:tests/test_cli.py::test_add_task_creates_actionable_bundle:701`, `::test_add_task_tracks_generated_bundle_in_local_sldb_store:743`; `DK:tests/test_operational.py::test_create_task_bundle_rolls_back_the_task_when_tracking_fails:34`, `::test_create_task_bundle_writes_only_the_task:58`, `::test_create_task_bundle_restores_board_when_append_fails:78`; `DK:tests/test_closeout_declared_evidence.py::test_add_task_without_evidence_nor_task_type_fails_and_explains:244`; `DK:tests/test_add_task_from_drawer.py::test_payload_and_flag_resolve_the_same_drawer_path:29` |
+| W02 | `deskops edit task <sel> <campo> <valor>` sobre campos de contenido (`title, why, goal, scope, implementation_path, validation, done_when, task_type, depends_on, inherits_from, inherit_acceptance_context, atoms, files, references, tags, pills`); `edit_artifact_field` | TaskDoc: el campo nombrado, reemplazado entero (las listas se sustituyen completas) | Ninguno | P0 sobre el valor. PE: rechaza `id`, campo desconocido, y reescribir si borraría contenido que el modelo no declara (`operations.py:271-282`, `_write_doc` `:1297`) | Sin Git | Lee el documento y lo **reescribe completo** (`render_model_markdown`) en `DocTransaction`; retrackea si estaba rastreado. ASC. ALOG. Alcanza también candidatos de `desk/drawer/tasks/` (`_editable_artifact` `:1235`) | COMP | `DK:tests/test_cli.py::test_edit_task_updates_modeled_field_from_cli:1333`, `::test_edit_task_keeps_text_values_literal:1297`, `::test_edit_task_refuses_to_erase_undeclared_content:1246`, `::test_edit_task_reaches_drawer_task:1438`, `::test_edit_task_prefers_active_task_over_drawer_task:1450`, `::test_edit_rejects_immutable_id_field:1614`; `DK:tests/test_doc_io.py::test_write_restores_file_bytes_and_store_when_retracking_fails:104` |
+| W03 | `deskops edit task <sel> <campo> <valor>` sobre `status`, `current_node`, `history`, `closeout_evidence`, `from_drawer` | TaskDoc: campos de workflow (3) | Ninguno | **Ninguna guarda**: `edit_artifact_field` solo rechaza `id` (`operations.py:277-278`); búsqueda de `protected`/`protegid` en `DK/deskops/**/*.py`: sin coincidencias; en `DK/tests/*.py`: solo coincidencias ajenas (`test_graph_cli.py`, `test_migrate_desk_stores.py`). No valida el vocabulario de `closeout_evidence` (lo valida `add` y lo reporta `verify`) | Sin Git | Mismo efecto que W02. Permite saltarse el lifecycle y los gates. **Excluida de la whitelist** (sección 3) | NOAC | `DK/deskops/operations.py:271-282`. Existe un test de `edit pill status` (`DK:tests/test_cli.py::test_edit_pill_lifecycle_slots_including_drawer:2717`), ninguno para estos campos del TaskDoc |
+| W04 | `deskops advance task <id>` (sin `--to`); `DeskopsOperations.advance_task` | TaskDoc: `status`, `current_node`, `history` (por transición) | Ninguno | PE: la condición `--where` de la transición debe cumplirse (`DK/deskops/lifecycle.py:154-190`); rechaza el nodo terminal: no cierra (`DK/deskops/services/tasks.py:193-209`) | Sin Git | Lee el grafo del lifecycle (**MIG**), escribe el TaskDoc con `_write_doc`. `status` toma `sets_status` de la spec (`active`, `ready_for_testing`; `closed` solo en memoria, no se persiste, `task_lifecycle.yaml:27,34,41-42`). ALOG | COMP | `DK:tests/test_cli.py::test_show_list_and_advance_task_uses_operational_runtime:1817`, `::test_advance_task_blocks_testing_and_closeout_without_required_evidence:2017`; `DK:tests/test_operational.py::test_advance_task_does_not_persist_computed_gate_facts:135`; `DK:tests/test_inbox_promote_cli_gaps.py::test_forced_advance_to_complete_refuses_and_points_at_closeout:184` |
+| W05 | `deskops advance task <id> --to <nodo\|estado>` | TaskDoc: `status` (si el valor es `draft/open/in_progress/blocked/closed`) o `current_node` (cualquier otro texto) | Ninguno | **Ninguna guarda** salvo rechazar `complete` (`tasks.py:179-191`); no valida que el nodo exista | Sin Git | Escribe el TaskDoc; ALOG | NOAC | `DK/deskops/services/tasks.py:179-191`; `DK:tests/test_inbox_promote_cli_gaps.py::test_forced_advance_to_a_normal_node_leaves_status_alone:199`, `::test_forced_advance_to_a_status_value_still_sets_status:211`. Excluida de la whitelist |
+| W06 | `deskops bind pill <task> <pill>`; `bind_pill_to_task` | TaskDoc `pills` (añade) | Ninguno | PE: idempotente, no duplica (`operations.py:284-300`); ambos documentos deben existir | Sin Git | Escribe el TaskDoc (`_write_doc`); ASC; ALOG | COMP | `DK:tests/test_cli.py::test_bind_pill_appends_task_pills_list_from_cli:1495` |
+| W07 | `deskops add <pill\|ritual\|board\|atom\|materialization\|repository\|inbox-note\|faq-doc\|step>`; `create_artifact` | El modelo respectivo, creación; solo átomo, pill y materialización se rastrean en el acto (`_track_created_artifact`, `operations.py:1343`) | Ninguno | PE: `FileExistsError`; para átomo, espacios de tags y padres de dominio (`operations.py:243-269`) | Sin Git | Escribe un archivo nuevo; ASC; ALOG | COMP | `DK:tests/test_cli.py::test_add_list_and_show_pill_from_specs:2307`, `::test_add_list_and_show_ritual_from_specs:2348`, `::test_add_list_and_show_board_from_specs:2528`, `::test_add_list_and_show_repository_from_specs:2567`, `::test_add_list_and_show_step_from_specs:2601`, `::test_add_atom_tracks_local_sldb_store_when_atomdoc_registered:2487`; `DK:tests/test_retire_cli.py::test_add_pill_tracks_the_created_document:44`; `DK:tests/test_operational.py::test_create_artifact_rolls_back_file_when_tracking_fails:13` |
+| W08 | `deskops edit pill` y `edit ritual` | PillDoc / RitualDoc: el campo nombrado | Ninguno | Igual que W02 | Sin Git | Igual que W02. Para pills, `status/current_node/history` se editan tal cual (test) | COMP | `DK:tests/test_cli.py::test_edit_pill_updates_modeled_field_from_cli:1377`, `::test_edit_pill_lifecycle_slots_including_drawer:2717`, `::test_edit_ritual_accepts_frontmatter_id:1464` |
+| W09 | `deskops edit board\|atom\|materialization\|repository\|inbox-note\|faq-doc\|step` | El modelo respectivo; `edit board tasks '[…]'` reemplaza la lista de rutas entera | Ninguno | Igual que W02; **no valida** espacios de tags ni padres de dominio al editar un átomo (la validación está solo en `create_artifact`, `operations.py:250-257`) | Sin Git | Igual que W02. `BoardDoc.tasks` la escriben también `add task`, `closeout *` y `retire`: reemplazarla entera pisa sus cambios | LEC | `DK/deskops/operations.py:271-282`; solo `add/list/show board` tienen test (`DK:tests/test_cli.py:2528`), ninguno edita |
+| W10 | `deskops drawer remove <sel> [--force]`; `DrawerService.remove_entry` | Archivo del drawer; viñetas del Board del drawer | Ninguno | PE: se niega si un TaskDoc activo lo registra en `from_drawer`, salvo `--force` (`DK/deskops/services/drawer.py:141-181`) | Sin Git | Borra el archivo y sus viñetas en `DocTransaction`; destrackea | COMP | `DK:tests/test_inbox_promote_cli_gaps.py::test_drawer_remove_deletes_the_entry_and_its_board_bullets:349`, `::test_drawer_remove_refuses_when_an_active_task_records_the_entry:363`, `::test_drawer_remove_untracks_the_entry_from_the_store:390` |
+| W11 | `deskops promote inbox-to-drawer-task <sel>`; `DrawerService.promote_inbox_to_drawer_task` | Crea `desk/drawer/tasks/task-<slug>.md` (TaskDoc con `status: deferred`, tag `source:inbox`); **borra** la nota de inbox y la destrackea | Ninguno | PE: se niega si el candidato ya existe (`drawer.py:110-112`) | Sin Git | `DocTransaction`. El origen queda solo en la prosa de `why` («Promoted from the inbox note `<ruta>`»), apuntando a un archivo ya borrado (`drawer.py:246-274`). No existe promoción drawer→tarea activa | NOAC (no es canal de captura, ver 7.3) | `DK:tests/test_cli.py::test_promote_inbox_to_drawer_task_creates_candidate:659`; `DK:tests/test_inbox_promote_cli_gaps.py::test_inbox_to_drawer_keeps_the_note_body_loose:72`, `::test_drawer_to_active_task_promotion_no_longer_exists:92`, `::test_list_tasks_does_not_surface_drawer_items:105`, `::test_promote_untracks_the_note_from_the_store:120` |
+| W12 | `deskops message send <cuerpo> [--to <repo>] [--kind] [--title] [--from]` y `inbox <msg>` (alias); `MessageCLI._deliver_note` | InboxNoteDoc nuevo en el desk **destino**: `kind, sender_project, target_project, created_at, status=open, title, body` | `sender_project` = identidad del repo emisor, resuelta del registro/config o `--from` (`message.py:sender` resolución) | PE: valida el round-trip antes de escribir (`message.py:97-125`). Puede escribir en **otro** desk registrado (`--to`/`--repo`/`--desk-root`) | Sin Git | Escribe una nota con nombre por timestamp; rastrea en el store destino por cortesía: si falla, avisa y **no revierte** (`message.py:129-135`). Sin ALOG | COMP | `DK:tests/test_message_cli.py::test_message_send_list_read_ack_roundtrip:97`, `::test_message_delivery_tracks_note_in_target_repo_store:154`; `DK:tests/test_message_delivery.py::test_send_with_root_tracks_only_in_target_store:149`, `::test_send_to_registered_repo_tracks_only_in_target_store:181` |
+| W13 | `deskops message ack <sel>` y `inbox --ack`; `MessageCLI._ack_note` | InboxNoteDoc: `status: open→closed`, `acknowledged_by`, `acknowledged_at`, `target_project` (si faltaba); reescribe la nota entera | `acknowledged_by` = identidad del **desk** destino, no de una persona | PE: se niega si ya está en `closed` (`message.py:172-173`); no compara contra una imagen previa | Sin Git | Reescribe la nota y la retrackea (`untrack`+`track`); si el tracking falla, restaura los bytes (`message.py:181-187`). Sin ALOG | COMP | `DK:tests/test_cli.py::test_inbox_ack_flips_status_and_records_metadata:593`; `DK:tests/test_message_cli.py::test_message_ack_refreshes_note_tracked_in_target_repo_store:172`, `::test_message_ack_restores_note_when_tracking_fails:199` (comprueba bytes restaurados, `doc_status` ok y `stores check` PASS), `::test_message_ack_rejects_a_fragment_that_matches_two_notes:248` |
+| W14 | `deskops atoms proto <id> --title [--content] [--tag …]`; `DomainTree.create_protoatom` | ProtoAtomDoc nuevo: `id` (`proto-<slug>`), `title`, `content`, `tags`. **No acepta `provenance` ni `typed_as`** (firma en `DK/deskops/domain_tree.py:129`) | Ninguno | PE: id con convención, espacios de tags, un solo `domain:`, padres del dominio escritos, y `FileExistsError` si el id existe (`domain_tree.py:129-140,214-218`) | Sin Git | Escribe y rastrea el protoátomo; ASC; ALOG | COMP | `DK:tests/test_domain_tree.py::test_parents_must_be_written_before_their_children:58`, `::test_domain_tree_documents_are_tracked_in_the_store:138`. Sin prueba del rechazo por id existente ni del campo `provenance` (HUE X03) |
+| W15 | `deskops atoms crossroad <ruta>` | CrossroadDoc nuevo (prerequisito de los tags `domain:`) | Ninguno | PE: ruta válida, padres escritos, `FileExistsError` si ya existe | Sin Git | Escribe y rastrea; ASC; ALOG | COMP | `DK:tests/test_domain_tree.py::test_parents_must_be_written_before_their_children:58` (incluye el rechazo del duplicado) |
+| W16 | `deskops atoms type <proto> --model <M>`; `DomainTree.type_protoatom` | Crea el documento tipado; deja el protoátomo como stub (`typed_as`, `content` = redirección) | Ninguno | PE: se niega si ya está tipado; el modelo debe estar registrado | Sin Git | Escribe dos archivos y rastrea el tipado; el stub se escribe después del tipado, **fuera de `DocTransaction`** (`domain_tree.py:142-165`) | COMP | `DK:tests/test_domain_tree.py::test_typing_a_protoatom_creates_the_typed_doc_and_keeps_a_redirect_stub:104` |
+| W17 | `deskops atoms split` y `atoms merge`; `DeskopsOperations.split_atom`, `merge_atom` | AtomDoc: crea los destinos, deja el original como stub de redirección (`answer`), reescribe referencias entrantes (merge) | Ninguno | PE: se niegan si hay referencias entrantes o conflictos de pregunta, salvo `--force` (`DK/deskops/services/atoms.py:258-382`) | Sin Git | `DocTransaction` sobre varios archivos; ASC; ALOG | COMP | `DK:tests/test_atoms_split.py::test_atoms_split_supports_explicit_section_assignment_and_keeps_redirect_stub:54`, `::test_atoms_split_blocks_when_inbound_references_exist_without_force:100`; `DK:tests/test_atoms_merge.py::test_atoms_merge_rewrites_inbound_refs_and_preserves_traceability:110`, `::test_atoms_merge_blocks_question_conflicts_without_force:158`; `DK:tests/test_atoms_transactions.py::test_merge_restores_referrers_and_atoms_when_target_track_fails:59`, `::test_split_restores_source_and_store_when_second_atom_track_fails:98` |
+| W18 | `deskops atoms create <id> --from-pill\|--from-graph\|--from-diagram` y `atoms delete <id>` | AtomDoc: crea con procedencia exacta / borra | Ninguno | PE: `delete` se niega con referencias entrantes salvo `--force` | Sin Git | Escribe/borra y rastrea/destrackea; ASC; ALOG | COMP | `DK:tests/test_atoms_create_from_source.py::test_atoms_create_from_pill_uses_matching_section_and_exact_provenance:20`; `DK:tests/test_atoms_cli.py::test_atoms_delete_blocks_when_inbound_references_exist:77`, `::test_atoms_delete_force_removes_file_and_untracks_store:98` |
+| W19 | `deskops closeout commit --task <id> (--run-dir <d> \| --no-run --reason <r>) [--paths …]`; `ClosureService.close_manual`, `close_with_run` | Borra el TaskDoc, quita su ruta del Board, destrackea; escribe `runs/subagents/index.jsonl` y, con `--run-dir`, reescribe `run.yaml` | Autor de git (config de git) + trailers `Task-Id`, `Closeout-Mode`, `Closeout-Reason` / `Run-Dir`, `Run-Id`, `Session-Sha256` | PE: corre `verify` antes (`_gate_outcome`, `closure.py:540`); sin gate, no hay commit; `--run-dir` exige evidencia en la carpeta | **Escribe Git**: `git add -A -- <paths>` (errores ignorados, `check=False`), `git rm -f`, `git commit [--amend]` con pathspec, `git commit --amend --no-edit` del índice (`closure.py:370-538`) | Un commit de cierre. Fuera del servidor UI (9.6) | COMP | `DK/deskops/services/closure.py:72,271,370`; `DK:tests/test_closeout.py::test_closeout_commit_links_commit_to_run:132`, `::test_closeout_commit_no_run_makes_a_manual_commit:211`, `::test_closeout_commit_leaves_the_working_tree_clean:370`; `DK:tests/test_lifecycle_end_to_end.py::test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli:48`, `::test_closeout_amends_only_head_with_its_own_task_id:192`; `DK:tests/test_closeout_declared_evidence.py::test_code_task_with_declared_evidence_closes:137` |
+| W20 | `deskops closeout supersede` y `closeout retire` | TaskDoc: `status: superseded` + `history` (supersede, `closure.py:147-148`) / sin cambios (retire) | Autor de git + trailers `Closeout-Mode`, `Closeout-Reason`, `Closeout-Ref` | PE: razón y ref resoluble; `retire` exige estado resuelto | **Escribe Git** (igual que W19) | Un commit; revierte el TaskDoc si falla (`closure.py:179-181`) | COMP | `DK:tests/test_closeout.py::test_closeout_supersede_closes_a_task_with_a_reason_and_commit_ref:755`, `::test_closeout_supersede_refuses_an_unresolvable_ref_and_leaves_the_tree_unchanged:827`, `::test_closeout_retire_removes_a_legacy_resolved_task:940`, `::test_closeout_retire_refuses_a_task_that_is_not_resolved:1025` |
+| W21 | `deskops issue close <sel> --reason [--ref …]` y `deskops retire <ruta> --reason --ref …` | Issue (Markdown no modelado): `status` y sección `## Resolution` / borra un archivo bajo `desk/` | Ninguno (fecha en la resolución) | PE: se niega si ya está cerrado salvo `--force`; razón no vacía; `retire` exige ref resoluble y niega estructura requerida | Sin Git | Reescribe/borra y retrackea; `retire` usa `DeskopsOperations._write_doc` para el Board | COMP | `DK:tests/test_issue_cli.py::test_close_each_status_format_then_list:88`, `::test_close_refuses_already_closed_issue_unless_forced:154`; `DK:tests/test_retire_cli.py::test_retire_unroutes_a_board_routed_pill_and_keeps_the_store_green:74`, `::test_retire_refuses_while_referenced_unless_forced:116` |
+| W22 | `deskops atoms add-namespace <ns> --meaning …` | `desk/atoms/tag-namespaces.yaml` (no modelado) | Ninguno | PE: error si el espacio ya existe | Sin Git | Escribe el registro de espacios | COMP | `DK:tests/test_cli.py::test_atoms_add_namespace_updates_registry:385` |
+| W23 | `deskops atoms reorganize [--dry-run]` | Mueve átomos de carpeta según `atom_folder_axis` | Ninguno | P0 | Sin Git | Mueve archivos; ASC; ALOG | LEC | `DK/deskops/services/atoms.py:102-152`. Hay `DK:tests/test_atom_folder_axis.py` (cuerpo no abierto) |
+| W24 | `deskops init <ruta>`, `deskops desk install`, `deskops desk migrate` | Crean o migran la estructura `desk/` y el store | Ninguno | PE: `install` es idempotente; `migrate` no pisa autoría | Sin Git | Escriben andamiaje, `config.json`, store y lifecycle graph (`DK/deskops/cli/commands/core.py:InitCLI`) | COMP | `DK:tests/test_cli.py::test_desk_install_scaffolds_expected_surface:124`, `::test_desk_install_is_idempotent:159`, `::test_desk_migrate_preserves_authored_legacy_files_and_scaffolds_missing_surfaces:274`, `::test_init_bootstraps_local_store_and_desk:346` |
+| W25 | `deskops bootstrap`, `desk replace`, `desk update [--apply]`, `repo register`, `repo remove` | Máquina/store, texto de un archivo, contratos de modelos, registro de repos (`RepositoryDoc`) | Ninguno | `desk replace` exige conteo esperado de ocurrencias (`DK/deskops/services/replace.py:81`); el resto sin precondición leída | Sin Git (`desk update` lanza `sldb` por subproceso, `desk.py:284,334`) | Escriben fuera de la whitelist. Cuerpos no abiertos en profundidad | LEC | `DK/deskops/cli/commands/{desk,repo}.py` (encabezados y los tramos citados). Existen `DK:tests/test_desk_replace.py`, `test_desk_sync.py`, `test_repo_identity.py` sin leer |
+| W26 | `deskops materialize`, `graph build`, `graph reflect`, `runtime init`, `runtime stop`, `runtime template` | Salidas materializadas, snapshot de grafo (`graph_ui`/`.sldb`), plantillas de Scion, `RunDoc` con `--agent` | Ninguno | P0 | Sin Git | Escriben archivos derivados (`graph.py:21-51`, `materialize.py`, `runtime.py:70-110`). `runtime template … --task` registra un `RunDoc` (`DK/deskops/runtime/scion.py:366`). Fuera de la whitelist | LEC | Citas anteriores |
+
+### 2.4 Mutaciones por sldb
+
+| ID | Operación y canal | Modelo / campos | Actor | Precond. | Git | Efectos | Estado | Evidencia |
+|---|---|---|---|---|---|---|---|---|
+| S01 | `POST /save` con `changes[{action: create}]` (`sldb serve`) | Crea documento: `model`, `id`, `payload`; la ruta destino **no la elige el cliente**: es el directorio de otro documento del mismo modelo o `<raíz>/<Modelo>/` (`SL/cli/serve/save_plan.py:63-67`) | `by` de la firma = actor del proceso servidor (`SL/api/actor.py:11-24`, `provenance_stamp.py:25`): `--actor`, `SLDB_ACTOR` o `agent`; la ruta HTTP no pasa `actor` (`save_routes.py:94-107`) | PE: 409 si el nombre existe o si el archivo existe (`save_plan.py:33,45`); id con patrón (`:34`) | Sin Git | Valida round-trip de todo el lote antes de aplicar; aplica create→update→delete bajo `SAVE_LOCK` (hilo, `save_routes.py:23`); escribe Markdown firmado y rastrea | COMP | `SL:tests/test_serve.py::test_batch_save_create_update_delete:187`, `::test_batch_save_duplicate_create_rejected:228`, `::test_batch_save_invalid_payload_422:247` |
+| S02 | `POST /save` con `changes[{action: update, expected}]` | Reemplaza el payload **completo** de un documento rastreado (no un campo) | Igual que S01 | **PV**: `existing.payload != change.get("expected")` → 409 sin cambios (`save_plan.py:49-54`, línea 50); mismo modelo exigido | Sin Git | Compara contra la carga runtime del proceso (con caché); luego `save_document_payload`: **escribe el Markdown antes** de tomar el lock de índices (`SL/api/documents/payload_save.py:47-48`, `payload_save_steps.py:68-96`). No rechaza borrar contenido no declarado (HUE-07). Registra en el journal `previous_value/new_value` y hashes | COMP | `SL:tests/test_serve.py::test_batch_save_stale_expected_conflict:213` (409, cuerpo exacto, payload intacto), `::test_batch_save_create_update_delete:187` |
+| S03 | `POST /save` con `changes[{action: delete, expected}]` | Borra un documento | Igual que S01 | **PV** (`save_plan.py:57-60`, línea 58) | Sin Git | **Destrackea y borra el archivo** (`save_routes.py:94-107`; `delete_document`) | COMP | `SL:tests/test_serve.py::test_batch_save_delete_removes_the_file_it_created:1095` |
+| S04 | `POST /save {doc, payload}` (forma legacy; se elige por ausencia de `changes`) | Reemplaza el payload de `doc` | `agent` / proceso | **P0**: sin `expected` ni revisión; última escritura gana (`SL/cli/serve/save_single.py:13-20`) | Sin Git | Escribe vía `save_payload` → `save_document_payload` | NOAC (excluida: sin precondición) | `SL/cli/serve/save_single.py:13-20`; `infraestructura.md:53`. La ejerce `SL:tests/test_serve.py::test_serve_endpoints_use_real_store:28` (actualiza sin `expected`; `doc` desconocido da 404): prueba que existe y funciona, no que proteja |
+| S05 | `POST /docs` y `POST /docs/create` | Crea documento en `path` (o por defecto) con `model`, `name`, `payload` | Igual que S01 | PE: 409 si el nombre o el archivo existen, 400 id, 404 modelo, 422 payload (`SL/cli/serve/docs_routes.py:28-35,62-67`); `POST /docs` devuelve `{id, version}` | Sin Git | Escribe y rastrea. **`path` lo aporta el cliente y se resuelve sin contención**: acepta ruta absoluta (`docs_routes.py:105-112`) | COMP | `SL:tests/test_serve.py::test_docs_create_tracks_and_returns_version:616`, `::test_docs_create_duplicate_conflict:634`, `::test_docs_create_target_file_conflict:658`, `::test_docs_create_invalid_payload_422:645`, `::test_docs_create_unregistered_model_404:670` |
+| S06 | `POST /docs/track` y `POST /docs/untrack` | Rastrea un archivo existente / destrackea (el archivo queda) | Igual que S01 | PE: 404/409 | Sin Git | Escribe índices | COMP | `SL:tests/test_serve.py:691,702,719,731` (tests de track/untrack). Fuera de la whitelist |
+| S07 | `sldb docs update`, `sldb fields update\|append\|remove\|clean` y la API `sldb.api.save_document_payload` | Payload completo (campo por lectura-modificación-escritura) | `actor=` opcional; si no, `agent` | **P0**: ni `expected` ni revisión (`SL/api/documents/payload_save.py:16` no recibe precondición; `SL/cli/commands/fields_save.py:6-14`) | Sin Git | Igual que S02 sin comparación. Es el camino que usan `pron` (`PR/world/storage/payload_editor.py:24-37`) y graph_ui local (`GU/sldb_adapter.py:286-297`) | NOAC (excluida: sin precondición) | Citas anteriores; `infraestructura.md:31,54` |
+| S08 | API `sldb.api.create_document` llamada directamente | Crea y rastrea un documento en `path` | `actor=` opcional | **P0 y sobrescribe**: `doc_path.write_text` sin comprobar existencia (`SL/api/documents/create_document.py:50`) **antes** de rastrear (`:51`), y rastrear falla si ya estaba rastreado (`SL/store/ops.py:33-36`) | Sin Git | Si el archivo existía, queda reemplazado aunque la llamada falle (lectura; no ejecutado). La colisión solo la controlan las rutas HTTP (S05, S01) | NOAC (solo con sondeo previo) | `create_document.py:22-51` (docstring: «an existing file is overwritten»); `infraestructura.md:57` |
+| S09 | `POST /models/{fields-add,fields-remove,template-edit,validate,promote}` (sldb serve) y `/api/models/*` (graph_ui local y proxy) | Borradores de contrato de un modelo y su promoción (cambia el contrato de todos los documentos del modelo; `promote` sube `version`) | `agent` / proceso | PE: `promote` sin borrador se rechaza; sin `expected`/hash | Sin Git | Escriben borradores y, al promover, el contrato vigente (efecto sobre CLI y agentes que usan el mismo store: P03) | COMP | `SL:tests/test_serve.py:435-500` (add/remove/promote, versión 1→2 en `:487`); `GU:tests/test_mindmap_endpoints.py::test_models_promote_without_draft_is_rejected:469`, `::test_models_promote_installs_validated_draft:477`, `::test_models_fields_add_and_remove:435`. Consumidor: WS39 |
+
+### 2.5 Mutaciones por graph_ui
+
+| ID | Operación y canal | Modelo / campos | Actor | Precond. | Git | Efectos | Estado | Evidencia |
+|---|---|---|---|---|---|---|---|---|
+| U01 | `POST /api/save` (modo local; `EditorStore.save`) | `changes[]` create/update/delete de cualquier documento rastreado del store + `view` | `agent` / proceso (llama a pron → `save_document_payload` sin `actor`) | **PV** `current.payload != change.get('expected')` → 409 (`GU/persistence.py:101-102`) **+ PT** `viewRevision` del archivo de vista (`:84-85`); refresca la caché antes de comparar (`:77`); `adapter.lock` (RLock del proceso, `:70`) | Sin Git | Prevalida todo el lote y aplica create→update→delete; `delete` **solo destrackea y deja el archivo** (`sldb_adapter.py:299-312`), al revés que S03. Falla a mitad → 500 con `completed` | COMP | `GU:tests/test_mindmap_persistence.py::test_create_update_containment_and_reload_from_disk:29`, `::test_invalid_batch_writes_nothing:45`, `::test_conflict_and_untrack_preserves_file:54`, `::test_view_conflict_and_path_traversal_rejected:66` |
+| U02 | `POST /api/save` (modo remote): reenvía `changes` a `POST /save` de sldb y guarda la vista local | Igual que S01–S03 | Igual que S01 | PV de S02/S03 + PT `viewRevision` local | Sin Git | La rama remota **no aplica la guarda de `Origin`** (`GU/serve.py:387-398` precede a la guarda de `:431-434`, que solo cubre la local) y reenvía cualquier `model`/campo sin filtrar | LEC | `GU/serve.py:272-311,378-434`. Búsqueda de `whitelist`, `allowlist`, `protected`, `forbidden`, `read_only` en `GU/{serve,persistence,sldb_adapter,views_routes,deskops_routes}.py`: solo `deskops_routes.py:49` (una proyección de lectura) |
+| U03 | `POST /api/desk/advance {id, revision}` | TaskDoc: `status/current_node/history` vía `DeskopsOperations.advance_task` | Ninguno (proceso graph_ui) | **PT**: la ruta recalcula `revision` y compara (`GU/deskops_routes.py:113-115`) → 409; luego llama `advance_task(id)` **sin pasarle la revisión** (`:116`). `DeskRoutes.lock` (RLock del proceso, `:21,86`). Guarda `Origin` (`:96-98`), cuerpo ≤ 8192 B (`:103`), solo `{id, revision}` (`:111`) | Sin Git | Lee `detail` (MIG, ALOG), avanza, vuelve a leer y devuelve; 409 si no progresa. Entre la comparación y la escritura otro proceso puede escribir (el lock es de proceso) | COMP | `GU:tests/test_mindmap_deskops.py::test_real_advance_stale_origin_and_types:77`, `::test_serialized_advances_and_board_revision:94`, `::test_terminal_cannot_close_and_path_escape:136`, `::test_blocked_and_missing_lifecycle:109` |
+| U04 | `POST /api/views/save` | ViewDoc en `<store.parent>/sldb/views/<name>.md` | `agent` / proceso | **P0** (`GU/views_routes.py:56-66`; `write_document` crea o `save_document_payload` sin `expected`, `GU/sldb_adapter.py:427-434`); acepta `store` del cliente (`views_routes.py:29-33`); guarda `Origin` (`serve.py:382-385`) | Sin Git | Escribe un ViewDoc | LEC | Citas anteriores; `GU:tests/test_projection_views.py` sin abrir |
+| U05 | `POST /api/models/*` (graph_ui) | Igual que S09, vía pron/`models_service` | `agent` / proceso | Igual que S09 | Sin Git | Igual que S09; en remoto se reenvía 1:1 sin guarda de `Origin` | COMP | `GU:tests/test_mindmap_endpoints.py::test_models_template_edit:420`, `::test_models_fields_add_and_remove:435`, `::test_models_promote_without_draft_is_rejected:469`, `::test_models_promote_installs_validated_draft:477` |
+
+### 2.6 Operaciones que el DAG necesita y no existen
+
+| ID | Operación faltante | Modelo / campos | Actor | Precond. | Git | Efecto requerido por el consumidor | Estado | Evidencia de la falta |
+|---|---|---|---|---|---|---|---|---|
+| X01 | Respuesta local dentro del mismo desk | InboxNoteDoc (¿nueva nota ligada a la original?) | — | — | — | WS25.1: «respuesta local solo si el contrato WS12 define esa operación» | HUE | `InboxNoteDoc` no tiene campo de respuesta ni de hilo (`DK/deskops/models/inbox.py:37-61`); `message send` crea una nota nueva hacia un desk destino, sin vínculo con la original (`message.py:97-135`). Búsqueda de `reply`, `in_reply_to`, `thread` en `DK/deskops/**/*.py`: solo prosa en `runtime/scion.py` |
+| X02 | Captura de un candidato directo al drawer (sin nota de inbox) | TaskDoc en `desk/drawer/tasks/` con origen | — | — | — | WS25.2: origen preservado, sin tarea activa, colisión controlada | HUE | Sección 7: ninguna opción tiene prueba real |
+| X03 | Origen (`provenance`) al capturar un protoátomo | ProtoAtomDoc `provenance` | — | — | — | WS25.2: origen ruta o mensaje visible tras recargar | HUE | `create_protoatom(doc_id, *, title, content, tags)` y `atoms proto` no lo reciben (`DK/deskops/domain_tree.py:129`; `DK/deskops/cli/commands/atoms.py:_run_domain_tree`); sin test (`DK:tests/test_domain_tree.py`: búsqueda de `provenance`: sin coincidencias) |
+| X04 | Enrutar un TaskDoc **ya existente** al Board con precondición | BoardDoc `tasks` (añadir una ruta) | — | — | — | WS26.2: «Enrutar = añadir la tarea a `tasks` por operación pública» | HUE | Solo `create_task_bundle` añade al Board, y lo hace con un método privado (`operations.py:_append_task_to_board:527`); la vía pública `edit board tasks` reemplaza la lista entera (W09) |
+| X05 | Registrar la decisión humana (aprobar / pedir corrección) con actor humano | Ninguno existente (`RunDoc` no tiene campos de decisión, `DK/deskops/models/run.py:48-83`) | — | — | — | WS33.2: «solo escribe la decisión por la operación que fije el contrato WS12» | HUE | Búsqueda de `decision`, `approve` en `DK/deskops/**/*.py`: solo `graph/self_reflection.py` y `runtime/scion.py`, sin operación de decisión |
+| X06 | Dispatch autorizado a Scion | — | — | — | — | WS34.1: adaptador público restringido con confirmación, timeout y autoridad | HUE | Búsqueda de `dispatch`, `reply` en `DK/deskops/**/*.py`: prosa y comentarios; `runtime/scion.py:12`: «Dispatch (`scion start`) is the supervisor's gesture»; `cli/commands/runtime.py` no tiene subcomando de dispatch ni de reply |
+| X07 | Reply autorizado vinculado al intento | — | — | — | — | WS34.2 | HUE | Igual que X06 |
+| X08 | Guardado de Markdown en bruto con precondición y buffer recuperable | Documento (fuente) | — | — | — | WS20/G_SOURCE | HUE | `infraestructura.md:33`: `grep -rniE "raw.?source\|raw_source" sldb/src/sldb/api` sin resultados; las firmas de escritura reciben payload (`payload_save.py:16`, `create_document.py:22`) |
+
+### 2.7 Cobertura de `command_registry()` y conteo por estado
+
+Las 17 entradas agregadoras (`message`, `promote`, `drawer`, `issue`, `add`, `edit`, `bind`, `list`, `show`, `advance`, `repo`, `desk`, `atoms`, `graph`, `drift`, `closeout`, `runtime`) no tienen efecto propio: lo tiene su subcomando. Las 96 hojas quedan cubiertas así:
+
+| Fila | Hojas |
+|---|---|
+| R01 | `list tasks` |
+| R02 | `list pills`, `list rituals`, `list boards`, `list atoms`, `list materializations`, `list repositories`, `list inbox-notes`, `list faq-docs`, `list steps`, `atoms list` |
+| R03 / R04 | `show task` / `show pill`, `show ritual`, `show board`, `show atom`, `show materialization`, `show repository`, `show inbox-note`, `show faq-doc`, `show step`, `atoms show` |
+| R05 / R06 / R07 / R08 | `next` / `message list`, `message read` / `issue list` / `closeout verify` |
+| R09 / R10 | `about`, `faq`, `repo whoami` / `atoms tree`, `graph neighbors`, `graph missing`, `runtime status`, `runtime attach`, `runtime workers`, `runtime supervise` |
+| D01 / D02 / D03 / D04 | `doctor`, `status` (con y sin `--repair`) / — / `atoms validate` / `drift check` |
+| W01 / W02–W03 | `add task` / `edit task` |
+| W04 / W05 / W06 | `advance task` (sin y con `--to`) / `bind pill` |
+| W07 | `add pill`, `add ritual`, `add board`, `add atom`, `add materialization`, `add repository`, `add inbox-note`, `add faq-doc`, `add step` |
+| W08 / W09 | `edit pill`, `edit ritual` / `edit board`, `edit atom`, `edit materialization`, `edit repository`, `edit inbox-note`, `edit faq-doc`, `edit step` |
+| W10 / W11 | `drawer remove` / `promote inbox-to-drawer-task` |
+| W12 / W13 | `message send`, `inbox` (flags de envío) / `message ack` |
+| W14 / W15 / W16 / W17 / W18 | `atoms proto` / `atoms crossroad` / `atoms type` / `atoms split`, `atoms merge` / `atoms create`, `atoms delete` |
+| W19 / W20 / W21 | `closeout commit` / `closeout supersede`, `closeout retire` / `issue close`, `retire` |
+| W22 / W23 | `atoms add-namespace` / `atoms reorganize` |
+| W24 / W25 / W26 | `init`, `desk install`, `desk migrate` / `bootstrap`, `desk replace`, `desk update`, `repo register`, `repo remove` / `materialize`, `graph build`, `graph reflect`, `runtime init`, `runtime stop`, `runtime template` |
+
+Sumadas: 96 hojas. Filas de otros canales: S01–S09 (sldb), U01–U05 (graph_ui), X01–X08 (faltantes).
+
+**Conteo de filas por estado** (65 filas: R 12, D 5, W 26, S 9, U 5, X 8):
+
+| Estado | R | D | W | S | U | X | Total |
+|---|---|---|---|---|---|---|---|
+| COMP | 10 | 1 | 19 | 6 | 3 | 0 | **39** |
+| LEC | 2 | 4 | 4 | 0 | 2 | 0 | **12** |
+| NOAC | 0 | 0 | 3 | 3 | 0 | 0 | **6** |
+| HUE | 0 | 0 | 0 | 0 | 0 | 8 | **8** |
+
+(NOAC = W03, W05, W11, S04, S07, S08.) Ninguna de las 65 filas está aceptada por acta.
+
+## 3. Campos protegidos por modelo y operación
+
+### 3.1 Método
+
+No hay lista universal. Un campo es **protegido para una operación** cuando una ruta de código distinta de la edición genérica es la dueña de su valor, y esa ruta existe para que el campo cambie solo por una transición o una operación con guardas. La fuente de cada fila es una de estas:
+
+1. Los **modelos**: `OperationalArtifactDoc` añade `current_node` y `history` (`DK/deskops/models/base.py:36-47`); aplica a TaskDoc, PillDoc, BoardDoc y RitualDoc (las cuatro subclases, `grep -n "^class .*Doc" DK/deskops/models/*.py`).
+2. El **lifecycle**: `lifecycle.advance` escribe `status`, `history` y `current_node` (`DK/deskops/lifecycle.py:179-184`); los estados que impone salen de la spec (`task_lifecycle.yaml:27,34,41`).
+3. Las **operaciones con dueño**: `closeout supersede` (`closure.py:147-148`), `advance --to` (`tasks.py:184-187`), `attach_drawer_source` (`drawer.py:81-90`), `_append_task_to_board` y el borrado del Board en `_close` (`operations.py:527`, `closure.py:437`), `message ack` (`message.py:175-181`), `type_protoatom` (`domain_tree.py:142-165`), `split/merge` (`atoms.py:624,688`).
+4. La **introspección del CLI**: al crear, `id`, `current_node` y `history` nunca se exponen como flags y `status` tampoco para `OperationalArtifactDoc` (`DK/deskops/cli/model_introspection.py:183-210`). Esa exclusión es de `add`; **`edit` no la aplica** (W03).
+
+Regla que fija el contrato (sale de «ningún estado se edita por payload», TaskDoc de WS12, y de P05): **para todo modelo `OperationalArtifactDoc`, `status`, `current_node` y `history` no se escriben por payload desde la UI**, ni al crear ni al editar. Donde ningún workflow los gestiona (PillDoc, BoardDoc, RitualDoc), la regla los excluye de la whitelist hasta que exista una operación con dueño.
+
+### 3.2 Cómo se hace cumplir (obligación del adaptador, no un mecanismo nuevo)
+
+Ninguna capa existente lo hace cumplir: ni `sldb` (su `update` acepta el payload completo de cualquier documento rastreado, incluido un TaskDoc y los documentos de `desk/lifecycle/`) ni graph_ui (la búsqueda declarada en U02 no encuentra filtros). Para un `update` por campos con `expected` (S02/U01), el adaptador debe, antes de invocar al escritor, calcular el conjunto de campos de primer nivel cuyo valor difiere entre `expected` y `payload` y **rechazar** si interseca la columna «Protegido» de la tabla siguiente para ese modelo; en una creación, **no aceptar** esos campos del cliente y fijarlos él mismo (`status: draft` por defecto del modelo/spec, `current_node` = nodo de entrada, `history: []`). El hueco es HO-02.
+
+### 3.3 Tabla por modelo y operación
+
+«Crear» = `add` / creación por el adaptador. «Editar» = `edit` genérico o `update` por payload. «Leer» siempre permitido.
+
+| Modelo | Campo | Quién lo escribe hoy (evidencia) | Crear (UI) | Editar (UI) | Operación que sí puede cambiarlo |
+|---|---|---|---|---|---|
+| TaskDoc | `id` | Derivado del título al crear (`specs/compiler.py:36`); inmutable (`operations.py:277-278`; `test_edit_rejects_immutable_id_field:1614`) | El adaptador lo deriva | **Protegido** | Ninguna |
+| TaskDoc | `status` | `lifecycle.advance` (`lifecycle.py:179-180`); `closeout supersede` → `superseded` (`closure.py:147`); `advance --to` con 5 valores (`tasks.py:184-186`); la promoción a drawer escribe `deferred` (`drawer.py:264`); `add task` por payload acepta cualquiera (`specs/compiler.py:40`) | **Protegido** (fijado por el adaptador) | **Protegido** | W04 (transición), W20 |
+| TaskDoc | `current_node` | `lifecycle.advance` (`:184`); `advance --to` (`tasks.py:187`); nodo de entrada al crear (`specs/compiler.py:60`) | **Protegido** | **Protegido** | W04 |
+| TaskDoc | `history` | `lifecycle.advance` (`:181-183`); `closeout supersede` (`closure.py:148`) | **Protegido** | **Protegido** | W04, W20 |
+| TaskDoc | `closeout_evidence` | Declarada al crear: `--evidence` o inferida de `--task-type` (`closeout_gates.py:77-98`, `tasks.py:86-87`); la lee `verify` (`operations.py:602`) como la lista de compuertas que exige; `edit` la cambia sin validar el vocabulario cerrado (`closeout_gates.py:23`) | **Autoría**: se declara aquí, validada contra el vocabulario | **Protegido** (cambiarla después altera lo que exige G_CLOSEOUT) | W01 al crear; `edit` solo por CLI |
+| TaskDoc | `from_drawer` | `attach_drawer_source` (`drawer.py:81-90`); lo lee `drawer remove` como guarda (`drawer.py:183-196`) | Lo fija la operación `--from-drawer` | **Protegido** | W01 |
+| TaskDoc | `title, why, goal, scope, implementation_path, validation, done_when, task_type, depends_on, inherits_from, inherit_acceptance_context, atoms, files, references, tags` | Edición genérica; nada los gestiona | Autorables | Autorables **solo por la operación del consumidor** (WS26.1 autoría; WS19.1 campos) | W01, W02 |
+| TaskDoc | `pills` | `bind pill` (`operations.py:284-300`) | Por `bind` | Por `bind` | W06 |
+| BoardDoc | `tasks` | `_append_task_to_board` en `add task`; `_close` la recorta; `retire` desenruta (`retire.py:200`); `edit board tasks` la reemplaza entera | — | **Protegido**: las tres operaciones con dueño la gestionan; la edición genérica pisa sus cambios | W01, W19–W21; enrutar existente = X04 (HUE) |
+| BoardDoc | `status, current_node, history` | Ningún código los escribe (búsqueda de `current_node` en `DK/deskops/**/*.py`: solo `services/tasks.py`, `lifecycle.py`, `lifecycle_migration.py`, `specs/compiler.py`, `workflow/next_actions.py` y `operations.py` (hidratar y leer), todos sobre TaskDoc) | — | **Excluidos por la regla de 3.1** | Ninguna |
+| BoardDoc | `title, scope, purpose, pills, rituals, notes, tags` | Edición genérica | — | Fuera de la whitelist: ningún consumidor los edita | CLI |
+| PillDoc | `status, current_node, history` | Solo `edit pill` (test `:2717` los trata como «slots»); ningún workflow | — | **Excluidos por la regla de 3.1** | W08 por CLI |
+| PillDoc | `what, why, when, where, how, how_not, title, summary, tags` | `edit pill` | — | Fuera de la whitelist (WS26.1 solo **vincula** pills) | W08 por CLI |
+| RitualDoc | `purpose … completion`, `status, current_node, history` | Nodos del lifecycle: `ensure_lifecycle_graph` los rastrea por id y puede **re-renderizar o archivar** los que el modelo no lee (`lifecycle.py:204,254,275`) | — | Fuera de la whitelist (WS23 es lectura) | W08 por CLI |
+| RelationDoc / RelationTypeDoc de `desk/lifecycle/` | Todos (`condition`, `source_id`, `target_id`, `relation_type`) | Solo `ensure_lifecycle_graph` (`init`, `desk update --apply`); **definen los gates** (`transitions_from` los lee, `lifecycle.py:123-151`) | — | **Protegidos por ruta y por `relation_type`**: el adaptador debe excluir todo documento bajo `desk/lifecycle/` y toda relación con `relation_type` ∈ {`task_activates`, `task_hands_to_closeout`, `task_completes`}. `sldb /save` **sí** los aceptaría | Ninguna |
+| InboxNoteDoc | `status`, `acknowledged_by`, `acknowledged_at` | `message ack` (`message.py:175-181`) | — | **Protegidos** | W13 |
+| InboxNoteDoc | `created_at`, `sender_project`, `target_project` | `message send` (resueltos de la identidad y el registro) | Los fija `send` | **Protegidos** | W12 |
+| InboxNoteDoc | `kind, title, body` | `message send` | Autorables en `send` | Fuera de la whitelist | W12 |
+| AtomDoc | `id` | Inmutable; convención `atom-<slug>` | El adaptador lo deriva | **Protegido** | Ninguna |
+| AtomDoc | `answer` de un átomo con redirección | `split`/`merge` lo reemplazan por el stub (`atoms.py:624,688`) | — | **Protegido** si es stub | W17 |
+| AtomDoc | `tags`, `provenance` | `create_artifact` valida espacios de tags y padres de dominio; `edit` no (W09). `provenance` debe resolver (`atoms.py:731`) | Validados al crear | Fuera de la whitelist hasta que la validación exista en el canal | W07, W18 |
+| ProtoAtomDoc | `typed_as`, `content` (cuando `typed_as` está fijado) | `type_protoatom` (`domain_tree.py:142-165`) | — | **Protegidos** | W16 |
+| ProtoAtomDoc | `id, title, content, tags` | `create_protoatom` | Autorables (captura) | Fuera de la whitelist | W14 |
+| ProtoAtomDoc | `provenance` | Ningún escritor público lo fija al crear (X03) | HUE | — | — |
+| CrossroadDoc | `id`, `path` | Derivados de la ruta de dominio (`domain_tree.py:117-127`) | — | **Protegidos** | W15 |
+| MaterializationContractDoc | todos | `add`/`edit materialization` por CLI | — | **Fuera de la whitelist**: WS42 inspecciona y valida, no escribe | CLI |
+| RepositoryDoc | todos | `repo register/remove` (registro canónico) | — | **Fuera de la whitelist** | W25 |
+| DeskFAQDoc, StepDoc | todos | `add/edit` por CLI | — | Fuera de la whitelist (sin consumidor) | CLI |
+| RoleDoc, RuntimeProfileDoc | todos | — | — | Fuera de la whitelist (edición excluida por UF09, `navegacion.md` §11) | CLI |
+| RunDoc | `session_sha256`, `commit_sha`, `outcome` | `runtime template --task` lo crea (`scion.py:366`); `commit_sha` «vacío hasta el cierre» (`models/run.py`) | Ramal E (WS32.x) | **Protegidos** | WS32.1/WS32.2 |
+| Issue (Markdown no modelado) | `status`, `## Resolution` | `issue close` (`issues.py:303-344`) | — | Fuera de la whitelist | W21 |
+
+**Lo que la whitelist autoriza escribir desde la UI, por modelo** (cuando el delta correspondiente tenga recibo y T-P03.1): TaskDoc — creación con campos autorables y `closeout_evidence` declarada, `pills` por `bind`, campos de contenido; InboxNoteDoc — `ack` (y `send` local); ProtoAtomDoc — creación; átomos — `split`/`merge`/`type`; cualquier otro documento rastreado — `update` por campos con `expected`, **menos** los campos protegidos de arriba y **menos** los modelos y rutas excluidos.
+
+## 4. Adaptador
+
+Adaptador = el canal público existente (CLI de deskops, `DeskopsOperations`, API de sldb, rutas HTTP de `sldb serve`) por el que la UI invoca cada operación. Si no existe, se registra hueco y dueño; no se diseña aquí.
+
+### 4.1 Reglas de invocación
+
+- Se invoca por superficie **pública**: los métodos públicos de `DeskopsOperations` (`DK/deskops/operations.py`; 24 según el conteo de `auditoria/deskops.md`, WS02), la CLI con `--root` explícito, o `sldb.api`/`sldb serve`. graph_ui hoy llama a métodos con guion bajo (`ops._read_doc`, `ops._resolve_glob`, `GU/deskops_routes.py:34,41,46,67`); existen equivalentes públicos (`show_artifact`, `list_tasks`, `show_task`). Eso es una divergencia a corregir en WS22 (lectura) y no se extiende a la escritura.
+- Siempre `--root` (o `root` del constructor) **explícito**. Sin él, una orden con `mutates=True` se redirige al sandbox si hay `DESKOPS_TEST_ROOT` o `sandbox.enabled` (`DK/deskops/cli/main.py:155-182`; `DK:tests/test_cli.py::test_explicit_root_dot_bypasses_the_sandbox_override:3048`). La bandera `mutates` **solo** gobierna esa redirección; no impide ni permite nada (búsqueda de `.mutates` en `DK/deskops/**/*.py`: solo `main.py:124,155-162`).
+- Precedentes de invocación que ya existen en graph_ui: importar `DeskopsOperations` en proceso (`deskops_routes.py:28-29`) y lanzar la CLI por subproceso con `--format json` (`GU/serve.py:156-183`, con un tope de 10 s en `:175`, que es el único timeout de ese archivo y es de una lectura).
+
+### 4.2 Canal por operación
+
+| Operación (IDs) | Canal público existente | Ruta o adaptador en graph_ui hoy | Hueco → dueño → productor |
+|---|---|---|---|
+| Leer payload / obtener `expected` (R12) | `GET /graph`, `GET /document` de sldb; `SldbAdapter` local | `GET /api/graph`, `/api/document` existen (`GU/serve.py:316-376`) | — |
+| Editar campos de un documento (S02, U01/U02) | `POST /save` con `changes[update, expected]` | `/api/save` existe para el KB map, **sin filtro de modelo ni de campo** | **HO-02** (filtro de protegidos y whitelist) → graph_ui → WS19.1 (campos), WS26.1 (campos de tarea) |
+| Alta/baja de relación (campo de referencia: S02; RelationDoc: S01/S03) | Ídem; para RelationDoc, create/delete | Ídem | HO-02 → graph_ui → WS19.2; semántica de la baja de RelationDoc: **HO-05** |
+| Guardar fuente en bruto (X08) | No existe | — | **HO-08** → sldb → WS20 (G_SOURCE) |
+| Autorar tarea (W01, W06) | `add task` / `create_task_bundle`; `bind pill` / `bind_pill_to_task` | Ninguna ruta de autoría (`ui.md` WS26.1: ausencia explícita) | **HO-01** → graph_ui → WS26.1 |
+| Enrutar tarea (X04) | No existe operación pública de añadir con precondición | — | **HO-12** → deskops → sin productor en el DAG |
+| Avanzar tarea (W04) | `advance_task` / `deskops advance task` | `POST /api/desk/advance` existe (U03) | Condicionado a T-P03.1 (HO-03) |
+| Verificar cierre (R08) | `verify_task_closeout` / `deskops closeout verify` | Ninguna ruta (`ui.md` WS28) | HO-01 → graph_ui → WS27.2, WS28 |
+| Cerrar (W19–W20) | `deskops closeout commit` | **Fuera del servidor UI** (9.6) | Handoff; sin hueco de API |
+| Leer inbox (R06) | `deskops message list/read` (sin método en `DeskopsOperations`) | Ninguna ruta | HO-01 → graph_ui → WS25.1 |
+| Ack (W13) | `deskops message ack` | Ninguna ruta | HO-01 → graph_ui → WS25.1; actor: HO-10 |
+| Respuesta local (X01) | No existe | — | **HO-09** → deskops → sin productor en el DAG |
+| Captura a drawer (X02) | No hay opción con prueba real (7) | — | **HO-11** → deskops → sin productor en el DAG |
+| Captura a protoátomo (W14) | `deskops atoms proto` / `DomainTree.create_protoatom` (clase fuera de `DeskopsOperations`) | Ninguna ruta | HO-01 → graph_ui → WS25.2; origen: **HO-11b** (X03) |
+| Dividir / reunir / tipar (W17, W16) | `DeskopsOperations.split_atom`, `merge_atom`; `DomainTree.type_protoatom` / `deskops atoms type` | Ninguna ruta | HO-01 → graph_ui → WS42 |
+| Inspeccionar y validar materializaciones | `show materialization` (R04); validación por API pública de sldb contra el modelo del store (no abierta aquí) | Ninguna ruta | HO-01 → graph_ui → WS42; el canal de validación lo fija el TaskDoc de WS42 |
+| Modelos: borrador / validar / promover (S09, U05) | `POST /models/*` de sldb; `/api/models/*` de graph_ui | Existen | WS39; sin autoridad compartida no se habilita `promote` (5) |
+| Diff Git por tarea y repo | Ninguna operación pública de deskops o sldb (solo `document_history`, por documento, `SL/api/documents/document_history.py`) | Ninguna tracked (`ui.md` WS27.1) | **HO-13** → graph_ui → WS27.1 (regla de lectura en 9.8) |
+| Capa lista | Ningún cálculo en deskops (búsqueda de `overlap`, `solap`, `disjoint` en `DK/deskops/**/*.py`: solo la prosa de `workspace.py:351`) | Ninguna | **HO-14** → graph_ui → WS26.2 (regla en 4.3) |
+| Dispatch / reply (X06, X07) | No existe | — | **HO-16** → deskops → WS34.1, WS34.2 (sección 11) |
+
+### 4.3 Regla de capa lista (la que WS26.2 debe aplicar)
+
+El ritual de fase pide «las tareas cuyos prerrequisitos están satisfechos y cuyos cambios planeados no se solapan operativamente» (`DK/desk/rituals/phase.md:14-16`, último commit del archivo `e80e8c0a`). Esta regla la concreta; no existe como cálculo en el código.
+
+1. **Dependencia pendiente**: una tarea de `depends_on` está pendiente mientras su TaskDoc exista en `desk/tasks/` (el cierre lo borra con `git rm`, `closure.py:458`, y deja un commit con trailer `Task-Id`, `closure.py:46-58`). Derivación por lectura.
+2. **Normalización de `files`**: tomar la parte previa a `::`, quitar espacios, resolver contra la raíz del repo y exigir que quede dentro de ella (misma función que usa el gate: `DK/deskops/operations.py:986`, `_normalize_repo_relative_path`). Una ruta que no resuelve dentro del repo es **no comprobada**.
+3. **Solapamiento**: dos rutas normalizadas se solapan si son iguales o una contiene a la otra como directorio.
+4. **No comprobado, no «lista»**: `files` vacío o ausente, caracteres de glob (`*`, `?`, `[`) o ruta no resoluble → la tarea queda **no comprobada** y requiere revisión del supervisor antes de marcarla lista (WS26.2, `dag.yaml:1808`). Nunca heurística optimista.
+5. Resolución entre repos: solo con el contrato de navegación (§3.2); una ruta de otro repo sin alias resoluble es no comprobada.
+
+## 5. Política de coordinador y «modo manual exclusivo» (T-P03.1)
+
+### 5.1 Lo que el registro compromete
+
+P03 (humana, `decisiones.md`): con otro coordinador escribiendo, la UI queda en lectura o handoff hasta contar con un canal de escritura coordinado. T-P03 (técnica derivada): canal público con autoridad compartida CLI/agentes/UI, **probado**; el lock solo de UI no basta. T-P03.1 (revisión root del 2026-11-01, `root-decision-20261101.md`, punto 3; no es aprobación humana): WS12 produce la definición operativa de «modo manual exclusivo», las formas de comprobarla y la respuesta ante ausencia de evidencia, antes de habilitar a los consumidores; hoy no se fija mecanismo de lock ni de detección, y la ausencia de señal no declara exclusividad. Consumidores que lo citan: WS19.1 («mutación restringida a desk en modo manual exclusivo (P03); otros modos read-only hasta contrato», `dag.yaml:1306`) y WS28 («a `deskops closeout commit` por CLI en modo manual, o al coordinador si está activo (P03)»).
+
+### 5.2 Definición operativa
+
+- **Escritor**: cualquier proceso o persona que pueda modificar los documentos de un desk o de su store: la UI, un humano con la CLI, un agente, un coordinador (Herdr/Scion), otro `sldb serve`, un editor, `git checkout`.
+- **Modo manual exclusivo** para un desk D y una ventana de escritura W de la UI: durante W, la UI es el único escritor de los documentos cubiertos por la whitelist de D; toda otra modificación de D ocurre solo por handoff explícito (la UI prepara el comando, una persona o el coordinador lo ejecuta fuera de W). Es una afirmación sobre el **conjunto de escritores**, no sobre un lock.
+- **Se considera cumplido** solo si hay **a)** una afirmación explícita y vigente del responsable del desk, hecha fuera de la petición del cliente, **y b)** ausencia de evidencia contraria obtenida en el momento de cada escritura. Ninguna de las dos basta sola. La afirmación sin comprobación es un dato declarado; la comprobación sin afirmación es ausencia de señal.
+
+### 5.3 Formas de comprobarla
+
+| Forma | Qué prueba | ¿Existe hoy? | Límite |
+|---|---|---|---|
+| F1. Afirmación del responsable del desk, suministrada fuera de la petición | Que alguien responsable declara exclusividad para una ventana | **El patrón existe** (configuración confiable del operador, `navegacion.md` §3.2, para aliases); **no existe campo ni lectura para exclusividad** | Es una declaración, no una comprobación; se debe poder revocar y caducar. Formato, ubicación y vigencia: HO-03 |
+| F2a. Agentes vivos con `cwd` bajo la raíz | Evidencia contraria positiva | `deskops runtime workers --format json` (`runtime.py:157-182`) y `GET /api/workers` de graph_ui (`serve.py:156-193`) [L] | Solo agentes Herdr de esta máquina. **Ante error devuelve `{"workers": [], "error": …}`** (`serve.py:172-193`): la lista vacía con `error` es **falta de evidencia**, no «sin escritores» |
+| F2b. Cambio entre lectura y escritura | Evidencia contraria positiva de que alguien escribió | `revision` de `/api/desk/task` (R11) y `expected` (S02) | Detecta un cambio ya ocurrido, no un escritor presente; no cubre la ventana entre comparar y escribir |
+| F2c. Lock de store ocupado | Un guardado de sldb en curso | `store.lock`, advisory, no bloqueante por defecto (`SL/store/io/lock.py:27-51`) | Solo dura la actualización de índices (`payload_save_steps.py:87`); no detecta un escritor ocioso |
+| F2d. Estado Git | Árbol con cambios ajenos o HEAD movido | `git status`/`git rev-parse` de solo lectura | No distingue autor; un árbol limpio no prueba exclusividad |
+| F3. Autoridad compartida probada | Que CLI, agentes y UI no se pisan | **No existe** (6.4) | Es la salida de la política, no una forma de comprobar |
+| — Plantilla del coordinador Scion («the only writer of that `desk/`», `DK/deskops/runtime/scion.py:204-210`) | Una afirmación en un prompt | Existe como texto | **No es una señal consultable**; no se usa como evidencia |
+
+### 5.4 Respuesta de la UI ante falta de evidencia (normativa)
+
+| Situación observada | Respuesta |
+|---|---|
+| No hay afirmación F1 vigente | **Lectura y handoff.** No se escribe. La UI dice qué falta (afirmación ausente). |
+| Hay F1 y se detecta evidencia contraria (F2) | Lectura y handoff; muestra la evidencia (qué, cuándo) y conserva el buffer local. No reintenta ni sobrescribe. |
+| Hay F1 y no se obtiene evidencia (error al consultar, herramienta ausente, lista vacía con `error`) | Se trata como **falta de evidencia**: lectura y handoff. |
+| Hay F1 y no hay evidencia contraria | Se permite solo la operación de la whitelist, cada una con su precondición (6) y **siempre que el delta tenga además su recibo y `G_HUMAN_READ`** (10). La UI muestra «declarado, sin evidencia contraria a las <hora>», **no** «exclusivo comprobado». |
+| Aparece evidencia contraria después de escribir | No revierte. Marca el desk como no exclusivo y bloquea la siguiente escritura. |
+
+El **handoff** contiene: la operación, el comando CLI exacto, los valores `expected` que la UI vio y el destino. La UI no lo ejecuta ni asume su resultado; el refresco lo verifica (P05/T-P05).
+
+### 5.5 Con otro coordinador escritor
+
+Lectura o handoff hasta que exista **autoridad compartida probada**. «Probada» exige un canal público documentado y una prueba en la que dos escritores (la CLI y la UI, o un agente) no se pisen: con la misma imagen previa, una escritura se aplica y la otra recibe un rechazo observable. Esa prueba no existe (6.4).
+
+### 5.6 El lock de la UI no coordina
+
+El lock de graph_ui es un `RLock` de proceso (`GU/deskops_routes.py:21,86`; `adapter.lock`, `GU/persistence.py:70`); `SAVE_LOCK` es un `threading.RLock` de proceso (`SL/cli/serve/save_routes.py:23`); `DocTransaction` guarda su pila en un diccionario del proceso (`DK/deskops/doc_io.py:247-250`). Búsqueda de `flock`, `fcntl`, `lockfile`, `filelock`, `O_EXCL` en `DK/deskops/**/*.py`: sin coincidencias. `GU:tests/test_mindmap_deskops.py::test_serialized_advances_and_board_revision:94` prueba la serialización de dos peticiones HTTP dentro del mismo proceso; no prueba nada frente a la CLI ni a un agente. El único lock de archivo entre procesos es el de sldb y cubre solo la actualización de índices (6.2).
+
+### 5.7 Cómo se comprobaría (obligación de cada consumidor, no ejecutada)
+
+Cada TaskDoc de un delta de escritura (WS19.1, WS19.2, WS25.x, WS26.x, WS28, WS39, WS42) debe, en un store temporal: (i) sin F1, la mutación queda deshabilitada y se ofrece el handoff; (ii) con F1 y un escritor CLI que modifica el documento entre la lectura y la escritura, la escritura de la UI recibe 409, no cambia nada y conserva el texto local; (iii) con herramienta de evidencia ausente o con error, la UI actúa como en «falta de evidencia»; (iv) evidencia contraria tras escribir bloquea la escritura siguiente. El receptor P01 lo verifica al registrar su acta.
+
+### 5.8 Qué no fija
+
+El formato y la ubicación de F1, el tiempo de vigencia, el umbral de frescura de la evidencia, ni lock o API nuevos. Es HO-03, sin productor en el DAG.
+
+## 6. Precondición de escritura
+
+### 6.1 Tres cosas distintas
+
+| Representación | Qué es | Dónde existe | Qué comprueba de verdad | Prueba |
+|---|---|---|---|---|
+| **A. Before-image por valor (`expected`, 409)** | El cliente envía el payload que vio; el servidor lo compara por igualdad con el payload actual | `sldb serve` `POST /save` update/delete (`SL/cli/serve/save_plan.py:50,58`); graph_ui local (`GU/persistence.py:101-102`); el remoto reenvía a sldb | Que el payload que el **proceso servidor** ve ahora (carga runtime con caché) es igual al que el cliente vio. No compara el texto del archivo ni el resto de la ventana comparar→escribir | COMP: `SL:tests/test_serve.py::test_batch_save_stale_expected_conflict:213`, `::test_batch_save_create_update_delete:187`; `GU:tests/test_mindmap_persistence.py::test_conflict_and_untrack_preserves_file:54` |
+| **B. Token publicado** | Un valor que la API entrega y que el cliente podría devolver | `version` = `hash_d` (campo hash) en `GET /graph` y en las respuestas de `/docs*` (`SL/api/documents/document_serialization.py:8-9,24-32`); `revision` de `/api/desk/task` = sha256(Board + TaskDoc) (`GU/deskops_routes.py:79`); `viewRevision`; en pron, `expected_hash` por `hash_c` (`PR/kernel/kernel.py:49-63`) | `version`: **nadie lo lee al guardar**. Búsqueda de `version`, `hash` en `SL/cli/serve/{save_routes,save_plan,save_single}.py` y `SL/api/documents/payload_save.py`: sin coincidencias de comparación (solo el journal de `payload_save.py:49`). La docstring promete «el token que el cliente devuelve al guardar» (`document_serialization.py:25-28`) y `save_plan.py` compara el payload, no el token: discrepancia. `revision` y `viewRevision` solo los compara la ruta de graph_ui. El `hash_c` de pron es de pron | COMP de la **publicación**: `SL:tests/test_serve.py:66,84-85,616-626`; `GU:tests/test_mindmap_endpoints.py::test_document_shape_matches_sldb_serve_no_version:294`. Sin prueba de **uso** como precondición |
+| **C. Precondición compartida entre escritores** | Un mecanismo público que cualquier escritor (CLI, agente, UI) respeta, con comparación y escritura atómicas | **No existe.** Búsqueda de `expected` como parámetro de escritura en `SL/api/**/*.py` y `SL/cli/**/*.py`: solo `save_plan.py:50,58` (los demás `expected` son de búsqueda/anclas); de `etag`, `if_match`, `content_hash` como precondición en `DK/deskops/**/*.py`: sin coincidencias; locks entre procesos: solo `store_lock` (índices) y el del journal (`SL/store/io/lock.py:27-51`; `infraestructura.md:46-49`) | — | Sin prueba, porque no hay capacidad |
+
+### 6.2 Qué cubre y qué no cubre A hoy (por lectura; no ejecutado)
+
+- La **escritura del Markdown ocurre antes** de tomar el lock de índices (`payload_save.py:47` → `:48`; `payload_save_steps.py:68-75,87`), y la comparación (`save_plan.py:50`) ocurre antes de ambas. `SAVE_LOCK` serializa las peticiones de **un** `sldb serve`; otro proceso (CLI de sldb, deskops, pron, un agente) puede escribir entre la comparación y la escritura.
+- La carga usada para comparar es `load_runtime_documents` (`save_routes.py:38`). graph_ui local fuerza el re-barrido antes de comparar (`persistence.py:77`, con la nota del propio código de que sin él «el guardado pisa el cambio ajeno»); `sldb serve` abre el store una vez al arrancar (`infraestructura.md:51`). Si el servidor ve una edición externa previa a la petición **no está probado**: es el primer caso que WS45 debe ensayar.
+- El guardado de payload **no rechaza contenido no declarado** del archivo: `create_document` y `track_document_file` llaman `refuse_structural_noise` y `refuse_undeclared_frontmatter`, `save_document_payload` no (búsqueda de esos nombres en `SL/api/documents/*.py` y `SL/cli/serve/*.py`: `create_document.py:60-61`, `track_document_file.py:47-48`). `deskops edit` sí lo rechaza (`DK/deskops/operations.py:1297-1327`; `test_edit_task_refuses_to_erase_undeclared_content:1246`). Ningún canal reúne precondición y esa guarda: HO-07.
+
+### 6.3 Representación elegida
+
+**Para toda escritura de payload por campos desde la UI (WS19.1, WS19.2, WS21 y el guardado de campos de WS26.1): before-image por valor (`expected`), enviado en un `changes[]` por lote, con 409 y sin cambios ante un estado previo distinto.**
+
+Justificación, con lo existente:
+
+1. Es la **única** precondición que existe en un escritor público, con rechazo sin cambios y 409 observable, y con pruebas en dos repos (A, 6.1). Reutiliza lo existente (criterio del DAG) y no crea API ni algoritmo.
+2. Responde a lo que piden los consumidores: «una escritura obsoleta no pierde texto local y el conflicto se muestra como tal» (WS19.1) y «una revisión obsoleta se rechaza con error visible» (WS19.2).
+3. No es un token: no exige que `sldb` elija un algoritmo de hash ni que publique uno nuevo. El token `version` existe y se publica, pero ningún escritor lo consume; adoptarlo como contrato sería afirmar una capacidad sin evidencia.
+4. Es honesta con su alcance: protege contra **una vista obsoleta de la UI** respecto de lo que ve el proceso servidor; no pretende coordinar con la CLI ni con agentes (eso es P03, sección 5).
+
+**Operaciones alcanzadas**: `update` de un documento rastreado (payload completo con los campos autorables cambiados y los protegidos intactos, 3.2) incluyendo los campos de referencia que representan relaciones; `delete` con `expected` (cuando 5/W del consumidor lo permita); `create` con el 409 por colisión de nombre o archivo.
+
+**Escritores alcanzados**, con el dueño de la comprobación:
+
+| Escritor | ¿Alcanzado? | Quién verifica |
+|---|---|---|
+| `sldb serve` `POST /save` batch (directo o por el proxy remoto de graph_ui) | Sí | WS45 (sldb) |
+| graph_ui local `EditorStore.save` (compara en graph_ui, escribe por pron) | Sí | Pruebas del delta en graph_ui (WS19.1); el compare vive en graph_ui, no en sldb |
+| `POST /save {doc, payload}` legacy | **No** (S04): sin `expected`; excluida de la whitelist | — |
+| `sldb docs update`, `sldb fields *`, `save_document_payload` directo, pron `say/eval/MCP` | **No** (S07): no tienen precondición | — (HO-06) |
+| `deskops edit`, `advance --to`, `message ack`, `closeout *` | **No**: la CLI de deskops no tiene precondición; sus escrituras no se ofrecen por la UI sin handoff (sección 5) | — |
+| `POST /api/views/save` | **No** (U04): sin `expected` | — |
+
+### 6.4 Lo que este contrato no afirma
+
+- No afirma frescura frente a la CLI, ni que la comparación y la escritura sean atómicas entre procesos, ni que exista una precondición compartida (representación C). Por eso P03 no cambia: con otro escritor, lectura o handoff.
+- **No fuerza CAS por hash en toda CLI ni elige un algoritmo.** Las órdenes de deskops y de sldb que escriben sin precondición (W02–W06, W13, W19–W21, S07) se quedan así; el contrato no les añade una por reflejo.
+
+### 6.5 Qué verifica WS45 (productor, gate G_PAYLOAD_PRECONDITION)
+
+WS45 (sldb, independiente de `source_mode` y de raw-source) entrega el inventario con ruta, símbolo y commit y, por cada pareja (operación, escritor) de la tabla de 6.3 marcada «Sí» y propiedad de sldb, una prueba focalizada de: estado previo obsoleto rechazado **sin cambios**, estado vigente aplicado, y rechazo observable por el llamante. Lo ya citado (`test_serve.py:187,213`) cubre el caso feliz y el obsoleto en un `sldb serve`; WS45 debe además ensayar: (a) edición externa por CLI **entre dos peticiones** al mismo `sldb serve` (frescura de la carga, 6.2); (b) dos peticiones con la misma imagen previa: una aplica, la otra 409 observable; (c) la discrepancia de `version`. Si la capacidad existe, esas pruebas bastan y no se duplica código; si es parcial, se completa solo lo que falte, con tarea propia en sldb y recibo `G_SLDB_WRITE` para ese delta (`dag.yaml:2883`).
+
+### 6.6 Fuente en bruto (WS20, G_SOURCE)
+
+Las pruebas de conflicto de WS20 usan la precondición de guardado raw-source que fija este contrato (`dag.yaml:1390`). Representación: **before-image por valor del texto íntegro del archivo** (la misma familia que A). Requisitos observables, no mecanismo: (i) el texto que la UI vio se envía con la petición; (ii) el servidor lo compara con el contenido del **archivo** al escribir (no con el payload cacheado, que ignora el texto fuera de los campos); (iii) si difiere, rechazo observable (409) sin cambios; (iv) dos escrituras con la misma imagen previa: una aplica, la otra recibe el 409; (v) campos protegidos (sección 3) intactos tras el roundtrip; (vi) el buffer de la persona no se descarta ante conflicto o fallo. WS20 puede implementar la comparación como igualdad de texto o por el hash del texto que sldb ya guarda (`source_hash`/`hash_c`, `payload_save_steps.py:76`) siempre que cumpla (i)–(vi). El contrato **no exige que la API exista** para especificarse: X08 es el hueco, WS20 el productor, `G_SOURCE` su gate y `G_SLDB_WRITE` su recepción, antes de implementar.
+
+## 7. Captura a drawer y protoátomo
+
+### 7.1 Criterio
+
+El DAG define el hueco así: «falta conducta de workflow cuando ni la API ni su composición de llamadas pueden, con prueba real, preservar origen, no crear tarea activa y controlar colisiones» (`dag.yaml:723`, scope de WS12). «Prueba real» = prueba en `tests/` del repo dueño, citada por ruta y nombre, sin ejecutar (`preflight-disposition.md`). **Origen** = referencia tipada al soporte (ruta o mensaje), con representación fijada por este contrato (WS25.2). No se aprueba ninguna opción, no se crea API ni modelo.
+
+### 7.2 Representación del origen (propuesta del contrato, sin prueba)
+
+Reutiliza la gramática que ya existe para procedencia: una cadena `ruta-relativa-al-repo[::localizador]` o una URL http(s) (`DK/deskops/services/atoms.py:540-546,731-742`). El **tipo** se deriva de la ubicación: un archivo bajo `desk/inbox/` es un **mensaje**; cualquier otra ruta es una **ruta**. Se guarda en el campo libre que el destino ya tiene: `provenance` en ProtoAtomDoc (`DK/deskops/models/protoatom.py:48`, «URL or path»); una entrada de `references` en el TaskDoc del candidato (`models/task.py`, lista de cadenas). Es una propuesta: ningún test comprueba que se conserve y se muestre tras recargar (WS25.2 lo prueba). Si root prefiere un campo tipado, es una decisión de modelo que este contrato no toma.
+
+### 7.3 Comparación para el candidato de drawer
+
+| Opción | Origen | Colisión | No crea tarea activa | Prueba real | Veredicto |
+|---|---|---|---|---|---|
+| **A. `sldb.api.create_document(store, "TaskDoc", "desk/drawer/tasks/<id>.md", payload, name=…)`** (API) | Posible por construcción (`references`/`why`) | **Ninguna en la API**: escribe sin comprobar existencia (`create_document.py:50`) y rastrea después (`:51`; `store/ops.py:33-36` falla si ya estaba rastreado, con el archivo ya reemplazado) [L] | Un archivo bajo `desk/drawer/tasks/` no está en el Board ni en `list tasks` (que solo lee `desk/tasks/`, `operations.py:list_tasks`); lo prueba para candidatos de DrawerService (`test_list_tasks_does_not_surface_drawer_items:105`), no para uno creado por esta vía. Además lo **rastrea** en el store con nombre `task-…`, y no se abrió qué ocurre si luego `add task` crea una tarea con el mismo id (`create_task_bundle` rastrea con `force=True`) | Ninguna sobre drawer, origen ni colisión de la API | No cumple |
+| **B. `POST /docs/create {model, name, path, payload}`** (ruta HTTP de sldb) | Ídem A | **Sí**: 409 si el nombre o el archivo existen (`docs_routes.py:28-35,62-67`) | Ídem A | Colisión: `SL:tests/test_serve.py::test_docs_create_duplicate_conflict:634`, `::test_docs_create_target_file_conflict:658`. Sin prueba de origen ni de drawer. **`path` lo aporta el cliente sin contención** (`docs_routes.py:105-112`): el adaptador debería fijarlo | Cumple una de tres con prueba; no basta |
+| **C. `DrawerService`** (`deskops promote inbox-to-drawer-task`) | **Se pierde**: la nota se borra y `why` apunta a la ruta borrada (`drawer.py:246-274`) | Sí (`drawer.py:110-112`) | **Sí**, con prueba (`test_drawer_to_active_task_promotion_no_longer_exists:92`, `test_list_tasks_does_not_surface_drawer_items:105`) | Parcial | No preserva origen; además exige una nota de inbox previa |
+| **D. Composición `message send` + `promote`** | Se pierde (C) | La nota nueva queda huérfana si la promoción falla (dos órdenes, sin transacción común); el nombre es por timestamp | Sí (C) | Cada pieza tiene tests; la composición no | **No aprobada** (decisión del plan: la promoción borra la nota) |
+| **E. Wrapper de Deskops** | — | — | — | No existe | Hueco |
+
+Resultado: **ninguna opción cumple las tres propiedades con prueba real**. Según el criterio del DAG, falta conducta de workflow para el candidato de drawer: HO-11, dueño deskops, productor «sin productor en el DAG» (el DAG prevé un productor Deskops explícito **antes de WS25.2** solo si falta esta conducta; todavía no existe ese nodo). Dos salidas posibles, ambas fuera de este contrato: un wrapper en deskops, o que la opción B acumule la prueba de origen y de no-tarea-activa. Quién ejecuta la «prueba real del canal de captura» (pregunta de `promotion-notes.md`, sección WS12) queda sin asignar mientras no exista el productor.
+
+### 7.4 Valor por defecto de la captura directa (pregunta de `promotion-notes.md`)
+
+Sin prueba existente citada, la composición de llamadas es hueco con productor Deskops explícito antes de WS25.2, porque WS12 no ejecuta mutaciones (HO-11). El valor por defecto es: **la captura a drawer no está disponible**; WS25.2 la declara no disponible y no la simula.
+
+### 7.5 Captura a protoátomo
+
+Entra en la whitelist con su canal: `deskops atoms proto <id> --title [--content] [--tag …]` / `DomainTree.create_protoatom` (W14, COMP: `test_parents_must_be_written_before_their_children:58`). Propiedades: colisión controlada (`FileExistsError`, `domain_tree.py:214-218`, **sin test** del rechazo); no es una tarea (no hay riesgo de tarea activa); requiere que existan los cruces de dominio si se usa un tag `domain:`, y sin tag queda sin ubicar. **Hueco**: el origen (X03/HO-11b): ni la CLI ni `create_protoatom` aceptan `provenance`. Sin prueba de origen, la disponibilidad de WS25.2 para protoátomo queda condicionada a ese hueco.
+
+### 7.6 Qué hace falta para cerrarlo
+
+Un productor deskops explícito (wrapper o parámetro de `provenance`) o prueba real de la composición elegida, antes de promover WS25.2. Cada destino se prueba por separado (WS25.2). Hasta entonces: contrato y huecos asignados, sin habilitar nada.
+
+## 8. Ack y respuesta local de inbox
+
+### 8.1 Qué existe
+
+- **Leer**: `deskops message list/read` (R06, COMP).
+- **Ack**: `deskops message ack <sel>` (W13, COMP): cierra la nota (`status: closed`), registra `acknowledged_by` (la identidad del **desk**, no de una persona) y `acknowledged_at`, reescribe la nota entera y la retrackea; si el tracking falla restaura los bytes; se niega a repetir (`ValueError`, `message.py:172-173`). **No borra la nota**: el mensaje origen sigue legible después del ack (distinto de `promote`, W11). Un ack no es aprobación del trabajo.
+- **Enviar**: `message send` (W12) escribe una nota **nueva** en el desk destino, que puede ser otro desk.
+
+### 8.2 Qué no existe
+
+- **Respuesta local** dentro del mismo desk (X01): no hay operación. `message send` hacia el propio desk crea una nota sin vínculo con la original (`InboxNoteDoc` no tiene campo de hilo o respuesta); su `sender_project` sale de la identidad del emisor, no del texto. No se considera respuesta por parecerse. Efecto: WS25.1 declara «respuesta local: no disponible» (su aceptación lo permite).
+
+### 8.3 Qué falta para que el ack esté disponible en la UI
+
+El comando existe, pero eso no lo hace disponible. Falta, y cada punto es independiente:
+
+| Condición | Estado |
+|---|---|
+| Adaptador en graph_ui (ruta que invoque `message ack` con `--root` del desk y valide que el destino es el mismo desk) | Ausente (HO-01, WS25.1) |
+| T-P03.1: afirmación F1 y ausencia de evidencia contraria (5) | Sin mecanismo (HO-03) |
+| Recibo `G_UI_WRITE` de WS25.1 (acta del receptor P01) y `G_HUMAN_READ` | Ninguno |
+| Verificación tras recargar: leer la nota y ver `status: closed` y `acknowledged_*` (R06) | Posible con lo existente |
+| Atribución: quién hizo el ack. La nota guarda la identidad del desk | No hay actor humano (HO-10) |
+| Errores visibles: «ya acusada» es un `ValueError` de la CLI; ambigüedad es `UsageError` (`DK:tests/test_message_cli.py::test_message_ack_rejects_a_fragment_that_matches_two_notes:248`); fallo de tracking restaura y sale 1 | Existen como salidas de la CLI; no hay contrato de forma de error para la UI (HO-01) |
+| Precondición: solo guarda de estado; dos ack concurrentes de distintos escritores no se detectan más que por el estado `closed` | PE; sin `expected` (6.4) |
+
+`message send` desde la UI, si se ofreciera, debe validar que el destino sea el mismo desk (UF08 es solo lectura entre desks; WS25.1 «sin envío interdesk»).
+
+## 9. Git, guardar, cierre, promoción, fallos parciales, permisos y canales de closeout
+
+### 9.1 Git por operación
+
+Búsqueda de invocaciones de `git` en `DK/deskops/**/*.py` (`grep -rn "\"git\"\|'git'"`): `services/closure.py` (escribe) y `services/closeout_gates.py:208-221` (lee); `bootstrap.py`, `workspace.py:534`, `cli/commands/{doctor,desk}.py` y `runtime/herdr.py` lanzan subprocesos que **no** son git (`sldb`, `herdr`). Búsqueda de `"push"`, `"tag"`, `"stash"`, `"checkout"`, `"reset"` como argv: sin coincidencias. Por lo tanto, **el único módulo de deskops que escribe Git es `services/closure.py`**, y solo en W19–W20 y la ruta legacy `close_auto`. En `sldb`, el uso de git es de lectura en las rutas abiertas (`api/documents/document_history.py:59`, `store/diagnostics_models/text_history.py:50`, `api/stores/gitignore_policy.py:35`, `cli/commands/stores_build_check.py:87`); en graph_ui, `git check-ignore` (`workspace_routes.py:468`). Los argv de historia no se abrieron uno por uno.
+
+### 9.2 Guardar no commitea (P05)
+
+Todas las filas de escritura de 2.3–2.5, salvo W19 y W20, no hacen stage ni commit. Un guardado deja el árbol sucio y el commit lo hace otro: la CLI de cierre, un coordinador o una persona. La UI no commitea. **Excepción que hay que conocer**: `closeout commit` ejecuta `git add -A -- .sldb` si `.sldb` tiene cambios (`closure.py:447`), de modo que arrastra al commit de cierre los cambios de store que haya dejado cualquier guardado previo.
+
+### 9.3 Cierre y promoción por workflow
+
+- **Cierre**: solo por `closeout commit|supersede|retire`. `advance` no cierra: lo rechaza y apunta al cierre (`tasks.py:196-209,212-219`; `test_forced_advance_to_complete_refuses_and_points_at_closeout:184`). `closeout commit` corre `verify` antes y no commitea si falla (`closure.py:540-558`). Una tarea **ya cerrada no aparece como pendiente**: el cierre borra el TaskDoc.
+- **Promoción**: el único camino a una tarea activa es autorarla (`add task --from-drawer`); no existe promoción drawer→activa (`test_drawer_to_active_task_promotion_no_longer_exists:92`). Inbox→drawer es W11. WS26: «promoción solo cuando el contrato resuelve commits previos por canal autorizado»: no hay operación que compruebe commits previos (búsqueda de `git` en `operations.py`, `services/tasks.py`, `services/drawer.py`: sin coincidencias). La acción queda en **handoff explícito y se declara no disponible** (WS26.1).
+- **Refresco que verifica el resultado** (T-P05, WS28): `deskops show task` (R03) y el commit de cierre localizado por `git log -1 --grep 'Task-Id: <id>'` (`closure.py:46-58`); el estado se vuelve a leer de deskops.
+
+### 9.4 Fallos parciales
+
+| Operación | Qué pasa si falla a mitad | Evidencia |
+|---|---|---|
+| `add task` (W01) | `DocTransaction` revierte el archivo, el tracking y el Board | COMP: `test_operational.py:34,78` |
+| `edit`/`bind` (W02, W06, W08) | `DocTransaction` restaura bytes y entrada del store | COMP: `test_doc_io.py:104,124,150,167` |
+| `atoms split/merge` (W17) | Restaura fuentes, destinos y store | COMP: `test_atoms_transactions.py:59,98` |
+| `message ack` (W13) | Restaura los bytes de la nota; el store queda coherente | COMP: `test_message_cli.py:199` |
+| `message send` (W12) | Entrega y avisa («delivered … could not track»); **no revierte** | LEC: `message.py:129-135` |
+| `promote` (W11) | `DocTransaction`: restaura | COMP: `test_inbox_promote_cli_gaps.py:120,153` |
+| `atoms type` (W16) | El stub se escribe después del tipado y fuera de la transacción | LEC: `domain_tree.py:142-165` |
+| `closeout commit` (W19) | Si falla antes del commit: restaura índice, Board y TaskDoc (`closure.py:501-507`). Si el commit existe y falla el commit del índice de runs: revierte el índice, pero **el commit de cierre ya existe**. Con `--run-dir`, `run.yaml` se reescribe **antes** del gate (`closure.py:320`) y no se restaura si el gate falla. `git add` ignora errores (`check=False`) | COMP parcial: `test_lifecycle_end_to_end.py:462` (ruta legacy); el resto LEC |
+| `sldb /save` batch (S01–S03) | Prevalida todo antes de aplicar; si falla al aplicar responde 500 con `completed` y **no revierte** | COMP: `test_serve.py:247,262` |
+| `save_document_payload` (S02, S07) | Archivo cambiado y índice sin actualizar si cae entre ambos; `stores check` lo verá como alerta | LEC: `payload_save.py:47-48`; `infraestructura.md:47-48` |
+| graph_ui local `/api/save` (U01) | Prevalida el lote; fallo a mitad → 500 con `completed`, la vista no se escribe | COMP de prevalidación: `test_mindmap_persistence.py:45`; el resto LEC |
+| `/api/desk/advance` (U03) | `advance_task` usa `_write_doc` (transaccional); el ciclo comparar→avanzar no es atómico frente a otros procesos | COMP de 409: `test_mindmap_deskops.py:77,94` |
+
+**Regla para la UI**: ante un fallo parcial muestra qué se completó (`completed` cuando exista), qué no, y no reintenta lo ya aplicado; no ofrece «reparar» por una operación que no exista (UF07). El contrato de forma de error de cada operación para la UI queda en HO-01 con el adaptador.
+
+### 9.5 Permisos
+
+No hay roles ni RBAC (el recibo de G_CLOSEOUT dice «no autenticación/RBAC nuevo»). Lo que existe:
+
+| Capa | Control | Evidencia |
+|---|---|---|
+| deskops | Permisos del sistema de archivos; ninguna comprobación de actor. `mutates` solo redirige al sandbox | `main.py:155-182` |
+| sldb serve | Token Bearer **opcional** (apagado por defecto), `hmac.compare_digest`; `OPTIONS` exento; CORS opcional | `SL/cli/serve/auth.py`; `SL:tests/test_serve_auth.py::test_serve_without_token_stays_open:54`, `::test_serve_with_token_requires_the_bearer_token:66`, `::test_serve_token_blocks_writes_and_leaves_the_store_untouched:79` |
+| graph_ui `/api/desk/advance` | `Origin` igual al `Host`, cuerpo ≤ 8192 B, `application/json`, solo `{id, revision}` | `GU/deskops_routes.py:96-112` |
+| graph_ui `/api/save` local, `/api/views/*` | `Origin`, cuerpo ≤ 5 000 000 B | `GU/serve.py:382-385,431-440` |
+| graph_ui `/api/save` y `/api/models/*` **remotos** | **Sin guarda de `Origin`** en la rama remota | `GU/serve.py:387-418` (lectura) |
+| graph_ui `/api/views/*` | `store` lo elige el cliente: cualquier `.sldb` de la máquina | `GU/views_routes.py:29-33` |
+| `sldb /docs/create` | `path` del cliente sin contención | `SL/cli/serve/docs_routes.py:105-112` |
+
+La **whitelist de este contrato es la capa de permisos de operación**: lo que no figura como autorable no se ofrece. Las filas de arriba marcadas sin guarda son requisitos para los consumidores (HO-15): el adaptador de cada delta fija el store, el `path` y el modelo, y aplica `Origin`.
+
+### 9.6 Canales de closeout, fuera del servidor UI
+
+| Canal | Quién lo ejecuta | Qué es | Dentro del servidor UI |
+|---|---|---|---|
+| `deskops closeout verify --task <id>` | La UI (lectura) o la persona | JSON en stdout (`ok, declared, found, summary, gates, findings, alerts`); resumen y alertas en stderr; exit 1 si `ok` es falso (`closeout.py:_verify`) | **Permitido** como lectura (WS27.2, WS28), por `verify_task_closeout` o la CLI con `--root` |
+| `deskops closeout commit --task <id> --run-dir <d>` o `--no-run --reason <r>` [`--paths`] | Una persona o el coordinador | Commit de cierre con trailers | **No**: no hay commit ni cierre desde HTTP |
+| `closeout supersede` / `closeout retire` | Ídem | Idem | **No** |
+| Commits previos, `push` | Ídem | Git | **No**; handoff |
+
+**Handoff de cierre (WS28)**: lleva el ID de la tarea, el resultado de `verify` (gates, findings, alertas), la ruta exacta (`--run-dir` o `--no-run --reason`), los `--paths` propuestos (`TaskDoc.files` y la carpeta del run) y la instrucción de refrescar con `show task` y el commit con `Task-Id`. Los endpoints de WS28 son solo los que este contrato autoriza: leer `verify` y entregar el handoff; **ninguno que ejecute `closeout commit`**. Un comando o una solicitud no equivalen a un cierre.
+
+**Autoría de tareas y cierre esperan G_CLOSEOUT**, que está `satisfied` para el contrato de **evidencia declarada** (vocabulario cerrado `tests, commit, atom, materialization, document, external`, `closeout_gates.py:23`); no autoriza ninguna mutación de cierre por la UI.
+
+### 9.7 Correspondencia evidencia declarada → soporte → salida de `verify` (WS27.2)
+
+«Declarada» = `TaskDoc.closeout_evidence`. «Encontrada» = lo que `verify` resuelve en `references` y `files`. «Verificada» = el resultado del gate de ese tipo en el reporte; **no** es una prueba independiente del artefacto.
+
+| Tipo declarado | Cómo lo resuelve `verify` | Soporte abrible | Clave del reporte (`gates`) |
+|---|---|---|---|
+| `tests` | Una referencia a un `.py` existente bajo `tests/` (admite `::nodo`, que no se valida; admite `pytest <ruta>`); rutas absolutas o que escapan de `tests/` no cuentan (`closeout_gates.py:reference_points_to_test`) | El archivo de test | `tests` |
+| `commit` | Hexadecimal en minúscula que resuelve a HEAD o a un ancestro; `HEAD`, `main` o un descendiente no cuentan (`reference_points_to_commit`) | El commit en git | `commit` |
+| `atom` / `materialization` | Una referencia a un átomo (`atom:<id>` o un `.md` bajo `desk/atoms/`) y, para cada archivo cambiado, vínculo en el grafo o seguimiento enrutado (`operations.py:_closeout_link_gate`); un desk sin átomos locales queda exento | El átomo o la materialización | `atom_or_materialization_link` |
+| `document` | Un archivo existente `.md/.rst/.txt/.adoc/.yaml/.yml` en `references` o `files`, fuera de `tests/` y `desk/tasks/` (`reference_points_to_document`) | El documento, en el lector si es Markdown dentro del workspace | `document` |
+| `external` | Una URL http(s) en `references` | La URL (no se abre en el lector) | `external` |
+
+Un tipo fuera del vocabulario produce el hallazgo `unknown_closeout_evidence`. Una tarea sin el campo se evalúa como código y emite la alerta `closeout_evidence_not_declared` (`implicit_code: true`). **Reporte ausente o fallo del comando**: exit 1 **sin JSON** (tarea no encontrada, error) es *no verificable con error*, nunca verificado; exit 1 **con JSON** y `ok: false` es *verificación fallida*; `ok: true` con `findings` vacío es *verificada*. La UI no infiere el tipo por la extensión.
+
+### 9.8 Lectura de Git para el diff por tarea (WS27.1)
+
+No hay operación pública de diff por tarea (HO-13). Regla para el adaptador de WS27.1: solo invocaciones **de lectura** de git con argv fijo, sin shell, con la raíz del repo resuelta por el contrato de navegación; permitidas `rev-parse`, `merge-base --is-ancestor`, `log`, `show`, `diff`, `status --porcelain`, `check-ignore`; **prohibido** cualquier verbo que escriba (`add`, `commit`, `rm`, `restore`, `reset`, `checkout`, `stash`, `tag`, `push`). Precedentes: `closeout_gates.py:208-221` y `workspace_routes.py:468`. Base del diff: los commits de `TaskDoc.references` y las rutas de `TaskDoc.files`; los detalles de orden y rutas sin seguir quedan para el TaskDoc de WS27.1.
+
+## 10. Recepción por delta
+
+### 10.1 Reglas
+
+- `G_WRITE_CONTRACT` y `G_UI_WRITE` se evalúan **por ID y efecto**, nunca como aceptación conjunta; `evaluation: per_delta`, `accepted_scope_nodes: []` en todos (`dag.yaml:122-160,195-224`).
+- Un recibo técnico nombra actor, IDs/alcance, fecha y commit/blob en el repo dueño (`decisiones.md`). El receptor P01 lo registra en **su** repo al preparar ese delta; WS12 no crea actas interrepo.
+- **Deltas de deskops** (WS32, WS32.1, WS32.2, WS33, WS33.1, WS33.2, WS34, WS34.1, WS34.2, WS43): **no hay recepción nueva**; rige la autorización de trabajo local. Su prueba es de `tests/` de deskops en un store temporal, con commit/blob verificable.
+- Los agregados (WS19, WS25, WS26, WS32, WS33, WS34) no tienen recibo propio: se cumplen cuando sus hijos cumplen (precedente: `navegacion.md` §12.1).
+- Los campos de lectura, intake, ack y captura **no esperan** Changes (WS29), modelos (WS39), Scion ni raw-source.
+- `G_CLOSEOUT` ya está `satisfied`; `G_SOURCE` lo produce WS20; `G_PAYLOAD_PRECONDITION` lo produce WS45; `G_SLDB_WRITE` cubre WS20 y WS45.
+
+### 10.2 Tabla (26 IDs de `scope_nodes` de `G_WRITE_CONTRACT`)
+
+La columna «Cobertura» es una **propuesta para la evaluación de root**: indica qué filas de 2 y qué huecos de 12 componen el contrato de efectos de ese ID. No marca ninguno como comprobado.
+
+| ID | Repo / receptor | Efecto del delta | Cobertura (filas; huecos) | Recibo o prueba que le corresponde | Gates que consume |
+|---|---|---|---|---|---|
+| WS19 | graph_ui (agregado) | — | Hijos | Sin recibo propio | — |
+| WS19.1 | graph_ui · P01 | Editar campos de un documento con conflicto visible; el texto local se conserva | S02/U01/U02, R12; HO-02, HO-03, HO-07 | Acta graph_ui del delta; pruebas graph_ui: 409 sin pérdida del texto local, campos protegidos rechazados, sin F1 la mutación se deshabilita (5.7) | G_WRITE_CONTRACT, G_UI_WRITE, G_PAYLOAD_PRECONDITION, G_HUMAN_READ |
+| WS19.2 | graph_ui · P01 | Alta/baja de relaciones permitidas | S02 (campos de referencia), S01/S03 (RelationDoc), U01; HO-02, HO-03, HO-05 | Acta graph_ui; prueba de alta y baja que persisten tras recargar, y relación no permitida (lifecycle) rechazada | Ídem |
+| WS20 | sldb · P01 | Guardado de fuente en bruto reversible | X08, 6.6; HO-08 | Acta sldb **antes** de WS20 (`G_SLDB_WRITE`); tests de roundtrip, conflicto, recuperación tras fallo y campos protegidos (`G_SOURCE`) | G_WRITE_CONTRACT (solo el requisito de API faltante, propio de WS20), G_SLDB_WRITE, G_SOURCE |
+| WS21 | graph_ui · P01 | Alternar fuente/render; guardado por campos | 6.3; **el contrato no define escritura de composición** (búsqueda de rutas POST en `SL/cli/serve/routes.py:dispatch_post`: solo `/models/*`, `/docs*`, `/extract/segments` y `/save`; `/extract/segments` (`routes.py:105-106`) y `GET /document/segments` (`document_routes.py:23`) son lecturas), por lo que la composición queda de solo lectura y se declara | Acta graph_ui; en variante editable, `G_SOURCE` | G_WRITE_CONTRACT, G_UI_WRITE, G_PAYLOAD_PRECONDITION; G_SOURCE solo en editable |
+| WS25 | graph_ui (agregado) | — | Hijos | Sin recibo propio | — |
+| WS25.1 | graph_ui · P01 | Leer inbox; ack | R06, W13, 8; HO-01, HO-03, HO-10; X01 (respuesta local: no disponible) | Acta graph_ui; el ack persiste tras recargar mostrando el mensaje origen; no crea tarea ni cron | G_WRITE_CONTRACT, G_UI_WRITE, G_HUMAN_READ |
+| WS25.2 | graph_ui · P01 | Captura a protoátomo; captura a drawer | W14, 7.5; X02, X03; HO-11, HO-11b | Acta graph_ui, **por destino**; prueba de origen, colisión y no-tarea-activa (7) | Ídem |
+| WS26 | graph_ui (agregado) | — | Hijos | Sin recibo propio | G_CLOSEOUT (hijos) |
+| WS26.1 | graph_ui · P01 | Autorar tarea, evidencia y pills desde un candidato | W01, W02, W06, 3, 9.3; HO-01, HO-03, HO-02; operaciones Git: handoff | Acta graph_ui; UF04 sobre un TaskDoc real; nunca editar `status` | G_WRITE_CONTRACT, G_UI_WRITE, G_CLOSEOUT, G_HUMAN_READ |
+| WS26.2 | graph_ui · P01 | Enrutar en Board y mostrar capa lista | X04, 4.3; HO-12, HO-14 | Acta graph_ui; si falta la operación completa, handoff y «pendiente», no promoción | Ídem |
+| WS28 | graph_ui · P01 | Verificar cierre y entregar handoff | R08, 9.6, 9.7; HO-01 | Acta graph_ui; el diagnóstico muestra lo que reporta `verify`; el refresco confirma el cierre externo | G_WRITE_CONTRACT, G_UI_WRITE, G_CLOSEOUT, G_HUMAN_READ |
+| WS32 | deskops (agregado) | — | Hijos | Sin recibo propio | — |
+| WS32.1 | deskops · sin recepción | Identidad de intento y registro intent/no confirmado | HO-17 (ubicación del registro por intento: depende del inventario WS05, ausente) | Tests deskops en store temporal; sin dispatch ni red | G_WRITE_CONTRACT, G_CLOSEOUT, G_SCION |
+| WS32.2 | deskops · sin recepción | Manifiesto/cierre idempotente | HO-17; artefacto de sesión y digest: sin inventario | Tests deskops en store temporal | Ídem |
+| WS33 | deskops (agregado) | — | Hijos | Sin recibo propio | — |
+| WS33.1 | deskops · sin recepción | Vincular mensajes/resultados al intento | HO-17 | Tests deskops | G_WRITE_CONTRACT, G_SCION |
+| WS33.2 | deskops · sin recepción | Registrar la decisión humana | X05; HO-18 | Tests deskops; actor humano identificado según este contrato (HO-10) | Ídem |
+| WS34 | deskops (agregado) | — | Hijos | Sin recibo propio | — |
+| WS34.1 | deskops · sin recepción | Dispatch autorizado | X06; sección 11.1; HO-16 | Tests deskops con agente real (G_EXEC) | G_WRITE_CONTRACT, G_EXEC, G_SCION |
+| WS34.2 | deskops · sin recepción | Reply autorizado | X07; sección 11.2; HO-16 | Ídem | Ídem |
+| WS36 | graph_ui · P01 | Delegación e intervención humanas (consume el adaptador WS34) | HO-16 | Acta graph_ui | G_WRITE_CONTRACT, G_UI_WRITE, G_EXEC, G_SCION |
+| WS39 | graph_ui · P01 | Inspección y edición de modelos (borrador, validar, promover) | S09, U05; 5 (autoridad: `promote` cambia el contrato de todos los documentos del modelo) | Acta graph_ui (G_UI_WRITE) y acta de modelos (G_HUMAN_MODEL); **no se habilita promover** sin autoridad compartida probada | G_WRITE_CONTRACT, G_UI_WRITE, G_HUMAN_READ |
+| WS42 | graph_ui · P01 | Dividir, reunir y tipar; inspeccionar y validar materializaciones | W16, W17, R04; el canal de validación de materializaciones lo fija el TaskDoc | Acta graph_ui; confirmación mostrando origen y efecto | G_WRITE_CONTRACT, G_UI_WRITE, G_HUMAN_READ |
+| WS43 | deskops · sin recepción | Publicar la navegación del desk real por operaciones autorizadas | W01, W07, W18, W19; átomos por `atoms create` | Tests y commit por `deskops closeout commit` (WS43) | G_WRITE_CONTRACT, G_PRODUCT, G_HUMAN_MANUAL |
+| WS45 | sldb · P01 | Verificar o completar la precondición de payload | 6.3, 6.5 | Acta sldb (`G_SLDB_WRITE`); pruebas focalizadas por pareja (operación, escritor) | G_WRITE_CONTRACT (solo el requisito de API faltante, propio de WS45), G_SLDB_WRITE |
+
+Los nodos de `G_UI_WRITE` (14 IDs, calculados leyendo `scope_nodes`): WS19, WS19.1, WS19.2, WS21, WS25, WS25.1, WS25.2, WS26, WS26.1, WS26.2, WS28, WS36, WS39, WS42. Los de `G_SLDB_WRITE`: WS20, WS45.
+
+## 11. Ramal E: política de timeout de dispatch y reply, por delta
+
+Alcance: este contrato asume producir, para WS34.1 y WS34.2, la política y el umbral de timeout y la clasificación observable (`dag.yaml:2427`). **No fija ningún valor numérico ahora.** La duración la fija esta sección del contrato **al preparar esos deltas**, no WS34. Su ausencia no impide cerrar el contrato núcleo de las Entregas L y M. WS34.1 y WS34.2 se detienen y registran el hueco si no existe esa política, y no eligen un umbral propio.
+
+**Precedentes que existen y no se reutilizan por reflejo**: `deskops runtime supervise --timeout-ms` es **observacional** (espera a que un agente Herdr se asiente) y clasifica `timeout`/`unknown` como estados terminales (`DK/deskops/runtime/supervise.py:27-30,44-66`); el único timeout de graph_ui es un tope fijo de 10 s de una **lectura** de workers (`GU/serve.py:175`). Ninguno gobierna un dispatch o un reply a la API de Scion. No existe el inventario WS05 ni el probe WS44 (no hay `auditoria/scion.md` ni `auditoria/scion-probe.md`), de modo que la API real de Scion no está abierta aquí.
+
+### 11.1 Delta WS34.1 — dispatch
+
+| Aspecto | Contenido |
+|---|---|
+| **Política de timeout** | Un dispatch a Scion tiene un plazo de confirmación. Qué se mide (desde la solicitud hasta la respuesta pública de Scion), si es único o por etapa, y si admite reintentos: **a fijar al preparar el delta**, con evidencia del probe WS44 y del inventario WS05. Sin valor ahora. |
+| **Clasificación observable** | **Aceptado** — respuesta pública de la API de Scion que confirma el dispatch, con la identidad que exponga; es lo único que fija `confirmed` (WS32.1). **Rechazado** — respuesta pública de Scion que lo deniega o falla, observada. **Vencido sin confirmación** — no hubo respuesta dentro del plazo; no equivale a éxito ni a fallo remoto no observado. Además, antes del dispatch existe la **intención local** (`intent`, no confirmada, WS32.1) y el **no intentado** por falta de autoridad (G_EXEC, T-P03.1). |
+| **Qué se registra** | Todo estado se correlaciona con el id de intento local previo (WS32.1) y con los registros de WS32.2. Un «no confirmado» nunca se etiqueta como fallo ni como aceptado sin evidencia. |
+| **Actor** | El que ejecuta el dispatch: el coordinador autorizado, o la persona por la intervención de WS36 que invoca el adaptador. La «autoridad del coordinador» exige: autorización explícita vigente (G_EXEC, `autorizaciones/scion.md`, que no existe) **y** que ese actor sea el declarado para el desk según 5. |
+| **Momento de preparación** | Cuando se prepare el delta, después de que `G_SCION` esté verificado (WS44), WS05 exista y WS32.1/WS32.2 estén definidos, y antes de promover WS34.1. Lo prepara el Executor de una corrección documental de este contrato; lo verifica root en `G_WRITE_CONTRACT` para el ID WS34.1. |
+| **Prueba requerida** | Un dispatch real aceptado y uno rechazado o vencido, correlacionados al id de intento previo (WS34.1, aceptación). |
+
+### 11.2 Delta WS34.2 — reply
+
+| Aspecto | Contenido |
+|---|---|
+| **Política de timeout** | Un reply vinculado al intento tiene su plazo. Qué se mide y si es el mismo que el del dispatch: **a fijar al preparar el delta**. Sin valor ahora. |
+| **Clasificación observable** | **Aceptado** — Scion confirma el reply, vinculado al intento correcto. **Rechazado** — Scion lo deniega o falla, observado. **Vencido sin confirmación** — se reporta como **fallo sin confirmación**, con el umbral de la política; no se convierte en éxito ni en fallo remoto observado (WS34.2). |
+| **Actor** | Como en 11.1. |
+| **Momento de preparación** | Después de WS34.1 y antes de promover WS34.2. |
+| **Prueba requerida** | Respuesta vinculada al intento correcto y un timeout reportado como fallo sin confirmación (WS34.2, aceptación). Sin mensajes en tareas de planificación. |
+
+### 11.3 Lo que el ramal necesita de este contrato y hoy no existe
+
+La ubicación y el esquema del registro por intento (insumo de WS32.2), el artefacto de sesión y su digest, y la operación de decisión humana con actor identificado (X05) dependen del inventario WS05, que no existe: HO-17 y HO-18. WS12 no los inventa.
+
+## 12. Huecos
+
+Clase: **API** (operación pública ausente en el repo dueño), **instancia**, **vínculo**, **consulta**, **renderer**, **política** (decisión técnica de contrato sin mecanismo), **prueba**. «Productor» = ID de nodo de `dag.yaml` o «sin productor en el DAG» (con el repo dueño). Hueco de escritura de la lista de `navegacion.md` §11: H-25 se remite aquí.
+
+| ID | Hueco | Clase | Dueño | Productor | Bloquea |
+|---|---|---|---|---|---|
+| HO-01 | Rutas o adaptadores de UI que invoquen cada operación de la whitelist con su contrato de error (autoría, enrutado, verify, inbox, ack, captura, split/merge/type, materializaciones) | API/renderer | graph_ui | WS26.1, WS26.2, WS27.2, WS28, WS25.1, WS25.2, WS42 (cada uno para su operación) | Cada delta |
+| HO-02 | Filtro de campos protegidos y de modelos y rutas excluidos en el camino de escritura de la UI (3.2); hoy `/api/save` reenvía cualquier `model`/campo | API | graph_ui | WS19.1, WS19.2, WS26.1 | Esos deltas |
+| HO-03 | Mecanismo de afirmación F1 y de evidencia para el modo manual exclusivo (5): formato, ubicación, vigencia, lectura | política | graph_ui (consumo), deskops (registro del coordinador) | sin productor en el DAG | Toda mutación de UI (WS19.1, WS19.2, WS25.1, WS25.2, WS26.1, WS26.2, WS39, WS42) |
+| HO-04 | Precondición compartida entre escritores (representación C): comparación y escritura atómicas respetadas por CLI, agentes y UI | API | sldb (y deskops para sus escritores) | sin productor en el DAG | Salir de «lectura/handoff» ante otro escritor (P03) |
+| HO-05 | Semántica de la baja de un RelationDoc: sldb `/save` borra el archivo (`test_batch_save_delete_removes_the_file_it_created:1095`) y graph_ui local solo destrackea y lo deja (`test_conflict_and_untrack_preserves_file:54`) | política | sldb / graph_ui | sin productor en el DAG; WS19.2 depende | WS19.2 (baja de relación como documento) |
+| HO-06 | Escritores con `save_document_payload` sin precondición (S04, S07, pron, `/api/views/save`) fuera de la whitelist; retirar o proteger la forma legacy de `/save` | API | sldb | sin productor en el DAG (WS45 verifica solo los escritores alcanzados) | — (excluidos) |
+| HO-07 | El guardado de payload no rechaza borrar contenido no declarado del archivo, mientras `deskops edit` sí; ningún canal reúne precondición y esa guarda | API | sldb (guarda en `save_document_payload`) o deskops (precondición en `edit`) | sin productor en el DAG | WS19.1 sobre documentos con contenido no declarado |
+| HO-08 | Guardado de Markdown en bruto con precondición y buffer recuperable (X08) | API | sldb | WS20 (G_SOURCE) | WS21 en variante editable |
+| HO-09 | Respuesta local de inbox (X01) | API | deskops | sin productor en el DAG | WS25.1: se declara no disponible |
+| HO-10 | Atribución del actor humano en escrituras de UI: sldb firma `by` con `--actor`/`SLDB_ACTOR`/`agent` y la ruta HTTP no pasa `actor`; `message ack` guarda la identidad del desk; las escrituras de deskops no llevan actor | API | sldb, deskops, graph_ui | WS33.2 solo para la decisión humana; el resto sin productor en el DAG | Atribución de G_UI_WRITE y WS33.2 |
+| HO-11 | Captura directa a drawer: conducta de workflow con prueba real (7) | API/prueba | deskops | sin productor en el DAG (el DAG prevé uno explícito antes de WS25.2 si falta la conducta) | WS25.2, destino drawer |
+| HO-11b | Origen (`provenance`) al capturar un protoátomo (X03) | API | deskops | sin productor en el DAG | WS25.2, destino protoátomo |
+| HO-12 | Enrutar un TaskDoc existente al Board con una operación pública con precondición (X04) | API | deskops | sin productor en el DAG | WS26.2 (handoff) |
+| HO-13 | Diff Git por tarea y repo con argv de solo lectura (9.8) | API/renderer | graph_ui | WS27.1 | WS27.1 |
+| HO-14 | Cálculo de capa lista según 4.3 | consulta/renderer | graph_ui | WS26.2 | WS26.2 |
+| HO-15 | Guardas de `Origin` en la rama remota de `/api/save` y `/api/models/*`; contención de `path` y de `store` en rutas que los reciben del cliente | API | graph_ui, sldb | sin productor en el DAG; cada adaptador de delta las aplica | Deltas que usen esas rutas |
+| HO-16 | Adaptador público de dispatch y reply con confirmación, timeout y autoridad (X06, X07) | API | deskops | WS34.1, WS34.2 | WS34, WS36 |
+| HO-17 | Ubicación y esquema del registro por intento; artefacto de sesión y digest | política | deskops | WS05 (inventario); luego una corrección de este contrato | WS32.1, WS32.2, WS33.1 |
+| HO-18 | Operación de decisión humana y actor humano identificado (X05) | API | deskops | WS33.2 depende; la operación no tiene productor en el DAG | WS33.2 |
+| HO-19 | Valor del timeout de dispatch y reply (sección 11) | política | deskops | Corrección documental de este contrato al preparar WS34.1/WS34.2 (no es un nodo del DAG) | WS34.1, WS34.2 |
+
+Productores usados, verificados contra `dag.yaml`: WS05, WS19.1, WS19.2, WS20, WS25.1, WS25.2, WS26.1, WS26.2, WS27.1, WS27.2, WS28, WS33.2, WS34.1, WS34.2, WS42, WS45. El contrato puede cerrar con estos huecos asignados; ninguno exige habilitar una mutación.
+
+## 13. Trazabilidad
+
+### 13.1 Aceptación de WS12 (`dag.yaml:723`), frase por frase
+
+| # | Frase | Dónde queda |
+|---|---|---|
+| 1 | «G_WRITE_POLICY registrado» | 1.2, 1.5 (`satisfied`, no se registra de nuevo) |
+| 2 | «Publicar whitelist por operación/campo/canal/actor/revisión/Git/efectos y estado existente comprobado/faltante» | Secciones 2 y 3 |
+| 3 | «Mapear qué recibo receptor/prueba corresponde a cada delta» | 10.2 |
+| 4 | «receptor P01 registra acta en su repo al preparar ese delta, no WS12» | 10.1 |
+| 5 | «campos/intake no esperan Changes/modelos/Scion ni raw-source» | 10.1 |
+| 6 | «G_WRITE_CONTRACT y G_UI_WRITE se evalúan por IDs/efecto, nunca como aceptación conjunta» | 10.1, 10.2 |
+| 7 | «Autoría de tareas/cierre esperan G_CLOSEOUT» | 9.6, 10.2 |
+| 8 | «Raw-source faltante tiene productor WS20 y G_SOURCE; recepción G_SLDB_WRITE antes de WS20, sin exigir API implementada» | 6.6, 10.2, HO-08 |
+| 9 | «Escritura de payload por campos: WS12 define la representación de la precondición, las operaciones y los escritores alcanzados» | 6.3 |
+| 10 | «distinguiendo before-image por valor existente (`expected`, HTTP 409), token publicado (`version`/`content_hash`) y comparación o escritura pública con precondición compartida (aún no probada)» | 6.1 |
+| 11 | «no fuerza CAS en toda CLI ni un algoritmo, ni infiere frescura por CLI, y P03 no cambia» | 6.4, 5.5 |
+| 12 | «Su productor es WS45 (sldb, independiente de source_mode) y su gate G_PAYLOAD_PRECONDITION» | 6.5 |
+| 13 | «Captura directa a drawer: WS12 compara API SLDB existente, composición de llamadas, eventual wrapper, sin aprobar ninguna ni crear API o modelo por reflejo» | 7.3 |
+| 14 | «`message send` más `promote` no queda aprobado (la promoción borra la nota y deja `why` apuntando a una ruta borrada)» | 7.3 (opción D), W11 |
+| 15 | «La captura a protoátomo entra en la whitelist con su canal o con su hueco y dueño» | 7.5, W14, X03, HO-11b |
+| 16 | «Solo si falta conducta de workflow se registra un productor Deskops explícito antes de WS25.2; si esa composición cumple, se documenta prueba y contrato» | 7.3, 7.6, HO-11 |
+| 17 | «Lock solo UI no coordina CLI/agentes: con otro coordinador escritor, read-only/handoff hasta API pública con autoridad compartida probada» | 5.5, 5.6 |
+| 18 | «WS12 solo escribe contrato y enlaces en deskops; no ejecuta mutaciones ni crea actas interrepo» | 1.2 |
+| 19 | «Contrastar inventarios WS02–04 y contrato WS11, citar path/símbolo/commit observado; comprobado requiere evidencia real citada» | 1.3 (contraste), 1.4, columnas «Evidencia» de 2 |
+| 20 | «Cierra con matriz de capacidades/efectos y huecos asignados, no requiere habilitar ninguna mutación» | 2, 12 |
+| 21 | «G_WRITE_CONTRACT admite requisito de API faltante solo para el nodo productor de esa API (WS20 con G_SOURCE; WS45 con G_PAYLOAD_PRECONDITION), manteniendo consumidor WS21 bloqueado por G_PAYLOAD_PRECONDITION y, solo en editable, G_SOURCE» | 10.2 (filas WS20, WS21, WS45) |
+| 22 | «Elegir la representación de la precondición es entregable de este contrato, justificado por operaciones y escritores alcanzados y reutilizando lo existente; WS45 la verifica» | 6.3, 6.5 |
+| 23 | «Receptor P01 aplica a graph_ui, sldb y spec2viz; en deltas de deskops no se crea recepción nueva» | 10.1 |
+| 24 | «Falta conducta de workflow cuando ni la API ni su composición de llamadas pueden, con prueba real, preservar origen, no crear tarea activa y controlar colisiones» | 7.1, 7.3 |
+| 25 | «Ramal E: sección por delta de WS34.1 y WS34.2 con política y umbral de timeout y clasificación observable (aceptado, rechazado, vencido sin confirmación); la duración no se elige ahora; su ausencia no impide cerrar el núcleo» | Sección 11, HO-19 |
+
+Elementos del **scope** de WS12: whitelist por campo/modelo (2, 3); adapter (4); policy coordinador (5); Git (9.1–9.3); workflow-protected fields (3); precondición y locks (5.6, 6); fallos parciales (9.4); permisos (9.5); closeout fuera del servidor UI (9.6).
+
+### 13.2 T-P03.1
+
+| Compromiso | Dónde |
+|---|---|
+| Definición operativa de «modo manual exclusivo» | 5.2 |
+| Formas de comprobarla | 5.3, 5.7 |
+| Respuesta ante ausencia de evidencia | 5.4 |
+| La ausencia de señal no declara exclusividad | 5.2, 5.4 |
+| Sin mecanismo de lock ni de detección fijado; el lock de UI no coordina CLI ni agentes | 5.6, 5.8, HO-03 |
+| Producida antes de habilitar a los consumidores | 5 y 10.2 (cada delta cita 5.7) |
+
+### 13.3 Lo que `promotion-notes.md` remite a WS12
+
+| Nota | Dónde |
+|---|---|
+| Umbral de timeout de dispatch/reply (WS12, «Resuelto 2026-10-31») | Sección 11 |
+| Valor por defecto de la captura directa a drawer | 7.4 |
+| Quién ejecuta la «prueba real del canal de captura» | 7.3 (sin asignar mientras no exista productor), HO-11 |
+| Adenda WS12: T-P03.1 obligatorio | Sección 5 |
+| Adenda WS09: `atoms validate` puede crear andamiaje | D03, 1.4 (ASC) |
+| Adenda: `stores check` clasificado por efectos | D01, D05 |
+| WS26.1: si un candidato sin evidencia o sin dependencias puede autorarse | W01 exige evidencia declarada; las dependencias son opcionales (`depends_on` vacío es válido); lo fija el TaskDoc de WS26.1 |
+| WS26.2: ritual de fase y TaskDoc sin `files` = no comprobado | 4.3 |
+| WS27.1: canal Git por WS12 | 9.8, HO-13 |
+| WS27.2: correspondencia por tipo de evidencia y esquema de `verify` | 9.7 |
+| WS28: evidencia del handoff y endpoints | 9.6 |
+| WS33.2 / WS32.x: actor y ubicación del registro | X05, HO-17, HO-18 |
+| WS34.1: citar el umbral de WS12 | Sección 11 |
+| WS39: efectos y errores de draft/validate/promote | S09, U05; 5 |
+| WS45: si es la «tarea propia en sldb» o se abre otra | 6.5: el recibo `G_SLDB_WRITE` es para ese delta; si falta capacidad, tarea propia en sldb (lo decide la promoción) |
+
+### 13.4 Lo que `contratos/navegacion.md` remite a WS12
+
+| Remisión | Dónde |
+|---|---|
+| §1: escritura, guardado, whitelist, conflictos y fallos parciales | Secciones 2, 3, 6, 9.4 |
+| §7.6 y H-15: el **conflicto** (409 de guardado) es de WS12/WS19 | 6.1, 9.4; la forma de error en la UI: HO-01 |
+| H-25: captura, ack, respuesta local, autoría de tareas y edición de campos | 7, 8, 3, 4.2 |
+| §12.2: contrato de efectos de los 14 nodos `G_UI_WRITE`; `G_SLDB_WRITE` de WS20 y WS45 | 10.2 |
+| §4: la edición de fuente espera WS20/WS21 y es de WS12 | 6.6, X08 |
+| §5.4: ausencia de escrituras en lectura; `open_store` migra, `document_edges` reconstruye | 1.4 (MIG), R03, R11, D01; extiende la lectura a `show task` y a `advance task` |
+| §3.2: una petición de lectura no crea ni migra el store | Obligación del consumidor de lectura; en este contrato, los efectos transitivos de cada fila lectura/diagnóstico están rotulados |
+
+### 13.5 Qué no se abrió o no se pudo verificar
+
+Ver `runs/subagents/20261101-ws12-operaciones/result-summary.md`.
