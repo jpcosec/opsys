@@ -18,7 +18,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
 
 Repo único: `graph_ui`. Tamaño relativo: S.
 
-frontends/mindmap/views/workspace/errors/; rutas de lectura definidas por el contrato WS11; tests/
+frontends/mindmap/views/workspace/errors/; frontends/mindmap/shell/api.js (conservar estado HTTP y tipificar errores HTTP/red/JSON, manteniendo error.body y compatibilidad con consumidores); rutas de lectura definidas por el contrato WS11; tests/
 
 Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
 

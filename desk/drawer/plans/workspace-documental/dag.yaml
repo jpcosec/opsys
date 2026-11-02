@@ -1058,8 +1058,10 @@ tasks:
   requires:
   - G_UI_READ
   owner_repo: graph_ui
-  output_scope: frontends/mindmap/views/workspace/errors/; rutas de lectura definidas
-    por el contrato WS11; tests/
+  output_scope: frontends/mindmap/views/workspace/errors/; frontends/mindmap/shell/api.js
+    (conservar estado HTTP y tipificar errores HTTP/red/JSON, manteniendo error.body
+    y compatibilidad con consumidores); rutas de lectura definidas por el contrato
+    WS11; tests/
   scope: Referencia rota, documento ausente, modelo no importable y backend caído
     se muestran en panel afectado sin borrar historial ni fingir vacío. Fuente sin
     permiso/capacidad de edición es límite read-only visible, no fallo de lectura.
