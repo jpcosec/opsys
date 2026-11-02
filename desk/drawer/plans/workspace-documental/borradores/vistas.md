@@ -364,7 +364,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
 - **Identidad**: `Model:name`; SpecDoc con `sha256` del spec (`infraestructura.md:35`).
 - **Contrato**: SpecDoc y NotationDoc registrados por `diagram sync` y `notation sync` (`infraestructura.md:100`). SurfaceDoc no es una pantalla (línea 22 de este archivo).
 - **Campos y relaciones**: campo `notation` del SpecDoc, glifos y links (`infraestructura.md:100`).
-- **Renderer existente o requerido**: renderers de spec2viz por CLI: 9 (`infraestructura.md:134`). La vista Specs de Mindmap la nombra la visión (`vision.md:36`, leída solo esa línea por búsqueda de texto) y no tiene fila en `ui.md`: sin productor en el DAG, repo dueño graph_ui; si entra al lector, contrato WS11.
+- **Renderer existente o requerido**: renderers de spec2viz por CLI: 9 (`infraestructura.md:134`). Base existente en graph_ui: la vista Specs de Mindmap (`notationView`) está declarada (`../UIs/graph_ui/frontends/mindmap/views/specs/notation/notation-view.js:356`) y registrada (`../UIs/graph_ui/frontends/mindmap/shell/registry.js:16`); se leyeron esa declaración y ese registro, no todo el renderer, y no se afirma aceptación. La nombra además la visión (`vision.md:36`, leída solo esa línea por búsqueda de texto) y no tiene fila en `ui.md`. Integrarla al lector sigue siendo candidatura sin productor en el DAG, repo dueño graph_ui; si entra al lector, contrato WS11.
 - **Navegación**: no definido; productor WS11.
 - **Acción/dueño**: reutilizar Specs; render y validación por `spec2viz`; dueño spec2viz.
 - **Destino de escritura**: sync escribe por `sldb.api` (`infraestructura.md:35`). Desde UI: no definido; productor WS12.
