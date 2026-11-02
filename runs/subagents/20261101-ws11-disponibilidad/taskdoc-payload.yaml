@@ -1,0 +1,25 @@
+title: Aplicar disponibilidad de alias en el contrato WS11
+why: 'La validación de §3.2 exigía que root y store existan y volvía inalcanzable E-MD3. Root distingue autorización de disponibilidad y preaprobó un reemplazo exacto.'
+goal: Sustituir la cadena de §3.2 por la frase preaprobada y obtener el sha256 aprobado por root.
+scope: |-
+  Autoridad: runs/subagents/20261101-ws11-disponibilidad/review-source.md.
+  En desk/drawer/plans/workspace-documental/contratos/navegacion.md, §3.2 Validación, sustituir la única cadena «`root` y `store` existen» por la frase preaprobada. Resultado esperado sha256 6a4f8518f3d69de6118550b3077921db4bbb46bc9123c26980c6c8fc5f62361e. Si difiere, se detiene y se comunica.
+  Sin otras frases, sin cambiar el estado del archivo, sin otras superficies. Sin revisiones del DAG: el contrato no es fuente del helper.
+implementation_path: 1. Aplicar el reemplazo y comprobar el hash. 2. Tester focal de §3.2 y §8.5. 3. Revisión fresca WS13.1 y WS41. 4. Comparar. 5. Checks. 6. Nota de aprobación y closeout.
+done_when: 'Acceptance: sha256 exacto; Tester focal PASS; revisión fresca comparada sin contradicción real; build --check, validate --check y status en verde.'
+validation:
+- sha256sum desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- python desk/drawer/plans/workspace-documental/build_plan.py --check
+- python desk/drawer/plans/workspace-documental/validate_plan.py --check
+- python desk/drawer/plans/workspace-documental/context_review.py status
+- Tester independiente de solo lectura deja runs/subagents/20261101-ws11-disponibilidad/tester-result-summary.md
+task_type: docs
+closeout_evidence:
+- commit
+- document
+from_drawer: desk/drawer/tasks/task-disponibilidad-alias-ws11.md
+references:
+- desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- runs/subagents/20261101-ws11-disponibilidad/review-source.md
+files:
+- desk/drawer/plans/workspace-documental/contratos/navegacion.md
