@@ -71,3 +71,12 @@ El contrato tiene las 13 secciones en orden. Fija la identidad de Markdown no mo
 ## Revisión del Supervisor antes de congelar
 
 Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01, sin Executor. Leí el contrato completo. Comprobé contra código, por grep y lectura de líneas: los IDs de WS y gates; los 18 nodos de `G_UI_READ`; los símbolos de `workspace_routes.py`; `document_edges` llama a `rebuild_edges(..., wait=True)` en la línea 30; `recover_links` resuelve también por ruta (`resolver.py:32-37`); `_store` de `views_routes.py` acepta cualquier store del cliente; `identity.py:256-262` no impone contención; `focus` no aparece en `workspace_routes.py` ni en `views/workspace`; `[[` y `recover_links` no aparecen en código del workspace (coincidencias solo en notación y una regex de `contract.py`). No edité el contrato. El Tester independiente es quien coteja el resto.
+
+## Ajuste del Supervisor tras Tester v1 FAIL
+
+Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Evidencia v1 en `renovacion-1/`. Dos afirmaciones de lectura eran falsas y mi revisión previa no las vio:
+
+- §2.2 decía que ninguna ruta de graph_ui lee el archivo propio. Lo lee en dos puntos internos que no exponen el texto (hash y frontmatter de respaldo). Ahora dice que ninguna ruta lo entrega a la UI.
+- §4 decía que el único `read_text` estaba en el IR. Hay también secciones, procedencia y `payload_save`. Ahora los enumera, tras buscar `read_text` y `read_bytes` en `SL/cli/serve` y `SL/api/documents`.
+
+No cambia ninguna decisión, hueco ni productor. La salvedad del Tester sobre C4 ya estaba en la fila: soportado a nivel de entrada, sin estado de foco.
