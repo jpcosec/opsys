@@ -14,6 +14,7 @@ depends_on:
 requires:
 - G_CLOSEOUT
 - G_HUMAN_READ
+- G_PAYLOAD_PRECONDITION
 - G_UI_WRITE
 - G_WRITE_CONTRACT
 ---
@@ -40,7 +41,7 @@ Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su aceptación.
 
 ## Dependencias
 
-Tareas: WS12, WS22, WS26.1, WS26.2. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS22, WS26.1, WS26.2. Gates: G_CLOSEOUT, G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 

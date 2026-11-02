@@ -722,6 +722,10 @@ data:
     to: WS26
     relation: prerequisite
     label: habilitar uso UI
+  - from: G_PAYLOAD_PRECONDITION
+    to: WS26
+    relation: prerequisite
+    label: ''
   - from: G_UI_WRITE
     to: WS26
     relation: prerequisite
