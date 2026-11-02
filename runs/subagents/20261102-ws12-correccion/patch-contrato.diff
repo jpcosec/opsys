@@ -1,5 +1,5 @@
 diff --git a/desk/drawer/plans/workspace-documental/contratos/operaciones.md b/desk/drawer/plans/workspace-documental/contratos/operaciones.md
-index 136a0f79..85efac6f 100644
+index 136a0f79..67eee760 100644
 --- a/desk/drawer/plans/workspace-documental/contratos/operaciones.md
 +++ b/desk/drawer/plans/workspace-documental/contratos/operaciones.md
 @@ -2,6 +2,8 @@
@@ -175,7 +175,7 @@ index 136a0f79..85efac6f 100644
  
 +### 4.4 Preparación del candidato de drawer (WS26.1), separada de la creación activa (WS26.2)
 +
-+Decisiones técnicas de root para planificación, no humanas ni aprobación de `G_WRITE_CONTRACT`. **Frontera.** WS26.1 prepara un candidato bajo `desk/drawer/tasks/` (UF04: preparar); no crea la tarea activa ni añade al Board. WS26.2 autoriza y crea la tarea activa con su Board (W01, operación conjunta), enruta, y deja los commits previos y la promoción en handoff. **El caso se identifica por la ruta y el store reales** (lectura con la navegación autorizada: archivo bajo `desk/drawer/tasks/` del desk autorizado, confirmado como TaskDoc, y si el store lo rastrea), no por una suposición sobre cómo se creó.
++Decisiones técnicas de root para planificación, no humanas ni aprobación de `G_WRITE_CONTRACT`. **Frontera.** WS26.1 prepara un candidato bajo `desk/drawer/tasks/` (UF04: preparar); no crea la tarea activa ni añade al Board. WS26.2 autoriza y crea la tarea activa con su Board (W01, operación conjunta), enruta, y deja los commits previos y la promoción en handoff. **El caso se identifica por la ruta y el store reales** (lectura con la navegación autorizada: archivo bajo `desk/drawer/tasks/` del desk autorizado, confirmado como TaskDoc, y si el store lo rastrea: consulta pública `doc_status(<directorio del store>, "local:" + ruta)`, que compara nombre, ruta y `Model/name` sobre los documentos indexados (`SL/api/stores/doc_status.py:26-29,48-49`, `doc_ref.py:43-45`), con sus efectos de `open_store` (1.4, MIG); si la consulta falla, el caso se trata como no rastreado y sigue el recorrido B), no por una suposición sobre cómo se creó.
 +
 +**Recorrido A: candidato rastreado, escritura directa guardada.** `POST /save` `update` con `expected` (S02). Exige WS47, `G_PAYLOAD_PRECONDITION` (WS45) y la admisión de WS48. El adaptador solo escribe campos autorables (contenido, `depends_on`, `files`, `references`, `tags`, `pills`, y `closeout_evidence` con la regla de 3.3); `id`, `status`, `current_node`, `history` y `from_drawer` quedan protegidos. Un `expected` obsoleto da 409, sin cambios y con el texto local conservado.
 +
