@@ -36,7 +36,7 @@ Tareas: WS12. Gates: G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.
 
 ## Review barato de comprensión
 
-Estado: `pending`. Protocolo requerido: `ritual-context-review`. Evidencia: []. Revisión barata pendiente; no ejecutar. APTO del concilio es experto y no satisface este gate.
+Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS48/4ff520f32c0cad6e97634533938dc69007e84c9acbd2405f16d1d29ab28cb1de/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
 
 ## Gate de promoción
 

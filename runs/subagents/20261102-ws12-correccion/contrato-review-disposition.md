@@ -36,3 +36,18 @@ Con `navegacion.md` §3 en el input de WS26.1. Sin cambio de contrato: parada aq
 | WS26.1 | 3. Evidencia vacía | Decisión root: el candidato puede conservarla como pendiente |
 
 Ninguna atribuye implementación a otro nodo. WS19.1 no asume `shell/api.js` ni WS47.
+
+## Ronda final, `contrato-review/`, contrato final y nodos finales
+
+Rondas intermedias en `renovacion-7` a `renovacion-11`: cada cambio de nodo repitió las tres, porque sus inputs incluyen esos nodos. Sin contradicción real en la final.
+
+| Consumidor | Ambigüedad | Disposición |
+|---|---|---|
+| WS19.1 | Ocho hallazgos no enumerados | Artefacto: el encabezado cita un archivo que el input no lleva. No obliga a nada |
+| WS19.1 | Cómo detectar contenido no declarado antes | §6.7: rechazo al guardar por WS47. La UI no lo clasifica antes |
+| WS19.1 | Base `a1b2b22` | Anotada para root: aparece en todas las rondas |
+| WS25.2 | Representación, endpoints, permisos | §7.2 con WS46, HO-01, whitelist |
+| WS25.2 | G_HUMAN_READ y cierre | Regla común del DAG |
+| WS26.1 | Si B puede entregarse antes de WS47/48 | El nodo es uno: depende de ambos aunque B no los use. Anotada para root |
+| WS26.1 | «Demás contenido» | §3.3 enumera |
+| WS26.1 | Evidencia incompleta | Decisión root 2 |

@@ -1,0 +1,12 @@
+## REFORMULACION
+WS47 es un nodo de planificación, no ejecutado, del repo sldb. Su propósito es producir un inventario y pruebas focalizadas de una guarda que conserve contenido no declarado al editar por campos hasta `save_document_payload` (POST /save update y update local de graph_ui), distinta de la precondición `expected` de WS45 y de la protección de campos de la UI. El resultado esperado es: inventario con ruta, símbolo y commit de `refuse_structural_noise`, `refuse_undeclared_frontmatter` y de la guarda de `deskops edit`; guarda en `src/sldb/api/documents/` y `src/sldb/cli/serve/` solo para ella; tests. Límites: no amplía WS45, no cambia la creación, no resuelve el gap de prevalidación del inbox de sldb, no usa workaround de Deskops, no hace merge/restauración y no afirma implementación ni aceptación.
+
+## AMBIGUEDADES
+1. «un update con expected vigente que perdería contenido no declarado del archivo» y «sin prometer editar todo documento con ruido». No se define qué es contenido declarado/no declarado ni «ruido»; el ejecutor tendría que inventar la clasificación y el criterio de pérdida, que sostienen toda la aceptación.
+2. «piso de detección, que son las comprobaciones de la guarda de deskops edit (_write_doc) leídas en fuente» y «solo se amplía si el inventario lo justifica». No se fija revisión/commit de deskops ni criterio de justificación; obligaría a inventar qué versión constituye el piso y cuándo ampliarlo.
+
+## DRY-RUN
+Un ejecutor futuro leería WS12, sección 6.7, el código de `create_document`, `track_document_file`, `save_document_payload`, las funciones de rechazo citadas y la guarda `_write_doc` de deskops; comprobaría G_SLDB_WRITE para WS47 y G_WRITE_CONTRACT. Produciría el inventario con rutas, símbolos y commits, añadiría la guarda solo en los directorios autorizados y tests focalizados. Validaría: documento limpio se aplica; update que perdería contenido no declarado se rechaza con error observable y sin cambios; `expected` obsoleto da 409; creación sin cambios; aceptación declara pérdidas detectadas, no detectadas y casos deshabilitados. Si falta contrato, recibo o función inventariada, se detendría y registraría el hueco, sin sustituto.
+
+## FUTURO
+WS12 debe fijar el canal y HO-07; el receptor P01 emite el acta G_SLDB_WRITE por delta; WS19.1, WS19.2 y WS26.1 consumen la guarda; la promoción exige preflight y archivos concretos; la aceptación humana y el gap de prevalidación se resuelven fuera de este nodo.

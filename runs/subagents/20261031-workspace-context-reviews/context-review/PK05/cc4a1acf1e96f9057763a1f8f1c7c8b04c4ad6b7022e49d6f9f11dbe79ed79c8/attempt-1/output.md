@@ -1,0 +1,11 @@
+REFORMULACION
+PK05 es un paquete agregado no ejecutable: su propósito es dejar contratada, implementada por sus hijos y validada como recorrido humano seguro la autoría y operación manual del workspace documental. Resultado sustantivo: contrato de operaciones; precondición de payload; guardas de contenido; admisión de escritura UI; edición por campos y fuente/render; captura/triage; tareas; diff/evidencia; handoff de cierre; operaciones de conocimiento; acta WS30. Repo dueño: deskops; hijos en deskops, sldb y graph_ui. Límites: sin ejecución aquí, sin crear tareas/aristas; gates pendientes intencionales; mutaciones UI tras G_HUMAN_READ; pruebas API aisladas pueden avanzar.
+
+AMBIGUEDADES
+Ninguna.
+
+DRY-RUN
+Hipotético: con WS12 y WS11/WS13/WS17/WS22/WS24 disponibles, ejecutar por aristas y sin solape: WS45, WS20 y WS47 en sldb en serie —comparten src/sldb/api/documents/— y WS46 en deskops y WS48 en graph_ui en paralelo. WS45 entrega inventario/pruebas y G_PAYLOAD_PRECONDITION; WS20 entrega API fuente y G_SOURCE; WS47 entrega guarda de contenido; WS46 captura drawer/protoátomo con origen; WS48 admisión común de escritura. Luego WS19.1/WS19.2 consumen WS45, WS47, WS48 y producen edición/conflicto; WS25.1/WS25.2 consumen WS48 y WS46 y producen intake; WS26.1/WS26.2 consumen WS45, WS47, WS48 y WS22 y producen autoría/contexto; WS21 consume WS19, WS48, G_PAYLOAD_PRECONDITION y, en editable, G_SOURCE, y produce fuente/render; WS42 consume WS19, WS24, WS48 y WS12 y produce conocimiento; WS27.1/WS27.2 consumen WS13 y WS12 y producen diff/evidencia; WS28 consume WS27 y WS48 y produce verificación/handoff. WS30 integra WS17, WS21, WS22, WS23, WS24, WS25, WS26, WS28 y WS42 y valida UF01–05 y navegación con acta humana. Validación conjunta: gates G_SOURCE/G_PAYLOAD_PRECONDITION y pruebas de conflicto/buffer/protegidos; guardar sin commit; read-only/handoff con coordinador; evidencia declarada/encontrada/verificada; cierre por commit/Deskops; sin declarar disponibles capacidades no probadas.
+
+FUTURO
+WS30 produce acta humana; el responsable de producto acepta deltas por repo; WS12 fija contrato/whitelist y WS45/WS20/WS47/WS46/WS48 producen sus recibos técnicos. G_HUMAN_READ, G_CLOSEOUT y G_UI_WRITE los resuelven nodos/actores indicados; no se inventan aquí.

@@ -1,0 +1,13 @@
+REFORMULACION
+El nodo WS26.1 (graph_ui, implementation) debe preparar un candidato TaskDoc en `desk/drawer/tasks/` de un desk autorizado, sin crear tarea activa ni añadirla al Board. Resultado: UI de autoría que separa dos recorridos por ruta y store reales. Rastreado: escribe por `POST /save` update con `expected`, solo campos autorables y `closeout_evidence` validada; depende de WS47, WS48 y G_PAYLOAD_PRECONDITION. No rastreado: muestra propuesta, entrega handoff exacto a `deskops edit task` y refresca, sin escritura HTTP ni marcar aplicado. Repo: graph_ui (`frontends/mindmap/views/workspace/authoring/`, endpoints autorizados, `tests/`). Límites: no tocar `id`, `status`, `current_node`, `history`, `from_drawer`; no rastrear por reflejo, ampliar S06, inventar API, promoción ni commits; WS26.2 crea y enruta.
+
+AMBIGUEDADES
+1. «Rastreado: … WS47, admisión de WS48» frente a «No rastreado: … sin escritura desde HTTP» y `depends_on: WS47, WS48`. ¿El recorrido B puede entregarse y probarse antes de WS47/WS48, o todo el nodo queda bloqueado? Obligaría a inventar si la aceptación admite entrega parcial.
+2. «solo campos autorables (título y demás contenido, dependencias, files, references, tags, pills y closeout_evidence…)». «Demás contenido» no enumera el conjunto. Obligaría a inventar si incluye `task_type`, `inherits_from`, `inherit_acceptance_context` y `atoms`.
+3. «closeout_evidence validada con el vocabulario cerrado existente» frente a «puede conservar evidencia vacía o incompleta como pendiente». Obligaría a inventar si una evidencia incompleta se rechaza al guardar o se guarda como pendiente y qué muestra la UI.
+
+DRY-RUN
+Lecturas: contrato WS12 §3.3, 4.4, 5.9 y 6.7; nodos WS47/WS48; rutas actuales de graph_ui; `DeskopsOperations` y CLI. Cambios: módulo de autoría y endpoints autorizados; detección por ruta bajo drawer y consulta pública de tracking; recorrido A con payload filtrado y `expected`; recorrido B sin HTTP, propuesta y comando solo tras comprobar selector único, ausencia de prefijo activo y fallo de `show task`; refresco. Dependencias: WS47/48, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_HUMAN_READ, G_WRITE_CONTRACT, G_CLOSEOUT. Errores esperados: 409, evidencia inválida, selector no seguro, admisión denegada. Validaciones: store temporal; persistencia tras recargar; 409 conserva texto; protegidos rechazados; sin admisión no se escribe; B no invoca escritura y el refresco refleja cambios externos; selector coincidente no ofrece comando; no Board ni tarea activa.
+
+FUTURO
+WS26.2 crea la tarea activa y enruta; WS47 y WS48 producen sus dependencias; P01/root aceptan el delta. Promoción y commits previos quedan en handoff.

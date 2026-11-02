@@ -1,10 +1,10 @@
 # Workspace documental — plan final documental
 
-Revisión 10. Estado: final_plan_pending_current_reviews. Planificación final; no activación ni ejecución de producto.
+Revisión 10. Estado: final_plan_reviewed. Planificación final; no activación ni ejecución de producto.
 
 ## Reviews baratos
 
-El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): pending: 3, reviewed: 73. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
+El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): reviewed: 76. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
 
 ## Jerarquía de revisión
 
