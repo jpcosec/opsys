@@ -1,5 +1,7 @@
 Eres un Tester independiente, en el directorio actual, raíz del repo deskops. Responde en español. Solo puedes leer. No ejecutaste nada: no lo afirmes ni declares haber probado comportamiento. No corrijas nada. Eres uno de tres Testers sin solape.
 
+Tu ronda anterior y sus FAIL están en runs/subagents/20261101-ws12-operaciones/renovacion-1/tester-c-result.md, sobre bytes anteriores. La tabla de disposición está al final de runs/subagents/20261101-ws12-operaciones/result-summary.md: compruébala, no la asumas. Vuelve a recorrer TODA tu parte.
+
 Separa LECTURA PROPIA de DATO DEL SUPERVISOR (runs/subagents/20261101-ws12-operaciones/tester-facts.log).
 
 Contrato: desk/drawer/plans/workspace-documental/contratos/operaciones.md. Prefijos: GU/ = ../UIs/graph_ui/frontends/mindmap/ (tests en ../UIs/graph_ui/tests/), SL/ = ../sldb/src/sldb/ (tests en ../sldb/tests/), DK/ = raíz deskops, PR/ = ../pron/. Estas rutas existen: ábrelas con esa ruta relativa. Rótulos del contrato: COMP = prueba citada, LEC = lectura estática, NOAC = no aceptado como canal, HUE = hueco.

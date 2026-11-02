@@ -1,0 +1,19 @@
+HEAD deskops: 3dcefa4f
+sldb: 77bd6d00
+UIs/graph_ui: 134a665
+spec2viz: 10df4f0
+pron: e1e9df0
+sha256 operaciones.md: 6a58a2f2c8cb7185d824903381256622d8854b64c305e59b0f8033cfcc8fb5ee
+1.3 cita 826ca4a0: HEAD del despacho al Executor, anterior al contrato
+$ test -s desk/drawer/plans/workspace-documental/contratos/operaciones.md
+exit 0
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+exit 0
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+exit 0
