@@ -44,9 +44,31 @@ index 367fdfa2..9dc5e2c7 100644
  ### 7.4 Fallo de carga CDN
  
 diff --git a/desk/drawer/plans/workspace-documental/dag.yaml b/desk/drawer/plans/workspace-documental/dag.yaml
-index a2c44f6b..fb3d01fb 100644
+index a2c44f6b..355380c0 100644
 --- a/desk/drawer/plans/workspace-documental/dag.yaml
 +++ b/desk/drawer/plans/workspace-documental/dag.yaml
+@@ -826,8 +826,8 @@ tasks:
+   context_review:
+     contract_sha256: 3c1b922ac5269c1cff3e7f58c0e1277d95d4daee3ca00cfdedb4b95a31291396
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13/347000def510a671c806ef602ef99c78ff6b75f9cbcea454f1c77706b3bea7df/attempt-1
+-    input_sha256: 347000def510a671c806ef602ef99c78ff6b75f9cbcea454f1c77706b3bea7df
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13/85e49703703387435b16bfb98625c8b7e3614cae13c8061fc0090335cf77e87b/attempt-1
++    input_sha256: 85e49703703387435b16bfb98625c8b7e3614cae13c8061fc0090335cf77e87b
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
+@@ -1038,8 +1038,8 @@ tasks:
+   context_review:
+     contract_sha256: 14c96819a475e8dc85b29b6c2cf797e593efd54feb5705dd4ae62ecd52d4736a
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15/a1c5ef81125032ee88d9247291283caba6b50246502389f4237e264097b32274/attempt-1
+-    input_sha256: a1c5ef81125032ee88d9247291283caba6b50246502389f4237e264097b32274
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15/96daadfd5cfb29403980d3b9cbf1e910875f692142fbc034dbf93886be1120b3/attempt-1
++    input_sha256: 96daadfd5cfb29403980d3b9cbf1e910875f692142fbc034dbf93886be1120b3
+     required_protocol: ritual-context-review
+     status: reviewed
+   node_role: aggregate
 @@ -1058,8 +1058,10 @@ tasks:
    requires:
    - G_UI_READ
@@ -60,8 +82,35 @@ index a2c44f6b..fb3d01fb 100644
    scope: Referencia rota, documento ausente, modelo no importable y backend caído
      se muestran en panel afectado sin borrar historial ni fingir vacío. Fuente sin
      permiso/capacidad de edición es límite read-only visible, no fallo de lectura.
+@@ -1075,10 +1077,10 @@ tasks:
+   promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+     preflight required
+   context_review:
+-    contract_sha256: 96359e596a228ceb22a8b058b852901fe3a6d64d5a438118854660c8529901a3
++    contract_sha256: e610ea9bc687b6c5d4aaeb5a5ab6f81c2cada4f19147b82bfcf4bec25256e909
+     evidence:
+-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/034feb989d832d2ed6a168ff81420b681df1b664b71ad17f9c8dc788156dd0d7/attempt-1
+-    input_sha256: 034feb989d832d2ed6a168ff81420b681df1b664b71ad17f9c8dc788156dd0d7
++    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/6e0504be702fa893a014c310b763ba0a968f1e88bd03eef85c7df40430cc4ca3/attempt-1
++    input_sha256: 6e0504be702fa893a014c310b763ba0a968f1e88bd03eef85c7df40430cc4ca3
+     required_protocol: ritual-context-review
+     status: reviewed
+   output_base: graph_ui:repository_root/
+diff --git a/desk/drawer/tasks/workspace-documental/task-ws13.md b/desk/drawer/tasks/workspace-documental/task-ws13.md
+index 17d02f5b..f796608d 100644
+--- a/desk/drawer/tasks/workspace-documental/task-ws13.md
++++ b/desk/drawer/tasks/workspace-documental/task-ws13.md
+@@ -44,7 +44,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente
+ 
+ ## Review barato de comprensión
+ 
+-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13/347000def510a671c806ef602ef99c78ff6b75f9cbcea454f1c77706b3bea7df/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
++Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS13/85e49703703387435b16bfb98625c8b7e3614cae13c8061fc0090335cf77e87b/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+ 
+ ## Gate de promoción
+ 
 diff --git a/desk/drawer/tasks/workspace-documental/task-ws15-1.md b/desk/drawer/tasks/workspace-documental/task-ws15-1.md
-index 7f88b309..88c1c210 100644
+index 7f88b309..430ef148 100644
 --- a/desk/drawer/tasks/workspace-documental/task-ws15-1.md
 +++ b/desk/drawer/tasks/workspace-documental/task-ws15-1.md
 @@ -18,7 +18,7 @@ Candidata de planificación; no TaskDoc activa ni autorización de ejecución. F
@@ -72,4 +121,26 @@ index 7f88b309..88c1c210 100644
 +frontends/mindmap/views/workspace/errors/; frontends/mindmap/shell/api.js (conservar estado HTTP y tipificar errores HTTP/red/JSON, manteniendo error.body y compatibilidad con consumidores); rutas de lectura definidas por el contrato WS11; tests/
  
  Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro de esa base antes de promoción. Ninguna ruta autoriza modificar otro repo.
+ 
+@@ -38,7 +38,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente
+ 
+ ## Review barato de comprensión
+ 
+-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/034feb989d832d2ed6a168ff81420b681df1b664b71ad17f9c8dc788156dd0d7/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
++Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/6e0504be702fa893a014c310b763ba0a968f1e88bd03eef85c7df40430cc4ca3/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+ 
+ ## Gate de promoción
+ 
+diff --git a/desk/drawer/tasks/workspace-documental/task-ws15.md b/desk/drawer/tasks/workspace-documental/task-ws15.md
+index 8e38174a..b7df4337 100644
+--- a/desk/drawer/tasks/workspace-documental/task-ws15.md
++++ b/desk/drawer/tasks/workspace-documental/task-ws15.md
+@@ -42,7 +42,7 @@ Solapamiento: `workspace` en external_references. Solo delta o ticket existente
+ 
+ ## Review barato de comprensión
+ 
+-Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15/a1c5ef81125032ee88d9247291283caba6b50246502389f4237e264097b32274/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
++Estado: `reviewed`. Protocolo requerido: `ritual-context-review`. Evidencia: ['runs/subagents/20261031-workspace-context-reviews/context-review/WS15/96daadfd5cfb29403980d3b9cbf1e910875f692142fbc034dbf93886be1120b3/attempt-1']. Revisión barata vigente; acredita comprensión, no ejecución. APTO del concilio es experto y no satisface este gate.
+ 
+ ## Gate de promoción
  
