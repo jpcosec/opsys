@@ -1,0 +1,32 @@
+{
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada: archivos, cambios concretos, consumo de dependencias y gates, errores y validación esperada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto; no basta listar prerrequisitos ni verificar aceptaciones. Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261101-ws11-alineacion/contrato-review/ws41/input.md"
+ ],
+ "pid": 2941283,
+ "instruction_version": "v2-ejecucion-hipotetica",
+ "input_sha256": "70f0d314879a9c3bc345c3527f866270bb6bb1040c291b811c578e4d0ff425ed",
+ "output_sha256": "69a237c9d736b89d0383865a51c9544b1670b4560a924cb8dc35b4505ead103d",
+ "returncode": 0,
+ "fresh_process": true,
+ "stdin": "devnull",
+ "start": "2026-11-02T01:47:01.192984+00:00",
+ "end": "2026-11-02T01:47:22.230056+00:00",
+ "contract_sha256": "03853809b8fe58bc839f699d9c305a4f13780f410ed8a7ba43a347030b58000e"
+}
