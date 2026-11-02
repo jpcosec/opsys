@@ -1,0 +1,13 @@
+diff --git a/desk/drawer/plans/workspace-documental/contratos/navegacion.md b/desk/drawer/plans/workspace-documental/contratos/navegacion.md
+index 327d3f99..367fdfa2 100644
+--- a/desk/drawer/plans/workspace-documental/contratos/navegacion.md
++++ b/desk/drawer/plans/workspace-documental/contratos/navegacion.md
+@@ -86,7 +86,7 @@ Esto **existe** y está **sin aceptar**. No hay en graph_ui un concepto de «pro
+ 
+ ### 3.2 Regla del contrato
+ 
+-1. **Explícita por petición.** Cada petición de lectura nombra el desk con un **alias** (cadena de un conjunto cerrado), nunca con una ruta ni con un store. El servidor traduce alias a `(root, store)` consultando el conjunto cerrado. Una petición sin alias usa el desk del proceso, y el alias que lo designa se devuelve en la respuesta.
++1. **Explícita por petición.** Cada petición de lectura nombra el desk con un **alias** (cadena de un conjunto cerrado), nunca con una ruta ni con un store. El servidor traduce alias a `(root, store)` consultando el conjunto cerrado. Una petición sin alias usa el desk del proceso, y el alias que lo designa se devuelve en la respuesta: el de la configuración confiable si el operador lo incluyó y, si no, `local`, que ya designa el desk de la petición (5.2, paso 3a). Sin configuración confiable la identidad de 2.2 y la clave de 5.3 usan `local`, y WS13.1 no depende de WS41 para tenerla.
+ 2. **Aliases y roots autorizados: el contrato del input, no los valores** (decisión root de 2026-11-01, `review-source.md:13`). Los aliases reales son **configuración confiable suministrada por el operador** al arrancar o al seleccionar el despliegue; no son un documento que haya que generar automáticamente.
+    - **Reparto**: WS11 (este contrato) fija el contrato del input; WS41 lo consume y lo valida; WS40 da la instancia temporal con la que se prueba.
+    - **Contrato del input**: un conjunto cerrado de entradas `alias → (root, store)`, suministrado fuera de la petición (el cliente nunca lo aporta). Cada entrada: un `alias` (cadena que debe poder escribirse como prefijo `alias:` de una referencia, es decir cumplir `[A-Za-z0-9][A-Za-z0-9._-]*`, `SL/api/stores/doc_ref.py:17,19`; `local` ya significa «el store local» en esa sintaxis, `:18,38-39`, y está reservado en la sintaxis de enlaces, queda fuera del conjunto y el operador no puede redefinirlo: WS41 rechaza una entrada con ese alias; ver 5.2, paso 3a), el `root` del repo y el `store` (directorio `.sldb`). Los valores concretos los pone el operador: este contrato no inventa ninguno. El soporte, el formato y el punto de carga de la configuración son implementación de WS41, con estas condiciones: conjunto cerrado, fuera de la petición y sin valores reales en el repo de graph_ui ni en el corpus.
