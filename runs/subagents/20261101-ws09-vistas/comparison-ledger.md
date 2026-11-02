@@ -15,3 +15,7 @@ El Tester halló defectos reales que mi revisión no vio: tres estados que contr
 ## Renovación vigente
 
 Fuente `8c3a06be`. `status` marcó 1 de 73. attempt-1 de la carpeta de hash nueva, recibo completo, v2, sin ambigüedades. Leí `output.md` completo junto al contrato.
+
+## Adenda: Tester v2 FAIL y renovación vigente
+
+El Tester v2 confirmó los hallazgos previos resueltos y halló F07 y F15 con WS11 como productor de implementación. Corregidos en `b40da63b`. La renovación sobre `8c3a06be` queda como historia. Vigente: attempt-1 sobre `b40da63b`, recibo completo, v2, dos ambigüedades clasificadas, ninguna real.

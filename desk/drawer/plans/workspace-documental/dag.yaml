@@ -638,8 +638,8 @@ tasks:
   context_review:
     contract_sha256: db63604050fba77fca8130958b185656c0e634f791c40645e296f674dca529b8
     evidence:
-    - runs/subagents/20261031-workspace-context-reviews/context-review/WS09/996f1503de6c89b4c0e5df51fc58ee719a976295f7624de69634b38f8df05c8b/attempt-1
-    input_sha256: 996f1503de6c89b4c0e5df51fc58ee719a976295f7624de69634b38f8df05c8b
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS09/06bd65de72b3d20b51db08fab1cb4e432dfb80bb663cdeb49c9a4e9f095dd87f/attempt-1
+    input_sha256: 06bd65de72b3d20b51db08fab1cb4e432dfb80bb663cdeb49c9a4e9f095dd87f
     required_protocol: ritual-context-review
     status: reviewed
   node_role: delivery

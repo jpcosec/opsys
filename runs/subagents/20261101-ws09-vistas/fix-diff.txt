@@ -1,0 +1,22 @@
+diff --git a/desk/drawer/plans/workspace-documental/borradores/vistas.md b/desk/drawer/plans/workspace-documental/borradores/vistas.md
+index 62851a0c..918bfc21 100644
+--- a/desk/drawer/plans/workspace-documental/borradores/vistas.md
++++ b/desk/drawer/plans/workspace-documental/borradores/vistas.md
+@@ -160,7 +160,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Identidad**: nombre, stem o fragmento (`message read`, `deskops.md:40`); `<ts>-<kind>-<slug>` (`deskops.md:38`). Selector en el lector: no definido; productor WS11.
+ - **Contrato**: InboxNoteDoc (`deskops.md:189`).
+ - **Campos y relaciones**: estado cerrado y `acknowledged_by/at` (`deskops.md:41`). Otros campos: no leídos en las auditorías; productor WS11.
+-- **Renderer existente o requerido**: ausente en la UI (solo un ícono de `InboxNoteDoc`, `ui.md:71`); productor WS25.1 (`dag.yaml:1652`). Mostrar la nota como documento puede reutilizar el lector genérico: no definido; productor WS11.
++- **Renderer existente o requerido**: ausente en la UI (solo un ícono de `InboxNoteDoc`, `ui.md:71`); productor WS25.1 (`dag.yaml:1652`). Mostrar la nota como documento: contrato de lectura WS11, implementación WS25.1.
+ - **Navegación**: consultar contexto con `sldb find`, `fields query`, pills (`user-flows.md:44`); más: no definido; productor WS11.
+ - **Acción/dueño**: leer y listar; ack local reescribe la nota y re-trackea (`deskops.md:41`) pero su uso como ack de la UF queda pendiente del contrato WS12 (`user-flows.md:49`); responder dentro del mismo desk es hueco (`user-flows.md:50`); `promote inbox-to-drawer-task` borra la nota y no está aprobado como canal (`deskops.md:43`; `user-flows.md:47`). Dueño: deskops.
+ - **Destino de escritura**: nota de `desk/inbox` del mismo desk (`deskops.md:41`). Desde UI: no definido; productor WS12 (UI: WS25.1).
+@@ -313,7 +313,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Identidad**: no definido; productor WS11.
+ - **Contrato**: DeskFAQDoc (`deskops.md:188`).
+ - **Campos y relaciones**: no leídos en las auditorías; no definido; productor WS11.
+-- **Renderer existente o requerido**: no definido; productor WS11 (documento por el lector genérico) y WS13.1 (el FAQ Markdown de WS40 se lee como Markdown, `dag.yaml:2690`). Navegación de preguntas: sin productor en el DAG, repo dueño graph_ui (`dag.yaml` nombra FAQ en WS02, WS09 y WS40, líneas 356, 620 y 2690; ninguno produce esa navegación).
++- **Renderer existente o requerido**: no definido; contrato WS11, implementación WS13.1 (el FAQ Markdown de WS40 se lee como Markdown, `dag.yaml:2690`). Navegación de preguntas: sin productor en el DAG, repo dueño graph_ui (`dag.yaml` nombra FAQ en WS02, WS09 y WS40, líneas 356, 620 y 2690; ninguno produce esa navegación).
+ - **Navegación**: orientación, buscar y abrir (tabla 2); no definido más allá; productor WS11.
+ - **Acción/dueño**: `list/show/add/edit faq-doc` (`deskops.md:59,70,84,95`); dueño deskops. Edición bajo contrato.
+ - **Destino de escritura**: `desk/faq/<id>.md` por `add faq-doc`, que no lo trackea en el acto (`deskops.md:59`). Desde UI: no definido; productor WS12.
