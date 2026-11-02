@@ -180,3 +180,13 @@ Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01, sin Executor. Leí el contrato compl
 
 - **§5.2, paso 6.** La redacción del Executor pasaba a `doc_status` el destino sin prefijo y prohibía `split_doc_ref`, pero `doc_status` lo llama por dentro (`doc_status.py:26`). Un destino con dos puntos seguiría un enlace directo del store que el operador no autorizó. `deskops/.sldb/store.yaml` declara enlaces, así que el caso es real. Ahora el paso exige `"local:" + resto`, sintaxis pública que deja el resto entero y solo busca en ese store (`doc_ref.py:38-39`).
 - **`vistas.md:367`.** Usaba el prefijo `GU/`, no definido en ese archivo. Ahora lleva la ruta completa.
+
+## Ajuste del Supervisor por la comprobación focal root
+
+Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01, sin Executor. Autoridad: `review-source-2.md`. Por lectura, nada ejecutado.
+
+- §5.2: `local:` se reconoce antes que los aliases y se retira una vez; designa el desk de origen o de la petición; el resto no se reinterpreta. Tabla de ejemplos positivos y negativos.
+- §3.2 y §8.5: `local` reservado, WS41 rechaza esa entrada. E-MD1 solo para el parámetro explícito de alias; el literal de texto del paso 3c es E5.
+- C5b: el builder consume un descriptor y no consulta registro; reutilización con `model=None` por verificar en WS13.1.
+- H-11: fuera de las cinco clases documentales, sin clase nueva.
+- `vistas.md` no cambia respecto de `b4968374`: root resolvió que Evidencia de F18a no se toca.
