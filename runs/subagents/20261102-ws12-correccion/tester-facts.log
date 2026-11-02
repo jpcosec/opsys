@@ -1,0 +1,4 @@
+HEAD deskops: e9cb4e82
+sha256 operaciones.md: 72b84042525a9085623a5922a1b3c34926026e4f748825d91323ba0c76034dfc
+sha256 dag.yaml: d6b9405a6bddb74e83bdb398598c0f4d95a9e4a90f9ec33af8d9ef0e1bb25ceb
+stale medido: 38 entradas; build --check verde
