@@ -1,0 +1,10 @@
+Deprecated: use `deskops doctor`
+Alerts (the store moved under an expected change; nothing is broken):
+- AtomDoc:atom-desk-health-delegates-store-diagnostics-to-sldb: 4 heading(s) the model does not declare: ## Boundary Rationale, ## Delegation Pattern, ## Evidence, ## Tags
+- AtomDoc:atom-desk-health-is-measured-by-cli-diagnostics: 4 heading(s) the model does not declare: ## Diagnostic Surface, ## Repairability, ## Evidence, ## Tags
+- AtomDoc:atom-desk-health-is-workspace-integrity-state: 3 heading(s) the model does not declare: ## Evidence, ## Related Atoms, ## Tags
+- AtomDoc:atom-desk-repair-is-owned-by-deskops: 4 heading(s) the model does not declare: ## Owned Operations, ## Not Owned, ## Evidence, ## Tags
+- RepositoryDoc:repo-deskops: 1 block(s) its model does not read would be lost on a rewrite (desk/registry/repo-deskops.md)
+  register edits, moves and new documents with: deskops desk update --apply
+
+Desk is healthy, with 5 alert(s).
