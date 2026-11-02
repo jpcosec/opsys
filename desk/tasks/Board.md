@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-corregir-contrato-de-navegación-de-ws11-tras-revisión-root.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Corregir contrato de navegación de WS11 tras revisión root [draft] - Corregir en una pasada contratos/navegacion.md según los puntos A a F y las cuatro decisiones root, y ajustar solo la celda necesaria de F18a en vistas.md, cotejando todas las filas C y H y las cadenas de llamada relevantes.

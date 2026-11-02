@@ -1,0 +1,98 @@
+---
+id: task-corregir-contrato-de-navegación-de-ws11-tras-revisión-root
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
+references:
+- desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- desk/drawer/plans/workspace-documental/borradores/vistas.md
+- desk/drawer/plans/workspace-documental/dag.yaml
+- runs/subagents/20261101-ws11-correccion/review-source.md
+- runs/subagents/20261101-ws11-navegacion/handoff.md
+- runs/subagents/20261101-ws11-navegacion/comparison-ledger.md
+- desk/rituals/context-review.md
+depends_on: []
+pills:
+- desk/contexts/pill-005-subagent-execution.md
+- desk/contexts/pill-001-task-closure-commit.md
+files:
+- desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- desk/drawer/plans/workspace-documental/borradores/vistas.md
+task_type: docs
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/tasks/task-corregir-contrato-ws11.md
+closeout_evidence:
+- commit
+- document
+---
+
+# Corregir contrato de navegación de WS11 tras revisión root
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+La revisión root no aprobó contratos/navegacion.md: el PASS del Tester fue focal y tres auditorías de apoyo hallaron afirmaciones que no se sostienen, además de decisiones root sobre foco, enlaces, WS18 y aliases que el contrato debe recoger.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+Corregir en una pasada contratos/navegacion.md según los puntos A a F y las cuatro decisiones root, y ajustar solo la celda necesaria de F18a en vistas.md, cotejando todas las filas C y H y las cadenas de llamada relevantes.
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+Autoridad: runs/subagents/20261101-ws11-correccion/review-source.md, que se lee completo y prevalece sobre este resumen. Lista cerrada.
+
+Superficies de escritura: desk/drawer/plans/workspace-documental/contratos/navegacion.md, una celda de F18a en desk/drawer/plans/workspace-documental/borradores/vistas.md y runs/subagents/20261101-ws11-correccion/result-summary.md.
+
+Decisiones root que el contrato debe recoger, sin reabrirlas:
+1. WS13.1 no se reduce a C1-C4. Foco interno por documento, distinguido de navegación.
+2. Enlaces entre desks por composición en graph_ui dentro de WS41, sin ampliar sldb. H-16 pasa a integración/API de graph_ui de WS41.
+3. WS18 sigue detenida por selección y notación mínimas; es opcional y no bloquea la base.
+4. Aliases reales: configuración confiable del operador al arrancar o seleccionar despliegue. WS11 fija el contrato del input, WS41 consume y valida, WS40 da la instancia temporal. Sin configuración confiable no hay lectura cruzada. El registry da identidad y puede ser fuente designada por el operador, no autorización automática.
+
+Correcciones:
+A. Secciones 4 y 6 y H-03 a H-05b: separar datos disponibles, interacción existente y comportamiento futuro comprometido, con todas las condiciones de A sobre C1-C4, C5b, C6, C7, C8/C9, C11/C12, C14, H-05b, mismo origen y RitualDoc.steps.
+B. Sección 3.3: guardias generales separadas de las específicas de referencias de TaskDoc. H-06 y enlaces: autorizar y resolver antes de cualquier lectura o recursión; composición parse_links, split_anchor y doc_status; sintaxis y tratamiento fijados.
+C. Secciones 3, 5.4, 8 y H-14: retirar «doc_status no escribe»; lectura sin mutación con stores preparados y comprobación al ejecutar consumidores; store propio en WS13.1 y WS24, segundo desk en WS41.
+D. Sección 7 y H-09: status conservado en el cliente como delta de WS15.1; E7 muestra la causa recibida.
+E. Sección 10: authored no equivale a modelado.
+F. vistas.md, F18a: solo la celda necesaria, con notation-view.js:356 y shell/registry.js:16.
+Además: clave de sesión de modelado con alias además de Model:name.
+
+Conservar: mapa de recibos por delta de la sección 12, estado de actas, opcionales sin bloquear la base, fuente propia frente a Code, identidad opcional, store explícito y estado borrador.
+
+Cotejar todas las filas C y H, no una muestra, abriendo el código citado. Tabla por fila en result-summary.md.
+
+No tocar: dag.yaml, helper, validadores, fuentes comunes, otros contratos, código, repos hermanos, auditorías. Sin commits, revisiones ni tests. Sin preguntar al solicitante. Una decisión de producto no cubierta se expone en result-summary.md, no se improvisa.
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+1. Leer review-source.md y el contrato completos. 2. Abrir cada cita de cada fila C y H y seguir las cadenas de llamada nombradas por root. 3. Aplicar A a F y las cuatro decisiones. 4. Escribir result-summary.md con resolución por punto, tabla por fila y lo no leído.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- test -s desk/drawer/plans/workspace-documental/contratos/navegacion.md
+- python desk/drawer/plans/workspace-documental/build_plan.py --check
+- python desk/drawer/plans/workspace-documental/validate_plan.py --check
+- python desk/drawer/plans/workspace-documental/context_review.py status
+- Tester independiente de solo lectura deja runs/subagents/20261101-ws11-correccion/tester-result-summary.md
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+Acceptance: A a F y las cuatro decisiones resueltas explícitamente en el contrato; todas las filas C y H cotejadas; revisión root del parche congelado antes de registrar o revisar; Tester independiente PASS sobre los puntos corregidos completos, por lectura; revisión fresca no ejecutora del contrato corregido con consumidor, en evidencia separada; WS09 renovada solo si vistas.md cambió; build --check, validate --check y status en verde.
