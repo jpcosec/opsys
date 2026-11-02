@@ -1,0 +1,13 @@
+diff --git a/desk/drawer/plans/workspace-documental/borradores/vistas.md b/desk/drawer/plans/workspace-documental/borradores/vistas.md
+index 0cdfcb8a..ca2c584e 100644
+--- a/desk/drawer/plans/workspace-documental/borradores/vistas.md
++++ b/desk/drawer/plans/workspace-documental/borradores/vistas.md
+@@ -317,7 +317,7 @@ Convención de citas. `deskops.md:N`, `infraestructura.md:N` y `ui.md:N` son lí
+ - **Navegación**: orientación, buscar y abrir (tabla 2); no definido más allá; productor WS11.
+ - **Acción/dueño**: `list/show/add/edit faq-doc` (`deskops.md:59,70,84,95`); dueño deskops. Edición bajo contrato.
+ - **Destino de escritura**: `desk/faq/<id>.md` por `add faq-doc`, que no lo trackea en el acto (`deskops.md:59`). Desde UI: no definido; productor WS12.
+-- **Error**: no definido; productor WS11. Condicionado: con 0 documentos no hay orientación que mostrar, y el comando `faq` lee otra fuente (`deskops.md:233`).
++- **Error**: no definido; productor WS11. Condicionado: que no existan instancias DeskFAQDoc (`deskops.md:188,233`) no implica ausencia de orientación: `deskops faq` lee `docs/faq.md` (`deskops.md:33`) y WS40 crea un FAQ Markdown en el corpus (`dag.yaml:2690`).
+ - **Estado**: bloqueado. WS40 crea un FAQ Markdown en el corpus para la entrada mínima (`dag.yaml:2690`), y su lectura necesita WS40, WS13.1 y el contrato WS11.
+ - **Clase**: authored (preguntas); derivado (índice de preguntas, búsqueda).
+ - **UF**: ninguna explícita: `user-flows.md` no menciona FAQ (búsqueda de texto sin coincidencias). WS40 la usa como enlace de la entrada mínima que prueba WS16 (`dag.yaml:2690`).

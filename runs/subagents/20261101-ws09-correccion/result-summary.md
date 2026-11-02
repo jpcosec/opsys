@@ -56,3 +56,7 @@ Archivo editado: `desk/drawer/plans/workspace-documental/borradores/vistas.md`. 
 - Que `build_plan.py --check`, `validate_plan.py --check` y `context_review.py status` pasen: no se ejecutaron, por instrucción.
 - No abrí `desk/rituals/testing.md` ni `execution.md` más allá del campo `steps` (testing completo hasta línea 20; execution hasta línea 22).
 - Las rutas `deskops/models/ritual.py` y los rituales se citan como en la instrucción; las líneas de las auditorías se abrieron una a una con `sed`, no con Read.
+
+## Ítem 11, añadido por el Supervisor tras Tester PASS
+
+Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Fuera de la lista cerrada de la TaskDoc, y declarado aquí. El Tester señaló que F15 conservaba «con 0 documentos no hay orientación que mostrar», el mismo patrón que root marcó en F05: negar por conteo de instancias. Se corrige en F15, campo Error, citando `deskops.md:33,188,233` y `dag.yaml:2690`. `docs/faq.md` existe en el repo. Estados sin cambio.
