@@ -194,3 +194,7 @@ Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01, sin Executor. Autoridad: `review-sou
 ## Ajuste del Supervisor tras la revisión fresca, ronda 1
 
 Claude Opus 5.5, sin Executor. Tres frases: §5.2 `local:`, §3.2 soporte de la configuración, §7.5 E7 como caso de E4. Disposición en `contrato-review-disposition.md`.
+
+## Ajuste del Supervisor tras la revisión fresca, ronda 2
+
+Una frase en §3.2.1: sin alias configurado, el desk del proceso usa `local`. Decisión mía, declarada para root.

@@ -16,3 +16,23 @@ Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01. Evidencia en `renovacion-1/contrato-
 Tester ronda 1, PASS, observación E4/E7: **ajustada**, §7.5 declara E7 como caso de E4. Rangos con línea vecina: no se tocan.
 
 **Para root, no resuelto aquí:** el delta de WS15.1 toca `shell/api.js` (§7.3), y el `output_scope` de WS15.1 es `views/workspace/errors/`, rutas de lectura y tests. `dag.yaml` no se edita en este alcance.
+
+# Ronda 2
+
+Evidencia en `renovacion-2/contrato-review/`, sobre sha256 `8c4df02e…`. Tester ronda 2 PASS sobre esos bytes, copia en `renovacion-2/`.
+
+| Consumidor | Ambigüedad | Disposición |
+|---|---|---|
+| WS13.1 | 1. `repo` de la identidad sin configuración | **Ajustada**, §3.2.1. Marcada por los dos consumidores por separado |
+| WS41 | 1. Alias del desk del proceso | **Ajustada**, misma frase |
+| WS13.1 | 2. Línea Code frente a C12 | Resuelta por C11a, C12 y §6.1. No cambia |
+| WS13.1 | 3. F17 «bloqueado» frente a «soportadas» | El estado de F17 espera a WS11 y WS13.1; §6.1 fija qué se soporta. No cambia |
+| WS13.1 | 4. Procedencia de arista en el panel | Resuelta por §6.1, punto 4. No cambia |
+| WS41 | 2. Quién implementa volver | H-12: WS41 conserva el alias; historia en WS13.3. WS41 depende de WS13. No cambia |
+| WS41 | 3. `output_scope` con `source/` | Ver abajo |
+
+**La frase de §3.2.1 es decisión del Supervisor**, derivada de la resolución root de `local` (`review-source-2.md`). Root la revisa.
+
+**Para root:** el `output_scope` de WS41 nombra `frontends/mindmap/source/`. Ver el estado de esa carpeta en `freeze-final.md`. `dag.yaml` no se edita en este alcance.
+
+Parada: acepto las demás ambigüedades como futuras o ya respondidas. Una revisión fresca sin historial siempre encuentra más; no se itera hasta vaciarla.
