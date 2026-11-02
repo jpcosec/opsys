@@ -6,6 +6,8 @@ node_role: delivery
 parent_id: WS19
 depends_on:
 - WS12
+- WS47
+- WS48
 requires:
 - G_HUMAN_READ
 - G_PAYLOAD_PRECONDITION
@@ -31,11 +33,11 @@ Alta/baja de relaciones permitidas por contrato, usando API real y la precondici
 
 ## Aceptación
 
-Alta y baja persisten y se confirman tras recargar; una relación no permitida o una revisión obsoleta se rechaza con error visible.
+Alta y baja persisten y se confirman tras recargar; una relación no permitida o una revisión obsoleta se rechaza con error visible. La baja de un RelationDoc borra el documento autorado y su índice por el canal público de sldb (/save delete con expected) y no reaparece tras recargar; si el modo no ofrece ese efecto (graph_ui local solo destrackea) la baja de RelationDoc no se habilita y se declara. Quitar una referencia de campo es otra operación con su prueba propia. Tipos y relaciones protegidos por el contrato se rechazan. Depende de WS47 (guarda de contenido) y WS48 (admisión de escritura).
 
 ## Dependencias
 
-Tareas: WS12. Gates: G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS47, WS48. Gates: G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 

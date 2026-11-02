@@ -6,6 +6,8 @@ node_role: delivery
 parent_id: WS19
 depends_on:
 - WS12
+- WS47
+- WS48
 requires:
 - G_HUMAN_READ
 - G_PAYLOAD_PRECONDITION
@@ -31,11 +33,11 @@ Edición de campos reutilizando editores y API, con precondición de escritura d
 
 ## Aceptación
 
-Guardar/recargar confirma dato real; una escritura obsoleta no pierde texto local y el conflicto se muestra como tal. Mutación restringida a desk en modo manual exclusivo (P03); otros modos read-only hasta contrato.
+Guardar/recargar confirma dato real; una escritura obsoleta no pierde texto local y el conflicto se muestra como tal. Mutación restringida a desk en modo manual exclusivo (P03), admitida por el productor común WS48; otros modos read-only hasta contrato. Documentos con contenido no declarado no son editables por este canal hasta que WS47 pruebe la guarda de contenido; la igualdad de payload (expected) no la sustituye.
 
 ## Dependencias
 
-Tareas: WS12. Gates: G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS47, WS48. Gates: G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 

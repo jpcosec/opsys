@@ -7,6 +7,7 @@ parent_id: WS26
 depends_on:
 - WS12
 - WS22
+- WS48
 requires:
 - G_CLOSEOUT
 - G_HUMAN_READ
@@ -36,7 +37,7 @@ UF04 sobre TaskDoc real: el candidato queda autorado con evidencia declarada, de
 
 ## Dependencias
 
-Tareas: WS12, WS22. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS22, WS48. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 

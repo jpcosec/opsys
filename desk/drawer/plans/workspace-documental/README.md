@@ -1,10 +1,10 @@
 # Workspace documental — plan final documental
 
-Revisión 9. Estado: final_plan_reviewed. Planificación final; no activación ni ejecución de producto.
+Revisión 10. Estado: final_plan_pending_current_reviews. Planificación final; no activación ni ejecución de producto.
 
 ## Reviews baratos
 
-El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): reviewed: 73. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
+El concilio conserva APTO COMO PLAN como revisión experta; no acredita contexto cero barato. Estado por nodo (raíz, paquetes y candidatas): pending: 3, reviewed: 73. Evidencia en `runs/subagents/20261031-workspace-context-reviews/context-review/`; protocolo `ritual-context-review`. Un review vigente prueba comprensión del encargo: no promueve nodos ni satisface gates. `execution_authorized=false`.
 
 ## Jerarquía de revisión
 
@@ -14,7 +14,7 @@ ROOT y PK agrupan la revisión; no son dependencias. Un nodo `aggregate` no se e
 - **PK02 Decisiones y contratos**: WS07, WS08, WS09, WS10, WS11, WS12
 - **PK03 Lector y descubrimiento**: WS13, WS14, WS15, WS16, WS40, WS41
 - **PK04 Navegación y representaciones**: WS17, WS18, WS22, WS23, WS24
-- **PK05 Autoría y operación manual**: WS19, WS20, WS21, WS45, WS25, WS26, WS27, WS28, WS30, WS42
+- **PK05 Autoría y operación manual**: WS19, WS20, WS21, WS45, WS46, WS47, WS48, WS25, WS26, WS27, WS28, WS30, WS42
 - **PK06 Publicación básica**: WS31, WS43
 - **PK07 Extensiones independientes**: WS29, WS39
 - **PK08 Ramal Scion opcional**: WS32, WS33, WS34, WS35, WS36, WS37, WS38, WS44
@@ -64,23 +64,23 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | WS17 | [Escribir entradas e índices del desk ejemplo](../../tasks/workspace-documental/task-ws17.md) | WS11, WS40 | — | deskops | S |
 | WS18 | [Declarar proyecciones de grafo reutilizables](../../tasks/workspace-documental/task-ws18.md) | WS09, WS11 | G_SPEC_VIEW | spec2viz | S |
 | WS19 | [Integrar edición de campos con conflicto](../../tasks/workspace-documental/task-ws19.md) | WS12, WS19.1, WS19.2 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS19.1 | [Editar campos con conflicto visible](../../tasks/workspace-documental/task-ws19-1.md) | WS12 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS19.2 | [Editar relaciones permitidas por contrato](../../tasks/workspace-documental/task-ws19-2.md) | WS12 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS19.1 | [Editar campos con conflicto visible](../../tasks/workspace-documental/task-ws19-1.md) | WS12, WS47, WS48 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS19.2 | [Editar relaciones permitidas por contrato](../../tasks/workspace-documental/task-ws19-2.md) | WS12, WS47, WS48 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS20 | [Comprobar o completar guardado fuente reversible](../../tasks/workspace-documental/task-ws20.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | M |
 | WS21 | [Integrar fuente y renderizado según source_mode](../../tasks/workspace-documental/task-ws21.md) | WS19 | G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS22 | [Renderizar Board como trabajo navegable](../../tasks/workspace-documental/task-ws22.md) | WS13, WS09 | G_UI_READ | graph_ui | M |
 | WS23 | [Renderizar rituales y pasos como procedimiento](../../tasks/workspace-documental/task-ws23.md) | WS13, WS09 | G_UI_READ | graph_ui | S |
 | WS24 | [Integrar conocimiento y grafo local](../../tasks/workspace-documental/task-ws24.md) | WS13, WS09 | G_UI_READ | graph_ui | M |
 | WS25 | [Integrar captura y triage en UI](../../tasks/workspace-documental/task-ws25.md) | WS12, WS25.1, WS25.2 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS25.1 | [Leer inbox y registrar ack o respuesta local](../../tasks/workspace-documental/task-ws25-1.md) | WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | S |
-| WS25.2 | [Capturar en drawer o protoátomo](../../tasks/workspace-documental/task-ws25-2.md) | WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | S |
+| WS25.1 | [Leer inbox y registrar ack o respuesta local](../../tasks/workspace-documental/task-ws25-1.md) | WS12, WS48 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | S |
+| WS25.2 | [Capturar en drawer o protoátomo](../../tasks/workspace-documental/task-ws25-2.md) | WS12, WS46, WS48 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | S |
 | WS26 | [Integrar autoría y contexto de tareas](../../tasks/workspace-documental/task-ws26.md) | WS12, WS22, WS26.1, WS26.2 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS26.1 | [Autorar tarea, evidencia y contexto](../../tasks/workspace-documental/task-ws26-1.md) | WS12, WS22 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS26.2 | [Enrutar en Board y mostrar capa lista](../../tasks/workspace-documental/task-ws26-2.md) | WS12, WS22, WS26.1 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS26.1 | [Autorar tarea, evidencia y contexto](../../tasks/workspace-documental/task-ws26-1.md) | WS12, WS22, WS48 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS26.2 | [Enrutar en Board y mostrar capa lista](../../tasks/workspace-documental/task-ws26-2.md) | WS12, WS22, WS26.1, WS48 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS27 | [Integrar revisión de cambios y evidencia](../../tasks/workspace-documental/task-ws27.md) | WS13, WS12, WS27.1, WS27.2 | G_UI_READ | graph_ui | M |
 | WS27.1 | [Mostrar diff Git por repo y tarea](../../tasks/workspace-documental/task-ws27-1.md) | WS13, WS12 | G_UI_READ | graph_ui | M |
 | WS27.2 | [Mostrar evidencia declarada, encontrada y verificada](../../tasks/workspace-documental/task-ws27-2.md) | WS13, WS12 | G_UI_READ | graph_ui | S |
-| WS28 | [Integrar verificación y handoff de cierre](../../tasks/workspace-documental/task-ws28.md) | WS27, WS12 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS28 | [Integrar verificación y handoff de cierre](../../tasks/workspace-documental/task-ws28.md) | WS27, WS12, WS48 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS29 | [Integrar Changes e impacto comprobable](../../tasks/workspace-documental/task-ws29.md) | WS15, WS24 | G_UI_READ | graph_ui | M |
 | WS30 | [Validar autoría y revisión manual completas](../../tasks/workspace-documental/task-ws30.md) | WS17, WS21, WS22, WS23, WS24, WS25, WS26, WS28, WS42 | — | graph_ui | M |
 | WS31 | [Publicar manual documental básico probado](../../tasks/workspace-documental/task-ws31.md) | WS30, WS10, WS43 | G_HUMAN_MANUAL | deskops | M |
@@ -97,13 +97,16 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | WS36 | [Integrar delegación e intervención humanas](../../tasks/workspace-documental/task-ws36.md) | WS34, WS35 | G_EXEC, G_SCION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS37 | [Validar delegación con agente real](../../tasks/workspace-documental/task-ws37.md) | WS36, WS30 | G_EXEC, G_SCION | graph_ui | M |
 | WS38 | [Publicar capítulos verificados de delegación](../../tasks/workspace-documental/task-ws38.md) | WS37, WS31 | G_HUMAN_DELEGATE | deskops | S |
-| WS39 | [Integrar inspección y edición de modelos existente](../../tasks/workspace-documental/task-ws39.md) | WS12, WS13 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS39 | [Integrar inspección y edición de modelos existente](../../tasks/workspace-documental/task-ws39.md) | WS12, WS13, WS48 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS40 | [Crear generador reproducible del corpus Taller](../../tasks/workspace-documental/task-ws40.md) | WS11, WS08 | G_UI_READ | graph_ui | M |
 | WS41 | [Implementar lectura segura entre desks](../../tasks/workspace-documental/task-ws41.md) | WS13, WS11, WS40 | G_UI_READ | graph_ui | M |
-| WS42 | [Integrar operaciones de conocimiento existentes](../../tasks/workspace-documental/task-ws42.md) | WS19, WS24, WS12 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS42 | [Integrar operaciones de conocimiento existentes](../../tasks/workspace-documental/task-ws42.md) | WS19, WS24, WS12, WS48 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS43 | [Publicar navegación documental del desk real](../../tasks/workspace-documental/task-ws43.md) | WS17, WS30 | G_HUMAN_MANUAL, G_PRODUCT, G_WRITE_CONTRACT | deskops | S |
 | WS44 | [Comprobar y revalidar acceso público a Scion](../../tasks/workspace-documental/task-ws44.md) | WS05, WS07 | G_PRODUCT | deskops | S |
 | WS45 | [Verificar o completar la precondición de escritura de payload](../../tasks/workspace-documental/task-ws45.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | M |
+| WS46 | [Probar o completar la captura a drawer y protoátomo con origen](../../tasks/workspace-documental/task-ws46.md) | WS12 | G_WRITE_CONTRACT | deskops | M |
+| WS47 | [Proteger contenido no declarado en la edición por campos de /save](../../tasks/workspace-documental/task-ws47.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | S |
+| WS48 | [Admitir escrituras de la UI en modo manual exclusivo](../../tasks/workspace-documental/task-ws48.md) | WS12 | G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 
 ## Gates externos y humanos
 

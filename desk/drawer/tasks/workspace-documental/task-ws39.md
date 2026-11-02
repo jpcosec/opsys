@@ -6,6 +6,7 @@ node_role: delivery
 depends_on:
 - WS12
 - WS13
+- WS48
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -34,7 +35,7 @@ UF09 inspección y mutación en store temporal real de prueba; comprobar los efe
 
 ## Dependencias
 
-Tareas: WS12, WS13. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS13, WS48. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 

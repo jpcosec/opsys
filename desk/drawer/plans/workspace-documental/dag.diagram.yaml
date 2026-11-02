@@ -196,6 +196,15 @@ data:
     WS45:
       label: 'WS45: Verificar o completar la precondición de escritura de payload'
       kind: core
+    WS46:
+      label: 'WS46: Probar o completar la captura a drawer y protoátomo con origen'
+      kind: core
+    WS47:
+      label: 'WS47: Proteger contenido no declarado en la edición por campos de /save'
+      kind: core
+    WS48:
+      label: 'WS48: Admitir escrituras de la UI en modo manual exclusivo'
+      kind: core
     G_PRODUCT:
       label: G_PRODUCT [satisfied]
       kind: boundary
@@ -501,6 +510,14 @@ data:
     to: WS19.1
     relation: prerequisite
     label: ''
+  - from: WS47
+    to: WS19.1
+    relation: prerequisite
+    label: ''
+  - from: WS48
+    to: WS19.1
+    relation: prerequisite
+    label: ''
   - from: G_HUMAN_READ
     to: WS19.1
     relation: prerequisite
@@ -518,6 +535,14 @@ data:
     relation: prerequisite
     label: recibo por delta
   - from: WS12
+    to: WS19.2
+    relation: prerequisite
+    label: ''
+  - from: WS47
+    to: WS19.2
+    relation: prerequisite
+    label: ''
+  - from: WS48
     to: WS19.2
     relation: prerequisite
     label: ''
@@ -629,6 +654,10 @@ data:
     to: WS25.1
     relation: prerequisite
     label: ''
+  - from: WS48
+    to: WS25.1
+    relation: prerequisite
+    label: ''
   - from: G_HUMAN_READ
     to: WS25.1
     relation: prerequisite
@@ -642,6 +671,14 @@ data:
     relation: prerequisite
     label: recibo por delta
   - from: WS12
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: WS46
+    to: WS25.2
+    relation: prerequisite
+    label: ''
+  - from: WS48
     to: WS25.2
     relation: prerequisite
     label: ''
@@ -697,6 +734,10 @@ data:
     to: WS26.1
     relation: prerequisite
     label: ''
+  - from: WS48
+    to: WS26.1
+    relation: prerequisite
+    label: ''
   - from: G_CLOSEOUT
     to: WS26.1
     relation: prerequisite
@@ -722,6 +763,10 @@ data:
     relation: prerequisite
     label: ''
   - from: WS26.1
+    to: WS26.2
+    relation: prerequisite
+    label: ''
+  - from: WS48
     to: WS26.2
     relation: prerequisite
     label: ''
@@ -790,6 +835,10 @@ data:
     relation: prerequisite
     label: ''
   - from: WS12
+    to: WS28
+    relation: prerequisite
+    label: ''
+  - from: WS48
     to: WS28
     relation: prerequisite
     label: ''
@@ -1145,6 +1194,10 @@ data:
     to: WS39
     relation: prerequisite
     label: ''
+  - from: WS48
+    to: WS39
+    relation: prerequisite
+    label: ''
   - from: G_HUMAN_READ
     to: WS39
     relation: prerequisite
@@ -1194,6 +1247,10 @@ data:
     relation: prerequisite
     label: ''
   - from: WS12
+    to: WS42
+    relation: prerequisite
+    label: ''
+  - from: WS48
     to: WS42
     relation: prerequisite
     label: ''
@@ -1251,6 +1308,38 @@ data:
     label: recibo por delta
   - from: G_WRITE_CONTRACT
     to: WS45
+    relation: prerequisite
+    label: recibo por delta
+  - from: WS12
+    to: WS46
+    relation: prerequisite
+    label: ''
+  - from: G_WRITE_CONTRACT
+    to: WS46
+    relation: prerequisite
+    label: recibo por delta
+  - from: WS12
+    to: WS47
+    relation: prerequisite
+    label: ''
+  - from: G_SLDB_WRITE
+    to: WS47
+    relation: prerequisite
+    label: recibo por delta
+  - from: G_WRITE_CONTRACT
+    to: WS47
+    relation: prerequisite
+    label: recibo por delta
+  - from: WS12
+    to: WS48
+    relation: prerequisite
+    label: ''
+  - from: G_UI_WRITE
+    to: WS48
+    relation: prerequisite
+    label: recibo por delta
+  - from: G_WRITE_CONTRACT
+    to: WS48
     relation: prerequisite
     label: recibo por delta
   - from: WS07

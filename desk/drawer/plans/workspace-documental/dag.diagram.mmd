@@ -70,6 +70,9 @@ flowchart TD
     WS43["WS43: Publicar navegación documental del desk real"]
     WS44["WS44: Comprobar y revalidar acceso público a Scion"]
     WS45["WS45: Verificar o completar la precondición de escritura de payload"]
+    WS46["WS46: Probar o completar la captura a drawer y protoátomo con origen"]
+    WS47["WS47: Proteger contenido no declarado en la edición por campos de /save"]
+    WS48["WS48: Admitir escrituras de la UI en modo manual exclusivo"]
     G_PRODUCT["G_PRODUCT [satisfied]"]
     G_CLOSEOUT["G_CLOSEOUT [satisfied]"]
     G_SOURCE["G_SOURCE [pending]"]
@@ -150,11 +153,15 @@ flowchart TD
     G_UI_WRITE -->|"recibo por delta"| WS19
     G_WRITE_CONTRACT -->|"recibo por delta"| WS19
     WS12 -->|"prerequisite"| WS19.1
+    WS47 -->|"prerequisite"| WS19.1
+    WS48 -->|"prerequisite"| WS19.1
     G_HUMAN_READ -->|"habilitar uso UI"| WS19.1
     G_PAYLOAD_PRECONDITION -->|"prerequisite"| WS19.1
     G_UI_WRITE -->|"recibo por delta"| WS19.1
     G_WRITE_CONTRACT -->|"recibo por delta"| WS19.1
     WS12 -->|"prerequisite"| WS19.2
+    WS47 -->|"prerequisite"| WS19.2
+    WS48 -->|"prerequisite"| WS19.2
     G_HUMAN_READ -->|"habilitar uso UI"| WS19.2
     G_PAYLOAD_PRECONDITION -->|"prerequisite"| WS19.2
     G_UI_WRITE -->|"recibo por delta"| WS19.2
@@ -182,10 +189,13 @@ flowchart TD
     G_UI_WRITE -->|"recibo por delta"| WS25
     G_WRITE_CONTRACT -->|"recibo por delta"| WS25
     WS12 -->|"prerequisite"| WS25.1
+    WS48 -->|"prerequisite"| WS25.1
     G_HUMAN_READ -->|"habilitar uso UI"| WS25.1
     G_UI_WRITE -->|"recibo por delta"| WS25.1
     G_WRITE_CONTRACT -->|"recibo por delta"| WS25.1
     WS12 -->|"prerequisite"| WS25.2
+    WS46 -->|"prerequisite"| WS25.2
+    WS48 -->|"prerequisite"| WS25.2
     G_HUMAN_READ -->|"habilitar uso UI"| WS25.2
     G_UI_WRITE -->|"recibo por delta"| WS25.2
     G_WRITE_CONTRACT -->|"recibo por delta"| WS25.2
@@ -199,6 +209,7 @@ flowchart TD
     G_WRITE_CONTRACT -->|"recibo por delta"| WS26
     WS12 -->|"prerequisite"| WS26.1
     WS22 -->|"prerequisite"| WS26.1
+    WS48 -->|"prerequisite"| WS26.1
     G_CLOSEOUT -->|"prerequisite"| WS26.1
     G_HUMAN_READ -->|"habilitar uso UI"| WS26.1
     G_UI_WRITE -->|"recibo por delta"| WS26.1
@@ -206,6 +217,7 @@ flowchart TD
     WS12 -->|"prerequisite"| WS26.2
     WS22 -->|"prerequisite"| WS26.2
     WS26.1 -->|"prerequisite"| WS26.2
+    WS48 -->|"prerequisite"| WS26.2
     G_CLOSEOUT -->|"prerequisite"| WS26.2
     G_HUMAN_READ -->|"habilitar uso UI"| WS26.2
     G_UI_WRITE -->|"recibo por delta"| WS26.2
@@ -223,6 +235,7 @@ flowchart TD
     G_UI_READ -->|"recibo por delta"| WS27.2
     WS27 -->|"prerequisite"| WS28
     WS12 -->|"prerequisite"| WS28
+    WS48 -->|"prerequisite"| WS28
     G_CLOSEOUT -->|"prerequisite"| WS28
     G_HUMAN_READ -->|"habilitar uso UI"| WS28
     G_UI_WRITE -->|"recibo por delta"| WS28
@@ -311,6 +324,7 @@ flowchart TD
     G_HUMAN_DELEGATE -->|"prerequisite"| WS38
     WS12 -->|"prerequisite"| WS39
     WS13 -->|"prerequisite"| WS39
+    WS48 -->|"prerequisite"| WS39
     G_HUMAN_READ -->|"habilitar uso UI"| WS39
     G_UI_WRITE -->|"recibo por delta"| WS39
     G_WRITE_CONTRACT -->|"recibo por delta"| WS39
@@ -324,6 +338,7 @@ flowchart TD
     WS19 -->|"prerequisite"| WS42
     WS24 -->|"prerequisite"| WS42
     WS12 -->|"prerequisite"| WS42
+    WS48 -->|"prerequisite"| WS42
     G_HUMAN_READ -->|"habilitar uso UI"| WS42
     G_UI_WRITE -->|"recibo por delta"| WS42
     G_WRITE_CONTRACT -->|"recibo por delta"| WS42
@@ -338,6 +353,14 @@ flowchart TD
     WS12 -->|"prerequisite"| WS45
     G_SLDB_WRITE -->|"recibo por delta"| WS45
     G_WRITE_CONTRACT -->|"recibo por delta"| WS45
+    WS12 -->|"prerequisite"| WS46
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS46
+    WS12 -->|"prerequisite"| WS47
+    G_SLDB_WRITE -->|"recibo por delta"| WS47
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS47
+    WS12 -->|"prerequisite"| WS48
+    G_UI_WRITE -->|"recibo por delta"| WS48
+    G_WRITE_CONTRACT -->|"recibo por delta"| WS48
     WS07 -->|"evidencia"| G_PRODUCT
     WS20 -->|"evidencia"| G_SOURCE
     WS45 -->|"evidencia"| G_PAYLOAD_PRECONDITION

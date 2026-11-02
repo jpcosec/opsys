@@ -8,6 +8,7 @@ depends_on:
 - WS12
 - WS22
 - WS26.1
+- WS48
 requires:
 - G_CLOSEOUT
 - G_HUMAN_READ
@@ -37,7 +38,7 @@ Tras enrutar, `deskops show board` muestra la tarea y la UI la distingue de una 
 
 ## Dependencias
 
-Tareas: WS12, WS22, WS26.1. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS22, WS26.1, WS48. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 

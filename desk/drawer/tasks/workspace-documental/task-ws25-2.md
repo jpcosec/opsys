@@ -6,6 +6,8 @@ node_role: delivery
 parent_id: WS25
 depends_on:
 - WS12
+- WS46
+- WS48
 requires:
 - G_HUMAN_READ
 - G_UI_WRITE
@@ -26,15 +28,15 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones controladas) está pendiente del contrato WS12, que compara API SLDB existente, composición de llamadas a esas API (no la Composición del glosario) y eventual wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+Captura interna con destino elegido explícitamente por la persona usuaria —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones controladas) está pendiente del contrato WS12, que compara API SLDB existente, composición de llamadas a esas API (no la Composición del glosario) y eventual wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. La capacidad de captura con origen la produce y prueba WS46, del que este nodo depende. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 
-UF02: una captura persiste tras recargar en el destino elegido, con origen y sin tarea implícita. Permisos del contrato aplicados. Origen = referencia tipada al soporte del que nace la captura (ruta o mensaje), con representación fijada por el contrato WS12; los orígenes ruta y mensaje se registran y se muestran tras recargar. Una colisión con un candidato existente no se sobrescribe en silencio; se controla según el contrato.
+UF02: una captura persiste tras recargar en el destino elegido, con origen y sin tarea implícita. Permisos del contrato aplicados. Origen = referencia tipada al soporte del que nace la captura (ruta o mensaje), con representación fijada por el contrato WS12; los orígenes ruta y mensaje se registran y se muestran tras recargar. Una colisión con un candidato existente no se sobrescribe en silencio; se controla según el contrato. No se cumple declarando la captura no disponible: requiere la capacidad probada por WS46 para cada destino.
 
 ## Dependencias
 
-Tareas: WS12. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS12, WS46, WS48. Gates: G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 

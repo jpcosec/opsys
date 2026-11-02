@@ -6,6 +6,7 @@ node_role: delivery
 depends_on:
 - WS27
 - WS12
+- WS48
 requires:
 - G_CLOSEOUT
 - G_HUMAN_READ
@@ -35,7 +36,7 @@ UF05 termina cuando `deskops show task` y el commit de closeout confirman el cie
 
 ## Dependencias
 
-Tareas: WS27, WS12. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS27, WS12, WS48. Gates: G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 ## Review barato de comprensión
 
