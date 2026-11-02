@@ -1,6 +1,6 @@
 id: deskops-workspace-documental
 revision: 10
-revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de revision root; no es aprobacion humana): productores minimos WS46 (captura a drawer y protoatomo con origen, deskops), WS47 (guarda de contenido no declarado en la edicion por campos de /save, sldb) y WS48 (admision comun de escritura en modo manual exclusivo, graph_ui); dependencias de WS19.1, WS19.2, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42; WS19.2 distingue baja de RelationDoc de quitar una referencia de campo; scope_nodes de G_WRITE_CONTRACT, G_UI_WRITE y G_SLDB_WRITE actualizados. Las revisiones baratas de los nodos tocados y de sus vecinos quedan obsoletas hasta renovarse. Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
+revision_note: 'Rev 10 (propuesta de correccion WS12, 2026-11-02, pendiente de revision root; no es aprobacion humana): productores minimos WS46 (captura a drawer y protoatomo con origen, deskops), WS47 (guarda de contenido no declarado en la edicion por campos de /save, sldb) y WS48 (admision comun de escritura en modo manual exclusivo, graph_ui); dependencias de WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42; WS19.2 distingue baja de RelationDoc de quitar una referencia de campo; scope_nodes de G_WRITE_CONTRACT, G_UI_WRITE y G_SLDB_WRITE actualizados. Las revisiones baratas de los nodos tocados y de sus vecinos quedan obsoletas hasta renovarse. Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
   de autoria de ViewDoc/NotationDoc concretos (WS18), sin portabilidad generica ni
   evaluador nuevo; B) glosario de revision en tres conceptos y nuevo productor planificado
   WS45 (sldb, precondicion de escritura de payload, independiente de source_mode)
@@ -1452,6 +1452,7 @@ tasks:
   kind: implementation
   depends_on:
   - WS19
+  - WS48
   requires:
   - G_PAYLOAD_PRECONDITION
   - G_UI_WRITE
@@ -3058,7 +3059,7 @@ tasks:
     de evidencia ausente o con error, lectura o handoff con su causa y el buffer conservado.
     Con afirmación y sin evidencia contraria se admite sin afirmar exclusividad comprobada.
     Evidencia contraria tras escribir bloquea la siguiente escritura. Los consumidores
-    WS19.1, WS19.2, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42 dependen de este
+    WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42 dependen de este
     nodo y lo usan, ninguno lo reimplementa. Acta P01 del delta. Este nodo es plan;
     no afirma que exista ni que esté implementado o aceptado.
   estimate: M
@@ -3337,7 +3338,7 @@ hierarchy:
       ready con todos sus prerrequisitos satisfechos y sin solapamiento de archivos;
       WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22. Revisión 10
       (propuesta): WS12→WS46→WS25.2 (captura con origen), WS12→WS47→WS19.1 y WS19.2
-      (guarda de contenido) y WS12→WS48→WS19.1, WS19.2, WS25.1, WS25.2, WS26.1, WS26.2,
+      (guarda de contenido) y WS12→WS48→WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2,
       WS28, WS39 y WS42 (admisión de escritura).'
     acceptance: precondición de escritura/conflicto/buffer/protegidos probados; guardar
       sin commit; coordinador escritor implica read-only/handoff; mostrar evidencia

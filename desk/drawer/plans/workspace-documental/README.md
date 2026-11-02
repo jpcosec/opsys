@@ -67,7 +67,7 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | WS19.1 | [Editar campos con conflicto visible](../../tasks/workspace-documental/task-ws19-1.md) | WS12, WS47, WS48 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS19.2 | [Editar relaciones permitidas por contrato](../../tasks/workspace-documental/task-ws19-2.md) | WS12, WS47, WS48 | G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS20 | [Comprobar o completar guardado fuente reversible](../../tasks/workspace-documental/task-ws20.md) | WS12 | G_SLDB_WRITE, G_WRITE_CONTRACT | sldb | M |
-| WS21 | [Integrar fuente y renderizado según source_mode](../../tasks/workspace-documental/task-ws21.md) | WS19 | G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS21 | [Integrar fuente y renderizado según source_mode](../../tasks/workspace-documental/task-ws21.md) | WS19, WS48 | G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS22 | [Renderizar Board como trabajo navegable](../../tasks/workspace-documental/task-ws22.md) | WS13, WS09 | G_UI_READ | graph_ui | M |
 | WS23 | [Renderizar rituales y pasos como procedimiento](../../tasks/workspace-documental/task-ws23.md) | WS13, WS09 | G_UI_READ | graph_ui | S |
 | WS24 | [Integrar conocimiento y grafo local](../../tasks/workspace-documental/task-ws24.md) | WS13, WS09 | G_UI_READ | graph_ui | M |

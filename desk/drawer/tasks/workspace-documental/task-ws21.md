@@ -5,6 +5,7 @@ owner_repo: graph_ui
 node_role: delivery
 depends_on:
 - WS19
+- WS48
 requires:
 - G_PAYLOAD_PRECONDITION
 - G_UI_WRITE
@@ -33,7 +34,7 @@ Cumplir la aceptación específica de la variante P04. En editable, G_SOURCE y G
 
 ## Dependencias
 
-Tareas: WS19. Gates: G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
+Tareas: WS19, WS48. Gates: G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT. Ver estados/evidencia en dag.yaml; un archivo presente no satisface un gate.
 
 Solapamiento: `editing` en external_references. Solo delta o ticket existente tras WS06; nunca ejecución duplicada.
 

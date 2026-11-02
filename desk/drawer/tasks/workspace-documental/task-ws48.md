@@ -28,7 +28,7 @@ Productor común de la evidencia de modo manual exclusivo (T-P03.1, HO-03; contr
 
 ## Aceptación
 
-Pruebas en un store temporal. Sin afirmación vigente la mutación queda deshabilitada y se ofrece handoff. Con evidencia contraria, o con la herramienta de evidencia ausente o con error, lectura o handoff con su causa y el buffer conservado. Con afirmación y sin evidencia contraria se admite sin afirmar exclusividad comprobada. Evidencia contraria tras escribir bloquea la siguiente escritura. Los consumidores WS19.1, WS19.2, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42 dependen de este nodo y lo usan, ninguno lo reimplementa. Acta P01 del delta. Este nodo es plan; no afirma que exista ni que esté implementado o aceptado.
+Pruebas en un store temporal. Sin afirmación vigente la mutación queda deshabilitada y se ofrece handoff. Con evidencia contraria, o con la herramienta de evidencia ausente o con error, lectura o handoff con su causa y el buffer conservado. Con afirmación y sin evidencia contraria se admite sin afirmar exclusividad comprobada. Evidencia contraria tras escribir bloquea la siguiente escritura. Los consumidores WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42 dependen de este nodo y lo usan, ninguno lo reimplementa. Acta P01 del delta. Este nodo es plan; no afirma que exista ni que esté implementado o aceptado.
 
 ## Dependencias
 
