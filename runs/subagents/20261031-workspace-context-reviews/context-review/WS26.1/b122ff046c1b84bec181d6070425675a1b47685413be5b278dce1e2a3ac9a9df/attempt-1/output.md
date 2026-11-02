@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: preparar un candidato de tarea en el drawer (UF04, paso preparar) con dos recorridos que WS12 §4.4 separa por ruta y store: rastreado (update directo con `expected`, guarda WS47, admisión WS48 y G_PAYLOAD_PRECONDITION) y no rastreado (propuesta y handoff a `deskops edit task`, sin escritura HTTP, con refresco posterior). Resultado: UI de autoría en graph_ui que edita solo campos autorables —título/contenido, dependencias, files, references, tags, pills y closeout_evidence validada—, nunca id/status/current_node/history/from_drawer; persiste evidencia, dependencias y pills; rechaza guardado obsoleto con 409 sin perder texto local; ofrece handoff solo si el selector no resuelve a tarea activa; no crea tarea activa ni ruta en Board. Repo: graph_ui, `frontends/mindmap/views/workspace/authoring/`, endpoints autorizados por WS12, `tests/`. Límites: no editar status, no ampliar S06, no inventar API, no rastrear por reflejo; operación Git sin contrato/dueño queda en handoff no disponible; G_HUMAN_READ habilita uso de mutaciones UI, no desarrollo/pruebas API aisladas.
+
+AMBIGUEDADES
+Ninguna.
+
+DRY-RUN
+Lecturas: nodo WS26.1, contratos WS12 (whitelist/§4.4), WS22, WS47, WS48, gates y TaskDoc de promoción. Cambios previstos: en authoring/ implementar editor de campos autorables, validación de pills/PillDoc, precondición `expected` y manejo 409, ruta de propuesta/handoff con refresco; pruebas en tests/. Dependencias: consumir WS12, WS22, WS47, WS48 y gates G_CLOSEOUT (satisfecho), G_HUMAN_READ (WS16), G_PAYLOAD_PRECONDITION (WS45), G_UI_WRITE y G_WRITE_CONTRACT per_delta. Si falta contrato/API/dato/permiso, detener, registrar hueco con repo dueño y declarar no disponible. Validación esperada: store temporal real; recorrido rastreado persiste y 409 conserva texto; recorrido no rastreado sin HTTP, propuesta/handoff y lectura posterior; caso de selector coincidente no ofrece comando; evidencia vacía queda pendiente; no status/tarea activa/Board; acta P01 del delta.
+
+FUTURO
+WS16 produce acta G_HUMAN_READ; WS45 verifica G_PAYLOAD_PRECONDITION; WS12 produce G_WRITE_CONTRACT; receptor P01 emite G_UI_WRITE por delta; WS26.2 crea tarea activa y Board; WS47/WS48 deben estar implementados/aceptados. La promoción de WS26.1 sigue no autorizada: exige changed files/pills/atoms/evidence y preflight task-only.

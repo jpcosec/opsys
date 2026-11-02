@@ -1,0 +1,11 @@
+REFORMULACION
+WS19.1 es un nodo de implementación en graph_ui: editar campos de documentos del workspace reutilizando editores y API, con la precondición de escritura de payload que fije WS12 —verificada por WS45— y conflicto visible que conserve el texto local. El resultado se ubica en `frontends/mindmap/views/workspace/fields/`, consume endpoints del contrato WS12 sin cambiarlo y añade tests. Límites: los campos protegidos por workflow no son editables por este canal; los documentos con contenido no declarado no se habilitan hasta que WS47 pruebe su guarda; toda mutación pasa por la admisión de WS48 en modo manual exclusivo y otros modos quedan read-only; no implementa la precondición, la guarda ni el contrato.
+
+AMBIGUEDADES
+ninguna.
+
+DRY-RUN
+WS19.1 es delivery ejecutable, no agregado; no tiene hijos que recorrer. Un ejecutor futuro leería el contrato WS12 (endpoints, whitelist campo/modelo, representación de la precondición), la evidencia de WS45, la guarda y pruebas de WS47, la interfaz de admisión de WS48 y el workspace base (`workspace-view.js`, `workspace.mjs`, `persistence.py`, rutas y tests existentes). Cambios previstos: crear los editores de campos en `views/workspace/fields/`, conectarlos a los endpoints contractuales, conservar el buffer local y mostrar el rechazo de conflicto, impedir campos protegidos y consultar WS48 antes de escribir; añadir pruebas. Dependencias: consume WS12, WS47 y WS48; los gates G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT y G_HUMAN_READ están pendientes y, si falta lo que producen, el ejecutor se detiene y registra el hueco. Errores esperados: 409/conflicto, rechazo de la guarda de contenido no declarado, denegación de WS48 (lectura/handoff) y endpoint ausente. Validación: store temporal real, guardar/recargar el dato, escritura obsoleta sin pérdida de texto local y conflicto visible; después acta P01 por delta.
+
+FUTURO
+WS12 fija la representación de la precondición, operaciones y endpoints; WS45 verifica la precondición y produce G_PAYLOAD_PRECONDITION; WS47 produce la guarda de contenido no declarado; WS48 produce la admisión de escrituras. WS16 y el acta humana producen G_HUMAN_READ; el receptor P01 produce el acta G_UI_WRITE del delta; WS19 cierra cuando WS19.1 y WS19.2 cumplen.

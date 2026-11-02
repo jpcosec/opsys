@@ -1,0 +1,13 @@
+## REFORMULACION
+**Propósito:** implementar en `graph_ui` el alta y baja de relaciones permitidas por el contrato de operaciones, usando API real y la precondición de escritura que fije WS12. **Resultado:** mutaciones que persisten y se confirman tras recargar; rechazo visible de relaciones no permitidas, campos/relaciones protegidos o revisión obsoleta; baja de `RelationDoc` con borrado real de documento e índice, o deshabilitada y declarada si el canal no ofrece ese efecto. **Repo:** `graph_ui`, bajo `frontends/mindmap/views/workspace/relations/` y endpoints autorizados por WS12. **Límites:** no crear semántica de relaciones en el componente, no reimplementar WS48 ni la guarda WS47, no ampliar el alcance a otras operaciones, y detenerse si falta contrato/API/permiso.
+
+## AMBIGUEDADES
+1. **Contradicción sobre la precondición.** El scope dice «usando API real y la precondición de escritura que fije WS12», pero la aceptación exige «por el canal público de sldb (/save delete con expected)». WS12 puede fijar `expected`, token/CAS u otra representación; el ejecutor tendría que inventar si `expected` es obligatorio o sustituible.
+2. **Dependencia faltante para la precondición.** La aceptación exige rechazar «una revisión obsoleta» y el nodo requiere `G_PAYLOAD_PRECONDITION`, cuyo productor es WS45, pero `depends_on` solo incluye WS12, WS47 y WS48. El ejecutor debe inventar si espera a WS45 o usa la capacidad existente.
+3. **Modo no definido en la baja.** «si el modo no ofrece ese efecto (graph_ui local solo destrackea) la baja de RelationDoc no se habilita y se declara» no identifica qué modo ni cómo comprobarlo; obliga a inventar detección y declaración.
+
+## DRY-RUN
+Un ejecutor futuro leería el contrato WS12 (whitelist, canal, precondición, errores), la admisión de WS48 y la guarda de WS47. Modificaría `views/workspace/relations/` y tests: formularios/acciones de alta y baja, llamada al canal autorizado con la precondición fijada, manejo de 409/rechazo y refresco. Si WS12 fija `/save delete` con `expected`, implementaría el borrado de `RelationDoc`; si no, declararía la baja deshabilitada. Consumiría WS48 antes de cualquier mutación y WS47 como guarda de contenido. Validaría con store temporal: persistencia tras recarga, rechazo de relación no permitida y de revisión obsoleta, y ausencia de resurrección del `RelationDoc` borrado. Un contrato ausente detendría el nodo y registraría el hueco, sin sustituto. Los gates pendientes no se considerarían defecto.
+
+## FUTURO
+WS12 fija representación, operaciones y whitelist; WS45 produce/verifica `G_PAYLOAD_PRECONDITION`; WS48 aporta la admisión; WS47 la guarda; el receptor P01 emite el acta de `G_UI_WRITE`. WS19 termina cuando cumplen sus hijos.
