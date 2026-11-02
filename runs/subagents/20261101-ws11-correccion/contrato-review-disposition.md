@@ -36,3 +36,18 @@ Evidencia en `renovacion-2/contrato-review/`, sobre sha256 `8c4df02e…`. Tester
 **Para root:** el `output_scope` de WS41 nombra `frontends/mindmap/source/`. Ver el estado de esa carpeta en `freeze-final.md`. `dag.yaml` no se edita en este alcance.
 
 Parada: acepto las demás ambigüedades como futuras o ya respondidas. Una revisión fresca sin historial siempre encuentra más; no se itera hasta vaciarla.
+
+# Ronda 3, contrato final
+
+Evidencia en `contrato-review/`, sobre el contrato final. Ninguna cambia el contrato; regla de parada de la ronda 2.
+
+| Consumidor | Ambigüedad | Disposición |
+|---|---|---|
+| WS13.1 | 1. Dos mecanismos de «mismo origen» | Implementación de WS13.1; el contrato fija lo observable |
+| WS13.1 | 2. Recibo frente a aceptación | §12 y H-03: el delta es de WS13.1, el recibo es de P01 |
+| WS13.1 | 3. Criterio de reutilización `model=None` | Se verifica al implementar; si falla, hueco de C5b |
+| WS13.1 | 4. De dónde sale `local` | Falsa: es reservado, no se configura |
+| WS41 | 1. Códigos HTTP de E-MD1 a E-MD4 | §8.5 lo deja a WS41 |
+| WS41 | 2. ¿Otro alias para el desk del proceso? | §3.2.1: sí, el de la configuración si el operador lo incluyó |
+| WS41 | 3. Qué se compara | §5.4 fija archivos y versión; el medio es del consumidor |
+| WS41 | 4. Quién prepara los stores | **Sin dueño nombrado**: §5.4 dice «fuera del request». Queda como límite para root |

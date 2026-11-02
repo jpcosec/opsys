@@ -1,0 +1,3330 @@
+id: deskops-workspace-documental
+revision: 9
+revision_note: 'Rev 9 (ajuste canonico tras WS06, 2026-10-31): A) C-50 pasa a delta
+  de autoria de ViewDoc/NotationDoc concretos (WS18), sin portabilidad generica ni
+  evaluador nuevo; B) glosario de revision en tres conceptos y nuevo productor planificado
+  WS45 (sldb, precondicion de escritura de payload, independiente de source_mode)
+  con gate G_PAYLOAD_PRECONDITION, consumido por WS19, WS19.1, WS19.2 y WS21; C) captura
+  a drawer como canal permitido pendiente de WS12 (comparacion API SLDB / composicion
+  / eventual wrapper Deskops); D) WS06 clasifica sin ejecutar WS05, WS32/33 conservan
+  dependencias y gates; recibos externos = acta del receptor P01 y WS11/12 como fuente
+  de contrato. Nada implementado ni aceptado; execution_authorized=false.'
+status: final_plan_reviewed
+as_of: '2026-10-31'
+source: dag.yaml is canonical; generated README/table/task files/diagram must agree
+baseline_proposal: 'Base acordada 2026-10-31: Mindmap existente + SLDB/pron + Deskops,
+  lector y manual primero; Kimun fuera y Scion posterior. Aprobación de producto no
+  acredita contratos ni habilita ejecución.'
+execution_authorized: false
+estimate_legend:
+  S: one bounded deliverable, relative size small; not elapsed-time promise
+  M: bounded feature/contract; split at promotion if more than one deliverable; no
+    estimate is implementation evidence
+gates:
+  G_PRODUCT:
+    title: Decisiones de producto registradas por humano
+    state: satisfied
+    resolver: WS07
+    evidence: 'decisiones.md: P01/P02/P04/P07/P08/P09, actor/tipo/fuente/resultado
+      registrados; no aprobación técnica ni Scion'
+    produced_by: WS07
+    verified_evidence: runs/subagents/20261031-finalizar-plan-workspace/owner-decisions.json;
+      decisiones.md P07/P09 defaults técnicos delegados, 2026-10-31
+  G_CLOSEOUT:
+    title: Contrato de evidencia de closeout estabilizado
+    state: satisfied
+    resolver: independent tester focalizado / recibo actual del contrato
+    evidence: 59244c9 implementación, 1fefa97 cierre; tests/test_closeout_declared_evidence.py
+      y tests/test_lifecycle_end_to_end.py prueban evidencia declarada y relación
+      task→commit Task-Id exacta/parentage/commit-amend aislado. Recibo actual en
+      run finalizar-plan-workspace. No autenticación/RBAC nuevo.
+    verified_evidence: 'runs/subagents/20261031-finalizar-plan-workspace/tester-closeout-contract.md;
+      tester-closeout-command.json; tester-closeout-pytest.log; tester-closeout-receipts.json:
+      23 passed, 3 deselected, exit0, 2026-10-31; commit bd93985; impl 59244c9/cierre1fefa97'
+  G_SOURCE:
+    title: Fuente reversible y guardas de campos probadas
+    state: pending
+    resolver: WS20
+    evidence: API pública y tests roundtrip/conflicto/campos protegidos, con revisión
+      de contrato
+    produced_by: WS20
+  G_PAYLOAD_PRECONDITION:
+    title: Precondicion de escritura de payload verificada en sldb
+    state: pending
+    resolver: WS45
+    produced_by: WS45
+    evidence: 'Inventario con path/simbolo/commit y pruebas reales focalizadas en
+      sldb de la precondicion de escritura de payload que fije el contrato WS12 (representacion,
+      operaciones, escritores alcanzados): estado previo obsoleto rechazado sin cambios
+      y vigente aplicado, rechazo observable por el llamante; commit/blob verificable
+      en sldb. Independiente de source_mode y de G_SOURCE. El `expected` por valor
+      existente (C-40) cuenta solo si WS12 lo adopta como contrato. Planificado: no
+      hay evidencia de que exista ni este aceptado.'
+  G_SCION:
+    title: Scion accesible y contrato público comprobado
+    state: unverified
+    resolver: WS44, operador a designar al abordar ramal E
+    evidence: auditoria/scion-probe.md bajo paquete del plan; actor de WS44, fecha/Hub/endpoint/identidad/capabilities
+      de API pública, sin secretos. WS05 solo inventaría; WS44 permanece bloqueada
+      hasta probe real y puede revalidarse.
+    produced_by: WS44
+  G_EXEC:
+    title: Humano autoriza ejecución y comunicaciones del escenario
+    state: pending
+    resolver: external
+    evidence: 'deskops:desk/drawer/plans/workspace-documental/autorizaciones/scion.md:
+      permiso explícito del solicitante/designee para agente/proyecto/acciones/alcance/sesión.
+      Plan/review no autoriza ejecución.'
+  G_HUMAN_READ:
+    title: Persona aprueba recorrido de lectura
+    state: pending
+    resolver: WS16
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/lectura/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    produced_by: WS16
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/lectura/acta.md
+    effect: enable_ui_use_only; no bloquea desarrollo/pruebas aisladas de API; se
+      exige antes de habilitar mutaciones en UI
+  G_HUMAN_MANUAL:
+    title: Persona aprueba autoría/revisión
+    state: pending
+    resolver: WS30
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/manual/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    produced_by: WS30
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/manual/acta.md
+  G_HUMAN_DELEGATE:
+    title: Persona aprueba delegación
+    state: pending
+    resolver: WS37
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/delegacion/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    produced_by: WS37
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/delegacion/acta.md
+  G_WRITE_POLICY:
+    title: Política de escritura aprobada por humano
+    state: satisfied
+    resolver: WS07
+    evidence: 'decisiones.md: P03/P04/P05/P06, actor/tipo/fuente/resultado registrados;
+      no aprobación técnica ni Scion'
+    produced_by: WS07
+    verified_evidence: runs/subagents/20261031-finalizar-plan-workspace/owner-decisions.json;
+      decisiones.md P07/P09 defaults técnicos delegados, 2026-10-31
+  G_WRITE_CONTRACT:
+    title: Contrato técnico de operaciones verificado
+    state: pending
+    resolver: WS12
+    produced_by: WS12
+    evidence: 'Contrato técnico WS12 por delta/operación: canal público, campos, actor,
+      revisión esperada, efectos, errores y pruebas reales/API existente o productor
+      si falta; commit/blob verificable y revisión responsable. accepted_scope_nodes
+      solo enumera IDs cuyo contrato de efectos requerido está comprobado; no esperar
+      otros deltas ni confundir acta de recepción con prueba API.'
+    evaluation: per_delta
+    accepted_scope_nodes: []
+    scope_nodes:
+    - WS19
+    - WS19.1
+    - WS19.2
+    - WS20
+    - WS21
+    - WS25
+    - WS25.1
+    - WS25.2
+    - WS26
+    - WS26.1
+    - WS26.2
+    - WS28
+    - WS32
+    - WS32.1
+    - WS32.2
+    - WS33
+    - WS33.1
+    - WS33.2
+    - WS34
+    - WS34.1
+    - WS34.2
+    - WS36
+    - WS39
+    - WS42
+    - WS43
+    - WS45
+  G_UI_READ:
+    title: Deltas de lectura aceptados en graph_ui
+    state: pending
+    resolver: 'external: solicitante P01 receptor del repo al preparar/promover el
+      delta concreto'
+    evidence: 'Acta de recepción por delta concreto en repo receptor: actor solicitante
+      humano designado P01, fecha, alcance/IDs, efecto, task receptora/no solapamiento
+      y commit/blob verificable. Cada nodo usa solo su recibo; ausencia de otro delta
+      no bloquea este. Estado global pendiente resume recibos, no obliga aceptación
+      conjunta. Productor del acta: receptor del repo dueño al preparar/promover ese
+      delta, enlaza contrato WS11; Executor deskops solo registra el enlace, no escribe/commitea
+      actas interrepo.'
+    scope_nodes:
+    - WS13
+    - WS13.1
+    - WS13.2
+    - WS13.3
+    - WS14
+    - WS15
+    - WS15.1
+    - WS15.2
+    - WS22
+    - WS23
+    - WS24
+    - WS27
+    - WS27.1
+    - WS27.2
+    - WS29
+    - WS35
+    - WS40
+    - WS41
+    evaluation: per_delta
+    accepted_scope_nodes: []
+    contract_source: WS11
+  G_UI_WRITE:
+    title: Deltas de mutación aceptados en graph_ui
+    state: pending
+    resolver: 'external: solicitante P01 receptor del repo al preparar/promover el
+      delta concreto'
+    evidence: 'Acta de recepción por delta concreto en repo receptor: actor solicitante
+      humano designado P01, fecha, alcance/IDs, efecto, task receptora/no solapamiento
+      y commit/blob verificable. Cada nodo usa solo su recibo; ausencia de otro delta
+      no bloquea este. Estado global pendiente resume recibos, no obliga aceptación
+      conjunta. Productor del acta: receptor del repo dueño al preparar/promover ese
+      delta, enlaza contrato WS12; Executor deskops solo registra el enlace, no escribe/commitea
+      actas interrepo.'
+    scope_nodes:
+    - WS19
+    - WS19.1
+    - WS19.2
+    - WS21
+    - WS25
+    - WS25.1
+    - WS25.2
+    - WS26
+    - WS26.1
+    - WS26.2
+    - WS28
+    - WS36
+    - WS39
+    - WS42
+    evaluation: per_delta
+    accepted_scope_nodes: []
+    contract_source: WS12
+  G_SLDB_WRITE:
+    title: Alcance fuente aceptado en sldb
+    state: pending
+    resolver: 'external: solicitante P01 receptor del repo al preparar/promover el
+      delta concreto'
+    evidence: 'Acta de recepción por delta concreto en repo receptor: actor solicitante
+      humano designado P01, fecha, alcance/IDs, efecto, task receptora/no solapamiento
+      y commit/blob verificable. Cada nodo usa solo su recibo; ausencia de otro delta
+      no bloquea este. Estado global pendiente resume recibos, no obliga aceptación
+      conjunta. Productor del acta: receptor del repo dueño al preparar/promover ese
+      delta, enlaza contrato WS12; Executor deskops solo registra el enlace, no escribe/commitea
+      actas interrepo.'
+    scope_nodes:
+    - WS20
+    - WS45
+    evaluation: per_delta
+    accepted_scope_nodes: []
+    contract_source: WS12
+  G_SPEC_VIEW:
+    title: Alcance de proyecciones aceptado en spec2viz
+    state: pending
+    resolver: 'external: solicitante P01 receptor del repo al preparar/promover el
+      delta concreto'
+    evidence: 'Acta de recepción por delta concreto en repo receptor: actor solicitante
+      humano designado P01, fecha, alcance/IDs, efecto, task receptora/no solapamiento
+      y commit/blob verificable. Cada nodo usa solo su recibo; ausencia de otro delta
+      no bloquea este. Estado global pendiente resume recibos, no obliga aceptación
+      conjunta. Productor del acta: receptor del repo dueño al preparar/promover ese
+      delta, enlaza contrato WS11; Executor deskops solo registra el enlace, no escribe/commitea
+      actas interrepo.'
+    scope_nodes:
+    - WS18
+    evaluation: per_delta
+    accepted_scope_nodes: []
+    contract_source: WS11
+  G_HUMAN_MODEL:
+    title: Persona valida inspección/edición de modelos
+    state: pending
+    resolver: WS39
+    produced_by: WS39
+    evidence: graph_ui:runs/subagents/workspace-documental-acceptance/modelos/acta.md;
+      actor humano/versión/guion/resultado y soportes. Guardar en repo dueño, no en
+      el paquete de plan deskops.
+    evidence_ref:
+      repo: graph_ui
+      path: runs/subagents/workspace-documental-acceptance/modelos/acta.md
+external_references:
+  workspace:
+    path: ../UIs/graph_ui/frontends/mindmap/workspace_routes.py
+    exists: true
+    sha256: dfbf68a70f3f1394119bc9cbcdbffe9ac9237397a5fa07788152146a697f39c9
+    interpretation: observed_source_not_gate_acceptance
+    historical_receipt: git -C ../UIs/graph_ui show f16fcd1^:desk/tasks/task-workspace-multiproyeccion-documento-grafo-local-codigo-y-contexto.md;
+      impl a1b2b22; cierre f16fcd1; Board 134a665
+  editing:
+    path: ../UIs/graph_ui/desk/tasks/task-edicion-contextual-de-relaciones-y-campos-con-control-de-concurrencia.md
+    exists: true
+    sha256: ea6b71f2795eb5f944c75e83ced4c2ba770e260436efae5bbc19aa82192b50c6
+    interpretation: observed_source_not_gate_acceptance
+  changes:
+    path: ../UIs/graph_ui/desk/tasks/task-vista-changes-arbol-de-hashes-staleness-e-impacto-en-conocimiento.md
+    exists: true
+    sha256: 433ecb51e6dc433b8bb94d0acecc6d508793ae743eae563283aa40c5f8e24377
+    interpretation: observed_source_not_gate_acceptance
+  scion:
+    path: desk/drawer/tasks/task-correlacionar-intentos-scion-con-rundoc-y-closeout.md
+    exists: true
+    sha256: 125b862b88883028060365d2ff8584fc5dcd313140623a71b858fae6d9b17ba9
+    interpretation: observed_source_not_gate_acceptance
+  kimun_reference_only:
+    path: desk/drawer/tasks/task-integracion-opsys-kimun-frontera-de-autoridad-y-modelos-del-desk.md
+    exists: true
+    sha256: 848f8ceba82b6f3c793ee277b932a8ef3337a059e4aebe3712cd989f8360717b
+    interpretation: observed_source_not_gate_acceptance
+  closeout:
+    path: deskops/services/closeout_gates.py
+    exists: true
+    sha256: 8f17f8a207e831762421433692ac409b1e3909bbd0061cab9307be65e12e0ab9
+    interpretation: observed_source_not_gate_acceptance
+    historical_receipt: git show 1fefa97^:desk/tasks/task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo.md;
+      impl 59244c9; cierre 1fefa97
+tasks:
+- id: WS01
+  title: Fijar brief y glosario autosuficientes
+  status: candidate
+  kind: planning
+  depends_on: []
+  requires: []
+  owner_repo: deskops
+  output_scope: brief.md
+  scope: Brief/glosario ya authored y cubiertos por recibo covered_work. Al promover
+    auditorías verificar hash/alcance; no reescribir si no cambió decisión/contrato.
+    Si cambia realmente el encargo, editar solo brief.md con acuerdos textuales y
+    vocabulario documento/nodo/vista/renderer/consulta/foco; sin chat invisible.
+  acceptance: brief.md enlaza decisiones.md como registro Pxx completo; no editar
+    decisiones.md desde este nodo. Acuerdos textuales tienen actor/fuente y distinciones
+    glosario legibles. Coordinator compara reformulación/dry-run de review barato
+    aislado ritual-context-review con intención y explicita hallazgos/disposición;
+    APTO no basta. Cobertura documental actual satisface elaboración del brief, no
+    lifecycle cerrado ni autorización producto.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws01.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 3458e227153640e9f299ce9bac3ff6773814ce5073bfd9f1bc18cb920f7362b9
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS01/96fb3f6cf136addd87f848f41fea6cccaa8bb80971bcea6beeea4578d3977f2e/attempt-1
+    input_sha256: 96fb3f6cf136addd87f848f41fea6cccaa8bb80971bcea6beeea4578d3977f2e
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  covered_work:
+    state: documented_not_task_closed
+    evidence:
+    - path: desk/drawer/plans/workspace-documental/brief.md
+      sha256: c36f08057d0995449a83b24d6439bed1e20b7a0fd2baffafc3706561c3f22abc
+    remaining: Verificar recibo al promover auditorías; solo reabrir brief si cambia
+      alcance o evidencia, no volver a redactar base
+- id: WS02
+  title: Inventariar superficies y operaciones Deskops
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/deskops.md
+  scope: 'Superficie = cada archivo, comando público o modelo registrado concreto
+    de las categorías enumeradas; una fila por superficie. Modelos y Markdown no modelado;
+    inbox/drawer/issues/FAQ/crossroads/pills/fases/rituales/registry/roles/runs; firmas
+    públicas, efectos Git y cierre. Modelado = tiene modelo registrado en el store
+    (`sldb models list`); Markdown no modelado = el resto. Firmas públicas = comandos
+    CLI de deskops y métodos de DeskopsOperations. Cierre = `deskops closeout verify|commit`.
+    Universo: archivos de categorías enumeradas bajo desk/ de este checkout, comandos
+    Deskops y modelos que sirven esas superficies; store local .sldb del checkout.
+    Una fila por superficie con lista de todas sus operaciones públicas; no duplicar
+    por comando. Para dato pasivo registrar path/hash o listado read-only; falta store
+    se informa no comprobado con causa.'
+  acceptance: Cada fila incluye ubicación (archivo o símbolo de código) y la operación
+    expuesta (comando o método que la lee o muta, o «dato pasivo»), con estado comprobado;
+    no inferir modelo por carpeta. Estado comprobado = lectura citada con archivo:línea
+    o salida de comando de solo lectura; lo no comprobado se marca «no comprobado»
+    con causa (ausente, inaccesible o no encontrado). Una fila contiene lista de operaciones,
+    no elegir solo una. La evidencia puede ser archivo:línea, hash/listado read-only
+    o salida de comando según soporte; alcance de categorías y store local .sldb,
+    sin inventariar binarios ajenos.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws02.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: d81efda29e8a89f569a94b6dd719b5b35a7d5a0450d01a910f754322b99236c9
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS02/571622b670bff24d119de1e5fcec51ca74909d546e41b6212115235911468b2e/attempt-1
+    input_sha256: 571622b670bff24d119de1e5fcec51ca74909d546e41b6212115235911468b2e
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS03
+  title: Inventariar persistencia, consultas y notaciones
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/infraestructura.md
+  scope: 'Auditoría de solo lectura de sldb/pron/spec2viz: fuente/payload, conflictos
+    y límites de locks (control de concurrencia real de sldb/pron: CAS por revisión/hash,
+    locks de archivo o DB; a auditar), referencias documentales, búsquedas (índices
+    o consultas expuestas) y alcance real ViewDoc. Kimun solo referencia.'
+  acceptance: Una salida documental, sin cambios interrepo; distinguir API comprobada
+    (lectura citada del estado actual), ausencia y hueco.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws03.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: fd5b1526ee51309c357dbcee50c72f6105bc124cf390e854bb623ea8f5196c7c
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS03/01cdfe4b424533fafecb084bd469f4e4dce43b73bff38ffdd24dc30f1373358d/attempt-1
+    input_sha256: 01cdfe4b424533fafecb084bd469f4e4dce43b73bff38ffdd24dc30f1373358d
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS04
+  title: Inventariar UI y reconciliar trabajo en curso
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/ui.md
+  scope: Leer graph_ui (../UIs/graph_ui) Board, tareas y código actuales; mapear a
+    deltas existentes los nodos de este plan que toquen graph_ui (tarea o entrada
+    del Board de graph_ui, o commit que ya lo implementa), registrando la correspondencia
+    en auditoria/ui.md; identificar sesiones y solapamientos sin cambiar sus tareas.
+    SPEC externo = /home/jp/proyectos/softfactory_spec/SPEC.md. Sesión = trabajo en
+    curso observable en Board, git status o paneles herdr.
+  acceptance: 'Cada tarea externa con path, estado observado, hash y alcance, y cada
+    solapamiento (misma tarea o archivos reclamados por dos sesiones); reconciliar
+    también el SPEC externo (coincidencias, discrepancias y ausencias frente a este
+    plan, con path y hash) y cualquier encargo aportado al ejecutar. Hash = SHA256
+    del archivo de tarea. Encargo aportado = documento que el solicitante entregue
+    explícitamente al ejecutor; si no hay, se registra que no hubo. Tabla de mapeo
+    para cada nodo graph_ui: ID, base reutilizada/delta/ticket o ausencia explícita
+    (no omitir), path/símbolo y commit observado si implementado. Partir de HEAD/Board
+    y commits a1b2b22/f16fcd1/134a665; ampliar historia solo si una referencia actual
+    lo requiere. Sesiones visibles en estado observado son coordinación, nunca autoridad
+    privada; ausencia de sesión se registra. Commit solo prueba base citada, no aceptación
+    ampliada.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws04.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 0ec4e5beb1d37056d12cddb5617ec3313a9f699245b886c03e15ffd1f2cc947e
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS04/be43fa32650598b23dca179e7a38b714ed5be15113c30864a9c574ecc8014015/attempt-1
+    input_sha256: be43fa32650598b23dca179e7a38b714ed5be15113c30864a9c574ecc8014015
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS05
+  title: Inventariar identidad y API Scion
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS01
+  requires: []
+  owner_repo: deskops
+  output_scope: auditoria/scion.md
+  scope: 'Leer runtime/templates/RunDoc y API pública de Scion (endpoints/SDK documentados
+    o exportados; no tablas ni funciones internas); separar slug/agente/intento/dispatch/mensaje/conversación
+    y permisos (roles, scopes y operaciones autorizadas según la API pública). Lee
+    código y documentación en deskops y en el repo scion (../scion); no contacta endpoints
+    vivos ni usa credenciales: solo el probe de WS44 es evidencia de G_SCION. Sin
+    crear agentes, enviar mensajes ni modificar configuración; puede leer configuración
+    sin secretos y no muestra tokens. WS05 no produce G_SCION; el probe y sus reintentos
+    son responsabilidad explícita de WS44, incluso si el inventario aporta observaciones.'
+  acceptance: No usar tablas internas como interfaz; señalar los campos internos que
+    no figuren en la API pública definida en el scope y capacidades que requieren
+    API real; el inventario separa slug/agente/intento/dispatch/mensaje/conversación
+    y permisos; marca qué capabilities requieren WS32 y WS33.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws05.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 6fc2c821230aefdfcf2ab4fbfd1dab452cabf383ae94c3ea3d115cc8e87261e8
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS05/adbb1144f9418561d715ef3eac1a3106283e50dd243b639f5395f9b16e8d836d/attempt-1
+    input_sha256: adbb1144f9418561d715ef3eac1a3106283e50dd243b639f5395f9b16e8d836d
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  review_context_nodes:
+  - WS33
+- id: WS06
+  title: Proponer correspondencia de alcance con repos dueños
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS02
+  - WS03
+  - WS04
+  requires: []
+  owner_repo: deskops
+  output_scope: reconciliacion.md
+  scope: 'Una matriz con una fila por delta o capacidad única (varios nodos pueden
+    remitir a la misma fila), agrupada por repo dueño: ya cubierto (capacidad observable
+    en código implementado, citando path/símbolo y commit observado), extender ticket
+    existente (incluido un draft del Board) o nuevo delta. La fila Scion RunDoc/cierre
+    de reconciliacion.md conserva el tratamiento ya registrado (descomposición en
+    WS32/33): WS06 puede clasificar y conservar esa descomposición sin ejecutar WS05;
+    WS32 y WS33 conservan sus dependencias (incluida WS05) y gates canónicos. Registrar
+    en reconciliacion.md la atomización propuesta, sin notificar, despachar ni modificar
+    el Board de graph_ui. Recibos externos: el receptor P01 produce el acta en su
+    repo al preparar cada delta; WS11 y WS12 son fuente de contrato y solo enlazan
+    esas actas. Sin firmas, gates ni recepción ficticia. «No designado en P01» para
+    deskops es un dato de esa tabla, no un permiso que frene trabajo local autorizado.'
+  acceptance: Matriz con una fila por delta o capacidad propuesta, agrupada por repo
+    dueño, no por nodo del DAG; correspondencia ticket/delta y responsable ya designado
+    P01; operador Scion posterior solo para ramal E; no produce gates de aceptación
+    ni aprueba deltas que aún no están definidos. WS11/12 son fuente de contrato y
+    enlazan el acta del receptor P01 por delta; WS06 no firma ni registra recepción.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws06.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 73a7d53ede413ff576548121b478eb9bf7bbbf24cfc3f7b9420583acfd4e2638
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS06/de6ec41b967957be4cf6602661343b9c9b6723bbe949a66ee39e7f4485244840/attempt-1
+    input_sha256: de6ec41b967957be4cf6602661343b9c9b6723bbe949a66ee39e7f4485244840
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS07
+  title: Mantener registro trazado de decisiones acordadas
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS06
+  requires: []
+  owner_repo: deskops
+  output_scope: decisiones.md; `baseline_proposal` y parameters.source_mode en dag.yaml
+  scope: 'Reutilizar decisiones.md y owner-decisions.json: respuestas humanas literales
+    0–2, mapeo P01–P09, actor/fecha/fuente. P07/P09 son defaults técnicos delegados,
+    no firmas humanas. source_mode=editable condicionado a G_SOURCE. Responsabilidad
+    producto/recepción graph_ui/sldb/spec2viz es del solicitante; operador y permisos
+    Scion se designan al abordar E sin bloquear L/M. baseline_proposal es el string
+    raíz de dag.yaml suministrado: conservar base acordada y actualizar solo ante
+    nueva decisión explícita con fuente verificable. Cobertura documental se refiere
+    a decisiones.md + owner-decisions.json y covered_work de este nodo, no sustituye
+    cobertura de UFs ni auditorías WS06.'
+  acceptance: Registro concreto de cada Pxx con tipo humano/técnico, actor, fuente
+    y nodos/gates. No repetir preguntas ya resueltas ni inferir aceptación de API/UI
+    o permiso Scion. Verificar y reutilizar cobertura documental ya producida; actualizar
+    solo por cambio real de decisión.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws07.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: a9569642fd6b96b741d23348033de703fb99300461b19ffd04aa37282951b04a
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS07/3d747c10624c4c81991b7549756296816228d64bf4a1d24c4531881bedfbd119/attempt-1
+    input_sha256: 3d747c10624c4c81991b7549756296816228d64bf4a1d24c4531881bedfbd119
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  covered_work:
+    state: decisions_documented_pending_audit_reconciliation
+    evidence: decisiones.md; owner-decisions.json respuestas0–2
+    remaining: verificar trazabilidad al promover; no repetir decisiones ni dar por
+      implementados contratos
+- id: WS08
+  title: Precisar user-flows y criterios observables
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: borradores/user-flows.md
+  scope: 'Mapear UF a operaciones de WS02/03/04; cubrir manual, captura, revisión,
+    cambios (UF07/WS29), arranque, multidesk, schemas y modo degradado (UF07, fallo
+    de backend/dependencia). UF02 responder significa dentro del desk/contexto autorizado
+    local; ack local: operación pendiente de confirmar en el contrato WS12; no se
+    da por disponible. UF08 es lectura; envío interdesk fuera de baseline, sin excepción
+    implícita a P07. Las operaciones vienen de auditoria/{deskops,infraestructura,ui}.md,
+    disponibles por dependencia transitiva vía WS06/WS07.'
+  acceptance: Cada UF tiene entrada/salida, operación, error, nodo y gate humano;
+    no prometer función fuera de alcance. Nodo = ID del DAG. Una operación ausente
+    se marca hueco, sin inventarla. Cubrir todas UF01–UF10; operación/nodo/gate admiten
+    listas completas, no elegir nodo principal. Distinguir gate humano WS16/30/37/39
+    de prueba técnica propia WS29; si no hay gate humano adicional escribir ninguno
+    adicional. Delegación se documenta condicionada a G_SCION/G_EXEC, sin habilitarla.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws08.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 708dae1414df5ab962378be3c1c0248b852b371be2ec8c9e08b2a172f9b25c72
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS08/35bb9f3186c36265ca392d1cda2b8e0a1613aad5c74b08c1cd7e30c08472dd87/attempt-1
+    input_sha256: 35bb9f3186c36265ca392d1cda2b8e0a1613aad5c74b08c1cd7e30c08472dd87
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS09
+  title: Precisar catálogo de renderizaciones
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS07
+  - WS10
+  - WS08
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: borradores/vistas.md
+  scope: Inventariar fuente, queries, Board, ritual, conocimiento/crossroads, issues,
+    FAQ, Code y vistas existentes; ViewDoc es grafo, no contrato universal de UI.
+  acceptance: Cada fila inventaría origen, contrato (o «sin contrato» si el soporte
+    no lo tiene), renderer, acción/dueño, error y estado desde auditorías WS02–04/decisiones
+    y UFs WS08. Campo sin evidencia se marca no definido con productor WS11/12 o futura
+    implementación, incluido renderer/actor/campos/relaciones; nunca inventar actor/API
+    disponible. Distinguir authored/derivado/preferencia local. Aplica a cada fila
+    de las tablas de vistas.md y completa la ficha por fila. Estado = disponible/propuesto/bloqueado
+    según WS10; disponibilidad actual viene de auditoria/ui.md (WS04); error = fallo
+    visible esperado para esa fila. Filas compuestas admiten listas de contratos/renderers/acciones/errores
+    y clasificación por componente authored/derivado/local; separar fila solo si el
+    delta tiene evidencia/estado independiente. Para propuesto/bloqueado indicar error
+    esperado condicionado a contrato/implementación, o no definido con productor WS11/12
+    si falta; nunca inventar error actual.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws09.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: db63604050fba77fca8130958b185656c0e634f791c40645e296f674dca529b8
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS09/03de5b5522dd400f1089dfeff1803607bb5f58ca82b597f38db36fb510505f8b/attempt-1
+    input_sha256: 03de5b5522dd400f1089dfeff1803607bb5f58ca82b597f38db36fb510505f8b
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS10
+  title: Precisar índice y convención del manual
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS02
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: borradores/manual.md
+  scope: 'Índice y esquema de capítulos conceptuales (propósito/entradas/salidas,
+    no redacción del manual completo), ejemplo fijo y etiqueta de disponibilidad;
+    reutilizar manual CLI. Usa auditoria WS02–WS04; WS03/WS04 llegan de forma transitiva
+    por WS06/WS07. Ejemplo fijo acordado P08: Taller, graph_ui:.tmp/workspace-documental-ejemplo/,
+    productor WS40; hasta generarse describir como corpus futuro, sin capturas ni
+    pasos inventados.'
+  acceptance: 'Registrar en borradores/manual.md definiciones: disponible solo versión/commit
+    implementado + pruebas relevantes + acta humana del recorrido y pasos verificados;
+    propuesto intención sin esa evidencia; bloqueado dependencia/contrato identificado
+    pendiente. Contrastar estado actual con auditorías WS02–04 y remitir pruebas/actas
+    futuras a sus productores. No escribir pasos ni capturas ficticios.'
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws10.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: f0f30c78744136e9bad45ab5bf9e361c419709436ca3876e3425f75a5e592664
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS10/efb71a9bc9c1b9f387eb9fbfc4aa9d979641f2e4261760f75fb2ed248e41ce00/attempt-1
+    input_sha256: efb71a9bc9c1b9f387eb9fbfc4aa9d979641f2e4261760f75fb2ed248e41ce00
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS11
+  title: Cerrar contrato de navegación e identidad
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS09
+  - WS08
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: contratos/navegacion.md; enlaces a recibos externos G_UI_READ por
+    delta, G_SPEC_VIEW opcional
+  scope: Un documento Markdown mantiene identidad/ruta/modelo opcional; graph/code
+    admiten otros nodos con origen. Resolución repo/store explícita, foco, enlaces/historia
+    y modo read-only multidesk. Clasificar huecos sin modelos hipotéticos. Instancia
+    = documento concreto que falta escribir. Vínculo = referencia o enlace que falta
+    entre documentos existentes.
+  acceptance: Identidad/origen/foco/enlaces y lectura multidesk definidos con APIs
+    reales citadas por auditorías WS02–04 (path/símbolo/commit y evidencia existente);
+    cada hueco clasificado instancia/vínculo/consulta/API/renderer y productor dueño
+    antes de code. Mapear recepción requerida por delta en graph_ui (actor P01, IDs
+    y efectos); enlazar acta externa solo si el receptor ya la registró. El contrato
+    básico puede cerrar sin recepción de Changes, Scion ni ViewDoc opcional; cada
+    delta sigue bloqueado hasta su propio recibo. G_SPEC_VIEW se obtiene separadamente
+    al preparar WS18, sin bloquear navegación base. WS11 cierra con contrato básico
+    revisado, clasificación de huecos y mapa de deltas que requieren recepción; puede
+    cerrar sin acta receptora. Recibos son producidos por solicitante P01/repo receptor
+    al preparar cada delta, no por Executor de WS11 ni por escritura interrepo. Cada
+    delta espera su propio recibo; contrato básico no afirma que ninguno se haya recibido.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws11.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 53243ad428bbd671520282e462b84d7d50a3d1546b31f4052b9469e6654e97e9
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS11/88f8951abfeeb9e215449603af269f745e79c8fe0c442311a68c7a95dc8e3b0c/attempt-1
+    input_sha256: 88f8951abfeeb9e215449603af269f745e79c8fe0c442311a68c7a95dc8e3b0c
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS12
+  title: Cerrar contrato de operaciones y escritura
+  status: candidate
+  kind: planning
+  depends_on:
+  - WS11
+  - WS08
+  requires:
+  - G_WRITE_POLICY
+  owner_repo: deskops
+  output_scope: contratos/operaciones.md
+  scope: Whitelist de lectura/mutación por campo/modelo; adapter CLI/API público;
+    policy coordinador, Git, workflow-protected fields, precondición de escritura
+    (before-image por valor, token publicado o CAS solo si el contrato lo fija)/locks,
+    fallos parciales, permisos y closeout fuera del servidor UI. Adapter = canal público
+    existente (CLI/DeskopsOperations/API sldb) por el que la UI invoca cada operación;
+    si no existe, se registra hueco y dueño, no se diseña uno aquí. Whitelist incluye
+    campos protegidos definidos por modelos/lifecycle auditados WS02 (status/current_node/history/closeout_evidence
+    entre otros que determine modelo), por modelo/operación; no lista universal inventada.
+  acceptance: 'G_WRITE_POLICY registrado. Publicar whitelist por operación/campo/canal/actor/revisión/Git/efectos
+    y estado existente comprobado/faltante. Mapear qué recibo receptor/prueba corresponde
+    a cada delta; receptor P01 registra acta en su repo al preparar ese delta, no
+    WS12: campos/intake no esperan Changes/modelos/Scion ni raw-source. G_WRITE_CONTRACT
+    y G_UI_WRITE se evalúan por IDs/efecto, nunca como aceptación conjunta. Autoría
+    de tareas/cierre esperan G_CLOSEOUT. Raw-source faltante tiene productor WS20
+    y G_SOURCE; recepción G_SLDB_WRITE antes de WS20, sin exigir API implementada
+    para especificar contrato. Escritura de payload por campos: WS12 define la representación
+    de la precondición, las operaciones y los escritores alcanzados, distinguiendo
+    before-image por valor existente (`expected`, HTTP 409), token publicado (`version`/`content_hash`)
+    y comparación o escritura pública con precondición compartida (aún no probada);
+    no fuerza CAS en toda CLI ni un algoritmo, ni infiere frescura por CLI, y P03
+    no cambia. Su productor es WS45 (sldb, independiente de source_mode) y su gate
+    G_PAYLOAD_PRECONDITION. Captura directa a drawer: WS12 compara API SLDB existente
+    (`sldb.api.create_document`, DrawerService), composición de llamadas a esas API
+    (no la Composición del glosario) y eventual wrapper Deskops, sin aprobar ninguna
+    ni crear API o modelo por reflejo; `message send` más `promote` no queda aprobado
+    (la promoción borra la nota y deja `why` apuntando a una ruta borrada). La captura
+    a protoátomo entra en la whitelist con su canal o con su hueco y dueño. Solo si
+    falta conducta de workflow se registra un productor Deskops explícito antes de
+    WS25.2; si esa composición de llamadas cumple, se documenta prueba y contrato.
+    Lock solo UI no coordina CLI/agentes: con otro coordinador escritor, read-only/handoff
+    hasta API pública con autoridad compartida probada. WS12 solo escribe contrato
+    y enlaces en deskops; no ejecuta mutaciones ni crea actas interrepo. Contrastar
+    inventarios WS02–04 y contrato WS11, citar path/símbolo/commit observado; comprobado
+    requiere evidencia real citada de API/prueba existente. Cierra con matriz de capacidades/efectos
+    y huecos asignados, no requiere habilitar ninguna mutación. Receptor P01 en repo
+    dueño produce acta por delta al prepararlo; G_WRITE_CONTRACT admite requisito
+    de API faltante solo para el nodo productor de esa API (WS20 raw-source con G_SOURCE;
+    WS45 precondición de payload con G_PAYLOAD_PRECONDITION), manteniendo consumidor
+    WS21 bloqueado por G_PAYLOAD_PRECONDITION y, solo en variante editable, G_SOURCE.
+    Elegir la representación de la precondición es entregable de este contrato, justificado
+    por operaciones y escritores alcanzados y reutilizando lo existente; WS45 la verifica.
+    «Receptor P01» aplica a graph_ui, sldb y spec2viz: en deltas de deskops no se
+    crea recepción nueva y rige la autorización de trabajo local. Falta conducta de
+    workflow cuando ni la API ni su composición de llamadas pueden, con prueba real,
+    preservar origen, no crear tarea activa y controlar colisiones. Para el ramal
+    E, este contrato asume producir, como sección por delta de WS34.1 y WS34.2, la
+    política y el umbral de timeout de dispatch y reply y su clasificación observable
+    (al menos aceptado, rechazado y vencido sin confirmación). La duración no se elige
+    ahora: esa sección del contrato WS12 la fija al preparar esos deltas, no WS34,
+    y su ausencia no impide cerrar el contrato núcleo de las Entregas L y M.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws12.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 9d3757a9474621df598ca8deda9f048c203aab61682aadbb3316908e0347683b
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS12/7b1db1d8750ae6573cc3e7bd49ed10f9b5b68ed7fef60899d1c19c2000dd2d9f/attempt-1
+    input_sha256: 7b1db1d8750ae6573cc3e7bd49ed10f9b5b68ed7fef60899d1c19c2000dd2d9f
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS13
+  title: Integrar lector workspace con historia y foco
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS11
+  - WS13.1
+  - WS13.2
+  - WS13.3
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: 'Agregado: salidas de WS13.1, WS13.2, WS13.3'
+  scope: 'Implementación o delta conciliado sobre workspace integrado a1b2b22: documento/fuente
+    solo lectura, contexto, enlaces, tabs/historia y selección por documento/nodo.
+    Mantener Code local y rutas del host; no requerir índices nuevos. Incluir explorador
+    de documentos modelados/no modelados, dos documentos lado a lado y tabs/historia.
+    Se reutiliza el registro de vistas existente en shell/registry.js; organización
+    de contenido procede de documentos/consultas.'
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws13.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 3c1b922ac5269c1cff3e7f58c0e1277d95d4daee3ca00cfdedb4b95a31291396
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13/347000def510a671c806ef602ef99c78ff6b75f9cbcea454f1c77706b3bea7df/attempt-1
+    input_sha256: 347000def510a671c806ef602ef99c78ff6b75f9cbcea454f1c77706b3bea7df
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS13.1
+  - WS13.2
+  - WS13.3
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS13.1
+  title: Leer documento, contexto y enlaces
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS11
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/ (reutilizar node/workspace-view.js
+    y componentes Document/Graph/Code/contexto existentes); rutas de lectura contrato
+    WS11; tests/
+  scope: Documento/fuente solo lectura, panel de contexto (identidad, relaciones y
+    origen), enlaces y Code local con selección por documento/nodo. Mantener rutas
+    del host; no requerir índices nuevos. Implementación o delta conciliado sobre
+    el workspace integrado a1b2b22, según contrato WS11 y recibo externo del delta.
+    Foco = elemento/nodo seleccionado dentro del documento; documento activo identifica
+    pestaña. Compartir foco solo donde exista correspondencia real de origen definida
+    WS11; no inventar mapeo texto→código.
+  acceptance: 'Markdown sin modelo tiene render de lectura y fuente cruda íntegra
+    legibles (ambas), con mismo origen; el panel de contexto muestra identidad, las
+    relaciones que declare el contrato WS11 y la ruta de origen reales; seguir un
+    enlace y alternar entre texto/graph/code, en las representaciones que el catálogo
+    WS09 (borradores/vistas.md) y el contrato WS11 declaren soportadas, preserva origen.
+    La selección por documento/nodo fija el foco del documento abierto: seleccionar
+    en Code, texto o graph actualiza ese foco y las demás representaciones del mismo
+    documento lo comparten, sin abrir otra copia. No depender de conocer un ID; no
+    crear otro workspace independiente.  La base a1b2b22 es punto de partida reutilizable;
+    el cierre de este delta exige SU evidencia de aceptación ampliada Markdown no
+    modelado/fuente, enlaces y foco. Ni cierre f16fcd1 ni commit previo sustituyen
+    esa evidencia. Una copia es instancia documental con mismo origen, no cada representación.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws13-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 358c1c04d30e81e4e57c04ad2db25b6342e467e999788c6e3c8bb45d31355a3d
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13.1/de918fd823b60d8b9aeef1c00a7fd1d827089dd6d5cec7a243b38fb56ea59570/attempt-1
+    input_sha256: de918fd823b60d8b9aeef1c00a7fd1d827089dd6d5cec7a243b38fb56ea59570
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS13
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS13.2
+  title: Explorar documentos modelados y no modelados
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS11
+  - WS13.1
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/explorer/; rutas de lectura definidas
+    por el contrato WS11; tests/
+  scope: Explorador sobre documentos reales del store y Markdown no modelado del desk.
+    El árbol se obtiene de la API del store y del sistema de archivos del desk, según
+    contrato WS11.
+  acceptance: Desde el explorador abrir un documento modelado y uno no modelado sin
+    conocer su ID ni usar índices nuevos; al añadir un documento al store temporal
+    de prueba, aparece sin cambiar código. Altas de documento modelado en store y
+    Markdown no modelado en desk aparecen tras refresco explícito del catálogo sin
+    reiniciar servidor ni cambiar código. Se permite reutilizar catálogo/filtro existente
+    para modelados; WS11 determina API/seguridad para no modelados.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws13-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: a150d8a9a3b80d55c0b3af13d5235863a2fb5b19bc0f488acb537b568b500fc5
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13.2/8e3570081527849c5cd6d4a5277502cb134466520511db06e78348c18e8756f4/attempt-1
+    input_sha256: 8e3570081527849c5cd6d4a5277502cb134466520511db06e78348c18e8756f4
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS13
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS13.3
+  title: Abrir documentos en pestañas y divisiones con historia
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS11
+  - WS13.1
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/layout/; rutas de lectura definidas
+    por el contrato WS11; tests/
+  scope: Pestañas, dos documentos lado a lado, foco e historia de navegación; disposición
+    como estado local según P07, no como documento compartido. Foco es el elemento
+    seleccionado dentro de un documento; origen es su soporte y ruta real. Cambiar
+    de pestaña o división cambia el documento activo sin alterar el foco guardado
+    de cada documento; volver restaura documento, foco y origen. Disposición por sesión
+    de navegador; no se exige persistir tras recargar.
+  acceptance: Abrir, cambiar y cerrar pestañas; abrir dos documentos en divisiones,
+    alternar el documento activo y volver conservando foco e historia. Volver sigue
+    el orden inverso de navegación.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws13-3.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: c4fa9df60eb015f9d02399c60724f96c630930167cda45ba65b8ae8df456be3f
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS13.3/0b8fe521237db42dbb9f0245008a4afc08cfc8f548bed7c56e99c7e055f9d1f9/attempt-1
+    input_sha256: 0b8fe521237db42dbb9f0245008a4afc08cfc8f548bed7c56e99c7e055f9d1f9
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS13
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS14
+  title: Integrar búsqueda navegable del workspace
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/source/; views/workspace/; tests/
+  scope: 'Texto/campos/semántica solo según API real; resultados abren el documento
+    con su identidad y ruta de origen. Estados diferenciados: búsqueda sin resultados,
+    error y degradación.'
+  acceptance: 'Usar `sldb find` o su ruta en `sldb serve`, según auditoria/infraestructura.md
+    (producido por WS03) y contrato WS11; no parser propio. Con teclado: buscar, abrir
+    un resultado y volver conserva consulta y foco. Sin resultados; error de backend
+    (la API no responde o falla y la UI lo declara sin mostrar vacío); y búsqueda
+    degradada (la API responde con capacidad parcial, p. ej. sin semántica, y la UI
+    declara qué no cubre) se ven como tres estados distintos; no cargar todo grafo
+    en cada tecla. Comprobar en prueba de peticiones que teclear no dispara petición
+    de carga completa del grafo; no exige debounce/umbral nuevo, mecanismo se fija
+    en TaskDoc.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws14.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 5aa191ede3a406b6885f039fc49f532ce747823e46c9060f61699b80e55ddcb3
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS14/8e1cce201dd7777d5dccef7ac11d3420b2aee74486d7f31df925ef386f437b1f/attempt-1
+    input_sha256: 8e1cce201dd7777d5dccef7ac11d3420b2aee74486d7f31df925ef386f437b1f
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS15
+  title: Mostrar errores de lectura y modo degradado
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS15.1
+  - WS15.2
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: 'Agregado: salidas de WS15.1, WS15.2'
+  scope: 'Agregado: errores de lectura (WS15.1) y orientación sin desk (WS15.2).'
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws15.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 14c96819a475e8dc85b29b6c2cf797e593efd54feb5705dd4ae62ecd52d4736a
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15/a1c5ef81125032ee88d9247291283caba6b50246502389f4237e264097b32274/attempt-1
+    input_sha256: a1c5ef81125032ee88d9247291283caba6b50246502389f4237e264097b32274
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS15.1
+  - WS15.2
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS15.1
+  title: Mostrar errores de lectura y modo degradado
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/errors/; rutas de lectura definidas
+    por el contrato WS11; tests/
+  scope: Referencia rota, documento ausente, modelo no importable y backend caído
+    se muestran en panel afectado sin borrar historial ni fingir vacío. Fuente sin
+    permiso/capacidad de edición es límite read-only visible, no fallo de lectura.
+    Fallos CDN se declaran límite actual sin prometer offline.
+  acceptance: Reutilizar lectura Markdown de WS13.1 donde siga disponible; no implementar
+    otro lector ni guardado. Contrato WS11 define errores de API y estados de red
+    sin respuesta, incluido fallo de carga CDN; pruebas distinguen ambos sin inventar
+    respuesta del backend ausente. Reintentar backend tras restaurarlo recupera lectura
+    conservando pestañas/foco/historia; fallo CDN tiene diagnóstico visible y prueba
+    de no carga, sin exigir recuperación offline. Empaquetado offline fuera.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws15-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 96359e596a228ceb22a8b058b852901fe3a6d64d5a438118854660c8529901a3
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15.1/034feb989d832d2ed6a168ff81420b681df1b664b71ad17f9c8dc788156dd0d7/attempt-1
+    input_sha256: 034feb989d832d2ed6a168ff81420b681df1b664b71ad17f9c8dc788156dd0d7
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS15
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS15.2
+  title: Orientar proyecto sin desk
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/orientation/; rutas de lectura definidas
+    por el contrato WS11; tests/
+  scope: 'UF10: un proyecto sin desk muestra orientación, la ruta absoluta del proyecto
+    como destino y el comando `deskops init <ruta>`; nunca inicializar por GET. Tras
+    init externo real, refrescar lectura.'
+  acceptance: Abrir un proyecto sin desk muestra orientación y destino sin mutar nada;
+    tras ejecutar init fuera de la UI, refrescar muestra el desk real.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws15-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: cd54499c1e2cff058d14329f18ebf700364b0dc1eef9a05f8abf56ebaa1467b3
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS15.2/3e9cdd682977d14ff3c608d007fc8b885db090613e22aabdf0746dfbe99c3369/attempt-1
+    input_sha256: 3e9cdd682977d14ff3c608d007fc8b885db090613e22aabdf0746dfbe99c3369
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS15
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS16
+  title: Validar con humano lectura y descubrimiento
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS14
+  - WS15
+  - WS08
+  - WS40
+  - WS41
+  requires: []
+  owner_repo: graph_ui
+  output_scope: runs/subagents/workspace-documental-acceptance/lectura/
+  scope: Gate humano temprano para UF01/UF03 lectura/UF07 diagnóstico y UF08 lectura;
+    consume el manifiesto de WS40 y sigue el protocolo de validacion-humana.md, sin
+    crear corpus propio. Incluye UF10 arranque/ausencia de desk y UF08 lectura del
+    segundo desk real, sin mutación interdesk.
+  acceptance: 'Humano real realiza recorrido; agente no sustituye aprobación. Ante
+    un fallo, WS16 lo registra y supervisor del repo receptor atribuye el fallo por
+    evidencia; si aún no se aísla causa, registra incidente/diagnóstico en repo/superficie
+    antes de asignar nodo y abrir corrección; WS16 no la implementa. Reportar tiempos
+    y pruebas técnicas por separado. Preparar corpus por WS40; G_HUMAN_READ habilita
+    uso de mutaciones del baseline en UI, no bloquea desarrollo/pruebas aisladas API.
+    Renderizaciones read-only pueden desarrollarse en paralelo sin afirmar aceptación
+    de usuario. Mide aperturas y búsquedas; guardados no aplican hasta WS30. Superar
+    objetivos P08 de apertura/búsqueda/arranque es fallo medido: registrar y mantener
+    gate pendiente hasta corrección o revisión explícita del objetivo por humano con
+    razón/evidencia, nunca rebajar umbral silenciosamente.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws16.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 087f1fc9ab626cd2a62d5272b8b67b93d46aa95e777abcda8b76fdc9aca7f3c6
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS16/b18a21d1d2aacb337e073ed59c7e4fb48706c4d8466fa22450b312b738991cfd/attempt-1
+    input_sha256: b18a21d1d2aacb337e073ed59c7e4fb48706c4d8466fa22450b312b738991cfd
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS17
+  title: Escribir entradas e índices del desk ejemplo
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS11
+  - WS40
+  requires: []
+  owner_repo: deskops
+  output_scope: ejemplo/nav/ (plantillas Markdown versionadas en el paquete del plan)
+  scope: 'Escribir solo entradas/índices authored como plantillas versionadas bajo
+    el paquete del plan; no es el productor del corpus. El generador de WS40 acepta
+    estas fuentes y las materializa bajo su root temporal, sin copiar inventarios
+    derivados ni escribir repos reales. Puede escribirse antes de WS16: el lector
+    no depende de estos índices nuevos; WS30 sí los integra. Índice authored = texto
+    curado y enlaces de entrada elegidos para recorrido, sin copiar listados completos
+    del store que debe resolver consulta. Registry = desk/registry/repo-*.md existente
+    inventariado WS02. WS43 lo reutiliza en publicación real; plantillas temporales
+    enlazan por roots/aliases del manifiesto WS40, sin copiar ni depender del registry
+    real.'
+  acceptance: 'Tras regenerar corpus WS40 con ejemplo/nav/, recorrer links Markdown
+    sin UI; source versionado y destino temporal no son registros independientes.
+    Verificar al regenerar que cada plantilla resuelve el root/store de procedencia
+    de los dos desks del manifiesto WS40; no duplicar el registry de deskops; el conjunto
+    temporal usa solo manifiesto WS40, no enlaces al checkout real. Plantillas son
+    fuente única: destino temporal se regenera desde ellas, no se edita/commitea como
+    registro competidor. Resolver cada link según identidad/root/store/aliases contrato
+    WS11 contra manifiesto WS40; conjunto de plantillas cubre ambos desks, no cada
+    plantilla individual.'
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws17.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 2582c75ba234025a2268d1e2e656a6df769240e24a47e6d07a045c0ef25c2a99
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS17/f31913fe877807a6ec16ecb6c58d1cd420c5d34636ae1bd4e274d69688c1a600/attempt-1
+    input_sha256: f31913fe877807a6ec16ecb6c58d1cd420c5d34636ae1bd4e274d69688c1a600
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS18
+  title: Declarar proyecciones de grafo reutilizables
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS09
+  - WS11
+  requires:
+  - G_SPEC_VIEW
+  owner_repo: spec2viz
+  output_scope: sldb/views/ (ruta y registro confirmados según el contrato al promover;
+    con output_base spec2viz (raíz del repo) puede ser spec2viz/sldb/views/ y el prefijo
+    textual no cambia el dueño); tests/
+  scope: Autoría de ViewDoc y NotationDoc concretos (la notación que el ViewDoc referencia)
+    para selecciones y notación ya soportadas por spec2viz, y su comprobación sobre
+    stores reales reutilizando el evaluador evaluate_view y las rutas /api/views de
+    graph_ui (fila C-37 de reconciliacion.md) y la notación de spec2viz resolve_documents
+    (fila C-49). ViewDoc es datos sin ruta de store y el evaluador recibe el store
+    por petición, así que no se pide portabilidad genérica, ni servicio, CLI o runtime
+    fuera de graph_ui, ni extraer o compartir el evaluador. No crear UI pages declarativas
+    ficticias. Selecciones concretas y notación requerida vienen de catálogo WS09
+    y contrato WS11, contrastados con capacidades WS03; si catálogo no fija selección
+    mínima, detener promoción y corregir ese contrato antes de elegir una. No inventar
+    selección aquí.
+  acceptance: Los ViewDoc y NotationDoc concretos definidos por WS09/WS11 se evalúan
+    con el camino existente de graph_ui sobre un store real, la selección coincide
+    con la declarada en catálogo WS09 y contrato WS11, que son la fuente; el ViewDoc
+    la repite y el ViewDoc documenta qué selecciona; no se alega que una prueba con
+    dos stores demuestre el mismo payload completo (cambia filtros); tareas receptoras
+    en spec2viz se promueven por dueño. Gate receptor G_SPEC_VIEW requerido; este
+    paquete documental deskops no escribe en spec2viz; la futura TaskDoc de WS18 se
+    promueve y ejecuta en spec2viz por su supervisor/Executor, con recepción G_SPEC_VIEW
+    para ese delta.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws18.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: spec2viz:repository_root/
+  context_review:
+    contract_sha256: 815a0db38b3c60b8060a90e165669a18ed7ffdae17a883aee3f5cc2c5d73b60d
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS18/b25e8b9600065a24d8f3a5442b0bd3172372a575fa125198fab6f2245c35968c/attempt-1
+    input_sha256: b25e8b9600065a24d8f3a5442b0bd3172372a575fa125198fab6f2245c35968c
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS19
+  title: Integrar edición de campos con conflicto
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS19.1
+  - WS19.2
+  requires:
+  - G_HUMAN_READ
+  - G_PAYLOAD_PRECONDITION
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: 'Agregado: salidas de WS19.1, WS19.2'
+  scope: Delta sobre workspace integrado a1b2b22 de edición; reutilizar editores y
+    API, precondición de escritura (WS45/WS12) y conflicto visible; workflow-protected
+    fields no editables por este canal. Incluir alta/baja de relaciones permitidas
+    por contrato, usando API real y la precondición de escritura que fije WS12; no
+    crear semántica de relaciones en componente. G_HUMAN_READ habilita uso de mutaciones
+    en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates
+    técnicos sin acta humana de lectura.
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws19.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: editing
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: d42cfe84b6c80269f8d8d1f3c03add12560e742c57abe0118ece9336666d02ba
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19/97fa5b79c7ed24f3434b8c0c89e6df795eee8134746a03c5417daa921fc79d14/attempt-1
+    input_sha256: 97fa5b79c7ed24f3434b8c0c89e6df795eee8134746a03c5417daa921fc79d14
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS19.1
+  - WS19.2
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS19.1
+  title: Editar campos con conflicto visible
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_HUMAN_READ
+  - G_PAYLOAD_PRECONDITION
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/fields/; endpoints del contrato
+    WS12 consumidos desde graph_ui sin cambios de contrato; tests/
+  scope: Edición de campos reutilizando editores y API, con precondición de escritura
+    de payload (la fija WS12 y la verifica WS45; `expected` por valor, token `version`/`content_hash`
+    o CAS según el contrato, sin asumir hash) y conflicto visible (mensaje de rechazo
+    con el texto local conservado); workflow-protected fields no editables por este
+    canal. Delta sobre workspace integrado a1b2b22 de edición. G_HUMAN_READ habilita
+    uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con
+    sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: Guardar/recargar confirma dato real; una escritura obsoleta no pierde
+    texto local y el conflicto se muestra como tal. Mutación restringida a desk en
+    modo manual exclusivo (P03); otros modos read-only hasta contrato.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws19-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 7628edb78f2b21261907be496abf8485d18002b0e98e3d75807cf35d316cd607
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19.1/208a2371845a77a3602fe173f9cfb2f5dc2e7443374137b2caf00ebfe8332b1b/attempt-1
+    input_sha256: 208a2371845a77a3602fe173f9cfb2f5dc2e7443374137b2caf00ebfe8332b1b
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS19
+  overlap_with: editing
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS19.2
+  title: Editar relaciones permitidas por contrato
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_HUMAN_READ
+  - G_PAYLOAD_PRECONDITION
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/relations/; endpoints autorizados
+    por el contrato WS12; tests/
+  scope: Alta/baja de relaciones permitidas por contrato, usando API real y la precondición
+    de escritura que fije WS12; no crear semántica de relaciones en el componente.
+    G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de
+    API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: Alta y baja persisten y se confirman tras recargar; una relación no
+    permitida o una revisión obsoleta se rechaza con error visible.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws19-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 763c837367f86466714a3692c833895c490b7a5630f70e96cafdf7957345d2bd
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS19.2/72b8e51df1fffdaa9f282c1b886cc4f797cfb381461d91e775347877cbb8c1b8/attempt-1
+    input_sha256: 72b8e51df1fffdaa9f282c1b886cc4f797cfb381461d91e775347877cbb8c1b8
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS19
+  overlap_with: editing
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS20
+  title: Comprobar o completar guardado fuente reversible
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_SLDB_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: sldb
+  output_scope: src/sldb/api/documents/; src/sldb/cli/serve/; tests/
+  scope: Primero verificar capacidad existente. Un documento raw-source se extrae/valida
+    y guarda por API pública con revisión y preservación de campos protegidos; no
+    sobrescribir Markdown desde browser. Conserva solo raw-source, y la precondición
+    de escritura de payload por campos es un hueco separado, producido por WS45 e
+    independiente de source_mode. Las pruebas de conflicto de WS20 usan la precondición
+    de guardado raw-source que fije WS12 y no esperan a WS45.
+  acceptance: Reversible = guardar y volver a extraer conserva campos y secciones
+    sin pérdida. En ambas ramas G_SOURCE exige API pública y tests de roundtrip, conflicto,
+    recuperación tras fallo y campos protegidos. Si la capacidad existe, esos tests
+    bastan y no se duplica código. Si falta, se implementa en sldb mediante tarea
+    propia aceptada en G_SLDB_WRITE. WS20 se convierte en esa tarea propia en sldb
+    al promoverse (mismo delta/recibo G_SLDB_WRITE), no crea un segundo productor.
+    Capacidad existente significa que satisface todos los requisitos de esta aceptación/G_SOURCE;
+    parcial se completa solo en lo faltante y se vuelve a probar todo el contrato.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws20.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  enabled_when:
+    parameter: source_mode
+    equals: editable
+  output_base: sldb:repository_root/
+  context_review:
+    contract_sha256: 6d01928427980136727ca7d142055e57ac2b467653828666ffb7eb8fcccd4362
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS20/ab4aa273c582bedca02cf440cff61facf3db231c98710323f1bac531858cd71e/attempt-1
+    input_sha256: ab4aa273c582bedca02cf440cff61facf3db231c98710323f1bac531858cd71e
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS21
+  title: Integrar fuente y renderizado según source_mode
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS19
+  requires:
+  - G_PAYLOAD_PRECONDITION
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/; tests/
+  scope: Alternar fuente/render con mismo origen, revisión y dirty buffer; usar guardado
+    fuente autorizado. Composición escribe solo origen trazable soportado. Ejecutar
+    solo la variante elegida por P04; Con pending no se prepara ni se promueve este
+    nodo. Al alternar con cambios sin guardar se conserva el buffer; nunca se descarta
+    sin confirmación explícita de la persona usuaria; si no confirma, el buffer se
+    conserva. No requiere G_SOURCE si el humano eligió fuente read_only; el guardado
+    por campos exige G_PAYLOAD_PRECONDITION en ambas variantes.
+  acceptance: Cumplir la aceptación específica de la variante P04. En editable, G_SOURCE
+    y G_WRITE_CONTRACT pasan y se prueba edición/conflicto/roundtrip. En read_only,
+    fuente legible no editable y edición por campos probada; manual/WS30 no declaran
+    edición fuente disponible. En ambos modos una composición, si existe en el contrato
+    WS12, escribe solo en el documento dueño de cada campo; si no hay soporte, queda
+    de solo lectura y se declara.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws21.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: editing
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  variants:
+  - when:
+      parameter: source_mode
+      equals: editable
+    depends_on:
+    - WS20
+    requires:
+    - G_SOURCE
+    acceptance: Fuente y render editables con API reversible y campos protegidos;
+      roundtrip/conflicto real.
+  - when:
+      parameter: source_mode
+      equals: read_only
+    depends_on: []
+    requires: []
+    acceptance: Fuente explícitamente read-only y campos editables por API. Conservar
+      buffer/foco, ocultar guardado fuente; manual y WS30 etiquetan este alcance sin
+      afirmar edición fuente completa.
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 2a7400817da362555c7877c468a2f8d7c4fd5dd3c58eef0ef38110b10d947db8
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS21/ff4a233001993117751ccf66679709e6fed8a944aa4034d17689e4fe4d53b217/attempt-1
+    input_sha256: ff4a233001993117751ccf66679709e6fed8a944aa4034d17689e4fe4d53b217
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS22
+  title: Renderizar Board como trabajo navegable
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS09
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/board/; tests/
+  scope: Representar Board real como lista, como tablero agrupado por estado y con
+    las dependencias declaradas en el TaskDoc, abriendo en el lector los mismos TaskDoc
+    y sus pills/átomos referenciados. No reemplazar workflow con drag-and-drop de
+    status.
+  acceptance: Las tres representaciones (lista, tablero y dependencias) abren el mismo
+    TaskDoc; selección y links comunes con lector; estados y condiciones de lifecycle
+    leídos de deskops (Board, lifecycle), no de dag.yaml; no duplicar tareas ni presentar
+    predicado satisfecho como test aprobado.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws22.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 155328756ad4a011c5cf59c0150c54f7e939a82ca12c7e71ea29606112e374b0
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS22/e50eb7176b7f4ed164687d833e1b2d3937de6ec4497fb8c68747d49f2e1e8c67/attempt-1
+    input_sha256: e50eb7176b7f4ed164687d833e1b2d3937de6ec4497fb8c68747d49f2e1e8c67
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS23
+  title: Renderizar rituales y pasos como procedimiento
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS09
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/procedure/; tests/
+  scope: RitualDoc/StepDoc/lifecycle sobre referencias reales; pasos y fuentes navegables;
+    transiciones solo representadas, no accionables. Pruebas sobre corpus WS40 o store
+    temporal real.
+  acceptance: Un procedimiento abre sus documentos y soporte; no auto-marcar pasos
+    como realizados por leerlos. Mostrar progreso/estado de paso solo si WS02/WS09/WS11
+    identifican campo/API real de deskops que lo produce; si no, pasos authored son
+    inertes y no hay progreso inventado. La vista no escribe estado. Las transiciones
+    muestran origen/destino/condición declarados del lifecycle, sin controles que
+    invoquen avance ni mutaciones; prueba de no peticiones de escritura.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws23.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 055c99436a4e54a1214de258a398c4b24d000e4aeac3867898fefc9edefd4971
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS23/738a2132ccbe08454820963ff8eb6a4b029dbd69ecf742f63dcafd8871f1e803/attempt-2
+    input_sha256: 738a2132ccbe08454820963ff8eb6a4b029dbd69ecf742f63dcafd8871f1e803
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS24
+  title: Integrar conocimiento y grafo local
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS09
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/graph/ y node/workspace-view.js
+    (panel Context existente); shell/registry.js; tests/
+  scope: Reutilizar el gráfico actual y una vista de documento genérica única registrada
+    en shell/registry.js para átomos/protoátomos/crossroads (inventariados en WS02
+    y catalogados en WS09)/materializaciones (MaterializationContractDoc; modelo en
+    deskops/models/materialization.py)/pills, clasificación y vecindad; preservar
+    Code local existente del workspace integrado a1b2b22. Backlinks = relaciones entrantes
+    calculadas por la API de grafo de sldb según auditoria/infraestructura.md (producido
+    por WS03). Clasificación = tipo del modelo y tags del documento cuando el modelo
+    los declare. Vecindad = hasta 2 hops. Code local = proyección Code del workspace
+    integrado a1b2b22. La vecindad existente se reutiliza sin esperar WS18. ViewDoc
+    de WS18 es extensión opcional y solo se conecta tras recepción G_SPEC_VIEW, sin
+    bloquear navegación básica ni manual. Tags se leen del payload/semantic_tags públicos
+    del documento según inventario WS03 y contrato WS11, sin inferirlos por carpeta.
+    Markdown no modelado se hereda del lector WS13.1/explorador WS13.2 (vía WS13),
+    no segundo lector.
+  acceptance: Navegación ida/vuelta por fuentes y backlinks derivados; un soporte
+    no modelado (Markdown sin modelo) es visible y navegable en la vista de documento
+    genérica con su ruta de origen. La vista muestra la clasificación (tipo y tags)
+    y la vecindad de hasta 2 hops. No un renderer nuevo obligatorio por cada clase.
+    Markdown no modelado se identifica sin modelo y sin tags declarados; no inferir
+    clasificación ficticia.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws24.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: workspace
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 11e5d94d0a511240cd3b35630a40c12994e35f1b304a845f0b03311d0c82e061
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS24/25a9a2d3fd42d56383e571e58be211e753dfc4b25d8811ae418f5ae39e52ffd2/attempt-1
+    input_sha256: 25a9a2d3fd42d56383e571e58be211e753dfc4b25d8811ae418f5ae39e52ffd2
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS25
+  title: Integrar captura y triage en UI
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS25.1
+  - WS25.2
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: 'Agregado: salidas de WS25.1, WS25.2'
+  scope: UI para mensaje/ack y captura interna de drawer/protoátomo mediante operaciones
+    permitidas por contrato; no confundir ack con aprobación. G_HUMAN_READ habilita
+    uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con
+    sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws25.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 34b262ef7dd03fe4a65adcd88a98252f1f700d30df0b6865552299ea96730bbb
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25/354ffe9305d50479b164a0b69603c845e7ec9c9c02c79c2a95ed0d3e3cb4b687/attempt-1
+    input_sha256: 354ffe9305d50479b164a0b69603c845e7ec9c9c02c79c2a95ed0d3e3cb4b687
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS25.1
+  - WS25.2
+- id: WS25.1
+  title: Leer inbox y registrar ack o respuesta local
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/inbox/; endpoints autorizados por
+    el contrato WS12; tests/
+  scope: UI para leer mensajes, ack y respuesta dentro del mismo desk mediante operaciones
+    permitidas por contrato; sin envío interdesk; no confundir ack con aprobación.
+    G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de
+    API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: Ack persiste tras recargar mostrando el mensaje origen; respuesta local
+    solo si el contrato WS12 define esa operación, y si no se declara no disponible;
+    no crea tarea implícita ni cron de triage. Permisos del contrato aplicados.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws25-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 1c04ff2e05576469bbd264351e3c837eb2e403c22a408edf701368a52d4903fe
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25.1/d3048f281f05b5ddb9ff743eb783726b988820962745f9a61dd365adf8d5b571/attempt-1
+    input_sha256: d3048f281f05b5ddb9ff743eb783726b988820962745f9a61dd365adf8d5b571
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS25
+- id: WS25.2
+  title: Capturar en drawer o protoátomo
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/capture/; endpoints autorizados
+    por el contrato WS12; tests/
+  scope: Captura interna con destino elegido explícitamente por la persona usuaria
+    —candidato de drawer o protoátomo— mediante operaciones permitidas por el contrato
+    WS12, sin exigir tarea; cada destino se prueba por separado. Para el candidato
+    de drawer, el canal permitido (con origen preservado, sin tarea activa y colisiones
+    controladas) está pendiente del contrato WS12, que compara API SLDB existente,
+    composición de llamadas a esas API (no la Composición del glosario) y eventual
+    wrapper Deskops; no se asume ninguno ni se crea API o modelo por reflejo. G_HUMAN_READ
+    habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden
+    avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: 'UF02: una captura persiste tras recargar en el destino elegido, con
+    origen y sin tarea implícita. Permisos del contrato aplicados. Origen = referencia
+    tipada al soporte del que nace la captura (ruta o mensaje), con representación
+    fijada por el contrato WS12; los orígenes ruta y mensaje se registran y se muestran
+    tras recargar. Una colisión con un candidato existente no se sobrescribe en silencio;
+    se controla según el contrato.'
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws25-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 5eaa372348be21c1838175c1e208e1610696fea94affdb7a1a5c2de461770f84
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS25.2/07b626976308425a2be021541d5555fe7f6dae9c4a4683bd854087303cb87fa0/attempt-1
+    input_sha256: 07b626976308425a2be021541d5555fe7f6dae9c4a4683bd854087303cb87fa0
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS25
+- id: WS26
+  title: Integrar autoría y contexto de tareas
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS22
+  - WS26.1
+  - WS26.2
+  requires:
+  - G_CLOSEOUT
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: 'Agregado: salidas de WS26.1, WS26.2'
+  scope: Autoría explícita desde candidato, evidencia declarada, dependencias y contexto/pill
+    binding; promoción solo cuando el contrato resuelve commits previos por canal
+    autorizado. Incluir enrutamiento explícito en Board y representación de capa lista
+    por dependencias/no solapamiento; sin confundir Board route con ejecución. El
+    canal de promoción debe respetar commits previos y estado real. G_HUMAN_READ habilita
+    uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con
+    sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws26.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 316947debc5c42056ffd12e91781b48315251bcd1ef3f641d2e86642ed7af7ef
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26/6e414f0800298f6c4cd1d8e0cd556836f4485591814878b68db2289249c3dadf/attempt-1
+    input_sha256: 6e414f0800298f6c4cd1d8e0cd556836f4485591814878b68db2289249c3dadf
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS26.1
+  - WS26.2
+- id: WS26.1
+  title: Autorar tarea, evidencia y contexto
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS22
+  requires:
+  - G_CLOSEOUT
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/authoring/; endpoints autorizados
+    por el contrato WS12; tests/
+  scope: Autoría explícita desde candidato, evidencia declarada, dependencias y binding
+    de contexto/pills. Candidato = archivo del drawer. G_HUMAN_READ habilita uso de
+    mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus
+    contratos/gates técnicos sin acta humana de lectura.
+  acceptance: 'UF04 sobre TaskDoc real: el candidato queda autorado con evidencia
+    declarada, dependencias y pills de contexto vinculadas y visibles tras recargar;
+    nunca editar status para avanzar. Si una operación Git no tiene contrato o dueño,
+    la acción queda en handoff explícito y se declara no disponible.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws26-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 321789eeb24c6eb32d74407448bcc8c5b8d73ae842a9b004c543e0f597d9fb5a
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26.1/37383ce7c164eb1d393fb9fc76a91cbebdb2058e9cac2b5251ed3778ec45192d/attempt-1
+    input_sha256: 37383ce7c164eb1d393fb9fc76a91cbebdb2058e9cac2b5251ed3778ec45192d
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS26
+- id: WS26.2
+  title: Enrutar en Board y mostrar capa lista
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS22
+  - WS26.1
+  requires:
+  - G_CLOSEOUT
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/routing/; endpoints autorizados
+    por el contrato WS12; tests/
+  scope: Enrutamiento explícito en Board y representación de capa lista por dependencias/no
+    solapamiento; promoción solo cuando el contrato resuelve commits previos por canal
+    autorizado. Enrutar = añadir la tarea a la lista tasks del BoardDoc por operación
+    pública. Capa lista = tareas sin dependencias pendientes y sin archivos solapados
+    según los `files` declarados en cada TaskDoc y el ritual de fase. G_HUMAN_READ
+    habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden
+    avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+  acceptance: 'Tras enrutar, `deskops show board` muestra la tarea y la UI la distingue
+    de una tarea en ejecución; el canal de promoción respeta commits previos y estado
+    real; la capa lista se muestra separada de tareas en ejecución y de tareas con
+    dependencias pendientes o archivos solapados. No implementar promoción nueva:
+    invocar solo operación completa ya admitida por WS12; si falta, preparar handoff
+    y mostrar pendiente, no promoción terminada. Capa lista usa rutas normalizadas/expansión
+    de files que documente contrato WS12 y ritual vigente: igualdad o contención directorio
+    implican solapamiento; glob/no-resolución dudosa implica no comprobado y revisión
+    supervisor antes de marcar lista, no heurística optimista.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws26-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 9d9393abafc2aab6207efa570e52e92be62e3f493c60ea38b7f5ea7a57b19adc
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS26.2/51a584beb40ddfafd8b5213eb797ef42a6a4395a8156b3439ef255a27affc982/attempt-1
+    input_sha256: 51a584beb40ddfafd8b5213eb797ef42a6a4395a8156b3439ef255a27affc982
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS26
+- id: WS27
+  title: Integrar revisión de cambios y evidencia
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS12
+  - WS27.1
+  - WS27.2
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: 'Agregado: salidas de WS27.1, WS27.2'
+  scope: 'Agregado: diff (WS27.1) y evidencia (WS27.2).'
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws27.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 047a6a896d4a0b3dae8e4568c3bcb04c926feb2131e0df2e98ca635d3d962917
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS27/d4f2ca871299fd850933ef936c3854ac329c8cfa80d1ed3def09b22d7a441f25/attempt-1
+    input_sha256: d4f2ca871299fd850933ef936c3854ac329c8cfa80d1ed3def09b22d7a441f25
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS27.1
+  - WS27.2
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS27.1
+  title: Mostrar diff Git por repo y tarea
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS12
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/diff/; rutas de lectura definidas
+    por el contrato WS11; tests/
+  scope: 'Diff Git e historial read-only junto a la TaskDoc. Base: commits listados
+    en TaskDoc.references y rutas en TaskDoc.files (campos del modelo TaskDoc de deskops);
+    sin commits, working tree contra HEAD limitado a esas rutas. Historial baseline
+    = commits de TaskDoc.references resolubles y ordenados por fecha de commit, limitados
+    a TaskDoc.files; sin commits se declara que no hay historial referenciado y se
+    usa diff working tree→HEAD. Repo/rutas se resuelven por contrato WS11 con registry/aliases,
+    presentando root repo explícito; ruta sin repo resoluble queda no disponible,
+    no adivinar ni escribir cruzado.'
+  acceptance: Diff real e historial read-only acotados al repo y tarea (la asociación
+    a intento se añade en WS35), sin escribir ni revertir nada; la vista no muestra
+    hallazgos de integridad del store, que son de WS29. Se muestra una sección por
+    cada repo alcanzado por TaskDoc.files, con el repo declarado.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws27-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 92206d3a86b0421a83f97fb74198362f59944e9b1894c186548984333f889091
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS27.1/f2df862dd4ca0a9401e12826062efa7dfcae22746e1cf90200eada90d8651ae6/attempt-1
+    input_sha256: f2df862dd4ca0a9401e12826062efa7dfcae22746e1cf90200eada90d8651ae6
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS27
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS27.2
+  title: Mostrar evidencia declarada, encontrada y verificada
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS12
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/evidence/; rutas de lectura definidas
+    por el contrato WS11; tests/
+  scope: Evidencia junto a la TaskDoc. Sin modelo de comentarios nuevo. WS12 fija
+    correspondencia por tipo de evidencia declarada TaskDoc (no inferencia por extensión
+    en renderer), artefactos soporte y salida pública de closeout verify; declarada/encontrada/gates/summary
+    se muestran según reporte real. Verificada refiere al resultado del gate de la
+    TaskDoc/tipo, no prueba independiente del artefacto. Reporte ausente/fallo de
+    comando es no verificable con error, nunca verificado.
+  acceptance: Mostrar declarada/encontrada/verificada y abrir su soporte; una evidencia
+    ausente se ve como ausente; declarada sin artefacto, artefacto no declarado y
+    verificación fallida se muestran como estados distintos, sin colapsarlos. Declarada
+    = closeout_evidence de la TaskDoc; encontrada = artefactos resolubles en las references/files
+    de la TaskDoc; verificada = resultado de `deskops closeout verify`. Abrir soporte
+    = abrir el artefacto en el lector si es Markdown dentro del workspace; fuera de
+    ese caso se muestra la ruta y se declara no soportado (alcance.md).
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws27-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 5cd5ef217ebf87af367d118804936f998b9ba6fdf26b0bc8e4a0cb9d4a83943e
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS27.2/cbbdaf6677d7674159d199262d3ee409687ceab985dfddf98b64ec56750d2f71/attempt-1
+    input_sha256: cbbdaf6677d7674159d199262d3ee409687ceab985dfddf98b64ec56750d2f71
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: graph_ui:repository_root/
+  node_role: delivery
+  parent_id: WS27
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS28
+  title: Integrar verificación y handoff de cierre
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS27
+  - WS12
+  requires:
+  - G_CLOSEOUT
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/review/; endpoints; tests/
+  scope: 'Verificar con `deskops closeout verify` por el canal del contrato WS12,
+    diagnosticar faltantes y ofrecer handoff explícito con evidencia: a `deskops closeout
+    commit` por CLI en modo manual, o al coordinador si está activo (P03). No commit/close
+    desde HTTP en baseline. G_HUMAN_READ aplica porque es una acción de escritura
+    del baseline. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas
+    aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana
+    de lectura.'
+  acceptance: UF05 termina cuando `deskops show task` y el commit de closeout confirman
+    el cierre externo y se refresca el estado desde deskops; El diagnóstico muestra
+    los faltantes que reporta `deskops closeout verify`; comando o solicitud no equivalen
+    a cierre. Sin terminal embebido genérico.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws28.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 1e156a4b09ede5b5f34e4d066057cfa97645bf3d56fb4dc26c7e3f658706d54e
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS28/6abba704b40972047220fb3d628978cdb52e2a79eeb2516e03639dded30a7828/attempt-1
+    input_sha256: 6abba704b40972047220fb3d628978cdb52e2a79eeb2516e03639dded30a7828
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS29
+  title: Integrar Changes e impacto comprobable
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS15
+  - WS24
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/changes/; rutas de integridad definidas
+    por contrato WS11; tests/
+  scope: 'Delta sobre tarea Changes actual; stores check/doctor/drift y relaciones
+    comprobadas; errores = hallazgos de esos tres comandos, agrupados por comando.
+    No CST ni árbol Kimun supuesto. Comandos: `sldb stores check`, `deskops doctor`,
+    `deskops drift check`. Pruebas sobre store temporal real.'
+  acceptance: 'Una mutación real en el store temporal muestra documento afectado,
+    relaciones alcanzadas (entrantes y salientes a 1 hop del documento afectado, según
+    la API de grafo de sldb) y errores. Reparar no es automático: la vista enlaza
+    al comando documentado que corresponde a cada hallazgo (`sldb stores check`, `deskops
+    doctor` o `deskops drift check`), en la documentación de su repo dueño. Esta extensión
+    no bloquea lector/manual básico.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws29.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: changes
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 6589efef2aa5313c8e875b8046d3e62452dc757e7b85afbf44e518b180294bfa
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS29/e57fdace0bb7d0b848405b163662fc31397e89d7bdd3516f35a8f8f718c678b3/attempt-2
+    input_sha256: e57fdace0bb7d0b848405b163662fc31397e89d7bdd3516f35a8f8f718c678b3
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS30
+  title: Validar autoría y revisión manual completas
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS17
+  - WS21
+  - WS22
+  - WS23
+  - WS24
+  - WS25
+  - WS26
+  - WS28
+  - WS42
+  requires: []
+  owner_repo: graph_ui
+  output_scope: runs/subagents/workspace-documental-acceptance/manual/
+  scope: Persona recorre UF02/03 edición/04/05; integra conocimiento y tarea en ejemplo;
+    los escenarios de error, conflicto en dos ventanas y navegación por teclado del
+    guion de WS08 y validacion-humana.md. Incluye explícitamente UF01 usando entradas
+    authored WS17 materializadas por generador WS40, además de edición/operación;
+    no limitarlo a búsqueda.
+  acceptance: Registro humano bajo protocolo; un fallo de guion bloquea el gate y
+    el responsable del repo dueño abre tarea en el nodo que lo causó; una observación
+    solo se registra. No llamar ready a un flujo solo por tests. Acta enumera plantillas/entradas
+    WS17 validadas, paths/hashes y recorridos, para que WS43 pueda trazar publicación
+    real. UF03 incluye edición y navegación/lectura necesarias para comprobar origen/resultado;
+    WS16 ya cubre lectura completa. Si causa de fallo no está aislada, registrar incidente
+    con repo/superficie y que supervisor receptor autorice diagnóstico antes de atribuir
+    nodo; no inventar causalidad ni corregir otro repo.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws30.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: bff9e3fa419e52da3c539a79ca668fdab834cac90c5af219a4f5337c1dba0f70
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS30/2aacf3fc974fde915e65362d165e782345cf8ba9d27a91add7540971e2fc1623/attempt-1
+    input_sha256: 2aacf3fc974fde915e65362d165e782345cf8ba9d27a91add7540971e2fc1623
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS31
+  title: Publicar manual documental básico probado
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS30
+  - WS10
+  - WS43
+  requires:
+  - G_HUMAN_MANUAL
+  owner_repo: deskops
+  output_scope: docs/workspace-user-manual.md; docs/assets/workspace-user-manual/;
+    desk/atoms/ vinculados
+  scope: Publicar navegación, edición, captura, trabajo manual y revisión demostradas;
+    incorporar el índice de borradores/manual.md, capturas y limitaciones a docs/workspace-user-manual.md.
+  acceptance: Cada instrucción remite al acta de WS30 o al acta de publicación de
+    WS43 de la versión publicada; un átomo por cada decisión Pxx humana o técnica
+    ya registrada y vigente en decisiones.md y por cada contrato en contratos/ (navegacion.md,
+    operaciones.md u otros de WS11/WS12); no atomizar permisos o aceptación técnica
+    que aún no existen; etiquetas, links y atom->doc verificados. Scion se incluye
+    solo como capítulo marcado propuesto hasta WS38. Para capítulos que mencionen
+    personalización o impacto, comprobar G_HUMAN_MODEL/WS29 o mantener etiqueta propuesta;
+    no bloquear manual básico por esos extras. contratos/ se resuelve en deskops:desk/drawer/plans/workspace-documental/contratos/
+    según output_base WS11/12; otros contratos solo si dichos productores los inventarían
+    explícitamente. Para WS29 exigir referencia a pruebas reales/recibo y commit de
+    su TaskDoc de ejecución; sin ella capítulo sigue propuesto. Executor del manual
+    comprueba links resolubles, etiquetas coherentes con actas/commits y atom→doc
+    con fuente declarada; Tester independiente verifica esos criterios antes del cierre.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws31.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:repository_root/
+  context_review:
+    contract_sha256: d83f387ee2dc0cdb2e986c092985901b14b641e501469d942b74445a9fd6b7f7
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS31/adb1bcdd64907ba61a4b215b9975b8c25c42c2d33a8ff1b9060866762b1b414f/attempt-1
+    input_sha256: adb1bcdd64907ba61a4b215b9975b8c25c42c2d33a8ff1b9060866762b1b414f
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS32
+  title: Unificar identidad de intento y cierre Scion
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS05
+  - WS12
+  - WS32.1
+  - WS32.2
+  requires:
+  - G_CLOSEOUT
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: 'Agregado: salidas de WS32.1, WS32.2'
+  scope: 'Refinar el candidato de drawer de external_references.scion (no es ticket
+    del Board), sin segundo pipeline: intento no es slug, dispatch intent/confirmed
+    separado, manifiesto/RunDoc/cierre consistentes e idempotentes. WS32.1/32.2 validan
+    identidad/registro/idempotencia local sin dispatch/reply de red; estados Hub reales
+    se prueban y correlacionan en WS34/37 bajo G_EXEC, sin mocks ni eventos inventados.'
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws32.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: deskops:repository_root/
+  context_review:
+    contract_sha256: 3ba9b8f2e4c3ab71f71a5f985d7a996b5309be12df1613db65d2644f93be35e0
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32/c1bae598f238fa4a110a9518b68338d881a41b749e4a55298bf06534a3bd222d/attempt-1
+    input_sha256: c1bae598f238fa4a110a9518b68338d881a41b749e4a55298bf06534a3bd222d
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS32.1
+  - WS32.2
+  reconciliation: 'reconciliacion.md: base a1b2b22/f16fcd1/134a665 reutilizable; acceptance
+    de este nodo/delta pendiente, no duplicar implementación ni inferir cierre por
+    commit'
+- id: WS32.1
+  title: Separar identidad de intento y dispatch
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS05
+  - WS12
+  requires:
+  - G_CLOSEOUT
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: deskops/runtime/scion.py; models/run.py; services/closure.py; tests/
+  scope: 'Refinar el candidato de drawer de external_references.scion (no es ticket
+    del Board), sin segundo pipeline: intento no es slug; dispatch intent (intención
+    local registrada) y confirmed (solo respuesta Hub observada) como hechos separados
+    del RunDoc; ambos se registran en el registro por intento que WS32.2 vuelve manifiesto
+    canónico. Confirmed = respuesta de la API pública de Scion con la identidad que
+    exponga, a comprobar en WS05/WS44. WS12 especifica contrato/ubicación del registro
+    por intento (input de WS32.2), derivado del runtime real inventariado WS05; WS32.1
+    materializa ese registro e identidades según contrato, no inventa almacenamiento.
+    Código models/run.py se cambia como código de modelo con registro/validación SLDB;
+    instancias RunDoc trackeadas se crean/editan por API/CLI SLDB, sin ad hoc Markdown.
+    Solo identidad/persistencia mediante operaciones locales reales en store temporal,
+    SIN dispatch/reply de red ni evento Hub fingido. Registro local intent/no confirmado
+    no afirma fallo/éxito de Hub.'
+  acceptance: Dos intentos locales generan IDs distintos antes de dispatch y registro
+    intent/no confirmado mediante operaciones reales del store temporal, sin simular
+    respuesta Hub ni invocar red. Ningún no confirmado se etiqueta como fallo/aceptado
+    Hub sin evidencia. WS34 (con G_EXEC) y WS37 demostrarán dispatch real fallido/confirmado
+    y correlación exacta al id previo; contrato de integración explícito. Código modelos
+    se registra/valida SLDB y RunDoc trackeado se edita por API/CLI, no ad hoc.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws32-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: f121c027c1148a35343ab34bc6cdc05ff90fc7db2de49fd769dc293de2b8b2b9
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32.1/2f8c97a1a06c923189f499133985e1e9a5d09422f783f6de91d299e23f8a6bcb/attempt-1
+    input_sha256: 2f8c97a1a06c923189f499133985e1e9a5d09422f783f6de91d299e23f8a6bcb
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: deskops:repository_root/
+  node_role: delivery
+  parent_id: WS32
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+- id: WS32.2
+  title: Hacer idempotente manifiesto y cierre
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS05
+  - WS12
+  - WS32.1
+  requires:
+  - G_CLOSEOUT
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: deskops/runtime/scion.py; models/run.py; services/closure.py; tests/
+  scope: 'Manifiesto, RunDoc y cierre consistentes e idempotentes sobre el intento
+    correcto (el identificado por el id de intento que cita el cierre, nunca por agente
+    o slug). Manifiesto = registro canónico por intento que materializa RunDoc y registros
+    de closeout, según el candidato de drawer de external_references.scion (campos
+    mínimos: id de intento, identidad de agente, identidad de run si la API la expone,
+    timestamps, hash de sesión, evidencia y commit de cierre). Idempotencia de persistencia
+    local por operaciones reales del store temporal, sin dispatch/reply de red ni
+    confirmar evento Hub no observado; prueba runtime con Hub y correlación es WS34/37
+    bajo G_EXEC.'
+  acceptance: Una finalización repetida sobre el mismo id de intento conserva identidad
+    y evidencia sin crear registros nuevos; manifiesto, RunDoc y registros de closeout
+    coinciden en id de intento, hash de sesión y evidencia. Sesión aquí = artefacto
+    de sesión/log del intento que identifique inventario WS05 y contrato WS12, con
+    campo/algoritmo digest y fuente exactos declarados allí. No hash de proceso/slug
+    ni valor fabricado. Si no existe artefacto/contrato de hash, registrar hueco con
+    productor WS12/WS05 y bloquear esa coincidencia antes de promoción.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws32-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 54dfcb27395e7ec9648622b57fcdc88856f2b51d25cd732307c799adcf4313f9
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS32.2/a6860f3a28e76c6f54fa1b52683ffa60b735577939f459684211b407ae9dff48/attempt-1
+    input_sha256: a6860f3a28e76c6f54fa1b52683ffa60b735577939f459684211b407ae9dff48
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: deskops:repository_root/
+  node_role: delivery
+  parent_id: WS32
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+- id: WS33
+  title: Vincular mensajes, resultados y decisiones
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS32
+  - WS11
+  - WS33.1
+  - WS33.2
+  requires:
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: 'Agregado: salidas de WS33.1, WS33.2'
+  scope: Referencias Hub/proyecto/conversación/mensaje/intento y decisión humana explícita
+    (WS33.2); dedup y procedencia. Backend documental, independiente de editor UI.
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws33.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+  output_base: deskops:repository_root/
+  context_review:
+    contract_sha256: f9c2bcb8f1acae3225bd04e1bfe65dd0f8c9c1cd61b8500eba4f943215228082
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33/0e831261b9e7bc58b4c3088e2ef685a3b57135ab388bd134e446c96deac11522/attempt-1
+    input_sha256: 0e831261b9e7bc58b4c3088e2ef685a3b57135ab388bd134e446c96deac11522
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS33.1
+  - WS33.2
+- id: WS33.1
+  title: Vincular mensajes y resultados al intento
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS32
+  requires:
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: runtime/ (adaptador definido por contrato); modelos/reportes; tests/
+  scope: 'Referencias Hub/proyecto/conversación/mensaje/intento y resultados, con
+    deduplicación y procedencia. Backend documental, independiente de editor UI. Clave
+    de deduplicación: Hub + proyecto + conversación + id de mensaje. Los resultados
+    se identifican por intento y por el identificador que exponga la fuente, a comprobar
+    en WS05/WS44, y se deduplican por Hub + proyecto + intento + id de fuente, conservando
+    procedencia. Solo se vinculan mensajes y resultados con referencia a un id de
+    intento existente; un mensaje con varios intentos o sin intento resoluble no se
+    vincula y registra la procedencia como hueco.'
+  acceptance: Con contrato público real, una importación repetida (mismo Hub/proyecto
+    y conversación) no duplica mensajes ni resultados ni atribuye una conversación
+    completa a un intento; los mensajes no vinculados quedan como hueco de procedencia.
+    No tocar tablas Scion.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws33-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 7f6d0d5677e11419435cdbb8af0cfded0341ffdedffb6e15352e6a5c30e966f0
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33.1/f63e8e46bff59fc9e11e126017524d51816b546e6d75f3bb7f84c9ac96755dc3/attempt-1
+    input_sha256: f63e8e46bff59fc9e11e126017524d51816b546e6d75f3bb7f84c9ac96755dc3
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: deskops:repository_root/
+  node_role: delivery
+  parent_id: WS33
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+- id: WS33.2
+  title: Registrar decisión humana explícita
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS32
+  - WS33.1
+  requires:
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: runtime/ (adaptador definido por contrato); modelos/reportes; tests/
+  scope: Registrar la decisión humana (aprobar o pedir corrección) con actor humano
+    identificado por el contrato WS12, asociada al intento y, por él, a su tarea.
+    Completado lo reporta Scion; validado y cerrado son estados de deskops (testing
+    y closeout) que este nodo no escribe. Este nodo solo escribe la decisión por la
+    operación que fije el contrato WS12 (si falta, hueco con dueño).
+  acceptance: Una decisión humana queda registrada con actor, referencia al intento
+    y a su tarea, y resultado explícito aprobar o pedir corrección (esta exige el
+    texto de la corrección); completed del agente nunca se registra como aprobado.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws33-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: a34e72095bcd7f0f1a95e537d5feb8277e1ee93a900bc98288fb5369335c16d5
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS33.2/3cd94d292ec9fe06772c03254e44ffc47b1b595f58ffb68c27e8b194f740462d/attempt-1
+    input_sha256: 3cd94d292ec9fe06772c03254e44ffc47b1b595f58ffb68c27e8b194f740462d
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: deskops:repository_root/
+  node_role: delivery
+  parent_id: WS33
+  overlap_with: scion
+  integration_mode: delta_or_existing_ticket; matriz WS06 llega de forma transitiva
+    por WS11/WS12; never_parallel_duplicate
+- id: WS34
+  title: Exponer despacho y respuesta Scion autorizados
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS33
+  - WS12
+  - WS34.1
+  - WS34.2
+  requires:
+  - G_EXEC
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: 'Agregado: salidas de WS34.1, WS34.2'
+  scope: Un adaptador público restringido para dispatch/reply, con confirmación, identidad
+    de intento, timeout/errores y autoridad del coordinador.
+  acceptance: 'Agregado no ejecutable: se cumple cuando todos sus hijos cumplen su
+    aceptación. Sus dependientes siguen dependiendo de este ID.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws34.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:repository_root/
+  context_review:
+    contract_sha256: bc6cfdab8d63960ed4683c86bb90c26616e41efdb747efd49d2869227a548206
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34/148985ca894f2178164f643e2d1c4120fbcc809d26e81e0e99f0cd238309bb14/attempt-1
+    input_sha256: 148985ca894f2178164f643e2d1c4120fbcc809d26e81e0e99f0cd238309bb14
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: aggregate
+  children:
+  - WS34.1
+  - WS34.2
+- id: WS34.1
+  title: Exponer dispatch autorizado
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS33
+  - WS12
+  requires:
+  - G_EXEC
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: runtime/; cli/commands/runtime.py o la API que fije el contrato WS12;
+    tests/
+  scope: Adaptador público restringido para dispatch, con confirmación, identidad
+    de intento, timeout/errores y autoridad del coordinador. Confirmación = respuesta
+    de la API de Scion. Autoridad del coordinador según contrato WS12.
+  acceptance: G_SCION/G_EXEC pasan; agente real demuestra un dispatch aceptado y uno
+    rechazado o vencido por timeout. No shell arbitrario ni duplicar transporte. Dispatch
+    real aceptado y rechazado/timeout se correlacionan al id de intento local previo
+    WS32.1 y registros WS32.2; confirmed solo con respuesta observada Hub, sin convertir
+    ausencia de confirmación en éxito/fallo remoto no observado. Solo avanza con la
+    política de timeout de este delta en el contrato WS12, verificada en G_WRITE_CONTRACT;
+    sin ella se detiene y registra el hueco, sin elegir un umbral propio.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws34-1.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 6937ad3c21ee9f29323e46a8feddd0b5fe64906bacdbe1a434853a1fbc13811e
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34.1/20df3d0605358ff23bf5a3e673c78d20e5351f386bdcfd0e97529cb28eceda5b/attempt-1
+    input_sha256: 20df3d0605358ff23bf5a3e673c78d20e5351f386bdcfd0e97529cb28eceda5b
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: deskops:repository_root/
+  node_role: delivery
+  parent_id: WS34
+- id: WS34.2
+  title: Exponer respuesta autorizada
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS33
+  - WS12
+  - WS34.1
+  requires:
+  - G_EXEC
+  - G_SCION
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: runtime/; cli/commands/runtime.py o API definida; tests/
+  scope: Adaptador público restringido para reply vinculado al intento, con timeout/errores
+    y autoridad del coordinador.
+  acceptance: G_SCION/G_EXEC pasan; agente real demuestra respuesta vinculada al intento
+    correcto y un timeout se reporta como fallo sin confirmación, con el umbral de
+    la política de timeout que WS12 produce para este delta. No mandar mensajes en
+    la tarea de planificación. Solo avanza con esa política en el contrato WS12, verificada
+    en G_WRITE_CONTRACT; sin ella se detiene y registra el hueco, sin elegir un umbral
+    propio.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws34-2.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  context_review:
+    contract_sha256: 7be5432fec2fae547c7a45880beb1427592581c4acba24044a4655399b5e730f
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS34.2/611a9ea0c549a18762cd41706fd0eebe2e635ca9acc11a6c0bcb48c49242b367/attempt-1
+    input_sha256: 611a9ea0c549a18762cd41706fd0eebe2e635ca9acc11a6c0bcb48c49242b367
+    required_protocol: ritual-context-review
+    status: reviewed
+  output_base: deskops:repository_root/
+  node_role: delivery
+  parent_id: WS34
+- id: WS35
+  title: Mostrar ejecución y trazabilidad en workspace
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS33
+  - WS27
+  requires:
+  - G_SCION
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/execution/; tests/
+  scope: 'Lectura tarea-intento-conversación-resultados-decisión: tarea de deskops,
+    intento y decisión de WS32/WS33, mensajes de Scion por su API y resultados vinculados
+    por WS33.1.'
+  acceptance: Cada mensaje, resultado y decisión se muestra bajo su intento y tarea;
+    cada uno enlaza a su fuente; la evidencia abre en el lector (WS13). completed
+    no se traduce en aprobado/cerrado.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws35.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: b436eb86dde8f99de283b50c85b568e5063e81dcd80d44a529e53cdcdf1c4da7
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS35/b638d5f538d10a89682d1be92da26389ab880408df5229a368051b46a1c4e3eb/attempt-1
+    input_sha256: b638d5f538d10a89682d1be92da26389ab880408df5229a368051b46a1c4e3eb
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  review_context_nodes:
+  - WS33.1
+- id: WS36
+  title: Integrar delegación e intervención humanas
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS34
+  - WS35
+  requires:
+  - G_EXEC
+  - G_SCION
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/execution/; ruta fina hacia el adaptador
+    WS34 autorizada por contrato WS12; tests/
+  scope: Invocar solo el adaptador WS34 para dispatch/reply y registrar decisiones
+    con WS33.2; revisión con actor/evidencia visible.
+  acceptance: Respuesta vinculada al intento y operación confirmada; la revisión muestra
+    actor humano y evidencia enlazada de WS33.1/WS33.2, cubierto por test; ausencia
+    de API o permisos se muestra como error en la pantalla y lo cubre un test. No
+    autoaprobación ni simulación.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws36.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 770522edc8d0871640d44a2c3e43c8873a7a8cb8a8b958a511dc231ca1526104
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS36/535ced27afa01075ee2712a68dc43f5458604a6626c595cbf0e9e4c02b68c946/attempt-1
+    input_sha256: 535ced27afa01075ee2712a68dc43f5458604a6626c595cbf0e9e4c02b68c946
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+  review_context_nodes:
+  - WS33.2
+- id: WS37
+  title: Validar delegación con agente real
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS36
+  - WS30
+  requires:
+  - G_EXEC
+  - G_SCION
+  owner_repo: graph_ui
+  output_scope: runs/subagents/workspace-documental-acceptance/delegacion/
+  scope: 'UF06 real: pregunta/intervención/corrección/evidencia/decisión y cierre
+    por el handoff de WS28, con actor humano.'
+  acceptance: G_SCION/G_EXEC y protocolo de validacion-humana.md (guion, acta en runs/subagents/workspace-documental-acceptance/delegacion/);
+    no sustituir integración por mocks ni completed por aprobación. No bloquea WS31.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws37.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 8104372dd24612f2043c7e94f78a4e7313186d850ce89c0cdb5aa6396a1da998
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS37/6ab37f98c5a28e77f98f8238f7ce0d2471ca9523d55a3a2fd9448f28f54b7f5a/attempt-1
+    input_sha256: 6ab37f98c5a28e77f98f8238f7ce0d2471ca9523d55a3a2fd9448f28f54b7f5a
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS38
+  title: Publicar capítulos verificados de delegación
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS37
+  - WS31
+  requires:
+  - G_HUMAN_DELEGATE
+  owner_repo: deskops
+  output_scope: docs/workspace-user-manual.md; desk/atoms/ vinculados
+  scope: Añadir al manual operación de delegación y revisión trazable tal como quedó
+    en WS37.
+  acceptance: Cada paso remite al acta de WS37 y a operaciones reales; cada acuerdo
+    durable deja su átomo vinculado; los fallos registrados en esa acta se documentan;
+    se indica que G_EXEC es necesario para operar. Acuerdo durable = regla de operación/autoridad/identidad
+    de delegación demostrada y reusable fuera de una sesión; incidente/timestamp/resultado
+    puntual queda en acta. Buscar átomos existentes de WS31 por regla; enlazar/actualizar
+    el mismo cuando cubre acuerdo, crear solo si no existe regla equivalente. No atomizar
+    permisos de una sola sesión.
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws38.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: deskops:repository_root/
+  context_review:
+    contract_sha256: 7eefb0fe78c3f226e2fde0b77ea89800fb995be7013874d8018d8e40fb442392
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS38/939a428d113cebcd20e2fd05fa1625259a38603688e8959e1074b518e2977f52/attempt-1
+    input_sha256: 939a428d113cebcd20e2fd05fa1625259a38603688e8959e1074b518e2977f52
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS39
+  title: Integrar inspección y edición de modelos existente
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  - WS13
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: shell/dialogs.js; views/models/; tests/; runs/subagents/workspace-documental-acceptance/modelos/
+  scope: Hacer navegables Schema/editar clases ya disponibles desde documento/contexto;
+    usar draft/validate/promote de sldb. No reimplementar modelos. G_HUMAN_READ habilita
+    uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con
+    sus contratos/gates técnicos sin acta humana de lectura. Contexto = panel lateral
+    Context del lector WS13 (node/workspace-view.js); acceso desde documento activo
+    muestra Schema/clase origen de ese documento y abre editor existente inventariado
+    WS04. Probar ese punto de entrada además de mutación UF09; ruta/selector exacto
+    se fija en TaskDoc. WS13 aporta el lector requerido para integración, G_HUMAN_READ
+    solo habilita uso de mutaciones.
+  acceptance: UF09 inspección y mutación en store temporal real de prueba; comprobar
+    los efectos y errores que declara el contrato WS12; no habilitar promover si API/autoridad
+    falta. Extensión posterior al lector básico. Guardar acta de prueba humana en
+    graph_ui:runs/subagents/workspace-documental-acceptance/modelos/acta.md con el
+    participante que fija P08 y resultado; G_HUMAN_MODEL debe pasar antes de marcar
+    disponible en el manual que publica WS31 el capítulo 15 (Personalizar modelos)
+    del índice de borradores/manual.md.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws39.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 641afa4e202520bda56b44616a2dde1c188c08a84c004ba1087671dbef7afdb6
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS39/32cb6ad45ac4bbc10a2393596f84b1ccc72bcb7db9f44e7f04ab59aaffccd57a/attempt-1
+    input_sha256: 32cb6ad45ac4bbc10a2393596f84b1ccc72bcb7db9f44e7f04ab59aaffccd57a
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS40
+  title: Crear generador reproducible del corpus Taller
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS11
+  - WS08
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: tests/fixtures/workspace_documental/; script de seed; tests/
+  scope: 'Versionar un generador en graph_ui que usa el contrato WS11 y los CLI reales
+    de deskops/sldb verificados en WS02/WS03, no servidor fake. Crear dos repos temporales
+    bajo graph_ui:.tmp/workspace-documental-ejemplo/ (o tmp_path en pruebas), sus
+    stores y documentos, incluyendo Markdown no modelado, Code local y referencia
+    rota. Parámetro opcional con la ruta de plantillas WS17: WS40 cierra sin ellas,
+    y WS17 regenera con ellas después. Generar instrucciones de instalación/arranque
+    del ejemplo y entrada mínima ecosistema/proyecto con enlaces al Board del desk
+    temporal, su FAQ Markdown y documentos de conocimiento, todos creados dentro del
+    corpus temporal, para que WS16 pruebe una entrada sin esperar índices ricos WS17.
+    Incluir un tercer repo temporal sin desk para UF10 y enlaces authored entre los
+    dos desks con desk para UF08.'
+  acceptance: Un comando crea/recrea entorno aislado, hace commits git reales en los
+    repos temporales y nunca toca desk real; imprime un manifiesto JSON con roots,
+    stores, commits y documentos clave. Es productor único de corpus para WS16/30;
+    WS17 solo aporta contenido authored. Entrada mínima y README de arranque reproducibles,
+    manifiesto de ubicación y segundo desk; WS17 enriquece navegación posteriormente.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws40.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 3fed6947d30cd91c8bbba0d49df3046d026abd5cf8a4d53c219029949bc873bc
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS40/ad283bad4fa399d31d370d93aeafafd10eb76549080c768743bdc4c79849e326/attempt-1
+    input_sha256: ad283bad4fa399d31d370d93aeafafd10eb76549080c768743bdc4c79849e326
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS41
+  title: Implementar lectura segura entre desks
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS13
+  - WS11
+  - WS40
+  requires:
+  - G_UI_READ
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/source/; rutas de lectura por store definidas por
+    contrato WS11, que llaman a APIs públicas; views/workspace/; tests/
+  scope: Resolver aliases/roots explícitamente autorizados en contrato WS11, usando
+    APIs públicas de stores; cada request conserva proyecto/store sin cambiar global
+    SLDB_STORE. Leer segundo desk y volver, sin mutaciones cruzadas.
+  acceptance: 'UF08 lectura sobre dos stores de WS40: identidad/origen visibles, seguir
+    enlaces authored del corpus entre desks y volver por la historia; alias no autorizado,
+    path escapado y store ausente dan error visible; rechazar roots arbitrarios o
+    paths escapados. No afirmar federación por copiar contenido.'
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws41.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 5358b97d31cfe6690022061409a2194c2530c73da0a7eadc8908cb26695f129e
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS41/f6eb1e33e08f81ab180158df0c5bf8ec655da91d568c97e890b79266ccfca6a3/attempt-1
+    input_sha256: f6eb1e33e08f81ab180158df0c5bf8ec655da91d568c97e890b79266ccfca6a3
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS42
+  title: Integrar operaciones de conocimiento existentes
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS19
+  - WS24
+  - WS12
+  requires:
+  - G_HUMAN_READ
+  - G_UI_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: graph_ui
+  output_scope: frontends/mindmap/views/workspace/knowledge/; endpoints limitados
+    a la whitelist de WS12; tests/
+  scope: 'Invocar contratos reales de atoms split/merge y proto typing cuando disponibles,
+    con confirmación de la persona usuaria en la UI, que ve el origen y el efecto
+    de la operación antes de ejecutar; materializaciones se inspeccionan/validan,
+    no se generan destinos arbitrarios. G_HUMAN_READ habilita uso de mutaciones en
+    UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates
+    técnicos sin acta humana de lectura. Operaciones split/merge/proto typing y la
+    validación de materializaciones vienen del inventario Deskops WS02 y APIs SLDB
+    WS03, concretadas por WS12; si faltan, WS12 registra productor/hueco y UI no disponible.
+    Materializaciones: modelo MaterializationContractDoc de deskops/models/materialization.py
+    registrado en el store temporal real seleccionado por TaskDoc (o manifiesto Taller
+    WS40), versión/commit registrados; validar por API pública SLDB contra ese modelo,
+    no renderer propio.'
+  acceptance: UF03 dividir/reunir/tipar con persistencia, referencias y conflictos
+    reales, tras confirmación que muestra el origen y el efecto de la operación; las
+    materializaciones existentes se inspeccionan y validan contra el modelo SLDB registrado
+    en el store de la tarea, sin crear destinos; una materialización que no valida
+    se muestra como inválida y no se ofrece para operar; cada capability no soportada
+    se declara no disponible y bloquea solo el escenario de UF03 que la usa y su etiqueta
+    de disponibilidad, no se simula. Cubierto por WS30.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws42.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: graph_ui:repository_root/
+  context_review:
+    contract_sha256: 3dc73154cc9e115f0a91eb11849026e09c89a5886f83144a106ccd7c0745d324
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS42/40bb275e81fd68b1115f7e392addab624e979a52d457f7616ff76641d5d6d23b/attempt-2
+    input_sha256: 40bb275e81fd68b1115f7e392addab624e979a52d457f7616ff76641d5d6d23b
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS43
+  title: Publicar navegación documental del desk real
+  status: candidate
+  kind: documentation
+  depends_on:
+  - WS17
+  - WS30
+  requires:
+  - G_HUMAN_MANUAL
+  - G_PRODUCT
+  - G_WRITE_CONTRACT
+  owner_repo: deskops
+  output_scope: desk/README.md; mapa de ecosistema/índices según P09 y WS11; átomos
+    de acuerdos durables; runs/subagents/workspace-documental-acceptance/publicacion/acta.md
+  scope: 'Aplicar entradas/índices authored validados en Taller al deskops real, por
+    operaciones autorizadas y preservando registry como inventario derivable. Enlazar
+    repos conocidos por identidad/origen y su entrada existente; no modificar repos
+    hermanos ni imponer nuevos modelos. Registrar conocimiento durable en átomos antes
+    de docs. Repos a enlazar = todos los de `deskops list repositories`: enlazar no
+    escribe en ellos. Escribir una entrada dentro de otro repo requiere su tarea y
+    acuerdo de alcance. Contrato = contratos/navegacion.md (WS11, transitivo).'
+  acceptance: 'P09 y contrato fijan ubicación/modelo opcional; los acuerdos durables
+    aplicados al mapa (Pxx aceptadas y contratos navegacion.md/operaciones.md de WS11/WS12)
+    quedan en átomos enlazados desde él. El participante que fija P08 recorre Markdown
+    y UI real, links/roots verificables (root = alias/root autorizado por el contrato
+    de navegación; un enlace es verificable si resuelve a un path existente del repo
+    enlazado), commit por `deskops closeout commit`, acta deskops:runs/subagents/workspace-documental-acceptance/publicacion/acta.md
+    y commit; no publicar solo ejemplo como si fuera ecosistema real y el mapa publicado
+    corresponde a las entradas/índices validados en Taller. Escribir una entrada en
+    un proyecto adicional requiere su tarea de repo y acuerdo de alcance. Regla durable
+    de mapa = navegación/identidad/registry reusable P01/P02/P07/P09 vigentes (incluidos
+    defaults técnicos); P03–06 solo si mapa expone operaciones, P08 remite a protocolo,
+    permisos de sesión no se atomizan. Reutilizar átomo equivalente antes de crear.
+    Contrastar lista paths/hashes de entradas WS17 que acta WS30 valida y registrar
+    correspondencia a publicación. Repo listado sin entrada authored: enlazar registro
+    existente y mostrar entrada ausente con follow-up del repo dueño; no omitir repo
+    ni fabricar entrada interrepo.'
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws43.md
+  promotion: not_authorized; require exact paths, model/contract, pills/atoms, evidence
+    and cold preflight
+  output_base: deskops:repository_root/
+  context_review:
+    contract_sha256: abf53d5e1b2d1c7407971120cfff3eb8360450de537293e48cd20afaf9839033
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS43/a2e719d9ee63bdec74a650bc99cb6606460f058dd033eb0438f75ad9977679a0/attempt-1
+    input_sha256: a2e719d9ee63bdec74a650bc99cb6606460f058dd033eb0438f75ad9977679a0
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS44
+  title: Comprobar y revalidar acceso público a Scion
+  status: candidate
+  kind: validation
+  depends_on:
+  - WS05
+  - WS07
+  requires:
+  - G_PRODUCT
+  owner_repo: deskops
+  output_scope: auditoria/scion-probe.md
+  scope: Responsable de instalación Scion, designado por solicitante al abordar ramal
+    E, realiza probe read-only de API con acceso ya autorizado; verifica capacidades/identidad
+    necesarias para intento y mensajes. Sin crear agentes, enviar mensajes, cambiar
+    config o mostrar secretos. Puede repetir el probe si el inventario WS05 terminó
+    sin acceso. El solicitante registra en autorizaciones/scion.md qué acceso read-only
+    tiene el operador; sin ese registro no se ejecuta el probe. El operador indica
+    el Hub desde la configuración existente. Las capabilities mínimas son las que
+    auditoria/scion.md marque como requeridas por WS32/WS33; si no las mapea por nodo,
+    WS44 se detiene y registra el hueco antes del probe.
+  acceptance: 'G_SCION se satisface solo con respuesta pública real, identidad del
+    operador (actor del probe) y Hub, fecha y capabilities registrados. Si API o acceso
+    no están, WS44 permanece bloqueada, no se cierra unverified ni se avanza WS32.
+    Tras cambio de Hub/API/credencial, repetir y invalidar recibo previo. Operador/acceso
+    aún no designados: pendiente intencional solo de ramal E; no atribuir autorización
+    al acuerdo de producto.'
+  estimate: S
+  task_file: desk/drawer/tasks/workspace-documental/task-ws44.md
+  promotion: not_authorized; appoint responsible operator and confirm read-only permission
+    before probe
+  output_base: deskops:desk/drawer/plans/workspace-documental/
+  context_review:
+    contract_sha256: 3bae5491475120da3f0a59acf8d767b07790454ddd2433fc0be2bf3f688354d6
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS44/0f0062887a64191e45e35d9a9ca05a792da07d1e44e97ee38413dd65ed9cd014/attempt-1
+    input_sha256: 0f0062887a64191e45e35d9a9ca05a792da07d1e44e97ee38413dd65ed9cd014
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+- id: WS45
+  title: Verificar o completar la precondición de escritura de payload
+  status: candidate
+  kind: implementation
+  depends_on:
+  - WS12
+  requires:
+  - G_SLDB_WRITE
+  - G_WRITE_CONTRACT
+  owner_repo: sldb
+  output_scope: inventario y pruebas focalizadas; src/sldb/api/documents/ y src/sldb/cli/serve/
+    solo si al ejecutar falta capacidad; tests/
+  scope: Productor planificado, independiente de source_mode y de raw-source (WS20
+    conserva raw-source). Distingue tres cosas, sin negar la capacidad optimista real
+    ni inferir frescura por CLI; before-image por valor existente (`expected`, HTTP
+    409, C-40), token publicado (`version`/`content_hash`, C-38) y comparación o escritura
+    pública con precondición compartida, aún no probada. Primero reutilizar; inventario
+    con path, símbolo y commit de la capacidad existente en sldb frente al contrato
+    WS12 (representación de la precondición, operaciones y escritores alcanzados);
+    luego pruebas reales focalizadas; código solo si al ejecutar falta capacidad,
+    con tarea propia en sldb. No fuerza CAS en toda CLI ni elige un algoritmo de hash
+    por inercia, y no mezcla UI ni productor condicional alguno. P03 no cambia.
+  acceptance: Inventario entregado y, para cada operación y escritor que el contrato
+    WS12 alcance, una prueba real focalizada que muestra que una precondición obsoleta
+    se rechaza sin cambios, una vigente se aplica y el rechazo es observable por el
+    llamante. Si la capacidad existe, esas pruebas bastan y no se duplica código;
+    si es parcial, se completa solo lo faltante y se vuelve a probar todo el contrato,
+    tras recibo G_SLDB_WRITE para este delta. G_PAYLOAD_PRECONDITION se satisface
+    solo con esa evidencia verificable. Este nodo es plan; no afirma que exista ni
+    que esté implementado o aceptado.
+  estimate: M
+  task_file: desk/drawer/tasks/workspace-documental/task-ws45.md
+  promotion: not_authorized; precise changed files/pills/atoms/evidence and task-only
+    preflight required
+  output_base: sldb:repository_root/
+  context_review:
+    contract_sha256: d6d5820fe44eb5bb9148a3e8480c38e448dad47b51eea5226b39c680605fd44b
+    evidence:
+    - runs/subagents/20261031-workspace-context-reviews/context-review/WS45/2ca958e942afe41dbbe26a2e6d5af72437363035b575f0c5a60596430832bbfa/attempt-1
+    input_sha256: 2ca958e942afe41dbbe26a2e6d5af72437363035b575f0c5a60596430832bbfa
+    required_protocol: ritual-context-review
+    status: reviewed
+  node_role: delivery
+legacy_mapping:
+  A1: WS02–WS05
+  A2: WS01/WS07
+  A3: WS08
+  A4: WS09
+  A5: WS10
+  B1: WS06/WS07
+  B2/C1: WS11
+  B3: WS12
+  C2: WS17
+  C3: WS18
+  D1: WS13–WS16
+  D2: WS19–WS21
+  D3: WS22–WS24
+  D4: WS25–WS28
+  E1: WS32
+  E2: WS33
+  E3: WS34–WS37
+  F1: WS15/WS29
+  G1: WS16/WS30
+  G2: WS37
+  H1: WS31
+  H2: WS38
+parameters:
+  source_mode:
+    value: editable
+    allowed:
+    - pending
+    - editable
+    - read_only
+    decided_by: P04/WS07
+    evidence: decisiones.md P04; owner-decisions.json respuesta1; habilitación real
+      requiere G_SOURCE
+    variant_rule: Una variante añade sus depends_on/requires a los del nodo base;
+      nunca los quita. Listas vacías significan que no añade nada.
+repo_roots:
+  deskops: .
+  graph_ui: ../UIs/graph_ui
+  sldb: ../sldb
+  spec2viz: ../spec2viz
+council_review:
+  rounds: 5
+  final_round: R5
+  verdicts:
+    claude: APTO COMO PLAN
+    deepseek: APTO COMO PLAN
+    gemini: APTO COMO PLAN
+  scope: Expert planning review only; APTO COMO PLAN is retained as expert evidence
+    and does not credit cheap zero-context reviews of root, packages or leaves, authorize
+    implementation, approve Pxx or satisfy any gate.
+hierarchy:
+  root:
+    id: ROOT
+    title: Workspace documental de Deskops
+    scope: 'Lector temprano, autoría/operación manual y manual publicado sobre Mindmap/SLDB/Deskops;
+      extensiones y Scion independientes. Agrupación de entregables sin ejecución
+      propia; dry-run hipotético describe orden/aristas y transferencia entre hijos:
+      PK01 audita base y reconcilia deltas; PK02 convierte decisiones registradas
+      en flows/vistas/contratos; PK03 entrega y valida lector; PK04 representa navegación/trabajo/conocimiento;
+      PK05 habilita manual con guardas y evidencia; PK06 publica entradas/manual comprobados;
+      PK07 añade Changes/modelos por separado; PK08 delegación posterior con Scion/permisos
+      reales.'
+    acceptance: Validar futuro por actas humanas WS16/30 y publicación WS43/31; extras
+      solo tras sus pruebas propias, Scion tras WS37/38. Comprobar identidad/origen
+      compartidos, APIs públicas, guardas/canales, manual trazado a versión y ausencia
+      de dependencias opcionales sobre núcleo. Completitud sustantiva del paquete
+      requiere salidas de sus hijos e integración indicada; revisiones de comprensión
+      no equivalen a producto entregado. Describir validaciones futuras sin ejecutarlas;
+      agrupación no autoriza tareas ni añade aristas. Para revisar este macroencargo,
+      dry-run debe describir cómo se ejecutaría hipotéticamente el paquete por sus
+      hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo se probaría resultado
+      integrado; NO limitarse a comprobar status/hashes/disposition. No ejecutar esos
+      pasos ahora.
+    children:
+    - PK01
+    - PK02
+    - PK03
+    - PK04
+    - PK05
+    - PK06
+    - PK07
+    - PK08
+    context_review:
+      contract_sha256: 05d398b125697238e3c4644a5cf23bb9193ca16c2f00078dddcd4d1d7fbeef58
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/ROOT/ce60a1dfd68f5e20a5ce71738187c09484888167ca2a9a34da34098c341c7b90/attempt-1
+      input_sha256: ce60a1dfd68f5e20a5ce71738187c09484888167ca2a9a34da34098c341c7b90
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  packages:
+  - id: PK01
+    title: Fundamentos y auditoría
+    scope: 'Base factual y matriz de deltas verificables para no duplicar código.
+      Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS01 brief cubierto alimenta auditorías
+      independientes WS02 Deskops, WS03 infraestructura y WS04 UI; WS06 integra sus
+      evidencias por delta/repo. WS05 inventario Scion es independiente y alimenta
+      E.'
+    acceptance: Auditorías citan capacidades existentes/ausentes/huecos y repo dueño;
+      matriz registra reutilización/ticket/delta pendiente con evidencia actual. Sin
+      implícitos de chat, sin aceptar producto ni probes vivos. Completitud sustantiva
+      del paquete requiere salidas de sus hijos e integración indicada; revisiones
+      de comprensión no equivalen a producto entregado. Describir validaciones futuras
+      sin ejecutarlas; agrupación no autoriza tareas ni añade aristas. Para revisar
+      este macroencargo, dry-run debe describir cómo se ejecutaría hipotéticamente
+      el paquete por sus hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo
+      se probaría resultado integrado; NO limitarse a comprobar status/hashes/disposition.
+      No ejecutar esos pasos ahora.
+    children:
+    - WS01
+    - WS02
+    - WS03
+    - WS04
+    - WS05
+    - WS06
+    context_review:
+      contract_sha256: 6239ca4debb210729625cbcaa2dd2686aed6726fc1922e8c2ea5c71b429da666
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK01/8b9417a2b23f4dbf4a35804564f937f4cd0fc0bf52bbea5940d743c4816c7064/attempt-1
+      input_sha256: 8b9417a2b23f4dbf4a35804564f937f4cd0fc0bf52bbea5940d743c4816c7064
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK02
+    title: Decisiones y contratos
+    scope: 'Contratos de producto/navegación/operaciones que permiten preparar cada
+      delta. Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS07 reutiliza decisiones humanas
+      dadas contra WS06; WS08 define UFs; WS10 fija convención manual; WS09 cataloga
+      vistas consumiendo ambos; WS11 identidad/navegación y WS12 whitelist técnica
+      por delta.'
+    acceptance: Pxx trazadas; cada UF tiene operaciones/errores/IDs/gates; vistas
+      tienen soporte/origen; APIs y huecos con productores. Recepción técnica por
+      delta, sin bloquear núcleo por extras ni suponer editable sin G_SOURCE. Completitud
+      sustantiva del paquete requiere salidas de sus hijos e integración indicada;
+      revisiones de comprensión no equivalen a producto entregado. Describir validaciones
+      futuras sin ejecutarlas; agrupación no autoriza tareas ni añade aristas. Para
+      revisar este macroencargo, dry-run debe describir cómo se ejecutaría hipotéticamente
+      el paquete por sus hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo
+      se probaría resultado integrado; NO limitarse a comprobar status/hashes/disposition.
+      No ejecutar esos pasos ahora.
+    children:
+    - WS07
+    - WS08
+    - WS09
+    - WS10
+    - WS11
+    - WS12
+    context_review:
+      contract_sha256: 99c0d0c30c594053cb1554288398d947b05fe81b56e26df13be1fa49b4446341
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK02/bc45fc7eb939e90e81f7ed4b92c2b5dd7a10908b8ae3de67107dc1b5548c055b/attempt-1
+      input_sha256: bc45fc7eb939e90e81f7ed4b92c2b5dd7a10908b8ae3de67107dc1b5548c055b
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK03
+    title: Lector y descubrimiento
+    scope: 'Lector útil con descubrimiento sin ID y aceptación humana temprana. Agrupación
+      de entregables sin ejecución propia; dry-run hipotético describe orden/aristas
+      y transferencia entre hijos: WS11/08 habilitan WS13 e hijos, búsqueda WS14 y
+      errores/orientación WS15; WS40 produce Taller real y WS41 lectura entre desks;
+      WS16 integra guion humano.'
+    acceptance: Abrir soporte modelado/no modelado, foco/historia/Code/grafo, búsqueda
+      y errores reales; Taller incluye dos desks y repo sin desk; acta WS16 con mediciones
+      P08. No depender de edición/Changes/Scion. Completitud sustantiva del paquete
+      requiere salidas de sus hijos e integración indicada; revisiones de comprensión
+      no equivalen a producto entregado. Describir validaciones futuras sin ejecutarlas;
+      agrupación no autoriza tareas ni añade aristas. Para revisar este macroencargo,
+      dry-run debe describir cómo se ejecutaría hipotéticamente el paquete por sus
+      hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo se probaría resultado
+      integrado; NO limitarse a comprobar status/hashes/disposition. No ejecutar esos
+      pasos ahora. Mediciones P08 aquí son aperturas/búsquedas/arranque; guardado
+      corresponde solo WS30. Grafo/Code existentes y su integración documental los
+      aporta WS13.1 vía agregado WS13.
+    children:
+    - WS13
+    - WS14
+    - WS15
+    - WS16
+    - WS40
+    - WS41
+    context_review:
+      contract_sha256: 49d924cdc5fca124c128f00e64f1fcb9e1846f2c152d42b2e13ae74a4eaf83b1
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK03/124c86d1fe5dbc08cd83becd5835d6a85dca3a97ea99ce1beaae897a58e91574/attempt-1
+      input_sha256: 124c86d1fe5dbc08cd83becd5835d6a85dca3a97ea99ce1beaae897a58e91574
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK04
+    title: Navegación y representaciones
+    scope: 'Entradas authored y representaciones navegables del desk sobre identidad
+      común. Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS17 consume WS11/40 para índices
+      del ejemplo; WS22 Board y WS23 procedimientos consumen WS13/09; WS24 conocimiento
+      reutiliza vecindad. WS18 ViewDoc es extensión opcional tras G_SPEC_VIEW y no
+      bloquea WS24.'
+    acceptance: Abrir mismos documentos/soportes desde lista/tablero/dependencias,
+      procedimiento y conocimiento; no escribir status desde renderer ni marcar pasos
+      por lectura; índices siguen fuentes. ViewDoc concreto (WS18, opcional) prueba
+      su selección en WS18 sobre un store real con el evaluador de graph_ui; sin WS18
+      el resto del paquete puede completarse. Completitud sustantiva del paquete requiere
+      salidas de sus hijos e integración indicada; revisiones de comprensión no equivalen
+      a producto entregado. Describir validaciones futuras sin ejecutarlas; agrupación
+      no autoriza tareas ni añade aristas. Para revisar este macroencargo, dry-run
+      debe describir cómo se ejecutaría hipotéticamente el paquete por sus hijos/orden/aristas,
+      qué artefacto pasa a qué hijo y cómo se probaría resultado integrado; NO limitarse
+      a comprobar status/hashes/disposition. No ejecutar esos pasos ahora.
+    children:
+    - WS17
+    - WS18
+    - WS22
+    - WS23
+    - WS24
+    context_review:
+      contract_sha256: 8e9d1c9b783e5af5769429702741d2873a866f6da976cbdd48a5b05bf212d268
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK04/59a8e0ad1a5598e1e1c52143d0235b2388906871f75c33c50761c6138459da05/attempt-1
+      input_sha256: 59a8e0ad1a5598e1e1c52143d0235b2388906871f75c33c50761c6138459da05
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK05
+    title: Autoría y operación manual
+    scope: 'Autoría manual segura, intake/trabajo y revisión/cierre por handoff verificables.
+      Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS12 contrato por delta alimenta
+      WS19 campos, WS20 API fuente/G_SOURCE, WS45 precondición de payload/G_PAYLOAD_PRECONDITION
+      y WS21 fuente/render; WS25 captura, WS26 tareas, WS27 diff/evidencia, WS28 handoff
+      y WS42 conocimiento; WS30 integra pruebas humanas con entradas WS17. Orden parcial
+      obligatorio de ejecución hipotética (no simultaneidad de toda la lista): WS12→WS19
+      y sus hijos; WS12→WS20; WS12→WS45→G_PAYLOAD_PRECONDITION→WS19 y sus hijos y
+      WS21 (la arista WS12 y el gate se suman: el guardado espera ambos); WS12→WS25
+      y sus hijos; WS13+WS12→WS27 y sus hijos; WS19+WS20/G_SOURCE→WS21 editable; WS22+WS12→WS26
+      y sus hijos (WS26.1→WS26.2); WS19+WS24+WS12→WS42; WS27+WS12→WS28; todas las
+      salidas WS17/21/22/23/24/25/26/28/42→WS30. Solo ejecutar en paralelo nodos ya
+      ready con todos sus prerrequisitos satisfechos y sin solapamiento de archivos;
+      WS42 NO va en paralelo con su productor WS19, WS26 NO precede WS22.'
+    acceptance: precondición de escritura/conflicto/buffer/protegidos probados; guardar
+      sin commit; coordinador escritor implica read-only/handoff; mostrar evidencia
+      declarada/encontrada/verificada distinta; cierre confirmado por commit/Deskops.
+      Acta WS30 cubre UF02–05 y navegación; uso UI espera G_HUMAN_READ, desarrollo
+      API aislado no. Completitud sustantiva del paquete requiere salidas de sus hijos
+      e integración indicada; revisiones de comprensión no equivalen a producto entregado.
+      Describir validaciones futuras sin ejecutarlas; agrupación no autoriza tareas
+      ni añade aristas. Para revisar este macroencargo, dry-run debe describir cómo
+      se ejecutaría hipotéticamente el paquete por sus hijos/orden/aristas, qué artefacto
+      pasa a qué hijo y cómo se probaría resultado integrado; NO limitarse a comprobar
+      status/hashes/disposition. No ejecutar esos pasos ahora.
+    children:
+    - WS19
+    - WS20
+    - WS21
+    - WS45
+    - WS25
+    - WS26
+    - WS27
+    - WS28
+    - WS30
+    - WS42
+    context_review:
+      contract_sha256: 94536c97a438316a262fd267838b1be35bb37897cfa439f807f65e9ad7aac23a
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK05/d36fb03a9dd26e142fcaeb892aec3d59c61689aa5f57008a2b97f21b07f10e93/attempt-1
+      input_sha256: d36fb03a9dd26e142fcaeb892aec3d59c61689aa5f57008a2b97f21b07f10e93
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK06
+    title: Publicación básica
+    scope: 'Manual y entradas del desk real publicados sobre recorridos ya demostrados.
+      Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS30 acta manual y WS17 entradas
+      alimentan WS43 publicación real; WS31 reúne WS10, WS30 y WS43 en manual versionado
+      con átomos y fuentes.'
+    acceptance: Cada instrucción enlaza acta/versión y límites; entradas desk/README.md
+      y mapa authored probadas; links/provenance atom→doc verificadas. Scion/modelos/Changes
+      no demostrados siguen propuestos sin bloquear manual básico. Completitud sustantiva
+      del paquete requiere salidas de sus hijos e integración indicada; revisiones
+      de comprensión no equivalen a producto entregado. Describir validaciones futuras
+      sin ejecutarlas; agrupación no autoriza tareas ni añade aristas. Para revisar
+      este macroencargo, dry-run debe describir cómo se ejecutaría hipotéticamente
+      el paquete por sus hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo
+      se probaría resultado integrado; NO limitarse a comprobar status/hashes/disposition.
+      No ejecutar esos pasos ahora.
+    children:
+    - WS31
+    - WS43
+    context_review:
+      contract_sha256: 7b5eae1b3618195e2ae355984e0310546664222b4d56d444ea52fbdf14b754c0
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK06/4d864d5c1a1142a993e10b5a37b79ca240e5ed228f85fb776026104025bc1b53/attempt-1
+      input_sha256: 4d864d5c1a1142a993e10b5a37b79ca240e5ed228f85fb776026104025bc1b53
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK07
+    title: Extensiones independientes
+    scope: 'Changes y modelos como extensiones independientes con evidencia propia.
+      Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS29 consume lectura/vecindad WS15/24
+      para check/doctor/drift e impacto; WS39 consume contrato WS12 para inspección/edición
+      Schema existente. Ninguno es prerrequisito del lector o manual básico.'
+    acceptance: WS29 prueba mutación real e impacto 1 hop y diagnóstico sin reparación
+      automática; WS39 prueba edición/validación por API y aceptación humana propia.
+      Manual etiqueta cada extra según evidencia, no presume CST/Kimun. Completitud
+      sustantiva del paquete requiere salidas de sus hijos e integración indicada;
+      revisiones de comprensión no equivalen a producto entregado. Describir validaciones
+      futuras sin ejecutarlas; agrupación no autoriza tareas ni añade aristas. Para
+      revisar este macroencargo, dry-run debe describir cómo se ejecutaría hipotéticamente
+      el paquete por sus hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo
+      se probaría resultado integrado; NO limitarse a comprobar status/hashes/disposition.
+      No ejecutar esos pasos ahora.
+    children:
+    - WS29
+    - WS39
+    context_review:
+      contract_sha256: 255f2db61c0141671924f335c7dfc2c5f7146ce6b983aeb17de6d8774012b65d
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK07/00977edfa821d0feca64832ffca084837102ef1818e55405d795499277dc6161/attempt-1
+      input_sha256: 00977edfa821d0feca64832ffca084837102ef1818e55405d795499277dc6161
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
+  - id: PK08
+    title: Ramal Scion opcional
+    scope: 'Delegación Scion posterior con intentos/trazas/intervención verificables.
+      Agrupación de entregables sin ejecución propia; dry-run hipotético describe
+      orden/aristas y transferencia entre hijos: WS05 inventario alimenta WS44; solo
+      WS44 probe con operador/acceso designados produce G_SCION; WS32 identifica intento/cierre,
+      WS33 mensajes/decisiones, WS34 acciones autorizadas G_EXEC, WS35 trazas y WS36
+      UI; WS37 acepta recorrido real y WS38 publica capítulo tras manual básico.'
+    acceptance: Intento/manifiesto/RunDoc/cierre consistentes e idempotentes, mensajes
+      con procedencia/dedup, dispatch intent/confirmed separados, permisos explícitos
+      y acta humana WS37. Sin acceso real ramal bloqueado; ningún permiso de núcleo
+      se convierte en dispatch. No duplicar pipeline Scion. Completitud sustantiva
+      del paquete requiere salidas de sus hijos e integración indicada; revisiones
+      de comprensión no equivalen a producto entregado. Describir validaciones futuras
+      sin ejecutarlas; agrupación no autoriza tareas ni añade aristas. Para revisar
+      este macroencargo, dry-run debe describir cómo se ejecutaría hipotéticamente
+      el paquete por sus hijos/orden/aristas, qué artefacto pasa a qué hijo y cómo
+      se probaría resultado integrado; NO limitarse a comprobar status/hashes/disposition.
+      No ejecutar esos pasos ahora.
+    children:
+    - WS32
+    - WS33
+    - WS34
+    - WS35
+    - WS36
+    - WS37
+    - WS38
+    - WS44
+    context_review:
+      contract_sha256: 2298b47f55bb84413606928c22661fda3526dfc2f503dc5cee0432d330c85835
+      evidence:
+      - runs/subagents/20261031-workspace-context-reviews/context-review/PK08/f3a11534be475c6973a344ef65331bc29f46e5bcad0cb88a1b9fe6d453143491/attempt-1
+      input_sha256: f3a11534be475c6973a344ef65331bc29f46e5bcad0cb88a1b9fe6d453143491
+      required_protocol: ritual-context-review
+      status: reviewed
+    review_completion:
+      protocol: ritual-context-review
+      state_field: context_review
+      meaning: Gate de comprensión solamente; no define resultado ni completitud sustantiva
+        del paquete.
+    owner_repo: deskops
