@@ -117,3 +117,7 @@ Fuente: `runs/subagents/20261101-ws08-completitud/root-approval.md`.
 - WS13.1: el scope limita el foco a la correspondencia real definida por WS11, y la aceptación circunscribe las representaciones soportadas a WS09/WS11. Seleccionar en Code, texto o graph se interpreta dentro de ese dominio. Sin mapeo, la operación se detiene y registra hueco, y eso no es aceptación satisfecha. No cerrar WS13.1 omitiendo en silencio un caso comprometido. Al promover: selecciones soportadas, correspondencias y pruebas explícitas; retirar un comportamiento comprometido exige cambio de alcance.
 - WS12: T-P03.1 es obligatorio al preparar su TaskDoc. No autoriza asumir exclusividad ni inventar detección.
 - Huecos declarados, sin productor en el DAG: bundle de delegación de UF06 y `Corpus.rank`. El ramal E resuelve el bundle con inventario, contrato y dueño real antes de consumirlo; no equivale a `create_task_bundle`. La semántica no se promete: WS14 admite capacidad degradada según la API real.
+
+## Adenda 2026-11-01, WS09
+
+Fichas en `borradores/vistas.md`. Sin productor en el DAG, sin inventar nodo: consulta guardada y búsqueda por significado, edición de RoleDoc y RuntimeProfileDoc, navegación de FAQ, lista de issues en UI, renderer de roles y vista Specs. WS11 parte de la lista de `runs/subagents/20261101-ws09-vistas/result-summary.md`.
