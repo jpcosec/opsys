@@ -113,3 +113,4 @@
 {"task_id": "task-ws11-cerrar-contrato-de-navegaci\u00f3n-e-identidad", "run_id": null, "run_dir": "runs/subagents/20261101-ws11-navegacion", "session_sha256": null, "commit": null}
 {"task_id": "task-corregir-contrato-de-navegaci\u00f3n-de-ws11-tras-revisi\u00f3n-root", "run_id": null, "run_dir": "runs/subagents/20261101-ws11-correccion", "session_sha256": null, "commit": null}
 {"task_id": "task-alinear-contrato-ws11-en-transporte-alias-can\u00f3nico-preparaci\u00f3n-y-ws15-1", "run_id": null, "run_dir": "runs/subagents/20261101-ws11-alineacion", "session_sha256": null, "commit": null}
+{"task_id": "task-aplicar-disponibilidad-de-alias-en-el-contrato-ws11", "run_id": null, "run_dir": "runs/subagents/20261101-ws11-disponibilidad", "session_sha256": null, "commit": null}

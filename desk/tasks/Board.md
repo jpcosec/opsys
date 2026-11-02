@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-aplicar-disponibilidad-de-alias-en-el-contrato-ws11.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Aplicar disponibilidad de alias en el contrato WS11 [draft] - Sustituir la cadena de §3.2 por la frase preaprobada y obtener el sha256 aprobado por root.
