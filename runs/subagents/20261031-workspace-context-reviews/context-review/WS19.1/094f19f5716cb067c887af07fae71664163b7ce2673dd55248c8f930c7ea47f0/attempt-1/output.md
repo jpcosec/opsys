@@ -1,0 +1,11 @@
+## REFORMULACION
+WS19.1 es un nodo de implementación (`delivery`) en `graph_ui`: añadir edición de campos sobre el workspace ya integrado (`a1b2b22`), reutilizando editores y API, y consumiendo los endpoints que fije WS12 sin cambiar contrato. Resultado: guardar/recargar confirma dato real; una escritura obsoleta se rechaza sin perder el texto local y el conflicto se muestra; los campos workflow-protected no son editables. La precondición de payload la define WS12 y la verifica WS45, sin asumir hash. La mutación UI se admite solo por WS48 en modo manual exclusivo; otros modos quedan read-only. Documentos con contenido no declarado no son editables hasta que WS47 pruebe la guarda. Límites: `frontends/mindmap/views/workspace/fields/` y `tests/`; no redefine contrato; G_HUMAN_READ habilita uso, no desarrollo/pruebas aisladas.
+
+## AMBIGUEDADES
+Ninguna.
+
+## DRY-RUN
+WS19.1 no es agregado; un ejecutor futuro leería WS12, WS45/G_PAYLOAD_PRECONDITION, WS47, WS48, reconciliación y el workspace existente. Cambios previstos: módulo de campos bajo `views/workspace/fields/`; conectar guardado al endpoint WS12; invocar la admisión de WS48 antes de mutar; aplicar la precondición que WS12 fije (`expected`, token o CAS); mostrar conflicto conservando buffer; bloquear campos protegidos y documentos con contenido no declarado. Consumiría WS12 (representación/precondición/whitelist), WS48 (admisión) y WS47 (guarda probada), con gates G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE y G_WRITE_CONTRACT. Si falta contrato, API, guarda o admisión, se detendría y registraría el hueco con dueño, sin sustituto. Si falta acta humana, no habilitaría mutaciones UI. Validación esperada: pruebas en `tests/` con store temporal/real según reglas; guardar/recargar dato real; escritura obsoleta sin pérdida y conflicto visible; campos protegidos no editables; modo no admitido read-only; documento con contenido no declarado no editable.
+
+## FUTURO
+WS12 fija precondición, whitelist y endpoints; WS45 verifica G_PAYLOAD_PRECONDITION; WS47 prueba la guarda; WS48 entrega la admisión común; el receptor P01/humano emite el acta G_UI_WRITE por delta; WS16/humano resuelve G_HUMAN_READ. WS19.2 es hermano sin arista: no se entrega a WS19.1; WS19 valida el conjunto.

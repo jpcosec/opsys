@@ -1,0 +1,13 @@
+REFORMULACION
+Encargo del nodo WS26.1: implementar en graph_ui (`frontends/mindmap/views/workspace/authoring/`, endpoints que autorice WS12, `tests/`) la preparación de un candidato del drawer, separando el recorrido rastreado —update directo con `expected`, guarda WS47, admisión WS48 y G_PAYLOAD_PRECONDITION— del no rastreado —propuesta y handoff a `deskops edit task`, sin escritura HTTP—. Resultado: autorar contenido, dependencias, files, references, tags, pills y closeout_evidence validada; nunca id, status, current_node, history ni from_drawer; no crea tarea activa ni enruta al Board. Límites: sin API inventada, sin escritura desde el handoff, sin marcar aplicado por generar el comando, sin editar status, y con handoff/no disponible si falta contrato Git. Repo dueño: graph_ui.
+
+AMBIGUEDADES
+1. «El handoff se ofrece solo si una comprobación previa confirma que el selector no resuelve a una tarea activa». No se define qué es «el selector» ni dónde se consulta; la aceptación solo menciona «nombre idéntico y prefijo». Obligaría a inventar el mecanismo de comprobación y su criterio exacto.
+2. «Evidencia vacía o incompleta queda pendiente». No fija si eso bloquea el guardado, permite guardar como pendiente o exige handoff. Obligaría a inventar el efecto observable y la aceptación de ese caso.
+3. «solo campos autorables (contenido, dependencias, files, references, tags, pills y closeout_evidence...)». Omite el título y no aclara si «contenido» lo incluye. Obligaría a inventar si el título de la tarea es autorable.
+
+DRY-RUN
+Lecturas: WS12 sección 4.4 y contrato de operaciones; WS47; WS48; WS22; módulo authoring y tests existentes; TaskDoc de promoción. Cambios previstos: UI de autoría y composición del comando de handoff; llamada al update con `expected`; guarda WS47; consulta a WS48; reemplazo íntegro de pills. Dependencias: contrato WS12, TaskDoc/pills WS22, guarda WS47, admisión WS48; gates G_CLOSEOUT, G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE y G_WRITE_CONTRACT. Errores: 409 conserva texto local; falta contrato/operación Git → handoff no disponible; WS47 no superado → no habilitar edición con contenido no declarado; WS48 sin admisión → lectura/handoff. Validación futura: store temporal real; persistencia tras recarga; 409; handoff sin HTTP; caso de tarea activa y selector coincidente; sin creación de tarea/ruta Board ni cambio de status.
+
+FUTURO
+WS26.2 crea la tarea activa y enruta al Board. WS47 y G_SLDB_WRITE habilitan la guarda; WS45 y G_PAYLOAD_PRECONDITION la precondición; WS48 la admisión; WS16 y G_HUMAN_READ el uso de mutaciones. P01 emite actas por delta para G_UI_WRITE/G_WRITE_CONTRACT. La promoción fijará archivos, pills, átomos, evidencia y preflight.

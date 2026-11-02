@@ -1,0 +1,163 @@
+{
+ "node_id": "WS33",
+ "role": "context-reviewer",
+ "attempt": 1,
+ "input_sha256": "a03efa853e42eb719dc622ac1abe2e6bf2eef30ab2658f449c087b85da03746e",
+ "ordered_sources": [
+  {
+   "path": "desk/drawer/plans/workspace-documental/context-review-guide.md",
+   "sha256": "dec1766a708b1fdfea8af1233c8f2fbe5aa03ce5d7c07e431082bf9d00975d0e",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/brief.md",
+   "sha256": "c36f08057d0995449a83b24d6439bed1e20b7a0fd2baffafc3706561c3f22abc",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/alcance.md",
+   "sha256": "203ef33a2a98706a6746f93d1912bd518c27ba88768c0d2181d553dbb802eba2",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/decisiones.md",
+   "sha256": "f2d4b58f41587ff91d511e801a21a11795b3ad54ec59b91edcc2c3e4a12bd72d",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/cobertura.md",
+   "sha256": "1104a1f134364cb16d9113768b70de6304252227935d3ec3ccb93abf6d64a4a9",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/reconciliacion.md",
+   "sha256": "e661d634d6bd1d8dff752e1a035dfe9fe7a4160324d9e437b59f993910e82c85",
+   "projection": "whole_file"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#external_reference:scion",
+   "sha256": "7a05f3d3e3d14afbca67a2937da55f314eb35bef28844fd7a2904b1726459ac7",
+   "projection": "external_reference"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#node:WS33",
+   "sha256": "956c0f68a25447db277f47fb42c6a3b10da81370bc1c5c65c5969aed90976806",
+   "projection": "node_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS32",
+   "sha256": "b291049619349980aa3edf13455884897e88f2e0c5c0797eaae9c61c70b4048b",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS11",
+   "sha256": "2f8a2d64f81f9e4400d02de5f29cd35f30101fe832b9e3720696ad4345406382",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS33.1",
+   "sha256": "6d0a1c20f1e39c61775e26c553cc52366822f9ae41cfba4de97ca970bad7b22e",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS33.2",
+   "sha256": "2a587dd9075604f74363f1c2aada3ad0f42f325a7898048e6a77455e9c8065e1",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS34",
+   "sha256": "be0941c8bf5ed003c3395b37a39e6487cfbaecd5d1c27a8633d7210c717bc8d4",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS34.1",
+   "sha256": "1f5175055360b7bbb75c6bb25e3dc1c55641d24b5b6e3ae14d36684fff9ad25b",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS34.2",
+   "sha256": "013db3e2d86626941a6e34e185ae17dc9e7943bfd6fc400e543a51a56eec5756",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#edge:WS35",
+   "sha256": "accef3cced3de9d6d9e812e4ec3001cf8e67f16c359df7338b7000289a08604d",
+   "projection": "edge_contract"
+  },
+  {
+   "path": "desk/drawer/plans/workspace-documental/dag.yaml#gates",
+   "sha256": "dda95232fb4d01080f6b30f7c9712d955b1af92d165f990b0c476897536b7f68",
+   "projection": "gate_contracts"
+  }
+ ],
+ "node_contract_sha256": "f9c2bcb8f1acae3225bd04e1bfe65dd0f8c9c1cd61b8500eba4f943215228082",
+ "edge_contracts": [
+  {
+   "id": "WS32",
+   "sha256": "3ba9b8f2e4c3ab71f71a5f985d7a996b5309be12df1613db65d2644f93be35e0"
+  },
+  {
+   "id": "WS11",
+   "sha256": "53243ad428bbd671520282e462b84d7d50a3d1546b31f4052b9469e6654e97e9"
+  },
+  {
+   "id": "WS33.1",
+   "sha256": "7f6d0d5677e11419435cdbb8af0cfded0341ffdedffb6e15352e6a5c30e966f0"
+  },
+  {
+   "id": "WS33.2",
+   "sha256": "a34e72095bcd7f0f1a95e537d5feb8277e1ee93a900bc98288fb5369335c16d5"
+  },
+  {
+   "id": "WS34",
+   "sha256": "bc6cfdab8d63960ed4683c86bb90c26616e41efdb747efd49d2869227a548206"
+  },
+  {
+   "id": "WS34.1",
+   "sha256": "6937ad3c21ee9f29323e46a8feddd0b5fe64906bacdbe1a434853a1fbc13811e"
+  },
+  {
+   "id": "WS34.2",
+   "sha256": "7be5432fec2fae547c7a45880beb1427592581c4acba24044a4655399b5e730f"
+  },
+  {
+   "id": "WS35",
+   "sha256": "b436eb86dde8f99de283b50c85b568e5063e81dcd80d44a529e53cdcdf1c4da7"
+  }
+ ],
+ "provider": "deepseek",
+ "model": "deepseek-flash",
+ "thinking": "low",
+ "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review; no se afirma precio mínimo global",
+ "isolation_flags": [
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools"
+ ],
+ "argv": [
+  "pi",
+  "--provider",
+  "deepseek",
+  "--model",
+  "deepseek-flash",
+  "--thinking",
+  "low",
+  "--offline",
+  "--no-session",
+  "--no-context-files",
+  "--no-skills",
+  "--no-extensions",
+  "--no-prompt-templates",
+  "--no-tools",
+  "--system-prompt",
+  "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada: archivos, cambios concretos, consumo de dependencias y gates, errores y validación esperada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto; no basta listar prerrequisitos ni verificar aceptaciones. Máximo 350 palabras.",
+  "--print",
+  "@runs/subagents/20261031-workspace-context-reviews/context-review/WS33/a03efa853e42eb719dc622ac1abe2e6bf2eef30ab2658f449c087b85da03746e/attempt-1/input.md"
+ ],
+ "instruction_version": "v2-ejecucion-hipotetica",
+ "system_prompt_sha256": "9fce4f529ed487c05bb6a6cc9b7df60910578fde80bff1375dcd2a06caa41a29"
+}

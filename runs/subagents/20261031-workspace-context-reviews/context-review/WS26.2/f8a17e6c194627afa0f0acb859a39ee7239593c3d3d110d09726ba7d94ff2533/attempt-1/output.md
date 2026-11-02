@@ -1,0 +1,12 @@
+REFORMULACION
+WS26.2 es una implementación de graph_ui: enrutar explícitamente un TaskDoc en Board y mostrar una capa lista por dependencias/no solapamiento, tras preparar el candidato en WS26.1 y con autorización humana. Resultado observable: `deskops show board` muestra la tarea, la UI la distingue de una en ejecución y separa la capa lista de tareas en ejecución, con dependencias pendientes o archivos solapados. Repo dueño: graph_ui; salidas en `frontends/mindmap/views/workspace/routing/`, endpoints autorizados por WS12 y `tests/`. Límites: no implementa promoción nueva; usa la operación completa admitida por WS12 o prepara handoff/pendiente; no hay operación parcial ni efecto oculto desde WS26.1; no crea tarea activa sin autorización; G_HUMAN_READ solo habilita uso de mutaciones en UI, no desarrollo/pruebas aisladas.
+
+AMBIGUEDADES
+1. «posterior a la preparación del candidato en WS26.1 y a la autorización de la persona»: no se identifica qué persona/rol autoriza ni cómo se registra o comprueba esa autorización. Obliga a inventar actor y evidencia para la operación conjunta de autorizar/crear/enrutar.
+2. «glob/no-resolución dudosa implica no comprobado y revisión supervisor antes de marcar lista»: «supervisor» no está definido ni se indica canal, evidencia o efecto de esa revisión. Obliga a inventar el rol y el modo de acreditarla; la aceptación no lo concreta.
+
+DRY-RUN
+Sin ejecutar: lecturas del contrato WS12 (canal, W01, precondiciones, expansión de `files`), WS22 (Board), WS26.1 (candidato), WS48 (admisión), ritual de fase y TaskDoc. Cambios previstos: módulo de enrutamiento y capa lista en `.../routing/`, llamadas solo a endpoints autorizados, estados de pendiente/no comprobado y pruebas en `tests/`. Dependencias: WS12 aporta operaciones y reglas; WS22 representación; WS26.1 candidato; WS48 admisión previa a mutar. Gates: G_WRITE_CONTRACT y G_UI_WRITE por delta; G_HUMAN_READ para habilitar uso; G_CLOSEOUT ya satisfecho. Errores: falta W01/canal -> handoff y pendiente, no sustituto; falta autorización -> no operación conjunta; glob -> no comprobado. Validación: pruebas con store temporal y `deskops show board`, separación de estados, no promoción parcial.
+
+FUTURO
+WS12 debe producir el contrato/operación completa y las reglas de solapamiento; WS22, WS26.1 y WS48 sus salidas; WS16 el acta de G_HUMAN_READ; el receptor P01 decide el acta G_UI_WRITE del delta. El ritual vigente y el TaskDoc fijan detalles de prueba.

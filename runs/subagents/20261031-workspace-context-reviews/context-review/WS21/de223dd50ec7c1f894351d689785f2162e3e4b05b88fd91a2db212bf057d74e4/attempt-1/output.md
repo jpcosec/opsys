@@ -1,0 +1,11 @@
+## REFORMULACION
+WS21 es un encargo de implementación en graph_ui: integrar en el workspace la alternancia fuente/renderizado según `source_mode` (`editable`, P04), conservando el mismo origen, revisión y buffer sucio. El resultado esperado es una vista que alterna sin perder cambios, guarda fuente solo por el canal autorizado y, si existe composición en el contrato WS12, escribe únicamente en el documento dueño de cada campo; sin soporte, la composición queda en solo lectura y se declara. Repo dueño: graph_ui; salidas en `frontends/mindmap/views/workspace/; tests/`. Límites: depende de WS19 y WS48 y de los gates G_PAYLOAD_PRECONDITION, G_UI_WRITE y G_WRITE_CONTRACT; la variante editable añade WS20 y G_SOURCE. No autoriza promoción ni implementa contratos ajenos.
+
+## AMBIGUEDADES
+Ninguna. Las referencias a revisión/precondición, guardado fuente autorizado y composición nombran productores y reglas existentes: WS12, WS20/G_SOURCE, G_PAYLOAD_PRECONDITION y la regla de alcance para contratos ausentes.
+
+## DRY-RUN
+Lecturas: `dag.yaml` (aristas WS21→WS19/WS48 y variante WS20), contrato WS12 sobre operaciones y composición, entrega de WS20/G_SOURCE, resultado de WS19, admisión de WS48, brief/alcance y matriz WS06. Cambios previstos: en la vista workspace, estado de alternancia fuente/render, conservación y confirmación del buffer sucio, llamada al guardado fuente autorizado y tratamiento de conflicto; composición limitada a origen trazable. Pruebas en `tests/`. Dependencias: WS19 debe entregar edición de campos con conflicto; WS48, la admisión de escrituras; WS20, el guardado raw-source. Gates: G_SOURCE, G_PAYLOAD_PRECONDITION, G_UI_WRITE y G_WRITE_CONTRACT deben estar satisfechos para la variante editable. Si falta contrato, API o permiso: detenerse, registrar hueco con repo dueño y dejar la operación no disponible; no crear sustituto. Validación esperada: roundtrip, conflicto real, campos protegidos, conservación de buffer/foco y composición sin escritura fuera del dueño.
+
+## FUTURO
+WS12 fija el contrato de operaciones y composición; WS20 produce G_SOURCE; WS45 produce G_PAYLOAD_PRECONDITION; el receptor P01 emite el acta de G_UI_WRITE; WS30 valida manualmente; la promoción fija archivos, TaskDoc y pruebas exactas.

@@ -1,0 +1,11 @@
+REFORMULACION
+WS33.2 es un nodo delivery de implementación en deskops: registrar una decisión humana explícita —aprobar o pedir corrección— asociada a un intento existente y, por él, a su tarea. El resultado es un registro con actor humano definido por el contrato WS12, referencia al intento y a la tarea, y resultado explícito; la corrección exige texto. Repo dueño: deskops; salidas en runtime/, modelos/reportes y tests/. Límites: no escribe los estados de deskops validado/cerrado ni el completed reportado por Scion, que nunca puede registrarse como aprobación. Solo escribe la decisión mediante la operación que fije WS12; no incluye dispatch/reply ni implementación autorizada (`promotion: not_authorized`). Depende de WS32 y WS33.1 y requiere G_SCION y G_WRITE_CONTRACT.
+
+AMBIGUEDADES
+1. «depends_on: - WS32 - WS33.1» frente a «asociada al intento y, por él, a su tarea». La aceptación no menciona mensajes ni resultados, que es lo que produce WS33.1 («Vincular mensajes y resultados al intento»). El ejecutor tendría que inventar si la decisión debe referenciar esa salida, si consume su vínculo o si WS33.1 sobra.
+
+DRY-RUN
+Un ejecutor futuro leería este nodo, su `task_file`, brief/alcance/decisiones, el contrato por delta de WS12/G_WRITE_CONTRACT, la evidencia de G_SCION y las salidas de WS32/WS33.1. Si falta G_SCION o el contrato WS12, se detendría y registraría el hueco con dueño; no creararía sustituto. Cambios previstos: operación/adaptador en deskops `runtime/` según contrato, modelo o reporte de decisión y tests; no tocaría tablas Scion. Consumiría de WS32 la identidad de intento y su vínculo con tarea; de WS33.1, el vínculo de mensajes/resultados si el plan aclara que aplica. Validaría con contrato público real: registrar aprobación y corrección con texto, actor e intento/tarea; rechazar corrección sin texto; comprobar que `completed` no se convierte en aprobado. Nada de esto se ejecuta.
+
+FUTURO
+WS12 produce G_WRITE_CONTRACT por delta; WS44 produce G_SCION; WS32 y WS33.1 producen identidad de intento y vínculo de mensajes/resultados. WS34.2 cubriría el reply de la corrección. La promoción/TaskDoc fijará archivos, modelo y pruebas; el receptor humano acepta el delta. WS33 termina cuando sus hijos cumplen.
