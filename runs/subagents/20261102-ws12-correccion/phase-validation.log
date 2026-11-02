@@ -1,0 +1,11 @@
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+exit 0
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+exit 0
+sha256 operaciones.md: 754546d60c5ec47b369c8a8b3d47124615659481403939855bb1ff76b4ce9f39
+sha256 dag.yaml: e905d71ab7c863365a2ef0756a8fe4abaf02c96b06f7c3e55ca9c7d90ad7f1c0
