@@ -190,3 +190,7 @@ Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01, sin Executor. Autoridad: `review-sou
 - C5b: el builder consume un descriptor y no consulta registro; reutilización con `model=None` por verificar en WS13.1.
 - H-11: fuera de las cinco clases documentales, sin clase nueva.
 - `vistas.md` no cambia respecto de `b4968374`: root resolvió que Evidencia de F18a no se toca.
+
+## Ajuste del Supervisor tras la revisión fresca, ronda 1
+
+Claude Opus 5.5, sin Executor. Tres frases: §5.2 `local:`, §3.2 soporte de la configuración, §7.5 E7 como caso de E4. Disposición en `contrato-review-disposition.md`.
