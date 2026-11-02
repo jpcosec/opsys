@@ -1,0 +1,18 @@
+HEAD deskops: 92ed7ed6
+sldb: 77bd6d00
+UIs/graph_ui: 134a665
+spec2viz: 10df4f0
+pron: e1e9df0
+sha256 operaciones.md: f91227ecf0b17a00bafc90cd243dca94229787bed7ccc26c12b152fe54735f27
+$ test -s desk/drawer/plans/workspace-documental/contratos/operaciones.md
+exit 0
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+exit 0
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+exit 0
