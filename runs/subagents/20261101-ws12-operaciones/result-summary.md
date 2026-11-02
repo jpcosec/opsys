@@ -113,3 +113,7 @@ Reales: 23. Falsos: 1 (el commit). Filas de la matriz que cambiaron de estado: D
 ## Revisión del Supervisor de la corrección
 
 Claude Opus 5.5, pane `w3Y:p1`, 2026-11-01. Evidencia de los Testers v1 en `renovacion-1/`. Leí el informe del Executor y una parte del diff. El cotejo de la corrección lo hacen los Testers v2.
+
+## Ajuste del Supervisor tras Testers v2
+
+Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Evidencia v2 en `renovacion-2/`: B PASS; A y C FAIL. Reales y corregidos: §4.1 «único timeout», que el Executor dijo corregir y seguía; U02, evidencia de la búsqueda; §10.1, regla de prueba generalizada; gates de seis agregados, contra `requires` de `dag.yaml`; §13.4, efectos «rotulados» pese a R09, R10 y D04.
