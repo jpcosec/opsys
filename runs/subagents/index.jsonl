@@ -109,3 +109,4 @@
 {"task_id": "task-ws08-precisar-user-flows-y-criterios-observables", "run_id": null, "run_dir": "runs/subagents/20261101-ws08-user-flows", "session_sha256": null, "commit": null}
 {"task_id": "task-completar-productores-en-los-campos-nodo-de-ws08", "run_id": null, "run_dir": "runs/subagents/20261101-ws08-completitud", "session_sha256": null, "commit": null}
 {"task_id": "task-ws09-precisar-cat\u00e1logo-de-renderizaciones", "run_id": null, "run_dir": "runs/subagents/20261101-ws09-vistas", "session_sha256": null, "commit": null}
+{"task_id": "task-corregir-fichas-de-ws09-tras-revisi\u00f3n-root", "run_id": null, "run_dir": "runs/subagents/20261101-ws09-correccion", "session_sha256": null, "commit": null}

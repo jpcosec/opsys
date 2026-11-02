@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-corregir-fichas-de-ws09-tras-revisión-root.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Corregir fichas de WS09 tras revisión root [draft] - Corregir en una pasada F05, F16, F18a, F18b y F12, con las precisiones de F03 y F12 y la nota de candidaturas.
