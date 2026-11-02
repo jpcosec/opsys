@@ -87,3 +87,7 @@ Línea base antes del parche: 0 obsoletas (verificada sobre una copia de la revi
 Claude Opus 5.5, pane `w3Y:p1`, 2026-11-02. Leí `contratos/operaciones.md` completo, §§1-13, sobre los bytes de este parche, y el diff de `dag.yaml`. Contrasté en fuente la cadena de `/save` (`save_plan.py:49-54`, `save_routes.py:61-107`). Lo demás del cotejo es del Executor y de los Testers. Regeneré derivados con `build_plan.py`, `render_diagram.py` y `validate_plan.py`.
 
 Residuos que anoto para root: U03 (`POST /api/desk/advance`) ya existe sin admisión y ningún nodo lo liga a WS48; WS19.2 no habilita la baja de RelationDoc en modo local.
+
+## Ajuste del Supervisor tras Testers de bloques
+
+Claude Opus 5.5, sin Executor. Evidencia en `renovacion-1/`. Reales y corregidos: §13.3, gemela de W01; W19, nota de test inexacta (`test_closeout.py:211` sí cierra sin TaskDoc, sin aseverar el gate); WS21 faltaba como consumidor de WS48, ahora en §5.7, §5.9, §10, HO-03 y `depends_on`; U03 ya no se presenta como condicionada: es ruta existente sin nodo que la reclame.
