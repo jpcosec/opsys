@@ -4,7 +4,8 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-ws11-cerrar-contrato-de-navegación-e-identidad.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +46,5 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- WS11: Cerrar contrato de navegación e identidad [draft] - Crear desk/drawer/plans/workspace-documental/contratos/navegacion.md con identidad, origen, resolución repo/store, foco, enlaces, multidesk read-only, huecos clasificados y mapa de deltas, con APIs reales verificadas.
