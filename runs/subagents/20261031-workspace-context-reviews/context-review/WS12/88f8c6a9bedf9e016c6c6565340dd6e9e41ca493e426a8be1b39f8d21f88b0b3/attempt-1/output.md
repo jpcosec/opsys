@@ -1,0 +1,11 @@
+REFORMULACION
+WS12 es un nodo de planificación (`kind: planning`, no agregado) del repo deskops. Su propósito es cerrar el contrato técnico de operaciones y escritura que gobierna la UI: whitelist de lectura/mutación por campo/modelo, adapter público existente o hueco con dueño, política de coordinador/Git/campos protegidos/precondición de escritura/locks, fallos parciales, permisos y closeout fuera del servidor UI. Resultado: `contratos/operaciones.md` con matriz por operación/campo/canal/actor/revisión/Git/efecto, representación elegida de la precondición de payload, comparación de captura directa a drawer y mapa de recibos por delta. Límites: solo contrato y enlaces en deskops; no ejecuta mutaciones, no crea actas interrepo, no aprueba API/modelo por reflejo; el núcleo L/M puede cerrar sin el ramal E. Depende de WS11 y WS08; G_WRITE_POLICY ya está satisfecho.
+
+AMBIGUEDADES
+Ninguna. El input resuelve los puntos que podrían exigir invención: si falta adapter se registra hueco y dueño («si no existe, se registra hueco y dueño, no se diseña uno aquí»); la precondición se elige y justifica, no se fuerza CAS («no fuerza CAS en toda CLI»); la captura a drawer se compara sin aprobar («sin aprobar ninguna ni crear API o modelo por reflejo»); y el umbral de timeout se difiere («La duración no se elige ahora»).
+
+DRY-RUN
+Un ejecutor futuro leería WS12, `dag.yaml`, `task-ws12.md`, contrato WS11, user-flows WS08, auditorías WS02–04 y decisiones. Escribiría/actualizaría `desk/drawer/plans/workspace-documental/contratos/operaciones.md`: matriz de capacidades/efectos, whitelist, adapter o hueco con productor, representación de precondición, comparación de captura y sección E condicionada. No tocaría código ni stores. Consumiría G_WRITE_POLICY; G_WRITE_CONTRACT queda per_delta, sin llenar `accepted_scope_nodes`; G_UI_WRITE/G_SLDB_WRITE son externos. Si falta evidencia real de API, registraría hueco (WS45/46/20) y no inventaría. Validación: revisión del contrato contra aceptación y citas path/símbolo/commit; promoción posterior exige TaskDoc/preflight.
+
+FUTURO
+WS45 verifica/completa la precondición de payload; WS46 prueba captura; WS47 guarda de contenido; WS48 admisión de escritura. P01/repos receptores emiten actas por delta. WS34.1/2 fijan el umbral de timeout al preparar sus deltas. La promoción de WS12 no está autorizada.

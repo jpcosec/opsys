@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: integrar en `graph_ui` la inspección y edición de modelos ya existentes, exponiendo desde el documento activo/contexto del lector WS13 el Schema/clase origen y abriendo el editor inventariado WS04, reutilizando `draft/validate/promote` de sldb. Resultado: punto de entrada navegable y flujo UF09 probado en store temporal real, con acta humana. Repo dueño: `graph_ui` (`shell/dialogs.js; views/models/; tests/; runs/subagents/workspace-documental-acceptance/modelos/`). Límites: no reimplementar modelos; no habilitar `promote` sin API/autoridad; mutaciones en UI sujetas a G_HUMAN_READ, G_UI_WRITE y G_WRITE_CONTRACT; G_HUMAN_MODEL antes de publicar el capítulo 15 del manual de WS31; ruta/selector exacto se fija en TaskDoc.
+
+AMBIGUEDADES
+ninguna
+
+DRY-RUN
+Lecturas: contrato WS12 (canal, campos, revisión, efectos y errores), API del panel Context del lector WS13 —agregado que solo termina cuando terminan WS13.1–WS13.3—, módulo común de admisión WS48, inventario WS04 y operaciones sldb `draft/validate/promote`. Cambios previstos: integrar el acceso desde documento/contexto en `shell/dialogs.js` y `views/models/`; añadir pruebas en `tests/`; escribir el acta en `runs/subagents/workspace-documental-acceptance/modelos/acta.md`. Dependencias: consumir WS12 antes de fijar efectos; usar WS13 como lector ya integrado; consultar WS48 antes de toda ruta de escritura UI; no reimplementar ninguno. Gates: G_WRITE_CONTRACT y G_UI_WRITE se comprueban por delta concreto; G_HUMAN_READ solo para uso de mutaciones en UI; G_HUMAN_MODEL tras la prueba humana. Si falta API, autoridad o contrato: detenerse, registrar el hueco con repo dueño y no habilitar `promote`. Validación esperada: pruebas con store temporal real, comprobación de efectos/errores, acta con el participante que fija P08 y resultado; el manual de WS31 no se marca disponible antes de G_HUMAN_MODEL. Errores previstos: contrato/API ausente, rechazo de admisión WS48, fallo de precondición; respuesta de lectura/handoff.
+
+FUTURO
+El receptor P01 emite el acta de G_UI_WRITE por delta; WS12 verifica G_WRITE_CONTRACT; el participante humano de P08 valida el recorrido y produce G_HUMAN_MODEL; WS31 publica el capítulo 15 una vez pasado el gate. WS04, WS13 y WS48 aportan inventario, lector y admisión. No es ambigüedad.

@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: implementar en graph_ui el alta/baja de relaciones permitidas por contrato en el workspace, con API real y la precondición que fije WS12, sin crear semántica de relaciones en el componente. Resultado: componente en `frontends/mindmap/views/workspace/relations/`, endpoints autorizados y tests; alta/baja persisten y se confirman tras recargar; relación no permitida o revisión obsoleta se rechaza con error visible; la baja de RelationDoc usa el canal público de sldb y no reaparece; si el modo no ofrece el efecto, no se habilita y se declara. Repo: graph_ui. Límites: depende de WS12, WS47 y WS48; gates G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE y G_WRITE_CONTRACT; quitar referencia de campo queda fuera; overlap con editing; promoción no autorizada.
+
+AMBIGUEDADES
+1. «La baja de un RelationDoc borra el documento autorado y su índice por el canal público de sldb (/save delete con expected)» fija `expected` como precondición, mientras WS12 «define la representación de la precondición (before-image por valor, token publicado o CAS...)». El ejecutor tendría que inventar si `expected` es requisito o ejemplo si WS12 elige token/version.
+
+DRY-RUN
+Lecturas: contrato WS12 (canal, whitelist, precondición), WS11, código de `views/workspace/`, conflicto/ConnectDialog, ruta sldb `/save delete`, WS47, WS48, ticket editing y tests. Cambios: crear `relations/`, ruta(s) que invoquen el canal autorizado, comprobación WS48 antes de mutar, UI de alta/baja con error visible y tests en store temporal. Dependencias: WS12, WS47, WS48, G_PAYLOAD_PRECONDITION, G_HUMAN_READ (solo uso UI), G_UI_WRITE y G_WRITE_CONTRACT por delta. Errores: sin contrato/canal, detenerse y registrar hueco con dueño; sin efecto `/save delete`, deshabilitar baja y declarar; sin WS47/WS48, no habilitar. Validación: persistencia tras recargar, rechazo visible de relación no permitida/revisión obsoleta, RelationDoc borrado no reaparece, protegidos rechazados, acta P01.
+
+FUTURO
+WS12 publica contrato y representación; WS45 produce G_PAYLOAD_PRECONDITION; WS47 y WS48 deben completarse; WS16 produce G_HUMAN_READ; el receptor P01 emite G_UI_WRITE por delta; WS19 cierra cuando sus hijos cumplan. La promoción sigue no autorizada.

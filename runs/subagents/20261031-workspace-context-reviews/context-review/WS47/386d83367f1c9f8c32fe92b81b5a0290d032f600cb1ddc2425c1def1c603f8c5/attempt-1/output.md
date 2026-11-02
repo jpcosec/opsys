@@ -1,0 +1,12 @@
+## REFORMULACION
+Propósito: producir en sldb la guarda que evita pérdida de contenido no declarado al editar por campos que termina en `save_document_payload` (HO-07, WS12 §6.7). Resultado: inventario con ruta/símbolo/commit de `refuse_structural_noise`, `refuse_undeclared_frontmatter` y de la guarda de `deskops edit` (`_write_doc`); guarda que inspecciona el archivo previo y el efecto de reescribirlo; pruebas focalizadas y declaración de pérdidas detectadas, no detectadas y casos deshabilitados. Repo dueño: sldb; cambios solo en `src/sldb/api/documents/`, `src/sldb/cli/serve/` para la guarda y `tests/`. Límites: no amplía WS45, no cambia la creación, no resuelve el gap de prevalidación del inbox de sldb, sin merge/restauración ni workaround Deskops; no habilita WS19.1/WS19.2/WS26.1 hasta pasar.
+
+## AMBIGUEDADES
+1. «el gap de prevalidación de update capturado en el inbox de sldb (si toca el mismo código, las ediciones van en serie)»: no identifica entrada, código ni qué significa «en serie». Obliga a inventar cuál es el gap, cómo comprobar solapamiento y cómo serializar.
+2. «un residuo declarado no aprueba una pérdida conocida dentro del alcance que el nodo pretende habilitar»: no define ese alcance; «sin prometer editar todo documento con ruido» tampoco fija el subconjunto. Obliga a inventar qué documentos con contenido no declarado quedan dentro y cuáles fuera.
+
+## DRY-RUN
+Hipotético, sin ejecutar. Lecturas: contrato WS12 §6.7/HO-07 y recibo G_SLDB_WRITE del delta; código sldb de `save_document_payload`, `refuse_*`, creación/track; `_write_doc` de deskops edit; entrada del inbox de sldb. Cambios previstos: inventario; guarda en las rutas sldb indicadas; tests focalizados. Dependencias: WS12 produce contrato/canal; G_WRITE_CONTRACT por delta; G_SLDB_WRITE (acta P01) por delta; `expected` existente; WS45 no se amplía. Validaciones: update con `expected` vigente que perdería contenido → error observable y sin cambios; update seguro y documento limpio → se aplica; `expected` obsoleto → 409; creación intacta; inventario con ruta/símbolo/commit; declaración de detección/residuo; consumidores siguen deshabilitados hasta pasar. Si falta contrato/recibo: detener y registrar hueco con dueño, sin sustituto.
+
+## FUTURO
+WS12 fija §6.7 y el canal; P01 emite acta G_SLDB_WRITE por delta; WS45 produce/verifica la precondición de payload, sin ampliarse aquí; el dueño del inbox de sldb trata el gap de prevalidación; WS19.1/WS19.2/WS26.1 habilitan edición con contenido no declarado solo tras pruebas y aceptación.

@@ -1,0 +1,12 @@
+REFORMULACION
+WS26.2 es un nodo de implementación en `graph_ui`: añadir enrutamiento explícito en Board y representar la capa lista, separándola de tareas en ejecución, con dependencias pendientes o archivos solapados. El resultado son vistas y tests en `frontends/mindmap/views/workspace/routing/` que crean y enrutan la tarea activa solo mediante la operación conjunta W01 admitida por WS12, después de WS26.1 y de la autorización humana, usando WS48 para la admisión de escritura. Límites: no implementa promoción nueva; si falta contrato o canal, deja handoff y pendiente; no crea operaciones parciales ni efectos ocultos. G_HUMAN_READ habilita el uso de mutaciones en UI, no el desarrollo ni las pruebas aisladas.
+
+AMBIGUEDADES
+1. «Enrutar un TaskDoc ya existente no tiene operación pública con precondición (HO-12).» El nodo incluye enrutamiento, pero no define si un TaskDoc existente queda fuera, se muestra no disponible o exige handoff, ni nombra productor/owner de HO-12. Obligaría a inventar el resultado y el canal para ese caso.
+2. «glob/no-resolución dudosa implica no comprobado y revisión supervisor antes de marcar lista». «Supervisor» no está definido como actor ni se indica cómo se registra su revisión. Obligaría a inventar rol, evidencia y efecto sobre la capa lista.
+
+DRY-RUN
+Un ejecutor futuro leería el TaskDoc WS26.2, el contrato WS12 (W01, operaciones y normalización de `files`), el Board/lifecycle de WS22, la salida de WS26.1 y la admisión WS48; comprobaría gates. Cambiaría componentes de routing y tests; llamaría solo endpoints autorizados; la creación y el enrutado serían conjuntos tras la autorización; la capa lista se calcularía con rutas normalizadas, igualdad o contención, y lo dudoso no se marcaría listo. Consumiría WS12, WS22, WS26.1 y WS48. Errores: contrato u operación ausente, admisión denegada o evidencia contraria → handoff/pendiente, sin sustituir API; solapamiento → no listo. Validaría con store temporal, `deskops show board`, distinción en UI y separación de capas; G_HUMAN_READ antes de habilitar mutaciones; G_UI_WRITE/G_WRITE_CONTRACT por delta; G_CLOSEOUT ya satisfecho. No ejecutaría promoción ni commit.
+
+FUTURO
+WS12 produce W01 y la normalización; WS22 el Board; WS26.1 el candidato; WS48 la admisión; WS16 el acta de G_HUMAN_READ; P01/G_UI_WRITE el recibo por delta. La promoción y los commits previos los decide el canal autorizado o quedan en handoff.

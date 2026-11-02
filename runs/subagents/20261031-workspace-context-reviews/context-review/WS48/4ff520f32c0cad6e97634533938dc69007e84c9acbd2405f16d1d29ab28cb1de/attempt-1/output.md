@@ -1,0 +1,11 @@
+REFORMULACION
+Propósito: producir en `graph_ui` el punto común de admisión de escrituras de la UI en modo manual exclusivo (T-P03.1, HO-03; contrato WS12, secciones 5 y 5.9). Resultado: módulo que consulta una afirmación vigente externa y evidencia pública contraria antes de invocar el canal; salidas admitida o lectura/handoff; guardia en servidor para `POST /api/desk/advance` antes de `advance_task`, con estado y mensaje del botón Avanzar; pruebas en store temporal. Repo: `graph_ui`, `frontends/mindmap/` y `tests/`; archivo exacto en TaskDoc. Límites: no crea identidad, autenticación, coordinación distribuida, lock, CAS universal ni 409 sin precondición; no añade operación lifecycle; no habilita uso real; depende de WS12 y de `G_UI_WRITE`/`G_WRITE_CONTRACT` por delta; no exige `G_HUMAN_READ` para desarrollar y probar.
+
+AMBIGUEDADES
+ninguna
+
+DRY-RUN
+Un ejecutor futuro leería el contrato WS12 5/5.9, la ruta `POST /api/desk/advance`, el botón de `views/workflow/deskops/deskops-view.js`, las consultas públicas de evidencia y las pruebas existentes; cargaría la configuración confiable fuera de la petición. Cambios previstos: módulo común de admisión, cargador/validador de la afirmación, adaptador de consultas de evidencia, guardia en servidor antes de `advance_task`, estado deshabilitado y mensaje de causa en el botón, y tests con store temporal. Consumiría WS12 y los gates `G_WRITE_CONTRACT`/`G_UI_WRITE` solo para el delta; `G_HUMAN_READ` no bloquearía desarrollo/pruebas aisladas. Errores esperados: afirmación ausente/no vigente, evidencia contraria, herramienta ausente o consulta fallida: rechazo o lectura/handoff con causa y buffer conservado; tras escribir, evidencia contraria bloquearía la siguiente escritura. Validación: rechazo antes de `advance_task`, conservación de revision/gates/rechazos existentes, botón deshabilitado y mensaje, admisión sin afirmar exclusividad, y no reimplementación por consumidores.
+
+FUTURO
+WS12 publica las secciones 5/5.9; el TaskDoc de promoción fija formato, ubicación y vigencia de la afirmación; el receptor P01 emite el acta por delta para `G_UI_WRITE`; un humano habilitará el uso real de mutaciones mediante los gates correspondientes; WS19.1, WS19.2, WS21, WS25.1, WS25.2, WS26.1, WS26.2, WS28, WS39 y WS42 consumen el módulo.
