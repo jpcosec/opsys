@@ -738,6 +738,10 @@ data:
     to: WS26.1
     relation: prerequisite
     label: ''
+  - from: WS47
+    to: WS26.1
+    relation: prerequisite
+    label: ''
   - from: WS48
     to: WS26.1
     relation: prerequisite
@@ -750,6 +754,10 @@ data:
     to: WS26.1
     relation: prerequisite
     label: habilitar uso UI
+  - from: G_PAYLOAD_PRECONDITION
+    to: WS26.1
+    relation: prerequisite
+    label: ''
   - from: G_UI_WRITE
     to: WS26.1
     relation: prerequisite

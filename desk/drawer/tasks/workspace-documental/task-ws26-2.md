@@ -30,7 +30,7 @@ Base explícita: `graph_ui:repository_root/`. Concretar archivos exactos dentro 
 
 ## Alcance
 
-Enrutamiento explícito en Board y representación de capa lista por dependencias/no solapamiento; promoción solo cuando el contrato resuelve commits previos por canal autorizado. Enrutar = añadir la tarea a la lista tasks del BoardDoc por operación pública. Capa lista = tareas sin dependencias pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc y el ritual de fase. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
+Enrutamiento explícito en Board y representación de capa lista por dependencias/no solapamiento; promoción solo cuando el contrato resuelve commits previos por canal autorizado. Autorizar, crear la tarea activa y enrutarla en el Board es una operación conjunta (W01 del contrato WS12: crea el TaskDoc y lo añade al Board), posterior a la preparación del candidato en WS26.1 y a la autorización de la persona; nunca una operación parcial ni un efecto oculto de WS26.1. Los commits previos y la promoción van en handoff cuando el contrato no ofrece canal. Enrutar un TaskDoc ya existente no tiene operación pública con precondición (HO-12). Capa lista = tareas sin dependencias pendientes y sin archivos solapados según los `files` declarados en cada TaskDoc y el ritual de fase. G_HUMAN_READ habilita uso de mutaciones en UI; desarrollo y pruebas aisladas de API pueden avanzar con sus contratos/gates técnicos sin acta humana de lectura.
 
 ## Aceptación
 

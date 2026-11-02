@@ -75,7 +75,7 @@ Base acordada: sldb/pron + Deskops + Mindmap existentes; Kimun es referencia, no
 | WS25.1 | [Leer inbox y registrar ack o respuesta local](../../tasks/workspace-documental/task-ws25-1.md) | WS12, WS48 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | S |
 | WS25.2 | [Capturar en drawer o protoátomo](../../tasks/workspace-documental/task-ws25-2.md) | WS12, WS46, WS48 | G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | S |
 | WS26 | [Integrar autoría y contexto de tareas](../../tasks/workspace-documental/task-ws26.md) | WS12, WS22, WS26.1, WS26.2 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
-| WS26.1 | [Autorar tarea, evidencia y contexto](../../tasks/workspace-documental/task-ws26-1.md) | WS12, WS22, WS48 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
+| WS26.1 | [Autorar tarea, evidencia y contexto](../../tasks/workspace-documental/task-ws26-1.md) | WS12, WS22, WS47, WS48 | G_CLOSEOUT, G_HUMAN_READ, G_PAYLOAD_PRECONDITION, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS26.2 | [Enrutar en Board y mostrar capa lista](../../tasks/workspace-documental/task-ws26-2.md) | WS12, WS22, WS26.1, WS48 | G_CLOSEOUT, G_HUMAN_READ, G_UI_WRITE, G_WRITE_CONTRACT | graph_ui | M |
 | WS27 | [Integrar revisión de cambios y evidencia](../../tasks/workspace-documental/task-ws27.md) | WS13, WS12, WS27.1, WS27.2 | G_UI_READ | graph_ui | M |
 | WS27.1 | [Mostrar diff Git por repo y tarea](../../tasks/workspace-documental/task-ws27-1.md) | WS13, WS12 | G_UI_READ | graph_ui | M |
