@@ -1,0 +1,6 @@
+HEAD deskops: d61b3cd1
+graph_ui: 134a665; sldb: 77bd6d00
+sha256 navegacion.md: 7d6e234ad7456a8cdea53bb675dddec590c4a5d80de28ac6a48a05065889928e
+sha256 vistas.md: 9772e00ea24602681e9e01fda4e05de61df63574ce0342cb8b822ffca099bc24
+Generated table/task files/diagram spec match dag.yaml
+stale: WS09: input changed 
