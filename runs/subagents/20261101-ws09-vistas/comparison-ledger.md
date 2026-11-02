@@ -7,3 +7,7 @@ Fecha: 2026-11-01. Rol: Supervisor. Actor: Claude Opus 5.5, pane `w3Y:p1`.
 Revisión: attempt-1, recibo completo, v2, hash vigente. Leí `output.md` completo junto al contrato. Una ambigüedad, `detalle de promoción`. Ninguna real.
 
 Revisión del Supervisor sobre el entregable: leí las 23 fichas completas. Comprobé por programa campos, IDs de nodos y gates, y que las 365 citas estén en rango; no comprobé el contenido de cada línea citada. Busqué las negaciones por texto: la de F15 era falsa y se corrigió antes de congelar.
+
+## Adenda: Tester v1 FAIL
+
+El Tester halló defectos reales que mi revisión no vio: tres estados que contradecían la disposición, una contradicción en F18a, un productor mal atribuido en F11b y WS11 usado como productor de implementación. Corregidos en una pasada. Esta revisión y su registro quedan como historia; la renovación vigente va abajo cuando exista.

@@ -1,0 +1,6 @@
+{
+ "argv": "pi --provider deepseek --model deepseek-flash --thinking low --no-session --no-context-files --no-skills --no-extensions --no-prompt-templates --tools read,grep,find,ls --print @runs/subagents/20261101-ws09-vistas/tester-input.md",
+ "stdin": "devnull",
+ "pane": "w3Y:pW",
+ "tools": "read,grep,find,ls"
+}

@@ -66,3 +66,14 @@ Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Donde difiera de lo anterior, vale
 - F11b: clasificaba el estado del runtime como preferencia local; por la definición es `derivado`.
 
 Conteo vigente: bloqueado 20, propuesto 3 (F11a, F18a, F19a), disponible 0. Clases por fichas: derivado 22, preferencia local 14, authored 20.
+
+## Ajuste del Supervisor tras Tester v1 FAIL
+
+Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Donde difiera de lo anterior, vale esto:
+
+- F11a, F18a y F19a pasan a `bloqueado`: sus campos nombran contratos WS11 o WS12 pendientes, y la disposición dice que eso es bloqueado. Mi conteo anterior de 3 propuesto era incorrecto.
+- F18a: se quita la contradicción sobre contrato; tiene contrato de modelo, no de UI.
+- F11b: la conversación no se atribuye a WS44, que es el probe de acceso; el vínculo es WS33.
+- F01, F11a, F14 y F18a: WS11 no produce implementación. Renderer sin nodo pasa a «sin productor en el DAG», repo dueño graph_ui.
+
+Conteo vigente: bloqueado 23, propuesto 0, disponible 0. Sin productor en el DAG se suman: lista de issues y renderer de roles en la UI, y vista Specs en el lector.
