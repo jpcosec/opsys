@@ -77,3 +77,7 @@ Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Donde difiera de lo anterior, vale
 - F01, F11a, F14 y F18a: WS11 no produce implementación. Renderer sin nodo pasa a «sin productor en el DAG», repo dueño graph_ui.
 
 Conteo vigente: bloqueado 23, propuesto 0, disponible 0. Sin productor en el DAG se suman: lista de issues y renderer de roles en la UI, y vista Specs en el lector.
+
+## Ajuste del Supervisor tras Tester v2 FAIL
+
+F07 y F15 aún usaban WS11 como productor de implementación. Corregido: contrato WS11, implementación WS25.1 y WS13.1. El estado de ambas sigue en `bloqueado`. La premisa de mi brief de que F01 no tenía productor era incorrecta: F01 sí los tiene.
