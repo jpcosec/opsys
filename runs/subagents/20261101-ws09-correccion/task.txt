@@ -1,0 +1,9 @@
+Task: task-corregir-fichas-de-ws09-tras-revisión-root
+Title: Corregir fichas de WS09 tras revisión root
+Status: draft
+Current node: ritual-execution
+Task type: docs
+From drawer: desk/drawer/tasks/task-corregir-fichas-ws09.md
+Closeout evidence: commit, document
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]

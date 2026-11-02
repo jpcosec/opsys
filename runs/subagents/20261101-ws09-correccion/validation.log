@@ -1,0 +1,9 @@
+$ grep -c "^### F"
+23
+Generated table/task files/diagram spec match dag.yaml
+build exit 0
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+validate exit 0
+all reviews current
+status exit 0
+13 passed in 1.38s
