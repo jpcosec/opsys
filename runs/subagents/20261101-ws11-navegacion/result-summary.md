@@ -80,3 +80,7 @@ Claude Opus 5.5, pane `w3Y:p1`, sin Executor. Evidencia v1 en `renovacion-1/`. D
 - §4 decía que el único `read_text` estaba en el IR. Hay también secciones, procedencia y `payload_save`. Ahora los enumera, tras buscar `read_text` y `read_bytes` en `SL/cli/serve` y `SL/api/documents`.
 
 No cambia ninguna decisión, hueco ni productor. La salvedad del Tester sobre C4 ya estaba en la fila: soportado a nivel de entrada, sin estado de foco.
+
+## Ajuste del Supervisor tras Tester v2 FAIL
+
+Evidencia v2 en `renovacion-2/`. La enumeración de §4 omitía `track_document_file.py` y `provenance_stamp.py`, que el grep ya mostraba. Quedan añadidas. El Tester cotejó además 13 negaciones y 6 citas de §7-§10 sin hallar otra falla. La conclusión de §4 no cambia.

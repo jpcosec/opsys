@@ -1,0 +1,17 @@
+HEAD deskops: 76155db9
+graph_ui: 134a665; sldb: 77bd6d00
+sha256 navegacion.md: 2375d6950ebd9309a61be267899f0dd8b2882a012537f9bc25f74948a4a82e57
+$ test -s desk/drawer/plans/workspace-documental/contratos/navegacion.md
+exit 0
+$ python desk/drawer/plans/workspace-documental/build_plan.py --check
+Generated table/task files/diagram spec match dag.yaml
+exit 0
+$ python desk/drawer/plans/workspace-documental/validate_plan.py --check
+scion: observed path/hash unchanged
+kimun_reference_only: observed path/hash unchanged
+closeout: observed path/hash unchanged
+No product code changed; this validates planning artifacts, not user journeys or functionality.
+exit 0
+$ python desk/drawer/plans/workspace-documental/context_review.py status
+all reviews current
+exit 0
