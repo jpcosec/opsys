@@ -121,3 +121,7 @@ Fuente: `runs/subagents/20261101-ws08-completitud/root-approval.md`.
 ## Adenda 2026-11-01, WS09
 
 Fichas en `borradores/vistas.md`. Sin productor en el DAG, sin inventar nodo: consulta guardada y búsqueda por significado, edición de RoleDoc y RuntimeProfileDoc, navegación de FAQ, lista de issues en UI, renderer de roles y vista Specs. WS11 parte de la lista de `runs/subagents/20261101-ws09-vistas/result-summary.md`.
+
+## Adenda 2026-11-01, corrección de WS09
+
+Decisión root en `runs/subagents/20261101-ws09-correccion/review-source.md`: no se crean nodos por candidaturas del catálogo. Consulta guardada y semántica no son prerrequisito del lector. La lectura básica de FAQ, issues y roles reutiliza productores existentes; las vistas especializadas no están comprometidas. WS11 las clasifica. WS12 debe considerar los efectos de los comandos de diagnóstico: `atoms validate` puede crear andamiaje.
