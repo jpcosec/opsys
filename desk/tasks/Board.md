@@ -4,7 +4,9 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks: []
+tasks:
+- desk/tasks/task-help-del-cli-alineado-con-la-evidencia-declarada.md
+- desk/tasks/task-documentacion-de-deskops-alineada-con-la-evidencia-declarada.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -45,3 +47,6 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
+
+- Help del CLI alineado con la evidencia declarada [draft] - Que todo ejemplo impreso por --help y about corra tal cual en un desk recien inicializado, y que el help de closeout y advance describa el gate de evidencia declarada.
+- Documentacion de deskops alineada con la evidencia declarada [draft] - Que ningun doc describa el gate fijo ni traiga un add task sin evidencia, que el atom fuente del gate este al dia y que los docs cubran closeout supersede/retire, runtime template y la cobertura real de verbos.
