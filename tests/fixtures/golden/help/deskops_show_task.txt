@@ -1,7 +1,10 @@
 usage: deskops show task [-h] [--root ROOT] [--format {text,json}] task_id
 
+Show one actionable task by selector.
+
 positional arguments:
-  task_id               Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+  task_id               Task selector. Selectors accept an exact id, filename,
+                        stem, or unique slug fragment where supported.
 
 options:
   -h, --help            show this help message and exit

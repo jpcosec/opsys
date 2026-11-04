@@ -1,5 +1,8 @@
 usage: deskops drift [-h] {check} ...
 
+Check for role-agent drift between tracked role docs and installed agent
+files.
+
 positional arguments:
   {check}
     check     Compare rendered role-agent output to installed files.

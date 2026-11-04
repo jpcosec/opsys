@@ -3,6 +3,8 @@ usage: deskops atoms split [-h] --into NEW_ATOM_ID [NEW_ATOM_ID ...]
                            [--root ROOT] [--force]
                            doc_id
 
+Split one atom into new atoms while keeping the original as a redirect stub.
+
 positional arguments:
   doc_id                Atom selector. Selectors accept an exact id, filename,
                         stem, or unique slug fragment where supported.

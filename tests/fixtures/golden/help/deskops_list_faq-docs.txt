@@ -1,5 +1,7 @@
 usage: deskops list faq-docs [-h] [--root ROOT] [--format {text,json}]
 
+List faq-docs.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

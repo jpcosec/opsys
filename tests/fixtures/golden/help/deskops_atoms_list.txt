@@ -1,6 +1,8 @@
 usage: deskops atoms list [-h] [--root ROOT] [--axis-value AXIS_VALUE]
                           [--format {text,json}]
 
+Deprecated alias for `deskops list atoms`; list all atoms.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

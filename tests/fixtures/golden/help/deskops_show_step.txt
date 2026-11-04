@@ -1,5 +1,7 @@
 usage: deskops show step [-h] [--root ROOT] [--format {text,json}] doc_id
 
+Show one step by selector.
+
 positional arguments:
   doc_id                Step selector. Selectors accept an exact id, filename,
                         stem, or unique slug fragment where supported.

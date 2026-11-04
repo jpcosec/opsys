@@ -1,5 +1,7 @@
 usage: deskops atoms tree [-h] [--root ROOT] [--format {text,json}]
 
+Show the domain tree: crossroads and the documents hanging from them.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

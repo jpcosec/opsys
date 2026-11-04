@@ -2,13 +2,17 @@ usage: deskops issue close [-h] --reason REASON [--ref REF [REF ...]]
                            [--root ROOT] [--force]
                            selector
 
+Close one issue with its reason, keeping the file as the trace.
+
 positional arguments:
-  selector             Issue selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+  selector             Issue selector. Selectors accept an exact id, filename,
+                       stem, or unique slug fragment where supported.
 
 options:
   -h, --help           show this help message and exit
   --reason REASON      Why the issue is closing.
-  --ref REF [REF ...]  Commit or path supporting the close; repeat or space-separate as needed.
+  --ref REF [REF ...]  Commit or path supporting the close; repeat or space-
+                       separate as needed.
   --root ROOT          Target repository root.
   --force              Close again even when already closed.
 

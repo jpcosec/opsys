@@ -1,5 +1,7 @@
 usage: deskops edit board [-h] [--root ROOT] selector field value
 
+Edit one board field.
+
 positional arguments:
   selector     Board selector. Selectors accept an exact id, filename, stem,
                or unique slug fragment where supported.

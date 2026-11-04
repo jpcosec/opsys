@@ -9,7 +9,9 @@ options:
   --from-yaml FROM_YAML
                         Load the faq-doc payload from a YAML file.
   --title TITLE         Primary H1 heading for the FAQ document.
-  --body BODY           Full FAQ body after the H1, including questions, answers, command examples, and cross-references to atom docs.
+  --body BODY           Full FAQ body after the H1, including questions,
+                        answers, command examples, and cross-references to
+                        atom docs.
 
 Example:
-  deskops add faq-doc --root . --title "Example"
+  deskops add faq-doc --root . --title "Example" --body "..."

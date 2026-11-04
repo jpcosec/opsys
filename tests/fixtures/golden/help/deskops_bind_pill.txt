@@ -1,8 +1,12 @@
 usage: deskops bind pill [-h] [--root ROOT] task pill
 
+Bind one pill to one task.
+
 positional arguments:
-  task         Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
-  pill         Pill selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+  task         Task selector. Selectors accept an exact id, filename, stem, or
+               unique slug fragment where supported.
+  pill         Pill selector. Selectors accept an exact id, filename, stem, or
+               unique slug fragment where supported.
 
 options:
   -h, --help   show this help message and exit

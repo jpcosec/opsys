@@ -43,7 +43,8 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
-    assert "Use docs/quickstart.md" in captured.out
+    assert "deskops faq" in captured.out
+    assert "docs/quickstart.md" in captured.out
 
 
 def test_core_help_documents_examples_and_selectors(capsys) -> None:

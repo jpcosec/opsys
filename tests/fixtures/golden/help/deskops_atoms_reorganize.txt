@@ -1,5 +1,8 @@
 usage: deskops atoms reorganize [-h] [--root ROOT] [--dry-run]
 
+Move atoms into folders derived from the configured atom_folder_axis tag
+namespace. Idempotent.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.

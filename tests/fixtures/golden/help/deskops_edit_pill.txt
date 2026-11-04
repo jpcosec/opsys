@@ -1,5 +1,7 @@
 usage: deskops edit pill [-h] [--root ROOT] selector field value
 
+Edit one pill field.
+
 positional arguments:
   selector     Pill selector. Selectors accept an exact id, filename, stem, or
                unique slug fragment where supported.

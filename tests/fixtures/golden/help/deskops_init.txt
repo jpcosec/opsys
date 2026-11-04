@@ -1,5 +1,7 @@
 usage: deskops init [-h] [path]
 
+Initialize a local .sldb store and scaffold desk/ if needed.
+
 positional arguments:
   path        Target repository path
 

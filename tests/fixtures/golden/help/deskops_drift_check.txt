@@ -1,5 +1,7 @@
 usage: deskops drift check [-h] [--root ROOT] [--out OUT]
 
+Compare rendered role-agent output to installed files.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.

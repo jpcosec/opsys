@@ -1,6 +1,8 @@
 usage: deskops show repository [-h] [--root ROOT] [--format {text,json}]
                                doc_id
 
+Show one repository by selector.
+
 positional arguments:
   doc_id                Repository selector. Selectors accept an exact id,
                         filename, stem, or unique slug fragment where

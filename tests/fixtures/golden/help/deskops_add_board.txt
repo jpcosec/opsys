@@ -15,7 +15,8 @@ options:
   --title TITLE         Board title for one active routing surface.
   --summary SUMMARY     Short semantic summary for the primitive.
   --tags TAGS [TAGS ...]
-                        Semantic tags placed at the end, using namespaced forms such as 'system:sldb' or 'workspace:desk'.
+                        Semantic tags placed at the end, using namespaced
+                        forms such as 'system:sldb' or 'workspace:desk'.
   --scope SCOPE         What area or workspace this board routes.
   --purpose PURPOSE     Why this board exists and what it indexes.
   --tasks TASKS [TASKS ...]
@@ -27,4 +28,4 @@ options:
   --notes NOTES         Short operational notes about the current routed set.
 
 Example:
-  deskops add board --root . --title "Example"
+  deskops add board --root . --title "Example" --scope "..." --purpose "..."

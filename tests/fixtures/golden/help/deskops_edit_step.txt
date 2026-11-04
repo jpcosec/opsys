@@ -1,5 +1,7 @@
 usage: deskops edit step [-h] [--root ROOT] selector field value
 
+Edit one step field.
+
 positional arguments:
   selector     Step selector. Selectors accept an exact id, filename, stem, or
                unique slug fragment where supported.

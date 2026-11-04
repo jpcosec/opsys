@@ -1,6 +1,8 @@
 usage: deskops promote inbox-to-drawer-task [-h] [--root ROOT] [--title TITLE]
                                             selector
 
+Promote one inbox note into a deferred drawer task candidate.
+
 positional arguments:
   selector       Inbox filename, stem, or unique slug fragment
 

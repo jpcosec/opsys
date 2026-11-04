@@ -1,5 +1,7 @@
 usage: deskops desk install [-h] path
 
+Scaffold a minimal local desk/ surface in a repo.
+
 positional arguments:
   path        Target repository path
 

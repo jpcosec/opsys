@@ -7,13 +7,16 @@ usage: deskops runtime template [-h] [--root ROOT] [--harness HARNESS]
                                 [--run-dir RUN_DIR]
                                 role_id
 
+Materialize a RoleDoc + RuntimeProfileDoc as a Scion agent template (scion-
+agent.yaml, system-prompt.md, agents.md).
+
 positional arguments:
   role_id               RoleDoc id or name, e.g. role-deskops-executor or
                         deskops-executor.
 
 options:
   -h, --help            show this help message and exit
-  --root ROOT           DeskOps repository root.
+  --root ROOT           Target repository root.
   --harness HARNESS     Scion harness-config / runtime kind to target (claude,
                         codex, antigravity, pi); defaults to the role's kind.
   --out OUT             Template directory; defaults to

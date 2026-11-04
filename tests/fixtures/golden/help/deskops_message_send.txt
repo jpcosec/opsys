@@ -5,6 +5,8 @@ usage: deskops message send [-h] [--title TITLE] [--kind {unclear,suggestion}]
                             [--format {text,json,yaml}]
                             body
 
+Send a message to a project desk.
+
 positional arguments:
   body                  Message body
 
@@ -26,3 +28,4 @@ options:
                         Project path used when auto-tracking messages through
                         the registered model
   --format {text,json,yaml}
+                        Output format.

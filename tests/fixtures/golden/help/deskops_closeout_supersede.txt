@@ -1,5 +1,7 @@
-usage: deskops closeout supersede [-h] [--root ROOT] --task TASK
-                                  --reason REASON --ref REF
+usage: deskops closeout supersede [-h] [--root ROOT] --task TASK --reason
+                                  REASON --ref REF
+
+Close a task whose subject no longer exists, naming a reason and a resolvable ref.
 
 options:
   -h, --help       show this help message and exit

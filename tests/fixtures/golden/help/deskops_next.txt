@@ -1,12 +1,16 @@
 usage: deskops next [-h] [--root ROOT] [--diagram] [--why] [task_id]
 
+Show the next valid workflow action for a task without mutating it.
+
 positional arguments:
-  task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+  task_id      Task selector. Selectors accept an exact id, filename, stem, or
+               unique slug fragment where supported.
 
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.
-  --diagram    Render the workflow state machine as Mermaid from its source spec.
+  --diagram    Render the workflow state machine as Mermaid from its source
+               spec.
   --why        Explain why this task and these actions were selected.
 
 Examples:

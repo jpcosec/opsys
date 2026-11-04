@@ -33,12 +33,19 @@ ROOT_EPILOG = """
 Typical flow:
   deskops bootstrap
   deskops init .
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
   deskops list tasks --root .
   deskops show task task-fix-thing --root .
   deskops advance task task-fix-thing --root .
 
-Use docs/quickstart.md for the first full walkthrough.
+A task declares at creation how it closes (--task-type or --evidence). When
+the work is done and the task's references carry that evidence, close it with
+`deskops closeout commit --root . --task task-fix-thing --no-run --reason "..."`
+(or --run-dir for a subagent run); it verifies the declared evidence first and
+makes the closing commit. `deskops doctor --root .` checks the desk afterwards.
+
+Run `deskops faq` for first-use questions; the full walkthrough is docs/quickstart.md
+in the deskops repository.
 """.strip()
 
 SELECTOR_HELP = "Selectors accept an exact id, filename, stem, or unique slug fragment where supported."
@@ -104,9 +111,9 @@ PYTHONPATH_INBOX_ARG = A(
     help="Project path used when auto-tracking inbox notes through a registered InboxNoteDoc model",
 )
 OUTPUT_FORMAT_ARG = A("--format", choices=("text", "json"), default="text", help="Output format.")
-OUTPUT_FORMAT_YAML_ARG = A("--format", choices=("text", "json", "yaml"), default="text")
+OUTPUT_FORMAT_YAML_ARG = A("--format", choices=("text", "json", "yaml"), default="text", help="Output format.")
 HERDR_ARG = A("--herdr", default="herdr", help="Herdr executable.")
-RUNTIME_ROOT_ARG = A("--root", default=".", help="DeskOps repository root.")
+RUNTIME_ROOT_ARG = A("--root", default=".", help="Target repository root.")
 
 
 def _add_subject_commands() -> list[Command]:
@@ -116,7 +123,8 @@ def _add_subject_commands() -> list[Command]:
     models = artifact_model_fields()
     for artifact_id, meta in ARTIFACT_SUBJECTS.items():
         subject = str(meta["subject"])
-        help_text = f"Create a {subject} artifact."
+        article = "an" if subject[:1] in "aeiou" else "a"
+        help_text = f"Create {article} {subject} artifact."
         if subject == "repository":
             help_text = (
                 "Create a local repository artifact doc; use 'deskops repo register' "
@@ -153,12 +161,39 @@ def _add_subject_commands() -> list[Command]:
                 args=tuple(args),
                 handler="deskops.cli.commands.operations:OperationsCLI",
                 mutates=True,
-                epilog=f"Example:\n  deskops add {subject} --root . --title \"Example\"",
+                epilog=_add_subject_example(subject, model),
                 description=help_text,
                 raw_text=True,
             )
         )
     return commands
+
+
+# Sample values for the generated ``deskops add <subject>`` example, by field
+# name. Any other required field is shown as "..."; enum fields show their
+# first choice. The example must run as printed.
+_EXAMPLE_VALUES: dict[str, str] = {
+    "title": "Example",
+    "name": "example",
+    "created_at": "2026-01-01T00:00:00",
+}
+
+
+def _add_subject_example(subject: str, model: type | None) -> str | None:
+    """The ``Example:`` epilog, built from the model's required fields."""
+
+    if model is None:
+        return None
+    parts = [f"deskops add {subject} --root ."]
+    for fmeta in model_cli_fields(model):
+        if not fmeta.is_required:
+            continue
+        if fmeta.choices:
+            value = fmeta.choices[0]
+        else:
+            value = _EXAMPLE_VALUES.get(fmeta.name, "...")
+        parts.append(f'{fmeta.cli_option} "{value}"')
+    return "Example:\n  " + " ".join(parts)
 
 
 def _list_subject_commands() -> list[Command]:
@@ -251,8 +286,11 @@ def _operation_shared_commands() -> list[Command]:
             mutates=True,
             epilog="""
 Examples:
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest"
-  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..."
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --evidence commit document
+  deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..." --when "..." --where "..." --how "..." --how-not "..."
+
+A task declares its closeout evidence with --task-type or --evidence; see `deskops add task --help`.
 """.strip(),
             raw_text=True,
             subcommand_dest="subject",
@@ -289,7 +327,13 @@ Examples:
                     default=[],
                     help="Task identifiers that must complete first; repeat or space-separate as needed.",
                 ),
-                A("--task-type", help="Workflow task type such as design, implementation, test, reflection, or closeout."),
+                A(
+                    "--task-type",
+                    help="Workflow task type; it fills --evidence when that is omitted. Valid: "
+                    "code, implementation, test (tests+commit+atom|materialization); "
+                    "docs, spec, design (commit+document); external (external). "
+                    "Any other type needs an explicit --evidence.",
+                ),
                 A(
                     "--evidence",
                     action="extend",
@@ -322,6 +366,15 @@ Examples:
             ),
             handler="deskops.cli.commands.operations:OperationsCLI",
             mutates=True,
+            epilog="""
+Examples:
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --validation "review" --evidence commit document
+
+The task declares at creation how it closes: --task-type fills --evidence, or
+--evidence lists the kinds explicitly. One of the two is required.
+""".strip(),
+            raw_text=True,
         ),
         *_add_subject_commands(),
         Command(
@@ -471,7 +524,12 @@ Advancement fires the first lifecycle transition (an sldb RelationDoc between ri
             help="Advance one actionable task through the desk's lifecycle graph.",
             args=(
                 A("task_id", help=f"Task selector. {SELECTOR_HELP}"),
-                A("--to", help="Optional target node or status for a manual override."),
+                A(
+                    "--to",
+                    help="Force the task to this node or status, skipping the lifecycle gates "
+                    "(no transition condition is evaluated). Closing is still refused, both "
+                    "`complete` and `closed`: only `deskops closeout commit` completes a task.",
+                ),
                 ROOT_ARG,
             ),
             handler="deskops.cli.commands.operations:OperationsCLI",
@@ -513,16 +571,22 @@ def _commands() -> list[Command]:
         Command(
             path=("doctor",),
             help="Detect and repair common broken desk states safely.",
+            description=(
+                "Check the desk and report two kinds of findings: errors, which break the desk\n"
+                "(exit 1), and alerts, which only mean the store moved under an expected change\n"
+                "(always printed, exit 0). Alerts are registered with `deskops desk update --apply`."
+            ),
+            raw_text=True,
             args=(
                 ROOT_ARG,
-                A("--repair", action="store_true", help="Attempt non-destructive repairs."),
+                A("--repair", action="store_true", help="Attempt non-destructive repairs of errors; alerts are left alone."),
             ),
             handler="deskops.cli.commands.doctor:DoctorCLI",
             mutates=True,
         ),
         Command(
             path=("status",),
-            help="Deprecated alias for `deskops doctor`; show current workspace and workflow status.",
+            help="Deprecated alias for `deskops doctor`.",
             args=(ROOT_ARG,),
             handler="deskops.cli.commands.doctor:DoctorCLI",
             mutates=False,
@@ -538,7 +602,12 @@ def _commands() -> list[Command]:
                     help="Question index, slug, or text fragment. Omit to list available questions.",
                 ),
                 OUTPUT_FORMAT_YAML_ARG,
-                A("--faq-path", default="docs/faq.md", help="FAQ markdown path"),
+                A(
+                    "--faq-path",
+                    default="docs/faq.md",
+                    help="FAQ markdown path (default: docs/faq.md; when it does not exist, "
+                    "the FAQ packaged with deskops at data/faq.md is used)",
+                ),
             ),
             handler="deskops.cli.commands.faq:FAQCLI",
             mutates=False,
@@ -585,14 +654,20 @@ def _commands() -> list[Command]:
             mutates=True,
             deprecated_for=("message",),
             epilog="""
-Deprecated: use `deskops message send|list|read|ack`.
+Deprecated: use `deskops message send|list|read|ack`. Each inbox form below
+has a `deskops message` equivalent; prefer it.
 
 Examples:
   deskops inbox "Need clearer CLI help" --kind unclear --title "CLI help"
+    -> deskops message send "Need clearer CLI help" --kind unclear --title "CLI help"
   deskops inbox --repo sibling-repo --sender current-repo "Need follow-up"
+    -> deskops message send "Need follow-up" --to sibling-repo --from current-repo
   deskops inbox --list --root .
+    -> deskops message list --root .
   deskops inbox --show 20260614-cli-help --root .
+    -> deskops message read 20260614-cli-help --root .
   deskops inbox --ack 20260614-cli-help --root .
+    -> deskops message ack 20260614-cli-help --root .
 
 --show/--ack selector: filename, stem, or slug fragment.
 """.strip(),
@@ -985,7 +1060,13 @@ The issue status is set to closed and a ## Resolution section records Closed, Re
             path=("atoms", "validate"),
             help="Validate one atom or all atoms for lifecycle safety checks.",
             args=(
-                A("doc_id", nargs="?", help=f"Atom selector. {SELECTOR_HELP}", group="target", group_required=True),
+                A(
+                    "doc_id",
+                    nargs="?",
+                    help=f"Atom selector; required unless --all is given. {SELECTOR_HELP}",
+                    group="target",
+                    group_required=True,
+                ),
                 A(
                     "--all",
                     action="store_true",
@@ -1272,7 +1353,8 @@ The issue status is set to closed and a ## Resolution section records Closed, Re
         ),
         Command(
             path=("closeout", "commit"),
-            help="Create the tool-made closing commit, linked to a run evidence directory or marked manual.",
+            help="Verify the task's declared closeout evidence, then create the tool-made closing commit, "
+            "linked to a run evidence directory or marked manual.",
             args=(
                 ROOT_ARG,
                 A("--run-dir", help="Run evidence dir under runs/subagents/.", group="closing_route"),
@@ -1307,6 +1389,16 @@ Without a subagent run, close the task manually and say why:
   deskops closeout commit --root . --task task-fix-thing \\
     --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \\
     --paths deskops/foo.py tests/test_foo.py
+
+Gate: for a task routed on desk/tasks/Board.md (as `deskops add task` leaves
+it) the command first runs the same check as `deskops closeout verify`. The
+task's closeout_evidence field (declared at `deskops add task` through
+--task-type or --evidence) says which kinds the task must show: tests, commit,
+atom|materialization, document, external. Each kind is looked up in the task's
+references (and files, for documents); the result is printed as one line,
+"esta tarea declaró X; encontré Y" (declared X; found Y). If any declared kind
+is missing the command stops and no commit is made. Alerts (ALERTA ...) are
+printed but do not block.
 
 With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
 trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.
@@ -1380,13 +1472,30 @@ ref, and the run index entry is marked legacy-resolved.
         ),
         Command(
             path=("closeout", "verify"),
-            help="Strictly verify closeout evidence gates for one task and print a structured report.",
+            help="Check the closeout evidence the task declared, without committing; print a structured report.",
             args=(
                 ROOT_ARG,
                 A("--task", required=True, help="Task id being verified."),
             ),
             handler="deskops.cli.commands.closeout:CloseoutCLI",
             mutates=False,
+            epilog="""
+Example:
+  deskops closeout verify --root . --task task-fix-thing
+
+The gate checks exactly the kinds listed in the task's closeout_evidence field
+(declared at `deskops add task` through --task-type or --evidence): tests,
+commit, atom|materialization, document, external. Each kind is looked up in
+the task's references (and files, for documents). A task without the field
+predates it and is gated as code, with an alert.
+
+Output: stdout carries a JSON report (declared, found, per-gate findings,
+alerts, ok, summary); stderr carries the one-line summary "esta tarea declaró
+X; encontré Y" (declared X; found Y) and any ALERTA lines. Exit 0 when
+everything declared was found, else 1.
+`deskops closeout commit` runs this same gate before committing.
+""".strip(),
+            raw_text=True,
         ),
         Command(
             path=("runtime",),

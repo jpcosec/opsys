@@ -1,5 +1,7 @@
 usage: deskops list pills [-h] [--root ROOT] [--format {text,json}]
 
+List pills.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

@@ -1,8 +1,11 @@
 usage: deskops issue [-h] {close,list} ...
 
+Close and list desk issues.
+
 positional arguments:
   {close,list}
-    close       Close one issue with its reason, keeping the file as the trace.
+    close       Close one issue with its reason, keeping the file as the
+                trace.
     list        List desk issues with id, status and title.
 
 options:

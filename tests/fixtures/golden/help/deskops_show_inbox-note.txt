@@ -1,6 +1,8 @@
 usage: deskops show inbox-note [-h] [--root ROOT] [--format {text,json}]
                                doc_id
 
+Show one inbox-note by selector.
+
 positional arguments:
   doc_id                Inbox-note selector. Selectors accept an exact id,
                         filename, stem, or unique slug fragment where

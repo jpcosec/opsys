@@ -1,5 +1,7 @@
 usage: deskops drawer remove [-h] [--root ROOT] [--force] selector
 
+Remove one drawer entry, its tracking, and its bullets on the drawer board.
+
 positional arguments:
   selector     Drawer file selector. Selectors accept an exact id, filename,
                stem, or unique slug fragment where supported.

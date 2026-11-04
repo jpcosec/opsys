@@ -1,6 +1,9 @@
 usage: deskops atoms merge [-h] --into TARGET_ATOM_ID [--root ROOT] [--force]
                            doc_id
 
+Merge one source atom into an existing target atom while rewriting inbound
+references.
+
 positional arguments:
   doc_id                Source atom selector. Selectors accept an exact id,
                         filename, stem, or unique slug fragment where

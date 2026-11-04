@@ -1,5 +1,7 @@
 usage: deskops list materializations [-h] [--root ROOT] [--format {text,json}]
 
+List materializations.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

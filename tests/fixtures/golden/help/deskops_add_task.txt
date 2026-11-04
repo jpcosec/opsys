@@ -12,6 +12,8 @@ usage: deskops add task [-h] [--from-yaml FROM_YAML] [--root ROOT]
                         [--inherit-acceptance-context]
                         [payload]
 
+Create an actionable task bundle.
+
 positional arguments:
   payload               Inline JSON payload for the task.
 
@@ -39,8 +41,11 @@ options:
                         Task identifiers that must complete first; repeat or
                         space-separate as needed.
   --task-type TASK_TYPE
-                        Workflow task type such as design, implementation,
-                        test, reflection, or closeout.
+                        Workflow task type; it fills --evidence when that is
+                        omitted. Valid: code, implementation, test
+                        (tests+commit+atom|materialization); docs, spec,
+                        design (commit+document); external (external). Any
+                        other type needs an explicit --evidence.
   --evidence EVIDENCE [EVIDENCE ...]
                         Closeout evidence this task must show, declared now:
                         tests, commit, atom, materialization, document,
@@ -58,3 +63,10 @@ options:
   --inherit-acceptance-context
                         Inherit validation and done-when context from tasks
                         listed in --inherits-from.
+
+Examples:
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --validation "review" --evidence commit document
+
+The task declares at creation how it closes: --task-type fills --evidence, or
+--evidence lists the kinds explicitly. One of the two is required.

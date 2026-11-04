@@ -1,5 +1,7 @@
 usage: deskops message [-h] {send,list,read,ack} ...
 
+Send, list, read, or acknowledge cross-desk messages.
+
 positional arguments:
   {send,list,read,ack}
     send                Send a message to a project desk.

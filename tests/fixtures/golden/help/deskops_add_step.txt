@@ -13,7 +13,8 @@ options:
   --action ACTION       What the step should do.
   --outcome OUTCOME     What the step should produce or confirm.
   --tags TAGS [TAGS ...]
-                        Semantic tags placed at the end, using namespaced forms such as 'topic:testing' or 'workspace:desk'.
+                        Semantic tags placed at the end, using namespaced
+                        forms such as 'topic:testing' or 'workspace:desk'.
 
 Example:
-  deskops add step --root . --title "Example"
+  deskops add step --root . --title "Example" --action "..." --outcome "..."

@@ -1,20 +1,28 @@
-usage: deskops closeout commit [-h] [--root ROOT] [--run-dir RUN_DIR |
-                               --no-run] [--reason REASON] --task TASK
-                               [-m MESSAGE] [--paths [PATHS ...]]
-                               [--run-id RUN_ID] [--session SESSION]
+usage: deskops closeout commit [-h] [--root ROOT]
+                               [--run-dir RUN_DIR | --no-run]
+                               [--reason REASON] --task TASK [-m MESSAGE]
+                               [--paths [PATHS ...]] [--run-id RUN_ID]
+                               [--session SESSION]
+
+Verify the task's declared closeout evidence, then create the tool-made closing commit, linked to a run evidence directory or marked manual.
 
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.
   --run-dir RUN_DIR     Run evidence dir under runs/subagents/.
-  --no-run              Close without a subagent run; requires --reason. Use instead of --run-dir.
-  --reason REASON       Why the task closes without a run; required with --no-run.
+  --no-run              Close without a subagent run; requires --reason. Use
+                        instead of --run-dir.
+  --reason REASON       Why the task closes without a run; required with --no-
+                        run.
   --task TASK           Task id being closed.
-  -m, --message MESSAGE
+  -m MESSAGE, --message MESSAGE
                         Commit message subject.
-  --paths [PATHS ...]   Paths to stage; defaults to run.yaml touched paths, else staged index.
-  --run-id RUN_ID       Subagent run id to record in run.yaml (--run-dir only).
-  --session SESSION     Child session.jsonl path to hash into run.yaml (--run-dir only).
+  --paths [PATHS ...]   Paths to stage; defaults to run.yaml touched paths,
+                        else staged index.
+  --run-id RUN_ID       Subagent run id to record in run.yaml (--run-dir
+                        only).
+  --session SESSION     Child session.jsonl path to hash into run.yaml (--run-
+                        dir only).
 
 Example:
   deskops closeout commit --root . --task task-fix-thing \
@@ -26,6 +34,16 @@ Without a subagent run, close the task manually and say why:
   deskops closeout commit --root . --task task-fix-thing \
     --no-run --reason "Fixed by the supervisor directly; no subagent was dispatched" \
     --paths deskops/foo.py tests/test_foo.py
+
+Gate: for a task routed on desk/tasks/Board.md (as `deskops add task` leaves
+it) the command first runs the same check as `deskops closeout verify`. The
+task's closeout_evidence field (declared at `deskops add task` through
+--task-type or --evidence) says which kinds the task must show: tests, commit,
+atom|materialization, document, external. Each kind is looked up in the task's
+references (and files, for documents); the result is printed as one line,
+"esta tarea declaró X; encontré Y" (declared X; found Y). If any declared kind
+is missing the command stops and no commit is made. Alerts (ALERTA ...) are
+printed but do not block.
 
 With --run-dir the commit message carries Task-Id/Run-Dir/Run-Id/Session-Sha256
 trailers; with --no-run it carries Task-Id/Closeout-Mode: manual/Closeout-Reason.

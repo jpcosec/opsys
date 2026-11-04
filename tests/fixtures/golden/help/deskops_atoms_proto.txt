@@ -2,6 +2,8 @@ usage: deskops atoms proto [-h] --title TITLE [--content CONTENT]
                            [--tag TAG [TAG ...]] [--root ROOT]
                            doc_id
 
+Create a protoatom: a free atom with a title, content and tags.
+
 positional arguments:
   doc_id               New protoatom id, conventionally proto-<slug>.
 

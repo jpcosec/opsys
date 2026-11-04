@@ -1,5 +1,7 @@
 usage: deskops show faq-doc [-h] [--root ROOT] [--format {text,json}] doc_id
 
+Show one faq-doc by selector.
+
 positional arguments:
   doc_id                Faq-doc selector. Selectors accept an exact id,
                         filename, stem, or unique slug fragment where

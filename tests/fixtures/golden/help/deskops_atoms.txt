@@ -1,5 +1,8 @@
 usage: deskops atoms [-h]
-                     {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree} ...
+                     {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree}
+                     ...
+
+Atom model and namespace management.
 
 positional arguments:
   {add-namespace,list,reorganize,show,validate,create,delete,split,merge,crossroad,proto,type,tree}

@@ -1,8 +1,10 @@
 usage: deskops atoms add-namespace [-h] [--root ROOT] --meaning MEANING
-                                   --use-when USE_WHEN
-                                   --do-not-use-when DO_NOT_USE_WHEN
+                                   --use-when USE_WHEN --do-not-use-when
+                                   DO_NOT_USE_WHEN
                                    [--example EXAMPLE [EXAMPLE ...]]
                                    namespace
+
+Add an extensible atom tag namespace to desk/atoms/tag-namespaces.yaml.
 
 positional arguments:
   namespace             Namespace name, such as pattern.

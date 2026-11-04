@@ -4,6 +4,8 @@ usage: deskops message ack [-h] [--root ROOT] [--desk-root DESK_ROOT]
                            [--format {text,json,yaml}]
                            selector
 
+Acknowledge one received message.
+
 positional arguments:
   selector              Message filename, stem, or unique slug fragment
 
@@ -20,3 +22,4 @@ options:
                         Project path used when auto-tracking messages through
                         the registered model
   --format {text,json,yaml}
+                        Output format.

@@ -56,9 +56,15 @@ def _add_command_parser(
 ) -> argparse.ArgumentParser:
     kwargs: dict[str, Any] = {}
     if command.raw_text:
-        kwargs["formatter_class"] = argparse.RawTextHelpFormatter
-    if command.description is not None:
-        kwargs["description"] = command.description
+        # Keep the hand-laid-out description and epilog (examples), but let
+        # argument help wrap to the terminal like every other page.
+        kwargs["formatter_class"] = argparse.RawDescriptionHelpFormatter
+    # Every command page states what it does: an explicit description wins,
+    # otherwise the one-line help is reused, so no `--help` page is bare.
+    description = command.description if command.description is not None else command.help
+    if command.deprecated_for is not None and "deprecated" not in description.lower():
+        description = f"{description}\nDeprecated: use `deskops {' '.join(command.deprecated_for)}`."
+    kwargs["description"] = description
     if command.epilog is not None:
         kwargs["epilog"] = command.epilog
     parser = subparsers.add_parser(command.path[-1], help=command.help, **kwargs)

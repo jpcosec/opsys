@@ -1,5 +1,8 @@
 usage: deskops desk update [-h] [--root ROOT] [--apply]
 
+Report and repair divergence between the current desk, its models, and its
+store.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.

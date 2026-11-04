@@ -3,6 +3,9 @@ usage: deskops atoms type [-h] --model MODEL [--id NEW_ID]
                           [--root ROOT]
                           doc_id
 
+Type a protoatom into another sldb model, keeping the protoatom as a redirect
+stub.
+
 positional arguments:
   doc_id                Protoatom selector: id or filename.
 

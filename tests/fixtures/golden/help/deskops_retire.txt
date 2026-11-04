@@ -1,15 +1,21 @@
 usage: deskops retire [-h] [--root ROOT] --reason REASON --ref REF [--force]
                       path
 
+Retire one obsolete desk document that has no dedicated verb, with its reason and refs.
+
 positional arguments:
-  path             Path of the file under desk/ to retire (pills, inbox notes, steps, roles, runtimes, faq, logbook, materializations, leftovers).
+  path             Path of the file under desk/ to retire (pills, inbox notes,
+                   steps, roles, runtimes, faq, logbook, materializations,
+                   leftovers).
 
 options:
   -h, --help       show this help message and exit
   --root ROOT      Target repository root
   --reason REASON  Why the document is obsolete.
-  --ref REF        Commit (HEAD or an ancestor) or existing path that replaces or resolves it. Repeatable.
-  --force          Retire even when other desk or docs files still reference it.
+  --ref REF        Commit (HEAD or an ancestor) or existing path that replaces
+                   or resolves it. Repeatable.
+  --force          Retire even when other desk or docs files still reference
+                   it.
 
 Example:
   deskops retire desk/contexts/pill-old.md --root . \

@@ -1,5 +1,7 @@
 usage: deskops edit ritual [-h] [--root ROOT] selector field value
 
+Edit one ritual field.
+
 positional arguments:
   selector     Ritual selector. Selectors accept an exact id, filename, stem,
                or unique slug fragment where supported.

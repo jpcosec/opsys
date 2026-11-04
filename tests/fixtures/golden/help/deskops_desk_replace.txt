@@ -2,6 +2,8 @@ usage: deskops desk replace [-h] [--root ROOT] --old OLD --new NEW
                             [--count COUNT]
                             path
 
+Replace an exact substring in one desk file that has no modeled edit verb.
+
 positional arguments:
   path           Path of the file under desk/ (desk/... or relative to the
                  desk root).

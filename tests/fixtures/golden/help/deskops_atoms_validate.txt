@@ -1,8 +1,11 @@
 usage: deskops atoms validate [-h] [--all] [--root ROOT] [doc_id]
 
+Validate one atom or all atoms for lifecycle safety checks.
+
 positional arguments:
-  doc_id       Atom selector. Selectors accept an exact id, filename, stem, or
-               unique slug fragment where supported.
+  doc_id       Atom selector; required unless --all is given. Selectors accept
+               an exact id, filename, stem, or unique slug fragment where
+               supported.
 
 options:
   -h, --help   show this help message and exit

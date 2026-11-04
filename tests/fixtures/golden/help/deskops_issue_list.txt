@@ -1,5 +1,7 @@
 usage: deskops issue list [-h] [--root ROOT] [--status {open,closed,all}]
 
+List desk issues with id, status and title.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

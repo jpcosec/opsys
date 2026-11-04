@@ -1,4 +1,6 @@
 usage: deskops bootstrap [-h]
 
+Install or repair sldb and register deskops models in the global store.
+
 options:
   -h, --help  show this help message and exit

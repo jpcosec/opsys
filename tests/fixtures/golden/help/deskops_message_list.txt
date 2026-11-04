@@ -3,6 +3,8 @@ usage: deskops message list [-h] [--root ROOT] [--desk-root DESK_ROOT]
                             [--pythonpath PYTHONPATH]
                             [--format {text,json,yaml}] [--limit LIMIT]
 
+List received messages.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Repository root whose desk/ holds the inbox
@@ -16,4 +18,5 @@ options:
                         Project path used when auto-tracking messages through
                         the registered model
   --format {text,json,yaml}
+                        Output format.
   --limit LIMIT         Limit listed messages

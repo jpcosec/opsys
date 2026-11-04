@@ -1,5 +1,7 @@
 usage: deskops graph [-h] {build,neighbors,missing,reflect} ...
 
+Build and inspect deskops KGDB graph runtime outputs.
+
 positional arguments:
   {build,neighbors,missing,reflect}
     build               Build the KGDB graph snapshot runtime artifact.

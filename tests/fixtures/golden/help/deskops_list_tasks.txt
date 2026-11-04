@@ -1,6 +1,8 @@
 usage: deskops list tasks [-h] [--root ROOT] [--include-repos]
                           [--format {text,json}]
 
+List actionable tasks.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

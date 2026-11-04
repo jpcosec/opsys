@@ -1,5 +1,7 @@
 usage: deskops advance [-h] {task} ...
 
+Advance an operational artifact through the desk's lifecycle graph.
+
 positional arguments:
   {task}
     task      Advance one actionable task through the desk's lifecycle graph.

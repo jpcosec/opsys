@@ -1,5 +1,7 @@
 usage: deskops show ritual [-h] [--root ROOT] [--format {text,json}] doc_id
 
+Show one ritual by selector.
+
 positional arguments:
   doc_id                Ritual selector. Selectors accept an exact id,
                         filename, stem, or unique slug fragment where

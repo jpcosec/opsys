@@ -2,6 +2,9 @@ usage: deskops atoms crossroad [-h] --title TITLE --content CONTENT
                                [--root ROOT]
                                path
 
+Write the crossroad of a domain path: the mandatory parent that describes what
+hangs below it.
+
 positional arguments:
   path               Domain path such as pizzeria.carta; its parent path needs
                      a crossroad first.

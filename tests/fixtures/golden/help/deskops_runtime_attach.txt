@@ -1,6 +1,8 @@
 usage: deskops runtime attach [-h] [--root ROOT] [--herdr HERDR]
 
+Focus this desk's Herdr Space.
+
 options:
   -h, --help     show this help message and exit
-  --root ROOT    DeskOps repository root.
+  --root ROOT    Target repository root.
   --herdr HERDR  Herdr executable.

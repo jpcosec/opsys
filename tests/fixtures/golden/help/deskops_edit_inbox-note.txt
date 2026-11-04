@@ -1,5 +1,7 @@
 usage: deskops edit inbox-note [-h] [--root ROOT] selector field value
 
+Edit one inbox-note field.
+
 positional arguments:
   selector     Inbox-note selector. Selectors accept an exact id, filename,
                stem, or unique slug fragment where supported.

@@ -1,5 +1,7 @@
 usage: deskops drawer [-h] {remove} ...
 
+Manage deferred drawer entries.
+
 positional arguments:
   {remove}
     remove    Remove one drawer entry, its tracking, and its bullets on the

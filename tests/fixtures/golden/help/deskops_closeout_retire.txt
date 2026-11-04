@@ -1,12 +1,15 @@
 usage: deskops closeout retire [-h] [--root ROOT] --task TASK --reason REASON
                                --ref REF
 
+Remove a task that was already resolved before the ritual lifecycle.
+
 options:
   -h, --help       show this help message and exit
   --root ROOT      Target repository root.
   --task TASK      Task id being retired.
   --reason REASON  Why the task is already resolved.
-  --ref REF        Ancestor commit id that resolved the task; repeat for more refs.
+  --ref REF        Ancestor commit id that resolved the task; repeat for more
+                   refs.
 
 Example:
   deskops closeout retire --root . --task task-fix-thing \

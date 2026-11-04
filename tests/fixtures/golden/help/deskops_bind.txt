@@ -1,5 +1,7 @@
 usage: deskops bind [-h] {pill} ...
 
+Bind workflow context artifacts to tasks.
+
 positional arguments:
   {pill}
     pill      Bind one pill to one task.

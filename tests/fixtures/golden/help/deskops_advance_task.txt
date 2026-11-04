@@ -1,11 +1,17 @@
 usage: deskops advance task [-h] [--to TO] [--root ROOT] task_id
 
+Advance one actionable task through the desk's lifecycle graph.
+
 positional arguments:
-  task_id      Task selector. Selectors accept an exact id, filename, stem, or unique slug fragment where supported.
+  task_id      Task selector. Selectors accept an exact id, filename, stem, or
+               unique slug fragment where supported.
 
 options:
   -h, --help   show this help message and exit
-  --to TO      Optional target node or status for a manual override.
+  --to TO      Force the task to this node or status, skipping the lifecycle
+               gates (no transition condition is evaluated). Closing is still
+               refused, both `complete` and `closed`: only `deskops closeout
+               commit` completes a task.
   --root ROOT  Target repository root.
 
 Example:

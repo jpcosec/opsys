@@ -11,12 +11,16 @@ options:
   --from-yaml FROM_YAML
                         Load the repository payload from a YAML file.
   --name NAME           Short human-readable name of the repository.
-  --path PATH           Relative path to the repository root from the ecosystem root.
-  --status STATUS       Current status of the repository (e.g., active, maintenance, archived).
+  --path PATH           Relative path to the repository root from the
+                        ecosystem root.
+  --status STATUS       Current status of the repository (e.g., active,
+                        maintenance, archived).
   --description DESCRIPTION
-                        Markdown description of the repository's purpose and scope.
+                        Markdown description of the repository's purpose and
+                        scope.
   --tags TAGS [TAGS ...]
-                        Semantic tags for categorization (e.g., type:tool, layer:infra).
+                        Semantic tags for categorization (e.g., type:tool,
+                        layer:infra).
 
 Example:
-  deskops add repository --root . --title "Example"
+  deskops add repository --root . --name "example" --description "..."

@@ -1,5 +1,7 @@
 usage: deskops graph reflect [-h] [--root ROOT] [--graph GRAPH]
 
+Write review-only self-reflection findings for a graph snapshot.
+
 options:
   -h, --help     show this help message and exit
   --root ROOT    Target repository root.

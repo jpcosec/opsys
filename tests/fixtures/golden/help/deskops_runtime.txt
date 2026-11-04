@@ -1,5 +1,8 @@
 usage: deskops runtime [-h]
-                       {init,status,attach,stop,workers,supervise,template} ...
+                       {init,status,attach,stop,workers,supervise,template}
+                       ...
+
+Manage the live Herdr runtime for this DeskOps desk.
 
 positional arguments:
   {init,status,attach,stop,workers,supervise,template}

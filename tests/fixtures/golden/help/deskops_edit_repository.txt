@@ -1,5 +1,7 @@
 usage: deskops edit repository [-h] [--root ROOT] selector field value
 
+Edit one repository field.
+
 positional arguments:
   selector     Repository selector. Selectors accept an exact id, filename,
                stem, or unique slug fragment where supported.

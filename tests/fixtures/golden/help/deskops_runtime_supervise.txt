@@ -4,13 +4,16 @@ usage: deskops runtime supervise [-h] [--root ROOT] [--herdr HERDR]
                                  [--timeout-ms TIMEOUT_MS]
                                  agent
 
+Block on one agent's Herdr lifecycle and report blocked/done settles without
+advancing the desk.
+
 positional arguments:
   agent                 Herdr agent name or pane id to supervise, e.g.
                         deskops-executor.
 
 options:
   -h, --help            show this help message and exit
-  --root ROOT           DeskOps repository root.
+  --root ROOT           Target repository root.
   --herdr HERDR         Herdr executable.
   --max-iterations MAX_ITERATIONS
                         Stop after this many settle events instead of running

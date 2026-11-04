@@ -1,5 +1,7 @@
 usage: deskops atoms delete [-h] [--root ROOT] [--force] doc_id
 
+Delete one atom after checking inbound references.
+
 positional arguments:
   doc_id       Atom selector. Selectors accept an exact id, filename, stem, or
                unique slug fragment where supported.

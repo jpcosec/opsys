@@ -1,5 +1,7 @@
 usage: deskops edit task [-h] [--root ROOT] selector field value
 
+Edit one task field.
+
 positional arguments:
   selector     Task selector. Selectors accept an exact id, filename, stem, or
                unique slug fragment where supported.

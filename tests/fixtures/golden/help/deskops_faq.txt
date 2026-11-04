@@ -1,6 +1,8 @@
 usage: deskops faq [-h] [--format {text,json,yaml}] [--faq-path FAQ_PATH]
                    [question]
 
+Browse the first-use FAQ by question.
+
 positional arguments:
   question              Question index, slug, or text fragment. Omit to list
                         available questions.
@@ -8,4 +10,7 @@ positional arguments:
 options:
   -h, --help            show this help message and exit
   --format {text,json,yaml}
-  --faq-path FAQ_PATH   FAQ markdown path
+                        Output format.
+  --faq-path FAQ_PATH   FAQ markdown path (default: docs/faq.md; when it does
+                        not exist, the FAQ packaged with deskops at
+                        data/faq.md is used)

@@ -1,5 +1,7 @@
 usage: deskops desk [-h] {install,migrate,replace,update} ...
 
+Desk workspace management.
+
 positional arguments:
   {install,migrate,replace,update}
     install             Scaffold a minimal local desk/ surface in a repo.

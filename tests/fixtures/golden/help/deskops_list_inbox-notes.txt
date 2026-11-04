@@ -1,5 +1,7 @@
 usage: deskops list inbox-notes [-h] [--root ROOT] [--format {text,json}]
 
+List inbox-notes.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

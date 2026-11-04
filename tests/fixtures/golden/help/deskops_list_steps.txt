@@ -1,5 +1,7 @@
 usage: deskops list steps [-h] [--root ROOT] [--format {text,json}]
 
+List steps.
+
 options:
   -h, --help            show this help message and exit
   --root ROOT           Target repository root.

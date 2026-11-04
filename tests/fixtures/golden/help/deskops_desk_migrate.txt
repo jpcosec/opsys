@@ -1,5 +1,8 @@
 usage: deskops desk migrate [-h] [--root ROOT]
 
+Adopt a legacy or partial desk into the current non-destructive workspace
+contract.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.

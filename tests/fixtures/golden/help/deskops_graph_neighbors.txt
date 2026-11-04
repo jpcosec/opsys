@@ -1,5 +1,7 @@
 usage: deskops graph neighbors [-h] [--root ROOT] [--graph GRAPH] id
 
+Show incoming and outgoing neighbors for one graph node.
+
 positional arguments:
   id             Graph node id to inspect, formatted as type:id (e.g.
                  atom:atom-name, task:task-name, issue:issue-name).

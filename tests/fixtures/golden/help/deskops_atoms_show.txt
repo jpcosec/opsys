@@ -1,5 +1,7 @@
 usage: deskops atoms show [-h] [--root ROOT] [--format {text,json}] doc_id
 
+Deprecated alias for `deskops show atom`; show an atom.
+
 positional arguments:
   doc_id                Atom selector. Selectors accept an exact id, filename,
                         stem, or unique slug fragment where supported.

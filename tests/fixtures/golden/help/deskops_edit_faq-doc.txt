@@ -1,5 +1,7 @@
 usage: deskops edit faq-doc [-h] [--root ROOT] selector field value
 
+Edit one faq-doc field.
+
 positional arguments:
   selector     Faq-doc selector. Selectors accept an exact id, filename, stem,
                or unique slug fragment where supported.

@@ -1,5 +1,7 @@
 usage: deskops show board [-h] [--root ROOT] [--format {text,json}] doc_id
 
+Show one board by selector.
+
 positional arguments:
   doc_id                Board selector. Selectors accept an exact id,
                         filename, stem, or unique slug fragment where

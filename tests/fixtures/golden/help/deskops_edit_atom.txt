@@ -1,5 +1,7 @@
 usage: deskops edit atom [-h] [--root ROOT] selector field value
 
+Edit one atom field.
+
 positional arguments:
   selector     Atom selector. Selectors accept an exact id, filename, stem, or
                unique slug fragment where supported.

@@ -1,5 +1,7 @@
 usage: deskops repo [-h] {register,whoami,remove} ...
 
+Repository registration and discovery.
+
 positional arguments:
   {register,whoami,remove}
     register            Canonically register a repository in the ecosystem

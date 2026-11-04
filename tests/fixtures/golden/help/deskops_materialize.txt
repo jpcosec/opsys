@@ -1,5 +1,7 @@
 usage: deskops materialize [-h] [--root ROOT] [--out OUT]
 
+Render tracked desk role prompts into installed pi-agent files.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.

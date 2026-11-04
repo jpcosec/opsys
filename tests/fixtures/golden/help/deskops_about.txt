@@ -1,4 +1,6 @@
 usage: deskops about [-h]
 
+Print a short overview of deskops and its first-use commands.
+
 options:
   -h, --help  show this help message and exit

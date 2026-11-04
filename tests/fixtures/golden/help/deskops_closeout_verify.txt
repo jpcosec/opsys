@@ -1,6 +1,23 @@
 usage: deskops closeout verify [-h] [--root ROOT] --task TASK
 
+Check the closeout evidence the task declared, without committing; print a structured report.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.
   --task TASK  Task id being verified.
+
+Example:
+  deskops closeout verify --root . --task task-fix-thing
+
+The gate checks exactly the kinds listed in the task's closeout_evidence field
+(declared at `deskops add task` through --task-type or --evidence): tests,
+commit, atom|materialization, document, external. Each kind is looked up in
+the task's references (and files, for documents). A task without the field
+predates it and is gated as code, with an alert.
+
+Output: stdout carries a JSON report (declared, found, per-gate findings,
+alerts, ok, summary); stderr carries the one-line summary "esta tarea declaró
+X; encontré Y" (declared X; found Y) and any ALERTA lines. Exit 0 when
+everything declared was found, else 1.
+`deskops closeout commit` runs this same gate before committing.

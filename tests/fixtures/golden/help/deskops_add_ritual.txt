@@ -18,19 +18,22 @@ options:
   --title TITLE         Short ritual title.
   --summary SUMMARY     Short semantic summary for the primitive.
   --tags TAGS [TAGS ...]
-                        Semantic tags placed at the end, using namespaced forms such as 'layer:workflow' or 'system:sldb'.
+                        Semantic tags placed at the end, using namespaced
+                        forms such as 'layer:workflow' or 'system:sldb'.
   --purpose PURPOSE     Why the ritual exists.
   --trigger TRIGGER     When the ritual should be started.
   --preconditions PRECONDITIONS [PRECONDITIONS ...]
                         Conditions that must hold before running the ritual.
   --steps STEPS [STEPS ...]
-                        Ordered prose steps to execute as part of the ritual; not document references.
+                        Ordered prose steps to execute as part of the ritual;
+                        not document references.
   --validation VALIDATION [VALIDATION ...]
-                        Checks that confirm the ritual was performed correctly.
+                        Checks that confirm the ritual was performed
+                        correctly.
   --failure-modes FAILURE_MODES [FAILURE_MODES ...]
                         Common mistakes, drifts, or anti-patterns to avoid.
   --completion COMPLETION
                         What indicates that the ritual has been completed.
 
 Example:
-  deskops add ritual --root . --title "Example"
+  deskops add ritual --root . --title "Example" --purpose "..." --trigger "..." --completion "..."

@@ -1,6 +1,11 @@
 usage: deskops doctor [-h] [--root ROOT] [--repair]
 
+Check the desk and report two kinds of findings: errors, which break the desk
+(exit 1), and alerts, which only mean the store moved under an expected change
+(always printed, exit 0). Alerts are registered with `deskops desk update --apply`.
+
 options:
   -h, --help   show this help message and exit
   --root ROOT  Target repository root.
-  --repair     Attempt non-destructive repairs.
+  --repair     Attempt non-destructive repairs of errors; alerts are left
+               alone.

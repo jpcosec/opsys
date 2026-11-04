@@ -1,11 +1,12 @@
-usage: deskops atoms create [-h]
-                            --five-wh-one-plus {what,why,how,how_not,when,where,for_whom}
+usage: deskops atoms create [-h] --five-wh-one-plus
+                            {what,why,how,how_not,when,where,for_whom}
                             [--title TITLE] [--tag TAG [TAG ...]]
-                            (--from-pill PILL_ID |
-                            --from-graph SOURCE_ID->TARGET_ID |
-                            --from-diagram SPEC_PATH) [--graph GRAPH]
-                            [--root ROOT]
+                            (--from-pill PILL_ID | --from-graph SOURCE_ID->TARGET_ID | --from-diagram SPEC_PATH)
+                            [--graph GRAPH] [--root ROOT]
                             doc_id
+
+Create one atom from a pill, graph finding, or diagram source while preserving
+exact provenance.
 
 positional arguments:
   doc_id                New atom id to create, conventionally atom-<slug>.
