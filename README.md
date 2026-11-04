@@ -31,15 +31,20 @@ Understanding `deskops` requires understanding `sldb` first: `sldb` owns structu
 
 Durable guides currently include:
 
+- `docs/quickstart.md`
 - `docs/operator-manual.md`
+- `docs/faq.md`
+- `docs/workflow-policy-reference.md`
 - `docs/atoms.md`
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
-- `docs/quickstart.md`
 
 Pi/project agent guidance includes:
 
 - `.pi/skills/use-deskops/SKILL.md`
+- `.pi/skills/deskops-task-lifecycle/SKILL.md`
+- `.pi/skills/deskops-inbox-coordination/SKILL.md`
+- `.pi/skills/deskops-health-and-drift/SKILL.md`
 - `../sldb/.pi/skills/use-sldb/SKILL.md`
 - `docs/agent-system-prompts/README.md`
 
@@ -163,7 +168,10 @@ Recommended first-use flow:
 ```bash
 deskops bootstrap
 deskops init .
+deskops add task --title "First task" --task-type docs --goal "..." --scope "..." --validation "..."
 ```
+
+`deskops add task` requires `--task-type` or `--evidence`: the task declares at creation the evidence `deskops closeout` will verify (`docs/quickstart.md` walks through it).
 
 `deskops bootstrap` will:
 
@@ -200,16 +208,22 @@ deskops --help
 python -m deskops --help
 ```
 
-Current commands:
+Current commands (`deskops --help` is authoritative; `docs/operator-manual.md` documents every verb):
 
-- `deskops about`
-- `deskops bootstrap`
-- `deskops init`
-- `deskops faq`
-- `deskops message` (cross-desk send/list/read/ack; `deskops inbox` is a deprecated alias)
-- `deskops bind pill`
-- `deskops repo register`
-- `deskops desk install`
+- `deskops about`, `deskops faq` - orientation
+- `deskops doctor` (`deskops status` is a deprecated alias)
+- `deskops bootstrap`, `deskops init`
+- `deskops message send/list/read/ack` (`deskops inbox` is a deprecated alias)
+- `deskops promote inbox-to-drawer-task`, `deskops drawer remove`, `deskops retire`, `deskops issue close/list`
+- `deskops add/edit/list/show <artifact>` - tasks, pills, rituals, boards, atoms, materializations, repositories, inbox-notes, faq-docs, steps
+- `deskops bind pill`, `deskops next`, `deskops advance task`
+- `deskops closeout commit/supersede/retire/verify`
+- `deskops repo register/whoami/remove`
+- `deskops desk install/migrate/replace/update`
+- `deskops atoms ...` (namespaces, crossroads, protoatoms, create/split/merge/delete/validate/reorganize/tree)
+- `deskops graph build/neighbors/missing/reflect`
+- `deskops materialize`, `deskops drift check`
+- `deskops runtime init/status/attach/stop/workers/supervise/template`
 
 ## Testing
 

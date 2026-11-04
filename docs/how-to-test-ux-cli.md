@@ -49,7 +49,7 @@ rm -rf "$DESKOPS_TEST_ROOT"
 mkdir -p "$DESKOPS_TEST_ROOT"
 ```
 
-When `DESKOPS_TEST_ROOT` is set, `deskops` commands that default to `--root .` will use that sandbox root instead. This keeps ad hoc `add`, `edit`, `show`, `list`, `advance`, `promote`, `inbox`, `repo`, and `graph` testing from polluting the repository's tracked `desk/` surfaces.
+When `DESKOPS_TEST_ROOT` is set, `deskops` commands that default to `--root .` will use that sandbox root instead. This keeps ad hoc `add`, `edit`, `show`, `list`, `advance`, `promote`, `message` (and its deprecated alias `inbox`), `repo`, and `graph` testing from polluting the repository's tracked `desk/` surfaces.
 
 If you want to test the real repo desk intentionally, pass an explicit `--root .` only after unsetting `DESKOPS_TEST_ROOT`.
 

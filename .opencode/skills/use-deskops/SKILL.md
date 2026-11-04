@@ -66,11 +66,11 @@ The project logic is:
 Key rules:
 
 - New unrouted repo-local work starts in `desk/drawer/tasks/`, not `desk/inbox/`.
-- Promote drawer work before implementation.
+- Author drawer work as an active task (`deskops add task --from-drawer <selector> ...`) before implementation; there is no drawer-to-task promotion.
 - Keep one coherent deliverable per task.
 - Do not skip execution, testing, or closeout gates.
 - `deskops advance task` stops at the closeout node; close only with `deskops closeout commit` (`--run-dir` or `--no-run --reason`).
-- Every closed task ends with its own atomic commit.
+- Every task declares its closeout evidence at creation (`--task-type` or `--evidence`); `deskops closeout verify` checks exactly that, and every closed task ends with its own atomic commit (`closeout commit`, or `closeout supersede`/`closeout retire`, which skip the evidence gates).
 - When a whole ready dependency layer closes, run the phase ritual before starting the next layer.
 - Docs are human-facing materializations of atoms, not the only durable source of truth.
 
@@ -104,14 +104,14 @@ deskops --help
 deskops faq
 deskops bootstrap
 deskops init .
-deskops add task --root . --title "..." --goal "..." --scope "..."
+deskops add task --root . --title "..." --task-type code --goal "..." --scope "..."
 deskops add atom --root . --title "..." --answer "..." --five-wh-one-plus what
 deskops list tasks --root .
 deskops list atoms --root .
 deskops show task <task-id> --root .
 deskops show atom <atom-id> --root .
-deskops add task --root . --from-drawer <drawer-selector> --title <title> --goal <goal> --scope <scope> --validation <check>
-deskops bind pill <pill-selector> --task <task-id> --root .
+deskops add task --root . --from-drawer <drawer-selector> --task-type docs --title <title> --goal <goal> --scope <scope> --validation <check>
+deskops bind pill <task-id> <pill-selector> --root .
 deskops advance task <task-id> --root .
 deskops closeout commit --task <task-id> --run-dir runs/subagents/<run-dir> --root .
 deskops closeout commit --task <task-id> --no-run --reason "<why>" --root .

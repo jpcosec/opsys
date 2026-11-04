@@ -122,6 +122,15 @@ deskops repo register "$identity" . --store .sldb --pythonpath .
 deskops repo whoami --root .
 ```
 
+`deskops repo remove <id>` takes a registration out of the registry so the
+repository can be registered again, for example after a rename:
+
+```bash runnable
+identity="$(deskops repo whoami --root .)"
+deskops repo remove "$identity" --root . --store .sldb
+deskops repo register "$identity" . --store .sldb --pythonpath .
+```
+
 `deskops add repository` is different: it creates a local repository artifact
 under `desk/registry/` for discovery or routing. It is not the canonical
 ecosystem registration path. The runnable walkthrough creates one later for a
@@ -220,7 +229,7 @@ Required and commonly used flags per subject:
 
 | Subject | Required flags | Common extras |
 |---|---|---|
-| `task` | `--title` | `--why`, `--goal`, `--scope`, `--implementation-path`, `--done-when`, `--validation`, `--from-drawer`, `--depends-on`, `--task-type`, `--inherits-from`, `--atom`, `--inherit-acceptance-context` |
+| `task` | `--title`, and `--task-type` or `--evidence` | `--why`, `--goal`, `--scope`, `--implementation-path`, `--done-when`, `--validation`, `--from-drawer`, `--depends-on`, `--evidence`, `--inherits-from`, `--atom`, `--inherit-acceptance-context` |
 | `pill` | `--what`, `--why`, `--when`, `--where`, `--how`, `--how-not` | `--summary`, `--tags` |
 | `ritual` | `--purpose`, `--trigger`, `--completion` | `--preconditions`, `--steps`, `--validation`, `--failure-modes`, `--tags` |
 | `board` | `--scope`, `--purpose` | `--tasks`, `--pills`, `--rituals`, `--notes`, `--tags` |
@@ -237,6 +246,11 @@ multi-value flag, because argparse consumes following tokens until the next
 flag.
 
 `--from-yaml <file>` loads the payload from YAML for every `add` subject.
+
+`--evidence <kind>...` declares the closeout evidence a task must show
+(`tests`, `commit`, `atom`, `materialization`, `document`, `external`). When it
+is omitted the list is filled from `--task-type`; with neither flag `add task`
+fails and says how to declare it. See Closeout.
 
 ### List artifacts
 
@@ -323,8 +337,10 @@ deskops message ack manual-message --root .
 deskops inbox --list --root .
 ```
 
-`--to <repo>` targets another registered repository. `--sender <repo>` overrides
-the resolved sender identity. `--desk-root` targets an explicit desk directory.
+`--to <repo>` targets another registered repository. `--from <project>` overrides
+the resolved sender identity (`--sender` is the deprecated `inbox` spelling).
+`--desk-root` targets an explicit desk directory. `--format json|yaml` prints
+the result for machines.
 
 ### Promote an inbox note to a drawer candidate
 
@@ -351,13 +367,30 @@ deskops promote inbox-to-drawer-task removable-candidate --root .
 deskops drawer remove task-removable-candidate --root .
 ```
 
+### Retire any other desk document
+
+`deskops retire` removes one obsolete file under `desk/` that has no dedicated
+verb (pills, inbox notes, steps, roles, runtimes, FAQ docs, materializations,
+leftovers), with a reason and a `--ref` that resolves to an ancestor commit or
+an existing path. It refuses while other desk or docs files still reference the
+document unless `--force` is passed. Tasks, drawer entries, atoms, and registry
+entries keep their own verbs: `closeout`, `drawer remove`, `atoms delete`,
+`repo remove`.
+
+```bash runnable
+deskops retire desk/steps/step-manual-step.md --root . \
+  --reason "The manual step was only an example" \
+  --ref "$(git rev-parse HEAD)"
+```
+
 ## Tasks
 
 ### Author a task from a drawer candidate
 
 There is no direct drawer-to-active promotion. A person or agent authors the
 active task explicitly and records the drawer file with `--from-drawer`. The
-drawer file is kept for manual cleanup.
+drawer file is kept for manual cleanup. Like every task it declares its closeout
+evidence: `--task-type docs` fills `commit` and `document`.
 
 ```bash runnable
 deskops add task --root . \
@@ -385,7 +418,7 @@ deskops bind pill task-close-a-manual-task \
 ### Inspect, edit, and advance a task
 
 `next <task>` explains the next valid workflow action without mutating the
-task. `show task` prints the lifecycle gates and whether each holds.
+task; `next <task> --why` adds why this task and these actions were selected. `show task` prints the lifecycle gates and whether each holds.
 
 ```bash runnable
 deskops list tasks --root .
@@ -402,17 +435,30 @@ task. When no outgoing transition condition holds, it exits non-zero and names
 the blocked gate.
 
 `--to <node>` is a manual override for operators who need to set an explicit
-target node or status.
+target node or status. It skips the lifecycle gates but never closes:
+`--to complete` and `--to closed` are refused and point at `deskops closeout commit`.
 
 ## Closeout
 
-`deskops closeout verify` checks three evidence gates for a board-routed task:
+A task declares at creation the evidence that closes it, in `closeout_evidence`:
+`deskops add task --evidence <kind>...`, or filled from `--task-type` (`code`,
+`implementation`, `test`: tests, commit, atom|materialization; `docs`, `spec`,
+`design`: commit, document; `external`: external). `deskops closeout verify`
+checks exactly that set for a board-routed task, nothing more and nothing less,
+and prints `esta tarea declaró X; encontré Y` (declared X; found Y):
 
-| Gate | What counts |
+| Evidence | What counts |
 |---|---|
-| tests | an existing `.py` file under `tests/`, optionally with `::node`, or a `pytest <path>` reference |
-| atom or materialization link | an atom reference, graph/materialization coverage for every path in `files`, or a routed follow-up reference |
-| commit | a lowercase 7-40 character commit id resolving to `HEAD` or an ancestor |
+| `tests` | an existing `.py` file under `tests/`, optionally with `::node`, or a `pytest <path>` reference |
+| `atom` / `materialization` | one gate: an atom reference, or graph/materialization coverage or a routed follow-up reference for every path in `files`; exempt in a desk without local atom documents |
+| `commit` | a lowercase 7-40 character commit id resolving to `HEAD` or an ancestor |
+| `document` | an existing `.md`, `.rst`, `.txt`, `.adoc`, or `.yaml` file in `references` or `files`, outside `tests/` and `desk/tasks/` |
+| `external` | an `http(s)` URL in `references`, for work tracked outside the repository |
+
+Changed `.py` files in a task that did not declare `tests` print a visible alert
+without blocking. A task created before the field existed is gated as code and
+alerted to declare its evidence with
+`deskops edit task <id> closeout_evidence '["commit", "document"]'`.
 
 Verify before adding evidence. It exits `1` and prints the missing gates:
 
@@ -420,9 +466,13 @@ Verify before adding evidence. It exits `1` and prints the missing gates:
 deskops closeout verify --root . --task task-close-a-manual-task
 ```
 
-Add a test file and point the task at real evidence. The commit reference must
-already exist, so use an earlier commit such as the repository seed or the
-promotion commit. The closing commit does not exist yet.
+The manual task was authored with `--task-type docs`, so it declared `commit`
+and `document`: the gate asks for no test file. The example still writes
+`tests/test_manual_smoke.py` because the task's `--validation` names it, and
+the `pytest ...` reference is extra context the gate does not read. The atom
+file is the document evidence. The commit reference must already exist, so use
+an earlier commit such as the repository seed or the authoring commit. The
+closing commit does not exist yet.
 
 ```bash runnable
 mkdir -p tests
@@ -450,7 +500,8 @@ routes:
 
 Either route removes the task bundle from `desk/tasks/`, removes it from
 `desk/tasks/Board.md`, records the commit in `runs/subagents/index.jsonl`, and
-commits only the paths it staged. Unrelated staged work stays staged.
+commits only the paths it staged. Unrelated staged work stays staged. `--paths`
+accepts files and directories.
 
 ```bash runnable
 deskops closeout commit --root . \
@@ -468,6 +519,34 @@ deskops closeout commit --root . \
   --run-id 6046eaef \
   --session ~/.pi/agent/sessions/<dir>/6046eaef/run-0/session.jsonl \
   --paths desk/atoms/atom-operator-manual-evidence.md tests/test_manual_smoke.py
+```
+
+### Supersede or retire a task
+
+Two closes skip the evidence gates because no work is being proven.
+`closeout supersede` closes a task whose subject no longer exists. `closeout
+retire` removes a task whose status is already `resolved`, `closed`, `done`, or
+`complete`, as pre-lifecycle tasks are. Both need `--reason` and at least one
+`--ref` (an ancestor commit; supersede also accepts an existing path), make
+exactly one closing commit with `Closeout-Mode: superseded` or
+`Closeout-Mode: legacy-resolved` trailers, and take the task off the Board.
+
+```bash runnable
+deskops add task --root . \
+  --title "Superseded manual task" \
+  --task-type docs \
+  --goal "Goal." --scope "Scope." --validation "pytest"
+deskops closeout supersede --root . \
+  --task task-superseded-manual-task \
+  --reason "The feature this task targeted was removed before any work started" \
+  --ref "$(git rev-parse HEAD)"
+```
+
+```bash
+deskops closeout retire --root . \
+  --task task-already-resolved \
+  --reason "Resolved before the ritual lifecycle existed" \
+  --ref 3900ad4
 ```
 
 ## Issues
@@ -495,6 +574,19 @@ EOF
 deskops issue list --root .
 deskops issue close issue-manual-example --reason "Manual example" --ref . --root .
 deskops issue list --status closed --root .
+```
+
+### Replace text in an unmodeled desk file
+
+`deskops desk replace` edits a file under `desk/` that no `deskops edit`
+subject reaches (issue bodies, drawer notes, role prompts, the tag namespace
+file). `--old` must occur exactly `--count` times (default 1); a modeled
+document is refused and pointed at its `edit` verb.
+
+```bash runnable
+deskops desk replace desk/issues/issue-manual-example.md --root . \
+  --old "The manual needs an issue example." \
+  --new "The manual has an issue example."
 ```
 
 ## Atoms
@@ -591,12 +683,12 @@ deskops add atom --root . \
 deskops atoms delete atom-delete-manual-atom --root .
 
 deskops atoms validate --all --root .
-deskops atoms list --root .
-deskops atoms show atom-typed-manual --root .
+deskops list atoms --root .
+deskops show atom atom-typed-manual --root .
 ```
 
-`atoms list` and `atoms show` are deprecated aliases for `list atoms` and
-`show atom`. `atoms delete` refuses to delete an atom with inbound references
+`list atoms` and `show atom` are the current spellings; `atoms list` and
+`atoms show` are deprecated aliases. `atoms delete` refuses to delete an atom with inbound references
 unless `--force` is passed. `atoms split --section <new-id>:<heading>` assigns
 specific headings to specific new atoms.
 
@@ -734,7 +826,21 @@ deskops runtime workers --format json
 # Block on one agent's lifecycle and report blocked/done settles.
 deskops runtime supervise deskops-executor --root .
 deskops runtime supervise deskops-executor --max-iterations 1 --timeout-ms 30000
+
+# Materialize a RoleDoc + RuntimeProfileDoc as a Scion agent template
+# (.scion/templates/<role-name>/: scion-agent.yaml, system-prompt.md, agents.md).
+deskops runtime template deskops-executor --root .
+deskops runtime template deskops-executor --root . --harness claude \
+  --mode executor --task task-fix-thing --agent deskops-executor-task-fix-thing
 ```
+
+`runtime template` needs no live Herdr Space: it writes the template files from
+the role and runtime-profile docs. `--mode executor` writes the agents.md for one
+bounded task; `--mode coordinator` writes it for an agent that owns a desk (the
+default follows the role name). With `--task` and `--agent` it also records a
+RunDoc under `runs/subagents/`; `--task-root` names the repository whose desk
+owns the task (default `--root`) and `--run-dir` reuses an existing evidence
+directory instead of a new `runs/subagents/<ts>-<task>`.
 
 `runtime supervise` never answers a blocked agent's prompt and never advances a
 task on a done settle. A human or supervisor decides what happens next.
@@ -754,19 +860,22 @@ This table maps every CLI verb to the section that documents it.
 | `message send/list/read/ack` | Send, list, read, and acknowledge messages |
 | `promote inbox-to-drawer-task` | Promote an inbox note to a drawer candidate |
 | `drawer remove` | Remove a drawer entry |
+| `retire` | Retire any other desk document |
 | `issue close/list` | Issues |
 | `add task/pill/ritual/board/atom/materialization/repository/inbox-note/faq-doc/step` | Add artifacts |
 | `edit ...` | Edit artifacts |
 | `bind pill` | Bind reusable context pills |
-| `next`, `next --diagram` | Inspect the lifecycle graph; Inspect, edit, and advance a task |
+| `next`, `next --why`, `next --diagram` | Inspect the lifecycle graph; Inspect, edit, and advance a task |
 | `list tasks/pills/rituals/boards/atoms/materializations/repositories/inbox-notes/faq-docs/steps` | List artifacts |
 | `show task/pill/ritual/board/atom/materialization/repository/inbox-note/faq-doc/step` | Show artifacts |
 | `advance task` | Inspect, edit, and advance a task |
-| `repo register/whoami` | Repository identity and the ecosystem registry |
+| `repo register/whoami/remove` | Repository identity and the ecosystem registry |
 | `desk install/migrate/update` | Desk scaffold, migration, and repair |
+| `desk replace` | Replace text in an unmodeled desk file |
 | `atoms add-namespace/list/reorganize/show/validate/create/delete/split/merge/crossroad/proto/type/tree` | Atoms |
 | `graph build/neighbors/missing/reflect` | Graph |
 | `materialize` | Roles, materialization, and drift |
 | `drift check` | Roles, materialization, and drift |
-| `closeout commit/verify` | Closeout |
-| `runtime init/status/attach/stop/workers/supervise` | Runtime and Herdr |
+| `closeout verify/commit` | Closeout |
+| `closeout supersede/retire` | Supersede or retire a task |
+| `runtime init/status/attach/stop/workers/supervise/template` | Runtime and Herdr |

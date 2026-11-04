@@ -12,6 +12,8 @@ atoms:
   role: documents
 - id: atom-code-changes-close-with-tests-and-commit
   role: documents
+- id: atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly
+  role: documents
 ---
 # deskops Quickstart
 
@@ -73,17 +75,20 @@ deskops desk install .
 
 ## Create A Task
 
-Create a first task with a concrete goal and validation command:
+Create a first task with a concrete goal, a validation command, and the evidence it will close with:
 
 ```bash
 deskops add task \
   --title "Try deskops quickstart" \
+  --task-type docs \
   --goal "Complete one task lifecycle" \
   --scope "Documentation walkthrough only" \
   --implementation-path "docs/quickstart.md" \
   --done-when "The quickstart task is validated and closed" \
   --validation "pytest"
 ```
+
+Every task declares at creation how it closes. `--task-type docs` fills the task's `closeout_evidence` with `commit` and `document`: this walkthrough changes no code, so a resolvable commit and an existing document are what closeout will check. A code task uses `--task-type code` (tests, commit, and an atom or materialization link), or names the evidence directly with `--evidence <kind>...` (`tests`, `commit`, `atom`, `materialization`, `document`, `external`). Without `--task-type` or `--evidence` the command fails and says how to declare it.
 
 This creates:
 
@@ -113,7 +118,7 @@ deskops show task task-try-deskops-quickstart
 
 The first advance moves the task into active execution. Later advances move it toward testing and then to the `ritual-closeout` node when the conditions of the lifecycle transitions hold (`deskops show task` lists them).
 
-`advance` stops at the closeout node. It never closes the task: once the task reaches closeout, the command reports that the task closes with `deskops closeout commit`.
+`advance` stops at the closeout node and exits 1 there. It never closes the task: while the declared closeout evidence is missing it names the blocked gate; once the evidence verifies, it reports that the task closes with `deskops closeout commit`.
 
 ## Test
 
@@ -122,6 +127,8 @@ Run the validation command named by the task:
 ```bash
 pytest
 ```
+
+The validation command is the task's own check; it is not what the closeout gate reads. The gate asks for a test file reference only when the task declared `tests` (every `--task-type code` task does). This docs task declared none, so the `pytest` run above is validation, not closeout evidence.
 
 For CLI changes, also run the affected command directly. For graph or store work, prefer semantic checks such as:
 
@@ -133,14 +140,14 @@ See `docs/how-to-test-ux-cli.md` and `desk/rituals/testing.md` for deeper testin
 
 ## Close Out
 
-`deskops advance task ...` moves the task to the `ritual-closeout` node and stops there. `deskops closeout commit` is the only way to close a task.
+`deskops advance task ...` moves the task to the `ritual-closeout` node and stops there. A task closes only through `deskops closeout`: `closeout commit` for work that was done, `closeout supersede` when the task's subject no longer exists, and `closeout retire` for a task that was already resolved before the ritual lifecycle (both take `--reason` and `--ref`, skip the evidence gates, and still make one closing commit).
 
 Before calling a task done:
 
 - Confirm validation passed.
 - Confirm bound pills and guardrails were satisfied.
 - Set the task's `files` field to every changed path.
-- Set the task's `references` field to test evidence, a link for every changed file, and a commit id that already exists.
+- Set the task's `references` field to the evidence the task declared: here a commit id that already exists and the document that changed (`docs/quickstart.md`).
 - Remove or update stale task/context docs.
 
 Close with the run-linked route, using evidence under `runs/subagents/`:
@@ -157,13 +164,17 @@ deskops closeout commit --task task-try-deskops-quickstart \
   --no-run --reason "<why the task closes without a run>"
 ```
 
-For a board-routed task, `closeout commit` runs the full `deskops closeout verify` gate before committing. The gate requires:
+For a board-routed task, `closeout commit` runs the full `deskops closeout verify` gate before committing. The gate checks exactly what the task declared in `closeout_evidence`, nothing more and nothing less, and prints `esta tarea declaró X; encontré Y` (declared X; found Y). The vocabulary:
 
-- a test evidence reference: an existing `.py` file under `tests/`, optionally with a `::node`, or the `pytest <path>` form;
-- a link for every path in the task's `files`: an atom reference, a materialization/graph link to an atom, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`;
-- a commit reference: a lowercase hex commit id that resolves to `HEAD` or an ancestor.
+- `tests`: an existing `.py` file under `tests/`, optionally with a `::node`, or the `pytest <path>` form;
+- `commit`: a lowercase hex commit id that resolves to `HEAD` or an ancestor;
+- `atom` / `materialization`: one gate with two ways to pass it: an atom reference, or a link for every path in the task's `files` (a materialization/graph link to an atom, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`). It is exempt in a desk without local atom documents;
+- `document`: an existing document file (`.md`, `.rst`, `.txt`, `.adoc`, `.yaml`) in `references` or `files`, outside `tests/` and `desk/tasks/`;
+- `external`: an `http(s)` URL in `references`, for work tracked outside the repository.
 
-The commit reference must point at an earlier commit that already exists, for example the task's promotion commit. The closing commit is made by `closeout commit` and cannot reference itself.
+`--task-type` fills the declaration: `code`, `implementation`, and `test` declare tests, commit, and atom|materialization; `docs`, `spec`, and `design` declare commit and document; `external` declares external. Changed `.py` files in a task that did not declare `tests` do not block closeout, but the gate prints a visible alert. A task created before `closeout_evidence` existed is gated as code, with an alert asking its owner to declare the evidence (`deskops edit task <id> closeout_evidence '["commit", "document"]'`).
+
+The commit reference must point at an earlier commit that already exists, for example the task's authoring commit. The closing commit is made by `closeout commit` and cannot reference itself.
 
 `closeout commit` then removes the task from `desk/tasks/Board.md`, untracks it from the store, deletes the resolved task document, and makes the one atomic closing commit with the route's trailers.
 

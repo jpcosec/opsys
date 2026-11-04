@@ -26,6 +26,8 @@ atoms:
   role: documents
 - id: atom-task-board-phases
   role: documents
+- id: atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly
+  role: documents
 ---
 # Workflow Policy Reference
 
@@ -33,7 +35,7 @@ Source atoms are declared in the YAML frontmatter.
 
 This reference summarizes the current workflow policy used by `deskops`.
 
-> **No task is complete without testing and its own commit. No phase is complete without integration validation and pill reconciliation.**
+> **No task is complete without the closeout evidence it declared at creation and its own closing commit. No phase is complete without integration validation and pill reconciliation.**
 
 ## Quick Links
 
@@ -54,7 +56,7 @@ A task is the atomic workflow unit.
 - One coherent deliverable.
 - May depend on other tasks.
 - Executes in a fresh subagent context.
-- Closes only after targeted validation and its own atomic commit.
+- Declares its closeout evidence at creation (`deskops add task --task-type` or `--evidence`) and closes only after exactly that evidence verifies, with its own atomic closing commit.
 
 ### Phases
 
@@ -126,7 +128,7 @@ Before starting a ready dependency layer:
 1. IDENTIFY -> Select reviewed ready non-overlapping leaves.
 2. BUNDLE   -> Confirm each task has its fresh context bundle.
 3. EXECUTE  -> Run the execution ritual per task.
-4. CLOSE    -> Require each task to close with tests and a task commit.
+4. CLOSE    -> Require each task to close with its declared evidence and a task commit.
 5. VALIDATE -> Run phase-level integration or end-to-end checks.
 6. REGRESS  -> Fix interaction regressions.
 7. RECONCILE-> Audit pills; delete, merge, or graduate them.
@@ -139,7 +141,7 @@ Before starting a ready dependency layer:
 For each task in the phase:
 
 ```text
-1. INIT   -> Confirm task scope, files, pills, and validation.
+1. INIT   -> Confirm task scope, files, pills, validation, and declared closeout evidence.
 2. REVIEW -> Accept cheap TaskDoc-only preflight, then separate cheap cold-bundle coverage.
 3. BIND   -> Bind every relevant pill.
 4. IMPLEMENT -> Make only task-scoped changes.
@@ -159,10 +161,12 @@ For each task in the phase:
 ### 4. Task Closeout Ritual
 
 ```text
-1. VERIFY -> Confirm passing evidence for the contract and pills.
+1. VERIFY -> Run `deskops closeout verify`: it checks exactly the declared evidence
+             (declared X; found Y) and the pill guardrails.
 2. CLEAN  -> Remove stale task-local context when appropriate.
 3. DELETE -> Remove the resolved task from active routing.
-4. COMMIT -> Make the dedicated task-closing commit.
+4. COMMIT -> Close with `deskops closeout commit`; `closeout supersede` when the
+             subject no longer exists, `closeout retire` for a pre-lifecycle resolution.
 5. WAIT   -> If this was the last task in the phase, do not start the next phase until phase closeout passes.
 ```
 
@@ -172,7 +176,7 @@ For each task in the phase:
 
 ### Task commit
 
-Every closed task gets its own atomic commit.
+Every closed task gets its own atomic commit, made by `deskops closeout commit`, `closeout supersede`, or `closeout retire`. The evidence it must show is the set declared when the task was created, not a fixed list.
 
 ### Phase commit
 
@@ -192,7 +196,7 @@ Do not hide unfinished task work inside a phase commit.
 - Starting implementation before identifying the ready phase.
 - Treating semantic milestones as phases when tasks still depend on each other.
 - Running multiple unrelated tasks through one stale context.
-- Closing tasks without targeted tests and a dedicated task commit.
+- Closing tasks without the evidence they declared or without a dedicated task commit.
 - Starting the next phase after isolated green task tests without integration validation.
 - Carrying stale or overlapping pills forward because each task passed independently.
 - Leaving durable rules only in pills instead of promoting them into atoms.

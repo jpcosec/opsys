@@ -1,13 +1,8 @@
 ---
-sldb:
-  by: agent
-  at: '2026-10-21T06:39:50Z'
-  authority: generated
-  via: create_document
 id: materialization-closeout-link-policy
 title: Closeout link policy
 source_atoms:
-- atom-closeout-verify-requires-tests-links-and-commit
+- atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly
 target_kind: source_file
 target_identity: deskops/operations.py
 validation:

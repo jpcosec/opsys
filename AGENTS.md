@@ -13,7 +13,7 @@ Read in this order before changing files:
 5. `desk/rituals/phase.md`, `desk/rituals/execution.md`, `desk/rituals/testing.md`, and `desk/rituals/closeout.md` for board/phase and task gates.
 6. Relevant atoms under `desk/atoms/`, preferably found through `sldb find` or graph commands rather than raw scanning.
 
-If the active board does not route a task, do not treat fixture-looking files in `desk/tasks/` as real work by default. Use `desk/drawer/tasks/Board.md` for deferred backlog, and promote drawer work before implementation.
+If the active board does not route a task, do not treat fixture-looking files in `desk/tasks/` as real work by default. Use `desk/drawer/tasks/Board.md` for deferred backlog; a drawer item becomes active work only when someone authors the task with `deskops add task --from-drawer <selector> ...`, declaring its closeout evidence (`--task-type` or `--evidence`).
 
 ## Skill Route
 
@@ -43,7 +43,7 @@ Do not add desk-local field documents to duplicate SLDB field behavior. If an ex
 
 - Start with ambiguity review. If a task would require improvisation, record or resolve the ambiguity before implementation.
 - New unrouted repo-local project work starts in `desk/drawer/tasks/`, not `desk/inbox/`. Reserve inbox for incoming notes, unclear external input, or cross-repo intake.
-- Commit the drawer task creation before promotion. Commit drawer-to-active promotion before implementation.
+- Commit the drawer task creation before authoring the active task. Commit the authored task (`deskops add task --from-drawer ...`) before implementation.
 - Keep one coherent deliverable per task.
 - Treat active work as a dependency graph: tasks are atomic units, phases are the current horizontal layer of non-overlapping ready tasks, and the next phase does not begin until the current phase passes its closeout ritual.
 - For active desk tasks, run the execution-ritual fresh-context subagent review before implementation. Each task should execute in its own fresh subagent context bundle: the task doc, routed instructions, bound pills, linked atoms, linked files, and validation targets. Use additional subagents for broad exploration when the task is non-trivial.
@@ -53,7 +53,7 @@ Do not add desk-local field documents to duplicate SLDB field behavior. If an ex
 - Do not skip from implementation to closeout. Pass execution, testing, and closeout gates explicitly.
 - Keep changes small and scoped. Do not clean unrelated dirty worktree changes.
 - For mutating CLI exploration or UX testing, write to a disposable sandbox desk such as `.tmp/deskops-cli-test`, not the repo's real `desk/`, unless the task is intentionally changing the tracked desk.
-- Every closed task ends with its own atomic commit.
+- Every closed task ends with its own atomic commit, made by `deskops closeout commit` after `closeout verify` checks exactly the evidence the task declared at creation (printed as declared X; found Y). `closeout supersede` and `closeout retire` are the closes for a vanished subject or a pre-lifecycle resolution.
 - When every task in a phase is closed, run the phase ritual: execute shared integration validation, reconcile pills, capture newly discovered work, and make the phase-closing commit before starting the next phase.
 
 ## Validation
@@ -81,6 +81,8 @@ deskops graph missing
 ## Selected Source Documents
 
 - `README.md`
+- `docs/quickstart.md`
+- `docs/operator-manual.md`
 - `docs/faq.md`
 - `docs/atoms.md`
 - `docs/workflow-policy-reference.md`
@@ -108,5 +110,6 @@ deskops graph missing
 - `desk/atoms/workflow-model/atom-phase-gates-prevent-agent-skipping.md`
 - `desk/atoms/workflow-model/atom-docs-are-human-facing-atom-materializations.md`
 - `desk/atoms/workflow-model/atom-cli-mutation-testing-uses-sandbox-desk-roots.md`
+- `desk/atoms/atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly.md`
 
-The broader manual is deferred in `desk/drawer/tasks/task-write-end-to-end-operator-manual.md`.
+The end-to-end manual is `docs/operator-manual.md`; `docs/quickstart.md` is the shortest walkthrough.

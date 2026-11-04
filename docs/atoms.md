@@ -30,10 +30,12 @@ $ deskops add atom --title "Example knowledge" \
   --tags topic:atoms
 
 Created atom atom-example-knowledge
-Path: desk/atoms/atom-example-knowledge.md
+Path: <repo>/desk/atoms/atom-example-knowledge.md
 ```
 
-Protoatoms are free knowledge units captured before typing. They have a title, free markdown content, and tags, but do not answer a fixed 5WH1+ question. They are the lowest rung of typing, typically captured during a brainstorm or mindmap. Typing a protoatom creates a new document of the target SLDB model, keeping the protoatom as a redirect stub so old IDs keep resolving.
+Protoatoms are free knowledge units captured before typing. They have a title, free markdown content, and tags, but do not answer a fixed 5WH1+ question. They are the lowest rung of typing, typically captured during a brainstorm or mindmap. Typing a protoatom creates a new document of the target SLDB model, keeping the protoatom as a redirect stub so old IDs keep resolving. Capture one with `deskops atoms proto <id> --title ... --content ... --tag ...` and type it with `deskops atoms type <id> --model <Model>`.
+
+A domain tag such as `domain:manual.docs` needs a written crossroad for every level of its path (`deskops atoms crossroad <path> --title ... --content ...`); `deskops atoms tree` shows the crossroads and the documents hanging from them, and `deskops list atoms --axis-value <value>` filters atoms by the folder-axis namespace. `docs/operator-manual.md` ("Namespaces, crossroads, and the domain tree") has tested examples.
 
 ## Tag namespaces and the folder axis
 
@@ -41,7 +43,7 @@ Atoms use namespaced semantic tags for retrieval and grouping (`namespace:value`
 
 When creating tags, you must use an existing namespace defined in `desk/atoms/tag-namespaces.yaml` (such as `system`, `topic`, `layer`, `domain`, or `pattern`). 
 
-Desks can declare one tag namespace as the physical folder axis for atoms by setting `atom_folder_axis` in `desk/config.json`. The default is `null`, keeping atoms in a flat layout under `desk/atoms/`.
+Desks can declare one tag namespace as the physical folder axis for atoms by setting `atom_folder_axis` in `desk/config.json`. The default is `null`, keeping atoms in a flat layout under `desk/atoms/`; the scaffolded `desk/config.json` does not set it. The value must be a namespace registered in `desk/atoms/tag-namespaces.yaml`, and `deskops atoms reorganize` exits non-zero while no axis is configured.
 - Only the axis namespace decides folder placement; all other tags are preserved but do not affect paths.
 - An atom with exactly one `axis:<value>` tag is placed under `desk/atoms/<value-as-folders>/` (e.g. dot-notation values like `mepu.licitaciones` become `mepu/licitaciones/`).
 - An atom with multiple values of the axis namespace is rejected with an explicit error to maintain deterministic physical placement.
@@ -68,7 +70,7 @@ $ deskops atoms add-namespace myns \
   --example "myns:example"
 
 Added atom tag namespace myns
-Path: desk/atoms/tag-namespaces.yaml
+Path: <repo>/desk/atoms/tag-namespaces.yaml
 ```
 
 ## Lifecycle operations
@@ -103,4 +105,4 @@ Store untracked: yes
 - **Merge**: Merges a source atom into an existing target atom, rewriting inbound references and preserving provenance.
 - **Create-from-source**: Creates an atom from a pill, graph finding, or diagram source, maintaining exact provenance back to the source surface.
 
-These mutating operations block on ambiguity unless forced, and typically run as deferred drawer work.
+These mutating operations run directly and block on ambiguity unless forced.

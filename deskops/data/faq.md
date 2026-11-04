@@ -1,6 +1,6 @@
 ---
 atoms:
-- id: atom-closeout-verify-requires-tests-links-and-commit
+- id: atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly
   role: documents
 - id: atom-docs-are-human-facing-atom-materializations
   role: documents
@@ -50,11 +50,18 @@ deskops provides a spec-driven artifact pipeline: YAML specs under `deskops/spec
 - `deskops init` — initialize a repo-local `.sldb/` plus `desk/`
 - `deskops faq` — first-use help (this document)
 - `deskops message` — send, list, read, and acknowledge cross-desk messages (`deskops inbox` is a deprecated alias)
-- `deskops promote` — move inbox messages and drawer task candidates through explicit workflow promotion steps
+- `deskops promote` — move inbox notes into loose drawer candidates (`inbox-to-drawer-task`); drawer items become tasks only by authoring them with `deskops add task --from-drawer`
 - `deskops bind pill` — bind a context pill to an active task through the modeled task surface
 - `deskops graph` — build graph snapshots, inspect neighbors, check missing references, and write review-only reflection reports
 - `deskops repo register` — canonical repository registration in the ecosystem desk registry, tracked through SLDB
-- `deskops desk install` — scaffold a desk surface in a target repository
+- `deskops desk install` — scaffold a desk surface in a target repository (`desk migrate`, `desk update`, `desk replace` maintain it)
+- `deskops doctor` — check the desk: errors that break it apart from alerts that only moved (`deskops status` is a deprecated alias)
+- `deskops add`, `edit`, `list`, `show` — create, change one field of, list, and inspect modeled desk artifacts
+- `deskops next`, `advance` — show the next valid action for a task, and move it through the lifecycle graph
+- `deskops closeout` — verify a task's declared evidence and make its closing commit; also `supersede` and `retire`
+- `deskops drawer`, `issue`, `retire` — manage deferred drawer entries, close and list issues, retire obsolete desk documents
+- `deskops atoms` — atom namespaces, protoatoms, crossroads, the domain tree, validation and reorganization
+- `deskops runtime`, `materialize`, `drift` — live Herdr agents and Scion templates, installed role prompts, and drift between them
 
 ### Spec-driven artifact commands
 
@@ -66,11 +73,12 @@ Supported artifact types:
 
 | Subject | Description | Key flags |
 |---|---|---|
-| `task` | Actionable task, walked through the desk's lifecycle graph | `--title`, `--goal`, `--scope` |
+| `task` | Actionable task, walked through the desk's lifecycle graph | `--title`, `--goal`, `--scope`, and `--task-type` or `--evidence` (one is required: it declares the closeout evidence) |
 | `pill` | Reusable context document | `--title`, `--what`, `--why` |
 | `ritual` | Repeatable procedure template | `--title`, `--purpose`, `--steps` |
 | `board` | Task coordination surface | `--title`, `--scope`, `--purpose` |
 | `atom` | Durable architectural concept | `--title`, `--five-wh-one-plus`, `--answer` |
+| `materialization` | Projection of atoms into a code, test, doc, or board target | `--target-kind`, `--target-identity`, `--intent`, `--source-atoms` |
 | `repository` | Local repository artifact doc; not canonical ecosystem registration | `--name`, `--path`, `--status` |
 | `inbox-note` | Incoming project message | `--kind`, `--title`, `--body` |
 | `faq-doc` | FAQ entry | (spec-defined flags) |
@@ -101,9 +109,9 @@ deskops show repository repo-deskops
 
 **Advance tasks** — `deskops advance task <task-id>`
 
-Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. It stops at `ritual-closeout`: it never closes the task. The only close is `deskops closeout commit --task <task-id> --run-dir <runs/subagents/dir>` or `deskops closeout commit --task <task-id> --no-run --reason <why>`. `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
+Fires the next lifecycle transition for the task. The lifecycle is part of the desk's sldb graph: the states are the rituals `ritual-execution`, `ritual-testing` and `ritual-closeout`, and each transition is an sldb `RelationDoc` between two rituals with a `--where` condition on the task (`deskops init` and `deskops desk update --apply` write them under `desk/lifecycle/`). `advance` fires the first transition leaving the task's `current_node` whose condition holds, sets the status it declares, and stops with the blocked gate named when none holds. It stops at `ritual-closeout`: it never closes the task. A task closes only through `deskops closeout`: `closeout commit --task <task-id> --run-dir <runs/subagents/dir>` or `closeout commit --task <task-id> --no-run --reason <why>` for work that was done, `closeout supersede` when the task's subject no longer exists, and `closeout retire` for a task resolved before the ritual lifecycle (both take `--reason` and `--ref`, skip the evidence gates, and still make one closing commit). `deskops show task` lists those gates and whether each holds; `deskops next --diagram` draws the graph.
 
-For a board-routed task, `closeout commit` runs `deskops closeout verify` first. The gate requires test evidence and a commit reference that resolves to `HEAD` or an ancestor. If the current desk contains atom documents, including nested `atom-*.md` files, it also requires a link for every path in the task's `files` (an atom reference, a materialization/graph link, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`). Missing knowledge links are optional when no local atom documents exist; a missing, empty, or README-only atoms directory qualifies. Invalid changed-file paths and missing generated-artifact provenance still fail. The commit reference must already exist when the gate runs, so point it at an earlier commit such as the task's promotion commit; the closing commit does not exist yet.
+For a board-routed task, `closeout commit` runs `deskops closeout verify` first. The gate checks exactly the evidence the task declared in `closeout_evidence` when it was created (`deskops add task --evidence <kind>...`, or filled from `--task-type`: `code`, `implementation`, `test` declare `tests`, `commit`, `atom|materialization`; `docs`, `spec`, `design` declare `commit`, `document`; `external` declares `external`) and prints `esta tarea declaró X; encontré Y` (declared X; found Y). `tests` needs an existing `.py` file under `tests/`, optionally with `::node` or in the `pytest <path>` form; `commit` a lowercase hex commit id that resolves to `HEAD` or an ancestor; `atom|materialization` is one gate with two ways to pass: an atom reference, or a link for every path in the task's `files` (a materialization/graph link to an atom, or a routed follow-up reference under `desk/tasks`, `desk/drawer/tasks`, or `desk/drawer/issues`), and it is exempt when the desk has no local atom documents (a missing, empty, or README-only atoms directory qualifies); `document` an existing document file in `references` or `files`; `external` an `http(s)` URL in `references`. Changed `.py` files in a task without declared `tests` print a visible alert but do not block. The commit reference must already exist when the gate runs, so point it at an earlier commit such as the task's authoring commit; the closing commit does not exist yet.
 
 **Promote inbox notes** — `deskops promote inbox-to-drawer-task <selector>`
 
@@ -113,15 +121,15 @@ Moves a project-addressed message into the drawer as a loose, deferred candidate
 deskops promote inbox-to-drawer-task <inbox-note-selector>
 ```
 
-There is no promotion from the drawer to an active task. The drawer holds loosely shaped material; an active task is a fully authored task document routed by the board. A drawer item becomes active work only when someone authors the task explicitly. `--from-drawer` records the drawer file in the task's own `from_drawer` field, which later edits to `references` cannot overwrite; the drawer file itself is kept and cleaned up by hand:
+There is no promotion from the drawer to an active task. The drawer holds loosely shaped material; an active task is a fully authored task document routed by the board. A drawer item becomes active work only when someone authors the task explicitly. `--from-drawer` records the drawer file in the task's own `from_drawer` field, which later edits to `references` cannot overwrite; the drawer file itself is kept and cleaned up by hand. Like any task it declares its closeout evidence with `--task-type` or `--evidence`:
 
 ```
-deskops add task --root . --from-drawer <drawer-selector> --title "..." --goal "..." --scope "..." --validation "..."
+deskops add task --root . --from-drawer <drawer-selector> --task-type docs --title "..." --goal "..." --scope "..." --validation "..."
 ```
 
 ### Generated CLI surface
 
-The `add`, `list`, and `show` subcommands for spec-driven artifacts (atoms, pills, rituals, boards, repositories, inbox-notes, faq-docs, steps) are automatically generated from the artifact registry. When a new artifact type is added to `ARTIFACT_SUBJECTS` in `deskops/operations.py`, subcommands and `--flag` generation follow automatically.
+The `add`, `edit`, `list`, and `show` subcommands for spec-driven artifacts (atoms, pills, rituals, boards, repositories, inbox-notes, faq-docs, steps) are automatically generated from the artifact registry. When a new artifact type is added to `ARTIFACT_SUBJECTS` in `deskops/operations.py`, subcommands and `--flag` generation follow automatically.
 
 For repository registration, prefer `deskops repo register`. It is the canonical ecosystem registration path because it anchors the repository document in the configured SLDB store. `deskops add repository` only creates a local `desk/registry/repo-*.md` artifact through the generic spec-driven add path.
 
@@ -129,10 +137,12 @@ The models under `deskops.models` and the materializers under `deskops.materiali
 
 Durable workflow guidance lives under `docs/`, including:
 
+- `docs/quickstart.md`
 - `docs/operator-manual.md`
+- `docs/workflow-policy-reference.md`
+- `docs/atoms.md`
 - `docs/how-to-report.md`
 - `docs/how-to-test-ux-cli.md`
-- `docs/quickstart.md`
 - `docs/faq.md` (this file)
 
 ## What is the relationship between `deskops` and `sldb`?
@@ -225,9 +235,9 @@ There are three main targeting modes:
 
 - run inside the target repo so the default local `desk/` is used
 - pass `--desk-root` with an explicit desk path
-- pass `--to` (or `--repo`) to resolve a repository through the ecosystem registry, optionally with `--store`
+- pass `--to` to resolve a repository through the ecosystem registry, optionally with `--store`
 
-If you use `--to`/`--repo`, the target repository must already be registered and discoverable from the chosen store context.
+If you use `--to`, the target repository must already be registered and discoverable from the chosen store context.
 
 ## How do I route sibling repo tasks without copying them?
 
@@ -252,7 +262,9 @@ This command is for cross-repo discovery inside the workflow ecosystem, not for 
 
 It scaffolds a minimal repo-local `desk/` surface in a target repository.
 
-The scaffold creates local `tasks/`, `contexts/`, `rituals/`, `inbox/`, and `drawer/` directories plus starter files for the board, pills, rituals, and drawer README.
+The scaffold creates local `tasks/`, `contexts/`, `rituals/`, `inbox/`, `drawer/`, `atoms/`, and `roles/` directories plus `config.json` and starter files for the board, pills, rituals, the atom tag namespaces, and the drawer README.
+
+It does not create the `.sldb/` store or the lifecycle graph that `deskops advance` reads; run `deskops init` for that.
 
 It does not auto-register the repository in an ecosystem registry. If you want cross-repo registry discovery, run `deskops repo register ...` as a separate step once the target repo is ready.
 

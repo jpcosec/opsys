@@ -1,13 +1,8 @@
 ---
-sldb:
-  by: agent
-  at: '2026-10-21T06:39:51Z'
-  authority: generated
-  via: create_document
 id: materialization-closeout-atomless-regressions
 title: Closeout atomless regressions
 source_atoms:
-- atom-closeout-verify-requires-tests-links-and-commit
+- atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly
 target_kind: test_file
 target_identity: tests/test_closeout_atomless.py
 validation:

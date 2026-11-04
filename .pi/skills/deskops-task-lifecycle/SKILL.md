@@ -45,9 +45,9 @@ Define el procedimiento obligatorio para gestionar el ciclo de vida de una tarea
 
 ### Paso 2: Promoción y Commit de Preparación
 1. Hacer commit de la creación en el drawer.
-2. Promover la tarea a activa. La promoción directa de drawer a tarea activa fue eliminada deliberadamente: la conversión mecánica solo rellenaba los campos con placeholders. La tarea activa se **autoriza** desde el ítem del drawer con la forma completa de flags (`--title`, `--goal`, `--scope`, `--validation`):
+2. Promover la tarea a activa. La promoción directa de drawer a tarea activa fue eliminada deliberadamente: la conversión mecánica solo rellenaba los campos con placeholders. La tarea activa se **autoriza** desde el ítem del drawer con la forma completa de flags (`--title`, `--goal`, `--scope`, `--validation`) y declara su evidencia de cierre con `--task-type` (`code`: tests+commit+atom|materialization; `docs`|`spec`|`design`: commit+document; `external`: external) o con `--evidence <kind>...`; sin una de las dos el comando falla:
    ```bash
-   deskops add task --from-drawer task-<id> --title "..." --goal "..." --scope "..." --validation "..."
+   deskops add task --from-drawer task-<id> --task-type code --title "..." --goal "..." --scope "..." --validation "..."
    ```
    El campo `from_drawer` queda registrado en la tarea y el archivo del drawer se conserva para limpieza manual.
 
@@ -87,6 +87,7 @@ No usar `--continue` ni `--resume`. El ritual concentra el protocolo completo; u
    ```bash
    deskops closeout commit --task task-<id> --run-dir runs/subagents/<run-dir>
    ```
+   El gate verifica exactamente la evidencia que la tarea declaró al crearse e imprime `esta tarea declaró X; encontré Y`. `deskops closeout supersede` (el sujeto ya no existe) y `deskops closeout retire` (resuelta antes del lifecycle) cierran sin gates de evidencia, con `--reason` y `--ref`.
 2. Al completar todas las tareas de la fase activa, ejecutar el **Ritual de Fase** (`desk/rituals/phase.md`).
 
 ---

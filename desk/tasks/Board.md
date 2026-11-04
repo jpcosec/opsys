@@ -4,8 +4,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-documentacion-de-deskops-alineada-con-la-evidencia-declarada.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -46,5 +45,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Documentacion de deskops alineada con la evidencia declarada [active] - Que ningun doc describa el gate fijo ni traiga un add task sin evidencia, que el atom fuente del gate este al dia y que los docs cubran closeout supersede/retire, runtime template y la cobertura real de verbos.
