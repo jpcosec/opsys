@@ -1,3 +1,8 @@
+---
+id: task-correlacionar-intentos-scion-con-rundoc-y-closeout
+status: deferred
+---
+
 # Correlacionar intentos Scion con RunDoc y closeout
 
 Estado: candidato de implementación; auditoría de código del 2026-10-30. No promovido. No mezclar con cambios activos de evidencia de closeout.

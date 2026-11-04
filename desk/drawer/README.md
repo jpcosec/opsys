@@ -11,7 +11,8 @@ This guide is a human-facing materialization of these atoms:
 
 ## Remaining surfaces
 
-- `desk/drawer/tasks/Board.md` — routes the deferred task backlog; only the 0.2.0 release task remains, waiting for the suite's coordinated deploy.
+- `desk/drawer/tasks/Board.md` — routes the deferred task backlog (`desk/drawer/tasks/`); the board lists every deferred task.
+- `desk/drawer/plans/` — deferred plans with their own DAG and review evidence (`workspace-documental/`).
 
 ## Retired surfaces
 
@@ -21,4 +22,4 @@ The covered use-cases and stress-tests were retired on 2026-10-19 because their 
 
 Work in `desk/drawer/` is not currently executing.
 
-When a drawer item becomes real implementation work, promote it into the active surfaces of `desk/` and bind it to the execution rituals there.
+When a drawer item becomes real work, author a full task from it with `deskops add task --from-drawer <item>` (see `desk/rituals/ritual-drawer-triage.md`); nothing promotes a drawer item into an active task.

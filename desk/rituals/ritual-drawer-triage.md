@@ -3,12 +3,15 @@
 id: ritual-drawer-triage
 # Ordered prose steps; not document references
 steps:
-- Capture the work in desk/drawer/<surface>/ instead of desk/tasks/.
-- Keep the description lightweight and future-oriented.
-- Separate speculative backlog items from active implementation tasks.
-- Route the item on desk/drawer/tasks/Board.md.
-- Promote the item into desk/ (task, atom, question, or ritual) once real execution
-  begins.
+- 1. Capture repo-local work directly in desk/drawer/tasks/ (inbox notes from other
+  desks arrive there with deskops promote inbox-to-drawer-task).
+- '2. Keep the item lightweight and future-oriented, but readable as a TaskDoc: id,
+  title and status deferred.'
+- 3. Separate speculative backlog items from active implementation tasks.
+- 4. Route the item on desk/drawer/tasks/Board.md.
+- 5. When the work is ready to execute, author a full task with deskops add task --from-drawer
+  <item>; nothing promotes a drawer item into an active task.
+- 6. Remove the drawer item by hand once the authored task supersedes it.
 # e.g., layer:workflow, system:sldb
 tags:
 - system:deskops
@@ -41,9 +44,9 @@ _List the conditions that must hold before running the ritual._
 
 _List the checks that prove the ritual was performed correctly._
 
-- The work is recorded under desk/drawer/ and routed by desk/drawer/tasks/Board.md.
+- The work is recorded under desk/drawer/tasks/, routed by desk/drawer/tasks/Board.md, and reads as a TaskDoc.
 - No drawer item is treated as active execution.
-- The promotion path into desk/ is explicit.
+- The path to execution is an authored task (deskops add task --from-drawer), not a promotion.
 
 ## Failure Modes
 
@@ -57,4 +60,4 @@ _List common mistakes this ritual prevents._
 
 _Describe what completion looks like._
 
-The deferred work is parked on the drawer board and has an explicit promotion path into desk/.
+The deferred work is parked on the drawer board and becomes active only through a task authored with deskops add task --from-drawer.

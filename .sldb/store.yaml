@@ -171,13 +171,13 @@ include:
     name: ritual-execution
   - path: desk/rituals/phase.md
     name: ritual-phase
-  - desk/rituals/ritual-drawer-triage.md
   - desk/rituals/ritual-knowledge-distillation-pass.md
   - path: desk/rituals/testing.md
     name: ritual-testing
   - path: desk/rituals/closeout.md
     name: ritual-closeout
   - desk/rituals/context-review.md
+  - desk/rituals/ritual-drawer-triage.md
 - model: RoleDoc
   glob: desk/roles/*.md
 - model: RuntimeProfileDoc
