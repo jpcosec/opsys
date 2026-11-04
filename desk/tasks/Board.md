@@ -48,5 +48,5 @@ No active tasks routed.
 
 _Generated from the task references above._
 
-- Help del CLI alineado con la evidencia declarada [draft] - Que todo ejemplo impreso por --help y about corra tal cual en un desk recien inicializado, y que el help de closeout y advance describa el gate de evidencia declarada.
-- Documentacion de deskops alineada con la evidencia declarada [draft] - Que ningun doc describa el gate fijo ni traiga un add task sin evidencia, que el atom fuente del gate este al dia y que los docs cubran closeout supersede/retire, runtime template y la cobertura real de verbos.
+- Help del CLI alineado con la evidencia declarada [active] - Que todo ejemplo impreso por --help y about corra tal cual en un desk recien inicializado, y que el help de closeout y advance describa el gate de evidencia declarada.
+- Documentacion de deskops alineada con la evidencia declarada [active] - Que ningun doc describa el gate fijo ni traiga un add task sin evidencia, que el atom fuente del gate este al dia y que los docs cubran closeout supersede/retire, runtime template y la cobertura real de verbos.

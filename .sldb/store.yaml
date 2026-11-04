@@ -186,14 +186,21 @@ include:
   glob: desk/tasks/task-*.md
 - model: MaterializationContractDoc
   paths:
-  - desk/materializations/materialization-closeout-link-policy.md
-  - desk/materializations/materialization-closeout-atomless-regressions.md
   - desk/materializations/materialization-extract-sources-declared-targets.md
   - desk/materializations/materialization-materialization-targets-outside-package-tests.md
   - desk/materializations/materialization-graph-extract-sources-unit-tests.md
   - desk/materializations/materialization-graph-vocabulary-source-kind-update.md
   - desk/materializations/materialization-board-portable-context.md
   - desk/materializations/materialization-board-portable-references-regressions.md
+  - desk/materializations/materialization-closeout-link-policy.md
+  - desk/materializations/materialization-closeout-atomless-regressions.md
+  - desk/materializations/materialization-forced-advance-never-closes.md
+  - desk/materializations/materialization-forced-advance-never-closes-regressions.md
+  - desk/materializations/materialization-cli-help-speaks-the-declared-evidence-workflow.md
+  - desk/materializations/materialization-every-command-help-page-states-what-it-does.md
+  - desk/materializations/materialization-about-walks-a-first-task-end-to-end.md
+  - desk/materializations/materialization-help-examples-run-as-printed.md
+  - desk/materializations/materialization-cli-tests-exercise-the-real-command-surface.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

@@ -179,9 +179,10 @@ class TasksService:
         if target_node:
             # Closing is the closeout command's job. A forced transition to the
             # terminal node must not leave a half-closed task behind.
-            if target_node == lifecycle.COMPLETE:
+            # The closed status is the same closing step under another name.
+            if target_node in (lifecycle.COMPLETE, "closed"):
                 return self._hydrate_task(payload), self._closure_required(task_id, payload)
-            if target_node in ["draft", "open", "in_progress", "blocked", "closed"]:
+            if target_node in ["draft", "open", "in_progress", "blocked"]:
                 payload["status"] = target_node
             else:
                 payload["current_node"] = target_node

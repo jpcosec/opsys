@@ -196,6 +196,21 @@ def test_forced_advance_to_complete_refuses_and_points_at_closeout(tmp_path: Pat
     assert task.status == "active"
 
 
+def test_forced_advance_to_closed_status_refuses_and_points_at_closeout(tmp_path: Path) -> None:
+    """`--to closed` is closing under another name: it must refuse exactly like
+    `--to complete` instead of writing status: closed."""
+    _install_desk(tmp_path)
+    operations = _make_task(tmp_path, "task-forced-closed")
+
+    task, result = operations.advance_task("task-forced-closed", target_node="closed")
+
+    assert result is not None
+    assert result.blocked
+    assert "deskops closeout commit" in result.message
+    assert task.current_node == "ritual-execution"
+    assert task.status == "active"
+
+
 def test_forced_advance_to_a_normal_node_leaves_status_alone(tmp_path: Path) -> None:
     """Only the terminal node closes the task; ordinary forced moves must not
     silently change status."""
