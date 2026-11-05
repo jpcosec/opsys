@@ -1,12 +1,13 @@
 ---
 id: task-el-grafo-del-closeout-se-lee-del-índice-de-sldb-no-reescaneando-el-repo
-status: draft
+status: active
 summary: ''
 tags:
 - workspace:desk
 - artifact:task
-current_node: ritual-execution
-history: []
+current_node: ritual-testing
+history:
+- task_activates
 references: []
 depends_on: []
 pills: []

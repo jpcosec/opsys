@@ -215,4 +215,5 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+graph_backend: networkx
 policy: {}
