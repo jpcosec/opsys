@@ -1,0 +1,6 @@
+{
+  "key": "PU02",
+  "exit": "timeout",
+  "technical_ok": false,
+  "disposition": "technical_failure"
+}

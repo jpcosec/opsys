@@ -1,0 +1,6 @@
+{
+  "key": "UI01",
+  "exit": "timeout",
+  "technical_ok": false,
+  "disposition": "technical_failure"
+}
