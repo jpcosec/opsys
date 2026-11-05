@@ -1,0 +1,239 @@
+id: deskops-gates-por-tipo
+revision: 1
+revision_note: 'Rev 1 (2026-11-04): plan inicial, lado consumidor del plan grafo-operable de sldb (rev 9). Sin revisión en frío todavía. execution_authorized=false.'
+status: draft_pending_review
+as_of: '2026-11-04'
+source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
+execution_authorized: false
+estimate_legend:
+  S: un entregable acotado, chico; no es promesa de tiempo
+  M: una capacidad o contrato acotado; se parte al promover si tiene más de un entregable
+  L: toca el núcleo de deskops (modelos o ciclo de vida); se parte al promover
+gates:
+  G_SLDB_LANG:
+    title: Lenguaje de predicados unificado disponible en sldb
+    state: pending
+    resolver: plan grafo-operable de sldb, nodo GO05 cerrado en main de sldb; deskops pinnea esa versión en pyproject.toml
+    evidence: sldb docs find --where acepta any()/all() sobre una relación y --explain nombra la cláusula; versión de sldb con GO05 en pyproject.toml de deskops
+  G_SLDB_RULES:
+    title: RuleDoc, rules check y rules explain disponibles en sldb
+    state: pending
+    resolver: plan grafo-operable de sldb, nodo GO06 cerrado; versión pinneada en pyproject.toml
+    evidence: sldb rules explain RULE SUBJECT devuelve el finding con node, holds, clause, seen; RuleDoc con subject model <= X, where, condition, severity, moment
+  G_SLDB_ANCHORS:
+    title: 'Anclas doc: con hash de contrato disponibles en sldb'
+    state: pending
+    resolver: plan grafo-operable de sldb, nodo GO07 cerrado; versión pinneada en pyproject.toml
+    evidence: un campo __doc_anchors__ con doc:Model:name se guarda pinneado a @sha256:<hash>; anchors check reporta intact/changed/lost; anchor_state consultable desde una regla por ^campo
+  G_SLDB_EVAL:
+    title: Evaluación on_transition con edges_holding findings y edges_blocked
+    state: pending
+    resolver: plan grafo-operable de sldb, nodo GO08 cerrado; versión pinneada en pyproject.toml
+    evidence: edges_holding devuelve effects y findings por arista; edges_blocked(store, node, subject) devuelve las aristas con finding error; el test end-to-end de GO08 (Task + Review + regla any(^subject ...)) pasa en sldb
+  G_SLDB_EFFECTS:
+    title: Transiciones como datos de la arista (attributes.sets, terminal, apply_effects)
+    state: pending
+    resolver: plan grafo-operable de sldb, nodo GO09 cerrado; versión pinneada en pyproject.toml
+    evidence: edges_holding devuelve effects = {sets resueltos, terminal}; apply_effects(subject, effects, model) valida y devuelve el payload nuevo
+  G_TYPES:
+    title: Tipos de tarea cerrados y con jerarquía en deskops
+    state: pending
+    produced_by: GC01
+    resolver: cierre de GC01 (revisión en frío aceptada por el desk de deskops, tests verdes, closeout commit)
+    evidence: add task --task-type rechaza un tipo no registrado; model <= TaskCodeDoc incluye a task.refactor y task.debug; TASK_TYPE_EVIDENCE no existe
+  G_RECEIPTS:
+    title: deskops review escribe recibos ReviewDoc en el desk
+    state: pending
+    produced_by: GC03
+    resolver: cierre de GC03
+    evidence: deskops review preflight <task> deja un ReviewDoc en desk/reviews/ con subject doc:<Modelo>:<id> y evidencia bajo runs/; deskops review dispose escribe el veredicto
+  G_CONSUMER:
+    title: deskops prueba el gate de activación con RuleDoc (gate externo del plan de sldb)
+    state: pending
+    produced_by: GC05
+    resolver: cierre de GC05 y nota a sldb por deskops message send --to sldb con el hash del commit
+    evidence: en un desk temporal, una tarea sin recibo de revisión no se activa y la explicación nombra la cláusula; con recibo atado al hash de contrato vigente, se activa; con el contrato editado, el recibo queda changed y vuelve a bloquear
+external_references:
+  sldb_producer_plan:
+    repo: sldb
+    path: desk/drawer/plans/grafo-operable/
+    status: reviewed_pending_promotion (rev 9; GO01 cerrado)
+    note: 'produce GO02 __contract__, GO05 lenguaje, GO06 RuleDoc, GO07 anclas doc:, GO08 evaluación y edges_blocked, GO09 effects. Este plan no inventa API más allá de lo que rev 9 fija; lo que no fija va como hipótesis en el scope del nodo.'
+  governed_review_driver:
+    repo: sldb
+    path: desk/drawer/plans/grafo-operable/context_review.py
+    status: reference
+    note: modos node, preflight, bundle, status; SYSTEM, ARGV y SELECTION del revisor; tope --max-attempts 2; GC03 lo reemplaza por deskops review
+  earlier_review_driver:
+    repo: deskops
+    path: desk/drawer/plans/workspace-documental/context_review.py
+    status: reference
+    note: modos run y status; tests/test_context_review_helper.py lo importa por ruta; GC03 lo retira junto con ese test
+  sldb_inbox_note:
+    repo: deskops
+    path: desk/inbox/20261104-213901-suggestion-sldb-eval-a-reglas-declaradas-plan-grafo-operable-en-sldb-desk-drawer-plans-grafo-operable.md
+    status: open
+    note: nota de sldb (GO01) que nombra lo que queda para deskops; se cierra (ack) al autorizar este plan
+hierarchy:
+  root:
+    id: ROOT
+    title: Gates por tipo de tarea en deskops
+    owner_repo: deskops
+    scope: 'deskops escribe sus gates de workflow como documentos (tipos de tarea con jerarquía, RuleDoc de activación por tipo, ReviewDoc como recibo, efectos en las aristas) y sldb los evalúa; se cierran las dos vías que saltan gates; un comando deskops review reemplaza los scripts de revisión en frío; la composición (parent_id, children, depends_on) pasa al grafo. Tres paquetes: tipos y recibos (sin dependencia de sldb), gates en el grafo (depende de los nodos GO05 a GO09 de sldb), composición y grafo. El orden entre paquetes lo imponen las aristas depends_on de sus hijos.'
+    acceptance: 'Todos los hijos cerrados; G_TYPES, G_RECEIPTS y G_CONSUMER satisfechos y G_CONSUMER informado a sldb. CHANGELOG y docs al día significa que cada hijo cumplió su propia aceptación de CHANGELOG y docs; ROOT no agrega criterio.'
+    children: [PC01, PC02, PC03]
+  packages:
+    - id: PC01
+      title: Tipos, recibos y revisor
+      node_role: aggregate
+      owner_repo: deskops
+      children: [GC01, GC02, GC03]
+      scope: 'Lo que deskops puede hacer sin esperar a sldb: tipos de tarea como modelos con jerarquía y evidencia de cierre declarada en el tipo (GC01); el modelo ReviewDoc como recibo con subject en __doc_anchors__ (GC02); el comando deskops review que produce esos recibos y retira los dos scripts (GC03). Antes de G_SLDB_ANCHORS el subject se guarda sin hash (sldb lo pinnea cuando GO07 exista; deskops no calcula hashes).'
+      acceptance: 'G_TYPES y G_RECEIPTS satisfechos; add task --task-type solo acepta tipos registrados; deskops review preflight y bundle dejan ReviewDoc y evidencia en runs/; ningún script context_review.py queda en los drawers de deskops.'
+    - id: PC02
+      title: Gates por tipo en el grafo
+      node_role: aggregate
+      owner_repo: deskops
+      children: [GC04, GC05, GC06, GC07, GC08]
+      scope: 'Que el ciclo de vida sea entero grafo y que los gates sean reglas: efectos en las aristas y advance por edges_holding (GC04); RuleDoc de activación por tipo y explicación por edges_blocked, que produce G_CONSUMER (GC05); cierre de advance --to y de edit task sobre campos del ciclo de vida (GC06, sin dependencia de sldb); herencia de tareas leída del grafo y cierre sobre effective_* (GC07); rituales y manual al día (GC08). GC06 puede correr apenas cierre GC01; GC04 y GC05 esperan a sldb.'
+      acceptance: 'Una tarea task.code sin recibos no se activa y deskops advance muestra el finding con la cláusula; con recibos intactos y aceptados se activa y su status lo escribe el efecto de la arista; advance --to no existe; edit task status falla; task_lifecycle.yaml no tiene sets_status ni terminal; los rituales nombran deskops review y ReviewDoc.'
+    - id: PC03
+      title: Composición y grafo
+      node_role: aggregate
+      owner_repo: deskops
+      children: [GC09, GC10, GC11]
+      scope: 'Que un plan como este se promueva nodo a nodo y el DAG quede en el grafo: parent_id, children y task.aggregate con su regla (GC09); promoción de un nodo de dag.yaml a TaskDoc con tipo, padre y dependencias, y revisión de nodos desde el mismo archivo (GC10); deskops graph leyendo las aristas de sldb en lugar del snapshot por regex (GC11).'
+      acceptance: 'Un nodo de dag.yaml se promueve con add task --from-drawer <plan>/dag.yaml --node <id> y la tarea resultante tiene tipo, parent_id y depends_on como aristas del store; un agregado no se activa hasta que sus hijos cierran; deskops graph neighbors de una tarea lista parent_id, children y depends_on tomados del índice de sldb.'
+tasks:
+  - id: GC01
+    title: Tipos de tarea como modelos con jerarquía y evidencia de cierre declarada en el tipo
+    kind: code
+    node_role: delivery
+    parent_id: PC01
+    owner_repo: deskops
+    estimate: L
+    depends_on: []
+    requires: []
+    scope: 'Módulo deskops/models/task_types.py con las subclases de TaskDoc de la tabla de brief.md §Tipos: TaskCodeDoc (task.code), TaskDocsDoc (task.docs), TaskDebugDoc (task.debug, hereda de TaskDoc: exige reproduction en lugar de bundle y por eso no puede ser subtipo de task.code, donde los gates solo se suman), TaskRefactorDoc (task.refactor, hereda de TaskCodeDoc y suma goldens), TaskDecisionDoc (task.decision), TaskAggregateDoc (task.aggregate; sus campos parent_id/children los agrega GC09), TaskExternalDoc (task.external). Cada subclase fija task_type a su nombre (Literal con default) y declara dos atributos de clase: __closeout_evidence__ (tupla del vocabulario de closeout_gates.py:23, más children para el agregado y goldens para refactor, que este nodo solo declara: su verificación es de GC09 y de un nodo posterior) y __activation_receipts__ (tupla de kinds de ReviewDoc que la regla de GC05 exigirá: preflight, bundle, reproduction, goldens, owner). TaskDoc base conserva el campo task_type: str para leer documentos viejos y declara __contract__ = [title, goal, scope, implementation_path, files, validation, done_when] (sintaxis de sldb GO02 (e); si la versión de sldb instalada no la lee, el atributo es inerte hasta que la lea). Registro: las subclases entran en MODEL_REFS (bootstrap.py:26) y se heredan en cada desk como los demás modelos (bootstrap.py:118-160); un desk agrega tipos propios en desk/models/*.py (DC7) y deskops desk update --apply los registra con sldb add_model y pythonpath = raíz del desk; hipótesis a verificar en el TaskDoc: sldb registra una subclase cuya base es un modelo heredado (federado) y base_models la resuelve. add task --task-type <nombre> rechaza un nombre que no sea un tipo registrado (familia model <= TaskDoc) con el mensaje que lista los tipos; sin --task-type, el default es task.code y se avisa en el envelope. closeout_evidence deja de escribirse en la tarea nueva: se lee del tipo (TASK_TYPE_EVIDENCE y evidence_for_task_type se borran); --evidence solo puede agregar kinds a los del tipo (piso; pendiente del dueño en decisiones.md) y un kind que quite falla. Las tareas existentes conservan su campo closeout_evidence, que el cierre sigue leyendo como override por encima del tipo. El documento de una tarea se guarda bajo el modelo de su tipo (TaskCodeDoc:task-x), de modo que model <= TaskCodeDoc lo encuentra; migración: deskops desk update --apply re-trackea cada tarea de desk/tasks bajo el modelo que su task_type legado indica (code|implementation|test → task.code; docs|spec|design → task.docs; external → task.external; vacío → task.code) y reescribe task_type; la migración es idempotente y reporta cada tarea movida. Produce G_TYPES.'
+    acceptance: 'add task --task-type task.code crea una tarea tracked como TaskCodeDoc:<id> con task_type task.code; --task-type foo falla nombrando los tipos registrados; sin --task-type se crea task.code con aviso; en un desk temporal con un desk/models/local_types.py que define TaskCliDoc(TaskCodeDoc) (task.code.cli), desk update --apply lo registra y add task --task-type task.code.cli funciona; sldb docs find --where "model <= TaskCodeDoc" devuelve tareas task.code y task.refactor y no task.docs ni task.debug; closeout verify de una tarea task.docs exige commit y document sin que la tarea tenga closeout_evidence; --evidence que quite un kind del tipo falla y uno que agregue se guarda; una tarea legada con task_type implementation queda task.code tras desk update --apply y una segunda corrida no cambia nada; grep de TASK_TYPE_EVIDENCE en deskops/ no devuelve nada; tests/fixtures/model_contract_hashes.json actualizado; CHANGELOG y docs/workflow-policy-reference.md con la tabla de tipos.'
+    output_scope: deskops/models/task.py, deskops/models/task_types.py, deskops/models/__init__.py, deskops/bootstrap.py, deskops/services/closeout_gates.py, deskops/services/tasks.py, deskops/operations.py (creación y verify_task_closeout), deskops/cli/registry.py (add task, desk update), deskops/workspace.py (desk/models), tests/, tests/fixtures/model_contract_hashes.json, docs/workflow-policy-reference.md, CHANGELOG.md
+  - id: GC02
+    title: ReviewDoc como recibo anclado al contrato de la tarea
+    kind: code
+    node_role: delivery
+    parent_id: PC01
+    owner_repo: deskops
+    estimate: S
+    depends_on: []
+    requires: []
+    scope: 'Modelo deskops/models/review.py ReviewDoc (StructuredNLDoc, como RunDoc) con campos: id (review-<task>-<kind>-<n>), title, kind (preflight | bundle | reproduction | goldens | owner; vocabulario cerrado validado), subject (str; valor doc:<Modelo>:<id> o vacío para revisiones de nodos de plan), subject_ref (str libre: ruta#node:ID cuando subject está vacío), engine (nombre del RuntimeProfileDoc o "human"), actor (identidad que corrió o dispuso; deskops/identity.py), run_dir (ruta relativa bajo runs/), input_sha256, output_sha256, verdict (pending | accepted | rejected | incomplete), reason (str), created_at, disposed_at, disposed_by, tags; cuerpo: sección Summary y sección Disposition. __doc_anchors__ = ["subject"] y __references__ = ["subject"] (GO07 trata __doc_anchors__ también como references; antes de GO07 el campo es una referencia normal que resuelve doc:Model:name sin sufijo, hipótesis: la versión actual de sldb acepta en un campo __references__ un valor con prefijo doc: o GC02 lo declara solo en __doc_anchors__ y espera a GO07; el TaskDoc fija cuál). Un ReviewDoc vive en desk/reviews/<task-id>/<kind>-<n>.md y se trackea; deskops init/desk update crean desk/reviews/. Validación al escribir: kind y verdict en su vocabulario; verdict accepted o rejected exige reason no vacía y disposed_by; subject con forma doc:<Modelo>:<id> o vacío. Un ReviewDoc no se edita con edit review verdict: edit lo rechaza (el veredicto se escribe con deskops review dispose, GC03). Registro en MODEL_REFS. Este nodo no escribe ReviewDocs desde ningún comando; GC03 lo hace.'
+    acceptance: 'ReviewDoc renderiza y extrae ida y vuelta con un payload de ejemplo; un kind fuera del vocabulario falla al validar; verdict accepted sin reason falla; subject "task-x" (sin prefijo doc:) falla; subject "doc:TaskCodeDoc:task-x" valida; en un desk temporal un ReviewDoc guardado con deskops (doc_io) queda tracked como ReviewDoc:<id> y sldb edges show lo enlaza a la tarea por subject; edit review verdict falla con el mensaje que remite a review dispose; tests/fixtures/model_contract_hashes.json actualizado; CHANGELOG.'
+    output_scope: deskops/models/review.py, deskops/models/__init__.py, deskops/bootstrap.py (MODEL_REFS), deskops/workspace.py (desk/reviews), deskops/operations.py (edit refuses verdict), tests/, tests/fixtures/model_contract_hashes.json, CHANGELOG.md
+  - id: GC03
+    title: Comando deskops review que reemplaza a los dos scripts de revisión en frío
+    kind: code
+    node_role: delivery
+    parent_id: PC01
+    owner_repo: deskops
+    estimate: M
+    depends_on: [GC02]
+    requires: []
+    scope: 'Comando deskops review con subcomandos: node <plan-dir> [IDS...] (revisa nodos de un dag.yaml del drawer: contrato del nodo con las claves KEEP del script gobernado, vecinos como edge, gates, y los cuatro archivos base del plan si existen: context-review-guide.md, brief.md, alcance.md, decisiones.md), preflight <task> (input = solo el TaskDoc), bundle <task> (TaskDoc + rituales enrutados por el Board + pills ligadas + átomos ligados + archivos que files nombra, menores de 60 KB + validación), status [<task> | <plan-dir>] (compara el hash del input vigente con los ReviewDoc existentes; sin llamar al modelo), dispose <review-id> --verdict accepted|rejected|incomplete --reason <texto> (escribe verdict, reason, disposed_at, disposed_by; falla si el ReviewDoc ya tiene veredicto distinto de pending). Cada corrida escribe la evidencia que el ritual pide bajo runs/subagents/<run>/context-review/<clave>/<sha256 del input>/attempt-N/ (input.md con FILE:<ruta> en orden documentado, manifest.json con argv, modelo, perfil, selection_reason, fuentes con sha256; output.md; stderr.log; receipt.json) y además un ReviewDoc (GC02) con verdict pending, subject = doc:<Modelo>:<id> de la tarea (sin hash: lo pinnea sldb cuando exista GO07; para node, subject vacío y subject_ref = <plan>/dag.yaml#node:<ID>), engine, run_dir, input_sha256, output_sha256. Motor: --engine <RuntimeProfileDoc> con default el perfil pi deepseek-flash del ritual (context-review.md paso 3), escrito por init como desk/runtimes/runtime-pi-deepseek-flash.md con los flags de aislamiento (--offline --no-session --no-context-files --no-skills --no-extensions --no-prompt-templates --no-tools) y el system prompt SYSTEM del script gobernado como texto del perfil; el perfil Scion queda como opción futura detrás de --engine y este nodo no lo implementa. Topes (D9): un input sin cambios no se vuelve a revisar (status lo dice); --max-attempts 2 por clave a nivel de plan; para preflight y bundle una por hash de contrato de la tarea, y una repetición exige --force con --reason, que queda en manifest.json y en el ReviewDoc. Falla de transporte (exit distinto de 0 o salida sin la sección REFORMULACION) deja receipt.json con technical_ok false y ReviewDoc con verdict incomplete y reason "technical", separado de los hallazgos de comprensión (ritual, paso 5). Retiro: se borran desk/drawer/plans/workspace-documental/context_review.py y tests/test_context_review_helper.py (los sustituyen los tests de este nodo); sldb/desk/drawer/plans/grafo-operable/context_review.py es de sldb y no se toca: se le manda nota por deskops message send --to sldb de que deskops review lo cubre. Produce G_RECEIPTS.'
+    acceptance: 'En un desk temporal con un ejecutable pi falso (fixture que devuelve una salida con REFORMULACION), deskops review preflight task-x escribe attempt-1 con los cinco archivos y un ReviewDoc review-task-x-preflight-1 con verdict pending, subject doc:TaskCodeDoc:task-x, run_dir e input_sha256 iguales a los del manifest; una segunda corrida sin cambios no llama al ejecutable y status lo reporta como reviewed; editar goal de la tarea hace que status la reporte stale y la siguiente corrida cree attempt bajo otro sha; bundle incluye en input.md los rituales del Board, las pills ligadas y los archivos de files, en ese orden, con FILE: por archivo; node sobre este mismo plan (gates-por-tipo) escribe un ReviewDoc por nodo con subject vacío y subject_ref; review dispose review-task-x-preflight-1 --verdict accepted --reason "..." escribe verdict, reason, disposed_at y disposed_by y una segunda dispose falla; un tercer intento sobre la misma clave a nivel de plan falla sin --force; un pi falso que sale con exit 1 deja technical_ok false y verdict incomplete; grep de context_review.py en desk/drawer de deskops no devuelve nada; CHANGELOG; docs/operator-manual.md con la sección deskops review.'
+    output_scope: deskops/cli/registry.py, deskops/cli/commands/review.py, deskops/services/review.py, deskops/workspace.py (runtime-pi-deepseek-flash), desk/runtimes/, desk/drawer/plans/workspace-documental/context_review.py (borrado), tests/, docs/operator-manual.md, CHANGELOG.md
+  - id: GC04
+    title: Efectos de transición en las aristas y advance por edges_holding
+    kind: code
+    node_role: delivery
+    parent_id: PC02
+    owner_repo: deskops
+    estimate: M
+    depends_on: []
+    requires: [G_SLDB_EFFECTS]
+    scope: 'ensure_lifecycle_graph escribe cada RelationDoc de desk/lifecycle/ con attributes: {sets: {status: <sets_status>}, terminal: <bool>} según la convención de sldb GO09, y deja de dejar los documentos existentes como están (lifecycle.py:280, :328, :354): desk update --apply reescribe un RelationDoc cuyo condition o attributes difieran del spec y lo reporta. task_lifecycle.yaml conserva transitions como plantilla para escribir el grafo (relation_type, source, target, condition, sets, terminal, bajo la clave attributes) y states para next_actions; las claves sets_status y terminal al nivel de la transición desaparecen del YAML y de Transition/LifecycleSpec.effect (lifecycle.py:48-49, :62-66). advance: edges_holding(store, ritual_export_id(current_node), payload) devuelve las aristas que se cumplen con effects; se toma la primera en el orden del spec, se aplica apply_effects(payload, effects, modelo del tipo de la tarea) y, si terminal, current_node = complete; history se sigue escribiendo en deskops (sldb no la conoce). Sin arista que se cumpla, el mensaje de bloqueo lista las condiciones como hoy; mostrar findings es de GC05 (edges_blocked). _add_closeout_facts y el borrado posterior de las claves (operations.py:441-450, tasks.py:196-199) quedan como están hasta GC05, que decide el destino de closeout_evidence_verified. La transición terminal sigue sin persistirse desde advance: la única puerta de cierre es closeout commit (tasks.py:200-205).'
+    acceptance: 'En un desk temporal, los tres RelationDoc tienen attributes.sets.status (active, ready_for_testing, closed) y task_completes tiene terminal true; advance de una tarea en ritual-execution deja status active y current_node ritual-testing con el status leído de effects (test que cambia el sets del RelationDoc a otro valor y comprueba que advance escribe ese valor, sin tocar el YAML); grep de sets_status en deskops/ y en task_lifecycle.yaml no devuelve nada; un desk con RelationDocs de la versión anterior (sin attributes) queda reescrito por desk update --apply y una segunda corrida no cambia nada; los tests de tests/test_lifecycle_graph.py y tests/test_lifecycle_end_to_end.py pasan (adaptados a effects); CHANGELOG.'
+    output_scope: deskops/lifecycle.py, deskops/spec/workflows/task_lifecycle.yaml, deskops/services/tasks.py, deskops/workflow/next_actions.py, deskops/lifecycle_migration.py, tests/, docs/workflow-policy-reference.md, CHANGELOG.md
+  - id: GC05
+    title: Reglas de activación por tipo y explicación por edges_blocked (produce G_CONSUMER)
+    kind: code
+    node_role: delivery
+    parent_id: PC02
+    owner_repo: deskops
+    estimate: L
+    depends_on: [GC01, GC02, GC04]
+    requires: [G_SLDB_LANG, G_SLDB_RULES, G_SLDB_ANCHORS, G_SLDB_EVAL]
+    scope: 'Reglas escritas por init y desk update --apply en desk/rules/ (idempotentes, reescritas si difieren), todas con severity error, moment on_transition y where "current_node = "ritual-execution"" (hipótesis: rev 9 no filtra las reglas on_transition por tipo de relación, así que la transición se distingue por el nodo de partida en where; si sldb agrega un filtro por relación, se usa ese). Una regla común activation-depends-on.md con subject "model <= TaskDoc" y condition all(depends_on: status = "closed") (DC6: una dependencia cerrada fue borrada y sldb la omite; una abierta falla nombrándola). Una regla por tipo de fábrica que declare __activation_receipts__ no vacío, activation-<tipo>.md, con subject "model <= <ModeloDelTipo>", message "activación de <tipo>" y condition = conjunción de any(^subject: kind = "<kind>" and anchor_state = "intact" and verdict = "accepted") por cada kind de __activation_receipts__ del tipo. Herencia por familia: un documento cumple las reglas de su tipo y de todos sus ancestros (sldb evalúa cada regla cuyo sujeto lo incluye), así que un subtipo suma gates y nunca quita (brief.md §Tipos): task.refactor pasa por la regla de task.code (preflight + bundle) y por la suya (goldens); task.debug no hereda de task.code justamente porque reemplaza bundle por reproduction. Un tipo propio de un desk sin regla propia queda cubierto por las de sus ancestros; si suma kinds, el desk escribe su regla con deskops add rule --type <tipo>, que genera el archivo desde __activation_receipts__ del tipo menos los kinds que ya exigen sus ancestros. advance: si edges_holding no devuelve task_activates, deskops llama a edges_blocked(store, nodo, payload) y muestra cada finding (what: message + explicación de GO02 con cláusula, nodo y valor visto) en el envelope como la explicación del bloqueo; show y next muestran lo mismo bajo gates. El hecho closeout_evidence_verified (operations.py:441-450) se mantiene en este nodo: la evidencia de cierre son hechos externos que deskops verifica (DC2); se documenta como la única condición que no es regla. Test de integración que es la evidencia de G_CONSUMER (sldb dag.yaml gates.G_CONSUMER): en un desk temporal, una tarea task.code sin ReviewDoc no se activa y la explicación nombra any(^subject ...); con dos ReviewDoc (preflight y bundle) accepted y pinneados se activa; editar goal deja los recibos changed y advance vuelve a bloquear nombrando anchor_state; editar references no cambia nada. Al cerrar: deskops message send --to sldb --kind suggestion con título "G_CONSUMER producido por deskops: gates-por-tipo GC05" y cuerpo con el hash del commit y la ruta del test. Produce G_CONSUMER.'
+    acceptance: 'desk/rules/ tiene la regla común y una RuleDoc por tipo de fábrica con recibos, y sldb rules check sin --subject no reporta errores de parseo; el test de integración de G_CONSUMER pasa en sus tres pasos; una tarea task.docs se activa con solo preflight y una task.code no; una task.refactor con preflight y bundle no se activa hasta tener goldens y una task.debug se activa con preflight y reproduction sin bundle; una tarea con depends_on a una tarea abierta no se activa y el finding nombra la dependencia; tras cerrar esa dependencia (closeout commit la borra) se activa; deskops advance de una tarea bloqueada imprime los findings con cláusula y valor visto y deskops show los lista bajo gates; add rule --type task.code.cli en un desk con ese tipo genera una RuleDoc válida; desk update --apply sobre un desk sin desk/rules/ las escribe y una segunda corrida no cambia nada; la nota a sldb existe en sldb/desk/inbox; CHANGELOG; docs/workflow-policy-reference.md con la regla de cada tipo.'
+    output_scope: deskops/lifecycle.py, deskops/services/tasks.py, deskops/services/rules.py, deskops/workspace.py (desk/rules), deskops/cli/registry.py (add rule), deskops/cli/commands/operations.py (show, next), deskops/operations.py, desk/rules/, tests/, docs/workflow-policy-reference.md, CHANGELOG.md, sldb/desk/inbox (vía message send)
+  - id: GC06
+    title: 'Cierre de las vías de escape: advance --to y edit task sobre campos del ciclo de vida'
+    kind: code
+    node_role: delivery
+    parent_id: PC02
+    owner_repo: deskops
+    estimate: S
+    depends_on: [GC01]
+    requires: []
+    scope: 'Se retira la opción --to de deskops advance (registry y tasks.py:179-192); cada uso documentado se reemplaza: cerrar → closeout commit; superseded → closeout supersede; blocked → nada que escribir (DC4: blocked es la regla que no se cumple; mientras GC05 no exista, el mensaje de bloqueo de advance ya lo dice). edit task rechaza status, current_node, task_type, closeout_evidence e history con un error que dice quién escribe cada campo (advance y closeout; add task para task_type) y con exit 1 (error de dominio); el resto de campos sigue editable. El inbox 20261029-213633 (advance --to superseded no cambia status) se cierra con ack porque la opción desaparece. Sin dependencia de sldb: con task_activates aún sin condición (hasta GC05) retirar --to no bloquea a nadie.'
+    acceptance: 'deskops advance task-x --to ritual-testing falla con error de uso (exit 2) y el help de advance no menciona --to; deskops edit task task-x status closed falla con exit 1 y el mensaje nombra closeout commit; lo mismo para current_node, task_type, closeout_evidence e history; deskops edit task task-x goal "..." sigue funcionando; el golden del help se actualiza; tests/test_cli.py y test_cli_help_examples.py pasan; CHANGELOG con entrada breaking; docs/operator-manual.md sin --to.'
+    output_scope: deskops/cli/registry.py, deskops/services/tasks.py, deskops/operations.py (edit_artifact_field), deskops/cli/commands/operations.py, tests/, tests/fixtures (goldens de help), docs/operator-manual.md, desk/inbox/20261029-213633-unclear-advance-to-superseded-no-cambia-status.md (ack), CHANGELOG.md
+  - id: GC07
+    title: Herencia de tareas leída del grafo y cierre sobre effective_*
+    kind: code
+    node_role: delivery
+    parent_id: PC02
+    owner_repo: deskops
+    estimate: S
+    depends_on: [GC01]
+    requires: [G_SLDB_LANG]
+    scope: '_resolve_task_payload (operations.py:1028-1071) deja de recorrer inherits_from en Python: la cadena de ancestros se obtiene de sldb siguiendo inherits_from+ (clausura de GO02 (b), conjunto sin duplicados, origen excluido, termina ante ciclos; un ciclo deja de ser error y se documenta) y los effective_* se calculan sobre esa lista en el orden que sldb devuelve (hipótesis: el orden de un conjunto alcanzado por camino lo fija GO05; si no, deskops ordena por id y lo documenta). El gate de cierre lee effective_references y effective_atoms en lugar de references y atoms crudos (closeout_gates.py:129, :146): la evidencia heredada cuenta. inherit_acceptance_context conserva su semántica. Sin GO04 el payload de los ancestros se sigue leyendo del Markdown por doc_io (sin cambio); lo que cambia es quién resuelve la cadena.'
+    acceptance: 'Una tarea C con inherits_from B y B con inherits_from A tiene effective_pills = pills de A ∪ B ∪ C en ese orden; un ciclo A→B→A no levanta ValueError y effective_* contiene a ambos una vez; closeout verify de una tarea cuyo commit está solo en references de su padre pasa el gate commit; grep de "Task inheritance cycle" en deskops/ no devuelve nada; tests existentes de herencia (tests/test_composition.py o el que corresponda) adaptados y verdes; CHANGELOG.'
+    output_scope: deskops/operations.py (_resolve_task_payload, _closeout_reference_evidence), deskops/services/closeout_gates.py, tests/, CHANGELOG.md
+  - id: GC08
+    title: Rituales, manual y guía de workflow al día con tipos, recibos y deskops review
+    kind: docs
+    node_role: delivery
+    parent_id: PC02
+    owner_repo: deskops
+    estimate: S
+    depends_on: [GC03, GC05, GC06]
+    requires: []
+    scope: 'desk/rituals/execution.md: los pasos 5 a 9 nombran deskops review preflight y deskops review bundle, el ReviewDoc como evidencia y review dispose como la disposición del coordinador; se retira la ruta runs/subagents/<run-dir>/preflight.md como lugar único. desk/rituals/context-review.md: paso 2 y 3 remiten al perfil runtime-pi-deepseek-flash y a runs/ que el comando escribe; paso 8 nombra los dos kinds; se agrega el tope D9. desk/rituals/phase.md: el gate de la fase es la regla de activación de cada tipo, no un paso manual. docs/workflow-policy-reference.md: tabla de tipos (de GC01), reglas por tipo (de GC05), campos del contrato, qué campos no se editan (GC06). docs/operator-manual.md y docs/quickstart.md: flujo add task --task-type → review preflight → review bundle → review dispose → advance. Las ediciones de rituales se hacen con deskops edit ritual (son documentos tracked), no a mano.'
+    acceptance: 'Los tres rituales extraen ida y vuelta por RitualDoc tras la edición (deskops doctor sin alertas nuevas); grep de "preflight.md" en desk/rituals y docs no devuelve nada; grep de "deskops review" aparece en execution.md, context-review.md, operator-manual.md y quickstart.md; la tabla de tipos de workflow-policy-reference.md coincide con la de brief.md; los tests de ejemplos del help (test_cli_help_examples.py) pasan; CHANGELOG.'
+    output_scope: desk/rituals/execution.md, desk/rituals/context-review.md, desk/rituals/phase.md, docs/workflow-policy-reference.md, docs/operator-manual.md, docs/quickstart.md, CHANGELOG.md
+  - id: GC09
+    title: 'Composición: parent_id, children y el tipo task.aggregate'
+    kind: code
+    node_role: delivery
+    parent_id: PC03
+    owner_repo: deskops
+    estimate: M
+    depends_on: [GC01, GC05]
+    requires: [G_SLDB_LANG]
+    scope: 'TaskDoc agrega parent_id: str (referencia a TaskDoc, vacío por defecto) y children: list[str] (referencia a TaskDoc), los dos en __references__ y __reference_models__. add task --parent <id> escribe parent_id en la nueva y agrega el id a children del padre (transacción de doc_io); el padre debe ser task.aggregate, si no falla. deskops doctor alerta cuando parent_id y children no se corresponden. Regla de activación de task.aggregate (molde de GC05): nonempty(children) and count(children: status != "closed") = 0 (DC6: los hijos cerrados fueron borrados y no cuentan; uno abierto cuenta). Evidencia de cierre children (declarada en GC01): closeout verify comprueba que cada id de children tiene un commit "closeout: <id>" alcanzable desde HEAD (closure.py:570 fija ese mensaje) o está en desk/tasks con status closed; falla nombrando el hijo que falta. show y next listan children y parent_id. Los agregados no se promueven ni se despachan: deskops advance de un agregado cuyo gate se cumple lo lleva a ritual-testing y de ahí a closeout como cualquier tarea; el ritual de testing para un agregado es la validación conjunta de la fase (phase.md).'
+    acceptance: 'add task --parent P falla si P no es task.aggregate; con P agregado, la nueva tarea tiene parent_id P y P tiene a la nueva en children; sldb edges show P lista la arista children; con dos hijos abiertos advance P se bloquea y el finding nombra count(children ...); tras cerrar los dos con closeout commit, advance P activa; closeout verify de P con un hijo sin commit de closeout falla nombrándolo; doctor alerta ante un hijo con parent_id P ausente de children de P; tests/fixtures/model_contract_hashes.json actualizado; CHANGELOG; docs/workflow-policy-reference.md con la sección de composición.'
+    output_scope: deskops/models/task.py, deskops/models/task_types.py, deskops/services/tasks.py, deskops/services/closeout_gates.py, deskops/services/rules.py (molde del agregado), deskops/doctor_findings.py, deskops/cli/registry.py (add task --parent), deskops/cli/commands/operations.py, tests/, tests/fixtures/model_contract_hashes.json, docs/workflow-policy-reference.md, CHANGELOG.md
+  - id: GC10
+    title: Promoción nodo a nodo desde dag.yaml y revisión de nodos sobre el mismo archivo
+    kind: code
+    node_role: delivery
+    parent_id: PC03
+    owner_repo: deskops
+    estimate: M
+    depends_on: [GC03, GC09]
+    requires: []
+    scope: 'deskops add task --from-drawer <plan-dir>/dag.yaml --node <ID> crea el TaskDoc del nodo: title, goal (= scope del nodo), scope (= output_scope), validation (= acceptance partida por ";" como lista), done_when (= acceptance), files (= output_scope partido por ","), task_type según kind (code → task.code; design | docs → task.docs; decision → task.decision; otro → error), from_drawer = <plan-dir>/dag.yaml#node:<ID>; depends_on = los ids de tarea de los nodos depends_on del DAG ya promovidos (un nodo prerrequisito no promovido es error que lo nombra: se promueve en orden); parent_id = la tarea task.aggregate del paquete (parent_id del nodo), creada por este mismo comando la primera vez con title del paquete y children vacío; un nodo con requires a un gate pending del DAG es error que nombra el gate (un gate pending no se promueve, como hoy: "un archivo presente no satisface un gate"). El mapa nodo → tarea se guarda en el dag.yaml bajo promoted: {ID: <task-id>} (única escritura al drawer; idempotente) para que review node y status crucen nodos con tareas. Tras promover, deskops review preflight y bundle trabajan sobre el TaskDoc como con cualquier tarea; review node sigue leyendo el dag.yaml. Las revisiones de nodo ya hechas (ReviewDoc con subject_ref) no se transfieren a la tarea: el preflight y el bundle son suyos. build_plan.py y validate_plan.py de workspace-documental quedan como están (plan cerrado); los planes nuevos no necesitan scripts.'
+    acceptance: 'Sobre este plan (gates-por-tipo) en un desk temporal, add task --from-drawer desk/drawer/plans/gates-por-tipo/dag.yaml --node GC02 crea una TaskCodeDoc (kind code) con parent_id = la tarea de PC01 (creada al vuelo, task.aggregate) y depends_on vacío; --node GC03 después tiene depends_on = [tarea de GC02]; --node GC03 antes que GC02 falla nombrando GC02; --node GC04 falla nombrando G_SLDB_EFFECTS pending; dag.yaml queda con promoted y una segunda promoción del mismo nodo falla como duplicado; review status <plan-dir> muestra por nodo la tarea promovida y el estado de sus revisiones; CHANGELOG; docs/operator-manual.md con la sección de promoción por nodo.'
+    output_scope: deskops/services/drawer.py, deskops/services/tasks.py, deskops/services/review.py (status por plan), deskops/cli/registry.py (add task --node), tests/, docs/operator-manual.md, CHANGELOG.md
+  - id: GC11
+    title: deskops graph sobre las aristas de sldb
+    kind: code
+    node_role: delivery
+    parent_id: PC03
+    owner_repo: deskops
+    estimate: S
+    depends_on: [GC09]
+    requires: []
+    scope: 'El snapshot de deskops graph toma nodos y aristas del índice de aristas de sldb (lo que extract_edges.py:245-310 ya lee) y retira los extractores por regex de ids en prosa (extract_edges.py:22-34, :631): una mención en prosa deja de ser arista. Las aristas de referencia de TaskDoc (depends_on, inherits_from, parent_id, children, pills, atoms, current_node) y de ReviewDoc (subject) aparecen con su nombre de campo como role. Los nodos de archivos fuente (extract_sources.py) y las materializaciones se conservan si el índice de sldb no los cubre; el TaskDoc fija la lista tras el grep. graph missing reporta las unresolved_references del índice de sldb. El esquema del snapshot sube de versión; graph neighbors y reflect leen el nuevo.'
+    acceptance: 'graph build de un desk temporal con una tarea task.code con depends_on, parent_id y un ReviewDoc produce aristas con role depends_on, parent_id, children y subject; una mención "task-otra" en la prosa de un documento no produce arista; graph missing reporta un depends_on a una tarea inexistente; goldens de graph (tests/fixtures) regenerados y el diff revisado en el TaskDoc; grep de TASK_OR_ISSUE_RE en deskops/ no devuelve nada; tests/test_graph_*.py verdes; CHANGELOG.'
+    output_scope: deskops/graph/extract_edges.py, deskops/graph/snapshot.py, deskops/graph/checks.py, deskops/graph/self_reflection.py, deskops/cli/commands/graph.py, tests/, tests/fixtures (goldens de graph), docs/knowledge-graph/, CHANGELOG.md
