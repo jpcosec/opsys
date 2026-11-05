@@ -1,0 +1,6 @@
+{
+  "key": "ROOT",
+  "exit": "timeout",
+  "technical_ok": false,
+  "disposition": "technical_failure"
+}
