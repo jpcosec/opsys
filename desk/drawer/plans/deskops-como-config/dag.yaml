@@ -1,0 +1,292 @@
+id: deskops-como-config
+revision: 1
+revision_note: 'Rev 1 (2026-11-05): plan inicial, ramas P3 y P5 del árbol aprobado por el dueño (deskops-como-config-arbol.md). Sucede a gates-por-tipo (congelado tras GC03, DK2). Sin revisión en frío todavía (la decide el supervisor). execution_authorized=false.'
+status: draft_pending_review
+as_of: '2026-11-05'
+source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
+execution_authorized: false
+tree: ~/proyectos/SLDB_1/deskops-como-config-arbol.md (P3 = CC30-CC37 = T3.0-T3.7; P5 = CC51-CC53 = T5.1-T5.3)
+estimate_legend:
+  S: un entregable acotado, chico; no es promesa de tiempo
+  M: una capacidad o contrato acotado; se parte al promover si tiene más de un entregable
+  L: toca el núcleo de deskops; se parte al promover
+gates:
+  G_P0:
+    title: P0 del árbol integrado en main de deskops y sldb
+    state: pending
+    resolver: coordinador 2 (T0.1) y claude4 (T0.3); integración del supervisor
+    evidence: wt/board-perf (read_snapshot) y wt/closeout-graph-sldb (deskops desk_graph.py, sldb project_graph) en main; task-el-grafo-del-closeout-se-lee-del-índice-de-sldb-no-reescaneando-el-repo cerrada
+  G_GATES_FROZEN:
+    title: gates-por-tipo congelado tras GC03 (DK2)
+    state: pending
+    resolver: coordinador 2 (T0.2)
+    evidence: closeout commits de GC01, GC02, GC03 y GC06 en main de deskops; deskops/desk/drawer/plans/gates-por-tipo/dag.yaml con status frozen y nota que remite a este plan para GC04, GC05, GC07-GC11
+  G_GO06:
+    title: RuleDoc, rules check y rules explain (sldb grafo-operable GO06)
+    state: pending
+    resolver: GO06 cerrado en main de sldb; versión pinneada en pyproject.toml de deskops
+    evidence: sldb rules explain RULE SUBJECT devuelve node, holds, clause, seen
+  G_GO08:
+    title: Evaluación on_write/on_transition/on_check, edges_blocked (sldb GO08; incluye GO07 anclas doc:)
+    state: pending
+    resolver: GO08 cerrado en main de sldb; versión pinneada
+    evidence: test end-to-end de GO08 (Task + Review + any(^subject ...)) verde en sldb; edges_blocked disponible
+  G_GO09:
+    title: Transiciones como datos de la arista (sldb GO09)
+    state: pending
+    resolver: GO09 cerrado en main de sldb; versión pinneada
+    evidence: edges_holding devuelve effects = {sets, terminal}; apply_effects valida contra el modelo
+  G_GD21:
+    title: Grafo de proyecto declarado y servido (sldb generalizar-desde-deskops GD21)
+    state: pending
+    resolver: GD21 cerrado en main de sldb, nota de cierre en el inbox de deskops; versión pinneada
+    evidence: sldb graph project nodes|edges|missing desde store.yaml project_graph, con edges_to
+  G_GD22:
+    title: referrers y rewrite_references (sldb GD22)
+    state: pending
+    resolver: GD22 cerrado; versión pinneada
+    evidence: sldb edges referrers/rewrite con campo, índice y menciones
+  G_GD23:
+    title: select_documents (sldb GD23)
+    state: pending
+    resolver: GD23 cerrado; versión pinneada
+    evidence: sldb docs select --prefix --one resuelve como desk_paths.resolve_selector
+  G_GD24:
+    title: sldb.api.transaction y apply_batch (sldb GD24)
+    state: pending
+    resolver: GD24 cerrado; versión pinneada
+    evidence: rollback total de archivos, entradas y shards; guarda expected_source_hash
+  G_GD25:
+    title: ViewDoc y GET /views/<nombre> (sldb GD25)
+    state: pending
+    resolver: GD25 cerrado; versión pinneada
+    evidence: sldb views run y GET /views/<nombre> con ETag; proveedores computed registrables
+  G_GD26:
+    title: scaffold_store con semillas declaradas (sldb GD26)
+    state: pending
+    resolver: GD26 cerrado; versión pinneada
+    evidence: scaffold_store(declaration=..., apply) con modos if_missing y managed, idempotente
+  G_GD27:
+    title: Espacios de nombres de tags, tag_tree y replace_text (sldb GD27)
+    state: pending
+    resolver: GD27 cerrado; versión pinneada
+    evidence: tag_namespaces con anchored_by; sldb docs replace con conteo exacto
+  G_CONSUMER:
+    title: deskops prueba el gate de activación con RuleDoc (gate externo de sldb grafo-operable)
+    state: pending
+    produced_by: CC32
+    resolver: cierre de CC32 y nota a sldb por deskops message send --to sldb con el hash del commit (antes asignado a GC05 de gates-por-tipo, congelado por DK2)
+    evidence: en un desk temporal, una tarea sin recibo de revisión no se activa y la explicación nombra la cláusula; con recibo atado al hash de contrato vigente, se activa; con el contrato editado, el recibo queda changed y vuelve a bloquear
+external_references:
+  sldb_grafo_operable:
+    repo: sldb
+    path: desk/drawer/plans/grafo-operable/
+    status: reviewed_pending_promotion (rev 9; GO01-GO03 cerrados, GO04 promovido)
+    note: produce GO06, GO08 (con GO07) y GO09; este plan no inventa API más allá de lo que rev 9 fija
+  sldb_generalizar_desde_deskops:
+    repo: sldb
+    path: desk/drawer/plans/generalizar-desde-deskops/
+    status: draft_pending_review (rev 1)
+    note: produce GD21-GD27; su alcance.md tiene la tabla de qué código de deskops deja sin motivo cada GD y qué CC lo borra
+  gates_por_tipo:
+    repo: deskops
+    path: desk/drawer/plans/gates-por-tipo/
+    status: se congela tras GC03 (DK2)
+    note: GC01, GC02, GC03, GC06 entran por G_GATES_FROZEN; GC04 → CC31; GC05 (y G_CONSUMER) → CC32; GC07 (herencia leída del grafo) y GC09-GC11 (composición) → CC33 y CC35 donde aplican, el resto queda como pendiente del dueño; GC08 (rituales) → regla 5 de alcance.md en cada nodo
+  graph_ui:
+    repo: graph_ui
+    path: ~/proyectos/SLDB_1/UIs/graph_ui
+    status: consumidor en proceso de deskops (DeskView, DeskopsOperations privados, cli.main)
+    note: CC34 lo pasa a leer de sldb serve; CC30 conserva los privados que importa hasta CC34
+hierarchy:
+  root:
+    id: ROOT
+    title: deskops como configuración sobre sldb
+    owner_repo: deskops
+    scope: 'deskops deja de tener motor propio: ciclo de vida, gates, vistas, escrituras y plantillas pasan a ser configuración que sldb evalúa, sirve y escribe; en código queda P4 (git, runtime, materializadores, bootstrap, identidad, CLI delgado). Cuatro paquetes: base (CC30, CC36), reglas (CC31, CC32, CC33, CC37), lecturas y escrituras (CC34, CC35), cierre (CC51, CC52, CC53). El orden lo imponen las aristas depends_on y los gates (DK5).'
+    acceptance: 'Todos los hijos cerrados; G_CONSUMER satisfecho e informado a sldb; el invariante de alcance.md se cumplió en cada hijo (cada uno lo prueba en su aceptación); CHANGELOG y docs al día significa que cada hijo cumplió su propia aceptación; ROOT no agrega criterio.'
+    children: [PF1, PF2, PF3, PF4]
+  packages:
+    - id: PF1
+      title: Base - fachada limpia y plantillas como datos
+      node_role: aggregate
+      owner_repo: deskops
+      children: [CC30, CC36]
+      scope: 'Lo que no espera a ninguna capacidad nueva de reglas: operations.py como fachada sin lógica y sin specs YAML duplicados (CC30); plantillas del desk como datos escritos por el scaffold de sldb (CC36, espera a GD26).'
+      acceptance: 'grep de spec/artifacts y spec/fields en deskops/ vacío; workspace.py sin strings de plantilla; deskops init en un directorio temporal produce el mismo árbol y bytes que antes.'
+    - id: PF2
+      title: Reglas - ciclo de vida, activación, cierre y vías de escape
+      node_role: aggregate
+      owner_repo: deskops
+      children: [CC31, CC32, CC33, CC37]
+      scope: 'Ciclo de vida como grafo con efectos (CC31), gates de activación por tipo como RuleDoc y G_CONSUMER (CC32), cierre como regla sobre recibos de evidencia (CC33), consistencia del ciclo de vida ante cualquier escritura (CC37).'
+      acceptance: 'task_lifecycle.yaml sin sets_status ni terminal a nivel de transición; una tarea task.code sin recibos no se activa y advance muestra el finding; el cierre no inyecta hechos en el payload; grep de closeout_evidence_verified y TASK_TYPE_EVIDENCE en deskops/ vacío.'
+    - id: PF3
+      title: Lecturas y escrituras vía sldb
+      node_role: aggregate
+      owner_repo: deskops
+      children: [CC34, CC35]
+      scope: 'Vistas de la UI como ViewDoc servidas por sldb (CC34); toda escritura por la transacción de sldb, con selectores y referencias entrantes de sldb (CC35).'
+      acceptance: 'desk_view.py y doc_io.py no existen; deskops view board en JSON igual al golden previo; graph_ui lee /views de sldb serve.'
+    - id: PF4
+      title: Cierre (P5)
+      node_role: aggregate
+      owner_repo: deskops
+      children: [CC51, CC52, CC53]
+      scope: 'Medir lo que quedó como código y como configuración, verificar los 6 desks y el Board, documentar cómo se declara un tipo de tarea nuevo.'
+      acceptance: 'docs/config-vs-code.md con el inventario; los 6 desks verdes; Board < 1 s caliente sobre el desk real; docs/configuration.md publicada.'
+tasks:
+  - id: CC30
+    tree_id: T3.0
+    title: Limpieza previa - operations.py como fachada y fuera los spec YAML duplicados
+    kind: refactor
+    node_role: delivery
+    parent_id: PF1
+    owner_repo: deskops
+    estimate: M
+    depends_on: []
+    requires: [G_P0, G_GATES_FROZEN]
+    enablers: {sldb: []}
+    scope: '(1) Dirección única de dependencias: los helpers privados que los servicios piden a operations (tasks.py:44-78 y atoms.py:51-79: _read_doc, _write_doc, _write_new_doc, _coerce_list, _hydrate_task, _resolve_glob, _resolve_task_payload, _normalize_task_payload, _add_closeout_facts y los demás que el grep delate) pasan a un módulo deskops/doc_access.py (lectura/escritura de documentos del desk) o al servicio dueño; los servicios dejan de construir DeskopsOperations (tasks.py:35-37, atoms.py:42-44, closure.py:63-65); DeskopsOperations queda como fachada que solo delega (ningún método con más de una llamada a servicio más el armado de argumentos). Los nombres privados que graph_ui importa (ops._read_doc, _resolve_glob, _registered_repositories, _repository_root: UIs/graph_ui/frontends/mindmap/deskops_routes.py:34,41,46,67; frontends/desk/serve.py:66-75) se conservan como alias en la fachada hasta CC34 y se marcan con un comentario que nombra CC34. (2) Duplicados: _normalize_task_payload (operations.py:537-567) y compile_task_spec (specs/compiler.py:25-61) quedan en una sola función; task_lifecycle.yaml se carga solo con lifecycle.load_lifecycle_spec (workflow/next_actions.py:9 la usa en lugar de su loader propio). (3) Specs: se borran spec/artifacts/*.yaml (10) y spec/fields/*.yaml (49), specs/loader.py (SpecRegistry) y specs/mermaid.py si solo los usan tests; id_pattern, status_default y tags por artefacto pasan a un atributo de clase de cada modelo (p. ej. __artifact__) que cli/model_introspection.py lee, y _ARTIFACT_DEFAULTS (model_introspection.py:302-349) se borra; compiler.py y operations.py:1118-1123 leen ese atributo; tests/test_specs.py y test_extension_points.py:44 se adaptan a los modelos. spec/workflows/task_lifecycle.yaml se queda (CC31 lo reduce). Sin cambio de comportamiento.'
+    acceptance: 'Goldens de ayuda y de salida idénticos (test_help_goldens, test_command_output_goldens sin --update-golden); grep -rn "spec/artifacts\|spec/fields\|SpecRegistry\|_ARTIFACT_DEFAULTS" deskops/ vacío; grep de "DeskopsOperations(" en deskops/services/ vacío; grep de "_normalize_task_payload\|compile_task_spec" devuelve una sola definición; los tests de los archivos tocados verdes (lista en la Validation del TaskDoc) y tests/test_desk_view.py verde incluido el cruce con graph_ui (:132); líneas de operations.py y de services/ antes y después en la Validation; CHANGELOG.'
+    output_scope: deskops/operations.py, deskops/doc_access.py, deskops/services/, deskops/specs/, deskops/spec/artifacts/ (borrado), deskops/spec/fields/ (borrado), deskops/cli/model_introspection.py, deskops/models/, deskops/workflow/next_actions.py, tests/, CHANGELOG.md
+  - id: CC31
+    tree_id: T3.1
+    title: Ciclo de vida declarado - efectos en RelationDoc.attributes y advance por edges_holding
+    kind: code
+    node_role: delivery
+    parent_id: PF2
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC30, CC36]
+    requires: [G_GO09, G_GD26]
+    enablers: {sldb: [GO09, GD26]}
+    scope: 'Rehace GC04 de gates-por-tipo (DK2) sobre la API general. Los RelationDoc y RelationTypeDoc de desk/lifecycle/ se declaran como semillas managed del paquete (deskops/data/lifecycle/, mecanismo de CC36 sobre sldb scaffold_store, GD26): cada RelationDoc lleva attributes: {sets: {status: <valor>}, terminal: <bool>} según la convención de GO09; desk update --apply reescribe un RelationDoc que difiera y lo reporta (reemplaza ensure_lifecycle_graph, lifecycle.py:275-374, que hoy deja los existentes como están, :328, :354); la migración de rituales legados de lifecycle.py:204-272 y lifecycle_migration.py se conserva mientras algún desk de los 6 la necesite (lo dice desk update en dry-run) y si ninguno la necesita se borra. task_lifecycle.yaml queda solo con states (next_actions, advance_when) para el comando next; transitions sale del YAML (su contenido vive en las semillas). lifecycle.py: se borran Transition.sets_status/terminal (:40-49) y LifecycleSpec.effect (:62-66); transitions_from usa edges_holding con effects; advance toma la primera arista de edges_holding en el orden de los RelationDoc (campo order en attributes si hace falta desempatar, como clave extra que GO09 conserva), aplica apply_effects(payload, effects, modelo del tipo de la tarea) y, si terminal, current_node = complete; history la sigue escribiendo deskops. lifecycle.py queda en: cargar la configuración, llamar a sldb y escribir history; objetivo < 150 líneas. _add_closeout_facts sigue hasta CC33. La transición terminal sigue sin persistirse desde advance (la puerta de cierre es closeout commit).'
+    acceptance: 'En un desk temporal, desk update --apply escribe los RelationDoc con attributes.sets.status (active, ready_for_testing, closed) y terminal true en task_completes; cambiar el sets de un RelationDoc del desk temporal (con la API de sldb en el test) hace que advance escriba ese valor sin tocar ningún YAML; un RelationDoc de la versión anterior (sin attributes) queda reescrito por desk update --apply y una segunda corrida no cambia nada; grep de sets_status y de "effect" como atributo de LifecycleSpec en deskops/ vacío; task_lifecycle.yaml sin la clave transitions; tests/test_lifecycle_graph.py y tests/test_lifecycle_end_to_end.py verdes (adaptados a effects, sin cambiar los escenarios); goldens de ayuda y salida de advance y next idénticos; deskops doctor sin hallazgos nuevos en los 6 desks tras desk update --apply en una copia de cada uno; líneas de lifecycle.py antes y después; CHANGELOG; docs/workflow-policy-reference.md.'
+    output_scope: deskops/lifecycle.py, deskops/lifecycle_migration.py, deskops/spec/workflows/task_lifecycle.yaml, deskops/data/lifecycle/, deskops/services/tasks.py, deskops/workflow/next_actions.py, deskops/cli/commands/desk.py, tests/, docs/workflow-policy-reference.md, CHANGELOG.md
+  - id: CC32
+    tree_id: T3.2
+    title: Gates de activación de cada tipo de tarea como RuleDoc (produce G_CONSUMER)
+    kind: code
+    node_role: delivery
+    parent_id: PF2
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC31]
+    requires: [G_GO06, G_GO08, G_GATES_FROZEN]
+    enablers: {sldb: [GO06, GO07, GO08]}
+    scope: 'Rehace GC05 de gates-por-tipo (DK2). Por cada tipo de fábrica de GC01 (task.code, task.docs, task.debug, task.refactor, task.decision, task.aggregate, task.external; tabla normativa de gates-por-tipo brief.md §Tipos) una RuleDoc semilla managed en deskops/data/rules/ (escrita en desk/lifecycle/ por desk update --apply, DP3): subject "model <= <Clase del tipo>", where current_node = "ritual-execution", moment on_transition, severity error, condition = conjunción de any(^subject: kind = "<kind>" and anchor_state = "intact" and verdict = "accepted") por cada recibo que el tipo exige y all(depends_on: status = "closed") (DC6 de gates-por-tipo: una dependencia cerrada ya no existe y se omite del conjunto), message en español que nombra el tipo. task.aggregate: all(children: status = "closed") si GC09 de gates-por-tipo no existe, hipótesis en el TaskDoc (children no existe todavía como campo; la regla se escribe cuando exista y mientras tanto el tipo no tiene regla de activación de hijos). Un subtipo de desk (desk/models/*.py, DC7) suma reglas por herencia de familia sin código (DP1). Los atributos de clase __activation_receipts__ de GC01 se borran; la regla es la fuente. ReviewDoc.subject queda en __doc_anchors__ (GO07), pinneado por sldb. advance: sin arista en edges_holding, el mensaje de bloqueo lista los findings de edges_blocked (cláusula, nodo, valor visto) en lugar de las condiciones crudas; next y show los muestran también. blocked deja de ser un status guardado: es la arista bloqueada visible en show/next. Test de integración G_CONSUMER (texto del gate): desk temporal, tarea task.code sin recibos → advance falla y el mensaje nombra la cláusula any(^subject: kind = "preflight" ...); con recibos preflight y bundle de deskops review accepted e intactos → advance la activa; editar goal → los recibos quedan changed → vuelve a bloquear con anchor_state = changed. Al cerrar: deskops message send --to sldb con el hash del commit (produce G_CONSUMER).'
+    acceptance: 'El test de integración G_CONSUMER pasa en sus tres pasos; una tarea task.debug exige reproduction y no bundle; una tarea task.refactor exige además goldens (herencia de familia de task.code); un subtipo task.code.cli de un desk temporal hereda las reglas de task.code sin código y una RuleDoc propia del desk suma una cláusula; una tarea con depends_on abierta no se activa y el finding nombra la dependencia; grep de __activation_receipts__ en deskops/ vacío; en una copia del desk de deskops tras desk update --apply, sldb rules check sin --subject no reporta errores (las reglas de activación son on_transition y rules check sin --subject solo recorre on_check) y sldb rules explain de la regla de task.code sobre una tarea activa existente devuelve el finding con su cláusula; goldens de ayuda idénticos; nota a sldb enviada y su archivo en sldb/desk/inbox; CHANGELOG; docs/workflow-policy-reference.md con la tabla de reglas por tipo. Produce G_CONSUMER.'
+    output_scope: deskops/data/rules/, deskops/models/task_types.py, deskops/models/review.py, deskops/lifecycle.py, deskops/services/tasks.py, deskops/workflow/next_actions.py, deskops/cli/commands/desk.py, tests/, docs/workflow-policy-reference.md, desk/rituals (vía deskops), CHANGELOG.md
+  - id: CC33
+    tree_id: T3.3
+    title: Cierre como regla sobre recibos de evidencia; en código solo los hechos de git y archivos
+    kind: code
+    node_role: delivery
+    parent_id: PF2
+    owner_repo: deskops
+    estimate: L
+    depends_on: [CC32]
+    requires: [G_GO06, G_GO08, G_GD21]
+    enablers: {sldb: [GO06, GO08, GD21]}
+    scope: '(1) Hechos (DP2): closeout_gates.py queda solo con los productores de hechos de git y archivos: reference_points_to_commit (closeout_gates.py:197-229), _to_test (:177-195), _to_document (:160-175), el enlace atom/materialization de _closeout_link_gate (operations.py:732-794) leído del grafo de proyecto de sldb (GD21, configuración de deskops/graph/desk_graph.py declarada como dato en project_graph), _skill_guard_test_evidence (:895-926) y _generated_artifact_source_finding (:939-984). deskops closeout verify corre los productores y escribe, por cada kind de evidencia verificado, un ReviewDoc kind evidence con fact = <kind> (tests | commit | atom | materialization | document | external), value (hash, ruta o URL), verdict accepted o rejected con reason, subject anclado al contrato de la tarea; una verificación repetida sin cambios no crea un recibo nuevo (mismo input_sha256). (2) Reglas: por tipo, una RuleDoc semilla on_transition sobre la arista task_completes (where current_node = "ritual-testing") que exige any(^subject: kind = "evidence" and fact = "<kind>" and anchor_state = "intact" and verdict = "accepted") por cada kind del tipo (atom|materialization como or de dos); los __closeout_evidence__ de clase de GC01 se borran. Las reglas sobre campos pasan a RuleDocs on_check/on_write alert: vocabulario de closeout_evidence, alerta de código implícito (operations.py:622-632), python_changes_without_declared_tests (:633-642), forma de URL, graduación de pills (operations.py:796-804). (3) Se borran: _add_closeout_facts (operations.py:441-450) y su limpieza (tasks.py:196-199), closeout_evidence_verified, pill_graduation_verified, has(closeout_evidence_verified) en task_lifecycle (ya en semillas desde CC31), verify_task_closeout como evaluador (queda como orquestador: corre productores, escribe recibos, llama a sldb rules explain sobre la arista y devuelve el mismo envelope que hoy). (4) Grafo: deskops graph build|neighbors|missing|reflect y drift leen sldb graph project (GD21); se borran graph/snapshot.py (construcción propia), graph/checks.py (rglob :124 → missing de GD21) y los rglob de graph/self_reflection.py; tests/graph_oracle_v1/ se conserva hasta la aceptación y luego se borra. Evidencia por tarea (closeout_evidence que suma kinds): hipótesis en el TaskDoc y nota a sldb (pendiente del dueño en decisiones.md); mientras tanto un kind extra de la tarea se verifica y se reporta como alert, sin bloquear.'
+    acceptance: 'closeout verify sobre una tarea task.code con commit en HEAD, test existente y atom enlazado escribe tres recibos evidence accepted y devuelve el mismo envelope que el golden previo; sin commit, el recibo commit queda rejected y la arista task_completes aparece en edges_blocked con la cláusula fact = "commit"; editar goal tras verificar deja los recibos changed y vuelve a bloquear; una segunda verify sin cambios no crea recibos; los tests de tests/test_closeout.py, test_closeout_declared_evidence.py, test_closeout_atomless.py y test_closeout_skill_links.py verdes con los mismos escenarios (adaptados a recibos); grep de closeout_evidence_verified, pill_graduation_verified, _add_closeout_facts y __closeout_evidence__ en deskops/ vacío; deskops graph neighbors y missing dan lo mismo que el oráculo v1 sobre el desk real de deskops y después tests/graph_oracle_v1/ se borra; goldens de ayuda y salida idénticos; deskops doctor sin hallazgos nuevos en los 6 desks; líneas de closeout_gates.py, operations.py y graph/ antes y después; CHANGELOG; docs/workflow-policy-reference.md; ritual closeout actualizado vía deskops.'
+    output_scope: deskops/services/closeout_gates.py, deskops/operations.py, deskops/services/tasks.py, deskops/services/closure.py (solo la llamada a verify), deskops/models/task_types.py, deskops/models/review.py, deskops/data/rules/, deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/drift.py, deskops/cli/commands/closeout.py, tests/, docs/workflow-policy-reference.md, desk/rituals (vía deskops), CHANGELOG.md
+  - id: CC34
+    tree_id: T3.4
+    title: Vistas de la UI como ViewDoc servidas por sldb; desk_view.py desaparece
+    kind: code
+    node_role: delivery
+    parent_id: PF3
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC33, CC36]
+    requires: [G_GD25, G_GD21]
+    enablers: {sldb: [GD21, GD25, GO06, GO08, GO09]}
+    scope: 'Primer paso: capturar goldens JSON de deskops view board|task|drawer|inbox sobre un desk de prueba fijo (no existen hoy en tests/fixtures/golden/output/). ViewDocs semilla (deskops/data/views/: board, task, drawer, inbox) que reproducen el contrato de docs/deskops-ui.md (CONTRACT_VERSION 1): board = sección de tareas del Board agrupadas por current_node en el orden de los RitualDoc del ciclo de vida, con transitions (holding/blocked de GO08/GO09), rules (findings de las reglas de CC32/CC33) y edges (pills, atoms); task = una tarea por {id} con sus campos y next; drawer = selector por path_glob desk/drawer/tasks/*.md; inbox = notas del inbox. Lo que no es documento se agrega con proveedores computed registrados por deskops (GD25 register_view_provider): agents (Herdr, runtime/, P4) y lo que el golden exija que sldb no calcule; ningún proveedor reimplementa una regla. deskops view <x> = sldb.api.run_view + el render_text actual (se conserva en el CLI); revision del payload = ETag de GD25 (los valores cambian, la clave y su semántica de guarda optimista no). Se borran services/desk_view.py, task_revision/note_revision y los alias privados de la fachada que CC30 conservó para graph_ui. graph_ui (repo aparte, UIs/graph_ui): GET /api/view/<view> lee GET /views/<view> de sldb serve (proxy o cliente directo, con ETag) en lugar de importar DeskView; deskops_routes.py deja de usar ops._read_doc/_resolve_glob/show_task y lee la vista task; las acciones siguen por el CLI de deskops en proceso (DP4); su guarda de revisión usa el ETag. Si las ViewDocs viven solo en el paquete o también en desk/views/ lo decide el dueño (DK4 en decisiones.md); mientras no decida, viven en el paquete y sldb serve las encuentra por un store de deskops enlazado.'
+    acceptance: 'deskops view board|task|drawer|inbox --format json idénticos a los goldens capturados en el primer paso salvo el valor de revision; ayuda de view idéntica; GET /views/board de sldb serve sobre el desk de prueba devuelve el mismo payload; graph_ui sirve la vista board leyendo de sldb serve (test en graph_ui) y POST /api/desk/advance con un ETag viejo da 409; tests/test_desk_view.py reescrito sobre run_view y verde; grep de "desk_view\|DeskView" en deskops/ y en UIs/graph_ui/frontends vacío; deskops view board en los 6 desks responde; tiempo frío/caliente de view board sobre el desk real de deskops registrado (meta caliente < 1 s, la verifica CC52); CHANGELOG; docs/deskops-ui.md.'
+    output_scope: deskops/services/desk_view.py (borrado), deskops/data/views/, deskops/cli/commands/view.py, deskops/runtime/ (proveedor agents), deskops/operations.py (alias privados), tests/, tests/fixtures/golden/output/, docs/deskops-ui.md, CHANGELOG.md, UIs/graph_ui/frontends/desk/serve.py, UIs/graph_ui/frontends/mindmap/deskops_routes.py, UIs/graph_ui/tests/
+  - id: CC35
+    tree_id: T3.5
+    title: Escrituras vía sldb (transacción, selectores, referencias entrantes, tags, reemplazo); borrar los caminos propios
+    kind: code
+    node_role: delivery
+    parent_id: PF3
+    owner_repo: deskops
+    estimate: L
+    depends_on: [CC30]
+    requires: [G_GD22, G_GD23, G_GD24, G_GD27]
+    enablers: {sldb: [GD22, GD23, GD24, GD27]}
+    scope: 'Se parte al promover en cuatro hijos (transacción, selectores, referencias, tags/reemplazo), cada uno con el mismo criterio de aceptación sobre su superficie. (1) Transacción: todo caller de doc_io.DocTransaction (operations.py:266,1327; tasks.py:92; atoms.py:179,294,356; drawer.py:116,168; retire.py:103; closure.py:429; issues.py:337; replace.py:85; runtime/scion.py:394) usa sldb.api.transaction (GD24) con expected_source_hash en los updates; message send/ack (cli/commands/message.py:123,181) también, sin rollback manual; doc_io.py se borra. (2) Selectores: desk_paths.resolve_selector (:24), _resolve_glob, _resolve_artifact_selector[_multi], _tracked_task_paths (que lee .sldb crudo), _registered_repositories, _resolve_ritual_selector (operations.py:1125-1279), issues.find_issue/list_issues (:96, :354), drawer.resolve_drawer_source/_resolve_unique (:49, :220) pasan a sldb.api.select_documents (GD23) con la misma regla exacto > prefijo único y los mismos mensajes de error de deskops (el mensaje lo arma deskops con los candidatos que sldb devuelve). (3) Referencias entrantes: atoms delete/split/merge (_find_inbound_atom_references :743, _rewrite_inbound_atom_references :764, _retarget_atom_documents :809), retire (_inbound_references :213, _board_pill_updates :158, _drawer_bullets_removed :141), drawer remove (_tasks_recording :183) y closure (_board_routes/_board_reference_matches :572-584) usan referrers/rewrite_references (GD22) dentro de la misma transacción; las menciones atom:<id> en prosa y los bullets del drawer se declaran como MentionPattern en la configuración de grafo de deskops (la de CC33). (4) Tags y reemplazo: desk/atoms/tag-namespaces.yaml sigue siendo la fuente (formato del desk) y desk update --apply la sincroniza a tag_namespaces del store por la API de sldb; domain_tree.require_domain_parents y DomainTree.check/tree pasan a la validación y tag_tree de GD27 (CrossroadDoc como anchored_by del namespace domain); atom_tags.axis_folder_relpath pasa a tag_folder; services/replace.py pasa a sldb replace_text con la misma guarda de conteo. Lo que queda de domain_tree.py es lo del caso (crear crossroads y protoátomos con sus plantillas). En cada hijo: los goldens de ayuda y salida de add/edit/advance/promote/retire/message/atoms/desk replace no cambian.'
+    acceptance: 'grep -rn "doc_io\|DocTransaction\|resolve_selector\|_tracked_task_paths\|_find_inbound_atom_references\|_rewrite_inbound_atom_references\|_inbound_references\|require_domain_parents" deskops/ vacío; un fallo inyectado a mitad de atoms merge revierte el atom, los referrers y el índice (hash de archivos y sldb stores check iguales antes y después); una escritura con expected_source_hash viejo falla con el mensaje de conflicto de deskops; retire de una pill la quita del Board y de las tareas en una sola transacción; atoms merge reescribe menciones atom:<id> en prosa; los mensajes de ambigüedad de selectores son los de antes (goldens); domain:a.b sin crossroad de domain:a falla como antes; goldens de ayuda y salida idénticos; los tests de los archivos tocados verdes; deskops doctor sin hallazgos nuevos en los 6 desks; líneas antes y después por archivo en la Validation; CHANGELOG.'
+    output_scope: deskops/doc_io.py (borrado), deskops/desk_paths.py, deskops/operations.py, deskops/services/, deskops/domain_tree.py, deskops/atom_tags.py, deskops/atom_references.py, deskops/graph/desk_graph.py (MentionPattern), deskops/cli/commands/message.py, deskops/cli/commands/desk.py, deskops/runtime/scion.py, tests/, CHANGELOG.md
+  - id: CC36
+    tree_id: T3.6
+    title: Plantillas del desk (board, rituales, drawer, faq) como datos escritos por el scaffold de sldb
+    kind: refactor
+    node_role: delivery
+    parent_id: PF1
+    owner_repo: deskops
+    estimate: S
+    depends_on: [CC30]
+    requires: [G_GD26]
+    enablers: {sldb: [GD26]}
+    scope: 'Primer paso: golden del scaffold (deskops init en un directorio temporal: lista de rutas y sha256 de cada archivo, y desk update --apply sobre un desk viejo de prueba). Las plantillas que hoy son strings de workspace.py (config.json :236, Board :292 vía BoardDoc, contexts/pills.md :322, rituales phase/execution/testing/closeout :340-398, drawer/README.md :412, atoms/tag-namespaces.yaml :419) pasan a archivos en deskops/data/templates/ y una declaración deskops/data/desk_declaration.yaml (folders y seeds, modo if_missing; las de ciclo de vida, reglas y vistas que agreguen CC31/CC32/CC34 con modo managed) que deskops pasa a sldb.api.scaffold_store(declaration=..., apply) (GD26, DP3); las carpetas extra de ensure_workspace (operations.py:231-241) entran a folders. default_ritual_text (workspace.py:401, usado por lifecycle.py:271) lee la plantilla. desk update deja de adivinar modelos por ruta (cli/commands/desk.py:100 guess_model_for_path) y usa includes declarados {model, glob} (apply_includes de sldb). La FAQ: docs/faq.md sigue siendo la ruta por defecto y deskops/data/faq.md el respaldo; init no la escribe (como hoy). Se borran scaffold_desk, _write_if_missing y los *_template de workspace.py; inspect_desk/migrate_desk (clasificación absent/empty/legacy/current) se quedan como código del caso.'
+    acceptance: 'deskops init en un directorio temporal produce las mismas rutas y los mismos sha256 que el golden; desk update --apply sobre el desk viejo de prueba produce el mismo reporte (created/preserved) y el mismo árbol; una segunda corrida no cambia nada; grep de _write_if_missing, scaffold_desk, guess_model_for_path y "_template(" en deskops/ vacío; un desk de los 6 (copia) con desk update en dry-run no reporta cambios nuevos; goldens de ayuda de init y desk idénticos; líneas de workspace.py antes y después; CHANGELOG.'
+    output_scope: deskops/workspace.py, deskops/data/templates/, deskops/data/desk_declaration.yaml, deskops/operations.py (ensure_workspace), deskops/lifecycle.py (default_ritual_text), deskops/cli/commands/core.py, deskops/cli/commands/desk.py, deskops/bootstrap.py, tests/, CHANGELOG.md
+  - id: CC37
+    tree_id: T3.7
+    title: Cerrar vías de escape - ninguna escritura deja el ciclo de vida fuera de las reglas
+    kind: code
+    node_role: delivery
+    parent_id: PF2
+    owner_repo: deskops
+    estimate: S
+    depends_on: [CC31, CC32]
+    requires: [G_GO08]
+    enablers: {sldb: [GO08]}
+    scope: 'GC06 de gates-por-tipo (entra por G_GATES_FROZEN) ya retiró advance --to y hace que edit task rechace status, current_node, history, task_type y closeout_evidence (tests/test_cli_escape_hatches.py). Este nodo cubre lo que queda: (1) inventario, en el TaskDoc, de toda vía que escribe un TaskDoc (CLI de deskops, servicios internos, graph_ui, sldb fields update, sldb docs update, sldb serve /save) y cuál pasa por una transición; (2) RuleDocs semilla on_write, severidad error, sobre model <= TaskDoc, de consistencia del ciclo de vida: status es el sets.status de la última arista que llevó a current_node (tabla derivada de los RelationDoc de CC31, escrita como cláusulas current_node = X implica status = Y, es decir not(current_node = X) or status = Y), el último elemento de history nombra current_node, y task_type coincide con el modelo del documento; así una escritura directa por sldb que deja una tarea inconsistente es rechazada con explicación; (3) las escrituras internas de deskops que cambian el ciclo de vida pasan solo por advance (apply_effects) y closeout commit, comprobado por grep; (4) lo que una regla on_write no puede ver (que el cambio no vino de una transición, porque la regla solo ve el payload nuevo) se manda a sldb como pedido (deskops message send --to sldb: campos solo por transición) y queda en el pendiente del dueño de decisiones.md.'
+    acceptance: 'sldb fields update de status sobre una tarea en ritual-execution a closed es rechazado con la cláusula de consistencia; sldb fields update de current_node sin status coherente es rechazado; una tarea migrada de cada uno de los 6 desks (copia) pasa las reglas tras desk update --apply (o el desk update reporta las inconsistentes sin escribirlas); advance y closeout commit siguen funcionando (tests de lifecycle y closeout verdes); grep de escrituras de status/current_node fuera de lifecycle.advance y closure en deskops/ vacío (patrón fijado en el TaskDoc); inventario en el TaskDoc; nota a sldb enviada; tests/test_cli_escape_hatches.py verde; CHANGELOG.'
+    output_scope: deskops/data/rules/, deskops/services/, deskops/lifecycle.py, deskops/cli/commands/desk.py, tests/, CHANGELOG.md
+  - id: CC51
+    tree_id: T5.1
+    title: Medición - líneas de código vs configuración e inventario justificado
+    kind: docs
+    node_role: delivery
+    parent_id: PF4
+    owner_repo: deskops
+    estimate: S
+    depends_on: [CC30, CC31, CC32, CC33, CC34, CC35, CC36, CC37]
+    requires: []
+    enablers: {sldb: []}
+    scope: 'docs/config-vs-code.md con: líneas de Python de deskops/deskops por directorio con el método (find deskops/deskops -name "*.py" | xargs wc -l, agrupado por directorio de primer nivel) en la base (827f3db7: 18,732; cli 5,515, nivel superior 4,650, services 3,570, graph 2,258, models 1,147, runtime 1,041, materializers 282, specs 213, workflow 56) y en el commit de cierre; inventario de configuración (modelos, RelationDoc, RuleDoc, ViewDoc, semillas, configuración de grafo) con su ubicación; lista de lo que quedó como código, archivo por archivo, cada uno con su justificación (P4: closure.py git, runtime/, materializers/, bootstrap, identity, CLI; hechos de git de CC33; proveedores computed de CC34) o marcado como deuda con un nodo o inbox que lo retire. N (meta de líneas) la fija el dueño antes de promover (pendiente en decisiones.md).'
+    acceptance: 'docs/config-vs-code.md existe con las dos mediciones, el inventario y la lista justificada; las líneas totales del commit de cierre son < N; cada archivo de deskops/deskops aparece en la lista o en un directorio de P4 nombrado; CHANGELOG.'
+    output_scope: docs/config-vs-code.md, CHANGELOG.md
+  - id: CC52
+    tree_id: T5.2
+    title: Suite, doctor y Board verdes en los 6 desks
+    kind: test
+    node_role: delivery
+    parent_id: PF4
+    owner_repo: deskops
+    estimate: S
+    depends_on: [CC30, CC31, CC32, CC33, CC34, CC35, CC36, CC37]
+    requires: []
+    enablers: {sldb: []}
+    scope: 'Verificación final, sin cambio de código salvo arreglos que la verificación delate (cada arreglo es un commit con su test). La suite completa de deskops y la de sldb las corre el supervisor una vez sobre el resultado integrado (regla 3); este nodo registra su resultado. En los 6 desks (deskops, sldb, spec2viz, scion, pron, graph_ui), con la versión integrada: deskops desk update --apply (dry-run primero, resultado en la Validation), deskops doctor, deskops view board, sldb stores check y sldb rules check. Board: deskops view board sobre el desk real de deskops, 3 corridas en frío (caché del usuario borrada) y 3 en caliente, mediana, en robocop2.'
+    acceptance: 'Suite completa de deskops y de sldb sin fallas nuevas contra main (resultado del supervisor registrado); en los 6 desks doctor sin errores, view board responde, stores check PASS y rules check sin errores; mediana caliente de view board en el desk real de deskops < 1 s y la de frío registrada; tabla con los 6 desks y los tiempos en la Validation del TaskDoc y en docs/config-vs-code.md.'
+    output_scope: tests/ (solo arreglos), docs/config-vs-code.md (sección verificación)
+  - id: CC53
+    tree_id: T5.3
+    title: Docs - qué es configuración y cómo se declara un tipo de tarea nuevo
+    kind: docs
+    node_role: delivery
+    parent_id: PF4
+    owner_repo: deskops
+    estimate: S
+    depends_on: [CC31, CC32, CC33, CC34, CC36]
+    requires: []
+    enablers: {sldb: []}
+    scope: 'docs/configuration.md: mapa de la configuración de deskops (modelos y tipos de tarea, ReviewDoc y recibos de evidencia, RelationDoc con attributes, RuleDoc de activación, cierre y consistencia, ViewDoc, configuración de grafo, semillas y plantillas) con su ubicación en el paquete y en el desk, y qué ejecuta sldb en cada caso. Receta paso a paso para declarar un tipo de tarea nuevo en un desk: subclase en desk/models/*.py (DC7), desk update --apply, RuleDoc propia que suma gates, cómo verlo con sldb rules explain y con deskops advance. Receta para una vista nueva. docs/operator-manual.md y docs/workflow-policy-reference.md enlazan a configuration.md; los rituales que nombran comportamiento cambiado se actualizan vía deskops; la FAQ (docs/faq.md y deskops/data/faq.md) gana las preguntas "dónde está la regla de X" y "cómo agrego un tipo".'
+    acceptance: 'docs/configuration.md existe; la receta del tipo nuevo se ejecuta tal cual en un desk temporal como test (tests/test_docs_recipes.py o equivalente fijado en el TaskDoc) y la tarea del tipo nuevo queda bloqueada y luego activada según su regla; los ejemplos de ayuda de la CLI siguen pasando (test_cli_help_examples.py); enlaces desde operator-manual y workflow-policy-reference; CHANGELOG.'
+    output_scope: docs/configuration.md, docs/operator-manual.md, docs/workflow-policy-reference.md, docs/faq.md, deskops/data/faq.md, desk/rituals (vía deskops), tests/, CHANGELOG.md

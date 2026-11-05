@@ -1,0 +1,24 @@
+# Decisiones registradas
+
+Cada entrada dice quién decidió, con qué fuente y en qué fecha. D2, D3 y D4 son del dueño y están en `sldb/desk/drawer/plans/grafo-operable/decisiones.md`; se copian con el mismo id porque este plan las consume. Las DP son propuestas de este plan: quedan como "propuesta" hasta que el dueño autorice el plan.
+
+| Id | Decisión | Actor | Fuente | Fecha |
+|---|---|---|---|---|
+| DK1 | Lo general va a sldb y lo específico del caso deskops va a deskops; deskops es configuración sobre sldb. | Dueño | Aprobación del árbol de tareas `~/proyectos/SLDB_1/deskops-como-config-arbol.md` (brief `planes-config-brief.md`) | 2026-11-05 |
+| DK2 | `gates-por-tipo` queda congelado tras GC03: se integran y cierran GC01, GC02, GC03 y GC06 (ya implementados en `wt/gates-por-tipo`); su resto (GC04 efectos en aristas, GC05 reglas de activación y `G_CONSUMER`, GC07 herencia, GC08 rituales, GC09–GC11 composición) no se ejecuta en ese plan y se rehace aquí en CC31, CC32 y CC33 sobre la API general. | Dueño | Árbol aprobado, T0.2 ("Terminar GC03 y congelar gates-por-tipo → su resto se rehace en P3") | 2026-11-05 |
+| DK3 | Invariante: el formato del desk y la gramática del CLI no cambian; en cada paso la suite y `deskops doctor` en los 6 desks quedan verdes; cada superficie se cambia y su código viejo se borra en el mismo paso. | Dueño | Árbol aprobado, §Contexto | 2026-11-05 |
+| DK5 | Orden: P3 empieza con CC30 (sin habilitador) y cada nodo sigue a su habilitador: CC31←GO09, CC32/CC33←GO06+GO08, CC34←GD25, CC35←GD22+GD23+GD24, CC37←CC31+CC32. Todo se ejecuta en robocop2. | Dueño | Árbol aprobado, §Orden y paralelismo | 2026-11-05 |
+| D2 | Los gates de activación son bloqueo duro, sin bandera de salto; la vía de escape es especializar tipos de tarea. | Dueño | sldb `grafo-operable/decisiones.md` D2 | 2026-11-04 |
+| D3 | No hay coordinación central entre desks; cada desk pide feedback por `deskops message send`. | Dueño | sldb `grafo-operable/decisiones.md` D3 | 2026-11-04 |
+| D4 | El revisor barato es pi deepseek(-flash). | Dueño | sldb `grafo-operable/decisiones.md` D4 | 2026-11-04 |
+| DP1 | Los tipos de tarea siguen siendo modelos con herencia (GC01, DC1 de gates-por-tipo); sus gates pasan de atributos de clase Python (`__activation_receipts__`, `__closeout_evidence__`) a `RuleDoc` por familia. La herencia de familias (`model <= X`) da gratis "un subtipo suma gates, nunca quita". | Propuesta de este plan | gates-por-tipo DC1; sldb GO06 | 2026-11-05 |
+| DP2 | Un hecho de git o archivos verificado por deskops queda como recibo `ReviewDoc` `kind: evidence` (campo `fact`) anclado al contrato de la tarea; la regla de cierre exige esos recibos intactos. Se retira la inyección de hechos en el payload (`closeout_evidence_verified`, `pill_graduation_verified`). | Propuesta de este plan | Árbol T3.3 ("en código solo los hechos que vienen de git"); gates-por-tipo §El límite | 2026-11-05 |
+| DP3 | Las reglas, vistas y documentos de ciclo de vida de fábrica son semillas del paquete deskops (`deskops/data/`), declaradas y pasadas en proceso a `sldb.api.scaffold_store` (GD26, `declaration=`); `store.yaml` de cada desk no cambia de forma. | Propuesta de este plan | sldb GD26; DK3 | 2026-11-05 |
+| DP4 | graph_ui lee las vistas de `sldb serve` (`GET /views/<nombre>`) y sigue escribiendo por el CLI de deskops en proceso hasta que CC35 deje las escrituras sobre la transacción de sldb; no habla con `sldb serve /save` directamente para tareas (las transiciones son de deskops). | Propuesta de este plan | Árbol T3.4; `frontends/desk/serve.py:217-238` | 2026-11-05 |
+
+## Pendientes del dueño
+
+- **N de CC51.** El árbol pide "deskops < N líneas de código" sin fijar N. Propuesta: el número que resulte de borrar lo que la tabla de `generalizar-desde-deskops/alcance.md` deja sin motivo, más P4; el dueño fija N antes de promover CC51.
+- **DK4: `ViewDoc` en el desk.** Las vistas de fábrica viven como semillas del paquete; si además se escriben en `desk/views/` (para que un desk las edite) es una carpeta nueva del desk. Confirmar o dejar las vistas solo en el paquete (en ese caso `sldb serve` las lee de un store de deskops enlazado).
+- **Evidencia por tarea (`--evidence`).** Con la evidencia como regla por tipo, `closeout_evidence` de una tarea solo puede sumar kinds; expresar "para cada kind de este campo lista existe un recibo" exige cuantificar sobre valores de un campo, que GO02 no fija (los caminos siguen referencias). CC33 lo deja como hipótesis y nota a sldb; confirmar si basta con que la evidencia sea solo por tipo.
+- **Escrituras fuera de deskops (CC37).** `sldb fields update`, `sldb docs update` y `/save` pueden escribir `status`/`current_node` de una tarea sin pasar por una transición; una regla `on_write` ve solo el payload nuevo. CC37 cubre la consistencia (status ↔ current_node ↔ history); cerrar del todo exige en sldb campos "solo por transición", que no está en P1 ni en P2.
