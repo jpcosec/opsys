@@ -1,0 +1,20 @@
+name: atom-the-deskops-ui-reads-the-desk-only-through-deskops-view-and-writes-only-through-deskops-operations
+path: desk/atoms/atom-the-deskops-ui-reads-the-desk-only-through-deskops-view-and-writes-only-through-deskops-operations.md
+source_hash: ea24bd0ec2c4946e777e42eb0e2a4716116890565ace6fc8b658b49bc4d3b416
+content_hash: ecef40106791e8d3a885f6117d7b95c454be857a053ca3f45ad9a457bd5f25aa
+field_hashes:
+  id: d617231b435503588867e140d213163851c62695ec19e6d611480f59e52d1c07
+  title: 04f47417b9935f32cb1301096dbba41514ed6774fcf86d60267c810e2295ebff
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 6bc85447a66897b9eb96e38ee9a63bf65d22cb4b05f56a57cc15e1296acf0b9f
+  tags: bf3915cf3e39efdf44c0135a78d657a7cf197fc314fdde930c27cf9123eda8d5
+  provenance: 9d20b268bc890a9643fe67d63059436704ddc5d2ab9a4d48ce8d68c099adff74
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:read-surfaces
+- topic:ui
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

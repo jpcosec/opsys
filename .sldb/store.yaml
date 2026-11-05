@@ -201,6 +201,11 @@ include:
   - desk/materializations/materialization-about-walks-a-first-task-end-to-end.md
   - desk/materializations/materialization-help-examples-run-as-printed.md
   - desk/materializations/materialization-cli-tests-exercise-the-real-command-surface.md
+  - desk/materializations/materialization-deskops-ui-view-service.md
+  - desk/materializations/materialization-deskops-ui-view-command.md
+  - desk/materializations/materialization-deskops-ui-view-registration.md
+  - desk/materializations/materialization-deskops-ui-view-tests.md
+  - desk/materializations/materialization-deskops-ui-view-contract-doc.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

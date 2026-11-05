@@ -1,0 +1,21 @@
+name: materialization-deskops-ui-view-command
+path: desk/materializations/materialization-deskops-ui-view-command.md
+source_hash: f4e3d4a82ff7cb994c3e4a63900e259f9f4f8b0ab49fa21d2364e045c6885e57
+content_hash: 2d3f06e20c3eaa8aaf82192396d23d5dbbbb5a879f8e4ccc918479d40fc10530
+field_hashes:
+  id: 9f3109131c37638fa412df44f26a65b5f2c3faa860da27689a09f28e945f1053
+  title: 3756482849b94ae568317d783a6f5d20dc691c6199e1e4b5079ad3d093245aaf
+  source_atoms: 9d2fcef74069da9274baf9b985f26d2deff34bbbf3ce01c51822d17f145960a0
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 142414161cc3973d39a4fc59151516a7f70e5f4cf50b086da1468ee92a71b839
+  intent: 3e611f7e915b54c25284f41e562ff264728457d73c44df77ffce86c7ae13682d
+  validation: 51e7a10c7c3bf7d4df6d5582bb98e1e108fafa7237b7cfd951e5f26a993cbf09
+  tags: c5f26a7bad9e1f3864f8ecc3f8db485f2f014778f0505d0e0ee7eddaad4ae8da
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:ui
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
