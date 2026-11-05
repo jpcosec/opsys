@@ -1,0 +1,19 @@
+name: materialization-extract-sources-declared-targets
+path: desk/materializations/materialization-extract-sources-declared-targets.md
+source_hash: aae9334fe555e3fa9626611c1c7831cc478166f908b871521445197a411438bf
+content_hash: fb73c4b08f7e1e7a6b9020c3039729dd04a41da4a4c2c8efce41c9db7ccd1b88
+field_hashes:
+  id: f8fbe7c7221c2b68b2b5d947eefbc737c103839163c8ce659744536eaf28a06a
+  title: 74476a0b295ed230a0d09e1b3aacf5c8e8daf52a70661e744e5521b7705dbb1c
+  source_atoms: fe05925db6d995d65e5818ce039c7c7cc22e551ef04cd159d82f54c24e818ad2
+  target_kind: 3e99dbb6780aa5f83b56f0bfddfc67e9d3047e51eb103d116d666ba801ac68ac
+  target_identity: afcd8a30dfecf5c6a21f6bba532d0547398d55942e9bb277e0451a64522e77c7
+  intent: 039798a2e2a3ac0b2076b357912b21f2bd735229c0975bda1087507395279743
+  validation: b5feccb4efbb7e3e77d37c85d895c10ec3576e1a5b5519175ffce8489cd2b64d
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

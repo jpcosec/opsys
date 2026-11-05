@@ -1,0 +1,33 @@
+name: context-review
+path: desk/rituals/context-review.md
+source_hash: d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0
+content_hash: a5baf130cff22f9c7aa70f620d37f47c9a3b86d3c3ff0b5e5dd2ec3bd628ec0d
+field_hashes:
+  title: 68b5ce62319faffcd92d20311a89fe02a501ccd62f48b9d18cfac144544fbf2a
+  id: 47cdc93ad2c09b91930ed45e8652bf83c0abe9092e49b00e2ad04c13a6b93912
+  status: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 6309413870c22f99b36eb8886d6636e4626247e18f5e86907c84377c0b3ba748
+  current_node: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  purpose: 4a228bb5bf20dda5bcdb7a642b8c1437b0dcdaf3468fe5dbb501f31dc7c8cab4
+  trigger: 1beb2b3132f1846aac60ca048e76590fad538088176e152c600286460c1882d4
+  preconditions: 1229c70077076c27d70c41bff6b90d0de485f35c50b3d8947e40ac08e7dfb6a8
+  steps: afb95a3d6743ade959681ca962c51cfda5ca521e1fb82121740975f08d97deae
+  validation: ab833c7b06c0ba8e06e9f0d2a170669281451ca3a823956e38aa5d15dcc7de31
+  failure_modes: 5f8e7b41a85c88faf1b7482581d0f7f8fc053ede04b44d26a4728a10289a6557
+  completion: 6a79da22f9d659ef2ac552150ddb6b52693dfda0e44566fcec3a5dfb166fccb4
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:sldb
+- topic:context-review
+- topic:rituals
+- type.workflow.ritual
+- workspace.desk
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-10-31T04:05:18Z'
+  authority: generated
+  via: create_document

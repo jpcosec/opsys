@@ -1,0 +1,17 @@
+name: repo-Chatbot_Infra
+path: desk/registry/repo-Chatbot_Infra.md
+source_hash: 34f87db0f02a53db39761b474dcba5971e2ca329c9a4c6304ad1571cc47ffc0a
+content_hash: 4f062bbf9d895328219fe0511088d134d3cd3bf271e7f9aac1b32a2854ed4c5a
+field_hashes:
+  name: 3de70cf70279bf4007e59f692f29fcc3ecc50b263bdbbd26b8ff821d5f9c0aad
+  id: 3de70cf70279bf4007e59f692f29fcc3ecc50b263bdbbd26b8ff821d5f9c0aad
+  path: 65cfa457dbb28c88501e1bedeea608fee18631d02175cae6f9de4ffa74ff6da2
+  status: db0fb2bf5ebc424454c3e11b5ee8bfb43af24a52e561aa49e94143831dc6fd93
+  description: c5e26c5d5369756b80f621f6af956f02b410d9ed67b1a8f0c9732a42ea46dbd9
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.repository
+- workspace.desk.registry
+provenance: null

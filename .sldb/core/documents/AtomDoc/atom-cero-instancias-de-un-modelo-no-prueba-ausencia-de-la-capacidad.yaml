@@ -1,0 +1,19 @@
+name: atom-cero-instancias-de-un-modelo-no-prueba-ausencia-de-la-capacidad
+path: desk/atoms/atom-cero-instancias-de-un-modelo-no-prueba-ausencia-de-la-capacidad.md
+source_hash: ee46582a0fa0c9cc3b7a6da5d8c67780064f60163b94cc4cb7ff063e131e1478
+content_hash: 8fb7d02183f12fb396fb44a99435c1d64bad19fbee39b1f57f7901518a2a6da3
+field_hashes:
+  id: 923fa6db73dc30548e93b2e6ee5423c904a29fc95d988a3811e84267aa113baf
+  title: 995c1430a353d0316aa5967595f8244e4fc9e8debcd7a2a509207a963578c6b7
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: d925bffbb362d445825d52afeeda7a782e81d1b4f4a82428ebb63c7ea82652e2
+  tags: 9f13720b0a02df8bb02ec72565eff4115f9f636c9625981f60a900a64b5022f3
+  provenance: 90487e7368a3b6cb2799c354fdaaf9b450fb9bdd657aaa550c889e5d2bb460c6
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

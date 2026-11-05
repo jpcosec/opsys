@@ -1,0 +1,19 @@
+name: materialization-graph-vocabulary-source-kind-update
+path: desk/materializations/materialization-graph-vocabulary-source-kind-update.md
+source_hash: 2a3d5c52ded54023d71728174e3b87fa5a79a504a269b996e4c650328f202781
+content_hash: bfdde7a6d74d85649a522ccb14d1d2aff6d7336db074b2864691df9db1eeb6b9
+field_hashes:
+  id: fc0bf15eb7973b0668f78cf719050ea32820caa03d48fb2f179ac511a5eb4c4a
+  title: 0bf18fc65d9bc6cde9f45132453b33939e9723aaf362bbe55a1dfcf58bceb1b2
+  source_atoms: fe05925db6d995d65e5818ce039c7c7cc22e551ef04cd159d82f54c24e818ad2
+  target_kind: bc0f43f548d6cd00dd5cc626a2e75c8454853828c86074d136cd4de2381ea142
+  target_identity: ae4553e075b4bb58d7decf41955d2a45b24c693287c7687c0d0074478ffd3922
+  intent: d223dbdd3b12708bb63d6e7ca56b72b63e6f7811bdb736e439fcd87ec5949a6f
+  validation: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

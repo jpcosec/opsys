@@ -1,0 +1,19 @@
+name: atom-una-disposicion-lee-toda-la-salida-del-revisor
+path: desk/atoms/atom-una-disposicion-lee-toda-la-salida-del-revisor.md
+source_hash: 3e40c6efc6417ca21d9271696097cdcad1f0e85d9526a4795b2826da1490f177
+content_hash: 165d53bfba9df9d48e21abe98186940fa81fc7d8c78819e2756a8f2fa9baafa0
+field_hashes:
+  id: d1719f421dac21633ef4434a4927999c9eca7cd67bf0d04fc6c04e64f6220ec9
+  title: d3b347b0c98804d6c9dd780f8ad797b61f0ae2c901acd7f3265e81e4a5d5b887
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: e83181dc9c396be1f4dab49ceda40605b6ed5c639d57a3ed103ca62eb2fd033f
+  tags: 9f13720b0a02df8bb02ec72565eff4115f9f636c9625981f60a900a64b5022f3
+  provenance: 6f28207c68962de0782d88977b27c73d423b65f883d154d5df4911968b334c15
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

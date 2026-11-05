@@ -1,0 +1,19 @@
+name: atom-separar-procedencia-exige-comparar-todas-las-columnas-contra-la-versión-previa
+path: desk/atoms/atom-separar-procedencia-exige-comparar-todas-las-columnas-contra-la-versión-previa.md
+source_hash: a97bc5c99801e87ef65c0f591226963d50b25289b2b45d97e2716774b39794e7
+content_hash: 0282974f66023f758bf25bb8b83b390231cb5ed0bc810e4aaa3c5898e33eecf6
+field_hashes:
+  id: 813973425bcf460da957250bafef046dc08d4a57277356a0da4e4b20f92a9fb6
+  title: 2c9d44c16839fcf113e10e1e98f891a5aa0dedf86a66a24e1a44a4335c4f6577
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: 6a702564c1eec2a9a86305cd05bbc06aacac250bc2e8524f588986521f92d8de
+  tags: 9f13720b0a02df8bb02ec72565eff4115f9f636c9625981f60a900a64b5022f3
+  provenance: 85e0920064b0ae7107f623fbc1e8d0f6cbdfda8c0ac0ddccd843a3e6d300c06f
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

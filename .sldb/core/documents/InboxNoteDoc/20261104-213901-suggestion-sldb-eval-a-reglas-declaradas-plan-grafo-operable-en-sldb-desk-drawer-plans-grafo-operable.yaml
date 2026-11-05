@@ -1,0 +1,18 @@
+name: 20261104-213901-suggestion-sldb-eval-a-reglas-declaradas-plan-grafo-operable-en-sldb-desk-drawer-plans-grafo-operable
+path: desk/inbox/20261104-213901-suggestion-sldb-eval-a-reglas-declaradas-plan-grafo-operable-en-sldb-desk-drawer-plans-grafo-operable.md
+source_hash: 56020d6bc20331831fe7a017ae8d88af4273113bd94761555123259b68c7bafb
+content_hash: df7310f1e0e8b463ff01c5eb631f5727bc6c45829ce6d582b03113824dd5d622
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: c8f2c83d9488538eb1ed3b046af16992e865a351b6663d00a1d122449bbcf0a4
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 4ec83f2640f6296d05acafc9355fb4b0a5caeb8b1a76a078c1465bea40873d19
+  body: f3181a45e5ba1ca511cdf7589fc9a54133db59498a8480812805ab43afa58cd6
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

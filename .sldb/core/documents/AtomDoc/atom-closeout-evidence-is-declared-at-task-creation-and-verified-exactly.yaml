@@ -1,0 +1,19 @@
+name: atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly
+path: desk/atoms/atom-closeout-evidence-is-declared-at-task-creation-and-verified-exactly.md
+source_hash: 3184e7347ad044c0264b382962fa2b18b9b14a027063d898bc5355beb36dc498
+content_hash: aff991797b0bc4b7286bb87378b01bae6ecf691828fee0b4f7702d6a8f405328
+field_hashes:
+  id: eca7b6fca90a6839f934a250e6602d2beb604ebcf8d146b47b529e5c185064c6
+  title: c0e5aad152ed1f7a5e7411c609db07ab5bdaa0a94e4fd7472da4f8e580acb40e
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 8a9873238de3899ed48d1d72189bf42ab47334e95261b3e4396e68c8badaf9d6
+  tags: dfefd6e676e17eca5c1da74fbf46465921acc0f4d2342e0f1d9b7d0428159d22
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:tasks
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

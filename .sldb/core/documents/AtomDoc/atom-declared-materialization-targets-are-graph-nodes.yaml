@@ -1,0 +1,20 @@
+name: atom-declared-materialization-targets-are-graph-nodes
+path: desk/atoms/atom-declared-materialization-targets-are-graph-nodes.md
+source_hash: e72075b856791a1e8fb17740934efdd87137f4cff70c3144ec0bb20bcfc0697c
+content_hash: f4661c4900dfe4af429c4a6bfb7de4e8a84c40a3f63361eacbb346630e0752e2
+field_hashes:
+  id: 41968f49230e14be52cf193bd1047acbb7552e6c64dd73822e04cc5449b58f84
+  title: 212105b91caed6d824c4883298ae66a3ccf9ee5b515e60f44ce0b499f87a836e
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: c56c4a6925569fae90441a65bfd3b94d9c7d0349e2a69f1bd8cb2803ce684e25
+  tags: 303f6ea3742a228828156f013e39a2339b3999b01b66a34505ebade8ae9f288d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:graph
+- topic:materialization
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

@@ -1,0 +1,22 @@
+name: materialization-forced-advance-never-closes
+path: desk/materializations/materialization-forced-advance-never-closes.md
+source_hash: d61a262df9ebee2814810b0c6720cb8ccb0e46d46493a67f5f7e376060f1c563
+content_hash: 3d79ccc8ca8e52e3bfc5e97d86d366ffaafef5d28b9c1c6358e543513f36142c
+field_hashes:
+  id: c7d06a19f06b9f2a5095601b8e18d2169698a51637fd63c8e3c513260628abb6
+  title: 3ec7d980e26de222c2416b04c9e051d4aca6cc428dfaafd8b81c2d3c82470533
+  source_atoms: 5a9c630cd81640563961cbfb62421a7d08e6ae2eb7c34321414f476221d12350
+  target_kind: 3e99dbb6780aa5f83b56f0bfddfc67e9d3047e51eb103d116d666ba801ac68ac
+  target_identity: 4f02ddab64eef29da5623bf4d3471dcfeb02c3c0b5e3fea74730fee6dcf4965f
+  intent: 94f3a57077dadf1081bb13b3a78dcf200ceaec3051bc4c347b6ebeabdea48ed9
+  validation: 091a29370afd039bf4112ac54092bb5fa55320fea165d5c7ae785c62bc22f5e8
+  tags: c41eedc005fdc940f7831d911a0a3b1a7862e59e026c51a85da54bae2e523e2d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

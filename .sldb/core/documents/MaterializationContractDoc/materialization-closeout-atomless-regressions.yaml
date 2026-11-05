@@ -1,0 +1,22 @@
+name: materialization-closeout-atomless-regressions
+path: desk/materializations/materialization-closeout-atomless-regressions.md
+source_hash: af136257674ee4b47267a6a11875d575176d7226394d8d6af271b4cc86fbe0e0
+content_hash: ec1a8234cecd06bf5c61aadac48d0863bda5c3c346808d839296c727abe1dd7d
+field_hashes:
+  id: 8e4029d9b34810e2a9dc1a80724a03b12ca865ef168be42b8eac66be67ba9dae
+  title: 00717c6e422966bd5e5357a4863753f05e469ef83c5cc037a573d493d2105d6c
+  source_atoms: a54ef997a0c8bdcaae54057138104a0f1d2aa190bc3a3db261fde7273202ae92
+  target_kind: 636fef96733cf18e3bf781120123c91c12b25fcfc6410d1540a6048d962556a8
+  target_identity: edca5973e7be1c74e7118d675663c2e09a2dcddcf36e510caa4d87d55d36dca7
+  intent: 857e96630f2b44fef0dcb41e81fc60bad469f3c8238e9b8553d267e8f11adad0
+  validation: 4e2aef7a858b0d571f862bb50f285019e38745660a10d58e6c3054dcf0106f55
+  tags: c41eedc005fdc940f7831d911a0a3b1a7862e59e026c51a85da54bae2e523e2d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

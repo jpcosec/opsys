@@ -4,8 +4,7 @@ __pycache__/
 .ruff_cache/
 .deskops.log
 
-.sldb/runtime/
-.sldb/core/
+.sldb_cache/
 *.egg-info/
 .serena/
 .pi/

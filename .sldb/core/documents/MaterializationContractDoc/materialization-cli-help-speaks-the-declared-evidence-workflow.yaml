@@ -1,0 +1,22 @@
+name: materialization-cli-help-speaks-the-declared-evidence-workflow
+path: desk/materializations/materialization-cli-help-speaks-the-declared-evidence-workflow.md
+source_hash: b4ef3bc01b7d31f0285d640aabf6f540084e3c6c84f656a857c8bac4b154c6ec
+content_hash: 660fd8c60407582e8cee34a830c05a41c4dc85592e4a5c68b923ac2f42302bde
+field_hashes:
+  id: ea496ea849fa9de8fd9f28b38a77d4c8b19753e4cdfffede2becae86c657a458
+  title: a7b2b8feb6e4a59a6082d75b90c947d44c39eba9981cdc2b65e759eba821edf4
+  source_atoms: 44c84ae1401ac1dd1fdb8cc36819ec68e1232c7cefca103df78ad554bd51a6a1
+  target_kind: 3e99dbb6780aa5f83b56f0bfddfc67e9d3047e51eb103d116d666ba801ac68ac
+  target_identity: 03d49390d854e640aff7fe73b370938d48f0b2249a058fb02ab85435f605f172
+  intent: abf1162e649aca77eec1acbb9c54d3e4d3b8d991d8d0601c1ad14e5460214091
+  validation: a7e122027015547416d8797a05db79c27b2e325e9b0230eb8939d8625e8835f6
+  tags: b5edc3388201a7d655d08f74655658ba78bf698369c314cac25cbad7cd7fbaab
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,15 @@
+name: atom-git-ignored-skill-trees-need-tracked-drift-guards
+path: desk/atoms/atom-git-ignored-skill-trees-need-tracked-drift-guards.md
+source_hash: b0aa91357027195c2ca6ab10f9e92a65ed4ac087b02402e04323180ac99bf7cc
+content_hash: df8e84a04eb19d3e1ffd7393e29b9c896b21a0574962f92a18a32d37701e074f
+field_hashes:
+  id: a74e1aa2c3aeffb278fd1fc28816024d6b8de91e5ea989badad7d65a711089e3
+  title: 406850f68128423ae237c5cb8f90520d6dc622205ce98aad7c66b44a762e1762
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: e11fbc57260f29048d12ec89bad87ef8f997c9018c17617f76da5d6c761966b1
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.atom
+- workspace.desk.atoms

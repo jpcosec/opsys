@@ -1,0 +1,19 @@
+name: atom-un-pass-focal-no-prueba-el-resto-del-artefacto
+path: desk/atoms/atom-un-pass-focal-no-prueba-el-resto-del-artefacto.md
+source_hash: 17056c8839295bda749872b29fa4a6e9715bf4e79428e864a79a1bc2370b994f
+content_hash: c7db1cf18b672ff9d6220faa35c55bde5bad76bb9b1f48110ad6944b6e1b41ca
+field_hashes:
+  id: 9afe55e96aa08f80b4515f722d1c16f1afc5807bd1aec9f2924faee391484c2e
+  title: 675c8ce30d35e44e1cdbd9d817e07fcca74ddd958000bfc8c848c0cbc5550781
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: 9c0d6d07caf685b15d52aa265ba8ebc9ca7466559b49ce851e3d4af93ad3671d
+  tags: 9f13720b0a02df8bb02ec72565eff4115f9f636c9625981f60a900a64b5022f3
+  provenance: 9b620a323bab944f223612d73fd2beecf1e787c744bb2a89f0c8d8b8f4450286
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

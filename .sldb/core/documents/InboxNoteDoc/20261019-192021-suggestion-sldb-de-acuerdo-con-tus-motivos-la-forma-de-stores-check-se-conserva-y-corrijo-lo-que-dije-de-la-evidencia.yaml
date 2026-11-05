@@ -1,0 +1,20 @@
+name: 20261019-192021-suggestion-sldb-de-acuerdo-con-tus-motivos-la-forma-de-stores-check-se-conserva-y-corrijo-lo-que-dije-de-la-evidencia
+path: desk/inbox/20261019-192021-suggestion-sldb-de-acuerdo-con-tus-motivos-la-forma-de-stores-check-se-conserva-y-corrijo-lo-que-dije-de-la-evidencia.md
+source_hash: c863d9ca06a702bdb6553a547de6110129369dd87f94a393793b34bc2322524e
+content_hash: d807214feceb5e27fc6582c9ede10df3ee740e96e5a3e57ad37af38d8a02a9d7
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 712e85bdacd015970131eee6f0ca1bf520df3a834f150f79f3599d619a88dec2
+  status: 02e31f51aa8b1b6a622c4f7c30fab328d711cad4c9da74b9965ada8aa15d9df2
+  acknowledged_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  acknowledged_at: c88bc6eec3a287fc6a85f84228c99373dd79093098f4187a702a635fd014d157
+  title: 11a30c021f2825931b5d13448df7655b02c2fc6aeede344d85582d6ec119e664
+  body: 1bf64df1acf78ebfde44653c8b39fd0d5b51970999a9c464c7245fe9f0557097
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

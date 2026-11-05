@@ -1,0 +1,20 @@
+name: 20261020-141330-suggestion-sldb-c-mo-declarar-anchors-a-c-digo-desde-atoms-tasks-y-docs-codeanchordoc-anchors-record-check
+path: desk/inbox/20261020-141330-suggestion-sldb-c-mo-declarar-anchors-a-c-digo-desde-atoms-tasks-y-docs-codeanchordoc-anchors-record-check.md
+source_hash: 2c96ff9e026329ab224de498a6a87fe08bc003d2023397e0d57d868a56afb15d
+content_hash: 016135c65e504921a91cd723c19e1f70b629216a544f9d1cc9f27dad563601b5
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: bc4efa41a262f6e1bc497d4dcdcb3e9de6eefe47bf5ba4152697e1c6d4012106
+  status: 02e31f51aa8b1b6a622c4f7c30fab328d711cad4c9da74b9965ada8aa15d9df2
+  acknowledged_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  acknowledged_at: e565338abf641a88f1d5de65c33d93fd1beccd4c34896148a5a77a6419b35ffc
+  title: 00612606a4d4cf96d000a4dfce20a70519123601b2b813e6abee167a2785b2d1
+  body: 13a7a93c9f8589e2ee8bd7e4b6109a36d01364ce3f025f9151019f220cedea6f
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

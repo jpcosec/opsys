@@ -1,0 +1,19 @@
+name: atom-un-límite-de-intentos-no-autoriza-aceptar-una-contradicción
+path: desk/atoms/atom-un-límite-de-intentos-no-autoriza-aceptar-una-contradicción.md
+source_hash: d5c51201d2f59f6d0ae9c3e1f010e7a1b50f24e2501bc2ae7820c05d79a2efdc
+content_hash: f044194c778ba632e0e11f6c8d47e1e410a6c77410d010a7174c1cbda37b2de7
+field_hashes:
+  id: 87acd96ad96c63def80af0790bf397ddda00583743bce823b8279af7a118a794
+  title: 985509066f8549df07cf5549146f3a83cab876f4616621d6623677c4cd427cd0
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: 9a67dab920930f0c8d696dc80f38ffc2a40cb6bd018c2e83f2a1427f7ebb78ea
+  tags: 9f13720b0a02df8bb02ec72565eff4115f9f636c9625981f60a900a64b5022f3
+  provenance: 602d86b542d76e44f68f2e7f2becd383e66c80b79f25bdad70410ce2235efc71
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

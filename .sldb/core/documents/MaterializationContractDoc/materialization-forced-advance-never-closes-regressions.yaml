@@ -1,0 +1,22 @@
+name: materialization-forced-advance-never-closes-regressions
+path: desk/materializations/materialization-forced-advance-never-closes-regressions.md
+source_hash: 5dd33a88f2426bbf227d291e142f15197f3363cd42aa61240748c6d977869325
+content_hash: 8eab5824892c9e238f2e993ea2dd32c687be7e05f40a073c28dfbd25fa46bcc5
+field_hashes:
+  id: ca3441895921242e70d4a5aaf77f438bc501743a3bfd165189e4a4fb659881f5
+  title: d3f92971f8a5d02215859174e4e1dc3632776883a6cb82375da7d592fabfc633
+  source_atoms: 5a9c630cd81640563961cbfb62421a7d08e6ae2eb7c34321414f476221d12350
+  target_kind: 636fef96733cf18e3bf781120123c91c12b25fcfc6410d1540a6048d962556a8
+  target_identity: 238a1690ff38198c04bf7b6c950a96979624bf0827bbafc0fdc48da74663b8e8
+  intent: 63e7a2b739372c4432fe7def127f9bc9ebec03f31151b9a5e15512ccf095ed9f
+  validation: 091a29370afd039bf4112ac54092bb5fa55320fea165d5c7ae785c62bc22f5e8
+  tags: c41eedc005fdc940f7831d911a0a3b1a7862e59e026c51a85da54bae2e523e2d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

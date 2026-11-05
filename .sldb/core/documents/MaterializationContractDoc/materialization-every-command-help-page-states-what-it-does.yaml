@@ -1,0 +1,22 @@
+name: materialization-every-command-help-page-states-what-it-does
+path: desk/materializations/materialization-every-command-help-page-states-what-it-does.md
+source_hash: 79644620738f91be1f35103bc278e6b7f446b799c52981de35ca3b9a5047a50d
+content_hash: 3d57ba51e2d7db91f42d8ba7218393ed1e423bb4674ce8fea14ddc63df715c1d
+field_hashes:
+  id: 02ae43f7c0c497dd1db745f09cfef6d7605856d6dbcbf76af710086492a0e4dd
+  title: c509cf7223500a8ac2e1ace8ba51fc9d25dc32e1508c1e7adfe1ea3ed19764d6
+  source_atoms: 1ec4ec277f6bb1ca75adcba84dca781a207ee03aeda355b403ee3a6231f01b65
+  target_kind: 3e99dbb6780aa5f83b56f0bfddfc67e9d3047e51eb103d116d666ba801ac68ac
+  target_identity: d41483ffb766a85aa8c76b7c78a92101a7dbef1589cdbca90c2a2be22a127024
+  intent: 33967577cb3d4635f52638a9337303962cc26f1a3b8443db95f9c314e47795e5
+  validation: a7e122027015547416d8797a05db79c27b2e325e9b0230eb8939d8625e8835f6
+  tags: b5edc3388201a7d655d08f74655658ba78bf698369c314cac25cbad7cd7fbaab
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,22 @@
+name: materialization-closeout-link-policy
+path: desk/materializations/materialization-closeout-link-policy.md
+source_hash: dd7911f1941651526b0af7d1341bd25185e25ae719001d4726363117cfdc05e6
+content_hash: b4c7168b131af45b0f6d4d4cca2106cc8977e748863dc393669a28082aa62eff
+field_hashes:
+  id: 98f6693bcfb945478152abbbdb5214f16e495a0e9857fa82ae15e09291ec3d2f
+  title: 5a92e490aa3db56d65ba192a95e6defb1a309a87148e6e0cec0f86a6aefdd988
+  source_atoms: a54ef997a0c8bdcaae54057138104a0f1d2aa190bc3a3db261fde7273202ae92
+  target_kind: 3e99dbb6780aa5f83b56f0bfddfc67e9d3047e51eb103d116d666ba801ac68ac
+  target_identity: c6b27abfba8509230708b661c19417a6c9b0cd29e0c2ab1a1d7ee32e2d6aff5d
+  intent: 5bfcb3a04860f6abd1f3b4c88d6f1278cadb154f1e96154e324857b2e0a65fa3
+  validation: 4e2aef7a858b0d571f862bb50f285019e38745660a10d58e6c3054dcf0106f55
+  tags: c41eedc005fdc940f7831d911a0a3b1a7862e59e026c51a85da54bae2e523e2d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

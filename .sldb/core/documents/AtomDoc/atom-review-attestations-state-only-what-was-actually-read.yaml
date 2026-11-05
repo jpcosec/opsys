@@ -1,0 +1,20 @@
+name: atom-review-attestations-state-only-what-was-actually-read
+path: desk/atoms/atom-review-attestations-state-only-what-was-actually-read.md
+source_hash: c24cdd3ac8d1031caac3e1364cc96e44cf6124d0c56f2edafeeff8436e440dc7
+content_hash: 8b426bb9609382950acc091aaea6abbbc5b4fe3e117d2161fe9313e56b19f540
+field_hashes:
+  id: 9891c8d9b99ca8cc45660ea7f5e285487571d1cbdcfff41ee7244160eeebd8a9
+  title: 4a0840a7f89fe29277d7c153a93b9553904f4bb07e814ca4c617fb7eae437eb7
+  five_wh_one_plus: c7d4bb6c4e85ef7f9bf7592aeecd1d09dd38adc39afd1ffb3908b19e689040ad
+  answer: e0c6006499a852f00a9e92e0e89eb1e75d7f0540eec2fc968d388d44193a77b1
+  tags: d3aeb842c837a6e5feacd5d045fcc0c9fa4c388671ceb59c3ef01581ed15f841
+  provenance: cf8ef09bb4ccd231a5a2e60f451a461a97fb04dbb2454a322991a12f4f2f060c
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:context-review
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

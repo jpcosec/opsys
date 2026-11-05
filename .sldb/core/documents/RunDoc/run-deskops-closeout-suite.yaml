@@ -1,0 +1,28 @@
+name: run-deskops-closeout-suite
+path: runs/subagents/20261031-044028-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
+source_hash: 5b3b7d4d59e617701cfde823b8c0e2bdaaad507313515584a81808fe5b382d09
+content_hash: f482c5501f78bfc68581bd336141e74da23c25536c3b768871335cf770d5f77e
+field_hashes:
+  id: 4e027a49d999cffe38293b0a4fc27c7a06a8119c9ef1c5e777766a10e5de448d
+  title: 2ce127cab24c494365435288591e305570b8e01aa68c6166f562bff061de2bd1
+  summary: 1c474a60979cef171e4112220419c36f0944580cec613e216f86c403e0bf14c9
+  task_id: 5f7cc2a204afd7f85df10d8f89ac2ac29c869663402bf02a7100d132922e3c5e
+  role_id: 8980bfef6a3fc6abef521560e4eaed8965c3ab8863cc66495a41d21209b33fef
+  kind: 389432cbf83f3d1b64029a75864ec96f8fd06451b4c99d7b28385d395d480bfa
+  run_dir: 3cb47782002a78d7e3ddb8a13213b43405e0cd45d2e0db16455c6006fe17de4c
+  herdr_pane_id: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  session_path: bc0c3517fbe7ef899d1c8d9c214cfb57a4ee6d3fc27aa9a78fc50d5d739acfef
+  session_sha256: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  started_at: 4eb48ed8d717f791716e82022f9f9575a4394e725ac671432a42bbfda2ad82a3
+  ended_at: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  outcome: de2bc7968076346e1ae2e62d3fd6385361b3855025678cd2732d9132eb9965cb
+  commit_sha: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 82b76cc5dace91279820eb1061e36da0b31e379da526bb858ab6e54f6cff9ca8
+semantic_tags:
+- representation.markdown
+- runtime:scion
+- source.document.markdown
+- system:deskops
+- type.workflow.run
+- workspace.desk.runs
+provenance: null

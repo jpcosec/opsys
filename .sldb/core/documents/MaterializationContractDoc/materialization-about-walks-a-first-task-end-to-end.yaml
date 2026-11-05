@@ -1,0 +1,22 @@
+name: materialization-about-walks-a-first-task-end-to-end
+path: desk/materializations/materialization-about-walks-a-first-task-end-to-end.md
+source_hash: f3ec08353a3035bb34e3f01ae1603130821635592160a8bd034b3e081718064b
+content_hash: a0f6fc427c5c34a26d346c268deccef8f8fa4fcbc9495258773a3a74cc1ac13b
+field_hashes:
+  id: 0af4b4a24b1c8cec5621580f9b638087d4d6ecd3d8988794fd4d1c808a7bc1da
+  title: 25ebf80e3ba4420a8f919822db29436bffcfc35d20af31858d2ce94545ae8f01
+  source_atoms: 44c84ae1401ac1dd1fdb8cc36819ec68e1232c7cefca103df78ad554bd51a6a1
+  target_kind: 3e99dbb6780aa5f83b56f0bfddfc67e9d3047e51eb103d116d666ba801ac68ac
+  target_identity: e62b0eea550196a9af44c54b619b70c57b5357019e52e726235cb68125c1f206
+  intent: a419f23b49d08618246b429da94e679f9aaed8c10a14957977a2ee69a47a4181
+  validation: a7e122027015547416d8797a05db79c27b2e325e9b0230eb8939d8625e8835f6
+  tags: b5edc3388201a7d655d08f74655658ba78bf698369c314cac25cbad7cd7fbaab
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

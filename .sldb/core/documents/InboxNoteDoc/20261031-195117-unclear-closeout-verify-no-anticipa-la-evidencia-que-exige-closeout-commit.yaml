@@ -1,0 +1,18 @@
+name: 20261031-195117-unclear-closeout-verify-no-anticipa-la-evidencia-que-exige-closeout-commit
+path: desk/inbox/20261031-195117-unclear-closeout-verify-no-anticipa-la-evidencia-que-exige-closeout-commit.md
+source_hash: dc0f709d32381841839e9944618ac2de93be408f7f493069de51bfa40d620c20
+content_hash: 0c5d7987207160f1998802feb4af750f21ff8f890703b47a5d9835d5b6e8157d
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 22104c30bb9b96b042d230a7f3ba38efff617ee4e4eb89d8baadced672d57498
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: e5da47d163665318054be050064df42001fc950a9c744efec19611ae58380fe6
+  body: 1cc36d76b9c2f02e553b3416b72009a275034296231b6357fc2362a76ee6045d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

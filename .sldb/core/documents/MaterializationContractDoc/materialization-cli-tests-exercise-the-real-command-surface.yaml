@@ -1,0 +1,22 @@
+name: materialization-cli-tests-exercise-the-real-command-surface
+path: desk/materializations/materialization-cli-tests-exercise-the-real-command-surface.md
+source_hash: 9a88cfb8d9511931e70d6748d317368c17b6aa95568ef4dfdfb5beddb580f837
+content_hash: dd0d03da7e251c0ab14585dd5a5f870e3654f13cf7979e74140305a9285da5de
+field_hashes:
+  id: a5959b0e7c1d72cc9e5d48bd7d1fddf641849afd1a11eb1eca5ace33edcb32c7
+  title: c60342f21bf0fb47c7ee384e95a0ed3875cab79f452b15aa8bfc59c8995537a4
+  source_atoms: c2ca0654fbbf6d191034793f409fbe1815862b30c61edf72707cabf1aa1dfcb5
+  target_kind: 636fef96733cf18e3bf781120123c91c12b25fcfc6410d1540a6048d962556a8
+  target_identity: 0beb5b92e6b01a34066cd75c123793804610e2c6100d767a1f677da24dd55f14
+  intent: 222fd5b63b7f5ea9c47bfadb37b332bfbe4a790d2f350a849d9540d10352713f
+  validation: 9917cb6fad090fcf8ef06e5b732aaef9ef45d0f0371540adc624ebcf0f5cf9e3
+  tags: b5edc3388201a7d655d08f74655658ba78bf698369c314cac25cbad7cd7fbaab
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,18 @@
+name: 20261104-180658-suggestion-cambios-solo-de-desk-van-directo-en-el-checkout-principal-nunca-en-un-worktree
+path: desk/inbox/20261104-180658-suggestion-cambios-solo-de-desk-van-directo-en-el-checkout-principal-nunca-en-un-worktree.md
+source_hash: 4033493a2441d34095c0e9c18c31de3717642341ec40bd904703bfdf5e6de158
+content_hash: 7f66034088e0d4c3f953a5a827f2c83c55966d7e57cdb302dc9bf81f34af818e
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: a7ebff5578d5c78c97d0c4ee39a8bae24e37c6ab0abc3ef63f414615b1fbc304
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 07e7913d5be1edfc1f55c9ff8142ebbb9c083881003fe7b9efd66f091f2730ab
+  body: 5ba4cf731c16bbc599a31ad2bea6109800dbaec99631e5b2c527f710b519c367
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

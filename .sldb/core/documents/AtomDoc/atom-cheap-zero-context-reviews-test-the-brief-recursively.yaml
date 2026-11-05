@@ -1,0 +1,24 @@
+name: atom-cheap-zero-context-reviews-test-the-brief-recursively
+path: desk/atoms/workflow-model/atom-cheap-zero-context-reviews-test-the-brief-recursively.md
+source_hash: 770257e40c6df2936016dc7b8a3b6b32202e576c38f33e5d7aa8ac8aa2facf5a
+content_hash: db3e34f888daa41af1f3995f44105c9a3f132fdc4c95b5eac221be0231cb0b7a
+field_hashes:
+  id: 39aac9054dfa0136807141ab47198a76ae229e6cf1fe9ebd2798f4a4b5e96f90
+  title: 8e81dd62056a6cba56c4b8b33b2979a66ef8c817421c9080cb5089dd5b386725
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: 9e0fed1e725f406eb8715e11931f7034492c29237f2a0cb08f1a4c1c91d2727b
+  tags: c9764e58ffc2aeece872fe25e6202e35e0f0c6aaf2e4e607a81f3641c0fe2744
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:context-review
+- topic:subagents
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-10-31T04:05:17Z'
+  authority: generated
+  via: create_document

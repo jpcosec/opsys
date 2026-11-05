@@ -1,0 +1,20 @@
+name: 20261022-175539-suggestion-cierre-de-task-con-un-commit-como-evidencia
+path: desk/inbox/20261022-175539-suggestion-cierre-de-task-con-un-commit-como-evidencia.md
+source_hash: 8233d569f25a6c428d8f42b7b36c23538da8a58172065ba36e40f5a0d4f6592e
+content_hash: d98e641d162c3826d32b7235af1f2f9c991d1d20f6d851ddf5f040a6c4b3d83e
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: 3de70cf70279bf4007e59f692f29fcc3ecc50b263bdbbd26b8ff821d5f9c0aad
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 553cd510cddc1945b8d21a608ecca55d83d9d95055ca7a5f79b48f750b65a621
+  status: 02e31f51aa8b1b6a622c4f7c30fab328d711cad4c9da74b9965ada8aa15d9df2
+  acknowledged_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  acknowledged_at: 3410a46cf0986ad9e3798329db5f3c3117c2f56ff557182d4880653aec7e7afa
+  title: 84a463dcab1baf9e5ccbda147a5b84d34de0795bf0ea7a52b6a0a01e0aa089e2
+  body: c109db57b7caf28abcd9f6933c59c6b87f724ffd5643394a2d80f707d47f9afb
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

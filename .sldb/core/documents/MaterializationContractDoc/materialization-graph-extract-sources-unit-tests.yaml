@@ -1,0 +1,19 @@
+name: materialization-graph-extract-sources-unit-tests
+path: desk/materializations/materialization-graph-extract-sources-unit-tests.md
+source_hash: bf2e0b15ab7930acfdb1f123ad3a642d3d4a792ded1fdc118fd766d899d64872
+content_hash: 2f06225a9f5697964a34e31e2c58ad8361b9ad1346e85a3334c3225602865e98
+field_hashes:
+  id: fa1fe41d8a15f2c9a20f2819021bac4ee3b180c2024e1827b0f2a5a5eaefc9ae
+  title: bdaf2877bf2e646bc5f741c2eeaafe3e25665b095741b0e03555b8a2537e8c86
+  source_atoms: fe05925db6d995d65e5818ce039c7c7cc22e551ef04cd159d82f54c24e818ad2
+  target_kind: 636fef96733cf18e3bf781120123c91c12b25fcfc6410d1540a6048d962556a8
+  target_identity: bcd7585d31c78911609ebd7b4aa1a6306f5df16c48f0fb71e50e8ced4e13b731
+  intent: 0567ac3844d4d10d8b3659da9d70ab59d3e427a71877a9c1cae7cb249f0f41d0
+  validation: b5feccb4efbb7e3e77d37c85d895c10ec3576e1a5b5519175ffce8489cd2b64d
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

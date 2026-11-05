@@ -1,0 +1,22 @@
+name: materialization-help-examples-run-as-printed
+path: desk/materializations/materialization-help-examples-run-as-printed.md
+source_hash: de1e6733644bdba51ad328e45b1df2879061b0087771d836cd621399cacae5a1
+content_hash: 85885c9a312f224ae1526d84cc57c170394f5516204b136a3402a78145889519
+field_hashes:
+  id: f916c0cabca7127dc89a00cbaea349535ceb3e1082e7c77dba7fbe0eaa936380
+  title: 7e0004a9001f64c959101d7413a4523bd17bf82a6f610ac7631085df5ee13f99
+  source_atoms: 0d0b861b66fa0c55a2e632518b9aace289c75745e63f1c2a154111c74998936b
+  target_kind: 636fef96733cf18e3bf781120123c91c12b25fcfc6410d1540a6048d962556a8
+  target_identity: 979eb3c7c81e1cafeb45915dc1a69b0eb2e393f0b29e845c5cc6bc04a70ce341
+  intent: 161d753ba26a27627dd293c9b090ae1c396cd1fe7f5b7e73c01d99ec0442b389
+  validation: 91a1990998022682aa85790f1bdf59dd6fdf9fef26fc66d469acbe32e8d794e9
+  tags: b5edc3388201a7d655d08f74655658ba78bf698369c314cac25cbad7cd7fbaab
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
