@@ -13,14 +13,16 @@ estimate_legend:
 gates:
   G_VIEW:
     title: Vista de datos de deskops con contrato
-    state: pending
+    state: satisfied
     produced_by: UI01
-    evidence: deskops view board|task|drawer|inbox|agents --format json con tests sobre desks temporales y docs/deskops-ui.md
+    resolver: UI01 integrada y cerrada en el desk de deskops
+    evidence: 'deskops f003d572 (deskops view, tests/test_desk_view.py, docs/deskops-ui.md); closeout 991709f6 con atom-the-deskops-ui-reads-the-desk-only-through-deskops-view-and-writes-only-through-deskops-operations y una materialización por archivo, 2026-11-05'
   G_SHELL:
     title: Shell de graph_ui sirviendo la vista
-    state: pending
+    state: satisfied
     produced_by: UI02
-    evidence: frontends/desk/serve.py en loopback con rutas que delegan en la vista y shell navegable con el design system
+    resolver: UI02-UI06 integradas en graph_ui y cerradas en su desk
+    evidence: 'graph_ui 5e4f347 (frontends/desk, tests/test_desk_ui_routes.py, tests/e2e_desk_ui.py); closeouts 48581ba..882f14a, 2026-11-05. Pendiente declarado: las capturas comparadas con Stitch quedaron en /tmp de la sesión y no están anotadas en los TaskDocs; la suite completa de graph_ui no está verde por fallas previas o de entorno (graph_ui sin .sldb/core versionado), ninguna en frontends/desk.'
   G_GC_GATES:
     title: Gates por tipo y explicación por edges_blocked
     state: pending
