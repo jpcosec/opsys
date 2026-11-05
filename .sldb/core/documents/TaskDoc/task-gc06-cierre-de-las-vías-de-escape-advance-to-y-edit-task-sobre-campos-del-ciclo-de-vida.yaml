@@ -1,7 +1,7 @@
 name: task-gc06-cierre-de-las-vías-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida
 path: desk/tasks/task-gc06-cierre-de-las-vías-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida.md
-source_hash: 5ce9df8e7d08af35d99c10e89c46b6352dbca05b735d1f3b6e512fccd3b3d366
-content_hash: 177e3ba853b083ec2d0384da96538c8119d893eece0359c6f7f8aa4e47d7cce7
+source_hash: 1f81a0967afabe826a84cfb747dc876198086554c7061e4b6cae3d8381cc6a0d
+content_hash: 619c856006e59134b8838dbcf4dc81f75fc7ed9bdbc18070e8e97639f22124b6
 field_hashes:
   title: 1c64e64b42314605893e609e8dce181d820ce4d858f4af22aae695ca3c31de13
   id: 22092a47e4a4435836295e8da23ce8a4250098b20e4da64ed5746faa0cc8e564
@@ -12,7 +12,7 @@ field_hashes:
   history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   why: 3918fbf6fbedb3c6fe9195b1cb66d40d7e68769fdc00c1959e278f2e40ed0d7c
   goal: 9c6192b999ae734ee3be26c0810fc2ae8cd87674437539535c1b711b907c86fc
-  scope: fba9ac5230d65381be8b3219f86b04f2e9086a96374c2ac767daeb49cd4803fa
+  scope: 33edf239591c0882d70e641ca7a97cc5ad409a03857641499836af0709ed96ab
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 51e9c1da515666f50626a8c7786093d7732247268ea26e1901ed7a6035676c17
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
