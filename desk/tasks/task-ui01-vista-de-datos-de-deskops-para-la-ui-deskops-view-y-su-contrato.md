@@ -45,7 +45,7 @@ Clase de servicio de solo lectura en deskops (deskops/services/desk_view.py) que
 
 _State what is in scope and what is out of scope._
 
-Solo lectura. Archivos: deskops/services/desk_view.py, deskops/cli/registry.py, deskops/cli/commands/view.py, tests/test_desk_view.py, tests/fixtures/golden/help/, docs/deskops-ui.md. Fuentes de datos y mapeo en desk/drawer/plans/deskops-ui/alcance.md (tabla "Mapeo de la pantalla de Stitch a fuentes reales"). Un elemento sin fuente real no entra a la vista (DU5): va a la lista errors con su causa.
+Solo lectura. Archivos: deskops/services/desk_view.py, deskops/cli/registry.py, deskops/cli/commands/view.py, tests/test_desk_view.py, tests/fixtures/golden/help/, docs/deskops-ui.md. Fuentes de datos y mapeo en desk/drawer/plans/deskops-ui/alcance.md (tabla "Mapeo de la pantalla de Stitch a fuentes reales"). Un elemento sin fuente real no entra a la vista (DU5): va a la lista errors con su causa. Precisiones del preflight (2026-11-05): (1) el orden de nodos es el de deskops/spec/workflows/task_lifecycle.yaml (entry_node y transiciones: ritual-execution, ritual-testing, ritual-closeout); (2) agents trae las últimas 20 corridas de runs/subagents/index.jsonl; (3) el estado de ack de una nota del inbox se lee de la misma fuente que usa deskops message list (no se inventa otra); (4) revision = sha256(bytes de desk/tasks/Board.md + b'\0' + bytes del archivo de la tarea), igual que frontends/mindmap/deskops_routes.py de graph_ui; (5) --format text es un resumen legible por humanos al estilo de los demás comandos de deskops, el contrato estable es el JSON.
 
 ## Implementation Path
 
