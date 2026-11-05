@@ -1,0 +1,129 @@
+id: deskops-ui
+revision: 1
+revision_note: 'Rev 1 (2026-11-04): plan inicial, seis nodos en dos paquetes. execution_authorized se habilita nodo a nodo tras la disposición de su revisión.'
+status: draft
+as_of: '2026-11-04'
+review_run: runs/subagents/20261104-deskops-ui-context-reviews/context-review
+source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
+execution_authorized: false
+estimate_legend:
+  S: un entregable acotado
+  M: una capacidad con varias piezas
+  L: varias pantallas o servicios; se parte al promover si hace falta
+gates:
+  G_VIEW:
+    title: Vista de datos de deskops con contrato
+    state: pending
+    produced_by: UI01
+    evidence: deskops view board|task|drawer|inbox|agents --format json con tests sobre desks temporales y docs/deskops-ui.md
+  G_SHELL:
+    title: Shell de graph_ui sirviendo la vista
+    state: pending
+    produced_by: UI02
+    evidence: frontends/desk/serve.py en loopback con rutas que delegan en la vista y shell navegable con el design system
+  G_GC_GATES:
+    title: Gates por tipo y explicación por edges_blocked
+    state: pending
+    resolver: deskops plan gates-por-tipo GC05 (G_CONSUMER)
+    evidence: cuando exista, la vista agrega findings de reglas a los gates de la tarjeta
+  G_GC_RECEIPTS:
+    title: Recibos de revisión (ReviewDoc)
+    state: pending
+    resolver: deskops plan gates-por-tipo GC02/GC03
+    evidence: cuando exista, la vista muestra preflight y bundle por tarea
+hierarchy:
+  root:
+    id: ROOT
+    title: UI de deskops
+    owner_repo: deskops
+    scope: 'La superficie de trabajo de la fábrica en el lenguaje visual de Stitch y con datos reales: vista de datos en deskops, frontend en graph_ui. PU01 construye la vista y el shell; PU02 las pantallas.'
+    acceptance: 'Hijos cerrados; desde http://127.0.0.1:<puerto>/ una persona ve el Board del desk elegido por etapa con gates reales, abre una tarea, ve drawer, inbox y agentes, y puede avanzar una tarea, reconocer un mensaje y pasar un mensaje al drawer, todo verificado contra deskops view y sin datos de ejemplo.'
+    children: [PU01, PU02]
+  packages:
+    - id: PU01
+      title: Vista y shell
+      node_role: aggregate
+      owner_repo: deskops
+      children: [UI01, UI02]
+      scope: 'UI01 escribe la vista de datos en deskops; UI02 levanta el servidor y el shell en graph_ui que la sirven.'
+      acceptance: G_VIEW y G_SHELL satisfechos.
+    - id: PU02
+      title: Pantallas
+      node_role: aggregate
+      owner_repo: graph_ui
+      children: [UI03, UI04, UI05, UI06]
+      scope: 'Board, Tarea, Drawer e Inbox, Agentes; en serie en un mismo worktree de graph_ui porque comparten archivos del frontend.'
+      acceptance: Las cuatro pantallas cumplen su aceptación y el e2e común pasa.
+tasks:
+  - id: UI01
+    title: Vista de datos de deskops para la UI (deskops view) y su contrato
+    kind: code
+    node_role: delivery
+    parent_id: PU01
+    owner_repo: deskops
+    estimate: M
+    depends_on: []
+    requires: []
+    scope: 'Clase de servicio de solo lectura en deskops (deskops/services/desk_view.py) que compone, desde las operaciones existentes listadas en alcance.md, cinco vistas JSON: board (columnas por nodo del ciclo de vida en el orden del spec, cada tarjeta con id, título, status, current_node, gates con condición y si se cumple, conteo cumplidos/total, evidencia declarada y encontrada de verify_task_closeout, pills y atoms resueltos a título); task (lo del board más goal, scope, implementation_path, validation, done_when, why, references, files, depends_on, inherits_from, pills con what/when/how_not, atoms con answer, next_actions y advance_when de next_action_report, y revision = sha256 de Board + archivo de tarea como la guarda de graph_ui); drawer (tareas de desk/drawer/tasks con id, título, status, primeras líneas del cuerpo y ruta, más el comando add task --from-drawer listo para copiar); inbox (notas con id, kind, título, emisor, destino, fecha del nombre de archivo, estado de ack, cuerpo); agents (runtime workers y las últimas N corridas de runs/subagents/index.jsonl). Toda referencia que no resuelve aparece en una lista errors de la vista con su causa, nunca como dato. Subcomando deskops view {board,task <id>,drawer,inbox,agents} --root --format json|text registrado en cli/registry.py. Documento docs/deskops-ui.md con el contrato JSON de cada vista y la tabla de mapeo de alcance.md. Solo lectura: nada escribe.'
+    acceptance: 'Tests sobre desks temporales reales (deskops init + add task): board agrupa por current_node y cuenta gates igual que show_task; task trae los campos listados y la misma revision que la guarda de graph_ui; una pill o atom inexistente aparece en errors y no en la lista; drawer, inbox y agents devuelven lo que hay en disco; ninguna vista escribe (hash del árbol igual antes y después); deskops view --help y golden de help; docs/deskops-ui.md existe con los cinco contratos; suite completa verde en robocop2.'
+    output_scope: deskops/services/desk_view.py, deskops/cli/registry.py, deskops/cli/commands/view.py, tests/test_desk_view.py, tests/fixtures/golden/help/, docs/deskops-ui.md
+  - id: UI02
+    title: Servidor y shell de la UI de deskops en graph_ui
+    kind: code
+    node_role: delivery
+    parent_id: PU01
+    owner_repo: graph_ui
+    estimate: M
+    depends_on: [UI01]
+    requires: [G_VIEW]
+    scope: 'frontends/desk/ (serve.py, index.html, app.js, styles.css): servidor en 127.0.0.1 (puerto por defecto 8091) que expone GET /api/view/{board,task,drawer,inbox,agents}?desk=<repo> llamando a la vista de UI01 por Python (no por subprocess), reusa DeskRoutes para POST /api/desk/advance, y sirve el shell. Selector de desk entre los repos del registro de deskops (desk/registry/repo-*.md) que tengan desk/. Shell con el design system de DESIGN.md en tema oscuro por defecto: barra lateral (Board, Drawer, Inbox, Agentes, y "Inspeccionar" que abre el visor KIMUN en :8090 con el id), cabecera con desk activo y conteos derivables (tareas por etapa, drawer, inbox sin ack, workers vivos). Estado de error visible con causa cuando la vista falla. Sin CDN: fuentes del sistema o vendorizadas, como pide el plan de la fábrica.'
+    acceptance: 'pytest de rutas: cada /api/view/* devuelve exactamente lo que devuelve deskops view para el mismo desk temporal; métodos no GET rechazados salvo advance; escucha solo en loopback; el shell carga sin red externa (ninguna URL http(s) externa en index.html, styles.css ni app.js); el selector lista los desks del registro; captura del shell comparada con The Desk - Active Board de Stitch y diferencias anotadas en el TaskDoc.'
+    output_scope: UIs/graph_ui/frontends/desk/, UIs/graph_ui/tests/test_desk_ui_routes.py, UIs/graph_ui/docs/deskops-ui-client.md
+  - id: UI03
+    title: Pantalla Board
+    kind: code
+    node_role: delivery
+    parent_id: PU02
+    owner_repo: graph_ui
+    estimate: M
+    depends_on: [UI02]
+    requires: [G_SHELL]
+    scope: 'Board al estilo de "The Desk - Active Board": una columna por nodo del ciclo de vida con su nombre y conteo; tarjetas con id mono, título, checklist de gates (verde cumple, ámbar pendiente, rojo si la evidencia declarada falla), conteo n/m, pills (chips) y atoms (con icono de candado); al seleccionar, panel derecho con objetivo, gates con condición, evidencia declarada vs encontrada, pills con what/when, atoms con answer, y acciones: Avanzar (POST advance con confirmación y guarda de revisión; refresca), y Iniciar ejecución / Promover a atom / Diferir deshabilitados con el motivo de alcance.md. Carril inferior con un resumen del drawer (enlace a la pantalla Drawer). Errores de la vista visibles en un aviso, no escondidos.'
+    acceptance: 'e2e de navegador sobre un desk temporal con dos tareas en nodos distintos: aparecen en sus columnas; los gates y el conteo coinciden con deskops view board; avanzar una tarea con gates cumplidos la mueve de columna y deskops show task lo confirma; avanzar con revisión vieja muestra el conflicto; ningún texto de ejemplo de Stitch aparece en la página (lista de cadenas de prueba: TASK-104, 85.7%, draft_spec_v2_syntax, atom-sldb-is-read-write-edit-surface, Worker #2); foco visible por teclado en tarjetas y botones.'
+    output_scope: UIs/graph_ui/frontends/desk/, UIs/graph_ui/tests/e2e_desk_ui.py
+  - id: UI04
+    title: Pantalla Tarea (documento)
+    kind: code
+    node_role: delivery
+    parent_id: PU02
+    owner_repo: graph_ui
+    estimate: S
+    depends_on: [UI03]
+    requires: [G_SHELL]
+    scope: 'Vista de lectura al estilo de "The Desk - Markdown Wiki Doc" y la columna derecha de "Tareas Concurrentes & Herencia": cabecera con id, status y etapa; secciones del TaskDoc en orden (why, goal, scope, implementation_path, validation, done_when) en tipografía de lectura; gates con detalle; pills como callouts; atoms con su respuesta; herencia (inherits_from y depends_on como enlaces a otras tareas del desk); referencias y archivos como chips; pie fijo con estado de gates y la acción Avanzar. Enlace "Inspeccionar" al visor KIMUN.'
+    acceptance: 'e2e: abrir una tarea muestra cada sección con el texto de deskops view task; un depends_on navega a la otra tarea; la acción Avanzar del pie se comporta igual que en el Board; sin textos de ejemplo de Stitch.'
+    output_scope: UIs/graph_ui/frontends/desk/, UIs/graph_ui/tests/e2e_desk_ui.py
+  - id: UI05
+    title: Pantallas Drawer e Inbox
+    kind: code
+    node_role: delivery
+    parent_id: PU02
+    owner_repo: graph_ui
+    estimate: M
+    depends_on: [UI04]
+    requires: [G_SHELL]
+    scope: 'Drawer al estilo de "Drawers - Cajón de Esbozos & Triage": lista de tareas diferidas con título, status y extracto; panel con el Markdown en crudo (solo lectura) y el comando deskops add task --from-drawer <id> listo para copiar (no hay botón que escriba). Inbox al estilo de "Inbox - Buzón Inter-Proyecto": lista con emisor → destino, kind, título, fecha y estado de ack; panel con el cuerpo; acciones Reconocer (deskops message ack) y Pasar al drawer (promote inbox-to-drawer-task), ambas por una ruta POST nueva en frontends/desk/serve.py que llama a la operación de deskops con confirmación y guarda de revisión (hash del archivo de la nota). Sin hilo de conversación, firmas, prioridad ni métricas: no existen.'
+    acceptance: 'e2e sobre un desk temporal: el drawer lista lo que hay en desk/drawer/tasks y el comando copiado es exacto; el inbox lista las notas; Reconocer marca la nota como en deskops message list; Pasar al drawer crea el archivo en desk/drawer/tasks y saca la nota del inbox como lo hace el CLI; una nota modificada entre lectura y acción da conflicto; pytest de las rutas POST nuevas; sin textos de ejemplo de Stitch.'
+    output_scope: UIs/graph_ui/frontends/desk/, UIs/graph_ui/tests/test_desk_ui_routes.py, UIs/graph_ui/tests/e2e_desk_ui.py
+  - id: UI06
+    title: Pantalla Agentes y corridas
+    kind: code
+    node_role: delivery
+    parent_id: PU02
+    owner_repo: graph_ui
+    estimate: S
+    depends_on: [UI05]
+    requires: [G_SHELL]
+    scope: 'Lista de workers vivos (runtime workers: pane, kind, status, cwd, título) y de las últimas corridas (task_id, run_dir, commit, modo) con enlace a la tarea si sigue en el Board. Sin métricas inventadas. Cierre del paquete: e2e común de las cuatro pantallas y la captura comparada de cada una con su referencia de Stitch anotada en el TaskDoc; README de frontends/desk con cómo levantarlo.'
+    acceptance: 'pytest y e2e: la lista coincide con deskops view agents; si herdr no está disponible, la pantalla muestra la causa en vez de una lista vacía muda; suite completa de graph_ui verde en robocop2; capturas de las cinco pantallas registradas.'
+    output_scope: UIs/graph_ui/frontends/desk/, UIs/graph_ui/tests/, UIs/graph_ui/frontends/desk/README.md
