@@ -1,7 +1,7 @@
 name: task-gc01-tipos-de-tarea-como-modelos-con-jerarquía-y-evidencia-de-cierre-declarada-en-el-tipo
 path: desk/tasks/task-gc01-tipos-de-tarea-como-modelos-con-jerarquía-y-evidencia-de-cierre-declarada-en-el-tipo.md
-source_hash: 90a017ea759dd63679b08107bd204fb69fd6a3715e3a641a039e402f70ba39c4
-content_hash: 451b20fcaf960ad4a170b15a29d9fac83abc0c90623da569421d6b9e5eb74ae5
+source_hash: 1e67f351c8b7578d8f997d89852e61b4eac9cd5fc4118b0a9e5a6e5223e6a5cb
+content_hash: 8f8ddbf790c8bf275b0a75a3b51a905a828851a716bd5da2e75d16b376e48fd0
 field_hashes:
   title: 2f1dfcea1e8e44895a07c0d3ddec82018ac5e0db961d24eae1bcac81b1eabec4
   id: c17e656945b3901d6b02f521a8d241c563fa75989344c605effdf22a92fadfab
@@ -16,7 +16,7 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: 92bcda99f4cde93dbf950a36d2d0bab45fb6623353cb78882057ab7cddfe2b39
+  files: 1b28019e783ef41398b879aba0619a295ccee449887a8ad89466232e43b4a89d
   implementation_path: 26287781031743759f023c85f7d83bdbef4c4ee01bbf72a67b9f6c748d5506bf
   validation: 9c0b3fb3adfd892c02463577fa552749d3f9defb962f30068ccdec21066a2ddb
   done_when: 4f98fed7cd5f4e24a1fece056531d528d830e1ca687d81ffe84bbadddc7bf158
