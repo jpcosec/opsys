@@ -1,0 +1,9 @@
+usage: deskops view board [-h] [--root ROOT] [--format {text,json}]
+
+Board view: one column per lifecycle node with task cards, gates, closeout
+evidence, pills and atoms.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json}  Output format.

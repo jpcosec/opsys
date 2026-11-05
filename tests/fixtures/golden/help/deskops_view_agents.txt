@@ -1,0 +1,12 @@
+usage: deskops view agents [-h] [--root ROOT] [--herdr HERDR] [--runs RUNS]
+                           [--format {text,json}]
+
+Agents view: live Herdr workers and the latest runs of
+runs/subagents/index.jsonl.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --herdr HERDR         Herdr executable.
+  --runs RUNS           How many of the latest run index entries to include.
+  --format {text,json}  Output format.

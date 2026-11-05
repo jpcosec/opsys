@@ -1,11 +1,11 @@
 usage: deskops [-h] [--debug]
-               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+               {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,view,runtime}
                ...
 
 deskops: Workflow-domain layer for the hum-ecosystem.
 
 positional arguments:
-  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,runtime}
+  {about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,view,runtime}
     about               Print a short overview of deskops and its first-use commands.
     doctor              Detect and repair common broken desk states safely.
     status              Deprecated alias for `deskops doctor`.
@@ -32,6 +32,7 @@ positional arguments:
     materialize         Render tracked desk role prompts into installed pi-agent files.
     drift               Check for role-agent drift between tracked role docs and installed agent files.
     closeout            Workflow closeout operations.
+    view                Read-only views of this desk for the deskops UI (contract: docs/deskops-ui.md).
     runtime             Manage the live Herdr runtime for this DeskOps desk.
 
 options:

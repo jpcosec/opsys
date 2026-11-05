@@ -1,0 +1,9 @@
+usage: deskops view drawer [-h] [--root ROOT] [--format {text,json}]
+
+Drawer view: deferred tasks in desk/drawer/tasks with excerpt and the add task
+--from-drawer command.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json}  Output format.

@@ -1,0 +1,20 @@
+usage: deskops view [-h] {board,task,drawer,inbox,agents} ...
+
+Read-only views of this desk for the deskops UI (contract: docs/deskops-
+ui.md).
+
+positional arguments:
+  {board,task,drawer,inbox,agents}
+    board               Board view: one column per lifecycle node with task
+                        cards, gates, closeout evidence, pills and atoms.
+    task                Task view: the board card plus the TaskDoc sections,
+                        next actions and the advance revision.
+    drawer              Drawer view: deferred tasks in desk/drawer/tasks with
+                        excerpt and the add task --from-drawer command.
+    inbox               Inbox view: notes in desk/inbox with sender, target,
+                        date, ack state and body.
+    agents              Agents view: live Herdr workers and the latest runs of
+                        runs/subagents/index.jsonl.
+
+options:
+  -h, --help            show this help message and exit
