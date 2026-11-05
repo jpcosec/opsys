@@ -1,7 +1,7 @@
 name: task-gc02-reviewdoc-como-recibo-anclado-al-contrato-de-la-tarea
 path: desk/tasks/task-gc02-reviewdoc-como-recibo-anclado-al-contrato-de-la-tarea.md
-source_hash: 800c96f01c0468a665e8e3b68f843008b39d2669cbe4ef8bd6d04a85a2825cb2
-content_hash: 05ca80f0589a61ef7b5b75fda8b590e87910ecbb26d1dc06d76a76fc6fa85242
+source_hash: 76f51536ffa9b1c11a05a4360ffad92fc7d3022faa91af6b97ae393aaa731105
+content_hash: 764ea7430e6d3ede6917ac72d76eba417c177975074ad76278eff2739cbc7f08
 field_hashes:
   title: 0416f930122c2f08a383c1599034f912130b1eb79e549706a1fc7889045d4957
   id: 15bf5227736d2f8578fad1c1935d9806043d258bc3f6739fb3fc04aec084a323
@@ -16,7 +16,7 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: bef49c597179d551f9707bff761601123c5d83d66b7b942a17477f88f51b6402
+  files: bb11e65771c5d1218e1a896aecb7c5e63612bbad3f8e3a7e6b49504e92877c23
   implementation_path: 74814d286505072bc35265f2333b3ad26bc87944377050463aef6d8af0866c11
   validation: 66fdbb0f49ef6a88193f6e3e092a61423a7d003d3d2275616ef10c4bae2e1ef8
   done_when: f4818c1eed5def327ef2fbf8096db39108f35b8430c2819e3096ef88f03a198b

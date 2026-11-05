@@ -1,0 +1,35 @@
+name: task-gc06-cierre-de-las-vías-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida
+path: desk/tasks/task-gc06-cierre-de-las-vías-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida.md
+source_hash: 5ce9df8e7d08af35d99c10e89c46b6352dbca05b735d1f3b6e512fccd3b3d366
+content_hash: 177e3ba853b083ec2d0384da96538c8119d893eece0359c6f7f8aa4e47d7cce7
+field_hashes:
+  title: 1c64e64b42314605893e609e8dce181d820ce4d858f4af22aae695ca3c31de13
+  id: 22092a47e4a4435836295e8da23ce8a4250098b20e4da64ed5746faa0cc8e564
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: 3918fbf6fbedb3c6fe9195b1cb66d40d7e68769fdc00c1959e278f2e40ed0d7c
+  goal: 9c6192b999ae734ee3be26c0810fc2ae8cd87674437539535c1b711b907c86fc
+  scope: fba9ac5230d65381be8b3219f86b04f2e9086a96374c2ac767daeb49cd4803fa
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 51e9c1da515666f50626a8c7786093d7732247268ea26e1901ed7a6035676c17
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: a286540e5c01ff1660ac56ef37c92aed06d02b2bb4ecb42a7ec3d3320808370f
+  implementation_path: 948c920077011a9a66e52b30c26d7919ad2929964ab21d82bb8bf6140b9903ce
+  validation: 277102589f306c40b974e4c910927b52a3d42c2c5522c2afb35cf697b2fca621
+  done_when: 804f9c62902a846ff1e405d794861fe63ee4f51a38600770594aca94dce5f7af
+  task_type: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  closeout_evidence: 6e22eae89f77bd621f1589b0778d6bdb33101cebb03011b3c9a1e6e29a2dcf4c
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance: null

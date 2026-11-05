@@ -17,6 +17,7 @@ files:
 - deskops/workspace.py
 - deskops/operations.py
 - deskops/cli/registry.py
+- deskops/cli/commands/desk.py
 - .sldb/core/models/
 - tests/
 - tests/fixtures/model_contract_hashes.json
