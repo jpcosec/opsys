@@ -1,6 +1,6 @@
 id: deskops-gates-por-tipo
-revision: 1
-revision_note: 'Rev 1 (2026-11-04): plan inicial, lado consumidor del plan grafo-operable de sldb (rev 9). Sin revisión en frío todavía. execution_authorized=false.'
+revision: 2
+revision_note: 'Rev 2 (2026-11-05): gates.G_TYPES.evidence corregida (task.debug no es subtipo de task.code, como fijan brief.md §Tipos y GC01), hallada en el preflight de GC01. Rev 1 (2026-11-04): plan inicial, lado consumidor del plan grafo-operable de sldb (rev 9). Sin revisión en frío todavía. execution_authorized=false.'
 status: draft_pending_review
 as_of: '2026-11-04'
 source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
@@ -40,7 +40,7 @@ gates:
     state: pending
     produced_by: GC01
     resolver: cierre de GC01 (revisión en frío aceptada por el desk de deskops, tests verdes, closeout commit)
-    evidence: add task --task-type rechaza un tipo no registrado; model <= TaskCodeDoc incluye a task.refactor y task.debug; TASK_TYPE_EVIDENCE no existe
+    evidence: add task --task-type rechaza un tipo no registrado; model <= TaskCodeDoc incluye a task.refactor y no a task.debug; TASK_TYPE_EVIDENCE no existe
   G_RECEIPTS:
     title: deskops review escribe recibos ReviewDoc en el desk
     state: pending
