@@ -1,0 +1,35 @@
+name: task-ui01-vista-de-datos-de-deskops-para-la-ui-deskops-view-y-su-contrato
+path: desk/tasks/task-ui01-vista-de-datos-de-deskops-para-la-ui-deskops-view-y-su-contrato.md
+source_hash: 2772d1fcfe4fe794efee785d9502227799d1596e4d7d05bb3791ee7f57cb5f71
+content_hash: 6b4d27315cca298db32544edd406fe307589953bb4b57e8558a888d78240b6e4
+field_hashes:
+  title: 4552335151b9655ace6a7f27c778b7d6a4190b394dd0aa47983c9d2dfa36b265
+  id: be6302afbce6308a4b21f606633e3b5733e8abeea03a659becaf2d4c2b9fb7ca
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: 45fdefb1ffbbafe03b294383c19bb3ec7fe86d353bcbbe5ac6d797fa1f54dc8a
+  goal: d30fe2a0507bf0c0f5a12ce02fd55c2529cb1e34c78e4c53c377310597d6c52c
+  scope: e781bf2ac43afa47d2ff940188ebdb4eb67af7402aa2c6302bcb7c872bbd3143
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: bef043143a50f0c827bc2839cd35d06adec6a407080e497a82b3db95b910157e
+  implementation_path: dd04f39a30dc09e005a208f2c2d045f6e40c0c02dbb484703620ffd326d13c29
+  validation: 8e88ff44b32d19a3ff385d7a6fe6d116b1bb413a840af7cdead2d201862efd88
+  done_when: b4df2628a1a2ca272dd9120b809a2df7b74c569abc425638398e419046f751a6
+  task_type: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  closeout_evidence: 6e22eae89f77bd621f1589b0778d6bdb33101cebb03011b3c9a1e6e29a2dcf4c
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance: null

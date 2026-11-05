@@ -1,0 +1,18 @@
+name: 20261105-002236-unclear-falta-un-comando-para-disponer-revisiones-en-fr-o-recibo-y-disposici-n
+path: desk/inbox/20261105-002236-unclear-falta-un-comando-para-disponer-revisiones-en-fr-o-recibo-y-disposici-n.md
+source_hash: 5d111242948d943b61661154661bf1e8fcfba647f123d775e5dd1027cbec493d
+content_hash: 746ce011783db8f395ee80f56d7983c3b23d88f0b233bc5a05897151507da8db
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: bf6af8a747fd2f9b7ab037345f00f9f61762fa7a9aac4656f548d82238da478d
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: a616dccd6757c73d66b348893383c37af3bb325640614e3b3a95d1ff752c943e
+  body: bc33ada5edfd68748b6e12aa75eb2dabf412657c0d2ec278a3b96b1561861858
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

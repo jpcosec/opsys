@@ -1,0 +1,18 @@
+name: 20261104-233657-suggestion-sldb-el-store-pasa-a-sldb-versionado-y-sldb-cache-ignorada-journal-retirado
+path: desk/inbox/20261104-233657-suggestion-sldb-el-store-pasa-a-sldb-versionado-y-sldb-cache-ignorada-journal-retirado.md
+source_hash: 56c86a8324abda3ceda140b14ee7a51cc9d3ebb2495cf4551f94bf8e2ddc97d0
+content_hash: 6195f1364fe3c0331a8b4893d2f29e27ddaba0114edbf2cbaf97d76bcccd2fbb
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 7c37502ba464ce7541880ebb8b96131cbb516de402c35e7d6b3285b1a6b24bc6
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: acf999864ea8430e37db5907961e5f872a342b589f85412ed3a57218d04c0419
+  body: 5931006a99d3190124aee8ccb636b1296345621f8032748a318d835d67c959ed
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
