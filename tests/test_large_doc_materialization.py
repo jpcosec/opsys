@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from deskops.graph.extract_edges import extract_declared_edges
+from deskops.graph.desk_graph import extract_declared_edges
 
 
 ROOT = Path(__file__).resolve().parents[1]

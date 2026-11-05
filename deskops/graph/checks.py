@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from sldb.api.edges.project_graph import MissingProjectTarget as MissingGraphTarget
 
 from deskops.atom_references import ALLOWED_ROLES
 from deskops.atom_references import CANONICAL_FIELD
@@ -14,8 +15,9 @@ from deskops.atom_references import LEGACY_FIELDS
 from deskops.atom_references import MATERIALIZATION_FIELD
 from deskops.atom_references import iter_atom_reference_values
 from deskops.atom_references import parse_atom_reference
-from deskops.graph.extract_edges import MissingGraphTarget
-from deskops.graph.extract_edges import extract_declared_edges
+
+
+from deskops.graph.desk_graph import extract_declared_edges
 from deskops.graph.snapshot import GraphSnapshot
 from deskops.graph.snapshot import GraphSnapshotReadError
 from deskops.graph.snapshot import read_graph_snapshot

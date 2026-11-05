@@ -1,0 +1,33 @@
+         141874554 function calls (134658511 primitive calls) in 73.564 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1144 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000   73.584   73.584 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:249(board)
+        1    0.000    0.000   73.584   73.584 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:253(_board_view)
+        5    0.000    0.000   73.432   14.686 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:215(_card)
+        5    0.000    0.000   42.171    8.434 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:432(show_task)
+        5    0.000    0.000   42.026    8.405 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:442(_lifecycle_gates)
+        5    0.000    0.000   41.863    8.373 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:895(_transitions_from)
+        1    0.000    0.000   41.863   41.863 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/lifecycle.py:123(transitions_from)
+        1    0.000    0.000   41.850   41.850 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/api/edges/edge_reading.py:31(edges_from)
+        2    0.000    0.000   41.742   20.871 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/api/edges/edge_reading.py:14(load_edge_index)
+        2    0.035    0.018   41.684   20.842 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/edge_index/compose.py:22(compose_edge_index)
+        2    0.081    0.041   41.621   20.810 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/edge_index/compose.py:48(_compose)
+        6    0.000    0.000   39.411    6.568 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/edge_index/compose.py:58(_merge_store)
+        6    0.007    0.001   37.139    6.190 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/edge_index/shard_reading.py:17(read_store_contributions)
+    15074    0.027    0.000   36.759    0.002 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/io/shards.py:31(_cached_shard)
+     4899    0.013    0.000   34.101    0.007 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/io/shards.py:86(load_edges_shard)
+      120    0.004    0.000   33.005    0.275 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/io/shard_compose.py:42(compose_edges_documents)
+     4893    0.022    0.000   32.934    0.007 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/io/shard_compose.py:48(<genexpr>)
+        5    0.000    0.000   30.859    6.172 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:184(_closeout)
+        5    0.000    0.000   30.859    6.172 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:622(verify_task_closeout)
+        5    0.000    0.000   30.596    6.119 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:752(_closeout_link_gate)
+        5    0.000    0.000   30.558    6.112 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:903(_build_closeout_graph_context)
+        1    0.000    0.000   30.558   30.558 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/closeout_gates.py:231(build_closeout_graph_context)
+    10314    0.393    0.000   28.999    0.003 /home/robocop/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/yaml/__init__.py:74(load)
+    10314    6.147    0.001   28.507    0.003 /home/robocop/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/yaml/constructor.py:47(get_single_data)
+    15074    0.039    0.000   28.206    0.002 /home/robocop/proyectos/SLDB_1/sldb/src/sldb/store/io/shards.py:35(_cached_instance)
+
+

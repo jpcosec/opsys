@@ -158,7 +158,7 @@ def _declared_materialization_target_nodes(
     POSIX path to an existing regular file and no exclusion rule applies, this
     function creates a source_file node for it.
     """
-    from deskops.graph.extract_docs import _iter_doc_paths
+    from tests.graph_oracle_v1.extract_docs import _iter_doc_paths
 
     materializations_dir = root / "desk" / "materializations"
     if not materializations_dir.exists():

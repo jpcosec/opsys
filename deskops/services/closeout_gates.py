@@ -228,25 +228,16 @@ class CloseoutGatesService:
             return False
         return ancestor.returncode == 0
 
-    def build_closeout_graph_context(self) -> dict[str, Any]:
-        from deskops.graph.extract_docs import extract_doc_nodes
-        from deskops.graph.extract_edges import extract_declared_edges
-        from deskops.graph.extract_sources import extract_source_file_nodes
+    def build_closeout_graph_context(self) -> "CloseoutGraph":
+        """The declared-edge graph the closeout link gate reads, built lazily.
 
-        doc_nodes = extract_doc_nodes(self.root)
-        source_nodes = extract_source_file_nodes(self.root)
-        by_path = {node.path: node.id for node in [*doc_nodes, *source_nodes]}
-        extraction = extract_declared_edges(self.root)
-        invalid_materializations = {
-            missing.source_id
-            for missing in extraction.missing_targets
-            if missing.source_id.startswith("materialization:")
-        }
-        return {
-            "node_ids_by_path": by_path,
-            "edges": extraction.edges,
-            "invalid_materializations": invalid_materializations,
-        }
+        Nodes come from one pass over the repository's document surfaces and file tree,
+        tracked documents and schema edges from one read of the sldb index; the declared
+        edges of a document are read only when the gate asks about it.
+        """
+        from deskops.graph.desk_graph import desk_graph
+
+        return CloseoutGraph(desk_graph(self.root))
 
     def _test_path_candidates(self, reference: str) -> list[str]:
         candidates: list[str] = []
@@ -261,3 +252,56 @@ class CloseoutGatesService:
         elif ".py" in stripped:
             candidates.append(stripped)
         return candidates
+
+
+class CloseoutGraph:
+    """What the closeout link gate asks of the declared-edge graph.
+
+    The gate needs, for a changed file, the edges leaving its node and the edges a
+    materialization points at it, plus the edges that link test files to atoms or
+    materializations. Only the materialization documents and the documents the gate asks
+    about are read; ``edges_around`` and ``test_link_edges`` return supersets of what the
+    gate keeps, in the order a full scan of the sorted edge list would visit them, so the
+    gate's own conditions produce the same evidence in the same order.
+    """
+
+    def __init__(self, graph: Any) -> None:
+        self.graph = graph
+        lookup = graph.nodes.lookup
+        self.node_ids_by_path = {path: node.id for path, node in lookup.by_path.items()}
+        materializations = sorted(
+            node_id for node_id in lookup.existing_ids | graph.node_ids() if node_id.startswith("materialization:")
+        )
+        self.invalid_materializations = {node_id for node_id in materializations if graph.missing_from(node_id)}
+        self._materialization_edges_to: dict[str, list[Any]] = {}
+        for node_id in materializations:
+            for edge in graph.edges_from(node_id):
+                self._materialization_edges_to.setdefault(edge.target_id, []).append(edge)
+
+    def node_id(self, relative_path: str) -> str | None:
+        return self.node_ids_by_path.get(relative_path)
+
+    def edges_around(self, node_id: str) -> list[Any]:
+        """Edges leaving ``node_id`` and materialization edges into it, sorted and unique."""
+        return _sorted_unique([*self.graph.edges_from(node_id), *self._materialization_edges_to.get(node_id, [])])
+
+    def test_link_edges(self) -> list[Any]:
+        """Edges leaving a test file, and materialization edges into a test file."""
+        edges = [
+            edge
+            for node_id in sorted(self.graph.node_ids())
+            if node_id.startswith("test_file:")
+            for edge in self.graph.edges_from(node_id)
+        ]
+        edges += [
+            edge
+            for target_id, into in self._materialization_edges_to.items()
+            if target_id.startswith("test_file:")
+            for edge in into
+        ]
+        return _sorted_unique(edges)
+
+
+def _sorted_unique(edges: list[Any]) -> list[Any]:
+    unique = {(edge.source_id, edge.target_id, edge.role, edge.provenance_locator): edge for edge in edges}
+    return [unique[key] for key in sorted(unique)]

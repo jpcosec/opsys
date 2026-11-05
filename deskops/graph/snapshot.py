@@ -5,13 +5,12 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from deskops.graph.extract_docs import EXTRACTOR_NAME as DOC_NODE_EXTRACTOR
-from deskops.graph.extract_docs import extract_doc_nodes
-from deskops.graph.extract_edges import EXTRACTOR_NAME as DECLARED_EDGE_EXTRACTOR
-from deskops.graph.extract_edges import DeclaredGraphEdge
-from deskops.graph.extract_edges import extract_declared_edges
-from deskops.graph.extract_sources import EXTRACTOR_NAME as SOURCE_FILE_NODE_EXTRACTOR
-from deskops.graph.extract_sources import extract_source_file_nodes
+from sldb.api.edges.project_graph import ProjectEdge as DeclaredGraphEdge
+
+from deskops.graph.desk_graph import DECLARED_EDGE_EXTRACTOR
+from deskops.graph.desk_graph import DOC_NODE_EXTRACTOR
+from deskops.graph.desk_graph import SOURCE_FILE_NODE_EXTRACTOR
+from deskops.graph.desk_graph import desk_graph
 
 
 SNAPSHOT_SCHEMA = "deskops_kgdb_graph_snapshot_v1"
@@ -129,9 +128,10 @@ def read_graph_neighbors(snapshot_path: Path, node_id: str) -> dict[str, Any]:
 def build_graph_snapshot(root: Path) -> dict[str, Any]:
     """Build a KGDB GraphSnapshot-compatible payload from deskops extractors."""
     project_root = root.resolve()
-    doc_nodes = [node.to_dict() for node in extract_doc_nodes(project_root)]
-    source_nodes = [node.to_dict() for node in extract_source_file_nodes(project_root)]
-    edge_result = extract_declared_edges(project_root)
+    graph = desk_graph(project_root)
+    doc_nodes = [node.to_dict() for node in graph.nodes.documents]
+    source_nodes = [node.to_dict() for node in graph.nodes.files]
+    edge_result = graph.extraction()
 
     nodes_by_id = _merge_nodes([*doc_nodes, *source_nodes])
     all_edges = edge_result.edges

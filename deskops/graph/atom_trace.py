@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from deskops.graph.extract_edges import extract_declared_edges
+from deskops.graph.desk_graph import extract_declared_edges
 
 
 @dataclass(frozen=True)

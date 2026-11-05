@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deskops.graph.extract_edges import extract_declared_edges
+from deskops.graph.desk_graph import extract_declared_edges
 
 
 def test_extract_declared_edges_returns_explicit_references_with_provenance(tmp_path: Path) -> None:

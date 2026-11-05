@@ -1,0 +1,4 @@
+run 1: cold=3.92s warm_new=[0.357, 0.36, 0.357] warm_same=[0.317, 0.363, 0.319] import=0.46s cards=5 errors=0
+run 2: cold=1.63s warm_new=[0.355, 0.358, 0.355] warm_same=[0.317, 0.317, 0.323] import=0.45s cards=5 errors=0
+run 3: cold=1.61s warm_new=[0.351, 0.351, 0.351] warm_same=[0.312, 0.311, 0.317] import=0.45s cards=5 errors=0
+median cold=1.63s median warm_new=0.355s median warm_same=0.317s

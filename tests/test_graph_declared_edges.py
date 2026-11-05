@@ -13,7 +13,7 @@ from pathlib import Path
 
 from deskops.cli.main import main
 from deskops.graph.checks import find_missing_graph_references
-from deskops.graph.extract_edges import extract_declared_edges
+from deskops.graph.desk_graph import extract_declared_edges
 
 
 def write(path: Path, text: str) -> None:

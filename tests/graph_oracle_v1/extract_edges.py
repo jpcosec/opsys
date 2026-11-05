@@ -13,8 +13,8 @@ from deskops.atom_references import CANONICAL_FIELD
 from deskops.atom_references import DEFAULT_ROLE
 from deskops.atom_references import LEGACY_FIELDS
 from deskops.atom_references import MATERIALIZATION_FIELD
-from deskops.graph.extract_docs import extract_doc_nodes
-from deskops.graph.extract_sources import extract_source_file_nodes
+from tests.graph_oracle_v1.extract_docs import extract_doc_nodes
+from tests.graph_oracle_v1.extract_sources import extract_source_file_nodes
 
 
 EXTRACTOR_NAME = "desk_declared_edges_v1"

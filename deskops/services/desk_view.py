@@ -222,7 +222,7 @@ class DeskView:
         node = str(payload.get("current_node") or "")
         if task is not None and not gates and node and node != lifecycle.COMPLETE:
             try:
-                lifecycle.transitions_from(self.root, node)
+                self.ops._transitions_from(node)
                 cause = f"The desk lifecycle graph declares no transition leaving {node}."
             except Exception as exc:
                 cause = f"Lifecycle gates unavailable: {exc}"
@@ -247,6 +247,10 @@ class DeskView:
 
     # ------------------------------------------------------------ views
     def board(self) -> dict[str, Any]:
+        with self.ops.read_snapshot():
+            return self._board_view()
+
+    def _board_view(self) -> dict[str, Any]:
         errors: list[dict[str, str]] = []
         board = self._board_payload()
         board_pills = [str(p) for p in board.get("pills") or []]
@@ -284,6 +288,10 @@ class DeskView:
         }
 
     def task(self, selector: str) -> dict[str, Any]:
+        with self.ops.read_snapshot():
+            return self._task_view(selector)
+
+    def _task_view(self, selector: str) -> dict[str, Any]:
         errors: list[dict[str, str]] = []
         try:
             path = self.ops._resolve_artifact_selector("artifact.task", self.ops.desk_root / "tasks", selector)

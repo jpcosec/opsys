@@ -1,12 +1,16 @@
 from __future__ import annotations
 
+from contextlib import contextmanager
+import copy
 from dataclasses import dataclass
 import json
 import logging
+import os
 from pathlib import Path
 import re
 import sys
 from typing import Any
+from typing import Iterator
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
@@ -54,6 +58,7 @@ if TYPE_CHECKING:
     from deskops.services.atoms import AtomsService
     from deskops.services.closeout import ClosureService
     from deskops.services.closeout_gates import CloseoutGatesService
+    from deskops.services.closeout_gates import CloseoutGraph
     from deskops.services.drawer import DrawerService
     from deskops.services.tasks import TasksService
 
@@ -198,6 +203,10 @@ class CloseoutGateReport:
         }
 
 
+# (absolute path, model) -> (text, payload): ``_read_doc`` parses a document once per text.
+_DOC_PAYLOADS: dict[tuple[str, Any], tuple[str, dict[str, Any]]] = {}
+
+
 class DeskopsOperations:
     def __init__(self, root: Path) -> None:
         self.root = root.resolve()
@@ -209,7 +218,25 @@ class DeskopsOperations:
         self._closeout_gates: CloseoutGatesService | None = None
         self._closure: ClosureService | None = None
         self._atoms: AtomsService | None = None
+        self._snapshot: dict[str, Any] | None = None
         self._setup_logging()
+
+    @contextmanager
+    def read_snapshot(self) -> Iterator[None]:
+        """Reuse task-independent graph reads for the duration of one read-only pass.
+
+        Inside the block, the closeout graph context and the lifecycle transitions
+        leaving each node are computed once and shared by every task read. The caller
+        promises not to write the desk inside the block; nesting reuses the outer one.
+        """
+        if self._snapshot is not None:
+            yield
+            return
+        self._snapshot = {"transitions": {}}
+        try:
+            yield
+        finally:
+            self._snapshot = None
 
     def _setup_logging(self) -> None:
         log_file = self.root / ".deskops.log"
@@ -423,7 +450,7 @@ class DeskopsOperations:
         if not task.current_node or task.current_node == lifecycle.COMPLETE:
             return []
         try:
-            transitions = lifecycle.transitions_from(self.root, task.current_node)
+            transitions = self._transitions_from(task.current_node)
         except Exception:
             return []
         payload = self._read_doc(self._resolve_glob(self.desk_root / "tasks", task.id), TaskDoc)
@@ -872,27 +899,39 @@ class DeskopsOperations:
     def _reference_points_to_commit(self, reference: str) -> bool:
         return self.closeout_gates.reference_points_to_commit(reference)
 
-    def _build_closeout_graph_context(self) -> dict[str, Any]:
-        return self.closeout_gates.build_closeout_graph_context()
+    def _transitions_from(self, node: str) -> list[Any]:
+        if self._snapshot is None:
+            return lifecycle.transitions_from(self.root, node)
+        cache = self._snapshot["transitions"]
+        if node not in cache:
+            cache[node] = lifecycle.transitions_from(self.root, node)
+        return cache[node]
 
-    def _changed_file_link_evidence(self, relative_path: str, graph_context: dict[str, Any]) -> list[str]:
+    def _build_closeout_graph_context(self) -> CloseoutGraph:
+        if self._snapshot is None:
+            return self.closeout_gates.build_closeout_graph_context()
+        if "graph_context" not in self._snapshot:
+            self._snapshot["graph_context"] = self.closeout_gates.build_closeout_graph_context()
+        return self._snapshot["graph_context"]
+
+    def _changed_file_link_evidence(self, relative_path: str, graph_context: CloseoutGraph) -> list[str]:
         evidence: list[str] = []
         path = self.root / relative_path
         if path.suffix == ".md" and self._is_under(path, self.desk_root / "atoms"):
             evidence.append(f"atom-doc:{relative_path}")
-        node_id = graph_context["node_ids_by_path"].get(relative_path)
+        node_id = graph_context.node_id(relative_path)
         if node_id is None:
             return evidence
-        for edge in graph_context["edges"]:
+        for edge in graph_context.edges_around(node_id):
             if edge.source_id == node_id and edge.target_id.startswith("atom:"):
                 evidence.append(f"graph:{node_id}->{edge.target_id}")
             if edge.target_id == node_id and edge.source_id.startswith("materialization:"):
-                if edge.source_id in graph_context["invalid_materializations"]:
+                if edge.source_id in graph_context.invalid_materializations:
                     continue
                 evidence.append(f"materialization:{edge.source_id}->{relative_path}")
         return self._dedupe_preserve_order(evidence)
 
-    def _skill_guard_test_evidence(self, relative_path: str, graph_context: dict[str, Any]) -> list[str]:
+    def _skill_guard_test_evidence(self, relative_path: str, graph_context: CloseoutGraph) -> list[str]:
         """Evidence for a changed skill file covered by an atom-linked guard test.
 
         Skill Markdown files are not graph nodes. A changed skill file is linked
@@ -925,13 +964,13 @@ class DeskopsOperations:
             evidence.append(f"guard-test:{test_path} -> {relative_path}")
         return self._dedupe_preserve_order(evidence)
 
-    def _atom_linked_test_paths(self, graph_context: dict[str, Any]) -> list[str]:
+    def _atom_linked_test_paths(self, graph_context: CloseoutGraph) -> list[str]:
         test_node_ids: set[str] = set()
-        for edge in graph_context["edges"]:
+        for edge in graph_context.test_link_edges():
             if edge.source_id.startswith("test_file:") and edge.target_id.startswith("atom:"):
                 test_node_ids.add(edge.source_id)
             if edge.target_id.startswith("test_file:") and edge.source_id.startswith("materialization:"):
-                if edge.source_id in graph_context["invalid_materializations"]:
+                if edge.source_id in graph_context.invalid_materializations:
                     continue
                 test_node_ids.add(edge.target_id)
         return sorted(node_id.removeprefix("test_file:") for node_id in test_node_ids)
@@ -1349,8 +1388,20 @@ class DeskopsOperations:
         doc_io.track(self.root, path, model, name=doc_id)
 
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
+        """The model payload of a document, parsed once per text of the file.
+
+        The parse is kept for the whole process under (path, model) with the text it came
+        from, and handed out as a copy: a reader that builds a new ``DeskopsOperations`` per
+        request (the UI's server) does not re-parse unchanged documents, and a caller that
+        edits the payload it got does not edit the kept one.
+        """
         raw_text = path.read_text(encoding="utf-8")
+        key = (os.path.abspath(path), model)
+        hit = _DOC_PAYLOADS.get(key)
+        if hit is not None and hit[0] == raw_text:
+            return copy.deepcopy(hit[1])
         payload = extract_model_data(model, raw_text)
         if "id" not in payload:
             payload["id"] = path.stem
+        _DOC_PAYLOADS[key] = (raw_text, copy.deepcopy(payload))
         return payload

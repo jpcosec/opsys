@@ -1,0 +1,33 @@
+         7373544 function calls (7064409 primitive calls) in 3.746 seconds
+
+   Ordered by: cumulative time
+   List reduced from 1426 to 25 due to restriction <25>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+        1    0.000    0.000    3.751    3.751 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:249(board)
+        1    0.000    0.000    3.750    3.750 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:253(_board_view)
+        5    0.000    0.000    3.665    0.733 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:215(_card)
+        5    0.000    0.000    2.294    0.459 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:439(show_task)
+        5    0.000    0.000    2.292    0.458 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:449(_lifecycle_gates)
+        5    0.000    0.000    2.274    0.455 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:902(_transitions_from)
+        2    0.000    0.000    2.273    1.137 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/lifecycle.py:123(transitions_from)
+        2    0.000    0.000    2.246    1.123 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/api/edges/edge_reading.py:31(edges_from)
+        3    0.000    0.000    2.228    0.743 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/api/edges/edge_reading.py:14(load_edge_index)
+        3    0.002    0.001    2.147    0.716 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/edge_index/compose.py:22(compose_edge_index)
+        1    0.002    0.002    2.142    2.142 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/edge_index/compose.py:48(_compose)
+        1    0.000    0.000    2.048    2.048 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/edge_index/compose.py:58(_merge_store)
+        1    0.000    0.000    1.979    1.979 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/edge_index/shard_reading.py:17(read_store_contributions)
+      884    0.022    0.000    1.938    0.002 /home/robocop/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/yaml/__init__.py:74(load)
+      570    0.001    0.000    1.930    0.003 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/shards.py:31(_cached_shard)
+      884    0.327    0.000    1.906    0.002 /home/robocop/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/yaml/constructor.py:47(get_single_data)
+      283    0.001    0.000    1.828    0.006 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/shards.py:86(load_edges_shard)
+       17    0.000    0.000    1.742    0.102 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/shard_compose.py:42(compose_edges_documents)
+      282    0.001    0.000    1.737    0.006 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/shard_compose.py:48(<genexpr>)
+      570    0.002    0.000    1.485    0.003 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/shards.py:35(_cached_instance)
+      568    0.002    0.000    1.443    0.003 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/utils.py:30(yaml_load)
+      283    0.004    0.000    1.388    0.005 /home/robocop/proyectos/SLDB_1/sldb-wt-closeout-graph/src/sldb/store/io/shards.py:91(<lambda>)
+        5    0.000    0.000    1.128    0.226 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/services/desk_view.py:184(_closeout)
+        5    0.000    0.000    1.128    0.226 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:629(verify_task_closeout)
+        5    0.000    0.000    1.011    0.202 /home/robocop/proyectos/SLDB_1/deskops-wt-graph/deskops/operations.py:759(_closeout_link_gate)
+
+

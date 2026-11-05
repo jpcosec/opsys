@@ -125,13 +125,17 @@ def transitions_from(root: Path, node: str, spec: LifecycleSpec | None = None) -
 
     Topology and conditions come from the graph; the effect of each transition comes from
     the spec. A relation type the spec does not know is not a lifecycle transition.
+
+    The lifecycle graph lives in the desk's own store (``ensure_lifecycle_graph`` writes it
+    there), so only that store's edge index is read (sldb keeps it composed while its shards
+    do not move), not the index composed with every linked store.
     """
     from sldb.api import edges_from
 
     spec = spec or load_lifecycle_spec()
     known = {t.relation_type for t in spec.transitions}
     found: list[Transition] = []
-    for edge in edges_from(_store(root), ritual_export_id(node)):
+    for edge in edges_from(_store(root), ritual_export_id(node), include_linked=False):
         if edge.relation not in known or edge.metadata.get("origin") != "relation_doc":
             continue
         effect = spec.effect(edge.relation)

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deskops.graph.extract_docs import extract_doc_nodes
+from deskops.graph.desk_graph import extract_doc_nodes
 
 
 def test_extract_doc_nodes_reads_only_desk_document_surfaces(tmp_path: Path) -> None:
@@ -62,7 +62,7 @@ type: artifact
     assert by_id["spec:spec/artifacts/atom.yaml"].document_id == "artifact.atom"
     assert by_id["spec:spec/artifacts/atom.yaml"].label == "Atom Artifact"
     assert by_id["diagram:docs/diagrams/codebase/codebase-knowledge-surfaces.mmd"].label == "Codebase Knowledge Surfaces"
-    assert by_id["task:task-005-extract-desk-doc-graph-nodes"].provenance == {
+    assert by_id["task:task-005-extract-desk-doc-graph-nodes"].provenance.model_dump() == {
         "path": "desk/tasks/005-extract-desk-doc-graph-nodes.md",
         "source_kind": "file_metadata",
         "extractor": "desk_doc_nodes_v1",

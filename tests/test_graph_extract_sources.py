@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from deskops.graph.extract_sources import extract_source_file_nodes
+from deskops.graph.desk_graph import extract_source_file_nodes
 
 
 def test_extract_source_file_nodes_reads_file_level_source_surfaces(tmp_path: Path) -> None:
@@ -35,7 +35,7 @@ def test_extract_source_file_nodes_reads_file_level_source_surfaces(tmp_path: Pa
     assert by_id["test_file:tests/test_atom_materialization.py"].file_kind == "test"
     assert by_id["config_file:pyproject.toml"].file_kind == "config"
     assert by_id["spec:spec/artifacts/atom.yaml"].file_kind == "spec"
-    assert by_id["config_file:desk/atoms/tag-namespaces.yaml"].provenance == {
+    assert by_id["config_file:desk/atoms/tag-namespaces.yaml"].provenance.model_dump() == {
         "path": "desk/atoms/tag-namespaces.yaml",
         "source_kind": "path_rule",
         "extractor": "desk_source_file_nodes_v1",
@@ -114,7 +114,7 @@ def test_declared_target_src_file_becomes_source_node(tmp_path: Path) -> None:
     assert node.identity == "src/vsm/organs/links.py"
     assert node.path == "src/vsm/organs/links.py"
     assert node.file_kind == "source"
-    assert node.provenance["source_kind"] == "declared_materialization_target"
+    assert node.provenance.source_kind == "declared_materialization_target"
 
 
 def test_declared_target_github_workflow_becomes_source_node(tmp_path: Path) -> None:
@@ -130,7 +130,7 @@ def test_declared_target_github_workflow_becomes_source_node(tmp_path: Path) -> 
 
     assert "source_file:.github/workflows/pulse.yml" in by_id
     node = by_id["source_file:.github/workflows/pulse.yml"]
-    assert node.provenance["source_kind"] == "declared_materialization_target"
+    assert node.provenance.source_kind == "declared_materialization_target"
 
 
 def test_declared_target_doc_surface_produces_no_source_node(tmp_path: Path) -> None:
@@ -162,7 +162,7 @@ def test_declared_target_already_matched_by_path_rule_not_duplicated(tmp_path: P
     # Should appear exactly once, from path_rule
     assert ids.count("source_file:deskops/operations.py") == 1
     node = next(n for n in nodes if n.id == "source_file:deskops/operations.py")
-    assert node.provenance["source_kind"] == "path_rule"
+    assert node.provenance.source_kind == "path_rule"
 
 
 def test_declared_target_leading_dotslash_is_stripped(tmp_path: Path) -> None:
@@ -286,7 +286,7 @@ def test_declared_target_dotslash_github_workflow_yields_correct_node(tmp_path: 
     node = by_id["source_file:.github/workflows/pulse.yml"]
     assert node.identity == ".github/workflows/pulse.yml"
     assert node.path == ".github/workflows/pulse.yml"
-    assert node.provenance["path"] == ".github/workflows/pulse.yml"
+    assert node.provenance.path == ".github/workflows/pulse.yml"
 
 
 def test_declared_target_symlink_yields_link_path_not_resolved_target(tmp_path: Path) -> None:
@@ -316,5 +316,5 @@ def test_declared_target_symlink_yields_link_path_not_resolved_target(tmp_path: 
     node = by_id["source_file:src/link.py"]
     assert node.identity == "src/link.py"
     assert node.path == "src/link.py"
-    assert node.provenance["path"] == "src/link.py"
-    assert node.provenance["source_kind"] == "declared_materialization_target"
+    assert node.provenance.path == "src/link.py"
+    assert node.provenance.source_kind == "declared_materialization_target"

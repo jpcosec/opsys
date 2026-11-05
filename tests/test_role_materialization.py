@@ -11,7 +11,7 @@ if str(SLDB_SRC) not in sys.path:
     sys.path.insert(0, str(SLDB_SRC))
 
 from deskops.cli.main import main
-from deskops.graph.extract_docs import extract_doc_nodes
+from deskops.graph.desk_graph import extract_doc_nodes
 from deskops.materializers.roles import render_pi_agent_markdown
 from deskops.models import RoleDoc
 from sldb.runtime.validation import extract_model_data
