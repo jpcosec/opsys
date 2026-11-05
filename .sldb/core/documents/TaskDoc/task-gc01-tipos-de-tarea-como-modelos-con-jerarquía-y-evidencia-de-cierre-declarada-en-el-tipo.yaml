@@ -1,0 +1,35 @@
+name: task-gc01-tipos-de-tarea-como-modelos-con-jerarquía-y-evidencia-de-cierre-declarada-en-el-tipo
+path: desk/tasks/task-gc01-tipos-de-tarea-como-modelos-con-jerarquía-y-evidencia-de-cierre-declarada-en-el-tipo.md
+source_hash: 4db65e245cd71fcbe117ac4d845514610e3164eead9779ffbad57fc660916d9e
+content_hash: eeb07f0d583ae7879862cc8b223a64f0a8c75b7acb5b764776a830a17807217b
+field_hashes:
+  title: 2f1dfcea1e8e44895a07c0d3ddec82018ac5e0db961d24eae1bcac81b1eabec4
+  id: c17e656945b3901d6b02f521a8d241c563fa75989344c605effdf22a92fadfab
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: 4b5286ee5c63ec8a25cdc7f49f4d2344b78ac40b25a12716daab1664e310d75e
+  goal: 3e9cce694adbc9a55316408ec7e245bf1afccef5379f10900620e99c9ff606c3
+  scope: f8f75a0223616f475cdfa7bc4affa12e8f12db21fa5d2ffc82d8b5f173a47a8d
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: 92bcda99f4cde93dbf950a36d2d0bab45fb6623353cb78882057ab7cddfe2b39
+  implementation_path: 26287781031743759f023c85f7d83bdbef4c4ee01bbf72a67b9f6c748d5506bf
+  validation: 9c0b3fb3adfd892c02463577fa552749d3f9defb962f30068ccdec21066a2ddb
+  done_when: 4f98fed7cd5f4e24a1fece056531d528d830e1ca687d81ffe84bbadddc7bf158
+  task_type: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  closeout_evidence: 6e22eae89f77bd621f1589b0778d6bdb33101cebb03011b3c9a1e6e29a2dcf4c
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance: null
