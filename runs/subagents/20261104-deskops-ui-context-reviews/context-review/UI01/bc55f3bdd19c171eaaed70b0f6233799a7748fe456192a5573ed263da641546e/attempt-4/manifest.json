@@ -1,0 +1,71 @@
+{
+  "key": "UI01",
+  "input_sha256": "bc55f3bdd19c171eaaed70b0f6233799a7748fe456192a5573ed263da641546e",
+  "sources": [
+    {
+      "path": "desk/drawer/plans/deskops-ui/context-review-guide.md",
+      "sha256": "ec5612470d10956c97f554a893ecc60c4e9bb499ad3aff0e4b29f9d5ecceab69",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/brief.md",
+      "sha256": "03af3ea4a39cdf67d54ffb5aa7a56cb6309f3cc8b2b818a31ebbdeadb5c614f3",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/alcance.md",
+      "sha256": "61b891a1b0da6f2af187c2206eae2b1fac4e4c7d1f4109d3e8adb88e0b9f88db",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/decisiones.md",
+      "sha256": "8aacd2a6bd47ffa8bd0f002de7afc7e18fd05d5c1d8d2df516e99ad9b6ac9810",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/dag.yaml#node:UI01",
+      "sha256": "b81d6aa746cfba9d1029972a8cdf6315a387ba95f5e57f9be8190f85c8ea7fb5",
+      "projection": "node_contract"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/dag.yaml#edge:UI02",
+      "sha256": "e7b08af86e1c846ee01a530393149465818ede35831d2a9c8663900e639e99b6",
+      "projection": "edge_contract"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/dag.yaml#edge:PU01",
+      "sha256": "96d672250947fc2e5be5cb203b5e8c6e74bb918dcf74f9ee1122f4acbaa2d0e2",
+      "projection": "edge_contract"
+    },
+    {
+      "path": "desk/drawer/plans/deskops-ui/dag.yaml#gates",
+      "sha256": "9766a342403e9a643d082a1bb234c2784babd48c50e67647c578c46e6a99bec3",
+      "projection": "gate_contracts"
+    }
+  ],
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "--print",
+    "@input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "thinking low, offline, no tools/session/context/skills/extensions/prompt-templates",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "started": "2026-11-05T02:30:10.512984+00:00",
+  "finished": "2026-11-05T02:45:10.628017+00:00"
+}

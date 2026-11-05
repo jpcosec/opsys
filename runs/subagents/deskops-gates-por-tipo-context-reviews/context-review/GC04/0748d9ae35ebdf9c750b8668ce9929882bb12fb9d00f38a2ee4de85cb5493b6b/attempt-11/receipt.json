@@ -1,0 +1,6 @@
+{
+  "key": "GC04",
+  "exit": "timeout",
+  "technical_ok": false,
+  "disposition": "technical_failure"
+}
