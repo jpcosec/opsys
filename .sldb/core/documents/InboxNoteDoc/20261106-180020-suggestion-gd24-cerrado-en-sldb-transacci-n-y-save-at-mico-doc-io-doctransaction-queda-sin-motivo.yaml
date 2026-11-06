@@ -1,0 +1,18 @@
+name: 20261106-180020-suggestion-gd24-cerrado-en-sldb-transacci-n-y-save-at-mico-doc-io-doctransaction-queda-sin-motivo
+path: desk/inbox/20261106-180020-suggestion-gd24-cerrado-en-sldb-transacci-n-y-save-at-mico-doc-io-doctransaction-queda-sin-motivo.md
+source_hash: 9f416ae77e2c83f0684daeb7cd957868d62da5a39f2ccbef8addbe04a8ac68b0
+content_hash: 16d881f3fd389a4ca0aad1ebad1cf75253dce6732d031d2d0db7c33ac96db4cd
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: b4d83d93a01d2d68f6489efdc669b1220a836d261234794ca23c27dc223898f6
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 945cc5c31fec8ecaff27c3e1eaaee508d086e8810b3414408abc7166ce35dd39
+  body: c8734fcab7faf18e349cac7df140dfc327b7655e8ae6bee9976e52de1c19a193
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
