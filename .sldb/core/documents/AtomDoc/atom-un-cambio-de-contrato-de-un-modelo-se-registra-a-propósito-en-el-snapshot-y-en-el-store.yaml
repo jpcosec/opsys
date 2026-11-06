@@ -1,0 +1,18 @@
+name: atom-un-cambio-de-contrato-de-un-modelo-se-registra-a-propósito-en-el-snapshot-y-en-el-store
+path: desk/atoms/atom-un-cambio-de-contrato-de-un-modelo-se-registra-a-propósito-en-el-snapshot-y-en-el-store.md
+source_hash: 92417afb20ad334a398f84680e88450effe840a383bb30adc4c80bb75aac2f1a
+content_hash: 3f9c0730f5d551be3dbb6c858563af1eeac949ddfdcf1f652d1835638126e50c
+field_hashes:
+  id: 93aadb48cbebed24bc3569449cdc1204bde5f2d8192bc97796e56cfc98f768f1
+  title: a150707b131ed50935d6e73b9548b1f6d32cef4a44907900a48c69d968c5cae8
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 8c4c794b0d86815f92b6e5a20c00bf515fd721c19c5a924dc9956708a00469cb
+  tags: a3088c8fd30e66b5b62b4d5fc35566bbeeda4d22e182627120db9eb71ee2bd83
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:model-contracts
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

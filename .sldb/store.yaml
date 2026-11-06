@@ -266,6 +266,7 @@ include:
   - desk/materializations/materialization-cc30-tests-test-packaging.md
   - desk/materializations/materialization-rg-tests-test-cli-grammar.md
   - desk/materializations/materialization-gi-tests-test-gitignore-policy.md
+  - desk/materializations/materialization-mc-fixtures-model-contract-hashes-json.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

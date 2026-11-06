@@ -7,7 +7,11 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_model_contract_snapshot.py
+- tests/test_model_contract_snapshot.py
+- 30eb97d40e458d342f68aacb1dac4c7ee6f5a4e8
+- desk/atoms/atom-un-cambio-de-contrato-de-un-modelo-se-registra-a-propósito-en-el-snapshot-y-en-el-store.md
 depends_on: []
 pills: []
 files:
@@ -63,6 +67,7 @@ _List the checks required before this task can close._
 - TMPDIR=/dev/shm pytest -q tests/test_model_contract_snapshot.py verde (2 passed)
 - grep RelationDoc tests/fixtures/model_contract_hashes.json = a71cc045… = contract_hash de .sldb/core/models/RelationDoc.yaml
 - git diff --stat contra git merge-base HEAD origin/main limitado a tests/fixtures/model_contract_hashes.json y CHANGELOG.md, una línea cambiada en el fixture
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash 30eb97d4 sobre origin/main): test_model_contract_snapshot 2 passed. Solo la entrada RelationDoc del fixture pasa a a71cc045, que es el contract_hash del store de deskops migrado en 09b5075c y el de sldb migrado en 96bcc5dd. CHANGELOG cita GO09 (33b3c7a0/d39bf915). La migración F6 (scripts/migrate_desk_stores.py) no migra RelationDoc porque es modelo de sldb; el equivalente vigente es sldb stores update. Los desks de spec2viz, scion, pron y graph_ui quedan para la tarea de reparación de desks del coordinador de proyecto.
 
 ## Done When
 
