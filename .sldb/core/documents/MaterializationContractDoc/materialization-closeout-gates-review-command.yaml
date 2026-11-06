@@ -1,0 +1,21 @@
+name: materialization-closeout-gates-review-command
+path: desk/materializations/materialization-closeout-gates-review-command.md
+source_hash: 8f77b3424d2a85f2e727e6b9d29c78969f70becdea9fac668b3b35571f05ae3b
+content_hash: fc4d001b42b15c5fe1fb9b80bdc39d7f3fdb35ce4fd375dd844193623027c9b0
+field_hashes:
+  id: f0820d5d0497d56df49c88be980bba930194e713e4559397cdd565ff176f3a3d
+  title: 0524b469f35503c9c5b3be5d778578644574f8748c9a4464e68bea346ef94311
+  source_atoms: a6e5c612469eed8c0a94806117878be1565ae57b906fd4b828113adcfc2818d3
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: c4de4991e187498946faf17b5580ae7711d70bfe3400770a0a72c16dd4aae58a
+  intent: 22bb120a8f7ce277a6ff0328a45245e5f2c0e368c8761a20499ecc72a0ef3242
+  validation: d631aa57ea31a315e4a1108e85926192db9752052abc9d31814cd2d9d43854dc
+  tags: 8c3192161566f4379853c2007f025f9aaeb5bd8ffa53cf4b44b3951c0163da8d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:gates-por-tipo
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

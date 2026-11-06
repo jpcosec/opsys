@@ -7,7 +7,14 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_task_types.py
+- tests/test_task_types.py::test_add_task_with_task_type_tracks_under_the_type_model
+- tests/test_task_types.py::test_closeout_verify_reads_evidence_from_the_type
+- tests/test_task_types.py::test_legacy_task_type_migrates_idempotently
+- pytest tests/test_model_contract_snapshot.py
+- 9df4c82a
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
 depends_on: []
 pills: []
 files:

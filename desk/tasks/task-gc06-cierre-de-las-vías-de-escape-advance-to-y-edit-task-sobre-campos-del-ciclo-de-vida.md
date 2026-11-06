@@ -7,7 +7,13 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_cli_escape_hatches.py
+- tests/test_cli_escape_hatches.py::test_advance_to_is_a_usage_error
+- tests/test_cli_escape_hatches.py::test_edit_task_status_names_closeout_commit
+- pytest tests/test_inbox_promote_cli_gaps.py
+- 9df4c82a
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
 depends_on:
 - task-gc01-tipos-de-tarea-como-modelos-con-jerarquía-y-evidencia-de-cierre-declarada-en-el-tipo
 pills: []

@@ -7,7 +7,13 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_review_command.py
+- tests/test_review_command.py::test_preflight_writes_attempt_evidence_and_receipt
+- tests/test_review_command.py::test_dispose_writes_the_verdict_and_a_second_dispose_fails
+- 9df4c82a
+- a1a938c4
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
 depends_on:
 - task-gc02-reviewdoc-como-recibo-anclado-al-contrato-de-la-tarea
 pills: []

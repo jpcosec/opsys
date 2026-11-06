@@ -1,7 +1,7 @@
 name: task-gc03-comando-deskops-review-que-reemplaza-a-los-dos-scripts-de-revisión-en-frío
 path: desk/tasks/task-gc03-comando-deskops-review-que-reemplaza-a-los-dos-scripts-de-revisión-en-frío.md
-source_hash: 5ae12b6f9a88cd96a4e68514ae991b1308824253f4eeb6392d53234475ef8068
-content_hash: 2b37bc7d95cae948e79db80dd13e23d65685590185afbcea96a2fc0e33ec4807
+source_hash: 466ca1168d98087d4c2f0741417ee68ad3cce968c8ca3707caf5a699583328d5
+content_hash: d41746d936ae8b8bd8d192555ea51af41a1f9b866acfa7e670c429547810c843
 field_hashes:
   title: 90619848a6fe5f7345289f77baa0418693ee1679edb8a3ce38971ff7771f01ad
   id: 48e571a4d632f1eae5bd38e8a679761a70b042ad9a51ee8c46c8a730a299bbc8
@@ -13,7 +13,7 @@ field_hashes:
   why: 1f709ef3a550e8de684e3177162807d4387b1a32550838af6069f111c38bba2c
   goal: 68fd9a98d9a47cd5c66754ebb45885588056a3aea95fc9027353be133be2d58d
   scope: a502265444cc86608df707578307f601575602b7955bdf74966283ee9ccfe3b6
-  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  references: 8edb0fa25cc4a0c43f9b9024ae893d2c9616a15e0f1247c8ca6d71b5b475e1b8
   depends_on: 175cf450e7f67d57a09031a95b9d881a3952d0e1baf26e6c2c4e7bff269bff9d
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 0579b5f4e679070934822722fc4139d5d42c0f5c7f4e139c8ee0810bea5720b3

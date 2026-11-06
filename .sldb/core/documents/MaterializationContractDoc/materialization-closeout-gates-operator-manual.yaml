@@ -1,0 +1,21 @@
+name: materialization-closeout-gates-operator-manual
+path: desk/materializations/materialization-closeout-gates-operator-manual.md
+source_hash: 59fea9e4ab914ac7de35c7af15671090823bb02d076eb2172382522ef85b94f7
+content_hash: 5eb613c2d30eb4035836cc11f86467fd7aa1fac04e1ae14d4de284affaa9e405
+field_hashes:
+  id: c8b2a2bda658ef2d0378990c47f083b273145248c4622f1d389c5cd2b83e2166
+  title: 52a3272be2a987ccb941b9121586bcaf4b994627ab6a6a16f873871fc11af706
+  source_atoms: a54ef997a0c8bdcaae54057138104a0f1d2aa190bc3a3db261fde7273202ae92
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 3bed947441017806533d525d02305a7a0ba4430336a3781093dbc5810d8c74a6
+  intent: a9e20c7e478637685e91bc590e0aab8ed075be80ee9e6e0bcb26e800ea1a3ff1
+  validation: 751de8e1ae93a7b45a3ece1d659771dab5809b9767fa5841f304bbd34e10d226
+  tags: 8c3192161566f4379853c2007f025f9aaeb5bd8ffa53cf4b44b3951c0163da8d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:gates-por-tipo
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

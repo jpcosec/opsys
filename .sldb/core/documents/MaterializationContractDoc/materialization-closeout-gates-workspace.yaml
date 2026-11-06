@@ -1,0 +1,21 @@
+name: materialization-closeout-gates-workspace
+path: desk/materializations/materialization-closeout-gates-workspace.md
+source_hash: d8deb36bd2c5e7ac791a8bf94931ea0449938a84efaa6efa7ab646f792e9f8ae
+content_hash: 905765cad09dea163b81e8f39cc957d72dc5bb049d3d5694589ac403ccc1e0ba
+field_hashes:
+  id: 7b249da26a0dabd1f5b86d1159f87f8490df4a1cb8f96490bf1dad4241df0677
+  title: d181f0675ba4203783fb66ea00591d44021e98b2e213a18bdf68d9b158d89d70
+  source_atoms: 0e7eb45bba0c65527b800ad967b2391d2b2ae64088d41656ec22bedf7055e1e4
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: fed5d3b4795f7a8690e9aea30c66045fc988230680e1002ab9a34e25f60b9184
+  intent: 9b3388da4316cfeca4255548e6d6a7a06e4be377df592ce87508a0adb9edad65
+  validation: d631aa57ea31a315e4a1108e85926192db9752052abc9d31814cd2d9d43854dc
+  tags: 8c3192161566f4379853c2007f025f9aaeb5bd8ffa53cf4b44b3951c0163da8d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:gates-por-tipo
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

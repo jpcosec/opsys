@@ -1,0 +1,21 @@
+name: materialization-closeout-gates-cli-operations
+path: desk/materializations/materialization-closeout-gates-cli-operations.md
+source_hash: e1bea2e4a765b2135ec6a74d206a88950b01bfd9e8fc5b6fb97d33aa25ba3216
+content_hash: 2a30a2c27f846d52f51c27142133576731dfd8c158193c23d8ebdb606e0202d2
+field_hashes:
+  id: e6c17633ac620f212c710306e4aff6f7861011e084a907ff6ccb5f268a1b68c6
+  title: b624dc28a8da7eb6755321101b79b3ef13cda4c7147ea03e33190c44b8618910
+  source_atoms: a54ef997a0c8bdcaae54057138104a0f1d2aa190bc3a3db261fde7273202ae92
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 866a42df5c049c31958a22a30cf62fa9fe3c4707825d273b8988b122cb87eb7f
+  intent: c74559f32925068b6a54a3931d3c72fb027d3160cca9dc18e010da0728b61765
+  validation: ed111669a3132f2a2cfafe52cbda65b79c2b59c067985dc4a57dc586b51cb46c
+  tags: 8c3192161566f4379853c2007f025f9aaeb5bd8ffa53cf4b44b3951c0163da8d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:gates-por-tipo
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
