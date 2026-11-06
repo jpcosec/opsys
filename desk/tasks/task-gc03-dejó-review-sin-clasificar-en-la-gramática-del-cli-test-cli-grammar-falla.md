@@ -46,6 +46,10 @@ _Outline the expected implementation route or affected surface._
 
 1) Leer en deskops/cli/registry.py el CommandSpec de review (path ('review',) o sus subcomandos) y su valor mutates. 2) En tests/test_cli_grammar.py agregar "review" a TOP_LEVEL_GRAMMAR['operational']. 3) Si command_for_path(('review',)) existe, agregar en test_operational_mutates_guards la aserción de su mutates tal como está en el registro; si review solo existe con subcomandos, fijar mutates de ('review','status') (no muta) y ('review','preflight') (muta) según el registro, sin cambiar el registro. Si el registro declara un valor que contradice lo que el comando hace (status escribe, o preflight no escribe), no se corrige aquí: se anota en la Validation como hallazgo para el coordinador. 4) CHANGELOG: una línea en Unreleased / Fixed nombrando test_cli_grammar y review. 5) No se toca la doc: docs/ no tiene una tabla de la gramática de primer nivel (grep 'gramm' en docs/ solo da la gramática de edit e inbox).
 
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-06; leídas del registro en main 1f6fe0fc):
+r1 (valores del registro, sin condicionales): command_for_path(('review',)) existe, con mutates=True. Los subcomandos declaran ('review','node') True, ('review','preflight') True, ('review','bundle') True, ('review','status') False y ('review','dispose') True. Estos valores coinciden con lo que hace cada comando: status solo compara hashes y no llama al modelo ni escribe; los otros escriben evidencia o recibos.
+r2 (qué fija el test): test_operational_mutates_guards agrega assert command_for_path(('review',)).mutates is True, assert command_for_path(('review','status')).mutates is False y assert command_for_path(('review','dispose')).mutates is True. No hay contradicción entre registro y comportamiento, así que no hay hallazgo que anotar. Si al implementar el registro difiere de r1, el worker para y avisa al coordinador.
+
 ## Validation
 
 _List the checks required before this task can close._

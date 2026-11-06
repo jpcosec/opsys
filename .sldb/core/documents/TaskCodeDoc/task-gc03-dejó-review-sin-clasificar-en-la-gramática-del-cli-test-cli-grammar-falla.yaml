@@ -1,7 +1,7 @@
 name: task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla
 path: desk/tasks/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla.md
-source_hash: baa0e83b0ece8fc7b7a4344800474a10cafef826e2f25fe85d9012760d58e4e3
-content_hash: ea950550a3d2ae5636caae56fde3ce9749f0c9be2251703b13dd9231a7f25826
+source_hash: 0ef18e35bbd7c9a47264b9493e1fc52027468d82b7be7a9e698fe655c878df29
+content_hash: 0c8388af6cce14a92eb9087c3e5924c7005efc6b81debf9eea01fed2eb806a8f
 field_hashes:
   title: 36665af327ae5782a0bd484e47612130c274f49adc1710f05273d545bed547e4
   id: cb5c433131c9005ce456fec56b63764dbbada427ad4f9ca3597cf7bf445c638f
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 671363902d07c041736bd99c758b5e7d5cc1f8bc713d7e3add98588555e50b46
-  implementation_path: 13a6ffb1d3384de37fcafa70011460bec53b57d5bb42b60ee24cccca9eb7c885
+  implementation_path: 59baa65c4a20b18ef89afe17766a62f85741b1fea2fa0ea170014c3f17a90609
   validation: 7adaaab62503758e800376d7a1d38dfef2b3615ba4562b23c6e1475111b17dfe
   done_when: 01b7df7612cd1525758d196f01474998f3e16d73f30c70c4c305def61fdc913a
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb

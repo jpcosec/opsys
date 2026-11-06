@@ -1,0 +1,30 @@
+name: review-task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla-preflight-1
+path: desk/reviews/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla/preflight-1.md
+source_hash: c34a696fe9338f2a96bcf4d0ccd4a1261a5d6e93047fbfb0b5b3718b6b9ce930
+content_hash: bcb899884805bbf94397189c12be29877b87897c70c9c6a101572e6e1fd4963c
+field_hashes:
+  id: ba1616ac4e731f35d97abffcad5365660cbc41763dd48765c19729443e5a4bb4
+  title: 36c1e66c7ac77a2643add0b118eb1b7db4efd5cd6a2d0029bfa2982478242c7d
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: ce096546c4116c91625f71a7d1830670c9b5f8d10e1ad441c584ab5dd21c8b6f
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: ccc1bffc75c1ecb76f5a46b34e2a0af3c5d4c0d265aab0ab2a815073a10f132e
+  input_sha256: ff1788ec7ee1b2213a7201030bb351b06d763189e87c61c3bd2a577142f32ddf
+  output_sha256: a2c3d8e4369a3ad22e9fe0f1f684e13d25ba5af3608d15cb476b1649435eefcd
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 02609c775bec3f457ba291e24f2b66653ad70f82660ef8f25239b2a6df8e0896
+  created_at: 67a640865c241ad1b1bd7d16aef4562dfde9ee14fd192a264ea2b615871a09ff
+  disposed_at: b5ea21c95a582c44cb294373b0ae685adb55fb6f3a978ce896de637ddc08554b
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 8a8e66f6b311ae321e8aff046add89675f03a818f1dc3eed825ca0bab0e03ba9
+  disposition: 7ccf3a87babba9b79470ee722771dc39d89b65b4b1358f435bc71d00aeeeaa13
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
