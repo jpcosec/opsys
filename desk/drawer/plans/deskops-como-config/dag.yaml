@@ -47,7 +47,8 @@ gates:
     evidence: sldb graph project nodes|edges|missing desde store.yaml project_graph, con edges_to
   G_GD22:
     title: referrers y rewrite_references (sldb GD22)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 2570b710, closeout 680adcc4, nota en el inbox; pin structuredLanguageDB>=0.1.13 (venv con el main de sldb editable); coordinador de proyecto, 2026-11-06'
     resolver: GD22 cerrado; versión pinneada
     evidence: sldb edges referrers/rewrite con campo, índice y menciones
   G_GD23:
