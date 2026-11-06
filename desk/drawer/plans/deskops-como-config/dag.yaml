@@ -65,7 +65,8 @@ gates:
     evidence: rollback total de archivos, entradas y shards; guarda expected_source_hash
   G_GD25:
     title: ViewDoc y GET /views/<nombre> (sldb GD25)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 05b4135f, closeout 2d5cf98e, nota en el inbox; pin structuredLanguageDB>=0.1.13 (venv con el main de sldb editable); coordinador de proyecto, 2026-11-06'
     resolver: GD25 cerrado; versión pinneada
     evidence: sldb views run y GET /views/<nombre> con ETag; sin proveedores computed (DA1)
   G_GD26:
