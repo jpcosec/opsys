@@ -24,6 +24,7 @@ files:
 - deskops/cli/commands/desk.py
 - deskops/cli/commands/core.py
 - tests/
+- pyproject.toml
 - docs/workflow-policy-reference.md
 - CHANGELOG.md
 task_type: task.code
@@ -102,6 +103,10 @@ n4 (qué se reescribe): solo los 6 documentos declarados como semillas managed (
 n5 (señal de k6): la migración legada hace falta en un desk si, con el código de main y sobre la copia, «deskops desk update --root <copia>» en dry-run imprime alguna línea de lifecycle_migration (inspect_legacy_lifecycle: «Legacy task lifecycle ...») o de la migración de rituales legados (_ensure_ritual_readable / _archive_legacy_ritual: archivar o reescribir un ritual). Las salidas por desk van al informe. Una línea que sea artefacto de la copia (como «graph missing» porque el owner store es otro, lo que ya se vio en CC36) se distingue, se explica y no cuenta.
 n6 (history): advance obtiene el payload nuevo con apply_effects y, si terminal, pone current_node = complete. Después deskops agrega la entrada de history como hoy y escribe el documento. apply_effects no toca history.
 n7 (6 desks): baseline = deskops doctor con el código de main sobre una copia de cada desk. Después, sobre otra copia, desk update --apply con el código de la rama y deskops doctor con el código de la rama. Se comparan los hallazgos, y uno nuevo que no se explique bloquea. Las copias van bajo /dev/shm y se borran al terminar. Los desks reales no se tocan.
+
+DESVÍOS AUTORIZADOS DURANTE LA EJECUCIÓN (coordinador del plan, 2026-11-06):
+d1 (package-data): pyproject.toml entra en files solo para agregar "data/lifecycle/**/*" a [tool.setuptools.package-data]. Sin eso, las plantillas de deskops/data/lifecycle/ no viajan en un wheel (la instalación editable no lo nota). tests/test_packaging.py comprueba que viajan, como en CC36 (c6). No se toca la dependencia de sldb.
+d2 (ruta de graph_ui): el sexto desk está en ~/proyectos/SLDB_1/UIs/graph_ui. El brief del worker decía ~/proyectos/SLDB_1/graph_ui por error.
 
 ## Validation
 
