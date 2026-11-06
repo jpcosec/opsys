@@ -5,7 +5,7 @@ from typing import Any
 
 from deskops.bootstrap import SLDBBootstrap
 from deskops.workspace import ensure_target_directory
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 
 
 class AboutCLI:
@@ -38,7 +38,7 @@ class InitCLI:
         if local_store != 0:
             return local_store
 
-        result = scaffold_desk(target_path)
+        result = seed_desk(target_path)
         if result.wrote_anything:
             print(f"Scaffolded desk at {target_path / 'desk'}.")
             for path in result.created_paths:

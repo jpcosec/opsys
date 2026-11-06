@@ -27,7 +27,7 @@ where = ["."]
 include = ["deskops*"]
 
 [tool.setuptools.package-data]
-deskops = ["spec/**/*.yaml", "data/faq.md"]
+deskops = ["spec/**/*.yaml", "data/faq.md", "data/templates/**/*", "data/desk_declaration.yaml"]
 
 [tool.pytest.ini_options]
 pythonpath = ["."]

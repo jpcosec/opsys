@@ -4,7 +4,7 @@ from pathlib import Path
 from sldb.api.stores.init_store import init_store
 from sldb.cli.commands.model import ModelCLI
 from deskops.cli.main import CLI
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 from sldb.api.documents.track_document_file import track_document_file
 import yaml
 from types import SimpleNamespace
@@ -219,13 +219,36 @@ def test_desk_update_apply_resigns_a_moved_model_contract(tmp_path: Path, capsys
     assert main(["desk", "update", "--root", str(tmp_path)]) == 0
 
 
-def test_guess_model_treats_extra_boards_in_tasks_as_boards(tmp_path: Path) -> None:
+def test_declared_includes_treat_extra_boards_in_tasks_as_boards(tmp_path: Path) -> None:
     """`deskops add board` writes `board-<slug>.md` next to Board.md (ARTIFACT_PATHS puts boards in
-    tasks/); tracking it as a TaskDoc fails validation (no `status`) and breaks `desk update --apply`."""
-    from deskops import models
-    from deskops.cli.commands.desk import guess_model_for_path
+    tasks/); tracking it as a TaskDoc fails validation (no `status`) and breaks `desk update --apply`.
+    The declared includes (deskops/data/desk_declaration.yaml) name it a BoardDoc and leave the
+    Board itself and the tasks to the paths that track them."""
+    from deskops.workspace import pending_desk_includes
+    from deskops.workspace import seed_desk
 
-    desk = tmp_path / "desk"
-    assert guess_model_for_path(desk, desk / "tasks" / "Board.md") is models.BoardDoc
-    assert guess_model_for_path(desk, desk / "tasks" / "board-compromisos-26-10.md") is models.BoardDoc
-    assert guess_model_for_path(desk, desk / "tasks" / "task-doc-7.md") is models.TaskDoc
+    seed_desk(tmp_path)
+    tasks = tmp_path / "desk" / "tasks"
+    (tasks / "board-compromisos-26-10.md").write_text("# Board\n", encoding="utf-8")
+    (tasks / "task-doc-7.md").write_text("# Task\n", encoding="utf-8")
+
+    assert pending_desk_includes(tmp_path) == [("BoardDoc", "desk/tasks/board-compromisos-26-10.md")]
+
+
+def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) -> None:
+    """One `{model, glob}` per desk folder `desk update --apply` tracked by path, under the model's
+    own id pattern; the scaffold's own files (pills.md, the lifecycle rituals) match no rule."""
+    from deskops.workspace import desk_declaration
+
+    rules = {rule["model"]: rule["glob"] for rule in desk_declaration("x").include}
+    assert rules == {
+        "BoardDoc": "desk/tasks/board-*.md",
+        "PillDoc": "desk/contexts/pill-*.md",
+        "RitualDoc": "desk/rituals/ritual-*.md",
+        "AtomDoc": "desk/atoms/atom-*.md",
+        "ProtoAtomDoc": "desk/atoms/proto-*.md",
+        "RoleDoc": "desk/roles/*.md",
+        "RepositoryDoc": "desk/registry/*.md",
+        "StepDoc": "desk/steps/*.md",
+        "DeskFAQDoc": "desk/faq/*.md",
+    }

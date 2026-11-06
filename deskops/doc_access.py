@@ -27,7 +27,6 @@ from sldb.runtime.validation import render_model_markdown
 from deskops import doc_io
 from deskops.atom_tags import axis_folder_relpath
 from deskops.atom_tags import default_registry_path
-from deskops.atom_tags import ensure_default_namespaces
 from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
@@ -48,7 +47,7 @@ from deskops.models import TaskDoc
 from deskops.runtime import Task
 from deskops.specs import compile_artifact_spec
 from deskops.specs import compile_task_spec
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 
 
 ARTIFACT_MODELS = {
@@ -144,17 +143,9 @@ def desk_root(root: Path) -> Path:
 
 # ---------------------------------------------------------------- workspace
 def ensure_workspace(root: Path) -> None:
-    """The desk scaffold, the artifact directories and the default tag namespaces."""
-    scaffold_desk(root)
-    for relative in [
-        Path("atoms"),
-        Path("materializations"),
-        Path("steps"),
-        Path("registry"),
-        Path("faq"),
-    ]:
-        (desk_root(root) / relative).mkdir(parents=True, exist_ok=True)
-    ensure_default_namespaces(default_registry_path(root))
+    """The desk scaffold: its declared folders (the artifact directories among them), seed files
+    and default tag namespaces, whichever are missing (``seed_desk``)."""
+    seed_desk(root)
 
 
 # ---------------------------------------------------------------- read / write

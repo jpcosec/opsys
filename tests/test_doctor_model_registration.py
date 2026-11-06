@@ -12,7 +12,7 @@ from deskops import models as deskops_models
 from deskops.bootstrap import MODEL_REFS
 from deskops.cli.main import main
 from deskops.paths import package_pythonpath
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 
 
 def _init_repo(root: Path, capsys) -> None:
@@ -62,7 +62,7 @@ def test_doctor_skips_model_check_when_index_unreadable(tmp_path: Path, monkeypa
 def test_doctor_skips_model_check_without_store(tmp_path: Path, capsys) -> None:
     root = tmp_path / "project"
     root.mkdir()
-    scaffold_desk(root)
+    seed_desk(root)
 
     assert main(["doctor", "--root", str(root)]) == 1
     out, _ = capsys.readouterr()

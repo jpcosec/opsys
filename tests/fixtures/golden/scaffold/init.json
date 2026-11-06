@@ -1,0 +1,21 @@
+{
+  "desk_name": "golden-desk",
+  "files": {
+    "desk/atoms/tag-namespaces.yaml": "c42b81ba27b3feb0c50c3515dd94b68a26c3f99416a6dbcb2cb890d3c5976e5a",
+    "desk/config.json": "795f2fd9155cf763d3755f76f66235b6f4845a1da2325b092e13c91f289189ae",
+    "desk/contexts/pills.md": "f9d6c0a6d7627bd9725d45f73c889059dea5bc43aa4a9c0f2f3598bbca31b2b5",
+    "desk/drawer/README.md": "bedd04b7bf954932f544a44742246a36f73bcf94af25998608ac4dfa65a5b6f8",
+    "desk/lifecycle/closeout-task_completes.md": "cf30ee9f7f9d6ca2837751db0288b68a2394ac1034fe01a50b607cb6ce7bef26",
+    "desk/lifecycle/execution-task_activates.md": "030de787eac4c692aefa2245356f5352ed1f287250334ada6119f515b447ea5e",
+    "desk/lifecycle/testing-task_hands_to_closeout.md": "f2d234e2f3bfa8e6a362c53b05592485c7adbc54914407dd3b593a66f9219f01",
+    "desk/lifecycle/type-task_activates.md": "82694800f31844ed3b86b5913f2cbf02eaebf24f4143a8a4542a64374d9217b5",
+    "desk/lifecycle/type-task_completes.md": "5b3f4ce0793df8b2ee535b6b37490b8d0abdd4c8bb8b43b330ddb6134ead7f0f",
+    "desk/lifecycle/type-task_hands_to_closeout.md": "d16cc9c1d329c8d362e0d08c9ba3d6f23bbc7538429fd82cf20540c593f700bf",
+    "desk/rituals/closeout.md": "b2afbd1d1d3a1d292c1509add5877e5537fd450b1336346401e40b42f64b0c17",
+    "desk/rituals/execution.md": "dc201702b3e015634c18724b162e71cfd542103029667990d2fa140bf19c4174",
+    "desk/rituals/phase.md": "885d511461bb712f8c542d187d931f51ff18c9831622b7965300e3ce7aa7e48e",
+    "desk/rituals/testing.md": "c1949f8d04c94205d46e143a9f53fb6959f94abd03bc8df32d627d7e05082fc8",
+    "desk/runtimes/runtime-pi-deepseek-flash.md": "d505ab97e1f3ed07fe01b72c1995abd4f450490ebc281fa4fa78ecc5347a6f54",
+    "desk/tasks/Board.md": "b3a1b3c5559c33320e688aa8bc47d18dc945a144f017ec6eefd57dc2ac351d80"
+  }
+}

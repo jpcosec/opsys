@@ -1,0 +1,138 @@
+# The desk a fresh repository gets: what `deskops init`, `deskops desk install`, `deskops desk
+# update --apply` and the first desk operation create when it is missing (CC36, DP3).
+#
+# This is an sldb StoreDeclaration (`sldb.api.StoreDeclaration`) restricted to `folders`,
+# `seeds` and `include`; deskops reads it, renders every seed for the desk at hand and passes
+# the result in process to `sldb.api.scaffold_store` (`deskops.workspace.seed_desk`):
+#
+# - `{desk_name}` in a `file:` template or in a `document:` payload is replaced with the
+#   project directory's name (`str.replace`, no other placeholder exists);
+# - `file:` sources are read from `deskops/data/templates/`;
+# - `document:` seeds are rendered through their deskops model, as the Board and the review
+#   runtime profile always were; the runtime profile's `system_prompt` is not data here: it
+#   is `deskops.services.review.SYSTEM`, injected while the declaration is built.
+#
+# Every seed is `if_missing`: a desk that already has the file keeps its own. The `include`
+# rules say which desk documents `deskops desk update --apply` tracks under which model
+# (`sldb.api.stores.apply_declaration.apply_includes`); the four lifecycle rituals, the Board,
+# the tasks and `desk/lifecycle/` are tracked by their own paths, so no rule names them.
+folders:
+- desk/tasks
+- desk/contexts
+- desk/rituals
+- desk/atoms
+- desk/roles
+- desk/inbox
+- desk/reviews
+- desk/drawer
+- desk/runtimes
+- desk/materializations
+- desk/steps
+- desk/registry
+- desk/faq
+seeds:
+- path: desk/config.json
+  mode: if_missing
+  file: config.json
+- path: desk/tasks/Board.md
+  mode: if_missing
+  track: false
+  document:
+    model: BoardDoc
+    name: board-001
+    payload:
+      id: board-001
+      title: '{desk_name} Board'
+      scope: desk
+      purpose: Route the active execution set for {desk_name}.
+      tasks: []
+      pills:
+      - desk/contexts/pills.md
+      rituals:
+      - desk/rituals/phase.md
+      - desk/rituals/execution.md
+      - desk/rituals/testing.md
+      - desk/rituals/closeout.md
+      notes: Bootstrap complete. Add active task docs under `desk/tasks/` and route them here.
+      tags:
+      - workspace:desk
+- path: desk/contexts/pills.md
+  mode: if_missing
+  file: contexts/pills.md
+- path: desk/rituals/phase.md
+  mode: if_missing
+  file: rituals/phase.md
+- path: desk/rituals/execution.md
+  mode: if_missing
+  file: rituals/execution.md
+- path: desk/rituals/testing.md
+  mode: if_missing
+  file: rituals/testing.md
+- path: desk/rituals/closeout.md
+  mode: if_missing
+  file: rituals/closeout.md
+- path: desk/drawer/README.md
+  mode: if_missing
+  file: drawer/README.md
+- path: desk/atoms/tag-namespaces.yaml
+  mode: if_missing
+  file: atoms/tag-namespaces.yaml
+- path: desk/runtimes/runtime-pi-deepseek-flash.md
+  mode: if_missing
+  track: false
+  document:
+    model: RuntimeProfileDoc
+    name: runtime-pi-deepseek-flash
+    payload:
+      id: runtime-pi-deepseek-flash
+      title: Pi deepseek-flash isolated reviewer
+      status: active
+      kind: pi
+      binary: pi
+      model_flag: --model
+      fallback_models_flag: ''
+      fallback_models_join: comma
+      tools_flag: ''
+      tools_join: comma
+      system_prompt_flag: --system-prompt
+      system_prompt_delivery: inline
+      session_flag: ''
+      extra_args:
+      - --provider
+      - deepseek
+      - --model
+      - deepseek-flash
+      - --thinking
+      - low
+      - --offline
+      - --no-session
+      - --no-context-files
+      - --no-skills
+      - --no-extensions
+      - --no-prompt-templates
+      - --no-tools
+      - --print
+      unsupported_role_fields: []
+      notes: 'Verified cheap profile for ritual-context-review step 3 (D4): offline, no session/context/skills/extensions/prompt-templates/tools.'
+      summary: Isolated cheap reviewer profile (pi deepseek-flash) used by `deskops review`.
+      tags:
+      - system:deskops
+include:
+- model: BoardDoc
+  glob: desk/tasks/board-*.md
+- model: PillDoc
+  glob: desk/contexts/pill-*.md
+- model: RitualDoc
+  glob: desk/rituals/ritual-*.md
+- model: AtomDoc
+  glob: desk/atoms/atom-*.md
+- model: ProtoAtomDoc
+  glob: desk/atoms/proto-*.md
+- model: RoleDoc
+  glob: desk/roles/*.md
+- model: RepositoryDoc
+  glob: desk/registry/*.md
+- model: StepDoc
+  glob: desk/steps/*.md
+- model: DeskFAQDoc
+  glob: desk/faq/*.md

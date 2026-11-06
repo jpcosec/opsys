@@ -51,13 +51,13 @@ def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_pa
     from deskops.bootstrap import SLDBBootstrap
     from deskops.doc_readability import is_unreadable_by_model
     from deskops.models import RitualDoc
-    from deskops.workspace import scaffold_desk
+    from deskops.workspace import seed_desk
     from sldb.runtime.validation import render_model_markdown
 
     root = tmp_path / "repo"
     root.mkdir()
     assert SLDBBootstrap().init_local_store(root) == 0
-    scaffold_desk(root)
+    seed_desk(root)
     ritual = root / "desk" / "rituals" / "execution.md"
     current = render_model_markdown(
         RitualDoc,
@@ -99,13 +99,13 @@ def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_pa
 )
 def test_a_ritual_the_model_cannot_carry_is_archived_and_replaced(tmp_path: Path, legacy: str) -> None:
     from deskops.bootstrap import SLDBBootstrap
-    from deskops.workspace import scaffold_desk
+    from deskops.workspace import seed_desk
     from sldb.api import doc_exists
 
     root = tmp_path / "repo"
     root.mkdir()
     assert SLDBBootstrap().init_local_store(root) == 0
-    scaffold_desk(root)
+    seed_desk(root)
     ritual = root / "desk" / "rituals" / "execution.md"
     ritual.write_text(legacy, encoding="utf-8")
 

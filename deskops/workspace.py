@@ -7,11 +7,13 @@ from pathlib import Path
 import re
 import subprocess
 import sys
+from typing import Any
 from typing import Literal
 
 import yaml
 
 from deskops.constants import CURRENT_DESK_FORMAT
+from deskops.paths import data_path
 
 DeskClassification = Literal["absent", "empty", "legacy", "current"]
 
@@ -137,14 +139,10 @@ def migrate_desk(root: Path) -> DeskMigrationResult:
     preserved = [str(path.relative_to(root)) for path in before.surface_docs]
     still_manual: list[str] = []
 
-    desk_dir = root / "desk"
-    result = scaffold_desk(root)
+    result = seed_desk(root)
     adopted.extend(str(path.relative_to(root)) for path in result.created_paths)
 
-    config_status = _write_or_patch_config(root)
-    if config_status == "created" and "desk/config.json" not in adopted:
-        adopted.append("desk/config.json")
-    elif config_status == "updated":
+    if _write_or_patch_config(root) == "updated":
         adopted.append("desk/config.json (patched desk_format)")
 
     after = inspect_desk(root)
@@ -167,112 +165,130 @@ def migrate_desk(root: Path) -> DeskMigrationResult:
     )
 
 
-def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
-    desk_dir = target_path / "desk"
-    created_paths: list[Path] = []
-    subdirs = [
-        "tasks",
-        "contexts",
-        "rituals",
-        "atoms",
-        "roles",
-        "inbox",
-        "reviews",
-        "drawer",
-        "runtimes",
+#: The one placeholder the desk templates use (CC36, e3): replaced with the project directory's
+#: name by ``str.replace``; the JSON and YAML templates have braces of their own.
+DESK_NAME_PLACEHOLDER = "{desk_name}"
+
+#: The declaration of the desk a repository gets, and the templates its ``file:`` seeds name.
+DESK_DECLARATION_PATH = data_path("data", "desk_declaration.yaml")
+DESK_TEMPLATES_PATH = data_path("data", "templates")
+
+#: The document seed whose ``system_prompt`` is code (``deskops.services.review.SYSTEM``), not
+#: declaration data (CC36, f3).
+_REVIEW_RUNTIME_SEED = "runtime-pi-deepseek-flash"
+
+
+def desk_declaration(name: str) -> Any:
+    """The desk declaration (``deskops/data/desk_declaration.yaml``) for a desk called ``name``.
+
+    The ``folders`` and ``include`` rules are the file's; every seed comes back rendered as
+    ``text``: ``file:`` templates read from ``deskops/data/templates/`` and ``document:`` payloads
+    rendered through their deskops model, both with ``{desk_name}`` replaced. The bytes are the
+    ones ``deskops init`` always wrote, and sldb only has to write them: its own ``document``
+    seed resolves the model from the store, which ``desk install`` and the first desk operation
+    do not have yet.
+    """
+    from sldb.api import Seed
+    from sldb.api import StoreDeclaration
+
+    declared = StoreDeclaration.model_validate(yaml.safe_load(DESK_DECLARATION_PATH.read_text(encoding="utf-8")))
+    seeds = [Seed(path=seed.path, mode=seed.mode, text=_seed_text(seed, name)) for seed in declared.seeds]
+    return StoreDeclaration(folders=declared.folders, seeds=seeds, include=declared.include)
+
+
+def _seed_text(seed: Any, name: str) -> str:
+    if seed.text is not None:
+        return seed.text.replace(DESK_NAME_PLACEHOLDER, name)
+    if seed.file is not None:
+        template = (DESK_TEMPLATES_PATH / seed.file).read_text(encoding="utf-8")
+        return template.replace(DESK_NAME_PLACEHOLDER, name)
+    document = seed.document
+    payload = _replace_desk_name(document["payload"], name)
+    if document["name"] == _REVIEW_RUNTIME_SEED:
+        from deskops.services.review import SYSTEM
+
+        payload["system_prompt"] = SYSTEM
+    return _render_document(document["model"], payload)
+
+
+def _render_document(model_name: str, payload: dict[str, Any]) -> str:
+    """A document seed rendered by its model, as ``deskops init`` rendered the Board."""
+    from sldb.runtime.validation import render_model_markdown
+
+    import deskops.models as models
+
+    return render_model_markdown(getattr(models, model_name), payload) + "\n"
+
+
+def _replace_desk_name(value: Any, name: str) -> Any:
+    if isinstance(value, str):
+        return value.replace(DESK_NAME_PLACEHOLDER, name)
+    if isinstance(value, list):
+        return [_replace_desk_name(item, name) for item in value]
+    if isinstance(value, dict):
+        return {key: _replace_desk_name(item, name) for key, item in value.items()}
+    return value
+
+
+def seed_desk(target_path: Path, *, apply: bool = True) -> DeskScaffoldResult:
+    """Create the declared desk folders and seed files that are missing (``sldb.api.scaffold_store``).
+
+    Every seed is ``if_missing``, so a desk that exists keeps its files. ``created_paths`` are the
+    absolute paths of what was created, folders first and then seeds in declaration order; with
+    ``apply=False`` nothing is written and they are what a run would create.
+    """
+    from sldb.api import scaffold_store
+
+    report = scaffold_store(target_path, declaration=desk_declaration(target_path.name), apply=apply)
+    return DeskScaffoldResult(created_paths=[target_path / relative for relative in report.created])
+
+
+def desk_seed_text(name: str, path: str) -> str:
+    """The text the desk seed at ``path`` (project-relative) carries for a desk called ``name``."""
+    for seed in desk_declaration(name).seeds:
+        if seed.path == path:
+            return seed.text
+    raise KeyError(path)
+
+
+def default_ritual_text(ritual_id: str, name: str) -> str:
+    """The ritual `deskops init` writes for one lifecycle state."""
+    return desk_seed_text(name, f"desk/rituals/{ritual_id.removeprefix('ritual-')}.md")
+
+
+def pending_desk_includes(root: Path) -> list[tuple[str, str]]:
+    """``(model, path)`` of each desk document the declared includes name and the store does not
+    track yet: what ``apply_desk_includes`` would track (every declared file when there is no store)."""
+    from sldb.api.stores.declared_files import declared_files
+    from sldb.api.stores.declared_includes import tracked_rows
+
+    root = root.resolve()
+    store_dir = root / ".sldb"
+    tracked = set(tracked_rows(store_dir, root)) if store_dir.exists() else set()
+    return [
+        (model, path)
+        for model, path, name in declared_files(root, desk_declaration(root.name))
+        if (model, path, name) not in tracked and (root / path).is_file()
     ]
 
-    desk_dir.mkdir(parents=True, exist_ok=True)
-    for sub in subdirs:
-        subdir = desk_dir / sub
-        if not subdir.exists():
-            subdir.mkdir(parents=True, exist_ok=True)
-            created_paths.append(subdir)
 
-    _write_if_missing(
-        desk_dir / "config.json",
-        _config_template(target_path.name),
-        created_paths,
-    )
+def apply_desk_includes(root: Path) -> list[str]:
+    """Track every pending declared desk document under its declared model; the paths tracked."""
+    from sldb.api.stores.apply_declaration import apply_includes
 
-    _write_if_missing(
-        desk_dir / "tasks" / "Board.md",
-        _board_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "contexts" / "pills.md",
-        _pills_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "rituals" / "phase.md",
-        _phase_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "rituals" / "execution.md",
-        _execution_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "rituals" / "testing.md",
-        _testing_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "rituals" / "closeout.md",
-        _closeout_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "drawer" / "README.md",
-        _drawer_template(target_path.name),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "atoms" / "tag-namespaces.yaml",
-        _atom_tag_namespaces_template(),
-        created_paths,
-    )
-    _write_if_missing(
-        desk_dir / "runtimes" / "runtime-pi-deepseek-flash.md",
-        _runtime_pi_deepseek_flash_template(),
-        created_paths,
-    )
-
-    return DeskScaffoldResult(created_paths=created_paths)
-
-
-def _config_template(name: str) -> str:
-    data = {
-        "project_identity": name,
-        "versions": {
-            "desk_format": CURRENT_DESK_FORMAT,
-            "model_version": "1.0.0",
-        },
-        "sandbox": {
-            "enabled": False,
-            "sandbox_root": ".tmp/deskops-sandbox",
-        },
-    }
-    return json.dumps(data, indent=2) + "\n"
-
-
-def _write_if_missing(path: Path, content: str, created_paths: list[Path]) -> None:
-    if path.exists():
-        return
-    path.write_text(content, encoding="utf-8")
-    created_paths.append(path)
+    root = root.resolve()
+    return apply_includes(root / ".sldb", root, desk_declaration(root.name))
 
 
 def _write_or_patch_config(root: Path) -> str | None:
-    desk_dir = root / "desk"
-    config_path = desk_dir / "config.json"
+    """Patch an existing ``desk/config.json`` to the current desk format and identity.
+
+    The file itself is a seed, written by ``seed_desk`` before this runs; a missing one is left
+    alone (this is migration, not scaffold).
+    """
+    config_path = root / "desk" / "config.json"
     if not config_path.exists():
-        config_path.parent.mkdir(parents=True, exist_ok=True)
-        config_path.write_text(_config_template(root.name), encoding="utf-8")
-        return "created"
+        return None
 
     data: dict[str, object]
     try:
@@ -298,211 +314,6 @@ def _write_or_patch_config(root: Path) -> str | None:
         config_path.write_text(rendered, encoding="utf-8")
         return "updated"
     return None
-
-
-def _board_template(name: str) -> str:
-    """The scaffolded board, rendered by the model so it stays readable.
-
-    A hand-written board that lacks the model's fixed text extracts as empty for
-    purpose and notes, so the first update through the model would blank them.
-    """
-    from deskops.models import BoardDoc
-    from sldb.runtime.validation import render_model_markdown
-
-    return render_model_markdown(
-        BoardDoc,
-        {
-            "id": "board-001",
-            "title": f"{name} Board",
-            "scope": "desk",
-            "purpose": f"Route the active execution set for {name}.",
-            "tasks": [],
-            "pills": ["desk/contexts/pills.md"],
-            "rituals": [
-                "desk/rituals/phase.md",
-                "desk/rituals/execution.md",
-                "desk/rituals/testing.md",
-                "desk/rituals/closeout.md",
-            ],
-            "notes": "Bootstrap complete. Add active task docs under `desk/tasks/` and route them here.",
-            "tags": ["workspace:desk"],
-        },
-    ) + "\n"
-
-
-def _pills_template(name: str) -> str:
-    return f"""---
-id: contexts-pills
-tags:
-- workspace:desk
----
-
-# Pills
-
-Pills are reusable context documents for the {name} desk routine.
-
-## Notes
-
-- Keep active task-to-pill binding in task docs.
-- Add temporary context here only when it affects execution safety or scope.
-"""
-
-
-def _phase_template(name: str) -> str:
-    return f"""---
-id: ritual-phase
-steps: []
-tags:
-- workspace:desk
----
-
-# Phase ritual for dependency-layer execution
-
-Run one horizontal layer of {name} tasks whose prerequisites are satisfied and whose
-planned changes do not overlap, then close the layer with integration validation,
-pill reconciliation, and next-phase preparation.
-
-Each task in the phase still closes with its own validation and its own commit;
-the phase adds the pass that only makes sense once those tasks are integrated.
-"""
-
-
-def _execution_template(name: str) -> str:
-    return f"""---
-id: ritual-execution
-steps: []
-tags:
-- workspace:desk
----
-
-# Execution ritual
-
-Review the board, bind the relevant pills, keep scope tight, and implement only the active task for {name}.
-"""
-
-
-def _testing_template(name: str) -> str:
-    return f"""---
-id: ritual-testing
-steps: []
-tags:
-- workspace:desk
----
-
-# Testing ritual
-
-Run the smallest relevant validation first, then broaden coverage when {name} changes shared behavior.
-"""
-
-
-def _closeout_template(name: str) -> str:
-    return f"""---
-id: ritual-closeout
-steps: []
-tags:
-- workspace:desk
----
-
-# Closeout ritual
-
-Close a {name} task only after validation passes, any durable knowledge from bound pills is linked to an atom when needed, the board is updated, and the final change is ready to commit.
-"""
-
-
-def default_ritual_text(ritual_id: str, name: str) -> str:
-    """The ritual `deskops init` writes for one lifecycle state."""
-    templates = {
-        "ritual-phase": _phase_template,
-        "ritual-execution": _execution_template,
-        "ritual-testing": _testing_template,
-        "ritual-closeout": _closeout_template,
-    }
-    return templates[ritual_id](name)
-
-
-def _drawer_template(name: str) -> str:
-    return f"""# Drawer
-
-Deferred desk work for {name} lives here until it is promoted into active execution.
-"""
-
-
-def _atom_tag_namespaces_template() -> str:
-    return """namespaces:
-  domain:
-    do_not_use_when: A more specific system, topic, layer, or pattern tag applies.
-    examples:
-    - domain:knowledge-management
-    - domain:task-execution
-    meaning: Problem domain or durable area of concern.
-    use_when: The atom belongs to a reusable problem domain.
-  layer:
-    do_not_use_when: The tag names only a broad topic or system.
-    examples:
-    - layer:document-model
-    - layer:runtime
-    - layer:cli
-    meaning: Architectural layer where the atom applies.
-    use_when: The atom is scoped to a layer of the system.
-  system:
-    do_not_use_when: The tag is only a general topic.
-    examples:
-    - system:deskops
-    meaning: System, project, or tool the atom belongs to.
-    use_when: The atom is about a specific system.
-  topic:
-    do_not_use_when: The atom describes a reusable implementation shape.
-    examples:
-    - topic:atoms
-    - topic:composition
-    meaning: Subject area discussed by the atom.
-    use_when: The atom is about a conceptual topic.
-"""
-
-
-def _runtime_pi_deepseek_flash_template() -> str:
-    """The default ``deskops review`` engine profile, seeded idempotently by init/update."""
-    from deskops.models import RuntimeProfileDoc
-    from deskops.services.review import SYSTEM
-    from sldb.runtime.validation import render_model_markdown
-
-    payload = {
-        "id": "runtime-pi-deepseek-flash",
-        "title": "Pi deepseek-flash isolated reviewer",
-        "status": "active",
-        "kind": "pi",
-        "binary": "pi",
-        "model_flag": "--model",
-        "fallback_models_flag": "",
-        "fallback_models_join": "comma",
-        "tools_flag": "",
-        "tools_join": "comma",
-        "system_prompt_flag": "--system-prompt",
-        "system_prompt_delivery": "inline",
-        "system_prompt": SYSTEM,
-        "session_flag": "",
-        "extra_args": [
-            "--provider",
-            "deepseek",
-            "--model",
-            "deepseek-flash",
-            "--thinking",
-            "low",
-            "--offline",
-            "--no-session",
-            "--no-context-files",
-            "--no-skills",
-            "--no-extensions",
-            "--no-prompt-templates",
-            "--no-tools",
-            "--print",
-        ],
-        "unsupported_role_fields": [],
-        "notes": "Verified cheap profile for ritual-context-review step 3 (D4): offline, no session/context/skills/extensions/prompt-templates/tools.",
-        "summary": "Isolated cheap reviewer profile (pi deepseek-flash) used by `deskops review`.",
-        "tags": ["system:deskops"],
-    }
-    return render_model_markdown(RuntimeProfileDoc, payload) + "\n"
 
 
 def desk_markdown_docs(desk_dir: Path) -> list[Path]:
