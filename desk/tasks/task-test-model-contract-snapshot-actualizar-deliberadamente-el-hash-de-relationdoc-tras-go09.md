@@ -12,6 +12,7 @@ references:
 - tests/test_model_contract_snapshot.py
 - 30eb97d40e458d342f68aacb1dac4c7ee6f5a4e8
 - desk/atoms/atom-un-cambio-de-contrato-de-un-modelo-se-registra-a-propósito-en-el-snapshot-y-en-el-store.md
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
 depends_on: []
 pills: []
 files:
