@@ -1,0 +1,18 @@
+name: 20261106-171908-suggestion-tests-fixture-autouse-que-limpia-los-caches-globales-de-sldb-despu-s-de-cada-test
+path: desk/inbox/20261106-171908-suggestion-tests-fixture-autouse-que-limpia-los-caches-globales-de-sldb-despu-s-de-cada-test.md
+source_hash: ca59761be0ca11461e3b674a00b58f3cab607eeeacb1244c788c409130e75869
+content_hash: 9af251d441de940a2c87e811308a82227778d4babe961f6a0a5cfbeb97aa0615
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 01c2a496f726f6e36abb986a46ca63a753c9560905ebdf79fd7e5ef295da5cca
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 8be91e9844469217f68eadb62027d2e8e802832f38f24b005bde9811674fceea
+  body: be2f5fd370e7b872493ddfbc13cfba9b2e227eb98c1309ad4b4a2c7190834bce
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
