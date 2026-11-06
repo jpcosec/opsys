@@ -124,3 +124,4 @@
 {"task_id": "task-el-grafo-del-closeout-se-lee-del-\u00edndice-de-sldb-no-reescaneando-el-repo", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-gc01-tipos-de-tarea-como-modelos-con-jerarqu\u00eda-y-evidencia-de-cierre-declarada-en-el-tipo", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-gc02-reviewdoc-como-recibo-anclado-al-contrato-de-la-tarea", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
+{"task_id": "task-gc06-cierre-de-las-v\u00edas-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
