@@ -7,8 +7,11 @@ from typing import Any
 import yaml
 
 
+from deskops.models.atom import ATOM_TAG_PATTERN
+
 NAMESPACE_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
-TAG_PATTERN = re.compile(r"^(?P<namespace>[a-z][a-z0-9_]*):[a-z][a-z0-9_.-]*$")
+# The tag form is the model's (AtomDoc.tags); this is the same pattern with the namespace named.
+TAG_PATTERN = re.compile(ATOM_TAG_PATTERN.replace("^[a-z][a-z0-9_]*:", "^(?P<namespace>[a-z][a-z0-9_]*):"))
 
 DEFAULT_ATOM_TAG_NAMESPACES: dict[str, dict[str, Any]] = {
     "system": {
@@ -129,11 +132,15 @@ def axis_folder_relpath(value: str) -> Path:
 
 
 def validate_atom_tag_namespaces(tags: list[str], path: Path) -> None:
+    """Every tag's namespace is declared in the registry at ``path`` (a rule between the
+    document and ``tag-namespaces.yaml``). The form of a tag is the model's own invariant
+    (``AtomDoc.tags``), so a malformed tag is not this function's error.
+    """
     namespaces = load_namespaces(path)
     for tag in tags:
-        match = TAG_PATTERN.fullmatch(tag)
+        match = TAG_PATTERN.fullmatch(str(tag))
         if match is None:
-            raise ValueError(f"Invalid atom tag '{tag}'. Expected namespace:value.")
+            continue
         namespace = match.group("namespace")
         if namespace not in namespaces:
             raise ValueError(f"Unknown atom tag namespace '{namespace}' for tag '{tag}'.")

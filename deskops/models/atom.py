@@ -1,9 +1,16 @@
 from enum import StrEnum
+import re
 from typing import Annotated
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from sldb import StructuredNLDoc
+
+from .crossroad import check_domain_path
+
+ATOM_TAG_PATTERN = r"^[a-z][a-z0-9_]*:[a-z][a-z0-9_.-]*$"
+DOMAIN_NAMESPACE = "domain"
+_ATOM_TAG = re.compile(ATOM_TAG_PATTERN)
 
 
 class AtomQuestion(StrEnum):
@@ -19,10 +26,49 @@ class AtomQuestion(StrEnum):
 AtomTag = Annotated[
     str,
     Field(
-        pattern=r"^[a-z][a-z0-9_]*:[a-z][a-z0-9_.-]*$",
+        pattern=ATOM_TAG_PATTERN,
         description="Namespaced semantic tag in the form namespace:value.",
     ),
 ]
+
+
+def check_slug_id(value: object, prefix: str, label: str) -> object:
+    """``<prefix><slug>``, where the slug is already in slug form. Anything else is left to pydantic."""
+    if not isinstance(value, str):
+        return value
+    # Lazy: doc_access imports the models, and the slug form is defined once, there.
+    from deskops.doc_access import slugify
+
+    slug = value.removeprefix(prefix)
+    if not value.startswith(prefix) or not slug or slug != slugify(slug):
+        raise ValueError(f"{label} id must follow slug convention {prefix}<slug>: {value}")
+    return value
+
+
+def check_atom_tags(tags: object) -> object:
+    """Each tag is ``namespace:value``; each ``domain:`` value is a domain path. Anything that is
+    not a list of strings is left to pydantic."""
+    if not isinstance(tags, list):
+        return tags
+    for tag in tags:
+        if not isinstance(tag, str):
+            continue
+        if _ATOM_TAG.fullmatch(tag) is None:
+            raise ValueError(f"Invalid atom tag '{tag}'. Expected namespace:value.")
+        namespace, value = tag.split(":", 1)
+        if namespace == DOMAIN_NAMESPACE:
+            check_domain_path(value)
+    return tags
+
+
+def domain_paths(tags: list[str]) -> list[str]:
+    """Values of the ``domain:`` tags, in order."""
+    values: list[str] = []
+    for tag in tags:
+        match = _ATOM_TAG.fullmatch(str(tag))
+        if match is not None and str(tag).split(":", 1)[0] == DOMAIN_NAMESPACE:
+            values.append(str(tag).split(":", 1)[1])
+    return values
 
 
 class AtomDoc(StructuredNLDoc):
@@ -85,3 +131,13 @@ provenance: ⸢optrev•provenance⸥
             "knowledge. Used for traceability and provenance tracking."
         ),
     )
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def _id_follows_the_slug_convention(cls, value: object) -> object:
+        return check_slug_id(value, "atom-", "atom")
+
+    @field_validator("tags", mode="before")
+    @classmethod
+    def _tags_are_namespaced(cls, tags: object) -> object:
+        return check_atom_tags(tags)

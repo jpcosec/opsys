@@ -31,8 +31,9 @@ def compile_task_spec(
     """Compile a task payload. The task starts at ``entry_node`` of the lifecycle graph
     (deskops/lifecycle.py); no per-task primitives or routine are generated.
 
-    This is the one normalization of a task payload: a missing ``title`` is a ``KeyError``,
-    a blank one a ``ValueError``, every list field is coerced to a list of strings, and
+    This is the one normalization of a task payload: a missing ``title`` is a ``KeyError``
+    (the raw payload has no such key; a blank title is the model's own refusal, ``TaskDoc``),
+    every list field is coerced to a list of strings, and
     ``closeout_evidence`` is stripped of blanks. ``current_node`` keeps the payload's value
     and falls back to ``entry_node`` (pass ``""`` to normalize a stored task as it is).
     """
@@ -40,8 +41,6 @@ def compile_task_spec(
     if raw_payload.get("title") is None:
         raise KeyError("Task payload must include 'title'")
     title = str(raw_payload["title"]).strip()
-    if not title:
-        raise ValueError("Task title cannot be empty")
     slug = _slugify(title)
     task_id = str(raw_payload.get("id") or str(artifact.get("id_pattern", "task-{slug}")).format(slug=slug))
     task_payload = {

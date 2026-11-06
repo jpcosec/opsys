@@ -21,6 +21,7 @@ from deskops.lifecycle import TransitionResult
 from deskops.models import BoardDoc
 from deskops.models import PillDoc
 from deskops.models import TaskDoc
+from deskops.models.validation import validated
 from deskops.models.task_types import TASK_TYPE_MODELS
 from deskops.models.task_types import canonical_task_type_name
 from deskops.runtime import Task
@@ -103,6 +104,7 @@ class TasksService:
         type_model = registry.get(task_type) or registry.get("task.code") or TaskDoc
         spec = lifecycle.load_lifecycle_spec()
         compiled = compile_task_spec({**raw_payload, "task_type": task_type}, entry_node=spec.entry_node)
+        validated(type_model, compiled.task_payload)
         task_id = compiled.task_payload["id"]
         task_path = self._task_path(task_id)
 

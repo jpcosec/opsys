@@ -1,4 +1,4 @@
-from pydantic import Field, model_serializer, model_validator
+from pydantic import Field, field_validator, model_serializer, model_validator
 
 from .base import OperationalArtifactDoc
 
@@ -180,6 +180,13 @@ _Name the observable condition that makes the task complete._
             "Empty means the task predates the field and is gated as code."
         ),
     )
+
+    @field_validator("title")
+    @classmethod
+    def _title_is_written(cls, value: str) -> str:
+        if not value.strip():
+            raise ValueError("Task title cannot be empty")
+        return value
 
     @model_serializer(mode="wrap")
     def _omit_unset_optional_fields(self, handler):
