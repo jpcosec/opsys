@@ -1,0 +1,20 @@
+name: 20261106-101739-unclear-deskops-main-abd6ec19-importa-sldb-api-edges-project-graph-en-deskops
+path: desk/inbox/20261106-101739-unclear-deskops-main-abd6ec19-importa-sldb-api-edges-project-graph-en-deskops.md
+source_hash: 31fe6961c89de3eee9a69223c0bd951abd94e77766dff38dfe015e4fec1e7430
+content_hash: c298f921fe1b7e68757d72cbe41d041ddd13e82c4d15c6f3039f55929b8a42dc
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 1c1e1ede2290c035873b63ec859b4095e682295d75d2f92551292f046fe73a26
+  status: 02e31f51aa8b1b6a622c4f7c30fab328d711cad4c9da74b9965ada8aa15d9df2
+  acknowledged_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  acknowledged_at: 371c2c0a9a25bde22d1c739c91ad8189a42ba40a0e9a15b20d74a5001253f9da
+  title: 6340d314bf1a0e5c4e261b320e748f5eb714af2ee8ca828e0927e8d088af341c
+  body: e4c0ba02b7ca14a82f5e5b35547e8d5bee875fbdd2d482643b4731f56d726a2d
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
