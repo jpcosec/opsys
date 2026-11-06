@@ -88,6 +88,12 @@ k5 (modelo para apply_effects): es el modelo registrado del tipo de la tarea (el
 k6 (migración legada, decisión por evidencia): antes de borrar nada se corre desk update en dry-run sobre una copia de cada uno de los 6 desks (deskops, sldb, spec2viz, scion, pron, graph_ui), bajo /dev/shm y borrada al terminar, con el código de main. Si alguno reporta que necesita la migración de rituales legados o lifecycle_migration, ambas se conservan y el informe dice cuál la necesita. Si ninguno la necesita, se borran (lifecycle.py :228-298 y lifecycle_migration.py, con sus llamadas en desk.py) en el mismo commit.
 k7 (fuera): doc_io sigue en ensure_lifecycle_graph o en lo que lo reemplace hasta CC35a. Este nodo no migra escrituras a sldb.api.transaction. _add_closeout_facts sigue hasta CC33. Las gates de activación por tipo son de CC32.
 
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-06; prevalecen sobre el SCOPE):
+m1 (orden): manda k4. No se agrega attributes.order; advance toma la primera arista de edges_holding en el orden que devuelve sldb. Si dos aristas se cumplen a la vez desde un mismo nodo, el worker para y avisa. La frase del SCOPE sobre «campo order si hace falta desempatar» no se aplica en este nodo.
+m2 (task_lifecycle.yaml): las claves de nivel superior que quedan son id, version, source_files, entry_node y states. Sale solo transitions. Cada elemento de states conserva sus campos actuales (id, current_node, phase, ritual, purpose, next_actions, advance_when). «Solo con states» quiere decir sin transitions, no que cambie la forma de states.
+m3 (objetivo de líneas): «< 150 líneas» es un objetivo, no aceptación. Si k6 conserva la migración de rituales legados, ese código (lifecycle.py :228-298) pasa a deskops/lifecycle_migration.py y lifecycle.py se mide sin él. Las líneas de ambos archivos, antes y después, van en el informe.
+m4 (referencias de línea): mandan las de k2 (ensure_lifecycle_graph :299-400 en main). Las del SCOPE (:275-374) son de antes de CC30.
+
 ## Validation
 
 _List the checks required before this task can close._
