@@ -91,6 +91,13 @@ c6 (empaquetado): [tool.setuptools.package-data] en pyproject.toml hoy es deskop
 c7 (desks reales): «un desk de los 6 (copia) con desk update en dry-run no reporta cambios nuevos» se prueba sobre una copia del desk de deskops en un directorio temporal bajo /dev/shm, borrada al terminar. Nunca sobre un desk real.
 c8 (goldens de ayuda): help de init y de desk idénticos (tests/test_output_goldens.py y tests/test_cli_help_examples.py, sin --update-golden).
 
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-06):
+e1 (desk viejo de c3): es tests/fixtures/golden_desk. Se copia a un directorio temporal bajo /dev/shm y desk update --apply corre sobre la copia; el fixture no se modifica nunca.
+e2 (carpetas): se edita deskops/doc_access.py:ensure_workspace (c2 manda sobre «operations.py:231-241» del SCOPE, que es de antes de CC30). Sus carpetas (atoms, materializations, steps, registry, faq bajo desk/) pasan a «folders» de la declaración, y ensure_workspace llama al scaffold declarado.
+e3 (placeholder): las plantillas usan el texto literal {desk_name} y deskops lo sustituye con str.replace('{desk_name}', name), no con str.format: las plantillas JSON y YAML tienen llaves propias. No hay otro placeholder.
+e4 (includes): van en deskops/data/desk_declaration.yaml, clave «include», con el esquema de sldb StoreDeclaration.include (sldb/src/sldb/api/stores/store_declaration.py:33): una entrada {model, glob} por cada caso que hoy resuelve guess_model_for_path (cli/commands/desk.py:104-...). deskops llama a sldb.api.apply_includes(store_path, root, declaration). Si un caso de guess_model_for_path no se expresa con {model, glob}, se anota como hipótesis y se usa {model, paths}; no se escribe lógica de adivinación nueva.
+e5 (FAQ): no es semilla. deskops/data/faq.md se queda donde está, como respaldo, y init no escribe la FAQ, como hoy. «faq» en el título solo dice que su ruta no cambia.
+
 ## Validation
 
 _List the checks required before this task can close._

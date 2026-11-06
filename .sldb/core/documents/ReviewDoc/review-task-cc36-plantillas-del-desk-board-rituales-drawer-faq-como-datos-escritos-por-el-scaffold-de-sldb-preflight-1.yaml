@@ -1,0 +1,30 @@
+name: review-task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb-preflight-1
+path: desk/reviews/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb/preflight-1.md
+source_hash: 701f978b01e1d4d7a6aff03cedb23c75085fbf31274b3742377ea954c81d3b71
+content_hash: 7b47975f1cd470f6d796277f15412af396e47ce7b56d555510cd9325b0b60ed3
+field_hashes:
+  id: 08d70b11a7ac26aebccba5e326c6e6182b28cd7cd047b298c31c9bc7723c4400
+  title: 7d42dc6ac147bda3bd832d2f652276ceb776fe4a5a64631688b598a5764a42f6
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 09dbbcad46adf60a752da78ef20699d21b651b953d112656ddf7eab8bc187929
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: cc170059461e699b99b31d23b67e27a1807a864602aac1b32250b8caf15456a3
+  input_sha256: 293655bdc6f2eb1ef0291bc4eb54e29b4c58e5798776a5084de9788dbc36e6be
+  output_sha256: 446fe09326e9ab6efcfd653655c3a2008416b4edc669a1a6a6b77ef8b798e82d
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 4ad783a0cae0816fd13c4df773d0e9546b3f843b2c90337fc70a2cf21fd745d7
+  created_at: 7a3af517d8130f0df2136e8847ee9e0c18a04ceec136257994a7aa02587d57e9
+  disposed_at: 2161812dd98a3a935cefe1209ca33c7f58cd5658a5400495f09dfc5d0830a4eb
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 395cb2ca5b37bfcb1dfc2d4becef91def100372ecd06d052ca503c10c54a4a43
+  disposition: fcf1457fa42bcf0d75c215002982a7e5eff80be1e041464a5a61e4b6a0c1c35d
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
