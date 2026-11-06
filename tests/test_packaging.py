@@ -22,6 +22,29 @@ def test_runtime_specs_and_faq_ship_inside_the_package() -> None:
     assert not paths.data_path("spec", "fields").exists()
 
 
+def test_desk_declaration_and_templates_ship_inside_the_package() -> None:
+    """The desk scaffold is package data (CC36): the declaration and every template it names."""
+    import yaml
+
+    from deskops.constants import CURRENT_DESK_FORMAT
+    from deskops.workspace import DESK_DECLARATION_PATH
+    from deskops.workspace import DESK_TEMPLATES_PATH
+
+    assert DESK_DECLARATION_PATH == paths.data_path("data", "desk_declaration.yaml")
+    assert DESK_DECLARATION_PATH.is_file()
+    declaration = yaml.safe_load(DESK_DECLARATION_PATH.read_text(encoding="utf-8"))
+    templates = [seed["file"] for seed in declaration["seeds"] if "file" in seed]
+    assert templates, "the declaration names file templates"
+    for relative in templates:
+        assert (DESK_TEMPLATES_PATH / relative).is_file(), relative
+    config = yaml.safe_load((DESK_TEMPLATES_PATH / "config.json").read_text(encoding="utf-8"))
+    assert config["versions"]["desk_format"] == CURRENT_DESK_FORMAT
+
+    package_data = Path(paths.package_pythonpath()) / "pyproject.toml"
+    text = package_data.read_text(encoding="utf-8")
+    assert '"data/templates/**/*"' in text and '"data/desk_declaration.yaml"' in text
+
+
 def test_packaged_faq_matches_the_human_copy() -> None:
     repo_faq = Path(__file__).resolve().parents[1] / "docs" / "faq.md"
 

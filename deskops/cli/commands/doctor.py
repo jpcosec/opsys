@@ -11,7 +11,7 @@ from deskops.doc_readability import is_unreadable_by_model
 from deskops.doctor_findings import REGISTER, Findings, moved_documents, print_findings, read_store_check
 from deskops.workspace import inspect_desk
 from deskops.workspace import modeled_desk_markdown_docs
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 
 
 _IGNORED_MODELED_NAMES = {
@@ -56,7 +56,7 @@ class DoctorCLI:
             ("desk/rituals/phase.md", (desk_dir / "rituals" / "phase.md").exists()),
         ) if desk_dir.exists() and not exists]
         if missing and repair:
-            scaffold_desk(root)
+            seed_desk(root)
             findings.fixed.append(f"Scaffolded missing desk/ structure: {', '.join(missing)}")
         elif missing:
             findings.errors.append(f"Missing desk structure: {', '.join(missing)}")

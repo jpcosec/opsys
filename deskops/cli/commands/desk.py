@@ -11,11 +11,12 @@ from deskops.workspace import ensure_target_directory
 from deskops.workspace import inspect_desk
 from deskops.workspace import migrate_desk
 from deskops.workspace import migrate_task_types
-from deskops.workspace import modeled_desk_markdown_docs
+from deskops.workspace import apply_desk_includes
 from deskops.workspace import pending_local_task_type_models
 from deskops.workspace import pending_task_type_migration
+from deskops.workspace import pending_desk_includes
 from deskops.workspace import register_local_task_type_models
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 from deskops.bootstrap import SLDBBootstrap, MODEL_REFS
 from deskops.errors import DeskopsEnvironmentError
 from deskops.paths import package_pythonpath
@@ -101,47 +102,6 @@ def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> li
     return changes
 
 
-def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
-    rel = path.relative_to(desk_dir)
-    parts = rel.parts
-    if len(parts) == 2 and parts[0] == "tasks":
-        # Boards share tasks/ with the tasks (ARTIFACT_PATHS): the main Board.md and
-        # any extra board written by `deskops add board` (stem `board-…`).
-        if parts[1] == "Board.md" or path.stem.startswith("board-"):
-            return models.BoardDoc
-        return models.TaskDoc
-    if len(parts) == 2 and parts[0] == "contexts":
-        return models.PillDoc
-    if len(parts) == 2 and parts[0] == "rituals":
-        return models.RitualDoc
-    if len(parts) == 2 and parts[0] == "atoms":
-        if path.stem.startswith("proto-"):
-            return models.ProtoAtomDoc
-        return models.AtomDoc
-    if len(parts) == 2 and parts[0] == "roles":
-        return models.RoleDoc
-    if len(parts) == 2 and parts[0] == "inbox":
-        return models.InboxNoteDoc
-    if len(parts) == 2 and parts[0] == "registry":
-        return models.RepositoryDoc
-    if len(parts) == 2 and parts[0] == "steps":
-        return models.StepDoc
-    if len(parts) == 2 and parts[0] == "faq":
-        return models.DeskFAQDoc
-    if len(parts) == 2 and parts[0] == "lifecycle":
-        return None  # written and tracked by deskops.lifecycle.ensure_lifecycle_graph
-    return None
-
-
-def _is_task_file(desk_dir: Path, path: Path) -> bool:
-    """Whether a modeled markdown path is a task document (migration owns its tracking)."""
-    try:
-        rel = path.resolve().relative_to((desk_dir / "tasks").resolve())
-    except ValueError:
-        return False
-    return rel.parts and len(rel.parts) == 1 and rel.name.startswith("task-")
-
-
 class DeskCLI:
     """Handle desk workspace scaffolding and rituals."""
 
@@ -178,7 +138,7 @@ class DeskCLI:
 
         desk_dir = target_path / "desk"
         print(f"Scaffolding local desk at {desk_dir}...")
-        result = scaffold_desk(target_path)
+        result = seed_desk(target_path)
         for path in result.created_paths:
             print(f"Wrote {path}")
 
@@ -346,7 +306,6 @@ class DeskCLI:
 
         invalid_docs: list[str] = []
         missing_docs: list[str] = []
-        tracked_mds: set[Path] = set()
         missing_store = not store_dir.exists()
         if not missing_store:
             result = subprocess.run(
@@ -376,33 +335,14 @@ class DeskCLI:
                     doc_path = doc.get("path")
                     if not doc_path:
                         continue
-                    tracked_path = (root / doc_path).resolve()
-                    tracked_mds.add(tracked_path)
-
                     if doc.get("note") not in ("ok",):
                         invalid_docs.append(f"{doc_path} ({doc.get('note')})")
                         if doc.get("note") == "missing":
                             missing_docs.append(doc.get("name") or Path(doc_path).stem)
 
-        untracked_docs: list[Path] = []
-        if desk_dir.exists():
-            ignored_modeled_names = {
-                "Board.md",
-                "pills.md",
-                "execution.md",
-                "testing.md",
-                "closeout.md",
-                "phase.md",
-                "README.md",
-                "tag-namespaces.yaml",
-            }
-            modeled_mds = {
-                path.resolve()
-                for path in modeled_desk_markdown_docs(root, desk_dir)
-                if path.name not in ignored_modeled_names
-                and not _is_task_file(desk_dir, path)
-            }
-            untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
+        # The desk documents the package's declared includes name and the store does not
+        # track yet, each with its declared model (deskops/data/desk_declaration.yaml).
+        untracked_docs = pending_desk_includes(root) if desk_dir.exists() else []
 
         pending_local_types = pending_local_task_type_models(root)
         pending_migration = pending_task_type_migration(root)
@@ -435,8 +375,7 @@ class DeskCLI:
         if copied_models:
             print(f"- Copied deskops models: {', '.join(copied_models)}")
         if untracked_docs:
-            rel_untracked = [str(p.relative_to(root)) for p in untracked_docs]
-            print(f"- Untracked desk documents: {', '.join(rel_untracked)}")
+            print(f"- Untracked desk documents: {', '.join(path for _model, path in untracked_docs)}")
         if pending_local_types:
             print(f"- Unregistered desk-local task types: {', '.join(pending_local_types)}")
         if pending_migration:
@@ -451,7 +390,7 @@ class DeskCLI:
         print("\nApplying repairs...")
         
         if missing_desk_files:
-            scaffold_desk(root)
+            seed_desk(root)
             print("Scaffolded missing desk structure.")
 
         if unregistered_models or copied_models:
@@ -468,23 +407,14 @@ class DeskCLI:
             print(f"- {change}")
 
         if untracked_docs:
-            pythonpath = package_pythonpath()
-            for p in untracked_docs:
-                model = guess_model_for_path(desk_dir, p)
-                if model:
-                    try:
-                        doc_io.track(
-                            root,
-                            p,
-                            model,
-                            name=p.stem,
-                            pythonpath=pythonpath,
-                        )
-                        print(f"Tracked {p.relative_to(root)} as {model.__name__}.")
-                    except Exception as e:
-                        print(f"Failed to track {p.relative_to(root)}: {e}")
-                else:
-                    print(f"Could not guess model for {p.relative_to(root)}.")
+            declared_models = {path: model_name for model_name, path in untracked_docs}
+            try:
+                tracked_paths = apply_desk_includes(root)
+            except Exception as exc:
+                print(f"Error: could not track the declared desk documents: {exc}")
+                return 1
+            for path in tracked_paths:
+                print(f"Tracked {path} as {declared_models.get(path, 'its declared model')}.")
 
         if missing_docs:
             # A tracked document whose file is gone must be untracked, not

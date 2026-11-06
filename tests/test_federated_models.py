@@ -10,7 +10,7 @@ from sldb.store.io import load_store_index
 
 from deskops.bootstrap import MODEL_REFS
 from deskops.cli.main import main
-from deskops.workspace import scaffold_desk
+from deskops.workspace import seed_desk
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -65,7 +65,7 @@ def test_desk_update_apply_converts_copied_deskops_models(tmp_path: Path, capsys
     store = location.store_path
     for model_ref in MODEL_REFS.values():
         add_model(store, model_ref, pythonpath=str(ROOT))
-    scaffold_desk(root)
+    seed_desk(root)
     track_document_file(
         store,
         "BoardDoc",
