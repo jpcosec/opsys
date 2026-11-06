@@ -286,11 +286,12 @@ include:
   paths:
   - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
-- model: BoardDoc
-  paths:
-  - desk/tasks/Board.md
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla.md
+  - desk/tasks/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero.md
+- model: BoardDoc
+  paths:
+  - desk/tasks/Board.md
 graph_backend: networkx
 policy: {}
