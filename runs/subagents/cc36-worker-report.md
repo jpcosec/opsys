@@ -8,7 +8,7 @@ Worktree `deskops-wt-cc36`, rama `wt/cc36` sobre `50acb477`. Sin push.
 ## Commits
 
 1. `3140c6b5` CC36: golden del scaffold (init y desk update --apply) con el código de main.
-2. (este commit) CC36: plantillas del desk como datos escritos por el scaffold de sldb.
+2. `bff89e63` CC36: plantillas del desk como datos escritos por el scaffold de sldb.
 
 ## Aceptación, línea por línea
 
