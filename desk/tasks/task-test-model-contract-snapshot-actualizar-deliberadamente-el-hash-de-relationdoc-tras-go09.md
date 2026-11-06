@@ -50,6 +50,12 @@ Estado verificado por el coordinador en main: test_model_contract_snapshot falla
 3) CHANGELOG, en Unreleased / Changed, una línea con este texto: «`tests/fixtures/model_contract_hashes.json` records the new `RelationDoc` contract from sldb GO09 (`attributes.sets`/`terminal`; sldb 33b3c7a0, closeout d39bf915); the deskops store was migrated with `sldb stores update` in 09b5075c. The other desks are migrated by their own repos.»
 4) Si el test falla por un modelo distinto de RelationDoc, parar y avisar al coordinador: no se actualiza ningún otro hash.
 
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-06):
+t1 (desks): quedan pendientes cuatro desks, spec2viz, scion, pron y graph_ui, y los repara el coordinador de proyecto. sldb ya está migrado (96bcc5dd). Este nodo no toca ninguno.
+t2 (hash distinto): si el hash de RelationDoc en la salida 'New hashes' no es a71cc04505ddc23c00b8a9ff917e000e955fe11de68ddbaeb08da2bb1e68c9a6, o no coincide con el contract_hash de .sldb/core/models/RelationDoc.yaml del worktree, el worker no escribe nada y avisa al coordinador.
+t3 (base): el worker trabaja en el worktree que le asigna el coordinador (rama wt/model-contract, creada desde origin/main). Verifica que la migración esté en su base con git merge-base --is-ancestor 09b5075c HEAD (exit 0) y que .sldb/core/models/RelationDoc.yaml tenga contract_hash a71cc045...
+t4 (CHANGELOG): «## [Unreleased]» ya tiene «### Changed». La línea va al final de esa lista, antes de la siguiente cabecera. No se crean secciones.
+
 ## Validation
 
 _List the checks required before this task can close._
@@ -62,4 +68,4 @@ _List the checks required before this task can close._
 
 _Name the observable condition that makes the task complete._
 
-test_model_contract_snapshot verde con el hash de RelationDoc de GO09 registrado deliberadamente, igual al del store de deskops migrado en 09b5075c; CHANGELOG cita GO09; los otros 5 desks quedan para la tarea del coordinador de proyecto.
+test_model_contract_snapshot verde con el hash de RelationDoc de GO09 registrado deliberadamente, igual al del store de deskops migrado en 09b5075c; CHANGELOG cita GO09; los cuatro desks pendientes (spec2viz, scion, pron, graph_ui) quedan para la tarea del coordinador de proyecto (sldb ya migrado en 96bcc5dd).

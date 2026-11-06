@@ -288,6 +288,8 @@ include:
     name: review-task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero-preflight-1
   - path: desk/reviews/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero/preflight-2.md
     name: review-task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero-preflight-2
+  - path: desk/reviews/task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09/preflight-1.md
+    name: review-task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09-preflight-1
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

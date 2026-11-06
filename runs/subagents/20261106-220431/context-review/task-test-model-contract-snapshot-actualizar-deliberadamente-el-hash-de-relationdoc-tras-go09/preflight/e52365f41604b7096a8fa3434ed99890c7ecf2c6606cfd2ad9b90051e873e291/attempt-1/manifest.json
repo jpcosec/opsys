@@ -1,0 +1,37 @@
+{
+  "key": "task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09/preflight",
+  "input_sha256": "e52365f41604b7096a8fa3434ed99890c7ecf2c6606cfd2ad9b90051e873e291",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/dev/shm/deskops-desk-cc/runs/subagents/20261106-220431/context-review/task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09/preflight/e52365f41604b7096a8fa3434ed99890c7ecf2c6606cfd2ad9b90051e873e291/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09.md",
+      "sha256": "5e4f0b4755890c2f53ef12b6bb6adb28e567a7cabf99a61a850e22efc64a8412",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [],
+  "started": "2026-11-06T22:04:31.880699+00:00",
+  "finished": "2026-11-06T22:04:50.925677+00:00"
+}
