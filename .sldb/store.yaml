@@ -295,8 +295,5 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
-- model: TaskCodeDoc
-  paths:
-  - desk/tasks/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero.md
 graph_backend: networkx
 policy: {}
