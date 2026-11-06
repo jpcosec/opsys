@@ -153,7 +153,7 @@ def test_replace_edits_legacy_drawer_tasks_but_refuses_a_valid_task_doc(tmp_path
             "--title",
             "Modeled task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "g",
             "--scope",

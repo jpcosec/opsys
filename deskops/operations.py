@@ -28,9 +28,12 @@ from deskops.models import InboxNoteDoc
 from deskops.models import MaterializationContractDoc
 from deskops.models import PillDoc
 from deskops.models import RepositoryDoc
+from deskops.models import ReviewDoc
 from deskops.models import RitualDoc
 from deskops.models import StepDoc
 from deskops.models import TaskDoc
+from deskops.models.task_types import TASK_TYPE_MODELS
+from deskops.models.task_types import canonical_task_type_name
 from deskops.runtime import Task
 from deskops import doc_io
 from deskops import lifecycle
@@ -71,6 +74,7 @@ ARTIFACT_MODELS = {
     "artifact.atom": AtomDoc,
     "artifact.materialization": MaterializationContractDoc,
     "artifact.repository": RepositoryDoc,
+    "artifact.review": ReviewDoc,
     "artifact.inbox_note": InboxNoteDoc,
     "artifact.faq": DeskFAQDoc,
     "artifact.step": StepDoc,
@@ -84,6 +88,7 @@ ARTIFACT_PATHS = {
     "artifact.atom": "atoms",
     "artifact.materialization": "materializations",
     "artifact.repository": "registry",
+    "artifact.review": "reviews",
     "artifact.inbox_note": "inbox",
     "artifact.faq": "faq",
     "artifact.step": "steps",
@@ -96,9 +101,21 @@ ARTIFACT_SUBJECTS = {
     "artifact.atom": {"subject": "atom", "list_subject": "atoms"},
     "artifact.materialization": {"subject": "materialization", "list_subject": "materializations"},
     "artifact.repository": {"subject": "repository", "list_subject": "repositories"},
+    "artifact.review": {"subject": "review", "list_subject": "reviews", "create": False},
     "artifact.inbox_note": {"subject": "inbox-note", "list_subject": "inbox-notes"},
     "artifact.faq": {"subject": "faq-doc", "list_subject": "faq-docs"},
     "artifact.step": {"subject": "step", "list_subject": "steps"},
+}
+
+# Fields whose value is an effect of a workflow command, not a free edit. The
+# value names who writes the field, so the refusal teaches the correct entry
+# point instead of only saying no.
+_TASK_OWNED_FIELDS = {
+    "status": "deskops advance (transition effects) and deskops closeout commit",
+    "current_node": "deskops advance",
+    "history": "deskops advance and deskops closeout (append-only)",
+    "task_type": "deskops add task --task-type (create a new task to change the type)",
+    "closeout_evidence": "the task type, and deskops add task --evidence at creation",
 }
 
 
@@ -219,6 +236,7 @@ class DeskopsOperations:
         self._closure: ClosureService | None = None
         self._atoms: AtomsService | None = None
         self._snapshot: dict[str, Any] | None = None
+        self._task_type_registry: dict[str, type[Any]] | None = None
         self._setup_logging()
 
     @contextmanager
@@ -303,6 +321,15 @@ class DeskopsOperations:
             raise ValueError(f"Unknown field '{field_name}' for {subject}")
         if field_name == "id":
             raise ValueError("Cannot edit immutable field 'id'")
+        if subject == "task" and field_name in _TASK_OWNED_FIELDS:
+            raise ValueError(
+                f"{field_name} is not editable with edit task; "
+                f"it is written by {_TASK_OWNED_FIELDS[field_name]}."
+            )
+        if subject == "review" and field_name in {"verdict", "reason", "disposed_at", "disposed_by"}:
+            raise ValueError(
+                "verdict is written by deskops review dispose (GC03); a new review is a new document"
+            )
         payload = self._read_doc(path, model)
         payload[field_name] = _parse_field_value(model, field_name, raw_value)
         self._write_doc(path, model, payload)
@@ -371,8 +398,8 @@ class DeskopsOperations:
     def create_task_bundle(self, raw_payload: dict[str, Any]) -> TaskBundle:
         return self.tasks.create_task_bundle(raw_payload)
 
-    def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:
-        return self.tasks.advance_task(task_id, target_node=target_node)
+    def advance_task(self, task_id: str) -> tuple[Task | None, TransitionResult | None]:
+        return self.tasks.advance_task(task_id)
 
     def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
         return self.tasks.next_action_report(task_selector)
@@ -604,14 +631,65 @@ class DeskopsOperations:
         """The stored closeout_evidence as plain strings; vocabulary is checked where it is used."""
         return [item.strip() for item in self._coerce_list(value) if item.strip()]
 
-    def _declared_closeout_evidence(self, payload: dict[str, Any]) -> tuple[list[str], bool]:
-        """Evidence the task declared, and whether it is the implicit-code migration.
+    def registered_task_types(self) -> dict[str, type[Any]]:
+        """task_type name -> model class: the factory types plus desk-local types in the store.
 
-        A task without the field predates it: it is gated as code, with an alert.
+        A desk adds its own types as ``desk/models/*.py`` subclasses; ``desk update --apply``
+        registers them with ``pythonpath`` = the desk root. Factory types are importable directly
+        and are merged in first, so local modules never shadow them.
+        """
+        cached = self._task_type_registry
+        if cached is not None:
+            return cached
+        registry: dict[str, type[Any]] = dict(TASK_TYPE_MODELS)
+        store_dir = self.root / ".sldb"
+        if store_dir.exists():
+            try:
+                from sldb.api.model_registry.model_reference import resolve_model_ref
+
+                from deskops.bootstrap import SLDBBootstrap
+
+                entries = SLDBBootstrap()._registered_model_entries(store_dir)
+                pythonpath = str(self.desk_root)
+                for name, entry in entries.items():
+                    if name in registry:
+                        continue
+                    model_ref = getattr(entry, "model_ref", "") or ""
+                    if not model_ref:
+                        continue
+                    try:
+                        cls = resolve_model_ref(model_ref, pythonpath=pythonpath)
+                    except Exception:
+                        continue
+                    if not isinstance(cls, type) or not issubclass(cls, TaskDoc):
+                        continue
+                    field = cls.model_fields.get("task_type")
+                    default = getattr(field, "default", None)
+                    if default not in (None, ""):
+                        registry[str(default)] = cls
+            except Exception:
+                pass
+        self._task_type_registry = registry
+        return registry
+
+    def _declared_closeout_evidence(self, payload: dict[str, Any]) -> tuple[list[str], bool]:
+        """Evidence the task closes with, and whether it is the implicit-code migration.
+
+        A non-empty ``closeout_evidence`` on the task is the complete list and replaces the
+        type's (the override); empty reads the evidence the task's type declares. A task with
+        no type and no field predates types and is gated as code with an alert.
         """
         declared = self._declared_evidence_list(payload.get("closeout_evidence"))
         if declared:
             return declared, False
+        task_type = str(payload.get("task_type") or "").strip()
+        registry = self.registered_task_types()
+        # A registered name (factory or desk-local subtype) wins; only then the legacy mapping,
+        # so a local subtype's added evidence is never replaced by its ancestor's.
+        type_model = registry.get(task_type) or registry.get(canonical_task_type_name(task_type))
+        if type_model is not None:
+            evidence = tuple(getattr(type_model, "__closeout_evidence__", ())) or closeout_gates_module.CODE_EVIDENCE
+            return list(evidence), not task_type
         return list(closeout_gates_module.CODE_EVIDENCE), True
 
     def _has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
@@ -635,7 +713,21 @@ class DeskopsOperations:
 
         findings: list[dict[str, str]] = []
         alerts: list[dict[str, str]] = []
-        unknown = [kind for kind in declared if kind not in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY]
+        not_verifiable = [kind for kind in declared if kind in closeout_gates_module.NOT_YET_VERIFIABLE_EVIDENCE]
+        for kind in not_verifiable:
+            findings.append(
+                {
+                    "code": "closeout_evidence_not_verifiable",
+                    "message": f"Closeout evidence '{kind}' is declared by the task type but is not verifiable yet; "
+                    "a later node checks it.",
+                }
+            )
+        unknown = [
+            kind
+            for kind in declared
+            if kind not in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY
+            and kind not in closeout_gates_module.NOT_YET_VERIFIABLE_EVIDENCE
+        ]
         for kind in unknown:
             findings.append(
                 {
@@ -644,7 +736,7 @@ class DeskopsOperations:
                     + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY),
                 }
             )
-        declared = [kind for kind in declared if kind not in unknown]
+        declared = [kind for kind in declared if kind not in unknown and kind not in not_verifiable]
 
         if implicit:
             alerts.append(
@@ -670,7 +762,7 @@ class DeskopsOperations:
 
         gate_dict: dict[str, Any] = {}
         found: list[str] = []
-        ok = not unknown
+        ok = not unknown and not not_verifiable
 
         def add_gate(name: str, gate: CloseoutGateReport, found_label: str | None) -> None:
             nonlocal ok
@@ -1155,7 +1247,7 @@ class DeskopsOperations:
         return self.atoms._atom_doc_path(atom_id, tags)
 
     def _artifact_glob_pattern(self, artifact_id: str) -> str:
-        if artifact_id in {"artifact.inbox_note", "artifact.board", "artifact.ritual"}:
+        if artifact_id in {"artifact.inbox_note", "artifact.board", "artifact.ritual", "artifact.review"}:
             return "*.md"
         spec = self.spec_registry.artifacts[artifact_id]
         id_pattern = str(spec["data"]["doc"]["id_pattern"])
@@ -1165,14 +1257,34 @@ class DeskopsOperations:
         return resolve_selector(self.desk_root, [directory], doc_id, f"{doc_id}*.md", "task", recursive=False)
 
     def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:
-        return resolve_selector(
-            self.desk_root,
-            directories,
-            selector,
-            self._artifact_glob_pattern(artifact_id),
-            artifact_id,
-            recursive=True,
-        )
+        try:
+            return resolve_selector(
+                self.desk_root,
+                directories,
+                selector,
+                self._artifact_glob_pattern(artifact_id),
+                artifact_id,
+                recursive=True,
+            )
+        except FileNotFoundError:
+            if artifact_id != "artifact.review":
+                raise
+        # A review's id is the authority; its file is named `<kind>-<n>.md` under
+        # `desk/reviews/<task-id>/`, so resolve it by the id its frontmatter carries
+        # (TaskDoc precisión 4: nothing parses the id back out of the path).
+        matches = [
+            path
+            for directory in directories
+            if directory.exists()
+            for path in sorted(directory.rglob("*.md"))
+            if self._frontmatter_id(path) == selector
+        ]
+        if not matches:
+            raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}'")
+        if len(matches) > 1:
+            names = ", ".join(str(path.relative_to(self.desk_root)) for path in matches)
+            raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {names}")
+        return matches[0]
 
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
         try:
@@ -1200,17 +1312,22 @@ class DeskopsOperations:
         )
 
     def _tracked_task_paths(self) -> set[Path]:
-        records = self.root / ".sldb" / "core" / "documents" / "TaskDoc"
-        if not records.is_dir():
-            return set()
-        tracked = set()
-        for record in records.glob("*.yaml"):
-            try:
-                path = (yaml.safe_load(record.read_text(encoding="utf-8")) or {}).get("path")
-            except (OSError, yaml.YAMLError):
+        # Tasks are tracked under their type model (TaskCodeDoc, …) and, for pre-type
+        # documents, under TaskDoc. Legacy file names resolve only through the tracked paths.
+        model_names = {"TaskDoc"}
+        model_names.update(getattr(cls, "__name__") for cls in self.registered_task_types().values())
+        tracked: set[Path] = set()
+        for model_name in model_names:
+            records = self.root / ".sldb" / "core" / "documents" / model_name
+            if not records.is_dir():
                 continue
-            if path:
-                tracked.add((self.root / path).resolve())
+            for record in records.glob("*.yaml"):
+                try:
+                    path = (yaml.safe_load(record.read_text(encoding="utf-8")) or {}).get("path")
+                except (OSError, yaml.YAMLError):
+                    continue
+                if path:
+                    tracked.add((self.root / path).resolve())
         return tracked
 
     def _registered_repositories(self) -> list[dict[str, Any]]:

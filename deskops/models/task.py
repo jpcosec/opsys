@@ -26,6 +26,9 @@ _ABSENT_FRONTMATTER_DEFAULTS = frozenset({
 
 
 class TaskDoc(OperationalArtifactDoc):
+    # The contract fields: editing any of these changes the task contract and (once sldb reads
+    # GO02 (e)) leaves receipts `changed`; editing references/pills/status/history/tags does not.
+    __contract__ = ["title", "goal", "scope", "implementation_path", "files", "validation", "done_when"]
     __references__ = ["references", "depends_on", "inherits_from", "current_node", "pills", "atoms"]
     __reference_models__ = {
         "depends_on": ["TaskDoc"],

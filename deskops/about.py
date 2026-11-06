@@ -15,9 +15,9 @@ First-use commands:
 - deskops init .
 
 First task, start to finish:
-- deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
-  (a task declares at creation how it closes: --task-type code|implementation|test|docs|spec|design|external,
-  or --evidence tests|commit|atom|materialization|document|external)
+- deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type task.code
+  (a task's type declares how it closes; --evidence only adds kinds to the type's,
+  e.g. tests|commit|atom|materialization|document|external; without --task-type the type is task.code)
 - deskops list tasks --root .
 - deskops show task task-fix-thing --root .
 - deskops advance task task-fix-thing --root .

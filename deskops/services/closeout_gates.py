@@ -22,29 +22,15 @@ URL_PATTERN = re.compile(r"https?://\S+")
 # `materialization` are alternatives of one gate: either link satisfies it.
 CLOSEOUT_EVIDENCE_VOCABULARY = ("tests", "commit", "atom", "materialization", "document", "external")
 
+#: Kinds a task type declares but no node verifies yet: the aggregate's ``children`` and the
+#: refactor's ``goldens``. `closeout verify` names them as not yet verifiable (TaskDoc precisión 3).
+NOT_YET_VERIFIABLE_EVIDENCE = ("children", "goldens")
+
 CODE_EVIDENCE = ("tests", "commit", "atom", "materialization")
 DOCUMENT_EVIDENCE = ("commit", "document")
 EXTERNAL_EVIDENCE = ("external",)
 
-# task_type -> evidence declared when --evidence is absent.
-TASK_TYPE_EVIDENCE: dict[str, tuple[str, ...]] = {
-    "code": CODE_EVIDENCE,
-    "implementation": CODE_EVIDENCE,
-    "test": CODE_EVIDENCE,
-    "docs": DOCUMENT_EVIDENCE,
-    "spec": DOCUMENT_EVIDENCE,
-    "design": DOCUMENT_EVIDENCE,
-    "external": EXTERNAL_EVIDENCE,
-}
-
 DOCUMENT_SUFFIXES = frozenset({".md", ".rst", ".txt", ".adoc", ".yaml", ".yml"})
-
-HOW_TO_DECLARE_EVIDENCE = (
-    "Declare how this task closes: pass --evidence <kind>... "
-    f"(kinds: {', '.join(CLOSEOUT_EVIDENCE_VOCABULARY)}) or --task-type "
-    f"({', '.join(TASK_TYPE_EVIDENCE)}) so the evidence is filled from the type "
-    "(code: tests+commit+atom|materialization; docs|spec|design: commit+document; external: external)."
-)
 
 
 class CloseoutEvidenceError(ValueError):
@@ -70,30 +56,15 @@ def normalize_declared_evidence(value: Any) -> list[str]:
     return declared
 
 
-def evidence_for_task_type(task_type: str) -> list[str]:
-    return list(TASK_TYPE_EVIDENCE.get(str(task_type or "").strip().lower(), ()))
-
-
-def resolve_new_task_evidence(payload: dict[str, Any], *, require: bool) -> list[str]:
-    """Evidence a new task declares: explicit --evidence, else filled from task_type.
-
-    With ``require`` set and neither source available (or the task_type unknown),
-    raises ``CloseoutEvidenceError`` explaining how to declare it.
+def order_evidence_kinds(kinds: list[str]) -> list[str]:
+    """Deduplicate a declared evidence list in the vocabulary order, keeping the kinds that
+    are declared on a type but not in the CLI vocabulary (``children``, ``goldens``) last.
     """
-    declared = normalize_declared_evidence(payload.get("closeout_evidence"))
-    if declared:
-        return declared
-    task_type = str(payload.get("task_type") or "").strip()
-    filled = evidence_for_task_type(task_type)
-    if filled:
-        return filled
-    if require:
-        if task_type:
-            raise CloseoutEvidenceError(
-                f"Task type '{task_type}' does not imply closeout evidence. " + HOW_TO_DECLARE_EVIDENCE
-            )
-        raise CloseoutEvidenceError("This task declares no closeout evidence. " + HOW_TO_DECLARE_EVIDENCE)
-    return []
+    seen: list[str] = []
+    for kind in [*CLOSEOUT_EVIDENCE_VOCABULARY, *kinds]:
+        if kind in kinds and kind not in seen:
+            seen.append(kind)
+    return seen
 
 
 def collapse_link_kinds(kinds: list[str]) -> list[str]:

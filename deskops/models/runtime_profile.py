@@ -33,6 +33,8 @@ tools_join: ⸢rev•tools_join⸥
 system_prompt_flag: ⸢rev•system_prompt_flag⸥
 # inline | file
 system_prompt_delivery: ⸢rev•system_prompt_delivery⸥
+# Optional fixed system prompt text; empty means role-provided
+system_prompt: ⸢rev•system_prompt⸥
 session_flag: ⸢rev•session_flag⸥
 extra_args: ⸢rev•extra_args⸥
 # RoleDoc fields this runtime cannot honor
@@ -83,6 +85,11 @@ _Operational notes such as authentication requirements or version pins._
         default="inline",
         description="How the system prompt text reaches the flag: 'inline' passes it directly as the flag value, "
         "'file' writes it to a session-scoped file and passes the file path.",
+    )
+    system_prompt: str | None = Field(
+        default=None,
+        description="Optional fixed system prompt text this profile carries (e.g. the isolated reviewer role); "
+        "empty means the role provides the text.",
     )
     session_flag: str = Field(
         default="",

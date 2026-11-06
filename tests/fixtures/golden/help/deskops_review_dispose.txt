@@ -1,0 +1,21 @@
+usage: deskops review dispose [-h] --verdict {accepted,rejected,incomplete}
+                              --reason REASON [--root ROOT]
+                              [--format {text,json,yaml}]
+                              review_id
+
+Write the verdict on one pending review receipt.
+
+positional arguments:
+  review_id             Review id (e.g. review-task-fix-thing-preflight-1).
+
+options:
+  -h, --help            show this help message and exit
+  --verdict {accepted,rejected,incomplete}
+                        Disposition verdict.
+  --reason REASON       Why the review is disposed with this verdict.
+  --root ROOT           Target repository root.
+  --format {text,json,yaml}
+                        Output format.
+
+Example:
+  deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .

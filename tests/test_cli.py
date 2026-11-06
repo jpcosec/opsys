@@ -40,7 +40,7 @@ def test_cli_help_uses_deskops_name(capsys) -> None:
     captured = capsys.readouterr()
     assert result == 0
     assert "usage: deskops" in captured.out
-    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,view,runtime}" in captured.out
+    assert "{about,doctor,status,faq,bootstrap,init,inbox,message,review,promote,drawer,retire,issue,add,edit,bind,next,list,show,advance,repo,desk,atoms,graph,materialize,drift,closeout,view,runtime}" in captured.out
     assert "Typical flow:" in captured.out
     assert "deskops add task --root ." in captured.out
     assert "deskops faq" in captured.out
@@ -709,7 +709,7 @@ def test_add_task_creates_actionable_bundle(tmp_path: Path, capsys) -> None:
             "--title",
             "Ship semantic CLI",
             "--task-type",
-            "code",
+            "task.code",
             "--why",
             "Operators need explicit task intent.",
             "--goal",
@@ -756,7 +756,7 @@ def test_add_task_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, ca
             "--title",
             "Track bundle",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Persist generated bundle docs in the store.",
             "--scope",
@@ -772,7 +772,7 @@ def test_add_task_tracks_generated_bundle_in_local_sldb_store(tmp_path: Path, ca
     assert "Created task bundle task-track-bundle" in create_out.out
 
     for doc_id, model_name in [
-        ("task-track-bundle", "TaskDoc"),
+        ("task-track-bundle", "TaskCodeDoc"),
         ("ritual-execution", "RitualDoc"),
         ("execution-task_activates", "RelationDoc"),
         ("type-task_activates", "RelationTypeDoc"),
@@ -806,7 +806,7 @@ def test_add_task_uses_test_root_override_for_sandboxed_generation(tmp_path: Pat
             "--title",
             "Sandboxed test task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Keep exploratory CLI output out of the repo desk.",
             "--scope",
@@ -837,7 +837,7 @@ def test_next_task_reports_current_workflow_action_without_mutating(tmp_path: Pa
             "--title",
             "Plan next action",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Explain what to do next.",
             "--scope",
@@ -880,7 +880,7 @@ def test_next_task_why_explains_selection_without_mutating(tmp_path: Path, capsy
             "--title",
             "Explain next selection",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Show why next was selected.",
             "--scope",
@@ -940,7 +940,7 @@ def test_next_without_selector_lists_multiple_board_tasks(tmp_path: Path, capsys
                 "--title",
                 title,
                 "--task-type",
-                "code",
+                "task.code",
                 "--goal",
                 "Exercise multi-task guidance.",
                 "--scope",
@@ -1186,7 +1186,7 @@ def test_add_task_accepts_json_payload(tmp_path: Path, capsys) -> None:
         [
             "add",
             "task",
-            '{"title":"JSON task","task_type":"code","goal":"Drive creation from payload.","scope":"Operational runtime only.","implementation_path":"Build from an inline JSON payload.","done_when":"The task bundle can be created from JSON.","validation":["pytest"]}',
+            '{"title":"JSON task","task_type":"task.code","goal":"Drive creation from payload.","scope":"Operational runtime only.","implementation_path":"Build from an inline JSON payload.","done_when":"The task bundle can be created from JSON.","validation":["pytest"]}',
             "--root",
             str(tmp_path),
         ]
@@ -1209,7 +1209,7 @@ def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, c
             "--title",
             "Legacy task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Original goal.",
             "--scope",
@@ -1224,7 +1224,7 @@ def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, c
     # Simulate a task written before the `task-*` naming: same tracked document, older file name.
     tasks = tmp_path / "desk" / "tasks"
     (tasks / "task-legacy-task.md").rename(tasks / "001-legacy-task.md")
-    record = tmp_path / ".sldb" / "core" / "documents" / "TaskDoc" / "task-legacy-task.yaml"
+    record = tmp_path / ".sldb" / "core" / "documents" / "TaskCodeDoc" / "task-legacy-task.yaml"
     record.write_text(
         record.read_text(encoding="utf-8").replace(
             "path: desk/tasks/task-legacy-task.md", "path: desk/tasks/001-legacy-task.md"
@@ -1255,7 +1255,7 @@ def test_edit_task_refuses_to_erase_undeclared_content(tmp_path: Path, capsys) -
             "--title",
             "Hand written task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Original goal.",
             "--scope",
@@ -1305,7 +1305,7 @@ def test_edit_task_keeps_text_values_literal(tmp_path: Path, capsys) -> None:
             "--title",
             "Literal task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Original goal.",
             "--scope",
@@ -1341,7 +1341,7 @@ def test_edit_task_updates_modeled_field_from_cli(tmp_path: Path, capsys) -> Non
             "--title",
             "Editable task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Original goal.",
             "--scope",
@@ -1503,7 +1503,7 @@ def test_bind_pill_appends_task_pills_list_from_cli(tmp_path: Path, capsys) -> N
             "--title",
             "Bindable task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Goal.",
             "--scope",
@@ -1583,7 +1583,7 @@ def test_edit_rejects_unknown_task_field(tmp_path: Path, capsys) -> None:
             "--title",
             "Unknown field task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Goal.",
             "--scope",
@@ -1622,7 +1622,7 @@ def test_edit_rejects_immutable_id_field(tmp_path: Path, capsys) -> None:
             "--title",
             "Immutable id task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Goal.",
             "--scope",
@@ -1709,7 +1709,7 @@ def test_show_task_json_resolves_inherited_workflow_context(tmp_path: Path, caps
                 "validation": ["pytest parent"],
                 "done_when": "Parent done.",
                 "tags": ["tag:parent"],
-                "task_type": "design",
+                "task_type": "task.docs",
                 "inherits_from": [],
                 "inherit_acceptance_context": False,
                 "atoms": ["desk/atoms/atom-parent.md"],
@@ -1739,7 +1739,7 @@ def test_show_task_json_resolves_inherited_workflow_context(tmp_path: Path, caps
                 "validation": ["pytest child"],
                 "done_when": "Child done.",
                 "tags": ["tag:child"],
-                "task_type": "implementation",
+                "task_type": "task.code",
                 "inherits_from": ["task-parent"],
                 "inherit_acceptance_context": True,
                 "atoms": ["desk/atoms/atom-child.md"],
@@ -1753,7 +1753,7 @@ def test_show_task_json_resolves_inherited_workflow_context(tmp_path: Path, caps
     payload = json.loads(captured.out)
 
     assert result == 0
-    assert payload["task_type"] == "implementation"
+    assert payload["task_type"] == "task.code"
     assert payload["inherits_from"] == ["task-parent"]
     assert payload["effective_pills"] == ["desk/contexts/pill-parent.md", "desk/contexts/pill-child.md"]
     assert payload["effective_atoms"] == ["desk/atoms/atom-parent.md", "desk/atoms/atom-child.md"]
@@ -1831,7 +1831,7 @@ def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Pat
             "--title",
             "Advance task runtime",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Operate task state through routines.",
             "--scope",
@@ -1938,7 +1938,7 @@ def test_list_and_show_task_support_json_output(lifecycle_desk: Path, capsys) ->
             "--title",
             "JSON task output",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Expose task data through the CLI.",
             "--scope",
@@ -2031,7 +2031,7 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
             "--title",
             "Advance blocked task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Enforce phase gates.",
             "--scope",
@@ -2190,7 +2190,7 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk
             "--title",
             "Advance with atom evidence",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Allow atom-backed closeout.",
             "--scope",
@@ -2283,7 +2283,7 @@ def test_advance_task_allows_empty_implementation_path(lifecycle_desk: Path, cap
             "--title",
             "Advance without path",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Keep task progression usable.",
             "--scope",
@@ -2701,7 +2701,7 @@ def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
 
     # Create a tracked document cleanly
     task_doc = root / "desk" / "tasks" / "task-foo.md"
-    main(["add", "task", "--title", "Foo", "--task-type", "docs", "--root", str(root)])
+    main(["add", "task", "--title", "Foo", "--task-type", "task.docs", "--root", str(root)])
     capsys.readouterr()
 
     # Corrupt it
@@ -3063,7 +3063,7 @@ def test_explicit_root_dot_bypasses_the_sandbox_override(tmp_path: Path, monkeyp
             "--title",
             "Explicit root task",
             "--task-type",
-            "code",
+            "task.code",
             "--goal",
             "Prove explicit roots win over the sandbox redirect.",
             "--scope",

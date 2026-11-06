@@ -89,7 +89,7 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     # written by hand. --validation takes nargs="+", so it goes last.
     _cli(
         root, "add", "task", "--root", str(root),
-        "--title", "Lifecycle E2E", "--task-type", "code",
+        "--title", "Lifecycle E2E", "--task-type", "task.code",
         "--why", "Prove the real CLI lifecycle end to end.",
         "--goal", "Close a task authored from a drawer candidate.",
         "--scope", "The lifecycle CLI only.",
@@ -213,7 +213,7 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
         "--root",
         str(root),
         '{"id": "task-foo", "title": "Foo", "goal": "g", "scope": "s", '
-        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "code"}',
+        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "task.code"}',
     )
     _cli(root, "advance", "task", "task-foo", "--root", str(root))
     _cli(root, "advance", "task", "task-foo", "--root", str(root))
@@ -306,7 +306,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
         "--root",
         str(root),
         '{"id": "task-pathspec-commit", "title": "Pathspec commit", "goal": "g", "scope": "s", '
-        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "code"}',
+        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "task.code"}',
     )
     _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
     _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
@@ -393,7 +393,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
         "--root",
         str(root),
         '{"id": "task-pathspec-amend", "title": "Pathspec amend", "goal": "g", "scope": "s", '
-        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "code"}',
+        '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "task.code"}',
     )
     _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
     _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
@@ -523,7 +523,7 @@ def test_deleting_the_drawer_entry_leaves_the_task_valid(tmp_path: Path) -> None
     drawer_entry = root / "desk" / "drawer" / "tasks" / "task-drawer-provenance.md"
     _cli(
         root, "add", "task", "--root", str(root),
-        "--title", "Drawer provenance", "--task-type", "docs",
+        "--title", "Drawer provenance", "--task-type", "task.docs",
         "--why", "w", "--goal", "g", "--scope", "s",
         "--implementation-path", "i", "--done-when", "d",
         "--from-drawer", "drawer-provenance",

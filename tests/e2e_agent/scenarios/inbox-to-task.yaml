@@ -15,7 +15,7 @@ setup:
 reference:
   - deskops inbox list --root . || deskops list inbox-notes --root .
   - deskops promote inbox-to-drawer-task document-the-release-process --root .
-  - deskops add task --root . --title "Document the release process" --goal "Write down how releases are made" --scope "docs only" --task-type docs --validation pytest
+  - deskops add task --root . --title "Document the release process" --goal "Write down how releases are made" --scope "docs only" --task-type task.docs --validation pytest
 checks:
   - name: the note was deferred into the drawer
     run: |-

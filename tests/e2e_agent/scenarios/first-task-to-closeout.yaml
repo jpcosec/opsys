@@ -12,7 +12,7 @@ setup:
   - git add -A && git commit -qm "initial"
 reference:
   - deskops init .
-  - deskops add task --root . --title "Add changelog" --goal "Start a changelog" --scope "CHANGELOG.md only" --task-type code --implementation-path CHANGELOG.md --done-when "CHANGELOG.md exists" --validation pytest
+  - deskops add task --root . --title "Add changelog" --goal "Start a changelog" --scope "CHANGELOG.md only" --task-type task.code --implementation-path CHANGELOG.md --done-when "CHANGELOG.md exists" --validation pytest
   - deskops advance task task-add-changelog --root .
   - printf -- '- Started using deskops.\n' > CHANGELOG.md
   - pytest -q

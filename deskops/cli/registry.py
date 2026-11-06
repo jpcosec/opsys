@@ -33,13 +33,13 @@ ROOT_EPILOG = """
 Typical flow:
   deskops bootstrap
   deskops init .
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type task.code
   deskops list tasks --root .
   deskops show task task-fix-thing --root .
   deskops advance task task-fix-thing --root .
 
-A task declares at creation how it closes (--task-type or --evidence). When
-the work is done and the task's references carry that evidence, close it with
+A task's type declares how it closes; without --task-type the type is task.code.
+When the work is done and the task's references carry that evidence, close it with
 `deskops closeout commit --root . --task task-fix-thing --no-run --reason "..."`
 (or --run-dir for a subagent run); it verifies the declared evidence first and
 makes the closing commit. `deskops doctor --root .` checks the desk afterwards.
@@ -122,6 +122,10 @@ def _add_subject_commands() -> list[Command]:
     commands: list[Command] = []
     models = artifact_model_fields()
     for artifact_id, meta in ARTIFACT_SUBJECTS.items():
+        # Reviews are receipts written by `deskops review` (GC03), never created through
+        # the generic add surface; `edit review`/`show review`/`list reviews` still exist.
+        if meta.get("create") is False:
+            continue
         subject = str(meta["subject"])
         article = "an" if subject[:1] in "aeiou" else "a"
         help_text = f"Create {article} {subject} artifact."
@@ -286,11 +290,11 @@ def _operation_shared_commands() -> list[Command]:
             mutates=True,
             epilog="""
 Examples:
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
-  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --evidence commit document
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type task.code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --task-type task.docs
   deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..." --when "..." --where "..." --how "..." --how-not "..."
 
-A task declares its closeout evidence with --task-type or --evidence; see `deskops add task --help`.
+A task's closeout evidence is declared by its type; see `deskops add task --help`.
 """.strip(),
             raw_text=True,
             subcommand_dest="subject",
@@ -329,20 +333,18 @@ A task declares its closeout evidence with --task-type or --evidence; see `desko
                 ),
                 A(
                     "--task-type",
-                    help="Workflow task type; it fills --evidence when that is omitted. Valid: "
-                    "code, implementation, test (tests+commit+atom|materialization); "
-                    "docs, spec, design (commit+document); external (external). "
-                    "Any other type needs an explicit --evidence.",
+                    help="Workflow task type; one of the registered types (task.code, task.docs, "
+                    "task.debug, task.refactor, task.decision, task.aggregate, task.external, plus any "
+                    "desk-local type registered from desk/models/*.py). Defaults to task.code.",
                 ),
                 A(
                     "--evidence",
                     action="extend",
                     nargs="+",
                     default=[],
-                    help="Closeout evidence this task must show, declared now: tests, commit, atom, materialization, "
-                    "document, external. Omitted, it is filled from --task-type "
-                    "(code: tests+commit+atom|materialization; docs|spec|design: commit+document; external: external). "
-                    "Without --evidence or --task-type the command fails.",
+                    help="Closeout evidence kinds: tests, commit, atom, materialization, document, external. "
+                    "The task type declares its own evidence as a floor; --evidence may only add kinds, "
+                    "never remove one the type requires.",
                 ),
                 A(
                     "--inherits-from",
@@ -368,11 +370,11 @@ A task declares its closeout evidence with --task-type or --evidence; see `desko
             mutates=True,
             epilog="""
 Examples:
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
-  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --validation "review" --evidence commit document
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type task.code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --task-type task.docs
 
-The task declares at creation how it closes: --task-type fills --evidence, or
---evidence lists the kinds explicitly. One of the two is required.
+The task type declares how the task closes; --evidence only adds kinds to the type's
+floor. Without --task-type the type is task.code.
 """.strip(),
             raw_text=True,
         ),
@@ -524,12 +526,6 @@ Advancement fires the first lifecycle transition (an sldb RelationDoc between ri
             help="Advance one actionable task through the desk's lifecycle graph.",
             args=(
                 A("task_id", help=f"Task selector. {SELECTOR_HELP}"),
-                A(
-                    "--to",
-                    help="Force the task to this node or status, skipping the lifecycle gates "
-                    "(no transition condition is evaluated). Closing is still refused, both "
-                    "`complete` and `closed`: only `deskops closeout commit` completes a task.",
-                ),
                 ROOT_ARG,
             ),
             handler="deskops.cli.commands.operations:OperationsCLI",
@@ -743,6 +739,130 @@ read/ack selector: filename, stem, or unique slug fragment.
             ),
             handler="deskops.cli.commands.message:MessageCLI",
             mutates=True,
+        ),
+        Command(
+            path=("review",),
+            help="Run and dispose cold context reviews (node, preflight, bundle, status, dispose).",
+            args=(),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=True,
+            epilog="""
+Examples:
+  deskops review preflight task-fix-thing --root .
+  deskops review bundle task-fix-thing --root .
+  deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .
+  deskops review status task-fix-thing --root .
+  deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+
+Every run writes ritual evidence under runs/subagents/<run>/context-review/<key>/<sha>/attempt-N/
+and a ReviewDoc receipt under desk/reviews/. `--engine` names a RuntimeProfileDoc under desk/runtimes/
+(default runtime-pi-deepseek-flash). An unchanged input is not reviewed again; `--max-attempts` (default 2)
+caps good attempts per key unless --force --reason.
+""".strip(),
+            raw_text=True,
+            subcommand_dest="review_command",
+        ),
+        Command(
+            path=("review", "node"),
+            help="Review the nodes of a drawer dag.yaml (contract, neighbours, and gates).",
+            args=(
+                A("plan_dir", help="Plan directory that contains dag.yaml (relative to --root or absolute)."),
+                A("ids", nargs="*", help="Node ids to review; defaults to every node in the dag."),
+                ROOT_ARG,
+                A("--engine", help="RuntimeProfileDoc id under desk/runtimes (default runtime-pi-deepseek-flash)."),
+                A("--max-attempts", type=int, default=2, help="Maximum good attempts per key (default 2)."),
+                A("--force", action="store_true", help="Re-review even when the cap is reached; requires --reason."),
+                A("--reason", help="Why this forced re-review runs; recorded in manifest.json and the ReviewDoc."),
+                A("--timeout", type=int, default=900, help="Model call timeout in seconds (default 900)."),
+                A("--run", help="Run directory name under runs/subagents/ (default a timestamp)."),
+                OUTPUT_FORMAT_YAML_ARG,
+            ),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("review", "preflight"),
+            help="Review a task from its TaskDoc alone (before dispatch).",
+            args=(
+                A("task", help="Task selector."),
+                ROOT_ARG,
+                A("--engine", help="RuntimeProfileDoc id under desk/runtimes (default runtime-pi-deepseek-flash)."),
+                A("--max-attempts", type=int, default=2, help="Maximum good attempts per key (default 2)."),
+                A("--force", action="store_true", help="Re-review even when the cap is reached; requires --reason."),
+                A("--reason", help="Why this forced re-review runs; recorded in manifest.json and the ReviewDoc."),
+                A("--timeout", type=int, default=900, help="Model call timeout in seconds (default 900)."),
+                A("--run", help="Run directory name under runs/subagents/ (default a timestamp)."),
+                OUTPUT_FORMAT_YAML_ARG,
+            ),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops review preflight task-fix-thing --root .
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("review", "bundle"),
+            help="Review a task with its full cold bundle (routed rituals, pills, atoms, files).",
+            args=(
+                A("task", help="Task selector."),
+                ROOT_ARG,
+                A("--engine", help="RuntimeProfileDoc id under desk/runtimes (default runtime-pi-deepseek-flash)."),
+                A("--max-attempts", type=int, default=2, help="Maximum good attempts per key (default 2)."),
+                A("--force", action="store_true", help="Re-review even when the cap is reached; requires --reason."),
+                A("--reason", help="Why this forced re-review runs; recorded in manifest.json and the ReviewDoc."),
+                A("--timeout", type=int, default=900, help="Model call timeout in seconds (default 900)."),
+                A("--run", help="Run directory name under runs/subagents/ (default a timestamp)."),
+                OUTPUT_FORMAT_YAML_ARG,
+            ),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops review bundle task-fix-thing --root .
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("review", "status"),
+            help="Compare current inputs with recorded reviews without calling the model.",
+            args=(
+                A("target", nargs="?", help="Task selector or plan directory; omit to list every key that has a review."),
+                ROOT_ARG,
+                OUTPUT_FORMAT_YAML_ARG,
+            ),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=False,
+            epilog="""
+Example:
+  deskops review status task-fix-thing --root .
+  deskops review status desk/drawer/plans/gates-por-tipo --root .
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("review", "dispose"),
+            help="Write the verdict on one pending review receipt.",
+            args=(
+                A("review_id", help="Review id (e.g. review-task-fix-thing-preflight-1)."),
+                A("--verdict", choices=("accepted", "rejected", "incomplete"), required=True, help="Disposition verdict."),
+                A("--reason", required=True, help="Why the review is disposed with this verdict."),
+                ROOT_ARG,
+                OUTPUT_FORMAT_YAML_ARG,
+            ),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+""".strip(),
+            raw_text=True,
         ),
         Command(
             path=("promote",),
@@ -1392,11 +1512,11 @@ Without a subagent run, close the task manually and say why:
 
 Gate: for a task routed on desk/tasks/Board.md (as `deskops add task` leaves
 it) the command first runs the same check as `deskops closeout verify`. The
-task's closeout_evidence field (declared at `deskops add task` through
---task-type or --evidence) says which kinds the task must show: tests, commit,
-atom|materialization, document, external. Each kind is looked up in the task's
-references (and files, for documents); the result is printed as one line,
-"esta tarea declaró X; encontré Y" (declared X; found Y). If any declared kind
+task's type declares which kinds the task must show (its own non-empty
+closeout_evidence overrides it): tests, commit, atom|materialization, document,
+external. Each kind is looked up in the task's references (and files, for
+documents); the result is printed as one line,
+"esta tarea declaró X; encontró Y" (declared X; found Y). If any declared kind
 is missing the command stops and no commit is made. Alerts (ALERTA ...) are
 printed but do not block.
 
@@ -1483,11 +1603,11 @@ ref, and the run index entry is marked legacy-resolved.
 Example:
   deskops closeout verify --root . --task task-fix-thing
 
-The gate checks exactly the kinds listed in the task's closeout_evidence field
-(declared at `deskops add task` through --task-type or --evidence): tests,
-commit, atom|materialization, document, external. Each kind is looked up in
-the task's references (and files, for documents). A task without the field
-predates it and is gated as code, with an alert.
+The gate checks exactly the kinds the task's type declares (its own non-empty
+closeout_evidence overrides it): tests, commit, atom|materialization, document,
+external. Each kind is looked up in the task's references (and files, for
+documents). A task with no type and no field predates the types and is gated as
+code, with an alert.
 
 Output: stdout carries a JSON report (declared, found, per-gate findings,
 alerts, ok, summary); stderr carries the one-line summary "esta tarea declaró

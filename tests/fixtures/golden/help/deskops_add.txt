@@ -22,8 +22,8 @@ options:
   -h, --help            show this help message and exit
 
 Examples:
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
-  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --evidence commit document
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type task.code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --task-type task.docs
   deskops add pill --root . --title "Guardrail: Keep layers clean" --what "..." --why "..." --when "..." --where "..." --how "..." --how-not "..."
 
-A task declares its closeout evidence with --task-type or --evidence; see `deskops add task --help`.
+A task's closeout evidence is declared by its type; see `deskops add task --help`.

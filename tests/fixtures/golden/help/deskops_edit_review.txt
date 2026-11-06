@@ -1,0 +1,14 @@
+usage: deskops edit review [-h] [--root ROOT] selector field value
+
+Edit one review field.
+
+positional arguments:
+  selector     Review selector. Selectors accept an exact id, filename, stem,
+               or unique slug fragment where supported.
+  field        Model field name to update; hyphens are accepted for
+               underscores.
+  value        New field value, parsed like an SLDB field value.
+
+options:
+  -h, --help   show this help message and exit
+  --root ROOT  Target repository root.

@@ -56,7 +56,23 @@ A task is the atomic workflow unit.
 - One coherent deliverable.
 - May depend on other tasks.
 - Executes in a fresh subagent context.
-- Declares its closeout evidence at creation (`deskops add task --task-type` or `--evidence`) and closes only after exactly that evidence verifies, with its own atomic closing commit.
+- Declares how it closes by choosing a task type (`deskops add task --task-type`); the type declares its closeout evidence and its activation receipts, and closes only after exactly that evidence verifies, with its own atomic closing commit. `--evidence` only adds kinds to the type's floor, never removes one the type requires.
+
+#### Task types
+
+A task type is a model: a `TaskDoc` subclass registered in the store. `model <= <Tipo>` names the type's family (including its subtypes); a subtype inherits the gates of its ancestors and can only add, never remove.
+
+| Type | Extends | Activation receipts | Closeout evidence |
+|---|---|---|---|
+| `task.code` | `TaskDoc` | `preflight` + `bundle` | `tests` + `commit` + `atom\|materialization` |
+| `task.docs` | `TaskDoc` | `preflight` | `commit` + `document` |
+| `task.debug` | `TaskDoc` | `preflight` + `reproduction` | `tests` + `commit` + `atom\|materialization` |
+| `task.refactor` | `task.code` | `preflight` + `bundle` + `goldens` | `task.code` + `goldens` |
+| `task.decision` | `TaskDoc` | `owner` | `commit` + `document` |
+| `task.aggregate` | `TaskDoc` | (never executes; activates when children close) | `children` + `commit` |
+| `task.external` | `TaskDoc` | `preflight` | `external` (URL) |
+
+`atom|materialization` is one gate with two alternatives. `commit` means a commit reachable from `HEAD`. A desk adds its own subtypes in `desk/models/*.py`; `deskops desk update --apply` registers them and migrates legacy `task_type` strings (`code`/`implementation`/`test` → `task.code`; `docs`/`spec`/`design` → `task.docs`; `external` → `task.external`; empty → `task.code`).
 
 ### Phases
 

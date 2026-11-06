@@ -30,7 +30,9 @@ from deskops.operations import ARTIFACT_SUBJECTS
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CLI = [sys.executable, "-m", "deskops"]
-ADD_KINDS = sorted(str(meta["subject"]) for meta in ARTIFACT_SUBJECTS.values())
+ADD_KINDS = sorted(
+    str(meta["subject"]) for meta in ARTIFACT_SUBJECTS.values() if meta.get("create") is not False
+)
 
 
 def _env() -> dict[str, str]:

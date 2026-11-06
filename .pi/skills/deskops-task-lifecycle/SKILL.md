@@ -45,9 +45,9 @@ Define el procedimiento obligatorio para gestionar el ciclo de vida de una tarea
 
 ### Paso 2: Promoción y Commit de Preparación
 1. Hacer commit de la creación en el drawer.
-2. Promover la tarea a activa. La promoción directa de drawer a tarea activa fue eliminada deliberadamente: la conversión mecánica solo rellenaba los campos con placeholders. La tarea activa se **autoriza** desde el ítem del drawer con la forma completa de flags (`--title`, `--goal`, `--scope`, `--validation`) y declara su evidencia de cierre con `--task-type` (`code`: tests+commit+atom|materialization; `docs`|`spec`|`design`: commit+document; `external`: external) o con `--evidence <kind>...`; sin una de las dos el comando falla:
+2. Promover la tarea a activa. La promoción directa de drawer a tarea activa fue eliminada deliberadamente: la conversión mecánica solo rellenaba los campos con placeholders. La tarea activa se **autoriza** desde el ítem del drawer con la forma completa de flags (`--title`, `--goal`, `--scope`, `--validation`) y elige su tipo de tarea con `--task-type` (el tipo declara la evidencia de cierre: `task.code`: tests+commit+atom|materialization; `task.docs`: commit+document; `task.external`: external). `--evidence <kind>...` solo agrega kinds a los del tipo; sin `--task-type` el tipo es `task.code`:
    ```bash
-   deskops add task --from-drawer task-<id> --task-type code --title "..." --goal "..." --scope "..." --validation "..."
+   deskops add task --from-drawer task-<id> --task-type task.code --title "..." --goal "..." --scope "..." --validation "..."
    ```
    El campo `from_drawer` queda registrado en la tarea y el archivo del drawer se conserva para limpieza manual.
 

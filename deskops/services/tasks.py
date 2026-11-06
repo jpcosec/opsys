@@ -18,9 +18,9 @@ from deskops import lifecycle
 from deskops.lifecycle import TransitionResult
 from deskops.models import BoardDoc
 from deskops.models import TaskDoc
+from deskops.models.task_types import canonical_task_type_name
 from deskops.operations import TaskBundle
 from deskops.runtime import Task
-from deskops.services import closeout_gates
 from deskops.specs import compile_task_spec
 from deskops.workflow.next_actions import load_task_lifecycle_spec
 from deskops.workflow.next_actions import match_workflow_state
@@ -82,16 +82,21 @@ class TasksService:
         (deskops/lifecycle.py), so nothing else is written per task."""
         self.ensure_workspace()
         payload = self._normalize_task_payload(raw_payload)
-        # A new task states how it closes; one that names a task_type gets the type's evidence.
-        payload["closeout_evidence"] = closeout_gates.resolve_new_task_evidence(payload, require=False)
+        # A task's closeout evidence is declared by its type, not written into the task. The
+        # task is stored under its type's model so `model <= TaskCodeDoc` finds it.
+        raw_task_type = str(payload.get("task_type") or "").strip()
+        registry = self._ops.registered_task_types()
+        task_type = raw_task_type if raw_task_type in registry else canonical_task_type_name(raw_task_type)
+        type_model = registry.get(task_type) or registry.get("task.code") or TaskDoc
+        payload["task_type"] = task_type
         spec = lifecycle.load_lifecycle_spec()
         compiled = compile_task_spec(self._ops.spec_registry, payload, entry_node=spec.entry_node)
         task_id = compiled.task_payload["id"]
         task_path = self._task_path(task_id)
 
         with doc_io.DocTransaction(self.root):
-            self._write_new_doc(task_path, TaskDoc, compiled.task_payload)
-            self._track_created_document(TaskDoc, task_path, task_id)
+            self._write_new_doc(task_path, type_model, compiled.task_payload)
+            self._track_created_document(type_model, task_path, task_id)
             self._ops._append_task_to_board(task_id)
         return TaskBundle(task_id=task_id, task_path=task_path)
 
@@ -169,27 +174,12 @@ class TasksService:
             "sources": sources,
         }
 
-    def advance_task(self, task_id: str, target_node: str | None = None) -> tuple[Task | None, TransitionResult | None]:
+    def advance_task(self, task_id: str) -> tuple[Task | None, TransitionResult | None]:
         try:
             task_path = self._resolve_glob(self.desk_root / "tasks", task_id)
         except FileNotFoundError:
             return None, None
         payload = self._read_doc(task_path, TaskDoc)
-
-        if target_node:
-            # Closing is the closeout command's job. A forced transition to the
-            # terminal node must not leave a half-closed task behind.
-            # The closed status is the same closing step under another name.
-            if target_node in (lifecycle.COMPLETE, "closed"):
-                return self._hydrate_task(payload), self._closure_required(task_id, payload)
-            if target_node in ["draft", "open", "in_progress", "blocked"]:
-                payload["status"] = target_node
-            else:
-                payload["current_node"] = target_node
-            self._write_doc(task_path, TaskDoc, payload)
-            advanced_task = self._hydrate_task(payload)
-            self.logger.info(f"Advanced task {task_id} manually to {target_node}")
-            return advanced_task, TransitionResult(target_node, payload.get("status", ""), True, False, f"Forced transition to {target_node}.")
 
         current_node = str(payload.get("current_node") or "")
         current_status = str(payload.get("status") or "")

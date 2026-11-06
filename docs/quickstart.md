@@ -80,7 +80,7 @@ Create a first task with a concrete goal, a validation command, and the evidence
 ```bash
 deskops add task \
   --title "Try deskops quickstart" \
-  --task-type docs \
+  --task-type task.docs \
   --goal "Complete one task lifecycle" \
   --scope "Documentation walkthrough only" \
   --implementation-path "docs/quickstart.md" \
@@ -88,7 +88,7 @@ deskops add task \
   --validation "pytest"
 ```
 
-Every task declares at creation how it closes. `--task-type docs` fills the task's `closeout_evidence` with `commit` and `document`: this walkthrough changes no code, so a resolvable commit and an existing document are what closeout will check. A code task uses `--task-type code` (tests, commit, and an atom or materialization link), or names the evidence directly with `--evidence <kind>...` (`tests`, `commit`, `atom`, `materialization`, `document`, `external`). Without `--task-type` or `--evidence` the command fails and says how to declare it.
+Every task's type declares how it closes. `--task-type task.docs` declares `commit` and `document`: this walkthrough changes no code, so a resolvable commit and an existing document are what closeout will check. A code task uses `--task-type task.code` (tests, commit, and an atom or materialization link). `--evidence <kind>...` (`tests`, `commit`, `atom`, `materialization`, `document`, `external`) only adds kinds to the type's, never removes one. Without `--task-type` the type is `task.code`.
 
 This creates:
 
@@ -128,7 +128,7 @@ Run the validation command named by the task:
 pytest
 ```
 
-The validation command is the task's own check; it is not what the closeout gate reads. The gate asks for a test file reference only when the task declared `tests` (every `--task-type code` task does). This docs task declared none, so the `pytest` run above is validation, not closeout evidence.
+The validation command is the task's own check; it is not what the closeout gate reads. The gate asks for a test file reference only when the task's type declares `tests` (every `task.code` task does). This docs task's type declares none, so the `pytest` run above is validation, not closeout evidence.
 
 For CLI changes, also run the affected command directly. For graph or store work, prefer semantic checks such as:
 
@@ -172,7 +172,7 @@ For a board-routed task, `closeout commit` runs the full `deskops closeout verif
 - `document`: an existing document file (`.md`, `.rst`, `.txt`, `.adoc`, `.yaml`) in `references` or `files`, outside `tests/` and `desk/tasks/`;
 - `external`: an `http(s)` URL in `references`, for work tracked outside the repository.
 
-`--task-type` fills the declaration: `code`, `implementation`, and `test` declare tests, commit, and atom|materialization; `docs`, `spec`, and `design` declare commit and document; `external` declares external. Changed `.py` files in a task that did not declare `tests` do not block closeout, but the gate prints a visible alert. A task created before `closeout_evidence` existed is gated as code, with an alert asking its owner to declare the evidence (`deskops edit task <id> closeout_evidence '["commit", "document"]'`).
+The task's type declares the evidence: `task.code` and `task.debug` declare tests, commit, and atom|materialization; `task.docs` and `task.decision` declare commit and document; `task.external` declares external. `--evidence` only adds kinds to the type's. Changed `.py` files in a task whose type did not declare `tests` do not block closeout, but the gate prints a visible alert. A task created before the types existed is gated as code, with an alert asking its owner to declare the evidence (`deskops edit task <id> closeout_evidence '["commit", "document"]'`).
 
 The commit reference must point at an earlier commit that already exists, for example the task's authoring commit. The closing commit is made by `closeout commit` and cannot reference itself.
 

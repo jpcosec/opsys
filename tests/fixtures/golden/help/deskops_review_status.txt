@@ -1,0 +1,18 @@
+usage: deskops review status [-h] [--root ROOT] [--format {text,json,yaml}]
+                             [target]
+
+Compare current inputs with recorded reviews without calling the model.
+
+positional arguments:
+  target                Task selector or plan directory; omit to list every
+                        key that has a review.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json,yaml}
+                        Output format.
+
+Example:
+  deskops review status task-fix-thing --root .
+  deskops review status desk/drawer/plans/gates-por-tipo --root .

@@ -12,7 +12,9 @@ from deskops.cli.render import render_error
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
 from deskops.services.closeout_gates import CloseoutEvidenceError
-from deskops.services.closeout_gates import resolve_new_task_evidence
+from deskops.services.closeout_gates import CLOSEOUT_EVIDENCE_VOCABULARY
+from deskops.services.closeout_gates import normalize_declared_evidence
+from deskops.services.closeout_gates import order_evidence_kinds
 
 
 class OperationsCLI:
@@ -22,11 +24,41 @@ class OperationsCLI:
 
         if args.command == "add" and args.subject == "task":
             payload = parse_task_input(args)
+            requested_type = str(payload.get("task_type") or "").strip()
+            registry = operations.registered_task_types()
+            if requested_type:
+                if requested_type not in registry:
+                    print(
+                        f"Error: '{requested_type}' is not a registered task type. "
+                        f"Registered types: {', '.join(sorted(registry))}."
+                    )
+                    return 1
+                task_type = requested_type
+            else:
+                task_type = "task.code"
+                print("Note: no --task-type given; defaulting to task.code.")
+            payload["task_type"] = task_type
+
+            type_model = registry[task_type]
+            type_evidence = list(getattr(type_model, "__closeout_evidence__", ()))
             try:
-                payload["closeout_evidence"] = resolve_new_task_evidence(payload, require=True)
+                declared = normalize_declared_evidence(payload.get("closeout_evidence"))
             except CloseoutEvidenceError as exc:
                 print(f"Error: {exc}")
                 return 1
+            if declared:
+                floor = [kind for kind in type_evidence if kind in CLOSEOUT_EVIDENCE_VOCABULARY]
+                missing = [kind for kind in floor if kind not in declared]
+                if missing:
+                    print(
+                        f"Error: --evidence removes closeout evidence the task type requires: "
+                        f"{', '.join(missing)}. The type's evidence is a floor; add those kinds or drop --evidence."
+                    )
+                    return 1
+                payload["closeout_evidence"] = order_evidence_kinds([*type_evidence, *declared])
+            else:
+                payload["closeout_evidence"] = []
+
             drawer_selector = getattr(args, "from_drawer", None)
             if not drawer_selector:
                 raw_drawer = payload.get("from_drawer")
@@ -157,7 +189,7 @@ class OperationsCLI:
             from deskops.lifecycle import LifecycleGraphMissing
 
             try:
-                task, result = operations.advance_task(args.task_id, target_node=getattr(args, "to", None))
+                task, result = operations.advance_task(args.task_id)
             except LifecycleGraphMissing as exc:
                 print(f"Error: {exc}", file=sys.stderr)
                 return 1

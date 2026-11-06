@@ -188,6 +188,102 @@ models:
   - source.document.markdown
   - type.documentation.faq
   - workspace.docs.faq
+- name: TaskCodeDoc
+  model_ref: deskops.models:TaskCodeDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskCodeDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: TaskDocsDoc
+  model_ref: deskops.models:TaskDocsDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskDocsDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: TaskDebugDoc
+  model_ref: deskops.models:TaskDebugDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskDebugDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: TaskRefactorDoc
+  model_ref: deskops.models:TaskRefactorDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskRefactorDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: TaskDecisionDoc
+  model_ref: deskops.models:TaskDecisionDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskDecisionDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: TaskAggregateDoc
+  model_ref: deskops.models:TaskAggregateDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskAggregateDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: TaskExternalDoc
+  model_ref: deskops.models:TaskExternalDoc
+  path: deskops/models/task_types.py
+  models_index: .sldb/core/models/TaskExternalDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.task
+  - workspace.desk
+- name: ReviewDoc
+  model_ref: deskops.models:ReviewDoc
+  path: deskops/models/review.py
+  models_index: .sldb/core/models/ReviewDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - representation.markdown
+  - source.document.markdown
+  - type.workflow.review
+  - workspace.desk.runs
 predicates:
 - name: has_model
   axis: WHAT
@@ -240,4 +336,4 @@ predicates:
   description: A composed field of the source (`__compositions__`) renders this document's
     payload into the source's text; the edge carries the composed field, the field
     holding the refs and the ref as authored.
-store_hash: 5e0b361d5a19764a4a6cd36859ac23a7cae0e796ccc92930e3fe5afed5ea0c02
+store_hash: 1cf708cbdf04cb3008c48f489610a85aeda297fc6bf7561543a20b0217ecce48

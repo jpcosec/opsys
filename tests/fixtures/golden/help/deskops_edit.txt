@@ -1,11 +1,11 @@
 usage: deskops edit [-h]
-                    {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
+                    {task,pill,ritual,board,atom,materialization,repository,review,inbox-note,faq-doc,step}
                     ...
 
 Update one field on a modeled desk artifact.
 
 positional arguments:
-  {task,pill,ritual,board,atom,materialization,repository,inbox-note,faq-doc,step}
+  {task,pill,ritual,board,atom,materialization,repository,review,inbox-note,faq-doc,step}
     task                Edit one task field.
     pill                Edit one pill field.
     ritual              Edit one ritual field.
@@ -13,6 +13,7 @@ positional arguments:
     atom                Edit one atom field.
     materialization     Edit one materialization field.
     repository          Edit one repository field.
+    review              Edit one review field.
     inbox-note          Edit one inbox-note field.
     faq-doc             Edit one faq-doc field.
     step                Edit one step field.

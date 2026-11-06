@@ -37,11 +37,11 @@ Without a subagent run, close the task manually and say why:
 
 Gate: for a task routed on desk/tasks/Board.md (as `deskops add task` leaves
 it) the command first runs the same check as `deskops closeout verify`. The
-task's closeout_evidence field (declared at `deskops add task` through
---task-type or --evidence) says which kinds the task must show: tests, commit,
-atom|materialization, document, external. Each kind is looked up in the task's
-references (and files, for documents); the result is printed as one line,
-"esta tarea declaró X; encontré Y" (declared X; found Y). If any declared kind
+task's type declares which kinds the task must show (its own non-empty
+closeout_evidence overrides it): tests, commit, atom|materialization, document,
+external. Each kind is looked up in the task's references (and files, for
+documents); the result is printed as one line,
+"esta tarea declaró X; encontró Y" (declared X; found Y). If any declared kind
 is missing the command stops and no commit is made. Alerts (ALERTA ...) are
 printed but do not block.
 

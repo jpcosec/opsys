@@ -9,7 +9,7 @@ setup:
   - git init -q
   - mkdir -p tests && printf 'def test_ok():\n    assert True\n' > tests/test_ok.py
   - deskops init . >/dev/null
-  - deskops add task --root . --title "Ship notes" --goal "Ship release notes" --scope "notes only" --task-type code >/dev/null
+  - deskops add task --root . --title "Ship notes" --goal "Ship release notes" --scope "notes only" --task-type task.code >/dev/null
   - deskops advance task task-ship-notes --root . >/dev/null
   - git add -A && git commit -qm "initial"
 reference:

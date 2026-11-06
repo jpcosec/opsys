@@ -1,0 +1,30 @@
+usage: deskops review [-h] {node,preflight,bundle,status,dispose} ...
+
+Run and dispose cold context reviews (node, preflight, bundle, status, dispose).
+
+positional arguments:
+  {node,preflight,bundle,status,dispose}
+    node                Review the nodes of a drawer dag.yaml (contract,
+                        neighbours, and gates).
+    preflight           Review a task from its TaskDoc alone (before
+                        dispatch).
+    bundle              Review a task with its full cold bundle (routed
+                        rituals, pills, atoms, files).
+    status              Compare current inputs with recorded reviews without
+                        calling the model.
+    dispose             Write the verdict on one pending review receipt.
+
+options:
+  -h, --help            show this help message and exit
+
+Examples:
+  deskops review preflight task-fix-thing --root .
+  deskops review bundle task-fix-thing --root .
+  deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .
+  deskops review status task-fix-thing --root .
+  deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+
+Every run writes ritual evidence under runs/subagents/<run>/context-review/<key>/<sha>/attempt-N/
+and a ReviewDoc receipt under desk/reviews/. `--engine` names a RuntimeProfileDoc under desk/runtimes/
+(default runtime-pi-deepseek-flash). An unchanged input is not reviewed again; `--max-attempts` (default 2)
+caps good attempts per key unless --force --reason.

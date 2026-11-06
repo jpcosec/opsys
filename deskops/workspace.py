@@ -1,11 +1,15 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import importlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 from typing import Literal
+
+import yaml
 
 from deskops.constants import CURRENT_DESK_FORMAT
 
@@ -173,7 +177,9 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
         "atoms",
         "roles",
         "inbox",
+        "reviews",
         "drawer",
+        "runtimes",
     ]
 
     desk_dir.mkdir(parents=True, exist_ok=True)
@@ -227,6 +233,11 @@ def scaffold_desk(target_path: Path) -> DeskScaffoldResult:
     _write_if_missing(
         desk_dir / "atoms" / "tag-namespaces.yaml",
         _atom_tag_namespaces_template(),
+        created_paths,
+    )
+    _write_if_missing(
+        desk_dir / "runtimes" / "runtime-pi-deepseek-flash.md",
+        _runtime_pi_deepseek_flash_template(),
         created_paths,
     )
 
@@ -449,6 +460,51 @@ def _atom_tag_namespaces_template() -> str:
 """
 
 
+def _runtime_pi_deepseek_flash_template() -> str:
+    """The default ``deskops review`` engine profile, seeded idempotently by init/update."""
+    from deskops.models import RuntimeProfileDoc
+    from deskops.services.review import SYSTEM
+    from sldb.runtime.validation import render_model_markdown
+
+    payload = {
+        "id": "runtime-pi-deepseek-flash",
+        "title": "Pi deepseek-flash isolated reviewer",
+        "status": "active",
+        "kind": "pi",
+        "binary": "pi",
+        "model_flag": "--model",
+        "fallback_models_flag": "",
+        "fallback_models_join": "comma",
+        "tools_flag": "",
+        "tools_join": "comma",
+        "system_prompt_flag": "--system-prompt",
+        "system_prompt_delivery": "inline",
+        "system_prompt": SYSTEM,
+        "session_flag": "",
+        "extra_args": [
+            "--provider",
+            "deepseek",
+            "--model",
+            "deepseek-flash",
+            "--thinking",
+            "low",
+            "--offline",
+            "--no-session",
+            "--no-context-files",
+            "--no-skills",
+            "--no-extensions",
+            "--no-prompt-templates",
+            "--no-tools",
+            "--print",
+        ],
+        "unsupported_role_fields": [],
+        "notes": "Verified cheap profile for ritual-context-review step 3 (D4): offline, no session/context/skills/extensions/prompt-templates/tools.",
+        "summary": "Isolated cheap reviewer profile (pi deepseek-flash) used by `deskops review`.",
+        "tags": ["system:deskops"],
+    }
+    return render_model_markdown(RuntimeProfileDoc, payload) + "\n"
+
+
 def desk_markdown_docs(desk_dir: Path) -> list[Path]:
     return sorted(path for path in desk_dir.rglob("*.md") if path.is_file())
 
@@ -604,3 +660,226 @@ def _dedupe(items: list[str]) -> list[str]:
         seen.add(item)
         ordered.append(item)
     return ordered
+
+
+# ---------------------------------------------------------------------------
+# Desk-local task type registration and legacy task_type migration (GC01).
+#
+# A desk adds its own task types as `desk/models/*.py` subclasses (DC7); `desk update
+# --apply` registers them with `sldb add_model` and `pythonpath` = the desk root. Legacy
+# `task_type` strings are then re-tracked under the model their canonical type names
+# (TaskDoc precisión 4).
+
+_FRONTMATTER_RE = re.compile(r"\A---\n(.*?)\n---\n", re.S)
+
+#: The legacy ``task_type`` values that map onto a known type (the same map the migration
+#: uses). Anything else is an unknown legacy value and migrates to ``task.code``.
+LEGACY_TASK_TYPE_KEYS = frozenset({"code", "implementation", "test", "docs", "spec", "design", "external", ""})
+
+
+def _task_frontmatter(path: Path) -> tuple[dict, str] | None:
+    text = path.read_text(encoding="utf-8")
+    match = _FRONTMATTER_RE.match(text)
+    if not match:
+        return None
+    data = yaml.safe_load(match.group(1)) or {}
+    return (data if isinstance(data, dict) else {}), text
+
+
+def _frontmatter_task_type(path: Path) -> str:
+    parsed = _task_frontmatter(path)
+    if parsed is None:
+        return ""
+    return str(parsed[0].get("task_type") or "").strip()
+
+
+def discover_local_task_type_models(desk_dir: Path) -> list[tuple[str, str]]:
+    """``(model_ref, class_name)`` for every ``TaskDoc`` subclass defined in ``desk/models/*.py``."""
+    from deskops.models import TaskDoc
+
+    models_dir = desk_dir / "models"
+    if not models_dir.is_dir():
+        return []
+    desk_root = str(desk_dir.resolve())
+    added = desk_root not in sys.path
+    if added:
+        sys.path.insert(0, desk_root)
+    found: list[tuple[str, str]] = []
+    try:
+        for path in sorted(models_dir.glob("*.py")):
+            if path.name.startswith("_"):
+                continue
+            module_name = f"models.{path.stem}"
+            try:
+                module = importlib.import_module(module_name)
+            except Exception:
+                continue
+            for name in dir(module):
+                obj = getattr(module, name, None)
+                if (
+                    isinstance(obj, type)
+                    and issubclass(obj, TaskDoc)
+                    and obj is not TaskDoc
+                    and getattr(obj, "__module__", "") == module.__name__
+                ):
+                    found.append((f"{module_name}:{name}", name))
+    finally:
+        if added:
+            sys.path.remove(desk_root)
+    return found
+
+
+def pending_local_task_type_models(root: Path) -> list[str]:
+    """Desk-local task type models that are not registered yet, as readable labels."""
+    store_dir = root / ".sldb"
+    if not store_dir.exists():
+        return []
+    try:
+        from deskops.bootstrap import SLDBBootstrap
+
+        registered = {name for name in SLDBBootstrap()._registered_model_entries(store_dir)}
+    except Exception:
+        registered = set()
+    return [
+        f"{module_ref} ({class_name})"
+        for module_ref, class_name in discover_local_task_type_models(root / "desk")
+        if class_name not in registered
+    ]
+
+
+def register_local_task_type_models(root: Path) -> list[str]:
+    """Register unregistered desk-local task types; one change line per registration."""
+    from deskops import doc_io
+    from deskops.bootstrap import SLDBBootstrap
+
+    store_dir = root / ".sldb"
+    if not store_dir.exists():
+        return []
+    registered = {name for name in SLDBBootstrap()._registered_model_entries(store_dir)}
+    pythonpath = str((root / "desk").resolve())
+    changes: list[str] = []
+    for module_ref, class_name in discover_local_task_type_models(root / "desk"):
+        if class_name in registered:
+            continue
+        try:
+            doc_io.register_model(root, module_ref, pythonpath=pythonpath)
+        except Exception as exc:
+            raise RuntimeError(f"could not register desk-local task type {class_name}: {exc}") from exc
+        changes.append(f"registered {class_name} from {module_ref}")
+    return changes
+
+
+def _task_type_migration_plan(root: Path) -> list[dict]:
+    """Per-task migration plan for ``desk/tasks``, including the canonical type and target model."""
+    from deskops.models.task_types import LEGACY_TASK_TYPE_MAP
+    from deskops.models.task_types import canonical_task_type_name
+    from deskops.operations import DeskopsOperations
+
+    tasks_dir = root / "desk" / "tasks"
+    if not tasks_dir.is_dir():
+        return []
+    operations = DeskopsOperations(root)
+    registry = operations.registered_task_types()
+    fallback = registry.get("task.code")
+    plan: list[dict] = []
+    for path in sorted(tasks_dir.glob("*.md")):
+        if path.name == "Board.md" or path.name.startswith("board-"):
+            continue
+        raw = _frontmatter_task_type(path)
+        canonical = raw if raw in registry else canonical_task_type_name(raw)
+        target = registry.get(canonical) or fallback
+        plan.append(
+            {
+                "path": path,
+                "raw": raw,
+                "canonical": canonical,
+                "target_cls": target,
+                "target_name": target.__name__ if target is not None else "TaskDoc",
+                "unknown": bool(raw) and raw not in registry and raw not in LEGACY_TASK_TYPE_MAP,
+            }
+        )
+    return plan
+
+
+def pending_task_type_migration(root: Path) -> list[str]:
+    """The change lines ``migrate_task_types`` would apply, so the dry run can list them."""
+    from sldb.api.stores.doc_status import doc_status
+
+    store_dir = root / ".sldb"
+    lines: list[str] = []
+    for item in _task_type_migration_plan(root):
+        path = item["path"]
+        rel = path.relative_to(root).as_posix()
+        tracked_model = None
+        if store_dir.exists():
+            status = doc_status(store_dir, rel)
+            if status.exists:
+                tracked_model = status.model
+        needs_rewrite = item["raw"] != item["canonical"]
+        needs_retrack = store_dir.exists() and tracked_model != item["target_name"]
+        if not needs_rewrite and not needs_retrack:
+            continue
+        lines.append(_task_type_migration_line(item, rel))
+    return lines
+
+
+def _task_type_migration_line(item: dict, rel: str) -> str:
+    if item["unknown"]:
+        return (
+            f"unknown legacy task_type {item['raw']!r} in {rel}: migrated to {item['canonical']} "
+            f"(tracked as {item['target_name']})"
+        )
+    return (
+        f"migrated {rel}: task_type {item['raw']!r} -> {item['canonical']!r} "
+        f"(tracked as {item['target_name']})"
+    )
+
+
+def _rewrite_task_type(path: Path, canonical: str) -> None:
+    parsed = _task_frontmatter(path)
+    if parsed is None:
+        return
+    data, text = parsed
+    data["task_type"] = canonical
+    body = text[_FRONTMATTER_RE.match(text).end():]
+    path.write_text(
+        "---\n" + yaml.safe_dump(data, sort_keys=False, allow_unicode=True) + "---\n" + body,
+        encoding="utf-8",
+    )
+
+
+def migrate_task_types(root: Path) -> list[str]:
+    """Rewrite legacy ``task_type`` values and re-track each task under its type's model.
+
+    Idempotent: a second run changes nothing. ``closeout_evidence`` is preserved because the
+    frontmatter rewrite only touches ``task_type``.
+    """
+    from deskops import doc_io
+    from sldb.api.stores.doc_status import doc_status
+
+    store_dir = root / ".sldb"
+    pythonpath = str((root / "desk").resolve())
+    changes: list[str] = []
+    for item in _task_type_migration_plan(root):
+        path = item["path"]
+        rel = path.relative_to(root).as_posix()
+        tracked_model = None
+        if store_dir.exists():
+            status = doc_status(store_dir, rel)
+            if status.exists:
+                tracked_model = status.model
+        needs_rewrite = item["raw"] != item["canonical"]
+        needs_retrack = store_dir.exists() and tracked_model != item["target_name"]
+        if not needs_rewrite and not needs_retrack:
+            continue
+        if needs_rewrite:
+            _rewrite_task_type(path, item["canonical"])
+        if store_dir.exists() and item["target_cls"] is not None:
+            if tracked_model is not None:
+                try:
+                    doc_io.untrack(root, path)
+                except Exception:
+                    pass
+            doc_io.track(root, path, item["target_cls"], name=path.stem, pythonpath=pythonpath, force=True)
+        changes.append(_task_type_migration_line(item, rel))
+    return changes

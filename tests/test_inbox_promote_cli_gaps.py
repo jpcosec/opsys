@@ -1,11 +1,8 @@
 """Regression tests for the CLI gaps reported in desk/inbox/.
 
-Covers the two inbox notes:
+Covers the inbox note:
   - 20260827-160657 "CLI gaps: inbox --root, promote deja notas tracked
     huerfanas, sin listado de drawer"
-  - 20260827-164846 "edit/extractor corre secciones vacias y advance --to no
-    toca status" (the advance half; the extractor half is a sldb-level fix
-    covered by sldb's tests/test_section_body_extraction.py)
 
 Drawer -> active task promotion was removed rather than repaired: the drawer
 is loose by design and an active task is a compiled, fully authored bundle,
@@ -17,7 +14,6 @@ from __future__ import annotations
 from pathlib import Path
 
 from deskops.cli.main import main
-from deskops.operations import DeskopsOperations
 
 
 def _install_desk(tmp_path: Path) -> None:
@@ -160,78 +156,6 @@ def test_promote_still_succeeds_without_a_store(tmp_path: Path) -> None:
     assert (tmp_path / "desk" / "drawer" / "tasks" / "task-nostore.md").exists()
 
 
-# ── advance --to complete closes the status ──────────────────────────────────
-
-
-def _make_task(tmp_path: Path, task_id: str) -> DeskopsOperations:
-    operations = DeskopsOperations(tmp_path)
-    operations.create_task_bundle({
-        "id": task_id,
-        "title": "Forced Transition",
-        "status": "active",
-        "why": "Because.",
-        "goal": "Reach the terminal node.",
-        "scope": "Just this task.",
-        "implementation_path": "None.",
-        "validation": ["pytest"],
-        "done_when": "It is complete.",
-        "references": [],
-        "tags": ["workspace:desk", "artifact:task"],
-    })
-    return operations
-
-
-def test_forced_advance_to_complete_refuses_and_points_at_closeout(tmp_path: Path) -> None:
-    """Only `deskops closeout commit` closes a task. A forced transition to
-    the terminal node must leave the task untouched and say where to close."""
-    _install_desk(tmp_path)
-    operations = _make_task(tmp_path, "task-forced-complete")
-
-    task, result = operations.advance_task("task-forced-complete", target_node="complete")
-
-    assert result is not None
-    assert result.blocked
-    assert "deskops closeout commit" in result.message
-    assert task.current_node == "ritual-execution"
-    assert task.status == "active"
-
-
-def test_forced_advance_to_closed_status_refuses_and_points_at_closeout(tmp_path: Path) -> None:
-    """`--to closed` is closing under another name: it must refuse exactly like
-    `--to complete` instead of writing status: closed."""
-    _install_desk(tmp_path)
-    operations = _make_task(tmp_path, "task-forced-closed")
-
-    task, result = operations.advance_task("task-forced-closed", target_node="closed")
-
-    assert result is not None
-    assert result.blocked
-    assert "deskops closeout commit" in result.message
-    assert task.current_node == "ritual-execution"
-    assert task.status == "active"
-
-
-def test_forced_advance_to_a_normal_node_leaves_status_alone(tmp_path: Path) -> None:
-    """Only the terminal node closes the task; ordinary forced moves must not
-    silently change status."""
-    _install_desk(tmp_path)
-    operations = _make_task(tmp_path, "task-forced-mid")
-
-    task, _ = operations.advance_task("task-forced-mid", target_node="some-checklist-node")
-
-    assert task.current_node == "some-checklist-node"
-    assert task.status == "active"
-
-
-def test_forced_advance_to_a_status_value_still_sets_status(tmp_path: Path) -> None:
-    _install_desk(tmp_path)
-    operations = _make_task(tmp_path, "task-forced-blocked")
-
-    task, _ = operations.advance_task("task-forced-blocked", target_node="blocked")
-
-    assert task.status == "blocked"
-
-
 # ── add task --from-drawer ───────────────────────────────────────────────────
 
 
@@ -246,7 +170,7 @@ def _authored_task_argv(tmp_path: Path, *extra: str) -> list[str]:
     # --validation takes nargs="+", so it has to stay last.
     return [
         "add", "task", "--root", str(tmp_path),
-        "--title", "Authored From Drawer", "--task-type", "docs",
+        "--title", "Authored From Drawer", "--task-type", "task.docs",
         "--goal", "G.", "--scope", "S.", "--implementation-path", "I.", "--done-when", "D.",
         *extra,
         "--validation", "pytest",

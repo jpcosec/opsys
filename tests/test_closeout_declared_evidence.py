@@ -241,18 +241,18 @@ def _declared(root: Path, task_id: str) -> list[str]:
     return yaml.safe_load(frontmatter).get("closeout_evidence") or []
 
 
-def test_add_task_without_evidence_nor_task_type_fails_and_explains(desk_repo: Path) -> None:
+def test_add_task_without_evidence_nor_task_type_defaults_to_code(desk_repo: Path) -> None:
     result = _cli(desk_repo, "add", "task", "--title", "Undeclared")
-    assert result.returncode == 1
-    assert "--evidence" in result.stdout and "--task-type" in result.stdout
-    assert "tests, commit, atom, materialization, document, external" in result.stdout
-    assert not (desk_repo / "desk" / "tasks" / "task-undeclared.md").exists()
+    assert result.returncode == 0
+    assert "defaulting to task.code" in result.stdout
+    assert _declared(desk_repo, "task-undeclared") == []
 
 
-def test_add_task_with_an_unknown_task_type_and_no_evidence_fails(desk_repo: Path) -> None:
+def test_add_task_with_an_unknown_task_type_fails_listing_types(desk_repo: Path) -> None:
     result = _cli(desk_repo, "add", "task", "--title", "Odd", "--task-type", "reflection")
     assert result.returncode == 1
-    assert "reflection" in result.stdout and "--evidence" in result.stdout
+    assert "'reflection' is not a registered task type" in result.stdout
+    assert "task.code" in result.stdout
 
 
 def test_add_task_rejects_evidence_outside_the_vocabulary(desk_repo: Path) -> None:
@@ -262,30 +262,30 @@ def test_add_task_rejects_evidence_outside_the_vocabulary(desk_repo: Path) -> No
 
 
 @pytest.mark.parametrize(
-    "task_type,expected",
+    "task_type,slug",
     [
-        ("code", ["tests", "commit", "atom", "materialization"]),
-        ("docs", ["commit", "document"]),
-        ("spec", ["commit", "document"]),
-        ("design", ["commit", "document"]),
-        ("external", ["external"]),
+        ("task.code", "task-typed-task-code"),
+        ("task.docs", "task-typed-task-docs"),
+        ("task.external", "task-typed-task-external"),
     ],
 )
-def test_add_task_fills_evidence_from_task_type(desk_repo: Path, task_type: str, expected: list[str]) -> None:
+def test_add_task_type_leaves_closeout_evidence_to_the_type(desk_repo: Path, task_type: str, slug: str) -> None:
     result = _cli(desk_repo, "add", "task", "--title", f"Typed {task_type}", "--task-type", task_type)
     assert result.returncode == 0, result.stdout + result.stderr
-    assert _declared(desk_repo, f"task-typed-{task_type}") == expected
+    assert _declared(desk_repo, slug) == []
 
 
-def test_explicit_evidence_wins_over_task_type(desk_repo: Path) -> None:
-    result = _cli(desk_repo, "add", "task", "--title", "Explicit", "--task-type", "code", "--evidence", "commit", "document")
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert _declared(desk_repo, "task-explicit") == ["commit", "document"]
-    shown = _cli(desk_repo, "show", "task", "task-explicit")
-    assert "Closeout evidence: commit, document" in shown.stdout
+def test_evidence_can_only_add_to_the_type_floor(desk_repo: Path) -> None:
+    result = _cli(desk_repo, "add", "task", "--title", "Explicit", "--task-type", "task.code", "--evidence", "commit", "document")
+    assert result.returncode == 1
+    assert "--evidence removes closeout evidence the task type requires" in result.stdout
+
+    added = _cli(desk_repo, "add", "task", "--title", "Added", "--task-type", "task.code", "--evidence", "tests", "commit", "atom", "materialization", "document")
+    assert added.returncode == 0, added.stdout + added.stderr
+    assert _declared(desk_repo, "task-added") == ["tests", "commit", "atom", "materialization", "document"]
 
 
-def test_add_task_with_evidence_alone_is_enough(desk_repo: Path) -> None:
+def test_evidence_alone_defaults_to_code_floor(desk_repo: Path) -> None:
     result = _cli(desk_repo, "add", "task", "--title", "Only evidence", "--evidence", "external")
-    assert result.returncode == 0, result.stdout + result.stderr
-    assert _declared(desk_repo, "task-only-evidence") == ["external"]
+    assert result.returncode == 1
+    assert "--evidence removes closeout evidence the task type requires" in result.stdout

@@ -1,0 +1,32 @@
+usage: deskops review node [-h] [--root ROOT] [--engine ENGINE]
+                           [--max-attempts MAX_ATTEMPTS] [--force]
+                           [--reason REASON] [--timeout TIMEOUT] [--run RUN]
+                           [--format {text,json,yaml}]
+                           plan_dir [ids ...]
+
+Review the nodes of a drawer dag.yaml (contract, neighbours, and gates).
+
+positional arguments:
+  plan_dir              Plan directory that contains dag.yaml (relative to
+                        --root or absolute).
+  ids                   Node ids to review; defaults to every node in the dag.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --engine ENGINE       RuntimeProfileDoc id under desk/runtimes (default
+                        runtime-pi-deepseek-flash).
+  --max-attempts MAX_ATTEMPTS
+                        Maximum good attempts per key (default 2).
+  --force               Re-review even when the cap is reached; requires
+                        --reason.
+  --reason REASON       Why this forced re-review runs; recorded in
+                        manifest.json and the ReviewDoc.
+  --timeout TIMEOUT     Model call timeout in seconds (default 900).
+  --run RUN             Run directory name under runs/subagents/ (default a
+                        timestamp).
+  --format {text,json,yaml}
+                        Output format.
+
+Example:
+  deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .

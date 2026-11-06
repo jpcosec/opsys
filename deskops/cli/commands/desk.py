@@ -10,7 +10,11 @@ from deskops import doc_io
 from deskops.workspace import ensure_target_directory
 from deskops.workspace import inspect_desk
 from deskops.workspace import migrate_desk
+from deskops.workspace import migrate_task_types
 from deskops.workspace import modeled_desk_markdown_docs
+from deskops.workspace import pending_local_task_type_models
+from deskops.workspace import pending_task_type_migration
+from deskops.workspace import register_local_task_type_models
 from deskops.workspace import scaffold_desk
 from deskops.bootstrap import SLDBBootstrap, MODEL_REFS
 from deskops.errors import DeskopsEnvironmentError
@@ -127,6 +131,16 @@ def guess_model_for_path(desk_dir: Path, path: Path) -> type | None:
     if len(parts) == 2 and parts[0] == "lifecycle":
         return None  # written and tracked by deskops.lifecycle.ensure_lifecycle_graph
     return None
+
+
+def _is_task_file(desk_dir: Path, path: Path) -> bool:
+    """Whether a modeled markdown path is a task document (migration owns its tracking)."""
+    try:
+        rel = path.resolve().relative_to((desk_dir / "tasks").resolve())
+    except ValueError:
+        return False
+    return rel.parts and len(rel.parts) == 1 and rel.name.startswith("task-")
+
 
 class DeskCLI:
     """Handle desk workspace scaffolding and rituals."""
@@ -251,8 +265,12 @@ class DeskCLI:
                 missing_desk_files.append("desk/tasks/Board.md")
             if not (desk_dir / "drawer").exists():
                 missing_desk_files.append("desk/drawer/")
+            if not (desk_dir / "reviews").exists():
+                missing_desk_files.append("desk/reviews/")
             if not (desk_dir / "rituals" / "phase.md").exists():
                 missing_desk_files.append("desk/rituals/phase.md")
+            if not (desk_dir / "runtimes" / "runtime-pi-deepseek-flash.md").exists():
+                missing_desk_files.append("desk/runtimes/runtime-pi-deepseek-flash.md")
 
         bootstrap = SLDBBootstrap()
         registered_entries: dict[str, Any] = {}
@@ -382,10 +400,14 @@ class DeskCLI:
                 path.resolve()
                 for path in modeled_desk_markdown_docs(root, desk_dir)
                 if path.name not in ignored_modeled_names
+                and not _is_task_file(desk_dir, path)
             }
             untracked_docs = [p for p in modeled_mds if p not in tracked_mds]
 
-        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts:
+        pending_local_types = pending_local_task_type_models(root)
+        pending_migration = pending_task_type_migration(root)
+
+        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration:
             print("Desk is up to date.")
             return 0
 
@@ -415,6 +437,10 @@ class DeskCLI:
         if untracked_docs:
             rel_untracked = [str(p.relative_to(root)) for p in untracked_docs]
             print(f"- Untracked desk documents: {', '.join(rel_untracked)}")
+        if pending_local_types:
+            print(f"- Unregistered desk-local task types: {', '.join(pending_local_types)}")
+        if pending_migration:
+            print(f"- Pending task type migration: {len(pending_migration)} task(s)")
         if invalid_docs:
             print(f"- Stale document hashes: {', '.join(invalid_docs)}")
 
@@ -431,6 +457,15 @@ class DeskCLI:
         if unregistered_models or copied_models:
             bootstrap.init_local_store(root)
             print("Registered missing models and converted copied deskops models.")
+
+        try:
+            for change in register_local_task_type_models(root):
+                print(f"- {change}")
+        except Exception as exc:
+            print(f"Error: {exc}")
+            return 1
+        for change in migrate_task_types(root):
+            print(f"- {change}")
 
         if untracked_docs:
             pythonpath = package_pythonpath()

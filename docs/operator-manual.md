@@ -229,7 +229,7 @@ Required and commonly used flags per subject:
 
 | Subject | Required flags | Common extras |
 |---|---|---|
-| `task` | `--title`, and `--task-type` or `--evidence` | `--why`, `--goal`, `--scope`, `--implementation-path`, `--done-when`, `--validation`, `--from-drawer`, `--depends-on`, `--evidence`, `--inherits-from`, `--atom`, `--inherit-acceptance-context` |
+| `task` | `--title` | `--why`, `--goal`, `--scope`, `--task-type` (default `task.code`), `--implementation-path`, `--done-when`, `--validation`, `--from-drawer`, `--depends-on`, `--evidence` (adds kinds only), `--inherits-from`, `--atom`, `--inherit-acceptance-context` |
 | `pill` | `--what`, `--why`, `--when`, `--where`, `--how`, `--how-not` | `--summary`, `--tags` |
 | `ritual` | `--purpose`, `--trigger`, `--completion` | `--preconditions`, `--steps`, `--validation`, `--failure-modes`, `--tags` |
 | `board` | `--scope`, `--purpose` | `--tasks`, `--pills`, `--rituals`, `--notes`, `--tags` |
@@ -247,10 +247,9 @@ flag.
 
 `--from-yaml <file>` loads the payload from YAML for every `add` subject.
 
-`--evidence <kind>...` declares the closeout evidence a task must show
-(`tests`, `commit`, `atom`, `materialization`, `document`, `external`). When it
-is omitted the list is filled from `--task-type`; with neither flag `add task`
-fails and says how to declare it. See Closeout.
+`--evidence <kind>...` adds closeout evidence kinds to the type's (`tests`,
+`commit`, `atom`, `materialization`, `document`, `external`); it cannot remove
+one the type requires. Without `--task-type` the type is `task.code`. See Closeout.
 
 ### List artifacts
 
@@ -389,13 +388,13 @@ deskops retire desk/steps/step-manual-step.md --root . \
 
 There is no direct drawer-to-active promotion. A person or agent authors the
 active task explicitly and records the drawer file with `--from-drawer`. The
-drawer file is kept for manual cleanup. Like every task it declares its closeout
-evidence: `--task-type docs` fills `commit` and `document`.
+drawer file is kept for manual cleanup. Like every task, its type declares its
+closeout evidence: `--task-type task.docs` declares `commit` and `document`.
 
 ```bash runnable
 deskops add task --root . \
   --title "Close a manual task" \
-  --task-type docs \
+  --task-type task.docs \
   --why "Why." \
   --goal "Goal." \
   --scope "Scope." \
@@ -434,16 +433,15 @@ The two advances move the task from `draft` to `active` and then
 task. When no outgoing transition condition holds, it exits non-zero and names
 the blocked gate.
 
-`--to <node>` is a manual override for operators who need to set an explicit
-target node or status. It skips the lifecycle gates but never closes:
-`--to complete` and `--to closed` are refused and point at `deskops closeout commit`.
+There is no manual override: a transition fires only when its condition
+holds, and a blocked task stays where it is while `advance` names the gate.
+Closing is `deskops closeout commit` for work that was done, `closeout
+supersede` when the task's subject no longer exists, and `closeout retire` for
+a task resolved before the ritual lifecycle.
 
 ## Closeout
 
-A task declares at creation the evidence that closes it, in `closeout_evidence`:
-`deskops add task --evidence <kind>...`, or filled from `--task-type` (`code`,
-`implementation`, `test`: tests, commit, atom|materialization; `docs`, `spec`,
-`design`: commit, document; `external`: external). `deskops closeout verify`
+A task's type declares the evidence that closes it (`task.code`: tests + commit + atom|materialization; `task.docs` and `task.decision`: commit + document; `task.external`: external; `task.aggregate`: children + commit; `task.refactor`: task.code's evidence plus goldens). `--evidence` only adds kinds to the type's, never removes one. `deskops closeout verify`
 checks exactly that set for a board-routed task, nothing more and nothing less,
 and prints `esta tarea declaró X; encontré Y` (declared X; found Y):
 
@@ -466,8 +464,8 @@ Verify before adding evidence. It exits `1` and prints the missing gates:
 deskops closeout verify --root . --task task-close-a-manual-task
 ```
 
-The manual task was authored with `--task-type docs`, so it declared `commit`
-and `document`: the gate asks for no test file. The example still writes
+The manual task was authored with `--task-type task.docs`, so its type declares
+`commit` and `document`: the gate asks for no test file. The example still writes
 `tests/test_manual_smoke.py` because the task's `--validation` names it, and
 the `pytest ...` reference is extra context the gate does not read. The atom
 file is the document evidence. The commit reference must already exist, so use
@@ -534,7 +532,7 @@ exactly one closing commit with `Closeout-Mode: superseded` or
 ```bash runnable
 deskops add task --root . \
   --title "Superseded manual task" \
-  --task-type docs \
+  --task-type task.docs \
   --goal "Goal." --scope "Scope." --validation "pytest"
 deskops closeout supersede --root . \
   --task task-superseded-manual-task \
@@ -845,6 +843,35 @@ directory instead of a new `runs/subagents/<ts>-<task>`.
 `runtime supervise` never answers a blocked agent's prompt and never advances a
 task on a done settle. A human or supervisor decides what happens next.
 
+## Cold context reviews
+
+`deskops review` runs the cheap isolated reviewer from
+`desk/rituals/context-review.md` and writes the receipts (`ReviewDoc`) under
+`desk/reviews/`. The default engine is the `runtime-pi-deepseek-flash` profile
+seeded under `desk/runtimes/` by `deskops init` and `deskops desk update --apply`;
+`--engine` picks any other `RuntimeProfileDoc` under `desk/runtimes/`. Every run
+also writes ritual evidence under
+`runs/subagents/<run>/context-review/<key>/<sha>/attempt-N/`.
+
+The reviewer is an external model process, so these examples are illustrative
+only; they are not part of the runnable walkthrough.
+
+```bash
+deskops review preflight task-fix-thing --root .
+deskops review bundle task-fix-thing --root .
+deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .
+deskops review status task-fix-thing --root .
+deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+```
+
+An unchanged input is not reviewed again: `status` reports it as `reviewed`, and
+a second run does not call the model. `--max-attempts` (default 2) caps the good
+attempts per key; `--force --reason` is the only way to re-review a key whose
+input already has a good attempt. A transport failure (non-zero exit, timeout,
+or output without `REFORMULACION`) is recorded with `technical_ok: false` and a
+`verdict: incomplete` / `reason: technical` receipt, kept separate from
+comprehension findings.
+
 ## Verb coverage
 
 This table maps every CLI verb to the section that documents it.
@@ -879,3 +906,4 @@ This table maps every CLI verb to the section that documents it.
 | `closeout verify/commit` | Closeout |
 | `closeout supersede/retire` | Supersede or retire a task |
 | `runtime init/status/attach/stop/workers/supervise/template` | Runtime and Herdr |
+| `review node/preflight/bundle/status/dispose` | Cold context reviews |

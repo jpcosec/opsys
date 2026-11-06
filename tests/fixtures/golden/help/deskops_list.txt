@@ -1,11 +1,11 @@
 usage: deskops list [-h]
-                    {tasks,pills,rituals,boards,atoms,materializations,repositories,inbox-notes,faq-docs,steps}
+                    {tasks,pills,rituals,boards,atoms,materializations,repositories,reviews,inbox-notes,faq-docs,steps}
                     ...
 
 List desk workflow artifacts.
 
 positional arguments:
-  {tasks,pills,rituals,boards,atoms,materializations,repositories,inbox-notes,faq-docs,steps}
+  {tasks,pills,rituals,boards,atoms,materializations,repositories,reviews,inbox-notes,faq-docs,steps}
     tasks               List actionable tasks.
     pills               List pills.
     rituals             List rituals.
@@ -13,6 +13,7 @@ positional arguments:
     atoms               List atoms.
     materializations    List materializations.
     repositories        List repositories.
+    reviews             List reviews.
     inbox-notes         List inbox-notes.
     faq-docs            List faq-docs.
     steps               List steps.

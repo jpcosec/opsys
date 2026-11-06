@@ -168,10 +168,10 @@ Recommended first-use flow:
 ```bash
 deskops bootstrap
 deskops init .
-deskops add task --title "First task" --task-type docs --goal "..." --scope "..." --validation "..."
+deskops add task --title "First task" --task-type task.docs --goal "..." --scope "..." --validation "..."
 ```
 
-`deskops add task` requires `--task-type` or `--evidence`: the task declares at creation the evidence `deskops closeout` will verify (`docs/quickstart.md` walks through it).
+`deskops add task --task-type` names the type (default `task.code`): the task's type declares the evidence `deskops closeout` will verify (`docs/quickstart.md` walks through it).
 
 `deskops bootstrap` will:
 

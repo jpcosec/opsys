@@ -10,11 +10,11 @@ options:
 Example:
   deskops closeout verify --root . --task task-fix-thing
 
-The gate checks exactly the kinds listed in the task's closeout_evidence field
-(declared at `deskops add task` through --task-type or --evidence): tests,
-commit, atom|materialization, document, external. Each kind is looked up in
-the task's references (and files, for documents). A task without the field
-predates it and is gated as code, with an alert.
+The gate checks exactly the kinds the task's type declares (its own non-empty
+closeout_evidence overrides it): tests, commit, atom|materialization, document,
+external. Each kind is looked up in the task's references (and files, for
+documents). A task with no type and no field predates the types and is gated as
+code, with an alert.
 
 Output: stdout carries a JSON report (declared, found, per-gate findings,
 alerts, ok, summary); stderr carries the one-line summary "esta tarea declaró

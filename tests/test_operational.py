@@ -163,7 +163,7 @@ def _seed_task(root: Path, task_id: str, title: str) -> None:
         "implementation_path": "i",
         "done_when": "d",
         "validation": ["pytest"],
-        "task_type": "code",
+        "task_type": "task.code",
     }
     _cli(root, "add", "task", "--root", str(root), json.dumps(payload))
 

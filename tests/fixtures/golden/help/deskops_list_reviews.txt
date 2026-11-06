@@ -1,0 +1,8 @@
+usage: deskops list reviews [-h] [--root ROOT] [--format {text,json}]
+
+List reviews.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --format {text,json}  Output format.

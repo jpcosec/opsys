@@ -1,4 +1,4 @@
-usage: deskops advance task [-h] [--to TO] [--root ROOT] task_id
+usage: deskops advance task [-h] [--root ROOT] task_id
 
 Advance one actionable task through the desk's lifecycle graph.
 
@@ -8,10 +8,6 @@ positional arguments:
 
 options:
   -h, --help   show this help message and exit
-  --to TO      Force the task to this node or status, skipping the lifecycle
-               gates (no transition condition is evaluated). Closing is still
-               refused, both `complete` and `closed`: only `deskops closeout
-               commit` completes a task.
   --root ROOT  Target repository root.
 
 Example:

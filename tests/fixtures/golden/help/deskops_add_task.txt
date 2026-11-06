@@ -41,19 +41,16 @@ options:
                         Task identifiers that must complete first; repeat or
                         space-separate as needed.
   --task-type TASK_TYPE
-                        Workflow task type; it fills --evidence when that is
-                        omitted. Valid: code, implementation, test
-                        (tests+commit+atom|materialization); docs, spec,
-                        design (commit+document); external (external). Any
-                        other type needs an explicit --evidence.
+                        Workflow task type; one of the registered types
+                        (task.code, task.docs, task.debug, task.refactor,
+                        task.decision, task.aggregate, task.external, plus any
+                        desk-local type registered from desk/models/*.py).
+                        Defaults to task.code.
   --evidence EVIDENCE [EVIDENCE ...]
-                        Closeout evidence this task must show, declared now:
-                        tests, commit, atom, materialization, document,
-                        external. Omitted, it is filled from --task-type
-                        (code: tests+commit+atom|materialization;
-                        docs|spec|design: commit+document; external:
-                        external). Without --evidence or --task-type the
-                        command fails.
+                        Closeout evidence kinds: tests, commit, atom,
+                        materialization, document, external. The task type
+                        declares its own evidence as a floor; --evidence may
+                        only add kinds, never remove one the type requires.
   --inherits-from INHERITS_FROM [INHERITS_FROM ...]
                         Task identifiers that provide inherited workflow
                         context; repeat or space-separate as needed.
@@ -65,8 +62,8 @@ options:
                         listed in --inherits-from.
 
 Examples:
-  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type code
-  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --validation "review" --evidence commit document
+  deskops add task --root . --title "Fix thing" --goal "..." --scope "..." --validation "pytest" --task-type task.code
+  deskops add task --root . --title "Document the API" --goal "..." --scope "..." --task-type task.docs
 
-The task declares at creation how it closes: --task-type fills --evidence, or
---evidence lists the kinds explicitly. One of the two is required.
+The task type declares how the task closes; --evidence only adds kinds to the type's
+floor. Without --task-type the type is task.code.

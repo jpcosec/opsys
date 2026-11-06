@@ -104,13 +104,13 @@ deskops --help
 deskops faq
 deskops bootstrap
 deskops init .
-deskops add task --root . --title "..." --task-type code --goal "..." --scope "..."
+deskops add task --root . --title "..." --task-type task.code --goal "..." --scope "..."
 deskops add atom --root . --title "..." --answer "..." --five-wh-one-plus what
 deskops list tasks --root .
 deskops list atoms --root .
 deskops show task <task-id> --root .
 deskops show atom <atom-id> --root .
-deskops add task --root . --from-drawer <drawer-selector> --task-type docs --title <title> --goal <goal> --scope <scope> --validation <check>
+deskops add task --root . --from-drawer <drawer-selector> --task-type task.docs --title <title> --goal <goal> --scope <scope> --validation <check>
 deskops bind pill <task-id> <pill-selector> --root .
 deskops advance task <task-id> --root .
 deskops closeout commit --task <task-id> --run-dir runs/subagents/<run-dir> --root .
