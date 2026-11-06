@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import pytest
+from pydantic import ValidationError
 
 from deskops.models import TaskDoc
 from deskops.models.task_types import TASK_TYPE_MODELS
@@ -70,8 +71,9 @@ def test_task_spec_compiler_is_the_one_task_normalization() -> None:
     """What `_normalize_task_payload` used to do now happens in the compiler."""
     with pytest.raises(KeyError, match="must include 'title'"):
         compile_task_spec({"goal": "no title"}, entry_node="ritual-execution")
-    with pytest.raises(ValueError, match="cannot be empty"):
-        compile_task_spec({"title": "   "}, entry_node="ritual-execution")
+    # A blank title is the model's refusal (TaskDoc.title), not the compiler's.
+    with pytest.raises(ValidationError, match="Task title cannot be empty"):
+        TaskDoc(**compile_task_spec({"title": "   "}, entry_node="ritual-execution").task_payload)
 
     compiled = compile_task_spec(
         {

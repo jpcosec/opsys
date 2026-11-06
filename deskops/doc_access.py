@@ -44,6 +44,7 @@ from deskops.models import ReviewDoc
 from deskops.models import RitualDoc
 from deskops.models import StepDoc
 from deskops.models import TaskDoc
+from deskops.models.validation import validated
 from deskops.runtime import Task
 from deskops.specs import compile_artifact_spec
 from deskops.specs import compile_task_spec
@@ -572,6 +573,7 @@ def create_artifact(root: Path, artifact_id: str, raw_payload: dict[str, Any]) -
     ensure_workspace(root)
     model = ARTIFACT_MODELS[artifact_id]
     compiled = compile_artifact_spec(artifact_id, raw_payload, model_fields=model.model_fields.keys())
+    validated(model, compiled.artifact_payload)
     doc_id = compiled.artifact_payload["id"]
     if artifact_id == "artifact.atom":
         tags = list(compiled.artifact_payload.get("tags") or [])

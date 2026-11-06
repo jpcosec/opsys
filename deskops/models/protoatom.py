@@ -1,10 +1,15 @@
 """A free atom: a knowledge unit captured before it has a fixed type."""
 from __future__ import annotations
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from sldb import StructuredNLDoc
 
 from .atom import AtomTag
+from .atom import check_atom_tags
+from .atom import check_slug_id
+from .atom import domain_paths
+
+PROTO_PREFIX = "proto-"
 
 
 class ProtoAtomDoc(StructuredNLDoc):
@@ -46,3 +51,20 @@ provenance: ⸢optrev•provenance⸥
         description="Model:id of the document this protoatom was typed into; when set, the protoatom is a redirect stub.",
     )
     provenance: str | None = Field(default=None, description="Optional URL or path to the source of this knowledge.")
+
+    @field_validator("id", mode="before")
+    @classmethod
+    def _id_follows_the_slug_convention(cls, value: object) -> object:
+        return check_slug_id(value, PROTO_PREFIX, "Protoatom")
+
+    @field_validator("tags", mode="before")
+    @classmethod
+    def _tags_are_namespaced(cls, tags: object) -> object:
+        return check_atom_tags(tags)
+
+    @field_validator("tags")
+    @classmethod
+    def _hangs_from_one_place(cls, tags: list[str]) -> list[str]:
+        if len(domain_paths(tags)) > 1:
+            raise ValueError("A protoatom hangs from one place in the domain tree: use a single domain:<path> tag.")
+        return tags

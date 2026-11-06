@@ -16,13 +16,16 @@ from urllib.parse import urlparse
 
 from deskops import doc_io
 from deskops import doc_access
+from deskops.atom_tags import axis_folder_relpath
 from deskops.atom_tags import axis_values
 from deskops.atom_tags import default_registry_path
+from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.doc_access import DocumentRecord
-from deskops.doc_access import slugify
 from deskops.models import AtomDoc
 from deskops.models import PillDoc
+from deskops.models.validation import check_document
+from deskops.models.validation import validated
 from deskops.paths import package_pythonpath
 
 if TYPE_CHECKING:
@@ -248,13 +251,7 @@ class AtomsService:
             raise ValueError("Atom create requires exactly one source: --from-pill, --from-graph, or --from-diagram.")
 
         atom_id = str(atom_id).strip()
-        if not self._is_valid_atom_slug(atom_id):
-            raise ValueError(f"Atom id must follow slug convention atom-<slug>: {atom_id}")
-
         normalized_question = str(five_wh_one_plus).strip()
-        if normalized_question not in {"what", "why", "how", "how_not", "when", "where", "for_whom"}:
-            raise ValueError(f"Unsupported atom question '{normalized_question}'.")
-
         if tags:
             validate_atom_tag_namespaces(list(tags), default_registry_path(self.root))
 
@@ -287,6 +284,7 @@ class AtomsService:
             )
             source_kind = "diagram"
 
+        validated(AtomDoc, payload)
         path = self._atom_doc_path(atom_id, list(payload.get("tags") or []))
         self._write_new_doc(path, AtomDoc, payload)
         try:
@@ -329,27 +327,27 @@ class AtomsService:
             raise ValueError("Atom split target ids must be unique.")
         if atom_id in normalized_ids:
             raise ValueError(f"Atom split target ids must not include the source atom id {atom_id}.")
-        for target_id in normalized_ids:
-            if not self._is_valid_atom_slug(target_id):
-                raise ValueError(f"Atom split target id must follow slug convention atom-<slug>: {target_id}")
 
         sections = self._split_atom_answer_sections(str(payload.get("answer") or ""))
         assignments = self._resolve_atom_split_assignments(normalized_ids, sections, section_flags or [])
+        new_payloads: dict[str, dict[str, Any]] = {}
+        for target_id in normalized_ids:
+            heading, content = assignments[target_id]
+            new_payloads[target_id] = {
+                "id": target_id,
+                "title": f"{payload['title']} — {heading}",
+                "five_wh_one_plus": payload["five_wh_one_plus"],
+                "answer": content,
+                "tags": list(payload.get("tags") or []),
+                "provenance": payload.get("provenance"),
+            }
+            validated(AtomDoc, new_payloads[target_id])
 
         created: list[DocumentRecord] = []
 
         with doc_io.DocTransaction(self.root):
             for target_id in normalized_ids:
-                heading, content = assignments[target_id]
-                title = f"{payload['title']} — {heading}"
-                new_payload = {
-                    "id": target_id,
-                    "title": title,
-                    "five_wh_one_plus": payload["five_wh_one_plus"],
-                    "answer": content,
-                    "tags": list(payload.get("tags") or []),
-                    "provenance": payload.get("provenance"),
-                }
+                new_payload = new_payloads[target_id]
                 new_path = self._atom_doc_path(target_id, list(new_payload.get("tags") or []))
                 self._write_new_doc(new_path, AtomDoc, new_payload)
                 self._track_created_artifact("artifact.atom", AtomDoc, new_path, target_id)
@@ -384,10 +382,8 @@ class AtomsService:
         source_id = str(source_payload.get("id") or source_path.stem)
         target_id = str(target_payload.get("id") or target_path.stem)
 
-        if not self._is_valid_atom_slug(source_id):
-            raise ValueError(f"Atom merge source id must follow slug convention atom-<slug>: {source_id}")
-        if not self._is_valid_atom_slug(target_id):
-            raise ValueError(f"Atom merge target id must follow slug convention atom-<slug>: {target_id}")
+        validated(AtomDoc, source_payload)
+        validated(AtomDoc, target_payload)
 
         ambiguities = self._detect_atom_merge_ambiguities(source_payload, target_payload)
         if ambiguities and not force:
@@ -739,25 +735,19 @@ class AtomsService:
         )
 
     def _validate_atom_path(self, path: Path) -> AtomValidationRecord:
-        errors: list[str] = []
-        doc_id = path.stem
-        payload: dict[str, Any] | None = None
         try:
-            payload = self._read_doc(path, AtomDoc)
-            doc_id = str(payload.get("id") or path.stem)
-            AtomDoc(**payload)
+            payload, errors = check_document(AtomDoc, path.read_text(encoding="utf-8"), invalid="model validation failed")
         except Exception as exc:
-            errors.append(f"model validation failed: {exc}")
-            return AtomValidationRecord(doc_id=doc_id, path=path, errors=errors)
+            return AtomValidationRecord(doc_id=path.stem, path=path, errors=[f"model validation failed: {exc}"])
+        doc_id = str(payload.get("id") or path.stem)
 
         if path.stem != doc_id:
             errors.append(f"filename must match atom id '{doc_id}'")
-        if not self._is_valid_atom_slug(doc_id):
-            errors.append("atom id must follow slug convention atom-<slug>")
 
+        tags = payload.get("tags")
         try:
             validate_atom_tag_namespaces(
-                list(payload.get("tags") or []),
+                list(tags) if isinstance(tags, list) else [],
                 default_registry_path(self.root),
             )
         except ValueError as exc:
@@ -768,12 +758,6 @@ class AtomsService:
             errors.append(f"provenance is not resolvable: {provenance}")
 
         return AtomValidationRecord(doc_id=doc_id, path=path, errors=errors)
-
-    def _is_valid_atom_slug(self, atom_id: str) -> bool:
-        if not atom_id.startswith("atom-"):
-            return False
-        slug = atom_id.removeprefix("atom-")
-        return bool(slug) and slug == slugify(slug)
 
     def _provenance_is_resolvable(self, provenance: str) -> bool:
         parsed = urlparse(provenance)

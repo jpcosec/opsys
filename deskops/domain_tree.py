@@ -5,6 +5,12 @@ of that path (``a``, ``a.b``, ``a.b.c``) needs a CrossroadDoc with written
 content: the system is forced to write the parent before it can describe the
 children. Protoatoms are free atoms; typing one into another sldb model keeps it
 as a redirect stub whose ``typed_as`` names the typed document.
+
+What one document must satisfy on its own (the form of its id, its tags and its
+domain paths, one ``domain:`` tag per protoatom, a crossroad id naming its path)
+is a validator of its model in ``deskops.models``. What is checked here needs
+other documents or the file tree: the written parents of a domain path, the file
+name of a document, the tag namespace registry and the target of ``typed_as``.
 """
 from __future__ import annotations
 
@@ -16,33 +22,27 @@ from typing import Any
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
-from deskops.atom_tags import TAG_PATTERN
+from deskops import doc_access
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.bootstrap import MODEL_REFS
+from deskops.doc_access import ARTIFACT_MODELS
+from deskops.doc_access import ARTIFACT_PATHS
+from deskops.models.atom import DOMAIN_NAMESPACE as DOMAIN
 from deskops.models.atom import AtomDoc
+from deskops.models.atom import domain_paths
+from deskops.models.crossroad import CROSSROAD_PREFIX
 from deskops.models.crossroad import DOMAIN_PATH_PATTERN
 from deskops.models.crossroad import CrossroadDoc
+from deskops.models.crossroad import crossroad_id
+from deskops.models.protoatom import PROTO_PREFIX
 from deskops.models.protoatom import ProtoAtomDoc
-from deskops.operations import ARTIFACT_MODELS
-from deskops.operations import ARTIFACT_PATHS
-from deskops.operations import DeskopsOperations
-from deskops.operations import slugify
+from deskops.models.validation import check_document
+from deskops.models.validation import validated
 
-DOMAIN = "domain"
-PROTO_PREFIX = "proto-"
-CROSSROAD_PREFIX = "crossroad-"
+__all__ = ["DOMAIN", "PROTO_PREFIX", "CROSSROAD_PREFIX", "domain_paths", "crossroad_id", "DomainTree"]
+
 _DOMAIN_PATH = re.compile(DOMAIN_PATH_PATTERN)
-
-
-def domain_paths(tags: list[str]) -> list[str]:
-    """Values of the ``domain:`` tags, in order."""
-    values: list[str] = []
-    for tag in tags:
-        match = TAG_PATTERN.fullmatch(str(tag))
-        if match is not None and match.group("namespace") == DOMAIN:
-            values.append(str(tag).split(":", 1)[1])
-    return values
 
 
 def prefixes(path: str) -> list[str]:
@@ -51,12 +51,8 @@ def prefixes(path: str) -> list[str]:
     return [".".join(parts[: index + 1]) for index in range(len(parts))]
 
 
-def crossroad_id(path: str) -> str:
-    return CROSSROAD_PREFIX + path.replace(".", "--")
-
-
 def read_crossroads(atoms_dir: Path) -> dict[str, dict[str, Any]]:
-    """Written crossroads by path. An unreadable or empty one does not count as written."""
+    """Written crossroads by path. An unreadable or invalid one does not count as written."""
     found: dict[str, dict[str, Any]] = {}
     for file in sorted(atoms_dir.rglob(f"{CROSSROAD_PREFIX}*.md")):
         try:
@@ -78,10 +74,11 @@ def missing_parents(tags: list[str], crossroads: dict[str, Any]) -> list[str]:
 
 
 def require_domain_parents(atoms_dir: Path, tags: list[str]) -> None:
-    """Refuse domain tags whose path lacks a written crossroad for some prefix."""
-    for value in domain_paths(tags):
-        if not _DOMAIN_PATH.fullmatch(value):
-            raise ValueError(f"Invalid domain path '{value}': use lowercase segments separated by dots.")
+    """Refuse domain tags whose path lacks a written crossroad for some prefix.
+
+    The form of each path is the model's invariant (``AtomDoc.tags``); this only asks
+    the file tree whether the parents are written.
+    """
     missing = missing_parents(tags, read_crossroads(atoms_dir))
     if missing:
         commands = "; ".join(f"deskops atoms crossroad {path} --title ... --content ..." for path in missing)
@@ -110,33 +107,30 @@ class DomainTree:
     """Crossroads, protoatoms and typing over one repository's desk/atoms."""
 
     def __init__(self, root: Path) -> None:
-        self.ops = DeskopsOperations(root)
-        self.root = self.ops.root
-        self.atoms_dir = self.ops.desk_root / "atoms"
+        self.root = Path(root).resolve()
+        self.desk_root = doc_access.desk_root(self.root)
+        self.atoms_dir = self.desk_root / "atoms"
 
     def create_crossroad(self, path: str, *, title: str, content: str) -> Created:
-        self.ops.ensure_workspace()
-        if not _DOMAIN_PATH.fullmatch(path):
-            raise ValueError(f"Invalid domain path '{path}': use lowercase segments separated by dots.")
+        doc_access.ensure_workspace(self.root)
+        payload = validated(
+            CrossroadDoc, {"id": crossroad_id(path), "path": path, "title": title, "content": content}
+        ).model_dump(mode="json")
         parent = path.rpartition(".")[0]
         if parent:
             require_domain_parents(self.atoms_dir, [f"{DOMAIN}:{parent}"])
         if path in read_crossroads(self.atoms_dir):
             raise FileExistsError(f"A crossroad for '{path}' already exists.")
-        payload = CrossroadDoc(id=crossroad_id(path), path=path, title=title, content=content).model_dump(mode="json")
         return self._create(CrossroadDoc, payload, [f"{DOMAIN}:{path}"])
 
     def create_protoatom(self, doc_id: str, *, title: str, content: str = "", tags: list[str]) -> Created:
-        self.ops.ensure_workspace()
-        slug = doc_id.removeprefix(PROTO_PREFIX)
-        if not doc_id.startswith(PROTO_PREFIX) or not slug or slug != slugify(slug):
-            raise ValueError(f"Protoatom id must follow slug convention proto-<slug>: {doc_id}")
+        doc_access.ensure_workspace(self.root)
         tags = list(tags)
+        payload = validated(ProtoAtomDoc, {"id": doc_id, "title": title, "content": content, "tags": tags}).model_dump(
+            mode="json"
+        )
         validate_atom_tag_namespaces(tags, default_registry_path(self.root))
-        if len(domain_paths(tags)) > 1:
-            raise ValueError("A protoatom hangs from one place in the domain tree: use a single domain:<path> tag.")
         require_domain_parents(self.atoms_dir, tags)
-        payload = ProtoAtomDoc(id=doc_id, title=title, content=content, tags=tags).model_dump(mode="json")
         return self._create(ProtoAtomDoc, payload, tags)
 
     def type_protoatom(
@@ -149,17 +143,19 @@ class DomainTree:
         data: dict[str, Any] | None = None,
     ) -> Typed:
         """Create the typed document, then turn the protoatom into its redirect stub."""
-        self.ops.ensure_workspace()
+        doc_access.ensure_workspace(self.root)
         proto_path = self._find_protoatom(selector)
-        proto = self.ops._read_doc(proto_path, ProtoAtomDoc)
+        proto = doc_access.read_doc(proto_path, ProtoAtomDoc)
         if proto.get("typed_as"):
             raise ValueError(f"{proto['id']} was already typed as {proto['typed_as']}.")
         model = self._resolve_model(model_name)
         slug = str(proto["id"]).removeprefix(PROTO_PREFIX)
         target_id = doc_id or f"{model.__name__.removesuffix('Doc').lower()}-{slug}"
-        payload = model(**self._typed_payload(model, target_id, proto, content_field, data or {})).model_dump(mode="json")
-        stub = ProtoAtomDoc(**{**proto, "typed_as": f"{model.__name__}:{target_id}",
-                               "content": _redirect_content(model.__name__, target_id)})
+        payload = validated(model, self._typed_payload(model, target_id, proto, content_field, data or {})).model_dump(
+            mode="json"
+        )
+        stub = validated(ProtoAtomDoc, {**proto, "typed_as": f"{model.__name__}:{target_id}",
+                                        "content": _redirect_content(model.__name__, target_id)})
         # Rendered before any write, so a stub that cannot be written never leaves a typed orphan.
         stub_text = render_model_markdown(ProtoAtomDoc, stub.model_dump(mode="json")) + "\n"
         target_path = self._typed_path(model, target_id, list(proto.get("tags") or []))
@@ -199,7 +195,7 @@ class DomainTree:
                 continue
             model = ProtoAtomDoc if file.name.startswith(PROTO_PREFIX) else AtomDoc
             try:
-                payload = self.ops._read_doc(file, model)
+                payload = doc_access.read_doc(file, model)
             except Exception:
                 continue
             item = {"id": payload.get("id") or file.stem, "title": payload.get("title"),
@@ -215,16 +211,16 @@ class DomainTree:
         doc_id = str(payload["id"])
         if any(self.atoms_dir.rglob(f"{doc_id}.md")):
             raise FileExistsError(f"Refusing to overwrite existing document {doc_id}.")
-        path = self.ops._atom_doc_path(doc_id, tags)
+        path = doc_access.atom_doc_path(self.root, doc_id, tags)
         self._write_and_track(path, model, payload, doc_id)
         return Created(doc_id, path)
 
     def _write_and_track(self, path: Path, model: type[Any], payload: dict[str, Any], doc_id: str) -> None:
-        self.ops._write_new_doc(path, model, payload)
+        doc_access.write_new_doc(self.root, path, model, payload)
         try:
-            self.ops._track_created_document(model, path, doc_id)
+            doc_access.track_created_document(self.root, model, path, doc_id)
         except Exception:
-            self.ops._remove_created_file(path)
+            doc_access.remove_created_file(path)
             raise
 
     def _find_protoatom(self, selector: str) -> Path:
@@ -272,60 +268,55 @@ class DomainTree:
 
     def _typed_path(self, model: type[Any], doc_id: str, tags: list[str]) -> Path:
         if model.__name__ == AtomDoc.__name__:
-            return self.ops._atom_doc_path(doc_id, tags)
+            return doc_access.atom_doc_path(self.root, doc_id, tags)
         artifact = next((key for key, known in ARTIFACT_MODELS.items() if known.__name__ == model.__name__), None)
         folder = Path(ARTIFACT_PATHS[artifact]) if artifact else Path("typed") / model.__name__
-        return self.ops.desk_root / folder / f"{doc_id}.md"
+        return self.desk_root / folder / f"{doc_id}.md"
 
     def _check_crossroad(self, path: Path, crossroads: dict[str, Any]) -> tuple[str, list[str]]:
         try:
-            payload = self.ops._read_doc(path, CrossroadDoc)
-            CrossroadDoc(**payload)
+            payload, errors = check_document(CrossroadDoc, path.read_text(encoding="utf-8"), invalid="crossroad is invalid")
         except Exception as exc:
             return path.stem, [f"crossroad is invalid: {_first_line(exc)}"]
-        doc_id, errors = str(payload["id"]), []
-        if doc_id != crossroad_id(payload["path"]):
-            errors.append(f"crossroad id must be {crossroad_id(payload['path'])}")
+        doc_id = str(payload.get("id") or path.stem)
         if path.stem != doc_id:
             errors.append(f"filename must match crossroad id '{doc_id}'")
-        parent = str(payload["path"]).rpartition(".")[0]
+        parent = str(payload.get("path") or "").rpartition(".")[0]
         if parent:
             errors.extend(self._domain_errors([f"{DOMAIN}:{parent}"], crossroads))
         return doc_id, errors
 
     def _check_protoatom(self, path: Path, crossroads: dict[str, Any]) -> tuple[str, list[str]]:
         try:
-            payload = self.ops._read_doc(path, ProtoAtomDoc)
-            ProtoAtomDoc(**payload)
+            payload, errors = check_document(ProtoAtomDoc, path.read_text(encoding="utf-8"), invalid="protoatom is invalid")
         except Exception as exc:
             return path.stem, [f"protoatom is invalid: {_first_line(exc)}"]
-        doc_id, tags, errors = str(payload["id"]), list(payload.get("tags") or []), []
+        doc_id = str(payload.get("id") or path.stem)
+        tags = list(payload.get("tags") or []) if isinstance(payload.get("tags"), list) else []
         if path.stem != doc_id:
             errors.append(f"filename must match protoatom id '{doc_id}'")
         try:
             validate_atom_tag_namespaces(tags, default_registry_path(self.root))
         except ValueError as exc:
             errors.append(str(exc))
-        if len(domain_paths(tags)) > 1:
-            errors.append("a protoatom takes a single domain:<path> tag")
         errors.extend(self._domain_errors(tags, crossroads))
         typed_as = str(payload.get("typed_as") or "")
-        if typed_as and not any(self.ops.desk_root.rglob(f"{typed_as.split(':', 1)[-1]}.md")):
+        if typed_as and not any(self.desk_root.rglob(f"{typed_as.split(':', 1)[-1]}.md")):
             errors.append(f"typed_as target not found: {typed_as}")
         return doc_id, errors
 
     def _check_atom(self, path: Path, crossroads: dict[str, Any]) -> list[str]:
         try:
-            tags = list(self.ops._read_doc(path, AtomDoc).get("tags") or [])
+            tags = check_document(AtomDoc, path.read_text(encoding="utf-8"))[0].get("tags")
         except Exception:
             return []  # atoms validate already reports unreadable atoms
-        return self._domain_errors(tags, crossroads)
+        return self._domain_errors(list(tags) if isinstance(tags, list) else [], crossroads)
 
     def _domain_errors(self, tags: list[str], crossroads: dict[str, Any]) -> list[str]:
-        errors = [f"invalid domain path '{value}'" for value in domain_paths(tags) if not _DOMAIN_PATH.fullmatch(value)]
+        """The domain paths of ``tags`` without a written crossroad. A malformed path is the
+        model's error (reported with the document), so it is left out here."""
         valid = [f"{DOMAIN}:{value}" for value in domain_paths(tags) if _DOMAIN_PATH.fullmatch(value)]
-        errors.extend(f"no written crossroad for domain path '{path}'" for path in missing_parents(valid, crossroads))
-        return errors
+        return [f"no written crossroad for domain path '{path}'" for path in missing_parents(valid, crossroads)]
 
 
 def _redirect_content(model_name: str, doc_id: str) -> str:
