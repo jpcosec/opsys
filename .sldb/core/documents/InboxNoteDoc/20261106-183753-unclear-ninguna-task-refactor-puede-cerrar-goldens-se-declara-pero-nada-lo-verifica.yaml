@@ -1,0 +1,18 @@
+name: 20261106-183753-unclear-ninguna-task-refactor-puede-cerrar-goldens-se-declara-pero-nada-lo-verifica
+path: desk/inbox/20261106-183753-unclear-ninguna-task-refactor-puede-cerrar-goldens-se-declara-pero-nada-lo-verifica.md
+source_hash: 2b6adc2761be8e296012264e50c0ae9ccbbba77ec40f26de78793ac1fcf6ca27
+content_hash: ccc06406728ea87b4e20bfca5cab06d5fc11bbed03758f02d1f0c05e78a43618
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 61eead1d92c8c131710a637f2d12997f9ab840651612db2fe36aaf88938118d7
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 3ab219a261082cfa4138b5db29825e0a93c4a48b87a1e709f9226e56d17eef7a
+  body: 0502663b0a70aaf26c190099ddbdb7ec3176cb2b3203abf97b5d5368a3f0c6cb
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
