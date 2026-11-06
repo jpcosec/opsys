@@ -1,0 +1,21 @@
+name: materialization-closeout-graph-operations-read-snapshot
+path: desk/materializations/materialization-closeout-graph-operations-read-snapshot.md
+source_hash: 93dd553823732050b399793207f9eb8f945390087b0b49b81641146cbeff57e0
+content_hash: e833565a05602a8aeb467b98e28cf3a4160320931a88c5059dc97fddac3514dd
+field_hashes:
+  id: 300661ea5f2c800f410082f0fa6ae4a6b8f999cddae04d04add20f8968da1713
+  title: 56a36c8b782b9d412ab489737a541a4e0d00469664f46ec09c9752264d44b85c
+  source_atoms: 21d1bed7cf5e3d09865a840a8b06dabaccd4e59e217f24b1704626dc81773493
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: c6b27abfba8509230708b661c19417a6c9b0cd29e0c2ab1a1d7ee32e2d6aff5d
+  intent: 13661fbec7eb24f7eb94a78191aef90218f20ab629a163bb0383ca085d2fd5f8
+  validation: bbfbf4250e14a25a692fc4caf0395750b6bc3714744487260f39b0db1ca47b87
+  tags: 45935dd10406effb32866b6d83912939b17a93b2471f87bde4e02f46f2e4b1a1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout-graph
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

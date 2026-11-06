@@ -1,0 +1,21 @@
+name: materialization-closeout-graph-gate-equivalence-tests
+path: desk/materializations/materialization-closeout-graph-gate-equivalence-tests.md
+source_hash: c9a4aa6750eb3423344cc56c6807f757639cca0316714daaa6e673ec4286995d
+content_hash: 990e824f83c358255292928cf75571fef6b703b8d256f2a225ef0ff421a44c1e
+field_hashes:
+  id: 2fb1659512d429040a8a387a6c002927e12a84759ba6a145a27d3637d83c878f
+  title: 1399a50f34c40e40ae87cc441b93b8d66c75d81a0b9ee138685558ec02121fc9
+  source_atoms: 21d1bed7cf5e3d09865a840a8b06dabaccd4e59e217f24b1704626dc81773493
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 661e64ebf3637339b7cf6cf31e0820b889b2831e3a5c0e50b630be7978c36142
+  intent: 9a5acfc9c521684a95a6fd2a4025075ec39643e94efed182ea2d8d4bdc77bc40
+  validation: bbfbf4250e14a25a692fc4caf0395750b6bc3714744487260f39b0db1ca47b87
+  tags: 45935dd10406effb32866b6d83912939b17a93b2471f87bde4e02f46f2e4b1a1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout-graph
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,21 @@
+name: materialization-closeout-graph-gates-context
+path: desk/materializations/materialization-closeout-graph-gates-context.md
+source_hash: 782174a9b59e51b486053e465ad4e78a57f006826bfdb1798a371405599a1cf3
+content_hash: 713c08569a8b898830bfcea211a12b008e6bba44ee73058e7cf4d90e23c36200
+field_hashes:
+  id: e2ab1d9509217860d0d7767674786e6919f59552226838939dfdbbfac776b094
+  title: 88049fd89ab96f61c12ae52a4afd230a3c99713395aa6bffc39db5874025eaea
+  source_atoms: 21d1bed7cf5e3d09865a840a8b06dabaccd4e59e217f24b1704626dc81773493
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 0b47b22dba3c118607bf07aa33dae64bb1f23d77dfcbe03a040e570ce19f73d1
+  intent: 9bd4fad2be177280af2107c61520c6746c601effa3fef16ad7bb93f96de856b8
+  validation: bbfbf4250e14a25a692fc4caf0395750b6bc3714744487260f39b0db1ca47b87
+  tags: 45935dd10406effb32866b6d83912939b17a93b2471f87bde4e02f46f2e4b1a1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout-graph
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

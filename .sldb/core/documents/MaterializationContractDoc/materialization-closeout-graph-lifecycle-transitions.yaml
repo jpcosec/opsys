@@ -1,0 +1,21 @@
+name: materialization-closeout-graph-lifecycle-transitions
+path: desk/materializations/materialization-closeout-graph-lifecycle-transitions.md
+source_hash: bbd3fb253cf4012f6f6221601a485012f94bd01583b6cabe434576c36217b7c7
+content_hash: abcd7b185666389329eae660bcc3070b697e4084df0ff2fed64fc62c6870a853
+field_hashes:
+  id: ebe3d98258c03547cf82533ca253396e60c041aca0b1a010cdda1b922efd74c8
+  title: 1470929c24c5f74810bd3d854dae1ed745c4cc8cc509187dc6f988d5d96bda25
+  source_atoms: 21d1bed7cf5e3d09865a840a8b06dabaccd4e59e217f24b1704626dc81773493
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 39c2e5375349d0076eaf7cef799a88c6ad26d2b3b1c92c73022e9ddfb22eb634
+  intent: 98cf528798949f6a577ddb17ede98cfd2da2ebecaf5fbefbeb436daeaf2dd175
+  validation: bbfbf4250e14a25a692fc4caf0395750b6bc3714744487260f39b0db1ca47b87
+  tags: 45935dd10406effb32866b6d83912939b17a93b2471f87bde4e02f46f2e4b1a1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout-graph
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

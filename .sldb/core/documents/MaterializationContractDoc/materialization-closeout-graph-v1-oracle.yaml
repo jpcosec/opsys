@@ -1,0 +1,21 @@
+name: materialization-closeout-graph-v1-oracle
+path: desk/materializations/materialization-closeout-graph-v1-oracle.md
+source_hash: d0ca28e710cf8fdc43e3521af5c69d0166ba8063215f384188207439c339664c
+content_hash: 96c723dba00840f53e618a585c7f3e7019cc3b1249474c17870ae68f9eb5c970
+field_hashes:
+  id: 664bc40c2912a6c4a9e9acfd66258372188ac72964b8b5af8bf5baed7246c1db
+  title: 6d69b122eab230df6775e3b4874cda674c3a52c8a959deaba6f3e7b4873a8045
+  source_atoms: 21d1bed7cf5e3d09865a840a8b06dabaccd4e59e217f24b1704626dc81773493
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 998dd9ef3c387bd9365b0a48c2d544b669f51c41bda9a373bacd082bcadbce96
+  intent: fa1c5530ce27356f942b725728fa8dbdd876d23e6922311c9ff11bffd147e7ed
+  validation: bbfbf4250e14a25a692fc4caf0395750b6bc3714744487260f39b0db1ca47b87
+  tags: 45935dd10406effb32866b6d83912939b17a93b2471f87bde4e02f46f2e4b1a1
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout-graph
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
