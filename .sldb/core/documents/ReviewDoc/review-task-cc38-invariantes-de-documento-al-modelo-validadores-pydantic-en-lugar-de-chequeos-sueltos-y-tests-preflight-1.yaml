@@ -1,0 +1,30 @@
+name: review-task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests-preflight-1
+path: desk/reviews/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests/preflight-1.md
+source_hash: e369f0add0faf24700c4170e9d6746987ff1b84b90d90a72f4fba9f4a04384d0
+content_hash: 9f165f95bbcd20b9a21f76fd29a709b17f7ebaf0cbf5d36268410742c54558cd
+field_hashes:
+  id: a0508076a7a24a5ed560cb0ca10e67186ba1c406323c329f72e989a13b4568a9
+  title: d9540b42bbada16493e0819f1e17ec55627a46d6018ee76ecc76acd165d50304
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: c6529c466c5c4fc7d68135ef2da475ce2343a477c1058ace818d0609f0dd830e
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 5f567d41af3e4c36b4c16c02feec5777e6ca13bfb10bd0f9e0da3c09f690a2b1
+  input_sha256: cc1164826dc754b30241ec8e5c1bc135dff02e60f3f144c89d6837c258c38d5a
+  output_sha256: 07b559b6ac7db27a96cb757a977f7a345a18c2e919c741563045ea231953a735
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: c4f022a075b943c6679b0cd0c9a489b53ad5523652fba0f66c26ab781e87e10a
+  created_at: c4c4f7bfc87ce96510a58aa4c802b146733e1c5b7577a1a8c2427ad58fde1ed7
+  disposed_at: f5b2b2f11ad58d37b66f3518d394a010e42a9030b11e3af1ecc99a3ab386378f
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 619215b2e2fbac776341aa6bdacfccedd1916d842540995a593b53e31ffc8977
+  disposition: ac069656965c8b9d17eae718771b9991aa12586cb89be3e3f01e96d9f608d660
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null

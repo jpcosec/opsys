@@ -1,0 +1,9 @@
+{
+  "key": "task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "64b244b9a6c67838af1b2c7aa2367be36d845e3847e43554af1e91b32bae2dd3",
+  "output_sha256": "b77aabfb3760da38ce5de404d467f43024c6fb289cafefa9d6e9b68a2bbe65e6",
+  "start": "2026-11-06T21:25:17.873133+00:00",
+  "end": "2026-11-06T21:25:41.403595+00:00"
+}

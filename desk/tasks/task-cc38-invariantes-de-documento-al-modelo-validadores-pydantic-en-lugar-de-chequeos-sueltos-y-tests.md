@@ -88,6 +88,13 @@ p6 (prueba de sldb): «sldb fields update» y «sldb docs update» se prueban en
 p7 (desks existentes): antes y después se corre «deskops doctor --root <desk>» y una carga por modelo (sldb stores check) en los 6 desks. Un documento existente que el validador nuevo rechace se lista en el TaskDoc y se corrige con deskops (edit/retire), nunca a mano. Si la corrección exige una decisión del dueño, el nodo se bloquea y se avisa.
 p8 (fuera): la consistencia status ↔ current_node ↔ history de TaskDoc es de CC37; las reglas entre documentos solo se inventarían y asignan, no se implementan (CC32/CC33).
 
+PRECISIONES DEL PREFLIGHT (review-task-cc38-...-preflight-1, 2026-11-06):
+p9 (texto de error sin chequeo previo): un chequeo que solo vivía en un test no tiene texto viejo; su validador da un mensaje de una línea, en inglés como los demás errores de deskops, que nombra el campo, el valor y la regla. Ningún golden lo fija. p5 se aplica solo a los chequeos que tenían texto.
+p10 (grep de aceptación): el grep de los nombres del inventario en deskops/ debe quedar vacío salvo los asignados a CC32/CC33 y los clasificados «fuera de DK6» (p4c). Esos siguen en el código y el inventario los lista con su razón en una línea.
+p11 («el store» en p4b): un chequeo depende del store si consulta otro documento trackeado, el índice del store o el estado de tracking (si un documento está trackeado, si su hash cambió, si está movido). Leer el propio payload del documento a través del store no cuenta: eso sigue siendo de un documento.
+p12 (fuente del inventario de CC30): runs/subagents/cc30-worker-report.md está en la rama wt/cc30 y llega a main con la integración de CC30. Si el worktree de CC38 no lo tiene, se lee con git show origin/wt/cc30:runs/subagents/cc30-worker-report.md. No se copia al desk.
+p13 (matriz de p6): cuatro casos, AtomDoc y CrossroadDoc × «sldb fields update» y «sldb docs update». Cada uno, con el comando, el payload inválido y la salida de rechazo, en la Validation o en el informe del worker.
+
 ## Validation
 
 _List the checks required before this task can close._
