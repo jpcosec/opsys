@@ -1,0 +1,21 @@
+name: materialization-cc36-tests-test-desk-sync
+path: desk/materializations/materialization-cc36-tests-test-desk-sync.md
+source_hash: e2f24755e99e9bbb01eb7ac37d2c48b3f5245edeb94dfabf5cdfa0fc76f193d6
+content_hash: 8171dbd251b1406f8aa91a2ac5d619667e75035e7b92fc629bc85549cb54adcc
+field_hashes:
+  id: 9a1f8775bd1bb37ef0586b6e472d2c8a144c96a2e80a5d66e5f9fafce6c8f67e
+  title: d65613db15ad5dde11536901f0860216e3a3ac314a001ef42afb31675c1cbb52
+  source_atoms: ac978aba4867e9b8543a43551aa57b870ab35af73ed272fa7ac2641018f94ed7
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: a9a450831a517a4fa6afd962e965f9b080a4f49fae5f168db843363da2f28a9c
+  intent: 8b44fe5ee775cbcee2e4225314a09185692bbf4c70bc5a6ee49f02750183087a
+  validation: 9b14750e323fd16d13677cf9a96c590455cf8c8e2ba4a10c24c38deeb921e96e
+  tags: 5217d7d2bea865e5f79ddd473351f644fe9b6ce1113ff184ecff8e6f41b366f8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:scaffold
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,21 @@
+name: materialization-cc36-commands-core
+path: desk/materializations/materialization-cc36-commands-core.md
+source_hash: 86aa2ce55a3df41970d935442a38d0d2bbfd17133e4aa437bbf02f2279be4ba6
+content_hash: 5c269bb9d1921ab89ad548e49569d95bfa3564bcf0ffbbc07384a01f806279e4
+field_hashes:
+  id: 4a8afb87ad4a257a22d449945aae90fd8c8b00e78031cc736c5b22d63b3799ae
+  title: 247690f511c353be6b53e6ab4701eaf5a4f5c314e39492371ed9e2b844472ccd
+  source_atoms: ac978aba4867e9b8543a43551aa57b870ab35af73ed272fa7ac2641018f94ed7
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 8569e21c00fa5fb8d68d16efdad0d5ff3fdd877c3397fbfcffeb4848c00c287c
+  intent: 7d57c5e514366f50da48bb9a977649c0a2fc5080d056b95c0db77eef8766758f
+  validation: 65fbea6f6580c71a817a796f76a8ddf339e8b99e10fac72f518280c9a3e9099d
+  tags: 5217d7d2bea865e5f79ddd473351f644fe9b6ce1113ff184ecff8e6f41b366f8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:scaffold
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

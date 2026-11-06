@@ -3,8 +3,8 @@ model_ref: deskops.models:TaskRefactorDoc
 path: deskops/models/task_types.py
 documents_index: .sldb/core/documents/TaskRefactorDoc.yaml
 sections_index: .sldb/runtime/sections/TaskRefactorDoc.yaml
-model_hash: 88cee04fae741820772392834712f872ba7e04324b2123c09f7245c0c03d0851
-roster_hash: 937f8f40cd418da92a35f3275bfec237ab1e8d1368efe7f9dc3c1637bad5d70c
+model_hash: 135f0176bd905e3f525b81cf2cb4c68a173f2a74ea7e785d765ae7eddad09b9b
+roster_hash: 8671507261eb37443138630bbc9849dbf484b02e0814f6443b7c14d2a58e3488
 contract_hash: c1246d2faf240237a620436f75d03f1341658637d2b8a207965b720b76e79976
 documents_count: 3
 version: 1

@@ -1,0 +1,21 @@
+name: materialization-cc36-data-desk-declaration-yaml
+path: desk/materializations/materialization-cc36-data-desk-declaration-yaml.md
+source_hash: 31127fafb4203065c866d47f08c5d89a566b83438d4e6dc8d10f81358546a470
+content_hash: da4a68ceaffc897027df916435c76d15ae89a970f246aeca83f5b81fce8a38c8
+field_hashes:
+  id: 8f73137b34d091eb414c279c6f10bb056932da75eb2d1ea74def7114ca4bb966
+  title: b835a2c76de8c96f6d31db8cc0a11389039d1ba0f603e91892821326b779d7ba
+  source_atoms: ac978aba4867e9b8543a43551aa57b870ab35af73ed272fa7ac2641018f94ed7
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 483c26d6048f22034bb86e17dea42641a5aace5e780de265fabc921f36fa7b7b
+  intent: b1040f5762e121f12ef0c80f0f8d4bc8c3148f2a60b73b36c1e06e89aa0f0cac
+  validation: 65fbea6f6580c71a817a796f76a8ddf339e8b99e10fac72f518280c9a3e9099d
+  tags: 5217d7d2bea865e5f79ddd473351f644fe9b6ce1113ff184ecff8e6f41b366f8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:scaffold
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

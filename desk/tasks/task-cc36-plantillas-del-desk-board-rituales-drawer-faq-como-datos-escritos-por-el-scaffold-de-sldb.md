@@ -7,7 +7,14 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_scaffold_golden.py
+- tests/test_scaffold_golden.py
+- pytest tests/test_desk_sync.py
+- tests/test_desk_sync.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- d4b49ff66a3bd449bc0c4fff2b6cbc0dac773b09
+- desk/atoms/atom-la-estructura-inicial-de-un-desk-se-declara-en-el-paquete-de-deskops-y-la-aplica-sldb.md
 depends_on:
 - task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados
 pills: []
@@ -114,6 +121,7 @@ _List the checks required before this task can close._
 - TMPDIR=/dev/shm pytest -q, uno a la vez: test_scaffold_golden, test_desk_sync, test_packaging, test_lifecycle_graph, test_doctor_*, test_cli, test_output_goldens y test_cli_help_examples (sin --update-golden)
 - wc -l deskops/workspace.py antes (885) y después
 - CHANGELOG
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash d4b49ff6 sobre origin/main): scaffold_golden 3, desk_sync 8, packaging 6, lifecycle_graph 15, cli_help_examples 11, output_goldens 7: todos verdes, de a uno; golden del scaffold sin cambios tras su primer commit. El worker corrió 84 archivos: 79 verdes y 5 rojos previos de main (board_portable_references, skill_cli_drift, y atom_folder_axis/domain_tree/operator_manual, regresiones de CC30 que arregla CC38). H1 para sldb: las semillas document exigen store registrado; deskops rinde todo a texto en proceso. task.refactor: queda abierta por la evidencia goldens no verificable (opción a del overlord, como CC30).
 
 ## Done When
 

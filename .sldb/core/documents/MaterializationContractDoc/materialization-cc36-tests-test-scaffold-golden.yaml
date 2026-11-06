@@ -1,0 +1,21 @@
+name: materialization-cc36-tests-test-scaffold-golden
+path: desk/materializations/materialization-cc36-tests-test-scaffold-golden.md
+source_hash: 478f1cb444dda4d3ea223e55e20df4d6b9825d67e8c5e61cdd6db6dd68f90e7d
+content_hash: 5e4335aa86395717fd21dcce03c54a07a6a809c78ab8e402f6a92cdf60e06262
+field_hashes:
+  id: b67d7fe8260b848c7cf744ef6324f13c46dfc784594935c2eb010e3f4b502eac
+  title: 0889731a000612baa46b0e515958fdb0c327024442c5a0c688bae89643906481
+  source_atoms: ac978aba4867e9b8543a43551aa57b870ab35af73ed272fa7ac2641018f94ed7
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 0506929e0bd835b32243aae48c3e94133e84ac1b77665ccb290be3da6afc5925
+  intent: 17cc69823159c5f561cc3e52de568961fd7f98c1034f1d3d4858860eaccafe33
+  validation: 65c666d193465e9bc6af0f796392a65c3bbeba8269760c1736c328c8cfb73c97
+  tags: 5217d7d2bea865e5f79ddd473351f644fe9b6ce1113ff184ecff8e6f41b366f8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:scaffold
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

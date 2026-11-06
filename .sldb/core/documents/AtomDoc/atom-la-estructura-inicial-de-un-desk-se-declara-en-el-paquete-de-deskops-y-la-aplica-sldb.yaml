@@ -1,0 +1,18 @@
+name: atom-la-estructura-inicial-de-un-desk-se-declara-en-el-paquete-de-deskops-y-la-aplica-sldb
+path: desk/atoms/atom-la-estructura-inicial-de-un-desk-se-declara-en-el-paquete-de-deskops-y-la-aplica-sldb.md
+source_hash: d441c3b5a443bb89bc217c8a8561e09cdc4731abb7419760ef6e7bbead8767ff
+content_hash: 8d471c15b537303569e4d7280cc2299f2fa96a3f4661713321f8bc47e844f672
+field_hashes:
+  id: a49a9e140178c5e1eb092dd821caaa1509d991b2c74985c01fad2c7df871128e
+  title: 16e58f275f45a94bf126e9ac8c491cf60664c190f6b3b2d7983b708c0418ed0b
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 1d65be89efe28ae482da63b2fec0ebf6c91c262f5b291045db541c68c0116e56
+  tags: 5217d7d2bea865e5f79ddd473351f644fe9b6ce1113ff184ecff8e6f41b366f8
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:scaffold
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null
