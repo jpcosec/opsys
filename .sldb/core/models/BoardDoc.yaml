@@ -3,8 +3,8 @@ model_ref: deskops.models:BoardDoc
 path: deskops/models/board.py
 documents_index: .sldb/core/documents/BoardDoc.yaml
 sections_index: .sldb/runtime/sections/BoardDoc.yaml
-model_hash: d659ca59ef5bb50da214c8fcc0680e96a245f2449a0d0bde2d425009512fa3ee
-roster_hash: 24f8805e069dfba11dadb7c2795b6b8fdbe513710dfe6f871a171c0230d7b574
+model_hash: 76f5f8f7d92ae666bb7ef968c31f6d684775a48f0953fdb2158fcabfc087cadb
+roster_hash: 0ef0624bb068bc2023beae4990dfa9d1ced7d8b3dc0aafac3790d886795ccf1f
 contract_hash: efc79456a8b75fb3ece9476ec5c84df977f7ab5a4491a40cfcb1398a12f085cc
 documents_count: 1
 version: 1

@@ -1,0 +1,35 @@
+name: task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests
+path: desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
+source_hash: 10a24efcbf7251f5ae6eb8be9fa6be54b709ef8cbc91b78278bf1ff4e9f74afa
+content_hash: 94092bb68251f16c0d4cd0eb9483c50276d669c0cf5e35a7ebd16a0100863100
+field_hashes:
+  title: c59e3e1dc6a7997279454113245f5160c564c1f710ea00475d360168071bb455
+  id: f3b55cd486f346d1e13d96ed2b52eb0553b1689449cc69e1fc64f112c3ca829c
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: f3d690cb1cc07a15638405221e4230bc7c23fe28cd61211dbfc9dfa024f5db7c
+  goal: f39a04cfc5b1c12719ba706e36e3141e73313ba2a3c2e1c24b7aa776aaea1c9a
+  scope: a52ea95ed558a4ae0efa464f694ad90e4c850a66077be65eac4f22f5545e8412
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 6925f635c6e89f5a62865a4eba918bcd85733015c4463ba74b8428ac5a330944
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: b2e882baf1fa4af44bdc759546d427b265019c21adfaa867c43cc04697ab1026
+  implementation_path: b09dd945a021a4e89f8f67733c0ed21e07a4fcb303839ff0669dba8a201d94df
+  validation: 23499ad6c1710d89a3ef122f99acf468211d3d3a2469a9969ed60214ffa686f2
+  done_when: 3c0bb5256affe85fd8777c65c0003537f5164335d1bf3151674cbcfe9c6ca6bd
+  task_type: d0b4cbfeadc448bca1492079dfd36948fd84b4ae366c521b0e71add2bea3fa86
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  from_drawer: 84aa35b707b8c836a439c484210aaf1cb5e17c957defa1a24c2bfe86edf07e07
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance: null
