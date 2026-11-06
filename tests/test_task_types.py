@@ -302,6 +302,39 @@ class TaskCliDoc(TaskCodeDoc):
     assert json.loads(verify.stdout)["declared"] == ["tests", "commit", "atom", "materialization", "document"]
 
 
+def test_desk_update_apply_declares_the_types_it_registers_so_a_clean_clone_rebuilds(tmp_path: Path) -> None:
+    """`desk update --apply` registered GC01's task types in sldb's index but not in its
+    store.yaml, and the CI rebuild said `Model 'TaskCodeDoc' not registered.` (sldb 8b60e889).
+    A declared desk that gains a type keeps rebuilding from its declaration."""
+    root = tmp_path / "repo"
+    _init(root)
+    _git(root, "init", "-q")
+    declared = _sldb(root, "stores", "declare", "--write", "--store", ".sldb")
+    assert declared.returncode == 0, declared.stdout + declared.stderr
+    models_dir = root / "desk" / "models"
+    models_dir.mkdir()
+    (models_dir / "local_types.py").write_text(
+        """from typing import Literal
+from pydantic import Field
+from deskops.models import TaskCodeDoc
+
+
+class TaskCliDoc(TaskCodeDoc):
+    task_type: Literal["task.code.cli"] = Field(default="task.code.cli", description="CLI subtype.")
+    __closeout_evidence__ = ("tests", "commit")
+""",
+        encoding="utf-8",
+    )
+
+    _cli(root, "desk", "update", "--apply")
+    _cli(root, "add", "task", "--title", "CLI", "--goal", "g", "--scope", "s", "--task-type", "task.code.cli")
+
+    declaration = yaml.safe_load((root / ".sldb" / "store.yaml").read_text(encoding="utf-8"))
+    assert "TaskCliDoc" in {m["name"] for m in declaration["models"]}
+    check = _sldb(root, "stores", "build", "--check", "--store", ".sldb")
+    assert check.returncode == 0, check.stdout + check.stderr
+
+
 # ------------------------------------------------------------------ migration
 def test_legacy_task_type_migrates_idempotently(tmp_path: Path) -> None:
     root = tmp_path / "repo"
