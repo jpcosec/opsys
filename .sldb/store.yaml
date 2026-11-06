@@ -58,6 +58,30 @@ models:
 - name: DeskFAQDoc
   model_ref: deskops.models:DeskFAQDoc
   path: deskops/models/faq.py
+- name: TaskCodeDoc
+  model_ref: deskops.models:TaskCodeDoc
+  path: deskops/models/task_types.py
+- name: TaskDocsDoc
+  model_ref: deskops.models:TaskDocsDoc
+  path: deskops/models/task_types.py
+- name: TaskDebugDoc
+  model_ref: deskops.models:TaskDebugDoc
+  path: deskops/models/task_types.py
+- name: TaskRefactorDoc
+  model_ref: deskops.models:TaskRefactorDoc
+  path: deskops/models/task_types.py
+- name: TaskDecisionDoc
+  model_ref: deskops.models:TaskDecisionDoc
+  path: deskops/models/task_types.py
+- name: TaskAggregateDoc
+  model_ref: deskops.models:TaskAggregateDoc
+  path: deskops/models/task_types.py
+- name: TaskExternalDoc
+  model_ref: deskops.models:TaskExternalDoc
+  path: deskops/models/task_types.py
+- name: ReviewDoc
+  model_ref: deskops.models:ReviewDoc
+  path: deskops/models/review.py
 predicates:
   applies_to_source:
     axis: WHAT
