@@ -1,0 +1,134 @@
+{
+  "key": "task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb/bundle",
+  "input_sha256": "67997eb0bcb27bc768d5289637aa1a7775dfca1f5916a8ed6ddfcf3a92cf3599",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261106-224201/context-review/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb/bundle/67997eb0bcb27bc768d5289637aa1a7775dfca1f5916a8ed6ddfcf3a92cf3599/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb.md",
+      "sha256": "b9888f9fd285ff688d1addbe7c4603317ac44e30ee3f61bb3cb91c20ce2a565f",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "550ccb30be93dd94ad7692fc777e32eb512c713e72c674a531c83a1b4769277a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/doc_access.py",
+      "sha256": "d9f542a5a6c4c7bae2ab03544b228e2fa7dd699c757c216537d3af7191fc5cb4",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "7933b4eacd113da40671bf7c1f15d3c78be00b2ddf7bd5d0572e9e85a35bf61b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/core.py",
+      "sha256": "2b3edb5f60b0765a100004b4024bffd8a2fe7914aebce7cd1382e693faf7a633",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "53703b81e10dada98ca68c4d5f27abc8c8d2455bcb387403793ba447ea31032a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/doctor.py",
+      "sha256": "474df432b4305b20a0dd9f41445c5020eab025d93f6ed56651a82f32b02c3f58",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/bootstrap.py",
+      "sha256": "d74002a5620d4957ef5bf4b5a033ec80f6b03e8ff27620dc4de9d93c6a4450a2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "pyproject.toml",
+      "sha256": "56bc79a7bd9a5c763b7ebb93129c63a1c60808350a246816bc3cc25af286bbec",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_desk_sync.py",
+      "sha256": "6b31b6c26e5db0b6827bdf4e39d218a46a139b399a2b6178f8b9ab49bae96dee",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_packaging.py",
+      "sha256": "678e07a9dfbe869e03bbbdb8541cc33d4a1547e4dc64c9d608ae055846df0e2c",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "dde5db342c44c500b4fc435651598d3ad86028e25db6cf100958fb4894d3caf0",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/data/templates/",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/data/desk_declaration.yaml",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/test_scaffold_golden.py",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/fixtures/golden/scaffold/",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-06T22:42:02.097416+00:00",
+  "finished": "2026-11-06T22:42:30.972684+00:00"
+}

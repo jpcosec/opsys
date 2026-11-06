@@ -1,7 +1,7 @@
 name: task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb
 path: desk/tasks/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb.md
-source_hash: b9888f9fd285ff688d1addbe7c4603317ac44e30ee3f61bb3cb91c20ce2a565f
-content_hash: b39f67355e8b136bdb64781264e11351c0a63ea8f05700d062f69b5508aeea4d
+source_hash: d08a5e4209da646954a6111f18e9e38c6149fb3bcce7b5868136be6228868dee
+content_hash: 4b64497024da8d342c91703eb693e6cdf923bcf3bf133083ce943ba82f57f1d8
 field_hashes:
   title: dc2f5f0d71c903fadc42d0d52d48e378a2504c18bc5f7424e55dd3cafd08ad43
   id: 430707e3a5a1eacabecc70618627d2686388609315d49416e9c1b58af53f0e20
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 6925f635c6e89f5a62865a4eba918bcd85733015c4463ba74b8428ac5a330944
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: b33a303b739b47e4f5c6b63c9ecad418b4cd8b7006ba3d640ea119a05b12f1f6
-  implementation_path: 2d994c2fa3b46480e4529e77b7eb84eef4197ea233c698cc59252db6f903e5c6
+  implementation_path: 9e14d41d789889ee4a0a88a1ec8c7fc820cf1ac3961c20224f24920155374e2b
   validation: b1bd13f39981e86f575691741255b5cc161186ee095f005aa1070ad6da75f948
   done_when: dca3896b23d69d3e2735895353c81972028f499fb2405f6153bebb42e8e92428
   task_type: d0b4cbfeadc448bca1492079dfd36948fd84b4ae366c521b0e71add2bea3fa86
