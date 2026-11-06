@@ -2773,14 +2773,13 @@ def test_empty_selector_is_rejected_before_any_lookup(tmp_path: Path, capsys) ->
 
 def test_empty_selector_guard_holds_at_the_resolution_layer(tmp_path: Path, capsys) -> None:
     """The CLI guard is the first line; the resolver refuses too."""
-    from deskops.operations import DeskopsOperations
+    from deskops import doc_access
 
     assert main(["init", str(tmp_path)]) == 0
     capsys.readouterr()
 
-    operations = DeskopsOperations(tmp_path)
     with pytest.raises(ValueError, match="Empty or whitespace-only"):
-        operations._resolve_artifact_selector_multi("artifact.task", [tmp_path / "desk" / "tasks"], "")
+        doc_access.resolve_artifact_selector_multi(tmp_path, "artifact.task", [tmp_path / "desk" / "tasks"], "")
 
 
 def test_drift_check_reports_knowledge_surface_findings(tmp_path: Path, capsys) -> None:

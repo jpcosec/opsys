@@ -4,6 +4,13 @@ from .base import OperationalArtifactDoc
 
 
 class BoardDoc(OperationalArtifactDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "board-{slug}",
+        "status_default": "active",
+        "tags": ["workspace:desk", "artifact:board"],
+    }
     __containment__ = {"tasks": ["TaskDoc"], "pills": ["PillDoc"], "rituals": ["RitualDoc"]}
     __semantics__ = {"type": ["workflow", "board"], "workspace": ["desk"]}
     __compositions__ = {

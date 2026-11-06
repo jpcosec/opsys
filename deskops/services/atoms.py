@@ -2,12 +2,12 @@
 
 Every atom write goes through ``doc_io``; split and merge each run inside one
 ``DocTransaction`` so a failure restores the original file bytes and store
-entries. Shared document/path helpers stay on ``DeskopsOperations`` and this
-service delegates to the operations instance it is bound to.
+entries. Document and path helpers are ``deskops.doc_access``.
 """
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 import re
 from typing import Any
@@ -15,68 +15,115 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from deskops import doc_io
-from deskops.atom_tags import axis_folder_relpath
+from deskops import doc_access
 from deskops.atom_tags import axis_values
 from deskops.atom_tags import default_registry_path
-from deskops.atom_tags import folder_axis_value
-from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
-from deskops.config import DeskConfig
+from deskops.doc_access import DocumentRecord
+from deskops.doc_access import slugify
 from deskops.models import AtomDoc
 from deskops.models import PillDoc
-from deskops.operations import AtomCreateResult
-from deskops.operations import AtomMergeResult
-from deskops.operations import AtomSplitResult
-from deskops.operations import AtomValidationRecord
-from deskops.operations import DocumentRecord
-from deskops.operations import slugify
 from deskops.paths import package_pythonpath
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
 
 
-class AtomsService:
-    def __init__(self, root: Path, operations: "DeskopsOperations | None" = None) -> None:
-        if operations is None:
-            from deskops.operations import DeskopsOperations
+@dataclass(slots=True)
+class AtomValidationRecord:
+    doc_id: str
+    path: Path
+    errors: list[str]
 
-            operations = DeskopsOperations(root)
+
+@dataclass(slots=True)
+class AtomSplitResult:
+    original_id: str
+    original_path: Path
+    created: list[DocumentRecord]
+    redirect_kept: bool
+    inbound_references: list[str]
+
+
+@dataclass(slots=True)
+class AtomMergeResult:
+    source_id: str
+    source_path: Path
+    target_id: str
+    target_path: Path
+    redirect_kept: bool
+    rewritten_references: list[str]
+    ambiguities: list[str]
+
+
+@dataclass(slots=True)
+class AtomCreateResult:
+    doc_id: str
+    path: Path
+    source_kind: str
+    source_selector: str
+    provenance: str
+
+
+def reference_points_to_atom(root: Path, reference: str) -> bool:
+    """Whether a task reference names an atom document of this desk (by path or by id)."""
+    candidate = reference.strip()
+    if not candidate:
+        return False
+    path_text = candidate.split("::", 1)[0]
+    path = Path(path_text)
+    if not path.is_absolute():
+        path = root / path
+    atoms_dir = doc_access.desk_root(root) / "atoms"
+    if path.suffix == ".md" and path.exists():
+        try:
+            path.relative_to(atoms_dir)
+            return True
+        except ValueError:
+            pass
+    atom_id = candidate.removeprefix("atom:")
+    if not atom_id.startswith("atom-"):
+        return False
+    return any(atom_path.stem == atom_id for atom_path in atoms_dir.rglob("*.md"))
+
+
+class AtomsService:
+    def __init__(self, root: Path, operations: "DeskopsOperations") -> None:
         self._ops = operations
         self.root = operations.root
         self.desk_root = operations.desk_root
         self.logger = operations.logger
 
-    # Shared document helpers stay in the operations layer.
+    # Document access is ``deskops.doc_access``; these keep the service's own vocabulary.
     def ensure_workspace(self) -> None:
-        self._ops.ensure_workspace()
+        doc_access.ensure_workspace(self.root)
 
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
-        return self._ops._read_doc(path, model)
+        return doc_access.read_doc(path, model)
 
     def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
-        self._ops._write_doc(path, model, payload)
+        doc_access.write_doc(self.root, path, model, payload)
 
     def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
-        self._ops._write_new_doc(path, model, payload)
+        doc_access.write_new_doc(self.root, path, model, payload)
 
     def _remove_created_file(self, path: Path) -> None:
-        self._ops._remove_created_file(path)
+        doc_access.remove_created_file(path)
 
     def _track_created_artifact(self, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
-        self._ops._track_created_artifact(artifact_id, model, path, doc_id)
+        doc_access.track_created_artifact(self.root, artifact_id, model, path, doc_id)
 
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
-        return self._ops._resolve_artifact_selector(artifact_id, directory, selector)
+        return doc_access.resolve_artifact_selector(self.root, artifact_id, directory, selector)
 
     def _reference_points_to_atom(self, reference: str) -> bool:
-        return self._ops._reference_points_to_atom(reference)
+        return reference_points_to_atom(self.root, reference)
 
     def list_artifacts(self, artifact_id: str) -> list[dict[str, Any]]:
-        return self._ops.list_artifacts(artifact_id)
+        return doc_access.list_artifacts(self.root, artifact_id)
 
     def _resolve_artifact_selector_multi(self, artifact_id: str, directories: list[Path], selector: str) -> Path:
-        return self._ops._resolve_artifact_selector_multi(artifact_id, directories, selector)
+        return doc_access.resolve_artifact_selector_multi(self.root, artifact_id, directories, selector)
 
     def list_atoms(self, axis_value: str | None = None) -> tuple[str | None, list[dict[str, Any]]]:
         """List atoms annotated with their folder-axis value.
@@ -838,25 +885,7 @@ class AtomsService:
 
     def atom_folder_axis(self) -> str | None:
         """Return the configured folder axis namespace for atoms, or None (flat)."""
-        axis = DeskConfig.load(self.desk_root).atom_folder_axis
-        if axis is None:
-            return None
-        axis = str(axis).strip()
-        if not axis:
-            return None
-        namespaces = load_namespaces(default_registry_path(self.root))
-        if axis not in namespaces:
-            raise ValueError(
-                f"Configured atom_folder_axis '{axis}' is not a registered atom tag namespace. "
-                "Register it with 'deskops atoms add-namespace' or fix desk/config.json."
-            )
-        return axis
+        return doc_access.atom_folder_axis(self.root)
 
     def _atom_doc_path(self, atom_id: str, tags: list[str]) -> Path:
-        base = self.desk_root / "atoms"
-        axis = self.atom_folder_axis()
-        if axis is not None:
-            value = folder_axis_value(tags, axis)
-            if value is not None:
-                return base / axis_folder_relpath(value) / f"{atom_id}.md"
-        return base / f"{atom_id}.md"
+        return doc_access.atom_doc_path(self.root, atom_id, tags)

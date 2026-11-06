@@ -263,7 +263,6 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
 
     This is the authoritative mapping used by CLI arg generation.
     """
-    from deskops.operations import ARTIFACT_MODELS
     from deskops.models import (
         AtomDoc,
         BoardDoc,
@@ -291,75 +290,32 @@ def artifact_model_fields() -> dict[str, type[BaseModel]]:
 
 
 # ---------------------------------------------------------------------------
-# Spec-level defaults (the only YAML concern we keep)
+# Artifact-level defaults
 # ---------------------------------------------------------------------------
 
-# Artifact-level defaults that live in YAML and are not in the model.
-# These are id_pattern, status_default, and tags defaults.
-# The YAML spec is the source of truth here because these are
-# artifact-level configuration, not field-level schema.
+# id_pattern, status_default and tags are not field-level schema: each artifact model
+# declares them as its ``__artifact__`` class attribute (a dict with those three keys).
 
-_ARTIFACT_DEFAULTS: dict[str, dict[str, Any]] = {
-    "artifact.atom": {
-        "id_pattern": "atom-{slug}",
-        "status_default": None,
-        "tags": ["system:deskops", "topic:atoms"],
-    },
-    "artifact.board": {
-        "id_pattern": "board-{slug}",
-        "status_default": "active",
-        "tags": ["workspace:desk", "artifact:board"],
-    },
-    "artifact.faq": {
-        "id_pattern": "faq-{slug}",
-        "status_default": "active",
-        "tags": ["workspace:docs", "artifact:faq"],
-    },
-    "artifact.inbox_note": {
-        "id_pattern": "inbox-note-{slug}",
-        "status_default": "open",
-        "tags": ["workspace:desk", "artifact:inbox-note"],
-    },
-    "artifact.materialization": {
-        "id_pattern": "materialization-{slug}",
-        "status_default": None,
-        "tags": ["system:deskops", "topic:materialization"],
-    },
-    "artifact.pill": {
-        "id_pattern": "pill-{slug}",
-        "status_default": "active",
-        "tags": ["workspace:desk", "artifact:pill"],
-    },
-    "artifact.repository": {
-        "id_pattern": "repo-{slug}",
-        "status_default": "active",
-        "tags": ["workspace:desk", "artifact:repository"],
-    },
-    "artifact.ritual": {
-        "id_pattern": "ritual-{slug}",
-        "status_default": "active",
-        "tags": ["workspace:desk", "artifact:ritual"],
-    },
-    "artifact.step": {
-        "id_pattern": "step-{slug}",
-        "status_default": "active",
-        "tags": ["workspace:desk", "artifact:step"],
-    },
-}
+
+def _artifact_defaults(artifact_id: str) -> dict[str, Any]:
+    from deskops.doc_access import ARTIFACT_MODELS
+
+    model = ARTIFACT_MODELS.get(artifact_id)
+    if model is None:
+        return {}
+    return dict(getattr(model, "__artifact__", {}))
 
 
 def artifact_id_pattern(artifact_id: str) -> str:
     """Return the id_pattern for an artifact. E.g. 'atom-{slug}'."""
-    return _ARTIFACT_DEFAULTS.get(artifact_id, {}).get(
-        "id_pattern", "{slug}"
-    )
+    return _artifact_defaults(artifact_id).get("id_pattern", "{slug}")
 
 
 def artifact_status_default(artifact_id: str) -> str | None:
     """Return the status_default for an artifact, or None if status is not managed."""
-    return _ARTIFACT_DEFAULTS.get(artifact_id, {}).get("status_default")
+    return _artifact_defaults(artifact_id).get("status_default")
 
 
 def artifact_tags_default(artifact_id: str) -> list[str]:
     """Return the default tags for an artifact when none are provided."""
-    return list(_ARTIFACT_DEFAULTS.get(artifact_id, {}).get("tags", []))
+    return list(_artifact_defaults(artifact_id).get("tags", []))

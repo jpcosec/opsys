@@ -5,6 +5,7 @@ from pathlib import Path
 
 import pytest
 
+from deskops import doc_access
 from deskops.models.task import TaskDoc
 from deskops.operations import DeskopsOperations
 from tests.test_lifecycle_end_to_end import _cli, _make_repo
@@ -16,7 +17,7 @@ def test_create_artifact_rolls_back_file_when_tracking_fails(tmp_path: Path, mon
     def fail_tracking(*_args: object, **_kwargs: object) -> None:
         raise RuntimeError("tracking failed")
 
-    monkeypatch.setattr(operations, "_track_created_artifact", fail_tracking)
+    monkeypatch.setattr(doc_access, "track_created_artifact", fail_tracking)
 
     with pytest.raises(RuntimeError, match="tracking failed"):
         operations.create_artifact(
@@ -37,7 +38,7 @@ def test_create_task_bundle_rolls_back_the_task_when_tracking_fails(tmp_path: Pa
     def fail_tracking(*_args: object, **_kwargs: object) -> None:
         raise RuntimeError("tracking failed")
 
-    monkeypatch.setattr(operations, "_track_created_document", fail_tracking)
+    monkeypatch.setattr(doc_access, "track_created_document", fail_tracking)
 
     with pytest.raises(RuntimeError, match="tracking failed"):
         operations.create_task_bundle(
@@ -80,13 +81,13 @@ def test_create_task_bundle_restores_board_when_append_fails(tmp_path: Path, mon
     operations.ensure_workspace()
     board_path = tmp_path / "desk" / "tasks" / "Board.md"
     original_board_text = board_path.read_text(encoding="utf-8")
-    original_append = operations._append_task_to_board
+    original_append = operations.tasks._append_task_to_board
 
     def fail_after_append(task_id: str) -> None:
         original_append(task_id)
         raise RuntimeError("board append failed")
 
-    monkeypatch.setattr(operations, "_append_task_to_board", fail_after_append)
+    monkeypatch.setattr(operations.tasks, "_append_task_to_board", fail_after_append)
 
     with pytest.raises(RuntimeError, match="board append failed"):
         operations.create_task_bundle(
@@ -115,7 +116,7 @@ def test_pill_graduation_is_verified_when_bound_pills_have_an_atom_reference(tmp
         },
     )
 
-    assert operations._has_verified_task_pill_graduation(
+    assert operations.closure.has_verified_task_pill_graduation(
         {"pills": ["desk/contexts/pill-example.md"], "references": ["desk/atoms/atom-graduated-knowledge.md"]}
     )
 
@@ -123,13 +124,13 @@ def test_pill_graduation_is_verified_when_bound_pills_have_an_atom_reference(tmp
 def test_pill_graduation_is_not_verified_when_bound_pills_lack_an_atom_reference(tmp_path: Path) -> None:
     operations = DeskopsOperations(tmp_path)
 
-    assert not operations._has_verified_task_pill_graduation(
+    assert not operations.closure.has_verified_task_pill_graduation(
         {"pills": ["desk/contexts/pill-example.md"], "references": ["tests/test_runtime.py::test_runtime"]}
     )
 
 
 def test_pill_graduation_is_trivially_verified_without_bound_pills(tmp_path: Path) -> None:
-    assert DeskopsOperations(tmp_path)._has_verified_task_pill_graduation({"pills": [], "references": []})
+    assert DeskopsOperations(tmp_path).closure.has_verified_task_pill_graduation({"pills": [], "references": []})
 
 
 def test_advance_task_does_not_persist_computed_gate_facts(lifecycle_desk: Path) -> None:

@@ -499,7 +499,7 @@ def test_auto_commit_task_closure_failure_path_keeps_bundle(tmp_path: Path) -> N
 
     operations = DeskopsOperations(root)
     with pytest.raises(RuntimeError, match="Failed to commit task closure"):
-        operations._auto_commit_task_closure(
+        operations.closure.close_auto(
             {"id": task_id, "routine": "", "files": []}, task_path
         )
 

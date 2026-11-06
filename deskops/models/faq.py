@@ -4,6 +4,13 @@ from sldb import StructuredNLDoc
 
 
 class DeskFAQDoc(StructuredNLDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "faq-{slug}",
+        "status_default": "active",
+        "tags": ["workspace:docs", "artifact:faq"],
+    }
     __semantics__ = {
         "type": ["documentation", "faq"],
         "workspace": ["docs", "faq"],

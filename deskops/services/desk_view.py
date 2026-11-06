@@ -17,6 +17,7 @@ import re
 import shlex
 from typing import Any, Callable
 
+from deskops import doc_access
 from deskops import lifecycle
 from deskops.models import BoardDoc
 from deskops.models import InboxNoteDoc
@@ -104,7 +105,7 @@ class DeskView:
         return nodes
 
     def _board_payload(self) -> dict[str, Any]:
-        return self.ops._read_doc(self.board_path, BoardDoc)
+        return doc_access.read_doc(self.board_path, BoardDoc)
 
     def _board_task_paths(self, errors: list[dict[str, str]]) -> list[Path]:
         tasks_dir = (self.root / "desk" / "tasks").resolve()
@@ -216,13 +217,13 @@ class DeskView:
         self, path: Path, board_pills: list[str], errors: list[dict[str, str]], *, detail: bool = False
     ) -> tuple[dict[str, Any], dict[str, Any]]:
         stem = path.stem
-        payload = self.ops._resolve_task_payload(stem)
+        payload = doc_access.resolve_task_payload(self.root, stem)
         task_id = str(payload.get("id") or stem)
         task, gates = self.ops.show_task(stem)
         node = str(payload.get("current_node") or "")
         if task is not None and not gates and node and node != lifecycle.COMPLETE:
             try:
-                self.ops._transitions_from(node)
+                lifecycle.transitions_from(self.root, node, snapshot=self.ops.snapshot)
                 cause = f"The desk lifecycle graph declares no transition leaving {node}."
             except Exception as exc:
                 cause = f"Lifecycle gates unavailable: {exc}"
@@ -294,7 +295,7 @@ class DeskView:
     def _task_view(self, selector: str) -> dict[str, Any]:
         errors: list[dict[str, str]] = []
         try:
-            path = self.ops._resolve_artifact_selector("artifact.task", self.ops.desk_root / "tasks", selector)
+            path = doc_access.resolve_artifact_selector(self.root, "artifact.task", self.ops.desk_root / "tasks", selector)
         except (FileNotFoundError, ValueError) as exc:
             raise DeskViewError(f"Task '{selector}' does not resolve: {exc}") from exc
         board_paths = self._board_task_paths([])
@@ -350,7 +351,7 @@ class DeskView:
                 self._error(errors, rel, f"Drawer file does not parse: {exc}")
                 continue
             try:
-                doc = self.ops._read_doc(path, TaskDoc)
+                doc = doc_access.read_doc(path, TaskDoc)
             except Exception as exc:
                 doc = {}
                 self._error(errors, rel, f"Drawer file is not a valid TaskDoc: {exc}")
@@ -396,7 +397,7 @@ class DeskView:
                 self._error(errors, rel, f"Inbox note does not parse: {exc}")
                 continue
             try:
-                body = str(self.ops._read_doc(path, InboxNoteDoc).get("body") or "")
+                body = str(doc_access.read_doc(path, InboxNoteDoc).get("body") or "")
             except Exception as exc:
                 body = str(detail.get("body") or "")
                 self._error(errors, rel, f"Inbox note is not a valid InboxNoteDoc; body shown raw: {exc}")
@@ -456,7 +457,7 @@ class DeskView:
         board_ids = set()
         for path in self._board_task_paths([]):
             try:
-                board_ids.add(str(self.ops._read_doc(path, TaskDoc).get("id") or path.stem))
+                board_ids.add(str(doc_access.read_doc(path, TaskDoc).get("id") or path.stem))
             except Exception:
                 continue
         runs: list[dict[str, Any]] = []

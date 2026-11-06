@@ -1,110 +1,206 @@
-"""Task lifecycle service: create, advance, and next.
+"""Task lifecycle service: create, list, show, advance, next, and the task type registry.
 
 TaskDoc reads go only through sldb's ``extract_model_data``; this service never
-overlays a regex parse on top of the model. Shared document storage helpers
-(read/write/track, selector resolution, lifecycle facts) stay on
-``DeskopsOperations``; the service delegates to the operations instance it is
-bound to instead of duplicating them.
+overlays a regex parse on top of the model. Document storage (read/write/track,
+selector resolution, the task payload with its inherited context) is
+``deskops.doc_access``; the lifecycle graph is ``deskops.lifecycle``.
 """
 
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
+import sys
 from typing import Any
 from typing import TYPE_CHECKING
 
+from deskops import doc_access
 from deskops import doc_io
 from deskops import lifecycle
 from deskops.lifecycle import TransitionResult
 from deskops.models import BoardDoc
+from deskops.models import PillDoc
 from deskops.models import TaskDoc
+from deskops.models.task_types import TASK_TYPE_MODELS
 from deskops.models.task_types import canonical_task_type_name
-from deskops.operations import TaskBundle
 from deskops.runtime import Task
 from deskops.specs import compile_task_spec
-from deskops.workflow.next_actions import load_task_lifecycle_spec
 from deskops.workflow.next_actions import match_workflow_state
+from deskops.workflow.next_actions import render_workflow_mermaid
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
 
 
-class TasksService:
-    def __init__(self, root: Path, operations: "DeskopsOperations | None" = None) -> None:
-        if operations is None:
-            from deskops.operations import DeskopsOperations
+@dataclass(slots=True)
+class TaskBundle:
+    task_id: str
+    task_path: Path
 
-            operations = DeskopsOperations(root)
+
+def registered_task_types(root: Path) -> dict[str, type[Any]]:
+    """task_type name -> model class: the factory types plus desk-local types in the store.
+
+    A desk adds its own types as ``desk/models/*.py`` subclasses; ``desk update --apply``
+    registers them with ``pythonpath`` = the desk root. Factory types are importable directly
+    and are merged in first, so local modules never shadow them.
+    """
+    registry: dict[str, type[Any]] = dict(TASK_TYPE_MODELS)
+    store_dir = root / ".sldb"
+    if store_dir.exists():
+        try:
+            from sldb.api.model_registry.model_reference import resolve_model_ref
+
+            from deskops.bootstrap import SLDBBootstrap
+
+            entries = SLDBBootstrap()._registered_model_entries(store_dir)
+            pythonpath = str(doc_access.desk_root(root))
+            for name, entry in entries.items():
+                if name in registry:
+                    continue
+                model_ref = getattr(entry, "model_ref", "") or ""
+                if not model_ref:
+                    continue
+                try:
+                    cls = resolve_model_ref(model_ref, pythonpath=pythonpath)
+                except Exception:
+                    continue
+                if not isinstance(cls, type) or not issubclass(cls, TaskDoc):
+                    continue
+                field = cls.model_fields.get("task_type")
+                default = getattr(field, "default", None)
+                if default not in (None, ""):
+                    registry[str(default)] = cls
+        except Exception:
+            pass
+    return registry
+
+
+class TasksService:
+    def __init__(self, root: Path, operations: "DeskopsOperations") -> None:
         self._ops = operations
         self.root = operations.root
         self.desk_root = operations.desk_root
         self.logger = operations.logger
+        self._task_type_registry: dict[str, type[Any]] | None = None
 
-    # Shared document helpers stay in the operations layer.
-    def ensure_workspace(self) -> None:
-        self._ops.ensure_workspace()
+    def registered_task_types(self) -> dict[str, type[Any]]:
+        """The task type registry of this desk, read once per service instance."""
+        if self._task_type_registry is None:
+            self._task_type_registry = registered_task_types(self.root)
+        return self._task_type_registry
 
-    def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
-        return self._ops._read_doc(path, model)
-
-    def _write_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
-        self._ops._write_doc(path, model, payload)
-
-    def _write_new_doc(self, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
-        self._ops._write_new_doc(path, model, payload)
-
-    def _track_created_document(self, model: type[Any], path: Path, doc_id: str) -> None:
-        self._ops._track_created_document(model, path, doc_id)
-
-    def _coerce_list(self, value: Any) -> list[str]:
-        return self._ops._coerce_list(value)
-
-    def _hydrate_task(self, payload: dict[str, Any]) -> Task:
-        return self._ops._hydrate_task(payload)
-
-    def _add_closeout_facts(self, payload: dict[str, Any]) -> None:
-        self._ops._add_closeout_facts(payload)
-
-    def _resolve_glob(self, directory: Path, doc_id: str) -> Path:
-        return self._ops._resolve_glob(directory, doc_id)
-
-    def _normalize_task_payload(self, payload: dict[str, Any]) -> dict[str, Any]:
-        return self._ops._normalize_task_payload(payload)
-
-    def _resolve_task_payload(self, task_id: str) -> dict[str, Any]:
-        return self._ops._resolve_task_payload(task_id)
-
-    def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
-        return self._ops._resolve_artifact_selector(artifact_id, directory, selector)
-
+    # ---------------------------------------------------------------- create
     def create_task_bundle(self, raw_payload: dict[str, Any]) -> TaskBundle:
         """Write one task and route it on the Board. Its lifecycle is the desk's graph
         (deskops/lifecycle.py), so nothing else is written per task."""
-        self.ensure_workspace()
-        payload = self._normalize_task_payload(raw_payload)
+        doc_access.ensure_workspace(self.root)
         # A task's closeout evidence is declared by its type, not written into the task. The
         # task is stored under its type's model so `model <= TaskCodeDoc` finds it.
-        raw_task_type = str(payload.get("task_type") or "").strip()
-        registry = self._ops.registered_task_types()
+        raw_task_type = str(raw_payload.get("task_type") or "").strip()
+        registry = self.registered_task_types()
         task_type = raw_task_type if raw_task_type in registry else canonical_task_type_name(raw_task_type)
         type_model = registry.get(task_type) or registry.get("task.code") or TaskDoc
-        payload["task_type"] = task_type
         spec = lifecycle.load_lifecycle_spec()
-        compiled = compile_task_spec(self._ops.spec_registry, payload, entry_node=spec.entry_node)
+        compiled = compile_task_spec({**raw_payload, "task_type": task_type}, entry_node=spec.entry_node)
         task_id = compiled.task_payload["id"]
         task_path = self._task_path(task_id)
 
         with doc_io.DocTransaction(self.root):
-            self._write_new_doc(task_path, type_model, compiled.task_payload)
-            self._track_created_document(type_model, task_path, task_id)
-            self._ops._append_task_to_board(task_id)
+            doc_access.write_new_doc(self.root, task_path, type_model, compiled.task_payload)
+            doc_access.track_created_document(self.root, type_model, task_path, task_id)
+            self._append_task_to_board(task_id)
         return TaskBundle(task_id=task_id, task_path=task_path)
+
+    def _append_task_to_board(self, task_id: str) -> None:
+        board_path = self.desk_root / "tasks" / "Board.md"
+        board_payload = doc_access.read_doc(board_path, BoardDoc)
+        task_ref = f"desk/tasks/{task_id}.md"
+        tasks = list(board_payload.get("tasks") or [])
+        if task_ref not in tasks:
+            tasks.append(task_ref)
+            board_payload["tasks"] = tasks
+            doc_access.write_doc(self.root, board_path, BoardDoc, board_payload)
+
+    def bind_pill_to_task(self, task_selector: str, pill_selector: str) -> tuple[doc_access.DocumentRecord, str, bool]:
+        doc_access.ensure_workspace(self.root)
+        task_path = doc_access.resolve_artifact_selector(self.root, "artifact.task", self.desk_root / "tasks", task_selector)
+        pill_path = doc_access.resolve_artifact_selector(self.root, "artifact.pill", self.desk_root / "contexts", pill_selector)
+        task_payload = doc_access.read_doc(task_path, TaskDoc)
+        doc_access.read_doc(pill_path, PillDoc)
+        pill_ref = str(pill_path.relative_to(self.root))
+        pills = list(task_payload.get("pills") or [])
+        record = doc_access.DocumentRecord(kind="task", doc_id=str(task_payload.get("id", task_path.stem)), path=task_path)
+        if pill_ref in pills:
+            return record, pill_ref, False
+        task_payload["pills"] = [*pills, pill_ref]
+        doc_access.write_doc(self.root, task_path, TaskDoc, task_payload)
+        return record, pill_ref, True
+
+    # ---------------------------------------------------------------- read
+    def list_tasks(self) -> list[Task]:
+        task_dir = self.desk_root / "tasks"
+        if not task_dir.exists():
+            if not self.desk_root.exists():
+                raise FileNotFoundError(f"Desk root not found at {self.desk_root}. Run 'deskops init' to initialize.")
+            return []
+        tasks: list[Task] = []
+        for path in sorted(task_dir.glob("task-*.md")):
+            try:
+                tasks.append(doc_access.load_task(self.root, path.stem))
+            except Exception as e:
+                print(f"Warning: Failed to load task {path}: {e}", file=sys.stderr)
+        return tasks
+
+    def show_task(self, task_id: str) -> tuple[Task | None, list[dict[str, Any]]]:
+        """The task and the lifecycle transitions leaving its current node, each with
+        whether its condition holds now (empty when the graph is missing or the task is
+        complete)."""
+        try:
+            task = doc_access.load_task(self.root, task_id)
+        except FileNotFoundError:
+            return None, []
+        return task, self._lifecycle_gates(task)
+
+    def _lifecycle_gates(self, task: Task) -> list[dict[str, Any]]:
+        if not task.current_node or task.current_node == lifecycle.COMPLETE:
+            return []
+        try:
+            transitions = lifecycle.transitions_from(self.root, task.current_node, snapshot=self._ops.snapshot)
+        except Exception:
+            return []
+        payload = doc_access.read_doc(doc_access.resolve_glob(self.root, self.desk_root / "tasks", task.id), TaskDoc)
+        self.add_closeout_facts(payload)
+        return [
+            {
+                "relation_type": t.relation_type,
+                "target": lifecycle.COMPLETE if t.terminal else t.target,
+                "condition": t.condition,
+                "holds": lifecycle.condition_holds(t.condition, payload),
+            }
+            for t in transitions
+        ]
+
+    def add_closeout_facts(self, payload: dict[str, Any]) -> None:
+        """Facts the lifecycle conditions test with has(): present only when they hold."""
+        closure = self._ops.closure
+        for key, holds in (
+            ("closeout_evidence_verified", closure.has_verified_task_closeout_evidence(payload)),
+            ("pill_graduation_verified", closure.has_verified_task_pill_graduation(payload)),
+        ):
+            if holds:
+                payload[key] = "verified"
+            else:
+                payload.pop(key, None)
+
+    def render_next_action_diagram(self) -> str:
+        return render_workflow_mermaid(lifecycle.load_lifecycle_spec())
 
     def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
         board_path = self.desk_root / "tasks" / "Board.md"
         board_ref = str(board_path.relative_to(self.root))
         if not task_selector:
-            task_refs = list(self._read_doc(board_path, BoardDoc).get("tasks") or [])
+            task_refs = list(doc_access.read_doc(board_path, BoardDoc).get("tasks") or [])
             if not task_refs:
                 return {
                     "kind": "no_board_task",
@@ -119,7 +215,7 @@ class TasksService:
                 tasks = []
                 for task_ref in task_refs:
                     path = self.root / str(task_ref)
-                    payload = self._read_doc(path, TaskDoc)
+                    payload = doc_access.read_doc(path, TaskDoc)
                     tasks.append(
                         {
                             "id": str(payload.get("id") or path.stem),
@@ -137,8 +233,8 @@ class TasksService:
                     ],
                 }
         task_path = self._next_task_path(task_selector, board_path)
-        payload = self._resolve_task_payload(task_path.stem)
-        spec = load_task_lifecycle_spec(self._ops.spec_root)
+        payload = doc_access.resolve_task_payload(self.root, task_path.stem)
+        spec = lifecycle.load_lifecycle_spec()
         state = match_workflow_state(spec, str(payload.get("current_node") or ""))
         pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("effective_pills") or payload.get("pills") or [])]))
         sources = {
@@ -174,16 +270,17 @@ class TasksService:
             "sources": sources,
         }
 
+    # ---------------------------------------------------------------- advance
     def advance_task(self, task_id: str) -> tuple[Task | None, TransitionResult | None]:
         try:
-            task_path = self._resolve_glob(self.desk_root / "tasks", task_id)
+            task_path = doc_access.resolve_glob(self.root, self.desk_root / "tasks", task_id)
         except FileNotFoundError:
             return None, None
-        payload = self._read_doc(task_path, TaskDoc)
+        payload = doc_access.read_doc(task_path, TaskDoc)
 
         current_node = str(payload.get("current_node") or "")
         current_status = str(payload.get("status") or "")
-        self._add_closeout_facts(payload)
+        self.add_closeout_facts(payload)
         result = lifecycle.advance(self.root, payload)
         for key in ("closeout_evidence_verified", "pill_graduation_verified"):
             payload.pop(key, None)
@@ -192,10 +289,10 @@ class TasksService:
             # only closing entry point is `deskops closeout commit`.
             self.logger.info(f"Task {task_id} reached the closure gate; deferring to closeout commit.")
             restored = {**payload, "current_node": current_node, "status": current_status}
-            return self._hydrate_task(restored), self._closure_required(task_id, restored)
-        advanced_task = self._hydrate_task(payload)
+            return doc_access.hydrate_task(restored), self._closure_required(task_id, restored)
+        advanced_task = doc_access.hydrate_task(payload)
         if result.progressed:
-            self._write_doc(task_path, TaskDoc, payload)
+            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
         self.logger.info(f"Advanced task {task_id} to node {payload.get('current_node')}")
         return advanced_task, result
 
@@ -210,17 +307,14 @@ class TasksService:
         )
         return TransitionResult(node, status, False, True, message)
 
-    def _auto_commit_task_closure(self, payload: dict[str, Any], task_path: Path) -> None:
-        # Compatibility hook: closure logic lives in ClosureService.
-        self._ops.closure.close_auto(payload, task_path)
-
+    # ---------------------------------------------------------------- paths
     def _task_path(self, task_id: str) -> Path:
         return self.desk_root / "tasks" / f"{task_id}.md"
 
     def _next_task_path(self, task_selector: str | None, board_path: Path) -> Path:
         if task_selector:
-            return self._resolve_artifact_selector("artifact.task", self.desk_root / "tasks", task_selector)
-        board_payload = self._read_doc(board_path, BoardDoc)
+            return doc_access.resolve_artifact_selector(self.root, "artifact.task", self.desk_root / "tasks", task_selector)
+        board_payload = doc_access.read_doc(board_path, BoardDoc)
         task_refs = list(board_payload.get("tasks") or [])
         if not task_refs:
             raise FileNotFoundError("No active tasks routed by desk/tasks/Board.md")
@@ -230,7 +324,7 @@ class TasksService:
 
     def _board_pills(self, board_path: Path) -> list[str]:
         try:
-            board_payload = self._read_doc(board_path, BoardDoc)
+            board_payload = doc_access.read_doc(board_path, BoardDoc)
         except Exception:
             return []
         return [str(pill) for pill in board_payload.get("pills") or []]

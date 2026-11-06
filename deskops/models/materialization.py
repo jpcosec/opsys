@@ -6,6 +6,13 @@ from .atom import AtomTag
 
 
 class MaterializationContractDoc(StructuredNLDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "materialization-{slug}",
+        "status_default": None,
+        "tags": ["system:deskops", "topic:materialization"],
+    }
     __semantics__ = {
         "type": ["knowledge", "materialization_contract"],
         "workspace": ["desk", "materializations"],

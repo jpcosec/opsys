@@ -6,6 +6,13 @@ from sldb import StructuredNLDoc
 
 
 class InboxNoteDoc(StructuredNLDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "inbox-note-{slug}",
+        "status_default": "open",
+        "tags": ["workspace:desk", "artifact:inbox-note"],
+    }
     __semantics__ = {
         "type": ["desk", "inbox-note"],
         "workspace": ["desk", "inbox"],

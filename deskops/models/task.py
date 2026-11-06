@@ -26,6 +26,13 @@ _ABSENT_FRONTMATTER_DEFAULTS = frozenset({
 
 
 class TaskDoc(OperationalArtifactDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "task-{slug}",
+        "status_default": "draft",
+        "tags": ["workspace:desk", "artifact:task"],
+    }
     # The contract fields: editing any of these changes the task contract and (once sldb reads
     # GO02 (e)) leaves receipts `changed`; editing references/pills/status/history/tags does not.
     __contract__ = ["title", "goal", "scope", "implementation_path", "files", "validation", "done_when"]

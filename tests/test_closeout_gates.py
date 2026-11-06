@@ -214,8 +214,8 @@ def _verify_both(root: Path, monkeypatch: pytest.MonkeyPatch, task_id: str) -> t
     with monkeypatch.context() as patch:
         oracle_ops = DeskopsOperations(root)
         patch.setattr(
-            oracle_ops,
-            "_build_closeout_graph_context",
+            oracle_ops.closure,
+            "build_closeout_graph_context",
             lambda: FullScanCloseoutGraph(closeout_graph_context_v1(root)),
         )
         old = oracle_ops.verify_task_closeout(task_id)
@@ -269,11 +269,15 @@ def test_the_board_matches_the_full_scan(store_desk: Path, monkeypatch: pytest.M
     with monkeypatch.context() as patch:
         view = DeskView(store_desk)
         patch.setattr(
-            view.ops,
-            "_build_closeout_graph_context",
+            view.ops.closure,
+            "build_closeout_graph_context",
             lambda: FullScanCloseoutGraph(closeout_graph_context_v1(store_desk)),
         )
-        patch.setattr(view.ops, "_transitions_from", lambda node: transitions_from_v1(store_desk, node))
+        patch.setattr(
+            lifecycle,
+            "transitions_from",
+            lambda root, node, spec=None, *, snapshot=None: transitions_from_v1(store_desk, node),
+        )
         old = view.board()
     assert live == old
 
