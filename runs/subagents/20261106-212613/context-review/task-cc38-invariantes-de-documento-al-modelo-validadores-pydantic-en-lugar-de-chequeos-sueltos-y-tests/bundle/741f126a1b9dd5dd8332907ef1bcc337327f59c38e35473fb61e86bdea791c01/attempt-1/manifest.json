@@ -1,0 +1,120 @@
+{
+  "key": "task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests/bundle",
+  "input_sha256": "741f126a1b9dd5dd8332907ef1bcc337327f59c38e35473fb61e86bdea791c01",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/dev/shm/deskops-desk-cc/runs/subagents/20261106-212613/context-review/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests/bundle/741f126a1b9dd5dd8332907ef1bcc337327f59c38e35473fb61e86bdea791c01/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md",
+      "sha256": "08f61e3f9d736b6f31aff1091c758fe395442c7bc7f7045fa5afb459d11d2a04",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/domain_tree.py",
+      "sha256": "05eceac31c66b654afea1d9810f3f841a59530d8a3a15aeb22ba373bbb496f18",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/atom_tags.py",
+      "sha256": "f45090d5932514ce5538a3fcae20d8d0b3bbacbdb45c69e963c6e004aec67ee0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/atoms.py",
+      "sha256": "21b14b5cb312034b2d934459cb8e486d8a56a2e8024f8f383aa24ef28aa2f3a2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/doctor.py",
+      "sha256": "474df432b4305b20a0dd9f41445c5020eab025d93f6ed56651a82f32b02c3f58",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_atom_tags.py",
+      "sha256": "696b05793df2d2f9dc7fbdbaed7b515bad77a8fd88dd2589f3f7d4942d07c668",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_desk_paths.py",
+      "sha256": "572750b44fce9bac93c267c4e04c16392930d9f098f590192efd1695dea87da5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_output_goldens.py",
+      "sha256": "dae55ce6e552e38b5d2e433b574d9d29bf4474f3b05378a898ddf0a1262a198c",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "39ced22625c23d8358cd685888f4d819fbf93ea57dacae772dcd8e430d7d1950",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/models/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/services/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/doc_access.py",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/test_cli.py",
+      "reason": "size>=60000",
+      "size": 107699
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-06T21:26:13.480652+00:00",
+  "finished": "2026-11-06T21:26:39.534489+00:00"
+}

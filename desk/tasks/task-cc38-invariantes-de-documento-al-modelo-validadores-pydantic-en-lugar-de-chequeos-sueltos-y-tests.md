@@ -95,6 +95,12 @@ p11 («el store» en p4b): un chequeo depende del store si consulta otro documen
 p12 (fuente del inventario de CC30): runs/subagents/cc30-worker-report.md está en la rama wt/cc30 y llega a main con la integración de CC30. Si el worktree de CC38 no lo tiene, se lee con git show origin/wt/cc30:runs/subagents/cc30-worker-report.md. No se copia al desk.
 p13 (matriz de p6): cuatro casos, AtomDoc y CrossroadDoc × «sldb fields update» y «sldb docs update». Cada uno, con el comando, el payload inválido y la salida de rechazo, en la Validation o en el informe del worker.
 
+PRECISIONES DEL COLD-BUNDLE (review-task-cc38-...-bundle-1, 2026-11-06):
+p14 (chequeo mixto): la parte de un documento pasa al validador y se borra de la función vieja en el mismo paso. La parte entre documentos queda en el código, en la misma función reducida a esa parte (sin renombrar), hasta que CC32/CC33 la reemplace. El inventario la lista con el nodo asignado y el grep de p10 la exime.
+p15 (texto ya fijado por un test): si un test existente fija el texto de un chequeo (p. ej. match="Unknown atom tag namespace"), ese chequeo tiene texto viejo y p5 lo obliga a conservarlo. p9 vale solo para chequeos sin texto en ningún test ni golden.
+p16 (ValueError frente a ValidationError): cada chequeo movido tiene al menos un test nuevo que construye el modelo con el payload malo y espera pydantic.ValidationError. Los tests existentes que prueban la vía del servicio con pytest.raises(ValueError) se conservan si siguen verdes (ValidationError es subclase de ValueError) y no se migran. Se migran solo los que arman el payload para probar la invariante y no el servicio.
+p17 (sldb docs update): los cuatro casos de p13 bloquean, también «sldb docs update». Si una vía de sldb no aplica el validador, rige p6 (hipótesis y nota a sldb, sin suplir con Python) y el nodo se entrega con esa vía marcada como hipótesis abierta, no como verde.
+
 ## Validation
 
 _List the checks required before this task can close._
