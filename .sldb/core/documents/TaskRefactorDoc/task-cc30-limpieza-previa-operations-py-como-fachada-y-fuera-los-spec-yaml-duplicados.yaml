@@ -1,7 +1,7 @@
 name: task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados
 path: desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
-source_hash: 9125729e3cd26e872d0544b23b5f8d798e5dde94a67a29afbed62e1f2df88b0a
-content_hash: cec624f84d61863d211ee5ed3e08ccaac4527a395aa114c9da509aa4c80eda90
+source_hash: b14297a52cae78624f0d3d6af5631f156c21e85fd33c9703ed8d2a06582217d1
+content_hash: 2110900bf18338bf50264e64139a38dc048365772b9c201ca7323b775034310b
 field_hashes:
   title: b6ad6900c3a2f4a90de181be4be0ddc1e0efb76f0c1856abdf457ccf7a3958af
   id: a3bbd6558e95817b2dad6bbb38077a73bc25457ca88088c0eccea8a4a90ceed6
@@ -16,8 +16,8 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: 845f5dc83ffa43010eb0fdf5a0688bce199be0a8c6c86c60580c418d66e7d564
-  implementation_path: 760a270845bfa8881833e078d0b7ee3a69fdab37da9e16474eaf30a05edc734a
+  files: 476402f0eab3edc6ac9d8a161fa53dc19f7d4cc05881a15ed043eb4037e39c29
+  implementation_path: c1fbc303e164db1db8e33f4bc6a77d7b6ee8ff975fcec332379efb8e3cf14444
   validation: 9c7d6e2e04f508e4e0c4813a4aab82dda4636110167f97cccb2edc8c6f282611
   done_when: 50d7c32ae7d9fcc9f83d2c69549800bf68429e2c31b4c597f6c56f514a34bf34
   task_type: d0b4cbfeadc448bca1492079dfd36948fd84b4ae366c521b0e71add2bea3fa86

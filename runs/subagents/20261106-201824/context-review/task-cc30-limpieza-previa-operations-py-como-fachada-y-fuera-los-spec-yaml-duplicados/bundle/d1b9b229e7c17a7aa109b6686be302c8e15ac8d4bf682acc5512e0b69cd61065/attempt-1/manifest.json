@@ -1,0 +1,160 @@
+{
+  "key": "task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados/bundle",
+  "input_sha256": "d1b9b229e7c17a7aa109b6686be302c8e15ac8d4bf682acc5512e0b69cd61065",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/dev/shm/deskops-desk-cc/runs/subagents/20261106-201824/context-review/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados/bundle/d1b9b229e7c17a7aa109b6686be302c8e15ac8d4bf682acc5512e0b69cd61065/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md",
+      "sha256": "9125729e3cd26e872d0544b23b5f8d798e5dde94a67a29afbed62e1f2df88b0a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/tasks.py",
+      "sha256": "b6b8ab8d93cf46aac17fc7799f40ca01b0d52d137ee24e39fcad48ecbc4180a8",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/atoms.py",
+      "sha256": "21b14b5cb312034b2d934459cb8e486d8a56a2e8024f8f383aa24ef28aa2f3a2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/closure.py",
+      "sha256": "1a87b08fb284a0240f10ba54fa95916e17756d505b4de80999d750d574442348",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/retire.py",
+      "sha256": "58cfe639259c486a52594912c40f2455a32689540c951785855ced51e34c9630",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/desk_view.py",
+      "sha256": "365a5cb98a476c8a9c89bd6baef52c1277d6c626f82f1b786050eee50858725a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/specs/__init__.py",
+      "sha256": "ff25d5cd34cd9ad145fb758f3a6df1f8a9219ae6370e39a75117e3d4a4500020",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/specs/compiler.py",
+      "sha256": "6115bae5dfb1d8677179b5551b80785c9d27e41709fbe73483e9e258bff11cef",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/specs/loader.py",
+      "sha256": "cbc4d7467f3c6d2d2cb796e58993d34d0976ad5d2a5d598a70ab7c2ddaaee8a3",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/specs/mermaid.py",
+      "sha256": "80a48818251a7ec24c19327c93ba300f3234ede231e9e25f9fd8ecfa3f69e1ad",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/model_introspection.py",
+      "sha256": "41793ce505512129fbfe6474a4662fbd7696d1eb552068381974c99f8f556ca3",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workflow/next_actions.py",
+      "sha256": "6190c920b7b3c304ff09493bc8b47b3571c125a9d31676f148ff174e4a65cee3",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_specs.py",
+      "sha256": "2cb73797d3a1924fc4a0a527c3c1847a5031c875840bd69dd4df7ad5e945577c",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_extension_points.py",
+      "sha256": "c54f814ec7e075cfda1ccd30c526b9b03b452700a1c1eddf89a48355bf56da0b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_desk_view.py",
+      "sha256": "4c2a75a984c7ff664695eee59886a4eb5dd8b529add66ddcb0789f5c88a06d56",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_output_goldens.py",
+      "sha256": "dae55ce6e552e38b5d2e433b574d9d29bf4474f3b05378a898ddf0a1262a198c",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "39ced22625c23d8358cd685888f4d819fbf93ea57dacae772dcd8e430d7d1950",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/operations.py",
+      "reason": "size>=60000",
+      "size": 66408
+    },
+    {
+      "path": "deskops/doc_access.py",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/spec/artifacts/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/spec/fields/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/models/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-06T20:18:24.232906+00:00",
+  "finished": "2026-11-06T20:19:00.418007+00:00"
+}
