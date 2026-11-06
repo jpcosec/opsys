@@ -91,17 +91,27 @@ q2 (desk_view.py): services/desk_view.py construye DeskopsOperations (:66) y cae
 q3 (líneas base): la base de la medición es main dc1d2834.
 q4 (DK6): si al mover helpers aparece un chequeo de un documento fuera del modelo, no se mueve al modelo aquí: queda anotado para el inventario de CC38.
 
+PRECISIONES DEL PREFLIGHT (review-task-cc30-...-preflight-1, 2026-11-06):
+q5 (arranque): el ejecutor NO arranca mientras G_P0 o G_GATES_FROZEN estén pending en dag.yaml; el coordinador despacha solo cuando el supervisor los marca satisfechos.
+q6 (destino de cada helper): un helper de lectura/escritura/resolución de documentos del desk que usan dos o más servicios o la fachada (_read_doc, _write_doc, _write_new_doc, _coerce_list, _resolve_glob, _resolve_artifact_selector, _resolve_artifact_selector_multi, _resolve_task_payload, _hydrate_task, _track_created_document, _track_created_artifact, _remove_created_file) va a deskops/doc_access.py como función de módulo que recibe root; un helper que usa un solo servicio (_normalize_task_payload, _append_task_to_board, _add_closeout_facts, _reference_points_to_atom, _transitions_from) va a ese servicio (o a lifecycle.py en el caso de _transitions_from).
+q7 (inventario cerrado): el conjunto de helpers es exactamente la salida de grep -rhoE "operations\._[a-z_]+|ops\._[a-z_]+" deskops/services/ | sort -u sobre main dc1d2834 (los 17 nombres de q6); se registra aquí antes y después (después: vacío salvo desk_view.py, ver q9).
+q8 (atributo de modelo): el atributo se llama __artifact__ y es un dict con las claves id_pattern, status_default y tags, con los mismos valores que hoy dan spec/artifacts/*.yaml y _ARTIFACT_DEFAULTS; model_introspection.py, specs/compiler.py y operations.py lo leen con getattr(model, "__artifact__", {}).
+q9 (desk_view.py y retire.py): retire.py:200 escribe con doc_access.write_doc(root, ...). desk_view.py es consumidor de la fachada (la fachada no lo llama; lo construyen cli/commands/view.py y graph_ui serve.py:164 como DeskView(root)), no un servicio delegado: conserva su firma y su DeskopsOperations(self.root) por defecto; sus lecturas privadas (_read_doc, _resolve_task_payload, _transitions_from, _resolve_artifact_selector) pasan a doc_access/lifecycle. El grep de aceptación de "DeskopsOperations(" en deskops/services/ excluye services/desk_view.py, que CC34 borra.
+q10 (specs/mermaid.py): se borra si grep -rn "specs.mermaid\|from deskops.specs import" deskops/ --include=*.py fuera de deskops/specs/ no lo importa; si algo de deskops/ lo importa, se conserva y se registra aquí. El mismo criterio vale para specs/loader.py tras quitar SpecRegistry.
+q11 (tests fijados): los tests de los archivos tocados son tests/test_output_goldens.py, test_specs.py, test_extension_points.py, test_desk_view.py, test_atoms_transactions.py, test_board_portable_references.py, test_cli.py, test_closeout_gates.py, test_desk_replace.py, test_doc_io.py, test_materialization_contract.py, test_packaging.py, test_registry_robustness.py y test_review_doc.py (importan módulos tocados); fallas previas conocidas en main (test_board_portable_references::test_linked_board_context..., test_gitignore_policy::test_sldb_store_declaration...) se comparan contra main dc1d2834.
+
 ## Validation
 
 _List the checks required before this task can close._
 
-- TMPDIR=/dev/shm pytest -q tests/test_output_goldens.py (test_help_goldens y test_command_output_goldens sin --update-golden)
+- TMPDIR=/dev/shm pytest -q tests/test_output_goldens.py (help y output goldens sin --update-golden)
 - TMPDIR=/dev/shm pytest -q tests/test_specs.py tests/test_extension_points.py tests/test_desk_view.py
-- TMPDIR=/dev/shm pytest -q sobre cada test de los archivos tocados (lista final en esta sección al cerrar)
-- grep -rn 'spec/artifacts\|spec/fields\|SpecRegistry\|_ARTIFACT_DEFAULTS' deskops/ vacío
-- grep -rn 'DeskopsOperations(' deskops/services/ vacío
-- grep -rn 'def _normalize_task_payload\|def compile_task_spec' deskops/ devuelve una sola definición
-- wc -l deskops/operations.py deskops/services/*.py antes (main dc1d2834) y después, registrado aquí
+- TMPDIR=/dev/shm pytest -q, uno a la vez, tests/test_atoms_transactions.py tests/test_board_portable_references.py tests/test_cli.py tests/test_closeout_gates.py tests/test_desk_replace.py tests/test_doc_io.py tests/test_materialization_contract.py tests/test_packaging.py tests/test_registry_robustness.py tests/test_review_doc.py (fallas previas comparadas contra main dc1d2834)
+- grep -rn "spec/artifacts\|spec/fields\|SpecRegistry\|_ARTIFACT_DEFAULTS" deskops/ vacío
+- grep -rn "DeskopsOperations(" deskops/services/ vacío salvo services/desk_view.py (q9)
+- grep -rn "def _normalize_task_payload\|def compile_task_spec" deskops/ devuelve una sola definición
+- grep -rhoE "operations\._[a-z_]+|ops\._[a-z_]+" deskops/services/ antes y después (q7)
+- wc -l deskops/operations.py deskops/services/*.py antes (main dc1d2834) y después
 - deskops doctor y deskops view board en los 6 desks sin hallazgos nuevos
 
 ## Done When

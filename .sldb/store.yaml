@@ -229,6 +229,10 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+- model: ReviewDoc
+  paths:
+  - path: desk/reviews/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados/preflight-1.md
+    name: review-task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados-preflight-1
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

@@ -1,0 +1,30 @@
+name: review-task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados-preflight-1
+path: desk/reviews/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados/preflight-1.md
+source_hash: fc115ccd728193012903c2f884ece5ec0423b7b2ab13c10766cb387e949be5ea
+content_hash: a59b01175f547e6701911f40867194699b4129fa4bc3cbf15d1919faa170fb23
+field_hashes:
+  id: 11eb6f22dcc3a89992ae75f4004cd9847e585206f7af9442111efe8f1e73f7cf
+  title: c019bb5a99f1a190446fc5c14d3a27a0ad23d792cef7aaa720a6a0c2121cd521
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: a6214c6655e793e075cb40832bf74556feb73b25b119c90ff9f0623d5040f929
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 6d20df8779eb9e2d452f4c3dae2375ef0431a5b296e956cb8bec71a3cdb4f9d2
+  input_sha256: fb4cea4c12d0030159e1a92a5b5e88ff592214bce43cb47481425e22271c8e29
+  output_sha256: b134628e8bd7240d1066c6e6d9d98e79e5292ebfcec0eb55811c41eeeaec6f3a
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 9791d55bcdad26e01cc3cc0d1ae496e52a8b31bf189b6458c57f922f8d921b74
+  created_at: 713dff7c951bdc0338c7032bc00628155f29a2900be1e5a0376924135540e623
+  disposed_at: 2e56ac39ce1547f3abcb03a4890a2ff529afc8bd87086c543a3d89c8589ade98
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: af9c9056332864355128afc1c5ca320fb9661d2cc15fd570ef4c035b715683ef
+  disposition: be7e6db25e82b8f6fae137fe5f0f9a07620f00933494083696c5e884dfaf2090
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
