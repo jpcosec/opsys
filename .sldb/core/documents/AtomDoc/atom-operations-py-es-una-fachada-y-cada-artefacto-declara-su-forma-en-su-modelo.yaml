@@ -1,0 +1,19 @@
+name: atom-operations-py-es-una-fachada-y-cada-artefacto-declara-su-forma-en-su-modelo
+path: desk/atoms/atom-operations-py-es-una-fachada-y-cada-artefacto-declara-su-forma-en-su-modelo.md
+source_hash: a772a0384052e286ba1eb09ce0da8ef9dd69fe0434020aff339bbb104e5586ec
+content_hash: 59985c30badcc8075cd9c9d18ecffced92d8a93deb0d249b28fd933f233e9ace
+field_hashes:
+  id: 45c7b059e039d61893a5c4bf7ff72b130efe65022f6008501920a851de74eb96
+  title: 5d654a85bf78107a84e3d83de4d7ea8294a6813430b9afe0ae25ebf257cc6936
+  five_wh_one_plus: 43f94244d00ce4813a89d3c0d15e1842fe2cfd95ce9fe3b063dda9e7983e0063
+  answer: 78e20a319feebe428b02b4f473b3f7d51a6135695f667c1a57d08babacc86187
+  tags: fda22d0f4f188aed6c95111706d2f68a65aa935bc3b8dc687d295589cf308049
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- topic:models
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

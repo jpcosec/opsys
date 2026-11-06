@@ -1,0 +1,21 @@
+name: materialization-cc30-tests-test-materialization-contract
+path: desk/materializations/materialization-cc30-tests-test-materialization-contract.md
+source_hash: 3f113c1d1b5e77a9d32630e5c0b89825fdc97896895b505e63b6d50432a8c91b
+content_hash: 8852e9b0a29fda141bf7f4fef42cc7a05b1e1d0bac277ddd82924a316c9fef83
+field_hashes:
+  id: a332cd64dbfab77e3b1aac1d8e87883d53e79210cce67b7de5e0182fd22628ce
+  title: 5a3e5524b4f6ae1239988a1b719dc6996196ac0a14c6d27c954471caa76ed220
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 2885c2bac2f8a043ae6e722ace074afd65f3168e691abbb54f5fa2c1bdd0688f
+  intent: de3039ffa56086816131f9a751e27ab4abe395af972b25aed2de65f2c9054253
+  validation: 3a024baa1456a5f3ae42f6f854cf5ff05551ea739529b73f636fbc7bff63181f
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

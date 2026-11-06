@@ -1,0 +1,21 @@
+name: materialization-cc30-specs-compiler
+path: desk/materializations/materialization-cc30-specs-compiler.md
+source_hash: 73a8a5bb720b8c924261c55f8b2612148e10c73856d1bb9c1162cfb6107bb446
+content_hash: 81fe5c127d65f5884eeaea8d7bbe040b9a6c0e6fb9319ff5a7b59e3e045cba07
+field_hashes:
+  id: 104821566354b75695da8624827405884fe806c5944efaef75d523ab67761a7b
+  title: 84814d5169e679c2a17644dc70c0d9f2ffd2fcf965034fecab7f01f3ac851947
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: e3f54bd9af8e10e9026aa083d69cb55840c04d7797eac1fe0806324f15a6335e
+  intent: ec79005690bda7e1d1969a427c9b69e8299b8453ff58a47aea0927cd9cbe3738
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

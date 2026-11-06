@@ -251,6 +251,19 @@ include:
   - desk/materializations/materialization-closeout-gates-review-command.md
   - desk/materializations/materialization-closeout-gates-review-service.md
   - desk/materializations/materialization-closeout-gates-runtime-profile.md
+  - desk/materializations/materialization-cc30-deskops-doc-access.md
+  - desk/materializations/materialization-cc30-services-atoms.md
+  - desk/materializations/materialization-cc30-services-closure.md
+  - desk/materializations/materialization-cc30-services-retire.md
+  - desk/materializations/materialization-cc30-specs-init.md
+  - desk/materializations/materialization-cc30-specs-compiler.md
+  - desk/materializations/materialization-cc30-cli-model-introspection.md
+  - desk/materializations/materialization-cc30-workflow-next-actions.md
+  - desk/materializations/materialization-cc30-tests-test-specs.md
+  - desk/materializations/materialization-cc30-tests-test-extension-points.md
+  - desk/materializations/materialization-cc30-tests-test-output-goldens.md
+  - desk/materializations/materialization-cc30-tests-test-materialization-contract.md
+  - desk/materializations/materialization-cc30-tests-test-packaging.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -269,8 +282,8 @@ include:
     name: review-task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests-bundle-1
 - model: TaskRefactorDoc
   paths:
-  - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
   - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
+  - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

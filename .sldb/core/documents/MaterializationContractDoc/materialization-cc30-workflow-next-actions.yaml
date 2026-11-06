@@ -1,0 +1,21 @@
+name: materialization-cc30-workflow-next-actions
+path: desk/materializations/materialization-cc30-workflow-next-actions.md
+source_hash: ed27a45b1006b4fdb4654a91ebfd4284260c09ef2f1f5d54d826ffc63b807f9f
+content_hash: 65a80194eee2e5187ada1e908c82290f7772b3ddd06e50cfb45ee8a0ebd499e3
+field_hashes:
+  id: f2184be481c3d737cca5e4143ef69366ca84f98d068f1dc503faefed7c97b128
+  title: bee17876bd118179d205d2e623d7d13b8337834eafd9be64e0b3e3f9c2ff7c66
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: b69f412e18862ee8e0f17c549da9ee848d2d85a1a8dc09e41f31a7bfb36caa7d
+  intent: dad7d412e04fa6658465383a47d8957f0e54a08746d09fb7921372d838768b0a
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

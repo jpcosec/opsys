@@ -1,0 +1,21 @@
+name: materialization-cc30-cli-model-introspection
+path: desk/materializations/materialization-cc30-cli-model-introspection.md
+source_hash: a44d48fed1646949292f2a9ebc99986ba4ef2d560d32fe2a3e84f610b5c4c3b6
+content_hash: 0eb084bf65a54e543c969253b815aec35a85647e888d2bac7165aa37476860c7
+field_hashes:
+  id: 9d3823758d8107b78b049a323918c2d85e465849ae922cc656028e3ac1c3e01d
+  title: eebdb6bebe4a2555ece9a0f39fad34e46b9f033b34bfe63996232176c1e4b017
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: d2a524488036d51ba39b6be85d322b3be0710ff4655f500e86ad820c0972ac3f
+  intent: d6c1e259d1b090f428c4932805c3d8ade4e103da067f294396fa8728d6df40c6
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

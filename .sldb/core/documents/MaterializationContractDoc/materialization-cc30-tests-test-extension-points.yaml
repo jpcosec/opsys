@@ -1,0 +1,21 @@
+name: materialization-cc30-tests-test-extension-points
+path: desk/materializations/materialization-cc30-tests-test-extension-points.md
+source_hash: bbf7181e294b9ae72fc77e1ee61905af0b5cbdcfd33e0daa378e55c605312705
+content_hash: 7617e3a1bf01a4b73ebcbf29d7285dd6170323768bd0f75214fa6ad1f71fa387
+field_hashes:
+  id: cdb48ed8b742fe9257b8f050aabd286a95717428ee495d1bde3f657b7752dfc2
+  title: 548e56f34e064c5a7e456495e9d3afd8dd34fa7f7566e4e669d2129b1ccd48a0
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 7f85f3672e733cbbc69cb32920d714c84b81ae3abe30d3a1be13d8901062b98c
+  intent: f0905895cdd8e083c1118dd89b922eecce55441af0b727a7e787bb99bde90bfa
+  validation: a525e27d746032dc2654e26f6aee3b00fc2c31ce8f8163d86186e516aba71640
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

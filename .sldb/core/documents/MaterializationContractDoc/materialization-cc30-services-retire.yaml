@@ -1,0 +1,21 @@
+name: materialization-cc30-services-retire
+path: desk/materializations/materialization-cc30-services-retire.md
+source_hash: e7dd10a2ecd0f894c84439b2ef739c5614e2f166230a4f7a505127ce372e2720
+content_hash: 157a3e14b71ba8cca570d0121c5d4c1e5c96082418f1723131296491d618a96d
+field_hashes:
+  id: 31b55c50bc65057ab1dd533bfb3e619357762b615d29181c5f9c3a4356f9d6b5
+  title: bcd32b794e0ea11862e5f1d84724dc844e53ad79019ec685c7dcf265f22a7549
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 849b27f5fbf0c8900436cfbbea516c97adc8a0013d93241a858e32b473544d40
+  intent: 31349816c415094e441d527fb9627fee9ff8387c3341a114194c9266ddaa54a5
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,21 @@
+name: materialization-cc30-deskops-doc-access
+path: desk/materializations/materialization-cc30-deskops-doc-access.md
+source_hash: 86c8c876a1e56e87bd37c6fea2ae5242fd04cb0f9b976522c521edcaae2ec926
+content_hash: 1665d3fd2afbbbcd154bdbe321de83081d12d74851d518662f56cff0fd777b13
+field_hashes:
+  id: 3bd3b406af66bbbdc732dbf46156df665ba7be23b6d1fab958dc0c7ce425fa93
+  title: 362d24c52108173e5ef6d47003b615f89a6657ce8083fa84020c58e1e2c433f1
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 5cae68609c6efd54b2c734af4e38fabe209397f3bfcb0699b871d863016aaa87
+  intent: bbcd5e259ee24687a17c415991b86056f470040d66cbc2d1026667ff59ade3dc
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

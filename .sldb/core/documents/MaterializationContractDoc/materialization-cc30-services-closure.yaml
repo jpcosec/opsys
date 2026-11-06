@@ -1,0 +1,21 @@
+name: materialization-cc30-services-closure
+path: desk/materializations/materialization-cc30-services-closure.md
+source_hash: 963d14539cec8e7b8d76020c0ad94752a3d2f11c8b5b9901a0b28c399347aca7
+content_hash: 2dcf3030fd365915dcf91685bc17b9915fb7102062dac8de7463e9d79a9c107b
+field_hashes:
+  id: c2f309c864fba549de1aa9ee61c399ed63eac2d089667153b6ddf5957b89c93e
+  title: 13fced930944a978ed704afea1ebddc2958cfd2d627096b5c9a6c77ecdfb959f
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 6194c2533e39b9dfd88721f75777a1a4564a61864e3e7ccae6a755f646dd0057
+  intent: 85fb36bf8d0319f3646304f38b152c04770434e7a0b251265cc2138caf4ecd7d
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -1,0 +1,21 @@
+name: materialization-cc30-services-atoms
+path: desk/materializations/materialization-cc30-services-atoms.md
+source_hash: c4b3a5a26b54758ae4ba5d166c36b28e654f83d1a42afb45ee0672d43a984906
+content_hash: b21b9fbdcd6c3c9c89fab2a07d1043d8aaac19867e4105f2287f5e95f03e95fc
+field_hashes:
+  id: cd39f24310f7a52f62cf069fef37fdd70e443167bc013f97b32b177492b51679
+  title: 1a77c7c776114a6e9a5dd76bddada6e1bbf86ecf71697be0973a780cba6d1358
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 190781c887ac64db6846a24a0e6e2ae4e1740b98fd3917857655610aba6fcaef
+  intent: 0f42186ac66799308e5883ca06ee7caccc40f018f3c455ee914b740c5edfa5d0
+  validation: 230f620faa2b0ea90f6bfdcd62368ca8dafceb27fb5b453b9338a72aa8e9b686
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -7,7 +7,16 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_output_goldens.py
+- tests/test_output_goldens.py
+- pytest tests/test_specs.py
+- tests/test_specs.py
+- pytest tests/test_cli.py
+- 93cc1943d8b033c59714de30d25ff35f0a8e99af
+- desk/atoms/atom-operations-py-es-una-fachada-y-cada-artefacto-declara-su-forma-en-su-modelo.md
+- desk/drawer/tasks/task-docs-y-readme-todav-a-nombran-spec-artifacts-y-spec-fields-borrados-en-cc30.md
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
 depends_on: []
 pills: []
 files:
@@ -125,6 +134,7 @@ _List the checks required before this task can close._
 - grep -rhoE "operations\._[a-z_]+|ops\._[a-z_]+" deskops/services/ antes y después (q7)
 - wc -l deskops/operations.py deskops/services/*.py antes (main dc1d2834) y después
 - deskops doctor y deskops view board en los 6 desks sin hallazgos nuevos
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash 93cc1943 sobre origin/main): output_goldens 7 (sin update), cli_help_examples 11, specs 5, task_types 16, closeout_gates 7, operational 10, desk_view 9+1 skipped, cli 101: todos verdes, de a uno. El coordinador del plan verificó además doctor y view board idénticos a main en los 6 desks, y el worker los demás archivos (extension_points, doc_io, review_*, lifecycle_*, graph_*). Seguimientos: docs/README todavía nombran spec/artifacts y spec/fields (drawer task-docs-y-readme-...-borrados-en-cc30); paquetes y archivos borrados sin materialization propia (drawer task-closeout-una-materialization-con-target-identity-de-paquete-...); posible bug de deskops review status (marca technical_failure un preflight accepted tras la disposición). Suite completa pendiente al cierre del plan.
 
 ## Done When
 

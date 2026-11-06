@@ -1,0 +1,21 @@
+name: materialization-cc30-tests-test-output-goldens
+path: desk/materializations/materialization-cc30-tests-test-output-goldens.md
+source_hash: 7edae481b34bf7a094528e0dd441575f23cf756508112602e7d65672f25075e4
+content_hash: 47ebf36660a66afc5bbe71f0f165fca1fb0e7425bed84f3bcd8560321fd28026
+field_hashes:
+  id: c5b0fa7ece94966e142a0881def9f4515ab67cfa5772c8eaff3722c423efb293
+  title: 47f2f7d2b9308afc220488b2b9f44e9367f44782cabbc5f8ec9ee057494e0bb3
+  source_atoms: e5b7b47e6568c5606b7e7290a7676cf05542d941b0a61aa32595b9753a8c2a9d
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: a2b94edfa73cc6d24a4e5897e37107936202b8220926ccf54d5c42de39ee4df4
+  intent: 162d92a4d79ee844d2c229c6bf3f52ae792046361cc5a81235d7ab28d6101cb8
+  validation: 0fd05ff059c6aec6f4ce6dbf14143424d49769110e9ce657ffade3f9808d1372
+  tags: 09611893cd9971761060ab941f2566cd6d156485eb1f2ca8173923a10c136954
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:architecture
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
