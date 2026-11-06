@@ -235,7 +235,6 @@ include:
     name: run-deskops-closeout-suite
 - model: TaskCodeDoc
   paths:
-  - desk/tasks/task-gc02-reviewdoc-como-recibo-anclado-al-contrato-de-la-tarea.md
   - desk/tasks/task-gc06-cierre-de-las-vías-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida.md
   - desk/tasks/task-gc03-comando-deskops-review-que-reemplaza-a-los-dos-scripts-de-revisión-en-frío.md
 - model: ReviewDoc
