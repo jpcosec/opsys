@@ -126,3 +126,4 @@
 {"task_id": "task-gc02-reviewdoc-como-recibo-anclado-al-contrato-de-la-tarea", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-gc06-cierre-de-las-v\u00edas-de-escape-advance-to-y-edit-task-sobre-campos-del-ciclo-de-vida", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-gc03-comando-deskops-review-que-reemplaza-a-los-dos-scripts-de-revisi\u00f3n-en-fr\u00edo", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
+{"task_id": "task-gc03-dej\u00f3-review", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
