@@ -1,0 +1,18 @@
+name: 20261106-181236-suggestion-gd23-cerrado-en-sldb-selectores-de-documento-como-api-desk-paths-resolve-selector-queda-sin-motivo
+path: desk/inbox/20261106-181236-suggestion-gd23-cerrado-en-sldb-selectores-de-documento-como-api-desk-paths-resolve-selector-queda-sin-motivo.md
+source_hash: f153fcd2f00c868c18e1efd2dc7d95cd61296974187bc960b05b4848ef1f3ad2
+content_hash: 127f2a86ccf72e07b9c4e72496ddecdd547b62aafb1035181b5e2746531a2aca
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: c3c71ae2db314fed4461c1de9964b593853acfd4031c11c66e52ded06399968b
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 48269e363d2193f037d32559a8bda271c6a4cc179067a44458206a88563fe640
+  body: 8c9bdbbcb7eeb33f3ffe081773ef5d4ab444143f60f4d437da3ddb83069d91ca
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
