@@ -1,0 +1,18 @@
+name: 20261106-145349-suggestion-closeout-commit-arrastra-archivos-sin-trackear-de-sldb
+path: desk/inbox/20261106-145349-suggestion-closeout-commit-arrastra-archivos-sin-trackear-de-sldb.md
+source_hash: 04750e35e8adb86ba468f4ae1f95e3df1c3af19efedfbdde93b8d69d76675a65
+content_hash: a32cab45ff422452fc6f13f7138e23ecaab3742de28de68511f4cdd6a86192c1
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 613922af057a1c1ded64977b804adc41329b9de4d6bd07ba52ef8bcc9c5c7afe
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: bf30079243081afc39277c6d4989b996a3be89067f0be39400af5be43516bf9d
+  body: d044fe170a9556d4e7a4ddd4410de5dba4ddb244a80b656ab1ea6345f1f9a157
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
