@@ -18,9 +18,9 @@ gates:
     evidence: 'deskops 4a9a4bbb (read_snapshot en operations.py y desk_view.py, desk_graph.py) y sldb c8e3c9f4 (project_graph) en main; task-el-grafo-del-closeout-se-lee-del-índice-de-sldb-no-reescaneando-el-repo cerrada en ce857e14; verificado por el coordinador de proyecto, 2026-11-06'
   G_GATES_FROZEN:
     title: gates-por-tipo congelado tras GC03 (DK2)
-    state: pending
+    state: satisfied
     resolver: coordinador 2 (T0.2)
-    evidence: closeout commits de GC01, GC02, GC03 y GC06 en main de deskops; deskops/desk/drawer/plans/gates-por-tipo/dag.yaml con status frozen y nota que remite a este plan para GC04, GC05, GC07-GC11
+    evidence: 'closeout commits en main de deskops: GC01 5439b74c, GC02 44454cbb, GC06 a4a0f32a, GC03 52d37665 (evidencia de closeout en aacc09b0; código en el squash 9df4c82a); deskops/desk/drawer/plans/gates-por-tipo/dag.yaml con status frozen y frozen_note que remite a este plan para GC04, GC05, GC07-GC11 en c75ab5a9; coordinador 2, 2026-11-06'
   G_GO06:
     title: RuleDoc, rules check y rules explain (sldb grafo-operable GO06)
     state: pending

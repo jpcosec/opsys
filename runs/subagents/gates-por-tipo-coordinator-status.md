@@ -4,7 +4,7 @@ Coordinador: robocop2-coordinator2 (robocop2). Serie: GC01 → GC02 → GC06 →
 
 ## GC01: Tipos de tarea como modelos con jerarquía y evidencia de cierre declarada en el tipo
 
-Estado: **implementado y verificado en la rama; pendiente de closeout (supervisor)**.
+Estado: **cerrado** (ver Cierre).
 
 ### Commits
 - main de deskops (desk):
@@ -59,7 +59,7 @@ Estado: **implementado y verificado en la rama; pendiente de closeout (superviso
 
 ## GC02: ReviewDoc como recibo anclado al contrato de la tarea
 
-Estado: **implementado y verificado en la rama; pendiente de closeout (supervisor)**.
+Estado: **cerrado** (ver Cierre).
 
 ### Commits
 - main (desk): `29fbf2b9` promoción; `fa4042d1` preflight (attempt-1, technical_ok, 6 ambigüedades) y disposición; `4e5f1a72` files de GC02 tras su ejecución y promoción de GC06 (suma `deskops/cli/commands/desk.py` a files).
@@ -92,7 +92,7 @@ Estado: **implementado y verificado en la rama; pendiente de closeout (superviso
 
 ## GC06: cierre de las vías de escape (advance --to y edit task sobre campos del ciclo de vida)
 
-Estado: **implementado y verificado en la rama; pendiente de closeout (supervisor)**.
+Estado: **cerrado** (ver Cierre).
 
 ### Commits
 - main (desk): `4e5f1a72` promoción; `427e33af` preflight (attempts 1-3 timeout por saturación de deepseek, no cuentan; attempt-4 technical_ok, 6 ambigüedades) y disposición.
@@ -123,7 +123,7 @@ Estado: **implementado y verificado en la rama; pendiente de closeout (superviso
 
 ## GC03: comando deskops review
 
-Estado: **implementado, verificado e integrado en main (squash `9df4c82a`); pendiente de closeout**.
+Estado: **cerrado** (ver Cierre).
 
 ### Commits
 - main (desk): `d5523aa1` promoción; `5de22525` preflight (attempt-1, technical_ok, 9 ambigüedades) y disposición, precisiones (1)-(13).
@@ -155,3 +155,44 @@ Estado: **implementado, verificado e integrado en main (squash `9df4c82a`); pend
 
 ## Plan congelado
 Por decisión del dueño (`deskops-como-config-arbol.md`, T0.2), gates-por-tipo queda congelado tras GC03: no se promueven ni despachan más nodos GC. Lo que falta de tipos y compuertas se rehace como reglas declaradas en P3 (T3.2, T3.3).
+
+## Cierre (2026-11-06)
+Hecho en un worktree limpio sobre origin/main (`/dev/shm/deskops-cierre-gc`, desde `19860a7f`), por CLI, con push a main tras cada commit.
+
+### Commits
+- `aacc09b0`: evidencia de closeout.
+  - 13 materializations `materialization-closeout-gates-*`, una por archivo exacto que `closeout verify` marcaba `missing_changed_file_link`.
+  - `references` de las cuatro tareas con tests, `9df4c82a` y el seguimiento enrutado (`deskops edit task`).
+  - Promoción al drawer de la nota de sldb 20261106-163026 (`deskops promote inbox-to-drawer-task`): es el seguimiento enrutado de lo que el gate no puede cubrir.
+  - Retiro (`deskops retire`) de dos materializations de prueba que no crearon nodo: `tests/` y `tests/fixtures/model_contract_hashes.json`.
+- Closeouts, en orden, con `deskops closeout commit --no-run`; verify encontró tests, atom|materialization y commit en los cuatro:
+  - GC01 `5439b74c`
+  - GC02 `44454cbb`
+  - GC06 `a4a0f32a`
+  - GC03 `52d37665`
+- `c75ab5a9`: `desk/drawer/plans/gates-por-tipo/dag.yaml` con `status: frozen` (rev 3) y `frozen_note`, que remite a deskops-como-config para GC04, GC05 y GC07-GC11.
+- Commit de este informe: G_GATES_FROZEN `state: satisfied` en `desk/drawer/plans/deskops-como-config/dag.yaml`, con esos cinco commits como evidencia. Habilita CC30.
+
+### Evidencia
+- Tests en el worktree (main `19860a7f` + `aacc09b0`), uno a la vez, con MemoryMax=2G y TMPDIR=/dev/shm:
+
+  | Archivo | Resultado |
+  |---|---|
+  | `test_task_types` | 15 passed |
+  | `test_review_doc` | 13 passed, 1 xfailed (G_SLDB_ANCHORS/GO07) |
+  | `test_cli_escape_hatches` | 9 passed |
+  | `test_review_command` | 12 passed |
+
+- `closeout_evidence` no se tocó.
+
+### Lo que el gate no cubre por archivo
+Estos paths van al seguimiento `desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md`:
+- Directorios declarados en `files`: `tests/`, `.sldb/core/models/`, `tests/fixtures/golden/help/`, `tests/e2e_agent/scenarios/` y `desk/runtimes/`. Un `target_identity` de directorio no crea nodo.
+- `tests/fixtures/model_contract_hashes.json`: `tests/fixtures` está excluido del grafo.
+- Archivos borrados por GC03: `desk/drawer/plans/workspace-documental/context_review.py` y `tests/test_context_review_helper.py`.
+
+Propuesta para CC33: que un target de directorio cubra el directorio declarado y sus archivos.
+
+### Lo que no se pudo
+- **Ack de la nota 20261029-213633.** `deskops message ack 20261029-213633 --root .` responde `Unknown message` en el árbol limpio: el `.md` no está versionado desde `271d76c1`. No se hizo en el main compartido, donde otra sesión restauró el `.md` sin trackear, para no mezclar su árbol de trabajo. Queda para quien opere ese árbol.
+- **Nota a sldb** ("deskops review cubre grafo-operable/context_review.py") **y nota del `.sldb/README.md` de graph_ui.** Siguen bloqueadas porque `desk/registry/repo-*.md` apunta a `/home/jp/...`.
