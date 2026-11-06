@@ -1,7 +1,7 @@
 name: task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero
 path: desk/tasks/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero.md
-source_hash: 74d6426428511b7bd564d8c98c7dbf5ebb09ab02f3f9bf7df9255084bfd7956b
-content_hash: 4bbf9a5d56405f0fd02cbb2a4b899dec3422ea6e11acf9abc1a99f2cad1a3f1f
+source_hash: d60c51a4171e707a4aa0ff0202700181980e1d29749788a4c0b4ba8f43665734
+content_hash: 6a1c27c60101f2f67dc4f858c686e0eec99c6ce1d7ea97a40d186253fedf51b6
 field_hashes:
   title: 812ab8e33fa8980e073c457d6e366dc266525145af94ecad5dd85d2bd76ae9e8
   id: 6cbd251d299996c85c86aab00b5406927a6354585208fff01935d3ccfdc9b3c1
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 5ac0c2020d773966048fe09aa4c471753a3ac76dcf632f7c9892fef15cf8a89a
-  implementation_path: dcd5524024991cea19d0992c422cfff63a0900adb0bb80e31043864c12a0dfc5
+  implementation_path: 350558888a171761185859aacd8f3debb280be4107b9185dd4b38117ba7b128f
   validation: 42a9d744dad3a7960d87a906b69b52a7ca2b084711768f6c0bb593409ebd163e
   done_when: 715bac774bad27bfa028968603602dcd518075992affe73f13e94338d4ad3572
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb

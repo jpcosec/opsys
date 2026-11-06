@@ -282,6 +282,10 @@ include:
     name: review-task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests-bundle-1
   - path: desk/reviews/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla/preflight-1.md
     name: review-task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla-preflight-1
+  - path: desk/reviews/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero/preflight-1.md
+    name: review-task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero-preflight-1
+  - path: desk/reviews/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero/preflight-2.md
+    name: review-task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero-preflight-2
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

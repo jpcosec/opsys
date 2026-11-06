@@ -1,0 +1,30 @@
+name: review-task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero-preflight-2
+path: desk/reviews/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero/preflight-2.md
+source_hash: b78f4d94eeb76037da6f682332a12973b8c6518e71ca3c0c611f5527b99adbd7
+content_hash: a2fe643a6456733dca93659c8cfa0aa22755f1f77af9990c06ac235b525d9f13
+field_hashes:
+  id: 5f15c3a391aa1255b4ce605b3ea3b3cce01f4dff289bcedae00ead3f433e0d43
+  title: cfb7e82b56340cd9d8461d4898d1a7704116b743d53e8884aed4fc0b85677c3d
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 35986a6253d1482582466f0caf4dc84f011c70288a40a81dc63b80485279faaa
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 0e20965287c33b83adc652e02559eb0009dc3fd6f40979a304df1b3d7e636e0c
+  input_sha256: 1b550b54b9719303b7544dd70ca3689d57e92fbd1efb99cb33c5fa1e31c2e15f
+  output_sha256: 753a9d3b47b5e2fbb06cba7d316545ba311e5744c2d51d4cd0b64e70f0ce4829
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 12683685b3d7b52343a8953990fb94ed845cc83cc7a8e9b45cad0e7a5d8a783e
+  created_at: 28f64b79edd668056b406a4743d898c301502e30e245656530e7c4068ef0e4e4
+  disposed_at: d9c2aca3895657dc4fba02c8473717fa4801154e575c8d3ff14472033c85d670
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 2c1cc5d71618f61a803ae23b39d9a1723001134ccf7e447a36a686ecbc92a8d8
+  disposition: a90cd218326e7d640d674bb9408e279147cf7625f9a113797b363c1043a878b5
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
