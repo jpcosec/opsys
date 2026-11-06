@@ -1,0 +1,18 @@
+name: 20261106-171738-suggestion-sldb-go09-las-transiciones-llevan-su-efecto-sets-terminal-en-relationdoc-attributes
+path: desk/inbox/20261106-171738-suggestion-sldb-go09-las-transiciones-llevan-su-efecto-sets-terminal-en-relationdoc-attributes.md
+source_hash: 1ff4750b3aa8d02ee62754650e94c376911da1720588d584a1c8edc7eb45057e
+content_hash: fd475cffccce6a7f8fdae83c3774efc3e23262c16572f8989970a046874c332a
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 420e32340e1b30aa01d5dd1dc02c82fa1027b24d0c054f2dcef568581e5764d7
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 2057c2a763e4a3dc2a023b5c4cbe27121a784e454146621cd0e1aedfb6ce8583
+  body: f176243fccf13a9076b1cee251ee4f6f9f688c5ae3e1200fd99e9f54b9eed99e
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
