@@ -29,6 +29,7 @@ TOP_LEVEL_GRAMMAR: dict[str, frozenset[str]] = {
             "issue",
             "retire",
             "view",
+            "review",
         }
     ),
     "model_crud": frozenset({"add", "edit", "list", "show"}),
@@ -61,3 +62,6 @@ def test_operational_mutates_guards() -> None:
     assert command_for_path(("show",)).mutates is False
     assert command_for_path(("advance",)).mutates is True
     assert command_for_path(("closeout",)).mutates is True
+    assert command_for_path(("review",)).mutates is True
+    assert command_for_path(("review", "status")).mutates is False
+    assert command_for_path(("review", "dispose")).mutates is True
