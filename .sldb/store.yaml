@@ -284,8 +284,8 @@ include:
     name: review-task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla-preflight-1
 - model: TaskRefactorDoc
   paths:
-  - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
+  - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla.md

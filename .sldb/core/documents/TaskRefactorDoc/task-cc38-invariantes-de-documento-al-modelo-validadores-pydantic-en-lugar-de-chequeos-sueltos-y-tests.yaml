@@ -1,7 +1,7 @@
 name: task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests
 path: desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
-source_hash: 08872d0dcf3121b4cfc70c92bd318cb0f8463ae1ecf1b48f6704e6a3fb110ca6
-content_hash: 11c2edefe53cc51ab5708c1c94a6146375088985684450fa4b50536c057fd979
+source_hash: 1c35807e514dc81d0bf4e22f35ae8d59020add841049c3f2eae63f6116ad1d9f
+content_hash: 9b6a13b3ea83218de3a04d7835579b4eaa481900159846b1db0058713c09e1fe
 field_hashes:
   title: c59e3e1dc6a7997279454113245f5160c564c1f710ea00475d360168071bb455
   id: f3b55cd486f346d1e13d96ed2b52eb0553b1689449cc69e1fc64f112c3ca829c
@@ -16,8 +16,8 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 6925f635c6e89f5a62865a4eba918bcd85733015c4463ba74b8428ac5a330944
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: b2e882baf1fa4af44bdc759546d427b265019c21adfaa867c43cc04697ab1026
-  implementation_path: 7e7e3011217cb4b2609ff5a64baab8e47790d45ed8c4835b2b9e1db03c05c785
+  files: 08802f735053485f059bbd5e56b8e75230f912b88022645eac5830b1e2a95524
+  implementation_path: a38b0a259fdb9ff199e320bbd2b25d4e0b764e5c516112a56c41eb0303758248
   validation: 23499ad6c1710d89a3ef122f99acf468211d3d3a2469a9969ed60214ffa686f2
   done_when: 3c0bb5256affe85fd8777c65c0003537f5164335d1bf3151674cbcfe9c6ca6bd
   task_type: d0b4cbfeadc448bca1492079dfd36948fd84b4ae366c521b0e71add2bea3fa86

@@ -18,6 +18,7 @@ files:
 - deskops/services/atoms.py
 - deskops/services/
 - deskops/doc_access.py
+- deskops/specs/compiler.py
 - deskops/cli/commands/doctor.py
 - tests/test_atom_tags.py
 - tests/test_desk_paths.py
@@ -100,6 +101,10 @@ p14 (chequeo mixto): la parte de un documento pasa al validador y se borra de la
 p15 (texto ya fijado por un test): si un test existente fija el texto de un chequeo (p. ej. match="Unknown atom tag namespace"), ese chequeo tiene texto viejo y p5 lo obliga a conservarlo. p9 vale solo para chequeos sin texto en ningún test ni golden.
 p16 (ValueError frente a ValidationError): cada chequeo movido tiene al menos un test nuevo que construye el modelo con el payload malo y espera pydantic.ValidationError. Los tests existentes que prueban la vía del servicio con pytest.raises(ValueError) se conservan si siguen verdes (ValidationError es subclase de ValueError) y no se migran. Se migran solo los que arman el payload para probar la invariante y no el servicio.
 p17 (sldb docs update): los cuatro casos de p13 bloquean, también «sldb docs update». Si una vía de sldb no aplica el validador, rige p6 (hipótesis y nota a sldb, sin suplir con Python) y el nodo se entrega con esa vía marcada como hipótesis abierta, no como verde.
+
+DESVÍOS AUTORIZADOS DURANTE LA EJECUCIÓN (coordinador del plan, 2026-11-06; aprobados por el coordinador de proyecto):
+d1 (regresión de CC30): tests/test_domain_tree.py fallaba en main 93cc1943 (4 tests), porque domain_tree.py llamaba ops._write_new_doc, _track_created_document y _remove_created_file, que la fachada de CC30 ya no expone. CC38 lo corrige dentro de deskops/domain_tree.py llamando a doc_access directamente.
+d2 (files ampliado): deskops/specs/compiler.py entra en files. El chequeo de un documento 'Task title cannot be empty' (compiler.py:44; lo fija tests/test_specs.py:73) pasa al validador de TaskDoc.title con el mismo texto (p5) y se quita de compiler.py. El KeyError por title ausente en el payload crudo es forma de la entrada, no del modelo: se queda y se inventaría como fuera de DK6.
 
 ## Validation
 
