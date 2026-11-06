@@ -229,5 +229,8 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+- model: TaskRefactorDoc
+  paths:
+  - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
 graph_backend: networkx
 policy: {}

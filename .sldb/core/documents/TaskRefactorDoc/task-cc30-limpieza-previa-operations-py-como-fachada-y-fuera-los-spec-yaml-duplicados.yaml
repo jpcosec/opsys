@@ -1,0 +1,35 @@
+name: task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados
+path: desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
+source_hash: 3eb2999365a8c38766888099401de671a80336a786796045838bbf3d2b8ec699
+content_hash: 98fd56f6854d8eb8cd5d6e4413fdcd7f4150c6b037b1d81c089a1a2160c47333
+field_hashes:
+  title: b6ad6900c3a2f4a90de181be4be0ddc1e0efb76f0c1856abdf457ccf7a3958af
+  id: a3bbd6558e95817b2dad6bbb38077a73bc25457ca88088c0eccea8a4a90ceed6
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: f308a02c4e4beed11fc919887cf3972332ec1878cb8fb46c50ff1320f2b2f34e
+  goal: de853f71f97da21c18e730952b603843500df01e64682507d08025864aa4be82
+  scope: 03ceef64a57773cd7653de4490c1ec52a054f65e5ad0c43088c5af00bd4205f2
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: 845f5dc83ffa43010eb0fdf5a0688bce199be0a8c6c86c60580c418d66e7d564
+  implementation_path: 180c76122a78d89a795a1868b32e4f014218424f2536b1633fdae8e5de4f6162
+  validation: 0ddaba6bfdfeb5f42c24b94ae6220091c21f4b3632180d62273cecb61ca7ba57
+  done_when: 50d7c32ae7d9fcc9f83d2c69549800bf68429e2c31b4c597f6c56f514a34bf34
+  task_type: d0b4cbfeadc448bca1492079dfd36948fd84b4ae366c521b0e71add2bea3fa86
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  from_drawer: 84aa35b707b8c836a439c484210aaf1cb5e17c957defa1a24c2bfe86edf07e07
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance: null
