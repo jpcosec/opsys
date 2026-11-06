@@ -121,4 +121,37 @@ Estado: **implementado y verificado en la rama; pendiente de closeout (superviso
 - `tests/test_inbox_promote_cli_gaps.py`: se borraron los tests de `advance_task(target_node=…)` (API retirada).
 - `docs/diagrams/process/current-agent-workflow-and-automation.{md,mmd}` menciona "forced transition"; es proyección de Spec2viz, no se editó (posible ajuste en GC08).
 
-## Siguiente: GC03 (comando deskops review)
+## GC03: comando deskops review
+
+Estado: **implementado, verificado e integrado en main (squash `9df4c82a`); pendiente de closeout**.
+
+### Commits
+- main (desk): `d5523aa1` promoción; `5de22525` preflight (attempt-1, technical_ok, 9 ambigüedades) y disposición, precisiones (1)-(13).
+- rama: `e80fdef5` GC03 tras el rebase sobre `991709f6` (UI01). En el rebase, los conflictos de `.sldb/core/store_index.yaml` se resolvieron tomando main y regenerando con `sldb models add/update`; `deskops.txt` y `test_cli.py` tomaron main, se volvió a agregar `review` y los goldens se regeneraron.
+- main: `9df4c82a`, squash de `wt/gates-por-tipo` (GC01+GC02+GC06+GC03). Conflictos con el perf del closeout (`4a9a4bbb`): en `operations.py` y CHANGELOG se conservan ambos lados; store_index regenerado por CLI.
+- main (desk): `271d76c1` desk update --apply (5 tareas → task.code, perfil runtime-pi-deepseek-flash, desk/reviews, untrack de las notas 20261029-213633 y 20261104-222852 sin .md); `a1a938c4` drawer remove de los context_review.py de workspace-documental y gates-por-tipo.
+
+### Aceptación
+| Línea | Evidencia |
+|---|---|
+| preflight escribe attempt-1 con los cinco archivos y review-task-x-preflight-1 | `tests/test_review_command.py::test_preflight_writes_attempt_evidence_and_receipt` ✔ |
+| segunda corrida sin cambios no llama al modelo; status reviewed | `::test_unchanged_second_run_is_reviewed_and_does_not_call_the_model` ✔ |
+| editar goal → stale y nuevo sha | `::test_edited_goal_is_stale_and_next_run_uses_a_new_sha` ✔ |
+| bundle con rituales del Board, pills y files en orden | `::test_bundle_includes_rituals_pills_and_files_in_order` ✔ |
+| node sobre gates-por-tipo: ReviewDoc por nodo con subject_ref | `::test_node_writes_one_review_doc_per_node` ✔ |
+| dispose y segunda dispose falla | `::test_dispose_writes_the_verdict_and_a_second_dispose_fails` ✔ |
+| tercer intento a nivel de plan falla sin --force | `::test_third_good_attempt_on_the_same_key_fails_without_force` ✔ |
+| pi con exit 1 → technical_ok false, incomplete | `::test_transport_failure_leaves_technical_failure_and_incomplete` ✔ |
+| grep context_review.py en desk/drawer | retirados los de workspace-documental y gates-por-tipo (`a1a938c4`); queda `desk/drawer/plans/deskops-ui/context_review.py`, fuera de este encargo |
+| CHANGELOG, operator-manual | squash `9df4c82a` |
+
+### Tests (por archivo, con MemoryMax=2G y uno a la vez, por pedido del supervisor; la suite completa la corre él)
+- Rama tras el rebase: review_command 12, review_doc 13+1 xfailed, contract_snapshot 2, task_types 15, cli_escape_hatches 9, command_registry 3, cli_help_examples 11, output_goldens 7, inbox_promote_cli_gaps 20, operator_manual 1, packaging 5, add_task_from_drawer 3, closeout_declared_evidence 19, desk_replace 7, lifecycle_end_to_end 5, operational 10, cli 101, e2e_agent scenarios 6 + 3 skipped: todos verdes. board_portable_references: 1 failed (la falla previa conocida de main), 1 passed.
+- Squash en main antes del commit: contract_snapshot, command_registry, task_types, closeout_declared_evidence, closeout_gates 7, review_command, review_doc, cli_escape_hatches, output_goldens, cli_help_examples, desk_view 9+1 skipped: todos verdes.
+
+### Pendiente
+- Nota a sldb ("deskops review cubre grafo-operable/context_review.py"): `deskops message send --to sldb` falla porque `desk/registry/repo-sldb.md` apunta a `/home/jp/proyectos/SLDB_1/sldb`, y con `--root ../sldb` falla porque sldb no se registra a sí mismo en su registry. No se escribió nada en sldb.
+- Closeout de GC01, GC02, GC06 y GC03 (supervisor).
+
+## Plan congelado
+Por decisión del dueño (`deskops-como-config-arbol.md`, T0.2), gates-por-tipo queda congelado tras GC03: no se promueven ni despachan más nodos GC. Lo que falta de tipos y compuertas se rehace como reglas declaradas en P3 (T3.2, T3.3).
