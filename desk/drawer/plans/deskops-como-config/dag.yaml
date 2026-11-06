@@ -23,22 +23,26 @@ gates:
     evidence: 'closeout commits en main de deskops: GC01 5439b74c, GC02 44454cbb, GC06 a4a0f32a, GC03 52d37665 (evidencia de closeout en aacc09b0; código en el squash 9df4c82a); deskops/desk/drawer/plans/gates-por-tipo/dag.yaml con status frozen y frozen_note que remite a este plan para GC04, GC05, GC07-GC11 en c75ab5a9; coordinador 2, 2026-11-06'
   G_GO06:
     title: RuleDoc, rules check y rules explain (sldb grafo-operable GO06)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 622da0b5, closeout aed21a8c; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GO06 cerrado en main de sldb; versión pinneada en pyproject.toml de deskops
     evidence: sldb rules explain RULE SUBJECT devuelve node, holds, clause, seen
   G_GO08:
     title: Evaluación on_write/on_transition/on_check, edges_blocked (sldb GO08; incluye GO07 anclas doc:)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 3af872e7, closeout 556408da; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GO08 cerrado en main de sldb; versión pinneada
     evidence: test end-to-end de GO08 (Task + Review + any(^subject ...)) verde en sldb; edges_blocked disponible
   G_GO09:
     title: Transiciones como datos de la arista (sldb GO09)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 33b3c7a0, closeout d39bf915; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GO09 cerrado en main de sldb; versión pinneada
     evidence: edges_holding devuelve effects = {sets, terminal}; apply_effects valida contra el modelo
   G_GD21:
     title: Grafo de proyecto declarado y servido (sldb generalizar-desde-deskops GD21)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb a2a0174f, closeout 27457ff7, nota en inbox 3b789888; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GD21 cerrado en main de sldb, nota de cierre en el inbox de deskops; versión pinneada
     evidence: sldb graph project nodes|edges|missing desde store.yaml project_graph, con edges_to
   G_GD22:
@@ -48,12 +52,14 @@ gates:
     evidence: sldb edges referrers/rewrite con campo, índice y menciones
   G_GD23:
     title: select_documents (sldb GD23)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 850f8fca, closeout 0b72a473, nota en inbox 72408d8b; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GD23 cerrado; versión pinneada
     evidence: sldb docs select --prefix --one resuelve como desk_paths.resolve_selector
   G_GD24:
     title: sldb.api.transaction y apply_batch (sldb GD24)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 0cbd307e, closeout 88f19ac8, nota en inbox 62e19dd1; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GD24 cerrado; versión pinneada
     evidence: rollback total de archivos, entradas y shards; guarda expected_source_hash
   G_GD25:
@@ -63,12 +69,14 @@ gates:
     evidence: sldb views run y GET /views/<nombre> con ETag; sin proveedores computed (DA1)
   G_GD26:
     title: scaffold_store con semillas declaradas (sldb GD26)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb 96d7b823, closeout 713978e5, nota en inbox c7b5fa24; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GD26 cerrado; versión pinneada
     evidence: scaffold_store(declaration=..., apply) con modos if_missing y managed, idempotente
   G_GD27:
     title: Espacios de nombres de tags, tag_tree y replace_text (sldb GD27)
-    state: pending
+    state: satisfied
+    satisfied_note: 'sldb fb733e86, closeout 9f368024, nota en inbox 3f12d097; pin structuredLanguageDB>=0.1.13 en pyproject de deskops (versión actual de sldb; el venv usa el main de sldb editable, que contiene el cierre); coordinador de proyecto, 2026-11-06'
     resolver: GD27 cerrado; versión pinneada
     evidence: tag_namespaces con anchored_by; sldb docs replace con conteo exacto
   G_CONSUMER:
