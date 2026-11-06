@@ -1,7 +1,8 @@
 id: deskops-gates-por-tipo
-revision: 2
-revision_note: 'Rev 2 (2026-11-05): gates.G_TYPES.evidence corregida (task.debug no es subtipo de task.code, como fijan brief.md §Tipos y GC01), hallada en el preflight de GC01. Rev 1 (2026-11-04): plan inicial, lado consumidor del plan grafo-operable de sldb (rev 9). Sin revisión en frío todavía. execution_authorized=false.'
-status: draft_pending_review
+revision: 3
+revision_note: 'Rev 3 (2026-11-06): plan congelado (frozen) por decisión del dueño (deskops-como-config-arbol.md, T0.2, DK2): GC01, GC02, GC06 y GC03 cerrados en main de deskops; GC04, GC05 y GC07-GC11 no se promueven aquí y se rehacen en el plan deskops-como-config (ver frozen_note). Rev 2 (2026-11-05): gates.G_TYPES.evidence corregida (task.debug no es subtipo de task.code, como fijan brief.md §Tipos y GC01), hallada en el preflight de GC01. Rev 1 (2026-11-04): plan inicial, lado consumidor del plan grafo-operable de sldb (rev 9). Sin revisión en frío todavía. execution_authorized=false.'
+status: frozen
+frozen_note: 'Congelado tras GC03 (2026-11-06). Cerrados: GC01, GC02, GC06 y GC03 (squash 9df4c82a; closeout commits en main de deskops). GC04, GC05 y GC07-GC11 no se ejecutan en este plan: los toma desk/drawer/plans/deskops-como-config/ (GC04 → CC31; GC05 y G_CONSUMER → CC32; GC07 y GC09-GC11 → CC33 y CC35 donde aplican, el resto queda pendiente del dueño; GC08 → regla 5 de alcance.md en cada nodo). Gate G_GATES_FROZEN de ese plan.'
 as_of: '2026-11-04'
 source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
 execution_authorized: false
