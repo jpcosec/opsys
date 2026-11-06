@@ -4,6 +4,13 @@ from .base import OperationalArtifactDoc
 
 
 class PillDoc(OperationalArtifactDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "pill-{slug}",
+        "status_default": "active",
+        "tags": ["workspace:desk", "artifact:pill"],
+    }
     __semantics__ = {"type": ["workflow", "pill"], "workspace": ["desk"]}
     __template__ = """---
 # pill-xxx

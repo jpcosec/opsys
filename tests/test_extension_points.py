@@ -17,8 +17,6 @@ from deskops.cli.registry import command_registry
 from deskops.operations import ARTIFACT_MODELS
 from deskops.operations import ARTIFACT_PATHS
 from deskops.operations import ARTIFACT_SUBJECTS
-from deskops.paths import data_path
-from deskops.specs import SpecRegistry
 
 TASK_ARTIFACT = "artifact.task"
 
@@ -41,11 +39,14 @@ def test_model_refs_are_exported_structured_documents() -> None:
         assert issubclass(model, StructuredNLDoc)
 
 
-def test_every_spec_artifact_resolves_to_an_artifact_model() -> None:
-    artifacts = SpecRegistry.load(data_path("spec")).artifacts
-
-    for artifact_id in artifacts:
-        assert artifact_id in ARTIFACT_MODELS or artifact_id == TASK_ARTIFACT
+def test_every_creatable_artifact_model_declares_its_defaults() -> None:
+    for artifact_id, model in ARTIFACT_MODELS.items():
+        creatable = ARTIFACT_SUBJECTS.get(artifact_id, {}).get("create", True)
+        if not creatable:
+            continue
+        artifact = getattr(model, "__artifact__", None)
+        assert isinstance(artifact, dict), f"{artifact_id} ({model.__name__}) declares no __artifact__"
+        assert {"id_pattern", "status_default", "tags"} <= set(artifact), artifact_id
 
 
 def test_every_command_handler_resolves() -> None:

@@ -2,8 +2,8 @@
 
 Every way of closing a task ends here: ``deskops closeout commit`` (run-linked
 and manual routes), ``deskops closeout supersede``, ``deskops closeout retire``,
-and the legacy ``_auto_commit_task_closure`` hook. The
-service owns the whole closure: closeout gates for a board-routed task, Board
+and the legacy ``close_auto`` hook. The service owns the whole closure, and
+``verify_task_closeout`` with it: closeout gates for a board-routed task, Board
 update, store untracking, bundle removal, exactly one closing commit carrying
 the route's trailers, and the append-only index entry.
 
@@ -23,12 +23,19 @@ from typing import TYPE_CHECKING
 
 import yaml
 
+from deskops import doc_access
 from deskops import doc_io
+from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.models import BoardDoc
 from deskops.models import TaskDoc
+from deskops.models.task_types import canonical_task_type_name
+from deskops.models.task_types import declared_evidence_list
+from deskops.services import closeout_gates as closeout_gates_module
+from deskops.services.atoms import reference_points_to_atom
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
+    from deskops.services.closeout_gates import CloseoutGraph
 
 
 class ClosureCommitError(RuntimeError):
@@ -41,6 +48,20 @@ class ClosureOutcome:
 
     exit_code: int
     messages: list[str] = field(default_factory=list)
+
+
+@dataclass(slots=True)
+class CloseoutGateReport:
+    ok: bool
+    evidence: list[str]
+    findings: list[dict[str, str]]
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "ok": self.ok,
+            "evidence": list(self.evidence),
+            "findings": [dict(item) for item in self.findings],
+        }
 
 
 class ClosureService:
@@ -58,11 +79,7 @@ class ClosureService:
 
     REQUIRED_EVIDENCE = ["board.txt", "task.txt", "git-status.txt", "result-summary.md"]
 
-    def __init__(self, root: Path, operations: "DeskopsOperations | None" = None) -> None:
-        if operations is None:
-            from deskops.operations import DeskopsOperations
-
-            operations = DeskopsOperations(root)
+    def __init__(self, root: Path, operations: "DeskopsOperations") -> None:
         self._ops = operations
         self.root = operations.root
         self.desk_root = operations.desk_root
@@ -143,11 +160,11 @@ class ClosureService:
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
         original = task_path.read_bytes()
-        payload = self._ops._read_doc(task_path, TaskDoc)
+        payload = doc_access.read_doc(task_path, TaskDoc)
         payload["status"] = "superseded"
         payload["history"] = [*(payload.get("history") or []), "superseded"]
         try:
-            self._ops._write_doc(task_path, TaskDoc, payload)
+            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
         except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
             task_path.write_bytes(original)
             return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
@@ -225,7 +242,7 @@ class ClosureService:
         if not task_path.is_file():
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
-        payload = self._ops._read_doc(task_path, TaskDoc)
+        payload = doc_access.read_doc(task_path, TaskDoc)
         status = str(payload.get("status") or "").strip().lower()
         if status not in {"resolved", "closed", "done", "complete"}:
             return ClosureOutcome(
@@ -344,7 +361,7 @@ class ClosureService:
         )
 
     def close_auto(self, payload: dict[str, Any], task_path: Path) -> None:
-        """Legacy hook used by ``DeskopsOperations._auto_commit_task_closure``."""
+        """Legacy hook: close a task from its payload, committing only its own files."""
         task_id = payload.get("id", "unknown-task")
         files = [str(item) for item in payload.get("files") or []]
         try:
@@ -428,14 +445,14 @@ class ClosureService:
 
             with doc_io.DocTransaction(self.root) as transaction:
                 if routed and board_before is not None:
-                    board_payload = self._ops._read_doc(board_path, BoardDoc)
+                    board_payload = doc_access.read_doc(board_path, BoardDoc)
                     references = [
                         str(item)
                         for item in board_payload.get("tasks") or []
                         if not self._board_reference_matches(str(item), task_id, task_rel)
                     ]
                     board_payload["tasks"] = references
-                    self._ops._write_doc(board_path, BoardDoc, board_payload)
+                    doc_access.write_doc(self.root, board_path, BoardDoc, board_payload)
                     self._git("add", "--", "desk/tasks/Board.md", check=False)
                     add_commit_path("desk/tasks/Board.md")
 
@@ -541,7 +558,7 @@ class ClosureService:
         """Run the declared-evidence gate; its declared/found line and alerts are always reported."""
         self._gate_notes = []
         try:
-            report = self._ops.verify_task_closeout(task_id)
+            report = self.verify_task_closeout(task_id)
         except Exception as exc:  # noqa: BLE001 - a gate that cannot run blocks closure
             return ClosureOutcome(1, [f"Closeout verify failed for {task_id}; the closing commit was not made.", f"- {exc}"])
         notes = [f"Closeout gate: {report.get('summary', '')}"]
@@ -558,9 +575,438 @@ class ClosureService:
         messages.append(f"Run 'deskops closeout verify --task {task_id}' for the full report.")
         return ClosureOutcome(1, messages)
 
+    # ---------------------------------------------------------------- closeout verify
+    def verify_task_closeout(self, task_selector: str) -> dict[str, Any]:
+        task_path = doc_access.resolve_artifact_selector(self.root, "artifact.task", self.desk_root / "tasks", task_selector)
+        payload = doc_access.resolve_task_payload(self.root, task_path.stem)
+        reference_evidence = self._closeout_reference_evidence(payload)
+        changed_files = doc_access.coerce_list(payload.get("files") or [])
+        declared, implicit = self._declared_closeout_evidence(payload)
+
+        findings: list[dict[str, str]] = []
+        alerts: list[dict[str, str]] = []
+        not_verifiable = [kind for kind in declared if kind in closeout_gates_module.NOT_YET_VERIFIABLE_EVIDENCE]
+        for kind in not_verifiable:
+            findings.append(
+                {
+                    "code": "closeout_evidence_not_verifiable",
+                    "message": f"Closeout evidence '{kind}' is declared by the task type but is not verifiable yet; "
+                    "a later node checks it.",
+                }
+            )
+        unknown = [
+            kind
+            for kind in declared
+            if kind not in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY
+            and kind not in closeout_gates_module.NOT_YET_VERIFIABLE_EVIDENCE
+        ]
+        for kind in unknown:
+            findings.append(
+                {
+                    "code": "unknown_closeout_evidence",
+                    "message": f"Declared closeout evidence '{kind}' is not in the vocabulary: "
+                    + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY),
+                }
+            )
+        declared = [kind for kind in declared if kind not in unknown and kind not in not_verifiable]
+
+        if implicit:
+            alerts.append(
+                {
+                    "code": "closeout_evidence_not_declared",
+                    "message": "This task declares no closeout_evidence; it predates the field and is gated as code "
+                    "(tests, commit, atom|materialization). Declare it with: deskops edit task "
+                    f"{task_path.stem} closeout_evidence '[\"commit\", \"document\"]' (kinds: "
+                    + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY)
+                    + ").",
+                }
+            )
+        python_changes = [path for path in changed_files if str(path).endswith(".py")]
+        if python_changes and "tests" not in declared:
+            alerts.append(
+                {
+                    "code": "python_changes_without_declared_tests",
+                    "message": "The task changes Python files ("
+                    + ", ".join(python_changes)
+                    + ") but did not declare tests as closeout evidence; this does not block closeout.",
+                }
+            )
+
+        gate_dict: dict[str, Any] = {}
+        found: list[str] = []
+        ok = not unknown and not not_verifiable
+
+        def add_gate(name: str, gate: CloseoutGateReport, found_label: str | None) -> None:
+            nonlocal ok
+            gate_dict[name] = gate.to_dict()
+            findings.extend(gate.findings)
+            ok = ok and gate.ok
+            if found_label:
+                found.append(found_label)
+
+        if "tests" in declared:
+            tests = reference_evidence["tests"]
+            add_gate(
+                "tests",
+                CloseoutGateReport(
+                    ok=bool(tests),
+                    evidence=tests,
+                    findings=[] if tests else [{"code": "missing_tests_evidence", "message": "No resolvable test evidence reference found."}],
+                ),
+                "tests" if tests else None,
+            )
+        if "atom" in declared or "materialization" in declared:
+            link_gate = self._closeout_link_gate(payload, changed_files, reference_evidence)
+            real_links = [item for item in link_gate.evidence if not item.startswith("knowledge-coverage-exempt")]
+            label = None
+            if link_gate.ok and real_links:
+                label = "atom|materialization"
+            elif link_gate.ok:
+                label = "atom|materialization (exento: sin atoms locales)"
+            add_gate("atom_or_materialization_link", link_gate, label)
+        if "commit" in declared:
+            commits = reference_evidence["commit"]
+            add_gate(
+                "commit",
+                CloseoutGateReport(
+                    ok=bool(commits),
+                    evidence=commits,
+                    findings=[] if commits else [{"code": "missing_commit_evidence", "message": "No resolvable commit reference found."}],
+                ),
+                "commit" if commits else None,
+            )
+        if "document" in declared:
+            documents = reference_evidence["document"]
+            add_gate(
+                "document",
+                CloseoutGateReport(
+                    ok=bool(documents),
+                    evidence=documents,
+                    findings=[] if documents else [{"code": "missing_document_evidence", "message": "No existing document (a .md/.rst/.txt/.adoc/.yaml file outside tests/ and desk/tasks/) found in references or files."}],
+                ),
+                "document" if documents else None,
+            )
+        if "external" in declared:
+            urls = reference_evidence["external"]
+            add_gate(
+                "external",
+                CloseoutGateReport(
+                    ok=bool(urls),
+                    evidence=urls,
+                    findings=[] if urls else [{"code": "missing_external_evidence", "message": "No http(s) URL found in references."}],
+                ),
+                "external" if urls else None,
+            )
+
+        report = {
+            "task_id": str(payload.get("id") or task_path.stem),
+            "ok": ok,
+            "declared": declared,
+            "found": found,
+            "summary": closeout_gates_module.gate_summary(declared, found),
+            "implicit_code": implicit,
+            "alerts": alerts,
+            "gates": gate_dict,
+            "findings": findings,
+        }
+        if "pill_graduation_verified" in payload:
+            report["pill_graduation_verified"] = payload.get("pill_graduation_verified")
+        return report
+
+    def has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
+        evidence = self._closeout_reference_evidence(payload)
+        declared, _ = self._declared_closeout_evidence(payload)
+        probes = {
+            "tests": "tests",
+            "commit": "commit",
+            "atom": "atom",
+            "document": "document",
+            "external": "external",
+        }
+        return any(bool(evidence[probes[kind]]) for kind in declared if kind in probes)
+
+    def has_verified_task_pill_graduation(self, payload: dict[str, Any]) -> bool:
+        pills = doc_access.coerce_list(payload.get("pills") or [])
+        if not pills:
+            return True
+        return any(
+            reference_points_to_atom(self.root, str(reference).strip())
+            for reference in doc_access.coerce_list(payload.get("references") or [])
+            if str(reference).strip()
+        )
+
+    def build_closeout_graph_context(self) -> "CloseoutGraph":
+        """The closeout graph context, shared by every task read inside a read snapshot."""
+        snapshot = self._ops.snapshot
+        if snapshot is None:
+            return self._ops.closeout_gates.build_closeout_graph_context()
+        if snapshot.graph_context is None:
+            snapshot.graph_context = self._ops.closeout_gates.build_closeout_graph_context()
+        return snapshot.graph_context
+
+    def _declared_closeout_evidence(self, payload: dict[str, Any]) -> tuple[list[str], bool]:
+        """Evidence the task closes with, and whether it is the implicit-code migration.
+
+        A non-empty ``closeout_evidence`` on the task is the complete list and replaces the
+        type's (the override); empty reads the evidence the task's type declares. A task with
+        no type and no field predates types and is gated as code with an alert.
+        """
+        declared = declared_evidence_list(payload.get("closeout_evidence"))
+        if declared:
+            return declared, False
+        task_type = str(payload.get("task_type") or "").strip()
+        registry = self._ops.registered_task_types()
+        # A registered name (factory or desk-local subtype) wins; only then the legacy mapping,
+        # so a local subtype's added evidence is never replaced by its ancestor's.
+        type_model = registry.get(task_type) or registry.get(canonical_task_type_name(task_type))
+        if type_model is not None:
+            evidence = tuple(getattr(type_model, "__closeout_evidence__", ())) or closeout_gates_module.CODE_EVIDENCE
+            return list(evidence), not task_type
+        return list(closeout_gates_module.CODE_EVIDENCE), True
+
+    def _closeout_reference_evidence(self, payload: dict[str, Any]) -> dict[str, list[str]]:
+        return self._ops.closeout_gates.closeout_reference_evidence(
+            payload,
+            points_to_atom=lambda reference: reference_points_to_atom(self.root, reference),
+            points_to_routed_follow_up=self._reference_points_to_routed_follow_up,
+        )
+
+    def _closeout_link_gate(
+        self,
+        payload: dict[str, Any],
+        changed_files: list[str],
+        reference_evidence: dict[str, list[str]],
+    ) -> CloseoutGateReport:
+        evidence = list(reference_evidence["atom"])
+        findings: list[dict[str, str]] = []
+        has_local_atoms = any(
+            path.is_file()
+            for path in (self.desk_root / "atoms").rglob(doc_access.artifact_glob_pattern("artifact.atom"))
+        )
+        if not has_local_atoms:
+            evidence.append("knowledge-coverage-exempt: no local atom documents")
+        graph_context = self.build_closeout_graph_context()
+
+        for raw_path in changed_files:
+            relative_path = self._normalize_repo_relative_path(raw_path)
+            if relative_path is None:
+                findings.append(
+                    {
+                        "code": "changed_file_missing",
+                        "path": str(raw_path),
+                        "message": "Changed file path does not resolve inside the repository.",
+                    }
+                )
+                continue
+
+            source_finding = self._generated_artifact_source_finding(relative_path)
+            if source_finding is not None:
+                findings.append(source_finding)
+
+            file_evidence = self._changed_file_link_evidence(relative_path, graph_context)
+            file_evidence.extend(self._skill_guard_test_evidence(relative_path, graph_context))
+            if file_evidence:
+                evidence.extend(file_evidence)
+                continue
+
+            if reference_evidence["follow_up"]:
+                for follow_up in reference_evidence["follow_up"]:
+                    evidence.append(f"follow-up:{follow_up} -> {relative_path}")
+                continue
+
+            if not has_local_atoms:
+                continue
+
+            findings.append(
+                {
+                    "code": "missing_changed_file_link",
+                    "path": relative_path,
+                    "message": "Changed file has no atom/materialization link and no routed follow-up reference.",
+                }
+            )
+
+        if has_local_atoms and not changed_files and not reference_evidence["atom"]:
+            findings.append(
+                {
+                    "code": "missing_atom_or_materialization_link",
+                    "message": "No atom reference or changed-file materialization coverage found.",
+                }
+            )
+
+        return CloseoutGateReport(ok=not findings, evidence=self._dedupe_preserve_order(evidence), findings=findings)
+
+    def _reference_points_to_routed_follow_up(self, reference: str) -> bool:
+        candidate = reference.strip()
+        if not candidate:
+            return False
+        if candidate.startswith(("task:", "issue:")):
+            return self._reference_points_to_existing_route(candidate)
+        if candidate.endswith(".md"):
+            path = Path(candidate.split("::", 1)[0])
+            if not path.is_absolute():
+                path = self.root / path
+            return path.exists() and any(
+                self._resolved_is_under(path, self.root / relative)
+                for relative in ("desk/tasks", "desk/drawer/issues", "desk/drawer/tasks")
+            )
+        return False
+
+    def _reference_points_to_existing_route(self, reference: str) -> bool:
+        kind, _, identifier = reference.partition(":")
+        if not identifier:
+            return False
+        if kind == "task":
+            return any(path.stem == identifier for path in (self.desk_root / "tasks").glob("task-*.md"))
+        if kind == "issue":
+            return any(path.stem == identifier for path in (self.desk_root / "drawer" / "issues").rglob("issue-*.md"))
+        return False
+
+    def _changed_file_link_evidence(self, relative_path: str, graph_context: "CloseoutGraph") -> list[str]:
+        evidence: list[str] = []
+        path = self.root / relative_path
+        if path.suffix == ".md" and self._resolved_is_under(path, self.desk_root / "atoms"):
+            evidence.append(f"atom-doc:{relative_path}")
+        node_id = graph_context.node_id(relative_path)
+        if node_id is None:
+            return evidence
+        for edge in graph_context.edges_around(node_id):
+            if edge.source_id == node_id and edge.target_id.startswith("atom:"):
+                evidence.append(f"graph:{node_id}->{edge.target_id}")
+            if edge.target_id == node_id and edge.source_id.startswith("materialization:"):
+                if edge.source_id in graph_context.invalid_materializations:
+                    continue
+                evidence.append(f"materialization:{edge.source_id}->{relative_path}")
+        return self._dedupe_preserve_order(evidence)
+
+    def _skill_guard_test_evidence(self, relative_path: str, graph_context: "CloseoutGraph") -> list[str]:
+        """Evidence for a changed skill file covered by an atom-linked guard test.
+
+        Skill Markdown files are not graph nodes. A changed skill file is linked
+        only when a test that reads its skill tree (and names ``SKILL.md``) is
+        itself linked to an atom or to a valid materialization.
+        """
+        matching_prefix = next(
+            (prefix for prefix in SKILL_TREE_PREFIXES if relative_path.startswith(prefix)),
+            None,
+        )
+        if matching_prefix is None:
+            return []
+
+        tree_token = matching_prefix.rstrip("/")
+        evidence: list[str] = []
+        for test_path in self._atom_linked_test_paths(graph_context):
+            if not test_path.startswith("tests/"):
+                continue
+            path = self.root / test_path
+            if not path.is_file():
+                continue
+            try:
+                text = path.read_text(encoding="utf-8")
+            except OSError:
+                continue
+            if "SKILL.md" not in text:
+                continue
+            if tree_token not in text and relative_path not in text:
+                continue
+            evidence.append(f"guard-test:{test_path} -> {relative_path}")
+        return self._dedupe_preserve_order(evidence)
+
+    @staticmethod
+    def _atom_linked_test_paths(graph_context: "CloseoutGraph") -> list[str]:
+        test_node_ids: set[str] = set()
+        for edge in graph_context.test_link_edges():
+            if edge.source_id.startswith("test_file:") and edge.target_id.startswith("atom:"):
+                test_node_ids.add(edge.source_id)
+            if edge.target_id.startswith("test_file:") and edge.source_id.startswith("materialization:"):
+                if edge.source_id in graph_context.invalid_materializations:
+                    continue
+                test_node_ids.add(edge.target_id)
+        return sorted(node_id.removeprefix("test_file:") for node_id in test_node_ids)
+
+    def _generated_artifact_source_finding(self, relative_path: str) -> dict[str, str] | None:
+        path = self.root / relative_path
+        sibling = self._find_generated_artifact_source_sibling(path)
+        if sibling is None or not path.exists() or path.suffix not in {".md", ".json"}:
+            return None
+        if self._declares_materialization_sources(path):
+            return None
+        return {
+            "code": "generated_artifact_missing_declared_sources",
+            "path": relative_path,
+            "message": f"Rendered artifact has sibling source {sibling.name} but does not declare source_atoms or provenance.",
+        }
+
+    @staticmethod
+    def _find_generated_artifact_source_sibling(path: Path) -> Path | None:
+        for suffix in (".mmd", ".yaml", ".yml"):
+            sibling = path.with_suffix(suffix)
+            if sibling != path and sibling.exists():
+                return sibling
+        return None
+
+    @staticmethod
+    def _declares_materialization_sources(path: Path) -> bool:
+        if path.suffix not in {".md", ".yaml", ".yml", ".json"}:
+            return False
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            return False
+        if path.suffix == ".json":
+            try:
+                loaded = json.loads(text)
+            except json.JSONDecodeError:
+                return False
+            if not isinstance(loaded, dict):
+                return False
+            return bool(loaded.get("source_atoms") or loaded.get("provenance"))
+        if not text.startswith("---\n"):
+            return False
+        try:
+            _, rest = text.split("---\n", 1)
+            block, _body = rest.split("\n---", 1)
+        except ValueError:
+            return False
+        loaded = yaml.safe_load(block) or {}
+        if not isinstance(loaded, dict):
+            return False
+        return bool(loaded.get("source_atoms") or loaded.get("provenance"))
+
+    def _normalize_repo_relative_path(self, raw_path: str) -> str | None:
+        candidate = Path(str(raw_path).split("::", 1)[0].strip())
+        if not candidate:
+            return None
+        if not candidate.is_absolute():
+            candidate = (self.root / candidate).resolve()
+        else:
+            candidate = candidate.resolve()
+        try:
+            return candidate.relative_to(self.root).as_posix()
+        except ValueError:
+            return None
+
+    @staticmethod
+    def _dedupe_preserve_order(values: list[str]) -> list[str]:
+        result: list[str] = []
+        seen: set[str] = set()
+        for value in values:
+            if value in seen:
+                continue
+            seen.add(value)
+            result.append(value)
+        return result
+
+    @staticmethod
+    def _resolved_is_under(path: Path, parent: Path) -> bool:
+        try:
+            path.resolve().relative_to(parent.resolve())
+            return True
+        except ValueError:
+            return False
+
     def _task_path(self, task_id: str) -> Path:
         try:
-            return self._ops._resolve_glob(self.desk_root / "tasks", task_id)
+            return doc_access.resolve_glob(self.root, self.desk_root / "tasks", task_id)
         except FileNotFoundError:
             return self.desk_root / "tasks" / f"{task_id}.md"
 
@@ -571,7 +1017,7 @@ class ClosureService:
 
     def _board_routes(self, board_path: Path, task_id: str, task_path: Path) -> bool:
         try:
-            payload = self._ops._read_doc(board_path, BoardDoc)
+            payload = doc_access.read_doc(board_path, BoardDoc)
         except Exception:
             return False
         task_rel = self._relative(task_path)

@@ -169,3 +169,14 @@ def task_type_activation_receipts(task_type: str) -> tuple[str, ...]:
     if model is None:
         return ()
     return tuple(getattr(model, "__activation_receipts__", ()))
+
+
+def declared_evidence_list(value: object) -> list[str]:
+    """The stored ``closeout_evidence`` as plain strings; the vocabulary is checked where it is used."""
+    if isinstance(value, list):
+        items = [str(item) for item in value]
+    elif value in (None, ""):
+        items = []
+    else:
+        items = [str(value)]
+    return [item.strip() for item in items if item.strip()]

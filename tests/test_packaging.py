@@ -5,7 +5,6 @@ from pathlib import Path
 from deskops import paths
 from deskops.bootstrap import MODEL_REFS
 from deskops.bootstrap import SLDBBootstrap
-from deskops.specs.loader import SpecRegistry
 
 
 def test_package_pythonpath_is_the_directory_containing_deskops() -> None:
@@ -18,9 +17,9 @@ def test_package_pythonpath_is_the_directory_containing_deskops() -> None:
 def test_runtime_specs_and_faq_ship_inside_the_package() -> None:
     assert paths.data_path("spec", "workflows", "task_lifecycle.yaml").is_file()
     assert paths.data_path("data", "faq.md").is_file()
-    registry = SpecRegistry.load(paths.data_path("spec"))
-    assert "artifact.task" in registry.artifacts
-    assert "field.goal" in registry.fields
+    # Artifact and field specs are the models now (``__artifact__`` and the fields).
+    assert not paths.data_path("spec", "artifacts").exists()
+    assert not paths.data_path("spec", "fields").exists()
 
 
 def test_packaged_faq_matches_the_human_copy() -> None:

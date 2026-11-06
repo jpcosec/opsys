@@ -1,41 +1,45 @@
 from __future__ import annotations
 
-from pathlib import Path
+import pytest
 
-from deskops.paths import data_path
+from deskops.models import TaskDoc
+from deskops.models.task_types import TASK_TYPE_MODELS
+from deskops.cli.model_introspection import artifact_id_pattern
+from deskops.cli.model_introspection import artifact_status_default
+from deskops.cli.model_introspection import artifact_tags_default
+from deskops.operations import ARTIFACT_MODELS
+from deskops.specs.compiler import compile_artifact_spec
 from deskops.specs.compiler import compile_task_spec
-from deskops.specs.loader import SpecRegistry
-from deskops.specs.mermaid import render_artifact_structure_mermaid
 
 
-ROOT = Path(__file__).resolve().parents[1]
-SPEC_ROOT = data_path("spec")
+ARTIFACT_KEYS = {"id_pattern", "status_default", "tags"}
 
 
-def test_spec_registry_loads_fields_and_artifacts() -> None:
-    registry = SpecRegistry.load(SPEC_ROOT)
+def test_every_artifact_model_declares_its_artifact_defaults() -> None:
+    for artifact_id, model in ARTIFACT_MODELS.items():
+        if artifact_id == "artifact.review":
+            # Reviews are written by `deskops review`, never by `deskops add`.
+            assert not hasattr(model, "__artifact__")
+            continue
+        artifact = getattr(model, "__artifact__", None)
+        assert isinstance(artifact, dict), artifact_id
+        assert set(artifact) == ARTIFACT_KEYS, artifact_id
+        assert artifact["id_pattern"].endswith("-{slug}"), artifact_id
+        assert isinstance(artifact["tags"], list) and artifact["tags"], artifact_id
 
-    assert "field.goal" in registry.fields
-    assert "field.validation" in registry.fields
-    assert not hasattr(registry, "primitives"), "per-task primitive specs are gone; the lifecycle is a graph"
-    assert "artifact.task" in registry.artifacts
-    assert "artifact.pill" in registry.artifacts
-    assert "artifact.ritual" in registry.artifacts
-    assert "artifact.board" in registry.artifacts
-    assert "artifact.atom" in registry.artifacts
-    assert "artifact.repository" in registry.artifacts
-    assert "artifact.inbox_note" in registry.artifacts
-    assert "artifact.faq" in registry.artifacts
-    assert "artifact.step" in registry.artifacts
-    assert "field.description" in registry.fields
-    assert "field.related_atoms" in registry.fields
-    assert "field.created_at" in registry.fields
+
+def test_task_artifact_defaults_are_inherited_by_every_task_type() -> None:
+    assert TaskDoc.__artifact__ == {
+        "id_pattern": "task-{slug}",
+        "status_default": "draft",
+        "tags": ["workspace:desk", "artifact:task"],
+    }
+    for model in TASK_TYPE_MODELS.values():
+        assert model.__artifact__ is TaskDoc.__artifact__
 
 
 def test_task_spec_compiler_builds_only_the_task_at_the_lifecycle_entry() -> None:
-    registry = SpecRegistry.load(SPEC_ROOT)
     compiled = compile_task_spec(
-        registry,
         {
             "title": "Spec authored task",
             "goal": "Drive task creation from YAML specs.",
@@ -58,11 +62,51 @@ def test_task_spec_compiler_builds_only_the_task_at_the_lifecycle_entry() -> Non
     assert compiled.task_payload["implementation_path"] == "Compile artifact spec into runtime-ready docs."
     assert compiled.task_payload["validation"] == ["pytest"]
     assert compiled.task_payload["done_when"] == "The task is produced from specs."
+    assert compiled.task_payload["status"] == "draft"
+    assert compiled.task_payload["tags"] == ["workspace:desk", "artifact:task"]
 
 
-def test_mermaid_views_render_from_task_specs() -> None:
-    registry = SpecRegistry.load(SPEC_ROOT)
-    structure = render_artifact_structure_mermaid(registry, "artifact.task")
+def test_task_spec_compiler_is_the_one_task_normalization() -> None:
+    """What `_normalize_task_payload` used to do now happens in the compiler."""
+    with pytest.raises(KeyError, match="must include 'title'"):
+        compile_task_spec({"goal": "no title"}, entry_node="ritual-execution")
+    with pytest.raises(ValueError, match="cannot be empty"):
+        compile_task_spec({"title": "   "}, entry_node="ritual-execution")
 
-    assert "artifact.task[Task Artifact]" in structure
-    assert "field.goal[field.goal]" in structure
+    compiled = compile_task_spec(
+        {
+            "title": "  Padded title  ",
+            "references": "one-reference",
+            "closeout_evidence": [" commit ", "", "document"],
+            "current_node": "",
+        },
+        entry_node="ritual-execution",
+    )
+    assert compiled.task_payload["title"] == "Padded title"
+    assert compiled.task_payload["references"] == ["one-reference"]
+    assert compiled.task_payload["closeout_evidence"] == ["commit", "document"]
+    assert compiled.task_payload["current_node"] == "ritual-execution"
+    assert compiled.task_payload["why"] == "Not provided."
+
+    stored = compile_task_spec({"title": "Stored task", "current_node": "ritual-testing"}, entry_node="")
+    assert stored.task_payload["current_node"] == "ritual-testing"
+    assert compile_task_spec({"title": "Stored task"}, entry_node="").task_payload["current_node"] == ""
+
+
+def test_artifact_spec_compiler_reads_the_model_defaults() -> None:
+    pill = compile_artifact_spec("artifact.pill", {"title": "A pill"}, model_fields=ARTIFACT_MODELS["artifact.pill"].model_fields.keys())
+    assert pill.artifact_payload["id"] == "pill-a-pill"
+    assert pill.artifact_payload["status"] == "active"
+
+    atom = compile_artifact_spec(
+        "artifact.atom",
+        {"title": "An atom", "five_wh_one_plus": "what", "answer": "the answer"},
+        model_fields=ARTIFACT_MODELS["artifact.atom"].model_fields.keys(),
+    )
+    assert atom.artifact_payload["id"] == "atom-an-atom"
+    # The model's own `tags` default factory wins over the artifact default, as before.
+    assert atom.artifact_payload["tags"] == []
+    assert artifact_id_pattern("artifact.atom") == "atom-{slug}"
+    assert artifact_status_default("artifact.atom") is None
+    assert artifact_tags_default("artifact.atom") == ["system:deskops", "topic:atoms"]
+    assert artifact_id_pattern("artifact.review") == "{slug}"

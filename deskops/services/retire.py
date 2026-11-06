@@ -11,6 +11,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+from deskops import doc_access
 from deskops import doc_io
 from deskops.errors import DomainError
 from deskops.models import BoardDoc
@@ -195,9 +196,7 @@ def _handled_boards(root: Path, updates: list[tuple[Path, dict]], path: Path, re
 
 
 def _write_board(root: Path, board_path: Path, payload: dict) -> None:
-    from deskops.operations import DeskopsOperations
-
-    DeskopsOperations(root)._write_doc(board_path, BoardDoc, payload)
+    doc_access.write_doc(root, board_path, BoardDoc, payload)
 
 
 def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:

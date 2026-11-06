@@ -26,6 +26,13 @@ AtomTag = Annotated[
 
 
 class AtomDoc(StructuredNLDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "atom-{slug}",
+        "status_default": None,
+        "tags": ["system:deskops", "topic:atoms"],
+    }
     __semantics__ = {
         "type": ["knowledge", "atom"],
         "workspace": ["desk", "atoms"],

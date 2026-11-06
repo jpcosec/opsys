@@ -4,6 +4,13 @@ from sldb import StructuredNLDoc
 
 
 class StepDoc(StructuredNLDoc):
+    # Artifact-level defaults `deskops add` applies (formerly one YAML spec per artifact):
+    # the id built from the slug, the status a new document gets, and its default tags.
+    __artifact__ = {
+        "id_pattern": "step-{slug}",
+        "status_default": "active",
+        "tags": ["workspace:desk", "artifact:step"],
+    }
     __semantics__ = {"type": ["workflow", "step"], "workspace": ["desk"]}
     __template__ = """---
 # step-xxx

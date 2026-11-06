@@ -67,6 +67,18 @@ class LifecycleSpec:
 
 
 @dataclass(slots=True)
+class ReadSnapshot:
+    """Task-independent graph reads shared by every task read of one read-only pass.
+
+    ``DeskopsOperations.read_snapshot`` opens one; ``transitions_from`` keeps the transitions
+    leaving each node in it and the closure service keeps the closeout graph context.
+    """
+
+    transitions: dict[str, list["Transition"]] = field(default_factory=dict)
+    graph_context: Any = None
+
+
+@dataclass(slots=True)
 class TransitionResult:
     current_node: str
     status: str
@@ -120,7 +132,9 @@ def ritual_export_id(ritual_id: str) -> str:
     return f"{RITUAL_MODEL}:{ritual_id}"
 
 
-def transitions_from(root: Path, node: str, spec: LifecycleSpec | None = None) -> list[Transition]:
+def transitions_from(
+    root: Path, node: str, spec: LifecycleSpec | None = None, *, snapshot: ReadSnapshot | None = None
+) -> list[Transition]:
     """The lifecycle transitions leaving ``node``, as the desk's graph declares them.
 
     Topology and conditions come from the graph; the effect of each transition comes from
@@ -129,7 +143,13 @@ def transitions_from(root: Path, node: str, spec: LifecycleSpec | None = None) -
     The lifecycle graph lives in the desk's own store (``ensure_lifecycle_graph`` writes it
     there), so only that store's edge index is read (sldb keeps it composed while its shards
     do not move), not the index composed with every linked store.
+
+    With a ``snapshot``, the transitions leaving a node are read once and reused.
     """
+    if snapshot is not None:
+        if node not in snapshot.transitions:
+            snapshot.transitions[node] = transitions_from(root, node, spec)
+        return snapshot.transitions[node]
     from sldb.api import edges_from
 
     spec = spec or load_lifecycle_spec()

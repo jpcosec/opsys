@@ -7,9 +7,10 @@ from collections.abc import Collection
 from pydantic.fields import PydanticUndefined
 
 from deskops.cli.model_introspection import artifact_id_pattern
+from deskops.cli.model_introspection import artifact_status_default
 from deskops.cli.model_introspection import artifact_tags_default
-from deskops.cli.model_introspection import DEFAULT_FACTORY
-from .loader import SpecRegistry
+from deskops.models.task import TaskDoc
+from deskops.models.task_types import declared_evidence_list
 
 
 @dataclass(slots=True)
@@ -23,21 +24,30 @@ class CompiledArtifactSpec:
 
 
 def compile_task_spec(
-    registry: SpecRegistry,
     raw_payload: dict[str, Any],
     *,
     entry_node: str,
 ) -> CompiledTaskSpec:
     """Compile a task payload. The task starts at ``entry_node`` of the lifecycle graph
-    (deskops/lifecycle.py); no per-task primitives or routine are generated."""
-    artifact = registry.artifacts["artifact.task"]
+    (deskops/lifecycle.py); no per-task primitives or routine are generated.
+
+    This is the one normalization of a task payload: a missing ``title`` is a ``KeyError``,
+    a blank one a ``ValueError``, every list field is coerced to a list of strings, and
+    ``closeout_evidence`` is stripped of blanks. ``current_node`` keeps the payload's value
+    and falls back to ``entry_node`` (pass ``""`` to normalize a stored task as it is).
+    """
+    artifact = getattr(TaskDoc, "__artifact__", {})
+    if raw_payload.get("title") is None:
+        raise KeyError("Task payload must include 'title'")
     title = str(raw_payload["title"]).strip()
+    if not title:
+        raise ValueError("Task title cannot be empty")
     slug = _slugify(title)
-    task_id = str(raw_payload.get("id") or artifact["data"]["doc"]["id_pattern"].format(slug=slug))
+    task_id = str(raw_payload.get("id") or str(artifact.get("id_pattern", "task-{slug}")).format(slug=slug))
     task_payload = {
         "title": title,
         "id": task_id,
-        "status": str(raw_payload.get("status") or artifact["data"]["doc"].get("status_default", "draft")),
+        "status": str(raw_payload.get("status") or artifact.get("status_default") or "draft"),
         "why": str(raw_payload.get("why") or "Not provided."),
         "goal": str(raw_payload.get("goal") or ""),
         "scope": str(raw_payload.get("scope") or ""),
@@ -49,20 +59,19 @@ def compile_task_spec(
         "validation": _coerce_list(raw_payload.get("validation") or []),
         "done_when": str(raw_payload.get("done_when") or ""),
         "history": _coerce_list(raw_payload.get("history") or []),
-        "tags": _coerce_list(raw_payload.get("tags") or artifact["data"]["doc"].get("tags", [])),
+        "tags": _coerce_list(raw_payload.get("tags") or list(artifact.get("tags") or [])),
         "task_type": str(raw_payload.get("task_type") or ""),
         "inherits_from": _coerce_list(raw_payload.get("inherits_from") or []),
         "inherit_acceptance_context": bool(raw_payload.get("inherit_acceptance_context") or False),
         "atoms": _coerce_list(raw_payload.get("atoms") or []),
         "from_drawer": str(raw_payload.get("from_drawer") or ""),
-        "closeout_evidence": _coerce_list(raw_payload.get("closeout_evidence") or []),
+        "closeout_evidence": declared_evidence_list(raw_payload.get("closeout_evidence")),
     }
     task_payload["current_node"] = str(raw_payload.get("current_node") or entry_node)
     return CompiledTaskSpec(task_payload=task_payload)
 
 
 def compile_artifact_spec(
-    registry: SpecRegistry,
     artifact_id: str,
     raw_payload: dict[str, Any],
     *,
@@ -71,12 +80,11 @@ def compile_artifact_spec(
     """Compile a raw payload into an artifact payload using the Pydantic model.
 
     The Pydantic model is the single source of truth for which fields exist and
-    their defaults. The YAML spec (via registry) is consulted only for artifact-
-    level config: id_pattern and status_default.
+    their defaults. Its ``__artifact__`` attribute carries the artifact-level
+    config: id_pattern, status_default and the default tags.
     """
-    from deskops.operations import ARTIFACT_MODELS
+    from deskops.doc_access import ARTIFACT_MODELS
 
-    artifact = registry.artifacts[artifact_id]
     display_value = raw_payload.get("title") or raw_payload.get("name") or raw_payload.get("id")
     if display_value is None:
         raise KeyError(f"Payload for {artifact_id} must include 'title', 'name', or 'id'")
@@ -85,7 +93,6 @@ def compile_artifact_spec(
         raise ValueError(f"Payload for {artifact_id} has empty title/name/id after stripping whitespace")
     slug = _slugify(title)
 
-    # id_pattern from model_introspection (was in YAML doc section)
     id_pattern = artifact_id_pattern(artifact_id)
     doc_id = str(raw_payload.get("id") or id_pattern.format(slug=slug))
 
@@ -118,10 +125,11 @@ def compile_artifact_spec(
                 payload[field_name] = list(default)
             # else: other default types — leave for model validation
 
-    # Handle status_default from artifact config (not in model)
+    # Handle status_default from the artifact config (not in the model); an artifact
+    # that declares none (atom, materialization) keeps the historical "active".
     if "status" in supported and "status" not in payload:
-        status_default = str(artifact["data"]["doc"].get("status_default", "active"))
-        payload["status"] = status_default
+        status_default = artifact_status_default(artifact_id)
+        payload["status"] = "active" if status_default is None else str(status_default)
 
     # Handle tags default — prefer model factory, fall back to artifact config
     if "tags" in supported and "tags" not in payload:
