@@ -264,6 +264,7 @@ include:
   - desk/materializations/materialization-cc30-tests-test-output-goldens.md
   - desk/materializations/materialization-cc30-tests-test-materialization-contract.md
   - desk/materializations/materialization-cc30-tests-test-packaging.md
+  - desk/materializations/materialization-rg-tests-test-cli-grammar.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -292,8 +293,8 @@ include:
   - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
 - model: TaskCodeDoc
   paths:
-  - desk/tasks/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla.md
   - desk/tasks/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero.md
+  - desk/tasks/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

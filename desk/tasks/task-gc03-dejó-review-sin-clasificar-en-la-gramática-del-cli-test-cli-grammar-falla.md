@@ -7,7 +7,11 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_cli_grammar.py
+- tests/test_cli_grammar.py
+- 44bfc5c27673e6036987bd67408735ea38743dac
+- desk/atoms/atom-todo-sustantivo-de-primer-nivel-del-cli-de-deskops-está-clasificado-una-sola-vez-en-su-gramática.md
 depends_on: []
 pills: []
 files:
@@ -57,6 +61,7 @@ _List the checks required before this task can close._
 - TMPDIR=/dev/shm pytest -q tests/test_cli_grammar.py verde
 - TMPDIR=/dev/shm pytest -q tests/test_cli_help_examples.py verde (la ayuda no cambia)
 - git diff --stat origin/main limitado a tests/test_cli_grammar.py y CHANGELOG.md
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash 44bfc5c2 sobre origin/main): test_cli_grammar 2, test_cli_help_examples 11, de a uno, en verde. review queda en operational de TOP_LEVEL_GRAMMAR con sus guardas de mutates leídas del registro. Seguimiento de la regresión de GC03 hallada en la suite completa de deskops (f0a4a476).
 
 ## Done When
 

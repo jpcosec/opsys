@@ -1,0 +1,21 @@
+name: materialization-rg-tests-test-cli-grammar
+path: desk/materializations/materialization-rg-tests-test-cli-grammar.md
+source_hash: 8e78dffc4da26254b47cd588a4e4cd8c4ded5cd6902c24979f06f000c0ae4e21
+content_hash: f9177b42f79a4b013c888ef3d162086645144359393b3ef0a836067a73412058
+field_hashes:
+  id: 7cc947c58f2f1d97e353fe5e8f9799bbdb3be03e159892f429555d329c6bea6c
+  title: bd0a9a9eff1e0332d1642220771d2f3a95629606a44d75541a736b6f58fe74e3
+  source_atoms: fcffcd0a0395ab017c8b967e95f11c51eee31399fa3510993b2b1ab209fb4dd8
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 6d0ed5cb370703fa852bcf27b9bd00e0b77cca100165c3f78aeae223eb0200df
+  intent: 542b441415a16f46b0e12488cdd6d718279cf000a255129833da1695274703b2
+  validation: bf7b3e999bcfed898e9536c47634ac067ebdfb611d3c049d0ffff47b10799b48
+  tags: a628e7f4b1cb54f114b8dcad9a42365ba3a5751d942595018033590ba0c8c716
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:cli
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
