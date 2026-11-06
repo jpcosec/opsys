@@ -233,9 +233,6 @@ include:
     name: run-deskops-closeout-evidence
   - path: runs/subagents/20261031-044028-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
     name: run-deskops-closeout-suite
-- model: TaskCodeDoc
-  paths:
-  - desk/tasks/task-gc03-comando-deskops-review-que-reemplaza-a-los-dos-scripts-de-revisión-en-frío.md
 - model: ReviewDoc
   paths:
   - path: desk/reviews/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados/preflight-1.md
