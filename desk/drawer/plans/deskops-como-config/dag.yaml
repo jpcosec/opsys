@@ -1,6 +1,6 @@
 id: deskops-como-config
-revision: 2
-revision_note: 'Rev 2 (2026-11-06): el dueño autoriza el plan (2026-11-05) y responde sus pendientes (decisiones.md DA1-DA6, DK6): nodo nuevo CC38 (invariantes de un documento al modelo, depende de CC30) del que dependen CC32, CC33 y CC37; CC37 lleva la consistencia del ciclo de vida a un validador de TaskDoc (DA6) en lugar de RuleDocs on_write; CC33 deja la evidencia solo por tipo (DA5); CC34 sin proveedores computed (DA1) y con ViewDoc solo en el paquete (DA4); CC51 fija N tras CC30 (DA3). execution_authorized=true. Rev 1 (2026-11-05): plan inicial, ramas P3 y P5 del árbol aprobado por el dueño (deskops-como-config-arbol.md). Sucede a gates-por-tipo (congelado tras GC03, DK2). Sin revisión en frío todavía (la decide el supervisor). execution_authorized=false.'
+revision: 3
+revision_note: 'Rev 3 (2026-11-06): CC35 (L) se parte en cuatro hijos, como manda su scope: CC35a transacción, CC35b selectores, CC35c referencias entrantes y CC35d tags/reemplazo. CC35c depende de CC33 y conserva su parte de MentionPattern; se eligió no mover esa parte a CC33 para que el contrato de CC33 no cambie. Los hijos se promueven cuando CC38 y CC36 estén en main. Orden acordado con el coordinador de proyecto: CC36 → CC31 → CC35a/CC35b/CC35d → CC32 → CC33 → CC35c → CC37, un worker a la vez. Rev 2 (2026-11-06): el dueño autoriza el plan (2026-11-05) y responde sus pendientes (decisiones.md DA1-DA6, DK6): nodo nuevo CC38 (invariantes de un documento al modelo, depende de CC30) del que dependen CC32, CC33 y CC37; CC37 lleva la consistencia del ciclo de vida a un validador de TaskDoc (DA6) en lugar de RuleDocs on_write; CC33 deja la evidencia solo por tipo (DA5); CC34 sin proveedores computed (DA1) y con ViewDoc solo en el paquete (DA4); CC51 fija N tras CC30 (DA3). execution_authorized=true. Rev 1 (2026-11-05): plan inicial, ramas P3 y P5 del árbol aprobado por el dueño (deskops-como-config-arbol.md). Sucede a gates-por-tipo (congelado tras GC03, DK2). Sin revisión en frío todavía (la decide el supervisor). execution_authorized=false.'
 status: authorized
 as_of: '2026-11-06'
 source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
@@ -135,6 +135,7 @@ hierarchy:
       node_role: aggregate
       owner_repo: deskops
       children: [CC34, CC35]
+      note: CC35 es agregado de CC35a-CC35d (rev 3).
       scope: 'Vistas de la UI como ViewDoc servidas por sldb (CC34); toda escritura por la transacción de sldb, con selectores y referencias entrantes de sldb (CC35).'
       acceptance: 'desk_view.py y doc_io.py no existen; deskops view board en JSON igual al golden previo; graph_ui lee /views de sldb serve.'
     - id: PF4
@@ -219,7 +220,9 @@ tasks:
     tree_id: T3.5
     title: Escrituras vía sldb (transacción, selectores, referencias entrantes, tags, reemplazo); borrar los caminos propios
     kind: code
-    node_role: delivery
+    node_role: aggregate
+    children: [CC35a, CC35b, CC35c, CC35d]
+    partition_note: 'Partido en la rev 3. No se promueve el agregado; se promueven los hijos (regla común 8). Su acceptance es la unión de la de los hijos.'
     parent_id: PF3
     owner_repo: deskops
     estimate: L
@@ -229,6 +232,62 @@ tasks:
     scope: 'Se parte al promover en cuatro hijos (transacción, selectores, referencias, tags/reemplazo), cada uno con el mismo criterio de aceptación sobre su superficie. (1) Transacción: todo caller de doc_io.DocTransaction (operations.py:266,1327; tasks.py:92; atoms.py:179,294,356; drawer.py:116,168; retire.py:103; closure.py:429; issues.py:337; replace.py:85; runtime/scion.py:394) usa sldb.api.transaction (GD24) con expected_source_hash en los updates; message send/ack (cli/commands/message.py:123,181) también, sin rollback manual; doc_io.py se borra. (2) Selectores: desk_paths.resolve_selector (:24), _resolve_glob, _resolve_artifact_selector[_multi], _tracked_task_paths (que lee .sldb crudo), _registered_repositories, _resolve_ritual_selector (operations.py:1125-1279), issues.find_issue/list_issues (:96, :354), drawer.resolve_drawer_source/_resolve_unique (:49, :220) pasan a sldb.api.select_documents (GD23) con la misma regla exacto > prefijo único y los mismos mensajes de error de deskops (el mensaje lo arma deskops con los candidatos que sldb devuelve). (3) Referencias entrantes: atoms delete/split/merge (_find_inbound_atom_references :743, _rewrite_inbound_atom_references :764, _retarget_atom_documents :809), retire (_inbound_references :213, _board_pill_updates :158, _drawer_bullets_removed :141), drawer remove (_tasks_recording :183) y closure (_board_routes/_board_reference_matches :572-584) usan referrers/rewrite_references (GD22) dentro de la misma transacción; las menciones atom:<id> en prosa y los bullets del drawer se declaran como MentionPattern en la configuración de grafo de deskops (la de CC33). (4) Tags y reemplazo: desk/atoms/tag-namespaces.yaml sigue siendo la fuente (formato del desk) y desk update --apply la sincroniza a tag_namespaces del store por la API de sldb; domain_tree.require_domain_parents y DomainTree.check/tree pasan a la validación y tag_tree de GD27 (CrossroadDoc como anchored_by del namespace domain); atom_tags.axis_folder_relpath pasa a tag_folder; services/replace.py pasa a sldb replace_text con la misma guarda de conteo. Lo que queda de domain_tree.py es lo del caso (crear crossroads y protoátomos con sus plantillas). En cada hijo: los goldens de ayuda y salida de add/edit/advance/promote/retire/message/atoms/desk replace no cambian.'
     acceptance: 'grep -rn "doc_io\|DocTransaction\|resolve_selector\|_tracked_task_paths\|_find_inbound_atom_references\|_rewrite_inbound_atom_references\|_inbound_references\|require_domain_parents" deskops/ vacío; un fallo inyectado a mitad de atoms merge revierte el atom, los referrers y el índice (hash de archivos y sldb stores check iguales antes y después); una escritura con expected_source_hash viejo falla con el mensaje de conflicto de deskops; retire de una pill la quita del Board y de las tareas en una sola transacción; atoms merge reescribe menciones atom:<id> en prosa; los mensajes de ambigüedad de selectores son los de antes (goldens); domain:a.b sin crossroad de domain:a falla como antes; goldens de ayuda y salida idénticos; los tests de los archivos tocados verdes; deskops doctor sin hallazgos nuevos en los 6 desks; líneas antes y después por archivo en la Validation; CHANGELOG.'
     output_scope: deskops/doc_io.py (borrado), deskops/desk_paths.py, deskops/operations.py, deskops/services/, deskops/domain_tree.py, deskops/atom_tags.py, deskops/atom_references.py, deskops/graph/desk_graph.py (MentionPattern), deskops/cli/commands/message.py, deskops/cli/commands/desk.py, deskops/runtime/scion.py, tests/, CHANGELOG.md
+  - id: CC35a
+    tree_id: T3.5
+    title: 'CC35 (1) Transacción: toda escritura por sldb.api.transaction; doc_io.py se borra'
+    kind: code
+    node_role: delivery
+    parent_id: CC35
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC30, CC36, CC38]
+    requires: [G_GD24]
+    enablers: {sldb: [GD24]}
+    scope: 'Parte (1) del scope de CC35. Todo caller de doc_io.DocTransaction usa sldb.api.transaction (GD24) con expected_source_hash en los updates; message send/ack escribe por la transacción, sin rollback manual; doc_io.py se borra. Las líneas se fijan al promover, sobre main con CC30, CC36 y CC38 integrados.'
+    acceptance: 'grep -rn "doc_io\|DocTransaction" deskops/ vacío; un fallo inyectado a mitad de atoms merge revierte el atom, los referrers y el índice (hash de archivos y sldb stores check iguales antes y después); una escritura con expected_source_hash viejo falla con el mensaje de conflicto de deskops; goldens de ayuda y salida idénticos; tests de los archivos tocados verdes; deskops doctor sin hallazgos nuevos en los 6 desks; líneas antes y después; CHANGELOG.'
+    output_scope: deskops/doc_io.py (borrado), deskops/doc_access.py, deskops/services/, deskops/cli/commands/message.py, deskops/runtime/scion.py, tests/, CHANGELOG.md
+  - id: CC35b
+    tree_id: T3.5
+    title: 'CC35 (2) Selectores: resolución de documentos por sldb.api.select_documents'
+    kind: code
+    node_role: delivery
+    parent_id: CC35
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC35a]
+    requires: [G_GD23]
+    enablers: {sldb: [GD23]}
+    scope: 'Parte (2) del scope de CC35. desk_paths.resolve_selector, resolve_glob, resolve_artifact_selector[_multi], _tracked_task_paths (que lee .sldb crudo), _registered_repositories, _resolve_ritual_selector, issues.find_issue/list_issues y drawer.resolve_drawer_source/_resolve_unique pasan a sldb.api.select_documents (GD23) con la misma regla exacto > prefijo único; deskops arma los mensajes de error con los candidatos que sldb devuelve. Los alias privados que graph_ui importa se conservan hasta CC34.'
+    acceptance: 'grep -rn "resolve_selector\|_tracked_task_paths" deskops/ vacío salvo los alias para graph_ui marcados CC34; los mensajes de ambigüedad de selectores son los de antes (goldens); goldens de ayuda y salida idénticos; tests de los archivos tocados verdes; deskops doctor sin hallazgos nuevos en los 6 desks; líneas antes y después; CHANGELOG.'
+    output_scope: deskops/desk_paths.py, deskops/doc_access.py, deskops/services/, deskops/operations.py (alias), tests/, CHANGELOG.md
+  - id: CC35c
+    tree_id: T3.5
+    title: 'CC35 (3) Referencias entrantes: referrers y rewrite_references dentro de la transacción; menciones en prosa como MentionPattern'
+    kind: code
+    node_role: delivery
+    parent_id: CC35
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC35a, CC33]
+    requires: [G_GD22]
+    enablers: {sldb: [GD22]}
+    scope: 'Parte (3) del scope de CC35. atoms delete/split/merge, retire, drawer remove y closeout usan referrers/rewrite_references (GD22) dentro de la misma transacción. Las menciones atom:<id> en prosa y los bullets del drawer se declaran como MentionPattern en la configuración de grafo de deskops que deja CC33. Por eso depende de CC33: esa parte queda en este nodo y no se movió a CC33.'
+    acceptance: 'grep -rn "_find_inbound_atom_references\|_rewrite_inbound_atom_references\|_inbound_references" deskops/ vacío; retire de una pill la quita del Board y de las tareas en una sola transacción; atoms merge reescribe menciones atom:<id> en prosa; goldens de ayuda y salida idénticos; tests de los archivos tocados verdes; deskops doctor sin hallazgos nuevos en los 6 desks; líneas antes y después; CHANGELOG.'
+    output_scope: deskops/services/, deskops/atom_references.py, deskops/graph/desk_graph.py (MentionPattern), tests/, CHANGELOG.md
+  - id: CC35d
+    tree_id: T3.5
+    title: 'CC35 (4) Tags y reemplazo: tag_namespaces, tag_tree, tag_folder y replace_text de sldb'
+    kind: code
+    node_role: delivery
+    parent_id: CC35
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC35b]
+    requires: [G_GD27]
+    enablers: {sldb: [GD27]}
+    scope: 'Parte (4) del scope de CC35. desk/atoms/tag-namespaces.yaml sigue siendo la fuente (formato del desk) y desk update --apply la sincroniza a tag_namespaces del store por la API de sldb; domain_tree.require_domain_parents y DomainTree.check/tree pasan a la validación y tag_tree de GD27 (CrossroadDoc como anchored_by del namespace domain); atom_tags.axis_folder_relpath pasa a tag_folder; services/replace.py pasa a sldb replace_text con la misma guarda de conteo. Lo que queda de domain_tree.py es lo del caso (crear crossroads y protoátomos con sus plantillas). Parte de los chequeos que CC38 dejó inventariados para CC33 (padres de domain, registro de namespaces) pueden resolverse aquí si GD27 los cubre; se anota cuáles.'
+    acceptance: 'grep -rn "require_domain_parents" deskops/ vacío; domain:a.b sin crossroad de domain:a falla como antes; desk update --apply sincroniza tag-namespaces.yaml al store de forma idempotente; desk replace con la misma guarda de conteo; goldens de ayuda y salida idénticos; tests de los archivos tocados verdes; deskops doctor sin hallazgos nuevos en los 6 desks; líneas antes y después; CHANGELOG.'
+    output_scope: deskops/domain_tree.py, deskops/atom_tags.py, deskops/services/replace.py, deskops/cli/commands/desk.py, tests/, CHANGELOG.md
   - id: CC36
     tree_id: T3.6
     title: Plantillas del desk (board, rituales, drawer, faq) como datos escritos por el scaffold de sldb
