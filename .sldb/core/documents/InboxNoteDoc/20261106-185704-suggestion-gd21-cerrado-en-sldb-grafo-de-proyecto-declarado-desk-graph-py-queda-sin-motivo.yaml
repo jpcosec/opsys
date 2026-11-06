@@ -1,0 +1,18 @@
+name: 20261106-185704-suggestion-gd21-cerrado-en-sldb-grafo-de-proyecto-declarado-desk-graph-py-queda-sin-motivo
+path: desk/inbox/20261106-185704-suggestion-gd21-cerrado-en-sldb-grafo-de-proyecto-declarado-desk-graph-py-queda-sin-motivo.md
+source_hash: 459f351a592dec09668af1b0547f2f5b092f87196efa63f456c05ce69a28286d
+content_hash: c70ea2e03c38c46bc9832099b78125522d990c70e4a9a098df3137dc3220c4b0
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: adf8f4fb55456ba91d0b029904c49d4d1b85540b989a86435dfb80c0a89f7efb
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: f2892411dd17c3965d197afe1af2c6f04e4f115243c5328801bd83e47aa4dd06
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: fc08e794a5af358907abeeeccb9f0168987525481480ddbb6b88038288e2b305
+  body: ce9afbd4644da1b2d7ea94ad56ae2574a840a69156acfe54c5eafe44ea18bd47
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
