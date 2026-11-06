@@ -1,0 +1,30 @@
+name: review-task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding-bundle-1
+path: desk/reviews/task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding/bundle-1.md
+source_hash: 09e77df821ca58d7cae2126b5b7a4f54dd4ac8c6057ae4a0746e19ee66420f04
+content_hash: d59442247ab70ee1776d8ad48157da11be9a402f6fbb2302256bc5778721d0d5
+field_hashes:
+  id: acdddc753dfe4721a3c4b27dd126239236277434874a69b6baf3045e6aa22f82
+  title: 64a8ee5edb60952b97e2d50cb9edc07bb1e3a2f3388917087d571c0e06bb1517
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  subject: fec3363771fa1e70b67b583e288e31a4ac791418c349c49515d9303888fb867b
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 733bed21d3565ed47119d1ff7c12a203611ad22e033c11b9980cf5455f57a54c
+  input_sha256: dc7d3349d817e75c3cd7eda71f4816dbb57ab2c9634c116570e8a16b2371437a
+  output_sha256: a71bbb4ad4e562f103f8b7d6180ec4ddf65139c3438860e68d63303436bafa05
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 6efdfeb5fa749af8cdec41531ea3ea92a3a1abacbaf1e125ac5748c0407b073a
+  created_at: 82727e9c33c30901415434e5a01545ca8c07654ed33ad144aa8d9676f8583085
+  disposed_at: c4b877e25ca2c73520f99a24e478b882ee8102b38f51ed06fc74aed20670c09d
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 2417073ab2315179fd718da761dbe31427965263b05272b6dc94fadc51f85998
+  disposition: 905259a45d28e07e50deaf5c1b87a1ada11be6c29975151e799c63d332a1c94f
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null

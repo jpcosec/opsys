@@ -1,0 +1,122 @@
+{
+  "key": "task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding/bundle",
+  "input_sha256": "c8795a6d59264c523b80fb5111d6bb6c822783ffd783302f3323b1b765faddc4",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261106-234103/context-review/task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding/bundle/c8795a6d59264c523b80fb5111d6bb6c822783ffd783302f3323b1b765faddc4/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding.md",
+      "sha256": "62e08b380273a87b3ffa45255bc99843072d29d1431c070c4b0d050c52abd8cd",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "7933b4eacd113da40671bf7c1f15d3c78be00b2ddf7bd5d0572e9e85a35bf61b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle_migration.py",
+      "sha256": "9c817488c02232329dd79442df9939330923f27486bca1638581151fb5b78598",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/spec/workflows/task_lifecycle.yaml",
+      "sha256": "932d966139d5321d1ee07d31f22f7db6206cd0cbf45c8c6a8c6c9190220f5aa2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/data/desk_declaration.yaml",
+      "sha256": "142bcf6de13ddc582569b29051f663beb85565a894f2709c18e35279a0029611",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "8725e46d9dbe5b6ea2bdc9b49a04f0accd7df061f66732146624766b5b1e3ced",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/tasks.py",
+      "sha256": "93236dadd1e801308dd2a215c9629caa3ee41ad30d6a3c9363102462b374dc1a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workflow/next_actions.py",
+      "sha256": "338255617704d2b21785c047e6a5e0810c8dfbcab67789d89e6cbd4ec26324a1",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "c1eabf698cd2926631968da405b2a1558fb19d77924b5939f5db8a0b767d7b39",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/core.py",
+      "sha256": "fbb608ab9f95d2f324662cc02b57f54a1410bee946b28981c66fb47c430ed403",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/workflow-policy-reference.md",
+      "sha256": "1722c50480321c94334fd6822e0a9f148d37a7ab74550abb9ef33686e2c01dbe",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "14fcc7399ac1dbe8fd73fb2484b82a1d2762479ba71056a0f3197f836718b3df",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/data/lifecycle/",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-06T23:41:03.778405+00:00",
+  "finished": "2026-11-06T23:41:29.118340+00:00"
+}
