@@ -1,0 +1,18 @@
+name: atom-en-deskops-el-store-de-sldb-se-versiona-entero-y-solo-la-caché-se-ignora
+path: desk/atoms/atom-en-deskops-el-store-de-sldb-se-versiona-entero-y-solo-la-caché-se-ignora.md
+source_hash: ab7a738819efcdd845c3f4e43e60e44a186c2e7e354eb634ab82851242e26b85
+content_hash: 5908af46e1f0e489131809e3fd6e110b3e34280458f6d02e92437448be9f0867
+field_hashes:
+  id: ca482ec982467605b84dd594b04d56bb701f570a1ff71de2737678cd6ed0dbeb
+  title: 1bbdaeda055b9a44496aaeeb0316c3c4e0c61c4a63ca97be704b8191e0181f82
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: f80f4003d55fc0ee6aa48809c3ca2acfdebf86e19c5f4ecec66d9f203f8efffb
+  tags: 6cb9335a4a3659a6fcc87627ebce830d9f6bb7d10a1254fd7e5af155c0a425dc
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:store-layout
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

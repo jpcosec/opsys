@@ -7,7 +7,11 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_gitignore_policy.py
+- tests/test_gitignore_policy.py
+- 3cf8a24eda6946dd0a562249ae7096349de8c8d8
+- desk/atoms/atom-en-deskops-el-store-de-sldb-se-versiona-entero-y-solo-la-caché-se-ignora.md
 depends_on: []
 pills: []
 files:
@@ -57,6 +61,7 @@ _List the checks required before this task can close._
 
 - TMPDIR=/dev/shm pytest -q tests/test_gitignore_policy.py verde
 - git diff --stat origin/main limitado a tests/test_gitignore_policy.py y CHANGELOG.md; .gitignore sin cambios
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash 3cf8a24e sobre origin/main): test_gitignore_policy 1 passed. El test ahora afirma la política vigente (store.yaml y .sldb/core trackeados, .sldb_cache ignorada, nada trackeado en .sldb/runtime) sin tocar .gitignore. .sldb/runtime/ no está ignorado por .gitignore; si el dueño quiere ignorarlo es otro nodo. Conflicto trivial de cabecera ### Fixed en CHANGELOG con el seguimiento de review-grammar: quedan las dos líneas.
 
 ## Done When
 

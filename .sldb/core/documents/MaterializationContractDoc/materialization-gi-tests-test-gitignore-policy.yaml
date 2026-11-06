@@ -1,0 +1,21 @@
+name: materialization-gi-tests-test-gitignore-policy
+path: desk/materializations/materialization-gi-tests-test-gitignore-policy.md
+source_hash: 6575206d745971dfa1a65c3eb6fb6ee2b7f2d6a3947ebd2c80099eefb3a5606d
+content_hash: d460977a119d0fa5778ee14cb4013655ac1f55ed18b9b3fdd1a0eacb2cbbb9a7
+field_hashes:
+  id: 6627de0777c71e98e793236d31f274c78de6d875e21d1ecdd2e4c1b55bb2a072
+  title: cec0fdafe866dccce15998971a8dcfd1dab78ea5cf8fffeda0d28c0eb0f607b6
+  source_atoms: e3de11b30f3bab3745224ddcca6d362e1e2b9ad42487d9de4e1a4ad1d9736313
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: e285720bf14b6d4e7ecd9f3df063bf094f80724723e2db231255f4bff487eb2b
+  intent: c9ccefff0670726ccf729abd6a609cebb0222f02e06278e5dbd6f0035beb9775
+  validation: 0c3a7f31dd1d8548f558344965fd93892d77c159ad0ed840977f07cc12a95776
+  tags: 6cb9335a4a3659a6fcc87627ebce830d9f6bb7d10a1254fd7e5af155c0a425dc
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:store-layout
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
