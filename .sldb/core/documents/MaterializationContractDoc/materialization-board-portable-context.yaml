@@ -1,0 +1,21 @@
+name: materialization-board-portable-context
+path: desk/materializations/materialization-board-portable-context.md
+source_hash: aded07562b99046b13c081968feeadc7cc6c087fb343f5c05e302baf1520a09f
+content_hash: 18756382e0274282e2611f38a3f7ceb9a72cdd6f86db5adb133e10a2b7869900
+field_hashes:
+  id: 9aeb57d948eeb1bf6d947d8a155b0c4ac54fac507e4b7eb2c7681e5b75a5d46d
+  title: 4c7298ebc7e4a98900354ef3b04f06a89a993fceeae2c4e7f4e0e1e182f4c854
+  source_atoms: fdce63edbc11a725faaa9fc4c06538750ecf48f704ee607dd08597fafbb17432
+  target_kind: 9b71b1c022bd84e4d9b4aef5507b0818b6f39da332bf32b2973452be3d5f6774
+  target_identity: 9b85c7a185236b28ea687d4a6c61ea88e1ca4a1d592e8d8c42f6ca45c65c102f
+  intent: 241e9bffc1dcda0aed813ebe7683af01630ad38eb1ab96dc13918ed5c6ff4a2d
+  validation: 5730daee0a1a439fb2afd19650d70be75607678bbd4a4967b578fdadadfdf151
+  tags: b23a9feb75157af4828acb96311274ad71d527031f789de02e0f59dd20567fbc
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boards
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

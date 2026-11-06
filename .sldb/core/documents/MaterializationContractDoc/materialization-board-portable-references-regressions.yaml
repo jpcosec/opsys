@@ -1,0 +1,22 @@
+name: materialization-board-portable-references-regressions
+path: desk/materializations/materialization-board-portable-references-regressions.md
+source_hash: ffcfe068b5832fee185b9b4c47d6b2754bf0554cebe5d8b1edc7fb508669a60a
+content_hash: d61636a91cc6c4709c4e6ca924faec8239df1cd3c79fa580897f18375ddd585b
+field_hashes:
+  id: 361a96915544160f7705e85c5bf98a81b6cfd7d67062f09d62b49012a2f1cf17
+  title: 3d5f4e3befc68594ccb9a2dc15e74e94de7f87261cbcb0da7122ce83711dfcb7
+  source_atoms: fdce63edbc11a725faaa9fc4c06538750ecf48f704ee607dd08597fafbb17432
+  target_kind: 636fef96733cf18e3bf781120123c91c12b25fcfc6410d1540a6048d962556a8
+  target_identity: 99377d53a6efc5964bb7f6c737a75f03a24064896e5d39d3d8750c5036da5b28
+  intent: f9314110f47605ffc527a07f05e35be50ff99f0cdb875bb2a80236699ddcbaff
+  validation: 5730daee0a1a439fb2afd19650d70be75607678bbd4a4967b578fdadadfdf151
+  tags: ae24f80aaaf0cdb2de5b5598e1a43c49027dff33c23788f33cd45d9df407e6a2
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:boards
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

@@ -27,7 +27,7 @@ files:
 - deskops/models/runtime_profile.py
 - deskops/cli/commands/desk.py
 - tests/fixtures/model_contract_hashes.json
-task_type: code
+task_type: task.code
 inherits_from: []
 inherit_acceptance_context: false
 atoms: []

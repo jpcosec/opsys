@@ -2,11 +2,11 @@ name: TaskCodeDoc
 model_ref: deskops.models:TaskCodeDoc
 path: deskops/models/task_types.py
 documents_index: .sldb/core/documents/TaskCodeDoc.yaml
-sections_index: ''
-model_hash: abebc4aefe0a78b5ecf427a847693fab211e6b6db9f98ee28a8c5e573868eb47
-roster_hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+sections_index: .sldb/runtime/sections/TaskCodeDoc.yaml
+model_hash: 5b819bf064b35083bcdadf6d04410e6303987316e3170e101caa09816a78005e
+roster_hash: 787bd1aa914721ceb44be8e774f9ccd532bccc80d37f33f91101b96170112f4f
 contract_hash: fac7ef5325d87f49c624009f368c0ee7695b8e8c29c3b57df00e8d85c50fcb80
-documents_count: 0
+documents_count: 5
 version: 1
 canonical: false
 family: null

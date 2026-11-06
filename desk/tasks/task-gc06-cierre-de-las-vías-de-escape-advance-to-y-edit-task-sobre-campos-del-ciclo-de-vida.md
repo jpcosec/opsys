@@ -20,7 +20,7 @@ files:
 - tests/fixtures/golden/help/
 - docs/operator-manual.md
 - CHANGELOG.md
-task_type: code
+task_type: task.code
 inherits_from: []
 inherit_acceptance_context: false
 atoms: []

@@ -24,7 +24,7 @@ files:
 - tests/test_closeout_gates.py
 - docs/
 - CHANGELOG.md
-task_type: code
+task_type: task.code
 inherits_from: []
 inherit_acceptance_context: false
 atoms:
