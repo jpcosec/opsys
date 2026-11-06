@@ -287,5 +287,8 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+- model: TaskCodeDoc
+  paths:
+  - desk/tasks/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla.md
 graph_backend: networkx
 policy: {}
