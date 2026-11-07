@@ -1,0 +1,117 @@
+{
+  "key": "task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/bundle",
+  "input_sha256": "16b69dc4101a16ef67fa7a30cb3443e045f946e480c0c3ba6a8afe9c12068348",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261107-011212/context-review/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/bundle/16b69dc4101a16ef67fa7a30cb3443e045f946e480c0c3ba6a8afe9c12068348/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md",
+      "sha256": "2169ecee7c6a24d35f8c2e2155819a085048afed88bab0b7ebdab642fab6d55e",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/doc_io.py",
+      "sha256": "bcd640afcafae8ba6468a982e824e4bf7216129ac662b9b2cea7699386001973",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/doc_access.py",
+      "sha256": "939721f1fac5e7cddd2b8b09c9baa576dd612d38faaf1191746f71722cb82150",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/message.py",
+      "sha256": "96931d3c2ec70c10960cb659b49bcd74a61d3b01c6fcfb1796039891e48d4e8b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "b70f6ecfa5fee534e6bbb05a952124d7a7762d44c62b403ec18558a918bd9af5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/repo.py",
+      "sha256": "f958e6f86e74b946e225632f45c5e1f6277279c6b6512e2285bcfea32cf4193d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/runtime/scion.py",
+      "sha256": "4739711d07090630d048525a088214e61ab01f9da06e8e7207bd432fddb7b75a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "f11aae1a2732bc7faf5f99887800b531a3743ead4c931437399a845b58d2b01e",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "a5095d6474aa1192ebff2de636a6723dac3b2f6b46cba594206f84e2cd0085fd",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/bootstrap.py",
+      "sha256": "d74002a5620d4957ef5bf4b5a033ec80f6b03e8ff27620dc4de9d93c6a4450a2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "ae5d2bf3eaf2a9e036cd07e812f0563afb14aa1d67b43d9d8a389fd743254cfa",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/services/",
+      "reason": "directory"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-07T01:12:12.690590+00:00",
+  "finished": "2026-11-07T01:12:54.966420+00:00"
+}
