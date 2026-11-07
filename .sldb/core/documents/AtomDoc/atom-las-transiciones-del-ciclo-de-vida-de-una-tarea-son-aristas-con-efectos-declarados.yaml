@@ -1,0 +1,18 @@
+name: atom-las-transiciones-del-ciclo-de-vida-de-una-tarea-son-aristas-con-efectos-declarados
+path: desk/atoms/atom-las-transiciones-del-ciclo-de-vida-de-una-tarea-son-aristas-con-efectos-declarados.md
+source_hash: a1eaac805d7188a0cea8ca5d6ae67a79e2e5c99f1ceabf023d170942a996f7fc
+content_hash: 3000b690734340e172770274281b2b3af3977a58d7d7d5d08fec3fc67d1c214c
+field_hashes:
+  id: 67bdedbe7be4874545f0e4d5cb28597a8de3ac1733a1bf7c6ad736bbf377e363
+  title: 1f1daf20e3316aed4ec21ea579406f15d58f5c2ddeb1368f43687c4e29633a6c
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: f5fa89fa160c5f8720e5ecf859a4e1edb3370429d846337aac58f1a1246a2d6e
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

@@ -7,7 +7,14 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_lifecycle_graph.py
+- tests/test_lifecycle_graph.py
+- pytest tests/test_lifecycle_end_to_end.py
+- tests/test_lifecycle_end_to_end.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- 439150d716d4a15dd305ecc387fca974577e86ea
+- desk/atoms/atom-las-transiciones-del-ciclo-de-vida-de-una-tarea-son-aristas-con-efectos-declarados.md
 depends_on:
 - task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados
 - task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb
@@ -122,6 +129,7 @@ _List the checks required before this task can close._
 - deskops doctor sin hallazgos nuevos en los 6 desks tras desk update --apply en una copia de cada uno
 - wc -l deskops/lifecycle.py antes (406) y después (objetivo < 150)
 - CHANGELOG y docs/workflow-policy-reference.md
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash 439150d7 sobre origin/main): lifecycle_graph 9, lifecycle_end_to_end 5, promotion_nesting 2, desk_sync 8, scaffold_golden 3, packaging 6, closeout_gates 7, model_validators 14, cli_help_examples 11, cli 101, output_goldens 7: todos verdes, de a uno. w1:pW terminó el nodo porque el worker quedó trabado en el diálogo de auto mode. n7: con cwd neutro el apply rinde y la segunda corrida queda al día; las 12 alertas 'lost' salen igual con main (previas). Desvíos d1-d4 en el TaskDoc. lifecycle_migration.py borrado y deskops/data/lifecycle (carpeta) cubiertos por el seguimiento enrutado de paquetes y archivos borrados.
 
 ## Done When
 

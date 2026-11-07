@@ -1,0 +1,21 @@
+name: materialization-cc31-workflows-task-lifecycle-yaml
+path: desk/materializations/materialization-cc31-workflows-task-lifecycle-yaml.md
+source_hash: 2038eb0874eb3fb4c56bfb8748e9f3025c3512665555e37d3ae68d35a0de29e5
+content_hash: 82b75f1350fdf7b4c4aef3ccc880f035b3f7ab2e5989677af6b3b426f00ff50f
+field_hashes:
+  id: 63f776053b9735bd5328d46a54b023245ec1299e772f53c5198e883f78a55ab2
+  title: 150588e7b7db08e19ddd9c637161135f0198e4862e71bb04fca095fc22f9fc07
+  source_atoms: a72a74ae2519161f6cada0c49f2cab0656f5c7d9aba21bea99d970a6583a5e01
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 4f6ba2436434dca0ca4c09d8eb433c233c5a302f85048e84cec3097686526c8f
+  intent: f8daac81caada6d2993b0e5c769933ee72cc01a0f81e9d88f90fd7062c4d97ca
+  validation: 6108ec8eddd845f7dbd95e443c869dd86f29cb017dd1e07b9466b16914dd5e8b
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
