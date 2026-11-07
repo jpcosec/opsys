@@ -1279,7 +1279,7 @@ def test_edit_task_refuses_to_erase_undeclared_content(tmp_path: Path, capsys) -
 
     with_key = task_path.read_text(encoding="utf-8").replace(
         "## Out of scope\n\nNever touch prod.\n\n", "", 1
-    ).replace("---\nid:", "---\npriority: p0\nid:", 1)
+    ).replace("\nid:", "\npriority: p0\nid:", 1)
     task_path.write_text(with_key, encoding="utf-8")
     capsys.readouterr()
 

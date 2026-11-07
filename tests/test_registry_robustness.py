@@ -5,7 +5,6 @@ import io
 import json
 from pathlib import Path
 import re
-from types import SimpleNamespace
 
 import pytest
 from sldb.core.exceptions import SLDBStoreError
@@ -178,34 +177,20 @@ def test_repo_register_accepts_optional_path_flag_and_does_not_crash_on_registry
     desk_root = root / "desk"
     registry_dir = desk_root / "registry"
     registry_dir.mkdir(parents=True)
+    # A real store that registers RepositoryDoc: the registration is written and tracked in
+    # its transaction (the old fake tracking seam is gone with doc_io).
+    from sldb.api import add_model, init_store
+
+    init_store(path=root)
     store_path = root / ".sldb"
-    store_path.mkdir(parents=True)
+    add_model(store_path, "deskops.models:RepositoryDoc", pythonpath=str(Path(__file__).resolve().parents[1]))
 
     _write_repo_doc(registry_dir, repo_id="existing-repo", repo_path="tools/existing-repo")
-
-    tracked: list[str] = []
 
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
     monkeypatch.setattr("deskops.cli.commands.repo.get_store_context", lambda _arg: (store_path, root))
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, root))
     monkeypatch.setattr("deskops.cli.commands.repo.find_local_store", lambda: store_path)
-    monkeypatch.setattr(
-        "deskops.cli.commands.repo.registered_model",
-        lambda store, name, pythonpath: (RepositoryDoc, SimpleNamespace(models_index=Path("models-index.yaml")), "documents-idx"),
-    )
-
-    class FakeModelsIndex:
-        documents_index = Path("documents-index.yaml")
-
-    class FakeDocumentsIndex:
-        documents: list[object] = []
-
-    monkeypatch.setattr("sldb.store.io.load_models_index", lambda _path: FakeModelsIndex())
-    monkeypatch.setattr("sldb.store.io.load_documents_index", lambda _path: FakeDocumentsIndex())
-    monkeypatch.setattr(
-        "deskops.cli.commands.repo.track_document",
-        lambda store_path_arg, root_arg, idx, model_type, entry, path, note_name, resolver, pythonpath: tracked.append(note_name),
-    )
 
     repo_root = (tmp_path / "external" / "deskops").resolve()
     result = main([
@@ -223,7 +208,7 @@ def test_repo_register_accepts_optional_path_flag_and_does_not_crash_on_registry
 
     assert result == 0
     assert output_path.exists()
-    assert tracked == ["repo-deskops"]
+    assert doc_exists(store_path, "repo-deskops")
     assert "Unexpected:" not in captured.out
     assert f"Wrote {output_path}" in captured.out
 

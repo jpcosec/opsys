@@ -33,6 +33,7 @@ from sldb.api import Transaction
 from sldb.api import store_fingerprint
 from sldb.api import tracked_documents
 from sldb.api import transaction
+from sldb.store.layout import store_exists
 from sldb.api.documents.frontmatter_keys import undeclared_frontmatter_keys
 from sldb.api.documents.structural_noise import find_structural_noise
 from sldb.cli.utils import parse_data_value
@@ -188,7 +189,9 @@ def store_path(root: Path) -> Path:
 
 
 def has_store(root: Path) -> bool:
-    return store_path(root).is_dir()
+    """Whether the root has an sldb store: a ``.sldb/`` that only holds runtime files
+    (graph snapshots, caches) is not one."""
+    return store_exists(store_path(root))
 
 
 def _absolute(root: Path, path: Path | str) -> Path:
@@ -278,7 +281,7 @@ def _store_root_of(path: Path) -> Path | None:
     """The root whose store may track ``path``: the nearest parent with a store, unless a
     desk without one (``desk/`` and no ``.sldb``) comes first."""
     for parent in path.resolve().parents:
-        if (parent / ".sldb").is_dir():
+        if has_store(parent):
             return parent
         if (parent / "desk").is_dir():
             return None

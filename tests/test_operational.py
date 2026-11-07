@@ -5,19 +5,25 @@ from pathlib import Path
 
 import pytest
 
-from deskops import doc_access
 from deskops.models.task import TaskDoc
 from deskops.operations import DeskopsOperations
 from tests.test_lifecycle_end_to_end import _cli, _make_repo
 
 
-def test_create_artifact_rolls_back_file_when_tracking_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    operations = DeskopsOperations(tmp_path)
+def _fail_sldb_create(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The store's `create_document` (what `Transaction.create` calls) fails."""
+    from sldb.api.documents import transaction_ops
 
     def fail_tracking(*_args: object, **_kwargs: object) -> None:
         raise RuntimeError("tracking failed")
 
-    monkeypatch.setattr(doc_access, "track_created_artifact", fail_tracking)
+    monkeypatch.setattr(transaction_ops, "create_document", fail_tracking)
+
+
+def test_create_artifact_rolls_back_file_when_tracking_fails(lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path = lifecycle_desk
+    operations = DeskopsOperations(tmp_path)
+    _fail_sldb_create(monkeypatch)
 
     with pytest.raises(RuntimeError, match="tracking failed"):
         operations.create_artifact(
@@ -32,13 +38,10 @@ def test_create_artifact_rolls_back_file_when_tracking_fails(tmp_path: Path, mon
     assert not list((tmp_path / "desk" / "atoms").glob("atom-rollback-atom.md"))
 
 
-def test_create_task_bundle_rolls_back_the_task_when_tracking_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_create_task_bundle_rolls_back_the_task_when_tracking_fails(lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path = lifecycle_desk
     operations = DeskopsOperations(tmp_path)
-
-    def fail_tracking(*_args: object, **_kwargs: object) -> None:
-        raise RuntimeError("tracking failed")
-
-    monkeypatch.setattr(doc_access, "track_created_document", fail_tracking)
+    _fail_sldb_create(monkeypatch)
 
     with pytest.raises(RuntimeError, match="tracking failed"):
         operations.create_task_bundle(
@@ -76,7 +79,8 @@ def test_create_task_bundle_writes_only_the_task(tmp_path: Path) -> None:
     assert not (tmp_path / "desk" / "primitives").exists()
 
 
-def test_create_task_bundle_restores_board_when_append_fails(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_create_task_bundle_restores_board_when_append_fails(lifecycle_desk: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    tmp_path = lifecycle_desk
     operations = DeskopsOperations(tmp_path)
     operations.ensure_workspace()
     board_path = tmp_path / "desk" / "tasks" / "Board.md"
