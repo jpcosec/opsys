@@ -1,8 +1,8 @@
 """Atom domain service: create, validate, reorganize, split, merge, retarget, delete.
 
-Every atom write goes through ``doc_io``; split and merge each run inside one
-``DocTransaction`` so a failure restores the original file bytes and store
-entries. Document and path helpers are ``deskops.doc_access``.
+Every atom write goes through ``deskops.doc_access`` and the desk's
+``sldb.api.transaction``; split and merge each run inside one ``desk_transaction``
+block so a failure restores the original files and store entries.
 """
 
 from __future__ import annotations
@@ -14,7 +14,8 @@ from typing import Any
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
-from deskops import doc_io
+from sldb.api import Transaction
+
 from deskops import doc_access
 from deskops.atom_tags import axis_folder_relpath
 from deskops.atom_tags import axis_values
@@ -26,7 +27,6 @@ from deskops.models import AtomDoc
 from deskops.models import PillDoc
 from deskops.models.validation import check_document
 from deskops.models.validation import validated
-from deskops.paths import package_pythonpath
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
@@ -225,9 +225,8 @@ class AtomsService:
             raise ValueError(
                 f"Refusing to delete {atom_id}; inbound references found: {refs}. Re-run with --force to delete without rewriting references."
             )
-        untracked = doc_io.is_tracked(self.root, path)
-        with doc_io.DocTransaction(self.root) as transaction:
-            transaction.delete(path)
+        untracked = doc_access.index_entry(self.root, path) is not None
+        doc_access.delete_doc(self.root, path)
         return DocumentRecord(kind="atom-untracked" if untracked else "atom", doc_id=atom_id, path=path)
 
     def create_atom_from_source(
@@ -286,12 +285,7 @@ class AtomsService:
 
         validated(AtomDoc, payload)
         path = self._atom_doc_path(atom_id, list(payload.get("tags") or []))
-        self._write_new_doc(path, AtomDoc, payload)
-        try:
-            self._track_created_artifact("artifact.atom", AtomDoc, path, atom_id)
-        except Exception:
-            self._remove_created_file(path)
-            raise
+        doc_access.create_doc(self.root, path, AtomDoc, payload, atom_id)
         return AtomCreateResult(
             doc_id=atom_id,
             path=path,
@@ -345,12 +339,11 @@ class AtomsService:
 
         created: list[DocumentRecord] = []
 
-        with doc_io.DocTransaction(self.root):
+        with doc_access.desk_transaction(self.root):
             for target_id in normalized_ids:
                 new_payload = new_payloads[target_id]
                 new_path = self._atom_doc_path(target_id, list(new_payload.get("tags") or []))
-                self._write_new_doc(new_path, AtomDoc, new_payload)
-                self._track_created_artifact("artifact.atom", AtomDoc, new_path, target_id)
+                doc_access.create_doc(self.root, new_path, AtomDoc, new_payload, target_id)
                 created.append(DocumentRecord(kind="atom", doc_id=target_id, path=new_path))
 
             payload["answer"] = self._render_atom_split_redirect_answer(atom_id, normalized_ids)
@@ -396,7 +389,7 @@ class AtomsService:
         inbound_references = self._find_inbound_atom_references(source_id, excluded_path=source_path)
         rewritten_references: list[str] = []
 
-        with doc_io.DocTransaction(self.root) as transaction:
+        with doc_access.desk_transaction(self.root) as transaction:
             rewritten_references = self._rewrite_inbound_atom_references(
                 source_id,
                 target_id,
@@ -798,7 +791,7 @@ class AtomsService:
         target_id: str,
         *,
         excluded_paths: set[Path] | None = None,
-        transaction: doc_io.DocTransaction | None = None,
+        transaction: Transaction | None = None,
     ) -> list[str]:
         needle = f"atom:{source_id}"
         replacement = f"atom:{target_id}"
@@ -847,14 +840,15 @@ class AtomsService:
         if not (self.root / ".sldb").is_dir():
             return False
 
-        pythonpath = package_pythonpath()
         changed = False
         for atom_id, new_path in retargets.items():
             try:
-                doc_io.untrack(self.root, atom_id, pythonpath=pythonpath)
-                doc_io.track(self.root, self.root / new_path, AtomDoc, name=atom_id, pythonpath=pythonpath)
+                with doc_access.desk_transaction(self.root) as transaction:
+                    doc_access.untrack_doc(self.root, atom_id)
+                    transaction.track(self.root / new_path, "AtomDoc", atom_id)
             except Exception:
                 continue
+            doc_access.forget_index(self.root)
             changed = True
         return changed
 
@@ -862,7 +856,7 @@ class AtomsService:
         if not (self.root / ".sldb").is_dir():
             return False
         try:
-            doc_io.untrack(self.root, atom_id, pythonpath=package_pythonpath())
+            doc_access.untrack_doc(self.root, atom_id)
         except Exception:
             return False
         return True

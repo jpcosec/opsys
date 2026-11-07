@@ -12,8 +12,9 @@ from sldb.core.exceptions import SLDBStoreError
 from sldb.runtime.validation import render_model_markdown
 
 from deskops.bootstrap import SLDBBootstrap
+from sldb.api import doc_exists
+
 from deskops.cli.main import main
-from deskops import doc_io
 from deskops.identity import load_repository_registry
 from deskops.identity import EcosystemIdentity
 from deskops.models import RepositoryDoc
@@ -80,14 +81,14 @@ def test_repo_remove_then_register_same_path_under_correct_id(
 
     registry_file = root / "desk" / "registry" / "repo-graph-ui.md"
     assert registry_file.exists()
-    assert doc_io.is_tracked(root, registry_file)
+    assert doc_exists(root / ".sldb", registry_file.relative_to(root).as_posix())
 
     removed = main(["repo", "remove", "graph-ui", "--store", str(store_path)])
     remove_out = capsys.readouterr().out
     assert removed == 0
     assert str(registry_file) in remove_out
     assert not registry_file.exists()
-    assert not doc_io.is_tracked(root, registry_file)
+    assert not doc_exists(root / ".sldb", registry_file.relative_to(root).as_posix())
 
     missing = main(["repo", "remove", "not-registered", "--store", str(store_path)])
     missing_out = capsys.readouterr().out

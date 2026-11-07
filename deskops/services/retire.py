@@ -12,7 +12,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from deskops import doc_access
-from deskops import doc_io
 from deskops.errors import DomainError
 from deskops.models import BoardDoc
 from sldb.runtime.validation import extract_model_data
@@ -101,13 +100,14 @@ def retire_document(
                 "Update those first, or pass --force."
             )
 
-    with doc_io.DocTransaction(root) as transaction:
+    with doc_access.desk_transaction(root) as transaction:
         for board_path, payload in updates:
             _write_board(root, board_path, payload)
         if unrouted_drawer:
-            transaction.record(drawer_board)
+            if transaction is not None:
+                transaction.record(drawer_board)
             drawer_board.write_text(_drawer_bullets_removed(drawer_board, path.stem), encoding="utf-8")
-        transaction.delete(path)
+        doc_access.delete_doc(root, path)
     boards = [board_path.relative_to(root).as_posix() for board_path, _ in updates]
     if unrouted_drawer:
         boards.append(drawer_board.relative_to(root).as_posix())

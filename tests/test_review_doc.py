@@ -19,10 +19,10 @@ import sys
 import pytest
 from pydantic import ValidationError
 from sldb.api import doc_status
+from sldb.api import track_document_file
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
-from deskops import doc_io
 from deskops.cli.main import main
 from deskops.models import ReviewDoc
 
@@ -91,7 +91,7 @@ def _write_review(root: Path, **overrides: object) -> Path:
     path = root / "desk" / "reviews" / task_id / f"{kind}-1.md"
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(render_model_markdown(ReviewDoc, payload) + "\n", encoding="utf-8")
-    doc_io.track(root, path, ReviewDoc, name=review_id, pythonpath=str(ROOT))
+    track_document_file(root / ".sldb", "ReviewDoc", path, name=review_id, pythonpath=str(ROOT), force=True)
     return path
 
 

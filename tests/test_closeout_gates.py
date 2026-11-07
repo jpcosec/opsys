@@ -193,19 +193,17 @@ def bare_desk(tmp_path: Path) -> Path:
 @pytest.fixture
 def store_desk(lifecycle_desk: Path) -> Path:
     """An initialized desk whose store tracks the atom, the tasks and the materializations."""
-    from deskops import doc_io
-    from deskops.models import AtomDoc
-    from deskops.models import MaterializationContractDoc
-    from deskops.models import TaskDoc
+    from sldb.api import track_document_file
 
     root = lifecycle_desk
     _populate(root)
     _commit(root)
-    doc_io.track(root, root / "desk" / "atoms" / f"{ATOM}.md", AtomDoc, name=ATOM)
+    pythonpath = str(Path(__file__).resolve().parents[1])
+    track_document_file(root / ".sldb", "AtomDoc", root / "desk" / "atoms" / f"{ATOM}.md", name=ATOM, pythonpath=pythonpath, force=True)
     for path in sorted((root / "desk" / "materializations").glob("materialization-*.md")):
-        doc_io.track(root, path, MaterializationContractDoc, name=path.stem)
+        track_document_file(root / ".sldb", "MaterializationContractDoc", path, name=path.stem, pythonpath=pythonpath, force=True)
     for task_id in TASKS:
-        doc_io.track(root, root / "desk" / "tasks" / f"{task_id}.md", TaskDoc, name=task_id)
+        track_document_file(root / ".sldb", "TaskDoc", root / "desk" / "tasks" / f"{task_id}.md", name=task_id, pythonpath=pythonpath, force=True)
     return root
 
 

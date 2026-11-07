@@ -495,24 +495,18 @@ def _setup_inbox_identity_env(tmp_path: Path, monkeypatch) -> tuple[Path, Path, 
     _write_repo_doc(registry_dir, repo_id="target-repo", repo_path="target-repo", name="Target Repo")
 
     # Delivery tracks the note in the target repo's own store, never the
-    # sender's ecosystem store.
-    (target_repo / ".sldb").mkdir(parents=True)
+    # sender's ecosystem store: the target repo gets a real store that registers
+    # InboxNoteDoc, and the note is written and tracked in its transaction.
+    from sldb.api import add_model, init_store
+
+    init_store(path=target_repo)
+    add_model(target_repo / ".sldb", "deskops.models:InboxNoteDoc", pythonpath=str(ROOT))
 
     store_path = tmp_path / ".sldb"
-    tracked: list[str] = []
 
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_sldb_available", lambda self: 0)
     monkeypatch.setattr("deskops.identity.get_store_context", lambda _arg: (store_path, tmp_path))
     monkeypatch.setattr("deskops.cli.commands.message.get_store_context", lambda _arg: (store_path, tmp_path))
-    monkeypatch.setattr(
-        "deskops.cli.commands.message.registered_model",
-        lambda store, name, pythonpath: (InboxNoteDoc, object(), "idx"),
-    )
-
-    def fake_track_document(store_path_arg, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
-        tracked.append(note_name)
-
-    monkeypatch.setattr("deskops.cli.commands.message.track_document", fake_track_document)
     return sender_repo, target_repo, store_path
 
 

@@ -19,7 +19,7 @@ from typing import Iterable
 
 import yaml
 
-from deskops import doc_io
+from deskops import doc_access
 from deskops.desk_paths import resolve_selector
 from deskops.errors import DomainError
 
@@ -334,13 +334,15 @@ def close_issue(
     updated = _append_resolution(updated, normalized_reason, ref_list, today)
 
     identity = _tracked_identity(resolved_root, path)
-    with doc_io.DocTransaction(resolved_root) as transaction:
-        transaction.record(path)
-        if identity is not None:
-            doc_io.untrack(resolved_root, identity[1])
+    with doc_access.desk_transaction(resolved_root) as transaction:
+        if transaction is not None:
+            transaction.record(path)
+            if identity is not None:
+                transaction.untrack(identity[1])
         path.write_text(updated, encoding="utf-8")
-        if identity is not None:
-            doc_io.track(resolved_root, path, identity[0], name=identity[1])
+        if transaction is not None and identity is not None:
+            transaction.track(path, identity[0], identity[1])
+    doc_access.forget_index(resolved_root)
     return IssueCloseResult(path=path, issue_id=issue.issue_id)
 
 

@@ -15,7 +15,6 @@ from typing import Any
 from typing import TYPE_CHECKING
 
 from deskops import doc_access
-from deskops import doc_io
 from deskops import lifecycle
 from deskops.lifecycle import TransitionResult
 from deskops.models import BoardDoc
@@ -108,9 +107,8 @@ class TasksService:
         task_id = compiled.task_payload["id"]
         task_path = self._task_path(task_id)
 
-        with doc_io.DocTransaction(self.root):
-            doc_access.write_new_doc(self.root, task_path, type_model, compiled.task_payload)
-            doc_access.track_created_document(self.root, type_model, task_path, task_id)
+        with doc_access.desk_transaction(self.root):
+            doc_access.create_doc(self.root, task_path, type_model, compiled.task_payload, task_id)
             self._append_task_to_board(task_id)
         return TaskBundle(task_id=task_id, task_path=task_path)
 

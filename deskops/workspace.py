@@ -262,10 +262,11 @@ def seed_desk(target_path: Path, *, apply: bool = True, restore_managed: bool = 
         )
     report = scaffold_store(target_path, declaration=declaration, apply=apply)
     if apply and report.rewritten and (target_path / ".sldb" / "core").exists():
-        from deskops import doc_io
+        from sldb.api import update_store_indexes
+
         from deskops.paths import package_pythonpath
 
-        doc_io.update_store_indexes_in(target_path, pythonpath=package_pythonpath(), wait=False)
+        update_store_indexes(target_path / ".sldb", package_pythonpath(), wait=False)
     return DeskScaffoldResult(
         created_paths=[target_path / relative for relative in report.created],
         rewritten_paths=[target_path / relative for relative in report.rewritten],
@@ -589,7 +590,8 @@ def pending_local_task_type_models(root: Path) -> list[str]:
 
 def register_local_task_type_models(root: Path) -> list[str]:
     """Register unregistered desk-local task types; one change line per registration."""
-    from deskops import doc_io
+    from sldb.api import add_model
+
     from deskops.bootstrap import SLDBBootstrap
 
     store_dir = root / ".sldb"
@@ -602,7 +604,7 @@ def register_local_task_type_models(root: Path) -> list[str]:
         if class_name in registered:
             continue
         try:
-            doc_io.register_model(root, module_ref, pythonpath=pythonpath)
+            add_model(store_dir, module_ref, pythonpath=pythonpath)
         except Exception as exc:
             raise RuntimeError(f"could not register desk-local task type {class_name}: {exc}") from exc
         changes.append(f"registered {class_name} from {module_ref}")
@@ -694,7 +696,8 @@ def migrate_task_types(root: Path) -> list[str]:
     Idempotent: a second run changes nothing. ``closeout_evidence`` is preserved because the
     frontmatter rewrite only touches ``task_type``.
     """
-    from deskops import doc_io
+    from sldb.api import track_document_file
+    from sldb.api import untrack_document
     from sldb.api.stores.doc_status import doc_status
 
     store_dir = root / ".sldb"
@@ -717,9 +720,9 @@ def migrate_task_types(root: Path) -> list[str]:
         if store_dir.exists() and item["target_cls"] is not None:
             if tracked_model is not None:
                 try:
-                    doc_io.untrack(root, path)
+                    untrack_document(store_dir, status.name, pythonpath=pythonpath)
                 except Exception:
                     pass
-            doc_io.track(root, path, item["target_cls"], name=path.stem, pythonpath=pythonpath, force=True)
+            track_document_file(store_dir, item["target_cls"].__name__, path, name=path.stem, pythonpath=pythonpath, force=True)
         changes.append(_task_type_migration_line(item, rel))
     return changes
