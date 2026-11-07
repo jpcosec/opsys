@@ -276,15 +276,14 @@ def test_the_board_matches_the_full_scan(store_desk: Path, monkeypatch: pytest.M
         patch.setattr(
             lifecycle,
             "transitions_from",
-            lambda root, node, spec=None, *, snapshot=None: transitions_from_v1(store_desk, node),
+            lambda root, node, *, snapshot=None: transitions_from_v1(store_desk, node),
         )
         old = view.board()
     assert live == old
 
 
 def _lifecycle_nodes() -> list[str]:
-    spec = lifecycle.load_lifecycle_spec()
-    return sorted({t.source for t in spec.transitions} | {t.target for t in spec.transitions} | {"ritual-unknown"})
+    return sorted(set(lifecycle.load_lifecycle_spec().rituals) | {"ritual-unknown"})
 
 
 def test_transitions_match_the_linked_index(lifecycle_desk: Path, tmp_path: Path) -> None:

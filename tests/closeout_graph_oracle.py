@@ -75,23 +75,19 @@ def transitions_from_v1(root: Path, node: str) -> list[lifecycle.Transition]:
     """``lifecycle.transitions_from`` as it was: the index composed with the linked stores."""
     from sldb.api import edges_from
 
-    spec = lifecycle.load_lifecycle_spec()
-    known = {t.relation_type for t in spec.transitions}
     found: list[lifecycle.Transition] = []
     for edge in edges_from(root / ".sldb", lifecycle.ritual_export_id(node)):
-        if edge.relation not in known or edge.metadata.get("origin") != "relation_doc":
+        if edge.metadata.get("origin") != "relation_doc" or not edge.target.rsplit("/", 1)[-1].startswith("RitualDoc:"):
             continue
-        effect = spec.effect(edge.relation)
+        attributes = edge.metadata.get("attributes") or {}
         found.append(
             lifecycle.Transition(
                 relation_type=edge.relation,
-                title=effect.title,
-                description=effect.description,
                 source=node,
                 target=edge.target.rsplit(":", 1)[-1],
                 condition=str(edge.metadata.get("condition") or ""),
-                sets_status=effect.sets_status,
-                terminal=effect.terminal,
+                sets=dict(attributes.get("sets") or {}),
+                terminal=bool(attributes.get("terminal")),
             )
         )
-    return sorted(found, key=lambda t: [x.relation_type for x in spec.transitions].index(t.relation_type))
+    return found

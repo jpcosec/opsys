@@ -232,16 +232,38 @@ def test_declared_includes_treat_extra_boards_in_tasks_as_boards(tmp_path: Path)
     (tasks / "board-compromisos-26-10.md").write_text("# Board\n", encoding="utf-8")
     (tasks / "task-doc-7.md").write_text("# Task\n", encoding="utf-8")
 
-    assert pending_desk_includes(tmp_path) == [("BoardDoc", "desk/tasks/board-compromisos-26-10.md")]
+    pending = pending_desk_includes(tmp_path)
+    assert ("BoardDoc", "desk/tasks/board-compromisos-26-10.md") in pending
+    assert not any(path.startswith("desk/tasks/task-") for _model, path in pending), "tasks are tracked by their own paths"
+    # Without a store, the lifecycle graph the scaffold wrote is pending too (CC31).
+    assert [row for row in pending if row[0] not in ("RelationTypeDoc", "RelationDoc", "RitualDoc")] == [
+        ("BoardDoc", "desk/tasks/board-compromisos-26-10.md")
+    ]
 
 
 def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) -> None:
     """One `{model, glob}` per desk folder `desk update --apply` tracked by path, under the model's
-    own id pattern; the scaffold's own files (pills.md, the lifecycle rituals) match no rule."""
+    own id pattern; the scaffold's own files (pills.md) match no glob. The lifecycle graph is tracked
+    by its declared paths (CC31): the RelationDocs by name, the lifecycle rituals by their ids."""
     from deskops.workspace import desk_declaration
 
-    rules = {rule["model"]: rule["glob"] for rule in desk_declaration("x").include}
+    include = desk_declaration("x").include
+    rules = {rule["model"]: rule["glob"] for rule in include if "glob" in rule}
+    listed = {rule["model"]: rule["paths"] for rule in include if "paths" in rule}
+    assert listed == {
+        "RelationDoc": [
+            "desk/lifecycle/execution-task_activates.md",
+            "desk/lifecycle/testing-task_hands_to_closeout.md",
+            "desk/lifecycle/closeout-task_completes.md",
+        ],
+        "RitualDoc": [
+            {"path": "desk/rituals/execution.md", "name": "ritual-execution"},
+            {"path": "desk/rituals/testing.md", "name": "ritual-testing"},
+            {"path": "desk/rituals/closeout.md", "name": "ritual-closeout"},
+        ],
+    }
     assert rules == {
+        "RelationTypeDoc": "desk/lifecycle/type-*.md",
         "BoardDoc": "desk/tasks/board-*.md",
         "PillDoc": "desk/contexts/pill-*.md",
         "RitualDoc": "desk/rituals/ritual-*.md",

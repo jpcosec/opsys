@@ -7,15 +7,22 @@
 #
 # - `{desk_name}` in a `file:` template or in a `document:` payload is replaced with the
 #   project directory's name (`str.replace`, no other placeholder exists);
-# - `file:` sources are read from `deskops/data/templates/`;
+# - `file:` sources are read from `deskops/data/` (`templates/` for the desk's own files,
+#   `lifecycle/` for the lifecycle graph);
 # - `document:` seeds are rendered through their deskops model, as the Board and the review
 #   runtime profile always were; the runtime profile's `system_prompt` is not data here: it
 #   is `deskops.services.review.SYSTEM`, injected while the declaration is built.
 #
-# Every seed is `if_missing`: a desk that already has the file keeps its own. The `include`
-# rules say which desk documents `deskops desk update --apply` tracks under which model
-# (`sldb.api.stores.apply_declaration.apply_includes`); the four lifecycle rituals, the Board,
-# the tasks and `desk/lifecycle/` are tracked by their own paths, so no rule names them.
+# A desk's own files are `if_missing` seeds: a desk that already has the file keeps its own.
+# The task lifecycle graph (CC31, GO09) is `managed`: the three RelationTypeDoc and the three
+# RelationDoc under `desk/lifecycle/` are deskops' documents, written from `lifecycle/` and
+# rewritten whenever a desk's copy differs (`deskops desk update --apply` reports it). Each
+# RelationDoc carries the transition's effects in `attributes`: `sets` (the fields written on
+# the task when the edge is taken) and `terminal` (the task closes). The `include` rules say
+# which desk documents `deskops desk update --apply` tracks under which model
+# (`sldb.api.stores.apply_declaration.apply_includes`): the lifecycle documents, the three
+# lifecycle rituals by their ids (`RitualDoc:ritual-<x>`, what the graph's edges name) and
+# one glob per desk folder. The Board and the tasks are tracked by their own paths.
 folders:
 - desk/tasks
 - desk/contexts
@@ -33,7 +40,7 @@ folders:
 seeds:
 - path: desk/config.json
   mode: if_missing
-  file: config.json
+  file: templates/config.json
 - path: desk/tasks/Board.md
   mode: if_missing
   track: false
@@ -58,25 +65,25 @@ seeds:
       - workspace:desk
 - path: desk/contexts/pills.md
   mode: if_missing
-  file: contexts/pills.md
+  file: templates/contexts/pills.md
 - path: desk/rituals/phase.md
   mode: if_missing
-  file: rituals/phase.md
+  file: templates/rituals/phase.md
 - path: desk/rituals/execution.md
   mode: if_missing
-  file: rituals/execution.md
+  file: templates/rituals/execution.md
 - path: desk/rituals/testing.md
   mode: if_missing
-  file: rituals/testing.md
+  file: templates/rituals/testing.md
 - path: desk/rituals/closeout.md
   mode: if_missing
-  file: rituals/closeout.md
+  file: templates/rituals/closeout.md
 - path: desk/drawer/README.md
   mode: if_missing
-  file: drawer/README.md
+  file: templates/drawer/README.md
 - path: desk/atoms/tag-namespaces.yaml
   mode: if_missing
-  file: atoms/tag-namespaces.yaml
+  file: templates/atoms/tag-namespaces.yaml
 - path: desk/runtimes/runtime-pi-deepseek-flash.md
   mode: if_missing
   track: false
@@ -117,7 +124,40 @@ seeds:
       summary: Isolated cheap reviewer profile (pi deepseek-flash) used by `deskops review`.
       tags:
       - system:deskops
+- path: desk/lifecycle/type-task_activates.md
+  mode: managed
+  file: lifecycle/type-task_activates.md
+- path: desk/lifecycle/type-task_hands_to_closeout.md
+  mode: managed
+  file: lifecycle/type-task_hands_to_closeout.md
+- path: desk/lifecycle/type-task_completes.md
+  mode: managed
+  file: lifecycle/type-task_completes.md
+- path: desk/lifecycle/execution-task_activates.md
+  mode: managed
+  file: lifecycle/execution-task_activates.md
+- path: desk/lifecycle/testing-task_hands_to_closeout.md
+  mode: managed
+  file: lifecycle/testing-task_hands_to_closeout.md
+- path: desk/lifecycle/closeout-task_completes.md
+  mode: managed
+  file: lifecycle/closeout-task_completes.md
 include:
+- model: RelationTypeDoc
+  glob: desk/lifecycle/type-*.md
+- model: RelationDoc
+  paths:
+  - desk/lifecycle/execution-task_activates.md
+  - desk/lifecycle/testing-task_hands_to_closeout.md
+  - desk/lifecycle/closeout-task_completes.md
+- model: RitualDoc
+  paths:
+  - path: desk/rituals/execution.md
+    name: ritual-execution
+  - path: desk/rituals/testing.md
+    name: ritual-testing
+  - path: desk/rituals/closeout.md
+    name: ritual-closeout
 - model: BoardDoc
   glob: desk/tasks/board-*.md
 - model: PillDoc

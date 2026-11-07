@@ -358,7 +358,7 @@ def test_init_bootstraps_local_store_and_desk(tmp_path: Path, monkeypatch, capsy
 
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.ensure_machine_ready", fake_machine_ready)
     monkeypatch.setattr("deskops.cli.main.SLDBBootstrap.init_local_store", fake_init_local_store)
-    monkeypatch.setattr("deskops.lifecycle.ensure_lifecycle_graph", lambda root: [])
+    monkeypatch.setattr("deskops.lifecycle.write_lifecycle_graph", lambda root: [])
 
     result = main(["init", str(tmp_path)])
 
@@ -973,8 +973,10 @@ def test_next_without_selector_lists_multiple_board_tasks(tmp_path: Path, capsys
     assert {path: path.read_bytes() for path in before} == before
 
 
-def test_next_diagram_renders_workflow_graph_from_spec(capsys) -> None:
-    result = main(["next", "--diagram"])
+def test_next_diagram_renders_workflow_graph_from_the_desk_graph(tmp_path: Path, capsys) -> None:
+    assert main(["init", str(tmp_path)]) == 0
+    capsys.readouterr()
+    result = main(["next", "--diagram", "--root", str(tmp_path)])
     output = capsys.readouterr()
 
     assert result == 0

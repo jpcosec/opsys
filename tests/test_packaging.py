@@ -27,6 +27,7 @@ def test_desk_declaration_and_templates_ship_inside_the_package() -> None:
     import yaml
 
     from deskops.constants import CURRENT_DESK_FORMAT
+    from deskops.workspace import DESK_DATA_PATH
     from deskops.workspace import DESK_DECLARATION_PATH
     from deskops.workspace import DESK_TEMPLATES_PATH
 
@@ -36,13 +37,15 @@ def test_desk_declaration_and_templates_ship_inside_the_package() -> None:
     templates = [seed["file"] for seed in declaration["seeds"] if "file" in seed]
     assert templates, "the declaration names file templates"
     for relative in templates:
-        assert (DESK_TEMPLATES_PATH / relative).is_file(), relative
+        assert (DESK_DATA_PATH / relative).is_file(), relative
+    lifecycle = [seed for seed in declaration["seeds"] if seed["path"].startswith("desk/lifecycle/")]
+    assert len(lifecycle) == 6 and all(seed["mode"] == "managed" for seed in lifecycle)
     config = yaml.safe_load((DESK_TEMPLATES_PATH / "config.json").read_text(encoding="utf-8"))
     assert config["versions"]["desk_format"] == CURRENT_DESK_FORMAT
 
     package_data = Path(paths.package_pythonpath()) / "pyproject.toml"
     text = package_data.read_text(encoding="utf-8")
-    assert '"data/templates/**/*"' in text and '"data/desk_declaration.yaml"' in text
+    assert '"data/templates/**/*"' in text and '"data/lifecycle/**/*"' in text and '"data/desk_declaration.yaml"' in text
 
 
 def test_packaged_faq_matches_the_human_copy() -> None:

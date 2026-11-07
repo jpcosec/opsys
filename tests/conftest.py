@@ -45,7 +45,7 @@ def _git(root: Path, *argv: str) -> None:
 def _lifecycle_desk_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """One initialized desk (store, scaffold, lifecycle graph), built once per session."""
     from deskops.bootstrap import SLDBBootstrap
-    from deskops.lifecycle import ensure_lifecycle_graph
+    from deskops.lifecycle import write_lifecycle_graph
     from deskops.workspace import seed_desk
 
     root = tmp_path_factory.mktemp("lifecycle-desk-template") / "repo"
@@ -53,7 +53,7 @@ def _lifecycle_desk_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     with contextlib.redirect_stdout(io.StringIO()):
         assert SLDBBootstrap().init_local_store(root) == 0
     seed_desk(root)
-    ensure_lifecycle_graph(root)
+    write_lifecycle_graph(root)
     return root
 
 

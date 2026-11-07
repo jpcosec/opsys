@@ -5,6 +5,7 @@ from typing import Any
 from deskops.lifecycle import COMPLETE
 from deskops.lifecycle import LifecycleSpec
 from deskops.lifecycle import SPEC_PATH
+from deskops.lifecycle import Transition
 
 
 def match_workflow_state(spec: LifecycleSpec, current_node: str) -> dict[str, Any]:
@@ -19,9 +20,9 @@ def match_workflow_state(spec: LifecycleSpec, current_node: str) -> dict[str, An
     raise ValueError(f"No workflow state in {SPEC_PATH} matches current node '{current_node}'")
 
 
-def render_workflow_mermaid(spec: LifecycleSpec) -> str:
-    """Mermaid of the lifecycle graph: one node per state, one arrow per transition,
-    labelled with its relation type and condition."""
+def render_workflow_mermaid(spec: LifecycleSpec, transitions: list[Transition]) -> str:
+    """Mermaid of the lifecycle graph: one node per state, one arrow per transition of the
+    desk's graph, labelled with its relation type and condition."""
     states = list(spec.states)
     by_node = {str(state.get("current_node")): str(state["id"]) for state in states}
     lines = ["flowchart TD"]
@@ -29,7 +30,7 @@ def render_workflow_mermaid(spec: LifecycleSpec) -> str:
         state_id = str(state["id"])
         label = str(state.get("phase") or state_id).replace('"', "'")
         lines.append(f'    {state_id}["{label}"]')
-    for transition in spec.transitions:
+    for transition in transitions:
         source = by_node.get(transition.source, transition.source)
         target_node = COMPLETE if transition.terminal else transition.target
         target = by_node.get(target_node, target_node)

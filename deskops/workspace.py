@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from dataclasses import field
 import importlib
 import json
 from pathlib import Path
@@ -32,10 +33,12 @@ _MODELED_DESK_TOP_LEVEL_DIRS = {
 @dataclass
 class DeskScaffoldResult:
     created_paths: list[Path]
+    #: Managed seeds whose bytes differed from the package's and were restored (the lifecycle graph).
+    rewritten_paths: list[Path] = field(default_factory=list)
 
     @property
     def wrote_anything(self) -> bool:
-        return bool(self.created_paths)
+        return bool(self.created_paths or self.rewritten_paths)
 
 
 @dataclass
@@ -169,9 +172,11 @@ def migrate_desk(root: Path) -> DeskMigrationResult:
 #: name by ``str.replace``; the JSON and YAML templates have braces of their own.
 DESK_NAME_PLACEHOLDER = "{desk_name}"
 
-#: The declaration of the desk a repository gets, and the templates its ``file:`` seeds name.
+#: The declaration of the desk a repository gets; its ``file:`` seeds are relative to ``deskops/data/``
+#: (``templates/`` for the desk's own files, ``lifecycle/`` for the lifecycle graph's documents).
 DESK_DECLARATION_PATH = data_path("data", "desk_declaration.yaml")
-DESK_TEMPLATES_PATH = data_path("data", "templates")
+DESK_DATA_PATH = data_path("data")
+DESK_TEMPLATES_PATH = DESK_DATA_PATH / "templates"
 
 #: The document seed whose ``system_prompt`` is code (``deskops.services.review.SYSTEM``), not
 #: declaration data (CC36, f3).
@@ -182,11 +187,12 @@ def desk_declaration(name: str) -> Any:
     """The desk declaration (``deskops/data/desk_declaration.yaml``) for a desk called ``name``.
 
     The ``folders`` and ``include`` rules are the file's; every seed comes back rendered as
-    ``text``: ``file:`` templates read from ``deskops/data/templates/`` and ``document:`` payloads
-    rendered through their deskops model, both with ``{desk_name}`` replaced. The bytes are the
-    ones ``deskops init`` always wrote, and sldb only has to write them: its own ``document``
-    seed resolves the model from the store, which ``desk install`` and the first desk operation
-    do not have yet.
+    ``text`` with its ``mode``: ``file:`` templates read from ``deskops/data/`` and ``document:``
+    payloads rendered through their deskops model, both with ``{desk_name}`` replaced. The bytes
+    are the ones ``deskops init`` always wrote, and sldb only has to write them: its own
+    ``document`` seed resolves the model from the store, which ``desk install`` and the first desk
+    operation do not have yet. The lifecycle graph's seeds are ``managed``: a desk's copy that
+    differs is rewritten.
     """
     from sldb.api import Seed
     from sldb.api import StoreDeclaration
@@ -200,7 +206,7 @@ def _seed_text(seed: Any, name: str) -> str:
     if seed.text is not None:
         return seed.text.replace(DESK_NAME_PLACEHOLDER, name)
     if seed.file is not None:
-        template = (DESK_TEMPLATES_PATH / seed.file).read_text(encoding="utf-8")
+        template = (DESK_DATA_PATH / seed.file).read_text(encoding="utf-8")
         return template.replace(DESK_NAME_PLACEHOLDER, name)
     document = seed.document
     payload = _replace_desk_name(document["payload"], name)
@@ -230,17 +236,40 @@ def _replace_desk_name(value: Any, name: str) -> Any:
     return value
 
 
-def seed_desk(target_path: Path, *, apply: bool = True) -> DeskScaffoldResult:
-    """Create the declared desk folders and seed files that are missing (``sldb.api.scaffold_store``).
+def seed_desk(target_path: Path, *, apply: bool = True, restore_managed: bool = False) -> DeskScaffoldResult:
+    """Create the declared desk folders and seed files that are missing and, with
+    ``restore_managed``, restore the managed ones that differ (``sldb.api.scaffold_store``).
 
-    Every seed is ``if_missing``, so a desk that exists keeps its files. ``created_paths`` are the
-    absolute paths of what was created, folders first and then seeds in declaration order; with
-    ``apply=False`` nothing is written and they are what a run would create.
+    A desk's own files are ``if_missing`` seeds, so a desk that exists keeps them. The lifecycle
+    graph's documents are ``managed``: ``deskops init`` and ``deskops desk update --apply`` restore
+    a desk's copy that differs (``rewritten_paths``) and report it; every other scaffold (the first
+    desk operation, ``doctor --repair``) only creates what is missing, so an edit to the desk's
+    lifecycle is never undone silently. ``created_paths`` are the absolute paths of what was
+    created, folders first and then seeds in declaration order; with ``apply=False`` nothing is
+    written and both lists are what a run would do. A rewritten document the store tracks is
+    reindexed (sldb's scaffold writes the file but does not rehash it).
     """
+    from sldb.api import Seed
+    from sldb.api import StoreDeclaration
     from sldb.api import scaffold_store
 
-    report = scaffold_store(target_path, declaration=desk_declaration(target_path.name), apply=apply)
-    return DeskScaffoldResult(created_paths=[target_path / relative for relative in report.created])
+    declaration = desk_declaration(target_path.name)
+    if not restore_managed:
+        declaration = StoreDeclaration(
+            folders=declaration.folders,
+            seeds=[Seed(path=seed.path, mode="if_missing", text=seed.text) for seed in declaration.seeds],
+            include=declaration.include,
+        )
+    report = scaffold_store(target_path, declaration=declaration, apply=apply)
+    if apply and report.rewritten and (target_path / ".sldb" / "core").exists():
+        from deskops import doc_io
+        from deskops.paths import package_pythonpath
+
+        doc_io.update_store_indexes_in(target_path, pythonpath=package_pythonpath(), wait=False)
+    return DeskScaffoldResult(
+        created_paths=[target_path / relative for relative in report.created],
+        rewritten_paths=[target_path / relative for relative in report.rewritten],
+    )
 
 
 def desk_seed_text(name: str, path: str) -> str:

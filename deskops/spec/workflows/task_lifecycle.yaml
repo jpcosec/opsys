@@ -10,36 +10,14 @@ source_files:
   validates:
     - tests/test_cli.py
     - tests/test_lifecycle_graph.py
-# The lifecycle lives in the sldb graph of each desk: every state is a tracked RitualDoc,
-# every transition is a RelationDoc between two rituals whose `condition` is an sldb
-# `--where` predicate on the task. `deskops init` and `deskops desk update --apply` write
-# those documents into desk/lifecycle/ from the `transitions` below; `deskops advance`
-# reads them back from the graph. `sets_status` is the status a task takes when the
-# transition fires; a `terminal` transition closes the task (current_node: complete).
+# The lifecycle lives in the sldb graph of each desk: every state is a tracked RitualDoc and
+# every transition a RelationDoc between two rituals under desk/lifecycle/ (managed seeds of
+# deskops/data/desk_declaration.yaml, templates in deskops/data/lifecycle/) whose `condition`
+# is an sldb `--where` predicate on the task and whose `attributes` carry the transition's
+# effects: `sets` (the fields written on the task) and `terminal` (the task closes).
+# `deskops advance` reads them with `sldb.api.edges_holding`. This file only keeps the entry
+# node and the states `deskops next` describes: their ritual, next actions and advance_when.
 entry_node: ritual-execution
-transitions:
-  - relation_type: task_activates
-    title: Task activates
-    description: The task passes its execution gate and enters active work, under the testing ritual.
-    source: ritual-execution
-    target: ritual-testing
-    condition: ""
-    sets_status: active
-  - relation_type: task_hands_to_closeout
-    title: Task hands to closeout
-    description: The task has validation to prove and moves to the closeout ritual.
-    source: ritual-testing
-    target: ritual-closeout
-    condition: nonempty(validation)
-    sets_status: ready_for_testing
-  - relation_type: task_completes
-    title: Task completes
-    description: The task is ready for closeout and its references verify durable evidence; it closes.
-    source: ritual-closeout
-    target: ritual-closeout
-    condition: status = "ready_for_testing" and has(closeout_evidence_verified)
-    sets_status: closed
-    terminal: true
 states:
   - id: execution_gate
     current_node: ritual-execution
