@@ -317,5 +317,8 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+- model: TaskCodeDoc
+  paths:
+  - desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md
 graph_backend: networkx
 policy: {}
