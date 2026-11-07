@@ -107,6 +107,7 @@ n7 (6 desks): baseline = deskops doctor con el código de main sobre una copia d
 DESVÍOS AUTORIZADOS DURANTE LA EJECUCIÓN (coordinador del plan, 2026-11-06):
 d1 (package-data): pyproject.toml entra en files solo para agregar "data/lifecycle/**/*" a [tool.setuptools.package-data]. Sin eso, las plantillas de deskops/data/lifecycle/ no viajan en un wheel (la instalación editable no lo nota). tests/test_packaging.py comprueba que viajan, como en CC36 (c6). No se toca la dependencia de sldb.
 d2 (ruta de graph_ui): el sexto desk está en ~/proyectos/SLDB_1/UIs/graph_ui. El brief del worker decía ~/proyectos/SLDB_1/graph_ui por error.
+d3 (golden del scaffold de CC36): tests/fixtures/golden/scaffold/init.json y update.json fijan los bytes de desk/lifecycle/. Los 3 RelationDoc cambian a propósito al llevar attributes (sets/terminal), que es lo que pide la aceptación de este nodo. Por eso el golden se recaptura con --update-golden, con dos condiciones: el diff de los dos JSON contra main se limita a los sha256 de esos 3 RelationDoc, y las líneas del reporte de desk update y los demás archivos quedan idénticos. El informe muestra ese diff. Cualquier otra diferencia bloquea.
 
 ## Validation
 
