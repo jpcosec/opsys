@@ -317,8 +317,5 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
-- model: TaskCodeDoc
-  paths:
-  - desk/tasks/task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding.md
 graph_backend: networkx
 policy: {}
