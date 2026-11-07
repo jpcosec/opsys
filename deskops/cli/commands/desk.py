@@ -141,11 +141,13 @@ class DeskCLI:
         result = seed_desk(target_path)
         for path in result.created_paths:
             print(f"Wrote {path}")
+        for path in result.rewritten_paths:
+            print(f"Rewrote {path}")
 
         if (target_path / ".sldb").exists():
-            from deskops.lifecycle import ensure_lifecycle_graph
+            from deskops.lifecycle import write_lifecycle_graph
 
-            for change in ensure_lifecycle_graph(target_path):
+            for change in write_lifecycle_graph(target_path):
                 print(f"Lifecycle graph: {change}")
         else:
             print("No .sldb store yet: run 'deskops init' to create it and the lifecycle graph that 'deskops advance' reads.")
@@ -193,27 +195,7 @@ class DeskCLI:
         desk_dir = root / "desk"
         store_dir = root / ".sldb"
 
-        from deskops.lifecycle_migration import inspect_legacy_lifecycle
-        from deskops.lifecycle_migration import migrate_legacy_lifecycle
-
-        legacy = inspect_legacy_lifecycle(root) if desk_dir.exists() else None
-        legacy_pending = bool(legacy and (legacy.needs_migration or legacy.registered_legacy_models))
-        if legacy_pending and apply:
-            from deskops.lifecycle_migration import LegacyMigrationBlocked
-
-            print("Migrating the task lifecycle to the desk's sldb graph...")
-            if store_dir.exists() and "RitualDoc" not in SLDBBootstrap()._registered_model_entries(store_dir):
-                # The lifecycle states are RitualDocs; a store that never registered the
-                # model (an early desk) gets the deskops models before the graph is written.
-                SLDBBootstrap().init_local_store(root)
-                print("- registered the deskops models the lifecycle graph needs")
-            try:
-                for change in migrate_legacy_lifecycle(root):
-                    print(f"- {change}")
-            except LegacyMigrationBlocked as exc:
-                print(f"Error: {exc}")
-                return 1
-            legacy_pending = False
+        from deskops import lifecycle
 
         inspection = inspect_desk(root)
 
@@ -231,6 +213,16 @@ class DeskCLI:
                 missing_desk_files.append("desk/rituals/phase.md")
             if not (desk_dir / "runtimes" / "runtime-pi-deepseek-flash.md").exists():
                 missing_desk_files.append("desk/runtimes/runtime-pi-deepseek-flash.md")
+
+        # The lifecycle graph's documents are managed seeds: a desk's copy that differs from the
+        # package's is rewritten. A missing one is written with the rest of the scaffold.
+        scaffold_plan = seed_desk(root, apply=False, restore_managed=True) if desk_dir.exists() else None
+        lifecycle_rewrites = (
+            [path.relative_to(root).as_posix() for path in scaffold_plan.rewritten_paths] if scaffold_plan else []
+        )
+        lifecycle_missing = bool(scaffold_plan) and any(
+            path.relative_to(root).as_posix().startswith("desk/lifecycle/") for path in scaffold_plan.created_paths
+        )
 
         bootstrap = SLDBBootstrap()
         registered_entries: dict[str, Any] = {}
@@ -347,7 +339,7 @@ class DeskCLI:
         pending_local_types = pending_local_task_type_models(root)
         pending_migration = pending_task_type_migration(root)
 
-        if not legacy_pending and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration:
+        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration:
             print("Desk is up to date.")
             return 0
 
@@ -360,14 +352,8 @@ class DeskCLI:
             )
         if moved_contracts:
             print(f"- Moved model contracts: {', '.join(moved_contracts)}")
-        if legacy_pending and legacy is not None:
-            print(
-                "- Legacy task lifecycle: "
-                f"{len(legacy.primitive_docs)} routine/primitive documents to delete, "
-                f"{len(legacy.tasks_to_rewrite)} tasks to rewrite, "
-                f"lifecycle graph {'missing' if legacy.graph_missing else 'present'}, "
-                f"retired models still registered: {', '.join(legacy.registered_legacy_models) or 'none'}"
-            )
+        if lifecycle_rewrites:
+            print(f"- Lifecycle documents to rewrite: {', '.join(lifecycle_rewrites)}")
         if missing_desk_files:
             print(f"- Missing desk structure: {', '.join(missing_desk_files)}")
         if unregistered_models:
@@ -388,10 +374,13 @@ class DeskCLI:
             return 1
 
         print("\nApplying repairs...")
-        
-        if missing_desk_files:
-            seed_desk(root)
-            print("Scaffolded missing desk structure.")
+
+        if missing_desk_files or lifecycle_rewrites or lifecycle_missing:
+            scaffold = seed_desk(root, restore_managed=True)
+            if missing_desk_files:
+                print("Scaffolded missing desk structure.")
+            for change in lifecycle.seed_changes(root, scaffold):
+                print(f"Lifecycle graph: {change}")
 
         if unregistered_models or copied_models:
             bootstrap.init_local_store(root)
@@ -406,6 +395,8 @@ class DeskCLI:
         for change in migrate_task_types(root):
             print(f"- {change}")
 
+        # Recomputed: the scaffold may have written declared documents (the lifecycle graph).
+        untracked_docs = pending_desk_includes(root) if desk_dir.exists() and store_dir.exists() else []
         if untracked_docs:
             declared_models = {path: model_name for model_name, path in untracked_docs}
             try:
@@ -414,7 +405,9 @@ class DeskCLI:
                 print(f"Error: could not track the declared desk documents: {exc}")
                 return 1
             for path in tracked_paths:
-                print(f"Tracked {path} as {declared_models.get(path, 'its declared model')}.")
+                model_name = declared_models.get(path, "its declared model")
+                line = lifecycle.tracked_line(model_name, path)
+                print(f"Lifecycle graph: {line}" if line else f"Tracked {path} as {model_name}.")
 
         if missing_docs:
             # A tracked document whose file is gone must be untracked, not
@@ -431,13 +424,5 @@ class DeskCLI:
             pythonpath = package_pythonpath()
             doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
             print("Updated store derived indexes.")
-
-        if store_dir.exists():
-            from deskops.lifecycle import ensure_lifecycle_graph
-            from deskops.lifecycle import lifecycle_graph_present
-
-            if not lifecycle_graph_present(root):
-                for change in ensure_lifecycle_graph(root):
-                    print(f"Lifecycle graph: {change}")
 
         return 0

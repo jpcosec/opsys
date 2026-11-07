@@ -43,11 +43,13 @@ class InitCLI:
             print(f"Scaffolded desk at {target_path / 'desk'}.")
             for path in result.created_paths:
                 print(f"Wrote {path}")
+            for path in result.rewritten_paths:
+                print(f"Rewrote {path}")
         else:
             print(f"Desk already exists at {target_path / 'desk'}.")
-        from deskops.lifecycle import ensure_lifecycle_graph
+        from deskops.lifecycle import write_lifecycle_graph
 
-        for change in ensure_lifecycle_graph(target_path):
+        for change in write_lifecycle_graph(target_path):
             print(f"Lifecycle graph: {change}")
         print("Initialization complete.")
         return 0

@@ -196,7 +196,8 @@ class TasksService:
                 payload.pop(key, None)
 
     def render_next_action_diagram(self) -> str:
-        return render_workflow_mermaid(lifecycle.load_lifecycle_spec())
+        spec = lifecycle.load_lifecycle_spec()
+        return render_workflow_mermaid(spec, lifecycle.lifecycle_transitions(self.root, spec))
 
     def next_action_report(self, task_selector: str | None = None) -> dict[str, Any]:
         board_path = self.desk_root / "tasks" / "Board.md"
@@ -283,7 +284,12 @@ class TasksService:
         current_node = str(payload.get("current_node") or "")
         current_status = str(payload.get("status") or "")
         self.add_closeout_facts(payload)
-        result = lifecycle.advance(self.root, payload)
+        # The edge's effects validate against the task type's model. A task whose task_type is
+        # not a registered type (empty or legacy, what `desk update --apply` migrates) validates
+        # against TaskDoc, the model it was read with: a typed model's `task_type` literal could
+        # not accept it (d4, instead of k5's TaskCodeDoc).
+        model = self.registered_task_types().get(str(payload.get("task_type") or "")) or TaskDoc
+        result = lifecycle.advance(self.root, payload, model)
         for key in ("closeout_evidence_verified", "pill_graduation_verified"):
             payload.pop(key, None)
         if result.progressed and payload.get("current_node") == lifecycle.COMPLETE:

@@ -6,11 +6,26 @@ import pytest
 
 from deskops import lifecycle
 from deskops.cli.main import main
-from deskops.lifecycle_migration import inspect_legacy_lifecycle
-from deskops.lifecycle_migration import legacy_node_to_ritual
-from deskops.lifecycle_migration import migrate_legacy_lifecycle
 from deskops.models import TaskDoc
 from deskops.operations import DeskopsOperations
+from deskops.paths import package_pythonpath
+
+LIFECYCLE_TEMPLATES = Path(__file__).resolve().parents[1] / "deskops" / "data" / "lifecycle"
+RELATION_DOCS = ("execution-task_activates", "testing-task_hands_to_closeout", "closeout-task_completes")
+
+
+def _run(argv: list[str]) -> tuple[int, str]:
+    import contextlib
+    import io
+
+    buffer = io.StringIO()
+    with contextlib.redirect_stdout(buffer):
+        code = main(argv)
+    return code, buffer.getvalue()
+
+
+def _lifecycle_tree(root: Path) -> dict[str, bytes]:
+    return {path.name: path.read_bytes() for path in sorted((root / "desk" / "lifecycle").glob("*.md"))}
 
 
 def _task(operations: DeskopsOperations, title: str, **extra: object) -> str:
@@ -42,81 +57,85 @@ def test_the_lifecycle_graph_lives_in_the_store_as_rituals_and_relation_docs(lif
     assert closing[0].target == "ritual-closeout" and closing[0].terminal, "completion is a self-loop"
 
 
-def test_ensure_lifecycle_graph_is_idempotent(lifecycle_desk: Path) -> None:
-    assert lifecycle.ensure_lifecycle_graph(lifecycle_desk) == []
-    assert lifecycle.lifecycle_graph_present(lifecycle_desk)
+def test_write_lifecycle_graph_is_idempotent(lifecycle_desk: Path) -> None:
+    assert lifecycle.write_lifecycle_graph(lifecycle_desk) == []
+    assert _lifecycle_tree(lifecycle_desk) == {p.name: p.read_bytes() for p in LIFECYCLE_TEMPLATES.glob("*.md")}
 
 
-def test_an_old_ritual_without_step_details_is_rerendered_before_tracking(tmp_path: Path) -> None:
-    from deskops.bootstrap import SLDBBootstrap
-    from deskops.doc_readability import is_unreadable_by_model
-    from deskops.models import RitualDoc
-    from deskops.workspace import seed_desk
-    from sldb.runtime.validation import render_model_markdown
+def test_the_seeds_declare_the_effects_of_each_transition_and_one_edge_per_ritual(lifecycle_desk: Path) -> None:
+    """GO09: each RelationDoc carries `attributes.sets.status` and `terminal`; `task_completes` is the
+    terminal one. One edge leaves each ritual, so the order sldb returns holding edges in decides
+    nothing (k4, n3)."""
+    from sldb.models.relation_doc import RelationDoc
+    from sldb.runtime.validation import extract_model_data
 
-    root = tmp_path / "repo"
-    root.mkdir()
-    assert SLDBBootstrap().init_local_store(root) == 0
-    seed_desk(root)
-    ritual = root / "desk" / "rituals" / "execution.md"
-    current = render_model_markdown(
-        RitualDoc,
-        {
-            "id": "ritual-execution",
-            "title": "Execution ritual",
-            "tags": ["workspace:desk"],
-            "purpose": "Carry one active task through scoped implementation.",
-            "trigger": "Start when a task is active.",
-            "preconditions": ["A task exists."],
-            "validation": ["The task is explicit."],
-            "failure_modes": ["Skipping the task."],
-            "completion": "The implementation is ready for testing.",
-        },
-    )
-    old_style = current.split("## Step Details")[0].rstrip() + "\n"
-    ritual.write_text(old_style, encoding="utf-8")
-
-    changes = lifecycle.ensure_lifecycle_graph(root)
-
-    # Since sldb d31180e4 a document that ends before its template keeps its last
-    # section, so the old style may track as is; either way it must end up readable
-    # and tracked, and it is never archived.
-    text = ritual.read_text(encoding="utf-8")
-    assert is_unreadable_by_model(RitualDoc, text) == []
-    assert not any("archived" in change for change in changes)
-    assert any("tracked desk/rituals/execution.md" in change for change in changes)
-    assert main(["doctor", "--root", str(root)]) == 0
+    edges = {
+        name: extract_model_data(RelationDoc, (lifecycle_desk / "desk" / "lifecycle" / f"{name}.md").read_text(encoding="utf-8"))
+        for name in RELATION_DOCS
+    }
+    assert {name: edge["attributes"] for name, edge in edges.items()} == {
+        "execution-task_activates": {"sets": {"status": "active"}, "terminal": False},
+        "testing-task_hands_to_closeout": {"sets": {"status": "ready_for_testing"}, "terminal": False},
+        "closeout-task_completes": {"sets": {"status": "closed"}, "terminal": True},
+    }
+    sources = [edge["source_id"] for edge in edges.values()]
+    assert sorted(sources) == sorted(f"RitualDoc:{node}" for node in lifecycle.load_lifecycle_spec().rituals)
+    assert len(set(sources)) == len(sources), "one edge leaves each ritual"
+    for node in lifecycle.load_lifecycle_spec().rituals:
+        assert len(lifecycle.transitions_from(lifecycle_desk, node)) == 1, node
 
 
-@pytest.mark.parametrize(
-    "legacy",
-    [
-        "# Execution ritual\n\nReview the board and implement only the active task.\n",
-        "---\nid: ritual-execution\ntags:\n- workspace:desk\n---\n\n# Execution ritual\n\n"
-        "Execute one task at a time.\n\n## Pre-flight\n\n1. Recover board state.\n",
-    ],
-    ids=["no-frontmatter", "own-sections"],
-)
-def test_a_ritual_the_model_cannot_carry_is_archived_and_replaced(tmp_path: Path, legacy: str) -> None:
-    from deskops.bootstrap import SLDBBootstrap
-    from deskops.workspace import seed_desk
-    from sldb.api import doc_exists
+def test_desk_update_apply_rewrites_a_relation_doc_without_attributes_and_then_changes_nothing(
+    lifecycle_desk: Path,
+) -> None:
+    """A RelationDoc of the version before GO09 (no `attributes`) differs from the managed seed:
+    `desk update` names it, `--apply` rewrites and reports it, and a second run changes nothing."""
+    import re
 
-    root = tmp_path / "repo"
-    root.mkdir()
-    assert SLDBBootstrap().init_local_store(root) == 0
-    seed_desk(root)
-    ritual = root / "desk" / "rituals" / "execution.md"
-    ritual.write_text(legacy, encoding="utf-8")
+    edge = lifecycle_desk / "desk" / "lifecycle" / "testing-task_hands_to_closeout.md"
+    old_version = re.sub(r"^attributes:\n(?:  .*\n)+", "", edge.read_text(encoding="utf-8"), flags=re.M)
+    edge.write_text(old_version, encoding="utf-8")
+    assert "attributes" not in edge.read_text(encoding="utf-8") and "relation_type: task_hands_to_closeout" in old_version
 
-    changes = lifecycle.ensure_lifecycle_graph(root)
+    code, out = _run(["desk", "update", "--root", str(lifecycle_desk)])
+    assert code == 1
+    assert "- Lifecycle documents to rewrite: desk/lifecycle/testing-task_hands_to_closeout.md" in out
 
-    archived = root / "desk" / "drawer" / "rituals" / "legacy-execution.md"
-    assert archived.read_text(encoding="utf-8") == legacy
-    assert any("archived desk/rituals/execution.md" in change for change in changes)
-    assert "id: ritual-execution" in ritual.read_text(encoding="utf-8")
-    assert doc_exists(root / ".sldb", "RitualDoc/ritual-execution")
-    assert main(["doctor", "--root", str(root)]) == 0
+    code, out = _run(["desk", "update", "--root", str(lifecycle_desk), "--apply"])
+    assert code == 0, out
+    assert "Lifecycle graph: rewrote desk/lifecycle/testing-task_hands_to_closeout.md" in out
+    assert edge.read_bytes() == (LIFECYCLE_TEMPLATES / edge.name).read_bytes()
+    assert lifecycle.transitions_from(lifecycle_desk, "ritual-testing")[0].sets == {"status": "ready_for_testing"}
+
+    before = _lifecycle_tree(lifecycle_desk)
+    code, out = _run(["desk", "update", "--root", str(lifecycle_desk), "--apply"])
+    assert (code, out.strip()) == (0, "Desk is up to date.")
+    assert _lifecycle_tree(lifecycle_desk) == before
+    assert main(["doctor", "--root", str(lifecycle_desk)]) == 0
+
+
+def test_changing_sets_on_the_relation_doc_changes_what_advance_writes(lifecycle_desk: Path) -> None:
+    """The effect is the edge's: edited through sldb's API, `advance` writes the new value and no
+    YAML of the package changes."""
+    from sldb.api import save_document_payload
+    from sldb.models.relation_doc import RelationDoc
+    from sldb.runtime.validation import extract_model_data
+
+    spec_before = lifecycle.SPEC_PATH.read_bytes()
+    edge = lifecycle_desk / "desk" / "lifecycle" / "execution-task_activates.md"
+    payload = extract_model_data(RelationDoc, edge.read_text(encoding="utf-8"))
+    payload["attributes"]["sets"]["status"] = "in_review"
+    save_document_payload(lifecycle_desk / ".sldb", "RelationDoc", "execution-task_activates", payload, pythonpath=package_pythonpath())
+
+    operations = DeskopsOperations(lifecycle_desk)
+    task_id = _task(operations, "Declared effect")  # the first desk operation scaffolds only what is missing
+    task, result = operations.advance_task(task_id)
+
+    assert (task.current_node, task.status, result.progressed) == ("ritual-testing", "in_review", True)
+    stored = operations._read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
+    assert (stored["status"], stored["history"]) == ("in_review", ["task_activates"])
+    assert lifecycle.SPEC_PATH.read_bytes() == spec_before
+    assert "in_review" not in lifecycle.SPEC_PATH.read_text(encoding="utf-8")
 
 
 def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: Path) -> None:
@@ -165,49 +184,3 @@ def test_advance_without_a_lifecycle_graph_says_how_to_get_one(tmp_path: Path) -
 
     with pytest.raises(lifecycle.LifecycleGraphMissing, match="deskops init"):
         operations.advance_task(task_id)
-
-
-@pytest.mark.parametrize(
-    ("legacy", "expected"),
-    [
-        ("checklist-task-x-execution-ready", "ritual-execution"),
-        ("checklist-task-foo-bar-testing-ready", "ritual-testing"),
-        ("checklist-task-x-closeout-ready", "ritual-closeout"),
-        ("complete", "complete"),
-        ("ritual-testing", "ritual-testing"),
-    ],
-)
-def test_legacy_nodes_map_onto_rituals(legacy: str, expected: str) -> None:
-    assert legacy_node_to_ritual(legacy) == expected
-
-
-def test_migration_removes_primitives_rewrites_tasks_and_writes_the_graph(lifecycle_desk: Path) -> None:
-    root = lifecycle_desk
-    (root / "desk" / "routines").mkdir()
-    (root / "desk" / "routines" / "routine-task-old.md").write_text("---\nid: routine-task-old\n---\n", encoding="utf-8")
-    checklists = root / "desk" / "primitives" / "checklists"
-    checklists.mkdir(parents=True)
-    (checklists / "checklist-task-old-testing-ready.md").write_text("---\nid: checklist-task-old-testing-ready\n---\n", encoding="utf-8")
-    task = root / "desk" / "tasks" / "task-old.md"
-    task.write_text(
-        "---\nid: task-old\nstatus: active\nroutine: routine-task-old\n"
-        "current_node: checklist-task-old-testing-ready\nchecklists:\n- checklist-task-old-testing-ready\n"
-        "closeout_evidence_verified: false\npill_graduation_verified: true\n---\n\n# Old\n\nBody stays.\n",
-        encoding="utf-8",
-    )
-
-    report = inspect_legacy_lifecycle(root)
-    assert report.needs_migration
-    assert len(report.primitive_docs) == 2 and report.tasks_to_rewrite == [task]
-
-    migrate_legacy_lifecycle(root)
-
-    assert not (root / "desk" / "routines").exists()
-    assert not (root / "desk" / "primitives").exists()
-    text = task.read_text(encoding="utf-8")
-    for key in ("routine:", "checklists:", "closeout_evidence_verified", "pill_graduation_verified"):
-        assert key not in text
-    assert "current_node: ritual-testing" in text
-    assert text.endswith("# Old\n\nBody stays.\n")
-    assert not inspect_legacy_lifecycle(root).needs_migration
-    assert migrate_legacy_lifecycle(root)[-1] == "updated store indexes", "a second run changes nothing else"
