@@ -1,0 +1,37 @@
+{
+  "key": "task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/preflight",
+  "input_sha256": "71467b6f5df0780eac95ca51bb1cbc7fa71eaa7ef6e6b5343e03b3b66ca832f9",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261107-011041/context-review/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/preflight/71467b6f5df0780eac95ca51bb1cbc7fa71eaa7ef6e6b5343e03b3b66ca832f9/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md",
+      "sha256": "3e55882aedbcc2104a04a19a7b6335ab9f6be2ceecfbd2cc5fca35dd49ce69e5",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [],
+  "started": "2026-11-07T01:10:41.266768+00:00",
+  "finished": "2026-11-07T01:11:00.266125+00:00"
+}

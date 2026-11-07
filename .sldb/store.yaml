@@ -309,6 +309,8 @@ include:
     name: review-task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding-preflight-1
   - path: desk/reviews/task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding/bundle-1.md
     name: review-task-cc31-ciclo-de-vida-declarado-efectos-en-relationdoc-attributes-y-advance-por-edges-holding-bundle-1
+  - path: desk/reviews/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/preflight-1.md
+    name: review-task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra-preflight-1
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

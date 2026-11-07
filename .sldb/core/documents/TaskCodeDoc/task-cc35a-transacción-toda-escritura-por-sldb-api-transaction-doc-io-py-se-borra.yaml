@@ -1,7 +1,7 @@
 name: task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra
 path: desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md
-source_hash: 3e55882aedbcc2104a04a19a7b6335ab9f6be2ceecfbd2cc5fca35dd49ce69e5
-content_hash: 0d6c8e56ebf08efed33cc0d07e73a75cb9c921c759b631b0c277e2c5b795d59f
+source_hash: 2169ecee7c6a24d35f8c2e2155819a085048afed88bab0b7ebdab642fab6d55e
+content_hash: b88d3c4c49e35b502c62ce4684af0e3206612c3603817c79c4198f7d95f691ec
 field_hashes:
   title: 50ab12e522e08730150155861e0897c7e605e4bc9df382103ef7d77747554ef6
   id: ef121f29cfdd42ed9ba080c0fb224707569dc8db6bd85bc12bb24e7e952f023a
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 8acebdc0d9778d6f990aa329eab974eaa5109f1f9da76eb80b47af03ca87268d
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: d8e636a9cc040e9578082210c373ffff1e70ece75ff6b4e6cac1d24e30fe302b
-  implementation_path: da2601c61c967b5968678b78e4be00b89cb52f8ed8d4187547288c8e0a8e7102
+  implementation_path: 788abd9f93feb3dddcdae1cbd4622dad73687c6b9b800fae19f6fe47114f2696
   validation: 8ff0a155e9815abc856729da84d97aabd842bfc7bafd28cc68b9fefc8f42c997
   done_when: 4a08fb5ccb38fa2efb7090eb28fbb3552aff7c2ccbe4a6230798b854586db7f4
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb

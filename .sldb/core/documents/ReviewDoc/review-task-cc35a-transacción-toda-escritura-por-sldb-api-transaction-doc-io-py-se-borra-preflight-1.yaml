@@ -1,0 +1,30 @@
+name: review-task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra-preflight-1
+path: desk/reviews/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/preflight-1.md
+source_hash: 71fe60954a6db8a50cc4ec2d2aa2cdbcf65455bb61a31d52eff96ed49777ffa0
+content_hash: 4231d5a70c4488de281db13cc34b3710570d5ed94ec8d94e4b5a5a65c15ec3e8
+field_hashes:
+  id: 9efc58c02c50a5ede531f65767b33cc09bc5d38069f2b73eb9a8377b025004c3
+  title: 78ab58ff1df7c47c2ba2e1a5fa8b030cd83e25fa35cda360bb6889d3bfe4d837
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 96e3f5effa599c4ea9ed79b85fc072e71f4b042066103619479ccb389cf2a9c3
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 71b5a2388749bd1dfbdaf6a7285ff35af973b529ed0e31f01d36c66a3bcfe37d
+  input_sha256: d822ff0fc0de48b2ab0bb855f57d62bb6ecaee8134c865509953b836562c8b6b
+  output_sha256: 5e48490107fe4d0dd84f65149eb7dbe3b3e5e63975b277a4048e6b63e0e38b5d
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: e388969a0c0c45ffb3ec10738942954192aa4d0fe749fec270267ee953f80582
+  created_at: b7ce0fbf5e2531f51ffaf4d18f7bfcb45bc9f7037ec6255b5f2f95a3327b363c
+  disposed_at: 6bd7cc6e06b4c7738fedb2479e5e2027e34a130521b54b3d85a382a34c3986cf
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: e9e0f56501c78ff2c966f341469935b7d16b9e5e5f9fd080e7c703bc2184dae6
+  disposition: 87c82a7859d9c6b55ea8230b6d0880df9da56abfbc8b74be9ec1aa232b0917de
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
