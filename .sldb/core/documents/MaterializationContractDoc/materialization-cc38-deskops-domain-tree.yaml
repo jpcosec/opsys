@@ -1,0 +1,22 @@
+name: materialization-cc38-deskops-domain-tree
+path: desk/materializations/materialization-cc38-deskops-domain-tree.md
+source_hash: 322f4d03564b1e1894a2221670affce61b8a2886683873d6285775d321c2c522
+content_hash: 917525a7201b7dedf36b36eac4d415d85cf287e20bd1fd18929f0414280f5dfc
+field_hashes:
+  id: 7c168d3ff563cf297046ff286aa858bea783211c860b29b29fa52b7611185d64
+  title: 159e3a864d077d57709114439759262cf8c5f6884c22667b4b72d456d8d9db52
+  source_atoms: ad97e825fbba3f2b907e70783993bfc5a0b27511366c8f029c850761239634a7
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 66f0f632e44ca85f2b4c23fbe6ba5ac01f3f11f3f571c35e7e546fc96f846c11
+  intent: ee43c3f293d71073866295ab3dc36d8d9848bdecd2d92f6d12a31526272b526c
+  validation: bd8f0c7c4975071729f7206943a6d6d483ff6a60c47c921fdc64220a259a0e41
+  tags: ac0916cce5606e1d8342442a69ff5955f8a5fa898db10555461d58c02b16e5d3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:invariants
+- topic:models
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

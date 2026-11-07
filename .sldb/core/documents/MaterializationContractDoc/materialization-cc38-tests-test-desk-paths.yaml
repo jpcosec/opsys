@@ -1,0 +1,22 @@
+name: materialization-cc38-tests-test-desk-paths
+path: desk/materializations/materialization-cc38-tests-test-desk-paths.md
+source_hash: 91f00cce554682f5bd773087507dba182de1033e4e243ab5d292fa4adb46a431
+content_hash: fc0abcd17ca0c84691813335cbd72fd18f363fa57c773b580a7da513411622eb
+field_hashes:
+  id: ca9fc54cd973135f596c5d4ac81f8dbd538b032340e4855aa89fc92c48824bf9
+  title: 31035dd3bde83fa883fc2764c3a504e2d9299406f3880178dfc2d36f83cc6d6c
+  source_atoms: ad97e825fbba3f2b907e70783993bfc5a0b27511366c8f029c850761239634a7
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: f0e0bcaa7bb356a47bf4b65db07ac102f02e1fcb4506f9d0234cfbfbf2234ad6
+  intent: 91f33097d7fff4189aba6fb5bc51edf52a558d49a2ca328b205378a04bee2629
+  validation: f456905e1df2bd7328f2d6424bd4e6568382ce6126ecffc002a920d61ca1d483
+  tags: ac0916cce5606e1d8342442a69ff5955f8a5fa898db10555461d58c02b16e5d3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:invariants
+- topic:models
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

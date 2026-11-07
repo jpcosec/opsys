@@ -1,0 +1,19 @@
+name: atom-una-invariante-de-un-solo-documento-vive-como-validador-de-su-modelo
+path: desk/atoms/atom-una-invariante-de-un-solo-documento-vive-como-validador-de-su-modelo.md
+source_hash: f815d44d462c9e6ee348ba99dab65c6b6c3cea839c0ac593bc6d6bdd9867f461
+content_hash: ac27d5d0c1bc28453b72ef819a79f4125e71c4375340271e49622b91cefdfcc2
+field_hashes:
+  id: 04581ed42719f8bd92ebd4ad241ff046ba5d8f0112df9b1d3fe83195af604508
+  title: 3273950aa3e2167370d5626edd594b19d1fcac6de8f6d48a6135db8f7b744d70
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: ac637929972ac2cfc68ee42a6fe1c38f4060ffbd10043e1725886e74e6d03670
+  tags: ac0916cce5606e1d8342442a69ff5955f8a5fa898db10555461d58c02b16e5d3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:invariants
+- topic:models
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance: null

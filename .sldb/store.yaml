@@ -272,6 +272,10 @@ include:
   - desk/materializations/materialization-cc36-commands-doctor.md
   - desk/materializations/materialization-cc36-tests-test-scaffold-golden.md
   - desk/materializations/materialization-cc36-tests-test-desk-sync.md
+  - desk/materializations/materialization-cc38-deskops-domain-tree.md
+  - desk/materializations/materialization-cc38-deskops-atom-tags.md
+  - desk/materializations/materialization-cc38-tests-test-atom-tags.md
+  - desk/materializations/materialization-cc38-tests-test-desk-paths.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -307,8 +311,8 @@ include:
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
-  - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
   - desk/tasks/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb.md
+  - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

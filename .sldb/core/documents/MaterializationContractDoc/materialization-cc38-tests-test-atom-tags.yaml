@@ -1,0 +1,22 @@
+name: materialization-cc38-tests-test-atom-tags
+path: desk/materializations/materialization-cc38-tests-test-atom-tags.md
+source_hash: 35a0be5477c4291c4dd00977cd1281390d6206407160a0c9017a748d25ee53e5
+content_hash: 4398b32c23b4d65586ca5da3ad2d40b8e519afd18fec224537c10b78a4ef6b69
+field_hashes:
+  id: 17015023dea3d6c6d499750dfdb35a5c15eea730dcc4cfff69192cd41c03aa34
+  title: d9b7f2bc7ad05d528f2f881d82399cf2a86169cbf2af481d11a8e7a311958344
+  source_atoms: ad97e825fbba3f2b907e70783993bfc5a0b27511366c8f029c850761239634a7
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: aab774ab0d2d04f2b6920f25430fa7a476e78e9f69ed57db03882e12944163de
+  intent: 4486d7e7658b9f3b896d1fe8da5e2eb3f77957342604c032ece3a1ac7ad04f51
+  validation: c4bce692829de8674de36fa0a000418e8ad2b9586db56668eed71bd765b9547e
+  tags: ac0916cce5606e1d8342442a69ff5955f8a5fa898db10555461d58c02b16e5d3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:invariants
+- topic:models
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

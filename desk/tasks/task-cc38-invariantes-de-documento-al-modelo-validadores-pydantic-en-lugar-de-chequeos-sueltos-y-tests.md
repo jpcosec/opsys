@@ -7,7 +7,14 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_model_validators.py
+- tests/test_model_validators.py
+- pytest tests/test_domain_tree.py
+- tests/test_domain_tree.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- 4a1aae81d47bcee934224c2ce0504a1a3a15d1df
+- desk/atoms/atom-una-invariante-de-un-solo-documento-vive-como-validador-de-su-modelo.md
 depends_on:
 - task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados
 pills: []
@@ -116,6 +123,7 @@ _List the checks required before this task can close._
 - sldb fields update y sldb docs update rechazan un AtomDoc y un CrossroadDoc inválidos en una copia del desk bajo /dev/shm (p6), con comando y salida
 - deskops doctor y sldb stores check en los 6 desks antes y después sin hallazgos nuevos, o documentos inválidos listados y corregidos vía deskops (p7)
 - CHANGELOG
+- RESULTADO (coordinador de proyecto, 2026-11-06, squash 4a1aae81 sobre origin/main, después de renombrar por CLI los 82 átomos con '_' de spec2viz b16c021 y graph_ui 62bc9f8, autorizado por el overlord): model_validators 14, specs 5, model_contract_snapshot 2 (contratos sin cambio, sin migración), domain_tree 5, atom_folder_axis 13, atoms_cli 4, atom_tags 5, desk_view 9+1 skipped, scaffold_golden 3, cli_help_examples 11, operator_manual 1, output_goldens 7: todos verdes, de a uno. Corrige las regresiones de CC30 en domain_tree, atom_folder_axis y operator_manual. Inventario: 9 chequeos entre documentos para CC33 y 0 para CC32. task.refactor: queda abierta por goldens no verificable (opción a del overlord).
 
 ## Done When
 
