@@ -87,11 +87,14 @@ class ReadSnapshot:
     """Task-independent graph reads shared by every task read of one read-only pass.
 
     ``DeskopsOperations.read_snapshot`` opens one; ``transitions_from`` keeps the transitions
-    leaving each node in it and the closure service keeps the closeout graph context.
+    leaving each node in it, ``transition_findings`` the store's rule graph (sldb loads the
+    whole index for it, ~3 s on a small desk) and the closure service the closeout graph context.
     """
 
     transitions: dict[str, list["Transition"]] = field(default_factory=dict)
     graph_context: Any = None
+    rule_graph: Any = None
+    has_rules: bool | None = None
 
 
 @dataclass(slots=True)
@@ -199,11 +202,29 @@ def transitions_blocked(root: Path, node: str, payload: dict[str, Any], document
     return _lifecycle_edges(node, edges_blocked(_store(root), ritual_export_id(node), payload, include_linked=False, document=document))
 
 
-def transition_findings(root: Path, document: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
-    """The findings of the task's ``on_transition`` rules read as ``payload`` (``sldb.api.transition_findings``)."""
-    from sldb.api import transition_findings as sldb_transition_findings
+def transition_findings(root: Path, document: str, payload: dict[str, Any], *, snapshot: ReadSnapshot | None = None) -> list[dict[str, Any]]:
+    """The findings of the task's ``on_transition`` rules read as ``payload`` (``sldb.api.transition_findings``).
 
-    return [finding_dict(f) for f in sldb_transition_findings(_store(root), document, payload)]
+    With a ``snapshot``, the store's rule graph is loaded once and shared by every task read of
+    the pass (what ``sldb.api.transition_findings`` does on each call); a store without
+    ``RuleDoc`` has no findings and loads nothing."""
+    if snapshot is None:
+        from sldb.api import transition_findings as sldb_transition_findings
+
+        return [finding_dict(f) for f in sldb_transition_findings(_store(root), document, payload)]
+    from sldb.api.rules.rule_graph import rule_graph
+    from sldb.api.rules.rule_subjects import resolve_subject
+    from sldb.api.rules.rules_on_transition import has_rules
+    from sldb.api.rules.rules_on_transition import payload_findings
+
+    if snapshot.has_rules is None:
+        snapshot.has_rules = has_rules(_store(root))
+    if not snapshot.has_rules:
+        return []
+    if snapshot.rule_graph is None:
+        snapshot.rule_graph = rule_graph(_store(root))
+    graph = snapshot.rule_graph
+    return [finding_dict(f) for f in payload_findings(graph, "on_transition", resolve_subject(graph, document), payload)]
 
 
 def task_document(root: Path, task_path: Path) -> str | None:

@@ -191,7 +191,7 @@ class TasksService:
         if document is None:
             return []
         try:
-            return lifecycle.transition_findings(self.root, document, payload)
+            return lifecycle.transition_findings(self.root, document, payload, snapshot=self._ops.snapshot)
         except Exception:
             return []
 

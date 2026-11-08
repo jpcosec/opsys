@@ -199,6 +199,7 @@ def test_advance_task_exact_selector_wins_over_prefix(tmp_path: Path) -> None:
     _seed_task(root, "task-foo-bar", "Foo Bar")
     bar = root / "desk" / "tasks" / "task-foo-bar.md"
     before = bar.read_text(encoding="utf-8")
+    accept_receipts(root, "task-foo")
 
     result = _cli(root, "advance", "task", "task-foo")
 
