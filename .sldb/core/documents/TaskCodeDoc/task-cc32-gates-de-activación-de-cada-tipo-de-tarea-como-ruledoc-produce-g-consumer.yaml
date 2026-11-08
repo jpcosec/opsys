@@ -1,7 +1,7 @@
 name: task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer
 path: desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md
-source_hash: 2a26c18ce4ea2c252f8d5a32c363b39a37e37caea14e5f6a57c39c946c983c70
-content_hash: 6d08972813cbd4b3ddf918b225c3eb4a183dbf303ee2cb6dfad928bca89dae17
+source_hash: 3eb21531db346c7361b7da0e3992d00fd45d986bb9483eb8077d757c0da88fd0
+content_hash: 59f3c0c46df34716ccadef918216172dd182aa599516af8c987531bbe4c70872
 field_hashes:
   title: f04b7c55556feff92dcfbd76b98b084db7229ae5cd3a799fcb285def602d0f1e
   id: b9f0646997d83732d5160369434a9221586164201532e33457814c60e00ce5cf
@@ -16,8 +16,8 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 1e83c5a5c4a16bbf6928b62f113884e7eab44e32684a36825d996c8951c29328
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: 0bac0d2aa120d36a5b77b334b00688164e77a47cd5d42d33cea33c6ab3493dae
-  implementation_path: ceb3bf0bae126300f10fe2bde19bcd7d6d00838282cc897a4f84e8553aad7528
+  files: 32c5682650e67c40bbd50fd9071372513dd63ea046d0772dd44b879d08a231db
+  implementation_path: a9dde75a8fa0b964699778234b7ac7f5956f7f2c85cf2ffb391d63acc5db9f16
   validation: 5afecf2ce5e3f9af8598ab19270955b6479263e45ee55541db22450c70fb1e87
   done_when: 63833a24e2981fbb41d14e98b5f6c44eb16af1efce62acd01681b3b373994833
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb

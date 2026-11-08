@@ -20,6 +20,7 @@ files:
 - deskops/services/tasks.py
 - deskops/workflow/next_actions.py
 - deskops/cli/commands/desk.py
+- deskops/cli/commands/operations.py
 - tests/
 - docs/workflow-policy-reference.md
 - CHANGELOG.md
@@ -108,6 +109,10 @@ b8 (recibos sin comando en los tests): los ReviewDoc de kind reproduction, golde
 PRECISIONES DEL COLD-BUNDLE (review-...-bundle-1, 2026-11-08):
 c1 (goldens): manda b4. Los goldens de ayuda quedan idénticos. Los de salida también, salvo show_task.text y show_task.json, que solo cambian por la sección de findings. El Done When se corrigió en ese sentido.
 c2 (GO07 disponible): GO07 (anclas doc:) entró en sldb con GO08 (gate G_GO08, satisfied: sldb 3af872e7, closeout 556408da), y el venv usa el main editable de sldb. sldb calcula anchor_state (src/sldb/api/anchors/, rules_on_write.py); el test no lo simula. El docstring y el comentario de deskops/models/review.py (:14 y :40-41, «Until GO07 exists ... stays inert») quedaron viejos: el worker los corrige sin cambiar el modelo. Si anchor_state no se resuelve sobre ReviewDoc.subject en el desk temporal, el worker para y avisa con la evidencia (hipótesis para sldb), sin suplirlo con Python.
+
+PRECISIONES DE EJECUCIÓN (2026-11-08, coordinador del plan, a pedido del worker):
+d1 (operations.py entra en files): para que show y next impriman los findings en texto se toca deskops/cli/commands/operations.py, solo en _format_task_detail y _print_next_action_report (unas 8 líneas). CC35a no toca ese archivo, así que no se cruza con su rebase.
+d2 (anchor_state sin CC35a): en main sin CC35a, la vía de escritura de deskops (render + track, sin save_document_payload) no pinnea ReviewDoc.subject. Los recibos de deskops review + dispose quedan con anchor_state = lost y la regla no activa. Con sldb.api transaction.update el ancla se pinnea (intact), y editar goal da changed. Los tests escriben los recibos con sldb.api (b8). El informe lo lista como consecuencia: CC35a es prerrequisito operativo para que un recibo de deskops review active una tarea real. CC32 no cambia la vía de escritura (a1).
 
 ## Validation
 
