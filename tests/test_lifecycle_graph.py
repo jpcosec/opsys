@@ -12,6 +12,7 @@ from deskops.paths import package_pythonpath
 from tests.activation_receipts import accept_receipts
 
 LIFECYCLE_TEMPLATES = Path(__file__).resolve().parents[1] / "deskops" / "data" / "lifecycle"
+RULE_TEMPLATES = Path(__file__).resolve().parents[1] / "deskops" / "data" / "rules"
 RELATION_DOCS = ("execution-task_activates", "testing-task_hands_to_closeout", "closeout-task_completes")
 
 
@@ -27,6 +28,11 @@ def _run(argv: list[str]) -> tuple[int, str]:
 
 def _lifecycle_tree(root: Path) -> dict[str, bytes]:
     return {path.name: path.read_bytes() for path in sorted((root / "desk" / "lifecycle").glob("*.md"))}
+
+
+def _managed_templates() -> dict[str, bytes]:
+    """What `desk/lifecycle/` holds: the graph's six documents and the activation rules (CC32)."""
+    return {p.name: p.read_bytes() for folder in (LIFECYCLE_TEMPLATES, RULE_TEMPLATES) for p in folder.glob("*.md")}
 
 
 def _task(operations: DeskopsOperations, title: str, **extra: object) -> str:
@@ -60,7 +66,7 @@ def test_the_lifecycle_graph_lives_in_the_store_as_rituals_and_relation_docs(lif
 
 def test_write_lifecycle_graph_is_idempotent(lifecycle_desk: Path) -> None:
     assert lifecycle.write_lifecycle_graph(lifecycle_desk) == []
-    assert _lifecycle_tree(lifecycle_desk) == {p.name: p.read_bytes() for p in LIFECYCLE_TEMPLATES.glob("*.md")}
+    assert _lifecycle_tree(lifecycle_desk) == _managed_templates()
 
 
 def test_the_seeds_declare_the_effects_of_each_transition_and_one_edge_per_ritual(lifecycle_desk: Path) -> None:
