@@ -3,10 +3,10 @@ model_ref: deskops.models:TaskCodeDoc
 path: deskops/models/task_types.py
 documents_index: .sldb/core/documents/TaskCodeDoc.yaml
 sections_index: .sldb/runtime/sections/TaskCodeDoc.yaml
-model_hash: e4dd5bad6d30c1fcfe02f9eeb1f8d5348ee6ff38740e9bb8a66e151008e75aeb
-roster_hash: 23af005bfef36150b915e8b409cd3ac74b259c2eb84d22aec4fcbd18a41682c9
+model_hash: ac410bcacc694a64d1fedd969008642e44dd2b675db83cda10d0cb2aac55d794
+roster_hash: c1a656cf7e476b4c3b0589cc90b37aa0a009a33a199b3940731cd51b7cd39eeb
 contract_hash: fac7ef5325d87f49c624009f368c0ee7695b8e8c29c3b57df00e8d85c50fcb80
-documents_count: 1
+documents_count: 2
 version: 1
 canonical: false
 family: null
