@@ -113,6 +113,7 @@ c2 (GO07 disponible): GO07 (anclas doc:) entró en sldb con GO08 (gate G_GO08, s
 PRECISIONES DE EJECUCIÓN (2026-11-08, coordinador del plan, a pedido del worker):
 d1 (operations.py entra en files): para que show y next impriman los findings en texto se toca deskops/cli/commands/operations.py, solo en _format_task_detail y _print_next_action_report (unas 8 líneas). CC35a no toca ese archivo, así que no se cruza con su rebase.
 d2 (anchor_state sin CC35a): en main sin CC35a, la vía de escritura de deskops (render + track, sin save_document_payload) no pinnea ReviewDoc.subject. Los recibos de deskops review + dispose quedan con anchor_state = lost y la regla no activa. Con sldb.api transaction.update el ancla se pinnea (intact), y editar goal da changed. Los tests escriben los recibos con sldb.api (b8). El informe lo lista como consecuencia: CC35a es prerrequisito operativo para que un recibo de deskops review active una tarea real. CC32 no cambia la vía de escritura (a1).
+e1 (desvío aceptado por el coordinador de proyecto, 2026-11-08): la regla de task.refactor solo suma la cláusula de goldens y no repite all(depends_on: status = "closed"), porque TaskRefactorDoc <= TaskCodeDoc ya hereda esa cláusula de la regla de task.code (a5). b1 se lee para los tipos que no heredan otra regla. Entrega: wt/cc32 0896a2b1, verificado y sin integrar; el orden de integración es CC35a primero y CC32 después (G_CONSUMER y la nota a sldb van cuando los dos estén en main).
 
 ## Validation
 
