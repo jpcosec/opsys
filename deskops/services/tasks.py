@@ -169,17 +169,31 @@ class TasksService:
             transitions = lifecycle.transitions_from(self.root, task.current_node, snapshot=self._ops.snapshot)
         except Exception:
             return []
-        payload = doc_access.read_doc(doc_access.resolve_glob(self.root, self.desk_root / "tasks", task.id), TaskDoc)
+        task_path = doc_access.resolve_glob(self.root, self.desk_root / "tasks", task.id)
+        payload = doc_access.read_doc(task_path, TaskDoc)
         self.add_closeout_facts(payload)
+        findings = self._transition_findings(task_path, payload)
         return [
             {
                 "relation_type": t.relation_type,
                 "target": lifecycle.COMPLETE if t.terminal else t.target,
                 "condition": t.condition,
                 "holds": lifecycle.condition_holds(t.condition, payload),
+                **({"findings": findings} if findings else {}),
             }
             for t in transitions
         ]
+
+    def _transition_findings(self, task_path: Path, payload: dict[str, Any]) -> list[dict[str, Any]]:
+        """The findings of the task's ``on_transition`` rules (sldb GO08): what blocks the gate
+        leaving its node, as ``show`` and ``next`` print them; empty for an untracked task."""
+        document = lifecycle.task_document(self.root, task_path)
+        if document is None:
+            return []
+        try:
+            return lifecycle.transition_findings(self.root, document, payload)
+        except Exception:
+            return []
 
     def add_closeout_facts(self, payload: dict[str, Any]) -> None:
         """Facts the lifecycle conditions test with has(): present only when they hold."""
@@ -237,6 +251,7 @@ class TasksService:
         payload = doc_access.resolve_task_payload(self.root, task_path.stem)
         spec = lifecycle.load_lifecycle_spec()
         state = match_workflow_state(spec, str(payload.get("current_node") or ""))
+        findings = self._transition_findings(task_path, dict(payload)) if payload.get("current_node") else []
         pills = list(dict.fromkeys([*self._board_pills(board_path), *list(payload.get("effective_pills") or payload.get("pills") or [])]))
         sources = {
             "task": str(task_path.relative_to(self.root)),
@@ -267,6 +282,7 @@ class TasksService:
             "pills": pills,
             "next_actions": list(state.get("next_actions") or []),
             "advance_when": list(state.get("advance_when") or []),
+            "findings": findings,
             "why": why,
             "sources": sources,
         }
@@ -287,7 +303,7 @@ class TasksService:
         # against TaskDoc, the model it was read with: a typed model's `task_type` literal could
         # not accept it (d4, instead of k5's TaskCodeDoc).
         model = self.registered_task_types().get(str(payload.get("task_type") or "")) or TaskDoc
-        result = lifecycle.advance(self.root, payload, model)
+        result = lifecycle.advance(self.root, payload, model, document=lifecycle.task_document(self.root, task_path))
         for key in ("closeout_evidence_verified", "pill_graduation_verified"):
             payload.pop(key, None)
         if result.progressed and payload.get("current_node") == lifecycle.COMPLETE:

@@ -11,6 +11,7 @@ import pytest
 from deskops.cli.main import main
 from deskops.models import TaskDoc
 from deskops.operations import DeskopsOperations
+from tests.activation_receipts import accept_receipts
 from deskops.services.desk_view import DeskView
 from deskops.services.desk_view import DeskViewError
 
@@ -74,6 +75,7 @@ def desk(lifecycle_desk: Path) -> dict:
     atom = _atom(ops, "Atom for the view")
     first = _task(ops, "First task", pills=[pill], atoms=[atom])
     second = _task(ops, "Second task", pills=["pill-does-not-exist"], atoms=["atom-does-not-exist"])
+    accept_receipts(lifecycle_desk, second)
     ops.advance_task(second)
     return {"root": lifecycle_desk, "ops": ops, "first": first, "second": second, "pill": pill, "atom": atom}
 

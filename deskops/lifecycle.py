@@ -10,6 +10,16 @@ managed seeds of the package (``deskops/data/desk_declaration.yaml``, templates 
 ``deskops/data/lifecycle/``): ``deskops init`` and ``deskops desk update --apply`` write
 them under ``desk/lifecycle/`` and rewrite a desk's copy that differs.
 
+The activation gate of each factory task type is a ``RuleDoc`` (sldb GO06/GO08), also a
+managed seed (``deskops/data/rules/``, written to ``desk/lifecycle/rule-activation-<type>.md``):
+``on_transition`` over ``ritual-execution``, with subject ``model <= <TypeDoc>`` so a desk's
+subtype inherits it without code, requiring the review receipts the type asks for
+(``any(^subject: anchor_state = "intact" and verdict = "accepted" and kind = "<kind>")``) and
+the task's dependencies closed (``all(depends_on: status = "closed")``). sldb evaluates those
+rules when ``edges_holding`` receives the task as ``document``; an ``error`` finding blocks
+every edge and ``edges_blocked`` returns them with the findings ``deskops advance``, ``next``
+and ``show`` print.
+
 deskops keeps three things: the states ``deskops next`` describes
 (``deskops/spec/workflows/task_lifecycle.yaml``), the call to sldb for the edges whose
 condition holds (``sldb.api.edges_holding``) and their effects (``sldb.api.apply_effects``),
@@ -33,6 +43,8 @@ COMPLETE = "complete"
 RELATION_TYPE_MODEL = "RelationTypeDoc"
 RELATION_MODEL = "RelationDoc"
 RITUAL_MODEL = "RitualDoc"
+RULE_MODEL = "RuleDoc"
+RULE_MODEL_REF = "sldb.models.rule_doc:RuleDoc"
 
 
 class LifecycleGraphMissing(RuntimeError):
@@ -49,6 +61,9 @@ class Transition:
     condition: str
     sets: dict[str, Any] = field(default_factory=dict)
     terminal: bool = False
+    #: The findings of the task's ``on_transition`` rules (sldb GO08), as ``finding_dict`` gives
+    #: them: every finding on a blocked edge, only alerts on a holding one, none without a document.
+    findings: tuple[dict[str, Any], ...] = ()
 
     @property
     def effects(self) -> dict[str, Any]:
@@ -113,6 +128,16 @@ def ritual_export_id(ritual_id: str) -> str:
     return f"{RITUAL_MODEL}:{ritual_id}"
 
 
+def finding_dict(finding: Any) -> dict[str, Any]:
+    """An sldb ``Finding`` as the plain mapping ``show --format json`` prints."""
+    return {"level": finding.level, "code": finding.code, "subject": finding.subject, "what": finding.what}
+
+
+def finding_line(finding: dict[str, Any]) -> str:
+    """One finding as sldb prints it: ``<level>: [<code>] <node>: <message> | <clause> (seen: ...)``."""
+    return f"{finding['level']}: [{finding['code']}] {finding['subject']}: {finding['what']}"
+
+
 def _transition(node: str, edge: Any) -> Transition:
     """The edge as a transition; ``effects`` (filled by ``edges_holding``) else the declared attributes."""
     attributes = edge.metadata.get("attributes") or {}
@@ -124,6 +149,7 @@ def _transition(node: str, edge: Any) -> Transition:
         condition=str(edge.metadata.get("condition") or ""),
         sets=dict(effects.get("sets") or {}),
         terminal=bool(effects.get("terminal")),
+        findings=tuple(finding_dict(f) for f in (getattr(edge, "findings", None) or ())),
     )
 
 
@@ -155,12 +181,45 @@ def transitions_from(root: Path, node: str, *, snapshot: ReadSnapshot | None = N
     return _lifecycle_edges(node, edges_from(_store(root), ritual_export_id(node), include_linked=False))
 
 
-def transitions_holding(root: Path, node: str, payload: dict[str, Any]) -> list[Transition]:
+def transitions_holding(root: Path, node: str, payload: dict[str, Any], document: str | None = None) -> list[Transition]:
     """The transitions leaving ``node`` whose condition holds on ``payload`` (``sldb.api.edges_holding``),
-    each with its effects resolved for that payload."""
+    each with its effects resolved for that payload. With ``document`` (the task's ``Model:name``
+    in the store) the task's ``on_transition`` rules run too: an error finding holds every edge back."""
     from sldb.api import edges_holding
 
-    return _lifecycle_edges(node, edges_holding(_store(root), ritual_export_id(node), payload, include_linked=False))
+    return _lifecycle_edges(node, edges_holding(_store(root), ritual_export_id(node), payload, include_linked=False, document=document))
+
+
+def transitions_blocked(root: Path, node: str, payload: dict[str, Any], document: str) -> list[Transition]:
+    """The transitions leaving ``node`` whose condition holds on ``payload`` but that an error
+    finding of the task's ``on_transition`` rules blocks (``sldb.api.edges_blocked``), each
+    carrying every finding."""
+    from sldb.api import edges_blocked
+
+    return _lifecycle_edges(node, edges_blocked(_store(root), ritual_export_id(node), payload, include_linked=False, document=document))
+
+
+def transition_findings(root: Path, document: str, payload: dict[str, Any]) -> list[dict[str, Any]]:
+    """The findings of the task's ``on_transition`` rules read as ``payload`` (``sldb.api.transition_findings``)."""
+    from sldb.api import transition_findings as sldb_transition_findings
+
+    return [finding_dict(f) for f in sldb_transition_findings(_store(root), document, payload)]
+
+
+def task_document(root: Path, task_path: Path) -> str | None:
+    """The ``Model:name`` the desk's store tracks ``task_path`` under (the subject of its rules);
+    None for an untracked task or a desk without a store, where no rule runs."""
+    from sldb.api.stores.doc_status import doc_status
+
+    if not (_store(root) / "core").exists():
+        return None
+    try:
+        status = doc_status(_store(root), task_path.resolve().relative_to(root.resolve()).as_posix())
+    except Exception:
+        return None
+    if not status.model or not status.name:
+        return None
+    return f"{status.model}:{status.name}"
 
 
 def lifecycle_transitions(root: Path, spec: LifecycleSpec | None = None) -> list[Transition]:
@@ -171,7 +230,7 @@ def lifecycle_transitions(root: Path, spec: LifecycleSpec | None = None) -> list
     return [t for node in spec.rituals for t in transitions_from(root, node)]
 
 
-def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: LifecycleSpec | None = None) -> TransitionResult:
+def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: LifecycleSpec | None = None, document: str | None = None) -> TransitionResult:
     """Take the first transition out of the task's current node whose condition holds.
 
     The edge's effects are applied with ``sldb.api.apply_effects`` (``sets`` replaces the
@@ -180,6 +239,10 @@ def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: Lifecyc
     is appended to ``history``. Mutates ``payload`` and reports what happened; one call takes
     at most one transition. The graph has one edge leaving each ritual, so the order sldb
     returns the holding edges in decides nothing (k4).
+
+    With ``document`` (``task_document``) the task's ``on_transition`` rules run: when an error
+    finding holds the edges back, the message lists each finding (rule, clause, node and value
+    seen) instead of the edges' conditions.
     """
     from sldb.api import apply_effects
 
@@ -199,9 +262,14 @@ def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: Lifecyc
             f"No lifecycle transition leaves '{node}' in the graph of {_store(root)}. "
             "Run 'deskops desk update --apply' to write the lifecycle graph."
         )
-    holding = transitions_holding(root, node, payload)
+    holding = transitions_holding(root, node, payload, document)
     if not holding:
         payload["current_node"] = node
+        blocked = transitions_blocked(root, node, payload, document) if document else []
+        findings = [f for t in blocked for f in t.findings if f["level"] == "error"]
+        if findings:
+            lines = "; ".join(finding_line(f) for f in findings)
+            return TransitionResult(node, status, False, True, f"Gate {node} is blocked by its rules: {lines}")
         gates = "; ".join(f"{t.relation_type}: {t.condition}" for t in transitions)
         return TransitionResult(node, status, False, True, f"Gate {node} is not complete ({gates}).")
     transition = holding[0]
@@ -239,12 +307,26 @@ def tracked_line(model: str, path: str, spec: LifecycleSpec | None = None) -> st
     return None
 
 
+def ensure_rule_model(root: Path) -> bool:
+    """Register sldb's ``RuleDoc`` in the desk's store when it lacks it (``sldb.api.add_model``);
+    True when it was registered now. Tracking an activation rule needs the model, and each
+    ``model <= <TypeDoc>`` of a rule's subject needs the type registered, which the deskops
+    models always are."""
+    from sldb.api import add_model
+    from sldb.api import is_model_registered
+
+    if is_model_registered(_store(root), RULE_MODEL):
+        return False
+    add_model(_store(root), RULE_MODEL_REF, pythonpath=package_pythonpath())
+    return True
+
+
 def write_lifecycle_graph(root: Path) -> list[str]:
     """Make the desk's store carry the lifecycle graph; return what was written or tracked.
 
-    Idempotent: writes the managed lifecycle seeds and restores one the desk changed
-    (``workspace.seed_desk``), registers sldb's relation models when the store lacks them and
-    tracks the declared desk documents
+    Idempotent: writes the managed lifecycle seeds (the graph and the activation rules) and
+    restores one the desk changed (``workspace.seed_desk``), registers sldb's relation models
+    and ``RuleDoc`` when the store lacks them and tracks the declared desk documents
     (``workspace.apply_desk_includes``): the lifecycle documents and the lifecycle rituals by
     their ids. Any other declared document pending is tracked too and reported in the same way.
     """
@@ -259,6 +341,7 @@ def write_lifecycle_graph(root: Path) -> list[str]:
     changes = seed_changes(root, seed_desk(root, restore_managed=True))
     if not all(is_model_registered(_store(root), name) for name in (RELATION_MODEL, RELATION_TYPE_MODEL)):
         init_relations(_store(root), pythonpath=package_pythonpath())
+    ensure_rule_model(root)
     spec = load_lifecycle_spec()
     pending = {path: model for model, path in pending_desk_includes(root)}
     for path in apply_desk_includes(root):

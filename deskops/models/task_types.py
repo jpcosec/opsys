@@ -6,16 +6,17 @@ documents of ``task.code`` and of every subtype that extends it (``task.refactor
 ``bundle`` for ``reproduction`` — a subtype only ever *adds* gates, it cannot remove one
 (brief.md §Tipos, decisions.md DC1/D2).
 
-Each concrete type fixes ``task_type`` to its name with a ``Literal`` default and declares two
-class attributes:
+Each concrete type fixes ``task_type`` to its name with a ``Literal`` default and declares one
+class attribute, ``__closeout_evidence__``: the closeout evidence kinds ``deskops closeout
+verify`` checks. It uses the vocabulary of
+``deskops.services.closeout_gates.CLOSEOUT_EVIDENCE_VOCABULARY`` (tests, commit, atom,
+materialization, document, external) plus ``children`` (the aggregate) and ``goldens`` (the
+refactor) — both are only *declared* here; their verification lands in GC09 and a later node
+(TaskDoc precisión 3).
 
-- ``__closeout_evidence__``: the closeout evidence kinds ``deskops closeout verify`` checks.
-  It uses the vocabulary of ``deskops.services.closeout_gates.CLOSEOUT_EVIDENCE_VOCABULARY``
-  (tests, commit, atom, materialization, document, external) plus, for this node, ``children``
-  (the aggregate) and ``goldens`` (the refactor) — both are only *declared* here; their
-  verification lands in GC09 and a later node (TaskDoc precisión 3).
-- ``__activation_receipts__``: the ``ReviewDoc`` kinds the GC05 activation rule will require
-  (preflight, bundle, reproduction, goldens, owner). Declared here, evaluated later.
+The activation gate of a type is not Python: it is the ``RuleDoc`` seed
+``deskops/data/rules/rule-activation-<type>.md`` (CC32), whose subject ``model <= <TypeDoc>``
+names the family, so it needs no attribute here and a subtype inherits it.
 
 ``TaskDoc`` itself keeps ``task_type: str`` so old documents still read, and declares
 ``__contract__`` (the contract fields; sldb GO02 (e)).
@@ -38,7 +39,6 @@ class TaskCodeDoc(TaskDoc):
         description="Workflow task type; fixed to 'task.code' for this model.",
     )
     __closeout_evidence__ = ("tests", "commit", "atom", "materialization")
-    __activation_receipts__ = ("preflight", "bundle")
 
 
 class TaskDocsDoc(TaskDoc):
@@ -49,7 +49,6 @@ class TaskDocsDoc(TaskDoc):
         description="Workflow task type; fixed to 'task.docs' for this model.",
     )
     __closeout_evidence__ = ("commit", "document")
-    __activation_receipts__ = ("preflight",)
 
 
 class TaskDebugDoc(TaskDoc):
@@ -64,7 +63,6 @@ class TaskDebugDoc(TaskDoc):
         description="Workflow task type; fixed to 'task.debug' for this model.",
     )
     __closeout_evidence__ = ("tests", "commit", "atom", "materialization")
-    __activation_receipts__ = ("preflight", "reproduction")
 
 
 class TaskRefactorDoc(TaskCodeDoc):
@@ -75,7 +73,6 @@ class TaskRefactorDoc(TaskCodeDoc):
         description="Workflow task type; fixed to 'task.refactor' for this model.",
     )
     __closeout_evidence__ = ("tests", "commit", "atom", "materialization", "goldens")
-    __activation_receipts__ = ("preflight", "bundle", "goldens")
 
 
 class TaskDecisionDoc(TaskDoc):
@@ -86,7 +83,6 @@ class TaskDecisionDoc(TaskDoc):
         description="Workflow task type; fixed to 'task.decision' for this model.",
     )
     __closeout_evidence__ = ("commit", "document")
-    __activation_receipts__ = ("owner",)
 
 
 class TaskAggregateDoc(TaskDoc):
@@ -97,7 +93,6 @@ class TaskAggregateDoc(TaskDoc):
         description="Workflow task type; fixed to 'task.aggregate' for this model.",
     )
     __closeout_evidence__ = ("children", "commit")
-    __activation_receipts__ = ()
 
 
 class TaskExternalDoc(TaskDoc):
@@ -108,7 +103,6 @@ class TaskExternalDoc(TaskDoc):
         description="Workflow task type; fixed to 'task.external' for this model.",
     )
     __closeout_evidence__ = ("external",)
-    __activation_receipts__ = ("preflight",)
 
 
 #: Factory task type name -> model class. Desk-local types extend this set through
@@ -161,14 +155,6 @@ def task_type_closeout_evidence(task_type: str) -> tuple[str, ...] | None:
     if model is None:
         return None
     return tuple(getattr(model, "__closeout_evidence__", ()))
-
-
-def task_type_activation_receipts(task_type: str) -> tuple[str, ...]:
-    """The ``__activation_receipts__`` a factory type declares (empty when unknown)."""
-    model = factory_task_type_model(task_type)
-    if model is None:
-        return ()
-    return tuple(getattr(model, "__activation_receipts__", ()))
 
 
 def declared_evidence_list(value: object) -> list[str]:

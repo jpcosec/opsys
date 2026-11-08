@@ -30,6 +30,7 @@ from deskops.models import AtomDoc
 from deskops.models import TaskDoc
 from deskops.operations import DeskopsOperations
 from deskops.services.closure import ClosureService
+from tests.activation_receipts import accept_receipts
 
 WRITE_MODULE_PREFIXES = ("create_", "delete_", "update_", "track_", "untrack_")
 
@@ -415,6 +416,7 @@ def test_closeout_commit_includes_the_store_delta_it_causes(lifecycle_desk: Path
     )
     operations.edit_artifact_field("task", task_id, "files", f'["{atom_rel}"]')
 
+    accept_receipts(root, task_id)
     operations.advance_task(task_id)
     operations.advance_task(task_id)
     refused, result = operations.advance_task(task_id)

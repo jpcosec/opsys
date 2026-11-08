@@ -16,6 +16,7 @@ if str(SLDB_SRC) not in sys.path:
     sys.path.insert(0, str(SLDB_SRC))
 
 from deskops.cli.main import CLI
+from tests.activation_receipts import accept_receipts
 from deskops.cli.main import main
 from deskops.constants import CURRENT_DESK_FORMAT
 from deskops.models import InboxNoteDoc
@@ -1857,6 +1858,7 @@ def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Pat
     assert "Status: draft" in shown.out
     assert "Current node: ritual-execution" in shown.out
 
+    accept_receipts(tmp_path, "task-advance-task-runtime")
     first_advance = main(["advance", "task", "task-advance-task-runtime", "--root", str(tmp_path)])
     first = capsys.readouterr()
     assert first_advance == 0
@@ -2041,6 +2043,7 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
     capsys.readouterr()
     assert add_result == 0
 
+    accept_receipts(tmp_path, "task-advance-blocked-task")
     first_advance = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
     first = capsys.readouterr()
     assert first_advance == 0
@@ -2202,6 +2205,7 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk
     capsys.readouterr()
     assert add_task == 0
 
+    accept_receipts(tmp_path, "task-advance-with-atom-evidence")
     assert main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)]) == 0
     capsys.readouterr()
     assert main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)]) == 0
@@ -2293,6 +2297,7 @@ def test_advance_task_allows_empty_implementation_path(lifecycle_desk: Path, cap
     capsys.readouterr()
     assert add_result == 0
 
+    accept_receipts(tmp_path, "task-advance-without-path")
     first_advance = main(["advance", "task", "task-advance-without-path", "--root", str(tmp_path)])
     first = capsys.readouterr()
 

@@ -9,6 +9,7 @@ from deskops.cli.main import main
 from deskops.models import TaskDoc
 from deskops.operations import DeskopsOperations
 from deskops.paths import package_pythonpath
+from tests.activation_receipts import accept_receipts
 
 LIFECYCLE_TEMPLATES = Path(__file__).resolve().parents[1] / "deskops" / "data" / "lifecycle"
 RELATION_DOCS = ("execution-task_activates", "testing-task_hands_to_closeout", "closeout-task_completes")
@@ -129,6 +130,7 @@ def test_changing_sets_on_the_relation_doc_changes_what_advance_writes(lifecycle
 
     operations = DeskopsOperations(lifecycle_desk)
     task_id = _task(operations, "Declared effect")  # the first desk operation scaffolds only what is missing
+    accept_receipts(lifecycle_desk, task_id)
     task, result = operations.advance_task(task_id)
 
     assert (task.current_node, task.status, result.progressed) == ("ritual-testing", "in_review", True)
@@ -141,6 +143,7 @@ def test_changing_sets_on_the_relation_doc_changes_what_advance_writes(lifecycle
 def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: Path) -> None:
     operations = DeskopsOperations(lifecycle_desk)
     task_id = _task(operations, "Walk the graph")
+    accept_receipts(lifecycle_desk, task_id)
 
     task, result = operations.advance_task(task_id)
     assert (task.current_node, task.status, result.progressed) == ("ritual-testing", "active", True)
@@ -158,6 +161,7 @@ def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: 
 def test_testing_gate_needs_validation(lifecycle_desk: Path) -> None:
     operations = DeskopsOperations(lifecycle_desk)
     task_id = _task(operations, "No validation", validation=[])
+    accept_receipts(lifecycle_desk, task_id)
     operations.advance_task(task_id)
 
     task, result = operations.advance_task(task_id)
@@ -169,6 +173,7 @@ def test_testing_gate_needs_validation(lifecycle_desk: Path) -> None:
 def test_show_task_reports_the_gates_leaving_the_current_node(lifecycle_desk: Path) -> None:
     operations = DeskopsOperations(lifecycle_desk)
     task_id = _task(operations, "Show gates")
+    accept_receipts(lifecycle_desk, task_id)
     operations.advance_task(task_id)
 
     _task_obj, gates = operations.show_task(task_id)
