@@ -51,7 +51,8 @@ Decisiones de forma:
      `sldb rules explain` devuelve `holds: false` con esa misma `clause`.
    - Paso 2 (preflight y bundle accepted, pinneados `@sha256:` e intactos): exit 0, `Advanced to ritual-testing via task_activates.`
    - Paso 3 (`deskops edit task <id> goal ...`): exit 1, el finding termina en `(witness: ReviewDoc:review-<id>-bundle-1 {"anchor_state":"changed"})`.
-   - Resultado del archivo: <<TEST_ACTIVATION>>.
+   - Resultado del archivo: 10 passed sobre el HEAD final (`cc32/shm_test_activation_rules.log`, 41 s desde `/dev/shm`; antes,
+     en el SSD, 8 passed + 2 passed en dos corridas por el tiempo de máquina).
 2. **Tests por tipo** (mismo archivo):
    - `test_task_debug_requires_reproduction_and_not_bundle`: con preflight+bundle bloquea nombrando `kind = "reproduction"` y sin mencionar la regla de task.code; con reproduction activa.
    - `test_task_refactor_inherits_task_code_and_adds_goldens`: sin recibos bloquean las dos reglas (task.code por familia y task.refactor); con preflight+bundle solo queda `kind = "goldens"`; con goldens activa.
@@ -65,8 +66,64 @@ Decisiones de forma:
    - `sldb rules check --store <copia>/.sldb` (sin `--subject`): `rules check: sin hallazgos`, exit 0.
    - `sldb rules explain RuleDoc:rule-activation-task-code TaskCodeDoc:task-cc32-...`: finding `holds: false`, `clause: any(^subject: anchor_state = "intact" and verdict = "accepted" and kind = "preflight")`, exit 1 (`cc32/deskcopy/rules-explain.txt`).
    - Hallazgos de la copia no atribuibles a la rama: «Lifecycle documents to rewrite» (los tres RelationDoc del desk difieren del paquete, también con main) y «Stale document hashes» de `runs/` y `sldb/relation_types/` (la copia lleva solo `desk/` y `.sldb/`).
-5. **Tests de a uno** (`cc32/run-tests.summary`, logs `cc32/<archivo>.log`): <<TESTS>>
-6. **doctor y desk update en los 6 desks** (a13, `cc32/doctor6.sh`, salida en `cc32/doctor/`): <<DOCTOR6>>
+5. **Tests de a uno** (`cc32/run-tests.summary`, logs `cc32/<archivo>.log`): 
+
+   Corridas en serie, un archivo por vez (`cc32/run-tests.sh`, `run-tail.sh`, `run-rerun.sh`, `run-shm.sh`; resumen en
+   `cc32/run-tests.summary`, un log por archivo). La tanda final, sobre el HEAD `2a53f07b`, corrió desde una copia detached del
+   worktree en `/dev/shm/deskops-cc32` (pedido del overlord: las corridas desde el SSD saturaban el disco; la copia se borró al
+   terminar).
+
+   | Archivo | Resultado | Dónde |
+   |---|---|---|
+   | `tests/test_activation_rules.py` (nuevo) | 10 passed (41 s) | shm |
+   | `tests/test_task_types.py` | 16 passed | SSD (HEAD 1bf958d7, archivo sin cambios después) |
+   | `tests/test_lifecycle_graph.py` | 9 passed | SSD, re-ejecutado tras 2a53f07b |
+   | `tests/test_lifecycle_end_to_end.py` | 5 passed | SSD |
+   | `tests/test_closeout_gates.py` | 7 passed | SSD |
+   | `tests/test_scaffold_golden.py` | 2 failed antes de `--update-golden` (esperado: las 7 reglas), 3 passed después, 3 passed sin flag | SSD |
+   | `tests/test_cli.py` | 101 passed (2 min) | shm (y 101 passed en SSD antes de 2a53f07b) |
+   | `tests/test_desk_sync.py` | 8 passed | SSD, re-ejecutado tras 2a53f07b |
+   | `tests/test_output_goldens.py` (ayuda + salida, sin `--update-golden`) | 7 passed | shm (y 7 passed en SSD) |
+   | `tests/test_cli_help_examples.py` | 11 passed | SSD, re-ejecutado tras 2a53f07b |
+   | `tests/test_operational.py` | 10 passed | SSD, re-ejecutado tras 2a53f07b |
+   | `tests/test_desk_view.py` | 9 passed, 1 skipped (31 s) | shm; en el SSD agotó 1800 s y 2400 s dos veces (ver nota IO) |
+   | `tests/test_doc_io.py` | 8 passed | SSD |
+   | `tests/test_review_doc.py` | 13 passed, 1 xfailed (preexistente) | SSD |
+   | `tests/test_review_command.py` | 12 passed | SSD |
+   | `tests/test_promotion_nesting.py` | 2 passed | SSD |
+   | `tests/test_cli_escape_hatches.py` | 9 passed | SSD |
+
+   No corrí la suite completa (regla de máquina). Fallas conocidas de main no tocadas: `test_board_portable_references`,
+   `test_skill_cli_drift`.
+
+   **Nota IO** (pedido del overlord): desde el worktree del SSD `test_desk_view` tardaba >30 min y pasó en 31 s desde `/dev/shm`;
+   `test_cli` bajó de 11 a 2 min. Tests que leen el repo real (no desks temporales): `test_taskdoc_read_without_overlay`
+   (`rglob` sobre `desk/tasks` y `desk/drawer/tasks` del repo), `test_review_command` (`desk/drawer/plans/gates-por-tipo` del repo),
+   y `test_doc_io`, `test_task_types`, `test_activation_rules` (`rglob("*.py")` sobre `deskops/`, chico). Ninguno recorre `.venv`
+   ni `runs/` (`extract_sources` ya no existe en main). La lentitud del SSD venía del conjunto de corridas simultáneas (doctor de
+   6 desks + pytest), no de un test que camine el repo entero.
+6. **doctor y desk update en los 6 desks** (a13, `cc32/doctor6.sh` = plantilla de CC35a más `desk update --apply` ×2 con la rama
+   y ×1 con main, y doctor tras el update; salida en `cc32/doctor/`, `run.log`; código main `a152d5e0` = `3cd46be8` en `deskops/`):
+   - **doctor, copias sin tocar**: idéntico main vs rama en los 6 desks (`deskops: identical` ... `graph_ui: identical`).
+   - **desk update --apply (1ª)**: idéntico en spec2viz y graph_ui (en ambos lados falla igual: `'sldb stores check' failed ... exit code 1`,
+     desks legacy con `1 validation error for AtomDoc`, preexistente). DIFF en deskops, scion, pron y sldb: la rama suma las 7 líneas
+     `Lifecycle graph: wrote desk/lifecycle/rule-activation-task-*.md` (y `tracked ...` donde el store existe); el resto del diff es del
+     arnés (el `deskops` de main se extrae sin `.sldb`, así que main «registra los modelos directamente» mientras la rama ve
+     `deskops-wt-cc32/.sldb` como store propietario y «hereda»; en sldb y pron además miles de líneas `Sections rebuild: ... missing`
+     de documentos fuera de `desk/`), ver `cc32/doctor/diff-update-*.txt`.
+   - **desk update --apply (2ª, rama)**: `Desk is up to date.` en deskops, sldb y pron. spec2viz y graph_ui: misma falla preexistente.
+     scion: «Unregistered models ...» porque la 1ª saltó el registro (`Warning: ... already links 'deskops' to .../B/deskops/.sldb, not to
+     .../deskops-wt-cc32/.sldb. Skipping model registration`). **Verificado que es del arnés**: el código de main con su `.sldb`
+     presente hace exactamente lo mismo sobre scion (`cc32/scion-check.sh`, `cc32/doctor/mainowner-update*-scion.txt`,
+     `mainowner-doctor-after-update-scion.txt`: mismo Warning, mismo «Unregistered models», doctor exit 1).
+   - **doctor tras el update (rama)**: deskops y pron exit 0; sldb, spec2viz, graph_ui y scion exit 1 con los mismos errores que
+     main antes del update (modelos no importables de sldb, desks legacy, modelos sin registrar en scion). Las dos líneas nuevas de
+     sldb (`ArchitectureNarrativeDoc`, `StoreReadmeDoc` no importables) también aparecen con el código de main tras el update
+     (`cc32/sldb-check.sh`, `mainowner-doctor-after-update-sldb.txt`).
+   - **Alertas nuevas tras el update, en ambos lados**: `ReviewDoc:review-...: subject -> TaskCodeDoc:...: lost` (16 en deskops,
+     21 en sldb, idénticas con main y con la rama): el reindexado con el sldb actual (GO07) expone que ningún recibo existente está
+     pinneado (§CC35a). No son de la rama; son el estado real de los desks.
+   - Sin hallazgos nuevos atribuibles a la rama, salvo las reglas trackeadas.
 7. **wc -l antes y después**: §wc.
 8. **CHANGELOG** (`## [Unreleased]` → Added y Changed) y `docs/workflow-policy-reference.md` (§Task types con la columna de recibos y la nueva sección «Activation rules» con la tabla de reglas por tipo).
 
@@ -161,12 +218,16 @@ Cuerpo propuesto:
 > 2. **`create_document` no pinnea anclas** (anchoring.md): un recibo creado y nunca reescrito queda `lost` aunque su
 >    destino exista. deskops lo resuelve con `create` + `update` en la misma transacción; convendría que `create` pinnee o
 >    que exista una operación `pin`.
-> 3. **`sldb anchors check` no reporta `doc_lost`** para los `ReviewDoc.subject` sin hash del desk de deskops (salida
->    `doc_anchors: []`, `alerts: []`), aunque el lenguaje los lee como `lost`. O el estado `lost` por falta de hash no se
->    considera alerta, o `check_doc_anchors` no los recorre; conviene fijarlo en la doc.
+> 3. **`sldb anchors check` sobre un índice anterior a GO07** devuelve `doc_anchors: []` (desk de deskops tal como está en main),
+>    mientras el lenguaje ya lee esos `subject` sin hash como `lost`; tras `deskops desk update --apply` (reindexado) `deskops doctor`
+>    reporta 16 alertas `lost` en deskops y 21 en sldb. Conviene que `anchors check` avise cuando el índice no trae estados de ancla
+>    (o que los calcule al vuelo), para que las dos lecturas coincidan.
 > 4. **`sldb stores check` tarda ~28 s** en un store recién creado por `deskops init` (medido en el sandbox); `deskops desk update`
 >    lo ejecuta en cada corrida, por eso tarda minutos.
-> 5. **`children`** no existe como campo de TaskDoc: la cláusula `all(children: status = "closed")` de task.aggregate queda
+> 5. **`rule_graph` cuesta ~3,2 s** por llamada (store de ~30 documentos): `edges_holding(document=...)` y `transition_findings`
+>    lo construyen cada vez; `deskops view board` lo amortiza con un snapshot propio. Un caché por proceso o por
+>    `store_fingerprint` en sldb evitaría que cada consumidor lo reinvente.
+> 6. **`children`** no existe como campo de TaskDoc: la cláusula `all(children: status = "closed")` de task.aggregate queda
 >    pendiente de que exista el campo (hipótesis en deskops, no pide nada a sldb).
 
 ## a12 — rituales
@@ -190,10 +251,14 @@ Y, opcionalmente, en `validation`: `deskops edit ritual ritual-execution validat
 
 - **H-CC32-1 (testigo)**: ver nota a sldb, punto 1. Mientras tanto la conjunción interna lleva `anchor_state` primero.
 - **H-CC32-2 (`create` no pinnea)**: ver punto 2. Afecta a cualquier productor de recibos que use `create_document` una sola vez.
-- **H-CC32-3 (`anchors check` y `lost` sin hash)**: ver punto 3.
+- **H-CC32-3 (`anchors check` e índice anterior a GO07)**: ver punto 3 de la nota; mientras el store no se reindexa, `anchors check`
+  calla y el lenguaje ya bloquea.
 - **H-CC32-4 (children)**: `all(children: status = "closed")` para task.aggregate no se escribe porque `children` no es campo de
   `TaskDoc` (GC09 pendiente); cuando exista, la regla de task.aggregate suma esa cláusula (una línea en
   `deskops/data/rules/rule-activation-task-aggregate.md`).
+- **H-CC32-6 (costo de `rule_graph`)**: `sldb.api.transition_findings` y `edges_holding(document=...)` construyen `rule_graph(store)`
+  en cada llamada (~3,2 s en un store de ~30 documentos; `edges_from` tarda 0,04 s). deskops lo amortiza en su `ReadSnapshot`;
+  sldb podría cachear el `RuleGraph` por proceso (o por `store_fingerprint`) y ofrecer `transition_findings(..., graph=)`.
 - **H-CC32-5 (dependencia cerrada)**: una dependencia cerrada ya no existe como documento (DC6) y sldb la omite del conjunto
   de `all(depends_on: ...)`; verificado indirectamente (`all` sobre vacío es `true`: task.aggregate sin `depends_on` activa).
 
@@ -208,8 +273,13 @@ Y, opcionalmente, en `validation`: `deskops edit ritual ritual-execution validat
 - **`tests/test_lifecycle_graph.py::test_write_lifecycle_graph_is_idempotent`**: la expectativa del árbol de
   `desk/lifecycle/` ahora incluye `deskops/data/rules/*.md` (la aceptación siembra las reglas ahí). La aserción
   `write_lifecycle_graph(...) == []` no cambió.
-- **`tests/fixtures/golden/scaffold/`** (`init.json`, `update.json`): <<SCAFFOLD_GOLDEN>>
-- **Goldens de salida y de ayuda**: <<OUTPUT_GOLDENS>>
+- **`tests/fixtures/golden/scaffold/`** (`init.json`, `update.json`): regenerados con `--update-golden` (corrida previa roja en
+  `cc32/test_scaffold_golden_before.log`, 2 failed). El diff contra la base es solo la suma de las siete reglas: 7 entradas
+  `desk/lifecycle/rule-activation-task-*.md` en `init.json`, y en `update.json` las mismas 7 entradas del árbol más 14 líneas
+  del informe (`Lifecycle graph: wrote ...` y `Lifecycle graph: tracked ...` por regla). Nada más cambió (28 líneas añadidas, 0 quitadas).
+- **Goldens de salida y de ayuda**: idénticos. `test_output_goldens.py` (que incluye `test_help_goldens` y
+  `test_command_output_goldens`) pasa sin `--update-golden` (7 passed); `show_task.text/json` no cambian porque el desk de los
+  goldens no tiene grafo (sus `lifecycle_gates` son `[]`) y la sección de findings solo aparece cuando hay findings.
 - **Shape de `lifecycle_gates`**: cada gate suma la clave `findings` solo cuando hay findings; sin reglas aplicables (ritual-testing,
   ritual-closeout) el dict es el de antes, así `test_show_task_reports_the_gates_leaving_the_current_node` y
   `show_task.json` no cambian. El informe de `next` lleva siempre `findings` (lista, vacía si no hay); `next` no tiene JSON.
@@ -217,13 +287,60 @@ Y, opcionalmente, en `validation`: `deskops edit ritual ritual-execution validat
   mantiene `test_promotion_nesting` (tarea escrita a mano, sin store).
 - **`models/task.py`** no se tocó; la descripción de `status` («typically active or blocked») sigue vieja: seguimiento (a7).
 - **`tests/test_review_doc.py::test_sldb_edges_show_links_the_review_to_the_task_by_subject`** está `xfail(strict=True)`
-  por GO07: <<REVIEW_DOC_XFAIL>>
-- Sandboxes usados: `/mnt/ssd/proyectos/SLDB_1/.tmp-cc32-{exp,smoke,deskcopy,doctor}`; borrados al terminar (<<SANDBOX>>).
+  por GO07: sigue `xfailed` (13 passed, 1 xfailed): `sldb edges show` todavía no lista la arista `subject`
+  review→tarea como ese test la espera. Preexistente en main; no lo toqué (el test no es de este nodo).
+- **Rendimiento** (`scratchpad/view_time.py`, sandbox de 1 tarea): `show_task` pasó de 0,04 s a 3,4 s porque
+  `sldb.api.transition_findings` carga el grafo de reglas entero (`rule_graph`: 3,2 s) en cada llamada. Dentro de un
+  `read_snapshot` (lo que usa `deskops view board`) `lifecycle.transition_findings` carga el grafo una vez y lo comparte:
+  4 `show_task` pasan de 37 s a 4,1 s y `DeskView.board` con 4 tareas tarda 4,1 s (medido con el doctor de 6 desks corriendo
+  en paralelo). Un `show`/`next`/`advance` suelto sigue pagando una carga (~3 s); es costo de sldb (hipótesis H-CC32-6).
+- **`tests/test_cli_help_examples.py`**: el flujo típico de `deskops --help` termina en `deskops advance task task-fix-thing`,
+  que ahora bloquea sin recibos; el runner del test escribe los recibos (sldb.api) antes de cada ejemplo `advance task`, con
+  comentario. El texto de la ayuda no cambia (invariante 2: goldens de ayuda idénticos). Consecuencia para el dueño: el flujo
+  impreso ya no corre tal cual sin `deskops review preflight/bundle` + `review dispose` (y sin CC35a ni siquiera así, §CC35a);
+  actualizar el epílogo cambia 1 golden de ayuda, decisión fuera de este nodo.
+- **`tests/test_operational.py::test_advance_task_exact_selector_wins_over_prefix`**: escribe los recibos de `task-foo` antes
+  del `advance`; sus aserciones no cambian.
+- **`tests/test_desk_sync.py`** (2 tests): la lista de includes esperada suma `RuleDoc: desk/lifecycle/rule-activation-*.md` y
+  el filtro de pendientes sin store excluye también `RuleDoc`.
+- Sandboxes usados: `/mnt/ssd/proyectos/SLDB_1/.tmp-cc32-{exp,smoke,deskcopy,view,time,doctor}`; borrados al terminar.
 
 ## wc -l antes → después
 
-<<WC>>
+| Archivo | antes (3cd46be8) | después |
+|---|---|---|
+| `deskops/data/desk_declaration.yaml` | 178 | 206 |
+| `deskops/models/task_types.py` | 182 | 168 |
+| `deskops/models/review.py` | 145 | 145 |
+| `deskops/lifecycle.py` | 267 | 371 |
+| `deskops/services/tasks.py` | 338 | 354 |
+| `deskops/cli/commands/desk.py` | 428 | 429 |
+| `deskops/cli/commands/operations.py` | 328 | 335 |
+| `docs/workflow-policy-reference.md` | 227 | 245 |
+| `CHANGELOG.md` | 160 | 162 |
+| `tests/test_task_types.py` | 371 | 363 |
+| `tests/test_cli.py` | 3140 | 3145 |
+| `tests/test_lifecycle_end_to_end.py` | 540 | 545 |
+| `tests/test_lifecycle_graph.py` | 186 | 197 |
+| `tests/test_operational.py` | 200 | 203 |
+| `tests/test_desk_view.py` | 221 | 223 |
+| `tests/test_doc_io.py` | 248 | 250 |
+| `tests/test_desk_sync.py` | 276 | 279 |
+| `tests/test_cli_help_examples.py` | 128 | 136 |
+| `tests/activation_receipts.py` (nuevo) | 0 | 91 |
+| `tests/test_activation_rules.py` (nuevo) | 0 | 295 |
+| `runs/subagents/cc32-worker-report.md` (nuevo) | 0 | 280 |
+| `deskops/data/rules/rule-activation-task-aggregate.md` (nuevo) | 0 | 10 |
+| `deskops/data/rules/rule-activation-task-code.md` (nuevo) | 0 | 13 |
+| `deskops/data/rules/rule-activation-task-debug.md` (nuevo) | 0 | 13 |
+| `deskops/data/rules/rule-activation-task-decision.md` (nuevo) | 0 | 12 |
+| `deskops/data/rules/rule-activation-task-docs.md` (nuevo) | 0 | 12 |
+| `deskops/data/rules/rule-activation-task-external.md` (nuevo) | 0 | 12 |
+| `deskops/data/rules/rule-activation-task-refactor.md` (nuevo) | 0 | 12 |
 
 ## Commits
 
-<<COMMITS>>
+- `2a53f07b` CC32: grafo de reglas cacheado en el ReadSnapshot; tests ajustados a las reglas sembradas
+- `31caac72` CC32: test de activación (G_CONSUMER y por tipo), tabla de reglas en docs, CHANGELOG e informe
+- `1bf958d7` CC32: gates de activación por tipo como RuleDoc semilla; advance/next/show muestran los findings
+- (este informe: el commit que lo cierra, ver `git log wt/cc32`)
