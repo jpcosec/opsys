@@ -1,0 +1,112 @@
+{
+  "key": "task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer/bundle",
+  "input_sha256": "3014cc2d614b531caf9e5996b3c6a2d26b9b872b5445ab8247ec1f8f1239d57d",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261108-103803/context-review/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer/bundle/3014cc2d614b531caf9e5996b3c6a2d26b9b872b5445ab8247ec1f8f1239d57d/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md",
+      "sha256": "9c89586c493826a27cfecfb34683cff2304d7c377483d72a43361de2e16769f8",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/data/desk_declaration.yaml",
+      "sha256": "9e1d0d0244947d1e0e758a9c756a0aa0358be99d2fef6cf6b78a3514c4511370",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/task_types.py",
+      "sha256": "51890afef362cae64f19f2234f050ca5ed24fb58175e03ca11271da159012cc9",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/review.py",
+      "sha256": "74f3661663a3a1bfbfbb8c2c8538f6f9331a9dd94b09d137d7eb4313af13f599",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "f11aae1a2732bc7faf5f99887800b531a3743ead4c931437399a845b58d2b01e",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/tasks.py",
+      "sha256": "ef448d4fb1c79f11cd5585129215025e8ca49e01677b5c5ba68d9dd5ccee0b77",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workflow/next_actions.py",
+      "sha256": "0664a937432cbbe9f09b3cba927b6f305462f8cc337c0a38afd22696dbebcf2e",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "b70f6ecfa5fee534e6bbb05a952124d7a7762d44c62b403ec18558a918bd9af5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/workflow-policy-reference.md",
+      "sha256": "43e84c17bd30a96f069e0dda5c2c24d91754dcf5c4964eb01a77b07aa011aa7d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "ae5d2bf3eaf2a9e036cd07e812f0563afb14aa1d67b43d9d8a389fd743254cfa",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/data/rules/",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-08T10:38:03.246917+00:00",
+  "finished": "2026-11-08T10:38:26.350545+00:00"
+}

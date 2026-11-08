@@ -1,0 +1,30 @@
+name: review-task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer-bundle-1
+path: desk/reviews/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer/bundle-1.md
+source_hash: 7df5c02f92a42529239875a28dbe42b2b3f2cba52b86d319b0ca2380fd119aac
+content_hash: f17820f947c38919065d9a7b5135f90dbc5042757c2a8e014fcedabfa0b82977
+field_hashes:
+  id: 30a310e60a853fa745a7fc788d191f2b0c0f5e862e0a6ee7d42c6e220bc36ed5
+  title: 6bd6a1a64c70277964df95d495a0e678ef6a69f2abde9650e6e6da71ea23e058
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  subject: f3acd22f3475e063a34ef5a7d9fee016d7cde105f1ed3a884b6f646f423b4e66
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: c52115cf24179cd0d62f0e5d57c008eb92a31e8c48bac374958b44fa99f5f0ba
+  input_sha256: 22188bf9075c2aeab627d9e9fc9e0f71bfba935edab3d25b9e762b40c4867e87
+  output_sha256: b2ef02a8e6c6224ddf74e9b16a57aadf82d393f43d725073141cb4713d3d27cf
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: f787aa52401f7252496f7efd7b5ae856f4d4db8a2d22e9fe2e68da122cf75aad
+  created_at: 8a42cbb7c70150b8001dbcbaeabfe2a3673c984f8d30139c0122b13a99212f3d
+  disposed_at: e1f4232bbfa5c7047ec7fd35c03f555b0ce53166609349f8b2f56a1ab148b7b2
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: c02f3d17265ec518042a67fbf400402aead5baa2629da50eec999c67f7ceeb44
+  disposition: 4b5d5662396c0376da05002f06f90a4acd1d23bb2d11a8288843b37394f061f9
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
