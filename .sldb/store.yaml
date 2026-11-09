@@ -323,6 +323,8 @@ include:
     name: review-task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files-preflight-1
   - path: desk/reviews/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents/preflight-1.md
     name: review-task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents-preflight-1
+  - path: desk/reviews/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents/bundle-1.md
+    name: review-task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents-bundle-1
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

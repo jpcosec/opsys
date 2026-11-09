@@ -102,6 +102,11 @@ b4 (docs/): este nodo no cambia comportamiento documentado (los mensajes y la re
 b5 (wc -l): sin umbral. Es un registro: el informe trae una tabla archivo | antes | después de cada archivo tocado.
 b6 (API para trackear en fixtures): sldb.api.transaction (Transaction.create con el modelo de deskops que corresponde, como hace CC35a en deskops) o la API de track de sldb que deskops ya usa tras CC35a en doc_access. La misma que use el código de deskops para escribir tareas.
 
+PRECISIONES DEL COLD-BUNDLE (review-...-bundle-1, 2026-11-09):
+c1 (drawer e issues): manda b1/a3. No se migran.
+c2 (model en tareas): para tareas no se pasa model, porque viven bajo varios modelos tipados (TaskCodeDoc, TaskDocsDoc, ...) y bajo TaskDoc los legacy. Alcanza con el path_glob del directorio de tareas. Para el resto de artefactos se pasa el model de ARTIFACT_MODELS solo si todos sus documentos se trackean bajo ese modelo. Si no, va solo el path_glob.
+c3 (estrategia name/stem): dos consultas, en este orden, sin reimplementar la regla en Python. (1) select_documents con prefix=<selector> y el path_glob/model del directorio, expect="one": sldb da el nombre exacto antes que el prefijo único. (2) Solo si (1) no encontró nada, select_documents con path_glob=<directorio>/<selector>*.md, expect="one", que resuelve por el nombre del archivo (rituales como execution.md). La ambigüedad de cualquiera de las dos se informa con el mensaje de a5. Si una consulta es ambigua, no se pasa a la siguiente.
+
 ## Validation
 
 _List the checks required before this task can close._

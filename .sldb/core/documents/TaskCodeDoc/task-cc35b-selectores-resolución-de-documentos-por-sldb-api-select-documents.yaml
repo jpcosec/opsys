@@ -1,7 +1,7 @@
 name: task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents
 path: desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
-source_hash: 43f0905bce1a0b89fbd1bbb935994d5100da0447f063c32dd4bbcc2c2a318b85
-content_hash: bfbafbdd24cf29616fa315460b6e8e92c0a1ab994a07c65cd43caa475b7c74c8
+source_hash: b544dace05185b764ffb473aa85c37b01467818f91b97aead185c36dd42a676e
+content_hash: 3e28e8ed43092459bb87423e7cbad8fd01c688c3fbc59d33047800faf9196625
 field_hashes:
   title: c87568de5b32ac1669037b7cd62a372ed76328c401b1f590b45c4bbb2026f82a
   id: e4680a6672a55be0f325b96a932b59211670ed56052531682a461d6002fe7e0c
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 778d302f973d842b453e093525a79e58acfce5433f6ad93177d9629915bd052c
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: b033b5d5d5e45339b50788ecfc6ff6401f42d53b1dd816bc0fcd726d16e2279c
-  implementation_path: 83fa42119187cb36d4b9a3ac3f224bb0b9bbcb613b41d36cf37589a14382af40
+  implementation_path: 8374f6cf88953b89cbde88cc3beea0ece9681aaf1809e95fdcc1f5cbf56e8985
   validation: 5dd5ef9c543940ff0a469c158294b8b7fdc5619e5643df091fe32049fb56ee93
   done_when: 83f730dbd41ffe502cc50608cbbc7b55d4758129848c5f6d587c653ce2f00db3
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb

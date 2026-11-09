@@ -1,0 +1,30 @@
+name: review-task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents-bundle-1
+path: desk/reviews/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents/bundle-1.md
+source_hash: d85689da9e248dbf4df20b8da81a3ddcf4df035b432e87abedff40c3e6813688
+content_hash: 17ce98d19ef4b65c4a797df74806dc68bc71f49b284a896914924474a8f1f056
+field_hashes:
+  id: 2d0497870512bae74e5b4a651341ae8955c63f9ada46a6b46aa7848693117e01
+  title: 73df24433cc4ea196bf4e8f2950983c67d7f97845fa3ca0bdd20227df7bb23f7
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  subject: a352abb30236b6499e7f4fbe4e49ce96c4f56bd5d124624c1830fdb1e2368e61
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: f960da2e014bb00731f53c60d8e59ad0baa1808adfd352c2b8acb78dbd2b79b3
+  input_sha256: 4409041e6cb74ee882c115ee944b626ee82ee0708665cf90e45810eb9143b5cb
+  output_sha256: 628add9a14dd93993930a960ceebeee5a652f57fbdc79169abdc2e74e0141ed4
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: e4b38e698f432269c329942bf52e95a5b9b422b35ca4532440257d5c34c83be9
+  created_at: 2ceb2df55641762712eda1a75f779ab8e635dd57ac8a322d078dc5be4d605b66
+  disposed_at: d6e8f4348ce30f5076777eb2f907e7782e12765e36f41d0ceae19779e6fbce16
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: ed621190f66465b2c25ec968e473e1245a3db1e0cbc05fd5a0f9eb871077b9a3
+  disposition: c3a5bc32e4f89a7cd5cf22de1a3ad7f498b46a5cd3cf64095173055989db4791
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
