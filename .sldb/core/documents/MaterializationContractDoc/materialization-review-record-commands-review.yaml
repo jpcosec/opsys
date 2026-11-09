@@ -1,0 +1,25 @@
+name: materialization-review-record-commands-review
+path: desk/materializations/materialization-review-record-commands-review.md
+source_hash: c1daaf9a0ccc635fd0334f9b39169cf79acddbf2c752b6dcfb00fb7bb7caca2e
+content_hash: 930aad97c5473c61808e0311b28689100019fd6f75971d22be259f6c69c927a0
+field_hashes:
+  id: f1f6e868efb4c4a0ccd1cf832e47d371ee6bd388c45a27f1e12670024c20b5e0
+  title: 585dd64d07ee4f543a655f50b552acc24baca406dc8c94ac513283c8e1d86103
+  source_atoms: 60cd473f4e227c53e1d4a3eb3feca9fcc22e2aba1bb60c7cf2576075a7bade4d
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: c4de4991e187498946faf17b5580ae7711d70bfe3400770a0a72c16dd4aae58a
+  intent: c9e966056263a06ff24d5edfa695f275800f39dd947898f8292274415d5931f0
+  validation: ecc9a32dc73c6a14d84c69d5080a95a46ce4f250b8f3aea0c787e22a99b6b22c
+  tags: 42a86cbc7b61fd4b767aa06853197517b62326e638e0af28c66646573429adf2
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:review
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-09T18:21:15Z'
+  authority: generated
+  via: create_document

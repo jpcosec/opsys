@@ -284,6 +284,9 @@ include:
   - desk/materializations/materialization-cc35a-runtime-scion.md
   - desk/materializations/materialization-cc35a-deskops-doc-access.md
   - desk/materializations/materialization-cc35a-tests-test-transaction.md
+  - desk/materializations/materialization-review-record-services-review.md
+  - desk/materializations/materialization-review-record-commands-review.md
+  - desk/materializations/materialization-review-record-tests-test-review-record.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

@@ -1,4 +1,9 @@
 ---
+sldb:
+  by: agent
+  at: '2026-11-09T18:21:21Z'
+  authority: generated
+  via: save_document_payload
 id: task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32
 status: draft
 summary: ''
@@ -7,7 +12,12 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_review_record.py
+- pytest tests/test_review_command.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- 293c4dc7ee97c6a156d5ae1c6f608804bb7589da
+- desk/atoms/atom-deskops-review-record-deja-recibos-reproduction-goldens-y-owner-sin-modelo.md
 depends_on: []
 pills: []
 files:
@@ -77,6 +87,7 @@ _List the checks required before this task can close._
 - TMPDIR=/dev/shm pytest -q, uno a la vez: test_review_command, test_review_doc; test_cli desde copia en /dev/shm
 - wc -l antes y después
 - CHANGELOG y doc
+- Resultado (coordinador de proyecto, squash 293c4dc7): de a uno desde /dev/shm, review_record 17, review_command 12, review_doc 13 (+1 xfail), cli_help_examples 11, cli 101, output_goldens 7 (sin --update-golden). Goldens de ayuda: cambia deskops_review.txt y se agrega deskops_review_record.txt.
 
 ## Done When
 

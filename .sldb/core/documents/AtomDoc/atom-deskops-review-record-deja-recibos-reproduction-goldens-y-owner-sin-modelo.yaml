@@ -1,0 +1,22 @@
+name: atom-deskops-review-record-deja-recibos-reproduction-goldens-y-owner-sin-modelo
+path: desk/atoms/atom-deskops-review-record-deja-recibos-reproduction-goldens-y-owner-sin-modelo.md
+source_hash: c93cbff6d053ec28e9a73dc3befa89c331663cce7bf36a1b3f145591144887a1
+content_hash: a422ddf43e9da142392ce3ac5188404fb4a8711ad0e920ea8dcbd9956e72b4a5
+field_hashes:
+  id: 82e2db50f13651e92e9ea8e40dcf217977e5eae7c03a1affbd94166507f1a23f
+  title: b977e5be2848ef751f561352affaf983343418919726794aa990eeae2e0194ab
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 8ecdccdaaa2caf189040ef955b1084e24d3d464c428bea59792aaf409785a265
+  tags: 42a86cbc7b61fd4b767aa06853197517b62326e638e0af28c66646573429adf2
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:review
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-09T18:21:10Z'
+  authority: generated
+  via: create_document
