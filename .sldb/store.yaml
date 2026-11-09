@@ -359,6 +359,7 @@ include:
   - desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
   - desk/tasks/task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr.md
   - desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md
+  - desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

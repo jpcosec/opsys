@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T19:15:12Z'
+  at: '2026-11-09T19:45:59Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -16,6 +16,7 @@ tasks:
 - desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
 - desk/tasks/task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr.md
 - desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md
+- desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -63,3 +64,4 @@ _Generated from the task references above._
 - CC35b: Selectores - resolución de documentos por sldb.api.select_documents [draft] - La resolución de selectores de documentos trackeados de deskops pasa a sldb.api.select_documents (GD23), con la misma regla (nombre exacto antes que prefijo único) y los mismos mensajes de error, que deskops arma con los candidatos que sldb devuelve. desk_paths.resolve_selector y _tracked_task_paths (que lee .sldb crudo) desaparecen de las superficies trackeadas. Los alias privados que graph_ui importa se conservan, marcados CC34.
 - closeout resolved-by: cerrar una tarea cuyo trabajo ya entró por PR [draft] - deskops closeout resolved-by --task <id> --ref <commit> [--ref <commit|URL>...] --test <test> [--test ...] --reason <texto> cierra una tarea cuyo trabajo ya está en la historia. Exige al menos un --ref que sea commit ancestro de HEAD y al menos un --test que el gate de tests acepte, pero no exige un átomo por archivo. Hace un solo commit de cierre con Closeout-Mode: resolved-by, como supersede.
 - CC37: Cerrar vías de escape - ninguna escritura deja el ciclo de vida fuera de las reglas [draft] - Ninguna vía de escritura deja una TaskDoc con un ciclo de vida inconsistente: un validador del modelo TaskDoc (DK6, mecanismo de CC38) exige que status, current_node, history y task_type sean coherentes con el grafo del ciclo de vida, y sldb lo aplica en toda escritura (fields update, docs update, /save, transacción). Las escrituras internas de deskops que cambian el ciclo de vida pasan solo por advance y closeout. El inventario de vías de escritura queda en el TaskDoc.
+- CC33a: Recibos de evidencia - closeout verify escribe ReviewDoc kind evidence y queda como orquestador [draft] - deskops closeout verify corre los productores de hechos de git y archivos y escribe, por cada kind de evidencia verificado, un ReviewDoc kind evidence (fact, value, verdict accepted o rejected, subject anclado al contrato de la tarea), sin duplicar recibos en una verificación repetida sin cambios. verify_task_closeout queda como orquestador y devuelve el mismo envelope que hoy. El gate de cierre todavía no cambia: lo cambia CC33b.
