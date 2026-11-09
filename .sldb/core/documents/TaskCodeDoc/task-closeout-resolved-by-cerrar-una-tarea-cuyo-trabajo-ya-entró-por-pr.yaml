@@ -1,7 +1,7 @@
 name: task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr
 path: desk/tasks/task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr.md
-source_hash: 5d19e7b0b0cec745b2e2ea9d3bc3ef28af359c6aba15d2b69ee0031b97662b6a
-content_hash: cfa33bd56bff8b857fe102f2135209ed6281970b7af9c5c8c4170b5ac4ffc583
+source_hash: 63b6ae3972137e28a3ce26d7b1bb2c047bd5513989515725158b27a6e898e100
+content_hash: 037262ba76fc3cb2a3d9e2a45f0f9242545ca03680a11f715b9acb153480bd7d
 field_hashes:
   title: 574eeb5845fd77218f997cb3950768f9eedb0a94020f69ea7cb9de6dc1447883
   id: f32f3d93a30f4f880d616e170adaf7bd99f16d38a66857be60ca513c9005785e
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: c87a5319a977b86e54c5a6b0ae6a4c1212b4f8cb13df4159eaa7c4b5cb9f136c
-  implementation_path: 4718f401fe76b17f7fc870f2e0914c128fea1b5f61fe90a537aadc4c410b60ec
+  implementation_path: 941392091e4be79d4140374f5512658db5dd1edcfe5cb31949a81ace846724ab
   validation: 934cd4ebf4e3b4d4b47d0707e4ac935fa43bfede55f59094926e5f5b726df472
   done_when: 4e3044a217854a5493636974444bbf6ad6c20d9061eef164f1cdc6902b9c798a
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-09T18:37:24Z'
+  at: '2026-11-09T18:53:32Z'
   authority: generated
   via: save_document_payload

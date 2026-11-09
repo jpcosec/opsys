@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T18:37:24Z'
+  at: '2026-11-09T18:53:32Z'
   authority: generated
   via: save_document_payload
 id: task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr
@@ -75,6 +75,12 @@ r6 (tests): tests/test_closeout_resolved_by.py nuevo, sobre un desk temporal con
 - sin --reason: falla;
 - en cada falla, nada escrito (sha256 de desk/ y git status iguales).
 Además, de a uno: tests/test_closeout.py (donde vive supersede), tests/test_command_registry.py, test_cli_help_examples y test_output_goldens; test_cli desde una copia en /dev/shm. El golden nuevo sigue el patrón de tests/fixtures/golden/help/deskops_closeout_supersede.txt.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-2, 2026-11-09; el intento 1 fue un timeout técnico del modelo):
+b1 (nombre del golden): el arnés une el path del comando con «_» y conserva los guiones (deskops_promote_inbox-to-drawer-task.txt, deskops_add_faq-doc.txt). El nuevo es tests/fixtures/golden/help/deskops_closeout_resolved-by.txt.
+b2 (--paths y --message): los de close_superseded (closure.py:121-200). --paths son las rutas extra que entran al commit de cierre; se pasan a _close con explicit_paths=True. --message reemplaza el asunto del commit; si falta, va self._default_subject(task_id). resolved-by los pasa igual a _close.
+b3 (HEAD de qué repo): el del --root (CloseoutGatesService(root).reference_points_to_commit corre git en root), igual que supersede con _ref_resolves.
+b4 (test_cli en /dev/shm): git -C ~/proyectos/SLDB_1/deskops-wt-rb worktree add --detach /dev/shm/deskops-rb HEAD; pytest ahí con PYTHONPATH=/dev/shm/deskops-rb; al terminar, git -C ~/proyectos/SLDB_1/deskops-wt-rb worktree remove --force /dev/shm/deskops-rb.
 
 ## Validation
 

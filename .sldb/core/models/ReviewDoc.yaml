@@ -3,10 +3,10 @@ model_ref: deskops.models:ReviewDoc
 path: deskops/models/review.py
 documents_index: .sldb/core/documents/ReviewDoc.yaml
 sections_index: .sldb/runtime/sections/ReviewDoc.yaml
-model_hash: 933496d86c9772a033f72473e5da706c8d53b9fd7e008cdd840a5eb053b5bf24
-roster_hash: f1ef78810aea95f38046a4e2b63000c2f5f6e72d3b0b631cfe2692e85d1b6432
+model_hash: b014cb8ce0fe3da6ed480e0af21a7d44e0043d5e5004770e138d207a7c0ac955
+roster_hash: d1006bf198d82c7d22b3e2d10eaec40290aa4e9e048affb859d867235777cf82
 contract_hash: 9943636bd29f9a9681e8dfd607d638e2aa0ac57762e4c298d5b9f84f06423c39
-documents_count: 21
+documents_count: 23
 version: 1
 canonical: false
 family: null

@@ -1,0 +1,9 @@
+{
+  "key": "task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr/preflight",
+  "technical_ok": false,
+  "returncode": null,
+  "input_sha256": "1cca38a1906531db654b62a8b754fa0b596fd14e055b3d75c7b04af5f36839c9",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "start": "2026-11-09T18:37:33.394254+00:00",
+  "end": "2026-11-09T18:52:33.502082+00:00"
+}

@@ -1,0 +1,34 @@
+name: review-task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr-preflight-2
+path: desk/reviews/task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr/preflight-2.md
+source_hash: bfb2656e1ad0fc7ea7f30266105f44ffa9bc781d9c60044b7cab0af040c646cb
+content_hash: 5f87be9b25bcaf447a1bca7beb946cb698e6a62a605fc88159eb9c2f079317e5
+field_hashes:
+  id: 3bf5348ceeecf7de5785a8ba9d9444468289855d195610b3a2c6ff17347f42e3
+  title: 2b0c09b7489fb0a09d6e50c4521bcb24c5867521ce61c5d6fd601a15dfdfad13
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: be31c8b08bfc1313728abcab8303dd25f43ca966accbf95ff1178f913077a7ae
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: ed94abaa4943ca20ac8a13f7328c0c610cd97f79b02c8807156843114d280e02
+  input_sha256: 7a0e389aee82e11573ad6c7abdc0be3451efb45b70dc3c61e1ce87d72e7d89bb
+  output_sha256: 5989e7fd1b57f9b797becb2f43a74930a7e12387c5f7e0b1cde6fe11175ec966
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: c7f366791401ee86d7d50a75ab625874a360fba7e8f2abb5f5d49b0e8ab63e17
+  created_at: bb01a2a51777f17a2cd925d0bab6d238d7a728fd74720c9ffcbba4aca11ca2a7
+  disposed_at: 25d9fa67dcd5e1167cde34ca81aafdaf658cadd12ab76d1bbecfc59b8002a737
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 241088f06fc45dfc362e24c5179c10eb4da89357e6aa21a5c283b543c3bafc82
+  disposition: 4a9d932e93b36dea7b59b813dcb55509310cf2e09b4acfebbfd19f6ee152eb67
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-09T18:53:33Z'
+  authority: generated
+  via: save_document_payload
