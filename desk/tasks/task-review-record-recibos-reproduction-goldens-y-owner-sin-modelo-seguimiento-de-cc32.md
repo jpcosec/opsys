@@ -17,7 +17,7 @@ files:
 - tests/test_review_record.py
 - tests/fixtures/golden/help/deskops_review.txt
 - tests/fixtures/golden/help/deskops_review_record.txt
-- docs/workflow-policy-reference.md
+- docs/operator-manual.md
 - CHANGELOG.md
 task_type: task.code
 inherits_from: []
@@ -61,6 +61,12 @@ r5 (goldens de ayuda): cambian solo deskops_review.txt (lista el subcomando nuev
 r6 (conflicto con CC35b): CC35b cambia en paralelo la resolución de documentos en services/ (incluye _task_path y _resolve_review_path de review.py). Este nodo no toca esas funciones: el método nuevo las llama tal como están. El rebase lo resuelve el coordinador.
 r7 (prueba de extremo a extremo con CC32 fuera de este nodo): este nodo prueba que el recibo se escribe, se trackea con subject pinneado (anchor_state intact vía sldb, tras CC35a) y se dispone. Que la regla de activación de CC32 lo cuente se prueba al integrar CC32, no aquí: CC32 no está en main.
 r8 (tests): tests/test_review_record.py nuevo. Cubre: un recibo reproduction con evidencia se escribe pending y bien formado; el kind preflight se rechaza; evidencia inexistente o fuera del root falla sin escribir nada; owner sin evidencia funciona; dispose lo pasa a accepted; el subject queda con @sha256 (anchor intact según sldb). Además, de a uno: test_review_command, test_review_doc, test_cli_help_examples y test_output_goldens; test_cli desde una copia en /dev/shm.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-09):
+b1 (hash de la evidencia): las rutas de --evidence se normalizan a POSIX relativas al root y se ordenan alfabéticamente, sin repetidas. input_sha256 es el sha256 de los bytes «<ruta>\n<contenido>\n» de cada archivo, concatenados en ese orden. Sin evidencia (owner), input_sha256 queda vacío.
+b2 (actor y engine): actor sale de self._identity() (deskops/identity.py), igual que en los demás recibos. engine es «human», como dice la descripción del campo en ReviewDoc (models/review.py:105), y no «operator»: esto corrige r2.
+b3 (doc destino): docs/operator-manual.md, que es donde ya se documenta deskops review. Reemplaza a docs/workflow-policy-reference.md en files. Si test_operator_manual verifica el manual contra el CLI, entra en la validación.
+b4 (dónde va la evidencia): ReviewDoc no tiene campo references ni evidence (models/review.py:88-121). Las rutas van en summary con el formato de r2; el modelo no se cambia.
 
 ## Validation
 

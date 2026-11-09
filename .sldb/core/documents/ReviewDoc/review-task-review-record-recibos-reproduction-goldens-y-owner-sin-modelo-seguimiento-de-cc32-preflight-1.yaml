@@ -1,0 +1,30 @@
+name: review-task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32-preflight-1
+path: desk/reviews/task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32/preflight-1.md
+source_hash: 708dc10e90cecaca01e7a62926f1c21cd7db1e6832ea530f81832d4c6c95fcac
+content_hash: d0d7d77fc9f04843fd96e772452b0f750fa79fb4ee6e2315522a614aa0178745
+field_hashes:
+  id: 34f02e572c5af49797123e8322e352972ec970924d108968dec23d4b8abda944
+  title: fedba88eed47daac89d1dbe63dc049bcfcfc5d7d066522d0071f788551f032b2
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 70ae29f1057010bac4ecc4aeaa6be2b3c7c4ba102a4365c880fa4fd971424582
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 8db8a83cb89c8875b27f6c6091c1ed4f9d20f81542721676d445a0e42312e914
+  input_sha256: f6ebfc5879187e31d936f0a2e0232f3a33011fd03024159600ad2dabff8e254b
+  output_sha256: 25ebabe22842e223be3e9cf52d86192b3743a51ed8c09eafe67537d71184d50b
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 58e935573575d1f02f74f7ef9335734bfc1b12104b95ebd473e30d009bdc492d
+  created_at: d81075bffa862e38f8c593296c6f2fd1a31faf8cdb44226773081acdee485378
+  disposed_at: e6bcd1bc3c3b1b164de867cb9c6f1b1ce35a085757da1226354d88bbeba57fcc
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 2b19d69bb89aa34aa183c32283ff1229e01cdbf842f2d4cfa1ecfc9e59158e04
+  disposition: ec81b8e4cc818b9677810894466f292d2edf375855c719ac312f25133028585e
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
