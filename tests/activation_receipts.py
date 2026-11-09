@@ -7,9 +7,9 @@ dependencies closed. A test that advances a task writes those receipts first wit
 
 The receipts are written through ``sldb.api.transaction`` (TaskDoc precisión b8): ``create``
 writes the ``ReviewDoc`` and ``update`` saves it again through ``save_document_payload``, the
-step that pins ``subject`` with the task's contract hash (GO07). The deskops write path of
-``deskops review`` (``doc_io.DocTransaction.write``: render + track) does not pin until CC35a
-moves it onto sldb's transaction, so a receipt written that way stays ``lost``. Nothing here
+step that pins ``subject`` with the task's contract hash (GO07). Before CC35a the write path
+of ``deskops review`` (render + track, without that save) did not pin, so a receipt written
+that way stayed ``lost``; the helper keeps writing through sldb directly. Nothing here
 writes a file by hand or decides the receipts in Python: ``RECEIPTS`` mirrors the rules'
 ``kind`` clauses so a test can ask for "the receipts of this task's type".
 """
