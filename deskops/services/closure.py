@@ -24,7 +24,6 @@ from typing import TYPE_CHECKING
 import yaml
 
 from deskops import doc_access
-from deskops import doc_io
 from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.models import BoardDoc
 from deskops.models import TaskDoc
@@ -443,7 +442,7 @@ class ClosureService:
                 # Record its body first so the closing commit does not erase it.
                 self._record_uncommitted_task(task_id, task_path, task_rel)
 
-            with doc_io.DocTransaction(self.root) as transaction:
+            with doc_access.desk_transaction(self.root):
                 if routed and board_before is not None:
                     board_payload = doc_access.read_doc(board_path, BoardDoc)
                     references = [
@@ -457,7 +456,7 @@ class ClosureService:
                     add_commit_path("desk/tasks/Board.md")
 
                 if task_bytes is not None:
-                    transaction.untrack(task_path)
+                    doc_access.untrack_doc(self.root, task_path)
 
                 sldb_status = self._git("status", "--porcelain", "--", ".sldb", check=False)
                 if sldb_status:

@@ -19,7 +19,7 @@ import yaml
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
-from deskops import doc_io
+from deskops import doc_access
 from deskops.models import TaskDoc
 
 
@@ -113,8 +113,9 @@ class DrawerService:
 
         parsed = parse_sections(note["body"])
         messages = [f"Created drawer task candidate {task_id}"]
-        with doc_io.DocTransaction(self.root) as transaction:
-            transaction.record(target)
+        with doc_access.desk_transaction(self.root) as transaction:
+            if transaction is not None:
+                transaction.record(target)
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(
                 self._render_drawer_task(
@@ -130,7 +131,9 @@ class DrawerService:
             # unlinking the file alone leaves an orphan entry in the store and
             # `deskops status` reports it as an invalid missing document.
             # Untrack first so a store failure cannot destroy the source file.
-            untrack_message = self._untrack_note(transaction, source)
+            untrack_message = self._untrack_note(source)
+            if transaction is not None:
+                transaction.record(source)
             source.unlink(missing_ok=True)
         if untrack_message:
             messages.append(untrack_message)
@@ -165,15 +168,16 @@ class DrawerService:
 
         board = self.desk_root / "drawer" / "tasks" / "Board.md"
         board_changed = False
-        with doc_io.DocTransaction(self.root) as transaction:
+        with doc_access.desk_transaction(self.root) as transaction:
             if board.exists():
                 original = board.read_text(encoding="utf-8")
                 updated = self._without_entry_bullets(original, source.stem)
                 if updated != original:
-                    transaction.record(board)
+                    if transaction is not None:
+                        transaction.record(board)
                     board.write_text(updated, encoding="utf-8")
                     board_changed = True
-            transaction.delete(source)
+            doc_access.delete_doc(self.root, source)
 
         messages = [f"Removed drawer entry {relative}"]
         if board_changed:
@@ -202,7 +206,7 @@ class DrawerService:
             line for line in text.splitlines(keepends=True) if not line.startswith(prefix)
         )
 
-    def _untrack_note(self, transaction: doc_io.DocTransaction, source: Path) -> str | None:
+    def _untrack_note(self, source: Path) -> str | None:
         """Drop the promoted note from the sldb store, best effort.
 
         Returns a human-readable line describing what happened, or None when
@@ -212,7 +216,7 @@ class DrawerService:
         if not store_path.exists():
             return None
         try:
-            transaction.untrack(source.stem)
+            doc_access.untrack_doc(self.root, source)
             return None
         except Exception as exc:  # noqa: BLE001 - store problems must not abort the promotion
             return f"Warning: could not untrack '{source.stem}' from the store: {exc}"

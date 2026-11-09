@@ -24,7 +24,6 @@ from typing import Any
 
 import yaml
 
-from deskops import doc_io
 from deskops.paths import data_path
 from deskops.paths import package_pythonpath
 
@@ -249,6 +248,7 @@ def write_lifecycle_graph(root: Path) -> list[str]:
     (``workspace.apply_desk_includes``): the lifecycle documents and the lifecycle rituals by
     their ids. Any other declared document pending is tracked too and reported in the same way.
     """
+    from sldb.api import init_relations
     from sldb.api import is_model_registered
 
     from deskops.workspace import apply_desk_includes
@@ -258,7 +258,7 @@ def write_lifecycle_graph(root: Path) -> list[str]:
     root = root.resolve()
     changes = seed_changes(root, seed_desk(root, restore_managed=True))
     if not all(is_model_registered(_store(root), name) for name in (RELATION_MODEL, RELATION_TYPE_MODEL)):
-        doc_io.init_relations_in(root, pythonpath=package_pythonpath())
+        init_relations(_store(root), pythonpath=package_pythonpath())
     spec = load_lifecycle_spec()
     pending = {path: model for model, path in pending_desk_includes(root)}
     for path in apply_desk_includes(root):

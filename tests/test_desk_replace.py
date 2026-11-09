@@ -3,7 +3,8 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
-from deskops import doc_io
+from sldb.api import track_document_file
+
 from deskops.cli.main import main
 from deskops.models import RoleDoc
 from sldb.runtime.validation import render_model_markdown
@@ -99,7 +100,7 @@ def test_replace_retracks_a_role_doc_and_keeps_the_store_pass(tmp_path: Path, ca
         )
         + "\n",
     )
-    doc_io.track(root, role_path, "RoleDoc")
+    track_document_file(root / ".sldb", "RoleDoc", role_path, pythonpath=str(Path(__file__).resolve().parents[1]), force=True)
     capsys.readouterr()
 
     assert _replace(root, "desk/roles/deskops-supervisor.md", "# Workflow Supervisor", "# Workflow Lead") == 0

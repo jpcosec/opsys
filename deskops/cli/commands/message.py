@@ -7,6 +7,8 @@ import sys
 from typing import Any
 
 import yaml
+from sldb.api import Transaction
+from sldb.api import transaction
 from sldb.cli.model_utils import registered_model
 from sldb.cli.store_context import get_store_context
 from sldb.core.exceptions import SLDBStoreError, SLDBValidationError
@@ -15,7 +17,7 @@ from sldb.runtime.validation import render_model_markdown
 from sldb.runtime.validation import validate_model_input_roundtrip
 from sldb.store.layout import project_root
 
-from deskops import doc_io
+from deskops import doc_access
 from deskops.cli.render import render
 from deskops.cli.render import render_error
 from deskops.config import DeskConfig
@@ -23,18 +25,6 @@ from deskops.identity import EcosystemIdentity
 from deskops.identity import UNKNOWN_PROJECT_IDENTITY
 from deskops.identity import find_context_root
 from deskops.identity import find_local_store
-
-
-def track_document(store, root, idx, model_type, entry, path, note_name, resolver, pythonpath):
-    """Compatibility seam: the old positional sldb call signature delegates to doc_io."""
-    doc_io.track(root, path, model_type, name=note_name, pythonpath=pythonpath)
-
-
-def untrack_document(store, document, pythonpath=None):
-    """Compatibility seam: untrack through doc_io instead of the sldb CLI class."""
-    doc_io.untrack(project_root(Path(store)), document, pythonpath=pythonpath)
-
-
 from deskops.models import InboxNoteDoc
 from deskops.errors import UsageError
 
@@ -120,19 +110,27 @@ class MessageCLI:
         if not valid:
             raise SLDBValidationError("Message failed validation", details)
 
-        path.write_text(rendered, encoding="utf-8")
-
-        # Tracking is a courtesy to the target's doctor. A foreign desk may keep
-        # its models in a package this process cannot import, which must not turn
-        # a delivered note into a reported failure.
+        # The note and its tracking are written in the target store's transaction.
+        # Tracking is a courtesy to the target's doctor: a foreign desk may keep its
+        # models in a package this process cannot import, which must not turn a
+        # delivered note into a reported failure, so a tracking error is caught inside
+        # the block and the delivered note stays.
+        context = self._note_store_context(args, desk_root)
         tracked_name = None
-        try:
-            tracked_name = self._verify_and_track_note(args, path, desk_root)
-        except Exception as exc:
-            print(
-                f"Warning: delivered to {path} but could not track it in that store: {exc}",
-                file=sys.stderr,
-            )
+        if context is None:
+            path.write_text(rendered, encoding="utf-8")
+            self._warn_no_store(desk_root, path)
+        else:
+            store_path, _root = context
+            with transaction(store_path, args.pythonpath) as tx:
+                tx.write_file(path, rendered.encode("utf-8"))
+                try:
+                    tracked_name = self._track_note(tx, args, path, store_path)
+                except Exception as exc:
+                    print(
+                        f"Warning: delivered to {path} but could not track it in that store: {exc}",
+                        file=sys.stderr,
+                    )
         result = {
             "sender_project": sender_project,
             "target_project": target_project,
@@ -168,6 +166,9 @@ class MessageCLI:
                 type_name="DomainError",
             )
 
+        # The index entry as it is before the note is read: its source hash guards the update.
+        context = self._note_store_context(args, desk_root)
+        entry = doc_access.index_entry(context[1], note) if context is not None else None
         payload = extract_model_data(InboxNoteDoc, note.read_text(encoding="utf-8"))
         if payload.get("status") == "closed":
             raise ValueError(f"Message '{note.stem}' is already acknowledged.")
@@ -177,14 +178,23 @@ class MessageCLI:
         payload["target_project"] = payload.get("target_project") or target_project
         payload["acknowledged_by"] = target_project
         payload["acknowledged_at"] = acknowledged_at
-        original = note.read_text(encoding="utf-8")
-        note.write_text(render_model_markdown(InboxNoteDoc, payload) + "\n", encoding="utf-8")
-        try:
-            tracked_name = self._verify_and_track_note(args, note, desk_root)
-        except Exception:
-            # Keep the note and the store agreeing when the ack cannot be tracked.
-            note.write_text(original, encoding="utf-8")
-            raise
+        rendered = render_model_markdown(InboxNoteDoc, payload) + "\n"
+        tracked_name = None
+        if context is None:
+            note.write_text(rendered, encoding="utf-8")
+            self._warn_no_store(desk_root, note)
+        else:
+            # The ack is an update of the tracked note, guarded, in the store's transaction;
+            # a note the store does not track yet is written and tracked in the same block,
+            # so a tracking failure leaves the note as it was.
+            store_path, root = context
+            with transaction(store_path, args.pythonpath) as tx:
+                if entry is not None:
+                    doc_access.update_tracked_doc(tx, root, note, entry, payload)
+                    tracked_name = entry.name
+                else:
+                    tx.write_file(note, rendered.encode("utf-8"))
+                    tracked_name = self._track_note(tx, args, note, store_path)
         result = {
             "id": note.stem,
             "path": str(note),
@@ -458,16 +468,16 @@ class MessageCLI:
         identity = (DeskConfig.load(desk_root).project_identity or UNKNOWN_PROJECT_IDENTITY).strip()
         return identity if identity not in {"", UNKNOWN_PROJECT_IDENTITY} else None
 
-    def _verify_and_track_note(self, args: Any, path: Path, desk_root: Path) -> str | None:
-        context = self._note_store_context(args, desk_root)
-        if context is None:
-            print(
-                f"Warning: no .sldb store at {desk_root.parent / '.sldb'}; "
-                f"not tracking {path.name}.",
-                file=sys.stderr,
-            )
-            return None
-        store_path, root = context
+    @staticmethod
+    def _warn_no_store(desk_root: Path, path: Path) -> None:
+        print(
+            f"Warning: no .sldb store at {desk_root.parent / '.sldb'}; "
+            f"not tracking {path.name}.",
+            file=sys.stderr,
+        )
+
+    def _track_note(self, tx: Transaction, args: Any, path: Path, store_path: Path) -> str:
+        """Track the note at ``path`` in the open transaction of its store; its name."""
         model_type, _entry, _idx = registered_model(store_path, "InboxNoteDoc", args.pythonpath)
 
         rendered = path.read_text(encoding="utf-8")
@@ -476,28 +486,14 @@ class MessageCLI:
             raise SLDBValidationError("Message failed validation", details)
 
         note_name = path.stem
-
-        def track() -> None:
-            track_document(
-                store_path,
-                root,
-                _idx,
-                model_type,
-                _entry,
-                path,
-                note_name,
-                None,
-                args.pythonpath,
-            )
-
         try:
-            track()
+            tx.track(path, "InboxNoteDoc", note_name)
         except SLDBStoreError as exc:
             if "already tracked" not in str(exc):
                 raise
             # Re-sign an existing tracking entry instead of tracking it twice.
-            untrack_document(store_path, note_name, args.pythonpath)
-            track()
+            tx.untrack(note_name)
+            tx.track(path, "InboxNoteDoc", note_name)
         return note_name
 
     def _store_context(self, args: Any) -> tuple[Path, Path] | None:

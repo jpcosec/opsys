@@ -24,7 +24,7 @@ from pathlib import Path
 import re
 from typing import Any
 
-from deskops import doc_io
+from deskops import doc_access
 from deskops.materializers.roles import iter_role_doc_paths, load_role_doc
 from deskops.materializers.runtime_profiles import build_agent_spec_args, load_runtime_profiles
 from deskops.models import RunDoc
@@ -390,8 +390,9 @@ def record_scion_run(
         "commit_sha": "",
         "tags": ["system:deskops", "runtime:scion"],
     }
-    path = Path(run_dir) / "run.md"
-    with doc_io.DocTransaction(root) as transaction:
-        transaction.write(path, RunDoc, payload)
-        transaction.track(path, RunDoc, name=run_id)
-    return root / path
+    path = root / Path(run_dir) / "run.md"
+    if path.exists():
+        doc_access.write_doc(root, path, RunDoc, payload)
+    else:
+        doc_access.create_doc(root, path, RunDoc, payload, run_id)
+    return path

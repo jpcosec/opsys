@@ -204,10 +204,11 @@ def test_message_ack_restores_note_when_tracking_fails(tmp_path: Path, monkeypat
     note, _ = _deliver(repo_a, repo_b, "Restored when tracking fails")
     original = note.read_bytes()
 
-    def failing_untrack(*_args, **_kwargs):
+    def failing_save(*_args, **_kwargs):
         raise SLDBStoreError("simulated refresh failure")
 
-    monkeypatch.setattr("deskops.cli.commands.message.untrack_document", failing_untrack)
+    # The ack is `Transaction.update` of the tracked note: the store's save step fails.
+    monkeypatch.setattr("sldb.api.documents.transaction_ops.save_document_payload", failing_save)
     monkeypatch.chdir(repo_b)
 
     assert main(["message", "ack", note.stem, "--root", str(repo_b)]) == 1

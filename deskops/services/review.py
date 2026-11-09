@@ -34,7 +34,7 @@ import yaml
 from sldb.api.stores.doc_status import doc_status
 from sldb.runtime.validation import extract_model_data
 
-from deskops import doc_io
+from deskops import doc_access
 from deskops.config import DeskConfig
 from deskops.errors import DomainError
 from deskops.errors import UsageError
@@ -609,17 +609,13 @@ class ReviewService:
             "disposition": "",
             "tags": ["workspace:desk"],
         }
-        with doc_io.DocTransaction(self.root) as transaction:
-            transaction.write(path, ReviewDoc, payload)
-            transaction.track(path, ReviewDoc, name=review_id)
+        doc_access.create_doc(self.root, path, ReviewDoc, payload, review_id)
         return review_id, path
 
     # ------------------------------------------------------------------ dispose
     def dispose(self, review_id: str, verdict: str, reason: str) -> dict[str, Any]:
-        from sldb.runtime.validation import render_model_markdown
-
         path = self._resolve_review_path(review_id)
-        payload = extract_model_data(ReviewDoc, path.read_text(encoding="utf-8"))
+        payload = doc_access.read_doc(path, ReviewDoc)
         if (payload.get("verdict") or "pending") != "pending":
             raise DomainError(f"Review '{review_id}' already has verdict '{payload.get('verdict')}'; only a pending review can be disposed.")
         payload["verdict"] = verdict
@@ -627,8 +623,7 @@ class ReviewService:
         payload["disposed_at"] = _now()
         payload["disposed_by"] = self._identity()
         payload["disposition"] = f"Verdict {verdict}: {reason}"
-        with doc_io.DocTransaction(self.root) as transaction:
-            transaction.write(path, ReviewDoc, payload)
+        doc_access.write_doc(self.root, path, ReviewDoc, payload)
         return {
             "review_id": review_id,
             "verdict": verdict,

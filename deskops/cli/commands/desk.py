@@ -6,7 +6,12 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from deskops import doc_io
+from sldb.api import add_model
+from sldb.api import remove_model
+from sldb.api import track_document_file
+from sldb.api import untrack_document
+from sldb.api import update_store_indexes
+
 from deskops.workspace import ensure_target_directory
 from deskops.workspace import inspect_desk
 from deskops.workspace import migrate_desk
@@ -76,7 +81,7 @@ def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> li
 
     changes: list[str] = []
     if FAQ_MODEL not in entries:
-        doc_io.register_model(root, FAQ_MODEL_REF, pythonpath=pythonpath)
+        add_model(store_dir, FAQ_MODEL_REF, pythonpath=pythonpath)
         changes.append(f"registered {FAQ_MODEL}")
 
     # The old class no longer exists, so its documents are read from the indexes
@@ -92,12 +97,10 @@ def migrate_legacy_faq_model(root: Path, *, pythonpath: str | None = None) -> li
     for document in old_documents:
         if document.name in tracked:
             continue
-        doc_io.track(root, document.path, FAQ_MODEL, name=document.name, pythonpath=pythonpath)
+        track_document_file(store_dir, FAQ_MODEL, root / document.path, name=document.name, pythonpath=pythonpath, force=True)
         changes.append(f"tracked {document.name} as {FAQ_MODEL}")
 
-    doc_io.remove_model_from(
-        root, LEGACY_FAQ_MODEL, pythonpath=pythonpath, untrack_documents=True
-    )
+    remove_model(store_dir, LEGACY_FAQ_MODEL, pythonpath=pythonpath, untrack_documents=True)
     changes.append(f"removed {LEGACY_FAQ_MODEL}")
     return changes
 
@@ -415,14 +418,14 @@ class DeskCLI:
             pythonpath = package_pythonpath()
             for name in missing_docs:
                 try:
-                    doc_io.untrack(root, name, pythonpath=pythonpath)
+                    untrack_document(root / ".sldb", name, pythonpath=pythonpath)
                     print(f"Untracked {name}: its file is gone.")
                 except Exception as e:
                     print(f"Failed to untrack {name}: {e}")
 
         if invalid_docs:
             pythonpath = package_pythonpath()
-            doc_io.update_store_indexes_in(root, pythonpath=pythonpath, wait=False)
+            update_store_indexes(root / ".sldb", pythonpath, wait=False)
             print("Updated store derived indexes.")
 
         return 0

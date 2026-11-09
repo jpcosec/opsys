@@ -2,29 +2,44 @@
 
 Every function takes the repository ``root`` (the directory that holds ``desk/``) and
 works on the desk documents under it: parse a document into its model payload, write
-one through a ``doc_io`` transaction, resolve a selector to a file, read a task with
+one through ``sldb.api.transaction``, resolve a selector to a file, read a task with
 its inherited context, or list the artifacts of one kind. ``DeskopsOperations`` is a
 facade over these functions and the services; the services call them directly.
+
+Writes: every document write of deskops goes through the desk's ``sldb.api.transaction``
+(``desk_transaction``), so a service that writes several documents wraps them in one block
+and a failure anywhere restores them all. An update of a tracked document carries
+``expected_source_hash``: the hash the store had indexed for the document when
+``read_doc`` read it (``index_entry``, from the store's indexes alone), so a document the
+store rewrote in between is refused with the deskops conflict message and nothing is
+written. A document edited by hand and not reindexed keeps its indexed hash, so the next
+deskops edit of it goes through.
 """
 
 from __future__ import annotations
 
+from contextlib import contextmanager
 import copy
 from dataclasses import dataclass
 import json
 import os
 from pathlib import Path
 import sys
-from typing import Any
+from typing import Any, Iterator
 
 import yaml
+from sldb.api import ConflictError
+from sldb.api import Transaction
+from sldb.api import store_fingerprint
+from sldb.api import tracked_documents
+from sldb.api import transaction
+from sldb.store.layout import store_exists
 from sldb.api.documents.frontmatter_keys import undeclared_frontmatter_keys
 from sldb.api.documents.structural_noise import find_structural_noise
 from sldb.cli.utils import parse_data_value
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
-from deskops import doc_io
 from deskops.atom_tags import axis_folder_relpath
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import folder_axis_value
@@ -33,6 +48,7 @@ from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
 from deskops.desk_paths import resolve_selector
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
+from deskops.errors import DomainError
 from deskops.models import AtomDoc
 from deskops.models import BoardDoc
 from deskops.models import DeskFAQDoc
@@ -45,6 +61,7 @@ from deskops.models import RitualDoc
 from deskops.models import StepDoc
 from deskops.models import TaskDoc
 from deskops.models.validation import validated
+from deskops.paths import package_pythonpath
 from deskops.runtime import Task
 from deskops.specs import compile_artifact_spec
 from deskops.specs import compile_task_spec
@@ -112,6 +129,13 @@ _TRACKED_ON_CREATE = {"artifact.atom", "artifact.pill", "artifact.materializatio
 # (absolute path, model) -> (text, payload): ``read_doc`` parses a document once per text.
 _DOC_PAYLOADS: dict[tuple[str, Any], tuple[str, dict[str, Any]]] = {}
 
+# absolute path -> the source hash the store had indexed for the document when ``read_doc``
+# last read it (None: not tracked then): the ``expected_source_hash`` of its next update.
+_READ_HASHES: dict[str, str | None] = {}
+
+# resolved store path -> (store index signature, {relative path: IndexEntry}).
+_INDEX_ENTRIES: dict[str, tuple[tuple[int, int], dict[str, "IndexEntry"]]] = {}
+
 
 def slugify(text: str) -> str:
     lowered = "".join(ch.lower() if ch.isalnum() else "-" for ch in text)
@@ -149,6 +173,192 @@ def ensure_workspace(root: Path) -> None:
     seed_desk(root)
 
 
+# ---------------------------------------------------------------- store
+@dataclass(frozen=True)
+class IndexEntry:
+    """What the desk's store records about one tracked document: its model, its name and
+    the ``source_hash`` of the text it last indexed."""
+
+    model: str
+    name: str
+    source_hash: str
+
+
+def store_path(root: Path) -> Path:
+    return root / ".sldb"
+
+
+def has_store(root: Path) -> bool:
+    """Whether the root has an sldb store: a ``.sldb/`` that only holds runtime files
+    (graph snapshots, caches) is not one."""
+    return store_exists(store_path(root))
+
+
+def _absolute(root: Path, path: Path | str) -> Path:
+    candidate = Path(path)
+    return candidate if candidate.is_absolute() else root / candidate
+
+
+def relative_path(root: Path, path: Path | str) -> str:
+    """``path`` relative to the project root with ``/`` separators, as the store records it."""
+    absolute = _absolute(root, path).resolve()
+    try:
+        return absolute.relative_to(root.resolve()).as_posix()
+    except ValueError:
+        return absolute.as_posix()
+
+
+def _model_name(model: Any) -> str:
+    return model if isinstance(model, str) else str(getattr(model, "__name__", model))
+
+
+@contextmanager
+def desk_transaction(root: Path) -> Iterator[Transaction | None]:
+    """``sldb.api.transaction`` over the desk's store, importing its models from the deskops package.
+
+    Nested blocks over the same root join the open one, so a service that writes several
+    documents wraps them in one block and a failure anywhere restores them all. A root
+    without a store (a desk before ``deskops init``, the desks some tests build) has no
+    transaction: the block runs with ``None`` and each write is a plain file write.
+    """
+    if not has_store(root):
+        yield None
+        return
+    with transaction(store_path(root), pythonpath=package_pythonpath()) as tx:
+        yield tx
+
+
+def _index_signature(root: Path) -> tuple[int, int]:
+    try:
+        stat = (store_path(root) / "core" / "store_index.yaml").stat()
+    except OSError:
+        return (0, 0)
+    return (stat.st_mtime_ns, stat.st_size)
+
+
+def index_entries(root: Path) -> dict[str, IndexEntry]:
+    """Relative path -> index entry of every document the desk's store tracks.
+
+    Read from the store's indexes alone (``store_fingerprint`` for the hashes,
+    ``tracked_documents`` for the paths): no model is imported and no document is extracted.
+    Kept per process while the store index keeps its signature: every sldb write moves it, a
+    hand edit of a document does not, which is what the update guard needs (the hash of the
+    text the store indexed, not of the file on disk).
+    """
+    if not has_store(root):
+        return {}
+    store = store_path(root)
+    key = str(store.resolve())
+    signature = _index_signature(root)
+    hit = _INDEX_ENTRIES.get(key)
+    if hit is not None and hit[0] == signature:
+        return hit[1]
+    fingerprint = store_fingerprint(store)
+    refs = {key.replace(":", "/", 1): key for key in fingerprint.documents}
+    statuses = tracked_documents(store, list(refs))
+    entries = {
+        str(status.path): IndexEntry(
+            model=str(status.model),
+            name=str(status.name),
+            source_hash=fingerprint.documents[refs[ref]].source_hash,
+        )
+        for ref, status in statuses.items()
+    }
+    _INDEX_ENTRIES[key] = (signature, entries)
+    return entries
+
+
+def forget_index(root: Path) -> None:
+    _INDEX_ENTRIES.pop(str(store_path(root).resolve()), None)
+
+
+def index_entry(root: Path, path: Path | str) -> IndexEntry | None:
+    """The store's entry for ``path``, or None when it is not tracked (or there is no store)."""
+    return index_entries(root).get(relative_path(root, path))
+
+
+def _store_root_of(path: Path) -> Path | None:
+    """The root whose store may track ``path``: the nearest parent with a store, unless a
+    desk without one (``desk/`` and no ``.sldb``) comes first."""
+    for parent in path.resolve().parents:
+        if has_store(parent):
+            return parent
+        if (parent / "desk").is_dir():
+            return None
+    return None
+
+
+def _note_read(path: Path) -> None:
+    """Keep the source hash the store has for ``path`` as of this read."""
+    root = _store_root_of(path)
+    entry = index_entry(root, path) if root is not None else None
+    _READ_HASHES[os.path.abspath(path)] = entry.source_hash if entry is not None else None
+
+
+def _note_written(root: Path, path: Path) -> None:
+    forget_index(root)
+    entry = index_entry(root, path)
+    _READ_HASHES[os.path.abspath(path)] = entry.source_hash if entry is not None else None
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(text, encoding="utf-8")
+
+
+def conflict_error(root: Path, path: Path | str) -> DomainError:
+    """The deskops conflict: the store rewrote the document after deskops read it."""
+    return DomainError(
+        f"Error: {relative_path(root, path)} changed since deskops read it; nothing was written. Re-run the command."
+    )
+
+
+def update_tracked_doc(tx: Transaction, root: Path, path: Path, entry: IndexEntry, payload: dict[str, Any]) -> None:
+    """``Transaction.update`` of the tracked document at ``path``, guarded by the source hash
+    deskops read for it (``read_doc``; ``entry.source_hash`` when the caller read it another
+    way). A failed guard raises the deskops conflict, and the transaction writes nothing."""
+    key = os.path.abspath(path)
+    expected = _READ_HASHES.get(key, entry.source_hash)
+    try:
+        tx.update(relative_path(root, path), payload, expected_source_hash=expected)
+    except ConflictError as exc:
+        raise conflict_error(root, path) from exc
+    _note_written(root, path)
+
+
+def delete_doc(root: Path, path: Path) -> None:
+    """Delete a document: ``Transaction.delete`` when the store tracks it (entry and file),
+    else the file alone, recorded so the transaction restores it on failure."""
+    with desk_transaction(root) as tx:
+        if tx is not None and index_entry(root, path) is not None:
+            tx.delete(relative_path(root, path))
+        else:
+            if tx is not None:
+                tx.record(relative_path(root, path))
+            if path.exists():
+                path.unlink()
+    _READ_HASHES.pop(os.path.abspath(path), None)
+    forget_index(root)
+
+
+def untrack_doc(root: Path, ref: Path | str) -> bool:
+    """``Transaction.untrack`` by path or document name. A document the store does not
+    track, or a root without a store, is left alone (False)."""
+    with desk_transaction(root) as tx:
+        if tx is None:
+            return False
+        if isinstance(ref, Path):
+            entry = index_entry(root, ref)
+            name = entry.name if entry is not None else None
+        else:
+            name = next((entry.name for entry in index_entries(root).values() if entry.name == ref), None)
+        if name is None:
+            return False
+        tx.untrack(name)
+    forget_index(root)
+    return True
+
+
 # ---------------------------------------------------------------- read / write
 def read_doc(path: Path, model: type[Any]) -> dict[str, Any]:
     """The model payload of a document, parsed once per text of the file.
@@ -159,6 +369,7 @@ def read_doc(path: Path, model: type[Any]) -> dict[str, Any]:
     edits the payload it got does not edit the kept one.
     """
     raw_text = path.read_text(encoding="utf-8")
+    _note_read(path)
     key = (os.path.abspath(path), model)
     hit = _DOC_PAYLOADS.get(key)
     if hit is not None and hit[0] == raw_text:
@@ -200,18 +411,41 @@ def write_doc(root: Path, path: Path, model: type[Any], payload: dict[str, Any])
                 f"{'; '.join(erased)}. Move that content into a declared field "
                 "(or remove it) before editing the document here."
             )
-    with doc_io.DocTransaction(root) as transaction:
-        transaction.write(path, model, payload)
+    with desk_transaction(root) as tx:
+        if tx is None:
+            _write_text(path, rendered)
+            return
+        entry = index_entry(root, path)
+        if entry is None:
+            tx.write_file(relative_path(root, path), rendered.encode("utf-8"))
+            return
+        update_tracked_doc(tx, root, path, entry, payload)
 
 
 def write_new_doc(root: Path, path: Path, model: type[Any], payload: dict[str, Any]) -> None:
+    """A new document the store does not track yet, as a file the desk's transaction restores
+    on failure (``write_file``); ``track_created_document`` tracks it when its kind is tracked."""
     if path.exists():
         raise FileExistsError(f"Refusing to overwrite existing document: {path}")
-    try:
-        write_doc(root, path, model, payload)
-    except Exception:
-        remove_created_file(path)
-        raise
+    rendered = render_model_markdown(model, payload) + "\n"
+    with desk_transaction(root) as tx:
+        if tx is None:
+            _write_text(path, rendered)
+        else:
+            tx.write_file(relative_path(root, path), rendered.encode("utf-8"))
+
+
+def create_doc(root: Path, path: Path, model: type[Any], payload: dict[str, Any], name: str) -> None:
+    """A new tracked document: ``Transaction.create`` renders it under its registered model
+    and tracks it in one step. Without a store, the file alone."""
+    if path.exists():
+        raise FileExistsError(f"Refusing to overwrite existing document: {path}")
+    with desk_transaction(root) as tx:
+        if tx is None:
+            _write_text(path, render_model_markdown(model, payload) + "\n")
+            return
+        tx.create(_model_name(model), name, payload, relative_path(root, path))
+    _note_written(root, path)
 
 
 def remove_created_file(path: Path) -> None:
@@ -220,7 +454,11 @@ def remove_created_file(path: Path) -> None:
 
 
 def track_created_document(root: Path, model: type[Any], path: Path, doc_id: str) -> None:
-    doc_io.track(root, path, model, name=doc_id)
+    """``Transaction.track`` of a document deskops just wrote, if the root has a store."""
+    with desk_transaction(root) as tx:
+        if tx is not None:
+            tx.track(relative_path(root, path), _model_name(model), doc_id)
+    _note_written(root, path)
 
 
 def track_created_artifact(root: Path, artifact_id: str, model: type[Any], path: Path, doc_id: str) -> None:
@@ -584,9 +822,10 @@ def create_artifact(root: Path, artifact_id: str, raw_payload: dict[str, Any]) -
         path = atom_doc_path(root, doc_id, tags)
     else:
         path = artifact_path(root, artifact_id, doc_id)
-    with doc_io.DocTransaction(root):
+    if artifact_id in _TRACKED_ON_CREATE:
+        create_doc(root, path, model, compiled.artifact_payload, doc_id)
+    else:
         write_new_doc(root, path, model, compiled.artifact_payload)
-        track_created_artifact(root, artifact_id, model, path, doc_id)
     return DocumentRecord(kind=artifact_id.split(".")[-1], doc_id=doc_id, path=path)
 
 

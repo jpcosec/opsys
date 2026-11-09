@@ -11,8 +11,13 @@ import sys
 from typing import Any
 
 from sldb import StructuredNLDoc
+from sldb.api import add_model
+from sldb.api import inherit_model
+from sldb.api import init_relations
+from sldb.api import init_store
+from sldb.api import link_store
+from sldb.api import update_store_indexes
 
-from deskops import doc_io
 from deskops import models as deskops_models
 from deskops.paths import package_pythonpath
 
@@ -175,7 +180,7 @@ class SLDBBootstrap:
     def _register_model(self, model_ref: str, store_path: Path) -> None:
         if self._sldb_importable():
             try:
-                doc_io.register_model(store_path.parent, model_ref, pythonpath=package_pythonpath())
+                add_model(store_path, model_ref, pythonpath=package_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -213,9 +218,7 @@ class SLDBBootstrap:
                     if target == owner.resolve():
                         return False
                     if existing["status"] != "ok" and self._link_store_supports_replace():
-                        doc_io.link_store_alias(
-                            store_path.parent, owner, DESKOPS_STORE_LINK, replace=True
-                        )
+                        link_store(store_path, owner, DESKOPS_STORE_LINK, replace=True)
                         print(
                             f"Replaced broken '{DESKOPS_STORE_LINK}' link to {target} with {owner}."
                         )
@@ -225,7 +228,7 @@ class SLDBBootstrap:
                         f"not to {owner}."
                     )
                     return None
-                doc_io.link_store_alias(store_path.parent, owner, DESKOPS_STORE_LINK)
+                link_store(store_path, owner, DESKOPS_STORE_LINK)
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -247,7 +250,7 @@ class SLDBBootstrap:
         ref = f"{DESKOPS_STORE_LINK}:{model_name}"
         if self._sldb_importable():
             try:
-                doc_io.inherit_model_from(store_path.parent, ref, pythonpath=self.default_pythonpath())
+                inherit_model(store_path, ref, pythonpath=self.default_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -264,7 +267,7 @@ class SLDBBootstrap:
     def _init_relations(self, store_path: Path) -> None:
         if self._sldb_importable():
             try:
-                doc_io.init_relations_in(store_path.parent, pythonpath=self.default_pythonpath())
+                init_relations(store_path, pythonpath=self.default_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -280,7 +283,7 @@ class SLDBBootstrap:
     def _update_store_indexes(self, store_path: Path) -> None:
         if self._sldb_importable():
             try:
-                doc_io.update_store_indexes_in(store_path.parent, pythonpath=self.default_pythonpath())
+                update_store_indexes(store_path, self.default_pythonpath())
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:
@@ -292,7 +295,7 @@ class SLDBBootstrap:
     def _init_store(self, target_path: Path) -> None:
         if self._sldb_importable():
             try:
-                doc_io.init_store_at(target_path)
+                init_store(path=target_path)
             except Exception as exc:
                 raise RuntimeError(str(exc))
         else:

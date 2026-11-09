@@ -13,7 +13,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
-from deskops import doc_io
+from deskops import doc_access
 from deskops.errors import DomainError
 
 #: Paths whose documents ``deskops edit`` can already reach. Every modeled
@@ -82,12 +82,16 @@ def replace_text(
         )
 
     updated = text.replace(old, new)
-    with doc_io.DocTransaction(root) as transaction:
-        state = transaction.record(path)
+    with doc_access.desk_transaction(root) as transaction:
+        entry = doc_access.index_entry(root, path)
+        if transaction is not None:
+            transaction.record(path)
         path.write_text(updated, encoding="utf-8")
-        if state.was_tracked and state.tracked_model is not None:
-            transaction.untrack(path)
-            transaction.track(path, state.tracked_model, name=state.tracked_name)
+        if transaction is not None and entry is not None:
+            # The text changed outside the model: re-track so the store indexes the new text.
+            transaction.untrack(entry.name)
+            transaction.track(path, entry.model, entry.name)
+    doc_access.forget_index(root)
     return ReplaceResult(path=relative, replacements=count)
 
 
