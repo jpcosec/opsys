@@ -1,8 +1,10 @@
-"""One selector resolution rule for every desk artifact lookup.
+"""Selector resolution on disk, for the desk surfaces the store does not track.
 
-Exact name or stem first, then a unique prefix; anything else is an error.
-Callers provide the file pattern and whether the search recurses, so the rule
-itself never depends on artifact-specific layout.
+Tracked documents resolve through ``sldb.api.select_documents``
+(``deskops.doc_access.resolve_document``). What the store does not track (the drawer,
+``desk/issues``, a desk without a store) keeps this rule: exact name or stem first, then a
+unique prefix; anything else is an error. Both paths word their errors with
+``relative_candidates`` so the messages are the same.
 """
 
 from __future__ import annotations
@@ -11,7 +13,7 @@ from collections.abc import Callable
 from pathlib import Path
 
 
-def _relative_candidates(desk_root: Path, paths: list[Path]) -> str:
+def relative_candidates(desk_root: Path, paths: list[Path]) -> str:
     relative = []
     for path in paths:
         try:
@@ -21,6 +23,7 @@ def _relative_candidates(desk_root: Path, paths: list[Path]) -> str:
     return ", ".join(sorted(relative))
 
 
+# CC35b-a3: untracked surface, resolved on disk
 def resolve_selector(
     desk_root: Path,
     directories: list[Path],
@@ -54,11 +57,11 @@ def resolve_selector(
     if len(exact) == 1:
         return exact[0]
     if exact:
-        raise ValueError(f"Ambiguous {what} selector '{selector}': {_relative_candidates(desk_root, exact)}")
+        raise ValueError(f"Ambiguous {what} selector '{selector}': {relative_candidates(desk_root, exact)}")
 
     prefix = [path for path in candidates if path.name.startswith(selector) or path.stem.startswith(selector)]
     if not prefix:
         raise FileNotFoundError(f"No {what} file found for selector '{selector}'")
     if len(prefix) > 1:
-        raise ValueError(f"Ambiguous {what} selector '{selector}': {_relative_candidates(desk_root, prefix)}")
+        raise ValueError(f"Ambiguous {what} selector '{selector}': {relative_candidates(desk_root, prefix)}")
     return prefix[0]
