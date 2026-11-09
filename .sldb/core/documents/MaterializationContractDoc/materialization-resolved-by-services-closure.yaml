@@ -1,0 +1,25 @@
+name: materialization-resolved-by-services-closure
+path: desk/materializations/materialization-resolved-by-services-closure.md
+source_hash: 8780faf1a916d0a33dcd01069b4ba6b16d4abbdea194f5ee24d7a5f39bfeab91
+content_hash: 8cc92af5c1f39c0da33e31fbe6cc93fde76c0a928e7f34b5c996df2e9f03e0c7
+field_hashes:
+  id: 7ba270c886506101851ace09f6047f3f435e2c75adda228570b1a35fc961464f
+  title: 66db08d1fbfe6dbc725c2fc83452dc2325e861d53b7a931706fb8d57129f654d
+  source_atoms: 164704eeb50d19aa94283b7d62690185f6477b08ee28d0de261444fd7a168a0f
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 6194c2533e39b9dfd88721f75777a1a4564a61864e3e7ccae6a755f646dd0057
+  intent: d68a4f69eaf3ef792148ff6bcd182345e3ceaf4c389435791121f20d44be89af
+  validation: 68de010f9e8224fc38fafe54448d7c4e251a8a9de839756ddfaf932809a7ec94
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-09T20:36:53Z'
+  authority: generated
+  via: create_document

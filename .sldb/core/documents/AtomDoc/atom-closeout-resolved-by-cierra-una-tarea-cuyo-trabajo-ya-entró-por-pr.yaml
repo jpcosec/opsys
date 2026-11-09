@@ -1,0 +1,22 @@
+name: atom-closeout-resolved-by-cierra-una-tarea-cuyo-trabajo-ya-entró-por-pr
+path: desk/atoms/atom-closeout-resolved-by-cierra-una-tarea-cuyo-trabajo-ya-entró-por-pr.md
+source_hash: 8a6246f0c9e2607931cc679078c2384531015607e897002e30a91ffc128851b3
+content_hash: 8a8ecb419f1615b151c406004e4c83843a91a2b85044cc8137e1b665ed37430c
+field_hashes:
+  id: 08c3b1afeb029212889c61aebf835478d79b049f7c01fc23f50a9cf86376153f
+  title: 782a61cc749333c6013a80f0ce3575b3865c22eb73afde86b7ff8a6a41f3fd68
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: c552c93eb5805d5a4fd5dbaca22d6eca0adcb39eeb9f18477841adf0861ef368
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-09T20:36:51Z'
+  authority: generated
+  via: create_document

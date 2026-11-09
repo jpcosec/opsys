@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T18:53:32Z'
+  at: '2026-11-09T20:37:01Z'
   authority: generated
   via: save_document_payload
 id: task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr
@@ -12,7 +12,12 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_closeout_resolved_by.py
+- pytest tests/test_closeout.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- cdce4ca2d117adf0e6fa609eea77e6e9c145602c
+- desk/atoms/atom-closeout-resolved-by-cierra-una-tarea-cuyo-trabajo-ya-entró-por-pr.md
 depends_on: []
 pills: []
 files:
@@ -91,6 +96,7 @@ _List the checks required before this task can close._
 - TMPDIR=/dev/shm pytest -q, uno a la vez: test_closeout, test_command_registry, test_cli_help_examples, test_output_goldens; test_cli desde copia en /dev/shm
 - verify_task_closeout y closeout_gates.py sin tocar (git diff)
 - CHANGELOG y manual
+- Resultado (coordinador de proyecto, squash cdce4ca2 sobre CC35b b2673b36): de a uno desde /dev/shm, closeout_resolved_by 19, closeout 49, command_registry 3 (con la línea ('review','record') que faltaba desde 293c4dc7), cli_help_examples 11, cli 101, output_goldens 7 (sin --update-golden).
 
 ## Done When
 

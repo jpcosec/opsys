@@ -294,6 +294,9 @@ include:
   - desk/materializations/materialization-cc35b-deskops-desk-paths.md
   - desk/materializations/materialization-cc35b-deskops-doc-access.md
   - desk/materializations/materialization-cc35b-tests-test-tracked-selector-resolution.md
+  - desk/materializations/materialization-resolved-by-services-closure.md
+  - desk/materializations/materialization-resolved-by-commands-closeout.md
+  - desk/materializations/materialization-resolved-by-tests-test-closeout-resolved-by.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
