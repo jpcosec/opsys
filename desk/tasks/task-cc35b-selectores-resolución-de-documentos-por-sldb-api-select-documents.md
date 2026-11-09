@@ -1,4 +1,9 @@
 ---
+sldb:
+  by: agent
+  at: '2026-11-09T17:45:07Z'
+  authority: generated
+  via: save_document_payload
 id: task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents
 status: draft
 summary: ''
@@ -16,6 +21,7 @@ files:
 - deskops/doc_access.py
 - deskops/services/
 - deskops/operations.py
+- deskops/data/desk_declaration.yaml
 - tests/
 - CHANGELOG.md
 task_type: task.code
@@ -106,6 +112,9 @@ PRECISIONES DEL COLD-BUNDLE (review-...-bundle-1, 2026-11-09):
 c1 (drawer e issues): manda b1/a3. No se migran.
 c2 (model en tareas): para tareas no se pasa model, porque viven bajo varios modelos tipados (TaskCodeDoc, TaskDocsDoc, ...) y bajo TaskDoc los legacy. Alcanza con el path_glob del directorio de tareas. Para el resto de artefactos se pasa el model de ARTIFACT_MODELS solo si todos sus documentos se trackean bajo ese modelo. Si no, va solo el path_glob.
 c3 (estrategia name/stem): dos consultas, en este orden, sin reimplementar la regla en Python. (1) select_documents con prefix=<selector> y el path_glob/model del directorio, expect="one": sldb da el nombre exacto antes que el prefijo único. (2) Solo si (1) no encontró nada, select_documents con path_glob=<directorio>/<selector>*.md, expect="one", que resuelve por el nombre del archivo (rituales como execution.md). La ambigüedad de cualquiera de las dos se informa con el mensaje de a5. Si una consulta es ambigua, no se pasa a la siguiente.
+
+PRECISIONES DE EJECUCIÓN (2026-11-09, a pedido del worker; aceptadas por el coordinador de proyecto como revisables):
+d1 (lo que init escribe sin trackear): deskops init deja sin trackear desk/tasks/Board.md (seed con track: false) y desk/rituals/phase.md, y quizá otros documentos modelados de las superficies que resuelven los selectores (desk/contexts/pills.md, etc.). Con select_documents, «deskops edit board Board» en un desk recién creado da «No artifact.board file found» (test_retire_cli::test_retire_unroutes_a_board_routed_pill...). Decisión revisable: no se adapta el fixture. Se trackea por el include de deskops/data/desk_declaration.yaml cada documento modelado que init escribe en esas superficies (paths con model y, donde el nombre no salga del archivo, name). El seed del Board no cambia. desk update --apply sigue siendo idempotente. Entran en files deskops/data/desk_declaration.yaml (solo la sección include) y tests/fixtures/golden/scaffold/ (init.json y update.json), que solo cambian por las entradas trackeadas de más. El informe trae el inventario. El conflicto con CC32, que también agrega un include, lo resuelve el coordinador del plan al integrar.
 
 ## Validation
 

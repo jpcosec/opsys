@@ -1,7 +1,7 @@
 name: task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents
 path: desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
-source_hash: b544dace05185b764ffb473aa85c37b01467818f91b97aead185c36dd42a676e
-content_hash: 3e28e8ed43092459bb87423e7cbad8fd01c688c3fbc59d33047800faf9196625
+source_hash: eb7eb4cc3913474a69863970555bcd954e6fb5a26a9dd0a518d199cadd272354
+content_hash: 0c3a2a22b0450461d1e47ebb349fef1aa2a089f08eb60c2dea827d261baaaad1
 field_hashes:
   title: c87568de5b32ac1669037b7cd62a372ed76328c401b1f590b45c4bbb2026f82a
   id: e4680a6672a55be0f325b96a932b59211670ed56052531682a461d6002fe7e0c
@@ -16,8 +16,8 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 778d302f973d842b453e093525a79e58acfce5433f6ad93177d9629915bd052c
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: b033b5d5d5e45339b50788ecfc6ff6401f42d53b1dd816bc0fcd726d16e2279c
-  implementation_path: 8374f6cf88953b89cbde88cc3beea0ece9681aaf1809e95fdcc1f5cbf56e8985
+  files: 0da1e817c7ac02e435d625031cd9f7a2946d11113d2659409df0c3da7a986302
+  implementation_path: 102dec5ec1fd1367fe9dd85711c5379ca0ae545e8f2e4499d6003bc93f2db875
   validation: 5dd5ef9c543940ff0a469c158294b8b7fdc5619e5643df091fe32049fb56ee93
   done_when: 83f730dbd41ffe502cc50608cbbc7b55d4758129848c5f6d587c653ce2f00db3
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
@@ -32,4 +32,8 @@ semantic_tags:
 - type.workflow.task
 - workspace.desk
 - workspace:desk
-provenance: null
+provenance:
+  by: agent
+  at: '2026-11-09T17:45:07Z'
+  authority: generated
+  via: save_document_payload

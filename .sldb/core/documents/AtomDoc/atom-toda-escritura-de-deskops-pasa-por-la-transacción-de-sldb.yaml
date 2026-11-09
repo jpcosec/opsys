@@ -8,5 +8,11 @@ field_hashes:
   five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
   answer: 7ee2eebe4f85114bca113bf8511b464a66e556c72fd80d8a7aa3a480f1ce2f87
   tags: 0f6c48efd11519c8802c7e1053b671f368d618aca0fb46df0aba7ae434d4d855
-semantic_tags: []
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:transaction
+- type.knowledge.atom
+- workspace.desk.atoms
 provenance: null
