@@ -100,11 +100,14 @@ class CloseoutGatesService:
         references = payload.get("references") or []
         if not isinstance(references, list):
             references = [references]
+        files = payload.get("files") or []
+        if not isinstance(files, list):
+            files = [files]
         for reference in references:
             ref = str(reference).strip()
             if not ref:
                 continue
-            if self.reference_points_to_test(ref):
+            if self.reference_points_to_test(ref, files=files):
                 evidence["tests"].append(ref)
             if points_to_atom(ref):
                 evidence["atom"].append(ref)
@@ -114,9 +117,6 @@ class CloseoutGatesService:
                 evidence["follow_up"].append(ref)
             if self.reference_points_to_url(ref):
                 evidence["external"].append(ref)
-        files = payload.get("files") or []
-        if not isinstance(files, list):
-            files = [files]
         for candidate in [*references, *files]:
             ref = str(candidate).strip()
             if ref and self.reference_points_to_document(ref) and ref not in evidence["document"]:
@@ -145,24 +145,39 @@ class CloseoutGatesService:
         excluded = ((self.root / "tests").resolve(), (self.root / "desk" / "tasks").resolve())
         return not any(resolved.is_relative_to(parent) for parent in excluded)
 
-    def reference_points_to_test(self, reference: str) -> bool:
-        """True only for an existing .py file under <root>/tests/.
+    def reference_points_to_test(self, reference: str, files: list[Any] | None = None) -> bool:
+        """True only for an existing .py file inside the repository that is a test location.
 
-        Accepts an optional ``::node`` suffix (the node is not validated) and
-        the ``pytest <path>`` form. Absolute paths and paths that escape
-        ``tests/`` through ``..`` are not evidence.
+        After dropping an optional ``::node`` suffix (the node is not validated) and the
+        ``pytest <path>`` form, the reference must name an existing file, relative to the
+        root, whose suffix is exactly ``.py`` and which resolves inside the root. It counts
+        when one of its directories (relative to the root) is named ``tests`` (``tests/``,
+        ``runtime/foo/tests/``, ``ops/tests/sub/``) or when its path is declared in
+        ``files``, the evaluated TaskDoc's ``files``: they widen where tests may live but
+        are not evidence by themselves. Absolute paths, paths that leave the root through
+        ``..`` or a symlink, and files under a directory starting with ``.`` or named
+        ``site-packages`` or ``node_modules`` (third-party code) are not evidence. Each
+        reference is checked on its own; the disk is not walked.
         """
-        tests_root = (self.root / "tests").resolve()
         for candidate in self._test_path_candidates(reference):
             path_text = candidate.split("::", 1)[0]
             path = Path(path_text)
-            if path.is_absolute():
+            if not path_text or path.is_absolute():
                 continue
             resolved = (self.root / path).resolve()
             if resolved.suffix != ".py" or not resolved.is_file():
                 continue
-            if resolved.is_relative_to(tests_root):
+            if not resolved.is_relative_to(self.root):
+                continue
+            directories = resolved.relative_to(self.root).parts[:-1]
+            if any(part.startswith(".") or part in {"site-packages", "node_modules"} for part in directories):
+                continue
+            if "tests" in directories:
                 return True
+            for entry in files or []:
+                declared = str(entry).strip()
+                if declared and not Path(declared).is_absolute() and (self.root / declared).resolve() == resolved:
+                    return True
         return False
 
     def reference_points_to_commit(self, reference: str) -> bool:
