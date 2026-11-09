@@ -11,6 +11,7 @@ tasks:
 - desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md
 - desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md
 - desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
+- desk/tasks/task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
