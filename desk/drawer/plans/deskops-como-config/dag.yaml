@@ -83,7 +83,8 @@ gates:
     evidence: tag_namespaces con anchored_by; sldb docs replace con conteo exacto
   G_CONSUMER:
     title: deskops prueba el gate de activación con RuleDoc (gate externo de sldb grafo-operable)
-    state: pending
+    state: satisfied
+    satisfied_by: 'CC32 cerrado en main de deskops: squash 6afc78b0, closeout 2ce88abd (2026-11-09); tests/test_activation_rules.py (G_CONSUMER en 3 pasos); nota en el inbox de sldb'
     produced_by: CC32
     resolver: cierre de CC32 y nota a sldb por deskops message send --to sldb con el hash del commit (antes asignado a GC05 de gates-por-tipo, congelado por DK2)
     evidence: en un desk temporal, una tarea sin recibo de revisión no se activa y la explicación nombra la cláusula; con recibo atado al hash de contrato vigente, se activa; con el contrato editado, el recibo queda changed y vuelve a bloquear
