@@ -657,22 +657,25 @@ deskops atoms create atom-from-diagram \
   --from-diagram docs/diagrams/example/source.mmd --root .
 ```
 
-### Split, merge, delete, and validate
+### Merge, delete, and validate
 
-Splitting requires heading-based sections that start immediately in the answer
-body. The original is kept as a redirect stub. Merge rewrites inbound
-`atom:<source>` references to the target and also keeps the source as a
-redirect stub.
+Merge rewrites inbound `atom:<source>` references to the target and keeps the
+source as a redirect stub. `atoms split` is not shown here: since CC35a sldb
+refuses headings inside a field, so a sectioned atom cannot be written through
+the CLI (see the drawer entry
+task-atoms-split-no-se-puede-alimentar-por-el-cli-desde-cc35a-sldb-rechaza-encabezados-en-el-field).
 
 ```bash runnable
 deskops add atom --root . \
-  --title "Split manual atom" \
+  --title "Merge source manual atom" \
   --five-wh-one-plus what \
-  --answer $'### Part one\n\nOne.\n\n### Part two\n\nTwo.'
-
-deskops atoms split atom-split-manual-atom \
-  --into atom-part-one atom-part-two --root .
-deskops atoms merge atom-part-one --into atom-part-two --root .
+  --answer "One."
+deskops add atom --root . \
+  --title "Merge target manual atom" \
+  --five-wh-one-plus what \
+  --answer "Two."
+deskops atoms merge atom-merge-source-manual-atom \
+  --into atom-merge-target-manual-atom --root .
 
 deskops add atom --root . \
   --title "Delete manual atom" \
@@ -687,8 +690,7 @@ deskops show atom atom-typed-manual --root .
 
 `list atoms` and `show atom` are the current spellings; `atoms list` and
 `atoms show` are deprecated aliases. `atoms delete` refuses to delete an atom with inbound references
-unless `--force` is passed. `atoms split --section <new-id>:<heading>` assigns
-specific headings to specific new atoms.
+unless `--force` is passed.
 
 ### Reorganize atoms by tag namespace
 
