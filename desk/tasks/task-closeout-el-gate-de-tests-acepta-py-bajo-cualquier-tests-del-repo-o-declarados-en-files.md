@@ -56,6 +56,13 @@ p5 (comportamiento existente): las referencias que hoy cuentan siguen contando. 
 p6 (cambio mínimo): no se toca otra función de closeout_gates.py. El docstring de reference_points_to_test se reescribe con la regla nueva. CHANGELOG: una entrada en ## [Unreleased] / ### Changed.
 p7 (fuera): las notas de inbox no se tocan; el ack o la respuesta a Chatbot_Infra los hace el coordinador al integrar.
 
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-09):
+b1 (de qué TaskDoc salen los files): del TaskDoc que el closeout evalúa, el mismo payload de closeout_reference_evidence (:89), que ya lee payload["files"] para la evidencia de documentos. No es este TaskDoc.
+b2 (sin test de extremo a extremo): no hay test de extremo a extremo. Todos los tests son unitarios sobre CloseoutGatesService en un tmp_path, y se borra la frase «salvo un test de extremo a extremo opcional» de p4.
+b3 (qué corre desde /dev/shm): test_cli, test_output_goldens y test_cli_help_examples corren desde una copia de solo lectura del worktree en /dev/shm: git -C <worktree> worktree add --detach /dev/shm/deskops-ctp HEAD, pytest ahí con PYTHONPATH=/dev/shm/deskops-ctp y, al terminar, git -C <worktree> worktree remove --force /dev/shm/deskops-ctp. tests/test_closeout_test_paths.py y tests/test_closeout_gates.py pueden correr en el worktree.
+b4 (sufijo): se compara exacto con «.py», como hoy (resolved.suffix != ".py"). «.PY» y «.Py» no cuentan, y un test lo fija.
+b5 (cadenas que solo parecen evidencia): la regla es la de p1. Todo lo que no nombre un .py existente que cumpla p1 tras quitar ::nodo y la forma pytest no es evidencia. Los ejemplos de p2 son los casos que el test fija; no hace falta un listado exhaustivo.
+
 ## Validation
 
 _List the checks required before this task can close._

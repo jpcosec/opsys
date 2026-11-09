@@ -317,6 +317,8 @@ include:
     name: review-task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer-preflight-1
   - path: desk/reviews/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer/bundle-1.md
     name: review-task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer-bundle-1
+  - path: desk/reviews/task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files/preflight-1.md
+    name: review-task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files-preflight-1
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

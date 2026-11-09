@@ -1,0 +1,30 @@
+name: review-task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files-preflight-1
+path: desk/reviews/task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files/preflight-1.md
+source_hash: 11d1c2f79728d514293858b3bdbe6f15723bebb820f3ce0218716b07205a07f9
+content_hash: 1441681a576b1237f69d669b9b8f997c54923826cb75b69eb3dd1eb23f56b317
+field_hashes:
+  id: 5a8e7aaaa33376ea1f5a15274f6f765314a08b3774a7209c3a5a1701f914677e
+  title: 71f54c25e385fe9f86835b1439990f660b8a64cfb013ea368364aae1d19f6baa
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: ea6fb7804d91b87864fb5eacdd0740064344d7bc8d9e02337579627d6a2a316d
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 135f5dcaead1957e612f6ec80bf111954a8a2288a6f229e8bdb2a01d00e36633
+  input_sha256: 489431b6bebd464468f5cdb14a7fe47ec2fea8badc3d6335fc9f1c1e8e937ee1
+  output_sha256: 7a84ffdc45a1c6a91827ea3e60ccdba5cbdf16622ab1064b50a1a7e21b318c65
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: d614cc38864a6f157af7d3e16bf649546253f7d1e2e30f4d3d1274e82bccde7e
+  created_at: 1fc4f73a722c8f663588ffeb9257c799eab6287d79079b8c9d9c953095791458
+  disposed_at: f2302ef09537da59eb79e3149e4c421b9ac4adb865bff1e37fe65710648f4da3
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 75a5981d131c76c9e759445a14735d377818b7cc8cfdbe471059e3a70fc1fa0a
+  disposition: 3a6629ca151f4b437892ab8c35cfe6ade1aebb3796dea26275fceaeee81c2be8
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance: null
