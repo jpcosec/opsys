@@ -1,0 +1,34 @@
+usage: deskops closeout resolved-by [-h] [--root ROOT] --task TASK --reason
+                                    REASON --ref REF --test TEST [-m MESSAGE]
+                                    [--paths [PATHS ...]]
+
+Close a task whose work already entered the history, naming an ancestor commit and a test.
+
+options:
+  -h, --help            show this help message and exit
+  --root ROOT           Target repository root.
+  --task TASK           Task id being closed.
+  --reason REASON       Where the task's work entered the history.
+  --ref REF             Ancestor commit id or http(s) URL (the PR); at least
+                        one commit; repeat for more refs.
+  --test TEST           Test file the tests gate accepts; repeat for more
+                        tests.
+  -m MESSAGE, --message MESSAGE
+                        Commit message subject.
+  --paths [PATHS ...]   Extra paths to stage into the closing commit.
+
+Example:
+  deskops closeout resolved-by --root . --task task-fix-thing \
+    --reason "The fix entered main through PR #42 before the closeout" \
+    --ref 9f64f0f --ref https://example.com/org/repo/pull/42 \
+    --test tests/test_fix_thing.py
+
+Resolved-by closes a task whose work is already committed, so it does not ask
+for an atom per changed file. At least one --ref must be a commit that is HEAD
+or an ancestor; the others may be ancestor commits or http(s) URLs. At least
+one --test is required, and every test must be an existing .py file the tests
+gate accepts (under a tests/ directory or declared in the task's files). A
+refusal writes nothing. It makes exactly one closing commit: status `resolved`
+and history `resolved-by`, the commit carries Closeout-Mode: resolved-by with
+Closeout-Reason, one Closeout-Ref per ref and one Closeout-Test per test, the
+task leaves the Board, and the run index entry is marked resolved-by.

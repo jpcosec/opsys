@@ -1626,6 +1626,49 @@ ref, and the run index entry is marked legacy-resolved.
             raw_text=True,
         ),
         Command(
+            path=("closeout", "resolved-by"),
+            help="Close a task whose work already entered the history, naming an ancestor commit and a test.",
+            args=(
+                ROOT_ARG,
+                A("--task", required=True, help="Task id being closed."),
+                A("--reason", required=True, help="Where the task's work entered the history."),
+                A(
+                    "--ref",
+                    action="append",
+                    required=True,
+                    help="Ancestor commit id or http(s) URL (the PR); at least one commit; repeat for more refs.",
+                ),
+                A(
+                    "--test",
+                    action="append",
+                    required=True,
+                    help="Test file the tests gate accepts; repeat for more tests.",
+                ),
+                A(("-m", "--message"), help="Commit message subject."),
+                A("--paths", nargs="*", default=None, help="Extra paths to stage into the closing commit."),
+            ),
+            handler="deskops.cli.commands.closeout:CloseoutCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops closeout resolved-by --root . --task task-fix-thing \\
+    --reason "The fix entered main through PR #42 before the closeout" \\
+    --ref 9f64f0f --ref https://example.com/org/repo/pull/42 \\
+    --test tests/test_fix_thing.py
+
+Resolved-by closes a task whose work is already committed, so it does not ask
+for an atom per changed file. At least one --ref must be a commit that is HEAD
+or an ancestor; the others may be ancestor commits or http(s) URLs. At least
+one --test is required, and every test must be an existing .py file the tests
+gate accepts (under a tests/ directory or declared in the task's files). A
+refusal writes nothing. It makes exactly one closing commit: status `resolved`
+and history `resolved-by`, the commit carries Closeout-Mode: resolved-by with
+Closeout-Reason, one Closeout-Ref per ref and one Closeout-Test per test, the
+task leaves the Board, and the run index entry is marked resolved-by.
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
             path=("closeout", "verify"),
             help="Check the closeout evidence the task declared, without committing; print a structured report.",
             args=(
