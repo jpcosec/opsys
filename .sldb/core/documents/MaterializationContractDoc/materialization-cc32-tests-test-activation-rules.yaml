@@ -1,0 +1,25 @@
+name: materialization-cc32-tests-test-activation-rules
+path: desk/materializations/materialization-cc32-tests-test-activation-rules.md
+source_hash: cc4ca9f8ceb96ca672b6a7526579b0662e163eb08aa62aaae380ba984dcdd39b
+content_hash: 49ce6b306acbdfcb24a14e9d96cf713fbf3dd274f323896d2f22b808ef3dbb8d
+field_hashes:
+  id: 4f1de1a6f1e13606d7e7a0e73578188cc35073d6edb1c48503f7218318f92ed5
+  title: c3d596ed5a4370beb6b81ab3556fc14c842fc9df4c5f8c38b283b910cdc7f29b
+  source_atoms: ad4b2a5434e2bf2193aedf955152b297909adc2bcbe7218ecd5c50e35bbab86c
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 6ec9d837c637359d49ec9591562292315ecef19ffd6e94b6823dd890d1e5b744
+  intent: 6489b7869094faa437d6ffdc75be340b40bdf96687898edafef6d01de2a395af
+  validation: 73de9a1dcbfc3af271509fe3d6bc893e3c5184767d9191eb07911187a594d62d
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-09T19:12:04Z'
+  authority: generated
+  via: create_document

@@ -1,4 +1,9 @@
 ---
+sldb:
+  by: agent
+  at: '2026-11-09T19:12:08Z'
+  authority: generated
+  via: save_document_payload
 id: task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer
 status: draft
 summary: ''
@@ -7,7 +12,13 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_activation_rules.py
+- pytest tests/test_task_types.py
+- pytest tests/test_transaction.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- 6afc78b0dbdc1d28790b119956fb0fbc3bb9c8ce
+- desk/atoms/atom-los-gates-de-activación-de-cada-tipo-de-tarea-son-ruledoc-semilla.md
 depends_on:
 - task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests
 pills: []
@@ -127,6 +138,7 @@ _List the checks required before this task can close._
 - deskops doctor y desk update --apply en los 6 desks con main y rama, cwd neutro (a13)
 - wc -l antes y después por archivo tocado
 - CHANGELOG y docs/workflow-policy-reference.md con la tabla de reglas por tipo
+- Resultado (coordinador de proyecto, squash 6afc78b0 sobre main con CC35a y review-record): de a uno desde /dev/shm, contra sldb-runtime c5e0406d (arreglo de dirty.json 5d4e0771): transaction 11, activation_rules 10 (G_CONSUMER en 3 pasos), review_doc 13 (+1 xfail), review_record 17, task_types 16, lifecycle_graph 9, desk_sync 8, operational 10, scaffold_golden 3, cli_help_examples 11, lifecycle_end_to_end 5, cli 101, output_goldens 7 (sin --update-golden). Decisiones DO2/DO3 (overlord, revisables); desvío a5/e1.
 
 ## Done When
 

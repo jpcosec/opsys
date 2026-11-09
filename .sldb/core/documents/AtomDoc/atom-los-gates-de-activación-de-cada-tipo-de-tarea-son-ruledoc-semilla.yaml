@@ -1,0 +1,22 @@
+name: atom-los-gates-de-activación-de-cada-tipo-de-tarea-son-ruledoc-semilla
+path: desk/atoms/atom-los-gates-de-activación-de-cada-tipo-de-tarea-son-ruledoc-semilla.md
+source_hash: c25cbe30373b416f0d2fae0a5aa4577dca048d872b6b43bdde1fe95a9ddadfc9
+content_hash: cd7ca6efdfe262f088f36b8c6920284e7090f5f15a57957751f42f6ea14a1015
+field_hashes:
+  id: a2f5b8b832402126ef50ef7fe22018e36ea536dc6c9109b6fbab5b30c27114f2
+  title: f4213f7a781a25e380c9794c253dd36f47327dedabf0abc01bfed9cb5ea9a140
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: eef11f696981c24911f68bcd14bdf841c6f8ac7673ef12204ee4f0075b227af8
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-09T19:11:56Z'
+  authority: generated
+  via: create_document

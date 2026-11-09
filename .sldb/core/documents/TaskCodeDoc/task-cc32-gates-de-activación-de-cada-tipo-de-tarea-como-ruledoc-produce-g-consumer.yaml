@@ -1,7 +1,7 @@
 name: task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer
 path: desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md
-source_hash: 93f9a5ed0f9fffff70c16794170776826c5edee10d245b87a86b010dfd796e29
-content_hash: b3d4d04d0b2e89ecc5a3647bfd85e5a63595c40684c9e7d1e74fc272f976a78d
+source_hash: 039e844fe793f046cd6904f58440e0c0aec3614d53a1c335459acecf9d6b0dcd
+content_hash: 5e85cd796b624bab9415f289adaf35568e1bd3950597c9b86e5985642ab9c117
 field_hashes:
   title: f04b7c55556feff92dcfbd76b98b084db7229ae5cd3a799fcb285def602d0f1e
   id: b9f0646997d83732d5160369434a9221586164201532e33457814c60e00ce5cf
@@ -13,12 +13,12 @@ field_hashes:
   why: bed67f6334ff931fe8fad987b91f91d8895b5d7395a3d5c656879d2f82ad6368
   goal: 9177ef859cbc30e165529b32228ba8d32a762470461c9d279f63438c89adbafb
   scope: e1c1e60904b90b986d0733d7029dc750befd33dd46e33abd120375f235448e19
-  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  references: 26b195f1ff279aa99ac48087593ae865f1048098ae82cd65790d1a7cbc75635c
   depends_on: 1e83c5a5c4a16bbf6928b62f113884e7eab44e32684a36825d996c8951c29328
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 32c5682650e67c40bbd50fd9071372513dd63ea046d0772dd44b879d08a231db
   implementation_path: a85af7a9ec0651a99a045e063016b28d2e2da70808db3adf662aae4ae0e95512
-  validation: 5afecf2ce5e3f9af8598ab19270955b6479263e45ee55541db22450c70fb1e87
+  validation: ef7f9b3e40625f88ada2fd4d3e16905a077dedc409426eb15304b4007ff135c6
   done_when: 63833a24e2981fbb41d14e98b5f6c44eb16af1efce62acd01681b3b373994833
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
   inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
@@ -32,4 +32,8 @@ semantic_tags:
 - type.workflow.task
 - workspace.desk
 - workspace:desk
-provenance: null
+provenance:
+  by: agent
+  at: '2026-11-09T19:12:08Z'
+  authority: generated
+  via: save_document_payload

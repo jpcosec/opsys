@@ -1,0 +1,25 @@
+name: materialization-cc32-data-desk-declaration-yaml
+path: desk/materializations/materialization-cc32-data-desk-declaration-yaml.md
+source_hash: 26c7e71ab9ad84d9470f7577a87252e3908c6c61179f4cce5bcf27d4cbe95be0
+content_hash: 9157f163481a445a43b74f77a32c910eab54b1ecb173d221cacd83b1c26d9de5
+field_hashes:
+  id: 0981e08bec60f9ddd16f83ca1dd2c99ed73993b09f1316141c02f0399342437a
+  title: bc6785e830937af7c6c2c66848944b8dc7aa97e9c320eac89e8922e178527f2a
+  source_atoms: ad4b2a5434e2bf2193aedf955152b297909adc2bcbe7218ecd5c50e35bbab86c
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 483c26d6048f22034bb86e17dea42641a5aace5e780de265fabc921f36fa7b7b
+  intent: dd03e1b8324f295436d6296480922913ab2b8a65b9e4da765606085012fb177d
+  validation: 73de9a1dcbfc3af271509fe3d6bc893e3c5184767d9191eb07911187a594d62d
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-09T19:12:02Z'
+  authority: generated
+  via: create_document
