@@ -753,11 +753,13 @@ Examples:
   deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .
   deskops review status task-fix-thing --root .
   deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+  deskops review record task-fix-thing --kind reproduction --evidence runs/repro.log --reason "..." --root .
 
 Every run writes ritual evidence under runs/subagents/<run>/context-review/<key>/<sha>/attempt-N/
 and a ReviewDoc receipt under desk/reviews/. `--engine` names a RuntimeProfileDoc under desk/runtimes/
 (default runtime-pi-deepseek-flash). An unchanged input is not reviewed again; `--max-attempts` (default 2)
-caps good attempts per key unless --force --reason.
+caps good attempts per key unless --force --reason. `record` writes a reproduction, goldens or owner
+receipt from evidence the operator names, without calling the model; `dispose` gives it the verdict.
 """.strip(),
             raw_text=True,
             subcommand_dest="review_command",
@@ -861,6 +863,39 @@ Example:
             epilog="""
 Example:
   deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+""".strip(),
+            raw_text=True,
+        ),
+        Command(
+            path=("review", "record"),
+            help="Record a reproduction, goldens, or owner receipt from operator evidence (no model call).",
+            args=(
+                A("task", help="Task selector."),
+                A(
+                    "--kind",
+                    choices=("reproduction", "goldens", "owner"),
+                    required=True,
+                    help="Receipt kind; preflight, bundle, and node come from their own review command.",
+                ),
+                A(
+                    "--evidence",
+                    action="append",
+                    default=[],
+                    help="Existing file inside the root (repeatable); required for reproduction and goldens.",
+                ),
+                A("--reason", required=True, help="What the operator checked; recorded in the ReviewDoc."),
+                ROOT_ARG,
+                OUTPUT_FORMAT_YAML_ARG,
+            ),
+            handler="deskops.cli.commands.review:ReviewCLI",
+            mutates=True,
+            epilog="""
+Example:
+  deskops review record task-fix-thing --kind reproduction --evidence runs/repro.log --reason "..." --root .
+  deskops review record task-fix-thing --kind owner --reason "approved by the owner" --root .
+
+The receipt is a ReviewDoc with verdict pending, engine human, and input_sha256 over the sorted
+evidence files; `deskops review dispose <review-id>` writes its verdict.
 """.strip(),
             raw_text=True,
         ),

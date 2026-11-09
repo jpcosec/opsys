@@ -51,6 +51,15 @@ def _format_dispose(data: dict[str, Any]) -> str:
     )
 
 
+def _format_record(data: dict[str, Any]) -> str:
+    return (
+        f"{data['key']}: {data['state']}\n"
+        f"review: {data['review_id']}\n"
+        f"evidence: {', '.join(data['evidence']) if data['evidence'] else '(none)'}\n"
+        f"input_sha256: {data['input_sha256']}"
+    )
+
+
 class ReviewCLI:
     def run(self, args: Any) -> int:
         root = Path(args.root).resolve()
@@ -69,6 +78,8 @@ class ReviewCLI:
             return self._status(service, args, fmt)
         if command == "dispose":
             return self._dispose(service, args, fmt)
+        if command == "record":
+            return self._record(service, args, fmt)
         return 1
 
     def _run_task(self, service: ReviewService, args: Any, fmt: str, mode: str) -> int:
@@ -116,3 +127,10 @@ class ReviewCLI:
         except (DomainError, UsageError) as exc:
             return render_error(str(exc), fmt, type_name=type(exc).__name__, text=f"Error: {exc}", code=exc.exit_code)
         return render(result, fmt, _format_dispose)
+
+    def _record(self, service: ReviewService, args: Any, fmt: str) -> int:
+        try:
+            result = service.record_receipt(args.task, args.kind, list(args.evidence or []), args.reason)
+        except (DomainError, UsageError) as exc:
+            return render_error(str(exc), fmt, type_name=type(exc).__name__, text=f"Error: {exc}", code=exc.exit_code)
+        return render(result, fmt, _format_record)
