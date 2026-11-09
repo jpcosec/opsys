@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T17:45:07Z'
+  at: '2026-11-09T20:36:20Z'
   authority: generated
   via: save_document_payload
 id: task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents
@@ -12,7 +12,12 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_tracked_selector_resolution.py
+- pytest tests/test_desk_sync.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- b2673b366482fae89b0e30d656994db4d102a903
+- desk/atoms/atom-deskops-resuelve-documentos-por-los-selectores-de-sldb.md
 depends_on:
 - task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra
 pills: []
@@ -126,6 +131,7 @@ _List the checks required before this task can close._
 - deskops doctor sin hallazgos nuevos en los 6 desks, cwd neutro (a9)
 - wc -l antes y después
 - CHANGELOG
+- Resultado (coordinador de proyecto, squashes b2673b36 y cdce4ca2 combinados sobre c1a4313e): de a uno desde /dev/shm, command_registry 3, closeout_resolved_by 19, closeout 49, tracked_selector_resolution 10, desk_sync 8, scaffold_golden 3, activation_rules 10, retire_cli 11, task_types 16, promotion_nesting 2, transaction 11, review_record 17, cli_help_examples 11, cli 101, output_goldens 7 (sin --update-golden).
 
 ## Done When
 

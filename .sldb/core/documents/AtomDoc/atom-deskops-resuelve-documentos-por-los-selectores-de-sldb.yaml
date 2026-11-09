@@ -1,0 +1,22 @@
+name: atom-deskops-resuelve-documentos-por-los-selectores-de-sldb
+path: desk/atoms/atom-deskops-resuelve-documentos-por-los-selectores-de-sldb.md
+source_hash: 19287b1c6aa872d6faa0b914835c84f03b5d618c56e09b364017fde946345d57
+content_hash: 81a45d1ec06ff994152a959de5e0e255afbd84f31e794b7af049a01cdbb9d63e
+field_hashes:
+  id: fc8d206a770b086aaba840d2db3816f4c9b858b6d046d248cca1003fbdc8e8c3
+  title: 7fcfbcec5ed3b02add375636fab3e9ce9184f0eab862b849a2c0ca803a2f66a0
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 6e1c26ba549bc391bc2a24844a5d2a57374cb27911503d6455087bc3ac752d6b
+  tags: bdc0a24d7e2172f6ee23e5d47e5eb3017559dcea317fc2e47d8c71006c662d7e
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:selectors
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-09T20:36:10Z'
+  authority: generated
+  via: create_document

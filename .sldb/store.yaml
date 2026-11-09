@@ -291,6 +291,9 @@ include:
   - desk/materializations/materialization-cc32-models-task-types.md
   - desk/materializations/materialization-cc32-data-desk-declaration-yaml.md
   - desk/materializations/materialization-cc32-tests-test-activation-rules.md
+  - desk/materializations/materialization-cc35b-deskops-desk-paths.md
+  - desk/materializations/materialization-cc35b-deskops-doc-access.md
+  - desk/materializations/materialization-cc35b-tests-test-tracked-selector-resolution.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

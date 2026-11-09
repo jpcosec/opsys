@@ -1,0 +1,25 @@
+name: materialization-cc35b-tests-test-tracked-selector-resolution
+path: desk/materializations/materialization-cc35b-tests-test-tracked-selector-resolution.md
+source_hash: 53706f34717065c65853d08b04e795bdd4839f13357be779f9471fac8f5508fa
+content_hash: 46532a978a9c6e8de5da7a0dedaf0b9a24965a53b3d8e993be44109ee2d2b7a2
+field_hashes:
+  id: 065033934a065527963b542df3a31145d53a8b84b8572aa8c63b84a8cfaf6d62
+  title: 5abb0b9970da42211a22172521a73e4906996636a1b7c70eb55e92cc4087f793
+  source_atoms: 11157eb11342586483631631331c7f0499bcf3ac4840ade972dce1b0e90852d5
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: b8bc93c683158d7a46c27320713b9376d083a9a84bedfe95a88f415798380ccb
+  intent: 0d2fac9c87295ed32ed8a18687f807d14d82b2bd78290be0c74a9e0b4a62bf51
+  validation: 7856cf136c6517f263b72305df8eae5dd6aa15acf073fb5f7ebc9a8c45137bf9
+  tags: bdc0a24d7e2172f6ee23e5d47e5eb3017559dcea317fc2e47d8c71006c662d7e
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:selectors
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-09T20:36:16Z'
+  authority: generated
+  via: create_document

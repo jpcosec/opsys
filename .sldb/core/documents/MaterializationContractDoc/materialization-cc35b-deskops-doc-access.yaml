@@ -1,0 +1,25 @@
+name: materialization-cc35b-deskops-doc-access
+path: desk/materializations/materialization-cc35b-deskops-doc-access.md
+source_hash: 42e08d4344c8cf0cec2f2e6c235cf47c0338386a19358fcb99390f17e33b9e9b
+content_hash: 8763b878959d0c61fa1a430b9f72294a8d6d8e1f1b00ab647decb95c0e7f1ed4
+field_hashes:
+  id: 144da38b51c50e08b254f732a9f5b74c7ccb82141c83662caa719ec2863f50c7
+  title: 718df08c1771fd795cae272a4e696630e9422f1b37cfb499ce75687b2af0ada6
+  source_atoms: 11157eb11342586483631631331c7f0499bcf3ac4840ade972dce1b0e90852d5
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 5cae68609c6efd54b2c734af4e38fabe209397f3bfcb0699b871d863016aaa87
+  intent: c8e4d90a3c8eea386182e720caf3f4b0d580a8af40fd7462230693e3a05fcc43
+  validation: 7856cf136c6517f263b72305df8eae5dd6aa15acf073fb5f7ebc9a8c45137bf9
+  tags: bdc0a24d7e2172f6ee23e5d47e5eb3017559dcea317fc2e47d8c71006c662d7e
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:selectors
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-09T20:36:14Z'
+  authority: generated
+  via: create_document
