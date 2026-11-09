@@ -12,6 +12,7 @@ Modes:
   bundle <task>              cold bundle: TaskDoc + routed rituals + pills + atoms + files + validation
   status [task | plan-dir]   compare current inputs with recorded reviews; no model call
   dispose <review-id>        write the verdict on one pending receipt
+  record <task> --kind K     reproduction/goldens/owner receipt from operator evidence; no model call
 
 Caps (owner, D9): an unchanged input is not reviewed again; ``--max-attempts``
 (default 2) refuses another *good* attempt on the same key unless ``--force`` with
@@ -61,6 +62,8 @@ SELECTION = "deepseek-flash: perfil barato verificado en esta máquina por ritua
 MODEL = "deepseek/deepseek-flash"
 DEFAULT_ENGINE = "runtime-pi-deepseek-flash"
 TIMEOUT = 900
+# Receipts ``deskops review record`` writes by hand (no model call); the others come from their command.
+RECORD_KINDS = ("reproduction", "goldens", "owner")
 
 KEEP = (
     "id",
@@ -573,6 +576,7 @@ class ReviewService:
         reason: str,
         node_id: str | None,
         plan_id: str | None = None,
+        summary: str | None = None,
     ) -> tuple[str, Path]:
         if node_id is not None:
             node_lower = node_id.lower()
@@ -605,12 +609,71 @@ class ReviewService:
             "created_at": _now(),
             "disposed_at": "",
             "disposed_by": "",
-            "summary": f"{kind} review; engine {engine}; evidence under {run_dir}.",
+            "summary": summary if summary is not None else f"{kind} review; engine {engine}; evidence under {run_dir}.",
             "disposition": "",
             "tags": ["workspace:desk"],
         }
         doc_access.create_doc(self.root, path, ReviewDoc, payload, review_id)
         return review_id, path
+
+    # ------------------------------------------------------------------ record
+    def record_receipt(self, task_id: str, kind: str, evidence: list[str], reason: str) -> dict[str, Any]:
+        """A receipt the desk operator records without a model call (reproduction, goldens, owner).
+
+        Every ``evidence`` path must be an existing file inside the root; otherwise nothing is
+        written. ``input_sha256`` hashes ``<path>\\n<content>\\n`` of each file, paths POSIX-relative
+        to the root, sorted, without repeats (b1); empty without evidence. The verdict stays
+        ``pending`` until ``deskops review dispose`` (r4).
+        """
+        if kind not in RECORD_KINDS:
+            raise UsageError(
+                f"--kind {kind} is not recorded by hand; use one of {', '.join(RECORD_KINDS)} "
+                "(preflight, bundle and node come from their own review command)"
+            )
+        if not (reason and reason.strip()):
+            raise UsageError("--reason is required")
+        paths: list[str] = []
+        for raw in evidence:
+            candidate = Path(raw)
+            if not candidate.is_absolute():
+                candidate = self.root / candidate
+            resolved = candidate.resolve()
+            if not resolved.is_relative_to(self.root) or not resolved.is_file():
+                raise DomainError(f"evidence not found: {raw}")
+            paths.append(resolved.relative_to(self.root).as_posix())
+        paths = sorted(set(paths))
+        if not paths and kind != "owner":
+            raise UsageError(f"--kind {kind} requires at least one --evidence")
+
+        task_path = self._task_path(task_id)
+        subject = f"doc:{self._task_model(task_path)}:{task_id}"
+        input_sha256 = ""
+        if paths:
+            data = b"".join(rel.encode() + b"\n" + (self.root / rel).read_bytes() + b"\n" for rel in paths)
+            input_sha256 = _sha(data)
+        actor = self._identity()
+        summary = f"{kind} receipt recorded by {actor}; evidence: {', '.join(paths) if paths else '(none)'}"
+        review_id, review_path = self._write_review(
+            kind=kind,
+            subject=subject,
+            subject_ref="",
+            engine="human",
+            run_dir="",
+            input_sha256=input_sha256,
+            output_sha256="",
+            verdict="pending",
+            reason=reason,
+            node_id=None,
+            summary=summary,
+        )
+        return {
+            "key": f"{task_id}/{kind}",
+            "state": "recorded",
+            "review_id": review_id,
+            "review_path": review_path.relative_to(self.root).as_posix(),
+            "evidence": paths,
+            "input_sha256": input_sha256,
+        }
 
     # ------------------------------------------------------------------ dispose
     def dispose(self, review_id: str, verdict: str, reason: str) -> dict[str, Any]:

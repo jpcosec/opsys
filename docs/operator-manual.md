@@ -872,6 +872,26 @@ or output without `REFORMULACION`) is recorded with `technical_ok: false` and a
 `verdict: incomplete` / `reason: technical` receipt, kept separate from
 comprehension findings.
 
+Reproduction, goldens and owner receipts are not produced by a model: whoever
+operates the desk records them with the evidence they checked, and disposes of
+them like any other receipt.
+
+```bash
+deskops review record task-fix-thing --kind reproduction --evidence runs/repro.log --reason "..." --root .
+deskops review record task-fix-thing --kind owner --reason "approved by the owner" --root .
+```
+
+`record` writes a `ReviewDoc` with `verdict: pending`, `engine: human`, `actor`
+from the desk identity, and the evidence paths in `summary`. Each `--evidence` is
+an existing file inside the root; anything else fails with
+`Error: evidence not found: <path>` (exit 1) and writes nothing. `reproduction`
+and `goldens` need at least one `--evidence`; `owner` may carry only `--reason`.
+`input_sha256` is the SHA-256 of `<path>\n<content>\n` for each evidence file,
+paths relative to the root, sorted and without repeats (empty without evidence).
+`--kind` accepts only `reproduction`, `goldens` and `owner`: `preflight`,
+`bundle` and `node` come from their own command. `deskops review dispose
+<review-id>` writes the verdict.
+
 ## Verb coverage
 
 This table maps every CLI verb to the section that documents it.
@@ -906,4 +926,4 @@ This table maps every CLI verb to the section that documents it.
 | `closeout verify/commit` | Closeout |
 | `closeout supersede/retire` | Supersede or retire a task |
 | `runtime init/status/attach/stop/workers/supervise/template` | Runtime and Herdr |
-| `review node/preflight/bundle/status/dispose` | Cold context reviews |
+| `review node/preflight/bundle/status/dispose/record` | Cold context reviews |
