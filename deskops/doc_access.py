@@ -28,11 +28,14 @@ import sys
 from typing import Any, Iterator
 
 import yaml
+from sldb.api import AmbiguousSelectionError
 from sldb.api import ConflictError
 from sldb.api import Transaction
 from sldb.api import store_fingerprint
 from sldb.api import tracked_documents
+from sldb.api import select_documents
 from sldb.api import transaction
+from sldb.core.exceptions import SLDBDocumentTargetError
 from sldb.store.layout import store_exists
 from sldb.api.documents.frontmatter_keys import undeclared_frontmatter_keys
 from sldb.api.documents.structural_noise import find_structural_noise
@@ -46,7 +49,9 @@ from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
 from deskops.atom_tags import validate_atom_tag_namespaces
 from deskops.config import DeskConfig
+# CC35b-a3: untracked surface, resolved on disk
 from deskops.desk_paths import resolve_selector
+from deskops.desk_paths import relative_candidates
 from deskops.doc_readability import is_unreadable_by_model, unread_section_fields
 from deskops.errors import DomainError
 from deskops.models import AtomDoc
@@ -548,126 +553,105 @@ def atom_doc_path(root: Path, atom_id: str, tags: list[str]) -> Path:
     return base / f"{atom_id}.md"
 
 
+# Desk folders the store does not track (CC35b-a3): the include of
+# ``deskops/data/desk_declaration.yaml`` declares neither, so their documents resolve on disk.
+_UNTRACKED_DESK_FOLDERS = ("drawer", "issues")
+
+
+def _tracked_surface(root: Path, directory: Path) -> bool:
+    """Whether documents under ``directory`` resolve through the store: the root has one and
+    the directory is not one of the desk folders it leaves untracked."""
+    if not has_store(root):
+        return False
+    try:
+        relative = directory.resolve().relative_to(desk_root(root).resolve())
+    except ValueError:
+        return True
+    return not (relative.parts and relative.parts[0] in _UNTRACKED_DESK_FOLDERS)
+
+
+def _select_one(root: Path, query: dict[str, str], selector: str, what: str) -> Path | None:
+    """The one document ``query`` names (``select_documents``, ``expect="one"``), or None.
+
+    Several matches raise the deskops ambiguity message, its candidates the rows of the same
+    query (``expect="many"``) that ``AmbiguousSelectionError`` names, relative to ``desk/``.
+    """
+    store = store_path(root)
+    try:
+        rows = select_documents(store, query, expect="one")
+    except AmbiguousSelectionError as error:
+        named = set(error.candidates)
+        paths = [root / row["path"] for row in select_documents(store, query) if row["export_id"] in named]
+        raise ValueError(f"Ambiguous {what} selector '{selector}': {relative_candidates(desk_root(root), paths)}") from None
+    except SLDBDocumentTargetError:
+        return None
+    return root / rows[0]["path"]
+
+
+def resolve_document(
+    root: Path,
+    directory: Path,
+    selector: str,
+    what: str,
+    *,
+    pattern: str = "*.md",
+    recursive: bool = True,
+    model: str | None = None,
+) -> Path:
+    """The document ``selector`` names under ``directory`` (``pattern``; ``recursive`` reaches subfolders).
+
+    A tracked surface asks ``sldb.api.select_documents`` twice, in order (TaskDoc c3): by
+    name (``prefix``, where an exact name wins over the unique prefix match), then, only if
+    that found nothing, by file name (``path_glob`` of ``<selector>*.md``), which keeps the
+    files whose name differs from their document's (``desk/rituals/execution.md`` is
+    ``ritual-execution``). An ambiguous query stops there. Zero matches raise
+    ``FileNotFoundError``, several ``ValueError``, with the messages the disk rule uses.
+    """
+    if not selector or not str(selector).strip():
+        raise ValueError(f"Empty or whitespace-only selector provided for {what}")
+    if not _tracked_surface(root, directory):
+        # CC35b-a3: untracked surface, resolved on disk
+        return resolve_selector(desk_root(root), [directory], selector, pattern, what, recursive=recursive)
+    base = relative_path(root, directory) + ("/**/" if recursive else "/")
+    by_name = {"prefix": selector, "path_glob": base + pattern}
+    if model is not None:
+        by_name["model"] = model
+    for query in (by_name, {"path_glob": f"{base}{selector}*.md"}):
+        found = _select_one(root, query, selector, what)
+        if found is not None:
+            return found
+    raise FileNotFoundError(f"No {what} file found for selector '{selector}'")
+
+
 def resolve_glob(root: Path, directory: Path, doc_id: str) -> Path:
-    return resolve_selector(desk_root(root), [directory], doc_id, f"{doc_id}*.md", "task", recursive=False)
+    return resolve_document(root, directory, doc_id, "task", recursive=False)
 
 
 def resolve_artifact_selector_multi(root: Path, artifact_id: str, directories: list[Path], selector: str) -> Path:
-    try:
-        return resolve_selector(
-            desk_root(root),
-            directories,
-            selector,
-            artifact_glob_pattern(artifact_id),
-            artifact_id,
-            recursive=True,
-        )
-    except FileNotFoundError:
-        if artifact_id != "artifact.review":
-            raise
-    # A review's id is the authority; its file is named `<kind>-<n>.md` under
-    # `desk/reviews/<task-id>/`, so resolve it by the id its frontmatter carries
-    # (TaskDoc precisión 4: nothing parses the id back out of the path).
-    matches = [
-        path
-        for directory in directories
-        if directory.exists()
-        for path in sorted(directory.rglob("*.md"))
-        if frontmatter_id(path) == selector
-    ]
-    if not matches:
-        raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}'")
-    if len(matches) > 1:
-        names = ", ".join(str(path.relative_to(desk_root(root))) for path in matches)
-        raise ValueError(f"Ambiguous {artifact_id} selector '{selector}': {names}")
-    return matches[0]
+    """``resolve_artifact_selector`` over several directories, in order: the first that
+    names the selector wins (a review resolves by its id, the name the store tracks it by)."""
+    for directory in directories:
+        try:
+            return resolve_artifact_selector(root, artifact_id, directory, selector)
+        except FileNotFoundError:
+            continue
+    raise FileNotFoundError(f"No {artifact_id} file found for selector '{selector}'")
 
 
 def resolve_artifact_selector(root: Path, artifact_id: str, directory: Path, selector: str) -> Path:
     try:
-        return resolve_selector(
-            desk_root(root),
-            [directory],
-            selector,
-            artifact_glob_pattern(artifact_id),
-            artifact_id,
-            recursive=True,
-        )
+        return resolve_document(root, directory, selector, artifact_id, pattern=artifact_glob_pattern(artifact_id))
     except FileNotFoundError:
-        tracked = _tracked_task_paths(root) if artifact_id == "artifact.task" else set()
-        if not tracked:
+        if artifact_id != "artifact.task" or not _tracked_surface(root, directory):
             raise
-    # Tasks written before the `task-*` naming are still tracked TaskDocs.
-    return resolve_selector(
-        desk_root(root),
-        [directory],
-        selector,
-        "*.md",
-        artifact_id,
-        recursive=True,
-        keep=lambda path: path.resolve() in tracked,
-    )
-
-
-def _tracked_task_paths(root: Path) -> set[Path]:
-    # Tasks are tracked under their type model (TaskCodeDoc, …) and, for pre-type
-    # documents, under TaskDoc. Legacy file names resolve only through the tracked paths.
-    from deskops.services.tasks import registered_task_types
-
-    model_names = {"TaskDoc"}
-    model_names.update(getattr(cls, "__name__") for cls in registered_task_types(root).values())
-    tracked: set[Path] = set()
-    for model_name in model_names:
-        records = root / ".sldb" / "core" / "documents" / model_name
-        if not records.is_dir():
-            continue
-        for record in records.glob("*.yaml"):
-            try:
-                path = (yaml.safe_load(record.read_text(encoding="utf-8")) or {}).get("path")
-            except (OSError, yaml.YAMLError):
-                continue
-            if path:
-                tracked.add((root / path).resolve())
-    return tracked
-
-
-def frontmatter_id(path: Path) -> str | None:
-    try:
-        text = path.read_text(encoding="utf-8")
-    except OSError:
-        return None
-    if not text.startswith("---"):
-        return None
-    parts = text.split("---", 2)
-    if len(parts) < 3:
-        return None
-    try:
-        payload = yaml.safe_load(parts[1])
-    except yaml.YAMLError:
-        return None
-    if not isinstance(payload, dict) or payload.get("id") is None:
-        return None
-    return str(payload["id"])
+    # Tasks written before the `task-*` naming are still tracked: every task type extends
+    # TaskDoc, so its model family names them whatever their file is called.
+    return resolve_document(root, directory, selector, artifact_id, model="TaskDoc")
 
 
 def resolve_ritual_selector(root: Path, selector: str) -> Path:
     directory = desk_root(root) / ARTIFACT_PATHS["artifact.ritual"]
-    try:
-        return resolve_artifact_selector(root, "artifact.ritual", directory, selector)
-    except FileNotFoundError:
-        pass
-    # Ritual files are named by hand; accept the frontmatter id as well.
-    matches = (
-        [path for path in sorted(directory.glob("*.md")) if frontmatter_id(path) == selector]
-        if directory.exists()
-        else []
-    )
-    if not matches:
-        raise FileNotFoundError(f"No artifact.ritual file found for selector '{selector}'")
-    if len(matches) > 1:
-        names = ", ".join(str(path.relative_to(desk_root(root))) for path in matches)
-        raise ValueError(f"Ambiguous artifact.ritual selector '{selector}': {names}")
-    return matches[0]
+    return resolve_artifact_selector(root, "artifact.ritual", directory, selector)
 
 
 def editable_artifact(root: Path, subject: str, selector: str) -> tuple[type[Any], Path, str]:
@@ -854,11 +838,19 @@ def edit_artifact_field(root: Path, subject: str, selector: str, field: str, raw
 
 # ---------------------------------------------------------------- registry
 def registered_repositories(root: Path) -> list[dict[str, Any]]:
+    """The repositories of ``desk/registry/repo-*.md``: the documents the store tracks there
+    (``select_documents``), or the files on disk in a desk without a store."""
     registry_dir = desk_root(root) / "registry"
     if not registry_dir.exists():
         return []
+    if has_store(root):
+        pattern = relative_path(root, registry_dir) + "/repo-*.md"
+        paths = [root / row["path"] for row in select_documents(store_path(root), {"path_glob": pattern})]
+    else:
+        # CC35b-a3: untracked surface, resolved on disk
+        paths = sorted(registry_dir.glob("repo-*.md"))
     repositories = []
-    for path in sorted(registry_dir.glob("repo-*.md")):
+    for path in paths:
         try:
             repositories.append(read_doc(path, RepositoryDoc))
         except Exception as e:

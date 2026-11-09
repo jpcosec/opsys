@@ -222,8 +222,8 @@ def test_desk_update_apply_resigns_a_moved_model_contract(tmp_path: Path, capsys
 def test_declared_includes_treat_extra_boards_in_tasks_as_boards(tmp_path: Path) -> None:
     """`deskops add board` writes `board-<slug>.md` next to Board.md (ARTIFACT_PATHS puts boards in
     tasks/); tracking it as a TaskDoc fails validation (no `status`) and breaks `desk update --apply`.
-    The declared includes (deskops/data/desk_declaration.yaml) name it a BoardDoc and leave the
-    Board itself and the tasks to the paths that track them."""
+    The declared includes (deskops/data/desk_declaration.yaml) name it a BoardDoc, track the seeded
+    Board by its path (CC35b d1) and leave the tasks to the paths that track them."""
     from deskops.workspace import pending_desk_includes
     from deskops.workspace import seed_desk
 
@@ -235,10 +235,11 @@ def test_declared_includes_treat_extra_boards_in_tasks_as_boards(tmp_path: Path)
     pending = pending_desk_includes(tmp_path)
     assert ("BoardDoc", "desk/tasks/board-compromisos-26-10.md") in pending
     assert not any(path.startswith("desk/tasks/task-") for _model, path in pending), "tasks are tracked by their own paths"
-    # Without a store, the lifecycle graph (CC31) and the activation rules (CC32) the scaffold wrote
-    # are pending too.
+    # Without a store, the lifecycle graph (CC31), the activation rules (CC32) and the seeded
+    # Board (CC35b d1) the scaffold wrote are pending too.
     assert [row for row in pending if row[0] not in ("RelationTypeDoc", "RelationDoc", "RitualDoc", "RuleDoc")] == [
-        ("BoardDoc", "desk/tasks/board-compromisos-26-10.md")
+        ("BoardDoc", "desk/tasks/Board.md"),
+        ("BoardDoc", "desk/tasks/board-compromisos-26-10.md"),
     ]
 
 
@@ -246,7 +247,7 @@ def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) 
     """One `{model, glob}` per desk folder `desk update --apply` tracked by path, under the model's
     own id pattern; the scaffold's own files (pills.md) match no glob. The lifecycle graph is tracked
     by its declared paths (CC31): the RelationDocs by name, the lifecycle rituals by their ids; the
-    activation rules (CC32) by their glob."""
+    activation rules (CC32) by their glob, the seeded Board and phase ritual by theirs (CC35b d1)."""
     from deskops.workspace import desk_declaration
 
     include = desk_declaration("x").include
@@ -258,7 +259,9 @@ def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) 
             "desk/lifecycle/testing-task_hands_to_closeout.md",
             "desk/lifecycle/closeout-task_completes.md",
         ],
+        "BoardDoc": ["desk/tasks/Board.md"],
         "RitualDoc": [
+            {"path": "desk/rituals/phase.md", "name": "ritual-phase"},
             {"path": "desk/rituals/execution.md", "name": "ritual-execution"},
             {"path": "desk/rituals/testing.md", "name": "ritual-testing"},
             {"path": "desk/rituals/closeout.md", "name": "ritual-closeout"},

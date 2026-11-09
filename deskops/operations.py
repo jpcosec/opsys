@@ -263,9 +263,11 @@ class DeskopsOperations:
     def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
         return doc_access.read_doc(path, model)
 
+    # CC34: alias for graph_ui, removed by CC34
     def _resolve_glob(self, directory: Path, doc_id: str) -> Path:
         return doc_access.resolve_glob(self.root, directory, doc_id)
 
+    # CC34: alias for graph_ui, removed by CC34
     def _registered_repositories(self) -> list[dict[str, Any]]:
         return doc_access.registered_repositories(self.root)
 

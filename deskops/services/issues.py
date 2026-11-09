@@ -20,6 +20,7 @@ from typing import Iterable
 import yaml
 
 from deskops import doc_access
+# CC35b-a3: untracked surface, resolved on disk
 from deskops.desk_paths import resolve_selector
 from deskops.errors import DomainError
 
@@ -100,6 +101,7 @@ def find_issue(root: Path, selector: str) -> Path:
     behavior: ``ValueError`` and ``FileNotFoundError`` respectively.
     """
     desk_root = root.resolve() / "desk"
+    # CC35b-a3: untracked surface, resolved on disk
     return resolve_selector(
         desk_root,
         [desk_root / "issues", desk_root / "drawer" / "issues"],

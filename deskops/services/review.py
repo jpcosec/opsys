@@ -180,11 +180,9 @@ class ReviewService:
 
     # ------------------------------------------------------------------ tasks
     def _task_path(self, task_id: str) -> Path:
-        from deskops.desk_paths import resolve_selector
-
         tasks_dir = self.desk_root / "tasks"
         try:
-            return resolve_selector(self.desk_root, [tasks_dir], task_id, "*.md", "task", recursive=False)
+            return doc_access.resolve_document(self.root, tasks_dir, task_id, "task", recursive=False)
         except FileNotFoundError:
             raise DomainError(f"Task '{task_id}' not found under {tasks_dir}") from None
 
@@ -222,10 +220,8 @@ class ReviewService:
             candidate = self.root / candidate
         if candidate.is_file():
             return candidate
-        from deskops.desk_paths import resolve_selector
-
         try:
-            return resolve_selector(self.desk_root, [self.desk_root / "contexts"], ref, "*.md", "pill", recursive=True)
+            return doc_access.resolve_document(self.root, self.desk_root / "contexts", ref, "pill")
         except (FileNotFoundError, ValueError):
             return None
 
