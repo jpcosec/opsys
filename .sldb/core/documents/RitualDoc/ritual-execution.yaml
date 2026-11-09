@@ -1,7 +1,7 @@
 name: ritual-execution
 path: desk/rituals/execution.md
-source_hash: a71dcee57990863a292c5b2fe2e232260e1c568c39926d6917309b4aa5295d51
-content_hash: 9ebf89ab36f957095d6a9936c4044e133d0c056376198772470bd25471b90051
+source_hash: d2c97a4b4274dd1bf58e42e1c5d2be74dca6dd5c16d2580f2dcb1d1c51777635
+content_hash: be0245adb0507ffc418e67025822ac4856b32744e2e6baa0f9ecb8f8321eaa1f
 field_hashes:
   title: 6d298fe322e4ff3c1f95e4de19f01aa3ff54b687a8b0378cf11199da52ce086d
   id: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
@@ -13,7 +13,7 @@ field_hashes:
   purpose: 9924bf3e51bacc1d32471146c0d089b7e3feb9f6402337ebc9656b9c8c610fdf
   trigger: a7158a6d662a777009592da40e46f2427bb35a7912dd753b6bc97c17a978bb1d
   preconditions: f6904fbcda70ac720db4b5071e006d781ca705b5b6a5e24c016c2e004a0f859a
-  steps: 5628cb8b8bbd1db3d6f13a3a55dea28cc36b36803fbccf9f30a151e594797170
+  steps: 712bb2ac8ee619d65468cd197b887b668bb228ce64530251fd35459ebae314cd
   validation: 79ff64bab43ef62b11e5a9bb360e8eb258d5f1dcfbc2a3be42d3d2288ce1fbdb
   failure_modes: 740cec9a1727e0d8863c07bf6390f1e266f0117a3f3e99553ffe5c4117317f81
   completion: 9b86fd7f6dc9117f466bd0a02e58b6b5f870335132bb8951b922dadc90891a94
@@ -28,6 +28,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-10-31T04:05:19Z'
+  at: '2026-11-09T19:13:53Z'
   authority: generated
-  via: update_document
+  via: save_document_payload

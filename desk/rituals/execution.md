@@ -1,9 +1,9 @@
 ---
 sldb:
   by: agent
-  at: '2026-10-31T04:05:19Z'
+  at: '2026-11-09T19:13:53Z'
   authority: generated
-  via: update_document
+  via: save_document_payload
 # ritual-xxx
 id: ritual-execution
 # Ordered prose steps; not document references
@@ -36,6 +36,12 @@ steps:
   instead of proceeding on implicit assumptions.
 - 1. Do not start implementation until the initialization gate confirms atomization,
   preflight comprehension, cold review, and pill coverage.
+- '1. Activate the task with `deskops advance task <id>`: the task type''s activation
+  RuleDoc (`desk/lifecycle/rule-activation-<type>.md`) requires its review receipts
+  accepted and intact and its dependencies closed. Receipts come from `deskops review
+  preflight|bundle` or `deskops review record --kind reproduction|goldens|owner`,
+  each disposed with `deskops review dispose`; a blocked advance, `deskops show task
+  <id>` and `deskops next <id>` name the clause that fails.'
 - 1. Implement only the changes required for the active task.
 - 1. Keep scope tight and avoid unrelated fixes.
 - 1. Prepare validation before calling the work complete.
