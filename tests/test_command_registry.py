@@ -115,6 +115,7 @@ MUTATING_COMMANDS: set[tuple[str, ...]] = {
     ("closeout", "commit"),
     ("closeout", "supersede"),
     ("closeout", "retire"),
+    ("closeout", "resolved-by"),
     ("runtime",),
     ("runtime", "init"),
     ("runtime", "stop"),
