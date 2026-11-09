@@ -1218,16 +1218,15 @@ def test_edit_task_resolves_tracked_task_with_legacy_file_name(tmp_path: Path, c
         ]
     )
     assert created == 0
-    # Simulate a task written before the `task-*` naming: same tracked document, older file name.
+    # Simulate a task written before the `task-*` naming: same tracked document, older file name
+    # (CC35b a7: the store tracks it at that path through sldb, not by editing its record).
+    from deskops import doc_access
+    from deskops.models import TaskCodeDoc
+
     tasks = tmp_path / "desk" / "tasks"
+    doc_access.untrack_doc(tmp_path, tasks / "task-legacy-task.md")
     (tasks / "task-legacy-task.md").rename(tasks / "001-legacy-task.md")
-    record = tmp_path / ".sldb" / "core" / "documents" / "TaskCodeDoc" / "task-legacy-task.yaml"
-    record.write_text(
-        record.read_text(encoding="utf-8").replace(
-            "path: desk/tasks/task-legacy-task.md", "path: desk/tasks/001-legacy-task.md"
-        ),
-        encoding="utf-8",
-    )
+    doc_access.track_created_document(tmp_path, TaskCodeDoc, tasks / "001-legacy-task.md", "task-legacy-task")
     (tasks / "notes.md").write_text("# Not a task\n", encoding="utf-8")
     capsys.readouterr()
 
@@ -1463,8 +1462,11 @@ def test_edit_ritual_accepts_frontmatter_id(tmp_path: Path, capsys) -> None:
     from deskops.models import RitualDoc
     from sldb.runtime.validation import render_model_markdown
 
+    from deskops import doc_access
+
+    # CC35b a7: a ritual resolves by its id through the store, so the desk has one and tracks it.
+    assert main(["init", str(tmp_path)]) == 0
     ritual_path = tmp_path / "desk" / "rituals" / "closeout-like.md"
-    ritual_path.parent.mkdir(parents=True, exist_ok=True)
     ritual = RitualDoc(
         id="ritual-closeout-like",
         title="Closeout-like ritual",
@@ -1473,6 +1475,8 @@ def test_edit_ritual_accepts_frontmatter_id(tmp_path: Path, capsys) -> None:
         completion="Closed.",
     )
     ritual_path.write_text(render_model_markdown(RitualDoc, ritual.render_payload()) + "\n", encoding="utf-8")
+    doc_access.track_created_document(tmp_path, RitualDoc, ritual_path, "ritual-closeout-like")
+    capsys.readouterr()
 
     edited = main([
         "edit",
