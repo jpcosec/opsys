@@ -1,0 +1,21 @@
+name: materialization-cc35a-commands-message
+path: desk/materializations/materialization-cc35a-commands-message.md
+source_hash: b21a2175e26aeb8d485d34549c755810493d4651b0ff80c8c97eff7e489f1cbc
+content_hash: 684e8de0aaa602be5a63005cfa144b9486171c794e28af5fd4e091da1ee096b7
+field_hashes:
+  id: 399779a9550af5d84ee89b5cc94389cd03006085922fff44d1fd4b429d1d2f34
+  title: 091032dc67428a35662c99ae9d886c0fbf503da9671d8da09c8cf232682cf125
+  source_atoms: b8565218d3fddb4ca6a26a658e4433740921bbc104c3b1790a78ca7db156f8ee
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 6c701ccfb5d47a16e1cc0d3fcfc36d869a0c2c00de7d89dbc9be2077db5e5499
+  intent: 4bf2d26a3370652b2905264dfbe8b95166231aeb31abe3130d086babcd1de2f1
+  validation: 53839db82dd805983e966b03bc8c214f0fa6c0013a570b0fcc263ad0e3c51bd6
+  tags: 0f6c48efd11519c8802c7e1053b671f368d618aca0fb46df0aba7ae434d4d855
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:transaction
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

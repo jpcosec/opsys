@@ -7,7 +7,13 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_transaction.py
+- pytest tests/test_operational.py
+- pytest tests/test_message_cli.py
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- 8d0e23fef975308738bf478a7cdd84a6dc95bcc5
+- desk/atoms/atom-toda-escritura-de-deskops-pasa-por-la-transacción-de-sldb.md
 depends_on:
 - task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados
 - task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb
@@ -115,6 +121,7 @@ _List the checks required before this task can close._
 - deskops doctor sin hallazgos nuevos en los 6 desks, con cwd neutro (a8)
 - wc -l antes y después por archivo tocado
 - CHANGELOG
+- Resultado (coordinador de proyecto, squash 8d0e23fe): de a uno desde /dev/shm, transaction 11, operational 10, message_cli 10, message_delivery 6, atoms_merge 5, atoms_split 3, registry_robustness 5, review_doc 13 (+1 xfail), desk_replace 7, closeout_gates 7, closeout_test_paths 31, lifecycle_end_to_end 5, scaffold_golden 3, cli_help_examples 11, cli 101, output_goldens 7 (sin --update-golden). Bloque sldb: aceptado como DO1 (overlord 2026-11-09, revisable).
 
 ## Done When
 

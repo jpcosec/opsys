@@ -1,0 +1,21 @@
+name: materialization-cc35a-commands-repo
+path: desk/materializations/materialization-cc35a-commands-repo.md
+source_hash: 64006318c0789e64fbf6f149b4ad89804e3c3a4b59b8e9cbcf241e1b16c1509d
+content_hash: d00400bea7b166be54bdfde6adcff4985b00e5ca93cceda3aa882cdc6203c456
+field_hashes:
+  id: a76d6455d95541612f2a3bd5b71a874dde4b2ffa172d5737363942478b6a08a1
+  title: c236ecf95c5a8b51be31a5b3366f9174e7da84bef61e770952697653b88af418
+  source_atoms: b8565218d3fddb4ca6a26a658e4433740921bbc104c3b1790a78ca7db156f8ee
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 1951266db871cc4b2e405a250a1397550c09c99ea8cbd14fafb0e829c78afc7e
+  intent: 787d246b094018f8c875ef9ef37bb45195ed9ea6fe93781114e4bd8ff17e6631
+  validation: 53839db82dd805983e966b03bc8c214f0fa6c0013a570b0fcc263ad0e3c51bd6
+  tags: 0f6c48efd11519c8802c7e1053b671f368d618aca0fb46df0aba7ae434d4d855
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:transaction
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

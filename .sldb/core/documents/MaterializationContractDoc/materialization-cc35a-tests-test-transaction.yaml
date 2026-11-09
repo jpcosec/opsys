@@ -1,0 +1,21 @@
+name: materialization-cc35a-tests-test-transaction
+path: desk/materializations/materialization-cc35a-tests-test-transaction.md
+source_hash: c2de376d19674f7c48caeb8e8230eb3fe28e26c7c0afefec186b01581ec875f9
+content_hash: fbba92929c1600e53802e037455e6e1693ea341351aaba748dfaf4800f9a7a0d
+field_hashes:
+  id: 860a342fc299c2b0ceef6fb3e00e2931c69638ff0f9856e1c92b4835f85742e9
+  title: 22323aeca29adf3869cb97a8ea315561bb1a706fbb7aadf049bd9761e1f508f8
+  source_atoms: b8565218d3fddb4ca6a26a658e4433740921bbc104c3b1790a78ca7db156f8ee
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 13bc4380ae2c0071401db11efbf8ac5d0d5068383d8beeca70218885f81dfcaf
+  intent: c5853f24184ae37fb96b95e6b92a63b631cf460106da81f99a3ed82ee25a2b46
+  validation: 53839db82dd805983e966b03bc8c214f0fa6c0013a570b0fcc263ad0e3c51bd6
+  tags: 0f6c48efd11519c8802c7e1053b671f368d618aca0fb46df0aba7ae434d4d855
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:transaction
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

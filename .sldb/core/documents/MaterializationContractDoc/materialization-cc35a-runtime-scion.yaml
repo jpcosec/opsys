@@ -1,0 +1,21 @@
+name: materialization-cc35a-runtime-scion
+path: desk/materializations/materialization-cc35a-runtime-scion.md
+source_hash: 09476b33deb4c754f2089264d132afcce80c092389fe405e63f21ac0ffd82a39
+content_hash: 9f07c893e8aafe93b1c7666a23974b0706ccb5a1ef75a1ebe86ed0c56a8a91ab
+field_hashes:
+  id: d8881531018047039d9aaa27cd284158d4ccf7d240589c8c3c62e81415929dfd
+  title: 57ada5ff97a5ae3b813f2099a409c371b0b69b8297e5d9c28619a08cb462a49c
+  source_atoms: b8565218d3fddb4ca6a26a658e4433740921bbc104c3b1790a78ca7db156f8ee
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 6c0faf5411ced73438fd1e97bd5a4a805806513a53da73cee50025843d766055
+  intent: 5e15afa5c83b8549ae7e984137df9737017407ab0146ba0e420467eb0fd6a3cc
+  validation: 53839db82dd805983e966b03bc8c214f0fa6c0013a570b0fcc263ad0e3c51bd6
+  tags: 0f6c48efd11519c8802c7e1053b671f368d618aca0fb46df0aba7ae434d4d855
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:transaction
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

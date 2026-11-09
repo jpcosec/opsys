@@ -279,6 +279,11 @@ include:
   - desk/materializations/materialization-cc31-workflows-task-lifecycle-yaml.md
   - desk/materializations/materialization-closeout-tests-paths-services-closeout-gates.md
   - desk/materializations/materialization-closeout-tests-paths-tests-test-closeout-test-paths.md
+  - desk/materializations/materialization-cc35a-commands-message.md
+  - desk/materializations/materialization-cc35a-commands-repo.md
+  - desk/materializations/materialization-cc35a-runtime-scion.md
+  - desk/materializations/materialization-cc35a-deskops-doc-access.md
+  - desk/materializations/materialization-cc35a-tests-test-transaction.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -334,10 +339,10 @@ include:
   - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
 - model: TaskCodeDoc
   paths:
-  - desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md
   - desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md
   - desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
   - desk/tasks/task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32.md
+  - desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
