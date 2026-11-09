@@ -199,6 +199,118 @@ class ClosureService:
             task_path.write_bytes(original)
         return outcome
 
+    def close_resolved_by(
+        self,
+        task_id: str,
+        *,
+        reason: str,
+        refs: list[str] | None,
+        tests: list[str] | None,
+        paths: list[str] | None = None,
+        message: str | None = None,
+    ) -> ClosureOutcome:
+        """Close a task whose work already entered the history, for example through a PR.
+
+        The per-file atom gate does not run: the work is already committed. The
+        evidence is a reason, at least one ``--ref`` that is HEAD or an ancestor
+        commit (further refs may be ancestor commits or http(s) URLs, such as the
+        PR) and at least one ``--test`` the tests gate accepts for the task's
+        ``files``. Every ref and test must resolve; a refusal writes nothing.
+        The task is marked ``resolved`` and the closing commit says
+        ``Closeout-Mode: resolved-by``.
+        """
+        gates = self._ops.closeout_gates
+        reason = " ".join((reason or "").split())
+        if not reason:
+            return ClosureOutcome(
+                1,
+                ["Resolved-by needs a non-empty --reason saying where the task's work entered the history."],
+            )
+
+        cleaned_refs = [str(ref).strip() for ref in refs or [] if str(ref).strip()]
+        unresolved_refs = [
+            ref
+            for ref in cleaned_refs
+            if not gates.reference_points_to_commit(ref) and not gates.reference_points_to_url(ref)
+        ]
+        if unresolved_refs:
+            return ClosureOutcome(
+                1,
+                [
+                    f"Unresolvable --ref: {', '.join(unresolved_refs)} "
+                    "(need a commit that is HEAD or an ancestor, or an http(s) URL)."
+                ],
+            )
+        if not any(gates.reference_points_to_commit(ref) for ref in cleaned_refs):
+            return ClosureOutcome(
+                1,
+                ["Resolved-by needs at least one --ref naming a commit that is HEAD or an ancestor."],
+            )
+
+        cleaned_tests = [str(test).strip() for test in tests or [] if str(test).strip()]
+        if not cleaned_tests:
+            return ClosureOutcome(
+                1,
+                ["Resolved-by needs at least one --test naming a test file the tests gate accepts."],
+            )
+
+        task_path = self._task_path(task_id)
+        if not task_path.is_file():
+            return ClosureOutcome(1, [f"Task not found: {task_id}"])
+
+        original = task_path.read_bytes()
+        payload = doc_access.read_doc(task_path, TaskDoc)
+        task_files = list(payload.get("files") or [])
+        unresolved_tests = [test for test in cleaned_tests if not gates.reference_points_to_test(test, files=task_files)]
+        if unresolved_tests:
+            return ClosureOutcome(
+                1,
+                [
+                    f"Unresolvable --test: {', '.join(unresolved_tests)} "
+                    "(need an existing .py file under a tests/ directory or declared in the task's files)."
+                ],
+            )
+
+        payload["status"] = "resolved"
+        payload["history"] = [*(payload.get("history") or []), "resolved-by"]
+        try:
+            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
+        except Exception as exc:  # noqa: BLE001 - a task that cannot record resolved is not closed
+            task_path.write_bytes(original)
+            return ClosureOutcome(1, [f"Could not record resolved status on {task_id}: {exc}"])
+
+        trailers = [
+            f"Task-Id: {task_id}",
+            "Closeout-Mode: resolved-by",
+            f"Closeout-Reason: {reason}",
+            *[f"Closeout-Ref: {ref}" for ref in cleaned_refs],
+            *[f"Closeout-Test: {test}" for test in cleaned_tests],
+        ]
+        try:
+            outcome = self._close(
+                task_id,
+                route="resolved-by",
+                subject=message or self._default_subject(task_id),
+                trailers=trailers,
+                paths=list(paths or []),
+                explicit_paths=True,
+                run_gates=False,
+                index_entry={
+                    "task_id": task_id,
+                    "run_id": None,
+                    "run_dir": None,
+                    "session_sha256": None,
+                    "mode": "resolved-by",
+                },
+                success_line=f"Closing commit {{commit}} made in resolved-by mode: {reason}",
+            )
+        except Exception:
+            task_path.write_bytes(original)
+            raise
+        if outcome.exit_code != 0:
+            task_path.write_bytes(original)
+        return outcome
+
     def close_retired(
         self,
         task_id: str,

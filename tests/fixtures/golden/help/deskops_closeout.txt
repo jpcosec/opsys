@@ -1,9 +1,9 @@
-usage: deskops closeout [-h] {commit,supersede,retire,verify} ...
+usage: deskops closeout [-h] {commit,supersede,retire,resolved-by,verify} ...
 
 Workflow closeout operations.
 
 positional arguments:
-  {commit,supersede,retire,verify}
+  {commit,supersede,retire,resolved-by,verify}
     commit              Verify the task's declared closeout evidence, then
                         create the tool-made closing commit, linked to a run
                         evidence directory or marked manual.
@@ -11,6 +11,8 @@ positional arguments:
                         reason and a resolvable ref.
     retire              Remove a task that was already resolved before the
                         ritual lifecycle.
+    resolved-by         Close a task whose work already entered the history,
+                        naming an ancestor commit and a test.
     verify              Check the closeout evidence the task declared, without
                         committing; print a structured report.
 

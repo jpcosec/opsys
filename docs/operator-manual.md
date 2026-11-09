@@ -436,8 +436,9 @@ the blocked gate.
 There is no manual override: a transition fires only when its condition
 holds, and a blocked task stays where it is while `advance` names the gate.
 Closing is `deskops closeout commit` for work that was done, `closeout
-supersede` when the task's subject no longer exists, and `closeout retire` for
-a task resolved before the ritual lifecycle.
+resolved-by` for work that already entered the history (for example through a
+PR) before the closeout, `closeout supersede` when the task's subject no longer
+exists, and `closeout retire` for a task resolved before the ritual lifecycle.
 
 ## Closeout
 
@@ -545,6 +546,28 @@ deskops closeout retire --root . \
   --task task-already-resolved \
   --reason "Resolved before the ritual lifecycle existed" \
   --ref 3900ad4
+```
+
+### Close a task whose work already entered the history
+
+`closeout resolved-by` closes a task whose work was already committed, for
+example merged through a PR, before anyone ran its closeout. It does not ask for
+an atom per changed file. Its evidence is a `--reason`, at least one `--ref`
+that is a commit at HEAD or an ancestor (further refs may be ancestor commits or
+http(s) URLs, such as the PR), and at least one `--test` that the tests gate
+accepts for the task's `files`. A ref or test that does not resolve is refused
+and nothing is written. It makes exactly one closing commit with
+`Closeout-Mode: resolved-by`, `Closeout-Reason`, one `Closeout-Ref` per ref and
+one `Closeout-Test` per test; the task is marked `resolved` (history
+`resolved-by`) and leaves the Board. `--paths` adds paths to the closing commit
+and `--message` replaces its subject.
+
+```bash
+deskops closeout resolved-by --root . \
+  --task task-fix-thing \
+  --reason "The fix entered main through PR #42 before the closeout" \
+  --ref 9f64f0f --ref https://example.com/org/repo/pull/42 \
+  --test tests/test_fix_thing.py
 ```
 
 ## Issues
@@ -927,5 +950,6 @@ This table maps every CLI verb to the section that documents it.
 | `drift check` | Roles, materialization, and drift |
 | `closeout verify/commit` | Closeout |
 | `closeout supersede/retire` | Supersede or retire a task |
+| `closeout resolved-by` | Close a task whose work already entered the history |
 | `runtime init/status/attach/stop/workers/supervise/template` | Runtime and Herdr |
 | `review node/preflight/bundle/status/dispose/record` | Cold context reviews |
