@@ -332,6 +332,8 @@ include:
     name: review-task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents-bundle-1
   - path: desk/reviews/task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32/preflight-1.md
     name: review-task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32-preflight-1
+  - path: desk/reviews/task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a/preflight-1.md
+    name: review-task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a-preflight-1
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

@@ -1,7 +1,7 @@
 name: task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a
 path: desk/tasks/task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a.md
-source_hash: ea9795b19f00d8f4bb5534a0287ab26aa9c2d53febb47a805887c24f30f8c659
-content_hash: b04b84cfcc6f1dc0562860a1f050ecbe264b43a3f185ecd90648a161722c2dac
+source_hash: c6a99e0c2ed170490b51f2de605fb0f5c649683081f8cdee0512f6b3fcb55083
+content_hash: af7b140091f00e3d51a5b503ccf0e6890b55b4c1536b2eef8f7d7247eb215ae7
 field_hashes:
   title: abff6060b40561d86c2c8175c2e5564cece64aab7f7301ea79e97c53ff1f57dd
   id: 10cd89570de8291fae7d86a9f67f235d835ae200f4c29e04d8490f24c1aca7e2
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 1a88b4a265acd00fd34e3b72b3bb010a31034e2cb612619a7a4367ad9babde1a
-  implementation_path: c51ca8c738c9e11486ace6a57303121c82acca074958ae8b6056b5c10cdbd09d
+  implementation_path: d78fdec4f773a34c4b630962a9b7ee252467a83022de9a923ae57099031a5c33
   validation: 6cec5a42368373f6a70d282a7fa3ca90046b20f0418050a1efbe1a2b290f33a8
   done_when: 164cd95113ea98e46556d79b3324e251ed2bfc9e3fa445063efef54142658600
   task_type: 8dbc7ea3fc2d737a841f8f9a89de6dd4bd2ca7fdc77434a53400db8767ba695d
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-09T17:47:07Z'
+  at: '2026-11-09T17:47:47Z'
   authority: generated
   via: save_document_payload

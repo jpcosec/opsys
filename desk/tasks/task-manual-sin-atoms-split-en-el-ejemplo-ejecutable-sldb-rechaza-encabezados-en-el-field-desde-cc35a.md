@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T17:47:07Z'
+  at: '2026-11-09T17:47:47Z'
   authority: generated
   via: save_document_payload
 id: task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a
@@ -58,6 +58,12 @@ p3: el bloque runnable sigue siendo uno, para que el número de bloques runnable
 p4: del párrafo final se quita la frase sobre «atoms split --section»; el resto queda igual.
 p5: nada más del manual cambia. tests/test_operator_manual.py no se toca.
 p6 (validación, de a uno): tests/test_operator_manual.py verde. También test_cli_help_examples, para confirmar que no rompe nada, aunque no debería tocarlo. El manual corre deskops sobre un sandbox propio; corre desde una copia del worktree en /dev/shm si lee mucho.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-09):
+b1 (ids): el bloque actual ya usa esa regla: «Split manual atom» da atom-split-manual-atom y «Delete manual atom» da atom-delete-manual-atom. Con los títulos de p3, los ids son atom-merge-source-manual-atom y atom-merge-target-manual-atom. Se escriben literales en el bloque, como hoy, y el test confirma que existen.
+b2 (CHANGELOG): una línea al final de ## [Unreleased] / ### Changed: «- `docs/operator-manual.md`: the merge/delete/validate example no longer shows `atoms split`, because sldb refuses headings inside a field since CC35a; the split question is in the drawer (revisable decision).»
+b3 (/dev/shm): test_operator_manual corre siempre desde una copia del worktree en /dev/shm (git worktree add --detach /dev/shm/deskops-man HEAD; PYTHONPATH a la copia; al terminar, worktree remove --force). test_cli_help_examples puede correr en el worktree.
+b4 (base): el worktree ~/proyectos/SLDB_1/deskops-wt-man, rama wt/manual-no-split, creado desde origin/main con este TaskDoc (el commit lo nombra el brief). Las líneas citadas son de esa base.
 
 ## Validation
 
