@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T19:15:14Z'
+  at: '2026-11-09T19:31:17Z'
   authority: generated
   via: save_document_payload
 id: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
@@ -90,6 +90,13 @@ a5 (grep de escrituras internas): patrón fijado. grep -rnE '\["(status|current_
 a6 (los 6 desks): sobre copias, desk update --apply con la rama y cwd neutro (plantilla ~/proyectos/SLDB_1/coord2-ccconfig/cc35a/doctor6.sh). Toda tarea existente de los 6 desks pasa el validador, o desk update la reporta como inconsistente sin escribirla. El informe da la lista. En el desk de deskops hoy hay 5 tareas, todas draft en ritual-execution con history vacía: estado de entrada.
 a7 (en paralelo): CC35b (selectores, wt/cc35b) toca services/ y doc_access; closeout resolved-by (wt/closeout-resolved-by) agrega un método a closure.py. Este nodo no toca doc_access ni la resolución. En services/ y closure.py, cambios mínimos y solo si a5 lo exige.
 a8 (tests): un test por cada caso de a2 (válido e inválido) construyendo el modelo; los casos de a4 por vía sldb. Además, de a uno: test_cli_escape_hatches, test_lifecycle_*, test_closeout, test_activation_rules, test_model_validators y test_task_types; test_cli y test_output_goldens desde una copia en /dev/shm, sin --update-golden.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-2, 2026-11-09; el intento 1 fue un timeout técnico del modelo):
+b1 (cómo lo aplica sldb, sin tocar sldb): el validador es un model_validator de pydantic en deskops/models (en TaskDoc o en su base), como los de CC38. sldb no se toca. En toda escritura (fields update, docs update, /save y la transacción), sldb hace render_checked y validate_model_input_roundtrip (sldb src/sldb/api/documents/payload_save_steps.py:55-70), que construye el modelo registrado del documento y por eso corre el validador. Las pruebas de a4 lo comprueban por cada vía.
+b2 (status de entrada): el conjunto de entrada es {"draft"}, el status_default de TaskDoc (compile_task_spec, specs/compiler.py:49), más cada status que el inventario de a6 encuentre en tareas existentes de los 6 desks con current_node = entry_node e history vacía. El worker lo fija como constante en el validador y la lista en el informe con el desk y la tarea que la justifican. Con cualquier otro status en el estado de entrada, ValidationError.
+b3 (RuleDoc): si las cuatro condiciones de a2 se deciden con el payload de la tarea y la tabla del paquete, no hay RuleDoc y deskops/data/rules/ no se toca. Si alguna necesita otro documento, va como RuleDoc on_write severity error en deskops/data/rules/, con subject «model <= TaskDoc», y el informe explica por qué no cabe en el validador. Lo esperado es que no haga falta ninguna.
+b4 (dónde queda el inventario de a3): en el informe del worker, en una tabla «vía | pasa por transición | la cubre el validador | test». El coordinador del plan lo copia al TaskDoc al cerrar, con deskops edit task. El worker no edita el TaskDoc.
+b5 (estado cerrado, «las dos formas»): status «superseded» con el último elemento de history «superseded» (closure.py:163-164, hoy en main); status «resolved» con el último elemento de history «resolved-by» (lo agrega la rama wt/closeout-resolved-by); status «closed» con history que termina en la arista terminal task_completes (lo que escribe advance/closeout commit). El conjunto de cierre es una constante: pares (status, último de history).
 
 ## Validation
 

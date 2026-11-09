@@ -1,0 +1,34 @@
+name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-preflight-2
+path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight-2.md
+source_hash: 1dc74f7da2d379db8f98e6044d33af6f10475c6f50d1138c8b942ec35cec6b74
+content_hash: b1039e0e586042d50ffbe2b22913801f65c24b667da0bc97983a584c2bfa762a
+field_hashes:
+  id: b8c3047d4dddaa296425eebfa4b370d906d80543924fbd5e67841d454d692cee
+  title: 9b8f25d57ec3b8623e3cde05062b0f43e20c33dbbd3c9576e05cf1a84925f554
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 8d61fe77ecba0edbdae725c376e2192d6c2adf07787c2806ac687b7996501780
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: d4c14a1a9a4810bb583f4c5736c8790dc43fa07599cc5a7c2e1ab6d4a6b64920
+  input_sha256: 7011e1d116d7f4e76b0c2b22cbfa4c323f6d815c9ee387103a34ba0d7a207ba9
+  output_sha256: c8ecb58b3c68b78cb3da7596e77d3559a2b7502e0875cddffab2e3aa4083ee6c
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 5f59ddc1414a5a5c477d3aac2226fc073bd84df6b1213f6f1a4704ccac8fad51
+  created_at: 115d09f36f44f459dfe8fab8627151300fb3f098b11a427e72b29883ff6988b8
+  disposed_at: 4d8718d88cab74cd7307ed5dd37064879c352d991cd0f8f839fecea86f876fc1
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: f36aebeeea727903d030b36cc7b96ea9a23972c0c8b755b5f8d0d5baee4ac57d
+  disposition: d4eb9afab8a66c05464a58376acfdae1bfea86c88e30e37e5554e9f4e1f3d750
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-09T19:31:19Z'
+  authority: generated
+  via: save_document_payload

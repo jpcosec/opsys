@@ -1,0 +1,34 @@
+name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-preflight-1
+path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight-1.md
+source_hash: c9d3a525e6817fe26e10d3835eea7c0fbc544182749ab20e016f809edbe176c6
+content_hash: b4ec52635d2c1e2ed341f93f06457fc2231976101ea7c86fd62705a959b6de98
+field_hashes:
+  id: 84b1ed9d5570a2c1cb03033142518da44f558a8e7774bb4552a5772215d6d078
+  title: 9b8f25d57ec3b8623e3cde05062b0f43e20c33dbbd3c9576e05cf1a84925f554
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 2e19ecacfbc5279d03684d144670398124a1e93b2317c88c840fd259b9d23951
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 7bd6a78d767afb2cd4faa689ea8b4b4a3a81022b992ec5bb342fe8ff6d1a913c
+  input_sha256: 7011e1d116d7f4e76b0c2b22cbfa4c323f6d815c9ee387103a34ba0d7a207ba9
+  output_sha256: b4b16dad390bac4c7ce42014c594fa668910b49ec1b7771a17891c187d71e0ab
+  verdict: b93e167bbe964a29c927882c2bc868922a912d6e74592730258b222da98b8c6c
+  reason: 99949703a4cd3798543f647bacc9d068375b8e83c02f1a5c088abaa65fe5f63a
+  created_at: 0d874cb6d58ec675447a92711ed1df26bae3cc50e9be2a6fe5eaf2b570d747c4
+  disposed_at: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  disposed_by: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  summary: ee9f766c8f26883c055439649669824988c7fc0cd3d98701b345439aaf222b6e
+  disposition: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-09T19:30:27Z'
+  authority: generated
+  via: create_document

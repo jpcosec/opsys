@@ -345,6 +345,10 @@ include:
     name: review-task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr-preflight-1
   - path: desk/reviews/task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr/preflight-2.md
     name: review-task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr-preflight-2
+  - path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight-1.md
+    name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-preflight-1
+  - path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight-2.md
+    name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-preflight-2
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

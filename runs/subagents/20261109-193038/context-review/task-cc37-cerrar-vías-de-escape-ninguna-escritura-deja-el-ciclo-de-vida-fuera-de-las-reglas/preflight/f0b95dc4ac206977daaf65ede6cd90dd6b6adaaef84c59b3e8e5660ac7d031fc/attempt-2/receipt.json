@@ -1,0 +1,9 @@
+{
+  "key": "task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "f0b95dc4ac206977daaf65ede6cd90dd6b6adaaef84c59b3e8e5660ac7d031fc",
+  "output_sha256": "8ec3caf221787bfa52f0342ba59df6de5af3ceb1b5efb4baccdf6d7fd87d9fc9",
+  "start": "2026-11-09T19:30:38.475505+00:00",
+  "end": "2026-11-09T19:30:52.349818+00:00"
+}
