@@ -375,5 +375,8 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+- model: TaskDebugDoc
+  paths:
+  - desk/tasks/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f.md
 graph_backend: networkx
 policy: {}

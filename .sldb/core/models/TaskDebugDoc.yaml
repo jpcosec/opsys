@@ -2,11 +2,11 @@ name: TaskDebugDoc
 model_ref: deskops.models:TaskDebugDoc
 path: deskops/models/task_types.py
 documents_index: .sldb/core/documents/TaskDebugDoc.yaml
-sections_index: ''
-model_hash: 429ed807cc78a1c5a3b363025f6703a609fd86dc4cd2856f7c324bdd8616e348
-roster_hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+sections_index: .sldb/runtime/sections/TaskDebugDoc.yaml
+model_hash: 6f01237c61aee651ddad91a822eb609d7bfe97ac0f47f883eeadc22d1c79d784
+roster_hash: 03e896de9cf4e75c3615a6c72653eb5841f00756ba82dd5cdfc416a9cbe7bd84
 contract_hash: 53dbba942bb0773e4fe6563cadaa9247a0005c0c727262091b284445ab5ae667
-documents_count: 0
+documents_count: 1
 version: 1
 canonical: false
 family: null
