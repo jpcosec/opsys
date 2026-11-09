@@ -250,9 +250,16 @@ def test_dispose_accepts_a_recorded_receipt(desk: Path) -> None:
 
 
 def test_subject_is_pinned_and_the_anchor_is_intact(desk: Path) -> None:
+    """sldb pins `__doc_anchors__` on save (`save_document_payload`), not on
+    `create_document`: the recorded receipt carries the bare anchor, like every other
+    receipt, and the disposition write pins it against the task's contract."""
     root = desk
     result = _deskops(root, "review", "record", "task-x", "--kind", "owner", "--reason", "approved")
     assert result.returncode == 0, result.stdout + result.stderr
+    assert _review(root, "review-task-x-owner-1")["subject"] == "doc:TaskCodeDoc:task-x"
+
+    disposed = _deskops(root, "review", "dispose", "review-task-x-owner-1", "--verdict", "accepted", "--reason", "ok")
+    assert disposed.returncode == 0, disposed.stdout + disposed.stderr
     doc = _review(root, "review-task-x-owner-1")
     assert re.fullmatch(r"doc:TaskCodeDoc:task-x@sha256:[0-9a-f]{64}", doc["subject"]), doc["subject"]
 

@@ -1,9 +1,9 @@
-usage: deskops review [-h] {node,preflight,bundle,status,dispose} ...
+usage: deskops review [-h] {node,preflight,bundle,status,dispose,record} ...
 
 Run and dispose cold context reviews (node, preflight, bundle, status, dispose).
 
 positional arguments:
-  {node,preflight,bundle,status,dispose}
+  {node,preflight,bundle,status,dispose,record}
     node                Review the nodes of a drawer dag.yaml (contract,
                         neighbours, and gates).
     preflight           Review a task from its TaskDoc alone (before
@@ -13,6 +13,8 @@ positional arguments:
     status              Compare current inputs with recorded reviews without
                         calling the model.
     dispose             Write the verdict on one pending review receipt.
+    record              Record a reproduction, goldens, or owner receipt from
+                        operator evidence (no model call).
 
 options:
   -h, --help            show this help message and exit
@@ -23,8 +25,10 @@ Examples:
   deskops review node desk/drawer/plans/gates-por-tipo GC03 --root .
   deskops review status task-fix-thing --root .
   deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+  deskops review record task-fix-thing --kind reproduction --evidence runs/repro.log --reason "..." --root .
 
 Every run writes ritual evidence under runs/subagents/<run>/context-review/<key>/<sha>/attempt-N/
 and a ReviewDoc receipt under desk/reviews/. `--engine` names a RuntimeProfileDoc under desk/runtimes/
 (default runtime-pi-deepseek-flash). An unchanged input is not reviewed again; `--max-attempts` (default 2)
-caps good attempts per key unless --force --reason.
+caps good attempts per key unless --force --reason. `record` writes a reproduction, goldens or owner
+receipt from evidence the operator names, without calling the model; `dispose` gives it the verdict.

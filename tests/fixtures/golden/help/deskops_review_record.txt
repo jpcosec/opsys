@@ -1,0 +1,28 @@
+usage: deskops review record [-h] --kind {reproduction,goldens,owner}
+                             [--evidence EVIDENCE] --reason REASON
+                             [--root ROOT] [--format {text,json,yaml}]
+                             task
+
+Record a reproduction, goldens, or owner receipt from operator evidence (no model call).
+
+positional arguments:
+  task                  Task selector.
+
+options:
+  -h, --help            show this help message and exit
+  --kind {reproduction,goldens,owner}
+                        Receipt kind; preflight, bundle, and node come from
+                        their own review command.
+  --evidence EVIDENCE   Existing file inside the root (repeatable); required
+                        for reproduction and goldens.
+  --reason REASON       What the operator checked; recorded in the ReviewDoc.
+  --root ROOT           Target repository root.
+  --format {text,json,yaml}
+                        Output format.
+
+Example:
+  deskops review record task-fix-thing --kind reproduction --evidence runs/repro.log --reason "..." --root .
+  deskops review record task-fix-thing --kind owner --reason "approved by the owner" --root .
+
+The receipt is a ReviewDoc with verdict pending, engine human, and input_sha256 over the sorted
+evidence files; `deskops review dispose <review-id>` writes its verdict.
