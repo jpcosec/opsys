@@ -1,7 +1,7 @@
 name: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
 path: desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md
-source_hash: eef4db0fcbc6630be6d5ae80274c4ba0fa1df9a23c8d7e318bab7322cf2d76ce
-content_hash: 56f89781340cab8c37093141cce8a24031279a7c5524666a6d9121b7f9654dfc
+source_hash: d3440a5d2406d70eb3b8943947541a219255fcbd0ff4546f591d30a0aebf4a72
+content_hash: 80b2b73e438acbe5f29987c8b667b291ca3ab30f080921437500818304a5254a
 field_hashes:
   title: c08292e7c0d520ddaa456770c5d7aa5f4c78ce40a0366e29b6fc5020b38361e3
   id: 375b4b71d30daf0b361934b2c6aa4719b9d0231acbd5b6f9f29d65b408641ecb
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: dd7626849e11fbc17c69c5400ac0ff28b715a7c03297eb72aa6a695ed7094e01
-  implementation_path: 1e935a779f07e3666fa8604be1b17e70ca162777cb05d3e00a94ebc854e93e6c
+  implementation_path: eb36c10f86a3df6168d0985066847b3339b93156d08a4e8393832dee8f0985a1
   validation: d6bf31baab39679f471027ac50aa636c321058bca9def4b4fa835cd0eaf90d5f
   done_when: 9dbd4d403b555a4a627b5f6f98c7d0904c5d7694173f3e820f661f166b17471c
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-09T19:31:17Z'
+  at: '2026-11-09T19:48:40Z'
   authority: generated
   via: save_document_payload

@@ -1,0 +1,88 @@
+{
+  "key": "task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle",
+  "input_sha256": "f8a6907f73a91701393769635b86d076fe0864fa4d77cabb8d983e4828d4e0ac",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261109-194653/context-review/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle/f8a6907f73a91701393769635b86d076fe0864fa4d77cabb8d983e4828d4e0ac/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md",
+      "sha256": "a2d8499ac3377a7602e00accbb3a52ca340cb366908e75b42a94541b24018476",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/closeout_gates.py",
+      "sha256": "fa9d42657bbe1996148544acc301121b2cb115a3ad1890826446fc7319c8a5af",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/closure.py",
+      "sha256": "3e7c76978e9c85a11e6ad74237778544ed357bb49f4f5091266537bc3d54ac83",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/review.py",
+      "sha256": "e0e71627a428fe09e9f42fad74b3e6f2bedd6b97687c2b1e20e9bf9e2e9913d6",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/closeout.py",
+      "sha256": "30b13f9462af03b1e426a96d28e05c6182923cd110133706747233d9f7a38efe",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "49bc8090cb91c4ba5c5d4dc1f2180fc083fa471d7c1948ceaca54424c0992c16",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-09T19:46:53.344140+00:00",
+  "finished": "2026-11-09T19:47:12.514356+00:00"
+}

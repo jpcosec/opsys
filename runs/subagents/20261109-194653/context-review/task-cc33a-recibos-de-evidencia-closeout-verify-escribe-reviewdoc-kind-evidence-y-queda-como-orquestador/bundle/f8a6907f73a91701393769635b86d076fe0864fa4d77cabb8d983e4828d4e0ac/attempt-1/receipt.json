@@ -1,0 +1,9 @@
+{
+  "key": "task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "f8a6907f73a91701393769635b86d076fe0864fa4d77cabb8d983e4828d4e0ac",
+  "output_sha256": "7d2d7a37b7a34d32326a1fe67b970c3d07a3b55ba3cb40a9b6585f13bcb3b3b2",
+  "start": "2026-11-09T19:46:53.344140+00:00",
+  "end": "2026-11-09T19:47:12.514356+00:00"
+}

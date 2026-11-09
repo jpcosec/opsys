@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T19:31:17Z'
+  at: '2026-11-09T19:48:40Z'
   authority: generated
   via: save_document_payload
 id: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
@@ -97,6 +97,13 @@ b2 (status de entrada): el conjunto de entrada es {"draft"}, el status_default d
 b3 (RuleDoc): si las cuatro condiciones de a2 se deciden con el payload de la tarea y la tabla del paquete, no hay RuleDoc y deskops/data/rules/ no se toca. Si alguna necesita otro documento, va como RuleDoc on_write severity error en deskops/data/rules/, con subject «model <= TaskDoc», y el informe explica por qué no cabe en el validador. Lo esperado es que no haga falta ninguna.
 b4 (dónde queda el inventario de a3): en el informe del worker, en una tabla «vía | pasa por transición | la cubre el validador | test». El coordinador del plan lo copia al TaskDoc al cerrar, con deskops edit task. El worker no edita el TaskDoc.
 b5 (estado cerrado, «las dos formas»): status «superseded» con el último elemento de history «superseded» (closure.py:163-164, hoy en main); status «resolved» con el último elemento de history «resolved-by» (lo agrega la rama wt/closeout-resolved-by); status «closed» con history que termina en la arista terminal task_completes (lo que escribe advance/closeout commit). El conjunto de cierre es una constante: pares (status, último de history).
+
+PRECISIONES DEL COLD-BUNDLE (review-...-bundle-2, 2026-11-09; el bundle-1 fue un timeout técnico):
+c1 (status de entrada): mandan los dos, unidos: {"draft"} (lo único que escribe el código, compile_task_spec, cuando el payload no trae status) más los status que el inventario de a6 encuentra en tareas reales en estado de entrada. Los datos solo agregan valores legacy al conjunto, nunca lo reducen.
+c2 (cerrada): advance no persiste la transición terminal, y closeout commit saca la tarea del desk (una tarea cerrada deja de existir, DC6). En la práctica no hay TaskDoc persistidas con status closed. El par (closed, task_completes) queda en el conjunto de cierre por coherencia, para una escritura directa por sldb. Los pares que sí aparecen en disco son (superseded, superseded) y, tras resolved-by, (resolved, resolved-by).
+c3 (filtro del grep de a5): cuentan los hits en código que arma o muta un payload de TaskDoc: lifecycle.py, services/closure.py, specs/compiler.py (compile_task_spec), services/tasks.py y doc_access (hidratación de tareas). Los hits de otros modelos (message, repo, issues, desk_view, drawer, runtime, review, atoms) se listan en el informe con una línea cada uno, como «otro modelo».
+c4 (6 desks): la aceptación exige que desk update no escriba ninguna tarea inconsistente y que la reporte. Si alguna tarea real de los 6 desks no pasa el validador, el worker para y avisa con la lista antes de seguir: una tarea que no pasa ya no se puede editar por sldb, y eso es una decisión del coordinador.
+c5 (d4 de CC31): una tarea cuyo task_type no es un tipo registrado (vacío o legacy, como «code» en graph_ui) se valida contra TaskDoc genérico (services/tasks.py, comentario de advance_task). TaskDoc genérico acepta task_type vacío o cualquier string no registrado. Cada modelo tipado acepta solo su literal (TaskCodeDoc → task.code, etc.).
 
 ## Validation
 

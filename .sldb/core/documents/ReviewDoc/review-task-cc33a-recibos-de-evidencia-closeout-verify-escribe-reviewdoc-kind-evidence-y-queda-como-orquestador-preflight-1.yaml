@@ -1,0 +1,34 @@
+name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-preflight-1
+path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/preflight-1.md
+source_hash: e34ab12dcd2b7e91c961cb86093f954cd8253a447793bc89b3c20c7b4b562b46
+content_hash: 18608b2aad1109859dbd09ac895b9f35f24ea19b80049a8dffae5e7553c76f43
+field_hashes:
+  id: f3f86b68f2833e4ff04b662c8590e3e9823f210dbcf254755b991c84038ef6dd
+  title: ea2f689d37ad6de9277a4c462b6d0b4051ac4b5fc5ad0efbfa3a87b3e3c27adb
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 9e886e32d356d04336c3122f9855959e56e05986f9950d442b8265e93a2be70a
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: d71d7b9ac32d936119a0f6f4f3e2903082b194dfa84200becd507f94e8c23bc1
+  input_sha256: e25f8838cd425669634e9b2a464925bc6e46a2cd0894eace130f42a970e4c0c6
+  output_sha256: 8356a0c10ca248b90678b53c5627ce65d9b091eb01b34ff3b0c1b7b24fc8bcfb
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 36941d66f367863610559a30e87bd35ca16cb88d0615b05d88b5581ca6714808
+  created_at: 9a647e6888f07568d76dff92cc6254ec0a33d9d8d70b89eca599e09625655262
+  disposed_at: 971033f8bbc38e994a358d5302293710c1fcf4ed2d450a948079e28c8ff61b7e
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: ab8846d27634fab379aa6806912c788acfc441f87992ed4628829cb86e8821f5
+  disposition: 61aaebf07c23d154084a19e8b8386482a0e708d313d4683dc267b27ef3b03054
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-09T19:48:45Z'
+  authority: generated
+  via: save_document_payload

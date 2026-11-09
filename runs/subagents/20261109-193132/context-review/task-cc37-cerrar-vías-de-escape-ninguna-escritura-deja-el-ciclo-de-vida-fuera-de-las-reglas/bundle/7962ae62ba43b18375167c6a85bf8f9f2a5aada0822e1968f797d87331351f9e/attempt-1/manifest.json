@@ -1,0 +1,90 @@
+{
+  "key": "task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle",
+  "input_sha256": "7962ae62ba43b18375167c6a85bf8f9f2a5aada0822e1968f797d87331351f9e",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261109-193132/context-review/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle/7962ae62ba43b18375167c6a85bf8f9f2a5aada0822e1968f797d87331351f9e/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md",
+      "sha256": "eef4db0fcbc6630be6d5ae80274c4ba0fa1df9a23c8d7e318bab7322cf2d76ce",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/rituals/context-review.md",
+      "sha256": "d6e7e7ae45a13606fc3792caa37f6016b5d71e9c63f3e9604f6aa916f8a984b0",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "1b2cb3ddd01184496eeecece253f11e3ec3393551df2929c1abbcd108ecb1bb5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "d4d7d4e3efb4e36d92c31d0f8f57de2ad8fb9b7ac9681a311757569a5adc17d5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "49bc8090cb91c4ba5c5d4dc1f2180fc083fa471d7c1948ceaca54424c0992c16",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/models/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/data/rules/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/services/",
+      "reason": "directory"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-09T19:31:32.918410+00:00",
+  "finished": "2026-11-09T19:46:33.026349+00:00"
+}

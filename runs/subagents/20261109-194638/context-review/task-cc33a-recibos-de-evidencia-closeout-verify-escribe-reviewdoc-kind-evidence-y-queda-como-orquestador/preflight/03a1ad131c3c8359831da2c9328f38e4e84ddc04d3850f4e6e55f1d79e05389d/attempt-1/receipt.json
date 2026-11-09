@@ -1,0 +1,9 @@
+{
+  "key": "task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "03a1ad131c3c8359831da2c9328f38e4e84ddc04d3850f4e6e55f1d79e05389d",
+  "output_sha256": "e88fed8e47d1851a7ce2e3a59de16ec4873f6669b7bb13c7b9d853bf40815a8b",
+  "start": "2026-11-09T19:46:38.250276+00:00",
+  "end": "2026-11-09T19:46:51.681926+00:00"
+}

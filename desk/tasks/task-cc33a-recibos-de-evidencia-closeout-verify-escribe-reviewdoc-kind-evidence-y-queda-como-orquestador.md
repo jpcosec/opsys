@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T19:46:00Z'
+  at: '2026-11-09T19:48:43Z'
   authority: generated
   via: save_document_payload
 id: task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador
@@ -83,6 +83,22 @@ a4 (envelope): el JSON y el texto de closeout verify quedan idénticos a hoy (go
 a5 (paralelo): closeout resolved-by (wt/closeout-resolved-by) agrega close_resolved_by en closure.py; si se integra antes, el worker rebasea. CC35b cambia la resolución de documentos en doc_access/services: CC33a no la toca.
 a6 (reglas de activación sin aplicar en el desk de deskops): el runtime siembra desk/lifecycle/rule-activation-*.md sin trackear. No se commitea nada de desk/ ni de .sldb/.
 a7 (tests, de a uno): un test nuevo por cada caso de la aceptación (tres recibos accepted; commit rejected; segunda verify sin recibos nuevos; goal editado → anchor_state changed tras reescribir el recibo); test_closeout.py, test_closeout_atomless.py, test_closeout_declared_evidence.py, test_closeout_skill_links.py, test_closeout_gates.py, test_closeout_test_paths.py y test_review_doc.py; test_cli y test_output_goldens desde una copia en /dev/shm, sin --update-golden.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1) Y DEL COLD-BUNDLE (review-...-bundle-1), 2026-11-09:
+b1 (accepted o rejected por kind): solo reciben recibo los kinds que exige el tipo de la tarea más su closeout_evidence. Cada kind queda accepted si su productor de hoy encuentra evidencia, y rejected si no:
+- tests: alguna referencia pasa reference_points_to_test;
+- commit: reference_points_to_commit;
+- atom y materialization: el enlace de _closeout_link_gate;
+- document: reference_points_to_document;
+- external: reference_points_to_url.
+reason es el texto que hoy da el gate cuando falta ese kind.
+b2 (value e input_sha256): value es lo que pasó, ordenado y con rutas POSIX, unido con «\n». Para tests, las referencias; para commit, el id completo; para atom/materialization, los ids o rutas enlazados; para document, las rutas; para external, las URLs. input_sha256 = sha256 de «fact\nvalue\n» seguido, por cada ruta de archivo de value, del sha256 de sus bytes; para commit, el sha completo. Es determinista.
+b3 (closure.py): manda a1. En closure.py se editan verify_task_closeout y sus productores; los close_* no.
+b4 (anchor_state): no es un campo del modelo. Lo calcula sldb (GO07) comparando el @sha256 pinneado en ReviewDoc.subject con el hash de contrato actual de la tarea. Los tests lo leen por sldb, como los de CC32 (tests/test_activation_rules.py: el finding con anchor_state, o check_doc_anchors).
+b5 (CC35a): está en main (8d0e23fe, cerrado); por eso depends_on está vacío. La vía de escritura es doc_access.create_doc/write_doc sobre la transacción de sldb, la que usa _write_review.
+c1 (pin al nacer): como un recibo evidence nace con veredicto y no pasa por dispose, se escribe pinneado. create y, en la misma transacción, una reescritura sin cambios del payload que dispara save_document_payload y pinnea el subject (como tests/activation_receipts.py de CC32, H-CC32-2). El test lo verifica: subject con @sha256 tras verify.
+c2 (cuándo no se escribe): se salta la escritura solo si ya existe un recibo evidence del mismo fact para la tarea con el mismo input_sha256 y anchor_state intact. Si el contrato cambió (goal editado → changed), una verify nueva escribe un recibo nuevo (n+1) aunque el input_sha256 sea el mismo. El recibo viejo queda como está.
+c3 (_write_review): está en deskops/services/review.py (en el repo; el worker lo lee). Arma el payload del ReviewDoc y llama a doc_access.create_doc(root, path, ReviewDoc, payload, review_id). «Sin llamar al modelo» quiere decir sin LLM; la validación del modelo ReviewDoc sí corre. Si reusar _write_review exige tocar review.py más allá de lo mínimo, el worker escribe su propio helper en closure.py con la misma llamada a doc_access.
 
 ## Validation
 

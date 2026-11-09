@@ -1,0 +1,34 @@
+name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-bundle-2
+path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle-2.md
+source_hash: 04024e9940a0011ba653b65d3dac46b7f969075bbdc7f3540cb91a3e1b1df808
+content_hash: e8ea32b02aa98e93199b76a20c739ea267008f566bc288661af3cd396f248ce0
+field_hashes:
+  id: 0d2fae188f1f76af5cf96899e11bfd9be53938e1ccd576888ed1f629e04a7877
+  title: 0650d7c32492bab48fd95879fc454f870b96cc3741b7308b25e5d2c167ae5a10
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  subject: 70d155ef9ebf9a9fb2c8f792bb2a2f3290502573a1f90deba18aa7b1584ded02
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 3758cb174fbae6e2936fcd55aaa12c30a39bcb3061c97bb28cc5bd2f7f4740ce
+  input_sha256: 079dc2a6810dfe50b7981de4c0bfc94de31f43144d3f0ece586607df1bda9aa4
+  output_sha256: 4409c4347344577611baa8e690ff9a39379c10ec07da3190478e6086de7ef4c3
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 8ce3a874eb54639233f4b32f81e619b6cf96f1ce2dd16d9ef926f2287af1dfc2
+  created_at: 107f0760739b9ac9e09fe5a2c1e33fe292965beb61c6c99cb0f71178e0eca93b
+  disposed_at: a8e79acf1a81828a23a8ffcad404a62afc835194869c66897d044f63f5f7503c
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: bc25ba1b15474d4077cba234b0732d77f39f8c77a9d766ea4029ba11b63a088d
+  disposition: 42c752dcdb64db30ddbfa463edf5befa085e42c1b44ef87b36701861c4655a44
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-09T19:48:41Z'
+  authority: generated
+  via: save_document_payload

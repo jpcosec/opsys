@@ -1,0 +1,37 @@
+{
+  "key": "task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/preflight",
+  "input_sha256": "03a1ad131c3c8359831da2c9328f38e4e84ddc04d3850f4e6e55f1d79e05389d",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261109-194638/context-review/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/preflight/03a1ad131c3c8359831da2c9328f38e4e84ddc04d3850f4e6e55f1d79e05389d/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md",
+      "sha256": "a2d8499ac3377a7602e00accbb3a52ca340cb366908e75b42a94541b24018476",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [],
+  "started": "2026-11-09T19:46:38.250276+00:00",
+  "finished": "2026-11-09T19:46:51.681926+00:00"
+}
