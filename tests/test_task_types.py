@@ -15,6 +15,7 @@ import sys
 
 import yaml
 
+from deskops import doc_access
 from deskops.models import TaskAggregateDoc
 from deskops.models import TaskCodeDoc
 from deskops.models import TaskDebugDoc
@@ -235,7 +236,9 @@ def test_closeout_verify_reads_evidence_from_the_type(lifecycle_desk: Path) -> N
     _git(root, "commit", "-q", "-m", "docs")
     commit = _git(root, "rev-parse", "HEAD")
 
-    _write_task(root, "task-doc-task", task_type="task.docs", references=[commit, "docs/api.md"])
+    path = _write_task(root, "task-doc-task", task_type="task.docs", references=[commit, "docs/api.md"])
+    # Tasks resolve through the store (CC35b a7): track the hand-written task under its type.
+    doc_access.track_created_document(root, TaskDocsDoc, path, "task-doc-task")
 
     result = _cli(root, "closeout", "verify", "--task", "task-doc-task")
     report = json.loads(result.stdout)

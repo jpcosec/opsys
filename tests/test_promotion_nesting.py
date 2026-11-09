@@ -3,12 +3,14 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
+from sldb.api import track_document_file
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
 from deskops.cli.main import main
 from deskops.models import TaskDoc
 from deskops.operations import DeskopsOperations
+from deskops.paths import package_pythonpath
 
 
 def _section(body: str, heading: str) -> str:
@@ -94,6 +96,11 @@ def test_advance_task_keeps_nested_h3_sections_inside_scope(lifecycle_desk: Path
     }
     task_path = tmp_path / "desk" / "tasks" / "task-nested-active.md"
     task_path.write_text(render_model_markdown(TaskDoc, payload) + "\n", encoding="utf-8")
+    # Tasks resolve through the store (CC35b a7): track the hand-written task the way
+    # `desk update --apply` tracks a desk file (its nested headings are the point of the test).
+    track_document_file(
+        tmp_path / ".sldb", "TaskDoc", task_path, name="task-nested-active", pythonpath=package_pythonpath(), force=True
+    )
 
     task, result = operations.advance_task("task-nested-active")
 
