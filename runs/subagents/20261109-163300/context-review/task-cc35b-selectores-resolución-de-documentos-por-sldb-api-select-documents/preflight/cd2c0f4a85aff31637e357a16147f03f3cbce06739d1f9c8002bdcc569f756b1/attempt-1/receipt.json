@@ -1,0 +1,9 @@
+{
+  "key": "task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "cd2c0f4a85aff31637e357a16147f03f3cbce06739d1f9c8002bdcc569f756b1",
+  "output_sha256": "d0f1c039b6f5f46ce017b548a51cc7b0f981855939738a3bdcf0b04d4cb5e6d3",
+  "start": "2026-11-09T16:33:00.614924+00:00",
+  "end": "2026-11-09T16:33:18.834880+00:00"
+}

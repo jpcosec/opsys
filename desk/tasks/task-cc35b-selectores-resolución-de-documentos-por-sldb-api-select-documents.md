@@ -94,6 +94,14 @@ a7 (documentos no trackeados en superficies trackeadas): un archivo de desk/task
 a8 (CC32 en paralelo): CC32 (wt/cc32) toca lifecycle.py, services/tasks.py, operations.py (_format_task_detail y _print_next_action_report en cli/commands/operations.py) y cli/commands/desk.py, y se integra mientras corre este nodo. CC35b no toca lifecycle.py ni cli/commands/. En services/tasks.py y operations.py solo cambia las llamadas de resolución, con cambios mínimos.
 a9 (verificación): deskops doctor en los 6 desks con main y con la rama, sobre copias y con cwd neutro (plantilla ~/proyectos/SLDB_1/coord2-ccconfig/cc35a/doctor6.sh). Los tests que leen mucho el desk corren desde una copia del worktree en /dev/shm (git worktree add --detach /dev/shm/deskops-cc35b HEAD; al terminar, worktree remove --force).
 
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-09):
+b1 (drawer e issues): manda a3, que corrige el SCOPE del dag para esas dos superficies. issues.find_issue/list_issues y drawer.resolve_drawer_source/_resolve_unique no cambian.
+b2 (qué está trackeado): manda el include de deskops/data/desk_declaration.yaml (desk/lifecycle, rituales, desk/tasks/board-*, desk/contexts/pill-*, desk/rituals/ritual-*, desk/atoms/atom-* y proto-*, desk/roles, desk/registry, desk/steps, desk/faq), más lo que deskops trackea por su ruta al escribir (tareas, reviews, inbox). Cada resolver usa como path_glob el patrón del directorio que hoy globbea (artifact_glob_pattern(artifact_id) bajo su directorio) y, cuando lo conoce, el model (ARTIFACT_MODELS). No se infiere nada más: si un resolver de una superficie trackeada no encuentra por select_documents un documento que hoy encuentra, es un caso de a7.
+b3 (formato de las marcas): un comentario Python en la línea anterior a la definición o a la llamada: «# CC34: alias for graph_ui, removed by CC34» o «# CC35b-a3: untracked surface, resolved on disk». El grep de aceptación se verifica con grep -rn ... | grep -v que excluya esas líneas, y el informe trae el resultado.
+b4 (docs/): este nodo no cambia comportamiento documentado (los mensajes y la regla son los mismos), así que no toca docs/. Si algún doc de docs/ describe resolve_selector o _tracked_task_paths por nombre, el worker lo lista en el informe como seguimiento; no lo edita.
+b5 (wc -l): sin umbral. Es un registro: el informe trae una tabla archivo | antes | después de cada archivo tocado.
+b6 (API para trackear en fixtures): sldb.api.transaction (Transaction.create con el modelo de deskops que corresponde, como hace CC35a en deskops) o la API de track de sldb que deskops ya usa tras CC35a en doc_access. La misma que use el código de deskops para escribir tareas.
+
 ## Validation
 
 _List the checks required before this task can close._
