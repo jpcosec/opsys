@@ -345,5 +345,8 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
+- model: TaskDocsDoc
+  paths:
+  - desk/tasks/task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a.md
 graph_backend: networkx
 policy: {}

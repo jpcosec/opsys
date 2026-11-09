@@ -1,4 +1,9 @@
 ---
+sldb:
+  by: agent
+  at: '2026-11-09T17:47:05Z'
+  authority: generated
+  via: save_document_payload
 # board-xxx
 id: board-001
 # Affected workspace or domain
@@ -11,6 +16,7 @@ tasks:
 - desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md
 - desk/tasks/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents.md
 - desk/tasks/task-review-record-recibos-reproduction-goldens-y-owner-sin-modelo-seguimiento-de-cc32.md
+- desk/tasks/task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -58,3 +64,4 @@ _Generated from the task references above._
 - CC32: Gates de activación de cada tipo de tarea como RuleDoc (produce G_CONSUMER) [draft] - El gate de activación de cada tipo de tarea de fábrica (task.code, task.docs, task.debug, task.refactor, task.decision, task.aggregate, task.external) es una RuleDoc semilla managed, on_transition sobre ritual-execution, que sldb evalúa al avanzar: exige los recibos de revisión que el tipo pide (accepted e intactos) y las dependencias cerradas. Los atributos __activation_receipts__ se borran. deskops advance, next y show muestran los findings de edges_blocked (cláusula, nodo, valor visto). El test de integración G_CONSUMER pasa en sus tres pasos.
 - CC35b: Selectores - resolución de documentos por sldb.api.select_documents [draft] - La resolución de selectores de documentos trackeados de deskops pasa a sldb.api.select_documents (GD23), con la misma regla (nombre exacto antes que prefijo único) y los mismos mensajes de error, que deskops arma con los candidatos que sldb devuelve. desk_paths.resolve_selector y _tracked_task_paths (que lee .sldb crudo) desaparecen de las superficies trackeadas. Los alias privados que graph_ui importa se conservan, marcados CC34.
 - review record: recibos reproduction, goldens y owner sin modelo (seguimiento de CC32) [draft] - deskops review record <task> --kind reproduction|goldens|owner escribe un recibo ReviewDoc de ese kind sobre la tarea, con la evidencia que el operador nombra y verdict pending. deskops review dispose le da el veredicto, como a los demás recibos. Con el recibo accepted e intacto, la regla de activación de CC32 lo cuenta.
+- manual: sin atoms split en el ejemplo ejecutable (sldb rechaza encabezados en el field desde CC35a) [draft] - El manual deja de mostrar atoms split como ejemplo ejecutable (opción c, revisable): la sección «Split, merge, delete, and validate» pasa a «Merge, delete, and validate», el bloque runnable crea dos átomos con answer sin encabezados y los fusiona, y una línea de texto dice que split no se puede alimentar por el CLI desde CC35a, remitiendo al drawer. test_operator_manual vuelve a verde.
