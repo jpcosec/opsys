@@ -277,6 +277,8 @@ include:
   - desk/materializations/materialization-cc38-tests-test-atom-tags.md
   - desk/materializations/materialization-cc38-tests-test-desk-paths.md
   - desk/materializations/materialization-cc31-workflows-task-lifecycle-yaml.md
+  - desk/materializations/materialization-closeout-tests-paths-services-closeout-gates.md
+  - desk/materializations/materialization-closeout-tests-paths-tests-test-closeout-test-paths.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

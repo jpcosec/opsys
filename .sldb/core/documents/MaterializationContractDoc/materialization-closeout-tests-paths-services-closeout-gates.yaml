@@ -1,0 +1,21 @@
+name: materialization-closeout-tests-paths-services-closeout-gates
+path: desk/materializations/materialization-closeout-tests-paths-services-closeout-gates.md
+source_hash: 9105c9cddb7fd5e1635fb7b4a6780ff227e7758b840c358031ac63a28f4a2191
+content_hash: c9be396053b87c14da38feddc0793caca801917d4296bac572448b026c02dc1c
+field_hashes:
+  id: d26cdc508bd208ecfad283e658ddb9232b8195411cc5e240e55c839dd524cbc0
+  title: 45f9228f893b01f0a74b63c24260d8e813f0e2828e1dffa117cea31a24eec560
+  source_atoms: a924a17c308d6bc3aeaea6e5d6871f392894d2ed6d4f52a4be85cf9b6c676099
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 0b47b22dba3c118607bf07aa33dae64bb1f23d77dfcbe03a040e570ce19f73d1
+  intent: 235710c589b1f008c61871af6a1542d2810a14ec1cb9a4c3ad596bf130a70fb1
+  validation: e5ef8c2e4170bbb79147c6ec7877ca2215b44523201ef8e9e565b302820b7b15
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null

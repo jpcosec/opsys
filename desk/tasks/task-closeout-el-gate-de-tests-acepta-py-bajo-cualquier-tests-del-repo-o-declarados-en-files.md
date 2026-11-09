@@ -7,7 +7,11 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_closeout_test_paths.py
+- pytest tests/test_closeout_gates.py
+- 1a7107dc2791fe8c685c38b002814a8e5d8aa8b0
+- desk/atoms/atom-el-gate-de-tests-del-closeout-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files.md
 depends_on: []
 pills: []
 files:
@@ -72,6 +76,7 @@ _List the checks required before this task can close._
 - grep: sin rglob ni os.walk nuevos en closeout_gates.py
 - wc -l antes y después
 - CHANGELOG
+- Resultado (coordinador de proyecto, squash 1a7107dc): test_closeout_test_paths 31 y test_closeout_gates 7 verdes de a uno; test_cli 101, output_goldens 7 y help_examples 11 verdes en la rama (worker, desde /dev/shm), sin --update-golden.
 
 ## Done When
 

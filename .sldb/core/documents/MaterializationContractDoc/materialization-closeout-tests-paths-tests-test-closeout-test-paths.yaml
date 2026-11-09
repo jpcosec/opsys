@@ -1,0 +1,21 @@
+name: materialization-closeout-tests-paths-tests-test-closeout-test-paths
+path: desk/materializations/materialization-closeout-tests-paths-tests-test-closeout-test-paths.md
+source_hash: 1406186111329afe747066c1b048931d4017920c7917580bb913f9e3fb61f6e3
+content_hash: 8d8463a5a613c82521fe6cac989bb57b12c1f34c25eb1025873c5504c10e428b
+field_hashes:
+  id: 06e334b3e28a1b5a1ab0f1ac183608fbc63af8d0b3fb13e1263391fff3e52fff
+  title: c79c5da71d6459afee3324292b85b3d59473e83ab5093777fe9b38a4ad69960f
+  source_atoms: a924a17c308d6bc3aeaea6e5d6871f392894d2ed6d4f52a4be85cf9b6c676099
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 109412935cd1238480b251be9644658b4c3f00d2841b35d05887e7802ced81e1
+  intent: ad1fc595d91cba88e1c3e78e59bb679d392296092a71035e3c527f98e1ce75e9
+  validation: e5ef8c2e4170bbb79147c6ec7877ca2215b44523201ef8e9e565b302820b7b15
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance: null
