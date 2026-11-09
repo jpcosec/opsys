@@ -1,7 +1,7 @@
 name: task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a
 path: desk/tasks/task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a.md
-source_hash: c6a99e0c2ed170490b51f2de605fb0f5c649683081f8cdee0512f6b3fcb55083
-content_hash: af7b140091f00e3d51a5b503ccf0e6890b55b4c1536b2eef8f7d7247eb215ae7
+source_hash: e026dab132a31e2d3511b4ca1a571b474634f767d9b0931ac4d00f536067bedb
+content_hash: 8d14ffa70d6c664b2cce46dfec8177d77422050024b8b451922aacb3392ed5c2
 field_hashes:
   title: abff6060b40561d86c2c8175c2e5564cece64aab7f7301ea79e97c53ff1f57dd
   id: 10cd89570de8291fae7d86a9f67f235d835ae200f4c29e04d8490f24c1aca7e2
@@ -13,12 +13,12 @@ field_hashes:
   why: 16c1d08a20ff9fe14a4c304d1926cee666775b0c0d98118923f1187e5c043cb5
   goal: 5aa05c2c222d426c30282c04c3a60cd493722362510a1761c3e26c8fdb77a59a
   scope: b19ffb064c90472d3f2129aeb145af977e5335366fdf496ae86639cd209257dc
-  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  references: 70d7e5f4932d485e66abe8d649483e646a189dcde1381b15eb3b434bd5701d2c
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 1a88b4a265acd00fd34e3b72b3bb010a31034e2cb612619a7a4367ad9babde1a
   implementation_path: d78fdec4f773a34c4b630962a9b7ee252467a83022de9a923ae57099031a5c33
-  validation: 6cec5a42368373f6a70d282a7fa3ca90046b20f0418050a1efbe1a2b290f33a8
+  validation: 0939e194dbea29aeb9f7e8d32b2a3532068bb8a4a838a8f041e78819293c7755
   done_when: 164cd95113ea98e46556d79b3324e251ed2bfc9e3fa445063efef54142658600
   task_type: 8dbc7ea3fc2d737a841f8f9a89de6dd4bd2ca7fdc77434a53400db8767ba695d
   inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-09T17:47:47Z'
+  at: '2026-11-09T18:35:42Z'
   authority: generated
   via: save_document_payload

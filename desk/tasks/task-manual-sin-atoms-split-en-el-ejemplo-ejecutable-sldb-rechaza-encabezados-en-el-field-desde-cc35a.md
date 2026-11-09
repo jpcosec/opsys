@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T17:47:47Z'
+  at: '2026-11-09T18:35:42Z'
   authority: generated
   via: save_document_payload
 id: task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a
@@ -12,7 +12,8 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- d732e15dab9dd2697e3607e5a56adb9e40a87d80
 depends_on: []
 pills: []
 files:
@@ -72,6 +73,7 @@ _List the checks required before this task can close._
 - tests/test_operator_manual.py verde, sin cambiar el test
 - test_cli_help_examples verde
 - CHANGELOG
+- Resultado (coordinador de proyecto, squash d732e15d): test_operator_manual 1 y test_cli_help_examples 11 verdes de a uno desde /dev/shm.
 
 ## Done When
 
