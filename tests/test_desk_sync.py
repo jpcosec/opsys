@@ -235,8 +235,9 @@ def test_declared_includes_treat_extra_boards_in_tasks_as_boards(tmp_path: Path)
     pending = pending_desk_includes(tmp_path)
     assert ("BoardDoc", "desk/tasks/board-compromisos-26-10.md") in pending
     assert not any(path.startswith("desk/tasks/task-") for _model, path in pending), "tasks are tracked by their own paths"
-    # Without a store, the lifecycle graph the scaffold wrote is pending too (CC31).
-    assert [row for row in pending if row[0] not in ("RelationTypeDoc", "RelationDoc", "RitualDoc")] == [
+    # Without a store, the lifecycle graph (CC31) and the activation rules (CC32) the scaffold wrote
+    # are pending too.
+    assert [row for row in pending if row[0] not in ("RelationTypeDoc", "RelationDoc", "RitualDoc", "RuleDoc")] == [
         ("BoardDoc", "desk/tasks/board-compromisos-26-10.md")
     ]
 
@@ -244,7 +245,8 @@ def test_declared_includes_treat_extra_boards_in_tasks_as_boards(tmp_path: Path)
 def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) -> None:
     """One `{model, glob}` per desk folder `desk update --apply` tracked by path, under the model's
     own id pattern; the scaffold's own files (pills.md) match no glob. The lifecycle graph is tracked
-    by its declared paths (CC31): the RelationDocs by name, the lifecycle rituals by their ids."""
+    by its declared paths (CC31): the RelationDocs by name, the lifecycle rituals by their ids; the
+    activation rules (CC32) by their glob."""
     from deskops.workspace import desk_declaration
 
     include = desk_declaration("x").include
@@ -264,6 +266,7 @@ def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) 
     }
     assert rules == {
         "RelationTypeDoc": "desk/lifecycle/type-*.md",
+        "RuleDoc": "desk/lifecycle/rule-activation-*.md",
         "BoardDoc": "desk/tasks/board-*.md",
         "PillDoc": "desk/contexts/pill-*.md",
         "RitualDoc": "desk/rituals/ritual-*.md",

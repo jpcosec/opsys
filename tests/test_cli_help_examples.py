@@ -24,6 +24,8 @@ import sys
 
 import pytest
 
+from tests.activation_receipts import accept_receipts
+
 from deskops.cli.main import main
 from deskops.operations import ARTIFACT_SUBJECTS
 
@@ -82,7 +84,13 @@ def _argv(example: str) -> list[str]:
 
 def _run_examples(root: Path, examples: list[str]) -> None:
     for example in examples:
-        result = _run(root, _argv(example))
+        argv = _argv(example)
+        if argv[:2] == ["advance", "task"]:
+            # The printed flow does not show the review step; the task type's activation rule
+            # (CC32) needs the receipts accepted and intact before `advance`, so the test
+            # writes them the way the flow would after `deskops review` + `review dispose`.
+            accept_receipts(root, argv[2])
+        result = _run(root, argv)
         assert result.returncode == 0, (
             f"help example failed: {example}\n"
             f"stdout:\n{result.stdout}\nstderr:\n{result.stderr}"

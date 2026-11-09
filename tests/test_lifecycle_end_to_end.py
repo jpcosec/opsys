@@ -7,6 +7,7 @@ import sys
 import pytest
 
 from deskops.operations import DeskopsOperations
+from tests.activation_receipts import accept_receipts
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -108,6 +109,7 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     board_text = (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
     assert "desk/tasks/task-lifecycle-e2e.md" in board_text
 
+    accept_receipts(root, "task-lifecycle-e2e")
     first_advance = _cli(root, "advance", "task", "task-lifecycle-e2e", "--root", str(root))
     assert "Status: active" in first_advance.stdout
     assert "Current node: ritual-testing" in first_advance.stdout
@@ -215,6 +217,7 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
         '{"id": "task-foo", "title": "Foo", "goal": "g", "scope": "s", '
         '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "task.code"}',
     )
+    accept_receipts(root, "task-foo")
     _cli(root, "advance", "task", "task-foo", "--root", str(root))
     _cli(root, "advance", "task", "task-foo", "--root", str(root))
 
@@ -308,6 +311,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
         '{"id": "task-pathspec-commit", "title": "Pathspec commit", "goal": "g", "scope": "s", '
         '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "task.code"}',
     )
+    accept_receipts(root, "task-pathspec-commit")
     _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
     _cli(root, "advance", "task", "task-pathspec-commit", "--root", str(root))
 
@@ -395,6 +399,7 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
         '{"id": "task-pathspec-amend", "title": "Pathspec amend", "goal": "g", "scope": "s", '
         '"implementation_path": "i", "done_when": "d", "validation": ["pytest"], "task_type": "task.code"}',
     )
+    accept_receipts(root, "task-pathspec-amend")
     _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
     _cli(root, "advance", "task", "task-pathspec-amend", "--root", str(root))
     _write(root, amend_test, "def test_smoke():\n    assert True\n")

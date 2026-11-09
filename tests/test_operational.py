@@ -7,6 +7,7 @@ import pytest
 
 from deskops.models.task import TaskDoc
 from deskops.operations import DeskopsOperations
+from tests.activation_receipts import accept_receipts
 from tests.test_lifecycle_end_to_end import _cli, _make_repo
 
 
@@ -151,6 +152,7 @@ def test_advance_task_does_not_persist_computed_gate_facts(lifecycle_desk: Path)
         }
     )
 
+    accept_receipts(lifecycle_desk, "task-no-leaked-facts")
     task, result = operations.advance_task("task-no-leaked-facts")
 
     assert result is not None and result.progressed
@@ -197,6 +199,7 @@ def test_advance_task_exact_selector_wins_over_prefix(tmp_path: Path) -> None:
     _seed_task(root, "task-foo-bar", "Foo Bar")
     bar = root / "desk" / "tasks" / "task-foo-bar.md"
     before = bar.read_text(encoding="utf-8")
+    accept_receipts(root, "task-foo")
 
     result = _cli(root, "advance", "task", "task-foo")
 

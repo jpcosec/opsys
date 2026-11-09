@@ -7,12 +7,12 @@ operates the desk. ``deskops review`` (GC03) writes the receipt with ``verdict: 
 ``deskops review dispose`` writes the verdict; ``deskops edit review`` refuses to touch it
 because a new review is a new document (DC3).
 
-The subject is a document anchor: ``doc:<Model>:<id>`` (optionally pinned with
-``@sha256:<contract hash>`` when sldb GO07 pins it). Until GO07 exists the installed sldb does
-not resolve a ``doc:`` value declared in ``__references__`` (it reads it as a
-``store:Model:name`` with store ``doc``), so the field is declared only in
-``__doc_anchors__`` and stays inert; GO07 treats every ``__doc_anchors__`` field as a
-reference field too (``G_SLDB_ANCHORS``). Nothing here fabricates that edge.
+The subject is a document anchor: ``doc:<Model>:<id>``, pinned by sldb (GO07) with
+``@sha256:<contract hash>`` when the receipt is saved through ``save_document_payload``. The
+field is declared in ``__doc_anchors__``, not ``__references__``: sldb reads every
+``__doc_anchors__`` field as a reference too (the ``^subject`` edge the activation rules walk)
+and computes its ``anchor_state`` (``intact``, ``changed``, ``lost``) when it composes the
+index. Nothing here fabricates that edge or that state.
 """
 
 from __future__ import annotations
@@ -37,8 +37,8 @@ ReviewVerdict = Literal["pending", "accepted", "rejected", "incomplete"]
 class ReviewDoc(StructuredNLDoc):
     """Receipt of one cold review (or another external check) bound to a document contract."""
 
-    #: GO07 treats every ``__doc_anchors__`` field as a reference too; before it, the field
-    #: stays inert so no Python here has to fake the anchor edge (TaskDoc precisión 1).
+    #: sldb treats every ``__doc_anchors__`` field as a reference too (GO07) and pins it on
+    #: save; no Python here fakes the anchor edge or its state.
     __doc_anchors__ = ["subject"]
     __references__ = []
     __semantics__ = {"type": ["workflow", "review"], "workspace": ["desk", "runs"]}

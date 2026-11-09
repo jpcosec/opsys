@@ -18,11 +18,16 @@
 # RelationDoc under `desk/lifecycle/` are deskops' documents, written from `lifecycle/` and
 # rewritten whenever a desk's copy differs (`deskops desk update --apply` reports it). Each
 # RelationDoc carries the transition's effects in `attributes`: `sets` (the fields written on
-# the task when the edge is taken) and `terminal` (the task closes). The `include` rules say
+# the task when the edge is taken) and `terminal` (the task closes). The activation gate of
+# each factory task type (CC32, GO06/GO08) is a `managed` RuleDoc too, written from `rules/`
+# to `desk/lifecycle/rule-activation-<type>.md`: `on_transition` over `ritual-execution`, with
+# subject `model <= <TypeDoc>` so a desk subtype inherits it, it requires the review receipts
+# the type asks for (accepted and intact) and the task's dependencies closed; sldb evaluates
+# it when `deskops advance` asks for the holding edges. The `include` rules say
 # which desk documents `deskops desk update --apply` tracks under which model
-# (`sldb.api.stores.apply_declaration.apply_includes`): the lifecycle documents, the three
-# lifecycle rituals by their ids (`RitualDoc:ritual-<x>`, what the graph's edges name) and
-# one glob per desk folder. The Board and the tasks are tracked by their own paths.
+# (`sldb.api.stores.apply_declaration.apply_includes`): the lifecycle documents, the rules,
+# the three lifecycle rituals by their ids (`RitualDoc:ritual-<x>`, what the graph's edges
+# name) and one glob per desk folder. The Board and the tasks are tracked by their own paths.
 folders:
 - desk/tasks
 - desk/contexts
@@ -142,6 +147,27 @@ seeds:
 - path: desk/lifecycle/closeout-task_completes.md
   mode: managed
   file: lifecycle/closeout-task_completes.md
+- path: desk/lifecycle/rule-activation-task-code.md
+  mode: managed
+  file: rules/rule-activation-task-code.md
+- path: desk/lifecycle/rule-activation-task-docs.md
+  mode: managed
+  file: rules/rule-activation-task-docs.md
+- path: desk/lifecycle/rule-activation-task-debug.md
+  mode: managed
+  file: rules/rule-activation-task-debug.md
+- path: desk/lifecycle/rule-activation-task-refactor.md
+  mode: managed
+  file: rules/rule-activation-task-refactor.md
+- path: desk/lifecycle/rule-activation-task-decision.md
+  mode: managed
+  file: rules/rule-activation-task-decision.md
+- path: desk/lifecycle/rule-activation-task-aggregate.md
+  mode: managed
+  file: rules/rule-activation-task-aggregate.md
+- path: desk/lifecycle/rule-activation-task-external.md
+  mode: managed
+  file: rules/rule-activation-task-external.md
 include:
 - model: RelationTypeDoc
   glob: desk/lifecycle/type-*.md
@@ -150,6 +176,8 @@ include:
   - desk/lifecycle/execution-task_activates.md
   - desk/lifecycle/testing-task_hands_to_closeout.md
   - desk/lifecycle/closeout-task_completes.md
+- model: RuleDoc
+  glob: desk/lifecycle/rule-activation-*.md
 - model: RitualDoc
   paths:
   - path: desk/rituals/execution.md

@@ -1,7 +1,7 @@
 """GC01: task types as models with a hierarchy and type-declared closeout evidence.
 
 Covers each Done When line of task-gc01: the seven factory subclasses and their declared
-evidence/receipts, `add task --task-type` (registered-only + default + envelope note), the
+evidence (the activation receipts are the RuleDoc seeds of CC32), `add task --task-type` (registered-only + default + envelope note), the
 store family ``model <= TaskCodeDoc``, closeout reading evidence from the type, `--evidence`
 as a floor, the desk-local type registration (DC7), the legacy ``task_type`` migration, and
 the removal of ``TASK_TYPE_EVIDENCE``.
@@ -110,31 +110,24 @@ def _write_legacy_task(root: Path, task_id: str, task_type: str) -> Path:
 def test_factory_type_declarations_match_the_normative_table() -> None:
     assert TaskCodeDoc.model_fields["task_type"].default == "task.code"
     assert TaskCodeDoc.__closeout_evidence__ == ("tests", "commit", "atom", "materialization")
-    assert TaskCodeDoc.__activation_receipts__ == ("preflight", "bundle")
 
     assert TaskDocsDoc.model_fields["task_type"].default == "task.docs"
     assert TaskDocsDoc.__closeout_evidence__ == ("commit", "document")
-    assert TaskDocsDoc.__activation_receipts__ == ("preflight",)
 
     assert TaskDebugDoc.model_fields["task_type"].default == "task.debug"
     assert TaskDebugDoc.__closeout_evidence__ == ("tests", "commit", "atom", "materialization")
-    assert TaskDebugDoc.__activation_receipts__ == ("preflight", "reproduction")
 
     assert TaskRefactorDoc.model_fields["task_type"].default == "task.refactor"
     assert TaskRefactorDoc.__closeout_evidence__ == ("tests", "commit", "atom", "materialization", "goldens")
-    assert TaskRefactorDoc.__activation_receipts__ == ("preflight", "bundle", "goldens")
 
     assert TaskDecisionDoc.model_fields["task_type"].default == "task.decision"
     assert TaskDecisionDoc.__closeout_evidence__ == ("commit", "document")
-    assert TaskDecisionDoc.__activation_receipts__ == ("owner",)
 
     assert TaskAggregateDoc.model_fields["task_type"].default == "task.aggregate"
     assert TaskAggregateDoc.__closeout_evidence__ == ("children", "commit")
-    assert TaskAggregateDoc.__activation_receipts__ == ()
 
     assert TaskExternalDoc.model_fields["task_type"].default == "task.external"
     assert TaskExternalDoc.__closeout_evidence__ == ("external",)
-    assert TaskExternalDoc.__activation_receipts__ == ("preflight",)
 
 
 def test_type_hierarchy_keeps_refactor_in_code_and_debug_out_of_it() -> None:
@@ -278,7 +271,6 @@ from deskops.models import TaskCodeDoc
 class TaskCliDoc(TaskCodeDoc):
     task_type: Literal["task.code.cli"] = Field(default="task.code.cli", description="CLI subtype.")
     __closeout_evidence__ = ("tests", "commit", "atom", "materialization", "document")
-    __activation_receipts__ = ("preflight", "bundle")
 """,
         encoding="utf-8",
     )

@@ -403,6 +403,7 @@ class DeskCLI:
         if untracked_docs:
             declared_models = {path: model_name for model_name, path in untracked_docs}
             try:
+                lifecycle.ensure_rule_model(root)
                 tracked_paths = apply_desk_includes(root)
             except Exception as exc:
                 print(f"Error: could not track the declared desk documents: {exc}")

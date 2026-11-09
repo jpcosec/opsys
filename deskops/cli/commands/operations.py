@@ -9,6 +9,7 @@ from deskops.cli.parse_input import parse_task_input
 from deskops.cli.render import normalize
 from deskops.cli.render import render
 from deskops.cli.render import render_error
+from deskops.lifecycle import finding_line
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
 from deskops.services.closeout_gates import CloseoutEvidenceError
@@ -252,6 +253,10 @@ class OperationsCLI:
             print("Advance when:")
             for item in report["advance_when"]:
                 print(f"- {item}")
+        if report.get("findings"):
+            print("Blocked by:")
+            for finding in report["findings"]:
+                print(f"- {finding_line(finding)}")
         print("Sources:")
         for label, path in report["sources"].items():
             print(f"- {label}: {path}")
@@ -311,6 +316,8 @@ class OperationsCLI:
                 lines.append(
                     f"- {gate['relation_type']} -> {gate['target']}: {state} [{condition}]"
                 )
+                for finding in gate.get("findings") or []:
+                    lines.append(f"  blocked by: {finding_line(finding)}")
         return "\n".join(lines)
 
     @staticmethod
