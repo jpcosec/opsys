@@ -10,6 +10,7 @@ tasks:
 - desk/tasks/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb.md
 - desk/tasks/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra.md
 - desk/tasks/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer.md
+- desk/tasks/task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
