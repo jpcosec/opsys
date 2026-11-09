@@ -1,6 +1,6 @@
 id: deskops-como-config
 revision: 3
-revision_note: 'Rev 3 (2026-11-06): CC35 (L) se parte en cuatro hijos, como manda su scope: CC35a transacción, CC35b selectores, CC35c referencias entrantes y CC35d tags/reemplazo. CC35c depende de CC33 y conserva su parte de MentionPattern; se eligió no mover esa parte a CC33 para que el contrato de CC33 no cambie. Los hijos se promueven cuando CC38 y CC36 estén en main. Orden acordado con el coordinador de proyecto: CC36 → CC31 → CC35a/CC35b/CC35d → CC32 → CC33 → CC35c → CC37, un worker a la vez. Rev 2 (2026-11-06): el dueño autoriza el plan (2026-11-05) y responde sus pendientes (decisiones.md DA1-DA6, DK6): nodo nuevo CC38 (invariantes de un documento al modelo, depende de CC30) del que dependen CC32, CC33 y CC37; CC37 lleva la consistencia del ciclo de vida a un validador de TaskDoc (DA6) en lugar de RuleDocs on_write; CC33 deja la evidencia solo por tipo (DA5); CC34 sin proveedores computed (DA1) y con ViewDoc solo en el paquete (DA4); CC51 fija N tras CC30 (DA3). execution_authorized=true. Rev 1 (2026-11-05): plan inicial, ramas P3 y P5 del árbol aprobado por el dueño (deskops-como-config-arbol.md). Sucede a gates-por-tipo (congelado tras GC03, DK2). Sin revisión en frío todavía (la decide el supervisor). execution_authorized=false.'
+revision_note: 'Rev 4 (2026-11-09): CC33 (L) se parte en tres hijos al promover: CC33a recibos de evidencia (closeout verify escribe ReviewDoc kind evidence y queda como orquestador), CC33b reglas de cierre (RuleDocs por tipo sobre task_completes, reglas de campo, borrado de los hechos y gates viejos, chequeos entre documentos del inventario de CC38) y CC33c grafo (graph y drift leen sldb graph project, GD21). CC35c pasa a depender de CC33c, que lleva la configuración de grafo de deskops. Partición del coordinador del plan, revisable. Rev 3 (2026-11-06): CC35 (L) se parte en cuatro hijos, como manda su scope: CC35a transacción, CC35b selectores, CC35c referencias entrantes y CC35d tags/reemplazo. CC35c depende de CC33 y conserva su parte de MentionPattern; se eligió no mover esa parte a CC33 para que el contrato de CC33 no cambie. Los hijos se promueven cuando CC38 y CC36 estén en main. Orden acordado con el coordinador de proyecto: CC36 → CC31 → CC35a/CC35b/CC35d → CC32 → CC33 → CC35c → CC37, un worker a la vez. Rev 2 (2026-11-06): el dueño autoriza el plan (2026-11-05) y responde sus pendientes (decisiones.md DA1-DA6, DK6): nodo nuevo CC38 (invariantes de un documento al modelo, depende de CC30) del que dependen CC32, CC33 y CC37; CC37 lleva la consistencia del ciclo de vida a un validador de TaskDoc (DA6) en lugar de RuleDocs on_write; CC33 deja la evidencia solo por tipo (DA5); CC34 sin proveedores computed (DA1) y con ViewDoc solo en el paquete (DA4); CC51 fija N tras CC30 (DA3). execution_authorized=true. Rev 1 (2026-11-05): plan inicial, ramas P3 y P5 del árbol aprobado por el dueño (deskops-como-config-arbol.md). Sucede a gates-por-tipo (congelado tras GC03, DK2). Sin revisión en frío todavía (la decide el supervisor). execution_authorized=false.'
 status: authorized
 as_of: '2026-11-06'
 source: dag.yaml es canónico; brief.md, alcance.md y decisiones.md son sus fuentes de contexto
@@ -194,7 +194,9 @@ tasks:
     tree_id: T3.3
     title: Cierre como regla sobre recibos de evidencia; en código solo los hechos de git y archivos
     kind: code
-    node_role: delivery
+    node_role: aggregate
+    children: [CC33a, CC33b, CC33c]
+    partition_note: 'Partido en la rev 4. No se promueve el agregado; se promueven los hijos (regla común 8). Su acceptance es la unión de la de los hijos.'
     parent_id: PF2
     owner_repo: deskops
     estimate: L
@@ -204,6 +206,48 @@ tasks:
     scope: '(1) Hechos (DP2): closeout_gates.py queda solo con los productores de hechos de git y archivos: reference_points_to_commit (closeout_gates.py:197-229), _to_test (:177-195), _to_document (:160-175), el enlace atom/materialization de _closeout_link_gate (operations.py:732-794) leído del grafo de proyecto de sldb (GD21, configuración de deskops/graph/desk_graph.py declarada como dato en project_graph), _skill_guard_test_evidence (:895-926) y _generated_artifact_source_finding (:939-984). deskops closeout verify corre los productores y escribe, por cada kind de evidencia verificado, un ReviewDoc kind evidence con fact = <kind> (tests | commit | atom | materialization | document | external), value (hash, ruta o URL), verdict accepted o rejected con reason, subject anclado al contrato de la tarea; una verificación repetida sin cambios no crea un recibo nuevo (mismo input_sha256). (2) Reglas: por tipo, una RuleDoc semilla on_transition sobre la arista task_completes (where current_node = "ritual-testing") que exige any(^subject: kind = "evidence" and fact = "<kind>" and anchor_state = "intact" and verdict = "accepted") por cada kind del tipo (atom|materialization como or de dos); los __closeout_evidence__ de clase de GC01 se borran. Las reglas sobre campos pasan a RuleDocs on_check/on_write alert: vocabulario de closeout_evidence, alerta de código implícito (operations.py:622-632), python_changes_without_declared_tests (:633-642), forma de URL, graduación de pills (operations.py:796-804). (3) Se borran: _add_closeout_facts (operations.py:441-450) y su limpieza (tasks.py:196-199), closeout_evidence_verified, pill_graduation_verified, has(closeout_evidence_verified) en task_lifecycle (ya en semillas desde CC31), verify_task_closeout como evaluador (queda como orquestador: corre productores, escribe recibos, llama a sldb rules explain sobre la arista y devuelve el mismo envelope que hoy). (4) Grafo: deskops graph build|neighbors|missing|reflect y drift leen sldb graph project (GD21); se borran graph/snapshot.py (construcción propia), graph/checks.py (rglob :124 → missing de GD21) y los rglob de graph/self_reflection.py; tests/graph_oracle_v1/ se conserva hasta la aceptación y luego se borra. Evidencia (DA5): la regla de cierre es solo por tipo; closeout_evidence de una tarea (--evidence) solo suma kinds al tipo, nunca quita; un kind extra de la tarea se verifica y escribe su recibo como los del tipo, y como no hay cuantificación sobre valores de un campo en GO02 se reporta como alert sin bloquear (decisión del TaskDoc, sin nota a sldb). Los chequeos entre documentos que el inventario de CC38 asigna a CC33 pasan a RuleDoc aquí y su chequeo viejo se borra en el mismo paso (DK6).'
     acceptance: 'closeout verify sobre una tarea task.code con commit en HEAD, test existente y atom enlazado escribe tres recibos evidence accepted y devuelve el mismo envelope que el golden previo; sin commit, el recibo commit queda rejected y la arista task_completes aparece en edges_blocked con la cláusula fact = "commit"; editar goal tras verificar deja los recibos changed y vuelve a bloquear; una segunda verify sin cambios no crea recibos; los tests de tests/test_closeout.py, test_closeout_declared_evidence.py, test_closeout_atomless.py y test_closeout_skill_links.py verdes con los mismos escenarios (adaptados a recibos); grep de closeout_evidence_verified, pill_graduation_verified, _add_closeout_facts y __closeout_evidence__ en deskops/ vacío; deskops graph neighbors y missing dan lo mismo que el oráculo v1 sobre el desk real de deskops y después tests/graph_oracle_v1/ se borra; goldens de ayuda y salida idénticos; deskops doctor sin hallazgos nuevos en los 6 desks; líneas de closeout_gates.py, operations.py y graph/ antes y después; CHANGELOG; docs/workflow-policy-reference.md; ritual closeout actualizado vía deskops.'
     output_scope: deskops/services/closeout_gates.py, deskops/operations.py, deskops/services/tasks.py, deskops/services/closure.py (solo la llamada a verify), deskops/models/task_types.py, deskops/models/review.py, deskops/data/rules/, deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/drift.py, deskops/cli/commands/closeout.py, tests/, docs/workflow-policy-reference.md, desk/rituals (vía deskops), CHANGELOG.md
+  - id: CC33a
+    tree_id: T3.3
+    title: 'CC33 (1) Recibos de evidencia: closeout verify escribe ReviewDoc kind evidence y queda como orquestador'
+    kind: code
+    node_role: delivery
+    parent_id: CC33
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC32, CC38]
+    requires: [G_GO06, G_GO08]
+    enablers: {sldb: [GO06, GO08]}
+    scope: 'Partes (1) y la mitad orquestadora de (3) del scope de CC33. closeout_gates.py queda solo con los productores de hechos de git y archivos (reference_points_to_commit, reference_points_to_test, reference_points_to_document, el enlace atom/materialization, _skill_guard_test_evidence, _generated_artifact_source_finding). deskops closeout verify corre los productores y escribe, por cada kind de evidencia verificado, un ReviewDoc kind evidence con fact = <kind> (tests | commit | atom | materialization | document | external), value, verdict accepted o rejected con reason y subject anclado al contrato de la tarea; una verificación repetida sin cambios no crea recibo nuevo (mismo input_sha256). verify_task_closeout queda como orquestador (corre productores, escribe recibos, devuelve el mismo envelope que hoy). Las reglas que leen esos recibos son de CC33b; hasta entonces el gate de cierre sigue siendo el de hoy.'
+    acceptance: 'closeout verify sobre una tarea task.code con commit en HEAD, test existente y atom enlazado escribe tres recibos evidence accepted y devuelve el mismo envelope que el golden previo; sin commit, el recibo commit queda rejected; una segunda verify sin cambios no crea recibos; editar goal deja los recibos changed (anchor_state); tests de test_closeout*.py verdes con los mismos escenarios; goldens de ayuda y salida idénticos; líneas de closeout_gates.py antes y después; CHANGELOG.'
+    output_scope: deskops/services/closeout_gates.py, deskops/services/closure.py (solo la llamada a verify), deskops/models/review.py, deskops/cli/commands/closeout.py, tests/, CHANGELOG.md
+  - id: CC33b
+    tree_id: T3.3
+    title: 'CC33 (2) Reglas de cierre: RuleDocs por tipo sobre task_completes y reglas de campo; se borran los hechos y gates viejos'
+    kind: code
+    node_role: delivery
+    parent_id: CC33
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC33a]
+    requires: [G_GO06, G_GO08]
+    enablers: {sldb: [GO06, GO08]}
+    scope: 'Partes (2), el borrado de (3) y la regla de evidencia (DA5) del scope de CC33: por tipo, una RuleDoc semilla on_transition sobre la arista task_completes (where current_node = "ritual-testing") que exige los recibos evidence de CC33a (atom|materialization como or de dos); los __closeout_evidence__ de GC01 se borran; las reglas sobre campos pasan a RuleDocs on_check/on_write alert (vocabulario de closeout_evidence, código implícito, python_changes_without_declared_tests, forma de URL, graduación de pills); se borran _add_closeout_facts y su limpieza, closeout_evidence_verified, pill_graduation_verified y has(closeout_evidence_verified); los 9 chequeos entre documentos que el inventario de CC38 asigna a CC33 pasan a RuleDoc y su chequeo viejo se borra en el mismo paso (DK6).'
+    acceptance: 'sin recibo commit accepted, la arista task_completes aparece en edges_blocked con la cláusula fact = "commit"; editar goal tras verificar vuelve a bloquear; grep de closeout_evidence_verified, pill_graduation_verified, _add_closeout_facts y __closeout_evidence__ en deskops/ vacío; los 9 chequeos de CC38 como RuleDoc con su función vieja borrada; tests de closeout verdes; goldens idénticos; deskops doctor sin hallazgos nuevos en los 6 desks; docs/workflow-policy-reference.md; ritual closeout vía deskops; CHANGELOG.'
+    output_scope: deskops/data/rules/, deskops/models/task_types.py, deskops/operations.py, deskops/services/tasks.py, deskops/services/closeout_gates.py, deskops/lifecycle.py, tests/, docs/workflow-policy-reference.md, desk/rituals (vía deskops), CHANGELOG.md
+  - id: CC33c
+    tree_id: T3.3
+    title: 'CC33 (3) Grafo: graph y drift leen sldb graph project (GD21); se borran la construcción propia y sus rglob'
+    kind: code
+    node_role: delivery
+    parent_id: CC33
+    owner_repo: deskops
+    estimate: M
+    depends_on: [CC38]
+    requires: [G_GD21]
+    enablers: {sldb: [GD21]}
+    scope: 'Parte (4) del scope de CC33: deskops graph build|neighbors|missing|reflect y drift leen sldb graph project (GD21) con la configuración de grafo de deskops declarada como dato en project_graph; se borran graph/snapshot.py (construcción propia), graph/checks.py (rglob → missing de GD21) y los rglob de graph/self_reflection.py; tests/graph_oracle_v1/ se conserva hasta la aceptación y luego se borra. El enlace atom/materialization que usa el closeout (CC33a) se lee de ese grafo cuando este nodo entra.'
+    acceptance: 'deskops graph neighbors y missing dan lo mismo que el oráculo v1 sobre el desk real de deskops y después tests/graph_oracle_v1/ se borra; grep de rglob en deskops/graph/ vacío; goldens de ayuda y salida idénticos; deskops doctor sin hallazgos nuevos en los 6 desks; líneas de graph/ antes y después; CHANGELOG.'
+    output_scope: deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/drift.py, tests/, CHANGELOG.md
   - id: CC34
     tree_id: T3.4
     title: Vistas de la UI como ViewDoc servidas por sldb; desk_view.py desaparece
@@ -270,7 +314,7 @@ tasks:
     parent_id: CC35
     owner_repo: deskops
     estimate: M
-    depends_on: [CC35a, CC33]
+    depends_on: [CC35a, CC33c]
     requires: [G_GD22]
     enablers: {sldb: [GD22]}
     scope: 'Parte (3) del scope de CC35. atoms delete/split/merge, retire, drawer remove y closeout usan referrers/rewrite_references (GD22) dentro de la misma transacción. Las menciones atom:<id> en prosa y los bullets del drawer se declaran como MentionPattern en la configuración de grafo de deskops que deja CC33. Por eso depende de CC33: esa parte queda en este nodo y no se movió a CC33.'
