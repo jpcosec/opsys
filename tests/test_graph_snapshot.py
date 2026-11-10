@@ -94,7 +94,7 @@ def test_the_project_graph_view_is_what_the_built_snapshot_reads_back(tmp_path: 
 
     assert nodes(live) == nodes(built)
     assert live.edges == built.edges
-    assert ("task:task-source", "atom:atom-existing", "references") in {(e.source, e.target, e.role) for e in live.edges}
+    assert ("task:desk/tasks/task-source.md", "atom:atom-existing", "references") in {(e.source, e.target, e.role) for e in live.edges}
 
 
 def write(path: Path, content: str) -> None:

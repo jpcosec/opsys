@@ -1,13 +1,12 @@
-"""The closeout graph read from sldb's index gives what the full repository scan gave.
+"""The closeout graph and the lifecycle transitions read from sldb.
 
-`build_closeout_graph_context` used to extract every document and source file of the
-repository, ask `doc_status` once per document and read the declared edges of every
-document; `lifecycle.transitions_from` read the edge index composed with every linked
-store. Both now read less (the sldb index once, the documents the gate asks about, the
-desk's own store). `tests/closeout_graph_oracle.py` keeps the old path frozen; these
-tests run both over temporary desks and require the same answers: the same
-`verify_task_closeout` report, the same declared-edge extraction, the same source nodes
-and the same lifecycle transitions.
+`build_closeout_graph_context` reads sldb's project graph of the desk (GD21). These tests
+run the closeout gate over temporary desks that exercise each case it distinguishes. The
+frozen full-scan extractors (`tests/graph_oracle_v1`) were compared with the project graph
+over the real desk of this repository and removed by CC33c once they matched (neighbors and
+missing, as sets). `lifecycle.transitions_from` reads the desk's own store;
+`tests/closeout_graph_oracle.py` keeps the linked-index reading it replaced, and the
+transitions must be the same.
 """
 
 from __future__ import annotations
@@ -22,17 +21,8 @@ import pytest
 import yaml
 
 from deskops import lifecycle
-from deskops.graph.desk_graph import extract_declared_edges
-from deskops.graph.desk_graph import extract_doc_nodes
-from deskops.graph.desk_graph import extract_source_file_nodes
 from deskops.operations import DeskopsOperations
-from deskops.services.desk_view import DeskView
 
-from tests.closeout_graph_oracle import FullScanCloseoutGraph
-from tests.closeout_graph_oracle import closeout_graph_context_v1
-from tests.closeout_graph_oracle import extract_declared_edges_v1
-from tests.closeout_graph_oracle import extract_doc_nodes_v1
-from tests.closeout_graph_oracle import extract_source_file_nodes_v1
 from tests.closeout_graph_oracle import transitions_from_v1
 
 
@@ -208,27 +198,13 @@ def store_desk(lifecycle_desk: Path) -> Path:
     return root
 
 
-def _verify_both(root: Path, monkeypatch: pytest.MonkeyPatch, task_id: str) -> tuple[dict, dict]:
-    live = DeskopsOperations(root).verify_task_closeout(task_id)
-    with monkeypatch.context() as patch:
-        oracle_ops = DeskopsOperations(root)
-        patch.setattr(
-            oracle_ops.closure,
-            "build_closeout_graph_context",
-            lambda: FullScanCloseoutGraph(closeout_graph_context_v1(root)),
-        )
-        old = oracle_ops.verify_task_closeout(task_id)
-    return live, old
-
-
 @pytest.mark.parametrize("desk", ["bare_desk", "store_desk"])
-def test_closeout_reports_match_the_full_scan(desk: str, request: pytest.FixtureRequest, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_closeout_reports_cover_each_gate_case(desk: str, request: pytest.FixtureRequest) -> None:
     root: Path = request.getfixturevalue(desk)
-    reports = {}
-    for task_id in TASKS:
-        live, old = _verify_both(root, monkeypatch, task_id)
-        assert live == old, task_id
-        reports[task_id] = live["gates"]["atom_or_materialization_link"]
+    reports = {
+        task_id: DeskopsOperations(root).verify_task_closeout(task_id)["gates"]["atom_or_materialization_link"]
+        for task_id in TASKS
+    }
 
     # The desk exercises each case the gate distinguishes.
     valid = reports["task-valid-materialization"]
@@ -244,41 +220,10 @@ def test_closeout_reports_match_the_full_scan(desk: str, request: pytest.Fixture
     assert any(f["code"] == "changed_file_missing" for f in reports["task-mixed"]["findings"])
 
     context = DeskopsOperations(root).closeout_gates.build_closeout_graph_context()
-    assert context.invalid_materializations == closeout_graph_context_v1(root)["invalid_materializations"]
     assert context.invalid_materializations == {
         "materialization:materialization-broken-atom",
         "materialization:materialization-missing-target",
     }
-
-
-@pytest.mark.parametrize("desk", ["bare_desk", "store_desk"])
-def test_declared_edges_and_source_nodes_match_the_full_scan(desk: str, request: pytest.FixtureRequest) -> None:
-    root: Path = request.getfixturevalue(desk)
-    _assert_graph_matches_the_full_scan(root)
-
-
-def test_the_repository_itself_matches_the_full_scan() -> None:
-    """The real desk of this repository: hundreds of documents, a tracked store, runs/."""
-    root = Path(__file__).resolve().parents[1]
-    _assert_graph_matches_the_full_scan(root)
-
-
-def test_the_board_matches_the_full_scan(store_desk: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    live = DeskView(store_desk).board()
-    with monkeypatch.context() as patch:
-        view = DeskView(store_desk)
-        patch.setattr(
-            view.ops.closure,
-            "build_closeout_graph_context",
-            lambda: FullScanCloseoutGraph(closeout_graph_context_v1(store_desk)),
-        )
-        patch.setattr(
-            lifecycle,
-            "transitions_from",
-            lambda root, node, *, snapshot=None: transitions_from_v1(store_desk, node),
-        )
-        old = view.board()
-    assert live == old
 
 
 def _lifecycle_nodes() -> list[str]:
@@ -300,16 +245,3 @@ def test_transitions_match_the_linked_index(lifecycle_desk: Path, tmp_path: Path
     for node in _lifecycle_nodes():
         assert lifecycle.transitions_from(lifecycle_desk, node) == transitions_from_v1(lifecycle_desk, node), node
     assert lifecycle.transitions_from(lifecycle_desk, "ritual-testing")
-
-
-def _assert_graph_matches_the_full_scan(root: Path) -> None:
-    """sldb's project graph with the desk configuration gives the frozen extractors' output."""
-    assert _dicts(extract_doc_nodes(root)) == _dicts(extract_doc_nodes_v1(root))
-    assert _dicts(extract_source_file_nodes(root)) == _dicts(extract_source_file_nodes_v1(root))
-    live, old = extract_declared_edges(root), extract_declared_edges_v1(root)
-    assert _dicts(live.edges) == _dicts(old.edges)
-    assert _dicts(live.missing_targets) == _dicts(old.missing_targets)
-
-
-def _dicts(items: list) -> list[dict]:
-    return [item.to_dict() for item in items]
