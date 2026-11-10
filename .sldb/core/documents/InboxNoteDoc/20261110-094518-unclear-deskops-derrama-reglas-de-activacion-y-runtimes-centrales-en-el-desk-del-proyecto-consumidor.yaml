@@ -1,0 +1,18 @@
+name: 20261110-094518-unclear-deskops-derrama-reglas-de-activacion-y-runtimes-centrales-en-el-desk-del-proyecto-consumidor
+path: desk/inbox/20261110-094518-unclear-deskops-derrama-reglas-de-activacion-y-runtimes-centrales-en-el-desk-del-proyecto-consumidor.md
+source_hash: fcc1baf9e4f137a0bcfe50944b0a2205240b01f9b6db0f92b499c5a6c74013c3
+content_hash: c166ed760afd4f0ad2ba9d4b5ea285a95cdbbd0a82f4c1f763ab93917079f6be
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: 61b9410ba2d037186aef59e069fb63bdebe189c1d225b8dca1b5d5e1235c3a6d
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 996962d5b5be182c55ff7fb505c28e234c6af5b555d87bc66a0466f7132dc7f1
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 26c54225b1dc9ba18cef3b78eafa6564021132fa6b8c51e8d50c5f553b6b95a2
+  body: 9ff12cbf2beaabcc12fc660956f7ac40a72459691c8c58cda5dfc353f5bd63c5
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
