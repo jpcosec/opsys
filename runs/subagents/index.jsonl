@@ -139,3 +139,4 @@
 {"task_id": "task-closeout-resolved-by", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
 {"task_id": "task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
+{"task_id": "task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
