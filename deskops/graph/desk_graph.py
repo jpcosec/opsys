@@ -82,7 +82,7 @@ FILE_RULES = (
 
 EXCLUSIONS = FileExclusions(
     directories=(".git", ".mypy_cache", ".pytest_cache", ".ruff_cache", ".tmp", ".venv", "__pycache__", "build", "dist", "node_modules", "tools", "venv"),
-    path_prefixes=(".sldb/runtime", ".sldb/core/documents", "tests/fixtures"),
+    path_prefixes=(".sldb/runtime", ".sldb/core/documents", ".sldb_cache", "tests/fixtures"),
     suffixes=(".pyc", ".pyo"),
     path_endings=(".graph.json", ".kgdb.json", ".snapshot.json"),
 )
