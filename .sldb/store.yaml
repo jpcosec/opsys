@@ -384,5 +384,6 @@ include:
 - model: TaskDebugDoc
   paths:
   - desk/tasks/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f.md
+  - desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md
 graph_backend: networkx
 policy: {}
