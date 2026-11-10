@@ -226,3 +226,60 @@ def test_edit_review_refuses_the_disposition_fields(
 
     assert result == 1
     assert "verdict is written by deskops review dispose (GC03); a new review is a new document" in captured.out
+
+
+# ------------------------------------------------------------------ kind evidence (CC33a)
+def _evidence(**overrides: object) -> dict[str, object]:
+    fields: dict[str, object] = dict(
+        id="review-task-x-evidence-tests-1",
+        kind="evidence",
+        fact="tests",
+        value="tests/test_a.py\ntests/test_b.py",
+        engine="deskops-closeout",
+        run_dir="",
+        output_sha256="",
+        verdict="accepted",
+        reason="verified: tests tests/test_a.py\ntests/test_b.py",
+        disposed_at="2026-01-01T00:00:00Z",
+        disposed_by="robocop2",
+    )
+    fields.update(overrides)
+    return _payload(**fields)
+
+
+def test_evidence_receipt_roundtrips_fact_and_a_multiline_value() -> None:
+    payload = _evidence()
+    rendered = render_model_markdown(ReviewDoc, payload)
+    extracted = extract_model_data(ReviewDoc, rendered)
+    assert extracted["fact"] == "tests"
+    assert extracted["value"] == "tests/test_a.py\ntests/test_b.py"
+    assert ReviewDoc(**extracted).model_dump() == ReviewDoc(**payload).model_dump()
+
+
+def test_evidence_receipt_requires_fact() -> None:
+    with pytest.raises(ValidationError) as excinfo:
+        ReviewDoc(**_evidence(fact=""))
+    assert "requires fact" in str(excinfo.value)
+
+
+def test_fact_outside_the_evidence_vocabulary_fails() -> None:
+    with pytest.raises(ValidationError) as excinfo:
+        ReviewDoc(**_evidence(fact="goldens"))
+    assert "fact" in str(excinfo.value)
+
+
+@pytest.mark.parametrize("field", ["fact", "value"])
+def test_fact_and_value_are_refused_outside_kind_evidence(field: str) -> None:
+    with pytest.raises(ValidationError) as excinfo:
+        ReviewDoc(**_payload(**{field: "tests"}))
+    assert "only for kind 'evidence'" in str(excinfo.value)
+
+
+def test_a_receipt_written_before_kind_evidence_still_reads_with_empty_fact_and_value() -> None:
+    rendered = render_model_markdown(ReviewDoc, _payload())
+    legacy = "\n".join(
+        line for line in rendered.splitlines() if not line.startswith(("fact:", "value:", "# kind evidence only"))
+    )
+    extracted = extract_model_data(ReviewDoc, legacy)
+    assert extracted["fact"] == "" and extracted["value"] == ""
+    assert ReviewDoc(**extracted).kind == "preflight"

@@ -1,11 +1,13 @@
 name: review-task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero-preflight-2
 path: desk/reviews/task-test-gitignore-policy-quedó-viejo-sldb-core-se-versiona-entero/preflight-2.md
 source_hash: b78f4d94eeb76037da6f682332a12973b8c6518e71ca3c0c611f5527b99adbd7
-content_hash: a2fe643a6456733dca93659c8cfa0aa22755f1f77af9990c06ac235b525d9f13
+content_hash: 481357b4aea4b12ee69ffe3e6e3a1d5c78486bfd5dbfdf53fdba74806f5f4e8e
 field_hashes:
   id: 5f15c3a391aa1255b4ce605b3ea3b3cce01f4dff289bcedae00ead3f433e0d43
   title: cfb7e82b56340cd9d8461d4898d1a7704116b743d53e8884aed4fc0b85677c3d
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 35986a6253d1482582466f0caf4dc84f011c70288a40a81dc63b80485279faaa
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

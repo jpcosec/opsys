@@ -1,11 +1,13 @@
 name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-2
 path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight-2.md
 source_hash: febd8d392999147e400c9333e80fece9bbde374751d7b7e77c938104be540063
-content_hash: cd8361feb6e203739331981fe9be299121318d4d658d37861d4b7fa10ee42d82
+content_hash: 1aa40cf81d189beb1fdf07a8b8e1d613d6de4d530500550a9dbee1fd044c5f81
 field_hashes:
   id: 4d1e49b41308e731c8772b424032209cf66efa38980ac6b747927fec971e0987
   title: bc5001b10fd62ba5286e2a4fe5c33d313e1084c203f2d9708a7f849465be09d6
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 20b9069ec2d2e933d0143a39cc6b55ccd443842c94fd34278bd41c6766647634
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

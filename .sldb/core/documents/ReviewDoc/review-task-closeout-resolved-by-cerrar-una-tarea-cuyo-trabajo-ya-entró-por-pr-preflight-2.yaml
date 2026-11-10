@@ -1,11 +1,13 @@
 name: review-task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr-preflight-2
 path: desk/reviews/task-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr/preflight-2.md
 source_hash: bfb2656e1ad0fc7ea7f30266105f44ffa9bc781d9c60044b7cab0af040c646cb
-content_hash: 5f87be9b25bcaf447a1bca7beb946cb698e6a62a605fc88159eb9c2f079317e5
+content_hash: 3804d9d8b0500078053b884698d5d6c341b531934509974b7dda4c09f26dd56d
 field_hashes:
   id: 3bf5348ceeecf7de5785a8ba9d9444468289855d195610b3a2c6ff17347f42e3
   title: 2b0c09b7489fb0a09d6e50c4521bcb24c5867521ce61c5d6fd601a15dfdfad13
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: be31c8b08bfc1313728abcab8303dd25f43ca966accbf95ff1178f913077a7ae
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

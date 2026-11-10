@@ -1,11 +1,13 @@
 name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-bundle-1
 path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle-1.md
 source_hash: 27fe2cebd0ea1a0fe67a96ca36c3e122b5871f5f97b216211eb1eb46ec942c6f
-content_hash: b6f897c21597acac494fa25bd25283bcb86b477c0fc0c67885451ad2eefec4e8
+content_hash: 9cf1437fff4e3308d9c595b95080e08748bc0f893d92e89bcf155fea5d86d5df
 field_hashes:
   id: 5bf5abc1c6fff20b48f8f298e6be4d853b995881ae01f5601fffad37e8d84635
   title: cc5854c2d2e9d953f7f84527b9df75080d68c7a225b7c4295029e810b65f6860
   kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 9e886e32d356d04336c3122f9855959e56e05986f9950d442b8265e93a2be70a
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

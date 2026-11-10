@@ -82,7 +82,8 @@ test instead of an atom per file. Either way an append-only
 
     def _verify(self, args: Any) -> int:
         root = Path(args.root).resolve()
-        report = DeskopsOperations(root).verify_task_closeout(args.task)
+        # verify also writes the evidence receipts (CC33a); the envelope is unchanged.
+        report = DeskopsOperations(root).closure.verify_task_closeout(args.task, write_receipts=True)
         print(json.dumps(report, indent=2, sort_keys=True))
         # The JSON stays machine-readable on stdout; the declared/found line and the
         # alerts are always said aloud on stderr, never silently folded into the report.

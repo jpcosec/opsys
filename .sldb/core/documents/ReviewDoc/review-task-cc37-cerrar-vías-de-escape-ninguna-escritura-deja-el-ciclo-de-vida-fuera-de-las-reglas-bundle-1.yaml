@@ -1,11 +1,13 @@
 name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-bundle-1
 path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle-1.md
 source_hash: ed0de6f13ced3366beef29cb7acd3a906150ab4fcef7939e892a872e2f0e6974
-content_hash: 8f374cc4ec0e808e565c9e08d7243fb3a117cf6e6136fdb8e35f50f8a1121ffa
+content_hash: 258d23e22870d14f00fa59861f14d340e79475e90960080dbc4e8e20a6adbc9c
 field_hashes:
   id: 7804891b181694e2524bc101f677e6847ced2d557245427ed3a4cb7505cbbcbd
   title: 0650d7c32492bab48fd95879fc454f870b96cc3741b7308b25e5d2c167ae5a10
   kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 2e19ecacfbc5279d03684d144670398124a1e93b2317c88c840fd259b9d23951
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

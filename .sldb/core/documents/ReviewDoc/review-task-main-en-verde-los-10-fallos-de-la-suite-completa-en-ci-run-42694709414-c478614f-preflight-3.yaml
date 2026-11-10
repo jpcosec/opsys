@@ -1,11 +1,13 @@
 name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-3
 path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-3.md
 source_hash: 4a2f013a72d3f16046e791ea6af82d9b991b6dc3956edb6d844e9dcb31e32fef
-content_hash: a37fe769ad6e47a6586e35f1043a212a6295972c2a9c70500f73f17aecee72da
+content_hash: 56b09dd1abf6c6bf12373a289f7710853df7e8bebfb180781bd11d300e8c835a
 field_hashes:
   id: 039ee1338c9d43d4c00be2237e7d98e5b4cb5e36cd4ff4513eb97762b3bf7c99
   title: b7a57caa52b89ed90193aafdecce8f1cba8a3fb23d6339bb37c1fbdf10511b72
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: e7294c52eb22cc70cf685ea17c2a7d6ebead56a13308ff248d7111917bb36b82
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
