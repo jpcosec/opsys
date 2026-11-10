@@ -344,3 +344,29 @@ def test_human_preflight_and_bundle_activate_a_task_code(desk: Path, pi_log: Pat
     assert advanced.returncode == 0, advanced.stdout + advanced.stderr
     assert "Current node: ritual-testing" in advanced.stdout
     assert not pi_log.exists()
+
+
+def test_a_short_selector_keys_and_anchors_receipts_on_the_full_task_id(desk: Path, pi_log: Path) -> None:
+    """`review record|preflight` with a prefix of the task id: the receipt carries the full id
+    (review id, path and subject), or no activation rule would ever see it (main en verde)."""
+    root = desk
+    added = _deskops(
+        root, "add", "task", "--title", "Long name for a selector", "--goal", "g", "--scope", "s",
+        "--validation", "pytest", "--task-type", "task.code",
+    )
+    assert added.returncode == 0, added.stdout + added.stderr
+    full = "task-long-name-for-a-selector"
+
+    recorded = _deskops(root, "review", "record", "task-long", "--kind", "owner", "--reason", "approved")
+    assert recorded.returncode == 0, recorded.stdout + recorded.stderr
+    assert f"review: review-{full}-owner-1" in recorded.stdout
+    assert _review(root, f"review-{full}-owner-1")["subject"] == f"doc:TaskCodeDoc:{full}"
+    assert (root / "desk" / "reviews" / full / "owner-1.md").is_file()
+
+    # The model review too: the logging `pi` fails, so the receipt is a technical failure,
+    # but it is still written under the full id.
+    _deskops(root, "review", "preflight", "task-long")
+    assert pi_log.exists()
+    doc = _review(root, f"review-{full}-preflight-1")
+    assert doc["subject"] == f"doc:TaskCodeDoc:{full}"
+    assert not (root / "desk" / "reviews" / "task-long").exists()

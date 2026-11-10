@@ -194,6 +194,14 @@ class ReviewService:
         except FileNotFoundError:
             raise DomainError(f"Task '{task_id}' not found under {tasks_dir}") from None
 
+    def _resolve_task(self, selector: str) -> tuple[Path, str]:
+        """The task file a selector names and the task's full id (its frontmatter ``id``, else the
+        file stem). Receipts are keyed and anchored on that id, never on the selector as typed:
+        ``task-cc37`` would otherwise give ``doc:<Model>:task-cc37``, a subject no rule matches."""
+        task_path = self._task_path(selector)
+        task_id = str(self._task_payload(task_path).get("id") or "").strip() or task_path.stem
+        return task_path, task_id
+
     def _task_model(self, task_path: Path) -> str:
         store = self.root / ".sldb"
         if not store.exists():
@@ -660,7 +668,7 @@ class ReviewService:
         if not paths and kind != "owner":
             raise UsageError(f"--kind {kind} requires at least one --evidence")
 
-        task_path = self._task_path(task_id)
+        task_path, task_id = self._resolve_task(task_id)
         subject = f"doc:{self._task_model(task_path)}:{task_id}"
         input_sha256 = ""
         if paths:
@@ -816,7 +824,7 @@ class ReviewService:
         return (plan_dir / "dag.yaml").is_file()
 
     def _status_task(self, task_id: str) -> list[dict[str, Any]]:
-        task_path = self._task_path(task_id)
+        task_path, task_id = self._resolve_task(task_id)
         reports: list[dict[str, Any]] = []
         for mode, builder in (
             ("preflight", self._preflight_input),
@@ -880,7 +888,7 @@ class ReviewService:
     ) -> dict[str, Any]:
         if force and not (reason and reason.strip()):
             raise UsageError("--force requires --reason (recorded in manifest.json and the ReviewDoc)")
-        task_path = self._task_path(task_id)
+        task_path, task_id = self._resolve_task(task_id)
         model = self._task_model(task_path)
         subject = f"doc:{model}:{task_id}"
         builder = self._preflight_input if mode == "preflight" else self._bundle_input
