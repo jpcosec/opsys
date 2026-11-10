@@ -45,7 +45,11 @@ class GraphMissingFinding:
 
 def find_missing_graph_references(root: Path, graph_path: Path | None = None) -> list[GraphMissingFinding]:
     """Return missing graph references from declared source refs and optional snapshot edges."""
-    findings = [_finding_from_missing_target(missing) for missing in extract_declared_edges(root).missing_targets]
+    findings = [
+        _finding_from_missing_target(missing)
+        for missing in extract_declared_edges(root).missing_targets
+        if not declared_target_is_a_file(root, missing.target_id)
+    ]
     if graph_path is not None:
         try:
             snapshot = read_graph_snapshot(graph_path)
@@ -53,6 +57,27 @@ def find_missing_graph_references(root: Path, graph_path: Path | None = None) ->
             raise GraphMissingCheckError(str(exc)) from exc
         findings.extend(find_missing_snapshot_targets(snapshot))
     return sorted(findings, key=lambda finding: (finding.kind, finding.source_id, finding.target_id))
+
+
+def declared_target_is_a_file(root: Path, target_id: str) -> bool:
+    """Whether a declared target the graph has no node for is still an existing file of the repo.
+
+    The project graph makes nodes only for the files its surfaces extract, so an existing
+    ``.yaml`` or ``.json`` (the plan's ``dag.yaml`` in the drawer, a test fixture) is reported as
+    a missing target although it is there. Revisable decision until CC33c moves ``graph`` onto
+    ``sldb graph project`` (GD21): such a target is not missing when, without its ``kind:``
+    prefix, it names a file inside ``root``. An atom reference, a path that does not exist, and a
+    path that leaves ``root`` (absolute, or through ``..``) are still reported.
+    """
+    if target_id.startswith("atom:"):
+        return False
+    prefix, sep, rest = target_id.partition(":")
+    relative = rest if sep and "/" not in prefix else target_id
+    if not relative or Path(relative).is_absolute():
+        return False
+    base = Path(root).resolve()
+    candidate = (base / relative).resolve()
+    return candidate.is_relative_to(base) and candidate.is_file()
 
 
 def find_missing_snapshot_targets(snapshot: GraphSnapshot) -> list[GraphMissingFinding]:
