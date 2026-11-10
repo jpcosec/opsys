@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T19:48:40Z'
+  at: '2026-11-10T00:22:57Z'
   authority: generated
   via: save_document_payload
 id: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
@@ -20,6 +20,7 @@ files:
 - deskops/data/rules/
 - deskops/services/
 - deskops/lifecycle.py
+- deskops/workspace.py
 - deskops/cli/commands/desk.py
 - tests/
 - CHANGELOG.md
@@ -104,6 +105,10 @@ c2 (cerrada): advance no persiste la transición terminal, y closeout commit sac
 c3 (filtro del grep de a5): cuentan los hits en código que arma o muta un payload de TaskDoc: lifecycle.py, services/closure.py, specs/compiler.py (compile_task_spec), services/tasks.py y doc_access (hidratación de tareas). Los hits de otros modelos (message, repo, issues, desk_view, drawer, runtime, review, atoms) se listan en el informe con una línea cada uno, como «otro modelo».
 c4 (6 desks): la aceptación exige que desk update no escriba ninguna tarea inconsistente y que la reporte. Si alguna tarea real de los 6 desks no pasa el validador, el worker para y avisa con la lista antes de seguir: una tarea que no pasa ya no se puede editar por sldb, y eso es una decisión del coordinador.
 c5 (d4 de CC31): una tarea cuyo task_type no es un tipo registrado (vacío o legacy, como «code» en graph_ui) se valida contra TaskDoc genérico (services/tasks.py, comentario de advance_task). TaskDoc genérico acepta task_type vacío o cualquier string no registrado. Cada modelo tipado acepta solo su literal (TaskCodeDoc → task.code, etc.).
+
+
+PRECISIONES DE EJECUCIÓN (2026-11-10, a pedido del worker):
+d1 (workspace.py entra en files): para que desk update --apply no escriba una tarea inconsistente (c4), el filtro va en deskops/workspace.py (_task_type_migration_plan/migrate_task_types). Salta las tareas con errores de ciclo de vida y las devuelve como «inconsistent ... not written»; desk.py lo reporta. Es un cambio mínimo; no se toca nada más de workspace.py. En los 6 desks, las 11 tareas existentes están en estado de entrada (draft, ritual-execution, history vacía) y pasan el validador.
 
 ## Validation
 
