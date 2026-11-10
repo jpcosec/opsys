@@ -1,5 +1,7 @@
 """`deskops graph missing`: a declared target that is an existing file of the repo is not missing
-even when the project graph makes no node for it (revisable decision until CC33c)."""
+even when the project graph makes no node for it. CC33c checked sldb's project graph over the
+real desk: it still makes no node for the drawer's `dag.yaml` nor for a `tests/fixtures` JSON,
+so the exception stays."""
 
 from __future__ import annotations
 

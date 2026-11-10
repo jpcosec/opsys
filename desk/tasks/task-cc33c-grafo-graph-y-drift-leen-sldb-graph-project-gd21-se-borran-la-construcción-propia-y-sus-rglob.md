@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T14:18:41Z'
+  at: '2026-11-10T19:57:00Z'
   authority: generated
   via: save_document_payload
 id: task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob
@@ -57,10 +57,6 @@ En alcance: deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/
 
 _Outline the expected implementation route or affected surface._
 
-_Outline the expected implementation route or affected surface._
-
-_Outline the expected implementation route or affected surface._
-
 CONTRATO DEL NODO (dag.yaml rev 4, CC33c). SCOPE: Parte (4) del scope de CC33: deskops graph build|neighbors|missing|reflect y drift leen sldb graph project (GD21) con la configuración de grafo de deskops declarada como dato en project_graph; se borran graph/snapshot.py (construcción propia), graph/checks.py (rglob → missing de GD21) y los rglob de graph/self_reflection.py; tests/graph_oracle_v1/ se conserva hasta la aceptación y luego se borra. El enlace atom/materialization que usa el closeout (CC33a) se lee de ese grafo cuando este nodo entra.
 
 ACCEPTANCE: deskops graph neighbors y missing dan lo mismo que el oráculo v1 sobre el desk real de deskops y después tests/graph_oracle_v1/ se borra; grep de rglob en deskops/graph/ vacío; goldens de ayuda y salida idénticos; deskops doctor sin hallazgos nuevos en los 6 desks; líneas de graph/ antes y después; CHANGELOG.
@@ -85,7 +81,7 @@ REGLAS COMUNES (alcance.md):
 
 PRECISIONES DE PROMOCIÓN (2026-11-10, coordinador del plan; base origin/main 3951bb04):
 a1 (lo que ya está en main): desde 4a9a4bbb, deskops/graph/desk_graph.py (212 líneas) es la configuración del desk para sldb.api.edges.project_graph (GD21: ProjectGraphConfig, DocumentSurface, DeclaredFileTargets, FileExclusions), y checks.find_missing_graph_references ya lee extract_declared_edges de ahí. extract_docs/extract_edges/extract_sources están congelados en tests/graph_oracle_v1/ como oráculo (lo usan tests/closeout_graph_oracle.py y tests/graph_oracle_v1/).
-a2 (lo que falta, inventario en main): deskops/graph/snapshot.py (364 líneas; build_graph_snapshot :128, write_graph_snapshot, read_graph_neighbors) arma su propio snapshot. deskops/graph/checks.py :151 hace rglob("*.md") por superficie. deskops/graph/self_reflection.py (433 líneas) y cli/commands/graph.py (167 líneas: _build, _neighbors, ...) y cli/commands/drift.py (29) leen ese snapshot. Este nodo pasa graph build|neighbors|missing|reflect y drift a sldb.api.project_graph (o sldb graph project) con la configuración de desk_graph.py, y borra la construcción propia y los rglob.
+a2 (lo que falta, inventario en main): graph/snapshot.py (borrado por este nodo; 364 líneas; build_graph_snapshot :128, write_graph_snapshot, read_graph_neighbors) arma su propio snapshot. deskops/graph/checks.py :151 hace rglob("*.md") por superficie. deskops/graph/self_reflection.py (433 líneas) y cli/commands/graph.py (167 líneas: _build, _neighbors, ...) y cli/commands/drift.py (29) leen ese snapshot. Este nodo pasa graph build|neighbors|missing|reflect y drift a sldb.api.project_graph (o sldb graph project) con la configuración de desk_graph.py, y borra la construcción propia y los rglob.
 a3 (oráculo): neighbors y missing tienen que dar lo mismo que el oráculo v1 sobre el desk real de deskops (copia en /dev/shm). Recién después se borra tests/graph_oracle_v1/, en un commit propio que nombra la comparación.
 a4 (la decisión revisable de main-en-verde-2): graph missing no reporta un target declarado que existe como archivo dentro del root (deskops/graph/checks.py, declared_target_is_a_file, tests/test_graph_missing_existing_files.py). Este nodo decide si el grafo de sldb ya crea esos nodos (.yaml del drawer, fixtures .json). Si los crea, se borra la excepción y su test cambia a «aparece como nodo». Si no, la excepción queda y se anota como hipótesis para sldb.
 a5 (verificación): los 4 pasos del workflow de deskops en un clon limpio (los corre el coordinador) más deskops doctor en los 6 desks. Archivos de test de a uno: test_graph_* y closeout_graph_oracle, test_cli y test_output_goldens desde /dev/shm, sin --update-golden.

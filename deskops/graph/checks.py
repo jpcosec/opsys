@@ -18,9 +18,10 @@ from deskops.atom_references import parse_atom_reference
 
 
 from deskops.graph.desk_graph import extract_declared_edges
-from deskops.graph.snapshot import GraphSnapshot
-from deskops.graph.snapshot import GraphSnapshotReadError
-from deskops.graph.snapshot import read_graph_snapshot
+from deskops.graph.desk_graph import extract_doc_nodes
+from deskops.graph.view import GraphReadError
+from deskops.graph.view import GraphView
+from deskops.graph.view import read_graph_file
 
 
 class GraphMissingCheckError(RuntimeError):
@@ -44,7 +45,7 @@ class GraphMissingFinding:
 
 
 def find_missing_graph_references(root: Path, graph_path: Path | None = None) -> list[GraphMissingFinding]:
-    """Return missing graph references from declared source refs and optional snapshot edges."""
+    """Missing references of sldb's project graph (GD21), plus the dangling edges of a ``--graph`` file."""
     findings = [
         _finding_from_missing_target(missing)
         for missing in extract_declared_edges(root).missing_targets
@@ -52,8 +53,8 @@ def find_missing_graph_references(root: Path, graph_path: Path | None = None) ->
     ]
     if graph_path is not None:
         try:
-            snapshot = read_graph_snapshot(graph_path)
-        except GraphSnapshotReadError as exc:
+            snapshot = read_graph_file(graph_path)
+        except GraphReadError as exc:
             raise GraphMissingCheckError(str(exc)) from exc
         findings.extend(find_missing_snapshot_targets(snapshot))
     return sorted(findings, key=lambda finding: (finding.kind, finding.source_id, finding.target_id))
@@ -64,9 +65,9 @@ def declared_target_is_a_file(root: Path, target_id: str) -> bool:
 
     The project graph makes nodes only for the files its surfaces extract, so an existing
     ``.yaml`` or ``.json`` (the plan's ``dag.yaml`` in the drawer, a test fixture) is reported as
-    a missing target although it is there. Revisable decision until CC33c moves ``graph`` onto
-    ``sldb graph project`` (GD21): such a target is not missing when, without its ``kind:``
-    prefix, it names a file inside ``root``. An atom reference, a path that does not exist, and a
+    a missing target although it is there. CC33c read ``graph`` from sldb's project graph (GD21)
+    and found it still makes no node for them, so the exception stays: such a target is not
+    missing when, without its ``kind:`` prefix, it names a file inside ``root``. An atom reference, a path that does not exist, and a
     path that leaves ``root`` (absolute, or through ``..``) are still reported.
     """
     if target_id.startswith("atom:"):
@@ -80,8 +81,8 @@ def declared_target_is_a_file(root: Path, target_id: str) -> bool:
     return candidate.is_relative_to(base) and candidate.is_file()
 
 
-def find_missing_snapshot_targets(snapshot: GraphSnapshot) -> list[GraphMissingFinding]:
-    """Return edges whose target id is absent from a simple or KGDB-style graph snapshot."""
+def find_missing_snapshot_targets(snapshot: GraphView) -> list[GraphMissingFinding]:
+    """Return edges whose target id is absent from the graph's nodes."""
     node_ids = {node.id for node in snapshot.nodes}
     findings: list[GraphMissingFinding] = []
     seen: set[tuple[str, str, str | None]] = set()
@@ -138,28 +139,21 @@ class AtomReferenceFinding:
 def find_atom_reference_violations(root: Path) -> list[AtomReferenceFinding]:
     """Report invalid roles and legacy atom reference fields in Markdown frontmatter.
 
-    Only frontmatter under ``desk/`` and ``docs/`` is a declaration. Fenced YAML
-    blocks are examples, so they are not scanned.
+    The documents are the project graph's (sldb, GD21) under ``desk/`` and ``docs/``; only
+    their frontmatter is a declaration. Fenced YAML blocks are examples, so they are not read.
     """
     project_root = Path(root)
     findings: list[AtomReferenceFinding] = []
-
-    for surface in ("desk", "docs"):
-        surface_root = project_root / surface
-        if not surface_root.is_dir():
+    paths = {node.path for node in extract_doc_nodes(project_root) if node.path.endswith(".md") and node.path.split("/", 1)[0] in ("desk", "docs")}
+    for relative_path in sorted(paths):
+        if any(part.startswith(".") for part in Path(relative_path).parts):
             continue
-        for path in sorted(surface_root.rglob("*.md")):
-            relative_parts = path.relative_to(project_root).parts
-            if any(part.startswith(".") for part in relative_parts):
-                continue
-            try:
-                text = path.read_text(encoding="utf-8")
-            except OSError:
-                continue
-            frontmatter = _frontmatter_mapping(text)
-            if frontmatter is None:
-                continue
-            relative_path = path.relative_to(project_root).as_posix()
+        try:
+            text = (project_root / relative_path).read_text(encoding="utf-8")
+        except OSError:
+            continue
+        frontmatter = _frontmatter_mapping(text)
+        if frontmatter is not None:
             findings.extend(_atom_reference_findings(frontmatter, relative_path))
 
     return sorted(findings, key=lambda finding: (finding.path, finding.locator, finding.kind))
