@@ -443,9 +443,6 @@ include:
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
-- model: TaskDebugDoc
-  paths:
-  - desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md
 - model: RuleDoc
   paths:
   - desk/lifecycle/rule-activation-task-aggregate.md
