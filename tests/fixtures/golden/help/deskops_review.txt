@@ -13,8 +13,8 @@ positional arguments:
     status              Compare current inputs with recorded reviews without
                         calling the model.
     dispose             Write the verdict on one pending review receipt.
-    record              Record a reproduction, goldens, or owner receipt from
-                        operator evidence (no model call).
+    record              Record a reproduction, goldens, owner, preflight, or
+                        bundle receipt from operator evidence (no model call).
 
 options:
   -h, --help            show this help message and exit
@@ -32,3 +32,5 @@ and a ReviewDoc receipt under desk/reviews/. `--engine` names a RuntimeProfileDo
 (default runtime-pi-deepseek-flash). An unchanged input is not reviewed again; `--max-attempts` (default 2)
 caps good attempts per key unless --force --reason. `record` writes a reproduction, goldens or owner
 receipt from evidence the operator names, without calling the model; `dispose` gives it the verdict.
+Where no model is available (CI scenarios, the quickstart), `record --kind preflight|bundle --operator`
+writes a human receipt that says so.

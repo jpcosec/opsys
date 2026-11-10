@@ -1,0 +1,18 @@
+name: RuleDoc
+model_ref: sldb.models.rule_doc:RuleDoc
+path: /mnt/ssd/proyectos/SLDB_1/sldb-runtime/src/sldb/models/rule_doc.py
+documents_index: .sldb/core/documents/RuleDoc.yaml
+sections_index: .sldb/runtime/sections/RuleDoc.yaml
+model_hash: cc1c5d0cae3c7eb64d0f603b152a8037562fa96ea5539ea5f2744c22b36a75f1
+roster_hash: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+contract_hash: f2d2b1e396ed140aece657606b2fd71913fed64d3e5ca0a999eda4f1be60a930
+documents_count: 0
+version: 1
+canonical: false
+family: rule
+semantics:
+- layer.governance
+- representation.markdown
+- source.document.markdown
+- type.rule
+base_models: []

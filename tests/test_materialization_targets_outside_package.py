@@ -312,6 +312,14 @@ Implement.
 Done.
 """,
     )
+    # Since CC35b the task selector resolves through the store only: a task written by hand
+    # is tracked as `deskops add task` would track it (the CC35b a7 adaptation).
+    from deskops import doc_access
+    from deskops.models import TaskDoc
+
+    doc_access.track_created_document(
+        root, TaskDoc, root / "desk/tasks/task-closeout-test.md", "task-closeout-test"
+    )
 
     # Create board
     _write(

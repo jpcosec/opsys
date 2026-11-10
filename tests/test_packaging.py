@@ -39,13 +39,18 @@ def test_desk_declaration_and_templates_ship_inside_the_package() -> None:
     for relative in templates:
         assert (DESK_DATA_PATH / relative).is_file(), relative
     lifecycle = [seed for seed in declaration["seeds"] if seed["path"].startswith("desk/lifecycle/")]
-    assert len(lifecycle) == 6 and all(seed["mode"] == "managed" for seed in lifecycle)
+    assert all(seed["mode"] == "managed" for seed in lifecycle)
+    # CC31: the six lifecycle RelationDoc seeds; CC32: one activation RuleDoc per factory task type.
+    relations = [seed for seed in lifecycle if seed["file"].startswith("lifecycle/")]
+    rules = [seed for seed in lifecycle if seed["file"].startswith("rules/")]
+    assert len(relations) == 6 and len(rules) == 7 and len(lifecycle) == 13
     config = yaml.safe_load((DESK_TEMPLATES_PATH / "config.json").read_text(encoding="utf-8"))
     assert config["versions"]["desk_format"] == CURRENT_DESK_FORMAT
 
     package_data = Path(paths.package_pythonpath()) / "pyproject.toml"
     text = package_data.read_text(encoding="utf-8")
     assert '"data/templates/**/*"' in text and '"data/lifecycle/**/*"' in text and '"data/desk_declaration.yaml"' in text
+    assert '"data/rules/**/*"' in text, "the activation rule templates (CC32) must ship in the wheel"
 
 
 def test_packaged_faq_matches_the_human_copy() -> None:
