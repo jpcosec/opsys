@@ -137,3 +137,4 @@
 {"task_id": "task-cc32", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-cc35b", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-closeout-resolved-by", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
+{"task_id": "task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
