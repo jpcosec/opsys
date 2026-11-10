@@ -384,5 +384,14 @@ include:
   paths:
   - desk/tasks/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f.md
   - desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md
+- model: RuleDoc
+  paths:
+  - desk/lifecycle/rule-activation-task-aggregate.md
+  - desk/lifecycle/rule-activation-task-code.md
+  - desk/lifecycle/rule-activation-task-debug.md
+  - desk/lifecycle/rule-activation-task-decision.md
+  - desk/lifecycle/rule-activation-task-docs.md
+  - desk/lifecycle/rule-activation-task-external.md
+  - desk/lifecycle/rule-activation-task-refactor.md
 graph_backend: networkx
 policy: {}
