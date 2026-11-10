@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T00:53:46Z'
+  at: '2026-11-10T00:54:17Z'
   authority: generated
   via: save_document_payload
 id: task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f
@@ -81,6 +81,10 @@ b6 (commits del desk): un commit con lo que escribió desk update --apply («mai
 b7 (cierre): cierra el coordinador de proyecto tras integrar, con el run de CI en success en 3.12 y 3.13; la URL del run va a references.
 e1 (DECISIÓN del coordinador de proyecto, 2026-11-10, revisable): para los fallos 1-3 (e2e_agent), opción B. deskops review record acepta también --kind preflight|bundle con --evidence del operador. El recibo deja visible que es humano (engine human), para que no se confunda con una revisión de modelo. Entra con los goldens de ayuda de review record, la sección de review del operator-manual, un test de los dos kinds nuevos y CHANGELOG. Los escenarios e2e_agent producen sus recibos con review record + review dispose antes de advance. Sin skip.
 e2 (DECISIÓN del coordinador de proyecto): CC30, CC36 y CC38 no tienen archivo de corrida de goldens que sirva de evidencia, así que no se les registra goldens. Se cierran con closeout resolved-by (código ya en main: 93cc1943, d4b49ff6, 4a1aae81) con los tests que declararon. Los cierra el coordinador de proyecto cuando el CI esté verde. En la tabla de p5 figuran como «cierre por resolved-by (coordinador)». CC33a ya es activable.
+e3 (CONDICIONES del overlord sobre e1, que contradice pill-zero-context-preflight-precedes-executor; decisión DO4 en decisiones.md, revisable por JP):
+(a) review record con --kind preflight|bundle exige y deja visibles en el recibo engine human, el operador (--operator, obligatorio para esos dos kinds) y el motivo «no model available», que el comando escribe como valor fijo u obligatorio. Un test lo prueba: sin --operator falla sin escribir nada, y el recibo trae los tres datos.
+(b) decisiones.md y la nota de inbox los hace el coordinador de proyecto.
+(c) No se usa para activar tareas reales en ningún desk hasta que JP lo confirme: solo en los escenarios e2e del CI y en el quickstart. Los recibos de las tareas reales del desk (CC33a, CC37 y esta misma) se rehacen con deskops review preflight|bundle de pi de verdad, una revisión a la vez en la máquina, o con review record solo para reproduction|goldens|owner. La tabla de p5 lo refleja.
 
 ## Validation
 

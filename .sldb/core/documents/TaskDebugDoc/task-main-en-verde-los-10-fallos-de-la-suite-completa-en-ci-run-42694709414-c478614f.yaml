@@ -1,7 +1,7 @@
 name: task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f
 path: desk/tasks/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f.md
-source_hash: 2c0cb010e93366a5dc50fbc00ecf03a0549b15be911164316dfb4843317c6554
-content_hash: d0a17c94eb28f8325f3518914cc1cf8c5b9c5deec0a6bf06365baccdbd13a00a
+source_hash: 276201f84ccf8a4209bed75ab0599c4dab2d9424af96679191a60b6f0ef95037
+content_hash: 7d69d838ee46b3329871625e1fa359610187c3dc6d94b9edcc606ff36b08d8ea
 field_hashes:
   title: b770ea69f9bae6a5c1dd8b50590119dbc167ffa85cde2451e3d2fadfe2c2ae92
   id: 93b9354938daeebed0c8447da24207f4a2d60ea47da9eaea4df304e3392be217
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 745cf45d75840c2ab5bc256ee579ff16ae88c7ab3e16a16a88c8231b2b3e5fbc
-  implementation_path: 9f45127a4b32eb76eb9155bbf3680fc43c23b0626c7cfd69fefc6ee1769f3e77
+  implementation_path: f9ff99470935924983952c473f73f92da08783f6146db1bdb0512d4f4837ecef
   validation: b72972d5a143133127a62fc8d7df5c1e78b2117347f68eaa7195904fbdfa6faa
   done_when: b7b7a52da3b3b395530bc8b5dee660268f728a00a97b2dcefb2f4a0cc98e286a
   task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
@@ -33,6 +33,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-10T00:53:46Z'
+  at: '2026-11-10T00:54:17Z'
   authority: generated
   via: save_document_payload
