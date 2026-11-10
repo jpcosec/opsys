@@ -476,7 +476,6 @@ include:
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob.md
-  - desk/tasks/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22.md
   - desk/tasks/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos.md
 - model: BoardDoc
   paths:
