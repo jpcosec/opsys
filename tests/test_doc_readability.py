@@ -82,6 +82,10 @@ def test_editing_an_unreadable_pill_refuses_instead_of_erasing_it(tmp_path: Path
 
     pill = tmp_path / "desk" / "contexts" / "pill-hand-written.md"
     pill.write_text(HAND_WRITTEN_PILL, encoding="utf-8")
+    # Since CC35b `edit` resolves pills through the store only; a hand-written pill enters it
+    # as on a real desk, by `desk update --apply` (the include's `desk/contexts/pill-*.md`).
+    assert main(["desk", "update", "--apply", "--root", str(tmp_path)]) == 0
+    capsys.readouterr()
     before = pill.read_text(encoding="utf-8")
 
     assert main(["edit", "pill", "pill-hand-written", "status", "active", "--root", str(tmp_path)]) != 0
