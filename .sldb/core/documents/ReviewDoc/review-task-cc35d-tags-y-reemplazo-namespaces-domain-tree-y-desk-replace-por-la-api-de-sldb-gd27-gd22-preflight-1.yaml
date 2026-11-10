@@ -1,0 +1,34 @@
+name: review-task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22-preflight-1
+path: desk/reviews/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/preflight-1.md
+source_hash: 1903b00149e55f09c33593710a44d612ca5cc4b011b76d6247b7c20f3263c309
+content_hash: 02fae82f6e54a3004aa6098809751db72c524c17b867680e87927ebe87aba670
+field_hashes:
+  id: a619bf7274e9a95b47eb573381ed981ef7a604f752739de5284c1a26f714098d
+  title: 30b3f3ae23625fd5a9dd4067d040c03420b93502e00bc0cb657e26c145c63492
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: aaf67cfa320af60b70f9a1d72f264eb01dd704891f751575a11c2d1b84f37af4
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 0e001a21aeefd459eb4b8e017386e08f1867eec16df1dfc326df8e6e6b5828bf
+  input_sha256: e08b0f2e53f4cc67a58f7856a5c201aba668d05f7a75dac63daf1f3f27314cf7
+  output_sha256: 3806ee6ec52cb3bd40df8137cea296a93eb36839d3f210a6a9dd21e94f6793d1
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: e74fd20ac2dadae1b4669945f516e14252d89f817d63a2cdad421db9da7b4cf5
+  created_at: 4fa9ddcd567e3cfcc925a75b2b556526b915460ad2845028c6b66d65137b54a6
+  disposed_at: 1355bbb14e16c54b7438ba8f51d3476ea0b615a5ffd4a1e3e518b7867acac031
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: e4156b5339b3b2493f999da02df3537dc50970af8b8274e4dcd95bc404617cf3
+  disposition: 80da8692661153cd3d3afae06d257b8335be1d86be805605f8d1d55f8fb102cc
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T12:25:00Z'
+  authority: generated
+  via: save_document_payload

@@ -1,0 +1,9 @@
+{
+  "key": "task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "a16eb99fccd616068425dc02fcb3e129ee01054e555b678fba13aed7ded76316",
+  "output_sha256": "44acdaef5b3c264f50d903d94ecca118c016e39d043214853948b60a0c697fb4",
+  "start": "2026-11-10T12:19:53.060746+00:00",
+  "end": "2026-11-10T12:20:08.820514+00:00"
+}

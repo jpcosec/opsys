@@ -1,0 +1,87 @@
+{
+  "key": "task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/bundle",
+  "input_sha256": "c49391c89a62fea4507a77f9864afe8c00aaf92d32d128999e1cd28c266521c5",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261110-122010/context-review/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/bundle/c49391c89a62fea4507a77f9864afe8c00aaf92d32d128999e1cd28c266521c5/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22.md",
+      "sha256": "c212e8041565468f594f3d0f48127e2edcbeda94764228a411a0f53c8f9e2ee5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/domain_tree.py",
+      "sha256": "ee36b635648430142a890be00087283e4f6ff8906d9cc82fc4f85b76062a5a33",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/atom_tags.py",
+      "sha256": "fb381f26e9e3d1c7a9cc0ff16ea923c41735185bed790335b63ed2abd6f3f6f1",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/replace.py",
+      "sha256": "c5fbed63cfeca0ff08c2f78932fbcaf3dbb0614b1583857be5ec6717ea94332b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "c2143167ced5a34b6b83fc8d22d084bca9876c9adb2c4088265bc8e849989b8d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "7302246677cc72bde066db930a5b26374ae5d1419674c12a2648adf7b5e54209",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-10T12:20:10.574898+00:00",
+  "finished": "2026-11-10T12:20:39.974222+00:00"
+}

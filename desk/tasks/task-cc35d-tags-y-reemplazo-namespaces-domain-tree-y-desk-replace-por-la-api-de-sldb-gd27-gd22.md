@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T12:18:10Z'
+  at: '2026-11-10T12:23:22Z'
   authority: generated
   via: save_document_payload
 id: task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22
@@ -20,6 +20,7 @@ files:
 - deskops/atom_tags.py
 - deskops/services/replace.py
 - deskops/cli/commands/desk.py
+- docs/
 - tests/
 - CHANGELOG.md
 task_type: task.code
@@ -83,6 +84,15 @@ a4 (replace): services/replace.py pasa a sldb.api.replace_text. La guarda de con
 a5 (chequeos de CC38 para CC33): el informe lista cuáles de los 9 chequeos que el inventario de CC38 asignó a CC33 (padres de domain, registro de namespaces) quedan cubiertos por GD27 aquí, y cuáles siguen para CC33b.
 a6 (verificación): los 4 pasos del workflow de deskops en un clon limpio (los corre el coordinador) más deskops doctor en los 6 desks. Archivos de test de a uno: test_domain_tree, test_atom_tags, test_atom_folder_axis, test_desk_replace, test_desk_sync, test_cli y test_output_goldens, estos dos últimos desde /dev/shm y sin --update-golden.
 a7 (rendimiento): cada comando CLI tarda unos 30 s hasta que se integre el arreglo de rule_graph de sldb. Los archivos largos se corren por nodo.
+
+PRECISIONES DEL PREFLIGHT Y DEL COLD-BUNDLE (preflight-1 y bundle-1, 2026-11-10):
+b1 (los chequeos de CC38 para CC33; inventario en runs/subagents/cc38-worker-report.md): #3, namespace del tag declarado en tag-namespaces.yaml (atom_tags.py validate_atom_tag_namespaces); #5, todo prefijo de un domain path tiene crossroad escrito (domain_tree.py require_domain_parents y _domain_errors); #13, nombre de archivo = id; #14, provenance resolvible; #15, destino de typed_as existe; #18, un solo valor del eje de carpetas; #24, artefacto renderizado declara source_atoms o provenance; #25, referencia a documento existente. Este nodo solo evalúa #3 y #5 contra GD27 (tag_check y la validación anchored_by de tag_namespaces). El informe dice si quedan cubiertos y, si es así, se borra el chequeo viejo; los demás siguen para CC33b.
+b2 (qué queda en domain_tree.py): DomainTree.create_crossroad, create_protoatom, type_protoatom y sus ayudantes de creación (_create, _write_and_track, _find_protoatom, _resolve_model, _typed_payload, _typed_path, _redirect_content, _first_line). Pasan a GD27 o se borran require_domain_parents, missing_parents, read_crossroads, prefixes (si nadie más los usa), DomainTree.check, DomainTree.tree, _check_crossroad, _check_protoatom, _check_atom y _domain_errors.
+b3 (informe): runs/subagents/cc35d-worker-report.md, commiteado en la rama, con una sección por cada punto que el TaskDoc pide anotar.
+b4 (docs): la regla 5 manda. Si cambia el comportamiento documentado (desk replace, atoms tree/check), se actualiza la sección correspondiente de docs/operator-manual.md o docs/atoms.md, y docs/ entra en files.
+b5 (escritura de tag_namespaces): sldb guarda los namespaces en la declaración del store (StoreDeclaration.tag_namespaces, .sldb/store.yaml; sldb src/sldb/api/stores/store_declaration.py:40). desk update --apply lee desk/atoms/tag-namespaces.yaml, lo traduce a TagNamespace y lo escribe con la API de declaración de sldb (load_declaration y save_declaration de sldb.api.stores.store_declaration), nunca editando store.yaml a mano. Si el store difiere, gana tag-namespaces.yaml, que es la fuente; si no hay diferencia, no escribe. Es idempotente y está probado.
+b6 (tag_folder): axis_folder_relpath(value) pasa a sldb.api.tag_folder(tag). Un test fija, para los valores del eje de los 6 desks, que la ruta resultante es la misma que hoy; si alguna difiere, el worker para y avisa.
+b7 («falla como antes»): mismo exit code y mismo texto de error que hoy para domain:a.b sin crossroad de domain:a (el test existente lo fija). Si GD27 da otro texto, deskops arma el suyo con lo que sldb devuelve.
 
 ## Validation
 

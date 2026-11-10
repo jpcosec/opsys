@@ -1,7 +1,7 @@
 name: task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22
 path: desk/tasks/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22.md
-source_hash: c212e8041565468f594f3d0f48127e2edcbeda94764228a411a0f53c8f9e2ee5
-content_hash: cfe1ea74a46546952ceefb8240e53a33af216e9614f8d417838e93ac690d21a6
+source_hash: 183ec716afba5347bc7d044309ad22697a5514eb1752f8de6a69a8f85c5b533b
+content_hash: a94bd398bda1f3e7e5e0c94cbcd9d195c26c2b58df0f5802c0c236db9f1c4b9e
 field_hashes:
   title: 348d491e66917fa2836b783a815faa288755d993025ee21e7c0af2189397d378
   id: 91806c124c02363d2869f2c1f77feec58caba0ee9b0bca3f5be44a6bc15871ae
@@ -16,8 +16,8 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: 0e5dc52e04aea91a18f9775048552ac482bf9fb6b22cb72a8f1616c5f09982f5
-  implementation_path: 7bf5912d77f18a628a92c0d2c581476e7fe01bf1a16a67961b1ca7d7f9e672c5
+  files: eae10fded5b967348bc7f9add7108a9a2536106e673c162970c8a9756b7a6b32
+  implementation_path: 93bfbc98e5ea9271c37b5fe798dd22409960e33008f1b2b73756d5c9d57f5870
   validation: 866a1a7c551f037c83f100b4d1980512bcd8ba8daeda222d837c374e2d7efed9
   done_when: b566bbbb9e5ba1deec1e53a0bf83d89396550ca3ebdd91a93f6d307ed4e06ea2
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-10T12:18:10Z'
+  at: '2026-11-10T12:23:22Z'
   authority: generated
   via: save_document_payload

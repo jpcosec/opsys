@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T12:16:31Z'
+  at: '2026-11-10T12:22:15Z'
   authority: generated
   via: save_document_payload
 id: task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob
@@ -81,6 +81,16 @@ a3 (oráculo): neighbors y missing tienen que dar lo mismo que el oráculo v1 so
 a4 (la decisión revisable de main-en-verde-2): graph missing no reporta un target declarado que existe como archivo dentro del root (deskops/graph/checks.py, declared_target_is_a_file, tests/test_graph_missing_existing_files.py). Este nodo decide si el grafo de sldb ya crea esos nodos (.yaml del drawer, fixtures .json). Si los crea, se borra la excepción y su test cambia a «aparece como nodo». Si no, la excepción queda y se anota como hipótesis para sldb.
 a5 (verificación): los 4 pasos del workflow de deskops en un clon limpio (los corre el coordinador) más deskops doctor en los 6 desks. Archivos de test de a uno: test_graph_* y closeout_graph_oracle, test_cli y test_output_goldens desde /dev/shm, sin --update-golden.
 a6 (rendimiento): cada comando CLI tarda unos 30 s mientras el arreglo de rule_graph de sldb espera el CI verde de sldb. Los archivos largos se corren por nodo.
+
+PRECISIONES DEL PREFLIGHT Y DEL COLD-BUNDLE (preflight-1 y bundle-1, 2026-11-10):
+b1 (CC38): CC38 está cerrada en main (47ab1102). Una dependencia cerrada no se lista (DC6). depends_on vacío no bloquea nada.
+b2 (interfaz): la API Python sldb.api.project_graph(store), que ya usa desk_graph.py. No se llama al CLI sldb graph project desde deskops.
+b3 (decidir a4): la evidencia es el resultado de project_graph sobre la copia del desk real. Si entre sus nodos están desk/drawer/plans/deskops-como-config/dag.yaml y tests/fixtures/model_contract_hashes.json (los casos de main-en-verde-2), el grafo los «crea»: se borra declared_target_is_a_file y su test pasa a «es un nodo del grafo». Si no están, la excepción queda y el informe la anota como hipótesis para sldb.
+b4 (closeout): este nodo no toca closeout ni CC33a. Si el enlace atom/materialization del closeout ya lee desk_graph (closure._closeout_link_gate), no cambia. Si leía snapshot.py, el informe lo dice y se coordina con CC33a/b. No se edita closure.py.
+b5 (oráculo): «lo mismo» es igualdad semántica, el mismo conjunto de (source, target, kind) en neighbors y de findings en missing, sobre una copia en /dev/shm del desk real de deskops (desk/ y .sldb/ de main al despachar). El orden no cuenta. El oráculo se borra en un commit propio dentro de este nodo, después de la comparación verde.
+b6 (goldens): los de ayuda quedan idénticos. Los de salida también. Si alguno cambia porque la fuente del grafo es otra, el worker para y avisa con el diff; no lo regenera (manda «idénticos»).
+b7 (4 pasos del workflow): los de .github/workflows de deskops: sldb stores build --store .sldb; python -m pytest tests -q (el coordinador, un proceso por archivo); sldb stores build --check --store .sldb; bash scripts/ci-knowledge-check.sh . Los corre el coordinador sobre un clon limpio.
+b8 (drift): deskops drift check corre drift_check_role_docs y drift_check_runtime_bindings (materializers) y el chequeo de superficies de conocimiento. Este nodo solo cambia lo que lea el snapshot propio de graph/snapshot.py o haga rglob en deskops/graph/. Las comprobaciones de materializers no cambian.
 
 ## Validation
 
