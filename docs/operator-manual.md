@@ -610,7 +610,10 @@ deskops issue list --status closed --root .
 `deskops desk replace` edits a file under `desk/` that no `deskops edit`
 subject reaches (issue bodies, drawer notes, role prompts, the tag namespace
 file). `--old` must occur exactly `--count` times (default 1); a modeled
-document is refused and pointed at its `edit` verb.
+document is refused and pointed at its `edit` verb. The write is sldb's
+`replace_text` inside the desk transaction: a store-tracked file (a role prompt)
+must still validate under its model after the replacement, or nothing is written
+and the command exits 1 with `Refusing to replace in <path>: ...`.
 
 ```bash runnable
 deskops desk replace desk/issues/issue-manual-example.md --root . \

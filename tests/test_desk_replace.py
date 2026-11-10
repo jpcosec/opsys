@@ -173,3 +173,66 @@ def test_replace_edits_legacy_drawer_tasks_but_refuses_a_valid_task_doc(tmp_path
     captured = capsys.readouterr()
     assert "deskops edit task" in captured.out + captured.err
     assert "# Modeled task" in drawer_task.read_text(encoding="utf-8")
+
+
+def test_replace_writes_through_sldb_replace_text(tmp_path: Path, capsys, monkeypatch) -> None:
+    import sldb.api
+
+    calls: list[tuple[str, str, str, int]] = []
+    real = sldb.api.replace_text
+
+    def spy(store, ref, old, new, *, count=1, transaction=None, pythonpath=None):
+        calls.append((ref, old, new, count))
+        assert transaction is not None
+        return real(store, ref, old, new, count=count, transaction=transaction, pythonpath=pythonpath)
+
+    monkeypatch.setattr(sldb.api, "replace_text", spy)
+    root = _repo(tmp_path)
+    note = _write(root, "desk/drawer/features/note.md", "# Feature\n\nOld wording.\n")
+    capsys.readouterr()
+
+    assert _replace(root, "desk/drawer/features/note.md", "Old wording.", "New wording.") == 0
+
+    assert calls == [("desk/drawer/features/note.md", "Old wording.", "New wording.", 1)]
+    assert note.read_text(encoding="utf-8") == "# Feature\n\nNew wording.\n"
+
+
+def test_replace_refuses_a_tracked_document_the_new_text_breaks(tmp_path: Path, capsys) -> None:
+    from sldb.api import check_store
+
+    root = _repo(tmp_path)
+    text = render_model_markdown(
+        RoleDoc,
+        {
+            "id": "role-deskops-supervisor",
+            "name": "deskops-supervisor",
+            "description": "Use when acting as the desk workflow supervisor.",
+            "kind": "pi",
+            "model": "anthropic/claude-opus-4-8",
+            "fallback_models": [],
+            "tools": ["read", "bash"],
+            "system_prompt_mode": "replace",
+            "inherit_project_context": True,
+            "inherit_skills": True,
+            "default_context": "fresh",
+            "body": "# Workflow Supervisor\n\nOld body.",
+        },
+    ) + "\n"
+    role_path = _write(root, "desk/roles/deskops-supervisor.md", text)
+    pythonpath = str(Path(__file__).resolve().parents[1])
+    track_document_file(root / ".sldb", "RoleDoc", role_path, pythonpath=pythonpath, force=True)
+    capsys.readouterr()
+
+    assert _replace(root, "desk/roles/deskops-supervisor.md", "kind: pi", "kind: [") == 1
+    captured = capsys.readouterr()
+    assert "Refusing to replace in desk/roles/deskops-supervisor.md" in captured.out + captured.err
+    assert role_path.read_text(encoding="utf-8") == text
+    assert check_store(root / ".sldb", root, pythonpath=pythonpath)["ok"] is True
+
+
+def test_replace_in_a_desk_without_a_store_writes_the_file(tmp_path: Path, capsys) -> None:
+    root = tmp_path / "plain"
+    note = _write(root, "desk/drawer/features/note.md", "Old wording.\n")
+
+    assert _replace(root, "desk/drawer/features/note.md", "Old wording.", "New wording.") == 0
+    assert note.read_text(encoding="utf-8") == "New wording.\n"

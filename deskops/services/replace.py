@@ -4,8 +4,12 @@
 path does not map to one of those subjects — drawer notes, issue bodies, role
 prompts, the atom tag namespace file — are edited here instead.
 
-A store-tracked file keeps its tracking: its bytes change and the store record
-is rebuilt from them, so ``deskops doctor`` and ``sldb stores check`` stay green.
+The write is ``sldb.api.replace_text`` inside the desk's transaction: a tracked
+file is validated under its model, rewritten and tracked again, and a plain file
+is rewritten, so ``deskops doctor`` and ``sldb stores check`` stay green. deskops
+keeps what is its own: which files the verb reaches and the count guard, whose
+message is checked before sldb is called. A desk without a store has no sldb to
+call, and its file is written directly.
 """
 
 from __future__ import annotations
@@ -81,18 +85,33 @@ def replace_text(
             f"expected {count}. The file is unchanged."
         )
 
-    updated = text.replace(old, new)
     with doc_access.desk_transaction(root) as transaction:
-        entry = doc_access.index_entry(root, path)
-        if transaction is not None:
-            transaction.record(path)
-        path.write_text(updated, encoding="utf-8")
-        if transaction is not None and entry is not None:
-            # The text changed outside the model: re-track so the store indexes the new text.
-            transaction.untrack(entry.name)
-            transaction.track(path, entry.model, entry.name)
+        if transaction is None:
+            path.write_text(text.replace(old, new), encoding="utf-8")
+        else:
+            _sldb_replace(root, relative, old, new, count, transaction)
     doc_access.forget_index(root)
     return ReplaceResult(path=relative, replacements=count)
+
+
+def _sldb_replace(root: Path, relative: str, old: str, new: str, count: int, transaction: object) -> None:
+    from sldb.api import replace_text as sldb_replace_text
+    from sldb.core.exceptions import SLDBError
+
+    from deskops.paths import package_pythonpath
+
+    try:
+        sldb_replace_text(
+            doc_access.store_path(root),
+            relative,
+            old,
+            new,
+            count=count,
+            transaction=transaction,
+            pythonpath=package_pythonpath(),
+        )
+    except SLDBError as exc:
+        raise DomainError(f"Refusing to replace in {relative}: {exc} The file is unchanged.") from exc
 
 
 def _modeled_subject(relative: str, text: str) -> str | None:
