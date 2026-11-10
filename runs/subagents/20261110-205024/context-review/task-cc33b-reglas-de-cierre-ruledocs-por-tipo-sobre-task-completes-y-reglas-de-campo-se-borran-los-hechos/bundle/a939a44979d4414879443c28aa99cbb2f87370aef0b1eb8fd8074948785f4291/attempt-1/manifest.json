@@ -1,0 +1,130 @@
+{
+  "key": "task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos/bundle",
+  "input_sha256": "a939a44979d4414879443c28aa99cbb2f87370aef0b1eb8fd8074948785f4291",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp/runs/subagents/20261110-205024/context-review/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos/bundle/a939a44979d4414879443c28aa99cbb2f87370aef0b1eb8fd8074948785f4291/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos.md",
+      "sha256": "d464c2f02f7df3ffb682d8fd3af68aae86516176c59f76b703116fb4bb480f24",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/task_types.py",
+      "sha256": "158d732e9e6aba331e98da3c17fea3ffebe2fcab05746746732d4c48cca3450a",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/operations.py",
+      "sha256": "cda50ca9ef3a88581db7c23b0c0dccf41a9a68fd43ef6fbaeefb31bfb9aac6bc",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/operations.py",
+      "sha256": "a68129157e2ee6b4d87365dbc75440ba6a4d70290df162d027441139b9f43a82",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/tasks.py",
+      "sha256": "b010093eac180da39bbcd8a1b3ed30e8a72426ec0ee03ee6cdf079639bbb0ab1",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/closeout_gates.py",
+      "sha256": "94abdfcd5468420255fc7b1b6a01f6944ca7c8b741e4b4d59971b1a1d25e1e34",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "2319d9838240502f1c72930742f55282983a97782e1b521ffcefd3183f7f307b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/atom_tags.py",
+      "sha256": "fb381f26e9e3d1c7a9cc0ff16ea923c41735185bed790335b63ed2abd6f3f6f1",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/domain_tree.py",
+      "sha256": "ee36b635648430142a890be00087283e4f6ff8906d9cc82fc4f85b76062a5a33",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/atoms.py",
+      "sha256": "072444a4d071ee866e6ffc3877ac13216ba5365e45ff034906dbadc8077dcd6d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "a810862a1d907b63fdb5b81a5a1c65d9b74db4413346ecc89aae8a6a9233795c",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/data/rules/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/data/lifecycle/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/services/closure.py",
+      "reason": "size>=60000",
+      "size": 63527
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    },
+    {
+      "path": "docs/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-10T20:50:25.074025+00:00",
+  "finished": "2026-11-10T20:50:38.339912+00:00",
+  "retry_reason": "input cambiado: correcciones c1-c9 del TaskDoc tras la ronda 2"
+}

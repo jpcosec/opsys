@@ -1,0 +1,9 @@
+{
+  "key": "task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "a5657b6668f19ab1929cf5eee96a52b60b2070473233b89e6f745803c0bf9fec",
+  "output_sha256": "730fd6b5e328a28069b18dedd444af80a7276f29e01af88e61cf57082c39b19d",
+  "start": "2026-11-10T20:47:53.377809+00:00",
+  "end": "2026-11-10T20:48:37.245976+00:00"
+}
