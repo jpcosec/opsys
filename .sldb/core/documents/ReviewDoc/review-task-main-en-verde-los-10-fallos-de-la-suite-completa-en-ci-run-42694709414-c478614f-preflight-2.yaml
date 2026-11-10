@@ -1,0 +1,34 @@
+name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-2
+path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-2.md
+source_hash: 282bdcd022e1629bcc3483edcc363f9eda2afe952384e20c599392f0597a3a23
+content_hash: 8a6b059cf6ec26a17b02dbb8a4947c82cff2b6824c529b6439ef2b6cafddc467
+field_hashes:
+  id: 7433b8e7f48b9e640efbc160894baa73d61a5e42caa4639316b9945b90d5cd55
+  title: b7a57caa52b89ed90193aafdecce8f1cba8a3fb23d6339bb37c1fbdf10511b72
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: e05db804582d0bc22344d1ebaa3bf6de01576321f5ed3dcf98d289391b64e923
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 4660bab17c366a6f2c9f6827ef736b6c71bff017acb6891aeb82cdf9200f4c8d
+  input_sha256: 0adcc2b336f45663800376e8a3328fb0f5c6054711aa7b64b15b5026f7de16dd
+  output_sha256: b4b16dad390bac4c7ce42014c594fa668910b49ec1b7771a17891c187d71e0ab
+  verdict: b93e167bbe964a29c927882c2bc868922a912d6e74592730258b222da98b8c6c
+  reason: 99949703a4cd3798543f647bacc9d068375b8e83c02f1a5c088abaa65fe5f63a
+  created_at: 415d4329c2fc56569d912ccb5b63585a5dd9ccfe5d98e1e54a9ddb14aca37294
+  disposed_at: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  disposed_by: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  summary: 0b6021114da032a9af5a9d40eec79f9dc3979d8b0f997cd2ab5b7116a813884b
+  disposition: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T00:21:23Z'
+  authority: generated
+  via: create_document

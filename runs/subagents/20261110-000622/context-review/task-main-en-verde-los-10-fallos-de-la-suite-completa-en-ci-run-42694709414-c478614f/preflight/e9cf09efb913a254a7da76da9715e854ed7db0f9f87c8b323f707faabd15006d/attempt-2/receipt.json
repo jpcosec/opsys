@@ -1,0 +1,9 @@
+{
+  "key": "task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight",
+  "technical_ok": false,
+  "returncode": null,
+  "input_sha256": "e9cf09efb913a254a7da76da9715e854ed7db0f9f87c8b323f707faabd15006d",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "start": "2026-11-10T00:06:22.721731+00:00",
+  "end": "2026-11-10T00:21:22.837314+00:00"
+}
