@@ -299,6 +299,11 @@ include:
   - desk/materializations/materialization-resolved-by-services-closure.md
   - desk/materializations/materialization-resolved-by-commands-closeout.md
   - desk/materializations/materialization-resolved-by-tests-test-closeout-resolved-by.md
+  - desk/materializations/materialization-cc37-deskops-lifecycle.md
+  - desk/materializations/materialization-cc37-models-task.md
+  - desk/materializations/materialization-cc37-models-task-lifecycle.md
+  - desk/materializations/materialization-cc37-deskops-workspace.md
+  - desk/materializations/materialization-cc37-tests-test-task-lifecycle-validator.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md

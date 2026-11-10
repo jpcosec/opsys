@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T09:51:47Z'
+  at: '2026-11-10T10:32:39Z'
   authority: generated
   via: save_document_payload
 id: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
@@ -12,7 +12,13 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- pytest tests/test_task_lifecycle_validator.py
+- pytest tests/test_cli.py
+- https://github.com/jpcosec/opsys/actions/runs/42792080740
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- 81a60a6d8813e31a22cf9a35645512e327e69fcc
+- desk/atoms/atom-la-consistencia-del-ciclo-de-vida-de-una-tarea-es-un-validador-de-taskdoc.md
 depends_on: []
 pills: []
 files:
@@ -129,6 +135,7 @@ _List the checks required before this task can close._
 - TMPDIR=/dev/shm pytest -q, uno a la vez: test_cli_escape_hatches, test_lifecycle_*, test_closeout, test_activation_rules, test_model_validators, test_task_types; test_cli y test_output_goldens desde /dev/shm
 - Inventario de vías en el TaskDoc (a3)
 - CHANGELOG
+- Resultado (coordinador de proyecto, squash 81a60a6d): en clon limpio, stores build, los 13 archivos de test tocados (task_lifecycle_validator 36, cli 101, closeout 49, desk_sync 8…), build --check y ci-knowledge-check verdes; coord2 pytest 90/90 sobre el mismo árbol. CI de GitHub run 42792080740 en success para 3.12 y 3.13.
 
 ## Done When
 

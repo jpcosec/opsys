@@ -1,7 +1,7 @@
 name: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
 path: desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md
-source_hash: a758d6e32ffb5edba9206bcc2760047ae1ae35d23c784ca46e17aa2091255429
-content_hash: d06b8037dda39f98672cb46a854483222c2457aa7d5421814bb3a85b2e1cc7e7
+source_hash: 3dcd6050c52d37a39f409087b3c93afd473213f477016ffdafceeb2b5d3cb71b
+content_hash: 41a19657304e90138bbfb8738bc8a6b6f4d748ab50b96dcc929f98682af96264
 field_hashes:
   title: c08292e7c0d520ddaa456770c5d7aa5f4c78ce40a0366e29b6fc5020b38361e3
   id: 375b4b71d30daf0b361934b2c6aa4719b9d0231acbd5b6f9f29d65b408641ecb
@@ -13,12 +13,12 @@ field_hashes:
   why: 73b60bfb56b20058ae165889a251dfff3d081a209d0c0b58334fc1e9bbb507c2
   goal: 19e66e3ded7ccfa05ae101ce378da5380cb3bcc26efcb80b7a5805045a548e5c
   scope: 677066c04d207bbf3315c59a3aeeadb67fde6573daeaafeaf4f58251f12820fa
-  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  references: 59fbf4c00e3b724d09d66a3122c57bf2eb41769600a012de6b43772a0ab44d9e
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 1a88b33e2f79227d24dd1d34deea86b4b7d3a9272e34948e2ac5343b7ace8782
   implementation_path: af1476183e7e64eff50536e0ab1ea3605187f1b1d9d5f661dcd1c6b6790e880d
-  validation: d6bf31baab39679f471027ac50aa636c321058bca9def4b4fa835cd0eaf90d5f
+  validation: a947d9ea8d24a901b20fe73ec71f3a40c71adb8aa0392a30b11dd53f0e53488c
   done_when: 9dbd4d403b555a4a627b5f6f98c7d0904c5d7694173f3e820f661f166b17471c
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
   inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-10T09:51:47Z'
+  at: '2026-11-10T10:32:39Z'
   authority: generated
   via: save_document_payload
