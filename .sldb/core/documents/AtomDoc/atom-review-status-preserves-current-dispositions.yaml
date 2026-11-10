@@ -1,0 +1,22 @@
+name: atom-review-status-preserves-current-dispositions
+path: desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md
+source_hash: 143de6fd39536a7d070c4300a26a961a521316eb458f30314862329403269f82
+content_hash: 8aa78f267aea11e7c733c07cbdbd057e2d101ce0a6f5d1fae10dd7366c05cc2a
+field_hashes:
+  id: b10bfac5db1065f61a0d7a3fd5b22e0b3fc784f737ab9f089ea8b6ec9b494a02
+  title: 8ef4c32b048f5a17a19a51aef9641bb97f59acc0a4cc5981acf6bf2c7a2fa36f
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: df8ef07e449304e7461732541b8ccf53b6285fa2ba706aea3fa28f8ce0f0d345
+  tags: bab33056227f1bd574ce2ce651125bee2d735032fa4e63dfc64237659ad55b6a
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:reviews
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-10T14:36:44Z'
+  authority: generated
+  via: create_document

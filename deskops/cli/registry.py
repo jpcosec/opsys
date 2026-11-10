@@ -1849,9 +1849,20 @@ everything declared was found, else 1.
                 A("--task-repo", default=None, help="Repository under /workspace the agent may write to; named in agents.md."),
                 A(
                     "--mode",
-                    choices=("executor", "coordinator"),
+                    choices=("executor", "coordinator", "tester"),
                     default=None,
-                    help="Which agents.md to write: executor (one bounded task) or coordinator (owns a desk). Default: by role name.",
+                    help=(
+                        "Which agents.md to write: executor (one bounded task), tester (independent verification) "
+                        "or coordinator (owns a desk). Default: by the selected role's name/id; an explicit mode wins."
+                    ),
+                ),
+                A(
+                    "--context-file",
+                    default=None,
+                    help=(
+                        "JSON with project, workspace_root, desk_root, source_root and sldb_root; emits DESKOPS_* "
+                        "environment, PYTHONPATH and a workspace volume. Omitted: no context keys, previous behavior."
+                    ),
                 ),
                 A("--task", default=None, help="Task id being dispatched; with --agent, also records a RunDoc under runs/subagents/."),
                 A("--agent", default=None, help="Scion agent slug for the RunDoc (what you pass to `scion start`)."),

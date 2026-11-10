@@ -1,0 +1,95 @@
+.F..
+=================================== FAILURES ===================================
+_ test_status_classifies_only_current_receipts_without_mutating_evidence[receipts1-stale] _
+
+lifecycle_desk = PosixPath('/tmp/pytest-of-robocop/pytest-1184/test_status_classifies_only_cu1/repo')
+receipts = [('old', 'accepted'), ('old', 'rejected'), ('old', 'incomplete')]
+expected = 'stale'
+
+    @pytest.mark.parametrize(
+        ("receipts", "expected"),
+        [
+            ([], "missing"),
+            ([("old", "accepted"), ("old", "rejected"), ("old", "incomplete")], "stale"),
+            ([("current", "incomplete")], "technical_failure"),
+            ([("current", "incomplete"), ("current", "pending")], "reviewed"),
+            ([("current", "pending"), ("current", "rejected")], "rejected"),
+            ([("current", "accepted"), ("current", "rejected"), ("current", "pending"),
+              ("current", "incomplete"), ("old", "rejected")], "accepted"),
+            ([("old", "accepted"), ("current", "rejected")], "rejected"),
+        ],
+    )
+    def test_status_classifies_only_current_receipts_without_mutating_evidence(
+        lifecycle_desk: Path, receipts: list[tuple[str, str]], expected: str
+    ) -> None:
+        from deskops.services.review import ReviewService, _sha
+    
+        root = lifecycle_desk
+        _add_task(root, title="Status")
+        service = ReviewService(root)
+        task_path, task_id = service._resolve_task("task-status")
+        input_data, _, _ = service._preflight_input(task_path, task_id)
+        for index, (identity, verdict) in enumerate(receipts):
+            evidence = root / "runs" / "subagents" / f"receipt-{index}"
+            evidence.mkdir(parents=True)
+            (evidence / "input.md").write_bytes(input_data if identity == "current" else b"old input\n")
+            (evidence / "manifest.json").write_text(json.dumps({"profile": "test", "attempt": index}))
+>           service._write_review(
+                kind="preflight", subject=f"doc:TaskCodeDoc:{task_id}", subject_ref="",
+                engine="test", run_dir=evidence.relative_to(root).as_posix(),
+                input_sha256=_sha(input_data) if identity == "current" else _sha(b"old input\n"),
+                output_sha256=_sha(b"review output"), verdict=verdict, reason="test evidence",
+                node_id=None,
+            )
+
+tests/test_review_command.py:479: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+deskops/services/review.py:630: in _write_review
+    doc_access.create_doc(self.root, path, ReviewDoc, payload, review_id)
+deskops/doc_access.py:453: in create_doc
+    tx.create(_model_name(model), name, payload, relative_path(root, path))
+../sldb/src/sldb/api/documents/transaction.py:78: in create
+    return ops.create(self._state, model, name, payload, path)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../sldb/src/sldb/api/documents/transaction_ops.py:30: in create
+    return create_document(state.store_path, model, target, payload, name, state.pythonpath)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../sldb/src/sldb/api/documents/create_document.py:46: in create_document
+    rendered = _rendered(location, registered.model_type, payload, pythonpath)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../sldb/src/sldb/api/documents/create_document.py:77: in _rendered
+    rendered = _render_roundtrip(model_type, payload, location.project_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../sldb/src/sldb/api/documents/create_document.py:88: in _render_roundtrip
+    rendered = render_model_markdown(model_type, payload, ref_root)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+../sldb/src/sldb/runtime/validation.py:68: in render_model_markdown
+    def render_model_markdown(m: type[StructuredNLDoc], d: dict[str, Any], ref_root: Path | None = None) -> str: return Validator(m).render(d, ref_root)
+                                                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <sldb.runtime.validation.Validator object at 0x76f1a29164b0>
+data = {'id': 'review-task-status-preflight-1', 'title': 'Preflight review of task-status', 'kind': 'preflight', 'subject': 'doc:TaskCodeDoc:task-status', ...}
+ref_root = PosixPath('/tmp/pytest-of-robocop/pytest-1184/test_status_classifies_only_cu1/repo')
+
+    def render(self, data: dict[str, Any], ref_root: Path | None = None) -> str:
+>       return self.renderer.render(self.model_type(**data), ref_root)
+                                    ^^^^^^^^^^^^^^^^^^^^^^^
+E       pydantic_core._pydantic_core.ValidationError: 1 validation error for ReviewDoc
+E         Value error, verdict 'accepted' requires disposed_by [type=value_error, input_value={'id': 'review-task-statu...gs': ['workspace:desk']}, input_type=dict]
+E           For further information visit https://errors.pydantic.dev/2.14/v/value_error
+
+../sldb/src/sldb/runtime/validation.py:22: ValidationError
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636
+  /mnt/ssd/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636: PytestConfigWarning: Unknown config option: asyncio_default_fixture_loop_scope
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_review_command.py::test_status_classifies_only_current_receipts_without_mutating_evidence[receipts1-stale]
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! KeyboardInterrupt !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+/usr/lib/python3.12/selectors.py:415: KeyboardInterrupt
+(to show a full traceback on KeyboardInterrupt use --full-trace)
+1 failed, 3 passed, 12 deselected, 1 warning in 175.39s (0:02:55)

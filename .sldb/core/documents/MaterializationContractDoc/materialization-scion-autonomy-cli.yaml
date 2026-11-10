@@ -1,0 +1,26 @@
+name: materialization-scion-autonomy-cli
+path: desk/materializations/materialization-scion-autonomy-cli.md
+source_hash: 8e1ee0f260a4ca4397c02f6b80b738bdb77656a79cd7b16d4f1b518279bd9612
+content_hash: a68994aafd8ee30e10fff5094b7700a0852012d5ed246eb667d8212eec8479fb
+field_hashes:
+  id: 97365aba001cba4cd4d7bde48d79bd45a2bcad09423806edf6bdacb66953fe56
+  title: 634958f8edef289f74395128ff045e2efd53b7cbf76dd64b88c4877e998f423b
+  source_atoms: cb360521dfbcbbcbbfc986529169ae183e601518518e0e8d7c71b7f0af226376
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: ec6adeec900cd66f337cd4dd69f73e9f146826cf0b60e12ad22df0c5cfafd999
+  intent: 85314f6a8ba07c50bdbfdac53db3177807c4f503e1edbf4a69fae0c76144252a
+  validation: aeb2e6a9963962f358646be01e2c3e6b5475ce2e6d182b986ce01d34c2daff82
+  tags: 49e17fdb90b92f61e6f4c274dd5a0b257cc8d0bbc9e994066feaa209785d2df4
+  provenance: 6305b9d66b5cc284acac3249f7004cc623e6ade3060c26ddb6ec7fe573722622
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:materialization
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-10T17:56:32Z'
+  authority: generated
+  via: create_document

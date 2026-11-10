@@ -1,0 +1,9 @@
+{
+  "key": "task-scion-autonomy-coordinator-contract/preflight",
+  "state": "reviewed",
+  "input_sha256": "f990f213cc96ed2abb0d2b3c851f69c4ac55dc534e6f94744e46cbfef956654f",
+  "review_id": "review-task-scion-autonomy-coordinator-contract-preflight-2",
+  "review_path": "desk/reviews/task-scion-autonomy-coordinator-contract/preflight-2.md",
+  "run_dir": "runs/subagents/20261110-autonomy-coordinator-contract/context-review/task-scion-autonomy-coordinator-contract/preflight/f990f213cc96ed2abb0d2b3c851f69c4ac55dc534e6f94744e46cbfef956654f/attempt-1",
+  "technical_ok": true
+}

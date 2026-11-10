@@ -1,0 +1,22 @@
+## fix/scion-autonomy...origin/main [ahead 5]
+ M .sldb/core/documents/TaskCodeDoc/task-scion-autonomy-review-status.yaml
+ M .sldb/core/models/AtomDoc.yaml
+ M .sldb/core/models/MaterializationContractDoc.yaml
+ M .sldb/core/models/ReviewDoc.yaml
+ M .sldb/core/models/TaskCodeDoc.yaml
+ M .sldb/core/store_index.yaml
+ M .sldb/store.yaml
+ M CHANGELOG.md
+ M desk/tasks/task-scion-autonomy-review-status.md
+ M deskops/services/review.py
+ M docs/operator-manual.md
+ M tests/test_review_command.py
+?? .sldb/core/documents/AtomDoc/atom-review-status-preserves-current-dispositions.yaml
+?? .sldb/core/documents/MaterializationContractDoc/materialization-review-status-regression-tests.yaml
+?? .sldb/core/documents/ReviewDoc/review-task-scion-autonomy-review-status-bundle-1.yaml
+?? .sldb/core/documents/ReviewDoc/review-task-scion-autonomy-review-status-preflight-1.yaml
+?? desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md
+?? desk/materializations/materialization-review-status-regression-tests.md
+?? desk/reviews/task-scion-autonomy-review-status/
+?? runs/subagents/20261110-autonomy-coordinator-contract/
+?? runs/subagents/20261110-autonomy-review-status/

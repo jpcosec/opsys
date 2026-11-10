@@ -1,0 +1,83 @@
+{
+  "key": "task-scion-autonomy-review-status/bundle",
+  "input_sha256": "fa95593ef44aad94f6185d5ad9092371aa6229dfda5c83d8a45d91fc6d4793fc",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-wt-scion-autonomy/runs/subagents/20261110-autonomy-review-status/context-review/task-scion-autonomy-review-status/bundle/fa95593ef44aad94f6185d5ad9092371aa6229dfda5c83d8a45d91fc6d4793fc/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-scion-autonomy-review-status.md",
+      "sha256": "c03a795ca195be783a3bc66bc78fc6aca485f095cab6fa6bd244cd8887507a82",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/review.py",
+      "sha256": "cbff5eded8b5d8eff76bf51735637d892cf577b12a903004bbcbcd82ea173d92",
+      "projection": "whole_file"
+    },
+    {
+      "path": "tests/test_review_command.py",
+      "sha256": "cb9bb9c3a00d601be8fc554a0fc5303a951a5b245d75ce1849083bb1c2c3bc6d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md",
+      "sha256": "143de6fd39536a7d070c4300a26a961a521316eb458f30314862329403269f82",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/operator-manual.md",
+      "sha256": "9af1ad95eb09a7fbaf44619c85b117c1f25abc2932406e08a25c648964fcfd5b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "4f150479bebf424364a2086ccfd5f245f353d18207a558885ef572c93cfe4125",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    }
+  ],
+  "started": "2026-11-10T15:03:18.199520+00:00",
+  "finished": "2026-11-10T15:03:35.191159+00:00"
+}

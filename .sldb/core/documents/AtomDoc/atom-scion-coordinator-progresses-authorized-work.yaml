@@ -1,0 +1,25 @@
+name: atom-scion-coordinator-progresses-authorized-work
+path: desk/atoms/workflow-model/atom-scion-coordinator-progresses-authorized-work.md
+source_hash: 6d4649499c28df7536cae9623f35148501072f595316d1b5de575cf51569ac94
+content_hash: eda590aa9cfea75e8cf09ade401278afd6c524600697538230e7c36bdb9e00ed
+field_hashes:
+  id: cefc47bd418bf8dd0b55c8b6fd9e38b3547435ca1c9efd3c39a8378028a3798e
+  title: 99a6e1febfe3e56907a4ee48919caa37a7e0e2d8da145b1384f5c09c9707ba15
+  five_wh_one_plus: 5cada7d158df7d5d2f211af6f0f652e095e9f6ed1f2f2da0bd61ecab7e8ee74f
+  answer: b0b7b83dbc1f7cc4438b84c102d14516525babf0217683e49c72c9ebdf39b958
+  tags: 1587013fe0a198bba0056c61a612f6039bb1b29c9decb0ccfb488c77abd473d1
+  provenance: e52d1a77b68dd046dc3467b4ae695a8e809502d53748c195c95b57cec8345904
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:autonomy
+- topic:scion
+- topic:workflow
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-10T17:16:49Z'
+  authority: generated
+  via: update_document

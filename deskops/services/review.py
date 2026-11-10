@@ -767,21 +767,29 @@ class ReviewService:
             for record in self._review_records()
             if self._record_key(record) == key
         ]
-        pending = [record for record in records if record.get("verdict") == "pending"]
         if not records:
-            return {"key": key, "state": "missing", "input_sha256": current_sha}
-        if any(record.get("input_sha256") == current_sha for record in pending):
-            return {"key": key, "state": "reviewed", "input_sha256": current_sha}
-        if pending:
-            return {"key": key, "state": "stale", "input_sha256": current_sha}
-        return {"key": key, "state": "technical_failure", "input_sha256": current_sha}
+            state = "missing"
+        else:
+            current = [record for record in records if record.get("input_sha256") == current_sha]
+            verdicts = {record.get("verdict") for record in current}
+            if not current:
+                state = "stale"
+            elif "accepted" in verdicts:
+                state = "accepted"
+            elif "rejected" in verdicts:
+                state = "rejected"
+            elif "pending" in verdicts:
+                state = "reviewed"
+            else:
+                state = "technical_failure"
+        return {"key": key, "state": state, "input_sha256": current_sha}
 
     def _record_key(self, record: dict[str, Any]) -> str:
         subject = str(record.get("subject") or "")
         subject_ref = str(record.get("subject_ref") or "")
         kind = str(record.get("kind") or "")
         if subject:
-            task_id = subject.rsplit(":", 1)[-1].split("@", 1)[0]
+            task_id = subject.split("@", 1)[0].rsplit(":", 1)[-1]
             return f"{task_id}/{kind}"
         if subject_ref:
             node_id = subject_ref.rsplit("#node:", 1)[-1]

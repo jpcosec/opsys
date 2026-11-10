@@ -2,7 +2,8 @@ usage: deskops runtime template [-h] [--root ROOT] [--harness HARNESS]
                                 [--out OUT]
                                 [--model-alias {small,medium,large,extra-large}]
                                 [--task-repo TASK_REPO]
-                                [--mode {executor,coordinator}] [--task TASK]
+                                [--mode {executor,coordinator,tester}]
+                                [--context-file CONTEXT_FILE] [--task TASK]
                                 [--agent AGENT] [--task-root TASK_ROOT]
                                 [--run-dir RUN_DIR]
                                 role_id
@@ -27,9 +28,16 @@ options:
   --task-repo TASK_REPO
                         Repository under /workspace the agent may write to;
                         named in agents.md.
-  --mode {executor,coordinator}
-                        Which agents.md to write: executor (one bounded task)
-                        or coordinator (owns a desk). Default: by role name.
+  --mode {executor,coordinator,tester}
+                        Which agents.md to write: executor (one bounded task),
+                        tester (independent verification) or coordinator (owns
+                        a desk). Default: by the selected role's name/id; an
+                        explicit mode wins.
+  --context-file CONTEXT_FILE
+                        JSON with project, workspace_root, desk_root,
+                        source_root and sldb_root; emits DESKOPS_*
+                        environment, PYTHONPATH and a workspace volume.
+                        Omitted: no context keys, previous behavior.
   --task TASK           Task id being dispatched; with --agent, also records a
                         RunDoc under runs/subagents/.
   --agent AGENT         Scion agent slug for the RunDoc (what you pass to

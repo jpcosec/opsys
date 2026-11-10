@@ -1,0 +1,11 @@
+$ PYTHONPATH=/mnt/ssd/proyectos/SLDB_1/deskops-wt-scion-autonomy:/mnt/ssd/proyectos/SLDB_1/sldb/src /mnt/ssd/proyectos/SLDB_1/.venv/bin/python -m pytest tests/test_scion_runtime.py tests/test_command_registry.py -q
+............................                                             [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636
+  /mnt/ssd/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636: PytestConfigWarning: Unknown config option: asyncio_default_fixture_loop_scope
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+28 passed, 1 warning in 3.33s
+exit=0

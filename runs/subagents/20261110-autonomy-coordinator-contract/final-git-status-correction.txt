@@ -1,0 +1,16 @@
+## fix/scion-autonomy...origin/main [ahead 6, behind 1]
+ M .sldb/core/documents/RoleDoc/deskops-supervisor.yaml
+ M .sldb/core/models/AtomDoc.yaml
+ M .sldb/core/models/RoleDoc.yaml
+ M .sldb/core/store_index.yaml
+ M CHANGELOG.md
+ M desk/roles/deskops-supervisor.md
+ M deskops/cli/commands/runtime.py
+ M deskops/cli/registry.py
+ M deskops/runtime/scion.py
+ M docs/operator-manual.md
+ M tests/fixtures/golden/help/deskops_runtime_template.txt
+ M tests/test_scion_runtime.py
+?? .sldb/core/documents/AtomDoc/atom-scion-coordinator-progresses-authorized-work.yaml
+?? desk/atoms/workflow-model/atom-scion-coordinator-progresses-authorized-work.md
+?? runs/subagents/20261110-autonomy-coordinator-contract/

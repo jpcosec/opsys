@@ -1,0 +1,36 @@
+name: review-task-scion-autonomy-coordinator-contract-bundle-2
+path: desk/reviews/task-scion-autonomy-coordinator-contract/bundle-2.md
+source_hash: 22e3301c25ac40d6c0271896cf6b76c010b3985b3142967c64011196b6531520
+content_hash: 486ab094aadb1635408d02c82d0aabb6e3ba1c4a8ec3484c74b1b59e8ccad523
+field_hashes:
+  id: d70c16acaf34d62bbc4702718c623ccc1b1a7c876db212493fb7ea2fd6f98096
+  title: a259327908fb77f3588cd42717c81426666b6675fb4dee56775e33f85215e3eb
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: 9525e389cf8a05cd2d2feab0df83a76e0b5087dfb8b49eb7ed244fff5a3b4400
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: b7c743547bd02348879f544889528dffc3d48c7643765bd064db9503eb48cb77
+  input_sha256: cd88c6f2d1eb967e85bb5ec6dad13544cd7b9513257e95e06b58bd6a74ebb82c
+  output_sha256: af95aaf728af395df2c23b545f7df67ee32dc15f00661718c7fb743760c7e929
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: f242905a762bec8ddf373add42f42ea5541c94f993013c9081800b96a6382b46
+  created_at: 74b901c4dc42f90e6dfe85e584530033474dc16e5d5078497c5402f988cad951
+  disposed_at: 274f3d501b3bfc95edd585b61c4f507db3f83a69bb08288a3b17318770175208
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 4b29c2aa8e2ff1ed06a0c458c73bacf3b137193cc1d1f484a5839ca2f6578f45
+  disposition: e59a7cd7328caf0fa0dd569ad864fcd19931719dd3f0000fe159c40719a4b313
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T18:04:22Z'
+  authority: generated
+  via: save_document_payload

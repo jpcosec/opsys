@@ -1,0 +1,8 @@
+Missing graph references:
+- missing_declared_target: task:task-scion-autonomy-coordinator-contract -> desk/atoms/workflow-model/atom-scion-coordinator-progresses-authorized-work.md
+  provenance: desk/tasks/task-scion-autonomy-coordinator-contract.md:line:25:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+- missing_declared_target: task:task-scion-autonomy-review-status -> desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md
+  provenance: desk/tasks/task-scion-autonomy-review-status.md:line:23:source-file-reference
+  reason: declared target was not found among extracted graph nodes
+2 missing, 0 informational

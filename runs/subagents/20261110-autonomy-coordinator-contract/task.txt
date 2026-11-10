@@ -1,0 +1,9 @@
+Task: task-scion-autonomy-coordinator-contract
+Title: Scion autonomy: consistent coordinator and tester contract
+Status: draft
+Current node: ritual-execution
+Task type: task.code
+From drawer: desk/drawer/tasks/task-scion-autonomy-coordinator-contract.md
+Lifecycle gates:
+- task_activates -> ritual-testing: open [(none)]
+  blocked by: error: [rules/rule-activation-task-code] TaskCodeDoc:task-scion-autonomy-coordinator-contract: Una tarea task.code se activa con recibos preflight y bundle aceptados e intactos y sus dependencias cerradas. | any(^subject: anchor_state = "intact" and verdict = "accepted" and kind = "preflight") (seen: {})

@@ -1,0 +1,28 @@
+...........................                                              [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636
+  /mnt/ssd/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636: PytestConfigWarning: Unknown config option: asyncio_default_fixture_loop_scope
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+27 passed, 1 warning in 223.26s (0:03:43)
+
+
+$ PYTHONPATH=/mnt/ssd/proyectos/SLDB_1/deskops-wt-scion-autonomy:/mnt/ssd/proyectos/SLDB_1/sldb/src /mnt/ssd/proyectos/SLDB_1/.venv/bin/python -m pytest tests/test_scion_runtime.py tests/test_command_registry.py tests/test_output_goldens.py::test_help_goldens -q
+...........................                                              [100%]
+=============================== warnings summary ===============================
+../.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636
+  /mnt/ssd/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636: PytestConfigWarning: Unknown config option: asyncio_default_fixture_loop_scope
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+27 passed, 1 warning in 225.90s (0:03:45)
+exit=0
+---stderr---
+2026-11-10 12:46:11.692862658 -0300 0 runs/subagents/20261110-autonomy-coordinator-contract/graph-stderr.log
+2026-11-10 12:42:52.006470380 -0300 0 runs/subagents/20261110-autonomy-coordinator-contract/stderr.log
+2026-11-10 12:42:52.006470380 -0300 0 runs/subagents/20261110-autonomy-coordinator-contract/stdout.log
+2026-11-10 12:57:45.839240987 -0300 0 runs/subagents/20261110-autonomy-coordinator-contract/validation-stderr.log
+2026-11-10 13:01:32.039319662 -0300 862 runs/subagents/20261110-autonomy-coordinator-contract/validation.log

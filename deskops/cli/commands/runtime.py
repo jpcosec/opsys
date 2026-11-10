@@ -73,13 +73,15 @@ class RuntimeCLI:
         Never calls ``scion``: launching (``scion start <agent> "<task>"
         --type <template>``) stays a deliberate gesture of the supervisor.
         """
-        from deskops.runtime.scion import materialize_scion_template, record_scion_run
+        from deskops.runtime.scion import load_scion_context, materialize_scion_template, record_scion_run
 
         out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
         task_id = getattr(args, "task", None)
         agent = getattr(args, "agent", None)
         if bool(task_id) != bool(agent):
             raise ValueError("--task and --agent go together: the RunDoc needs both the task and the Scion agent slug")
+        context_file = getattr(args, "context_file", None)
+        context = load_scion_context(Path(context_file).expanduser()) if context_file else None
         target = materialize_scion_template(
             root,
             args.role_id,
@@ -88,6 +90,7 @@ class RuntimeCLI:
             model_alias=getattr(args, "model_alias", "medium"),
             task_repo=getattr(args, "task_repo", None),
             mode=getattr(args, "mode", None),
+            context=context,
         )
         print(f"Scion template: {target}")
         for name in ("scion-agent.yaml", "system-prompt.md", "agents.md"):

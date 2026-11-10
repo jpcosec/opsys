@@ -1,0 +1,49 @@
+{
+  "alerts": [],
+  "declared": [
+    "tests",
+    "commit",
+    "atom",
+    "materialization"
+  ],
+  "findings": [],
+  "found": [
+    "tests",
+    "atom|materialization",
+    "commit"
+  ],
+  "gates": {
+    "atom_or_materialization_link": {
+      "evidence": [
+        "desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md",
+        "materialization:materialization:materialization-closeout-gates-review-service->deskops/services/review.py",
+        "materialization:materialization:materialization-review-record-services-review->deskops/services/review.py",
+        "materialization:materialization:materialization-review-status-regression-tests->tests/test_review_command.py",
+        "atom-doc:desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md",
+        "materialization:materialization:materialization-review-status-regression-tests->desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md",
+        "materialization:materialization:materialization-closeout-gates-operator-manual->docs/operator-manual.md",
+        "materialization:materialization:materialization-closeout-gates-changelog->CHANGELOG.md"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "commit": {
+      "evidence": [
+        "ea42ea58"
+      ],
+      "findings": [],
+      "ok": true
+    },
+    "tests": {
+      "evidence": [
+        "tests/test_review_command.py"
+      ],
+      "findings": [],
+      "ok": true
+    }
+  },
+  "implicit_code": false,
+  "ok": true,
+  "summary": "esta tarea declar\u00f3 tests, commit, atom|materialization; encontr\u00e9 tests, atom|materialization, commit",
+  "task_id": "task-scion-autonomy-review-status"
+}

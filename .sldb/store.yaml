@@ -304,6 +304,11 @@ include:
   - desk/materializations/materialization-cc37-models-task-lifecycle.md
   - desk/materializations/materialization-cc37-deskops-workspace.md
   - desk/materializations/materialization-cc37-tests-test-task-lifecycle-validator.md
+  - desk/materializations/materialization-review-status-regression-tests.md
+  - desk/materializations/materialization-scion-autonomy-cli.md
+  - desk/materializations/materialization-scion-autonomy-help.md
+  - desk/materializations/materialization-scion-autonomy-supervisor.md
+  - desk/materializations/materialization-scion-autonomy-tests.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -402,6 +407,18 @@ include:
     name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-4
   - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/bundle-2.md
     name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-bundle-2
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/bundle-1.md
+    name: review-task-scion-autonomy-coordinator-contract-bundle-1
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/bundle-2.md
+    name: review-task-scion-autonomy-coordinator-contract-bundle-2
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/preflight-1.md
+    name: review-task-scion-autonomy-coordinator-contract-preflight-1
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/preflight-2.md
+    name: review-task-scion-autonomy-coordinator-contract-preflight-2
+  - path: desk/reviews/task-scion-autonomy-review-status/bundle-1.md
+    name: review-task-scion-autonomy-review-status-bundle-1
+  - path: desk/reviews/task-scion-autonomy-review-status/preflight-1.md
+    name: review-task-scion-autonomy-review-status-preflight-1
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md
