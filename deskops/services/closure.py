@@ -14,6 +14,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from dataclasses import field
+from datetime import datetime
+from datetime import timezone
 import hashlib
 import json
 from pathlib import Path
@@ -35,6 +37,10 @@ from deskops.services.atoms import reference_points_to_atom
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
     from deskops.services.closeout_gates import CloseoutGraph
+
+
+#: Engine of the ``evidence`` receipts ``deskops closeout verify`` writes (CC33a).
+EVIDENCE_ENGINE = "deskops-closeout"
 
 
 class ClosureCommitError(RuntimeError):
@@ -687,7 +693,14 @@ class ClosureService:
         return ClosureOutcome(1, messages)
 
     # ---------------------------------------------------------------- closeout verify
-    def verify_task_closeout(self, task_selector: str) -> dict[str, Any]:
+    def verify_task_closeout(self, task_selector: str, *, write_receipts: bool = False) -> dict[str, Any]:
+        """Run the closeout fact producers and return the gate envelope.
+
+        With ``write_receipts`` (``deskops closeout verify``), it also writes one pinned
+        ``ReviewDoc`` kind ``evidence`` per declared kind the producers verified (CC33a); the
+        envelope is the same either way. Read-only callers (the board view, the closing gate)
+        leave it off.
+        """
         task_path = doc_access.resolve_artifact_selector(self.root, "artifact.task", self.desk_root / "tasks", task_selector)
         payload = doc_access.resolve_task_payload(self.root, task_path.stem)
         reference_evidence = self._closeout_reference_evidence(payload)
@@ -822,7 +835,214 @@ class ClosureService:
         }
         if "pill_graduation_verified" in payload:
             report["pill_graduation_verified"] = payload.get("pill_graduation_verified")
+        if write_receipts:
+            self._write_evidence_receipts(task_path, report["task_id"], declared, gate_dict)
         return report
+
+    # ---------------------------------------------------------------- evidence receipts
+    def _write_evidence_receipts(
+        self, task_path: Path, task_id: str, declared: list[str], gates: dict[str, Any]
+    ) -> list[str]:
+        """One ``ReviewDoc`` kind ``evidence`` per declared kind, pinned on the task's contract.
+
+        A receipt is skipped when one of the same fact for the task already carries the same
+        ``input_sha256`` and an intact anchor (c2). Written by ``create`` plus an unchanged
+        ``update`` in the same transaction, the save that pins ``subject`` (c1). A root without
+        a store has no anchors to pin and gets no receipts. Returns the review ids written.
+        """
+        if not doc_access.has_store(self.root):
+            return []
+        facts = self._evidence_facts(declared, gates)
+        if not facts:
+            return []
+        review_dir = self.desk_root / "reviews" / task_id
+        subject = f"doc:{self._task_model(task_path)}:{task_id}"
+        actor = self._closeout_identity()
+        now = datetime.now(timezone.utc).isoformat()
+        not_intact: set[str] | None = None
+        pending: list[tuple[str, Path, dict[str, Any]]] = []
+        for fact, verdict, items, reason in facts:
+            value = "\n".join(items)
+            input_sha256 = self._evidence_input_sha256(fact, items)
+            same_input = [
+                review_id
+                for review_id, payload in self._evidence_receipts(review_dir, fact)
+                if payload.get("input_sha256") == input_sha256
+            ]
+            if same_input:
+                if not_intact is None:
+                    not_intact = self._not_intact_documents()
+                if any(review_id not in not_intact for review_id in same_input):
+                    continue
+            n = len(list(review_dir.glob(f"evidence-{fact}-*.md"))) + 1 if review_dir.exists() else 1
+            review_id = f"review-{task_id}-evidence-{fact}-{n}"
+            pending.append(
+                (
+                    review_id,
+                    review_dir / f"evidence-{fact}-{n}.md",
+                    {
+                        "id": review_id,
+                        "title": f"Closeout evidence {fact} of {task_id}",
+                        "kind": "evidence",
+                        "fact": fact,
+                        "value": value,
+                        "subject": subject,
+                        "subject_ref": "",
+                        "engine": EVIDENCE_ENGINE,
+                        "actor": actor,
+                        "run_dir": "",
+                        "input_sha256": input_sha256,
+                        "output_sha256": "",
+                        "verdict": verdict,
+                        "reason": reason,
+                        "created_at": now,
+                        "disposed_at": now,
+                        "disposed_by": actor,
+                        "summary": f"closeout verify checked {fact}: " + (", ".join(items) if items else "(nothing found)"),
+                        "disposition": f"Verdict {verdict}: {reason}",
+                        "tags": ["workspace:desk"],
+                    },
+                )
+            )
+        if not pending:
+            return []
+        review_dir.mkdir(parents=True, exist_ok=True)
+        with doc_access.desk_transaction(self.root) as tx:
+            for review_id, path, payload in pending:
+                tx.create("ReviewDoc", review_id, payload, doc_access.relative_path(self.root, path))
+                # The unchanged second save pins `subject` with the task's contract hash (GO07).
+                tx.update(review_id, payload)
+        return [review_id for review_id, _, _ in pending]
+
+    def _evidence_facts(
+        self, declared: list[str], gates: dict[str, Any]
+    ) -> list[tuple[str, str, list[str], str]]:
+        """``(fact, verdict, value items, reason)`` per declared kind, from the gates verify ran.
+
+        Accepted when the kind's producer found evidence, rejected with the gate's finding
+        message otherwise (b1, r7). ``value`` items are sorted, paths POSIX relative to the
+        root (r2). The link gate gives an ``atom`` receipt for atom links and a
+        ``materialization`` receipt for materialization links (r4).
+        """
+        facts: list[tuple[str, str, list[str], str]] = []
+
+        def add(fact: str, ok: bool, items: list[str], findings: list[dict[str, str]]) -> None:
+            items = sorted(set(items))
+            if ok and items:
+                facts.append((fact, "accepted", items, f"verified: {fact} " + "\n".join(items)))
+                return
+            messages = [str(item.get("message") or item.get("code") or "") for item in findings]
+            facts.append((fact, "rejected", items, "; ".join(m for m in messages if m) or f"no {fact} evidence found"))
+
+        for fact in ("tests", "commit", "document", "external"):
+            gate = gates.get(fact)
+            if fact not in declared or gate is None:
+                continue
+            evidence = [str(item) for item in gate.get("evidence") or []]
+            if fact == "commit":
+                items = [sha for sha in (self._ops.closeout_gates.full_commit_sha(ref) for ref in evidence) if sha]
+            elif fact == "external":
+                items = [item.strip() for item in evidence]
+            else:
+                items = [self._normalized_reference(item) for item in evidence]
+            add(fact, bool(gate.get("ok")), items, gate.get("findings") or [])
+
+        link = gates.get("atom_or_materialization_link")
+        if link is not None:
+            atoms, materializations = self._link_documents([str(item) for item in link.get("evidence") or []])
+            ok = bool(link.get("ok"))
+            findings = link.get("findings") or []
+            if ok:
+                # Exempt or follow-up-only coverage names no linking document: no link receipt.
+                for fact, ids in (("atom", atoms), ("materialization", materializations)):
+                    if ids and fact in declared:
+                        add(fact, True, ids, findings)
+            else:
+                rejected = [fact for fact, ids in (("atom", atoms), ("materialization", materializations)) if ids]
+                rejected = [fact for fact in rejected if fact in declared] or [
+                    next(fact for fact in ("atom", "materialization") if fact in declared)
+                ]
+                for fact in rejected:
+                    add(fact, False, atoms if fact == "atom" else materializations, findings)
+        order = list(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY)
+        return sorted(facts, key=lambda item: order.index(item[0]))
+
+    def _link_documents(self, evidence: list[str]) -> tuple[list[str], list[str]]:
+        """The ids of the atoms and materializations a link-gate evidence list names."""
+        atoms: list[str] = []
+        materializations: list[str] = []
+        for item in evidence:
+            if item.startswith("graph:") and "->atom:" in item:
+                atoms.append(item.rsplit("->atom:", 1)[1])
+            elif item.startswith("atom-doc:"):
+                atoms.append(Path(item.removeprefix("atom-doc:")).stem)
+            elif item.startswith("materialization:") and "->" in item:
+                materializations.append(item.removeprefix("materialization:").split("->", 1)[0].removeprefix("materialization:"))
+            elif reference_points_to_atom(self.root, item):
+                candidate = item.split("::", 1)[0].strip()
+                atoms.append(Path(candidate).stem if candidate.endswith(".md") else candidate.removeprefix("atom:"))
+        return atoms, materializations
+
+    def _normalized_reference(self, reference: str) -> str:
+        """A reference with its path POSIX-relative to the root, keeping a ``::node`` suffix."""
+        text = reference.strip()
+        if text.startswith("pytest "):
+            return text
+        path_text, sep, node = text.partition("::")
+        relative = self._normalize_repo_relative_path(path_text)
+        return (relative + sep + node) if relative else text
+
+    def _evidence_input_sha256(self, fact: str, items: list[str]) -> str:
+        """sha256 of ``fact\nvalue\n`` and, per file of value in order, ``path\nsha256\n`` (r3)."""
+        data = f"{fact}\n" + "\n".join(items) + "\n"
+        if fact != "commit" and fact != "external":
+            for item in items:
+                path_text = item.split("::", 1)[0]
+                path = self.root / path_text
+                if fact in {"atom", "materialization"} or not path_text or not path.is_file():
+                    continue
+                data += f"{path_text}\n{hashlib.sha256(path.read_bytes()).hexdigest()}\n"
+        return hashlib.sha256(data.encode("utf-8")).hexdigest()
+
+    def _evidence_receipts(self, review_dir: Path, fact: str) -> list[tuple[str, dict[str, Any]]]:
+        if not review_dir.is_dir():
+            return []
+        from deskops.models.review import ReviewDoc
+
+        receipts: list[tuple[str, dict[str, Any]]] = []
+        for path in sorted(review_dir.glob(f"evidence-{fact}-*.md")):
+            try:
+                payload = doc_access.read_doc(path, ReviewDoc)
+            except Exception:  # noqa: BLE001 - an unreadable receipt is never a match
+                continue
+            if payload.get("kind") == "evidence" and payload.get("fact") == fact:
+                receipts.append((str(payload.get("id") or path.stem), payload))
+        return receipts
+
+    def _not_intact_documents(self) -> set[str]:
+        """Ids of the store documents with an anchor that is not intact (r5: check_doc_anchors)."""
+        from sldb.api.anchors.check_doc_anchors import check_doc_anchors
+
+        from deskops.paths import package_pythonpath
+
+        findings = check_doc_anchors(doc_access.store_path(self.root), pythonpath=package_pythonpath())
+        return {str(finding.subject).rsplit(":", 1)[-1] for finding in findings}
+
+    def _task_model(self, task_path: Path) -> str:
+        """The typed model the store tracks the task under (``TaskCodeDoc``, ...), as review does."""
+        from sldb.api.stores.doc_status import doc_status
+
+        try:
+            status = doc_status(doc_access.store_path(self.root), self._relative(task_path))
+        except Exception:  # noqa: BLE001 - an untracked task anchors on the base model
+            return "TaskDoc"
+        return (status.model or "TaskDoc") if status.exists else "TaskDoc"
+
+    def _closeout_identity(self) -> str:
+        from deskops.config import DeskConfig
+
+        identity = (DeskConfig.load(self.desk_root).project_identity or "").strip()
+        return identity if identity and identity != "unknown-project" else self.root.name
 
     def has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
         evidence = self._closeout_reference_evidence(payload)

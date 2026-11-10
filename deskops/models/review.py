@@ -18,6 +18,7 @@ index. Nothing here fabricates that edge or that state.
 from __future__ import annotations
 
 import re
+from typing import Any
 from typing import Literal
 
 from pydantic import Field, model_validator
@@ -25,12 +26,17 @@ from pydantic import Field, model_validator
 from sldb import StructuredNLDoc
 
 
-REVIEW_ID_PATTERN = r"^review-.+-(preflight|bundle|reproduction|goldens|owner|node)-[0-9]+$"
+REVIEW_ID_PATTERN = (
+    r"^review-.+-(preflight|bundle|reproduction|goldens|owner|node"
+    r"|evidence-(tests|commit|atom|materialization|document|external))-[0-9]+$"
+)
 SUBJECT_PATTERN = r"^(doc:[A-Z][A-Za-z0-9_]*:[^\s:@]+(@sha256:[0-9a-f]{64})?)?$"
 SUBJECT_REF_PATTERN = r"^([^\s#]+#node:[A-Za-z0-9_-]+)?$"
 SHA256_PATTERN = re.compile(r"^[0-9a-f]{64}$")
 
-ReviewKind = Literal["preflight", "bundle", "reproduction", "goldens", "owner", "node"]
+ReviewKind = Literal["preflight", "bundle", "reproduction", "goldens", "owner", "node", "evidence"]
+#: Closeout evidence a kind ``evidence`` receipt records (CC33a): one receipt per verified kind.
+EvidenceFact = Literal["", "tests", "commit", "atom", "materialization", "document", "external"]
 ReviewVerdict = Literal["pending", "accepted", "rejected", "incomplete"]
 
 
@@ -45,8 +51,12 @@ class ReviewDoc(StructuredNLDoc):
     __template__ = """---
 # review-<task>-<kind>-<n>
 id: ⸢rev•id⸥
-# preflight | bundle | reproduction | goldens | owner | node
+# preflight | bundle | reproduction | goldens | owner | node | evidence
 kind: ⸢rev•kind⸥
+# kind evidence only: tests | commit | atom | materialization | document | external
+fact: ⸢rev•fact⸥
+# kind evidence only: what the producer verified, one item per line
+value: ⸢rev•value⸥
 # doc:<Model>:<id> or empty for reviews of plan nodes
 subject: ⸢rev•subject⸥
 # <plan>/dag.yaml#node:<ID>; empty when subject names a document
@@ -85,12 +95,30 @@ _Record the verdict rationale and who disposed of the review._
 ⸢rev•disposition⸥
 """.strip()
 
+    @model_validator(mode="before")
+    @classmethod
+    def _absent_evidence_fields_are_empty(cls, data: Any) -> Any:
+        """Receipts written before kind ``evidence`` have no ``fact``/``value`` keys: empty."""
+        if isinstance(data, dict):
+            return {key: value for key, value in data.items() if not (value is None and key in ("fact", "value"))}
+        return data
+
     id: str = Field(
         description="Stable review identifier: 'review-<task-id>-<kind>-<n>'.",
         pattern=REVIEW_ID_PATTERN,
     )
     title: str = Field(description="Short human-readable label for the review.")
-    kind: ReviewKind = Field(description="Review kind: preflight, bundle, reproduction, goldens, or owner.")
+    kind: ReviewKind = Field(
+        description="Review kind: preflight, bundle, reproduction, goldens, owner, node, or evidence."
+    )
+    fact: EvidenceFact = Field(
+        default="",
+        description="Closeout evidence kind a kind 'evidence' receipt records; empty for every other kind.",
+    )
+    value: str = Field(
+        default="",
+        description="What the closeout producer verified (kind 'evidence'): sorted items joined by newlines.",
+    )
     subject: str = Field(
         default="",
         description="Document anchor 'doc:<Model>:<id>' (optionally pinned with @sha256:<hash>); "
@@ -129,6 +157,10 @@ _Record the verdict rationale and who disposed of the review._
         subject_ref = self.subject_ref.strip()
         if bool(subject) == bool(subject_ref):
             raise ValueError("exactly one of subject or subject_ref must be non-empty")
+        if self.kind == "evidence" and not self.fact:
+            raise ValueError("kind 'evidence' requires fact")
+        if self.kind != "evidence" and (self.fact or self.value):
+            raise ValueError("fact and value are only for kind 'evidence'")
         if self.verdict in {"accepted", "rejected"}:
             if not self.reason.strip():
                 raise ValueError(f"verdict {self.verdict!r} requires a non-empty reason")

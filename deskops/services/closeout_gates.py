@@ -180,6 +180,19 @@ class CloseoutGatesService:
                     return True
         return False
 
+    def full_commit_sha(self, reference: str) -> str:
+        """The full id of a commit reference that passes ``reference_points_to_commit``, else ''."""
+        if not self.reference_points_to_commit(reference):
+            return ""
+        resolved = subprocess.run(
+            ["git", "rev-parse", "--verify", f"{reference.strip()}^{{commit}}"],
+            cwd=self.root,
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        return resolved.stdout.strip() if resolved.returncode == 0 else ""
+
     def reference_points_to_commit(self, reference: str) -> bool:
         """True only for a lowercase hex id resolving to HEAD or an ancestor.
 
