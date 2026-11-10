@@ -1,0 +1,13 @@
+REFORMULACION
+Propósito: corregir en deskops dos defectos ante desks con semillas del ciclo de vida anteriores a CC31: `doctor` no detecta semillas managed desactualizadas y `advance` falla con un `ValidationError` de pydantic que no nombra la causa. Resultado: `doctor` reporta un hallazgo por archivo desactualizado, con severidad según b1 y fix `deskops desk update --apply`; `advance` falla antes de escribir, nombrando archivo y `relation_type`, indicando que falta o difiere `attributes.sets.status`, y deja la tarea sin cambios. Repo: deskops, según rutas de `files` y el TaskDoc. Límites: no tocar el validador CC37, la migración del kit ni la gramática del CLI; no editar a mano `desk/` ni `.sldb/`; no `git add -A`; tests de a uno con `TMPDIR=/dev/shm` y guarda `pgrep`; los 4 pasos del workflow los corre el coordinador.
+
+AMBIGUEDADES
+1. «con qué difiere» y «<campos que difieren>» frente a «Para comparar se usa lo mismo que desk update (seed_desk(...)). No se escribe una comparación aparte.» `seed_desk` devuelve rutas reescritas, no diferencias por campo; obliga a inventar cómo obtener los campos sin una comparación aparte.
+2. «La justificación queda en el informe» y «con causa raíz escrita antes del arreglo»: no se define qué artefacto es «el informe» ni dónde se escribe la causa raíz; obliga a inventar si va en el TaskDoc, docs/, CHANGELOG o el recibo de cierre.
+3. «un hallazgo por archivo, con qué difiere» no fija orden, delimitadores ni nombres normalizados de los campos; b5 deja «<campos que difieren>» sin formato exacto, lo que obliga a inventar el texto que fijará el golden.
+
+DRY-RUN
+Lecturas: TaskDoc, Board, rituales, semillas `desk/lifecycle/`, `doctor_findings.py`, `doctor.py`, `lifecycle.py`, `workspace.py`, `task_lifecycle.py`, tests y goldens. Cambios previstos: añadir a doctor la comparación con `seed_desk(root, apply=False, restore_managed=True)`, clasificar por b1 y emitir el mensaje b5; añadir en `lifecycle.advance` una comprobación previa contra `lifecycle_table()` antes de `apply_effects`; tests de reproducción, doctor y goldens; docs y CHANGELOG. Dependencias: APIs sldb de scaffold/efectos, `lifecycle_table()` existente y la guarda de pytest. Validaciones futuras: tests focalizados, goldens de ayuda idénticos y nuevos de salida, reproducción en desk limpio, `desk update --apply` seguido de `advance` a `active`, y los 4 pasos del workflow en clon limpio. Nada se ejecuta aquí.
+
+FUTURO
+El coordinador ejecuta los 4 pasos en clon limpio; el dueño del kit Chatbot_Infra decide y aplica su migración; un revisor humano acepta severidad, ubicación del informe y textos de los goldens.

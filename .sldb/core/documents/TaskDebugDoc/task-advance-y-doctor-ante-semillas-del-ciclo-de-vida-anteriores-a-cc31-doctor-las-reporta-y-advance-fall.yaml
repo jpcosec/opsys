@@ -1,0 +1,39 @@
+name: task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall
+path: desk/tasks/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall.md
+source_hash: 2b6bee00fef2ab5f6917c1acfbf6109ab81e7c6aa9dcf10c8b614e284f920c7d
+content_hash: 1b15f6fcf39acc3125df249b77ea95c05854bf96f41eb93ab24deae3568de967
+field_hashes:
+  title: db3677d6727674c42fd0c79742621e026a2d1a7185fea2997b8931bc5571a365
+  id: 58032791c59b777f06f681023b1384ef60aecbdca983a4f74d3bfd5444807b48
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: ce0721c092d77565c53ccaee322eed3927faf0a62f2ae74dbe4f7f2b5667e37e
+  goal: 581360099eb295409e450a828e437dceccb4ad363217ee051ef22b499160f875
+  scope: 9c4d82bbd9946db3503fe0927175447b3848d32fe4327840f30ef6d89fca9837
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: 669ebd0ea00e15b347aae7e0b7557eb692573d125e26b382905e47b6f440d62f
+  implementation_path: ad96de0d469e007dc16b3911456cf53cdce3825c2d6226d50b7b92c2ea4ebd0e
+  validation: 6a1d1320c205d31d31b4f93bb7da1bd6e0076b9154242e5385fc2f4bda843ec3
+  done_when: dd71f11ac8ccc510aadb1d98bca005ab6c04e54fce29eeb6640e0dd35bcfa0a3
+  task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  from_drawer: 677f341d6d72e90bb0e77eddfffc37dabc24d691e4f64c11e158a09586f17438
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T21:19:54Z'
+  authority: generated
+  via: save_document_payload

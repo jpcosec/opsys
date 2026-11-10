@@ -1,0 +1,36 @@
+name: review-task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall-preflight-2
+path: desk/reviews/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall/preflight-2.md
+source_hash: 00f8a078ae92feb1cab62cd72c66a26af6bc749e1b32f9491eb477d4d9ee6010
+content_hash: 3656fc7bb266e41720b949fa5e9624b4a41755908de51a1a3e307de8c9b158e6
+field_hashes:
+  id: ca680bdcef954c997ba866e002b773bf265c3d784873d4e900450f27e26af9a7
+  title: 6808aa945416864df6ba5b97a9c0f338693032839974ccffa28d43fd0a4eb8f0
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: 16effed2e3bce33a68f1f557dbe4716d9c4b63c8944c9c1a17ac5db49ab96aa6
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 8f8c4f6325a85333c9b42ae0a8b979f48c717d4c5a7686fb26d4ffe290ba843c
+  input_sha256: 82df4ea26c9c958d3823e09a38e7f1ee7410b4fe23339b49c41d046b1b64d25d
+  output_sha256: 77bc46696b280d87ace9e3840cb8879d361e6f02e990b6906a4531b548bc0f2e
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: b3fe30ed2934186ee85b09674a0da469e54cd7f64a448de51b7c9203339d14f8
+  created_at: bdefd9b9120a40c390a0fd45986fd124c28cd74580888b76463fca66ec5bc352
+  disposed_at: 8c7301f5ee1a2f3558e9fbd940017f4ea39f00a3d6244fe932b5b860c7c927b6
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 29193fe1882b3eca56347e76e29a728c40aa19704865568583821108de828267
+  disposition: eb0303444aafdd059b834a37a2622ac01a8d57f1e33025ca62a5b3ec76d7cdf6
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T21:21:08Z'
+  authority: generated
+  via: save_document_payload

@@ -1,0 +1,35 @@
+### 1 deskops init (deskops del worktree 5ccc29a3+desk; sldb 84eb7f75)
+Initialization complete.
+### 2 add task task.code
+Task: /dev/shm/repro-adv/desk/tasks/task-repro-advance.md
+### 3 arista con el ciclo de vida anterior a CC31 (attributes {}), vía sldb fields update
+Updated field payload for 'execution-task_activates'
+11:attributes: {}
+### 4 recibos de activación (record --operator, como el quickstart)
+engine: human; operator: coord2; no model available
+disposed_by: repro-adv
+engine: human; operator: coord2; no model available
+disposed_by: repro-adv
+### 5 doctor (defecto d1)
+Desk is healthy. No issues found.
+### 6 advance task (defecto d2)
+Validation error:
+1 validation error for TaskCodeDoc
+  Value error, Task task-repro-advance lifecycle is inconsistent: status: 'draft' does not follow history 'task_activates'; expected 'active' [type=value_error, input_value={'title': 'Repro advance'...n_verified': 'verified'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.14/v/value_error
+rc=1
+### 7 la tarea en disco
+8:status: draft
+9-summary: ''
+--
+13:current_node: ritual-execution
+14:history: []
+15-references: []
+### 8 control: desk update --apply restaura la semilla y advance pasa
+Lifecycle graph: rewrote desk/lifecycle/execution-task_activates.md
+6:attributes:
+7-  sets:
+8-    status: active
+Current node: ritual-testing
+Message: Advanced to ritual-testing via task_activates.
+8:status: active

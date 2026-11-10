@@ -1,0 +1,101 @@
+{
+  "key": "task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall/bundle",
+  "input_sha256": "100670c06d50a849b10dc647faea76e8c45cf4405a62a358c18b0a43c0f8a80f",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp2/runs/subagents/20261110-211721/context-review/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall/bundle/100670c06d50a849b10dc647faea76e8c45cf4405a62a358c18b0a43c0f8a80f/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall.md",
+      "sha256": "6f6aa595b0f0f58f0c3df76a2614847bb6afb89bb0ee136dfff0454f611fea58",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/doctor_findings.py",
+      "sha256": "9e3a1c84e192740d8bd8e8ce90f2fef9a3d5bf59861ca1c3ba7434037223f5cf",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/doctor.py",
+      "sha256": "47ccf881ad2027347713d8dd85df7cd9160d46305c68bcfaab0ed7a00f85f2ee",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "2319d9838240502f1c72930742f55282983a97782e1b521ffcefd3183f7f307b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "7bc7796b9eb11f05b9df0a12d9ea7455be761be95aeaf2b0fbcf4c4c100dd9cb",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "c2143167ced5a34b6b83fc8d22d084bca9876c9adb2c4088265bc8e849989b8d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/tasks.py",
+      "sha256": "b010093eac180da39bbcd8a1b3ed30e8a72426ec0ee03ee6cdf079639bbb0ab1",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "df3ea28a4cb27f2825a412c0be152f33ef9dab111cb3abb3b9055b8f86c09aa1",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    },
+    {
+      "path": "docs/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-10T21:17:22.148662+00:00",
+  "finished": "2026-11-10T21:17:33.715751+00:00"
+}
