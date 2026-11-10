@@ -1,0 +1,36 @@
+name: review-task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos-bundle-4
+path: desk/reviews/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos/bundle-4.md
+source_hash: ca5ab7abffff37e28b085389edb305c098a29dcceee02cdff53a56b23fa09890
+content_hash: c844f4ab2071f94b6faec07ccedb045c21d549c794d5b2be8801486e56400ac7
+field_hashes:
+  id: fe9d6bb68306319e1b6610dc7da663389098a77840198935ee0952b73fde10ff
+  title: 8b7da89802cf4b93305582d04f9537d87f3bb008024146dd04b7d7cce982ed5c
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: a7e42a0a5924870447039efc1aaabb2a97147f620acdd2b97efa23e580c3f686
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 3fc7cedbda26c58727866c45b0bf79ac69f8257b8d8996612714c92a462f93e9
+  input_sha256: df15b5110525ef490f2b60b253a2d966c373b14ead814954afc43c15b30979df
+  output_sha256: 3ed4f38c67620e7e380982272f4045b5efbc03ca9f71c115c276bcb8b1fba7f2
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 6510b3c692d30719d8609480315bedb073843f6e2db0101810a934dc185ef62f
+  created_at: 2aa5cea3d6eb59be766e7b2f82d057ea3955ca0dc402d236709e69577da3ca19
+  disposed_at: d97e7545c9609d19fdcb78415932430e5ec01692fb883673f7e489e6de4c2840
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: ed2ed7ac8046174838059e8bc1de85531458654483e8abbe546a69b3139582da
+  disposition: bd87c27155217f6b4b79f5057b3833df20fdaa9f2a95371ac1e00165f4c00527
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T22:07:41Z'
+  authority: generated
+  via: save_document_payload
