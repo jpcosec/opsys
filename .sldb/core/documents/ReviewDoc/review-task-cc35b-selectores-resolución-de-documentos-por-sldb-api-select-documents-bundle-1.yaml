@@ -1,11 +1,13 @@
 name: review-task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents-bundle-1
 path: desk/reviews/task-cc35b-selectores-resolución-de-documentos-por-sldb-api-select-documents/bundle-1.md
 source_hash: d85689da9e248dbf4df20b8da81a3ddcf4df035b432e87abedff40c3e6813688
-content_hash: 17ce98d19ef4b65c4a797df74806dc68bc71f49b284a896914924474a8f1f056
+content_hash: 2a575cbd80ed91b73d32727d65fd6074c10263b5f0addede41ccc709fb554653
 field_hashes:
   id: 2d0497870512bae74e5b4a651341ae8955c63f9ada46a6b46aa7848693117e01
   title: 73df24433cc4ea196bf4e8f2950983c67d7f97845fa3ca0bdd20227df7bb23f7
   kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: a352abb30236b6499e7f4fbe4e49ce96c4f56bd5d124624c1830fdb1e2368e61
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

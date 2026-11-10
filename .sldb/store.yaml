@@ -82,6 +82,8 @@ models:
 - name: ReviewDoc
   model_ref: deskops.models:ReviewDoc
   path: deskops/models/review.py
+- name: RuleDoc
+  model_ref: sldb.models.rule_doc:RuleDoc
 predicates:
   applies_to_source:
     axis: WHAT
@@ -297,6 +299,16 @@ include:
   - desk/materializations/materialization-resolved-by-services-closure.md
   - desk/materializations/materialization-resolved-by-commands-closeout.md
   - desk/materializations/materialization-resolved-by-tests-test-closeout-resolved-by.md
+  - desk/materializations/materialization-cc37-deskops-lifecycle.md
+  - desk/materializations/materialization-cc37-models-task.md
+  - desk/materializations/materialization-cc37-models-task-lifecycle.md
+  - desk/materializations/materialization-cc37-deskops-workspace.md
+  - desk/materializations/materialization-cc37-tests-test-task-lifecycle-validator.md
+  - desk/materializations/materialization-review-status-regression-tests.md
+  - desk/materializations/materialization-scion-autonomy-cli.md
+  - desk/materializations/materialization-scion-autonomy-help.md
+  - desk/materializations/materialization-scion-autonomy-supervisor.md
+  - desk/materializations/materialization-scion-autonomy-tests.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -363,20 +375,70 @@ include:
     name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-bundle-1
   - path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle-2.md
     name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-bundle-2
-- model: TaskRefactorDoc
-  paths:
-  - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md
-  - desk/tasks/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb.md
-  - desk/tasks/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests.md
+  - path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-1.md
+    name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-1
+  - path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-2.md
+    name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-2
+  - path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-3.md
+    name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-3
+  - path: desk/reviews/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b/preflight-1.md
+    name: review-task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b-preflight-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/preflight-2.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-preflight-2
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle-2.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-bundle-2
+  - path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight-3.md
+    name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-preflight-3
+  - path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle-3.md
+    name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-bundle-3
+  - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight-1.md
+    name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-1
+  - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/bundle-1.md
+    name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-bundle-1
+  - path: desk/reviews/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/preflight-1.md
+    name: review-task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22-preflight-1
+  - path: desk/reviews/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/bundle-1.md
+    name: review-task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22-bundle-1
+  - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight-2.md
+    name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-2
+  - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight-3.md
+    name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-3
+  - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight-4.md
+    name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-4
+  - path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/bundle-2.md
+    name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-bundle-2
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/bundle-1.md
+    name: review-task-scion-autonomy-coordinator-contract-bundle-1
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/bundle-2.md
+    name: review-task-scion-autonomy-coordinator-contract-bundle-2
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/preflight-1.md
+    name: review-task-scion-autonomy-coordinator-contract-preflight-1
+  - path: desk/reviews/task-scion-autonomy-coordinator-contract/preflight-2.md
+    name: review-task-scion-autonomy-coordinator-contract-preflight-2
+  - path: desk/reviews/task-scion-autonomy-review-status/bundle-1.md
+    name: review-task-scion-autonomy-review-status-bundle-1
+  - path: desk/reviews/task-scion-autonomy-review-status/preflight-1.md
+    name: review-task-scion-autonomy-review-status-preflight-1
 - model: TaskCodeDoc
   paths:
-  - desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md
   - desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md
+  - desk/tasks/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob.md
+  - desk/tasks/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22.md
+  - desk/tasks/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
 - model: TaskDebugDoc
   paths:
-  - desk/tasks/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f.md
+  - desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md
+- model: RuleDoc
+  paths:
+  - desk/lifecycle/rule-activation-task-aggregate.md
+  - desk/lifecycle/rule-activation-task-code.md
+  - desk/lifecycle/rule-activation-task-debug.md
+  - desk/lifecycle/rule-activation-task-decision.md
+  - desk/lifecycle/rule-activation-task-docs.md
+  - desk/lifecycle/rule-activation-task-external.md
+  - desk/lifecycle/rule-activation-task-refactor.md
 graph_backend: networkx
 policy: {}

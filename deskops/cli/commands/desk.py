@@ -319,8 +319,10 @@ class DeskCLI:
                     ) from exc
             if payload is None:
                 if result.returncode != 0:
+                    # sldb's own reason, e.g. a tracked task whose model (its lifecycle) rejects it.
+                    reason = f": {result.stderr.strip()}" if result.stderr and result.stderr.strip() else ""
                     raise DeskopsEnvironmentError(
-                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}"
+                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}{reason}"
                     )
                 raise DeskopsEnvironmentError(
                     f"'sldb stores check' produced no JSON output for {store_dir}"
@@ -341,8 +343,11 @@ class DeskCLI:
 
         pending_local_types = pending_local_task_type_models(root)
         pending_migration = pending_task_type_migration(root)
+        # A task whose lifecycle TaskDoc's validator rejects is reported, never written (CC37).
+        inconsistent_tasks = [line for line in pending_migration if line.startswith("inconsistent ")]
+        pending_migration = [line for line in pending_migration if not line.startswith("inconsistent ")]
 
-        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration:
+        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration and not inconsistent_tasks:
             print("Desk is up to date.")
             return 0
 
@@ -371,6 +376,10 @@ class DeskCLI:
             print(f"- Pending task type migration: {len(pending_migration)} task(s)")
         if invalid_docs:
             print(f"- Stale document hashes: {', '.join(invalid_docs)}")
+        if inconsistent_tasks:
+            print(f"- Inconsistent task lifecycles (not written): {len(inconsistent_tasks)} task(s)")
+            for line in inconsistent_tasks:
+                print(f"  - {line}")
 
         if not apply:
             print("\nRun with --apply to repair these issues.")

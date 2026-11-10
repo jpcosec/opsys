@@ -1,0 +1,9 @@
+{
+  "key": "task-scion-autonomy-coordinator-contract/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "b554fdd860e5db9f12cec6553acb4f73c90c5c0e775478fac7b9524ee3e8eee2",
+  "output_sha256": "739e2b71633a1164fbc06ee2a24a565539b9f94f5431a24c6ed55b258bdcc19a",
+  "start": "2026-11-10T17:55:40.158269+00:00",
+  "end": "2026-11-10T17:55:55.720750+00:00"
+}

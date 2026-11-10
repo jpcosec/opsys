@@ -1,6 +1,7 @@
 from pydantic import Field, field_validator, model_serializer, model_validator
 
 from .base import OperationalArtifactDoc
+from .task_lifecycle import lifecycle_errors
 
 
 # An absent `optrev` frontmatter key extracts as None, not as "missing": drop
@@ -187,6 +188,16 @@ _Name the observable condition that makes the task complete._
         if not value.strip():
             raise ValueError("Task title cannot be empty")
         return value
+
+    @model_validator(mode="after")
+    def _lifecycle_is_coherent(self) -> "TaskDoc":
+        """status, current_node and history form a state the lifecycle graph or closeout can
+        produce (``task_lifecycle.lifecycle_errors``); sldb builds the model on every write, so a
+        direct ``sldb fields update``/``docs update``/``/save`` cannot leave a task outside it."""
+        errors = lifecycle_errors(self.status, self.current_node, list(self.history))
+        if errors:
+            raise ValueError(f"Task {self.id} lifecycle is inconsistent: " + "; ".join(errors))
+        return self
 
     @model_serializer(mode="wrap")
     def _omit_unset_optional_fields(self, handler):

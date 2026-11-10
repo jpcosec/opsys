@@ -1,0 +1,18 @@
+closeout_owner: parent
+executor: fix_review_status
+run_dir: runs/subagents/20261110-autonomy-review-status
+run_id: null
+session: null
+session_sha256: null
+task_id: task-scion-autonomy-review-status
+touched:
+- deskops/services/review.py
+- tests/test_review_command.py
+- desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md
+- docs/operator-manual.md
+- CHANGELOG.md
+- desk/reviews/task-scion-autonomy-review-status
+validation:
+  phase_integration: pending parent phase closeout after T2 + E2E
+  review_module: 21 passed in 1121.17s
+  service_matrix: 7 passed in 248.74s

@@ -1,0 +1,2 @@
+Executor: one active task task-scion-autonomy-review-status. Scope in TaskDoc. Preserve receipts; no lifecycle gate/model/CLI grammar changes. Source atom precedes docs. Use isolated tests; hand off evidence; do not self-close.
+Cold-review acceptance in disposition.md. Audit real anchored subject grouping as well as verdict classification; repair task-specific key extraction if confirmed, preserving model/gates.

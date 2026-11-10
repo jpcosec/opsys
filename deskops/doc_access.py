@@ -128,7 +128,8 @@ _TASK_OWNED_FIELDS = {
 # Artifacts whose documents are named by hand: their files are not `<id_pattern>.md`.
 _FREE_NAMED_ARTIFACTS = {"artifact.inbox_note", "artifact.board", "artifact.ritual", "artifact.review"}
 
-# Artifacts `create_artifact` tracks in the desk's store on creation.
+# Artifacts tracked in the desk's store on creation whatever their surface; ``create_artifact``
+# also tracks every other artifact it writes on a tracked surface (``_tracked_surface``).
 _TRACKED_ON_CREATE = {"artifact.atom", "artifact.pill", "artifact.materialization"}
 
 # (absolute path, model) -> (text, payload): ``read_doc`` parses a document once per text.
@@ -806,7 +807,10 @@ def create_artifact(root: Path, artifact_id: str, raw_payload: dict[str, Any]) -
         path = atom_doc_path(root, doc_id, tags)
     else:
         path = artifact_path(root, artifact_id, doc_id)
-    if artifact_id in _TRACKED_ON_CREATE:
+    # Every artifact `add` writes on a tracked surface is tracked as it is created: since CC35b
+    # the selectors of `show`/`edit` resolve those surfaces through the store only, so a
+    # document `add` left untracked could not be shown or edited until `desk update --apply`.
+    if artifact_id in _TRACKED_ON_CREATE or _tracked_surface(root, path.parent):
         create_doc(root, path, model, compiled.artifact_payload, doc_id)
     else:
         write_new_doc(root, path, model, compiled.artifact_payload)

@@ -275,6 +275,9 @@ def test_closeout_verify_accepts_materialization_coverage(tmp_path: Path) -> Non
         """---
 id: task-closeout-test
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references:
 - tests/test_materialization_targets_outside_package.py
 depends_on: []
@@ -312,6 +315,14 @@ Implement.
 Done.
 """,
     )
+    # Since CC35b the task selector resolves through the store only: a task written by hand
+    # is tracked as `deskops add task` would track it (the CC35b a7 adaptation).
+    from deskops import doc_access
+    from deskops.models import TaskDoc
+
+    doc_access.track_created_document(
+        root, TaskDoc, root / "desk/tasks/task-closeout-test.md", "task-closeout-test"
+    )
 
     # Create board
     _write(
@@ -341,6 +352,9 @@ tags: []
         f"""---
 id: task-closeout-test
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references:
 - tests/test_materialization_targets_outside_package.py
 - {commit_sha}

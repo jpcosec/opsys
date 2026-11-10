@@ -63,7 +63,15 @@ MODEL = "deepseek/deepseek-flash"
 DEFAULT_ENGINE = "runtime-pi-deepseek-flash"
 TIMEOUT = 900
 # Receipts ``deskops review record`` writes by hand (no model call); the others come from their command.
-RECORD_KINDS = ("reproduction", "goldens", "owner")
+# Kinds an operator records by hand. ``preflight`` and ``bundle`` also come from their own
+# model review; a hand-recorded one keeps ``engine: human`` so it never reads as a model review.
+RECORD_KINDS = ("reproduction", "goldens", "owner", "preflight", "bundle")
+
+# Recorded by hand, ``preflight`` and ``bundle`` name their operator (``--operator``) and say
+# why no model reviewed them; they are for desks without a model (CI scenarios, the quickstart),
+# not a substitute for ``deskops review preflight|bundle`` on a real desk.
+HUMAN_REVIEW_KINDS = ("preflight", "bundle")
+NO_MODEL_REASON = "no model available"
 
 KEEP = (
     "id",
@@ -185,6 +193,14 @@ class ReviewService:
             return doc_access.resolve_document(self.root, tasks_dir, task_id, "task", recursive=False)
         except FileNotFoundError:
             raise DomainError(f"Task '{task_id}' not found under {tasks_dir}") from None
+
+    def _resolve_task(self, selector: str) -> tuple[Path, str]:
+        """The task file a selector names and the task's full id (its frontmatter ``id``, else the
+        file stem). Receipts are keyed and anchored on that id, never on the selector as typed:
+        ``task-cc37`` would otherwise give ``doc:<Model>:task-cc37``, a subject no rule matches."""
+        task_path = self._task_path(selector)
+        task_id = str(self._task_payload(task_path).get("id") or "").strip() or task_path.stem
+        return task_path, task_id
 
     def _task_model(self, task_path: Path) -> str:
         store = self.root / ".sldb"
@@ -573,6 +589,8 @@ class ReviewService:
         node_id: str | None,
         plan_id: str | None = None,
         summary: str | None = None,
+        actor: str | None = None,
+        title: str | None = None,
     ) -> tuple[str, Path]:
         if node_id is not None:
             node_lower = node_id.lower()
@@ -580,13 +598,13 @@ class ReviewService:
             review_dir = self._reviews_dir() / f"{plan_id}-{node_lower}"
             n = self._next_review_number(review_dir, kind, node=True)
             review_id = f"review-{plan_id}-{node_lower}-node-{n}"
-            title = f"Node review of {node_id}"
+            title = title or f"Node review of {node_id}"
         else:
             task_id = subject.rsplit(":", 1)[-1].split("@", 1)[0]
             review_dir = self._reviews_dir() / task_id
             n = self._next_review_number(review_dir, kind, node=False)
             review_id = f"review-{task_id}-{kind}-{n}"
-            title = f"{kind.capitalize()} review of {task_id}"
+            title = title or f"{kind.capitalize()} review of {task_id}"
 
         path = review_dir / (f"node-{n}.md" if node_id is not None else f"{kind}-{n}.md")
         payload: dict[str, Any] = {
@@ -596,7 +614,7 @@ class ReviewService:
             "subject": subject,
             "subject_ref": subject_ref,
             "engine": engine,
-            "actor": self._identity(),
+            "actor": actor or self._identity(),
             "run_dir": run_dir,
             "input_sha256": input_sha256,
             "output_sha256": output_sha256,
@@ -613,8 +631,11 @@ class ReviewService:
         return review_id, path
 
     # ------------------------------------------------------------------ record
-    def record_receipt(self, task_id: str, kind: str, evidence: list[str], reason: str) -> dict[str, Any]:
-        """A receipt the desk operator records without a model call (reproduction, goldens, owner).
+    def record_receipt(
+        self, task_id: str, kind: str, evidence: list[str], reason: str, operator: str | None = None
+    ) -> dict[str, Any]:
+        """A receipt the desk operator records without a model call (reproduction, goldens, owner,
+        and preflight or bundle from operator evidence, always with ``engine: human``).
 
         Every ``evidence`` path must be an existing file inside the root; otherwise nothing is
         written. ``input_sha256`` hashes ``<path>\\n<content>\\n`` of each file, paths POSIX-relative
@@ -624,10 +645,16 @@ class ReviewService:
         if kind not in RECORD_KINDS:
             raise UsageError(
                 f"--kind {kind} is not recorded by hand; use one of {', '.join(RECORD_KINDS)} "
-                "(preflight, bundle and node come from their own review command)"
+                "(node comes from its own review command)"
             )
         if not (reason and reason.strip()):
             raise UsageError("--reason is required")
+        operator = (operator or "").strip()
+        if kind in HUMAN_REVIEW_KINDS and not operator:
+            raise UsageError(
+                f"--kind {kind} recorded by hand requires --operator <name>: the receipt names the "
+                f"human who reviewed instead of a model ({NO_MODEL_REASON})"
+            )
         paths: list[str] = []
         for raw in evidence:
             candidate = Path(raw)
@@ -641,14 +668,21 @@ class ReviewService:
         if not paths and kind != "owner":
             raise UsageError(f"--kind {kind} requires at least one --evidence")
 
-        task_path = self._task_path(task_id)
+        task_path, task_id = self._resolve_task(task_id)
         subject = f"doc:{self._task_model(task_path)}:{task_id}"
         input_sha256 = ""
         if paths:
             data = b"".join(rel.encode() + b"\n" + (self.root / rel).read_bytes() + b"\n" for rel in paths)
             input_sha256 = _sha(data)
-        actor = self._identity()
+        actor = operator or self._identity()
         summary = f"{kind} receipt recorded by {actor}; evidence: {', '.join(paths) if paths else '(none)'}"
+        title = None
+        if kind in HUMAN_REVIEW_KINDS:
+            summary = (
+                f"{kind} receipt recorded by hand by operator {operator}, not by a model review "
+                f"(engine human; {NO_MODEL_REASON}); evidence: {', '.join(paths)}"
+            )
+            title = f"{kind.capitalize()} receipt of {task_id} by operator {operator} ({NO_MODEL_REASON})"
         review_id, review_path = self._write_review(
             kind=kind,
             subject=subject,
@@ -661,6 +695,8 @@ class ReviewService:
             reason=reason,
             node_id=None,
             summary=summary,
+            actor=actor,
+            title=title,
         )
         return {
             "key": f"{task_id}/{kind}",
@@ -669,6 +705,9 @@ class ReviewService:
             "review_path": review_path.relative_to(self.root).as_posix(),
             "evidence": paths,
             "input_sha256": input_sha256,
+            "engine": "human",
+            "operator": actor,
+            "no_model_reason": NO_MODEL_REASON if kind in HUMAN_REVIEW_KINDS else "",
         }
 
     # ------------------------------------------------------------------ dispose
@@ -728,21 +767,29 @@ class ReviewService:
             for record in self._review_records()
             if self._record_key(record) == key
         ]
-        pending = [record for record in records if record.get("verdict") == "pending"]
         if not records:
-            return {"key": key, "state": "missing", "input_sha256": current_sha}
-        if any(record.get("input_sha256") == current_sha for record in pending):
-            return {"key": key, "state": "reviewed", "input_sha256": current_sha}
-        if pending:
-            return {"key": key, "state": "stale", "input_sha256": current_sha}
-        return {"key": key, "state": "technical_failure", "input_sha256": current_sha}
+            state = "missing"
+        else:
+            current = [record for record in records if record.get("input_sha256") == current_sha]
+            verdicts = {record.get("verdict") for record in current}
+            if not current:
+                state = "stale"
+            elif "accepted" in verdicts:
+                state = "accepted"
+            elif "rejected" in verdicts:
+                state = "rejected"
+            elif "pending" in verdicts:
+                state = "reviewed"
+            else:
+                state = "technical_failure"
+        return {"key": key, "state": state, "input_sha256": current_sha}
 
     def _record_key(self, record: dict[str, Any]) -> str:
         subject = str(record.get("subject") or "")
         subject_ref = str(record.get("subject_ref") or "")
         kind = str(record.get("kind") or "")
         if subject:
-            task_id = subject.rsplit(":", 1)[-1].split("@", 1)[0]
+            task_id = subject.split("@", 1)[0].rsplit(":", 1)[-1]
             return f"{task_id}/{kind}"
         if subject_ref:
             node_id = subject_ref.rsplit("#node:", 1)[-1]
@@ -785,7 +832,7 @@ class ReviewService:
         return (plan_dir / "dag.yaml").is_file()
 
     def _status_task(self, task_id: str) -> list[dict[str, Any]]:
-        task_path = self._task_path(task_id)
+        task_path, task_id = self._resolve_task(task_id)
         reports: list[dict[str, Any]] = []
         for mode, builder in (
             ("preflight", self._preflight_input),
@@ -849,7 +896,7 @@ class ReviewService:
     ) -> dict[str, Any]:
         if force and not (reason and reason.strip()):
             raise UsageError("--force requires --reason (recorded in manifest.json and the ReviewDoc)")
-        task_path = self._task_path(task_id)
+        task_path, task_id = self._resolve_task(task_id)
         model = self._task_model(task_path)
         subject = f"doc:{model}:{task_id}"
         builder = self._preflight_input if mode == "preflight" else self._bundle_input

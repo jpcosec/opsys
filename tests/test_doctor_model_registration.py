@@ -103,7 +103,7 @@ def test_init_registers_every_deskops_model(tmp_path: Path) -> None:
     }
     expected = (
         set(deskops_models.__all__) - {"PrimitiveDoc", "OperationalArtifactDoc"}
-    ) | {"RelationTypeDoc", "RelationDoc"}
+    ) | {"RelationTypeDoc", "RelationDoc", "RuleDoc"}  # sldb models: lifecycle graph (CC31), activation rules (CC32)
     assert names == expected
 
 

@@ -1,0 +1,23 @@
+name: materialization-review-status-regression-tests
+path: desk/materializations/materialization-review-status-regression-tests.md
+source_hash: 2c79065516a6672068eaac9aef2e3cf19a58ce78b4c72b804c229e2b3ac6303e
+content_hash: 0ffc6febf5d3813b51295ae791b42dd43df386c986b1e2ff8d3885d156c78511
+field_hashes:
+  id: 12969529c6db5f616e6f62f6fd0c36441ffc4c2f188f43eca837d9a169490b34
+  title: 0ec4353565e76d4bb845d16fa9fbea9754c8dd2e8b24d22a755dadd4e6730b71
+  source_atoms: 76734c8b10223adad4ca58585f00379da28e168bc00f8812d8e7ca443722388f
+  target_kind: 4d967a30111bf29f0eba01c448b375c1629b2fed01cdfcc3aed91f1b57d5dd5e
+  target_identity: 4165f8a460733037588a9d3655b057a4bd2ff76a8b4bdd13eb68f1d02a577cfe
+  intent: 68c6baf5cef7ccf27a7c64da63b24660b5f8b66c21c7cf2b86ee7a7059acc27c
+  validation: f712c373e7934802b4e9fd2c7558be2d682baf360a0c5089ffed863ae942fd65
+  tags: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-10T15:17:32Z'
+  authority: generated
+  via: create_document

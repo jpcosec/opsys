@@ -424,11 +424,19 @@ deskops list tasks --root .
 deskops show task task-close-a-manual-task --root .
 deskops next task-close-a-manual-task --root .
 deskops edit task task-close-a-manual-task scope "Edited scope." --root .
+deskops review record task-close-a-manual-task --kind preflight --operator "Manual operator" \
+  --evidence desk/tasks/task-close-a-manual-task.md --reason "Contract read; nothing ambiguous" --root .
+deskops review dispose review-task-close-a-manual-task-preflight-1 --verdict accepted --reason "Contract reviewed by the operator" --root .
 deskops advance task task-close-a-manual-task --root .
 deskops advance task task-close-a-manual-task --root .
 ```
 
-The two advances move the task from `draft` to `active` and then
+A task leaves `ritual-execution` only with the review receipts its type asks for
+(here `task.docs`: an accepted `preflight` on the task's current contract, so it
+is recorded after the last edit). This sandbox has no reviewer model, so the
+operator records a human receipt (`engine: human`, `no model available`; see
+[Cold context reviews](#cold-context-reviews)); a desk where the model runs uses
+`deskops review preflight`. The two advances move the task from `draft` to `active` and then
 `ready_for_testing`. `advance` stops at `ritual-closeout`; it never closes a
 task. When no outgoing transition condition holds, it exits non-zero and names
 the blocked gate.
@@ -854,16 +862,74 @@ deskops runtime supervise deskops-executor --max-iterations 1 --timeout-ms 30000
 # (.scion/templates/<role-name>/: scion-agent.yaml, system-prompt.md, agents.md).
 deskops runtime template deskops-executor --root .
 deskops runtime template deskops-executor --root . --harness claude \
-  --mode executor --task task-fix-thing --agent deskops-executor-task-fix-thing
+  --mode executor --task task-fix-thing --agent deskops-e-0123456789ab
+
+# A tester is its own role and mode, with separate scope and completion rules.
+deskops runtime template deskops-tester --root . --harness claude \
+  --mode tester --task task-fix-thing --agent deskops-t-0123456789ab \
+  --task-root . --run-dir runs/subagents/20261110-120000-task-fix-thing-testing
 ```
 
 `runtime template` needs no live Herdr Space: it writes the template files from
 the role and runtime-profile docs. `--mode executor` writes the agents.md for one
-bounded task; `--mode coordinator` writes it for an agent that owns a desk (the
-default follows the role name). With `--task` and `--agent` it also records a
-RunDoc under `runs/subagents/`; `--task-root` names the repository whose desk
-owns the task (default `--root`) and `--run-dir` reuses an existing evidence
-directory instead of a new `runs/subagents/<ts>-<task>`.
+bounded task, `--mode tester` writes the independent verification instructions,
+and `--mode coordinator` writes it for an agent that owns a desk. An explicit
+mode always wins; otherwise only the selected role's own name/id is inspected
+(a name or id ending in `-tester` chooses tester; a selected name or id naming a
+supervisor/coordinator chooses coordinator; anything else executor). With
+`--task` and `--agent` it also records the in_progress RunDoc launch intent under
+`runs/subagents/`; its summary says it is intent, not proof of start.
+`--task-root` names the repository whose desk owns the task (default `--root`)
+and `--run-dir` points at the evidence directory. An existing RunDoc is reused
+for reconciliation but never overwritten: a retry gets a new run_dir, and
+attempts and their evidence are immutable.
+
+`--context-file` accepts JSON with exactly `project`, `workspace_root`,
+`desk_root`, `source_root` and `sldb_root`. `project` is a non-empty Scion slug
+or UUID, never a filesystem path; the other four are absolute directories inside
+`workspace_root`, where `desk_root` contains `desk/`, `source_root` contains the
+`deskops` package and `sldb_root` is sldb's `src` directory. Missing, unknown,
+relative, out-of-workspace or invalid values are refused before any template is
+written. A valid context emits `DESKOPS_DESK_ROOT`, `DESKOPS_SOURCE_ROOT`,
+`DESKOPS_SLDB_SOURCE_ROOT`, `DESKOPS_WORKSPACE_ROOT`, `DESKOPS_SCION_PROJECT`
+and `PYTHONPATH=source_root:sldb_root`, plus a volume whose source and target are
+`workspace_root`. It carries no secrets. Omitting the flag preserves CLI, path
+and environment compatibility; the corrected prompt text is intentionally not
+byte-identical to the faulty earlier wording.
+
+The coordinator derives a stable child identity from the task contract:
+`deskops-e-<12hex>` for an executor or `deskops-t-<12hex>` for a tester, where
+the hex is SHA-256 of `task_id + NUL + contract_sha256 + NUL + role`.
+`contract_sha256` is the SLDB `TaskDoc.__contract__` digest. Attempt 1 uses the
+base name, attempt 2 appends `-a2`, and there is no attempt 3; labels are
+`deskops.task_id`, `deskops.contract_sha256`, `deskops.role` and
+`deskops.attempt`. The runtime helper `scion_child_identity(task_path, role,
+attempt)` returns that name and label set, and `scion_start_argv` builds the
+explicit native start argv. These helpers only derive identity/argv; native
+Scion orchestration remains Scion, not a DeskOps scheduler.
+
+Native labels must be printable ASCII and at most 63 characters. The helper
+preserves the full canonical task id and 64-hex contract hash in its returned
+identity and name derivation; `deskops.contract_sha256` carries the 63-hex prefix.
+A long or non-ASCII task-id label uses a bounded hash descriptor while TaskDoc
+and RunDoc retain the full id. Copy the helper label map exactly rather than
+pasting a full 64-hex digest into `--label`.
+
+The generated coordinator reconciles its own existing executor/tester lanes and
+completed handoffs before selecting new work; a restart or successful child
+completion must not skip its own task or duplicate a child. It reads Scion
+activity first and phase only as fallback, because the native bridge can report
+`activity=completed` while `phase=running`. A dependency-ready task missing its
+preflight/bundle receipt is routine work: run the cheap context review and
+adjudicate factual findings before dispatch. Implementation and validation run
+from the configured `desk_root`, with template artifacts and evidence under the
+assigned desk `runs/` path rather than `/tmp`. Closeout runs
+`deskops closeout verify`, reviews the diff, and commits only scoped
+implementation/evidence/review paths with `closeout commit --paths` (never
+`git add -A`). The coordinator signals `task_completed` only after all authorized
+work is closed, declared evidence verified and required phase integration/commit
+done; an external blocker is recorded and signalled as blocked, and only an
+actual owner decision uses `ask_user`.
 
 `runtime supervise` never answers a blocked agent's prompt and never advances a
 task on a done settle. A human or supervisor decides what happens next.
@@ -889,8 +955,18 @@ deskops review status task-fix-thing --root .
 deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
 ```
 
-An unchanged input is not reviewed again: `status` reports it as `reviewed`, and
-a second run does not call the model. `--max-attempts` (default 2) caps the good
+An unchanged input is not reviewed again; a second run does not call the model.
+`review status` compares the SHA-256 of the exact current builder input bytes
+with all receipts for the key. No receipts means `missing`; receipts with no
+matching input mean `stale`, regardless of their old verdict. Among matching
+receipts, priority is `accepted`, `rejected`, `pending` (reported as `reviewed`),
+then `incomplete` (reported as `technical_failure`). A current accepted
+receipt therefore survives later rejected or failed attempts. Task subjects
+use the same task id whether plain or pinned with a SHA-256 anchor. Status
+preserves receipts and run evidence and does not change lifecycle gates.
+See [the source atom](../desk/atoms/workflow-model/atom-review-status-preserves-current-dispositions.md).
+
+`--max-attempts` (default 2) caps the good
 attempts per key; `--force --reason` is the only way to re-review a key whose
 input already has a good attempt. A transport failure (non-zero exit, timeout,
 or output without `REFORMULACION`) is recorded with `technical_ok: false` and a
@@ -913,9 +989,22 @@ an existing file inside the root; anything else fails with
 and `goldens` need at least one `--evidence`; `owner` may carry only `--reason`.
 `input_sha256` is the SHA-256 of `<path>\n<content>\n` for each evidence file,
 paths relative to the root, sorted and without repeats (empty without evidence).
-`--kind` accepts only `reproduction`, `goldens` and `owner`: `preflight`,
-`bundle` and `node` come from their own command. `deskops review dispose
-<review-id>` writes the verdict.
+`--kind` accepts `reproduction`, `goldens`, `owner`, `preflight` and `bundle`;
+`node` comes from its own command. `deskops review dispose <review-id>` writes
+the verdict.
+
+A desk with no model to run the reviewer (the CI scenarios, the quickstart) can
+still activate a task: whoever operates it records the `preflight` and `bundle`
+receipts by hand. `--operator <name>` is required for those two kinds; without
+it the command fails and writes nothing. The receipt keeps `engine: human`,
+names the operator as its `actor`, and says `no model available` in its title
+and `summary`, so nobody mistakes it for a model review. It is not a stand-in
+for `deskops review preflight|bundle` on a desk where the model runs.
+
+```bash
+deskops review record task-fix-thing --kind preflight --operator "Ana" --evidence desk/tasks/task-fix-thing.md --reason "read the contract; no ambiguity" --root .
+deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+```
 
 ## Verb coverage
 

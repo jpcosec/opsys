@@ -57,6 +57,7 @@ def _format_record(data: dict[str, Any]) -> str:
         f"review: {data['review_id']}\n"
         f"evidence: {', '.join(data['evidence']) if data['evidence'] else '(none)'}\n"
         f"input_sha256: {data['input_sha256']}"
+        + (f"\nengine: human; operator: {data['operator']}; {data['no_model_reason']}" if data.get("no_model_reason") else "")
     )
 
 
@@ -130,7 +131,9 @@ class ReviewCLI:
 
     def _record(self, service: ReviewService, args: Any, fmt: str) -> int:
         try:
-            result = service.record_receipt(args.task, args.kind, list(args.evidence or []), args.reason)
+            result = service.record_receipt(
+                args.task, args.kind, list(args.evidence or []), args.reason, getattr(args, "operator", None)
+            )
         except (DomainError, UsageError) as exc:
             return render_error(str(exc), fmt, type_name=type(exc).__name__, text=f"Error: {exc}", code=exc.exit_code)
         return render(result, fmt, _format_record)

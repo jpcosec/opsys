@@ -67,7 +67,7 @@ def test_advance_task_keeps_nested_h3_sections_inside_scope(lifecycle_desk: Path
     payload = {
         "id": "task-nested-active",
         "title": "Nested Active",
-        "status": "active",
+        "status": "draft",
         "why": "Why.",
         "goal": "Goal text.",
         "scope": (

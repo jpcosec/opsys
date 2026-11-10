@@ -1,0 +1,36 @@
+name: review-task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas-preflight-3
+path: desk/reviews/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/preflight-3.md
+source_hash: 025f8a1c50ae8f9ae4296ef26d90f81ebc3283f950d7c07f1a142c0f18d460ed
+content_hash: 8855811169187358b8256ac61f01a5d20fa967255aec8c7ed04f4e6b69a4ee15
+field_hashes:
+  id: 6056e4374e403529ecfeb76290545f8d34c1cf03c77e09a3070dd3acdcf46449
+  title: 9b8f25d57ec3b8623e3cde05062b0f43e20c33dbbd3c9576e05cf1a84925f554
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: d997c1373bc040d3aef610e3a22f2421ead4305e76910e034021bccd40f33726
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: c8b6c9079ded652ca0885084a8f81e99cc7c37422e59c172e63223f394dbd137
+  input_sha256: f4f31248895e55e1f4c67397c8346ac62651d93edac89850a0475bdf45a0fd5f
+  output_sha256: 231670358893df8a56e5c40e164f4715cd5db8256e2b38ebdddf9bf5eda93a68
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 1a425df48360431425f758f9b650f14ad4c9abd06a08cee0699690c3495422f1
+  created_at: 370a65097a0cfc0b2f70899fac84cdfea45fcc0fa51793e5fb280fc44115af67
+  disposed_at: ed0cd2671bae3455c12799af921bdc2a555df7f195370dd8389bd4b0a4f58904
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 95db6c6f72d1da003af5873b59db4dc08ca3fbfbfaff9c5c1e6907c2b4039c0e
+  disposition: 00ed8ab9f396388eb58e4ab1ff26ad029fa54b3dd99a85e95e15f88e3520cc40
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T09:52:19Z'
+  authority: generated
+  via: save_document_payload

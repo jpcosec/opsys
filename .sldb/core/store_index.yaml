@@ -284,6 +284,18 @@ models:
   - source.document.markdown
   - type.workflow.review
   - workspace.desk.runs
+- name: RuleDoc
+  model_ref: sldb.models.rule_doc:RuleDoc
+  path: /mnt/ssd/proyectos/SLDB_1/sldb-runtime/src/sldb/models/rule_doc.py
+  models_index: .sldb/core/models/RuleDoc.yaml
+  version: 1
+  canonical: false
+  family: rule
+  semantics:
+  - layer.governance
+  - representation.markdown
+  - source.document.markdown
+  - type.rule
 predicates:
 - name: has_model
   axis: WHAT
@@ -336,4 +348,4 @@ predicates:
   description: A composed field of the source (`__compositions__`) renders this document's
     payload into the source's text; the edge carries the composed field, the field
     holding the refs and the ref as authored.
-store_hash: 866e669b2de5b4e01417d5115594bb883a55e01ea7fc014dbee85c10e4d49d36
+store_hash: 3a524dd2f7341dc4a52ca7d950651581ff8c93d421f2d7517ef28293342d8d2c

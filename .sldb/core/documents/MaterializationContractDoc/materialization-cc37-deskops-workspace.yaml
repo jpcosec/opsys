@@ -1,0 +1,25 @@
+name: materialization-cc37-deskops-workspace
+path: desk/materializations/materialization-cc37-deskops-workspace.md
+source_hash: ed0e2e67d81a26fb2b6fc28a40f837b4bc407c9622f61a3b5c2cad891795122e
+content_hash: 3216716f819cf3f84116b75ac7733ef5b5a17ab2f8b8007025465fa51f67c496
+field_hashes:
+  id: cb4f8be2af7ee8bf1bfb5078e68c050d52d54912317affd25ab4b40a6787bbe0
+  title: 9a7eae0e96c1b17b986fe643002ec19fbb6a73d7314aa09027aabc3e18c559c0
+  source_atoms: 17e0b23d3b116626a00ac503870f2a18598526257828af0d0dfb49fcb42337a7
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: fed5d3b4795f7a8690e9aea30c66045fc988230680e1002ab9a34e25f60b9184
+  intent: bc2b24493e2c7a9a61a63282c0c42cb14a95939ff9a419c5e19255306ef61120
+  validation: 814684c3c73e3f54d3b0fa54a96fb99f480c3854022a11515cce01c3f685a9ee
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-10T10:31:35Z'
+  authority: generated
+  via: create_document

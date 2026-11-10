@@ -1,0 +1,27 @@
+{
+  "links": [],
+  "models": [],
+  "predicates_changed": false,
+  "tracked": [
+    "desk/inbox/inbox-note-closeout-commit-sin-paths-dice-nothing-staged-aunque-el-cli-dejó-cambios.md",
+    "desk/inbox/inbox-note-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr.md",
+    "desk/inbox/inbox-note-decisión-el-venv-de-sldb-1-importa-deskops-y-sldb-de-worktrees-runtime-sobre-origin-main.md",
+    "desk/inbox/inbox-note-decisión-revisable-por-jp-review-record-firma-preflight-bundle-humano-contradice-pill-zero-context-p.md",
+    "desk/inbox/inbox-note-nombres-de-tarea-con-acentos-git-cita-las-rutas-y-el-hook-de-wt-las-rechaza.md",
+    "desk/runtimes/runtime-pi-deepseek-flash.md",
+    "desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md",
+    "desk/tasks/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob.md",
+    "desk/tasks/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22.md",
+    "desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md",
+    "desk/tasks/task-scion-autonomy-coordinator-contract.md"
+  ],
+  "generated": [],
+  "undeclared": [],
+  "missing": [],
+  "scaffold": {
+    "created": [],
+    "rewritten": [],
+    "present": [],
+    "conflicts": []
+  }
+}

@@ -1,11 +1,11 @@
 name: deskops-supervisor
 path: desk/roles/deskops-supervisor.md
-source_hash: a57e98078da0d33e88ad59b9650162d76dc051a5fcf37750bb68db18eb7b6d7d
-content_hash: 92c454f37bd0e3c78522d9ebf696096eb4b7c245661985a1e7564477d053eb9d
+source_hash: ad3ce028c7b48179b0132c678e2e16ae4d42681f58e5ca32dd57a94965a3d363
+content_hash: c1adcc4ebfe13bc60878761adc216035ce1ae39647f0d3a2bf2066bafe39d298
 field_hashes:
   id: a72c8291e98c725136452df047b6fbc248acc73bd2a6d98575b266624db1678d
   name: 8537fadb7b35983cfe3a8088b7167efb122ece5ec3959bffbd815e3c7253c38b
-  description: 1e75df8af46f774b735769432ed5dce8ab76b8e2f7bfccdd77413c5fb49e79f3
+  description: 71394dbf2ba5cf7b395b0b6870404b3dd1840dcee59dcb6dbe83cb5a29e28d31
   kind: d9470c6b3069cf135b35c8e1f67317837d889fee4a894ec293ab09ae3f352716
   model: d36d54f69cea83247d05c2991682a2a7d0b82072cc78e7c6c6eeb1ab34fd0376
   fallback_models: c2cb79a791978fa77c0e3a29f3a0b99e2370970fbd8bc75a0f46a3bdfc384368
@@ -14,9 +14,14 @@ field_hashes:
   inherit_project_context: b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b
   inherit_skills: b5bea41b6c623f7c09f1bf24dcae58ebab3c0cdd90ad966bc43a45b44867e12b
   default_context: b1e5780cb6ded9edcf5bac26c937adb4aa3023ab34d951398d5b4bed5ae4e115
-  body: 8cb4afa4b44dbcc5f80113b3c9093937a5f9e9bf4e881b5b0acf47564c87f649
+  body: 6aecab6439ecc16f0cacd450d82d0bd618c7566f3950dfdabb12fff273315385
 semantic_tags:
 - representation.markdown
 - source.document.markdown
 - type.workflow.role
 - workspace.desk.roles
+provenance:
+  by: agent
+  at: '2026-11-10T17:16:51Z'
+  authority: generated
+  via: update_document

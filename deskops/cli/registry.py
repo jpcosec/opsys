@@ -760,6 +760,8 @@ and a ReviewDoc receipt under desk/reviews/. `--engine` names a RuntimeProfileDo
 (default runtime-pi-deepseek-flash). An unchanged input is not reviewed again; `--max-attempts` (default 2)
 caps good attempts per key unless --force --reason. `record` writes a reproduction, goldens or owner
 receipt from evidence the operator names, without calling the model; `dispose` gives it the verdict.
+Where no model is available (CI scenarios, the quickstart), `record --kind preflight|bundle --operator`
+writes a human receipt that says so.
 """.strip(),
             raw_text=True,
             subcommand_dest="review_command",
@@ -868,22 +870,26 @@ Example:
         ),
         Command(
             path=("review", "record"),
-            help="Record a reproduction, goldens, or owner receipt from operator evidence (no model call).",
+            help="Record a reproduction, goldens, owner, preflight, or bundle receipt from operator evidence (no model call).",
             args=(
                 A("task", help="Task selector."),
                 A(
                     "--kind",
-                    choices=("reproduction", "goldens", "owner"),
+                    choices=("reproduction", "goldens", "owner", "preflight", "bundle"),
                     required=True,
-                    help="Receipt kind; preflight, bundle, and node come from their own review command.",
+                    help="Receipt kind; node comes from its own review command. A recorded preflight or bundle is a human receipt (engine human), not a model review.",
                 ),
                 A(
                     "--evidence",
                     action="append",
                     default=[],
-                    help="Existing file inside the root (repeatable); required for reproduction and goldens.",
+                    help="Existing file inside the root (repeatable); required for every kind but owner.",
                 ),
                 A("--reason", required=True, help="What the operator checked; recorded in the ReviewDoc."),
+                A(
+                    "--operator",
+                    help="Name of the human who reviewed; required for preflight and bundle, recorded as the receipt's actor.",
+                ),
                 ROOT_ARG,
                 OUTPUT_FORMAT_YAML_ARG,
             ),
@@ -893,9 +899,12 @@ Example:
 Example:
   deskops review record task-fix-thing --kind reproduction --evidence runs/repro.log --reason "..." --root .
   deskops review record task-fix-thing --kind owner --reason "approved by the owner" --root .
+  deskops review record task-fix-thing --kind preflight --operator "Ana" --evidence desk/tasks/task-fix-thing.md --reason "read the contract; no ambiguity" --root .
 
 The receipt is a ReviewDoc with verdict pending, engine human, and input_sha256 over the sorted
-evidence files; `deskops review dispose <review-id>` writes its verdict.
+evidence files; `deskops review dispose <review-id>` writes its verdict. A preflight or bundle
+recorded by hand requires --operator and says "no model available": it is for desks without a
+model (CI scenarios, the quickstart), never a stand-in for `deskops review preflight|bundle`.
 """.strip(),
             raw_text=True,
         ),
@@ -1840,9 +1849,20 @@ everything declared was found, else 1.
                 A("--task-repo", default=None, help="Repository under /workspace the agent may write to; named in agents.md."),
                 A(
                     "--mode",
-                    choices=("executor", "coordinator"),
+                    choices=("executor", "coordinator", "tester"),
                     default=None,
-                    help="Which agents.md to write: executor (one bounded task) or coordinator (owns a desk). Default: by role name.",
+                    help=(
+                        "Which agents.md to write: executor (one bounded task), tester (independent verification) "
+                        "or coordinator (owns a desk). Default: by the selected role's name/id; an explicit mode wins."
+                    ),
+                ),
+                A(
+                    "--context-file",
+                    default=None,
+                    help=(
+                        "JSON with project, workspace_root, desk_root, source_root and sldb_root; emits DESKOPS_* "
+                        "environment, PYTHONPATH and a workspace volume. Omitted: no context keys, previous behavior."
+                    ),
                 ),
                 A("--task", default=None, help="Task id being dispatched; with --agent, also records a RunDoc under runs/subagents/."),
                 A("--agent", default=None, help="Scion agent slug for the RunDoc (what you pass to `scion start`)."),

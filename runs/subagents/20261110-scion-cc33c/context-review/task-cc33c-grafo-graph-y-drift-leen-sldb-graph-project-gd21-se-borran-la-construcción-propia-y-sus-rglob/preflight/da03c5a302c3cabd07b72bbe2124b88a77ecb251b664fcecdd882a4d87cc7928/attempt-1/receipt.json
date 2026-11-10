@@ -1,0 +1,9 @@
+{
+  "key": "task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "da03c5a302c3cabd07b72bbe2124b88a77ecb251b664fcecdd882a4d87cc7928",
+  "output_sha256": "8871b603a45db5483bfe83148bcc7ada7d53747c162f3a4184a141b8f098b610",
+  "start": "2026-11-10T14:17:42.343018+00:00",
+  "end": "2026-11-10T14:17:59.144112+00:00"
+}

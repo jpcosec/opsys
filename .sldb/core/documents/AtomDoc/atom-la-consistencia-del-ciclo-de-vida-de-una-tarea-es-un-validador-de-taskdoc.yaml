@@ -1,0 +1,22 @@
+name: atom-la-consistencia-del-ciclo-de-vida-de-una-tarea-es-un-validador-de-taskdoc
+path: desk/atoms/atom-la-consistencia-del-ciclo-de-vida-de-una-tarea-es-un-validador-de-taskdoc.md
+source_hash: 9f69ffb620c724e6a4d799c22b6a30764fff5825f0de271a9db4985dadaa109b
+content_hash: d77dae5879b8af35eb6da9f651d8d2c34b1dea44c0f1c5481d065b2485554d06
+field_hashes:
+  id: 7e8d2d4da0a4a4a87b89021f4b40be299137b90796d53e93a19d5cfa65cb0334
+  title: 258b7306ea781464124526341c78099c54f577c7d2da112c2567f72f70640444
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 1e12e63ce715e42ee47bdeeb6f939f9123689e694c3f4ea9bc1f6ffb5174cfa8
+  tags: 56d7cea4a80b5533f876106383ea4c699b24d57431c370914d76f0b10271ee08
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:lifecycle
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-10T10:31:27Z'
+  authority: generated
+  via: create_document

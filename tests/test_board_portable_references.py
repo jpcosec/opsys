@@ -32,6 +32,9 @@ CONTEXT = [
 ] + [
     ('RitualDoc', name, f'desk/rituals/{name.removeprefix("ritual-")}.md')
     for name in RITUALS
+] + [
+    # e80e8c0a routed this ritual by path; the Board names it by its tracked name, as the atom asks.
+    ('RitualDoc', 'context-review', 'desk/rituals/context-review.md'),
 ]
 
 
@@ -40,6 +43,17 @@ def copy_context(root):
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(ROOT / relative, destination)
+
+
+def test_the_copied_context_is_everything_the_real_board_routes():
+    """The test copies the real Board: its pills and rituals must all be in CONTEXT."""
+    import yaml
+
+    text = (ROOT / 'desk/tasks/Board.md').read_text(encoding='utf-8')
+    board = yaml.safe_load(text.split('---', 2)[1])
+    routed = set(board['pills']) | set(board['rituals'])
+    copied = {name for _, name, _ in CONTEXT} | {relative for _, _, relative in CONTEXT}
+    assert routed <= copied, sorted(routed - copied)
 
 
 def test_linked_board_context_belongs_to_provider_despite_consumer_path_collisions(tmp_path):
@@ -65,7 +79,7 @@ def test_linked_board_context_belongs_to_provider_despite_consumer_path_collisio
     assert {edge.target for edge in edges} == {
         f'sldb://document/provider:{model}:{name}' for model, name, _ in CONTEXT
     }
-    assert len(edges) == 11
+    assert len(edges) == len(CONTEXT)
 
 
 def test_local_graph_next_show_and_retirement_accept_portable_context(tmp_path, capsys):

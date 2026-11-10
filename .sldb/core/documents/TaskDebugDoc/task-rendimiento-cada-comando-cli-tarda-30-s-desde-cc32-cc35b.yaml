@@ -1,0 +1,39 @@
+name: task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b
+path: desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md
+source_hash: c96a9977dd7b751b310c55c5ee56a05ccccc8c161d2458bb53a25f4023c6362b
+content_hash: 4f0a4f108bd64c1032612a5470467b0f25c5115bd6a6bf64e1422c486f63d936
+field_hashes:
+  title: ac667daab82fdd450e1d6b8c056d691a0d98046742ff52b7b7017b3a34112956
+  id: 58be412796b9354ad0066f3a5b590f38d2fc42e6646b230d0899a28015641e44
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: 3a3e285d376837617e937b5adcb5daf0d0099f5470b1ed9ffc9c45a31234c411
+  goal: d6d4cf870e805ff6f245064cdc402c24862633c241f94b2e422972a6c61c4c0b
+  scope: 355eceeb4e6456ccbd35cf5a8eabcc075bf3f6233b307a888407b165ff68cdae
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: 6d72d521aef10d6b593d4ed852ad6369066e5e5dd91cc0a1edd2cf3ae9b0928f
+  implementation_path: c93f908c829f4a94c6c938bbc02476e1e02087bcf26d1f236c3f855d520b302b
+  validation: 412930c210808c14e3d13cb024e90bb813445385ea5a750449a43500bdca39f6
+  done_when: 781afa694e936535445d659db38c06fc07c8090cd1c7ab9713641aab35a3cd15
+  task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  from_drawer: 84aa35b707b8c836a439c484210aaf1cb5e17c957defa1a24c2bfe86edf07e07
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T02:37:18Z'
+  authority: generated
+  via: save_document_payload

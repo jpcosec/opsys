@@ -1,0 +1,41 @@
+{
+  "argv": [
+    "/home/robocop/.local/bin/pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--system-prompt",
+    "Revisor barato aislado, no ejecutas comandos ni herramientas. Solo usa el input explicitamente suministrado. Responde en español con REFORMULACION (resultado, repo, limites), AMBIGUEDADES (solo decisiones que faltan, con cita; ninguna si no hay), DRY-RUN (lecturas, cambios y validaciones hipoteticas), FUTURO (comprobaciones de implementacion, no confundir con ambiguedades). Maximo 450 palabras. No apruebes por un token: reformula el contrato completo.",
+    "--print",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-wt-scion-autonomy/runs/subagents/20261110-autonomy-coordinator-contract/context-review/bundle/b39ebe7b384a313932f457cb89773befb9c5ce49a1496c973e35db76e36946e3/attempt-1/input.md"
+  ],
+  "sha256": "b39ebe7b384a313932f457cb89773befb9c5ce49a1496c973e35db76e36946e3",
+  "model": "deepseek/deepseek-flash",
+  "selection": "Available verified cheap isolated profile; no expert substitution",
+  "sources": [
+    "desk/tasks/task-scion-autonomy-coordinator-contract.md",
+    "AGENTS.md",
+    "desk/tasks/Board.md",
+    "desk/rituals/execution.md",
+    "desk/rituals/testing.md",
+    "desk/rituals/closeout.md",
+    "desk/rituals/context-review.md",
+    "desk/contexts/pill-005-subagent-execution.md",
+    "desk/drawer/tasks/task-scion-autonomy-coordinator-contract.md",
+    "desk/roles/deskops-supervisor.md",
+    "desk/roles/deskops-tester.md",
+    "deskops/runtime/scion.py",
+    "tests/test_scion_runtime.py"
+  ],
+  "returncode": 0
+}

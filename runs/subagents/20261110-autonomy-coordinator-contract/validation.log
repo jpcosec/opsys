@@ -1,0 +1,2 @@
+$ PYTHONPATH=/mnt/ssd/proyectos/SLDB_1/deskops-wt-scion-autonomy:/mnt/ssd/proyectos/SLDB_1/sldb/src /mnt/ssd/proyectos/SLDB_1/.venv/bin/python -m pytest tests/test_scion_runtime.py tests/test_command_registry.py tests/test_output_goldens.py::test_help_goldens -q
+..........................exit=143

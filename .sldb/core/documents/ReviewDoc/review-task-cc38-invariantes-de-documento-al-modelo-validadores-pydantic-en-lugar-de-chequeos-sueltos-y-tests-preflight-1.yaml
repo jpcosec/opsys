@@ -1,11 +1,13 @@
 name: review-task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests-preflight-1
 path: desk/reviews/task-cc38-invariantes-de-documento-al-modelo-validadores-pydantic-en-lugar-de-chequeos-sueltos-y-tests/preflight-1.md
 source_hash: e369f0add0faf24700c4170e9d6746987ff1b84b90d90a72f4fba9f4a04384d0
-content_hash: 9f165f95bbcd20b9a21f76fd29a709b17f7ebaf0cbf5d36268410742c54558cd
+content_hash: 59f7abd69e3130b929cd1aca2e828a6ab2bf46658bcf1e5ff025f160d8251a69
 field_hashes:
   id: a0508076a7a24a5ed560cb0ca10e67186ba1c406323c329f72e989a13b4568a9
   title: d9540b42bbada16493e0819f1e17ec55627a46d6018ee76ecc76acd165d50304
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: c6529c466c5c4fc7d68135ef2da475ce2343a477c1058ace818d0609f0dd830e
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

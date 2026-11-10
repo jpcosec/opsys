@@ -638,9 +638,23 @@ def _task_type_migration_plan(root: Path) -> list[dict]:
                 "target_cls": target,
                 "target_name": target.__name__ if target is not None else "TaskDoc",
                 "unknown": bool(raw) and raw not in registry and raw not in LEGACY_TASK_TYPE_MAP,
+                "lifecycle_errors": _task_lifecycle_errors(path),
             }
         )
     return plan
+
+
+def _task_lifecycle_errors(path: Path) -> list[str]:
+    """Why the task's lifecycle is inconsistent (``TaskDoc``'s validator); such a task is not written (CC37)."""
+    from deskops.models.task_lifecycle import lifecycle_errors
+
+    data = (_task_frontmatter(path) or ({}, ""))[0]
+    history = data.get("history") or []
+    return lifecycle_errors(str(data.get("status") or ""), str(data.get("current_node") or ""), [str(h) for h in history] if isinstance(history, list) else [str(history)])
+
+
+def _inconsistent_task_line(item: dict, rel: str) -> str:
+    return f"inconsistent task lifecycle in {rel}, not written: {'; '.join(item['lifecycle_errors'])}"
 
 
 def pending_task_type_migration(root: Path) -> list[str]:
@@ -652,6 +666,9 @@ def pending_task_type_migration(root: Path) -> list[str]:
     for item in _task_type_migration_plan(root):
         path = item["path"]
         rel = path.relative_to(root).as_posix()
+        if item["lifecycle_errors"]:
+            lines.append(_inconsistent_task_line(item, rel))
+            continue
         tracked_model = None
         if store_dir.exists():
             status = doc_status(store_dir, rel)
@@ -706,6 +723,9 @@ def migrate_task_types(root: Path) -> list[str]:
     for item in _task_type_migration_plan(root):
         path = item["path"]
         rel = path.relative_to(root).as_posix()
+        if item["lifecycle_errors"]:
+            changes.append(_inconsistent_task_line(item, rel))
+            continue
         tracked_model = None
         if store_dir.exists():
             status = doc_status(store_dir, rel)

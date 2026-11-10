@@ -20,16 +20,16 @@ def test_desk_update_command(tmp_path: Path):
 
     # Create untracked file
     untracked_path = desk_dir / "tasks" / "task-untracked.md"
-    untracked_path.write_text("---\nid: task-untracked\nstatus: active\ntags: []\n---\n# Untracked\n\n## Rationale\n\n## Goal\n")
+    untracked_path.write_text("---\nid: task-untracked\nstatus: draft\ntags: []\n---\n# Untracked\n\n## Rationale\n\n## Goal\n")
 
     # Create tracked file then modify it to make hash stale
     tracked_path = desk_dir / "tasks" / "task-stale.md"
-    tracked_path.write_text("---\nid: task-stale\nstatus: active\ntags: []\n---\n# Stale\n\n## Rationale\n\n## Goal\n")
+    tracked_path.write_text("---\nid: task-stale\nstatus: draft\ntags: []\n---\n# Stale\n\n## Rationale\n\n## Goal\n")
     track_document_file(
         store_dir, "TaskDoc", tracked_path, name="task-stale",
         pythonpath=str(Path(__file__).resolve().parents[1]), force=True
     )
-    tracked_path.write_text("---\nid: task-stale\nstatus: active\ntags: []\n---\n# Stale modified\n\n## Rationale\n\n## Goal\n")
+    tracked_path.write_text("---\nid: task-stale\nstatus: draft\ntags: []\n---\n# Stale modified\n\n## Rationale\n\n## Goal\n")
 
     # Unregister a model
     store_idx = store_dir / "core" / "store_index.yaml"

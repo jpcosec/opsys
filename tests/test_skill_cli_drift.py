@@ -6,8 +6,8 @@ d35726a): a drawer item becomes an active task only through
 scanned trees may still document the removed command, and the use-deskops
 copies must document the authoring path that replaced it. (.pi/ is
 gitignored by design, so this guard reads the on-disk skill surfaces that
-agents actually load, tracked or not; the local `.pi` copy is skipped when
-that tree is absent, as in a clean checkout.)
+agents actually load, tracked or not; the local `.pi` use-deskops copy is
+checked when that file is on disk and is absent in a clean checkout.)
 
 Scanned surfaces are every SKILL.md under `.pi/skills`, `.agents/skills`, and
 `.opencode/skills`. README files are excluded by design because only SKILL.md
@@ -21,21 +21,19 @@ from __future__ import annotations
 
 from pathlib import Path
 
-import pytest
-
 ROOT = Path(__file__).resolve().parents[1]
 
 SKILL_TREES = (".pi/skills", ".agents/skills", ".opencode/skills")
 
-PI_SKILLS = ROOT / ".pi" / "skills"
-
 REMOVED_PROMOTION_TOKEN = "drawer-task-to-active-task"
 AUTHORING_FLAG = "from-drawer"
 
-USE_DESKOPS_COPIES = (
-    ROOT / ".pi" / "skills" / "use-deskops" / "SKILL.md",
-    ROOT / ".opencode" / "skills" / "use-deskops" / "SKILL.md",
-)
+# The `.opencode` copy is tracked and must always exist. The `.pi` copy is a local,
+# gitignored install (`.gitignore` ignores `.pi/`); `.pi/skills` itself can still exist in a
+# clean checkout because `.pi/skills/deskops-task-lifecycle/SKILL.md` is tracked (e80e8c0a),
+# so the local copy is checked when it is on disk, keyed on the file and not on the tree.
+TRACKED_USE_DESKOPS_COPY = ROOT / ".opencode" / "skills" / "use-deskops" / "SKILL.md"
+LOCAL_USE_DESKOPS_COPY = ROOT / ".pi" / "skills" / "use-deskops" / "SKILL.md"
 
 
 def _collect_skill_files() -> list[Path]:
@@ -67,13 +65,11 @@ def test_no_skill_document_contains_the_removed_promotion_command() -> None:
 
 
 def test_use_deskops_copies_document_the_from_drawer_authoring_path() -> None:
-    if not PI_SKILLS.is_dir():
-        pytest.skip(
-            ".pi/skills is gitignored and absent in a clean checkout; "
-            "the local use-deskops skill copy cannot be checked"
-        )
-    for copy in USE_DESKOPS_COPIES:
-        assert copy.is_file(), f"missing use-deskops skill copy: {copy}"
+    assert TRACKED_USE_DESKOPS_COPY.is_file(), f"missing use-deskops skill copy: {TRACKED_USE_DESKOPS_COPY}"
+    copies = [TRACKED_USE_DESKOPS_COPY]
+    if LOCAL_USE_DESKOPS_COPY.is_file():
+        copies.append(LOCAL_USE_DESKOPS_COPY)
+    for copy in copies:
         assert AUTHORING_FLAG in copy.read_text(encoding="utf-8"), (
             f"{copy.relative_to(ROOT)} does not document the "
             "`deskops add task --from-drawer` authoring path"

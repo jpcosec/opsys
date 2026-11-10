@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 from pathlib import Path
 import re
 import sys
@@ -18,16 +20,22 @@ if str(SLDB_SRC) not in sys.path:
 
 from deskops.cli.main import main
 from deskops.materializers.runtime_profiles import load_runtime_profiles
-from deskops.models import RunDoc
+from deskops.models import RunDoc, TaskDoc
 from deskops.runtime.scion import (
     TEMPLATE_FILES,
     find_role_doc,
+    load_scion_context,
     materialize_scion_template,
     pick_harness_config,
     record_scion_run,
+    scion_child_identity,
+    scion_start_argv,
     scion_template_files,
+    validate_scion_context,
 )
-from sldb.runtime.validation import extract_model_data
+from sldb.runtime.validation import extract_model_data, render_model_markdown
+from sldb.store.graph.language.contract_hash import contract_hash
+from sldb.store.hashing import hash_fields_with_map
 
 
 @pytest.fixture(scope="module")
@@ -192,4 +200,378 @@ def test_record_scion_run_writes_a_rundoc_that_roundtrips(tmp_path: Path) -> Non
     assert data["task_id"] == "task-close-serve"
     assert data["session_path"] == "scion://agent/sldb-close-serve"
     assert data["outcome"] == "in_progress" and data["ended_at"] == ""
+    assert "intent, not proof of start" in data["summary"]
     assert data["tags"] == ["system:deskops", "runtime:scion"]
+
+
+def test_record_scion_run_never_overwrites_a_previous_attempt(tmp_path: Path) -> None:
+    run_dir = "runs/subagents/20261029-000000-task-close-serve"
+    record_scion_run(
+        tmp_path,
+        task_id="task-close-serve",
+        role_id="role-deskops-executor",
+        kind="claude",
+        agent_slug="deskops-e-abc123abc123",
+        run_dir=run_dir,
+    )
+    original = (tmp_path / run_dir / "run.md").read_text(encoding="utf-8")
+    with pytest.raises(ValueError, match="immutable"):
+        record_scion_run(
+            tmp_path,
+            task_id="task-close-serve",
+            role_id="role-deskops-executor",
+            kind="claude",
+            agent_slug="deskops-e-abc123abc123-a2",
+            run_dir=run_dir,
+        )
+    assert (tmp_path / run_dir / "run.md").read_text(encoding="utf-8") == original
+
+
+def _task_payload(**updates) -> dict:
+    payload = {
+        "id": "task-contract-identity",
+        "title": "Identity test task",
+        "status": "draft",
+        "summary": "",
+        "tags": ["workspace:desk", "artifact:task"],
+        "current_node": "ritual-execution",
+        "history": [],
+        "references": ["tests/test_scion_runtime.py"],
+        "depends_on": [],
+        "pills": [],
+        "files": ["deskops/runtime/scion.py"],
+        "task_type": "task.code",
+        "inherits_from": [],
+        "inherit_acceptance_context": False,
+        "atoms": [],
+        "why": "Test why.",
+        "goal": "Test goal.",
+        "scope": "Test scope.",
+        "implementation_path": "Test implementation.",
+        "validation": ["pytest tests/test_scion_runtime.py"],
+        "done_when": "The test passes.",
+    }
+    payload.update(updates)
+    return payload
+
+
+def _write_task(tmp_path: Path, name: str, **updates) -> Path:
+    path = tmp_path / f"{name}.md"
+    path.write_text(render_model_markdown(TaskDoc, _task_payload(**updates)) + "\n", encoding="utf-8")
+    return path
+
+
+def test_identity_uses_the_canonical_sldb_contract_digest(tmp_path: Path) -> None:
+    path = _write_task(tmp_path, "task")
+    markdown = path.read_text(encoding="utf-8")
+    _, fields = hash_fields_with_map(TaskDoc, markdown)
+    expected_contract = contract_hash(TaskDoc, fields)
+    expected_name = "deskops-e-" + hashlib.sha256(
+        f"task-contract-identity\0{expected_contract}\0executor".encode("utf-8")
+    ).hexdigest()[:12]
+
+    identity = scion_child_identity(path, "executor")
+    assert identity["contract_sha256"] == expected_contract
+    assert identity["name"] == expected_name
+    assert identity["labels"] == {
+        "deskops.task_id": "task-contract-identity",
+        "deskops.contract_sha256": expected_contract[:63],
+        "deskops.role": "executor",
+        "deskops.attempt": "1",
+    }
+    assert scion_child_identity(path, "tester")["name"].startswith("deskops-t-")
+
+    attempt_2 = scion_child_identity(path, "executor", attempt=2)
+    assert attempt_2["name"] == expected_name + "-a2"
+    assert attempt_2["labels"]["deskops.attempt"] == "2"
+    for bad in (0, 3, True):
+        with pytest.raises(ValueError, match="attempt must be 1 or 2"):
+            scion_child_identity(path, "executor", attempt=bad)
+    with pytest.raises(ValueError, match="role must be"):
+        scion_child_identity(path, "coordinator")
+
+
+def test_identity_ignores_status_history_and_references_but_moves_with_contract(tmp_path: Path) -> None:
+    entry = scion_child_identity(_write_task(tmp_path, "entry"), "executor")
+    active = scion_child_identity(
+        _write_task(
+            tmp_path,
+            "active",
+            status="active",
+            current_node="ritual-testing",
+            history=["task_activates"],
+            references=["other.md"],
+            summary="Different summary",
+            tags=["workspace:desk", "artifact:task", "state:changed"],
+        ),
+        "executor",
+    )
+    finished = scion_child_identity(
+        _write_task(
+            tmp_path,
+            "finished",
+            status="closed",
+            current_node="complete",
+            history=["task_activates", "task_hands_to_closeout", "task_completes"],
+            references=[],
+        ),
+        "executor",
+    )
+    assert entry["name"] == active["name"] == finished["name"]
+    assert entry["contract_sha256"] == active["contract_sha256"] == finished["contract_sha256"]
+
+    changed_goal = scion_child_identity(_write_task(tmp_path, "goal", goal="A changed goal."), "executor")
+    changed_scope = scion_child_identity(_write_task(tmp_path, "scope", scope="A changed scope."), "executor")
+    assert changed_goal["name"] != entry["name"]
+    assert changed_scope["contract_sha256"] != entry["contract_sha256"]
+
+
+def test_start_argv_carries_explicit_project_workspace_auth_and_labels(tmp_path: Path) -> None:
+    identity = scion_child_identity(_write_task(tmp_path, "task"), "tester")
+    argv = scion_start_argv(
+        identity,
+        prompt="Verify the contract.",
+        project="sldb-1",
+        workspace="/workspace",
+        template="deskops-tester",
+    )
+    assert argv[:4] == ["scion", "start", identity["name"], "Verify the contract."]
+    assert "--type" in argv and argv[argv.index("--type") + 1] == "deskops-tester"
+    assert "--project" in argv and argv[argv.index("--project") + 1] == "sldb-1"
+    assert "--workspace" in argv and argv[argv.index("--workspace") + 1] == "/workspace"
+    assert "--harness-auth" in argv and argv[argv.index("--harness-auth") + 1] == "api-key"
+    assert "--non-interactive" in argv
+    labels = {argv[index + 1].split("=", 1)[0]: argv[index + 1].split("=", 1)[1] for index, item in enumerate(argv) if item == "--label"}
+    assert labels == identity["labels"]
+
+
+def _context(tmp_path: Path) -> tuple[dict, dict[str, Path]]:
+    workspace = tmp_path / "workspace"
+    desk_root = workspace / "repo"
+    source_root = workspace / "source"
+    sldb_root = workspace / "sldb" / "src"
+    for path in (desk_root / "desk", source_root / "deskops", sldb_root / "sldb"):
+        path.mkdir(parents=True)
+    context = {
+        "project": "sldb-1",
+        "workspace_root": str(workspace),
+        "desk_root": str(desk_root),
+        "source_root": str(source_root),
+        "sldb_root": str(sldb_root),
+    }
+    return context, {
+        "workspace": workspace,
+        "desk": desk_root,
+        "source": source_root,
+        "sldb": sldb_root,
+    }
+
+
+def test_context_emits_environment_volume_and_concrete_examples(tmp_path: Path) -> None:
+    context, paths = _context(tmp_path)
+    _, supervisor = find_role_doc(ROOT, "role-deskops-supervisor")
+    files = scion_template_files(
+        supervisor, load_runtime_profiles(ROOT)["claude"], harness="claude", mode="coordinator", context=context
+    )
+    agent = yaml.safe_load(files["scion-agent.yaml"])
+    assert agent["env"] == {
+        "DESKOPS_DESK_ROOT": str(paths["desk"]),
+        "DESKOPS_SOURCE_ROOT": str(paths["source"]),
+        "DESKOPS_SLDB_SOURCE_ROOT": str(paths["sldb"]),
+        "DESKOPS_WORKSPACE_ROOT": str(paths["workspace"]),
+        "DESKOPS_SCION_PROJECT": "sldb-1",
+        "PYTHONPATH": f"{paths['source']}:{paths['sldb']}",
+    }
+    assert agent["volumes"] == [{"source": str(paths["workspace"]), "target": str(paths["workspace"])}]
+    agents = files["agents.md"]
+    for fragment in (
+        f"--root {paths['desk']}",
+        f"--project sldb-1",
+        f"--workspace {paths['workspace']}",
+        "--type deskops-executor",
+        "--type deskops-tester",
+        "--harness-auth api-key",
+        "--non-interactive",
+        "--mode tester",
+        "scion_child_identity(task_path, role, attempt)",
+    ):
+        assert fragment in agents
+
+
+def test_omitted_context_keeps_the_template_without_env_or_volumes() -> None:
+    _, supervisor = find_role_doc(ROOT, "role-deskops-supervisor")
+    files = scion_template_files(supervisor, load_runtime_profiles(ROOT)["claude"], harness="claude")
+    agent = yaml.safe_load(files["scion-agent.yaml"])
+    assert "env" not in agent and "volumes" not in agent
+    assert "coordinator of the `<repo>` desk" in files["agents.md"]
+
+
+def test_context_rejects_missing_unknown_relative_and_out_of_workspace_paths(tmp_path: Path) -> None:
+    context, paths = _context(tmp_path)
+    assert validate_scion_context(context)["project"] == "sldb-1"
+
+    with pytest.raises(ValueError, match="missing required key"):
+        validate_scion_context({key: value for key, value in context.items() if key != "sldb_root"})
+    with pytest.raises(ValueError, match="unknown key"):
+        validate_scion_context({**context, "secret": "nope"})
+    with pytest.raises(ValueError, match="absolute path"):
+        validate_scion_context({**context, "desk_root": "repo"})
+    with pytest.raises(ValueError, match="inside workspace_root"):
+        validate_scion_context({**context, "desk_root": str(tmp_path / "outside")})
+    with pytest.raises(ValueError, match="slug or UUID"):
+        validate_scion_context({**context, "project": str(paths["workspace"])})
+    with pytest.raises(ValueError, match="containing desk/"):
+        validate_scion_context({**context, "desk_root": str(paths["workspace"])})
+    with pytest.raises(ValueError, match="containing the deskops package"):
+        validate_scion_context({**context, "source_root": str(paths["workspace"])})
+    with pytest.raises(ValueError, match="sldb src directory"):
+        validate_scion_context({**context, "sldb_root": str(paths["source"])})
+
+
+def test_load_context_validates_json_and_cli_writes_nothing_on_failure(tmp_path: Path, capsys) -> None:
+    context, _ = _context(tmp_path)
+    valid = tmp_path / "context.json"
+    valid.write_text(json.dumps(context), encoding="utf-8")
+    assert load_scion_context(valid)["desk_root"] == validate_scion_context(context)["desk_root"]
+
+    invalid = tmp_path / "invalid.json"
+    invalid.write_text(json.dumps({key: value for key, value in context.items() if key != "project"}), encoding="utf-8")
+    out_dir = tmp_path / "out"
+    code = main([
+        "runtime", "template", "role-deskops-executor", "--root", str(ROOT),
+        "--harness", "claude", "--out", str(out_dir), "--context-file", str(invalid),
+    ])
+    captured = capsys.readouterr()
+    assert code != 0
+    assert "missing required key" in captured.out + captured.err
+    assert not out_dir.exists()
+
+
+def test_tester_mode_is_autodetected_and_explicit_mode_wins() -> None:
+    profiles = load_runtime_profiles(ROOT)
+    _, tester = find_role_doc(ROOT, "role-deskops-tester")
+    auto = scion_template_files(tester, profiles["claude"], harness="claude", task_repo="deskops")
+    assert "independent tester" in auto["agents.md"]
+    assert "## Tester scope" in auto["agents.md"]
+    assert "## Completion" in auto["agents.md"]
+    assert "You are a deskops executor" not in auto["agents.md"]
+    assert "Do not run `deskops closeout`" in auto["agents.md"]
+
+    _, executor = find_role_doc(ROOT, "role-deskops-executor")
+    forced = scion_template_files(executor, profiles["claude"], harness="claude", mode="tester")
+    assert "independent tester" in forced["agents.md"]
+    explicit = scion_template_files(tester, profiles["claude"], harness="claude", mode="executor")
+    assert "You are a deskops executor" in explicit["agents.md"]
+
+    id_tester = {"id": "role-x-tester", "name": "custom reviewer", "description": "d", "kind": "claude", "body": "# t"}
+    assert "independent tester" in scion_template_files(id_tester, profiles["claude"], harness="claude")["agents.md"]
+    not_tester = {"id": "role-x", "name": "tester", "description": "d", "kind": "claude", "body": "# t"}
+    assert "You are a deskops executor" in scion_template_files(not_tester, profiles["claude"], harness="claude")["agents.md"]
+
+    id_coordinator = {"id": "role-x-coordinator", "name": "custom lead", "description": "d", "kind": "claude", "body": "# t"}
+    coordinator = scion_template_files(id_coordinator, profiles["claude"], harness="claude")
+    assert "coordinator of the" in coordinator["agents.md"]
+    explicit_executor = scion_template_files(id_coordinator, profiles["claude"], harness="claude", mode="executor")
+    assert "You are a deskops executor" in explicit_executor["agents.md"]
+
+
+def _normalized(text: str) -> str:
+    return " ".join(text.split())
+
+
+def test_coordinator_reconciles_activity_own_lanes_and_reviews_before_dispatch() -> None:
+    profiles = load_runtime_profiles(ROOT)
+    _, supervisor = find_role_doc(ROOT, "role-deskops-supervisor")
+    agents = _normalized(
+        scion_template_files(supervisor, profiles["claude"], harness="claude", task_repo="deskops")["agents.md"]
+    )
+    assert "Never answer an executor's or tester's question" not in agents
+    for fragment in (
+        "activity=completed with phase=running means the child completed",
+        "inspect activity=completed first and use phase only as fallback",
+        "Reconcile your OWN completed or stopped lane",
+        "must not skip your own task",
+        "If its preflight or bundle receipt is missing",
+        "routine coordinator work, not a human blocker",
+        "do not blanket-surface every question",
+        "closeout verify --task <id>",
+        "--paths <scoped implementation, evidence and review paths>",
+        "Never use `git add -A`",
+        "Only an actual owner decision uses `ask_user`",
+        "sciontool status task_completed",
+        "Do not push.",
+    ):
+        assert fragment in agents, fragment
+    assert "/tmp/scion" not in agents
+
+
+def test_all_three_modes_receive_the_actual_context_roots(tmp_path: Path) -> None:
+    context, paths = _context(tmp_path)
+    profiles = load_runtime_profiles(ROOT)
+    roles = {
+        "role-deskops-executor": "executor",
+        "role-deskops-tester": "tester",
+        "role-deskops-supervisor": "coordinator",
+    }
+    for role_id, mode in roles.items():
+        _, role = find_role_doc(ROOT, role_id)
+        files = scion_template_files(role, profiles["claude"], harness="claude", context=context)
+        agents = files["agents.md"]
+        assert str(paths["desk"]) in agents, mode
+        assert str(paths["source"]) in agents, mode
+        assert f"cd {paths['desk']}" in agents, mode
+        assert "/tmp/scion" not in agents, mode
+        agent = yaml.safe_load(files["scion-agent.yaml"])
+        assert agent["env"]["DESKOPS_DESK_ROOT"] == str(paths["desk"]), mode
+
+
+def test_cli_tester_mode_and_context_file_are_available(tmp_path: Path, capsys) -> None:
+    context, paths = _context(tmp_path)
+    context_file = tmp_path / "context.json"
+    context_file.write_text(json.dumps(context), encoding="utf-8")
+    out_dir = tmp_path / "tester-template"
+    code = main([
+        "runtime", "template", "role-deskops-tester", "--root", str(ROOT),
+        "--harness", "claude", "--out", str(out_dir), "--context-file", str(context_file),
+    ])
+    out = capsys.readouterr().out
+    assert code == 0, out
+    assert "independent tester" in (out_dir / "agents.md").read_text(encoding="utf-8")
+    agent = yaml.safe_load((out_dir / "scion-agent.yaml").read_text(encoding="utf-8"))
+    assert agent["env"]["DESKOPS_DESK_ROOT"] == str(paths["desk"])
+
+
+def test_executor_preserves_assigned_run_and_coordinator_commit_boundary(executor, profiles) -> None:
+    agents = scion_template_files(executor, profiles["pi"], harness="pi", task_repo="example")["agents.md"]
+    assert "Use the exact run_dir assigned by the coordinator" in agents
+    assert "preserve its existing RunDoc intent" in agents
+    assert "$(date" not in agents
+    assert "graph.txt" in agents
+    assert "Do not commit or close the task yourself" in agents
+
+
+def test_omitted_context_keeps_legacy_tool_root_separate_from_task_repo(profiles) -> None:
+    _, supervisor = find_role_doc(ROOT, "role-deskops-supervisor")
+    files = scion_template_files(supervisor, profiles["pi"], harness="pi", task_repo="example")
+    assert "cd /workspace/example" in files["agents.md"]
+    assert "--root /workspace/deskops" in files["agents.md"]
+    assert "env:" not in files["scion-agent.yaml"]
+
+
+@pytest.mark.parametrize("task_id", ["task-" + "a" * 58, "task-" + "b" * 59, "task-construcción"])
+def test_native_labels_fit_scion_without_changing_canonical_identity(tmp_path, task_id) -> None:
+    path = _write_task(tmp_path, "native-labels", id=task_id)
+    identity = scion_child_identity(path, "executor")
+    labels = identity["labels"]
+    assert identity["task_id"] == task_id
+    assert len(identity["contract_sha256"]) == 64
+    assert labels["deskops.contract_sha256"] == identity["contract_sha256"][:63]
+    assert len(labels) <= 16
+    assert all(len(k) <= 63 and len(v) <= 63 for k, v in labels.items())
+    assert all(all(0x20 <= ord(c) <= 0x7E for c in key + value) for key, value in labels.items())
+    if len(task_id) <= 63 and task_id.isascii():
+        assert labels["deskops.task_id"] == task_id
+    else:
+        assert labels["deskops.task_id"] == "t-" + hashlib.sha256(task_id.encode()).hexdigest()[:61]
+    expected = hashlib.sha256(f"{task_id}\0{identity['contract_sha256']}\0executor".encode()).hexdigest()[:12]
+    assert identity["name"] == "deskops-e-" + expected

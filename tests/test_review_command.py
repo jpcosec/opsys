@@ -57,7 +57,7 @@ sys.exit(0)
 
 def _env() -> dict[str, str]:
     env = dict(os.environ)
-    env["PYTHONPATH"] = str(ROOT)
+    env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(ROOT), env.get("PYTHONPATH"))))
     return env
 
 
@@ -446,3 +446,91 @@ def test_init_and_desk_update_seed_the_deepseek_flash_profile_idempotently(
     profile.write_text("# my own profile\n", encoding="utf-8")
     assert main(["desk", "update", "--apply", "--root", str(root)]) == 0
     assert profile.read_text(encoding="utf-8") == "# my own profile\n"
+
+
+@pytest.mark.parametrize(
+    ("receipts", "expected"),
+    [
+        ([], "missing"),
+        ([("old", "accepted"), ("old", "rejected"), ("old", "incomplete")], "stale"),
+        ([("current", "incomplete")], "technical_failure"),
+        ([("current", "incomplete"), ("current", "pending")], "reviewed"),
+        ([("current", "pending"), ("current", "rejected")], "rejected"),
+        ([("current", "accepted"), ("current", "rejected"), ("current", "pending"),
+          ("current", "incomplete"), ("old", "rejected")], "accepted"),
+        ([("old", "accepted"), ("current", "rejected")], "rejected"),
+    ],
+)
+def test_status_classifies_only_current_receipts_without_mutating_evidence(
+    lifecycle_desk: Path, receipts: list[tuple[str, str]], expected: str
+) -> None:
+    from deskops.cli.main import main
+    from deskops.services.review import ReviewService, _sha
+
+    root = lifecycle_desk
+    assert main([
+        "add", "task", "--title", "Status", "--goal", "review goal",
+        "--scope", "review scope", "--validation", "pytest", "--task-type", "task.code",
+        "--root", str(root),
+    ]) == 0
+    service = ReviewService(root)
+    task_path, task_id = service._resolve_task("task-status")
+    input_data, _, _ = service._preflight_input(task_path, task_id)
+    for index, (identity, verdict) in enumerate(receipts):
+        evidence = root / "runs" / "subagents" / f"receipt-{index}"
+        evidence.mkdir(parents=True)
+        (evidence / "input.md").write_bytes(input_data if identity == "current" else b"old input\n")
+        (evidence / "manifest.json").write_text(json.dumps({"profile": "test", "attempt": index}))
+        review_id, _ = service._write_review(
+            kind="preflight", subject=f"doc:TaskCodeDoc:{task_id}", subject_ref="",
+            engine="test", run_dir=evidence.relative_to(root).as_posix(),
+            input_sha256=_sha(input_data) if identity == "current" else _sha(b"old input\n"),
+            output_sha256=_sha(b"review output"),
+            verdict="pending" if verdict in {"accepted", "rejected"} else verdict, reason="test evidence",
+            node_id=None,
+        )
+        if verdict in {"accepted", "rejected"}:
+            service.dispose(review_id, verdict, "test disposition")
+    preserved = {
+        path: path.read_bytes()
+        for directory in (root / "desk" / "reviews", root / "runs")
+        if directory.exists() for path in directory.rglob("*") if path.is_file()
+    }
+    reports = {item["key"]: item for item in service.status("task-status")}
+    assert reports["task-status/preflight"] == {
+        "key": "task-status/preflight", "state": expected, "input_sha256": _sha(input_data),
+    }
+    assert reports["task-status/bundle"]["state"] == "missing"
+    assert all(path.read_bytes() == content for path, content in preserved.items())
+
+
+@pytest.mark.parametrize("tracked", [False, True], ids=["plain", "pinned"])
+def test_disposed_review_status_uses_task_identity(
+    lifecycle_desk: Path, fake_pi: tuple[Path, Path], tracked: bool
+) -> None:
+    root = lifecycle_desk
+    if not tracked:
+        shutil.rmtree(root / ".sldb")
+    _add_task(root, title="Identity")
+    result = _deskops(root, "review", "preflight", "task-identity", "--run", "identity")
+    assert result.returncode == 0, result.stdout + result.stderr
+    doc = _review_docs(root)[0]
+    assert doc["subject"].startswith("doc:TaskCodeDoc:task-identity" if tracked else "doc:TaskDoc:task-identity")
+    disposed = _deskops(root, "review", "dispose", doc["id"], "--verdict", "accepted", "--reason", "correct")
+    assert disposed.returncode == 0, disposed.stdout + disposed.stderr
+    subject = _review_docs(root)[0]["subject"]
+    if tracked:
+        # GO07 pins the actual stored subject on disposition, not a parser fixture.
+        assert "@sha256:" in subject
+    else:
+        assert "@" not in subject
+    for target in [("task-identity",), ()]:
+        status = _deskops(root, "review", "status", *target, "--format", "json")
+        assert status.returncode == 0, status.stdout + status.stderr
+        report = next(item for item in json.loads(status.stdout) if item["key"] == "task-identity/preflight")
+        assert report["state"] == "accepted"
+    edit = _deskops(root, "edit", "task", "task-identity", "goal", "changed input")
+    assert edit.returncode == 0, edit.stdout + edit.stderr
+    status = _deskops(root, "review", "status", "task-identity", "--format", "json")
+    assert status.returncode == 0, status.stdout + status.stderr
+    assert next(item for item in json.loads(status.stdout) if item["key"] == "task-identity/preflight")["state"] == "stale"

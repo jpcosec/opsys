@@ -1,0 +1,22 @@
+Implemented the T2 correction within the existing task scope.
+
+Key changes:
+- Reconcile Scion **activity before phase**, own executor/tester lanes before selecting new work.
+- Missing preflight/bundle receipts are now routine coordinator review work, not a human blocker.
+- Removed blanket “surface every question”; only real owner/ownership/credential decisions escalate.
+- Executor/tester commands `cd` to configured `desk_root`; source roots are imports only.
+- Run-intent examples use assigned desk `runs/` evidence, not `/tmp`.
+- RunDoc summary is truthful launch intent, not proof of start; existing RunDocs are reused, never overwritten.
+- Closeout explicitly runs `verify`, reviews diff, and commits scoped `--paths` only; no `git add -A`.
+- Coordinator signals `task_completed` only after phase completion; blockers signal `blocked`.
+- Strict tester autodetection is selected name/id ending `-tester`; coordinator autodetection checks name or id. Explicit mode wins.
+- Updated the atom and supervisor RoleDoc through SLDB first, then matching code/docs/CHANGELOG.
+- Verified finding 6: all three renderers receive actual context; added coverage.
+
+Validation:
+- `pytest tests/test_scion_runtime.py tests/test_command_registry.py -q`
+- **28 passed, 1 pre-existing warning, exit=0**
+- Logs: `validation-correction.log`, `validation-correction-stderr.log`
+- Full help-golden suite was not rerun, per instruction; its prior genuine pass and unchanged fixtures remain valid.
+
+Handoff written to `runs/subagents/20261110-autonomy-coordinator-contract/result-summary.md`. No Scion launch, closeout, commit, push, or cross-repo change. Live integration remains parent-owned.

@@ -1,0 +1,9 @@
+{
+  "key": "task-scion-autonomy-review-status/preflight",
+  "state": "reviewed",
+  "input_sha256": "ef3c38e95b3a477fdeb7ed81840f7bf92339faebce2092949e15ebd3d36cf762",
+  "review_id": "review-task-scion-autonomy-review-status-preflight-1",
+  "review_path": "desk/reviews/task-scion-autonomy-review-status/preflight-1.md",
+  "run_dir": "runs/subagents/20261110-autonomy-review-status/context-review/task-scion-autonomy-review-status/preflight/ef3c38e95b3a477fdeb7ed81840f7bf92339faebce2092949e15ebd3d36cf762/attempt-1",
+  "technical_ok": true
+}
