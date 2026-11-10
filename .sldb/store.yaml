@@ -82,6 +82,8 @@ models:
 - name: ReviewDoc
   model_ref: deskops.models:ReviewDoc
   path: deskops/models/review.py
+- name: RuleDoc
+  model_ref: sldb.models.rule_doc:RuleDoc
 predicates:
   applies_to_source:
     axis: WHAT
