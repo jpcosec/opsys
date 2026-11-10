@@ -1,11 +1,13 @@
 name: review-task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra-preflight-1
 path: desk/reviews/task-cc35a-transacción-toda-escritura-por-sldb-api-transaction-doc-io-py-se-borra/preflight-1.md
 source_hash: 71fe60954a6db8a50cc4ec2d2aa2cdbcf65455bb61a31d52eff96ed49777ffa0
-content_hash: 4231d5a70c4488de281db13cc34b3710570d5ed94ec8d94e4b5a5a65c15ec3e8
+content_hash: 2c00c38cb617256254ff3cb323a709bf3af28ad9e32fd88628aef92f00932080
 field_hashes:
   id: 9efc58c02c50a5ede531f65767b33cc09bc5d38069f2b73eb9a8377b025004c3
   title: 78ab58ff1df7c47c2ba2e1a5fa8b030cd83e25fa35cda360bb6889d3bfe4d837
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 96e3f5effa599c4ea9ed79b85fc072e71f4b042066103619479ccb389cf2a9c3
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

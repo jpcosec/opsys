@@ -1,11 +1,13 @@
 name: review-task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files-preflight-1
 path: desk/reviews/task-closeout-el-gate-de-tests-acepta-py-bajo-cualquier-tests-del-repo-o-declarados-en-files/preflight-1.md
 source_hash: 11d1c2f79728d514293858b3bdbe6f15723bebb820f3ce0218716b07205a07f9
-content_hash: 1441681a576b1237f69d669b9b8f997c54923826cb75b69eb3dd1eb23f56b317
+content_hash: 306425e0bd89f4458281ae4dbeb13ba64111983ecb81732cf2ca10279474efdf
 field_hashes:
   id: 5a8e7aaaa33376ea1f5a15274f6f765314a08b3774a7209c3a5a1701f914677e
   title: 71f54c25e385fe9f86835b1439990f660b8a64cfb013ea368364aae1d19f6baa
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: ea6fb7804d91b87864fb5eacdd0740064344d7bc8d9e02337579627d6a2a316d
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

@@ -1,11 +1,13 @@
 name: review-task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a-preflight-1
 path: desk/reviews/task-manual-sin-atoms-split-en-el-ejemplo-ejecutable-sldb-rechaza-encabezados-en-el-field-desde-cc35a/preflight-1.md
 source_hash: a4f8e7f971a1b71e8cb2c6f965486d6b0d4c6ff6eba75204e212d8b1b9f49baa
-content_hash: b720e720a4a8148393184c896bc67a980788c9e97b3ad51bdbf4d9b6fabb2c16
+content_hash: 327ea2eea0d371c8c1f1bccfffdaa16f32756de10babd375d931f72a05452780
 field_hashes:
   id: 2177a920a4128b0fa5634ba4df9c1e1e572afa4e6fb0f5c1818afb3fbb75d1d5
   title: ea4f55f09b50deb18d6f198fbd4abbb776797f58f6abc665151dad82c127846c
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 6dd3ec73b51088d92c2d798bccb7dcc91cf1d9306aee7b1cae993b27800be76d
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

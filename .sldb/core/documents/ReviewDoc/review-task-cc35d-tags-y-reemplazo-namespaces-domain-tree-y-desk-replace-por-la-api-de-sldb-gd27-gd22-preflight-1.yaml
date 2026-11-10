@@ -1,11 +1,13 @@
 name: review-task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22-preflight-1
 path: desk/reviews/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22/preflight-1.md
 source_hash: 1903b00149e55f09c33593710a44d612ca5cc4b011b76d6247b7c20f3263c309
-content_hash: 02fae82f6e54a3004aa6098809751db72c524c17b867680e87927ebe87aba670
+content_hash: d1b6524fa7ea45093277f82d1ee7b746fd5c0db0262715bc5929bb70d0a00a7d
 field_hashes:
   id: a619bf7274e9a95b47eb573381ed981ef7a604f752739de5284c1a26f714098d
   title: 30b3f3ae23625fd5a9dd4067d040c03420b93502e00bc0cb657e26c145c63492
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: aaf67cfa320af60b70f9a1d72f264eb01dd704891f751575a11c2d1b84f37af4
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

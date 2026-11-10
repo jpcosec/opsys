@@ -1,11 +1,13 @@
 name: review-task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla-preflight-1
 path: desk/reviews/task-gc03-dejó-review-sin-clasificar-en-la-gramática-del-cli-test-cli-grammar-falla/preflight-1.md
 source_hash: c34a696fe9338f2a96bcf4d0ccd4a1261a5d6e93047fbfb0b5b3718b6b9ce930
-content_hash: bcb899884805bbf94397189c12be29877b87897c70c9c6a101572e6e1fd4963c
+content_hash: be46676ad24e32be068af3a3235fb472e759ab066e58c5088b6c2ddfff96aaee
 field_hashes:
   id: ba1616ac4e731f35d97abffcad5365660cbc41763dd48765c19729443e5a4bb4
   title: 36c1e66c7ac77a2643add0b118eb1b7db4efd5cd6a2d0029bfa2982478242c7d
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: ce096546c4116c91625f71a7d1830670c9b5f8d10e1ad441c584ab5dd21c8b6f
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

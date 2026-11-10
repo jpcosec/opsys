@@ -1,11 +1,13 @@
 name: review-task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb-bundle-1
 path: desk/reviews/task-cc36-plantillas-del-desk-board-rituales-drawer-faq-como-datos-escritos-por-el-scaffold-de-sldb/bundle-1.md
 source_hash: a5aeae37f8714c659f029a47a49ffc0d14f15f833aa88c0244d060c96ed0add1
-content_hash: c8131568c557cb907f654c00319194110d64379e389be441e36611a207414c01
+content_hash: 74a9f274bdd1b7983422deabafc31e54c47f420b478640af4cc03e8e7f589132
 field_hashes:
   id: 6cfe664e2672946b10e4cf7c88948d9408b924f742c304a23a1ceca12d554db6
   title: b9fb51dd5c3ab0108a4967c55d20e55d182d27a04a38d47de6b7f684076ca50f
   kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 09dbbcad46adf60a752da78ef20699d21b651b953d112656ddf7eab8bc187929
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

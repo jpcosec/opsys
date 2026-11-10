@@ -1,11 +1,13 @@
 name: review-task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09-preflight-1
 path: desk/reviews/task-test-model-contract-snapshot-actualizar-deliberadamente-el-hash-de-relationdoc-tras-go09/preflight-1.md
 source_hash: e311ba13f862a627faa959f0bcabcac9d8e7a3585b7ec31ebb9f2262360eb38e
-content_hash: a3f703e42d8a42bc2b30fb00464bb608690a05da2eb4db60fb9514fda141c3b4
+content_hash: d3603183b631891f14ebbe05977937be07145d53a7065fc5d426d2d1868719d3
 field_hashes:
   id: 119c50d6e1a99beb7b371ef831a05474353a0923a25ce6d559cf90773eee0bfa
   title: 0d9c1d37806b56cd1af4031133c5da2ecb74aa1cf7a8403ca2b589cbecc4c03d
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 18e78e4c21ba0868b0cdf0251eebb115747d8b5df4973df7a07b7e263da2be03
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

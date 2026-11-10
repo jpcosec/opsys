@@ -1,11 +1,13 @@
 name: review-task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer-preflight-1
 path: desk/reviews/task-cc32-gates-de-activación-de-cada-tipo-de-tarea-como-ruledoc-produce-g-consumer/preflight-1.md
 source_hash: 3fdd22d1ffd7a4b3d0ec3c3efae6d230556e1846e14578d7347fbef1eeeb27f3
-content_hash: 1f4ba7de0772ff33bc7bd9d1faee0cea0aedb791195886252ab988d7497620c1
+content_hash: ab6ca46979b1b7e530c397c9628abd602e13ca33e656dcefc9fdc67c87eaddb9
 field_hashes:
   id: 6f5169e777bef4f955b785bbd601263c7b2853d87b4ea64e3fa75cbc4441558e
   title: 73dd0920a69141617912925fab0c8b309bdff1665c9c381666a53195d4aca465
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: f3acd22f3475e063a34ef5a7d9fee016d7cde105f1ed3a884b6f646f423b4e66
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238

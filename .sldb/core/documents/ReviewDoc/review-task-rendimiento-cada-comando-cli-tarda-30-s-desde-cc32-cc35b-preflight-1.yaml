@@ -1,11 +1,13 @@
 name: review-task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b-preflight-1
 path: desk/reviews/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b/preflight-1.md
 source_hash: 3398101ce0ebb277ea0b4a3f0fd69df48e5ac71d60e1896b1a06b8a7bd10bc50
-content_hash: 507f5549c1ebb3a663c32088ebcf5ddd680320eabc2aae611a69b4b44b9b1931
+content_hash: f8b31d620d50a82a84a68bb0d19cdb45b2d2f5e6e7655da07e9f9e8296aa1acf
 field_hashes:
   id: 158de46c048617a05ceda62af09878bb688ed5debbc87f25a6a05f50bdb63b17
   title: ae234a95fca93121c2d098773941f6320c46ed92d775d0ec035a4c33a38c1fe6
   kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   subject: 2f8fa78ebd48f4e53ba3c7d21e9628b9aaaac73ebf17088458a8e8f056374dba
   subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
   engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
