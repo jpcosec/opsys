@@ -424,11 +424,19 @@ deskops list tasks --root .
 deskops show task task-close-a-manual-task --root .
 deskops next task-close-a-manual-task --root .
 deskops edit task task-close-a-manual-task scope "Edited scope." --root .
+deskops review record task-close-a-manual-task --kind preflight --operator "Manual operator" \
+  --evidence desk/tasks/task-close-a-manual-task.md --reason "Contract read; nothing ambiguous" --root .
+deskops review dispose review-task-close-a-manual-task-preflight-1 --verdict accepted --reason "Contract reviewed by the operator" --root .
 deskops advance task task-close-a-manual-task --root .
 deskops advance task task-close-a-manual-task --root .
 ```
 
-The two advances move the task from `draft` to `active` and then
+A task leaves `ritual-execution` only with the review receipts its type asks for
+(here `task.docs`: an accepted `preflight` on the task's current contract, so it
+is recorded after the last edit). This sandbox has no reviewer model, so the
+operator records a human receipt (`engine: human`, `no model available`; see
+[Cold context reviews](#cold-context-reviews)); a desk where the model runs uses
+`deskops review preflight`. The two advances move the task from `draft` to `active` and then
 `ready_for_testing`. `advance` stops at `ritual-closeout`; it never closes a
 task. When no outgoing transition condition holds, it exits non-zero and names
 the blocked gate.
