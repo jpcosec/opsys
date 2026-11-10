@@ -56,7 +56,7 @@ def test_the_table_is_read_from_the_package_relation_docs() -> None:
         "task_completes": ("complete", "closed"),
     }
     assert ENTRY_STATUSES == {"draft"}
-    assert DRAWER_STATUSES == {"deferred"}
+    assert DRAWER_STATUSES == {"deferred", "candidate"}
     assert {s: h for s, (h, _) in CLOSEOUT_STATES.items()} == {
         "closed": "task_completes",
         "superseded": "superseded",
@@ -74,8 +74,10 @@ def test_entry_state_is_valid() -> None:
 def test_a_drawer_task_outside_the_lifecycle_may_be_deferred() -> None:
     """``promote inbox-to-drawer-task`` writes ``deferred`` with no current_node and no history."""
     assert TaskDoc(**{**ENTRY, "status": "deferred", "current_node": ""}).status == "deferred"
+    # The drawer candidates of the workspace-documental plan (CC37 c4, revisable).
+    assert TaskDoc(**{**ENTRY, "status": "candidate", "current_node": ""}).status == "candidate"
     _rejects(TaskDoc, {**ENTRY, "status": "deferred"}, "status: 'deferred' is not an entry status")
-    _rejects(TaskDoc, {**ENTRY, "status": "active", "current_node": ""}, "status: 'active' is not an entry status; a task with an empty history and no current_node has status 'closed', 'complete', 'deferred', 'done', 'draft', 'resolved'")
+    _rejects(TaskDoc, {**ENTRY, "status": "active", "current_node": ""}, "status: 'active' is not an entry status; a task with an empty history and no current_node has status 'candidate', 'closed', 'complete', 'deferred', 'done', 'draft', 'resolved'")
 
 
 @pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete"])

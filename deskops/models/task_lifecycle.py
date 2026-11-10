@@ -42,10 +42,12 @@ COMPLETE = "complete"
 #: a legacy value found in a desk would be added here, one line each.
 ENTRY_STATUSES: frozenset[str] = frozenset({"draft"})
 
-#: The status a task outside the lifecycle may also hold: ``deferred``, what ``deskops promote
-#: inbox-to-drawer-task`` writes on a drawer task (``services/drawer.py``, no ``current_node``,
-#: empty history), the status of every drawer ``TaskDoc`` of the six desks.
-DRAWER_STATUSES: frozenset[str] = frozenset({"deferred"})
+#: The statuses a drawer task outside the lifecycle may also hold (no ``current_node``, empty
+#: history): ``deferred``, what ``deskops promote inbox-to-drawer-task`` writes
+#: (``services/drawer.py``), and ``candidate``, the status of the 67 drawer candidates of the
+#: workspace-documental plan in the deskops desk (``desk/drawer/tasks/workspace-documental/``).
+#: Adding ``candidate`` is a revisable decision of the plan coordinator (CC37 c4).
+DRAWER_STATUSES: frozenset[str] = frozenset({"deferred", "candidate"})
 
 #: The statuses of a task resolved before the lifecycle existed (no ``current_node``, empty
 #: history): what ``deskops closeout retire`` removes (``services/closure.py``, ``close_retired``).
