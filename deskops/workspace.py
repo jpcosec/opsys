@@ -726,3 +726,8 @@ def migrate_task_types(root: Path) -> list[str]:
             track_document_file(store_dir, item["target_cls"].__name__, path, name=path.stem, pythonpath=pythonpath, force=True)
         changes.append(_task_type_migration_line(item, rel))
     return changes
+
+
+# Alias de compatibilidad hacia atrás
+scaffold_desk = seed_desk
+
