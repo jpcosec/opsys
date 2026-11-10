@@ -147,3 +147,4 @@
 {"task_id": "task-cc33a", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
 {"task_id": "task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
+{"task_id": "task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcci\u00f3n-propia-y-sus-rglob", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
