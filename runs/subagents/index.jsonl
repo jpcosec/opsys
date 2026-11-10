@@ -144,3 +144,5 @@
 {"task_id": "task-cc37", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
 {"task_id": "task-scion-autonomy-review-status", "run_id": null, "run_dir": "runs/subagents/20261110-autonomy-review-status", "session_sha256": null, "commit": null}
 {"task_id": "task-scion-autonomy-coordinator-contract", "run_id": "01a1c620-5f20-7403-84c7-afdc6f5a5ddf", "run_dir": "runs/subagents/20261110-autonomy-coordinator-contract", "session_sha256": "9f9fd4c9ad86470ef80ed1e7e9a1936ccc7f54f95c7ff52380b83d1966b22ccf", "commit": null}
+{"task_id": "task-cc33a", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "manual", "commit": null}
+{"task_id": "task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}

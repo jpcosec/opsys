@@ -1,0 +1,25 @@
+name: materialization-materializa-recibos-de-evidencia-cc33a-en-commands-closeout
+path: desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-commands-closeout.md
+source_hash: 6918817849e3d0841b12b56a0149ecd31ac2f497e7fb208cf94983f0bd98d34c
+content_hash: 5bb76eefd169c104a2f0c9958e4b85d234ac6f9c5f55f3a27e78f703597845ea
+field_hashes:
+  id: acd0811bc2fc3dbf06465cc13a74331548b1242278a0b9916891b464cf88db8f
+  title: 6185c663502b23a8d11c2983903f7a9fa81c7982425e23bac16d3a0c03acc3ba
+  source_atoms: 4e1075f44ea81bb3614842b3d1b035da55b17d61312becbab664e67c03bf2147
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 01a727d8b59a031d3a5d68e4749441ae9dc50492c64035549c12d28d8c7d0c22
+  intent: 2d0f0baf8905e09974dac5befa362f03ce81c42ed6f568e071d6699150c7e9ea
+  validation: cfcd93e8e6f1e87f18102852263a9d004d74a48b371fc605275f243f7166a9dc
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-10T20:13:09Z'
+  authority: generated
+  via: create_document

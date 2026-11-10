@@ -1,0 +1,22 @@
+name: atom-closeout-verify-escribe-recibos-de-evidencia-como-reviewdoc-kind-evidence
+path: desk/atoms/atom-closeout-verify-escribe-recibos-de-evidencia-como-reviewdoc-kind-evidence.md
+source_hash: 5c1302c7a7ed3c5cff9d70368762a2f17a760a4bd12cb960b46881a96d41472c
+content_hash: 9766d128aa5a7d1ee740dab944813705000ef30e0b5a71cc55211d1a3ad464d9
+field_hashes:
+  id: 874b624e773f7b2e6738cf7a6c0a7674c6ccf2dde36d1d3885a3a41b7b4a581f
+  title: 3054ef6ccda79d4e37a4568aca4e9405921253b18f528d5ed114c2ac4dff2576
+  five_wh_one_plus: 0ac5b48a10a651e75b01f8d26468c18977ea336c90a9607a6163d0d330a4bb40
+  answer: 52a09c31d4af6b2249817971b79ff508a07367afde9f5fe2f0af4d565494f41d
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.atom
+- workspace.desk.atoms
+provenance:
+  by: agent
+  at: '2026-11-10T20:13:07Z'
+  authority: generated
+  via: create_document
