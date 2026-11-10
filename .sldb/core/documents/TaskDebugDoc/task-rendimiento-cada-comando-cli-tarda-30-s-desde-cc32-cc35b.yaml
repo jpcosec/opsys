@@ -1,7 +1,7 @@
 name: task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b
 path: desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md
-source_hash: 035b3032a1731eac6ea9d23ba7e84737443200d625ff75356309ab2165924ca3
-content_hash: 1f856dcbd9a176dd495f7c59fbaeeb0c278e1dc5894ed56fa394f25991f8c0be
+source_hash: c96a9977dd7b751b310c55c5ee56a05ccccc8c161d2458bb53a25f4023c6362b
+content_hash: 4f0a4f108bd64c1032612a5470467b0f25c5115bd6a6bf64e1422c486f63d936
 field_hashes:
   title: ac667daab82fdd450e1d6b8c056d691a0d98046742ff52b7b7017b3a34112956
   id: 58be412796b9354ad0066f3a5b590f38d2fc42e6646b230d0899a28015641e44
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 6d72d521aef10d6b593d4ed852ad6369066e5e5dd91cc0a1edd2cf3ae9b0928f
-  implementation_path: a1ea8d0b83169c9b2537187cbe156a4e769afa0b6f781f0a7123da8c0776ca1c
+  implementation_path: c93f908c829f4a94c6c938bbc02476e1e02087bcf26d1f236c3f855d520b302b
   validation: 412930c210808c14e3d13cb024e90bb813445385ea5a750449a43500bdca39f6
   done_when: 781afa694e936535445d659db38c06fc07c8090cd1c7ab9713641aab35a3cd15
   task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-10T02:36:21Z'
+  at: '2026-11-10T02:37:18Z'
   authority: generated
   via: save_document_payload

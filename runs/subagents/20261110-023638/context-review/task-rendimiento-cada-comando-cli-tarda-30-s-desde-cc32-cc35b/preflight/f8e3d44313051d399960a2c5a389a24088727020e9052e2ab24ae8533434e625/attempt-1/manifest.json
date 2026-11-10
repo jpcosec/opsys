@@ -1,0 +1,37 @@
+{
+  "key": "task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b/preflight",
+  "input_sha256": "f8e3d44313051d399960a2c5a389a24088727020e9052e2ab24ae8533434e625",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261110-023638/context-review/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b/preflight/f8e3d44313051d399960a2c5a389a24088727020e9052e2ab24ae8533434e625/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b.md",
+      "sha256": "035b3032a1731eac6ea9d23ba7e84737443200d625ff75356309ab2165924ca3",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [],
+  "started": "2026-11-10T02:36:38.686563+00:00",
+  "finished": "2026-11-10T02:36:54.023012+00:00"
+}

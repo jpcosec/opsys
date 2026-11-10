@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T02:36:21Z'
+  at: '2026-11-10T02:37:18Z'
   authority: generated
   via: save_document_payload
 id: task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b
@@ -56,6 +56,14 @@ p2 (causa raíz): escrita con evidencia (función, cuántas veces se llama por c
 p3 (dónde se arregla): si la causa está en deskops (por ejemplo, una llamada repetida que se puede hacer una vez por comando, o un registro de modelo que corre en cada comando), se arregla en esta rama. Si está en sldb, el worker para y avisa con la medición: el coordinador del plan abre la tarea en el desk de sldb y la despacha como la de dirty.json. Nada de cachés en deskops que escondan un problema de sldb (regla 7).
 p4 (aceptación medible): la tabla «comando | antes de CC32 | main hoy | con el arreglo», y test_activation_rules y test_lifecycle_end_to_end corridos enteros, de a uno, desde /dev/shm, cada uno por debajo de ~90 s. Sin cambiar la semántica: test_activation_rules, test_tracked_selector_resolution, test_transaction, test_cli y test_output_goldens verdes, sin --update-golden.
 p5 (coordinación con main-en-verde): si un fallo o timeout del CI que ataca main-en-verde viene de esto, el worker lo dice y los dos coordinan por el coordinador del plan; no se arregla dos veces.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-1, 2026-11-10):
+b1 (umbrales): aceptación dura, cada archivo de test entero en menos de 90 s, medido con time desde /dev/shm sin otros pytest corriendo. Por comando CLI no hay umbral fijo: el objetivo es volver al orden del commit anterior a CC32 (6afc78b0^) con una tolerancia de +50 %. Si no se logra, el informe dice cuánto falta y por qué.
+b2 (frontera deskops/sldb): se atribuye según dónde está la función que domina el tiempo acumulado en cProfile. Si está en el paquete sldb (sldb/...), es de sldb. Si deskops llama a una función de sldb más veces de lo necesario (por ejemplo, N veces por comando cuando alcanza una), es de deskops y se arregla aquí. Registrar un modelo en cada comando, aunque sea por medio de sldb, es de deskops si es deskops quien lo invoca sin necesidad.
+b3 (regla 7 de alcance.md): «Nada de Python supliendo una regla: si el lenguaje de sldb no la expresa, hipótesis en el TaskDoc y nota a sldb». Aplicada aquí: no se agrega en deskops una caché, un atajo ni una evaluación propia que reemplace o esconda un costo de sldb. Lo que es de sldb se arregla en sldb.
+b4 (precedente dirty.json): el worker para y avisa con la medición. El coordinador del plan crea la nota con deskops add inbox-note en un worktree limpio de sldb, la promueve con deskops promote inbox-to-drawer-task, promueve la tarea (add task --from-drawer), le corre el preflight y despacha un worker en una rama wt/ de sldb. El coordinador de proyecto la integra en sldb y avanza sldb-runtime.
+b5 («main hoy»): origin/main en el momento de despachar, que el brief nombra. Antes de CC32: 6afc78b0^. Antes de CC35b: el commit anterior al squash de CC35b (5328b664 es su closeout; el squash es el commit de código inmediatamente anterior; el worker lo identifica con git log).
+b6 (protocolo): el worker avisa al coordinador del plan con bash ~/setup/herdr/coordination.sh say w1:p1F "...". El coordinador del plan decide y, si hace falta, escala al coordinador de proyecto.
 
 ## Validation
 
