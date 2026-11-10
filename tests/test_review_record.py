@@ -158,7 +158,9 @@ def test_goldens_with_evidence_is_numbered_by_its_kind(desk: Path) -> None:
     assert SHA256.match(doc["input_sha256"])
 
 
-@pytest.mark.parametrize("kind", ["preflight", "bundle", "node"])
+# preflight and bundle are recorded by hand since main en verde (decision B of the project
+# coordinator, with the overlord's conditions): see the human-receipt tests below.
+@pytest.mark.parametrize("kind", ["node"])
 def test_model_kinds_are_refused_and_nothing_is_written(desk: Path, pi_log: Path, kind: str) -> None:
     root = desk
     rel = _evidence(root, "runs/repro/a.log", "first\n")
@@ -280,3 +282,65 @@ def test_json_output_reports_the_receipt(desk: Path) -> None:
     payload = data.get("data", data)
     assert payload["review_id"] == "review-task-x-reproduction-1"
     assert payload["evidence"] == ["runs/repro/a.log"]
+
+
+@pytest.mark.parametrize("kind", ["preflight", "bundle"])
+def test_human_preflight_and_bundle_require_an_operator_and_write_nothing_without_one(
+    desk: Path, pi_log: Path, kind: str
+) -> None:
+    root = desk
+    rel = _evidence(root, "runs/review/notes.md", "read the contract\n")
+    result = _deskops(root, "review", "record", "task-x", "--kind", kind, "--evidence", rel, "--reason", "r")
+    assert result.returncode != 0
+    assert "--operator" in result.stdout + result.stderr
+    assert _review_files(root) == []
+    assert not pi_log.exists()
+
+
+@pytest.mark.parametrize("kind", ["preflight", "bundle"])
+def test_human_preflight_and_bundle_receipts_show_engine_operator_and_no_model_reason(
+    desk: Path, pi_log: Path, kind: str
+) -> None:
+    root = desk
+    rel = _evidence(root, "runs/review/notes.md", "read the contract\n")
+    result = _deskops(
+        root, "review", "record", "task-x", "--kind", kind, "--operator", "Ana", "--evidence", rel, "--reason", "contract read",
+    )
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "engine: human; operator: Ana; no model available" in result.stdout
+
+    doc = _review(root, f"review-task-x-{kind}-1")
+    assert doc["kind"] == kind
+    assert doc["engine"] == "human"
+    assert doc["actor"] == "Ana"
+    assert doc["verdict"] == "pending"
+    assert doc["run_dir"] == "" and doc["output_sha256"] == ""
+    assert "operator Ana" in doc["summary"] and "no model available" in doc["summary"]
+    assert "no model available" in doc["title"]
+    assert not (root / "runs" / "subagents").exists()
+    assert not pi_log.exists()
+
+    disposed = _deskops(root, "review", "dispose", f"review-task-x-{kind}-1", "--verdict", "accepted", "--reason", "ok")
+    assert disposed.returncode == 0, disposed.stdout + disposed.stderr
+    doc = _review(root, f"review-task-x-{kind}-1")
+    assert doc["engine"] == "human" and doc["actor"] == "Ana"
+    assert "no model available" in doc["summary"]
+
+
+def test_human_preflight_and_bundle_activate_a_task_code(desk: Path, pi_log: Path) -> None:
+    """The documented path for a desk without a model (CI scenarios, the quickstart)."""
+    root = desk
+    rel = _evidence(root, "runs/review/notes.md", "read the contract\n")
+    blocked = _deskops(root, "advance", "task", "task-x")
+    assert blocked.returncode != 0 and "rule-activation-task-code" in blocked.stdout + blocked.stderr
+    for kind in ("preflight", "bundle"):
+        recorded = _deskops(
+            root, "review", "record", "task-x", "--kind", kind, "--operator", "Ana", "--evidence", rel, "--reason", "r",
+        )
+        assert recorded.returncode == 0, recorded.stdout + recorded.stderr
+        disposed = _deskops(root, "review", "dispose", f"review-task-x-{kind}-1", "--verdict", "accepted", "--reason", "ok")
+        assert disposed.returncode == 0, disposed.stdout + disposed.stderr
+    advanced = _deskops(root, "advance", "task", "task-x")
+    assert advanced.returncode == 0, advanced.stdout + advanced.stderr
+    assert "Current node: ritual-testing" in advanced.stdout
+    assert not pi_log.exists()

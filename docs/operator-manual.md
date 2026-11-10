@@ -913,9 +913,22 @@ an existing file inside the root; anything else fails with
 and `goldens` need at least one `--evidence`; `owner` may carry only `--reason`.
 `input_sha256` is the SHA-256 of `<path>\n<content>\n` for each evidence file,
 paths relative to the root, sorted and without repeats (empty without evidence).
-`--kind` accepts only `reproduction`, `goldens` and `owner`: `preflight`,
-`bundle` and `node` come from their own command. `deskops review dispose
-<review-id>` writes the verdict.
+`--kind` accepts `reproduction`, `goldens`, `owner`, `preflight` and `bundle`;
+`node` comes from its own command. `deskops review dispose <review-id>` writes
+the verdict.
+
+A desk with no model to run the reviewer (the CI scenarios, the quickstart) can
+still activate a task: whoever operates it records the `preflight` and `bundle`
+receipts by hand. `--operator <name>` is required for those two kinds; without
+it the command fails and writes nothing. The receipt keeps `engine: human`,
+names the operator as its `actor`, and says `no model available` in its title
+and `summary`, so nobody mistakes it for a model review. It is not a stand-in
+for `deskops review preflight|bundle` on a desk where the model runs.
+
+```bash
+deskops review record task-fix-thing --kind preflight --operator "Ana" --evidence desk/tasks/task-fix-thing.md --reason "read the contract; no ambiguity" --root .
+deskops review dispose review-task-fix-thing-preflight-1 --verdict accepted --reason "..." --root .
+```
 
 ## Verb coverage
 

@@ -63,7 +63,15 @@ MODEL = "deepseek/deepseek-flash"
 DEFAULT_ENGINE = "runtime-pi-deepseek-flash"
 TIMEOUT = 900
 # Receipts ``deskops review record`` writes by hand (no model call); the others come from their command.
-RECORD_KINDS = ("reproduction", "goldens", "owner")
+# Kinds an operator records by hand. ``preflight`` and ``bundle`` also come from their own
+# model review; a hand-recorded one keeps ``engine: human`` so it never reads as a model review.
+RECORD_KINDS = ("reproduction", "goldens", "owner", "preflight", "bundle")
+
+# Recorded by hand, ``preflight`` and ``bundle`` name their operator (``--operator``) and say
+# why no model reviewed them; they are for desks without a model (CI scenarios, the quickstart),
+# not a substitute for ``deskops review preflight|bundle`` on a real desk.
+HUMAN_REVIEW_KINDS = ("preflight", "bundle")
+NO_MODEL_REASON = "no model available"
 
 KEEP = (
     "id",
@@ -573,6 +581,8 @@ class ReviewService:
         node_id: str | None,
         plan_id: str | None = None,
         summary: str | None = None,
+        actor: str | None = None,
+        title: str | None = None,
     ) -> tuple[str, Path]:
         if node_id is not None:
             node_lower = node_id.lower()
@@ -580,13 +590,13 @@ class ReviewService:
             review_dir = self._reviews_dir() / f"{plan_id}-{node_lower}"
             n = self._next_review_number(review_dir, kind, node=True)
             review_id = f"review-{plan_id}-{node_lower}-node-{n}"
-            title = f"Node review of {node_id}"
+            title = title or f"Node review of {node_id}"
         else:
             task_id = subject.rsplit(":", 1)[-1].split("@", 1)[0]
             review_dir = self._reviews_dir() / task_id
             n = self._next_review_number(review_dir, kind, node=False)
             review_id = f"review-{task_id}-{kind}-{n}"
-            title = f"{kind.capitalize()} review of {task_id}"
+            title = title or f"{kind.capitalize()} review of {task_id}"
 
         path = review_dir / (f"node-{n}.md" if node_id is not None else f"{kind}-{n}.md")
         payload: dict[str, Any] = {
@@ -596,7 +606,7 @@ class ReviewService:
             "subject": subject,
             "subject_ref": subject_ref,
             "engine": engine,
-            "actor": self._identity(),
+            "actor": actor or self._identity(),
             "run_dir": run_dir,
             "input_sha256": input_sha256,
             "output_sha256": output_sha256,
@@ -613,8 +623,11 @@ class ReviewService:
         return review_id, path
 
     # ------------------------------------------------------------------ record
-    def record_receipt(self, task_id: str, kind: str, evidence: list[str], reason: str) -> dict[str, Any]:
-        """A receipt the desk operator records without a model call (reproduction, goldens, owner).
+    def record_receipt(
+        self, task_id: str, kind: str, evidence: list[str], reason: str, operator: str | None = None
+    ) -> dict[str, Any]:
+        """A receipt the desk operator records without a model call (reproduction, goldens, owner,
+        and preflight or bundle from operator evidence, always with ``engine: human``).
 
         Every ``evidence`` path must be an existing file inside the root; otherwise nothing is
         written. ``input_sha256`` hashes ``<path>\\n<content>\\n`` of each file, paths POSIX-relative
@@ -624,10 +637,16 @@ class ReviewService:
         if kind not in RECORD_KINDS:
             raise UsageError(
                 f"--kind {kind} is not recorded by hand; use one of {', '.join(RECORD_KINDS)} "
-                "(preflight, bundle and node come from their own review command)"
+                "(node comes from its own review command)"
             )
         if not (reason and reason.strip()):
             raise UsageError("--reason is required")
+        operator = (operator or "").strip()
+        if kind in HUMAN_REVIEW_KINDS and not operator:
+            raise UsageError(
+                f"--kind {kind} recorded by hand requires --operator <name>: the receipt names the "
+                f"human who reviewed instead of a model ({NO_MODEL_REASON})"
+            )
         paths: list[str] = []
         for raw in evidence:
             candidate = Path(raw)
@@ -647,8 +666,15 @@ class ReviewService:
         if paths:
             data = b"".join(rel.encode() + b"\n" + (self.root / rel).read_bytes() + b"\n" for rel in paths)
             input_sha256 = _sha(data)
-        actor = self._identity()
+        actor = operator or self._identity()
         summary = f"{kind} receipt recorded by {actor}; evidence: {', '.join(paths) if paths else '(none)'}"
+        title = None
+        if kind in HUMAN_REVIEW_KINDS:
+            summary = (
+                f"{kind} receipt recorded by hand by operator {operator}, not by a model review "
+                f"(engine human; {NO_MODEL_REASON}); evidence: {', '.join(paths)}"
+            )
+            title = f"{kind.capitalize()} receipt of {task_id} by operator {operator} ({NO_MODEL_REASON})"
         review_id, review_path = self._write_review(
             kind=kind,
             subject=subject,
@@ -661,6 +687,8 @@ class ReviewService:
             reason=reason,
             node_id=None,
             summary=summary,
+            actor=actor,
+            title=title,
         )
         return {
             "key": f"{task_id}/{kind}",
@@ -669,6 +697,9 @@ class ReviewService:
             "review_path": review_path.relative_to(self.root).as_posix(),
             "evidence": paths,
             "input_sha256": input_sha256,
+            "engine": "human",
+            "operator": actor,
+            "no_model_reason": NO_MODEL_REASON if kind in HUMAN_REVIEW_KINDS else "",
         }
 
     # ------------------------------------------------------------------ dispose

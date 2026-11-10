@@ -13,6 +13,10 @@ setup:
 reference:
   - deskops init .
   - deskops add task --root . --title "Add changelog" --goal "Start a changelog" --scope "CHANGELOG.md only" --task-type task.code --implementation-path CHANGELOG.md --done-when "CHANGELOG.md exists" --validation pytest
+  - deskops review record task-add-changelog --root . --kind preflight --operator "Scenario operator" --evidence desk/tasks/task-add-changelog.md --reason "no model in this scenario; contract read"
+  - deskops review dispose review-task-add-changelog-preflight-1 --root . --verdict accepted --reason "contract reviewed by the operator"
+  - deskops review record task-add-changelog --root . --kind bundle --operator "Scenario operator" --evidence desk/tasks/task-add-changelog.md --reason "no model in this scenario; contract read"
+  - deskops review dispose review-task-add-changelog-bundle-1 --root . --verdict accepted --reason "contract reviewed by the operator"
   - deskops advance task task-add-changelog --root .
   - printf -- '- Started using deskops.\n' > CHANGELOG.md
   - pytest -q

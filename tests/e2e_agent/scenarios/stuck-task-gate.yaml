@@ -10,6 +10,10 @@ setup:
   - mkdir -p tests && printf 'def test_ok():\n    assert True\n' > tests/test_ok.py
   - deskops init . >/dev/null
   - deskops add task --root . --title "Ship notes" --goal "Ship release notes" --scope "notes only" --task-type task.code >/dev/null
+  - deskops review record task-ship-notes --root . --kind preflight --operator "Scenario operator" --evidence desk/tasks/task-ship-notes.md --reason "no model in this scenario; contract read" >/dev/null
+  - deskops review dispose review-task-ship-notes-preflight-1 --root . --verdict accepted --reason "contract reviewed by the operator" >/dev/null
+  - deskops review record task-ship-notes --root . --kind bundle --operator "Scenario operator" --evidence desk/tasks/task-ship-notes.md --reason "no model in this scenario; contract read" >/dev/null
+  - deskops review dispose review-task-ship-notes-bundle-1 --root . --verdict accepted --reason "contract reviewed by the operator" >/dev/null
   - deskops advance task task-ship-notes --root . >/dev/null
   - git add -A && git commit -qm "initial"
 reference:

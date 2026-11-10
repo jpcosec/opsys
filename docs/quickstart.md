@@ -102,6 +102,18 @@ deskops list tasks
 deskops show task task-try-deskops-quickstart
 ```
 
+## Review The Contract
+
+A task leaves `ritual-execution` only with the review receipts its type asks for (`deskops show task` names them under "Lifecycle gates"). A `task.docs` task needs an accepted `preflight` receipt; a `task.code` task needs `preflight` and `bundle`. On a desk where the reviewer model runs, `deskops review preflight task-try-deskops-quickstart` writes it. Where no model is available, as in this walkthrough, you review the task's contract yourself and record a human receipt that names you as the operator, then dispose of it:
+
+```bash
+deskops review record task-try-deskops-quickstart --kind preflight --operator "Your Name" \
+  --evidence desk/tasks/task-try-deskops-quickstart.md --reason "Read the contract; nothing ambiguous"
+deskops review dispose review-task-try-deskops-quickstart-preflight-1 --verdict accepted --reason "Contract reviewed by the operator"
+```
+
+The receipt keeps `engine: human` and says `no model available`, so nobody mistakes it for a model review.
+
 ## Advance The Task
 
 Advance the task through the lifecycle:
