@@ -94,6 +94,9 @@ def _write_task(root: Path, changed_files: list[str]) -> None:
         f"""---
 id: task-x
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references:
 {references}
 depends_on: []

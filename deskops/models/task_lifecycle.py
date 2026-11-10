@@ -15,9 +15,9 @@ source.
 A task is coherent in one of three states:
 
 * entry: ``history`` is empty, ``current_node`` is the entry node (or empty, which ``deskops
-  advance`` reads as the entry node) and ``status`` is in ``ENTRY_STATUSES``; a drawer task
-  (``current_node`` empty: it has not entered the lifecycle) may also hold a status of
-  ``DRAWER_STATUSES``;
+  advance`` reads as the entry node) and ``status`` is in ``ENTRY_STATUSES``; a task with no
+  ``current_node`` is outside the lifecycle and may also hold a drawer status
+  (``DRAWER_STATUSES``) or a pre-lifecycle resolved one (``LEGACY_RESOLVED_STATUSES``);
 * after a transition: the last ``history`` item is the ``relation_type`` of an edge, and
   ``current_node`` and ``status`` are that edge's target and ``sets.status``;
 * closed by closeout: ``(status, last history item)`` is a pair of ``CLOSEOUT_STATES``.
@@ -46,6 +46,13 @@ ENTRY_STATUSES: frozenset[str] = frozenset({"draft"})
 #: inbox-to-drawer-task`` writes on a drawer task (``services/drawer.py``, no ``current_node``,
 #: empty history), the status of every drawer ``TaskDoc`` of the six desks.
 DRAWER_STATUSES: frozenset[str] = frozenset({"deferred"})
+
+#: The statuses of a task resolved before the lifecycle existed (no ``current_node``, empty
+#: history): what ``deskops closeout retire`` removes (``services/closure.py``, ``close_retired``).
+LEGACY_RESOLVED_STATUSES: frozenset[str] = frozenset({"resolved", "closed", "done", "complete"})
+
+#: Every status a task outside the lifecycle (``current_node`` and ``history`` empty) may hold.
+OUTSIDE_LIFECYCLE_STATUSES: frozenset[str] = ENTRY_STATUSES | DRAWER_STATUSES | LEGACY_RESOLVED_STATUSES
 
 #: ``status`` -> (last ``history`` item, required ``current_node`` or None for any node): the
 #: states closeout writes. ``closed`` is the terminal edge ``task_completes`` (it leads to
@@ -111,7 +118,7 @@ def lifecycle_errors(status: str, current_node: str, history: list[str]) -> list
                 f"current_node: '{current_node}' needs a history; with an empty history a task is at "
                 f"the entry node '{table.entry_node}'"
             )
-        allowed = ENTRY_STATUSES | DRAWER_STATUSES if current_node == "" else ENTRY_STATUSES
+        allowed = OUTSIDE_LIFECYCLE_STATUSES if current_node == "" else ENTRY_STATUSES
         if status not in allowed:
             expected = ", ".join(f"'{s}'" for s in sorted(allowed))
             errors.append(

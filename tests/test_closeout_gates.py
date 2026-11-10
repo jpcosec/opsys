@@ -91,7 +91,8 @@ def _task(task_id: str, files: list[str], atoms: list[str]) -> str:
     front = {
         "id": task_id,
         "status": "active",
-        "current_node": "ritual-execution",
+        "current_node": "ritual-testing",
+        "history": ["task_activates"],
         "references": [GUARD_TEST],
         "depends_on": [],
         "pills": [],
