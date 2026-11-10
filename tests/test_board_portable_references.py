@@ -33,7 +33,7 @@ CONTEXT = [
     ('RitualDoc', name, f'desk/rituals/{name.removeprefix("ritual-")}.md')
     for name in RITUALS
 ] + [
-    # The Board routes this ritual by path (e80e8c0a); the desk tracks it as `context-review`.
+    # e80e8c0a routed this ritual by path; the Board names it by its tracked name, as the atom asks.
     ('RitualDoc', 'context-review', 'desk/rituals/context-review.md'),
 ]
 
