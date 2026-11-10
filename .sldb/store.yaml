@@ -373,6 +373,10 @@ include:
     name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-3
   - path: desk/reviews/task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b/preflight-1.md
     name: review-task-rendimiento-cada-comando-cli-tarda-30-s-desde-cc32-cc35b-preflight-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/preflight-2.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-preflight-2
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle-2.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-bundle-2
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md

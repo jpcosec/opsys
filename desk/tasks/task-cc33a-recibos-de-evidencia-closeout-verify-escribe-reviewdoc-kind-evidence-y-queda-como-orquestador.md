@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T19:48:43Z'
+  at: '2026-11-10T09:47:05Z'
   authority: generated
   via: save_document_payload
 id: task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador
@@ -99,6 +99,18 @@ b5 (CC35a): está en main (8d0e23fe, cerrado); por eso depends_on está vacío. 
 c1 (pin al nacer): como un recibo evidence nace con veredicto y no pasa por dispose, se escribe pinneado. create y, en la misma transacción, una reescritura sin cambios del payload que dispara save_document_payload y pinnea el subject (como tests/activation_receipts.py de CC32, H-CC32-2). El test lo verifica: subject con @sha256 tras verify.
 c2 (cuándo no se escribe): se salta la escritura solo si ya existe un recibo evidence del mismo fact para la tarea con el mismo input_sha256 y anchor_state intact. Si el contrato cambió (goal editado → changed), una verify nueva escribe un recibo nuevo (n+1) aunque el input_sha256 sea el mismo. El recibo viejo queda como está.
 c3 (_write_review): está en deskops/services/review.py (en el repo; el worker lo lee). Arma el payload del ReviewDoc y llama a doc_access.create_doc(root, path, ReviewDoc, payload, review_id). «Sin llamar al modelo» quiere decir sin LLM; la validación del modelo ReviewDoc sí corre. Si reusar _write_review exige tocar review.py más allá de lo mínimo, el worker escribe su propio helper en closure.py con la misma llamada a doc_access.
+
+PRECISIONES DE LA REVISIÓN CON PI SOBRE MAIN (preflight-2 y bundle-2, 2026-11-10; recibos rehechos por DO4):
+r1 (closeout_evidence): es el campo TaskDoc.closeout_evidence (models/task.py:176, lista de kinds, lo escribe add task --evidence), sumado al __closeout_evidence__ del tipo (models/task_types.py). Lo resuelve la misma función que hoy usa verify (declared_evidence_list / el gate de closure.py); el worker no inventa la lectura.
+r2 (orden de value): orden lexicográfico de las cadenas, después de normalizar las rutas a POSIX relativas al root. Unidas con «\n», sin «\n» final.
+r3 (bytes del hash): UTF-8. input_sha256 = sha256 de (fact + "\n" + value + "\n" + por cada ruta de value, en el mismo orden: ruta + "\n" + hexdigest-sha256-de-los-bytes + "\n"), en hex minúscula. Para commit, value es el sha completo de 40 caracteres y no se agrega nada.
+r4 (atom/materialization): son dos facts distintos, como en el Literal de a2. El enlace de _closeout_link_gate (closure.py:773; gate atom_or_materialization_link) da un recibo atom si el enlace sale de un átomo y un recibo materialization si sale de una materialization. value es el id del documento enlazante (atom-... o materialization-...). Si el gate da los dos, hay dos recibos.
+r5 (anchor_state al decidir el skip de c2): se lee con sldb.api.anchors.check_doc_anchors(store) (src/sldb/api/anchors/check_doc_anchors.py:29), que da una alerta por ancla no intacta. Un recibo cuyo subject no aparece entre esas alertas está intacto. Si eso cuesta demasiado en el cuello de botella de rendimiento, se lee el campo subject__anchor_state que compone el índice (doc_anchor_states.SUFFIX). El informe dice cuál se usó.
+r6 (<Modelo> y el pin): <Modelo> es el modelo tipado bajo el que se trackea la tarea (TaskCodeDoc, ...), el mismo que usa services/review.py (_task_model). El pin es «@sha256:<hex>», que agrega sldb (GO07) en la reescritura de c1; el worker no lo escribe a mano.
+r7 (reason): rejected → el «message» del finding que hoy da el gate cuando falta ese kind (closure.py:765 missing_tests_evidence, :785 missing_commit_evidence, :796 missing_document_evidence, :807 missing_external_evidence, y el del link gate). accepted → «verified: <fact> <value>», porque el modelo exige reason no vacía.
+r8 (alcance, external): external usa reference_points_to_url, que no lee git ni archivos. Entra porque es uno de los productores de hechos que verify ya corre (CC33 parte 1 los nombra a todos); no se agrega ningún productor nuevo.
+r9 (umbral de _write_review): «lo mínimo» es agregar parámetros opcionales con default igual a hoy, como el summary opcional que ya agregó review-record. Si hace falta cambiar el comportamiento de _write_review para los kinds actuales, se usa un helper propio en closure.py.
+r10 (golden cambiado): manda a4. Si un golden de salida cambia, el worker para y avisa antes de tocarlo; no lo regenera.
 
 ## Validation
 

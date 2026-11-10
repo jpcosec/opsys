@@ -1,0 +1,88 @@
+{
+  "key": "task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle",
+  "input_sha256": "3b003e7ddf8673e4c8fba478b515af056b617b3879717a9243ff6b965221a7c8",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261110-094551/context-review/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/bundle/3b003e7ddf8673e4c8fba478b515af056b617b3879717a9243ff6b965221a7c8/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md",
+      "sha256": "4edae0a7c4fe3d1156d31e2cfb6aaf0ead50ef39c61752969a8d3d3224fcfcda",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/closeout_gates.py",
+      "sha256": "fa9d42657bbe1996148544acc301121b2cb115a3ad1890826446fc7319c8a5af",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/closure.py",
+      "sha256": "8f680d38e3bb34f13664cac1a861e6304094a3810de7be280d372b388062a80b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/review.py",
+      "sha256": "e0e71627a428fe09e9f42fad74b3e6f2bedd6b97687c2b1e20e9bf9e2e9913d6",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/closeout.py",
+      "sha256": "53ea85edd48f8e750d0adccddfd0b82b0ea9154ba30c1957f120c839d3840b7b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "7302246677cc72bde066db930a5b26374ae5d1419674c12a2648adf7b5e54209",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-10T09:45:52.002212+00:00",
+  "finished": "2026-11-10T09:46:04.203830+00:00",
+  "retry_reason": "recibos rehechos con pi sobre main 81a60a6d (reglas de CC32 instaladas; DO4: el recibo humano es solo para CI)"
+}
