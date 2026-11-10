@@ -389,6 +389,8 @@ include:
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md
+  - desk/tasks/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob.md
+  - desk/tasks/task-cc35d-tags-y-reemplazo-namespaces-domain-tree-y-desk-replace-por-la-api-de-sldb-gd27-gd22.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
