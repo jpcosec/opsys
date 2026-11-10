@@ -1,7 +1,7 @@
 name: task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob
 path: desk/tasks/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob.md
-source_hash: 009da1b4f495aff04fe0294b4b238f4db6b05d3a774c80c0a70a934a3edb26d7
-content_hash: f20af9cd7cb3bad1fc72d586127f70c8de3851c8c9559b8a5579670b2262337e
+source_hash: 58863799d35c2f53b0bdfeddf7725861e71fe1a2fb0f6535b316e9e26c86a5b5
+content_hash: ab963d978978c5571c92a58a9d144281b2dcd41c2a8e7934c267ad869417a81b
 field_hashes:
   title: d389735e9a3980166addf4d986b8e9c1e4a80e8017406d2f0d6808b94063582e
   id: e032d2cc0d78b6c3c0e31c626c183cee2f07b0691321c2f56b859b4757495153
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 0b69ce97bdfa4ce46e686568552358d6fe21924721078c9839e8a3d68ac7d4f4
   files: 22b79efbde2ba6ecc6e6e613699aa374684fd46576843ac2c7d155c3845332a4
-  implementation_path: b11c0d7f01177160e1978963af245303ea37a744425d5c95622563132fee97a0
+  implementation_path: 617c6f48598498a45f4d914f670e14831f0c879d602500044053659e95b9e86f
   validation: 8b284f9c53e721aa7de13a263cb0e023c8576b729d0bdf4a3260ed3f1c5a69b2
   done_when: b0d57256bcc78aa525960912aba02f47bfb63701e7d06ca7029a391f9189c093
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-10T14:18:41Z'
+  at: '2026-11-10T19:57:00Z'
   authority: generated
   via: save_document_payload

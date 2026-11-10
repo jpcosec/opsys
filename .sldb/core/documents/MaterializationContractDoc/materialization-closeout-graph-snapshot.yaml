@@ -1,13 +1,13 @@
 name: materialization-closeout-graph-snapshot
 path: desk/materializations/materialization-closeout-graph-snapshot.md
-source_hash: 8d309509e94bafee9492fa0ce44c1d17937652b3e3abaa37ba5629e99d11c83e
-content_hash: ed1059b67763227a4f15c503169b03ddffac57f7def28c9c716aa11f8cc3c1f5
+source_hash: c841dba3de78bea2b88f63f073fea890d8fbb8ddb5ad8967d0f0d32d3d87f734
+content_hash: 23a8ec9d47f3ab5f7321033adb3423c7c06fa30a04c4edccb472ecfa211c1864
 field_hashes:
   id: 5960a3b93f2d90ecffd051af37221c1b97da7f58f8027f6f60700adab64d72c4
   title: 06bd719b809e84bef8d097dfb892a13f7d9599cb79999aadc59a4ec573732875
   source_atoms: 21d1bed7cf5e3d09865a840a8b06dabaccd4e59e217f24b1704626dc81773493
   target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
-  target_identity: 19be1c4e8867d1588148100d9489ed774720bd5f8d697f4610d94a7ca31a39bc
+  target_identity: afedf1b7b84f0578e6b5adca2996712df5ec7eb66efdad9f9c6846bdac304307
   intent: 8ed67083e1ea711eb02158d328244c9e6a171ac98cf2deb92b623d9616e793ed
   validation: bbfbf4250e14a25a692fc4caf0395750b6bc3714744487260f39b0db1ca47b87
   tags: 45935dd10406effb32866b6d83912939b17a93b2471f87bde4e02f46f2e4b1a1
@@ -18,4 +18,8 @@ semantic_tags:
 - topic:closeout-graph
 - type.knowledge.materialization_contract
 - workspace.desk.materializations
-provenance: null
+provenance:
+  by: agent
+  at: '2026-11-10T19:57:12Z'
+  authority: generated
+  via: save_document_payload
