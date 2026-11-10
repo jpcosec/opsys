@@ -3,10 +3,10 @@ model_ref: deskops.models:MaterializationContractDoc
 path: deskops/models/materialization.py
 documents_index: .sldb/core/documents/MaterializationContractDoc.yaml
 sections_index: .sldb/runtime/sections/MaterializationContractDoc.yaml
-model_hash: abd6e1fe3dfb439ea7b2c40add68c14e37269633ff6146e910c8143206db3817
-roster_hash: 8e1c74b83b4c12e1c95e122933b5086c74e5fa5a20642a580b6442c99a24dde6
+model_hash: 3c01123314eef86d3045267fe78c77e970f105caeb97e6abacdec5e8f9795d75
+roster_hash: 6f82ed1a49621c159dff3ac36913e113d017cd80dd187e15ce97a27f03696240
 contract_hash: 7a9c4f2a6d1393a581170cb62c4c3779b80310e3b31ebe865e8bfd92d6beaf1b
-documents_count: 97
+documents_count: 103
 version: 1
 canonical: false
 family: null

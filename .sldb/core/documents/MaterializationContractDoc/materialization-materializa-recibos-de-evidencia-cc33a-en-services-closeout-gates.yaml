@@ -1,0 +1,25 @@
+name: materialization-materializa-recibos-de-evidencia-cc33a-en-services-closeout-gates
+path: desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-services-closeout-gates.md
+source_hash: 151f51fcdcad565bde6d278b60d17dae1833997ae70386865c99cb53daf7f9f7
+content_hash: 7ccded0cd0f3ff815bed9a2d10626b2f1f5d382b0486ee7ccdb7a6c86588c987
+field_hashes:
+  id: 0423b9bed56416571851f220790a921702612547960141a2fc8883526b3ce5ab
+  title: 474c0b0571de1e30c395239ff58cabe36e48881cc6857c44577af209fdd3bfec
+  source_atoms: 4e1075f44ea81bb3614842b3d1b035da55b17d61312becbab664e67c03bf2147
+  target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
+  target_identity: 0b47b22dba3c118607bf07aa33dae64bb1f23d77dfcbe03a040e570ce19f73d1
+  intent: 6fbacc09a444a0c4e36335f062d21f301010d916abc488d05c3db66888bf8c09
+  validation: cfcd93e8e6f1e87f18102852263a9d004d74a48b371fc605275f243f7166a9dc
+  tags: cfe8511f254e0d9f2a44b447c2da40339c65b1bc8ebf58f1d4700912cf8c0ea3
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- system:deskops
+- topic:closeout
+- type.knowledge.materialization_contract
+- workspace.desk.materializations
+provenance:
+  by: agent
+  at: '2026-11-10T20:13:12Z'
+  authority: generated
+  via: create_document

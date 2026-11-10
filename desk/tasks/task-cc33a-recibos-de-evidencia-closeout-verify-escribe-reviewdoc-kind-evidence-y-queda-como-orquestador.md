@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T09:47:05Z'
+  at: '2026-11-10T20:13:40Z'
   authority: generated
   via: save_document_payload
 id: task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador
@@ -12,7 +12,13 @@ tags:
 - artifact:task
 current_node: ritual-execution
 history: []
-references: []
+references:
+- desk/drawer/tasks/task-closeout-una-materialization-con-target-identity-de-paquete-no-cubre-los-archivos-del-paquete.md
+- tests/fixtures/model_contract_hashes.json
+- 6d133045610b3452751daddeb4cef85591f0f6d9
+- desk/atoms/atom-closeout-verify-escribe-recibos-de-evidencia-como-reviewdoc-kind-evidence.md
+- tests/test_closeout_evidence_receipts.py
+- tests/test_review_doc.py
 depends_on: []
 pills: []
 files:
@@ -116,11 +122,7 @@ r10 (golden cambiado): manda a4. Si un golden de salida cambia, el worker para y
 
 _List the checks required before this task can close._
 
-- Tests nuevos por caso de la aceptación (a7)
-- Goldens de salida y ayuda idénticos
-- TMPDIR=/dev/shm pytest -q, uno a la vez: test_closeout*.py, test_review_doc; test_cli y test_output_goldens desde /dev/shm
-- wc -l de closeout_gates.py y closure.py antes y después
-- CHANGELOG
+- Suite completa por archivo 93/93, stores build/--check y ci-knowledge-check rc 0 en clon limpio; CI 42874849731 success
 
 ## Done When
 

@@ -309,6 +309,12 @@ include:
   - desk/materializations/materialization-scion-autonomy-help.md
   - desk/materializations/materialization-scion-autonomy-supervisor.md
   - desk/materializations/materialization-scion-autonomy-tests.md
+  - desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-commands-closeout.md
+  - desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-models-review.md
+  - desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-services-closeout-gates.md
+  - desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-services-closure.md
+  - desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-tests-test-closeout-evidence-receipts.md
+  - desk/materializations/materialization-materializa-recibos-de-evidencia-cc33a-en-tests-test-review-doc.md
 - model: RunDoc
   paths:
   - path: runs/subagents/20261029-152259-task-closeout-la-evidencia-exigida-depende-de-lo-que-la-tarea-toca-no-es-la-misma-para-todo/run.md
@@ -419,6 +425,16 @@ include:
     name: review-task-scion-autonomy-review-status-bundle-1
   - path: desk/reviews/task-scion-autonomy-review-status/preflight-1.md
     name: review-task-scion-autonomy-review-status-preflight-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-tests-1.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-tests-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-commit-1.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-commit-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-atom-1.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-atom-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-materialization-1.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-materialization-1
+  - path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-tests-2.md
+    name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-tests-2
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md

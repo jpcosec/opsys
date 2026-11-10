@@ -1,7 +1,7 @@
 name: task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador
 path: desk/tasks/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador.md
-source_hash: 61a42f1c909a6c53f9e5d12c6f6b93727b5b6d0c13cd77635e5f2fbf82678899
-content_hash: 7770260908c8ffb1c737302013cb17015b6b4087263243501ee289c9b9bfec25
+source_hash: 61358e7450e5c18eed9c4ac82c9857459a52aaf0bd4740c2bf05da6eff0b7967
+content_hash: 565254fb887f354fda80174c36cb68a35bce83d4b8dc8a090d49c4146c88ba88
 field_hashes:
   title: 463d2bd8b05a6ec495d02c456914cbf4cd5110481556c94335e186f3da6b0543
   id: d59e755922ecad708e149b5cbbf5a89d512bc684484c1ca47dcc7c36f3819eb4
@@ -13,12 +13,12 @@ field_hashes:
   why: b713121e8d0c8809b3e086a550acc562ce22012edb73d9b2f286278ddcd4c89c
   goal: 097a432d6ae228a045d7493eeaef2badc8c27c24a0423c4ae390dced3f37546d
   scope: 4d9cdfd8f08f108fee434acca3441197b984d907ce69aa51b82f63d4a82bf859
-  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  references: dcd20973f2ff5c20201750d97d916611d538bb2b226ff94d680d66947e1bd2d1
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: a7dce03c0f2bdc8d9dbbe158b3ced08660e6dd57ae055e4c73915e2163d54d57
   implementation_path: 63bf35af81d4bb20ebb55950b43cba36b3fd75c9122f8b0390c99ab37cd5799b
-  validation: 06a15de7128cb675ab746291cae0276bd68cc5b0367a4eda8c469d0c79d56bfe
+  validation: 76e34ac3fc438882a7bc81ef624dd6f928cae1cb7bbda78f6a12a3049efdcd6d
   done_when: ea886ca19c09da4838fe0e190f9312a6c4fe8de33d78e1dd1c41b7070c918a9e
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
   inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-10T09:47:05Z'
+  at: '2026-11-10T20:13:40Z'
   authority: generated
   via: save_document_payload

@@ -1,0 +1,36 @@
+name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-materialization-1
+path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-materialization-1.md
+source_hash: f410368292e6562b3912b1323e0bf4b67dfddab55ef8f4025fd83991f2652fe4
+content_hash: a3bb64d759b9d18c7eeef20570abdecc7b95d6d6d1b1af49c80331b41021a192
+field_hashes:
+  id: a0939635a73e98635cf00d317bb30cce65ed8e4c5bbb6f5fcc8201ca70409409
+  title: e05f973070f2d9bdacd4e27c34f5a67a28ba0209474d624de713b3689b739807
+  kind: edecec53ab11f560816e75a17681eb83886beace01d7fb927d99707d3d031aac
+  fact: b77d8cf6414796c495587568e836eb101f2c47c6cbab025c9e93d24db5ead67b
+  value: c70437229f9462dc7f39e6b1d3c79c95757d95a8c4327b9a9b6736df099bd38c
+  subject: 3e6d91c66d2da76a729271dfc6b49901873dc7d8c5aa46d383f13856b9e4f83d
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 9eeef991471c47a0f748cc581c93b036c7560af99f0fcdf1ed75357a5551f1ac
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  input_sha256: 65e71f81eb924f75c629df584f3e3864e102f6c699755f6c392a5521a98343b0
+  output_sha256: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: e25384344f98a03fb83518aef6ca8ce3fa597a86de00cf8b8189af6128fb4b97
+  created_at: 8664cc9480a14fcf5f3524fad31fa40b0758b1d04f16200d038e9cf9c0f5f9c8
+  disposed_at: 8664cc9480a14fcf5f3524fad31fa40b0758b1d04f16200d038e9cf9c0f5f9c8
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 0a42f55b049a47090417cd1e48224b9c493e9634e1e24e600df7c4c9fb910735
+  disposition: df3c6cb44bd754bb91b693a5d29e5cc2802457f287a313fe7588127e3d5de822
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T20:13:30Z'
+  authority: generated
+  via: save_document_payload

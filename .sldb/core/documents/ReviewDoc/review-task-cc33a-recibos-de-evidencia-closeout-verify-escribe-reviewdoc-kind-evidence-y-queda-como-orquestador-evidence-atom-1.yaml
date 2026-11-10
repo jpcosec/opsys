@@ -1,0 +1,36 @@
+name: review-task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador-evidence-atom-1
+path: desk/reviews/task-cc33a-recibos-de-evidencia-closeout-verify-escribe-reviewdoc-kind-evidence-y-queda-como-orquestador/evidence-atom-1.md
+source_hash: 7407bce7d41ab86b82eb6841a5712c952525ba72170d3425e0485b135943e569
+content_hash: 44eccf861d505c55416458de983f53fecb766ff2e40888b419c75ce5b459ff01
+field_hashes:
+  id: d36fb7753e00e792af3244e18eabe6f7865d7fb53061d1f5284c3d9fb0b19413
+  title: 47faadf9b03c3257df85f0db8ee03bb6f1e88a73190d907e16c7bf0eaa227dd3
+  kind: edecec53ab11f560816e75a17681eb83886beace01d7fb927d99707d3d031aac
+  fact: c833c202b5b45ac10909767bb422916db457ddd48188a4ee591f0618893df0ba
+  value: 874b624e773f7b2e6738cf7a6c0a7674c6ccf2dde36d1d3885a3a41b7b4a581f
+  subject: 3e6d91c66d2da76a729271dfc6b49901873dc7d8c5aa46d383f13856b9e4f83d
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 9eeef991471c47a0f748cc581c93b036c7560af99f0fcdf1ed75357a5551f1ac
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  input_sha256: e49afe3d001f336fe13f9d26374d0911325f0d083dff0914ee88d7a6889233c1
+  output_sha256: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: c5c03fc56b60e8fbd835406566a61727d8ac72d431690e6a32f2b7e79165a6d1
+  created_at: 8664cc9480a14fcf5f3524fad31fa40b0758b1d04f16200d038e9cf9c0f5f9c8
+  disposed_at: 8664cc9480a14fcf5f3524fad31fa40b0758b1d04f16200d038e9cf9c0f5f9c8
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: a37f70dcedbf3027aee7d7da1ed841f30176186de6617f2f122ba9c78ebec14b
+  disposition: e17c362434c8d75cf604b4ab6e7a9dc746ea1a03e49df4239132054c8a4a852e
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T20:13:29Z'
+  authority: generated
+  via: save_document_payload
