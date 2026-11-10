@@ -34,6 +34,8 @@ def _write_declared_task(
     payload: dict = {
         "id": TASK_ID,
         "status": "active",
+        "current_node": "ritual-testing",
+        "history": ["task_activates"],
         "references": references,
         "depends_on": [],
         "pills": [],

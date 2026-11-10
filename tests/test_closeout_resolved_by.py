@@ -64,8 +64,9 @@ id: task-x
 status: active
 summary: ''
 tags: []
-current_node: ritual-execution
-history: []
+current_node: ritual-testing
+history:
+- task_activates
 references: []
 depends_on: []
 pills: []

@@ -128,7 +128,7 @@ MODEL_PAYLOADS = [
             "pills": ["pill-template-test"],
             "files": ["deskops/models/task.py"],
             "current_node": "ritual-testing",
-            "history": [],
+            "history": ["task_activates"],
             "implementation_path": "Edit the task template.",
             "validation": ["pytest tests/test_model_templates.py"],
             "done_when": "The task template roundtrips.",

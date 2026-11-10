@@ -275,6 +275,9 @@ def test_closeout_verify_accepts_materialization_coverage(tmp_path: Path) -> Non
         """---
 id: task-closeout-test
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references:
 - tests/test_materialization_targets_outside_package.py
 depends_on: []
@@ -349,6 +352,9 @@ tags: []
         f"""---
 id: task-closeout-test
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references:
 - tests/test_materialization_targets_outside_package.py
 - {commit_sha}

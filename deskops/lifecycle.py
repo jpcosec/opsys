@@ -294,12 +294,12 @@ def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: Lifecyc
         gates = "; ".join(f"{t.relation_type}: {t.condition}" for t in transitions)
         return TransitionResult(node, status, False, True, f"Gate {node} is not complete ({gates}).")
     transition = holding[0]
-    payload.update(apply_effects(payload, transition.effects, model))
-    history = payload.setdefault("history", [])
-    if isinstance(history, list):
-        history.append(transition.relation_type)
     target = COMPLETE if transition.terminal else transition.target
-    payload["current_node"] = target
+    # The model validates the whole new state (TaskDoc's lifecycle coherence): the edge's
+    # ``sets``, the history it appends to and the node it leads to are applied together.
+    history = [str(item) for item in payload.get("history") or []]
+    sets = {**transition.sets, "history": [*history, transition.relation_type], "current_node": target}
+    payload.update(apply_effects(payload, {**transition.effects, "sets": sets}, model))
     verb = "Completed" if transition.terminal else "Advanced to"
     return TransitionResult(target, str(payload.get("status") or ""), True, False, f"{verb} {target} via {transition.relation_type}.")
 

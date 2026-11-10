@@ -1447,7 +1447,8 @@ def test_edit_task_reaches_drawer_task(tmp_path: Path, capsys) -> None:
 def test_edit_task_prefers_active_task_over_drawer_task(tmp_path: Path, capsys) -> None:
     active_task = tmp_path / "desk" / "tasks" / "task-shadowed.md"
     drawer_task = tmp_path / "desk" / "drawer" / "tasks" / "task-shadowed.md"
-    _write_task_doc(active_task, goal="Original active goal.", status="active")
+    # An active-desk task outside the lifecycle is a draft; "active" without history is inconsistent (CC37).
+    _write_task_doc(active_task, goal="Original active goal.", status="draft")
     _write_task_doc(drawer_task, goal="Original drawer goal.")
 
     edited = main(["edit", "task", "task-shadowed", "goal", "Edited active goal.", "--root", str(tmp_path)])
@@ -1694,7 +1695,7 @@ def test_show_task_json_resolves_inherited_workflow_context(tmp_path: Path, caps
             {
                 "id": "task-parent",
                 "title": "Parent",
-                "status": "active",
+                "status": "draft",
                 "why": "Why.",
                 "goal": "Parent goal.",
                 "scope": "Parent scope.",
@@ -1724,7 +1725,7 @@ def test_show_task_json_resolves_inherited_workflow_context(tmp_path: Path, caps
             {
                 "id": "task-child",
                 "title": "Child",
-                "status": "active",
+                "status": "draft",
                 "why": "Why.",
                 "goal": "Child goal.",
                 "scope": "Child scope.",

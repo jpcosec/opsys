@@ -90,6 +90,9 @@ def _write_task(root: Path, references: list[str], files: list[str], *, task_id:
         f"""---
 id: {task_id}
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references:
 {yaml.safe_dump(references, sort_keys=False).rstrip()}
 depends_on: []
@@ -513,6 +516,9 @@ def test_closeout_verify_reports_structured_generated_artifact_findings(tmp_path
         """---
 id: task-follow-up
 status: active
+current_node: ritual-testing
+history:
+- task_activates
 references: []
 depends_on: []
 pills: []
@@ -700,8 +706,9 @@ id: {task_id}
 status: active
 summary: ''
 tags: []
-current_node: ritual-execution
-history: []
+current_node: ritual-testing
+history:
+- task_activates
 references: []
 depends_on: []
 pills: []
