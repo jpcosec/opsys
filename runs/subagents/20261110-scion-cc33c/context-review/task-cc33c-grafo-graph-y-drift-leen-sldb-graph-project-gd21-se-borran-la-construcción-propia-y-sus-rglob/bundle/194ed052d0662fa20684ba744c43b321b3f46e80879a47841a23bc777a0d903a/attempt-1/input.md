@@ -1,0 +1,770 @@
+FILE:desk/tasks/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob.md
+---
+sldb:
+  by: agent
+  at: '2026-11-10T14:18:41Z'
+  authority: generated
+  via: save_document_payload
+id: task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob
+status: draft
+summary: ''
+tags:
+- workspace:desk
+- artifact:task
+current_node: ritual-execution
+history: []
+references: []
+depends_on: []
+pills:
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+- desk/contexts/pill-009-source-file-graph-traceability.md
+- desk/contexts/pill-010-graph-runtime-output-policy.md
+- desk/contexts/pill-011-self-reflection-noise-control.md
+- desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
+files:
+- deskops/graph/
+- deskops/cli/commands/graph.py
+- deskops/cli/commands/drift.py
+- tests/
+- CHANGELOG.md
+task_type: task.code
+inherits_from: []
+inherit_acceptance_context: false
+atoms: []
+from_drawer: desk/drawer/plans/deskops-como-config/dag.yaml
+---
+
+# CC33c: Grafo - graph y drift leen sldb graph project (GD21); se borran la construcción propia y sus rglob
+
+## Rationale
+
+_Explain why this task exists or the business driver behind it._
+
+Nodo CC33c del plan deskops-como-config, dag rev 4: parte (4), grafo, del agregado CC33. Depende de CC38 (en main). Gate G_GD21, satisfied.
+
+## Goal
+
+_Describe the concrete result this task must produce._
+
+deskops graph build|neighbors|missing|reflect y drift leen el grafo de proyecto de sldb (GD21) con la configuración de desk_graph.py; se borran snapshot.py como construcción propia, el rglob de checks.py y los de self_reflection.py; neighbors y missing dan lo mismo que el oráculo v1 y después tests/graph_oracle_v1/ se borra.
+
+## Scope
+
+_State what is in scope and what is out of scope._
+
+En alcance: deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/drift.py, tests/ y CHANGELOG.md. Fuera: closeout (CC33a/CC33b), selectores y escrituras.
+
+## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+_Outline the expected implementation route or affected surface._
+
+_Outline the expected implementation route or affected surface._
+
+CONTRATO DEL NODO (dag.yaml rev 4, CC33c). SCOPE: Parte (4) del scope de CC33: deskops graph build|neighbors|missing|reflect y drift leen sldb graph project (GD21) con la configuración de grafo de deskops declarada como dato en project_graph; se borran graph/snapshot.py (construcción propia), graph/checks.py (rglob → missing de GD21) y los rglob de graph/self_reflection.py; tests/graph_oracle_v1/ se conserva hasta la aceptación y luego se borra. El enlace atom/materialization que usa el closeout (CC33a) se lee de ese grafo cuando este nodo entra.
+
+ACCEPTANCE: deskops graph neighbors y missing dan lo mismo que el oráculo v1 sobre el desk real de deskops y después tests/graph_oracle_v1/ se borra; grep de rglob en deskops/graph/ vacío; goldens de ayuda y salida idénticos; deskops doctor sin hallazgos nuevos en los 6 desks; líneas de graph/ antes y después; CHANGELOG.
+
+OUTPUT_SCOPE: deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/drift.py, tests/, CHANGELOG.md
+
+INVARIANTE (alcance.md):
+1. **El formato del desk no cambia.** Los archivos que hoy existen en `desk/` (Board, tareas, rituales, pills, átomos, drawer, inbox, `desk/lifecycle/`, `desk/reviews/`, `tag-namespaces.yaml`, `config.json`) conservan su ruta, su modelo y su forma. Un nodo puede agregar documentos nuevos en carpetas que ya existen (`RuleDoc` en `desk/lifecycle/`; las `ViewDoc` viven solo en el paquete, sin `desk/views/`, DA4), siempre escritos por `deskops desk update --apply` y nunca a mano; no reescribe los existentes salvo los que ya eran gestionados por deskops (`desk/lifecycle/`).
+2. **La gramática del CLI no cambia.** Los goldens de ayuda (`tests/fixtures/golden/help/*.txt`, 120 archivos, `test_output_goldens.py:316 test_help_goldens`) y de salida (`tests/fixtures/golden/output/`, `test_command_output_goldens` :669) quedan iguales. Excepción ya decidida: lo que `gates-por-tipo` GC06 retiró (`advance --to`), que entra con GC06 antes de este plan.
+3. **Cada superficie borra su código viejo en el mismo paso.** Un nodo que cambia una superficie a sldb borra en el mismo commit el código de deskops que la implementaba, con un grep en su aceptación. No hay periodo con dos caminos.
+4. **En cada paso**, los tests de los archivos tocados verdes, `deskops doctor` y `deskops view board` correctos en los 6 desks (deskops, sldb, spec2viz, scion, pron, graph_ui), y la suite completa del repo tocado sin fallas nuevas contra main (la corre el supervisor sobre el resultado integrado; ver regla 3).
+
+REGLAS COMUNES (alcance.md):
+1. Cada nodo se promueve con `deskops add task --from-drawer` en el desk de deskops, con `--task-type` y `files` completos. Las revisiones en frío (preflight, cold-bundle con `deskops review`) las decide el supervisor; quien opera el desk dispone los hallazgos como correcciones del TaskDoc (`deskops edit task`) y resume en `coordinator-status.md`. Nada a mano en `desk/` fuera de `drawer/plans` ni en `.sldb/`.
+2. Se ejecuta en robocop2, en un worktree de deskops por nodo o grupo de nodos que el coordinador fije.
+3. Validación: los tests de los archivos tocados (`pytest -q <archivos>`, uno a la vez); la suite completa la corre el supervisor una vez sobre el resultado integrado, sin fallas nuevas contra main. Un nodo no cierra con tests rojos ni saltados.
+4. Antes de cambiar una superficie, el nodo captura sus goldens de salida (si no existen) sobre un desk de prueba; después del cambio deben ser idénticos, salvo lo que su aceptación nombre.
+5. Toda capacidad entra con prueba, `CHANGELOG.md` y doc en `docs/`; los rituales del desk que nombran el comportamiento cambiado se actualizan con `deskops` en el mismo nodo.
+6. Compatibilidad de desks: lo que un nodo agrega o reescribe en `desk/` lo escribe `deskops desk update --apply` de forma idempotente (segunda corrida sin cambios), probado.
+7. Nada de Python supliendo una regla: si el lenguaje de sldb no la expresa, hipótesis en el TaskDoc y nota a sldb.
+8. Promoción de nodos con hijos (`node_role: aggregate`): nunca se promueve el agregado; se promueven los hijos.
+
+PRECISIONES DE PROMOCIÓN (2026-11-10, coordinador del plan; base origin/main 3951bb04):
+a1 (lo que ya está en main): desde 4a9a4bbb, deskops/graph/desk_graph.py (212 líneas) es la configuración del desk para sldb.api.edges.project_graph (GD21: ProjectGraphConfig, DocumentSurface, DeclaredFileTargets, FileExclusions), y checks.find_missing_graph_references ya lee extract_declared_edges de ahí. extract_docs/extract_edges/extract_sources están congelados en tests/graph_oracle_v1/ como oráculo (lo usan tests/closeout_graph_oracle.py y tests/graph_oracle_v1/).
+a2 (lo que falta, inventario en main): deskops/graph/snapshot.py (364 líneas; build_graph_snapshot :128, write_graph_snapshot, read_graph_neighbors) arma su propio snapshot. deskops/graph/checks.py :151 hace rglob("*.md") por superficie. deskops/graph/self_reflection.py (433 líneas) y cli/commands/graph.py (167 líneas: _build, _neighbors, ...) y cli/commands/drift.py (29) leen ese snapshot. Este nodo pasa graph build|neighbors|missing|reflect y drift a sldb.api.project_graph (o sldb graph project) con la configuración de desk_graph.py, y borra la construcción propia y los rglob.
+a3 (oráculo): neighbors y missing tienen que dar lo mismo que el oráculo v1 sobre el desk real de deskops (copia en /dev/shm). Recién después se borra tests/graph_oracle_v1/, en un commit propio que nombra la comparación.
+a4 (la decisión revisable de main-en-verde-2): graph missing no reporta un target declarado que existe como archivo dentro del root (deskops/graph/checks.py, declared_target_is_a_file, tests/test_graph_missing_existing_files.py). Este nodo decide si el grafo de sldb ya crea esos nodos (.yaml del drawer, fixtures .json). Si los crea, se borra la excepción y su test cambia a «aparece como nodo». Si no, la excepción queda y se anota como hipótesis para sldb.
+a5 (verificación): los 4 pasos del workflow de deskops en un clon limpio (los corre el coordinador) más deskops doctor en los 6 desks. Archivos de test de a uno: test_graph_* y closeout_graph_oracle, test_cli y test_output_goldens desde /dev/shm, sin --update-golden.
+a6 (rendimiento): cada comando CLI tarda unos 30 s mientras el arreglo de rule_graph de sldb espera el CI verde de sldb. Los archivos largos se corren por nodo.
+
+PRECISIONES DEL PREFLIGHT Y DEL COLD-BUNDLE (preflight-1 y bundle-1, 2026-11-10):
+b1 (CC38): CC38 está cerrada en main (47ab1102). Una dependencia cerrada no se lista (DC6). depends_on vacío no bloquea nada.
+b2 (interfaz): la API Python sldb.api.project_graph(store), que ya usa desk_graph.py. No se llama al CLI sldb graph project desde deskops.
+b3 (decidir a4): la evidencia es el resultado de project_graph sobre la copia del desk real. Si entre sus nodos están desk/drawer/plans/deskops-como-config/dag.yaml y tests/fixtures/model_contract_hashes.json (los casos de main-en-verde-2), el grafo los «crea»: se borra declared_target_is_a_file y su test pasa a «es un nodo del grafo». Si no están, la excepción queda y el informe la anota como hipótesis para sldb.
+b4 (closeout): este nodo no toca closeout ni CC33a. Si el enlace atom/materialization del closeout ya lee desk_graph (closure._closeout_link_gate), no cambia. Si leía snapshot.py, el informe lo dice y se coordina con CC33a/b. No se edita closure.py.
+b5 (oráculo): «lo mismo» es igualdad semántica, el mismo conjunto de (source, target, kind) en neighbors y de findings en missing, sobre una copia en /dev/shm del desk real de deskops (desk/ y .sldb/ de main al despachar). El orden no cuenta. El oráculo se borra en un commit propio dentro de este nodo, después de la comparación verde.
+b6 (goldens): los de ayuda quedan idénticos. Los de salida también. Si alguno cambia porque la fuente del grafo es otra, el worker para y avisa con el diff; no lo regenera (manda «idénticos»).
+b7 (4 pasos del workflow): los de .github/workflows de deskops: sldb stores build --store .sldb; python -m pytest tests -q (el coordinador, un proceso por archivo); sldb stores build --check --store .sldb; bash scripts/ci-knowledge-check.sh . Los corre el coordinador sobre un clon limpio.
+b8 (drift): deskops drift check corre drift_check_role_docs y drift_check_runtime_bindings (materializers) y el chequeo de superficies de conocimiento. Este nodo solo cambia lo que lea el snapshot propio de graph/snapshot.py o haga rglob en deskops/graph/. Las comprobaciones de materializers no cambian.
+
+PRECISIONES DE READINESS (2026-11-10, coordinador Scion sobre origin/main ba982a45):
+b9 (build y reflect): la aceptación de equivalencia con el oráculo v1 aplica a `neighbors` y `missing`. `graph build` y `graph reflect` conservan su contrato actual de CLI y de salida: no se les exige una comparación nueva contra el oráculo, sólo que sus tests existentes y los goldens sigan verdes y que no aparezca una segunda fuente de verdad (siguen leyendo project_graph de sldb).
+b10 (drift): el worker inspecciona `cli/commands/drift.py`; si no lee `graph/snapshot.py` ni hace `rglob`, no lo cambia y lo deja documentado en el informe. Si lee alguno de los dos, lo migra a project_graph con el mismo criterio de b9.
+b11 (líneas antes/después): el informe lleva una tabla `archivo | antes | después` con `wc -l` por archivo de `deskops/graph/` y los comandos de graph/drift tocados. No hay umbral de reducción; el dato es evidencia.
+b12 (base y copia del desk): la base es origin/main `ba982a45` y la copia real para el oráculo se toma de ese mismo commit en `/dev/shm`, con `.sldb/` incluido. El informe registra el SHA.
+b13 (doctor): el baseline son las salidas de `deskops doctor` en los 6 desks con origin/main `ba982a45`; «sin hallazgos nuevos» significa que el conjunto de errores/alertas no agrega ninguno que no estuviera en ese baseline.
+b14 (a4 y rglob): primero se corre `sldb.api.project_graph` sobre la copia de b12 y se registran los nodos de `desk/drawer/plans/deskops-como-config/dag.yaml` y `tests/fixtures/model_contract_hashes.json`. Si ambos aparecen como nodos, se borra `declared_target_is_a_file` y su test cambia a «es un nodo del grafo»; entonces el grep de `rglob` en `deskops/graph/` debe quedar vacío. Si no aparecen, el worker NO borra la excepción ni su test: PARA y avisa al coordinador con la evidencia de project_graph; la excepción queda como hipótesis para sldb y el grep se evalúa excluyendo esa única función, que se documenta en el informe.
+b15 (precedencia de b14): b14 manda sobre la frase general «se borra el rglob de checks.py». Si b14 ordena PARAR porque project_graph no crea los dos nodos, el worker no borra `declared_target_is_a_file`, no borra ese rglob, deja el test como está y avisa con la evidencia; la aceptación de grep se evalúa excluyendo esa única función, documentada en el informe. Si b14 confirma los dos nodos, el borrado sí es incondicional y el grep debe quedar vacío.
+b16 (precedencia de b10): b10 manda sobre la frase de scope para drift. Si `drift.py` no lee `snapshot.py` ni hace `rglob`, no se cambia y se documenta; no se inventa una migración de drift que no corresponde.
+b17 (interfaz única): la única interfaz es `sldb.api.project_graph(store)` (b2). No se invoca el CLI `sldb graph project` desde deskops.
+b18 (orden del oráculo): primero se implementa la migración y se prueba la paridad semántica; luego un commit de implementación con tests verdes; después un commit propio que borra `tests/graph_oracle_v1/` y actualiza sus referencias, sin cambiar código de producción en ese segundo commit.
+
+## Validation
+
+_List the checks required before this task can close._
+
+- Comparación con el oráculo v1 sobre copia del desk real (a3)
+- grep -rn rglob deskops/graph/ vacío
+- Tests de a uno (a5), test_cli y goldens desde /dev/shm
+- 4 pasos del workflow en clon limpio
+
+## Done When
+
+_Name the observable condition that makes the task complete._
+
+graph neighbors y missing iguales al oráculo v1 sobre el desk real; tests/graph_oracle_v1/ borrado; grep de rglob en deskops/graph/ vacío; goldens idénticos; doctor sin hallazgos nuevos en 6 desks; 4 pasos del workflow verdes; CHANGELOG.
+
+FILE:desk/contexts/pill-008-kgdb-sldb-boundary.md
+---
+# pill-xxx
+id: pill-008
+# e.g., language:python, library:pydantic
+tags:
+- system:deskops
+- system:sldb
+- pill-type:decision
+- topic:knowledge-graph
+---
+
+# Decision: sldb owns the graph layer
+
+## What
+
+_Define the context or guardrail this pill carries._
+
+sldb owns graph persistence, traversal, and the graph contracts. deskops builds its workflow-specific snapshot and validates and writes it through the sldb graph API (`sldb.api.graph`, `sldb.store.graph.graph_io`); there is no separate kgdb dependency.
+
+## Why
+
+_Explain why this context matters for safe execution._
+
+If deskops reimplemented graph contracts or persisted graphs on its own, the ecosystem would gain a competing graph runtime and two sources of truth for graph semantics. sldb already owns document semantics and the graph layer, so duplicating either boundary splits ownership.
+
+## When
+
+_Describe when an agent should apply this pill._
+
+Apply this pill to every task that emits, imports, queries, or documents graph data involving SLDB documents or semantic tags.
+
+## Where
+
+_Name the files, surfaces, or scope this pill applies to._
+
+Applies to `desk/tasks/*graph*.md`, deskops graph modules, SLDB semantic export payloads, and graph ingest/query integration.
+
+## How
+
+_Describe the correct way to apply this guidance._
+
+Treat SLDB semantic tags, indexes, DAG nodes, sections, and document payloads as graph inputs. Validate snapshots with `sldb.api.graph.snapshot.GraphSnapshot` and load/save them with `sldb.api.graph.snapshot.snapshot_load` and `sldb.store.graph.graph_io.save_graph`. Keep workflow-specific relation extraction in deskops.
+
+## How Not
+
+_Describe the shortcut or failure mode to avoid._
+
+Do not add SLDB document parsing or semantic tag derivation to deskops. Do not reintroduce a kgdb dependency or a deskops-owned graph runtime. Do not treat OWL or ontology reasoning as the first runtime dependency.
+
+FILE:desk/contexts/pill-009-source-file-graph-traceability.md
+---
+# pill-xxx
+id: pill-009
+# e.g., language:python, library:pydantic
+tags:
+- system:deskops
+- pill-type:model
+- topic:source-code
+- topic:traceability
+---
+
+# Model: source files are graph nodes
+
+## What
+
+_Define the context or guardrail this pill carries._
+
+The deskops knowledge graph must include source files as first-class nodes connected to desk artifacts by explicit roles.
+
+## Why
+
+_Explain why this context matters for safe execution._
+
+A graph that only connects desk documents explains knowledge organization but not implementation accountability. Source-file edges make it possible to ask what implements, validates, exposes, configures, or violates an atom or task.
+
+## When
+
+_Describe when an agent should apply this pill._
+
+Apply this pill to graph vocabulary, extraction, adapter, CLI, and self-reflection tasks.
+
+## Where
+
+_Name the files, surfaces, or scope this pill applies to._
+
+Applies to code under `deskops/`, `desk/`, `docs/`, `spec/`, and `tests/` when those files are represented as graph nodes or edge targets.
+
+## How
+
+_Describe the correct way to apply this guidance._
+
+Use stable path-based identifiers for source-file nodes first. Add symbol-level nodes only after file-level extraction is validated. Attach provenance metadata to inferred edges.
+
+## How Not
+
+_Describe the shortcut or failure mode to avoid._
+
+Do not start with symbol-level static analysis unless the task explicitly requires it. Do not infer high-confidence implementation edges from filename similarity alone.
+
+FILE:desk/contexts/pill-010-graph-runtime-output-policy.md
+---
+# pill-xxx
+id: pill-010
+# e.g., language:python, library:pydantic
+tags:
+- system:deskops
+- system:sldb
+- pill-type:guardrail
+- topic:runtime
+- topic:drift-control
+---
+
+# Guardrail: generated graph output is runtime state
+
+## What
+
+_Define the context or guardrail this pill carries._
+
+Generated graph snapshots and query indexes are runtime artifacts unless a task explicitly promotes a fixture or contract example into versioned test data.
+
+## Why
+
+_Explain why this context matters for safe execution._
+
+Graph outputs can become large, noisy, and stale. Keeping generated outputs in runtime prevents the repository from confusing source knowledge with derived graph projections.
+
+## When
+
+_Describe when an agent should apply this pill._
+
+Apply this pill whenever a task writes deskops graph snapshot JSON, generated indexes, query results, or self-reflection reports.
+
+## Where
+
+_Name the files, surfaces, or scope this pill applies to._
+
+Generated outputs should prefer `.sldb/runtime/` or another agreed ignored runtime location. Versioned fixtures belong under tests or contracts only when they prove behavior.
+
+## How
+
+_Describe the correct way to apply this guidance._
+
+Separate source specs/adapters from generated graph outputs. Add or update ignore rules when a new runtime path is introduced. Keep small golden fixtures only for tests.
+
+## How Not
+
+_Describe the shortcut or failure mode to avoid._
+
+Do not commit full generated graph snapshots as documentation. Do not use generated graph output as the only source of relation truth.
+
+FILE:desk/contexts/pill-011-self-reflection-noise-control.md
+---
+# pill-xxx
+id: pill-011
+# e.g., language:python, library:pydantic
+tags:
+- system:deskops
+- pill-type:guardrail
+- topic:self-reflection
+- topic:knowledge-graph
+- topic:drift-control
+---
+
+# Guardrail: self reflection must avoid noisy generation
+
+## What
+
+_Define the context or guardrail this pill carries._
+
+Self-reflection should produce high-signal atoms, issues, or routed questions from graph findings, not bulk-generated guesses.
+
+## Why
+
+_Explain why this context matters for safe execution._
+
+If every weak graph inference becomes an atom or issue, the knowledge base becomes noisy and harder to trust. Self-reflection must distinguish missing evidence from durable knowledge.
+
+## When
+
+_Describe when an agent should apply this pill._
+
+Apply this pill to self-reflection routines, graph missing checks, stale relation checks, and automatic issue/atom creation.
+
+## Where
+
+_Name the files, surfaces, or scope this pill applies to._
+
+Applies to desk/tasks/*self-reflection*.md, deskops graph reflect, and any generated inbox or drawer output.
+
+## How
+
+_Describe the correct way to apply this guidance._
+
+Require confidence, provenance, and dedupe before writing new atoms or issues. Prefer reviewable findings when uncertainty is high. Route unclear cross-tool questions to the owning repo inbox.
+
+## How Not
+
+_Describe the shortcut or failure mode to avoid._
+
+Do not create atoms from low-confidence graph gaps. Do not open duplicate issues for the same missing relation. Do not silently mutate source artifacts during a reflection-only task.
+
+FILE:desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
+---
+# pill-xxx
+id: pill-drift-checks-are-review-surfaces-not-mutators
+# e.g., language:python, library:pydantic
+tags:
+- system:deskops
+- workspace:desk
+- pill-type:guardrail
+- topic:drift
+- topic:review
+---
+
+# Guardrail: drift checks are review surfaces, not mutators
+
+## What
+
+_Define the context or guardrail this pill carries._
+
+Treat drift detection as a review surface that emits findings, evidence, and promotion paths, not as a command that rewrites durable knowledge automatically.
+
+## Why
+
+_Explain why this context matters for safe execution._
+
+Drift signals are often partial, heuristic, or confidence-weighted. They are useful for routing work, but dangerous as silent mutation triggers.
+
+## When
+
+_Describe when an agent should apply this pill._
+
+Apply this pill whenever a task designs drift checks, graph reflection outputs, or review records that compare atoms, docs, tests, diagrams, and implementation surfaces.
+
+## Where
+
+_Name the files, surfaces, or scope this pill applies to._
+
+Applies to drift CLI design, finding storage, review workflows, and any future automation that proposes follow-up tasks, questions, or atom updates.
+
+## How
+
+_Describe the correct way to apply this guidance._
+
+Emit provenance-backed findings, include confidence and dedupe keys, and route accepted work through explicit human-reviewed promotions.
+
+## How Not
+
+_Describe the shortcut or failure mode to avoid._
+
+Do not let drift tooling rewrite docs, atoms, or graph links just because a heuristic matched. Do not collapse review, decision, and mutation into one implicit step.
+
+FILE:deskops/cli/commands/graph.py
+from __future__ import annotations
+
+from pathlib import Path
+from typing import Any
+
+from deskops.errors import UsageError
+
+
+class GraphCLI:
+    def run(self, args: Any) -> int:
+        if args.graph_command == "build":
+            return self._build(args)
+        if args.graph_command == "neighbors":
+            return self._neighbors(args)
+        if args.graph_command == "missing":
+            return self._missing(args)
+        if args.graph_command == "reflect":
+            return self._reflect(args)
+        raise UsageError(f"Unknown graph command: {args.graph_command}")
+
+    def _build(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        if not root.exists() or not root.is_dir():
+            print(f"Error: graph root is not a directory: {root}")
+            return 1
+
+        from deskops.graph.snapshot import GraphSnapshotCapabilityError
+        from deskops.graph.snapshot import networkx_path_for_snapshot
+        from deskops.graph.snapshot import write_graph_snapshot
+
+        try:
+            requested_output = Path(args.output) if args.output else None
+            if requested_output is not None and not requested_output.is_absolute():
+                requested_output = root / requested_output
+            output_path = (
+                write_graph_snapshot(root, requested_output)
+                if requested_output is not None
+                else write_graph_snapshot(root)
+            )
+
+            from sldb.api.graph.snapshot import snapshot_load
+            from sldb.store.graph.graph_io import save_graph
+
+            save_graph(snapshot_load(output_path), networkx_path_for_snapshot(output_path))
+
+        except GraphSnapshotCapabilityError as exc:
+            print(f"Error: {exc}")
+            return 1
+
+        print(f"Graph snapshot written: {output_path}")
+        return 0
+
+    def _neighbors(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        from deskops.graph.snapshot import GraphSnapshotReadError
+        from deskops.graph.snapshot import default_snapshot_read_path
+        from deskops.graph.snapshot import read_graph_neighbors
+
+        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
+
+        try:
+            neighbors = read_graph_neighbors(graph_path, args.id)
+        except GraphSnapshotReadError as exc:
+            print(f"Error: {exc}")
+            return 1
+
+        self._print_neighbors(args.id, neighbors)
+        return 0
+
+    def _missing(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        if not root.exists() or not root.is_dir():
+            print(f"Error: graph root is not a directory: {root}")
+            return 1
+
+        # Imported outside the try: a failing import must surface as itself,
+        # not as an unbound name in the except clause.
+        from deskops.graph.checks import GraphMissingCheckError
+        from deskops.graph.checks import find_missing_graph_references
+
+        graph_path = Path(args.graph).resolve() if args.graph else None
+        try:
+            findings = find_missing_graph_references(root, graph_path)
+        except GraphMissingCheckError as exc:
+            print(f"Error: {exc}")
+            return 1
+
+        if not findings:
+            print("No missing graph references found.")
+            return 0
+
+        failing = [finding for finding in findings if not finding.record]
+        informational = [finding for finding in findings if finding.record]
+
+        if failing:
+            print("Missing graph references:")
+            for finding in failing:
+                self._print_missing_finding(finding)
+        if informational:
+            print("Informational (archived records):")
+            for finding in informational:
+                self._print_missing_finding(finding)
+
+        print(f"{len(failing)} missing, {len(informational)} informational")
+        return 1 if failing else 0
+
+    def _print_missing_finding(self, finding: Any) -> None:
+        print(f"- {finding.kind}: {finding.source_id} -> {finding.target_id}")
+        if finding.role:
+            print(f"  role: {finding.role}")
+        if finding.provenance_path:
+            locator = f":{finding.provenance_locator}" if finding.provenance_locator else ""
+            print(f"  provenance: {finding.provenance_path}{locator}")
+        print(f"  reason: {finding.reason}")
+
+    def _reflect(self, args: Any) -> int:
+        root = Path(args.root).resolve()
+        if not root.exists() or not root.is_dir():
+            print(f"Error: graph root is not a directory: {root}")
+            return 1
+
+        from deskops.graph.snapshot import GraphSnapshotReadError
+        from deskops.graph.snapshot import default_snapshot_read_path
+        from deskops.graph.snapshot import read_graph_snapshot
+
+        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
+        from deskops.graph.checks import GraphMissingCheckError
+        from deskops.graph.self_reflection import build_self_reflection_report
+        from deskops.graph.self_reflection import write_self_reflection_report
+
+        try:
+            snapshot = read_graph_snapshot(graph_path)
+            report = build_self_reflection_report(snapshot)
+            output_path = write_self_reflection_report(root, report)
+        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
+            print(f"Error: {exc}")
+            return 1
+
+        summary = report["summary"]
+        print(f"Self-reflection report written: {output_path}")
+        print(f"Findings: {summary['finding_count']}")
+        print(f"Suppressed duplicates: {summary['suppressed_duplicate_count']}")
+        return 0
+
+    def _print_neighbors(self, node_id: str, neighbors: dict[str, Any]) -> None:
+        nodes = neighbors["nodes"]
+        node = neighbors["node"]
+        print(f"Node: {node_id} ({_graph_node_label(node)})")
+        print("Outgoing:")
+        if neighbors["outgoing"]:
+            for edge in neighbors["outgoing"]:
+                target = nodes.get(edge["target"], {"id": edge["target"]})
+                print(f"- {edge['role']} -> {edge['target']} ({_graph_node_label(target)})")
+        else:
+            print("- none")
+
+        print("Incoming:")
+        if neighbors["incoming"]:
+            for edge in neighbors["incoming"]:
+                source = nodes.get(edge["source"], {"id": edge["source"]})
+                print(f"- {edge['source']} ({_graph_node_label(source)}) -> {edge['role']}")
+        else:
+            print("- none")
+
+
+def _graph_node_label(node: dict[str, Any]) -> str:
+    return str(node.get("label") or node.get("title") or node.get("id"))
+
+FILE:deskops/cli/commands/drift.py
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+from deskops.errors import UsageError
+from deskops.materializers.roles import drift_check_role_docs
+from deskops.materializers.runtime_profiles import drift_check_runtime_bindings
+
+
+class DriftCLI:
+    def run(self, args: argparse.Namespace) -> int:
+        if args.drift_command != "check":
+            raise UsageError(f"Unknown drift command: {args.drift_command}")
+        root = Path(args.root).resolve()
+        out_dir = Path(args.out).expanduser().resolve() if getattr(args, "out", None) else None
+        findings = drift_check_role_docs(root, out_dir)
+        findings += drift_check_runtime_bindings(root)
+        
+        from deskops.graph.self_reflection import drift_check_knowledge_surfaces
+        findings += drift_check_knowledge_surfaces(root)
+        
+        if not findings:
+            print("No drift found.")
+            return 0
+        print("Drift findings:")
+        for finding in findings:
+            print(f"- {finding}")
+        return 1
+
+FILE:CHANGELOG.md
+# Changelog
+
+All notable changes to deskops are recorded here.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Entries cover the unreleased changes since tag `v-stable-2026.08.29`.
+
+## [Unreleased]
+
+### Added
+
+- `deskops review record --kind preflight|bundle --operator <name>` (main en verde, decisión B del coordinador de proyecto con las condiciones del overlord): a desk without a model (CI scenarios, the quickstart) records those receipts by hand. `--operator` is required for both kinds (without it nothing is written); the receipt keeps `engine: human`, names the operator as `actor` and says `no model available` in its title and summary. Real desk tasks still get them from `deskops review preflight|bundle`.
+- The activation gate of each factory task type is a `RuleDoc` seed of the desk (CC32, sldb GO06/GO08): `deskops/data/rules/rule-activation-<type>.md`, one per type (`task.code`, `task.docs`, `task.debug`, `task.refactor`, `task.decision`, `task.aggregate`, `task.external`), written as managed seeds to `desk/lifecycle/` and tracked as `RuleDoc` by `deskops init` and `deskops desk update --apply` (declared in `deskops/data/desk_declaration.yaml`; `lifecycle.ensure_rule_model` registers sldb's `RuleDoc` in the store; a second `--apply` changes nothing). Each rule is `on_transition` over `ritual-execution` with subject `model <= <TypeDoc>`, so a desk subtype inherits it and a desk `RuleDoc` can add a clause; it requires the receipts the type asks for (`any(^subject: anchor_state = "intact" and verdict = "accepted" and kind = "<kind>")`) and `all(depends_on: status = "closed")`; `task.refactor` only adds `goldens` to the `task.code` rule its family already gets, `task.aggregate` only needs its dependencies closed. `deskops advance` passes the task as the `document` of `sldb.api.edges_holding`; when an error finding holds the edge back, the message lists the findings of `sldb.api.edges_blocked` (`error: [rules/<rule>] <Model>:<task>: <message> | <clause> (seen: ...) (witness: ...)`) instead of the edge conditions (exit 1 as before; a gate held back by its own condition keeps `Gate <node> is not complete (...)`). `deskops show task` prints them under each lifecycle gate (`blocked by:`, `findings` in JSON) and `deskops next` under `Blocked by:`. `docs/workflow-policy-reference.md` carries the table of rules per type.
+- Task types as models with a hierarchy (`deskops/models/task_types.py`): `TaskCodeDoc` (`task.code`), `TaskDocsDoc` (`task.docs`), `TaskDebugDoc` (`task.debug`), `TaskRefactorDoc` (`task.refactor`, extends `TaskCodeDoc`), `TaskDecisionDoc` (`task.decision`), `TaskAggregateDoc` (`task.aggregate`) and `TaskExternalDoc` (`task.external`). Each fixes `task_type` with a `Literal` default and declares `__closeout_evidence__` and `__activation_receipts__`; `TaskDoc` declares `__contract__`.
+- `deskops add task --task-type` accepts only registered types (and lists them on an unknown name); without `--task-type` the type defaults to `task.code` with an envelope note. Tasks are stored under their type model, so `model <= TaskCodeDoc` names the family.
+- A desk can add its own subtypes in `desk/models/*.py` (DC7); `deskops desk update --apply` registers them and migrates legacy `task_type` strings onto their canonical type (idempotent, with a per-task report).
+- `ReviewDoc` (`deskops/models/review.py`): a review receipt for preflight, bundle, reproduction, goldens, or owner checks. `kind` and `verdict` are closed vocabularies; `subject` holds a `doc:<Model>:<id>` anchor (or `subject_ref` names a plan node), and `verdict: accepted|rejected` requires a reason and `disposed_by`. The model declares `subject` in `__doc_anchors__` and leaves `__references__` alone until sldb GO07 (`G_SLDB_ANCHORS`).
+- `deskops init` and `deskops desk update` create `desk/reviews/`. The `review` subject is registered for `deskops edit review`, which refuses `verdict`, `reason`, `disposed_at`, and `disposed_by`: the verdict is written by `deskops review dispose` (GC03), and a new review is a new document.
+- `deskops review` replaces the two governed `context_review.py` scripts with a CLI command (`node`, `preflight`, `bundle`, `status`, `dispose`). Each run writes the ritual evidence under `runs/subagents/<run>/context-review/<key>/<sha>/attempt-N/` and a `ReviewDoc` receipt; the default engine is the `runtime-pi-deepseek-flash` profile seeded idempotently under `desk/runtimes/` (`RuntimeProfileDoc` gains an optional `system_prompt`). `--max-attempts` (default 2) caps good attempts per key, `--force --reason` re-reviews an unchanged input, and transport failures leave `technical_ok: false` with `verdict: incomplete` / `reason: technical`.
+- `deskops review record <task> --kind {reproduction,goldens,owner} --evidence <path>... --reason "..."` records the receipts a model does not produce (follow-up of CC32). It writes a `ReviewDoc` with `verdict: pending`, `engine: human`, `actor` from the desk identity, the task anchor as `subject` (pinned on write like the other receipts), and the evidence paths in `summary`; `input_sha256` is the SHA-256 of `<path>\n<content>\n` over the evidence files, paths relative to the root, sorted and without repeats. Evidence that does not exist or leaves the root fails with `Error: evidence not found: <path>` (exit 1) and writes nothing; `reproduction` and `goldens` require at least one `--evidence`, `owner` may have none, and `--kind` refuses `preflight`, `bundle` and `node`. `deskops review dispose` writes the verdict, as for the other receipts (`tests/test_review_record.py`).
+- `deskops closeout resolved-by --task <id> --reason "..." --ref <commit> [--ref <commit|URL>...] --test <test> [--test ...] [--paths ...] [--message ...]` closes a task whose work already entered the history (for example through a PR) before its closeout (`ClosureService.close_resolved_by`). It does not ask for an atom per changed file: at least one `--ref` must be a commit that is HEAD or an ancestor of the `--root` repository, the other refs may be ancestor commits or http(s) URLs, and at least one `--test` is required, each one accepted by the tests gate for the task's `files`. Any ref or test that does not resolve, or a blank reason, is refused with exit 1 and writes nothing. It makes one closing commit with `Task-Id`, `Closeout-Mode: resolved-by`, `Closeout-Reason`, one `Closeout-Ref` per ref and one `Closeout-Test` per test, marks the task `resolved` with `resolved-by` in its history, takes it off the Board and records the index entry with `mode: resolved-by` (`tests/test_closeout_resolved_by.py`).
+
+### Changed
+
+- `deskops graph missing` no reporta un target declarado que existe como archivo dentro del repo aunque el grafo de proyecto no tenga nodo para él (un `.yaml` del drawer, un fixture `.json`). Un target inexistente, un átomo o una ruta que sale del root siguen siendo missing. Es una decisión revisable hasta que CC33c pase `graph` a `sldb graph project` (GD21). Tests en `tests/test_graph_missing_existing_files.py`.
+- A task's lifecycle is a validator of `TaskDoc` (CC37, DK6/DA6), so no write leaves it outside the rules: `status`, `current_node` and `history` must form a state the lifecycle can produce, or the model refuses the payload with `Task <id> lifecycle is inconsistent: <field>: '<value>' ...; expected '<value>'`. Coherent states (`deskops/models/task_lifecycle.py`): the entry state (empty `history`, `current_node` the entry node `ritual-execution` or empty, `status` in `ENTRY_STATUSES` = `{draft}`, or `deferred`, what a drawer task holds, when `current_node` is empty); the state after a transition (the last `history` item is the `relation_type` of an edge, and `current_node`/`status` are that edge's target and `sets.status`, read from the package's `RelationDoc` seeds in `deskops/data/lifecycle/`, a `terminal` edge leading to `complete`); and the closeout records `CLOSEOUT_STATES` (`closed` after `task_completes` at `complete`, `superseded` after `superseded`, `resolved` after `resolved-by`, the last two from any node). `task_type` keeps matching the model through each typed model's `Literal`; `TaskDoc` itself still accepts any `task_type`. Because sldb builds the model on every write, `sldb fields update`, `sldb docs update` and `sldb serve`'s `/save` reject an inconsistent task with that message (`tests/test_task_lifecycle_validator.py`); a coherent state written without a transition is still accepted (no "transition only" field). `deskops advance` applies the edge's `sets`, the appended `history` and the new `current_node` in one `apply_effects` call, so the model validates the whole new state. `deskops desk update` reports a task whose lifecycle is inconsistent (`- Inconsistent task lifecycles (not written): N task(s)` and one `inconsistent task lifecycle in <path>, not written: <errors>` line each) and `--apply` leaves it as it is instead of migrating its `task_type`. `deskops add task` with a JSON payload carrying a non-entry `status` is now refused by the model.
+- A task's lifecycle is a validator of `TaskDoc` (CC37, DK6/DA6), so no write leaves it outside the rules: `status`, `current_node` and `history` must form a state the lifecycle can produce, or the model refuses the payload with `Task <id> lifecycle is inconsistent: <field>: '<value>' ...; expected '<value>'`. Coherent states (`deskops/models/task_lifecycle.py`): the entry state (empty `history`, `current_node` the entry node `ritual-execution` or empty, `status` in `ENTRY_STATUSES` = `{draft}`, or, when `current_node` is empty (a task outside the lifecycle), `deferred` (a drawer task) or `resolved`/`closed`/`done`/`complete` (a task resolved before the lifecycle, what `closeout retire` removes)); the state after a transition (the last `history` item is the `relation_type` of an edge, and `current_node`/`status` are that edge's target and `sets.status`, read from the package's `RelationDoc` seeds in `deskops/data/lifecycle/`, a `terminal` edge leading to `complete`); and the closeout records `CLOSEOUT_STATES` (`closed` after `task_completes` at `complete`, `superseded` after `superseded`, `resolved` after `resolved-by`, the last two from any node). `task_type` keeps matching the model through each typed model's `Literal`; `TaskDoc` itself still accepts any `task_type`. Because sldb builds the model on every write, `sldb fields update`, `sldb docs update` and `sldb serve`'s `/save` reject an inconsistent task with that message (`tests/test_task_lifecycle_validator.py`); a coherent state written without a transition is still accepted (no "transition only" field). `deskops advance` applies the edge's `sets`, the appended `history` and the new `current_node` in one `apply_effects` call, so the model validates the whole new state. `deskops desk update` reports a task whose lifecycle is inconsistent (`- Inconsistent task lifecycles (not written): N task(s)` and one `inconsistent task lifecycle in <path>, not written: <errors>` line each) and `--apply` leaves it as it is instead of migrating its `task_type`. `deskops add task` with a JSON payload carrying a non-entry `status` is now refused by the model.
+- Selectors of tracked desk documents resolve through `sldb.api.select_documents` (CC35b, GD23). `doc_access.resolve_document` asks the store twice, in order: by name (`prefix`, where an exact name wins over the one prefix match) under the directory's pattern, then, only if that found nothing, by file name (`path_glob` of `<selector>*.md`), so a ritual tracked as `ritual-execution` in `desk/rituals/execution.md` resolves as `ritual-execution` and as `execution`; an ambiguous query stops there. `resolve_glob`, `resolve_artifact_selector[_multi]`, `resolve_ritual_selector`, `registered_repositories` and the task and pill lookups of `deskops review` use it; the messages are the same (`No <what> file found for selector '<s>'`, `Ambiguous <what> selector '<s>': <paths relative to desk/>`), the ambiguity candidates being the rows sldb names. Gone: `_tracked_task_paths` (which read `.sldb/core/documents/` directly) and the frontmatter-id fallbacks of reviews and rituals (`frontmatter_id`): a legacy task resolves by the `TaskDoc` model family, a review and a ritual by the name the store tracks them by. A file on a tracked surface that the store does not track no longer resolves. The drawer and `desk/issues`, which the store does not track, and a desk without a store keep the disk rule of `desk_paths.resolve_selector` (marked `CC35b-a3`); the `operations.py` aliases graph_ui calls are marked `CC34`. `resolve_artifact_selector_multi` tries its directories in order (an active pill before a drawer pill of the same selector) instead of one candidate set across them. The desk declaration's `include` now names the seeded Board (`desk/tasks/Board.md` as `BoardDoc:Board`) and phase ritual (`desk/rituals/phase.md` as `RitualDoc:ritual-phase`), so `deskops init` and `deskops desk update --apply` track them and a new desk's `deskops edit board Board` resolves (CC35b d1); the Board seed keeps `track: false`.
+- The closeout tests gate (`CloseoutGatesService.reference_points_to_test`) accepts a referenced `.py` file under any directory named `tests` in the repository (`tests/`, `runtime/foo/tests/`, `ops/tests/sub/`), or declared in the evaluated TaskDoc's `files`, not only under `<root>/tests/`. The evidence still comes from `references` (`files` only widens where tests may live). Still rejected: absolute paths, paths that leave the root through `..` or a symlink, missing files, suffixes other than exactly `.py`, files under a directory starting with `.` or named `site-packages` or `node_modules`, and strings that only look like evidence. Each reference is checked on its own, without walking the disk (`tests/test_closeout_test_paths.py`).
+- Every write of deskops goes through `sldb.api.transaction` and `deskops/doc_io.py` is gone (CC35a, GD24). `doc_access.desk_transaction(root)` opens the desk store's transaction with the deskops package path (nested blocks join; a root without a store runs the block without one), and the services, `cli/commands/message.py`, `repo.py`, `runtime/scion.py` and `doc_access` write with `create`, `update`, `delete`, `track`, `untrack`, `write_file` and `record` of that transaction; `bootstrap.py`, `workspace.py`, `lifecycle.py` and `cli/commands/desk.py` call `add_model`, `link_store`, `inherit_model`, `init_relations`, `init_store`, `update_store_indexes`, `remove_model`, `track_document_file` and `untrack_document` directly. An update of a tracked document carries `expected_source_hash`: `read_doc` keeps the source hash the store had indexed for the document (`doc_access.index_entries`, from `store_fingerprint` and `tracked_documents`, indexes only), `update_tracked_doc` passes it, and a document the store rewrote in between is refused with `Error: <path> changed since deskops read it; nothing was written. Re-run the command.` (exit 1, no traceback), the whole transaction rolled back; a document edited by hand and not reindexed keeps its indexed hash and still takes `deskops edit`. A failure in the middle of `atoms merge` or `atoms split` (referrers rewritten, target written, source failing) leaves `desk/` and `.sldb/core/` as they were. `message send` writes the note and tracks it in the target store's transaction (a tracking failure still leaves the note delivered, with the same warning) and `message ack` is a guarded update of the tracked note; the manual restore of the note is gone. Tracked documents deskops creates or updates now carry sldb's provenance block (`sldb:` in the frontmatter), as every document sldb writes does; sldb's structural-noise refusal applies to documents deskops creates (an atom whose answer carries undeclared headings is refused on `add atom` under the store's default policy; `desk update --apply` still tracks such a file). `tests/test_transaction.py` replaces `test_doc_io.py` and `test_atoms_transactions.py`.
+- `__activation_receipts__` and `task_type_activation_receipts` are gone from `deskops/models/task_types.py`: the receipts a type requires live only in its activation `RuleDoc` (CC32). `ReviewDoc`'s docstring says what sldb does with `subject` now that GO07 is in (pins it on save, computes `anchor_state` on read); the model is unchanged. The tests that activate a task write its receipts first with `tests/activation_receipts.py` (accepted and pinned through `sldb.api.transaction`).
+- The desk a repository gets is data the sldb scaffold writes (CC36, DP3): the templates `deskops init` used to carry as strings in `workspace.py` (`config.json`, `pills.md`, the four lifecycle rituals, `drawer/README.md`, `atoms/tag-namespaces.yaml`) live in `deskops/data/templates/`, and `deskops/data/desk_declaration.yaml` declares the desk's `folders` (the artifact directories `ensure_workspace` created among them), its `if_missing` seeds (the Board and the `runtime-pi-deepseek-flash` profile as `document` seeds rendered by their model) and `include` rules `{model, glob}` per desk folder. `workspace.seed_desk` renders the seeds for the desk's name (`{desk_name}`, the only placeholder) and passes them in process to `sldb.api.scaffold_store`; `scaffold_desk`, `_write_if_missing`, the `*_template` functions and `guess_model_for_path` are gone, `_write_or_patch_config` only patches an existing file, and `desk update --apply` tracks desk documents through the declared includes (`sldb.api.stores.apply_declaration.apply_includes`) instead of guessing a model by path. What `init` and `desk update --apply` write is byte for byte what they wrote before (`tests/fixtures/golden/scaffold/`, `tests/test_scaffold_golden.py`); `init` now also creates `desk/materializations/`, `desk/steps/`, `desk/registry/` and `desk/faq/`.
+- Document invariants are validators of their model (DK6), so sldb applies them on every write (`deskops`, `sldb fields update`, `sldb docs update`): `AtomDoc` and `ProtoAtomDoc` check the slug convention of their id, the `namespace:value` form of each tag and the domain path of each `domain:` tag, `ProtoAtomDoc` takes one `domain:` tag, `CrossroadDoc` checks its path and that its id names it, and `TaskDoc` refuses a blank title. The same checks are gone from `domain_tree.py`, `atom_tags.py`, `services/atoms.py` and `specs/compiler.py`; what needs another document or the file tree (written parents, file names, the tag namespace registry, `typed_as` targets, provenance) stays where it was. Services report the validator's own line (`deskops.models.validation`), and `atoms validate` lists it next to the other findings of the document. `atoms crossroad`, `proto` and `type` write through `doc_access` again (they called facade names CC30 removed) (CC38).
+- `deskops/operations.py` is a facade: each method delegates one call to a service, to the new `deskops/doc_access.py` (document reads, writes and selector resolution, as module functions over `root`) or to `deskops.lifecycle`. Task logic lives in `services/tasks.py`, closeout verification in `services/closure.py`, and no service constructs `DeskopsOperations`. The per-artifact YAML specs (`spec/artifacts/`, `spec/fields/`, `SpecRegistry`, `specs/mermaid.py`) are gone: each model declares `__artifact__` (`id_pattern`, `status_default`, `tags`), `compile_task_spec` is the one task normalization, and `task_lifecycle.yaml` is loaded only by `lifecycle.load_lifecycle_spec`. CLI grammar and output are unchanged (CC30).
+- The desk graph is configuration over sldb: `deskops/graph/desk_graph.py` declares the desk's document surfaces, file rules, reference fields, section and line mentions, and which documents are history; sldb's `ProjectGraph` (`sldb.api.edges.project_graph`, branch `wt/closeout-graph-sldb`) reads the nodes, the store's cached edge index and the declarations. `deskops/graph/extract_docs.py`, `extract_edges.py` and `extract_sources.py` are removed; `graph build`, `graph missing`, atom traces and the closeout gate read the same graph (node, edge and finding output unchanged).
+- `build_closeout_graph_context` returns a `CloseoutGraph` over `ProjectGraph`: tracked documents and schema edges come from one read of the store index, and only the materializations and the documents the gate asks about are read.
+- `lifecycle.transitions_from` reads the desk's own store (`include_linked=False`), not the index composed with every linked store.
+- The task lifecycle is a graph with effects, declared in the desk (CC31, GO09): each `RelationDoc` under `desk/lifecycle/` carries `attributes: {sets: {status: <value>}, terminal: <bool>}` (`active`, `ready_for_testing`, `closed`; `terminal: true` on `task_completes`), and `deskops advance` takes the edge `sldb.api.edges_holding` says holds, applies its effects with `sldb.api.apply_effects` (validated against the task type's model, `TaskDoc` when the task's type is not a registered one), sets `current_node: complete` when the edge is terminal and appends the relation type to `history`; the terminal transition is still not persisted from `advance` (the closing gate is `closeout commit`). The six lifecycle documents (three `RelationTypeDoc`, three `RelationDoc`) are `managed` seeds of `deskops/data/desk_declaration.yaml` with templates in `deskops/data/lifecycle/` (`file:` seeds are now relative to `deskops/data/`): `deskops init` and `deskops desk update --apply` write them, rewrite a desk's copy that differs (`desk update` lists it as `Lifecycle documents to rewrite`, `--apply` reports `Lifecycle graph: rewrote ...`) and track them through the declared includes, together with the three lifecycle rituals by their ids; any other scaffold only creates what is missing. Gone: `Transition.sets_status`/`terminal` from the YAML, `LifecycleSpec.effect`, the `transitions` key of `task_lifecycle.yaml` (only `entry_node` and `states` remain, read by `deskops next`), `ensure_lifecycle_graph` (now `write_lifecycle_graph`), the legacy ritual migration and `deskops/lifecycle_migration.py` (no desk needs them). `deskops next --diagram` draws the desk's graph.
+- `DeskopsOperations._read_doc` parses a document once per text for the whole process, so a reader that builds a new `DeskView` per request (graph_ui's `serve.py`) does not re-parse unchanged documents.
+- `deskops view board` on the deskops desk: ~30 s cold / ~11 s warm before, ~1.7 s cold / ~0.4 s warm after (new `DeskView` per call). `tests/test_closeout_gates.py` compares the new path with the old extractors, frozen in `tests/graph_oracle_v1/`.
+- `deskops advance task --to` is removed (breaking): a task moves only through a lifecycle transition whose condition holds, and a blocked task stays where it is with the gate named. Close with `deskops closeout commit` (or `closeout supersede`/`closeout retire`), never by forcing a node.
+- `edit task` refuses `status`, `current_node`, `history`, `task_type` and `closeout_evidence` with exit 1 and names the command that writes each field. Ordinary fields such as `goal` stay editable. `force`-style flags that skip a gate are not offered (D2).
+- Closeout evidence is read from the task's type, not written into the task (`TASK_TYPE_EVIDENCE` and `evidence_for_task_type` are gone). `--evidence` is a floor: it can only add kinds to the type's, never remove one. A task's own non-empty `closeout_evidence` still overrides the type.
+- `closeout verify` names `children` and `goldens` (declared by `task.aggregate` and `task.refactor`) as not yet verifiable.
+- `tests/fixtures/model_contract_hashes.json` records the new `RelationDoc` contract from sldb GO09 (`attributes.sets`/`terminal`; sldb 33b3c7a0, closeout d39bf915); the deskops store was migrated with `sldb stores update` in 09b5075c. The other desks are migrated by their own repos.
+- `docs/operator-manual.md`: the merge/delete/validate example no longer shows `atoms split`, because sldb refuses headings inside a field since CC35a; the split question is in the drawer (revisable decision).
+
+### Fixed
+
+- `deskops review preflight|bundle|record|status <selector>` key and anchor the receipt on the task's full id (its frontmatter `id`), not on the selector as typed: `review preflight task-cc37` wrote `review-task-cc37-preflight-1` with subject `doc:TaskCodeDoc:task-cc37`, which no activation rule matches (main en verde).
+- `deskops add ritual|board|repository|faq-doc|step|inbox-note` tracks the new document in the desk's store, as `add atom|pill|materialization` already did. Since CC35b `show`/`edit` resolve those surfaces through the store only, so a document `add` left untracked could not be shown or edited until `desk update --apply` (main en verde, fallo 4: `test_operator_manual` bloque 11).
+- The wheel ships the activation rule templates (`data/rules/**/*` in the package data): CC32 added `deskops/data/rules/` to the desk declaration but not to `pyproject.toml`, so an installed deskops could not seed them (main en verde, fallo 6).
+- `tests/test_cli_grammar.py` classifies the `review` noun (GC03) once, under `operational`, and fixes its `mutates` guards as the registry declares them (`review` and `review dispose` mutate, `review status` does not); the grammar test passes again.
+- `tests/test_gitignore_policy.py` asserts the current `.sldb` layout policy: `.sldb/store.yaml` and `.sldb/core/` are tracked, `.sldb_cache/` is ignored, and nothing under `.sldb/runtime/` is tracked.
+
+## [0.2.0] - Unreleased
+
+### Added (rewrite plan F1–F6)
+
+- Model contract snapshot (`tests/fixtures/model_contract_hashes.json`), CLI contract tests, and golden files for help, output, and graph.
+- One selector resolution module (`deskops/desk_paths.py`) for every desk artifact lookup.
+- Typed errors with fixed exit codes (1 domain, 2 usage, 3 unexpected) and `--debug` for tracebacks.
+- Transactional document I/O (`deskops/doc_io.py`): a command writes all its documents and store records, or none.
+- Services for drawer routing, closeout gates, tasks, atoms, and closure.
+- `deskops drawer remove`, which refuses while an active task names the entry in `from_drawer` (`--force` skips the check).
+- Command registry, one output renderer with a JSON error envelope, and `--root`/`--store` agreement checks.
+- `scripts/migrate_desk_stores.py` to migrate every store that tracks deskops models (dry-run by default).
+- CI running `pytest tests` on Python 3.13, and this changelog.
+
+### Changed (rewrite plan F1–F6)
+
+- `deskops closeout commit` is the only way to close a task; `advance` stops at closeout and points to it (breaking). The closure runs the full `closeout verify` gate.
+- `init` links deskops models from the deskops store (federated) instead of copying them; bootstrap registers every deskops model.
+- The graph reads sldb's edge index (`__reference_models__`, structuredLanguageDB >= 0.1.12) and one snapshot reader.
+- TaskDoc declares its frontmatter explicitly; `pills`, `current_node`, and `atoms` are references, not containment.
+- `inbox`, `status`, `atoms list`, and `atoms show` remain as deprecated aliases with a warning.
+- The package runs outside an editable install: specs live in `deskops/spec/`, the FAQ ships as `deskops/data/faq.md`.
+- `desk update --apply` writes the lifecycle graph.
+
+### Removed (rewrite plan F1–F6)
+
+- `deskops/graph/extract_coverage.py` (recovery issue points at c378d15).
+
+### Fixed (rewrite plan F1–F6)
+
+- Tasks written before the explicit TaskDoc frontmatter (no `tags:` key) validate again.
+- Task selectors resolve tracked tasks whose file name predates `task-*`.
+- Rewrites (`edit`, `advance`, `bind`) refuse instead of silently erasing headings or frontmatter keys the model does not declare.
+- `edit` keeps text field values literal: multi-line text and values starting with `**` survive.
+- The test suite no longer writes to the real `~/.sldb`.
+
+### Added (desk-to-zero, 2026-10-18)
+
+- `deskops issue close|list` closes an issue in any of the three status formats with a Resolution section (reason, refs) and keeps the file.
+- `deskops closeout supersede` closes a task whose subject no longer exists (reason plus a resolvable ref); `deskops closeout retire` removes a task resolved before the ritual lifecycle (`Closeout-Mode: legacy-resolved`).
+- `deskops repo remove` takes a repository out of the registry so it can be registered again under the right id.
+- `deskops next --why`, and guidance from `deskops next` when the Board routes no task or several.
+- `docs/operator-manual.md`, whose runnable examples the suite executes.
+- Drift findings for invalid atom-reference roles, the legacy `related_atoms` field, and global policy restated inside tasks.
+
+### Changed (desk-to-zero, 2026-10-18)
+
+- Requires Python >=3.12 (Python 3.10 reaches end of life in October 2026; the whole suite moves to 3.12). CI runs the suite on 3.12 and 3.13. The test that kept the package importable on 3.10 and 3.11 is removed.
+- Requires structuredLanguageDB>=0.1.13 (link replacement, broken-link detection, and the extraction fixes in sldb main).
+- `closeout commit` folds the run index line into the closing commit; the tree stays clean.
+- deskops' FAQ model is `DeskFAQDoc`; ritual steps are prose, not StepDoc references.
+- `desk update --apply` archives legacy rituals RitualDoc cannot carry to `desk/drawer/rituals/legacy-*.md` and re-signs moved deskops model contracts.
+
+### Fixed (desk-to-zero, 2026-10-18)
+
+- `promote inbox-to-drawer-task` writes a TaskDoc; `closeout commit` accepts a directory in `--paths`; `edit` reaches drawer tasks and finds rituals by id; message delivery and ack work with desks that do not register the sender or themselves.
+
+### Added
+
+- Task lifecycle in the SLDB graph: rituals are states and gated relations are transitions.
+- `deskops message send|list|read|ack` for cross-desk transport.
+- `deskops closeout verify` with a strict all-of evidence gate.
+- `deskops closeout commit --no-run --reason` to close without a subagent run.
+- `deskops desk update` to reconcile a desk and its store.
+- `deskops desk migrate` and `deskops doctor` findings for absent, empty, and legacy desks.
+- `deskops repo whoami` and one canonical cross-repo identity resolution path.
+- Verifiable cross-desk inbox delivery with a delivery result and `--ack`.
+- Live Herdr agent inventory in `deskops runtime`, grouped by Herdr space.
+- Supervised execution over Herdr.
+- RoleDoc model, `desk/roles/` sources, and materialize/drift-check commands.
+- MaterializationContractDoc model, spec, CLI surface, and reference-resolution validation.
+- Atom validate and delete commands, plus split with provenance-safe rerouting and merge with reference reconciliation.
+- Protoatoms, domain crossroads, and protoatom typing.
+- Configurable atom folder axis by tag namespace.
+- Declared graph edges derived from model containment and references.
+- Per-project desk config and version contract with deterministic deep merge.
+- Drift-check review loop and knowledge-surface findings.
+- Graph snapshot and graph CLI commands.
+
+### Changed
+
+- Agent-facing inbox transport is renamed to the `message` command family (breaking).
+- A drawer item becomes an active task only through `deskops add task --from-drawer`.
+- Bootstrap and init drive SLDB in process instead of one subprocess per model.
+- The store uses SLDB's per-document layout.
+- Doctor excludes unmodeled desk surfaces from untracked findings and clarifies broken-tracking wording.
+- Promotion and TaskDoc reads flatten structured source sections into task fields.
+
+### Removed
+
+- Direct drawer-to-active-task promotion command (breaking).
+- The old `inbox` transport subcommands (breaking).
+- The kgdb dependency: `graph build` validates and writes through `sldb.api.graph`; requires structuredLanguageDB >= 0.1.11.
+
+### Fixed
+
+- F0: the closeout commit `advance` makes contains only the closing task's paths; unrelated staged changes stay staged.
+- F0: merge retargets whole tokens instead of substrings.
+- F0: pytest collects only `tests/`.
+- F0: ambiguous selectors are rejected instead of guessed.
+- F0: the payload and flag drawer paths resolve the same way.
+- F0: the graph ignores vendored trees.
+- F0: closing a task amends HEAD only when HEAD's `Task-Id` trailer is that task.
+- F0: doctor no longer crashes on desk-less roots.
+- `graph missing` reports findings from archived records (`record: true`) as informational and exits 0 when only those remain.
+- `desk update --apply` re-renders lifecycle rituals RitualDoc cannot read before tracking them.
+- `closeout verify` no longer aborts on a multi-document YAML block in docs.
+- `message` tracks a delivered note in the target repo's store with a relative path, and `--ack` re-signs it.
+- Empty and whitespace-only selectors are rejected before any lookup.
+- Graph commands import on Python 3.10/3.11 and report the real error.
+- `from_drawer` is treated as provenance, not as a reference that must resolve.
+- Edit keeps literal text fields and only guards deletion when the document is unreadable.
+- Unreadable documents are no longer rewritten.
+- Closeout commits the closure before deleting the task bundle.
+- `init` scaffolds `desk/rituals/phase.md`, which the doctor requires.
+- Tracked documents are written through the store, not under it.
+- Repo registry supports `repo register --path`, tolerates model-entry shadowing, and reports actionable errors.
+- Cross-repo identity resolution and inbox targeting precedence are unified.
+- Doctor detects unregistered models and proposes a `desk update` repair.
+- Optional-field and untrack paths are realigned with current SLDB.
+
+FILE:instruccion
+Cold-bundle de la tarea task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob: con el TaskDoc, los rituales enrutados por el Board, las pills ligadas, los átomos ligados y los archivos que el TaskDoc nombra, reformula el encargo, lista ambigüedades con cita textual del input y da el DRY-RUN sin ejecutar nada. No ejecutes nada.
+
+Sección de validación del TaskDoc:
+- Comparación con el oráculo v1 sobre copia del desk real (a3)
+- grep -rn rglob deskops/graph/ vacío
+- Tests de a uno (a5), test_cli y goldens desde /dev/shm
+- 4 pasos del workflow en clon limpio
+

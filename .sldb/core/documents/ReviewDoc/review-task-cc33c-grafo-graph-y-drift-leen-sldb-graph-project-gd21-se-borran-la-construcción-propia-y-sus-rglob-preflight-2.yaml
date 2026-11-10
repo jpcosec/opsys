@@ -1,0 +1,34 @@
+name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-preflight-2
+path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/preflight-2.md
+source_hash: febd8d392999147e400c9333e80fece9bbde374751d7b7e77c938104be540063
+content_hash: cd8361feb6e203739331981fe9be299121318d4d658d37861d4b7fa10ee42d82
+field_hashes:
+  id: 4d1e49b41308e731c8772b424032209cf66efa38980ac6b747927fec971e0987
+  title: bc5001b10fd62ba5286e2a4fe5c33d313e1084c203f2d9708a7f849465be09d6
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  subject: 20b9069ec2d2e933d0143a39cc6b55ccd443842c94fd34278bd41c6766647634
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 8e163954d144a5486f80dbb1b5030cf4d5c4f3f5cec49a7a11d9502e3206ce4d
+  input_sha256: 868fd1c2aaaaf99b69cba40102ee011cef09314ddc6294651e3d521140f0aad5
+  output_sha256: 79bddaac79d173a41bb528e18e0dcce1c50088cf9ede06cd3b0492228996adcb
+  verdict: d5a7606c75f86f5046e5c8312a9819e4778be8ab33a7e8950d62f7ba620684fe
+  reason: 5df3b455f441182940326a8209d3cd3fa327e73d4b76df42991c4f67ad8a6090
+  created_at: 3e505253d887a716e819a4a02ca753db7acd935366aba2955c4540c6f2b996ee
+  disposed_at: 305ab3053895b913196e4b267a723aec478d7cb8a716fee2f975640922e74912
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: ddf9180eb7a6965880c0f22a8655b605441abfe449a9ef595294ede7bd2fd9dc
+  disposition: 9dced1e7de7b6dd91aab8e8fb25496b10d5685f48b47c64c1d006d8587c4967f
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T14:19:58Z'
+  authority: generated
+  via: save_document_payload

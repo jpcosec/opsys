@@ -1,0 +1,14 @@
+## REFORMULACION
+Propósito: migrar las superficies de grafo de deskops a la fuente `sldb` ProjectGraph (GD21), usando la configuración de `deskops/graph/desk_graph.py`, y retirar la construcción propia. Resultado: `deskops graph build|neighbors|missing|reflect` y `drift` leen `sldb.api.project_graph(store)`; `neighbors` y `missing` igualan semánticamente al oráculo v1; se borran `graph/snapshot.py`, los `rglob` de `checks.py`/`self_reflection.py` y, tras comparación verde, `tests/graph_oracle_v1/`; goldens idénticos, doctor sin hallazgos nuevos, CHANGELOG. Repo: deskops, base `origin/main ba982a45`; copia del desk real en `/dev/shm` con `.sldb/`. Límites: solo `deskops/graph/`, `cli/commands/graph.py`, `cli/commands/drift.py`, `tests/`, `CHANGELOG.md`; no closeout, selectores ni escrituras; no cambia formato de `desk/` ni gramática CLI. No es agregado: es nodo hijo ejecutable `task.code`; no aplica recorrido de hijos.
+
+## AMBIGUEDADES
+1. «se borran ... el rglob de checks.py» frente a b14: «el worker NO borra la excepción ni su test: PARA y avisa». Obliga a inventar si el borrado es incondicional o depende de que `project_graph` cree los dos nodos citados.
+2. «drift leen el grafo de proyecto de sldb» frente a b10: «si no lee `graph/snapshot.py` ni hace `rglob`, no lo cambia». Obliga a inventar si `drift` debe migrarse siempre o solo si usa esas fuentes.
+3. «sldb graph project (GD21)» / «sldb.api.project_graph (o sldb graph project)» frente a b2: «La API Python `sldb.api.project_graph(store)`». Sin b2, obligaría a inventar módulo, firma y si se permite CLI.
+4. «tests/graph_oracle_v1/ se conserva hasta la aceptación y luego se borra» frente a «en un commit propio dentro de este nodo». Obliga a inventar el orden exacto: comparación, aceptación y commit de borrado.
+
+## DRY-RUN
+Lecturas: TaskDoc completo, b1-b14, `desk_graph.py`, `snapshot.py`, `checks.py`, `self_reflection.py`, `cli/commands/graph.py`, `drift.py`, tests de grafo/oráculo, goldens y CHANGELOG. Cambios previstos: sustituir snapshot/rglob por `sldb.api.project_graph(store)` con configuración de `desk_graph.py`; ajustar tests; borrar `snapshot.py` y oráculo en commit propio tras paridad; documentar excepción si b14 falla. Dependencias: `origin/main ba982a45`, API `sldb` disponible, copia `/dev/shm` con `.sldb/`, CC38 cerrada, closeout CC33a no editado. Validaciones futuras: paridad semántica `(source,target,kind)` y findings; `grep -rn rglob deskops/graph/`; tests por archivo; goldens sin regenerar; doctor contra baseline de 6 desks; 4 pasos del workflow; tabla `wc -l`; SHA registrado.
+
+## FUTURO
+El coordinador/humano toma la copia, corre workflow y doctor, decide aceptación y borrado del oráculo. El equipo `sldb` confirma si `project_graph` crea los nodos de b14 o corrige `rule_graph`/CI. CC33a/b coordinan el enlace de closeout si este leía `snapshot.py`. El supervisor ejecuta la suite completa integrada.

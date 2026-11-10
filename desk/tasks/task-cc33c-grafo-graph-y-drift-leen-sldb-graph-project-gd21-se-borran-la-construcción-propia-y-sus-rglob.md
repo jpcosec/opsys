@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T12:22:15Z'
+  at: '2026-11-10T14:18:41Z'
   authority: generated
   via: save_document_payload
 id: task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob
@@ -14,7 +14,12 @@ current_node: ritual-execution
 history: []
 references: []
 depends_on: []
-pills: []
+pills:
+- desk/contexts/pill-008-kgdb-sldb-boundary.md
+- desk/contexts/pill-009-source-file-graph-traceability.md
+- desk/contexts/pill-010-graph-runtime-output-policy.md
+- desk/contexts/pill-011-self-reflection-noise-control.md
+- desk/contexts/pill-drift-checks-are-review-surfaces-not-mutators.md
 files:
 - deskops/graph/
 - deskops/cli/commands/graph.py
@@ -49,6 +54,10 @@ _State what is in scope and what is out of scope._
 En alcance: deskops/graph/, deskops/cli/commands/graph.py, deskops/cli/commands/drift.py, tests/ y CHANGELOG.md. Fuera: closeout (CC33a/CC33b), selectores y escrituras.
 
 ## Implementation Path
+
+_Outline the expected implementation route or affected surface._
+
+_Outline the expected implementation route or affected surface._
 
 _Outline the expected implementation route or affected surface._
 
@@ -91,6 +100,18 @@ b5 (oráculo): «lo mismo» es igualdad semántica, el mismo conjunto de (source
 b6 (goldens): los de ayuda quedan idénticos. Los de salida también. Si alguno cambia porque la fuente del grafo es otra, el worker para y avisa con el diff; no lo regenera (manda «idénticos»).
 b7 (4 pasos del workflow): los de .github/workflows de deskops: sldb stores build --store .sldb; python -m pytest tests -q (el coordinador, un proceso por archivo); sldb stores build --check --store .sldb; bash scripts/ci-knowledge-check.sh . Los corre el coordinador sobre un clon limpio.
 b8 (drift): deskops drift check corre drift_check_role_docs y drift_check_runtime_bindings (materializers) y el chequeo de superficies de conocimiento. Este nodo solo cambia lo que lea el snapshot propio de graph/snapshot.py o haga rglob en deskops/graph/. Las comprobaciones de materializers no cambian.
+
+PRECISIONES DE READINESS (2026-11-10, coordinador Scion sobre origin/main ba982a45):
+b9 (build y reflect): la aceptación de equivalencia con el oráculo v1 aplica a `neighbors` y `missing`. `graph build` y `graph reflect` conservan su contrato actual de CLI y de salida: no se les exige una comparación nueva contra el oráculo, sólo que sus tests existentes y los goldens sigan verdes y que no aparezca una segunda fuente de verdad (siguen leyendo project_graph de sldb).
+b10 (drift): el worker inspecciona `cli/commands/drift.py`; si no lee `graph/snapshot.py` ni hace `rglob`, no lo cambia y lo deja documentado en el informe. Si lee alguno de los dos, lo migra a project_graph con el mismo criterio de b9.
+b11 (líneas antes/después): el informe lleva una tabla `archivo | antes | después` con `wc -l` por archivo de `deskops/graph/` y los comandos de graph/drift tocados. No hay umbral de reducción; el dato es evidencia.
+b12 (base y copia del desk): la base es origin/main `ba982a45` y la copia real para el oráculo se toma de ese mismo commit en `/dev/shm`, con `.sldb/` incluido. El informe registra el SHA.
+b13 (doctor): el baseline son las salidas de `deskops doctor` en los 6 desks con origin/main `ba982a45`; «sin hallazgos nuevos» significa que el conjunto de errores/alertas no agrega ninguno que no estuviera en ese baseline.
+b14 (a4 y rglob): primero se corre `sldb.api.project_graph` sobre la copia de b12 y se registran los nodos de `desk/drawer/plans/deskops-como-config/dag.yaml` y `tests/fixtures/model_contract_hashes.json`. Si ambos aparecen como nodos, se borra `declared_target_is_a_file` y su test cambia a «es un nodo del grafo»; entonces el grep de `rglob` en `deskops/graph/` debe quedar vacío. Si no aparecen, el worker NO borra la excepción ni su test: PARA y avisa al coordinador con la evidencia de project_graph; la excepción queda como hipótesis para sldb y el grep se evalúa excluyendo esa única función, que se documenta en el informe.
+b15 (precedencia de b14): b14 manda sobre la frase general «se borra el rglob de checks.py». Si b14 ordena PARAR porque project_graph no crea los dos nodos, el worker no borra `declared_target_is_a_file`, no borra ese rglob, deja el test como está y avisa con la evidencia; la aceptación de grep se evalúa excluyendo esa única función, documentada en el informe. Si b14 confirma los dos nodos, el borrado sí es incondicional y el grep debe quedar vacío.
+b16 (precedencia de b10): b10 manda sobre la frase de scope para drift. Si `drift.py` no lee `snapshot.py` ni hace `rglob`, no se cambia y se documenta; no se inventa una migración de drift que no corresponde.
+b17 (interfaz única): la única interfaz es `sldb.api.project_graph(store)` (b2). No se invoca el CLI `sldb graph project` desde deskops.
+b18 (orden del oráculo): primero se implementa la migración y se prueba la paridad semántica; luego un commit de implementación con tests verdes; después un commit propio que borra `tests/graph_oracle_v1/` y actualiza sus referencias, sin cambiar código de producción en ese segundo commit.
 
 ## Validation
 

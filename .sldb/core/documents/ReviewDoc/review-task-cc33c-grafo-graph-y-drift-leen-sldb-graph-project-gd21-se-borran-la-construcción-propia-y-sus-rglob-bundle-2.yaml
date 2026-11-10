@@ -1,0 +1,34 @@
+name: review-task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob-bundle-2
+path: desk/reviews/task-cc33c-grafo-graph-y-drift-leen-sldb-graph-project-gd21-se-borran-la-construcción-propia-y-sus-rglob/bundle-2.md
+source_hash: 43c305808169b9fc268affbfdb113004ff297b721dc8ba059c6f273d7705d717
+content_hash: 52a99808553e1b095d25ae3906770011e406e457d52d3ef599d97b4508de35f3
+field_hashes:
+  id: 9f984fc4ddde633b9a1a248dde9763ddad83ddf48c628617cafb90e9e1625ede
+  title: bf3a7a16be94b9d78ef295ff2856845a7dc506ae5d357b9180225b3d2e6c5566
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  subject: 20b9069ec2d2e933d0143a39cc6b55ccd443842c94fd34278bd41c6766647634
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 45ae6d661d403705207e3470832918ca0a63e16e5e0cb4b1ef9b4432a09e4aba
+  input_sha256: 14667a690a72bbc2549f284d6085612f099c9b41257c77a96dd43336b65f9368
+  output_sha256: 8f1a31742eb85a8cb4017e0aa1190d3cd6500da3b6e63b97bef242e1837fab42
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 159046e964db45af48ec284ad94618b6dc42bc310c840f8a77cdf914c398194e
+  created_at: 456dd92c14e0caabc2959a6f636b7aa069fe4bf1adfe842e7041df10912bb5f6
+  disposed_at: 907d9e69834b8e75b0f6bcb4843ce26d10fcd4928ff21cd9f78c92533daca64b
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: beb8a98f0cf001e162808fe74e6c4e5c41be38f8e7e361ecaa3e33b358d04df2
+  disposition: cac1f14b0fbcd1061d37515cd7f10fb06a959b83c100cc4b32768b88482233b1
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-10T14:21:39Z'
+  authority: generated
+  via: save_document_payload
