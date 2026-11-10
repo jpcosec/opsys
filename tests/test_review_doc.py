@@ -230,7 +230,7 @@ def test_edit_review_refuses_the_disposition_fields(
 
 # ------------------------------------------------------------------ kind evidence (CC33a)
 def _evidence(**overrides: object) -> dict[str, object]:
-    return _payload(
+    fields: dict[str, object] = dict(
         id="review-task-x-evidence-tests-1",
         kind="evidence",
         fact="tests",
@@ -242,8 +242,9 @@ def _evidence(**overrides: object) -> dict[str, object]:
         reason="verified: tests tests/test_a.py\ntests/test_b.py",
         disposed_at="2026-01-01T00:00:00Z",
         disposed_by="robocop2",
-        **overrides,
     )
+    fields.update(overrides)
+    return _payload(**fields)
 
 
 def test_evidence_receipt_roundtrips_fact_and_a_multiline_value() -> None:
