@@ -119,11 +119,12 @@ def lifecycle_errors(status: str, current_node: str, history: list[str]) -> list
                 f"the entry node '{table.entry_node}'"
             )
         allowed = OUTSIDE_LIFECYCLE_STATUSES if current_node == "" else ENTRY_STATUSES
+        where = "and no current_node" if current_node == "" else f"at '{table.entry_node}'"
         if status not in allowed:
             expected = ", ".join(f"'{s}'" for s in sorted(allowed))
             errors.append(
-                f"status: '{status}' is not an entry status; a task with an empty history at "
-                f"'{table.entry_node}' has status {expected} (status changes only through deskops "
+                f"status: '{status}' is not an entry status; a task with an empty history "
+                f"{where} has status {expected} (status changes only through deskops "
                 "advance and deskops closeout)"
             )
         return errors

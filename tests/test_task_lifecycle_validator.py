@@ -75,7 +75,7 @@ def test_a_drawer_task_outside_the_lifecycle_may_be_deferred() -> None:
     """``promote inbox-to-drawer-task`` writes ``deferred`` with no current_node and no history."""
     assert TaskDoc(**{**ENTRY, "status": "deferred", "current_node": ""}).status == "deferred"
     _rejects(TaskDoc, {**ENTRY, "status": "deferred"}, "status: 'deferred' is not an entry status")
-    _rejects(TaskDoc, {**ENTRY, "status": "active", "current_node": ""}, "status: 'active' is not an entry status")
+    _rejects(TaskDoc, {**ENTRY, "status": "active", "current_node": ""}, "status: 'active' is not an entry status; a task with an empty history and no current_node has status 'closed', 'complete', 'deferred', 'done', 'draft', 'resolved'")
 
 
 @pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete"])
