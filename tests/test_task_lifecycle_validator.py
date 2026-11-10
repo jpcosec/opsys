@@ -22,7 +22,7 @@ if str(SLDB_SRC) not in sys.path:
 
 from deskops.cli.main import main
 from deskops.models import TaskDoc
-from deskops.models.task_lifecycle import CLOSEOUT_STATES, ENTRY_STATUSES, lifecycle_table
+from deskops.models.task_lifecycle import CLOSEOUT_STATES, DRAWER_STATUSES, ENTRY_STATUSES, lifecycle_table
 from deskops.models.task_types import TaskCodeDoc, TaskDocsDoc
 from deskops.models.validation import validation_messages
 from deskops.operations import DeskopsOperations
@@ -56,6 +56,7 @@ def test_the_table_is_read_from_the_package_relation_docs() -> None:
         "task_completes": ("complete", "closed"),
     }
     assert ENTRY_STATUSES == {"draft"}
+    assert DRAWER_STATUSES == {"deferred"}
     assert {s: h for s, (h, _) in CLOSEOUT_STATES.items()} == {
         "closed": "task_completes",
         "superseded": "superseded",
@@ -68,6 +69,13 @@ def test_entry_state_is_valid() -> None:
     assert TaskCodeDoc(**ENTRY).status == "draft"
     # An empty current_node is the entry node (deskops advance reads it so).
     assert TaskCodeDoc(**{**ENTRY, "current_node": ""}).current_node == ""
+
+
+def test_a_drawer_task_outside_the_lifecycle_may_be_deferred() -> None:
+    """``promote inbox-to-drawer-task`` writes ``deferred`` with no current_node and no history."""
+    assert TaskDoc(**{**ENTRY, "status": "deferred", "current_node": ""}).status == "deferred"
+    _rejects(TaskDoc, {**ENTRY, "status": "deferred"}, "status: 'deferred' is not an entry status")
+    _rejects(TaskDoc, {**ENTRY, "status": "closed", "current_node": ""}, "has status 'deferred', 'draft'")
 
 
 def test_entry_state_rejects_a_status_outside_the_entry_set() -> None:
@@ -185,8 +193,7 @@ def task_desk(lifecycle_desk: Path) -> tuple[Path, Path]:
         "validation": ["pytest"],
         "task_type": "task.code",
     }
-    task_id = DeskopsOperations(lifecycle_desk).create_task_bundle(payload).task_id
-    assert main(["desk", "update", "--root", str(lifecycle_desk), "--apply"]) == 0
+    task_id = DeskopsOperations(lifecycle_desk).create_task_bundle(payload).task_id  # tracked as TaskCodeDoc
     return lifecycle_desk, lifecycle_desk / "desk" / "tasks" / f"{task_id}.md"
 
 
@@ -194,11 +201,13 @@ def _store_args(root: Path) -> list[str]:
     return ["--store", str(root / ".sldb"), "--pythonpath", str(ROOT)]
 
 
-def _inconsistent_payload(task: Path) -> dict:
-    from sldb.runtime.validation import extract_payload
+def _current_payload(root: Path) -> dict:
+    """The task's payload as sldb holds it (what ``/save``'s ``expected`` guard compares)."""
+    from sldb.cli.model_utils import resolve_model_ref
+    from sldb.store.query import load_runtime_documents
 
-    payload = extract_payload(TaskCodeDoc.__template__, task.read_text(encoding="utf-8"))
-    return {key: value for key, value in payload.items() if value is not None} | {"status": "closed"}
+    [doc] = [d for d in load_runtime_documents(root / ".sldb", resolve_model_ref, str(ROOT)) if d.name == "task-probe"]
+    return dict(doc.payload)
 
 
 def test_sldb_fields_update_of_status_to_closed_at_ritual_execution_is_rejected(task_desk, capsys) -> None:
@@ -229,7 +238,7 @@ def test_sldb_fields_update_of_current_node_without_a_coherent_status_is_rejecte
 def test_sldb_docs_update_with_the_inconsistent_payload_is_rejected(task_desk, capsys) -> None:
     root, task = task_desk
     before = task.read_text(encoding="utf-8")
-    payload = json.dumps(_inconsistent_payload(task))
+    payload = json.dumps({**_current_payload(root), "status": "closed"})
     code, message = _sldb_run(["docs", "update", "task-probe", payload, *_store_args(root)])
     out = capsys.readouterr()
     assert code != 0
@@ -244,11 +253,16 @@ def test_sldb_serve_save_with_the_inconsistent_payload_is_rejected(task_desk, ba
 
     root, task = task_desk
     before = task.read_text(encoding="utf-8")
-    payload = _inconsistent_payload(task)
-    request = {"changes": [{"doc": "task-probe", "payload": payload}]} if batched else {"doc": "task-probe", "payload": payload}
+    current = _current_payload(root)
+    payload = {**current, "status": "closed"}
+    if batched:
+        change = {"id": "task-probe", "action": "update", "model": "TaskCodeDoc", "payload": payload, "expected": current}
+        request = {"changes": [change]}
+    else:
+        request = {"doc": "task-probe", "payload": payload}
     try:
         response, code = save_request(request, root / ".sldb", root, str(ROOT))
-        message = json.dumps(response)
+        message = json.dumps(response, ensure_ascii=False)
     except Exception as exc:  # noqa: BLE001 - the single route raises what the HTTP layer turns into a 4xx
         code, message = 400, str(exc)
     assert code >= 400
@@ -266,15 +280,17 @@ def test_a_consistent_direct_write_is_accepted(task_desk, capsys) -> None:
 
 
 # ------------------------------------------------------------------ desk update reports, never writes
-def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(task_desk, capsys) -> None:
-    root, task = task_desk
-    # A legacy task_type (a pending migration) on a task whose status no transition wrote.
-    text = task.read_text(encoding="utf-8").replace("status: draft", "status: closed").replace(
-        "task_type: task.code", "task_type: code"
+def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(lifecycle_desk: Path, capsys) -> None:
+    """An untracked task with a legacy task_type (a pending migration) and a status no transition
+    wrote: desk update lists it and --apply neither migrates nor tracks it."""
+    root = lifecycle_desk
+    text = (
+        "---\nid: task-legacy\nstatus: closed\ncurrent_node: ritual-execution\nhistory: []\ntask_type: code\n---\n\n"
+        "# Legacy\n\n## Goal\n\ng\n"
     )
+    task = root / "desk" / "tasks" / "task-legacy.md"
     task.write_text(text, encoding="utf-8")
-    capsys.readouterr()
-    line = f"inconsistent task lifecycle in desk/tasks/{task.name}, not written: {ENTRY_ERROR}"
+    line = f"inconsistent task lifecycle in desk/tasks/task-legacy.md, not written: {ENTRY_ERROR}"
 
     assert main(["desk", "update", "--root", str(root)]) == 1
     out = capsys.readouterr().out
@@ -282,7 +298,22 @@ def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(task_des
     assert line in out
     assert "Pending task type migration" not in out
 
-    for _ in range(2):
-        assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
-        assert line in capsys.readouterr().out
-        assert task.read_text(encoding="utf-8") == text
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
+    assert line in capsys.readouterr().out
+    assert task.read_text(encoding="utf-8") == text
+    code, _ = _sldb_run(["docs", "list", "--store", str(root / ".sldb")])
+    assert "task-legacy" not in capsys.readouterr().out
+
+
+def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_desk, capsys) -> None:
+    """A tracked task edited by hand outside the rules: sldb's store check refuses the store with
+    the validator's message, which desk update prints; nothing is written."""
+    root, task = task_desk
+    text = task.read_text(encoding="utf-8").replace("status: draft", "status: closed")
+    task.write_text(text, encoding="utf-8")
+    capsys.readouterr()
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 3
+    err = capsys.readouterr().err
+    assert "'sldb stores check' failed" in err
+    assert ENTRY_ERROR in err
+    assert task.read_text(encoding="utf-8") == text

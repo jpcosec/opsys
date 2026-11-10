@@ -319,8 +319,10 @@ class DeskCLI:
                     ) from exc
             if payload is None:
                 if result.returncode != 0:
+                    # sldb's own reason, e.g. a tracked task whose model (its lifecycle) rejects it.
+                    reason = f": {result.stderr.strip()}" if result.stderr and result.stderr.strip() else ""
                     raise DeskopsEnvironmentError(
-                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}"
+                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}{reason}"
                     )
                 raise DeskopsEnvironmentError(
                     f"'sldb stores check' produced no JSON output for {store_dir}"
