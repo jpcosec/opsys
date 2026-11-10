@@ -4,9 +4,9 @@ from pathlib import Path
 
 from deskops.graph.checks import find_missing_graph_references
 from deskops.graph.checks import find_missing_snapshot_targets
-from deskops.graph.snapshot import Edge
-from deskops.graph.snapshot import GraphSnapshot
-from deskops.graph.snapshot import Node
+from deskops.graph.view import Edge
+from deskops.graph.view import GraphView as GraphSnapshot
+from deskops.graph.view import Node
 
 
 def test_find_missing_snapshot_targets_reports_dangling_edge() -> None:

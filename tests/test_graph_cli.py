@@ -6,9 +6,8 @@ import pytest
 
 from deskops.cli.main import main
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
-from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
-from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
-from deskops.graph.snapshot import networkx_path_for_snapshot
+from deskops.graph.export import DEFAULT_SNAPSHOT_PATH
+from deskops.graph.export import networkx_path_for_snapshot
 
 FIXTURE_GRAPH = Path(__file__).parent / "fixtures/knowledge_graph/static_desk_source_graph.json"
 
@@ -106,7 +105,7 @@ Existing knowledge.
     protected = {
         tmp_path / ".sldb/runtime/graphs/knowledge.kg.json": "knowledge snapshot\n",
         tmp_path / ".sldb/runtime/graphs/knowledge.nx.json": "knowledge networkx\n",
-        tmp_path / LEGACY_SNAPSHOT_PATH: "legacy snapshot\n",
+        tmp_path / ".sldb/runtime/knowledge_graph.kg.json": "legacy snapshot\n",
         tmp_path / ".sldb/runtime/knowledge_graph.nx.json": "legacy networkx\n",
     }
     for path, content in protected.items():
@@ -241,9 +240,8 @@ def test_graph_reflect_reports_missing_graph(tmp_path: Path, capsys) -> None:
     assert not (tmp_path / DEFAULT_REPORT_PATH).exists()
 
 
-def test_graph_reflect_uses_default_runtime_graph(tmp_path: Path, capsys) -> None:
-    graph_path = tmp_path / DEFAULT_SNAPSHOT_PATH
-    write(graph_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
+def test_graph_reflect_reads_the_project_graph_without_a_build(tmp_path: Path, capsys) -> None:
+    _write_live_desk(tmp_path)
 
     result = main(["graph", "reflect", "--root", str(tmp_path)])
 
@@ -252,59 +250,30 @@ def test_graph_reflect_uses_default_runtime_graph(tmp_path: Path, capsys) -> Non
     assert result == 0
     assert f"Self-reflection report written: {report_path}" in captured.out
     assert report_path.exists()
+    assert not (tmp_path / DEFAULT_SNAPSHOT_PATH).exists()
 
 
-def test_graph_neighbors_falls_back_to_legacy_runtime_graph(tmp_path: Path, capsys) -> None:
-    legacy_path = tmp_path / LEGACY_SNAPSHOT_PATH
-    write(legacy_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
+def test_graph_neighbors_reads_the_project_graph_without_a_build(tmp_path: Path, capsys) -> None:
+    """No snapshot is built or read: the neighbors are sldb's project graph of the desk."""
+    _write_live_desk(tmp_path)
+    write(tmp_path / DEFAULT_SNAPSHOT_PATH, "not json")
 
-    result = main(
-        [
-            "graph",
-            "neighbors",
-            "atom:atom-documents-point-to-atoms",
-            "--root",
-            str(tmp_path),
-        ]
+    result = main(["graph", "neighbors", "atom:atom-live", "--root", str(tmp_path)])
+
+    out = capsys.readouterr().out
+    assert result == 0
+    assert "Node: atom:atom-live (Live Atom)" in out
+    assert "- task:desk/tasks/task-live.md (Live task) -> references" in out
+    assert main(["graph", "neighbors", "atom:atom-absent", "--root", str(tmp_path)]) == 1
+    assert "Error: graph node not found: atom:atom-absent" in capsys.readouterr().out
+
+
+def _write_live_desk(root: Path) -> None:
+    write(
+        root / "desk/atoms/atom-live.md",
+        "---\nid: atom-live\ntitle: Live Atom\nfive_wh_one_plus: what\ntags: []\n---\n\n# Live Atom\n\n## Answer\n\nLive.\n",
     )
-
-    captured = capsys.readouterr()
-    assert result == 0
-    assert "Node: atom:atom-documents-point-to-atoms" in captured.out
-
-
-def test_graph_neighbors_prefers_deskops_runtime_graph(tmp_path: Path, capsys) -> None:
-    preferred_path = tmp_path / DEFAULT_SNAPSHOT_PATH
-    legacy_path = tmp_path / LEGACY_SNAPSHOT_PATH
-    write(preferred_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
-    write(legacy_path, "not json")
-
-    result = main(
-        [
-            "graph",
-            "neighbors",
-            "atom:atom-documents-point-to-atoms",
-            "--root",
-            str(tmp_path),
-        ]
-    )
-
-    captured = capsys.readouterr()
-    assert result == 0
-    assert "Node: atom:atom-documents-point-to-atoms" in captured.out
-
-
-def test_graph_reflect_falls_back_to_legacy_runtime_graph(tmp_path: Path, capsys) -> None:
-    legacy_path = tmp_path / LEGACY_SNAPSHOT_PATH
-    write(legacy_path, FIXTURE_GRAPH.read_text(encoding="utf-8"))
-
-    result = main(["graph", "reflect", "--root", str(tmp_path)])
-
-    captured = capsys.readouterr()
-    report_path = tmp_path / DEFAULT_REPORT_PATH
-    assert result == 0
-    assert f"Self-reflection report written: {report_path}" in captured.out
-    assert report_path.exists()
+    write(root / "desk/tasks/task-live.md", "# Live task\n\n## Related Atoms\n\n- atom-live\n")
 
 
 def write(path: Path, content: str) -> None:

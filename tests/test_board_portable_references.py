@@ -12,7 +12,7 @@ from sldb.api import (
 from sldb.api.graph.snapshot import GraphSnapshot
 
 from deskops.cli.main import main
-from deskops.graph.snapshot import build_graph_snapshot
+from deskops.graph.export import build_graph_snapshot
 from deskops.operations import DeskopsOperations
 from deskops.services.retire import _pill_reference_matches
 

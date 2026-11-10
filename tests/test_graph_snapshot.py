@@ -6,14 +6,13 @@ from pathlib import Path
 import pytest
 from sldb.api.graph.snapshot import GraphSnapshot
 
-from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
-from deskops.graph.snapshot import LEGACY_SNAPSHOT_PATH
-from deskops.graph.snapshot import GraphSnapshotReadError
-from deskops.graph.snapshot import build_graph_snapshot
-from deskops.graph.snapshot import default_snapshot_read_path
-from deskops.graph.snapshot import networkx_path_for_snapshot
-from deskops.graph.snapshot import read_graph_snapshot
-from deskops.graph.snapshot import write_graph_snapshot
+from deskops.graph.export import DEFAULT_SNAPSHOT_PATH
+from deskops.graph.export import build_graph_snapshot
+from deskops.graph.export import networkx_path_for_snapshot
+from deskops.graph.export import write_graph_snapshot
+from deskops.graph.view import GraphReadError as GraphSnapshotReadError
+from deskops.graph.view import project_graph_view
+from deskops.graph.view import read_graph_file as read_graph_snapshot
 
 
 def test_build_graph_snapshot_combines_nodes_and_declared_edges(tmp_path: Path) -> None:
@@ -72,18 +71,30 @@ def test_write_graph_snapshot_uses_ignored_runtime_path(tmp_path: Path) -> None:
 
 def test_snapshot_path_helpers_keep_projections_separate(tmp_path: Path) -> None:
     preferred = tmp_path / DEFAULT_SNAPSHOT_PATH
-    legacy = tmp_path / LEGACY_SNAPSHOT_PATH
 
     assert networkx_path_for_snapshot(preferred) == (
         tmp_path / ".sldb/runtime/graphs/deskops.nx.json"
     )
-    assert default_snapshot_read_path(tmp_path) == preferred
 
-    write(legacy, "legacy")
-    assert default_snapshot_read_path(tmp_path) == legacy
 
-    write(preferred, "deskops")
-    assert default_snapshot_read_path(tmp_path) == preferred
+def test_the_project_graph_view_is_what_the_built_snapshot_reads_back(tmp_path: Path) -> None:
+    """The graph commands read sldb's project graph directly; it is the graph `graph build` writes."""
+    write_atom(tmp_path / "desk/atoms/atom-existing.md", "atom-existing", "Existing Atom")
+    write(
+        tmp_path / "desk/tasks/task-source.md",
+        "# Source task\n\n## Related Atoms\n\n- atom-existing\n- atom-missing\n",
+    )
+    write(tmp_path / "deskops/tool.py", "VALUE = 1\n")
+
+    live = project_graph_view(tmp_path)
+    built = read_graph_snapshot(write_graph_snapshot(tmp_path))
+
+    def nodes(view):
+        return [(node.id, node.kind, node.path, node.label) for node in view.nodes]
+
+    assert nodes(live) == nodes(built)
+    assert live.edges == built.edges
+    assert ("task:task-source", "atom:atom-existing", "references") in {(e.source, e.target, e.role) for e in live.edges}
 
 
 def write(path: Path, content: str) -> None:

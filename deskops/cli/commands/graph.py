@@ -24,9 +24,9 @@ class GraphCLI:
             print(f"Error: graph root is not a directory: {root}")
             return 1
 
-        from deskops.graph.snapshot import GraphSnapshotCapabilityError
-        from deskops.graph.snapshot import networkx_path_for_snapshot
-        from deskops.graph.snapshot import write_graph_snapshot
+        from deskops.graph.export import GraphSnapshotCapabilityError
+        from deskops.graph.export import networkx_path_for_snapshot
+        from deskops.graph.export import write_graph_snapshot
 
         try:
             requested_output = Path(args.output) if args.output else None
@@ -52,15 +52,14 @@ class GraphCLI:
 
     def _neighbors(self, args: Any) -> int:
         root = Path(args.root).resolve()
-        from deskops.graph.snapshot import GraphSnapshotReadError
-        from deskops.graph.snapshot import default_snapshot_read_path
-        from deskops.graph.snapshot import read_graph_neighbors
+        from deskops.graph.view import GraphReadError
+        from deskops.graph.view import graph_neighbors
+        from deskops.graph.view import graph_view
 
-        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
-
+        graph_path = Path(args.graph).resolve() if args.graph else None
         try:
-            neighbors = read_graph_neighbors(graph_path, args.id)
-        except GraphSnapshotReadError as exc:
+            neighbors = graph_neighbors(graph_view(root, graph_path), args.id)
+        except GraphReadError as exc:
             print(f"Error: {exc}")
             return 1
 
@@ -119,20 +118,17 @@ class GraphCLI:
             print(f"Error: graph root is not a directory: {root}")
             return 1
 
-        from deskops.graph.snapshot import GraphSnapshotReadError
-        from deskops.graph.snapshot import default_snapshot_read_path
-        from deskops.graph.snapshot import read_graph_snapshot
-
-        graph_path = Path(args.graph).resolve() if args.graph else default_snapshot_read_path(root)
         from deskops.graph.checks import GraphMissingCheckError
         from deskops.graph.self_reflection import build_self_reflection_report
         from deskops.graph.self_reflection import write_self_reflection_report
+        from deskops.graph.view import GraphReadError
+        from deskops.graph.view import graph_view
 
+        graph_path = Path(args.graph).resolve() if args.graph else None
         try:
-            snapshot = read_graph_snapshot(graph_path)
-            report = build_self_reflection_report(snapshot)
+            report = build_self_reflection_report(graph_view(root, graph_path))
             output_path = write_self_reflection_report(root, report)
-        except (GraphSnapshotReadError, GraphMissingCheckError) as exc:
+        except (GraphReadError, GraphMissingCheckError) as exc:
             print(f"Error: {exc}")
             return 1
 

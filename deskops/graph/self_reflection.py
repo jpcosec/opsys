@@ -8,8 +8,8 @@ from typing import Any
 
 from deskops.graph.checks import GraphMissingFinding
 from deskops.graph.checks import find_missing_snapshot_targets
-from deskops.graph.snapshot import GraphSnapshot
-from deskops.graph.snapshot import Node
+from deskops.graph.view import GraphView
+from deskops.graph.view import Node
 
 
 REPORT_SCHEMA = "deskops_self_reflection_report_v2"
@@ -79,10 +79,10 @@ class SelfReflectionFinding:
 
 
 def build_self_reflection_report(
-    snapshot: GraphSnapshot,
+    snapshot: GraphView,
     missing_findings: list[GraphMissingFinding] | None = None,
 ) -> dict[str, Any]:
-    """Return review-only self-reflection findings for a graph snapshot."""
+    """Return review-only self-reflection findings for a graph (sldb's project graph, or a ``--graph`` file)."""
     findings = [
         *_missing_atom_reference_findings(snapshot, missing_findings or []),
         *_dangling_generated_artifact_findings(snapshot, missing_findings or []),
@@ -156,7 +156,7 @@ def _read_existing_decisions(path: Path) -> dict[str, Any]:
 
 
 def _missing_atom_reference_findings(
-    snapshot: GraphSnapshot,
+    snapshot: GraphView,
     missing_findings: list[GraphMissingFinding],
 ) -> list[SelfReflectionFinding]:
     findings = [_missing_atom_finding_from_snapshot(edge) for edge in _missing_atom_edges(snapshot)]
@@ -168,7 +168,7 @@ def _missing_atom_reference_findings(
     return findings
 
 
-def _missing_atom_edges(snapshot: GraphSnapshot) -> list[dict[str, str]]:
+def _missing_atom_edges(snapshot: GraphView) -> list[dict[str, str]]:
     return [
         edge
         for edge in _snapshot_missing_targets(snapshot)
@@ -177,7 +177,7 @@ def _missing_atom_edges(snapshot: GraphSnapshot) -> list[dict[str, str]]:
     ]
 
 
-def _snapshot_missing_targets(snapshot: GraphSnapshot) -> list[GraphMissingFinding]:
+def _snapshot_missing_targets(snapshot: GraphView) -> list[GraphMissingFinding]:
     return find_missing_snapshot_targets(snapshot)
 
 
@@ -227,7 +227,7 @@ def _missing_atom_finding_from_check(finding: GraphMissingFinding) -> SelfReflec
 
 
 def _dangling_generated_artifact_findings(
-    snapshot: GraphSnapshot,
+    snapshot: GraphView,
     missing_findings: list[GraphMissingFinding],
 ) -> list[SelfReflectionFinding]:
     findings: list[SelfReflectionFinding] = []
@@ -293,7 +293,7 @@ def _dangling_generated_artifact_findings(
     return findings
 
 
-def _unlinked_source_file_findings(snapshot: GraphSnapshot) -> list[SelfReflectionFinding]:
+def _unlinked_source_file_findings(snapshot: GraphView) -> list[SelfReflectionFinding]:
     nodes = snapshot.nodes
     linked_source_ids = _linked_source_ids(snapshot)
     findings: list[SelfReflectionFinding] = []
@@ -322,7 +322,7 @@ def _unlinked_source_file_findings(snapshot: GraphSnapshot) -> list[SelfReflecti
     return findings
 
 
-def _linked_source_ids(snapshot: GraphSnapshot) -> set[str]:
+def _linked_source_ids(snapshot: GraphView) -> set[str]:
     linked: set[str] = set()
     for edge in snapshot.edges:
         if edge.role not in SOURCE_LINK_ROLES:
@@ -376,18 +376,14 @@ def _is_excluded_source_path(path: str) -> bool:
 def drift_check_knowledge_surfaces(root: Path) -> list[str]:
     from deskops.graph.checks import find_atom_reference_violations
     from deskops.graph.checks import find_missing_graph_references
-    from deskops.graph.snapshot import DEFAULT_SNAPSHOT_PATH
-    from deskops.graph.snapshot import GraphSnapshot
-    from deskops.graph.snapshot import read_graph_snapshot
-    
-    graph_path = root / DEFAULT_SNAPSHOT_PATH
-    try:
-        snapshot = read_graph_snapshot(graph_path)
-    except Exception:
-        snapshot = GraphSnapshot()
-        
-    missing = find_missing_graph_references(root, graph_path if graph_path.exists() else None)
-    
+    from deskops.graph.view import project_graph_view
+
+    snapshot = project_graph_view(root)
+    missing = sorted(
+        [*find_missing_graph_references(root), *find_missing_snapshot_targets(snapshot)],
+        key=lambda finding: (finding.kind, finding.source_id, finding.target_id),
+    )
+
     report: list[str] = []
     
     # 1. an atom whose declared targets or materializations no longer resolve

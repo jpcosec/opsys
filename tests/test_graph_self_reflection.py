@@ -8,7 +8,7 @@ from deskops.graph.self_reflection import DEFAULT_DECISIONS_PATH
 from deskops.graph.self_reflection import DEFAULT_REPORT_PATH
 from deskops.graph.self_reflection import build_self_reflection_report
 from deskops.graph.self_reflection import write_self_reflection_report
-from deskops.graph.snapshot import read_graph_snapshot
+from deskops.graph.view import read_graph_file as read_graph_snapshot
 
 
 FIXTURE_GRAPH = Path(__file__).parent / "fixtures/knowledge_graph/static_desk_source_graph.json"
