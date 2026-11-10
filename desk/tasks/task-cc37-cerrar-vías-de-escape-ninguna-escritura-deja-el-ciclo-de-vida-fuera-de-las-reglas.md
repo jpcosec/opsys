@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T00:22:57Z'
+  at: '2026-11-10T09:51:47Z'
   authority: generated
   via: save_document_payload
 id: task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas
@@ -22,6 +22,7 @@ files:
 - deskops/lifecycle.py
 - deskops/workspace.py
 - deskops/cli/commands/desk.py
+- docs/workflow-policy-reference.md
 - tests/
 - CHANGELOG.md
 task_type: task.code
@@ -109,6 +110,13 @@ c5 (d4 de CC31): una tarea cuyo task_type no es un tipo registrado (vacío o leg
 
 PRECISIONES DE EJECUCIÓN (2026-11-10, a pedido del worker):
 d1 (workspace.py entra en files): para que desk update --apply no escriba una tarea inconsistente (c4), el filtro va en deskops/workspace.py (_task_type_migration_plan/migrate_task_types). Salta las tareas con errores de ciclo de vida y las devuelve como «inconsistent ... not written»; desk.py lo reporta. Es un cambio mínimo; no se toca nada más de workspace.py. En los 6 desks, las 11 tareas existentes están en estado de entrada (draft, ritual-execution, history vacía) y pasan el validador.
+
+PRECISIONES DE LA REVISIÓN CON PI SOBRE MAIN (preflight-3 y bundle-3, 2026-11-10; recibos rehechos por DO4, con CC37 ya integrado en 81a60a6d):
+r1 (tareas reales): no alcanza con que desk update las reporte: toda tarea real de los 6 desks tiene que pasar el validador. Así quedó: las 11 tareas del ciclo y las del drawer pasan, con «candidate» agregado como estado de drawer (decisión revisable del coordinador del plan, 838aa65e), y desk update reporta sin escribir solo un caso hipotético.
+r2 (docs): la regla 5 manda. La doc va en docs/workflow-policy-reference.md, sección «Lifecycle consistency» (7965a8e6), y docs/workflow-policy-reference.md entra en files.
+r3 (/save): la prueba usa la función de sldb que llama /save, ejecutada en el proceso sin levantar servidor, con el payload simple y en batch (tests/test_task_lifecycle_validator.py). El informe del worker dice cuál es.
+r4 (ENTRY_STATUSES): el inventario de los 6 desks da {"draft"} como único status de entrada (deskops/models/task_lifecycle.py). Los status fuera del ciclo, con current_node vacío, son los de drawer {"deferred", "candidate"} y los pre-ciclo {"resolved", "closed", "done", "complete"}.
+r5 (punto de partida): la implementación ya está en main (squash 81a60a6d). Estos recibos se rehicieron sobre el contrato vigente para el closeout (DO4), no para volver a implementar.
 
 ## Validation
 

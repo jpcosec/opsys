@@ -1,0 +1,95 @@
+{
+  "key": "task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle",
+  "input_sha256": "9274dbf3cca708121865f94517509fb3181d49832e2b3543aad919f05dee061e",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-cc/runs/subagents/20261110-094950/context-review/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle/9274dbf3cca708121865f94517509fb3181d49832e2b3543aad919f05dee061e/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas.md",
+      "sha256": "23881e3e7fd745d665655ef6dff6fa9118cebb08d79bf1ee1d1d3c93f0c92c14",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/lifecycle.py",
+      "sha256": "2319d9838240502f1c72930742f55282983a97782e1b521ffcefd3183f7f307b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "7bc7796b9eb11f05b9df0a12d9ea7455be761be95aeaf2b0fbcf4c4c100dd9cb",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/desk.py",
+      "sha256": "c2143167ced5a34b6b83fc8d22d084bca9876c9adb2c4088265bc8e849989b8d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "7302246677cc72bde066db930a5b26374ae5d1419674c12a2648adf7b5e54209",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/models/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/data/rules/",
+      "reason": "directory"
+    },
+    {
+      "path": "deskops/services/",
+      "reason": "directory"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-10T09:49:50.943182+00:00",
+  "finished": "2026-11-10T09:50:16.079769+00:00",
+  "retry_reason": "recibos rehechos con pi sobre main a63142d1, CC37 en main 81a60a6d (reglas de CC32 instaladas; DO4: el recibo humano es solo para CI)"
+}

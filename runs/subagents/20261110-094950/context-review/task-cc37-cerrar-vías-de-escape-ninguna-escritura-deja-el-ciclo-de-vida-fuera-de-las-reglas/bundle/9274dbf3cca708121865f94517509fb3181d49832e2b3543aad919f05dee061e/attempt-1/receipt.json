@@ -1,0 +1,9 @@
+{
+  "key": "task-cc37-cerrar-vías-de-escape-ninguna-escritura-deja-el-ciclo-de-vida-fuera-de-las-reglas/bundle",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "9274dbf3cca708121865f94517509fb3181d49832e2b3543aad919f05dee061e",
+  "output_sha256": "1e16e6f429a260f0995d91d4bb602f72ed592ea573477c9aff867d91f443f915",
+  "start": "2026-11-10T09:49:50.943182+00:00",
+  "end": "2026-11-10T09:50:16.079769+00:00"
+}
