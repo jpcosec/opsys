@@ -367,6 +367,8 @@ include:
     name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-1
   - path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-2.md
     name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-2
+  - path: desk/reviews/task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f/preflight-3.md
+    name: review-task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f-preflight-3
 - model: TaskRefactorDoc
   paths:
   - desk/tasks/task-cc30-limpieza-previa-operations-py-como-fachada-y-fuera-los-spec-yaml-duplicados.md

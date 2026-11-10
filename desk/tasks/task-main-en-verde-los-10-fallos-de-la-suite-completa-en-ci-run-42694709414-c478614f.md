@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-09T23:51:12Z'
+  at: '2026-11-10T00:53:46Z'
   authority: generated
   via: save_document_payload
 id: task-main-en-verde-los-10-fallos-de-la-suite-completa-en-ci-run-42694709414-c478614f
@@ -70,6 +70,17 @@ p5 (recibos de las tareas abiertas): con las reglas instaladas, el worker lista 
 Hoy las tareas abiertas son CC30, CC36 y CC38 (task.refactor; les falta goldens; sus preflight y bundle no tienen @sha256), CC37 y CC33a (task.code; recibos con @sha256, pero el contrato pudo cambiar después del dispose) y esta misma tarea (task.debug: preflight y reproduction). La evidencia de goldens de CC30, CC36 y CC38 es la corrida de goldens que nombra su TaskDoc (RESULTADO). Si no existe, el worker lo dice y no la inventa (p2). El informe trae una tabla «tarea | finding antes | recibos reescritos | finding después». No se avanza ninguna tarea: solo se las deja activables.
 p6 (tests): cada archivo fallido, de a uno, desde /dev/shm (TMPDIR=/dev/shm; git worktree add --detach /dev/shm/deskops-mv HEAD; worktree remove al terminar). Además, los archivos que toque cada arreglo. La suite completa la corre el coordinador de proyecto al integrar, un proceso por archivo. El worker no la corre.
 p7 (CI): el push va a wt/main-en-verde. El coordinador de proyecto integra y espera el workflow tests de GitHub en success en 3.12 y 3.13; la URL del run va a references al cerrar.
+
+PRECISIONES DEL PREFLIGHT (review-...-preflight-3, 2026-11-10; los intentos 1 y 2 fueron timeouts técnicos) Y DECISIONES DE EJECUCIÓN:
+b1 (copia): un solo mecanismo. git worktree add --detach /dev/shm/deskops-mv HEAD desde el worktree de la rama (HEAD de wt/main-en-verde), recreada tras cada commit. 45198785 era la base de promoción.
+b2 (paro): para solo ese fallo. El worker avisa y sigue con los demás mientras se decide.
+b3 (lost/changed): los calcula sldb (GO07) y salen en el finding de deskops show task (anchor_state lost: el subject no tiene @sha256; changed: el contrato cambió después del pin). Cuenta lo que diga el finding.
+b4 (tareas abiertas): se revalida al ejecutar con deskops list tasks y show task; la lista de p5 es la del 2026-11-09.
+b5 (punto de decisión): el worker propone y el coordinador decide (p2).
+b6 (commits del desk): un commit con lo que escribió desk update --apply («main-en-verde: reglas de activación de CC32 en el desk (desk update --apply)») y un commit por tarea cuyos recibos se reescriben.
+b7 (cierre): cierra el coordinador de proyecto tras integrar, con el run de CI en success en 3.12 y 3.13; la URL del run va a references.
+e1 (DECISIÓN del coordinador de proyecto, 2026-11-10, revisable): para los fallos 1-3 (e2e_agent), opción B. deskops review record acepta también --kind preflight|bundle con --evidence del operador. El recibo deja visible que es humano (engine human), para que no se confunda con una revisión de modelo. Entra con los goldens de ayuda de review record, la sección de review del operator-manual, un test de los dos kinds nuevos y CHANGELOG. Los escenarios e2e_agent producen sus recibos con review record + review dispose antes de advance. Sin skip.
+e2 (DECISIÓN del coordinador de proyecto): CC30, CC36 y CC38 no tienen archivo de corrida de goldens que sirva de evidencia, así que no se les registra goldens. Se cierran con closeout resolved-by (código ya en main: 93cc1943, d4b49ff6, 4a1aae81) con los tests que declararon. Los cierra el coordinador de proyecto cuando el CI esté verde. En la tabla de p5 figuran como «cierre por resolved-by (coordinador)». CC33a ya es activable.
 
 ## Validation
 
