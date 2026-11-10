@@ -1,0 +1,23 @@
+### 0 copia limpia de /srv/repos/shared_llm-gateway en 479b415; deskops main+cb515a4e (0ce8dc95 base), sldb 84eb7f75
+### 1 tareas con history vacía y status no draft
+desk/tasks/task-ci-propio-del-gateway.md status= superseded node= ritual-execution history= []
+desk/tasks/task-linea-base-de-lint-del-gateway.md status= draft node= ritual-closeout history= ['task_activates', 'task_hands_to_closeout']
+desk/tasks/task-logs-de-llm-gateway-servir-sin-pii.md status= draft node= ritual-closeout history= ['task_activates', 'task_hands_to_closeout']
+desk/tasks/task-tope-por-tipo-y-pedidos-bloqueados.md status= deferred node= ritual-execution history= []
+desk/tasks/task-workflow-check-obligatorio-del-gateway.md status= superseded node= ritual-execution history= []
+### 2 sldb stores check
+Unexpected: 1 validation error for TaskDoc
+  Value error, Task task-ci-propio-del-gateway lifecycle is inconsistent: status: 'superseded' is not an entry status; a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through deskops advance and deskops closeout) [type=value_error, input_value={'id': 'task-ci-propio-de...es obligatorio en main'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.14/v/value_error
+rc=1
+### 3 deskops doctor
+Errors (the desk is broken):
+- Legacy desk detected: sldb stores check failed: Unexpected: 1 validation error for TaskDoc. Migrate with: deskops desk migrate --root <repo>.
+- SLDB store check crashed (likely malformed documents): Unexpected: 1 validation error for TaskDoc
+- Unregistered models: ReviewDoc, TaskAggregateDoc, TaskCodeDoc, TaskDebugDoc, TaskDecisionDoc, TaskDocsDoc, TaskExternalDoc, TaskRefactorDoc. Register them with deskops desk update --apply.
+
+Run with --repair to attempt automatic fixes.
+### 4 deskops desk update (dry-run)
+'sldb stores check' failed for /dev/shm/repro-legacy/gw/.sldb with exit code 1: Unexpected: 1 validation error for TaskDoc
+  Value error, Task task-ci-propio-del-gateway lifecycle is inconsistent: status: 'superseded' is not an entry status; a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through deskops advance and deskops closeout) [type=value_error, input_value={'id': 'task-ci-propio-de...es obligatorio en main'}, input_type=dict]
+    For further information visit https://errors.pydantic.dev/2.14/v/value_error

@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T20:49:33Z'
+  at: '2026-11-10T22:00:10Z'
   authority: generated
   via: save_document_payload
 id: task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos
@@ -115,7 +115,7 @@ c2 (forma de la RuleDoc): la plantilla son las rule-activation-task-*.md de desk
 - condition: una cláusula any(^subject: kind = "evidence" and fact = "<kind>" and anchor_state = "intact" and verdict = "accepted") por cada kind; atom|materialization va como or de dos any;
 - message en español que nombra el tipo.
 Se aplica a la arista task_completes igual que las de activación se aplican a la suya; ver cómo lo resuelve lifecycle/advance para las rule-activation.
-c3 (de dónde lee el tipo sus kinds): de una tabla de datos, deskops/data/rules/closeout-evidence.yaml (task_type -> lista de kinds), no de la RuleDoc. La leen closure.py (qué productores corre verify) y cli/commands/operations.py. Un test comprueba que las cláusulas de cada rule-closeout-* coinciden con la tabla.
+c3 (de dónde lee el tipo sus kinds): de una tabla de datos nueva, closeout-evidence.yaml, en la carpeta de reglas de deskops/data (task_type -> lista de kinds; la crea este nodo), no de la RuleDoc. La leen closure.py (qué productores corre verify) y cli/commands/operations.py. Un test comprueba que las cláusulas de cada rule-closeout-* coinciden con la tabla.
 c4 (gates viejos): son los atributos __closeout_evidence__ de las clases de task_types.py y has(closeout_evidence_verified) en la arista. Los productores de closeout_gates.py se quedan: son los hechos de git y archivos de CC33a.
 c5 (DA5, decisiones.md): la evidencia de cierre es solo por tipo. `--evidence` (closeout_evidence de la tarea) solo suma kinds, nunca quita. Un kind extra de la tarea se verifica, se escribe su recibo y, si falla, se reporta como alert sin bloquear.
 c6 (goldens): la regla es «idénticos». b8 es el procedimiento si alguno pareciera tener que cambiar: el worker para y avisa, y el coordinador decide. No hay contradicción.
