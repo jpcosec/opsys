@@ -1,0 +1,23 @@
+name: board
+path: deskops/data/views/board.md
+source_hash: cf98f6c85a6cb86f30a1677eaade1623d10433ee2a31bcfde1ab613bed84a2ca
+content_hash: 4cc56e887323205cea8abd83b12967ce438fec841a8b54065b51d3d8c276618a
+field_hashes:
+  id: 9b71b1c022bd84e4d9b4aef5507b0818b6f39da332bf32b2973452be3d5f6774
+  name: 9b71b1c022bd84e4d9b4aef5507b0818b6f39da332bf32b2973452be3d5f6774
+  title: fc92d7973e252ff4f8e723a1e8c2ae730f021dab05c7c2f403f05b812e943ef5
+  nodes: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  relations: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  direction: 6a4adbca11192a326f61110cda055762eb10de529ff037da568d56e23724242d
+  notation: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  layout: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+  params: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  sections: b778d1ae9eacf7b3e10b1d7735f84bba9cbdc8915d319cd0227bcb3d9c4295f3
+  description: f652be6f21c86f9439b3e4981693da552eb0527289e90e4289db0c11aa9a3f6f
+semantic_tags:
+- layer.presentation
+- representation.markdown
+- source.document.markdown
+- system.spec2viz
+- type.view
+provenance: null

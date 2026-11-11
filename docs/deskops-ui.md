@@ -1,9 +1,19 @@
 # deskops view: el contrato de datos de la UI de deskops
 
 `deskops view {board,task <id>,drawer,inbox,agents} --root <repo> --format json|text`
-produce las vistas que dibuja la UI de deskops (graph_ui, `frontends/desk/`). La clase
-que las arma es `deskops.services.desk_view.DeskView`; graph_ui la importa en el mismo
-proceso y sirve exactamente el mismo JSON.
+produce las vistas que dibuja la UI de deskops (graph_ui, `frontends/desk/`).
+
+`board` y `task` son `ViewDoc` de sldb: las semillas `deskops/data/views/board.md` y
+`task.md` (viven solo en el paquete, sin `desk/views/`), trackeadas como `ViewDoc` en el
+store del propio repo deskops. `deskops view` las evalúa con `sldb.api.run_view` sobre el
+store del desk y `deskops.cli.commands.view.project(view, resultado, root)` proyecta el
+resultado a este contrato. graph_ui lee `GET /views/<vista>` de `sldb serve` (con ETag) y
+llama a la misma `project` en proceso, así que sirve exactamente el mismo JSON. `drawer`,
+`inbox` y `agents` los arma el CLI (ver «Fuentes de cada campo»).
+
+Mientras sldb no resuelva una `ViewDoc` de un store enlazado (hipótesis H9), `board` y
+`task` responden solo en un desk cuyo propio store trackea las `ViewDoc` (el repo deskops);
+en los demás salen con el sobre de error `Unknown view: <vista>`.
 
 Reglas comunes:
 
@@ -94,8 +104,9 @@ extra con `in_lifecycle: false` y además en `errors`.
 
 - `validation`, `done_when` y `references` son los efectivos (con herencia).
 - `next` viene de `next_action_report`; si falla, `next` es `null` y la causa va a `errors`.
-- `revision` = `sha256(bytes de desk/tasks/Board.md + b"\0" + bytes del archivo de la tarea)`,
-  la misma guarda que usa `POST /api/desk/advance` de graph_ui (`DeskRoutes.detail`).
+- `revision` = el ETag de la vista `task` (`run_view(...)["revision"]`, GD25): cambia cuando
+  cambia la tarea, el Board o una pill o un atom que la vista leyó. Es la guarda que usa
+  `POST /api/desk/advance` de graph_ui: con un `revision` viejo responde 409.
 
 ## drawer
 
@@ -161,6 +172,33 @@ extra con `in_lifecycle: false` y además en `errors`.
 - `runs`: las últimas `--runs` (20 por omisión) líneas de `runs/subagents/index.jsonl`, la
   más nueva primero; `on_board` dice si la tarea sigue en el Board.
 
+## Fuentes de cada campo (CC34)
+
+`run_view` es la vista `ViewDoc` evaluada por sldb. «Agregado CLI, pendiente de sldb Hn»
+es un campo que el CLI todavía arma con una operación de lectura que ya existía, porque el
+modelo de `ViewDoc` no lo expresa aún; cada uno se retira cuando sldb cierre su hipótesis.
+
+| Campo | Fuente |
+|---|---|
+| `view`, `contract`, `root` | constantes del CLI |
+| `board.path`, `board.pills` (ids) | `run_view`, sección `board` (campos `tasks`, `pills`) |
+| tareas del Board, su orden, `errors` de referencias | `run_view`, secciones `board` y `tasks` (el Board manda) |
+| columnas (`node`, agrupación) | `run_view`, sección `tasks` (`group_by: current_node`) |
+| `phase`, `purpose`, `in_lifecycle` de cada columna | agregado CLI, pendiente de sldb H5 (spec del ciclo de vida) |
+| `CARD.id/title/status/current_node/task_type/path` | `run_view`, filas de `tasks` / `task` |
+| `CARD.gates`, `gates_holding`, `gates_total` | agregado CLI, pendiente de sldb H1-H3 (`show_task`) |
+| `CARD.closeout` | agregado CLI, pendiente de sldb H4 (`verify_task_closeout` sin recibos) |
+| `CARD.pills`, `CARD.atoms` (títulos y detalle) | `run_view`, secciones `pills` y `atoms` |
+| lista efectiva de pills y atoms; `validation`, `done_when`, `references` | agregado CLI, pendiente de sldb H6 (`resolve_task_payload`) |
+| `counts` | suma del CLI sobre las tarjetas |
+| `task.on_board` | `run_view`, arista `tasks` del Board |
+| `task.why/goal/scope/implementation_path/files/depends_on/inherits_from/from_drawer/history` | `run_view`, fila de `task` |
+| `next` | agregado CLI, pendiente de sldb H5 (`next_action_report`) |
+| `revision` (task) | `run_view` (ETag de GD25) |
+| `drawer.*` (`markdown`, `excerpt`, `command`...) | agregado CLI, lectura del archivo, pendiente de H7 y H10 |
+| `inbox.*`, `notes[].revision` | agregado CLI, lectura del archivo, pendiente de H8 y H10 |
+| `agents.*` | CLI (`deskops/runtime/desk_agents.py`): no son documentos |
+
 ## Mapeo de la pantalla de Stitch a fuentes reales
 
 Copiado de `desk/drawer/plans/deskops-ui/alcance.md` (plan deskops-ui, 2026-11-04).
@@ -174,7 +212,7 @@ Copiado de `desk/drawer/plans/deskops-ui/alcance.md` (plan deskops-ui, 2026-11-0
 | Atoms | `atoms` y referencias `atom-*` → `AtomDoc` | `CARD.atoms` (+ `answer` en task) | id en `errors` |
 | "Promover a Atom" | no hay operación | — | botón deshabilitado: "requiere operación de graduación (no existe)" |
 | "Iniciar ejecución" | no hay dispatch | — | deshabilitado: "llega con runtime dispatch (fábrica E3)" |
-| Avanzar | `POST /api/desk/advance` de graph_ui | `task.revision` | — |
+| Avanzar | `POST /api/desk/advance` de graph_ui | `task.revision` (ETag) | — |
 | Diferir a drawer | no hay operación | — | deshabilitado con motivo |
 | Drawer: lista y vista raw | `desk/drawer/tasks/*.md` | `drawer.tasks` | — |
 | Drawer: "Promover a Desk" | `add task --from-drawer` | `drawer.tasks[].command` | se muestra el comando, no un botón |

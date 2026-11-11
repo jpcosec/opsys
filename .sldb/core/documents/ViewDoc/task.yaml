@@ -1,0 +1,23 @@
+name: task
+path: deskops/data/views/task.md
+source_hash: 32f4200dd2e3a8750e11911167821ec47ccfc77110a544fb6b03b27984529736
+content_hash: 19e96129f9df82b63668b76b8815e3d95aa28ffed2f6707f0046b485c91eb636
+field_hashes:
+  id: b9ce06a01002b74d199af6ebe3f5fb94ceba07ec633822e44fec47b29b9edb7d
+  name: b9ce06a01002b74d199af6ebe3f5fb94ceba07ec633822e44fec47b29b9edb7d
+  title: a4b9c33e8b25179727f550e7a2cebc547621ce56c8ce4fdb803c9846500ed185
+  nodes: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  relations: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  direction: 6a4adbca11192a326f61110cda055762eb10de529ff037da568d56e23724242d
+  notation: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  layout: 44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a
+  params: 0f3303933f9424c542482687962c46c7b8d8fdd0050b37053ceec1db9beee32d
+  sections: 89d6302b084cba2593168e01cdb2aa78c0d05fe9afd098270525553a42db5d33
+  description: c8262fed2d233fa6748b09a6693ab960ecbbd8882dabdf1ebe2e075d0fba61c1
+semantic_tags:
+- layer.presentation
+- representation.markdown
+- source.document.markdown
+- system.spec2viz
+- type.view
+provenance: null
