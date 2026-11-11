@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-11T03:25:43Z'
+  at: '2026-11-11T03:28:51Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -13,6 +13,7 @@ tasks:
 - desk/tasks/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall.md
 - desk/tasks/task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de.md
 - desk/tasks/task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro.md
+- desk/tasks/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -57,3 +58,4 @@ _Generated from the task references above._
 - advance y doctor ante semillas del ciclo de vida anteriores a CC31: doctor las reporta y advance falla nombrando la arista sin efecto sets [draft] - deskops doctor reporta las semillas managed del ciclo de vida desactualizadas y sugiere desk update --apply; deskops advance falla antes de escribir, con un mensaje que nombra la arista sin efecto sets.
 - Tareas con status terminal heredado y history vacía (desks pre-CC31): desk update las migra y doctor/desk update no caen por un documento inválido [draft] - deskops desk update --apply (o un subcomando de migración con dry-run) normaliza las tareas heredadas según la tabla de d1 y reporta las que no puede decidir; closeout retire puede retirar superseded, cancelled y deferred heredadas; doctor y desk update reportan los documentos inválidos uno por uno sin caer.
 - CC35c: Referencias entrantes - referrers y rewrite_references dentro de la transacción; menciones en prosa como MentionPattern [draft] - atoms delete/split/merge, retire, drawer remove y closeout buscan y reescriben las referencias entrantes con referrers y rewrite_references de sldb dentro de la misma transacción; las menciones en prosa se ven por los MentionPattern de la configuración de grafo; se borran las búsquedas propias.
+- CC34: Vistas de la UI como ViewDoc servidas por sldb; desk_view.py desaparece [draft] - deskops view board|task|drawer|inbox sale de sldb.api.run_view sobre ViewDocs semilla del paquete, con el mismo JSON que hoy salvo revision; graph_ui lee esas vistas sin importar DeskView; desk_view.py y sus helpers se borran.

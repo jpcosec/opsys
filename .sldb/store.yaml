@@ -506,5 +506,6 @@ include:
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro.md
+  - desk/tasks/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece.md
 graph_backend: networkx
 policy: {}
