@@ -166,9 +166,18 @@ def test_view_text_lists_the_board(desk: dict, capsys: pytest.CaptureFixture[str
     assert desk["execution"] in capsys.readouterr().out
 
 
-def test_a_store_without_the_viewdocs_is_an_error_envelope(lifecycle_desk: Path, capsys: pytest.CaptureFixture[str]) -> None:
-    """Until sldb resolves a ViewDoc of a linked store (H9), a desk whose own store lacks them
-    gets sldb's error, not an invented view."""
+def test_a_store_without_the_viewdocs_is_an_error_envelope(lifecycle_desk: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch) -> None:
+    """A store where sldb finds no ViewDoc `board` (neither its own nor a linked one) is sldb's
+    error in the envelope, not an invented view. Since sldb resolves a ViewDoc of a linked store
+    (H9, sldb 04a0e94e), whether a test desk finds the package's views depends on whether the
+    deskops repo's own store was built (CI builds it first), so the missing view is simulated at
+    sldb's API instead of relied on."""
+    from sldb.core.exceptions import SLDBDocumentTargetError
+
+    def no_view(store, name, params=None):
+        raise SLDBDocumentTargetError(f"Unknown view: {name}")
+
+    monkeypatch.setattr(api, "run_view", no_view)
     capsys.readouterr()
     assert main(["view", "board", "--root", str(lifecycle_desk), "--format", "json"]) == 1
     error = json.loads(capsys.readouterr().out)["error"]
