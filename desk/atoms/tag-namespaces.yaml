@@ -34,3 +34,11 @@ namespaces:
     - topic:composition
     meaning: Subject area discussed by the atom.
     use_when: The atom is about a conceptual topic.
+  workspace:
+    do_not_use_when: A domain, layer, system or topic tag names the subject more precisely.
+    examples:
+    - workspace:desk
+    meaning: Workspace surface the atom is about, the same value tasks and pills carry
+      (desk, docs, ...).
+    use_when: The atom states a rule about one workspace surface as a whole, such
+      as the desk.
