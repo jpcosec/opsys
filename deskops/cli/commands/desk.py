@@ -464,12 +464,13 @@ class DeskCLI:
             print(f"Error: could not migrate the task types: {exc}")
             failed = True
 
-        if tag_declaration_pending:
-            try:
-                sync_tag_declaration(root)
-            except Exception as exc:
-                print(f"Error: could not declare the tag namespaces: {exc}")
-                return 1
+        # Always: a store this --apply just created has no declaration yet (idempotent).
+        try:
+            declared_tags = sync_tag_declaration(root)
+        except Exception as exc:
+            print(f"Error: could not declare the tag namespaces: {exc}")
+            return 1
+        if declared_tags:
             print("Declared the tag namespaces of desk/atoms/tag-namespaces.yaml in .sldb/store.yaml.")
 
         # Recomputed: the scaffold may have written declared documents (the lifecycle graph).
