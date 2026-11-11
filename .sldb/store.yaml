@@ -526,9 +526,6 @@ include:
   - desk/lifecycle/rule-closeout-task-docs.md
   - desk/lifecycle/rule-closeout-task-external.md
   - desk/lifecycle/rule-closeout-task-refactor.md
-- model: TaskDebugDoc
-  paths:
-  - desk/tasks/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall.md
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro.md
