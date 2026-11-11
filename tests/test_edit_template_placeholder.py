@@ -94,8 +94,8 @@ def test_the_phrase_inside_a_longer_paragraph_is_kept(lifecycle_desk: Path, caps
 
 def test_inbox_note_body_keeps_one_placeholder(lifecycle_desk: Path, capsys) -> None:
     root = lifecycle_desk
-    assert main(["add", "inbox-note", "--root", str(root), "--kind", "suggestion", "--title",
-                 "Placeholder inbox probe", "--body", "Primer párrafo con evidencia."]) == 0
+    assert main(["message", "send", "--root", str(root), "--title", "Placeholder inbox probe",
+                 "--kind", "suggestion", "Primer párrafo con evidencia."]) == 0
     capsys.readouterr()
     [path] = (root / "desk" / "inbox").glob("*placeholder-inbox-probe*.md")
     assert path.read_text(encoding="utf-8").count(INBOX_PLACEHOLDER) == 1
