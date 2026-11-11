@@ -153,8 +153,9 @@ def lifecycle_errors(status: str, current_node: str, history: list[str]) -> list
 
 #: What the owner of a task the migration table does not cover is told to do (b1).
 UNMIGRATABLE_SUGGESTION = (
-    "decide its state: deskops closeout supersede <id> if it was replaced, deskops closeout "
-    "resolved-by <id> <commit> if its work is done, or recreate it with deskops add task"
+    "decide its state: deskops closeout supersede --task <id> --reason ... --ref ... if it was "
+    "replaced, deskops closeout resolved-by --task <id> --reason ... --ref <commit> --test <file> "
+    "if its work is done, or recreate it with deskops add task"
 )
 
 

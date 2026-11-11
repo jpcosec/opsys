@@ -848,23 +848,48 @@ def legacy_task_states(root: Path) -> tuple[list[LegacyTaskState], list[LegacyTa
     return migratable, unmigratable
 
 
-def _migrated_frontmatter(frontmatter: str, changes: dict[str, tuple[Any, Any]]) -> str:
-    """The frontmatter with the table's fields rewritten line by line, so nothing else moves."""
+def _migrated_frontmatter(frontmatter: str, changes: dict[str, Any]) -> str:
+    """The frontmatter with only the named top-level fields rewritten, so nothing else moves.
+
+    A field is its ``name:`` line plus the block-list items under it (``- x`` or indented);
+    a scalar is written plain (``''`` when empty), a list as a block list. A missing field is
+    appended.
+    """
     lines = frontmatter.split("\n")
-    for name, (_before, after) in changes.items():
+    for name, after in changes.items():
         if isinstance(after, list):
             value_lines = [f"{name}:"] + [f"- {item}" for item in after]
         else:
             value_lines = [f"{name}: {after}" if after else f"{name}: ''"]
-        # The table only writes a one-line field: an empty history, a node name.
         index = next((i for i, line in enumerate(lines) if line.startswith(f"{name}:")), None)
         if index is None:
             lines.extend(value_lines)
-        elif index + 1 < len(lines) and lines[index + 1][:1] in (" ", "-"):
-            raise ValueError(f"{name} spans several lines")
-        else:
-            lines[index:index + 1] = value_lines
+            continue
+        end = index + 1
+        while end < len(lines) and lines[end][:1] in (" ", "-"):
+            end += 1
+        lines[index:end] = value_lines
     return "\n".join(lines)
+
+
+def rewrite_task_fields(path: Path, changes: dict[str, Any]) -> list[str]:
+    """Write ``changes`` into a task's frontmatter without the model; ``[]`` once ``TaskDoc``
+    reads the result, else why not (and the file is restored byte for byte).
+
+    For a task the model rejects, which no model write can load: the migration of legacy
+    states and ``closeout supersede`` of an incoherent task.
+    """
+    original = path.read_bytes()
+    text = original.decode("utf-8")
+    match = _FRONTMATTER_RE.match(text)
+    if match is None:
+        return ["no frontmatter"]
+    new_text = "---\n" + _migrated_frontmatter(match.group(1), changes) + "\n---\n" + text[match.end():]
+    path.write_text(new_text, encoding="utf-8")
+    if errors := _model_errors(new_text):
+        path.write_bytes(original)
+        return errors
+    return []
 
 
 def migrate_legacy_task_states(root: Path) -> tuple[list[str], list[LegacyTaskState]]:
@@ -881,18 +906,7 @@ def migrate_legacy_task_states(root: Path) -> tuple[list[str], list[LegacyTaskSt
     lines: list[str] = []
     failed: list[LegacyTaskState] = []
     for state in migratable:
-        original = state.path.read_bytes()
-        text = original.decode("utf-8")
-        match = _FRONTMATTER_RE.match(text)
-        try:
-            new_fm = _migrated_frontmatter(match.group(1), state.changes)  # type: ignore[union-attr]
-        except (AttributeError, ValueError) as exc:
-            failed.append(LegacyTaskState(state.path, state.rel, state.task_id, [f"not migrated: {exc}"]))
-            continue
-        new_text = "---\n" + new_fm + "\n---\n" + text[match.end():]  # type: ignore[union-attr]
-        state.path.write_text(new_text, encoding="utf-8")
-        if errors := _model_errors(new_text):
-            state.path.write_bytes(original)
+        if errors := rewrite_task_fields(state.path, {name: after for name, (_before, after) in state.changes.items()}):
             failed.append(LegacyTaskState(state.path, state.rel, state.task_id, [f"not migrated, the result is still invalid: {'; '.join(errors)}"]))
             continue
         lines.extend(state.migration_lines())

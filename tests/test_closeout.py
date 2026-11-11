@@ -798,6 +798,45 @@ def test_closeout_supersede_closes_a_task_with_a_reason_and_commit_ref(
     ]
 
 
+def test_closeout_supersede_closes_a_task_whose_lifecycle_the_model_rejects(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    """A draft after task_hands_to_closeout (shared_llm-gateway, no migration decides it): supersede
+    reads its frontmatter instead of the model and closes it with the same commit and trailers."""
+    from deskops.models.task_lifecycle import lifecycle_errors
+
+    root = _make_repo(tmp_path)
+    _write_lifecycle_task(root)
+    path = root / "desk" / "tasks" / "task-x.md"
+    text = path.read_text(encoding="utf-8")
+    text = text.replace("status: active\n", "status: draft\n").replace("current_node: ritual-testing\n", "current_node: ritual-closeout\n")
+    text = text.replace("history:\n- task_activates\n", "history:\n- task_activates\n- task_hands_to_closeout\n")
+    path.write_text(text, encoding="utf-8")
+    assert lifecycle_errors("draft", "ritual-closeout", ["task_activates", "task_hands_to_closeout"])
+    _write_board(root, "task-x")
+    _git(root, "add", "desk/tasks")
+    _git(root, "commit", "-q", "-m", "add incoherent task and board")
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = _supersede_main(root, "--reason", "The owner replaced it", "--ref", ref)
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert message.splitlines()[0] == "closeout: task-x"
+    assert "Task-Id: task-x" in message
+    assert "Closeout-Mode: superseded" in message
+    assert "Closeout-Reason: The owner replaced it" in message
+    assert f"Closeout-Ref: {ref}" in message
+    assert not path.exists()
+    assert "desk/tasks/task-x.md" not in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert _git(root, "status", "--porcelain") == ""
+    assert sorted(_git(root, "show", "--name-only", "--format=", "HEAD").splitlines()) == [
+        "desk/tasks/Board.md",
+        "desk/tasks/task-x.md",
+        "runs/subagents/index.jsonl",
+    ]
+
+
 def test_closeout_supersede_accepts_an_existing_path_ref(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:

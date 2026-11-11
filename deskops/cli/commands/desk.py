@@ -415,22 +415,23 @@ class DeskCLI:
 
         print("\nApplying repairs...")
 
+        if store_check_error:
+            # sldb rebuilds every document of a model on each store write and stops at an
+            # invalid one, leaving the store half written: every repair but the migration above
+            # (the scaffold re-tracks the lifecycle graph too) waits for the fix.
+            print(
+                "Skipped the other repairs (structure, lifecycle graph, models, tracking, task types, "
+                "indexes): sldb cannot read the store while an invalid document remains. Fix the "
+                "documents above and run deskops desk update --apply again."
+            )
+            return 1
+
         if missing_desk_files or lifecycle_rewrites or lifecycle_missing:
             scaffold = seed_desk(root, restore_managed=True)
             if missing_desk_files:
                 print("Scaffolded missing desk structure.")
             for change in lifecycle.seed_changes(root, scaffold):
                 print(f"Lifecycle graph: {change}")
-
-        if store_check_error:
-            # sldb rebuilds every document of a model on each store write and stops at an
-            # invalid one, leaving the store half written: the store repairs wait for the fix.
-            print(
-                "Skipped the store repairs (models, tracking, task types, indexes): sldb cannot read "
-                "the store while an invalid document remains. Fix the documents above and run "
-                "deskops desk update --apply again."
-            )
-            return 1
 
         failed = False
         if unregistered_models or copied_models:

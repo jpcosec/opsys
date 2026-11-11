@@ -336,5 +336,5 @@ def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_d
     rel = task.relative_to(root).as_posix()
     assert f"  - {rel}: {ACTIVE_ERROR}." in out
     assert "- Store check failed ('sldb stores check' exit code 1" in out
-    assert "Skipped the store repairs" in out
+    assert "Skipped the other repairs" in out
     assert task.read_text(encoding="utf-8") == text

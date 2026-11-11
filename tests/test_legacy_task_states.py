@@ -191,7 +191,7 @@ def test_desk_update_apply_migrates_by_the_table_reports_the_rest_and_a_second_r
     out = capsys.readouterr().out
     assert out.startswith("Migrating legacy task states...\n" + "".join(f"- {line}\n" for line in MIGRATION_LINES))
     assert "- Invalid task documents (not written): 2 task(s)" in out
-    assert "Skipped the store repairs" in out
+    assert "Skipped the other repairs" in out
     after = _texts(paths)
     for rel in UNMIGRATABLE:
         assert after[rel] == before[rel]
@@ -291,4 +291,43 @@ def test_retire_waits_while_another_task_is_invalid_then_retires_the_migrated_ta
     assert main(retire) == 0, capsys.readouterr().out
     assert "Closeout-Mode: legacy-resolved" in _git(root, "log", "-1", "--format=%B")
     assert not (root / "desk" / "tasks" / "task-ci-propio-del-gateway.md").exists()
+    assert _sldb_check(root) == 0
+
+
+# ------------------------------------------------------------------ closeout supersede of an undecided task
+def test_supersede_closes_an_incoherent_task_by_cli_and_waits_while_another_is_invalid(lifecycle_desk: Path, capsys) -> None:
+    """The two gateway drafts after task_hands_to_closeout: supersede reads the frontmatter, so it
+    closes one by CLI; while the other is still invalid sldb cannot untrack (H2), so it refuses up
+    front and writes nothing. Once only one is invalid, it closes and the store checks."""
+    root = lifecycle_desk
+    rows = [row for row in LEGACY if row[1] == "draft"]
+    paths = _make_tasks(root, rows)
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "two incoherent drafts")
+    head = _git(root, "rev-parse", "HEAD")
+    first, second = sorted(Path(rel).stem for rel in paths)
+
+    def supersede(task_id: str) -> int:
+        return main(["closeout", "supersede", "--root", str(root), "--task", task_id, "--reason", "replaced", "--ref", head])
+
+    capsys.readouterr()
+    assert supersede(first) == 1
+    assert f"Cannot supersede {first} yet" in capsys.readouterr().out
+    assert _git(root, "status", "--porcelain") == ""
+    assert _git(root, "rev-parse", "HEAD") == head
+
+    # The other draft's owner decides it (status as its history says), so one invalid task is left.
+    second_path = root / "desk" / "tasks" / f"{second}.md"
+    second_path.write_text(second_path.read_text(encoding="utf-8").replace("status: draft\n", "status: ready_for_testing\n"), encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "owner removed the second draft")
+    head = _git(root, "rev-parse", "HEAD")
+    capsys.readouterr()
+
+    assert supersede(first) == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert "Closeout-Mode: superseded" in message
+    assert f"Task-Id: {first}" in message
+    assert not (root / "desk" / "tasks" / f"{first}.md").exists()
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0  # refreshes the hand-edited hash
     assert _sldb_check(root) == 0

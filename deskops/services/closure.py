@@ -33,6 +33,7 @@ from deskops import lifecycle
 from deskops.models.task_lifecycle import DRAWER_STATUSES
 from deskops.models.task_lifecycle import LEGACY_RESOLVED_STATUSES
 from deskops.models.task_lifecycle import _frontmatter
+from deskops.workspace import rewrite_task_fields
 from deskops.models.task_types import canonical_task_type_name
 from deskops.models.task_types import closeout_evidence_kinds
 from deskops.models.task_types import declared_evidence_list
@@ -177,14 +178,27 @@ class ClosureService:
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
         original = task_path.read_bytes()
-        payload = doc_access.read_doc(task_path, TaskDoc)
-        payload["status"] = "superseded"
-        payload["history"] = [*(payload.get("history") or []), "superseded"]
         try:
-            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
-        except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
-            task_path.write_bytes(original)
-            return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
+            payload = doc_access.read_doc(task_path, TaskDoc)
+        except Exception:  # noqa: BLE001 - the model rejects the task: read it from its frontmatter
+            payload = None
+        if payload is None:
+            # A task whose lifecycle the model rejects (a legacy state no table decides) is
+            # closed from its frontmatter: superseded with its own record is coherent from any node.
+            if blocking := self._other_invalid_tasks(task_path):
+                return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, "supersede", blocking)])
+            frontmatter = _frontmatter(original.decode("utf-8"))
+            history = [str(item) for item in frontmatter.get("history") or []]
+            if errors := rewrite_task_fields(task_path, {"status": "superseded", "history": [*history, "superseded"]}):
+                return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {'; '.join(errors)}"])
+        else:
+            payload["status"] = "superseded"
+            payload["history"] = [*(payload.get("history") or []), "superseded"]
+            try:
+                doc_access.write_doc(self.root, task_path, TaskDoc, payload)
+            except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
+                task_path.write_bytes(original)
+                return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
 
         trailers = [
             f"Task-Id: {task_id}",
@@ -388,15 +402,7 @@ class ClosureService:
                 ],
             )
         if blocking := self._other_invalid_tasks(task_path):
-            return ClosureOutcome(
-                1,
-                [
-                    f"Cannot retire {task_id} yet: sldb rebuilds every task of the store when one "
-                    f"leaves it, and these task documents are invalid: {', '.join(blocking)}. "
-                    "Migrate them with deskops desk update --apply (it lists the ones that need "
-                    "their owner's decision), then retire again."
-                ],
-            )
+            return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, "retire", blocking)])
 
         trailers = [
             f"Task-Id: {task_id}",
@@ -420,6 +426,15 @@ class ClosureService:
                 "mode": "legacy-resolved",
             },
             success_line=f"Closing commit {{commit}} made in legacy-resolved mode: {reason}",
+        )
+
+    @staticmethod
+    def _blocked_by_invalid_tasks(task_id: str, verb: str, blocking: list[str]) -> str:
+        return (
+            f"Cannot {verb} {task_id} yet: sldb rebuilds every task of the store when one "
+            f"leaves it, and these task documents are invalid: {', '.join(blocking)}. "
+            "Migrate them with deskops desk update --apply (it lists the ones that need "
+            f"their owner's decision), then {verb} again."
         )
 
     def _other_invalid_tasks(self, task_path: Path) -> list[str]:

@@ -88,7 +88,7 @@ the validator's text, read from the task's frontmatter: `sldb stores check` stop
 first such document, so doctor names every one and still runs the other checks
 (structure, store, models). A task the legacy migration decides says
 `Migrate it with deskops desk update --apply`; any other one says what its owner can
-do (`decide its state: deskops closeout supersede <id> ...`).
+do (`decide its state: deskops closeout supersede --task <id> --reason ... --ref ...`).
 
 `--repair` acts on errors only (it scaffolds structure and registers models). Use it
 when you understand the reported errors:
@@ -184,8 +184,9 @@ deskops desk update --root ../sibling --apply
   through sldb (sldb rebuilds every task of the store on each write and stops at
   the invalid one), and the new text is validated with `TaskDoc`; a task it
   still rejects is restored. While `sldb stores check` cannot read the store,
-  `--apply` reports it and skips the store repairs (models, tracking, task
-  types, indexes) instead of leaving the store half written. `--apply` exits 0
+  `--apply` reports it and skips every other repair (structure, lifecycle
+  graph, models, tracking, task types, indexes) instead of leaving the store
+  half written. `--apply` exits 0
   when nothing is left and 1 while a task waits for its owner; a second run
   migrates nothing.
 
@@ -564,7 +565,10 @@ retire` removes a task whose status is already `resolved`, `closed`, `done`,
 CC31 left; a `superseded` task with only its `superseded` record, what
 `desk update --apply` makes of it, too). Retire reads the task's frontmatter, so it also removes a task its
 model rejects; in a desk with a store it waits until no other task is invalid
-(`deskops desk update --apply` first). Both need `--reason` and at least one
+(`deskops desk update --apply` first). `closeout supersede` also closes a task
+its model rejects (a lifecycle no migration decides, such as a `draft` after
+`task_hands_to_closeout`): it reads and writes the frontmatter, with the same
+commit and trailers, and waits the same way while another task is invalid. Both need `--reason` and at least one
 `--ref` (an ancestor commit; supersede also accepts an existing path), make
 exactly one closing commit with `Closeout-Mode: superseded` or
 `Closeout-Mode: legacy-resolved` trailers, and take the task off the Board.

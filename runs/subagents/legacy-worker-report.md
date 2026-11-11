@@ -116,7 +116,9 @@ Todas verificadas sobre una copia del gateway en `/dev/shm` con sldb `84eb7f75`.
    `update_store_indexes`), y la tercera corrida da "Desk is up to date.".
 2. **`desk update --apply` se salta las reparaciones del store mientras `stores check` no lee el store.** Intentar
    registrar modelos o trackear en ese estado deja el store a medio escribir (H2, H3). Se imprime
-   `Skipped the store repairs (...)` y sale 1. Las reparaciones que no tocan el store (scaffold, migración) sí corren.
+   `Skipped the other repairs (...)` y sale 1. Solo corre la migración: tras el rebase sobre CC33b, el scaffold
+   también reescribe y retrackea una semilla del grafo (`closeout-task_completes.md`), que caía en sldb y dejaba
+   `.sldb` a medio escribir (visto en una copia del gateway), así que también espera.
    "Registro de modelos incluido" (d2) se cumple en doctor (el chequeo de modelos corre) y en desk update como
    reporte; el registro efectivo espera a que no quede ningún inválido.
 3. **`closeout retire` con store rechaza si hay otra tarea inválida** (mismo motivo), antes de escribir nada, y
@@ -136,7 +138,7 @@ Log: `~/proyectos/SLDB_1/coord2-ccconfig/legacy/worker-gw-after.log` (copia de `
 | task-linea-base-de-lint-del-gateway | draft, ritual-closeout, [task_activates, task_hands_to_closeout] | no migrable (b1) |
 | task-logs-de-llm-gateway-servir-sin-pii | ídem | no migrable (b1) |
 
-- Paso 3, `--apply`: tres líneas de migración, las dos draft reportadas, `Skipped the store repairs`, rc 1. El diff de
+- Paso 3, `--apply`: tres líneas de migración, las dos draft reportadas, `Skipped the store repairs` (hoy `Skipped the other repairs`), rc 1. El diff de
   `desk/` toca solo esas líneas.
 - Paso 5, segunda corrida: ninguna línea de migración, solo los dos no migrables, rc 1, sin cambios.
 - Paso 6, `sldb stores check`: rc 1, por las dos draft (H1).
