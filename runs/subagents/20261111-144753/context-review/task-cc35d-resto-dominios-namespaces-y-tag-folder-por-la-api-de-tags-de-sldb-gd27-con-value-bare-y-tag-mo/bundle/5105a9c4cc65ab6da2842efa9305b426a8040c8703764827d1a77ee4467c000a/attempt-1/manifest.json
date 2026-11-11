@@ -1,0 +1,111 @@
+{
+  "key": "task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo/bundle",
+  "input_sha256": "5105a9c4cc65ab6da2842efa9305b426a8040c8703764827d1a77ee4467c000a",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp16/runs/subagents/20261111-144753/context-review/task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo/bundle/5105a9c4cc65ab6da2842efa9305b426a8040c8703764827d1a77ee4467c000a/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo.md",
+      "sha256": "691677c1e1d488a4a209a0ac76e9652b57a3dfe0bf41435daf690acd0b312ca4",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/domain_tree.py",
+      "sha256": "ee36b635648430142a890be00087283e4f6ff8906d9cc82fc4f85b76062a5a33",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/atom_tags.py",
+      "sha256": "fb381f26e9e3d1c7a9cc0ff16ea923c41735185bed790335b63ed2abd6f3f6f1",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/doc_access.py",
+      "sha256": "c5b3d6437d955cfb3a919e9bcf47ece0c83b7b239fbd05a53ce5a5380393d1f2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/atoms.py",
+      "sha256": "072444a4d071ee866e6ffc3877ac13216ba5365e45ff034906dbadc8077dcd6d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/atoms.py",
+      "sha256": "6c55af80b6af0b0f26b9f4e5d0feaae222d6a5765b21b710661fc2e6fa7a71f2",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/doctor.py",
+      "sha256": "7b3b597767315b9b428884439f24a7ed01a4ed32ba845360dc3e3bc276044915",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/atom.py",
+      "sha256": "7d7f18b52cff2118d750e34ca26a38bc3c4197e876c81fa7fc81baff81add2a6",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/data/desk_declaration.yaml",
+      "sha256": "ad1ad1b498e33374e0a4a5f4265db6dbdf11404cf6cee1313120e8698b371ebc",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "9182fe0df290d3e1dc1d556db572d19cad1521a5fc70f840d5d925eb8c80e8d6",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    },
+    {
+      "path": "docs/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-11T14:47:53.819490+00:00",
+  "finished": "2026-11-11T14:48:07.782986+00:00"
+}

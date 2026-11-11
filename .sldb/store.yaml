@@ -507,6 +507,10 @@ include:
     name: review-task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m-bundle-1
   - path: desk/reviews/task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m/reproduction-1.md
     name: review-task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m-reproduction-1
+  - path: desk/reviews/task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo/preflight-1.md
+    name: review-task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo-preflight-1
+  - path: desk/reviews/task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo/bundle-1.md
+    name: review-task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo-bundle-1
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

@@ -1,0 +1,9 @@
+{
+  "key": "task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo/bundle",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "5105a9c4cc65ab6da2842efa9305b426a8040c8703764827d1a77ee4467c000a",
+  "output_sha256": "30f1b26c5344e1cb9f8ca8010d8af1722e0cd7084e68bd1cec24c3f9c01f43c2",
+  "start": "2026-11-11T14:47:53.819490+00:00",
+  "end": "2026-11-11T14:48:07.782986+00:00"
+}
