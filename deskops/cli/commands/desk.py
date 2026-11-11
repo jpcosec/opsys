@@ -14,6 +14,8 @@ from sldb.api import update_store_indexes
 
 from deskops.workspace import ensure_target_directory
 from deskops.workspace import inspect_desk
+from deskops.workspace import legacy_task_states
+from deskops.workspace import migrate_legacy_task_states
 from deskops.workspace import migrate_desk
 from deskops.workspace import migrate_task_types
 from deskops.workspace import apply_desk_includes
@@ -202,6 +204,20 @@ class DeskCLI:
 
         inspection = inspect_desk(root)
 
+        # Tasks with a pre-CC31 lifecycle state: the model rejects them, and sldb with them every
+        # other read of the store, so --apply migrates them first, from the frontmatter (d1).
+        if apply and desk_dir.exists():
+            migrated_lines, invalid_tasks = migrate_legacy_task_states(root)
+            if migrated_lines:
+                print("Migrating legacy task states...")
+                for line in migrated_lines:
+                    print(f"- {line}")
+            legacy_pending: list = []
+            invalid_tasks += legacy_task_states(root)[1]
+            invalid_tasks.sort(key=lambda state: state.rel)
+        else:
+            legacy_pending, invalid_tasks = legacy_task_states(root) if desk_dir.exists() else ([], [])
+
         missing_desk_files: list[str] = []
         if inspection.classification == "absent":
             missing_desk_files.append("desk/")
@@ -301,6 +317,7 @@ class DeskCLI:
 
         invalid_docs: list[str] = []
         missing_docs: list[str] = []
+        store_check_error = ""
         missing_store = not store_dir.exists()
         if not missing_store:
             result = subprocess.run(
@@ -317,17 +334,21 @@ class DeskCLI:
                     raise DeskopsEnvironmentError(
                         f"Could not parse 'sldb stores check' output for {store_dir}: {exc}"
                     ) from exc
-            if payload is None:
-                if result.returncode != 0:
-                    # sldb's own reason, e.g. a tracked task whose model (its lifecycle) rejects it.
-                    reason = f": {result.stderr.strip()}" if result.stderr and result.stderr.strip() else ""
-                    raise DeskopsEnvironmentError(
-                        f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}{reason}"
-                    )
+            if payload is None and result.returncode != 0 and invalid_tasks + legacy_pending:
+                # sldb stops at the first document its model rejects, one of the tasks listed below
+                # as invalid: reported, and the rest of the update goes on (d2).
+                reason = (result.stderr or "").strip().splitlines()
+                store_check_error = f"exit code {result.returncode}" + (f": {reason[0]}" if reason else "")
+            elif payload is None and result.returncode != 0:
+                reason = f": {result.stderr.strip()}" if result.stderr and result.stderr.strip() else ""
+                raise DeskopsEnvironmentError(
+                    f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}{reason}"
+                )
+            elif payload is None:
                 raise DeskopsEnvironmentError(
                     f"'sldb stores check' produced no JSON output for {store_dir}"
                 )
-            for model in payload.get("models", []):
+            for model in (payload or {}).get("models", []):
                 for doc in model.get("documents", []):
                     doc_path = doc.get("path")
                     if not doc_path:
@@ -343,11 +364,11 @@ class DeskCLI:
 
         pending_local_types = pending_local_task_type_models(root)
         pending_migration = pending_task_type_migration(root)
-        # A task whose lifecycle TaskDoc's validator rejects is reported, never written (CC37).
-        inconsistent_tasks = [line for line in pending_migration if line.startswith("inconsistent ")]
+        # A task whose lifecycle TaskDoc's validator rejects is not retyped (CC37); it is listed
+        # below as a legacy state to migrate or as an invalid task document.
         pending_migration = [line for line in pending_migration if not line.startswith("inconsistent ")]
 
-        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration and not inconsistent_tasks:
+        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration and not legacy_pending and not invalid_tasks and not store_check_error:
             print("Desk is up to date.")
             return 0
 
@@ -376,16 +397,34 @@ class DeskCLI:
             print(f"- Pending task type migration: {len(pending_migration)} task(s)")
         if invalid_docs:
             print(f"- Stale document hashes: {', '.join(invalid_docs)}")
-        if inconsistent_tasks:
-            print(f"- Inconsistent task lifecycles (not written): {len(inconsistent_tasks)} task(s)")
-            for line in inconsistent_tasks:
-                print(f"  - {line}")
+        if legacy_pending:
+            print(f"- Legacy task states to migrate: {len(legacy_pending)} task(s)")
+            for state in legacy_pending:
+                for line in state.migration_lines():
+                    print(f"  - {line}")
+        if invalid_tasks:
+            print(f"- Invalid task documents (not written): {len(invalid_tasks)} task(s)")
+            for state in invalid_tasks:
+                print(f"  - {state.finding()}")
+        if store_check_error:
+            print(f"- Store check failed ('sldb stores check' {store_check_error})")
 
         if not apply:
             print("\nRun with --apply to repair these issues.")
             return 1
 
         print("\nApplying repairs...")
+
+        if store_check_error:
+            # sldb rebuilds every document of a model on each store write and stops at an
+            # invalid one, leaving the store half written: every repair but the migration above
+            # (the scaffold re-tracks the lifecycle graph too) waits for the fix.
+            print(
+                "Skipped the other repairs (structure, lifecycle graph, models, tracking, task types, "
+                "indexes): sldb cannot read the store while an invalid document remains. Fix the "
+                "documents above and run deskops desk update --apply again."
+            )
+            return 1
 
         if missing_desk_files or lifecycle_rewrites or lifecycle_missing:
             scaffold = seed_desk(root, restore_managed=True)
@@ -394,9 +433,13 @@ class DeskCLI:
             for change in lifecycle.seed_changes(root, scaffold):
                 print(f"Lifecycle graph: {change}")
 
+        failed = False
         if unregistered_models or copied_models:
-            bootstrap.init_local_store(root)
-            print("Registered missing models and converted copied deskops models.")
+            if bootstrap.init_local_store(root) == 0:
+                print("Registered missing models and converted copied deskops models.")
+            else:
+                print("Error: could not register the missing models (sldb rejects a tracked document; see the report above).")
+                failed = True
 
         try:
             for change in register_local_task_type_models(root):
@@ -404,8 +447,13 @@ class DeskCLI:
         except Exception as exc:
             print(f"Error: {exc}")
             return 1
-        for change in migrate_task_types(root):
-            print(f"- {change}")
+        try:
+            for change in migrate_task_types(root):
+                if not change.startswith("inconsistent "):
+                    print(f"- {change}")
+        except Exception as exc:
+            print(f"Error: could not migrate the task types: {exc}")
+            failed = True
 
         # Recomputed: the scaffold may have written declared documents (the lifecycle graph).
         untracked_docs = pending_desk_includes(root) if desk_dir.exists() and store_dir.exists() else []
@@ -438,4 +486,5 @@ class DeskCLI:
             update_store_indexes(root / ".sldb", pythonpath, wait=False)
             print("Updated store derived indexes.")
 
-        return 0
+        # Exit 1 while a task needs its owner's decision or a repair could not run.
+        return 1 if invalid_tasks or failed or store_check_error else 0

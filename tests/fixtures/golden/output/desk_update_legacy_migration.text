@@ -1,0 +1,6 @@
+Migrating legacy task states...
+- desk/tasks/task-cancelada-heredada.md: current_node ritual-execution -> ''
+- desk/tasks/task-cerrada-heredada.md: current_node ritual-execution -> ''
+- desk/tasks/task-ci-propio-del-gateway.md: history [] -> [superseded]
+- desk/tasks/task-tope-por-tipo-y-pedidos-bloqueados.md: current_node ritual-execution -> ''
+- desk/tasks/task-workflow-check-obligatorio-del-gateway.md: history [] -> [superseded]

@@ -30,11 +30,19 @@ from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.models import BoardDoc
 from deskops.models import TaskDoc
 from deskops import lifecycle
+from deskops.models.task_lifecycle import DRAWER_STATUSES
+from deskops.models.task_lifecycle import LEGACY_RESOLVED_STATUSES
+from deskops.models.task_lifecycle import _frontmatter
+from deskops.workspace import rewrite_task_fields
 from deskops.models.task_types import canonical_task_type_name
 from deskops.models.task_types import closeout_evidence_kinds
 from deskops.models.task_types import declared_evidence_list
 from deskops.services import closeout_gates as closeout_gates_module
 from deskops.services.atoms import reference_points_to_atom
+
+#: Statuses ``closeout retire`` also removes when the history is empty: the pre-CC31 tasks left
+#: superseded or in a drawer status at a node, which no transition can close (task.debug d3).
+_RETIRABLE_WITHOUT_HISTORY = frozenset({"superseded"}) | DRAWER_STATUSES
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
@@ -170,14 +178,27 @@ class ClosureService:
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
         original = task_path.read_bytes()
-        payload = doc_access.read_doc(task_path, TaskDoc)
-        payload["status"] = "superseded"
-        payload["history"] = [*(payload.get("history") or []), "superseded"]
         try:
-            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
-        except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
-            task_path.write_bytes(original)
-            return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
+            payload = doc_access.read_doc(task_path, TaskDoc)
+        except Exception:  # noqa: BLE001 - the model rejects the task: read it from its frontmatter
+            payload = None
+        if payload is None:
+            # A task whose lifecycle the model rejects (a legacy state no table decides) is
+            # closed from its frontmatter: superseded with its own record is coherent from any node.
+            if blocking := self._other_invalid_tasks(task_path):
+                return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, "supersede", blocking)])
+            frontmatter = _frontmatter(original.decode("utf-8"))
+            history = [str(item) for item in frontmatter.get("history") or []]
+            if errors := rewrite_task_fields(task_path, {"status": "superseded", "history": [*history, "superseded"]}):
+                return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {'; '.join(errors)}"])
+        else:
+            payload["status"] = "superseded"
+            payload["history"] = [*(payload.get("history") or []), "superseded"]
+            try:
+                doc_access.write_doc(self.root, task_path, TaskDoc, payload)
+            except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
+                task_path.write_bytes(original)
+                return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
 
         trailers = [
             f"Task-Id: {task_id}",
@@ -364,16 +385,24 @@ class ClosureService:
         if not task_path.is_file():
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
-        payload = doc_access.read_doc(task_path, TaskDoc)
+        # Read from the frontmatter, not the model: the model rejects exactly the pre-CC31
+        # tasks retire is for (a terminal or drawer status with an empty history at a node).
+        payload = _frontmatter(task_path.read_text(encoding="utf-8"))
         status = str(payload.get("status") or "").strip().lower()
-        if status not in {"resolved", "closed", "done", "complete"}:
+        history = [str(item) for item in payload.get("history") or []]
+        # ``superseded`` with only its closeout record is what ``desk update --apply`` leaves of it.
+        legacy_history = not history or (status == "superseded" and history == ["superseded"])
+        if not (status in LEGACY_RESOLVED_STATUSES or (status in _RETIRABLE_WITHOUT_HISTORY and legacy_history)):
             return ClosureOutcome(
                 1,
                 [
                     f"Task {task_id} has status '{payload.get('status') or ''}'; only resolved, "
-                    "closed, done or complete tasks can be retired."
+                    "closed, done, complete or cancelled tasks, or superseded, deferred or "
+                    "candidate tasks with an empty history, can be retired."
                 ],
             )
+        if blocking := self._other_invalid_tasks(task_path):
+            return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, "retire", blocking)])
 
         trailers = [
             f"Task-Id: {task_id}",
@@ -398,6 +427,24 @@ class ClosureService:
             },
             success_line=f"Closing commit {{commit}} made in legacy-resolved mode: {reason}",
         )
+
+    @staticmethod
+    def _blocked_by_invalid_tasks(task_id: str, verb: str, blocking: list[str]) -> str:
+        return (
+            f"Cannot {verb} {task_id} yet: sldb rebuilds every task of the store when one "
+            f"leaves it, and these task documents are invalid: {', '.join(blocking)}. "
+            "Migrate them with deskops desk update --apply (it lists the ones that need "
+            f"their owner's decision), then {verb} again."
+        )
+
+    def _other_invalid_tasks(self, task_path: Path) -> list[str]:
+        """The other tasks the model rejects, when the desk has a store to untrack from."""
+        if not doc_access.has_store(self.root):
+            return []
+        from deskops.workspace import legacy_task_states
+
+        migratable, unmigratable = legacy_task_states(self.root)
+        return [s.rel for s in [*migratable, *unmigratable] if s.path.resolve() != task_path.resolve()]
 
     def _ref_resolves(self, reference: str) -> bool:
         if self._ops.closeout_gates.reference_points_to_commit(reference):

@@ -16,8 +16,9 @@ Example:
     --reason "Resolved before the ritual lifecycle existed" \
     --ref 3900ad4
 
-Retire removes a task whose status is already resolved, closed, done or
-complete, as pre-lifecycle tasks are. The ref must be a commit that is HEAD or
+Retire removes a task whose status is already resolved, closed, done,
+complete or cancelled, or superseded, deferred or candidate with an empty
+history, as pre-lifecycle tasks are. The ref must be a commit that is HEAD or
 an ancestor. The status is not rewritten and the evidence gates do not run. It
 makes exactly one closing commit: the task leaves the Board, the commit carries
 Closeout-Mode: legacy-resolved with Closeout-Reason and one Closeout-Ref per
