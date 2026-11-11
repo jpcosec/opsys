@@ -672,6 +672,35 @@ deskops closeout resolved-by --root . \
   --test tests/test_fix_thing.py
 ```
 
+When the task's code entered another repository (a task.code of a coordinating
+desk whose code lives in a sibling repo), qualify the ref and the test with that
+repository's id: `--ref <repo-id>:<sha>` and `--test <repo-id>:<test path>`.
+The id is looked up in the desk's own registry, `desk/registry/repo-*.md`,
+written by `deskops repo register`. The reference is cut at its first `:`: when
+what comes before it is a registered id, the rest is checked in that
+repository's registered root, with the same rules as a local reference (a
+lowercase commit id that is its HEAD or an ancestor; an existing `.py` file
+under one of its `tests/` directories, optionally with a pytest `::node`). The
+task's `files` do not widen where another repository's tests live. A prefix
+that is not a registered id (or a reference without `:`) is checked locally as
+before, and a prefix naming the desk itself (its `project_identity`, or a
+registered repository whose root is the desk's root) is local. A registered
+repository whose root is missing on this machine refuses the close with
+`Registered repository <id> is not at <path> on this machine.` and writes
+nothing. The closing commit is the same, made in the desk's repository, and its
+`Closeout-Ref` and `Closeout-Test` trailers keep each reference as written
+(`Closeout-Ref: infra:87671716`). `closeout verify`, `closeout commit` and
+`closeout supersede` still accept only local evidence.
+
+```bash
+deskops repo register infra --path /srv/infra --id infra --store .sldb
+deskops closeout resolved-by --root . \
+  --task task-wire-infra \
+  --reason "The code entered infra through PR #7" \
+  --ref infra:87671716 --ref https://example.com/org/infra/pull/7 \
+  --test infra:tests/test_wire.py
+```
+
 ## Issues
 
 Issues are plain Markdown files under `desk/issues/` or
