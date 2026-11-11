@@ -1,7 +1,7 @@
 name: task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup
 path: desk/tasks/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup.md
-source_hash: ad8332b5db51ce61fabc85fd5cf9b5ecad6a487f550e77b14c61cd9b98409645
-content_hash: 48f3f06addc412371a768c0f50eeff1954c80632f055d1ff93a5b8fc9c40cd2f
+source_hash: 2e49e10470f711c4590c324fdf65c37ef50d303efa03b743dd8a0c417fde4271
+content_hash: fcc488e0651701d7dcd31b37edcdb0a73d3938fab1e0f76311929bd596aabb2f
 field_hashes:
   title: 4758d513a59161887d8899603b0eb3e464c03489da8bd2156bef3a379f97a9bf
   id: c4edb416588f12b2e4f07feb406d3ea1fb4de859293329c28952502aacfffaf7
@@ -17,7 +17,7 @@ field_hashes:
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   files: 16b4b80b50b9d49fdd3565b242920f925f9fc42d3a0a2724a06421990ff42f04
-  implementation_path: 81420701c2a1c4ef1e8d37bddb4bc09dd89b1d3c053ade0622ecd6b39bb25903
+  implementation_path: 2c4db274fbac63272b8d689667f2ef01eb7c38701a2d254d9851b1357eec0f5a
   validation: b7b4b5511a451747b4e059630fc4bb13236b9a4bca238e5d652861a8e23a375b
   done_when: fdc5ef7e31ed9d05ff4fc8ef92f57f8e294c1db21081e67ffc8df82ef5b5a552
   task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-11T17:42:11Z'
+  at: '2026-11-11T17:51:25Z'
   authority: generated
-  via: create_document
+  via: save_document_payload

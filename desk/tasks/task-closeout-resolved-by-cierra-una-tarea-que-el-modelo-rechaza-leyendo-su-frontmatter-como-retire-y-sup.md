@@ -1,9 +1,9 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-11T17:42:11Z'
+  at: '2026-11-11T17:51:25Z'
   authority: generated
-  via: create_document
+  via: save_document_payload
 id: task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup
 status: draft
 summary: ''
@@ -56,7 +56,7 @@ _Outline the expected implementation route or affected surface._
 
 Drawer de origen 75e33dab (huecos de legacy, coord2), parte 1.
 
-REPRODUCCIÓN (coordinador, deskops main 60f1ec37; runs/subagents/20261111-repro-resolvedby/repro.log y test_repro_resolved_by_invalid.py, armado igual que test_closeout.py::test_closeout_supersede_closes_a_task_whose_lifecycle_the_model_rejects): 'deskops closeout resolved-by --task task-x --reason ... --ref <HEAD> --test tests/test_x.py' sobre una draft con history [task_activates, task_hands_to_closeout] sale rc 1 con 'Validation error: 1 validation error for TaskDoc ... lifecycle is inconsistent: status draft does not follow history task_hands_to_closeout'.
+REPRODUCCIÓN (coordinador, deskops main 60f1ec37; runs/subagents/20261111-repro-resolvedby/repro.log y test_repro_resolved_by_invalid.py, armado igual que test_closeout.py::test_closeout_supersede_closes_a_task_whose_lifecycle_the_model_rejects): 'deskops closeout resolved-by --task task-x --reason ... --ref <HEAD> --test <un archivo de test del repo de prueba>' sobre una draft con history [task_activates, task_hands_to_closeout] sale rc 1 con 'Validation error: 1 validation error for TaskDoc ... lifecycle is inconsistent: status draft does not follow history task_hands_to_closeout'.
 
 CAUSA (a confirmar): close_resolved_by carga la tarea con el modelo (read_doc con TaskDoc) para leer files y escribir status resolved. close_superseded ya tiene la rama de respaldo: si read_doc falla, lee el frontmatter, escribe solo status e history con workspace.rewrite_task_fields, revalida con TaskDoc y restaura si falla, y con store rechaza antes de escribir si hay otra tarea inválida en el modelo (H2).
 
