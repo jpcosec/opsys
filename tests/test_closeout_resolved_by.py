@@ -9,6 +9,7 @@ import subprocess
 import sys
 
 import pytest
+import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
@@ -108,7 +109,10 @@ Closed.
 @pytest.fixture
 def repo(tmp_path: Path) -> Path:
     """A git repo whose history already holds the task's work and its test."""
-    root = tmp_path / "repo"
+    return _make_repo(tmp_path / "repo")
+
+
+def _make_repo(root: Path, task_text: str | None = None) -> Path:
     root.mkdir()
     _git(root, "init", "-q")
     _git(root, "config", "user.email", "test@example.com")
@@ -121,7 +125,7 @@ def repo(tmp_path: Path) -> Path:
     _git(root, "add", ".gitignore", "pkg", "tests", "checks")
     _git(root, "commit", "-q", "-m", "work merged through the PR")
     _write(root / "desk" / "tasks" / "Board.md", BOARD)
-    _write(root / "desk" / "tasks" / "task-x.md", _task(["pkg/thing.py", "checks/check_thing.py"]))
+    _write(root / "desk" / "tasks" / "task-x.md", task_text or _task(["pkg/thing.py", "checks/check_thing.py"]))
     _git(root, "add", "desk/tasks")
     _git(root, "commit", "-q", "-m", "add task and board")
     return root
@@ -399,3 +403,60 @@ def test_resolved_by_refuses_an_unknown_task_and_writes_nothing(
     assert rc == 1
     assert "Task not found: task-missing" in capsys.readouterr().out
     assert _snapshot(repo) == before
+
+
+def _incoherent_task(files: list[str]) -> str:
+    """A legacy draft the model rejects: its history already handed it to closeout."""
+    text = _task(files)
+    return (
+        text.replace("status: active\n", "status: draft\n")
+        .replace("current_node: ritual-testing\n", "current_node: ritual-closeout\n")
+        .replace("history:\n- task_activates\n", "history:\n- task_activates\n- task_hands_to_closeout\n")
+    )
+
+
+def _close_and_describe(root: Path, seen: dict[str, str]) -> dict[str, object]:
+    """Close task-x by resolved-by and describe the closing commit, independent of the repo's hashes."""
+    ref = _work_commit(root)
+    rc = _resolved_by(root, "--reason", "Merged through PR 42", "--ref", ref, "--test", "checks/check_thing.py")
+    return {
+        "rc": rc,
+        "message": _git(root, "log", "-1", "--format=%B").replace(ref, "<ref>"),
+        "files": sorted(_git(root, "show", "--name-only", "--format=", "HEAD").splitlines()),
+        "status": _git(root, "status", "--porcelain"),
+        "index": (root / "runs" / "subagents" / "index.jsonl").read_text(encoding="utf-8").splitlines()[-1],
+        "task_status": yaml.safe_load(seen["task"].split("---\n")[1])["status"],
+        "history": yaml.safe_load(seen["task"].split("---\n")[1])["history"],
+    }
+
+
+def test_resolved_by_closes_a_task_the_model_rejects_like_a_valid_one(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A legacy draft after task_hands_to_closeout is read from its frontmatter, as supersede
+    does: the tests gate uses its declared files, and the closing commit, its trailers, the
+    board, the index entry and the recorded status equal those of a valid task (no store)."""
+    files = ["pkg/thing.py", "checks/check_thing.py"]
+    from deskops import doc_access
+    from deskops.models import TaskDoc
+
+    invalid = _make_repo(tmp_path / "invalid", _incoherent_task(files))
+    with pytest.raises(Exception, match="lifecycle is inconsistent"):
+        doc_access.read_doc(invalid / "desk" / "tasks" / "task-x.md", TaskDoc)
+    valid = _make_repo(tmp_path / "valid", _task(files))
+
+    seen = _capture_task_before_close(monkeypatch)
+    got = _close_and_describe(invalid, seen)
+    assert got["rc"] == 0, capsys.readouterr().out
+    expected = _close_and_describe(valid, seen)
+    assert expected["rc"] == 0, capsys.readouterr().out
+
+    # The history differs only by the legacy event the invalid task carried.
+    assert expected["history"] == ["task_activates", "resolved-by"]
+    assert {k: v for k, v in got.items() if k != "history"} == {k: v for k, v in expected.items() if k != "history"}
+    assert got["task_status"] == "resolved"
+    assert got["history"] == ["task_activates", "task_hands_to_closeout", "resolved-by"]
+    assert "Closeout-Mode: resolved-by" in str(got["message"])
+    assert "Closeout-Test: checks/check_thing.py" in str(got["message"])
+    assert got["status"] == ""
+    assert not (invalid / "desk" / "tasks" / "task-x.md").exists()

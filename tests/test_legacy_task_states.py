@@ -437,3 +437,54 @@ def test_supersede_closes_an_incoherent_task_by_cli_and_waits_while_another_is_i
     assert not (root / "desk" / "tasks" / f"{first}.md").exists()
     assert main(["desk", "update", "--root", str(root), "--apply"]) == 0  # refreshes the hand-edited hash
     assert _sldb_check(root) == 0
+
+
+# ------------------------------------------------------------------ closeout resolved-by of an undecided task
+def _resolved_by_desk(lifecycle_desk: Path, drafts: int) -> tuple[Path, list[str], str]:
+    """``drafts`` gateway drafts after task_hands_to_closeout, plus a committed test: the work entered."""
+    root = lifecycle_desk
+    rows = [row for row in LEGACY if row[1] == "draft"][:drafts]
+    paths = _make_tasks(root, rows)
+    (root / "tests").mkdir(exist_ok=True)
+    (root / "tests" / "test_gateway.py").write_text("def test_gateway():\n    assert True\n", encoding="utf-8")
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "incoherent drafts and their test")
+    return root, sorted(Path(rel).stem for rel in paths), _git(root, "rev-parse", "HEAD")
+
+
+def _resolved_by(root: Path, task_id: str, ref: str) -> int:
+    return main(["closeout", "resolved-by", "--root", str(root), "--task", task_id, "--reason", "work entered", "--ref", ref, "--test", "tests/test_gateway.py"])
+
+
+def test_resolved_by_closes_the_only_invalid_task_and_the_store_checks(lifecycle_desk: Path, capsys) -> None:
+    root, (task_id,), head = _resolved_by_desk(lifecycle_desk, 1)
+    capsys.readouterr()
+
+    rc = _resolved_by(root, task_id, head)
+    out = capsys.readouterr()
+    assert rc == 0, out.out + out.err
+    message = _git(root, "log", "-1", "--format=%B")
+    assert "Closeout-Mode: resolved-by" in message
+    assert f"Task-Id: {task_id}" in message
+    assert f"Closeout-Ref: {head}" in message
+    assert "Closeout-Test: tests/test_gateway.py" in message
+    assert not (root / "desk" / "tasks" / f"{task_id}.md").exists()
+    assert _git(root, "status", "--porcelain") == ""
+    assert _sldb_check(root) == 0
+
+
+def test_resolved_by_refuses_while_another_task_is_invalid_and_names_sldb_h2(lifecycle_desk: Path, capsys) -> None:
+    """With a store, sldb re-extracts the whole model on each write (H2): while the other draft is
+    invalid, resolved-by refuses before writing anything and names H2 and the manual route."""
+    root, (first, second), head = _resolved_by_desk(lifecycle_desk, 2)
+    capsys.readouterr()
+
+    assert _resolved_by(root, first, head) == 1
+    out = capsys.readouterr().out
+    assert f"Cannot resolved-by {first} yet" in out
+    assert f"desk/tasks/{second}.md" in out
+    assert f"desk/tasks/{first}.md" not in out  # the task being closed is not "another"
+    assert "sldb H2 (note 3895e9f7)" in out
+    assert "decide each by hand" in out
+    assert _git(root, "status", "--porcelain") == ""
+    assert _git(root, "rev-parse", "HEAD") == head
