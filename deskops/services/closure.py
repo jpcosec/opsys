@@ -39,6 +39,8 @@ from deskops.models.task_types import closeout_evidence_kinds
 from deskops.models.task_types import declared_evidence_list
 from deskops.services import closeout_gates as closeout_gates_module
 from deskops.services.atoms import reference_points_to_atom
+from deskops.services.references import alert_dangling
+from deskops.services.references import dangling_referrers
 
 #: Statuses ``closeout retire`` also removes when the history is empty: the pre-CC31 tasks left
 #: superseded or in a drawer status at a node, which no transition can close (task.debug d3).
@@ -605,6 +607,8 @@ class ClosureService:
 
         task_bytes = task_path.read_bytes() if task_path.exists() else None
         paths_to_remove: list[Path] = []
+        # The close deletes the task and unroutes it from the Board; what else names it is left as it is and reported.
+        dangling = dangling_referrers(self.root, task_path, excluded=(board_path,) if routed else ()) if task_bytes is not None else []
 
         try:
             if task_bytes is not None:
@@ -693,6 +697,7 @@ class ClosureService:
                 board_path.write_text(board_before, encoding="utf-8")
             raise
 
+        alert_dangling(task_rel, dangling)
         commit = self._git("rev-parse", "HEAD")
         messages: list[str] = []
         if index_entry:

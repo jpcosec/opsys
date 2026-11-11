@@ -14,7 +14,6 @@ from sldb.api.graph.snapshot import GraphSnapshot
 from deskops.cli.main import main
 from deskops.graph.export import build_graph_snapshot
 from deskops.operations import DeskopsOperations
-from deskops.services.retire import _pill_reference_matches
 
 ROOT = Path(__file__).resolve().parents[1]
 PILLS = [
@@ -100,5 +99,4 @@ def test_local_graph_next_show_and_retirement_accept_portable_context(tmp_path, 
     assert report['pills'] == PILLS
     for pill in PILLS:
         assert main(['show', 'pill', pill, '--root', str(tmp_path)]) == 0
-        assert _pill_reference_matches(pill, f'desk/contexts/{pill}.md', pill)
     capsys.readouterr()

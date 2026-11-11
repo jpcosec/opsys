@@ -299,6 +299,32 @@ def test_drawer_remove_deletes_the_entry_and_its_board_bullets(tmp_path: Path) -
     assert "- `task-keep-me-too` — another kept entry" in text
 
 
+def test_drawer_remove_alerts_each_reference_it_leaves_behind(tmp_path: Path, capsys) -> None:
+    """The stem bullet goes with the entry; the path bullet and a task naming the entry stay, each
+    reported on stderr (no rewrite, exit unchanged)."""
+    _install_desk(tmp_path)
+    # The id makes the entry the graph node `task:task-loose-idea` the bullets and the task name.
+    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md", "---\nid: task-loose-idea\n---\n\n# Loose idea\n\nNotes.\n")
+    board = _drawer_board(tmp_path)
+    board.write_text(board.read_text(encoding="utf-8") + "- `tasks/task-loose-idea.md` — path bullet\n", encoding="utf-8")
+    task = tmp_path / "desk" / "tasks" / "task-ref.md"
+    task.write_text("# Ref\n\n## Related Tasks\n\n- task-loose-idea\n", encoding="utf-8")
+    capsys.readouterr()
+
+    assert main(["drawer", "remove", "loose-idea", "--root", str(tmp_path)]) == 0
+    captured = capsys.readouterr()
+
+    assert not entry.exists()
+    assert "Removed drawer entry desk/drawer/tasks/task-loose-idea.md" in captured.out
+    assert "alert" not in captured.out
+    assert captured.err.splitlines() == [
+        "alert: desk/drawer/tasks/task-loose-idea.md still referenced by desk/drawer/tasks/Board.md",
+        "alert: desk/drawer/tasks/task-loose-idea.md still referenced by desk/tasks/task-ref.md",
+    ]
+    assert "- `tasks/task-loose-idea.md` — path bullet" in board.read_text(encoding="utf-8")
+    assert "- task-loose-idea" in task.read_text(encoding="utf-8")
+
+
 def test_drawer_remove_refuses_when_an_active_task_records_the_entry(tmp_path: Path, capsys) -> None:
     _install_desk(tmp_path)
     entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")

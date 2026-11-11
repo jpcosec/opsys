@@ -115,20 +115,105 @@ def test_retire_removes_a_tracked_pill_and_its_store_record(tmp_path: Path, caps
 
 def test_retire_refuses_while_referenced_unless_forced(tmp_path: Path, capsys) -> None:
     root = _repo(tmp_path)
-    note = root / "desk" / "logbook" / "old-note.md"
-    note.parent.mkdir(parents=True, exist_ok=True)
-    note.write_text("# Old note\n", encoding="utf-8")
-    (root / "docs").mkdir(exist_ok=True)
-    (root / "docs" / "guide.md").write_text("See desk/logbook/old-note.md.\n", encoding="utf-8")
+    pill = _add_pill(root)
+    relative = pill.relative_to(root).as_posix()
+    # A mention in prose (the path, read by the desk graph's SOURCE_PATH pattern) is never rewritten.
+    guide = root / "desk" / "tasks" / "task-guide.md"
+    guide.write_text(f"# Guide\n\nSee {relative} for the old guardrail.\n", encoding="utf-8")
     capsys.readouterr()
 
-    assert _retire(root, "desk/logbook/old-note.md", "--ref", "docs/guide.md") == 1
+    assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 1
     captured = capsys.readouterr()
-    assert "docs/guide.md" in captured.out + captured.err
-    assert note.exists()
+    assert "still referenced by desk/tasks/task-guide.md" in captured.out + captured.err
+    assert pill.exists()
 
-    assert _retire(root, "desk/logbook/old-note.md", "--ref", "docs/guide.md", "--force") == 0
-    assert not note.exists()
+    assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD"), "--force") == 0
+    assert not pill.exists()
+    assert relative in guide.read_text(encoding="utf-8")
+
+
+def _pill_routed_by_board_and_two_tasks(root: Path) -> tuple[str, list[Path]]:
+    pill = _add_pill(root)
+    relative = pill.relative_to(root).as_posix()
+    assert main(["edit", "board", "Board", "pills", json.dumps([relative]), "--root", str(root)]) == 0
+    tasks = []
+    for name in ("one", "two"):
+        assert main(["add", "task", "--root", str(root), "--title", f"Pill user {name}", "--task-type", "task.docs"]) == 0
+        task = root / "desk" / "tasks" / f"task-pill-user-{name}.md"
+        assert main(["edit", "task", task.stem, "pills", json.dumps([relative]), "--root", str(root)]) == 0
+        assert relative in task.read_text(encoding="utf-8")
+        tasks.append(task)
+    return relative, tasks
+
+
+def _desk_bytes(root: Path) -> dict[str, bytes]:
+    return {
+        path.relative_to(root).as_posix(): path.read_bytes()
+        for base in (root / "desk", root / ".sldb")
+        for path in sorted(base.rglob("*"))
+        if path.is_file()
+    }
+
+
+def test_retire_removes_a_pill_from_the_board_and_two_tasks_in_one_transaction(tmp_path: Path, capsys, monkeypatch) -> None:
+    from contextlib import contextmanager
+
+    from deskops import doc_access
+
+    root = _repo(tmp_path)
+    relative, tasks = _pill_routed_by_board_and_two_tasks(root)
+    board = root / "desk" / "tasks" / "Board.md"
+    capsys.readouterr()
+
+    original = doc_access.desk_transaction
+    depth = [0]
+    opened: list[Path] = []
+
+    @contextmanager
+    def counting(block_root: Path):
+        if depth[0] == 0:
+            opened.append(block_root)
+        depth[0] += 1
+        try:
+            with original(block_root) as tx:
+                yield tx
+        finally:
+            depth[0] -= 1
+
+    monkeypatch.setattr(doc_access, "desk_transaction", counting)
+    assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 0
+    out = capsys.readouterr().out
+
+    assert len(opened) == 1
+    for path in (board, *tasks):
+        assert f"Unrouted from {path.relative_to(root).as_posix()}" in out
+        text = path.read_text(encoding="utf-8")
+        assert relative not in text
+        assert "pill-old-guardrail" not in text
+    assert not (root / relative).exists()
+    monkeypatch.undo()
+    check = _store_check(root)
+    assert check.returncode == 0, check.stdout + check.stderr
+
+
+def test_retire_failing_midway_leaves_the_desk_and_store_unchanged(tmp_path: Path, monkeypatch) -> None:
+    import pytest
+
+    from deskops import doc_access
+    from deskops.services.retire import retire_document
+
+    root = _repo(tmp_path)
+    relative, _ = _pill_routed_by_board_and_two_tasks(root)
+    before = _desk_bytes(root)
+
+    def failing_delete(*_args, **_kwargs):
+        raise RuntimeError("forced failure after the Board and the tasks were rewritten")
+
+    monkeypatch.setattr(doc_access, "delete_doc", failing_delete)
+    with pytest.raises(RuntimeError, match="forced failure"):
+        retire_document(root, relative, "Describes a retired surface", [_git(root, "rev-parse", "HEAD")])
+
+    assert _desk_bytes(root) == before
 
 
 def test_retire_points_tasks_and_drawer_entries_at_their_own_verbs(tmp_path: Path, capsys) -> None:
