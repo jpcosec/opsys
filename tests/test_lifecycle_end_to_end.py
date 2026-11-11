@@ -122,7 +122,8 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     assert blocked_closeout.returncode == 1
     assert "Status: ready_for_testing" in blocked_closeout.stdout
     assert "Current node: ritual-closeout" in blocked_closeout.stdout
-    assert "is not complete" in blocked_closeout.stdout
+    # Without evidence receipts the type's closeout rule holds task_completes back (CC33b).
+    assert "rules/rule-closeout-task-code" in blocked_closeout.stdout
 
     _write(root, "tests/test_lifecycle_smoke.py", "def test_lifecycle_smoke():\n    assert True\n")
     seed_commit = _git(root, "rev-parse", "HEAD")
@@ -160,6 +161,8 @@ def test_task_lifecycle_runs_from_intake_to_closeout_via_real_cli(tmp_path: Path
     )
     assert "Updated task task-lifecycle-e2e field files" in edit_files.stdout
 
+    # Closeout ritual order (CC33b): verify writes the evidence receipts, commit evaluates the rule.
+    _cli(root, "closeout", "verify", "--root", str(root), "--task", "task-lifecycle-e2e", check=False)
     closed = _cli(
         root,
         "closeout",
@@ -256,6 +259,8 @@ def test_closeout_amends_only_head_with_its_own_task_id(tmp_path: Path) -> None:
     )
     other_closeout = _git(root, "rev-parse", "HEAD")
 
+    # Closeout ritual order (CC33b): verify writes the evidence receipts, commit evaluates the rule.
+    _cli(root, "closeout", "verify", "--root", str(root), "--task", "task-foo", check=False)
     _cli(
         root,
         "closeout",
@@ -347,6 +352,8 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
     _write(root, "unrelated.txt", "unrelated\n")
     _git(root, "add", "unrelated.txt")
 
+    # Closeout ritual order (CC33b): verify writes the evidence receipts, commit evaluates the rule.
+    _cli(root, "closeout", "verify", "--root", str(root), "--task", "task-pathspec-commit", check=False)
     _cli(
         root,
         "closeout",
@@ -433,6 +440,8 @@ def test_auto_commit_task_closure_commits_only_its_own_paths(tmp_path: Path) -> 
     _write(root, "unrelated-amend.txt", "unrelated\n")
     _git(root, "add", "unrelated-amend.txt")
 
+    # Closeout ritual order (CC33b): verify writes the evidence receipts, commit evaluates the rule.
+    _cli(root, "closeout", "verify", "--root", str(root), "--task", "task-pathspec-amend", check=False)
     _cli(
         root,
         "closeout",

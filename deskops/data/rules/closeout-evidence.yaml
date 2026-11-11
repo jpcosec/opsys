@@ -1,0 +1,19 @@
+# Closeout evidence of each factory task type (CC33b c3): task_type -> the evidence kinds it
+# closes with. `deskops closeout verify` reads it to choose which producers to run (and
+# which evidence receipts to write); `deskops add task` reads it as the floor `--evidence`
+# can only add to (DA5). The gate itself is not here: it is the RuleDoc
+# `rule-closeout-<type>.md` of this folder, `on_transition` over `ritual-closeout`, whose
+# clauses ask for those receipts (`tests/test_closeout_rules.py` checks the table against the
+# rules). A desk subtype reads the entry of its nearest factory ancestor.
+#
+# Kinds: the receipts `closeout verify` writes (`fact`: tests, commit, atom, materialization,
+# document, external; atom|materialization is one link clause) and `goldens`, the review
+# receipt of `deskops review record --kind goldens`. task.aggregate has no children clause:
+# TaskAggregateDoc has no children field yet (hypothesis in the TaskDoc, b4).
+task.code: [tests, commit, atom, materialization]
+task.docs: [commit, document]
+task.debug: [tests, commit, atom, materialization]
+task.refactor: [tests, commit, atom, materialization, goldens]
+task.decision: [commit, document]
+task.aggregate: [commit]
+task.external: [external]

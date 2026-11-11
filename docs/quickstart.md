@@ -162,7 +162,13 @@ Before calling a task done:
 - Set the task's `references` field to the evidence the task declared: here a commit id that already exists and the document that changed (`docs/quickstart.md`).
 - Remove or update stale task/context docs.
 
-Close with the run-linked route, using evidence under `runs/subagents/`:
+First verify. `deskops closeout verify` checks the evidence the task declared and writes one `ReviewDoc` evidence receipt per kind, anchored to the task's contract:
+
+```bash
+deskops closeout verify --task task-try-deskops-quickstart
+```
+
+Then close with the run-linked route, using evidence under `runs/subagents/`:
 
 ```bash
 deskops closeout commit --task task-try-deskops-quickstart \
@@ -176,7 +182,7 @@ deskops closeout commit --task task-try-deskops-quickstart \
   --no-run --reason "<why the task closes without a run>"
 ```
 
-For a board-routed task, `closeout commit` runs the full `deskops closeout verify` gate before committing. The gate checks exactly what the task declared in `closeout_evidence`, nothing more and nothing less, and prints `esta tarea declaró X; encontré Y` (declared X; found Y). The vocabulary:
+`closeout commit` does not write receipts: it evaluates the task type's closeout rule over the receipts `closeout verify` wrote. If one is missing, not accepted, or no longer intact (the task changed after verify), the commit stops, names the rule's clause, and tells you to run `deskops closeout verify` again. Verify checks exactly what the task's type declares (plus what `--evidence` added), nothing more and nothing less, and prints `esta tarea declaró X; encontré Y` (declared X; found Y). The vocabulary:
 
 - `tests`: an existing `.py` file under `tests/`, optionally with a `::node`, or the `pytest <path>` form;
 - `commit`: a lowercase hex commit id that resolves to `HEAD` or an ancestor;

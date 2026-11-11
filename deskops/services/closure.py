@@ -29,7 +29,9 @@ from deskops import doc_access
 from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.models import BoardDoc
 from deskops.models import TaskDoc
+from deskops import lifecycle
 from deskops.models.task_types import canonical_task_type_name
+from deskops.models.task_types import closeout_evidence_kinds
 from deskops.models.task_types import declared_evidence_list
 from deskops.services import closeout_gates as closeout_gates_module
 from deskops.services.atoms import reference_points_to_atom
@@ -41,6 +43,9 @@ if TYPE_CHECKING:
 
 #: Engine of the ``evidence`` receipts ``deskops closeout verify`` writes (CC33a).
 EVIDENCE_ENGINE = "deskops-closeout"
+
+#: The lifecycle node the closeout rules read the task at (the source of ``task_completes``).
+CLOSEOUT_NODE = "ritual-closeout"
 
 
 class ClosureCommitError(RuntimeError):
@@ -672,25 +677,55 @@ class ClosureService:
         return ClosureOutcome(0, messages)
 
     def _gate_outcome(self, task_id: str) -> ClosureOutcome | None:
-        """Run the declared-evidence gate; its declared/found line and alerts are always reported."""
+        """Evaluate the task type's closeout rule (``rule-closeout-<type>``, CC33b) on the
+        evidence receipts ``deskops closeout verify`` wrote; this path writes none (b2).
+
+        The rule runs as it does on the ``task_completes`` edge: ``on_transition`` with the task
+        read at ``ritual-closeout``. An error finding blocks the commit and is printed with the
+        rule, clause and values seen; verify runs read-only first so its declared/found line and
+        alerts are always reported.
+        """
         self._gate_notes = []
+        blocked = f"Closeout gate blocked {task_id}; the closing commit was not made."
         try:
             report = self.verify_task_closeout(task_id)
         except Exception as exc:  # noqa: BLE001 - a gate that cannot run blocks closure
-            return ClosureOutcome(1, [f"Closeout verify failed for {task_id}; the closing commit was not made.", f"- {exc}"])
+            return ClosureOutcome(1, [blocked, f"- {exc}"])
         notes = [f"Closeout gate: {report.get('summary', '')}"]
         for alert in report.get("alerts") or []:
             notes.append(f"ALERTA {alert.get('code', 'alert')}: {alert.get('message', '')}")
         self._gate_notes = notes
-        if report.get("ok"):
+        try:
+            findings = self.closeout_rule_findings(task_id)
+        except Exception as exc:  # noqa: BLE001 - a rule that cannot run blocks closure
+            return ClosureOutcome(1, [blocked, *notes, f"- {exc}"])
+        errors = [finding for finding in findings if finding.get("level") == "error"]
+        if not errors:
             return None
-        messages = [f"Closeout verify failed for {task_id}; the closing commit was not made.", *notes]
-        for finding in report.get("findings") or []:
-            code = finding.get("code", "finding")
-            detail = finding.get("message") or finding.get("path") or ""
-            messages.append(f"- {code}: {detail}")
-        messages.append(f"Run 'deskops closeout verify --task {task_id}' for the full report.")
-        return ClosureOutcome(1, messages)
+        return ClosureOutcome(
+            1,
+            [
+                blocked,
+                *notes,
+                *(f"- {lifecycle.finding_line(finding)}" for finding in errors),
+                f"Run 'deskops closeout verify --task {task_id}' to write the evidence receipts the rule asks for, then commit again.",
+            ],
+        )
+
+    def closeout_rule_findings(self, task_id: str) -> list[dict[str, Any]]:
+        """The findings of the task's ``on_transition`` rules read at ``ritual-closeout``: its
+        type's closeout rule and any rule the desk adds there. A task the store does not track
+        cannot be evaluated and raises."""
+        task_path = self._task_path(task_id)
+        document = lifecycle.task_document(self.root, task_path)
+        if document is None:
+            raise RuntimeError(
+                f"{self._relative(task_path)} is not tracked in the desk's store, so its closeout rule cannot run; "
+                "track it with 'deskops desk update --apply'."
+            )
+        payload = dict(doc_access.resolve_task_payload(self.root, task_path.stem))
+        payload["current_node"] = CLOSEOUT_NODE
+        return lifecycle.transition_findings(self.root, document, payload)
 
     # ---------------------------------------------------------------- closeout verify
     def verify_task_closeout(self, task_selector: str, *, write_receipts: bool = False) -> dict[str, Any]:
@@ -705,46 +740,25 @@ class ClosureService:
         payload = doc_access.resolve_task_payload(self.root, task_path.stem)
         reference_evidence = self._closeout_reference_evidence(payload)
         changed_files = doc_access.coerce_list(payload.get("files") or [])
-        declared, implicit = self._declared_closeout_evidence(payload)
+        type_kinds, extras, implicit = self._declared_closeout_evidence(payload)
 
         findings: list[dict[str, str]] = []
         alerts: list[dict[str, str]] = []
-        not_verifiable = [kind for kind in declared if kind in closeout_gates_module.NOT_YET_VERIFIABLE_EVIDENCE]
-        for kind in not_verifiable:
-            findings.append(
-                {
-                    "code": "closeout_evidence_not_verifiable",
-                    "message": f"Closeout evidence '{kind}' is declared by the task type but is not verifiable yet; "
-                    "a later node checks it.",
-                }
-            )
-        unknown = [
-            kind
-            for kind in declared
-            if kind not in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY
-            and kind not in closeout_gates_module.NOT_YET_VERIFIABLE_EVIDENCE
-        ]
+        unknown = [kind for kind in extras if kind not in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY]
         for kind in unknown:
-            findings.append(
+            alerts.append(
                 {
                     "code": "unknown_closeout_evidence",
                     "message": f"Declared closeout evidence '{kind}' is not in the vocabulary: "
-                    + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY),
-                }
-            )
-        declared = [kind for kind in declared if kind not in unknown and kind not in not_verifiable]
-
-        if implicit:
-            alerts.append(
-                {
-                    "code": "closeout_evidence_not_declared",
-                    "message": "This task declares no closeout_evidence; it predates the field and is gated as code "
-                    "(tests, commit, atom|materialization). Declare it with: deskops edit task "
-                    f"{task_path.stem} closeout_evidence '[\"commit\", \"document\"]' (kinds: "
                     + ", ".join(closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY)
-                    + ").",
+                    + "; it is not verified and does not block closeout.",
                 }
             )
+        # The type's kinds verify can produce; `goldens` is a review receipt the closeout rule
+        # reads directly (`deskops review record --kind goldens`), not a fact verify checks.
+        type_facts = [kind for kind in type_kinds if kind in closeout_gates_module.CLOSEOUT_EVIDENCE_VOCABULARY]
+        extra_facts = [kind for kind in extras if kind not in unknown]
+        declared = closeout_gates_module.order_evidence_kinds([*type_facts, *extra_facts])
         python_changes = [path for path in changed_files if str(path).endswith(".py")]
         if python_changes and "tests" not in declared:
             alerts.append(
@@ -758,15 +772,28 @@ class ClosureService:
 
         gate_dict: dict[str, Any] = {}
         found: list[str] = []
-        ok = not unknown and not not_verifiable
+        ok = True
+        link_in_type = "atom" in type_facts or "materialization" in type_facts
 
         def add_gate(name: str, gate: CloseoutGateReport, found_label: str | None) -> None:
+            """A gate of the type's evidence blocks; one the task adds only alerts (DA5, c5)."""
             nonlocal ok
             gate_dict[name] = gate.to_dict()
-            findings.extend(gate.findings)
-            ok = ok and gate.ok
             if found_label:
                 found.append(found_label)
+            in_type = link_in_type if name == "atom_or_materialization_link" else name in type_facts
+            if in_type:
+                findings.extend(gate.findings)
+                ok = ok and gate.ok
+            elif not gate.ok:
+                messages = "; ".join(str(f.get("message") or f.get("code") or "") for f in gate.findings)
+                alerts.append(
+                    {
+                        "code": "added_closeout_evidence_not_verified",
+                        "message": f"Closeout evidence '{name}' the task adds to its type was not verified ({messages}); "
+                        "this does not block closeout.",
+                    }
+                )
 
         if "tests" in declared:
             tests = reference_evidence["tests"]
@@ -833,8 +860,6 @@ class ClosureService:
             "gates": gate_dict,
             "findings": findings,
         }
-        if "pill_graduation_verified" in payload:
-            report["pill_graduation_verified"] = payload.get("pill_graduation_verified")
         if write_receipts:
             self._write_evidence_receipts(task_path, report["task_id"], declared, gate_dict)
         return report
@@ -953,10 +978,15 @@ class ClosureService:
             ok = bool(link.get("ok"))
             findings = link.get("findings") or []
             if ok:
-                # Exempt or follow-up-only coverage names no linking document: no link receipt.
                 for fact, ids in (("atom", atoms), ("materialization", materializations)):
                     if ids and fact in declared:
                         add(fact, True, ids, findings)
+                if not atoms and not materializations and ("atom" in declared or "materialization" in declared):
+                    # Exempt or follow-up-only coverage names no linking document: the gate
+                    # passed, so an accepted atom receipt records why (b3) and the rule's
+                    # atom|materialization clause needs no special case.
+                    reasons = [str(item) for item in link.get("evidence") or []] or ["no changed file needs a link"]
+                    add("atom", True, ["exempt: " + "; ".join(reasons)], findings)
             else:
                 rejected = [fact for fact, ids in (("atom", atoms), ("materialization", materializations)) if ids]
                 rejected = [fact for fact in rejected if fact in declared] or [
@@ -1044,28 +1074,6 @@ class ClosureService:
         identity = (DeskConfig.load(self.desk_root).project_identity or "").strip()
         return identity if identity and identity != "unknown-project" else self.root.name
 
-    def has_verified_task_closeout_evidence(self, payload: dict[str, Any]) -> bool:
-        evidence = self._closeout_reference_evidence(payload)
-        declared, _ = self._declared_closeout_evidence(payload)
-        probes = {
-            "tests": "tests",
-            "commit": "commit",
-            "atom": "atom",
-            "document": "document",
-            "external": "external",
-        }
-        return any(bool(evidence[probes[kind]]) for kind in declared if kind in probes)
-
-    def has_verified_task_pill_graduation(self, payload: dict[str, Any]) -> bool:
-        pills = doc_access.coerce_list(payload.get("pills") or [])
-        if not pills:
-            return True
-        return any(
-            reference_points_to_atom(self.root, str(reference).strip())
-            for reference in doc_access.coerce_list(payload.get("references") or [])
-            if str(reference).strip()
-        )
-
     def build_closeout_graph_context(self) -> "CloseoutGraph":
         """The closeout graph context, shared by every task read inside a read snapshot."""
         snapshot = self._ops.snapshot
@@ -1075,25 +1083,24 @@ class ClosureService:
             snapshot.graph_context = self._ops.closeout_gates.build_closeout_graph_context()
         return snapshot.graph_context
 
-    def _declared_closeout_evidence(self, payload: dict[str, Any]) -> tuple[list[str], bool]:
-        """Evidence the task closes with, and whether it is the implicit-code migration.
+    def _declared_closeout_evidence(self, payload: dict[str, Any]) -> tuple[list[str], list[str], bool]:
+        """``(type kinds, kinds the task adds, implicit)`` of the evidence the task closes with.
 
-        A non-empty ``closeout_evidence`` on the task is the complete list and replaces the
-        type's (the override); empty reads the evidence the task's type declares. A task with
-        no type and no field predates types and is gated as code with an alert.
+        The type's kinds come from ``deskops/data/rules/closeout-evidence.yaml`` through the
+        task's registered model (a desk subtype reads its nearest factory ancestor's); the
+        task's own ``closeout_evidence`` only adds kinds, never removes one (DA5). A task whose
+        type resolves to no factory type is gated as code; ``implicit`` says it has no
+        ``task_type`` (a task that predates types, which the ``rule-closeout-alert-implicit-code``
+        rule names when it is written).
         """
         declared = declared_evidence_list(payload.get("closeout_evidence"))
-        if declared:
-            return declared, False
         task_type = str(payload.get("task_type") or "").strip()
         registry = self._ops.registered_task_types()
-        # A registered name (factory or desk-local subtype) wins; only then the legacy mapping,
-        # so a local subtype's added evidence is never replaced by its ancestor's.
         type_model = registry.get(task_type) or registry.get(canonical_task_type_name(task_type))
-        if type_model is not None:
-            evidence = tuple(getattr(type_model, "__closeout_evidence__", ())) or closeout_gates_module.CODE_EVIDENCE
-            return list(evidence), not task_type
-        return list(closeout_gates_module.CODE_EVIDENCE), True
+        kinds = closeout_evidence_kinds(type_model) if type_model is not None else None
+        type_kinds = list(kinds if kinds is not None else closeout_gates_module.CODE_EVIDENCE)
+        extras = [kind for kind in dict.fromkeys(declared) if kind not in type_kinds]
+        return type_kinds, extras, not task_type
 
     def _closeout_reference_evidence(self, payload: dict[str, Any]) -> dict[str, list[str]]:
         return self._ops.closeout_gates.closeout_reference_evidence(

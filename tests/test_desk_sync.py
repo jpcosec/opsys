@@ -247,11 +247,14 @@ def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) 
     """One `{model, glob}` per desk folder `desk update --apply` tracked by path, under the model's
     own id pattern; the scaffold's own files (pills.md) match no glob. The lifecycle graph is tracked
     by its declared paths (CC31): the RelationDocs by name, the lifecycle rituals by their ids; the
-    activation rules (CC32) by their glob, the seeded Board and phase ritual by theirs (CC35b d1)."""
+    activation rules (CC32) and the closeout rules (CC33b) by their globs, the seeded Board and phase ritual by theirs (CC35b d1)."""
     from deskops.workspace import desk_declaration
 
     include = desk_declaration("x").include
-    rules = {rule["model"]: rule["glob"] for rule in include if "glob" in rule}
+    rules: dict[str, list[str]] = {}
+    for rule in include:
+        if "glob" in rule:
+            rules.setdefault(rule["model"], []).append(rule["glob"])
     listed = {rule["model"]: rule["paths"] for rule in include if "paths" in rule}
     assert listed == {
         "RelationDoc": [
@@ -268,15 +271,15 @@ def test_declared_includes_cover_what_desk_update_used_to_guess(tmp_path: Path) 
         ],
     }
     assert rules == {
-        "RelationTypeDoc": "desk/lifecycle/type-*.md",
-        "RuleDoc": "desk/lifecycle/rule-activation-*.md",
-        "BoardDoc": "desk/tasks/board-*.md",
-        "PillDoc": "desk/contexts/pill-*.md",
-        "RitualDoc": "desk/rituals/ritual-*.md",
-        "AtomDoc": "desk/atoms/atom-*.md",
-        "ProtoAtomDoc": "desk/atoms/proto-*.md",
-        "RoleDoc": "desk/roles/*.md",
-        "RepositoryDoc": "desk/registry/*.md",
-        "StepDoc": "desk/steps/*.md",
-        "DeskFAQDoc": "desk/faq/*.md",
+        "RelationTypeDoc": ["desk/lifecycle/type-*.md"],
+        "RuleDoc": ["desk/lifecycle/rule-activation-*.md", "desk/lifecycle/rule-closeout-*.md"],
+        "BoardDoc": ["desk/tasks/board-*.md"],
+        "PillDoc": ["desk/contexts/pill-*.md"],
+        "RitualDoc": ["desk/rituals/ritual-*.md"],
+        "AtomDoc": ["desk/atoms/atom-*.md"],
+        "ProtoAtomDoc": ["desk/atoms/proto-*.md"],
+        "RoleDoc": ["desk/roles/*.md"],
+        "RepositoryDoc": ["desk/registry/*.md"],
+        "StepDoc": ["desk/steps/*.md"],
+        "DeskFAQDoc": ["desk/faq/*.md"],
     }

@@ -1,4 +1,9 @@
 ---
+sldb:
+  by: agent
+  at: '2026-11-10T21:15:32Z'
+  authority: generated
+  via: save_document_payload
 # ritual-xxx
 id: ritual-closeout
 # Ordered prose steps; not document references
@@ -7,13 +12,14 @@ steps:
   and bound pills.
 - 1. Invalidate or fix stale tests if they no longer prove the intended behavior.
 - 1. Run the required validation commands and confirm they pass.
-- 1. Run `deskops closeout verify --task <id>` and require all reported gates to pass
-  before the tool-made commit.
+- '1. Run `deskops closeout verify --task <id>`: it runs the producers of the task
+  type''s evidence and writes one evidence receipt per kind (accepted or rejected)
+  under `desk/reviews/<id>/`; require every reported gate to pass.'
 - '1. Check that verify reports ''esta tarea declaró X; encontré Y'' and that Y covers
-  X: closeout verifies only the evidence the task declared in `closeout_evidence`
-  (tests, commit, atom, materialization, document, external), and a task created without
-  it is gated as code and raises an alert. Read every alert; a `.py` change on a task
-  that declared no tests is not blocked, but it is never silent.'
+  X: the evidence is the task type''s (`deskops/data/rules/closeout-evidence.yaml`)
+  plus any kind `--evidence` added at creation, which only alerts when it fails. Read
+  every alert; a `.py` change on a task that declared no tests is not blocked, but
+  it is never silent.'
 - 1. Confirm the task satisfied each bound pill and that no matching board-routed
   pill was missed during execution.
 - 1. If the task bound pills, check whether the task `references` list already points
@@ -30,8 +36,10 @@ steps:
 - 1. If the task's subject no longer exists, close it with `deskops closeout supersede`,
   naming a reason and at least one resolvable ref, and stop here instead of running
   the closeout commit.
-- 1. Close the task with `deskops closeout commit` as the one entry point and the
-  mandatory final gate.
+- '1. Close the task with `deskops closeout commit` as the one entry point and the
+  mandatory final gate: it writes no receipt and evaluates the type''s closeout rule
+  (`rule-closeout-<type>`) on the receipts verify wrote; if it blocks, run verify
+  again after fixing what the findings name, then commit.'
 # e.g., layer:workflow, system:sldb
 tags:
 - system:sldb

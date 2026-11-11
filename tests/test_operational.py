@@ -110,32 +110,28 @@ def test_create_task_bundle_restores_board_when_append_fails(lifecycle_desk: Pat
     assert not list((tmp_path / "desk").rglob("*task-rollback-board*.md"))
 
 
-def test_pill_graduation_is_verified_when_bound_pills_have_an_atom_reference(tmp_path: Path) -> None:
-    operations = DeskopsOperations(tmp_path)
-    operations.create_artifact(
-        "artifact.atom",
-        {
-            "title": "Graduated knowledge",
-            "five_wh_one_plus": "what",
-            "answer": "Atom references satisfy pill knowledge graduation.",
-        },
-    )
+def _pill_graduation_condition() -> str:
+    import yaml
 
-    assert operations.closure.has_verified_task_pill_graduation(
-        {"pills": ["desk/contexts/pill-example.md"], "references": ["desk/atoms/atom-graduated-knowledge.md"]}
-    )
+    from deskops.paths import data_path
+
+    text = data_path("data", "rules", "rule-closeout-alert-pill-graduation.md").read_text(encoding="utf-8")
+    return yaml.safe_load(text.split("---", 2)[1])["condition"]
 
 
-def test_pill_graduation_is_not_verified_when_bound_pills_lack_an_atom_reference(tmp_path: Path) -> None:
-    operations = DeskopsOperations(tmp_path)
+def test_pill_graduation_is_a_rule_not_a_closure_fact() -> None:
+    """CC33b: the graduation check is the on_write alert rule-closeout-alert-pill-graduation;
+    the rule following a reference to an atom is tested in test_closeout_rules.py."""
+    from sldb.api import where_matches
 
-    assert not operations.closure.has_verified_task_pill_graduation(
-        {"pills": ["desk/contexts/pill-example.md"], "references": ["tests/test_runtime.py::test_runtime"]}
-    )
+    from deskops.services.closure import ClosureService
 
-
-def test_pill_graduation_is_trivially_verified_without_bound_pills(tmp_path: Path) -> None:
-    assert DeskopsOperations(tmp_path).closure.has_verified_task_pill_graduation({"pills": [], "references": []})
+    assert not hasattr(ClosureService, "has_verified_task_pill_graduation")
+    condition = _pill_graduation_condition()
+    assert where_matches(condition, {"pills": [], "references": []}), "no bound pills: trivially holds"
+    assert not where_matches(
+        condition, {"pills": ["desk/contexts/pill-example.md"], "references": ["tests/test_runtime.py::test_runtime"]}
+    ), "bound pills without an atom reference"
 
 
 def test_advance_task_does_not_persist_computed_gate_facts(lifecycle_desk: Path) -> None:

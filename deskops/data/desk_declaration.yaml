@@ -23,7 +23,12 @@
 # to `desk/lifecycle/rule-activation-<type>.md`: `on_transition` over `ritual-execution`, with
 # subject `model <= <TypeDoc>` so a desk subtype inherits it, it requires the review receipts
 # the type asks for (accepted and intact) and the task's dependencies closed; sldb evaluates
-# it when `deskops advance` asks for the holding edges. The `include` rules say
+# it when `deskops advance` asks for the holding edges. The closeout gate of each factory type
+# (CC33b) is the same kind of managed RuleDoc, written from `rules/` to
+# `desk/lifecycle/rule-closeout-<type>.md`: `on_transition` over `ritual-closeout`, it requires
+# the evidence receipts `deskops closeout verify` writes (kinds in `rules/closeout-evidence.yaml`),
+# accepted and intact, and `deskops closeout commit` evaluates it; the two
+# `rule-closeout-alert-*.md` are `on_write` alerts over the task's own fields. The `include` rules say
 # which desk documents `deskops desk update --apply` tracks under which model
 # (`sldb.api.stores.apply_declaration.apply_includes`): the lifecycle documents, the rules,
 # the three lifecycle rituals by their ids (`RitualDoc:ritual-<x>`, what the graph's edges
@@ -170,6 +175,33 @@ seeds:
 - path: desk/lifecycle/rule-activation-task-external.md
   mode: managed
   file: rules/rule-activation-task-external.md
+- path: desk/lifecycle/rule-closeout-task-code.md
+  mode: managed
+  file: rules/rule-closeout-task-code.md
+- path: desk/lifecycle/rule-closeout-task-docs.md
+  mode: managed
+  file: rules/rule-closeout-task-docs.md
+- path: desk/lifecycle/rule-closeout-task-debug.md
+  mode: managed
+  file: rules/rule-closeout-task-debug.md
+- path: desk/lifecycle/rule-closeout-task-refactor.md
+  mode: managed
+  file: rules/rule-closeout-task-refactor.md
+- path: desk/lifecycle/rule-closeout-task-decision.md
+  mode: managed
+  file: rules/rule-closeout-task-decision.md
+- path: desk/lifecycle/rule-closeout-task-aggregate.md
+  mode: managed
+  file: rules/rule-closeout-task-aggregate.md
+- path: desk/lifecycle/rule-closeout-task-external.md
+  mode: managed
+  file: rules/rule-closeout-task-external.md
+- path: desk/lifecycle/rule-closeout-alert-implicit-code.md
+  mode: managed
+  file: rules/rule-closeout-alert-implicit-code.md
+- path: desk/lifecycle/rule-closeout-alert-pill-graduation.md
+  mode: managed
+  file: rules/rule-closeout-alert-pill-graduation.md
 include:
 - model: RelationTypeDoc
   glob: desk/lifecycle/type-*.md
@@ -180,6 +212,8 @@ include:
   - desk/lifecycle/closeout-task_completes.md
 - model: RuleDoc
   glob: desk/lifecycle/rule-activation-*.md
+- model: RuleDoc
+  glob: desk/lifecycle/rule-closeout-*.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

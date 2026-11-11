@@ -10,6 +10,8 @@ import sys
 import pytest
 import yaml
 
+from closeout_desk import store_repo
+from closeout_desk import track_task
 from test_closeout import _git, _make_repo, _write, _write_atom, _write_board, _write_task as _write_existing_task
 
 
@@ -19,6 +21,7 @@ def _write_task(root: Path, refs: list[str], files: list[str]) -> None:
     _, frontmatter, body = path.read_text().split("---", 2)
     payload = yaml.safe_load(frontmatter)
     payload["files"] = files
+    payload.pop("checklists", None)  # not a TaskDoc field: a tracked task would refuse it
     path.write_text("---\n" + yaml.safe_dump(payload, sort_keys=False) + "---" + body)
 
 
@@ -119,11 +122,22 @@ def test_atomless_paths_and_generated_provenance_still_fail(tmp_path: Path) -> N
     assert _verify(root)["ok"]
 
 
-def test_atomless_board_routed_task_closes_with_one_commit(tmp_path: Path) -> None:
-    root, _refs = _repo(tmp_path)
+def test_atomless_board_routed_task_closes_with_one_commit(lifecycle_desk: Path) -> None:
+    """A desk without local atoms: verify writes the exempt atom receipt (CC33b b3), so the
+    closeout rule holds and the commit closes the task in one commit."""
+    root = store_repo(lifecycle_desk)
+    (root / "tests").mkdir(exist_ok=True)
+    shutil.copyfile(__file__, root / "tests" / Path(__file__).name)
+    _git(root, "add", "tests")
+    _git(root, "commit", "-q", "-m", "regression source")
+    _write_task(root, [f"tests/{Path(__file__).name}", _git(root, "rev-parse", "HEAD")], ["seed.txt"])
     _write_board(root)
-    _git(root, "add", ".")
+    track_task(root, "task-x")
+    _git(root, "add", "-A")
     _git(root, "commit", "-q", "-m", "route task")
+    assert _verify(root)["ok"]
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "evidence receipts")
     before = _git(root, "rev-parse", "HEAD")
     result = _cli(root, "commit", "--no-run", "--reason", "CLI regression exercised directly", "--paths", "seed.txt")
     assert result.returncode == 0, result.stdout + result.stderr

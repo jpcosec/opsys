@@ -171,7 +171,6 @@ class TasksService:
             return []
         task_path = doc_access.resolve_glob(self.root, self.desk_root / "tasks", task.id)
         payload = doc_access.read_doc(task_path, TaskDoc)
-        self.add_closeout_facts(payload)
         findings = self._transition_findings(task_path, payload)
         return [
             {
@@ -194,18 +193,6 @@ class TasksService:
             return lifecycle.transition_findings(self.root, document, payload, snapshot=self._ops.snapshot)
         except Exception:
             return []
-
-    def add_closeout_facts(self, payload: dict[str, Any]) -> None:
-        """Facts the lifecycle conditions test with has(): present only when they hold."""
-        closure = self._ops.closure
-        for key, holds in (
-            ("closeout_evidence_verified", closure.has_verified_task_closeout_evidence(payload)),
-            ("pill_graduation_verified", closure.has_verified_task_pill_graduation(payload)),
-        ):
-            if holds:
-                payload[key] = "verified"
-            else:
-                payload.pop(key, None)
 
     def render_next_action_diagram(self) -> str:
         spec = lifecycle.load_lifecycle_spec()
@@ -297,15 +284,12 @@ class TasksService:
 
         current_node = str(payload.get("current_node") or "")
         current_status = str(payload.get("status") or "")
-        self.add_closeout_facts(payload)
         # The edge's effects validate against the task type's model. A task whose task_type is
         # not a registered type (empty or legacy, what `desk update --apply` migrates) validates
         # against TaskDoc, the model it was read with: a typed model's `task_type` literal could
         # not accept it (d4, instead of k5's TaskCodeDoc).
         model = self.registered_task_types().get(str(payload.get("task_type") or "")) or TaskDoc
         result = lifecycle.advance(self.root, payload, model, document=lifecycle.task_document(self.root, task_path))
-        for key in ("closeout_evidence_verified", "pill_graduation_verified"):
-            payload.pop(key, None)
         if result.progressed and payload.get("current_node") == lifecycle.COMPLETE:
             # The lifecycle graph would close the task. Do not persist it; the
             # only closing entry point is `deskops closeout commit`.

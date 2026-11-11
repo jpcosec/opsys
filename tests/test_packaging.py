@@ -43,7 +43,8 @@ def test_desk_declaration_and_templates_ship_inside_the_package() -> None:
     # CC31: the six lifecycle RelationDoc seeds; CC32: one activation RuleDoc per factory task type.
     relations = [seed for seed in lifecycle if seed["file"].startswith("lifecycle/")]
     rules = [seed for seed in lifecycle if seed["file"].startswith("rules/")]
-    assert len(relations) == 6 and len(rules) == 7 and len(lifecycle) == 13
+    # 7 activation rules (CC32), 7 closeout rules and 2 closeout field alerts (CC33b).
+    assert len(relations) == 6 and len(rules) == 16 and len(lifecycle) == 22
     config = yaml.safe_load((DESK_TEMPLATES_PATH / "config.json").read_text(encoding="utf-8"))
     assert config["versions"]["desk_format"] == CURRENT_DESK_FORMAT
 

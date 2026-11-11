@@ -22,10 +22,6 @@ URL_PATTERN = re.compile(r"https?://\S+")
 # `materialization` are alternatives of one gate: either link satisfies it.
 CLOSEOUT_EVIDENCE_VOCABULARY = ("tests", "commit", "atom", "materialization", "document", "external")
 
-#: Kinds a task type declares but no node verifies yet: the aggregate's ``children`` and the
-#: refactor's ``goldens``. `closeout verify` names them as not yet verifiable (TaskDoc precisión 3).
-NOT_YET_VERIFIABLE_EVIDENCE = ("children", "goldens")
-
 CODE_EVIDENCE = ("tests", "commit", "atom", "materialization")
 DOCUMENT_EVIDENCE = ("commit", "document")
 EXTERNAL_EVIDENCE = ("external",)

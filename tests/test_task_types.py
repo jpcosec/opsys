@@ -25,6 +25,7 @@ from deskops.models import TaskDocsDoc
 from deskops.models import TaskExternalDoc
 from deskops.models import TaskRefactorDoc
 from deskops.models.task_types import canonical_task_type_name
+from deskops.models.task_types import closeout_evidence_kinds
 from deskops.models.task_types import TASK_TYPE_MODELS
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -109,26 +110,21 @@ def _write_legacy_task(root: Path, task_id: str, task_type: str) -> Path:
 
 # ------------------------------------------------------------------ models
 def test_factory_type_declarations_match_the_normative_table() -> None:
-    assert TaskCodeDoc.model_fields["task_type"].default == "task.code"
-    assert TaskCodeDoc.__closeout_evidence__ == ("tests", "commit", "atom", "materialization")
-
-    assert TaskDocsDoc.model_fields["task_type"].default == "task.docs"
-    assert TaskDocsDoc.__closeout_evidence__ == ("commit", "document")
-
-    assert TaskDebugDoc.model_fields["task_type"].default == "task.debug"
-    assert TaskDebugDoc.__closeout_evidence__ == ("tests", "commit", "atom", "materialization")
-
-    assert TaskRefactorDoc.model_fields["task_type"].default == "task.refactor"
-    assert TaskRefactorDoc.__closeout_evidence__ == ("tests", "commit", "atom", "materialization", "goldens")
-
-    assert TaskDecisionDoc.model_fields["task_type"].default == "task.decision"
-    assert TaskDecisionDoc.__closeout_evidence__ == ("commit", "document")
-
-    assert TaskAggregateDoc.model_fields["task_type"].default == "task.aggregate"
-    assert TaskAggregateDoc.__closeout_evidence__ == ("children", "commit")
-
-    assert TaskExternalDoc.model_fields["task_type"].default == "task.external"
-    assert TaskExternalDoc.__closeout_evidence__ == ("external",)
+    """The closeout evidence of each type is data (``closeout-evidence.yaml``, CC33b c3), not a
+    class attribute; ``task.aggregate`` has no children kind until a children field exists."""
+    expected = {
+        TaskCodeDoc: ("task.code", ("tests", "commit", "atom", "materialization")),
+        TaskDocsDoc: ("task.docs", ("commit", "document")),
+        TaskDebugDoc: ("task.debug", ("tests", "commit", "atom", "materialization")),
+        TaskRefactorDoc: ("task.refactor", ("tests", "commit", "atom", "materialization", "goldens")),
+        TaskDecisionDoc: ("task.decision", ("commit", "document")),
+        TaskAggregateDoc: ("task.aggregate", ("commit",)),
+        TaskExternalDoc: ("task.external", ("external",)),
+    }
+    for model, (name, kinds) in expected.items():
+        assert model.model_fields["task_type"].default == name
+        assert closeout_evidence_kinds(model) == kinds
+        assert "__closeout_evidence__" not in vars(model)
 
 
 def test_type_hierarchy_keeps_refactor_in_code_and_debug_out_of_it() -> None:
@@ -248,15 +244,16 @@ def test_closeout_verify_reads_evidence_from_the_type(lifecycle_desk: Path) -> N
     assert report["implicit_code"] is False
 
 
-def test_closeout_verify_fails_naming_children_and_goldens_as_not_verifiable(lifecycle_desk: Path) -> None:
+def test_closeout_verify_of_an_aggregate_declares_only_commit(lifecycle_desk: Path) -> None:
+    """No children kind (TaskAggregateDoc has no children field, b4): the aggregate closes with
+    a commit receipt, and verify names nothing it cannot check."""
     _cli(lifecycle_desk, "add", "task", "--title", "Aggregate", "--goal", "g", "--scope", "s", "--task-type", "task.aggregate")
     result = _cli(lifecycle_desk, "closeout", "verify", "--task", "task-aggregate", check=False)
     assert result.returncode == 1
     report = json.loads(result.stdout)
-    assert not report["ok"]
-    codes = {item["code"] for item in report["findings"]}
-    assert "closeout_evidence_not_verifiable" in codes
-    assert any("children" in item["message"] for item in report["findings"])
+    assert report["declared"] == ["commit"]
+    assert {item["code"] for item in report["findings"]} == {"missing_commit_evidence"}
+    assert "children" not in result.stdout
 
 
 # ------------------------------------------------------------------ local types (DC7)
@@ -273,7 +270,6 @@ from deskops.models import TaskCodeDoc
 
 class TaskCliDoc(TaskCodeDoc):
     task_type: Literal["task.code.cli"] = Field(default="task.code.cli", description="CLI subtype.")
-    __closeout_evidence__ = ("tests", "commit", "atom", "materialization", "document")
 """,
         encoding="utf-8",
     )
@@ -292,9 +288,9 @@ class TaskCliDoc(TaskCodeDoc):
     results = json.loads(found.stdout)["results"]
     assert [(r["name"], r["model"]) for r in results] == [("task-cli", "TaskCliDoc")]
 
-    # The local subtype adds `document`: closeout reads the subtype's evidence, not task.code's.
+    # The local subtype reads its factory ancestor's evidence (task.code) from the table.
     verify = _cli(root, "closeout", "verify", "--task", "task-cli", check=False)
-    assert json.loads(verify.stdout)["declared"] == ["tests", "commit", "atom", "materialization", "document"]
+    assert json.loads(verify.stdout)["declared"] == ["tests", "commit", "atom", "materialization"]
 
 
 def test_desk_update_apply_declares_the_types_it_registers_so_a_clean_clone_rebuilds(tmp_path: Path) -> None:
@@ -316,7 +312,6 @@ from deskops.models import TaskCodeDoc
 
 class TaskCliDoc(TaskCodeDoc):
     task_type: Literal["task.code.cli"] = Field(default="task.code.cli", description="CLI subtype.")
-    __closeout_evidence__ = ("tests", "commit")
 """,
         encoding="utf-8",
     )

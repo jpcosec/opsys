@@ -253,7 +253,6 @@ from deskops.models import TaskCodeDoc
 
 class TaskCliDoc(TaskCodeDoc):
     task_type: Literal["task.code.cli"] = Field(default="task.code.cli", description="CLI subtype.")
-    __closeout_evidence__ = ("tests", "commit", "atom", "materialization", "document")
 """,
         encoding="utf-8",
     )

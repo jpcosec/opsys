@@ -423,6 +423,8 @@ def test_closeout_commit_includes_the_store_delta_it_causes(lifecycle_desk: Path
     assert result is not None and result.blocked
     assert refused is not None and refused.current_node == "ritual-closeout"
 
+    # Closeout ritual order (CC33b): verify writes the evidence receipts the closeout rule reads.
+    assert operations.closure.verify_task_closeout(task_id, write_receipts=True)["ok"]
     outcome = ClosureService(root, operations).close_manual(
         task_id,
         reason="Store delta smoke test",

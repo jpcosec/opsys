@@ -10,6 +10,7 @@ from deskops.cli.render import normalize
 from deskops.cli.render import render
 from deskops.cli.render import render_error
 from deskops.lifecycle import finding_line
+from deskops.models.task_types import closeout_evidence_kinds
 from deskops.operations import DeskopsOperations
 from deskops.operations import ARTIFACT_SUBJECTS
 from deskops.services.closeout_gates import CloseoutEvidenceError
@@ -41,7 +42,7 @@ class OperationsCLI:
             payload["task_type"] = task_type
 
             type_model = registry[task_type]
-            type_evidence = list(getattr(type_model, "__closeout_evidence__", ()))
+            type_evidence = list(closeout_evidence_kinds(type_model) or ())
             try:
                 declared = normalize_declared_evidence(payload.get("closeout_evidence"))
             except CloseoutEvidenceError as exc:

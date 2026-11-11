@@ -163,7 +163,10 @@ def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: 
 
     task, result = operations.advance_task(task_id)
     assert result.blocked and not result.progressed
-    assert "task_completes" in result.message, "the blocked gate is named"
+    # Without the evidence receipts closeout verify writes, the type's closeout rule holds
+    # task_completes back (CC33b) and the message names the rule and its clause.
+    assert "rules/rule-closeout-task-code" in result.message, "the blocking rule is named"
+    assert 'fact = "tests"' in result.message
     payload = operations._read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
     assert payload["history"] == ["task_activates", "task_hands_to_closeout"]
 

@@ -1,7 +1,7 @@
 name: ritual-closeout
 path: desk/rituals/closeout.md
-source_hash: 9978878ba0473b4a6492d9c6913d33ab123bb04f05c1ed15f5af66ea001a9945
-content_hash: a63768695e9dddfc986ea69bb1dbeed8eaff709df447de19d6c7d2d7626e4b4e
+source_hash: f690c9355094a484da7f5bdb8349dd1fe5d6df38e22e880903f5d6858aac68d3
+content_hash: 8ae6324c035d79506f01550e1c98435858570a59e4383bdab14131e3fb15bdb5
 field_hashes:
   title: 8d677f909a743b988932908d3d5d6cddb67800fcb09bc8cbe3768a856cd6a7a5
   id: 71574bcab867d8a2e20830806268bc698b67c239b762fe065d282e362267e872
@@ -13,7 +13,7 @@ field_hashes:
   purpose: e022157f2a792b05d7e9828fe17739b5a467db32411e1da3f28a56c3076d3abc
   trigger: 7e6c2a174080c1d53fee5d1d6da1268ae379a7ade7877b736987fde928206e42
   preconditions: 12d3c1eb001eb450b0b521641effe7e82d7b249216e62d11c1176b2a7783d74d
-  steps: 1c2467e7b935e9de603454e4841c0fa9f90e86a53791dacbd106615adb1b0744
+  steps: 83e0a227d695fc7c571df66f54d22128aecbb80cea60ccb8f35ac7bbd5782dd1
   validation: 783fae74f8a8752f3242ba96cb3cb0f16d260d1f9acdc19f33b686ada8ac7111
   failure_modes: 40fdecb816f15ad5fb8f3a75bf826bd5737a235d1e8b5967977d884ed4fba14e
   completion: 9f8336d40fb235571f9fd2adb83286bcf75c5e5da29d9771d54520ca939a4c0b
@@ -26,4 +26,8 @@ semantic_tags:
 - type.workflow.ritual
 - workspace.desk
 - workspace:desk
-provenance: null
+provenance:
+  by: agent
+  at: '2026-11-10T21:15:32Z'
+  authority: generated
+  via: save_document_payload

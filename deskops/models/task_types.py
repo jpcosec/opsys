@@ -6,15 +6,13 @@ documents of ``task.code`` and of every subtype that extends it (``task.refactor
 ``bundle`` for ``reproduction`` — a subtype only ever *adds* gates, it cannot remove one
 (brief.md §Tipos, decisions.md DC1/D2).
 
-Each concrete type fixes ``task_type`` to its name with a ``Literal`` default and declares one
-class attribute, ``__closeout_evidence__``: the closeout evidence kinds ``deskops closeout
-verify`` checks. It uses the vocabulary of
-``deskops.services.closeout_gates.CLOSEOUT_EVIDENCE_VOCABULARY`` (tests, commit, atom,
-materialization, document, external) plus ``children`` (the aggregate) and ``goldens`` (the
-refactor) — both are only *declared* here; their verification lands in GC09 and a later node
-(TaskDoc precisión 3).
+Each concrete type fixes ``task_type`` to its name with a ``Literal`` default. Its closeout
+evidence is data, not a class attribute: ``deskops/data/rules/closeout-evidence.yaml`` maps
+each factory type to the kinds ``deskops closeout verify`` checks (``closeout_evidence_kinds``;
+a desk subtype reads its nearest factory ancestor's), and the closeout gate is the ``RuleDoc``
+seed ``deskops/data/rules/rule-closeout-<type>.md`` (CC33b) that asks for those receipts.
 
-The activation gate of a type is not Python: it is the ``RuleDoc`` seed
+The activation gate of a type is not Python either: it is the ``RuleDoc`` seed
 ``deskops/data/rules/rule-activation-<type>.md`` (CC32), whose subject ``model <= <TypeDoc>``
 names the family, so it needs no attribute here and a subtype inherits it.
 
@@ -24,9 +22,13 @@ names the family, so it needs no attribute here and a subtype inherits it.
 
 from __future__ import annotations
 
-from typing import Literal
+from functools import lru_cache
+from typing import Any, Literal
 
 from pydantic import Field
+import yaml
+
+from deskops.paths import data_path
 
 from .task import TaskDoc
 
@@ -38,7 +40,6 @@ class TaskCodeDoc(TaskDoc):
         default="task.code",
         description="Workflow task type; fixed to 'task.code' for this model.",
     )
-    __closeout_evidence__ = ("tests", "commit", "atom", "materialization")
 
 
 class TaskDocsDoc(TaskDoc):
@@ -48,7 +49,6 @@ class TaskDocsDoc(TaskDoc):
         default="task.docs",
         description="Workflow task type; fixed to 'task.docs' for this model.",
     )
-    __closeout_evidence__ = ("commit", "document")
 
 
 class TaskDebugDoc(TaskDoc):
@@ -62,7 +62,6 @@ class TaskDebugDoc(TaskDoc):
         default="task.debug",
         description="Workflow task type; fixed to 'task.debug' for this model.",
     )
-    __closeout_evidence__ = ("tests", "commit", "atom", "materialization")
 
 
 class TaskRefactorDoc(TaskCodeDoc):
@@ -72,7 +71,6 @@ class TaskRefactorDoc(TaskCodeDoc):
         default="task.refactor",
         description="Workflow task type; fixed to 'task.refactor' for this model.",
     )
-    __closeout_evidence__ = ("tests", "commit", "atom", "materialization", "goldens")
 
 
 class TaskDecisionDoc(TaskDoc):
@@ -82,7 +80,6 @@ class TaskDecisionDoc(TaskDoc):
         default="task.decision",
         description="Workflow task type; fixed to 'task.decision' for this model.",
     )
-    __closeout_evidence__ = ("commit", "document")
 
 
 class TaskAggregateDoc(TaskDoc):
@@ -92,7 +89,6 @@ class TaskAggregateDoc(TaskDoc):
         default="task.aggregate",
         description="Workflow task type; fixed to 'task.aggregate' for this model.",
     )
-    __closeout_evidence__ = ("children", "commit")
 
 
 class TaskExternalDoc(TaskDoc):
@@ -102,7 +98,6 @@ class TaskExternalDoc(TaskDoc):
         default="task.external",
         description="Workflow task type; fixed to 'task.external' for this model.",
     )
-    __closeout_evidence__ = ("external",)
 
 
 #: Factory task type name -> model class. Desk-local types extend this set through
@@ -149,12 +144,27 @@ def factory_task_type_model(task_type: str) -> type[TaskDoc] | None:
     return TASK_TYPE_MODELS.get(canonical_task_type_name(task_type))
 
 
-def task_type_closeout_evidence(task_type: str) -> tuple[str, ...] | None:
-    """The ``__closeout_evidence__`` a factory type declares, or ``None`` when unknown."""
-    model = factory_task_type_model(task_type)
-    if model is None:
-        return None
-    return tuple(getattr(model, "__closeout_evidence__", ()))
+CLOSEOUT_EVIDENCE_TABLE = data_path("data", "rules", "closeout-evidence.yaml")
+
+
+@lru_cache(maxsize=1)
+def closeout_evidence_table() -> dict[str, tuple[str, ...]]:
+    """``deskops/data/rules/closeout-evidence.yaml``: factory task type -> its closeout evidence kinds."""
+    payload = yaml.safe_load(CLOSEOUT_EVIDENCE_TABLE.read_text(encoding="utf-8")) or {}
+    return {str(name): tuple(str(kind) for kind in kinds or ()) for name, kinds in payload.items()}
+
+
+def closeout_evidence_kinds(model: type[Any]) -> tuple[str, ...] | None:
+    """The closeout evidence kinds of a task model: the table's entry for the nearest class of
+    its MRO whose ``task_type`` default is a factory type (a desk subtype reads its ancestor's);
+    ``None`` when no class of the MRO is a factory type."""
+    table = closeout_evidence_table()
+    for cls in getattr(model, "__mro__", ()):
+        field = getattr(cls, "model_fields", {}).get("task_type")
+        name = getattr(field, "default", None)
+        if isinstance(name, str) and name in table:
+            return table[name]
+    return None
 
 
 def declared_evidence_list(value: object) -> list[str]:

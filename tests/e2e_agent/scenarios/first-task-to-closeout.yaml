@@ -28,6 +28,7 @@ reference:
     commit=$(git rev-parse HEAD)
     deskops edit task task-add-changelog references "[\"desk/atoms/atom-changelog-closeout-evidence.md\", \"pytest tests/test_ok.py::test_ok\", \"$commit\"]" --root .
   - deskops edit task task-add-changelog files '["desk/atoms/atom-changelog-closeout-evidence.md"]' --root .
+  - deskops closeout verify --root . --task task-add-changelog
   - deskops closeout commit --root . --task task-add-changelog --no-run --reason "Quickstart closes without a subagent run" --paths desk/atoms/atom-changelog-closeout-evidence.md CHANGELOG.md
 checks:
   - name: CHANGELOG.md is committed with the requested line

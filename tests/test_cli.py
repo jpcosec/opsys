@@ -1881,7 +1881,9 @@ def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Pat
     assert blocked_advance == 1
     assert "Status: ready_for_testing" in blocked.out
     assert "Current node: ritual-closeout" in blocked.out
-    assert "Message: Gate ritual-closeout is not complete" in blocked.out
+    # Without the evidence receipts closeout verify writes, the closeout rule holds the gate (CC33b).
+    assert "Message: Gate ritual-closeout is blocked by its rules" in blocked.out
+    assert "rules/rule-closeout-task-code" in blocked.out
 
     runtime_test = tmp_path / "tests" / "test_runtime.py"
     runtime_test.parent.mkdir(parents=True, exist_ok=True)
@@ -1915,6 +1917,8 @@ def test_show_list_and_advance_task_uses_operational_runtime(lifecycle_desk: Pat
     capsys.readouterr()
     assert files_edit == 0
 
+    assert main(["closeout", "verify", "--root", str(tmp_path), "--task", "task-advance-task-runtime"]) == 0
+    capsys.readouterr()
     closed = main([
         "closeout", "commit", "--root", str(tmp_path),
         "--task", "task-advance-task-runtime",
@@ -2089,7 +2093,9 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
     assert blocked_closeout == 1
     assert "Status: ready_for_testing" in blocked_closeout_out.out
     assert "Current node: ritual-closeout" in blocked_closeout_out.out
-    assert "Message: Gate ritual-closeout is not complete" in blocked_closeout_out.out
+    # Without the evidence receipts closeout verify writes, the closeout rule holds the gate (CC33b).
+    assert "Message: Gate ritual-closeout is blocked by its rules" in blocked_closeout_out.out
+    assert "rules/rule-closeout-task-code" in blocked_closeout_out.out
 
     add_invalid_evidence = main([
         "edit",
@@ -2106,7 +2112,9 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
     still_blocked = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
     still_blocked_out = capsys.readouterr()
     assert still_blocked == 1
-    assert "Message: Gate ritual-closeout is not complete" in still_blocked_out.out
+    # Without the evidence receipts closeout verify writes, the closeout rule holds the gate (CC33b).
+    assert "Message: Gate ritual-closeout is blocked by its rules" in still_blocked_out.out
+    assert "rules/rule-closeout-task-code" in still_blocked_out.out
 
     add_evidence = main([
         "edit",
@@ -2120,12 +2128,14 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
     capsys.readouterr()
     assert add_evidence == 0
 
-    # Evidence now clears the lifecycle gate, but `advance` still refuses to
-    # close: the only closing entry point is `closeout commit`.
+    # A test reference alone is not the type's evidence: after verify writes the receipts,
+    # the closeout rule still holds the gate on the missing commit (CC33b).
+    assert main(["closeout", "verify", "--root", str(tmp_path), "--task", "task-advance-blocked-task"]) == 1
+    capsys.readouterr()
     close_attempt = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
     close_attempt_out = capsys.readouterr()
     assert close_attempt == 1
-    assert "deskops closeout commit" in close_attempt_out.out
+    assert 'fact = "commit"' in close_attempt_out.out
     assert (tmp_path / "desk" / "tasks" / "task-advance-blocked-task.md").exists()
 
     assert main(["add", "atom", "--root", str(tmp_path), *ATOM_PAYLOAD_ARGS]) == 0
@@ -2156,6 +2166,13 @@ def test_advance_task_blocks_testing_and_closeout_without_required_evidence(life
     capsys.readouterr()
     assert files_edit == 0
 
+    assert main(["closeout", "verify", "--root", str(tmp_path), "--task", "task-advance-blocked-task"]) == 0
+    capsys.readouterr()
+    # With every receipt accepted the gate clears, but `advance` still refuses to close:
+    # the only closing entry point is `closeout commit`.
+    close_attempt = main(["advance", "task", "task-advance-blocked-task", "--root", str(tmp_path)])
+    assert close_attempt == 1
+    assert "deskops closeout commit" in capsys.readouterr().out
     closed = main([
         "closeout", "commit", "--root", str(tmp_path),
         "--task", "task-advance-blocked-task",
@@ -2228,13 +2245,12 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk
     capsys.readouterr()
     assert set_atom_reference == 0
 
-    # The atom reference clears the lifecycle gate (not "Gate ... not
-    # complete"), but closing itself belongs to `closeout commit`.
-    close_attempt = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
-    close_attempt_out = capsys.readouterr()
-    assert close_attempt == 1
-    assert "deskops closeout commit" in close_attempt_out.out
-    assert "Gate ritual-closeout is not complete" not in close_attempt_out.out
+    # The atom reference is accepted as the atom|materialization evidence: verify writes an
+    # accepted atom receipt (the rule still asks for tests and commit, CC33b).
+    main(["closeout", "verify", "--root", str(tmp_path), "--task", "task-advance-with-atom-evidence"])
+    capsys.readouterr()
+    receipt = (tmp_path / "desk" / "reviews" / "task-advance-with-atom-evidence" / "evidence-atom-1.md").read_text(encoding="utf-8")
+    assert "verdict: accepted" in receipt and "atom-trackable-atom" in receipt
 
     atom_test = tmp_path / "tests" / "test_atom_evidence.py"
     atom_test.parent.mkdir(parents=True, exist_ok=True)
@@ -2265,6 +2281,13 @@ def test_advance_task_accepts_atom_reference_as_closeout_evidence(lifecycle_desk
     capsys.readouterr()
     assert files_edit == 0
 
+    assert main(["closeout", "verify", "--root", str(tmp_path), "--task", "task-advance-with-atom-evidence"]) == 0
+    capsys.readouterr()
+    close_attempt = main(["advance", "task", "task-advance-with-atom-evidence", "--root", str(tmp_path)])
+    close_attempt_out = capsys.readouterr()
+    assert close_attempt == 1
+    assert "deskops closeout commit" in close_attempt_out.out
+    assert "is blocked by its rules" not in close_attempt_out.out
     close_result = main([
         "closeout", "commit", "--root", str(tmp_path),
         "--task", "task-advance-with-atom-evidence",
