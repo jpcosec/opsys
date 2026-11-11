@@ -198,3 +198,14 @@ Sin `--apply`; nada se aplicó en ningún desk real. Salidas: `~/proyectos/SLDB_
 El kit Chatbot_Infra coincide con b11 (19 heredadas). spec2viz y graph_ui reportan `Store check failed (... AtomDoc)`:
 un átomo inválido, ajeno a esta tarea, que antes hacía caer `desk update` con `DeskopsEnvironmentError` y ahora se
 reporta.
+
+## Rebase sobre origin/main 4338f90b (CC33b)
+
+**Causa raíz del choque en `deskops/services/closure.py`:** el choque está solo en el bloque de imports, y ambos lados agregan
+líneas en el mismo lugar. CC33b sumó `from deskops import lifecycle` y `closeout_evidence_kinds` (la regla de cierre
+`rule-closeout-<tipo>` y sus findings); esta rama sumó `DRAWER_STATUSES`, `LEGACY_RESOLVED_STATUSES` y `_frontmatter`
+de `task_lifecycle`. Se conservan los dos lados. No hubo choque en `close_retired`: CC33b no lo tocó, y la regla de
+cierre (`_gate_outcome` → `closeout_rule_findings`) solo corre en `_close` con `run_gates=True`. Retire sigue con
+`run_gates=False`: sin regla de cierre, con `Closeout-Mode: legacy-resolved` y leyendo la tarea por frontmatter. No se
+reintrodujo nada de lo que CC33b borró (`__closeout_evidence__`, `closeout_evidence_verified`, `_add_closeout_facts`
+no aparecen en el diff de esta rama contra main). CHANGELOG se fusionó solo; `.sldb` no chocó (la rama no lo toca).
