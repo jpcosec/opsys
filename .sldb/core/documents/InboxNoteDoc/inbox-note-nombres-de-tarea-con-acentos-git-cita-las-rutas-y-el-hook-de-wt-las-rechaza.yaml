@@ -1,0 +1,18 @@
+name: inbox-note-nombres-de-tarea-con-acentos-git-cita-las-rutas-y-el-hook-de-wt-las-rechaza
+path: desk/inbox/inbox-note-nombres-de-tarea-con-acentos-git-cita-las-rutas-y-el-hook-de-wt-las-rechaza.md
+source_hash: 7c5787f9334e0210600127698b25ff8c3ee728b2365009d4cf644258f8dd5d68
+content_hash: ec5eb7966fb65452bce1c33b078a0cc5155bab15e990d8b41e5e47c4d8ed8a77
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: f4a2eec9b5734c37e246678816f0b307c59c117a7dc74691342c9b86ff80e169
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 4d286587dd41e01a66aa1b7930ae4982b5ae603eccd5510f3bcae2216add2ce0
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 7fa4f52e53725c8671ec0cc5fadf82b7aaa31017a2a085728a04795ab88344a1
+  body: 37d16c70d5472288aad1f2149d55b9d645383422ba69b83b00756e6f3a7206f6
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

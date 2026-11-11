@@ -1,0 +1,18 @@
+name: inbox-note-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr
+path: desk/inbox/inbox-note-closeout-resolved-by-cerrar-una-tarea-cuyo-trabajo-ya-entró-por-pr.md
+source_hash: e2459161cd750da12b62edc01c0c8aa1c6befd4ec5d6657af5138756115adbd1
+content_hash: 984e450a6a8f949abe216ba95cba7db54ec14178cb04fb0b86705fb1256e8b8d
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: f4a2eec9b5734c37e246678816f0b307c59c117a7dc74691342c9b86ff80e169
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: 8207e599699ea50f6c64df2cf390cf4d88f80c8208ce23dd77ebe831919499e4
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 574eeb5845fd77218f997cb3950768f9eedb0a94020f69ea7cb9de6dc1447883
+  body: 9327ab3104d96c4f81e35c4084293c6409c82ac38ff2733c63ac65d80bf193fc
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

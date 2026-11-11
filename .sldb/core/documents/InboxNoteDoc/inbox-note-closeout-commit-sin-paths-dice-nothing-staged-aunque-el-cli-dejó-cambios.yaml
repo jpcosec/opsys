@@ -1,0 +1,18 @@
+name: inbox-note-closeout-commit-sin-paths-dice-nothing-staged-aunque-el-cli-dejó-cambios
+path: desk/inbox/inbox-note-closeout-commit-sin-paths-dice-nothing-staged-aunque-el-cli-dejó-cambios.md
+source_hash: 9e810275d300361039cefd650876bcdd55d0e2df2eee41a817e675e4eefc919b
+content_hash: 83a72b57fa4fad9d77e5f19d6cbb83cd6d23bae8ff201e64c72d8d82791528e6
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: f4a2eec9b5734c37e246678816f0b307c59c117a7dc74691342c9b86ff80e169
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: e9b623a5a1a281a4c1c97e5f9e092a494b33f56d6caa90679a08f022c4a6d957
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: ebf4382b574066e38355d3dd3f4493ca5eac29a319ef23fd2c05f0f196b3831a
+  body: b2e6cd488e1fb2f4c0d168fc72a7f0378779c8db661b650fd04172963da1a05f
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null

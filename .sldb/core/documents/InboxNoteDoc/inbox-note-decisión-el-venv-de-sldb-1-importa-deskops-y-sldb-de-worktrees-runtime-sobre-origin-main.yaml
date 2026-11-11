@@ -1,0 +1,18 @@
+name: inbox-note-decisión-el-venv-de-sldb-1-importa-deskops-y-sldb-de-worktrees-runtime-sobre-origin-main
+path: desk/inbox/inbox-note-decisión-el-venv-de-sldb-1-importa-deskops-y-sldb-de-worktrees-runtime-sobre-origin-main.md
+source_hash: ce70fd5140b7c13b02eae71c297fa556f9202fb1b09ad670d735b1f9e83541c6
+content_hash: 42011b40348c81c42c0dc6c5c7f0290b9cb0c35ac9cfa83dee17b3e1a0cef853
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: cab854a5343c7860617e24263aeb01c922a95ea3519329b1e080460e1d6aec60
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 4d5fb15361312b3fbf969e6a851650b926d147677180313c3bc7f85701951970
+  body: 3184368539c64b9d9ad7c3172ac64d9cb7a22352fe5ff91290e407981ef808c4
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
