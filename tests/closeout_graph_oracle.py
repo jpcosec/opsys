@@ -33,6 +33,7 @@ def transitions_from_v1(root: Path, node: str) -> list[lifecycle.Transition]:
                 condition=str(edge.metadata.get("condition") or ""),
                 sets=dict(attributes.get("sets") or {}),
                 terminal=bool(attributes.get("terminal")),
+                relation_doc=str(edge.metadata.get("relation_doc") or ""),
             )
         )
     return found
