@@ -511,6 +511,15 @@ include:
   - desk/lifecycle/rule-activation-task-docs.md
   - desk/lifecycle/rule-activation-task-external.md
   - desk/lifecycle/rule-activation-task-refactor.md
+  - desk/lifecycle/rule-closeout-alert-implicit-code.md
+  - desk/lifecycle/rule-closeout-alert-pill-graduation.md
+  - desk/lifecycle/rule-closeout-task-aggregate.md
+  - desk/lifecycle/rule-closeout-task-code.md
+  - desk/lifecycle/rule-closeout-task-debug.md
+  - desk/lifecycle/rule-closeout-task-decision.md
+  - desk/lifecycle/rule-closeout-task-docs.md
+  - desk/lifecycle/rule-closeout-task-external.md
+  - desk/lifecycle/rule-closeout-task-refactor.md
 - model: TaskDebugDoc
   paths:
   - desk/tasks/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall.md
