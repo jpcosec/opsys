@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from deskops import doc_access
+
 from pathlib import Path
 
 from sldb.runtime.validation import extract_model_data
@@ -38,7 +40,7 @@ def test_read_doc_taskdoc_equals_extract_model_data() -> None:
     for path in paths:
         raw_text = path.read_text(encoding="utf-8")
         extracted = extract_model_data(TaskDoc, raw_text)
-        read = operations._read_doc(path, TaskDoc)
+        read = doc_access.read_doc(path, TaskDoc)
         if read != extracted:
             fields = sorted(
                 key for key in set(read) | set(extracted)

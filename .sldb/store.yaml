@@ -84,6 +84,8 @@ models:
   path: deskops/models/review.py
 - name: RuleDoc
   model_ref: sldb.models.rule_doc:RuleDoc
+- name: ViewDoc
+  model_ref: sldb.models.notation_models:ViewDoc
 predicates:
   applies_to_source:
     axis: WHAT
@@ -530,5 +532,9 @@ include:
   paths:
   - desk/tasks/task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro.md
   - desk/tasks/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece.md
+- model: ViewDoc
+  paths:
+  - deskops/data/views/board.md
+  - deskops/data/views/task.md
 graph_backend: networkx
 policy: {}

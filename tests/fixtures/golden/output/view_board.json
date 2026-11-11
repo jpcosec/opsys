@@ -1,0 +1,295 @@
+{
+  "board": {
+    "path": "desk/tasks/Board.md",
+    "pills": []
+  },
+  "columns": [
+    {
+      "count": 1,
+      "in_lifecycle": true,
+      "node": "ritual-execution",
+      "phase": "execution",
+      "purpose": "Confirm initialization gate before implementation.",
+      "tasks": [
+        {
+          "atoms": [
+            {
+              "id": "atom-atom-for-the-view",
+              "title": "Atom for the view"
+            }
+          ],
+          "closeout": {
+            "alerts": [],
+            "declared": [
+              "tests",
+              "commit",
+              "atom",
+              "materialization"
+            ],
+            "evidence": [
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_tests_evidence",
+                    "message": "No resolvable test evidence reference found."
+                  }
+                ],
+                "gate": "tests",
+                "state": "pending"
+              },
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_atom_or_materialization_link",
+                    "message": "No atom reference or changed-file materialization coverage found."
+                  }
+                ],
+                "gate": "atom_or_materialization_link",
+                "state": "pending"
+              },
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_commit_evidence",
+                    "message": "No resolvable commit reference found."
+                  }
+                ],
+                "gate": "commit",
+                "state": "pending"
+              }
+            ],
+            "found": [],
+            "implicit_code": false,
+            "ok": false,
+            "summary": "esta tarea declar\u00f3 tests, commit, atom|materialization; encontr\u00e9 nada"
+          },
+          "current_node": "ritual-execution",
+          "gates": [
+            {
+              "condition": "",
+              "findings": [
+                {
+                  "code": "rules/rule-activation-task-code",
+                  "level": "error",
+                  "subject": "TaskCodeDoc:task-view-golden-execution",
+                  "what": "Una tarea task.code se activa con recibos preflight y bundle aceptados e intactos y sus dependencias cerradas. | any(^subject: anchor_state = \"intact\" and verdict = \"accepted\" and kind = \"preflight\") (seen: {})"
+                }
+              ],
+              "holds": true,
+              "relation_type": "task_activates",
+              "target": "ritual-testing"
+            }
+          ],
+          "gates_holding": 1,
+          "gates_total": 1,
+          "id": "task-view-golden-execution",
+          "path": "desk/tasks/task-view-golden-execution.md",
+          "pills": [
+            {
+              "id": "pill-guardrail-view-pill",
+              "source": "task",
+              "title": "Guardrail: view pill"
+            }
+          ],
+          "status": "draft",
+          "task_type": "task.code",
+          "title": "View golden execution"
+        }
+      ]
+    },
+    {
+      "count": 1,
+      "in_lifecycle": true,
+      "node": "ritual-testing",
+      "phase": "testing",
+      "purpose": "Prove the implementation contract and bound pill guardrails.",
+      "tasks": [
+        {
+          "atoms": [],
+          "closeout": {
+            "alerts": [],
+            "declared": [
+              "tests",
+              "commit",
+              "atom",
+              "materialization"
+            ],
+            "evidence": [
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_tests_evidence",
+                    "message": "No resolvable test evidence reference found."
+                  }
+                ],
+                "gate": "tests",
+                "state": "pending"
+              },
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_atom_or_materialization_link",
+                    "message": "No atom reference or changed-file materialization coverage found."
+                  }
+                ],
+                "gate": "atom_or_materialization_link",
+                "state": "pending"
+              },
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_commit_evidence",
+                    "message": "No resolvable commit reference found."
+                  }
+                ],
+                "gate": "commit",
+                "state": "pending"
+              }
+            ],
+            "found": [],
+            "implicit_code": false,
+            "ok": false,
+            "summary": "esta tarea declar\u00f3 tests, commit, atom|materialization; encontr\u00e9 nada"
+          },
+          "current_node": "ritual-testing",
+          "gates": [
+            {
+              "condition": "nonempty(validation)",
+              "holds": true,
+              "relation_type": "task_hands_to_closeout",
+              "target": "ritual-closeout"
+            }
+          ],
+          "gates_holding": 1,
+          "gates_total": 1,
+          "id": "task-view-golden-testing",
+          "path": "desk/tasks/task-view-golden-testing.md",
+          "pills": [],
+          "status": "active",
+          "task_type": "task.code",
+          "title": "View golden testing"
+        }
+      ]
+    },
+    {
+      "count": 1,
+      "in_lifecycle": true,
+      "node": "ritual-closeout",
+      "phase": "closeout",
+      "purpose": "Close only after evidence, cleanup, and atomic commit.",
+      "tasks": [
+        {
+          "atoms": [],
+          "closeout": {
+            "alerts": [],
+            "declared": [
+              "tests",
+              "commit",
+              "atom",
+              "materialization"
+            ],
+            "evidence": [
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_tests_evidence",
+                    "message": "No resolvable test evidence reference found."
+                  }
+                ],
+                "gate": "tests",
+                "state": "failing"
+              },
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_atom_or_materialization_link",
+                    "message": "No atom reference or changed-file materialization coverage found."
+                  }
+                ],
+                "gate": "atom_or_materialization_link",
+                "state": "failing"
+              },
+              {
+                "evidence": [],
+                "findings": [
+                  {
+                    "code": "missing_commit_evidence",
+                    "message": "No resolvable commit reference found."
+                  }
+                ],
+                "gate": "commit",
+                "state": "failing"
+              }
+            ],
+            "found": [],
+            "implicit_code": false,
+            "ok": false,
+            "summary": "esta tarea declar\u00f3 tests, commit, atom|materialization; encontr\u00e9 nada"
+          },
+          "current_node": "ritual-closeout",
+          "gates": [
+            {
+              "condition": "status = \"ready_for_testing\"",
+              "findings": [
+                {
+                  "code": "rules/rule-closeout-task-code",
+                  "level": "error",
+                  "subject": "TaskCodeDoc:task-view-golden-closeout",
+                  "what": "Una tarea task.code se cierra con recibos evidence aceptados e intactos de tests, commit y atom o materialization (los escribe deskops closeout verify). | any(^subject: kind = \"evidence\" and fact = \"tests\" and anchor_state = \"intact\" and verdict = \"accepted\") (seen: {}) (witness: ReviewDoc:review-task-view-golden-closeout-bundle-1 {\"kind\":\"bundle\"})"
+                }
+              ],
+              "holds": true,
+              "relation_type": "task_completes",
+              "target": "complete"
+            }
+          ],
+          "gates_holding": 1,
+          "gates_total": 1,
+          "id": "task-view-golden-closeout",
+          "path": "desk/tasks/task-view-golden-closeout.md",
+          "pills": [],
+          "status": "ready_for_testing",
+          "task_type": "task.code",
+          "title": "View golden closeout"
+        }
+      ]
+    }
+  ],
+  "contract": 1,
+  "counts": {
+    "by_node": {
+      "ritual-closeout": 1,
+      "ritual-execution": 1,
+      "ritual-testing": 1
+    },
+    "gates_holding": 3,
+    "gates_total": 3,
+    "tasks": 3
+  },
+  "errors": [
+    {
+      "cause": "Pill referenced by the board does not resolve to a PillDoc.",
+      "reference": "desk/contexts/pills.md"
+    },
+    {
+      "cause": "Pill referenced by the task does not resolve to a PillDoc.",
+      "reference": "pill-does-not-exist",
+      "task": "task-view-golden-testing"
+    },
+    {
+      "cause": "Atom referenced by the task does not resolve to an AtomDoc.",
+      "reference": "atom-does-not-exist",
+      "task": "task-view-golden-testing"
+    }
+  ],
+  "root": "<root>",
+  "view": "board"
+}

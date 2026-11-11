@@ -1,0 +1,132 @@
+{
+  "contract": 1,
+  "errors": [
+    {
+      "cause": "Pill referenced by the board does not resolve to a PillDoc.",
+      "reference": "desk/contexts/pills.md"
+    }
+  ],
+  "next": {
+    "advance_when": [
+      "Execution gate obligations are recorded or satisfied."
+    ],
+    "next_actions": [
+      "Make the active task, scope, touched files, and validation targets explicit.",
+      "Run a fresh-context subagent review.",
+      "Bind matching board and task pills.",
+      "Start implementation only after the initialization gate is satisfied."
+    ],
+    "phase": "execution",
+    "ritual": "desk/rituals/execution.md"
+  },
+  "revision": "<revision>",
+  "root": "<root>",
+  "task": {
+    "atoms": [
+      {
+        "answer": "the answer",
+        "id": "atom-atom-for-the-view",
+        "question": "what",
+        "title": "Atom for the view"
+      }
+    ],
+    "closeout": {
+      "alerts": [],
+      "declared": [
+        "tests",
+        "commit",
+        "atom",
+        "materialization"
+      ],
+      "evidence": [
+        {
+          "evidence": [],
+          "findings": [
+            {
+              "code": "missing_tests_evidence",
+              "message": "No resolvable test evidence reference found."
+            }
+          ],
+          "gate": "tests",
+          "state": "pending"
+        },
+        {
+          "evidence": [],
+          "findings": [
+            {
+              "code": "missing_atom_or_materialization_link",
+              "message": "No atom reference or changed-file materialization coverage found."
+            }
+          ],
+          "gate": "atom_or_materialization_link",
+          "state": "pending"
+        },
+        {
+          "evidence": [],
+          "findings": [
+            {
+              "code": "missing_commit_evidence",
+              "message": "No resolvable commit reference found."
+            }
+          ],
+          "gate": "commit",
+          "state": "pending"
+        }
+      ],
+      "found": [],
+      "implicit_code": false,
+      "ok": false,
+      "summary": "esta tarea declar\u00f3 tests, commit, atom|materialization; encontr\u00e9 nada"
+    },
+    "current_node": "ritual-execution",
+    "depends_on": [],
+    "done_when": "d",
+    "files": [],
+    "from_drawer": "",
+    "gates": [
+      {
+        "condition": "",
+        "findings": [
+          {
+            "code": "rules/rule-activation-task-code",
+            "level": "error",
+            "subject": "TaskCodeDoc:task-view-golden-execution",
+            "what": "Una tarea task.code se activa con recibos preflight y bundle aceptados e intactos y sus dependencias cerradas. | any(^subject: anchor_state = \"intact\" and verdict = \"accepted\" and kind = \"preflight\") (seen: {})"
+          }
+        ],
+        "holds": true,
+        "relation_type": "task_activates",
+        "target": "ritual-testing"
+      }
+    ],
+    "gates_holding": 1,
+    "gates_total": 1,
+    "goal": "goal of View golden execution",
+    "history": [],
+    "id": "task-view-golden-execution",
+    "implementation_path": "i",
+    "inherits_from": [],
+    "on_board": true,
+    "path": "desk/tasks/task-view-golden-execution.md",
+    "pills": [
+      {
+        "how_not": "how not text",
+        "id": "pill-guardrail-view-pill",
+        "source": "task",
+        "title": "Guardrail: view pill",
+        "what": "what text",
+        "when": "when text"
+      }
+    ],
+    "references": [],
+    "scope": "s",
+    "status": "draft",
+    "task_type": "task.code",
+    "title": "View golden execution",
+    "validation": [
+      "pytest -q tests/test_x.py"
+    ],
+    "why": "Not provided."
+  },
+  "view": "task"
+}

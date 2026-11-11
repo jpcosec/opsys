@@ -1,0 +1,22 @@
+{
+  "contract": 1,
+  "count": 1,
+  "errors": [],
+  "root": "<root>",
+  "tasks": [
+    {
+      "command": "deskops add task --root . --from-drawer desk/drawer/tasks/task-deferred-idea.md --title 'Deferred idea'",
+      "excerpt": [
+        "Promoted from the inbox note `desk/inbox/20261104-101500-suggestion-deferred-idea.md`.",
+        "Triage and resolve the inbox message promoted from `desk/inbox/20261104-101500-suggestion-deferred-idea.md`.",
+        "Body of the idea"
+      ],
+      "id": "task-deferred-idea",
+      "markdown": "---\nid: task-deferred-idea\nstatus: deferred\nsummary: ''\ntags:\n- workspace:desk\n- artifact:task\n- source:inbox\ncurrent_node: ''\nhistory: []\nreferences: []\ndepends_on: []\npills: []\nfiles: []\ntask_type: ''\ninherits_from: []\ninherit_acceptance_context: false\natoms: []\n---\n\n# Deferred idea\n\n## Rationale\n\n_Explain why this task exists or the business driver behind it._\n\nPromoted from the inbox note `desk/inbox/20261104-101500-suggestion-deferred-idea.md`.\n\n## Goal\n\n_Describe the concrete result this task must produce._\n\nTriage and resolve the inbox message promoted from `desk/inbox/20261104-101500-suggestion-deferred-idea.md`.\n\n## Scope\n\n_State what is in scope and what is out of scope._\n\n_Describe the incoming message with enough evidence to triage._\n\nBody of the idea\n\n## Implementation Path\n\n_Outline the expected implementation route or affected surface._\n\nTo be defined when the task is promoted.\n\n## Validation\n\n_List the checks required before this task can close._\n\n- \n\n## Done When\n\n_Name the observable condition that makes the task complete._\n\nThe message is resolved, answered, or promoted into active work.\n",
+      "path": "desk/drawer/tasks/task-deferred-idea.md",
+      "status": "deferred",
+      "title": "Deferred idea"
+    }
+  ],
+  "view": "drawer"
+}

@@ -256,23 +256,6 @@ class DeskopsOperations:
     ) -> AtomMergeResult:
         return self.atoms.merge_atom(selector, into_selector=into_selector, force=force)
 
-    # ---------------------------------------------------------------- private aliases
-    # graph_ui (UIs/graph_ui/frontends/mindmap/deskops_routes.py, frontends/desk/serve.py)
-    # and deskops/domain_tree.py still call these private names; CC34 replaces that
-    # access and removes the aliases.
-    def _read_doc(self, path: Path, model: type[Any]) -> dict[str, Any]:
-        return doc_access.read_doc(path, model)
-
-    # CC34: alias for graph_ui, removed by CC34
-    def _resolve_glob(self, directory: Path, doc_id: str) -> Path:
-        return doc_access.resolve_glob(self.root, directory, doc_id)
-
-    # CC34: alias for graph_ui, removed by CC34
-    def _registered_repositories(self) -> list[dict[str, Any]]:
-        return doc_access.registered_repositories(self.root)
-
-    def _repository_root(self, repository: dict[str, Any]) -> Path:
-        return doc_access.repository_root(self.root, repository)
-
+    # ---------------------------------------------------------------- private helpers
     def _atom_doc_path(self, atom_id: str, tags: list[str]) -> Path:
         return doc_access.atom_doc_path(self.root, atom_id, tags)
