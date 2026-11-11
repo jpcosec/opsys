@@ -1,0 +1,1 @@
+Error: Cannot advance task-repro-advance via task_activates: the edge desk/lifecycle/execution-task_activates.md does not set status active (attributes.sets.status is missing). The desk's lifecycle seeds are out of date: run 'deskops desk update --apply'.

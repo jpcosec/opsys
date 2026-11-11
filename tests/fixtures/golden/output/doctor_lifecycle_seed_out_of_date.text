@@ -1,0 +1,4 @@
+Errors (the desk is broken):
+- lifecycle seed out of date: desk/lifecycle/execution-task_activates.md differs from the deskops package (attributes). Fix: deskops desk update --apply
+
+Run with --repair to attempt automatic fixes.
