@@ -1,15 +1,15 @@
 name: materialization-deskops-ui-view-service
 path: desk/materializations/materialization-deskops-ui-view-service.md
-source_hash: 14d64931d14355bdff40f1b9efe95b9f4867ee1a3905a8368b699f500477c59e
-content_hash: bd7b5cc9e274dc32e01688c82bcb225c883f4bcebc1ded20449f116b1756d65e
+source_hash: cc9b3492052ed75acc3732f99079173dc2080dfde79615fb458ec2532a1569cc
+content_hash: 187917fa548c1081bfc7f34d4be7ed324def2f4f13dbdbfbbbbfd44caeed3371
 field_hashes:
   id: e507c2d03aef8b70bca2435af621bff776ca531e42850678b4c61fd075f17488
   title: 8f221472efd2fcf8083521433b713892ff046e7b352a8fc8ae0a79f6164f21ce
   source_atoms: 9d2fcef74069da9274baf9b985f26d2deff34bbbf3ce01c51822d17f145960a0
   target_kind: 4a1933b06cf695fcff4acaba1fdbaa7f10ce109d3c7f57bbf62f6bb572658de8
-  target_identity: 87a205b4720527d7c673b84f24536fac7d9ad82678e0ff5e478c5c74e99815e3
+  target_identity: 142414161cc3973d39a4fc59151516a7f70e5f4cf50b086da1468ee92a71b839
   intent: fe807547274b6f18225dae3485e7a63ba3c1895cb6a6359ba9594856b8803111
-  validation: 51e7a10c7c3bf7d4df6d5582bb98e1e108fafa7237b7cfd951e5f26a993cbf09
+  validation: 3fc1784c1ebc23faf3c5b05099faede1417ded25b705ccf7840bd56ce777c16d
   tags: c5f26a7bad9e1f3864f8ecc3f8db485f2f014778f0505d0e0ee7eddaad4ae8da
 semantic_tags:
 - representation.markdown
@@ -18,4 +18,8 @@ semantic_tags:
 - topic:ui
 - type.knowledge.materialization_contract
 - workspace.desk.materializations
-provenance: null
+provenance:
+  by: agent
+  at: '2026-11-11T10:43:49Z'
+  authority: generated
+  via: save_document_payload
