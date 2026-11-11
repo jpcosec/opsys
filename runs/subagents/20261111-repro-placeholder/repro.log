@@ -1,0 +1,7 @@
+### Reproducción coord2 2026-11-11 sobre deskops main 9035ca60 (copia /dev/shm, fixture lifecycle_desk). COUNTS = placeholders en el archivo tras crear y tras cada edit task. 1 y 2: valor limpio, o extraído y reescrito: estable. 3: valor = texto crudo de la sección (con su placeholder) + texto nuevo, como en la corrida scion de CC33c (4305c7d9 pasó de 1 a 3): crece de a uno.
+COUNTS [1, 1, 1] 
+.COUNTS2 [1, 1, 1] 
+.COUNTS3 [1, 2, 3]
+        print("COUNTS3", counts)
+E       AssertionError: [1, 2, 3]
+tests/test_repro_edit_task_placeholder.py:64: AssertionError
