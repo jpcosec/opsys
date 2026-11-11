@@ -41,6 +41,9 @@ from deskops.services import closeout_gates as closeout_gates_module
 from deskops.services.atoms import reference_points_to_atom
 from deskops.services.references import alert_dangling
 from deskops.services.references import dangling_referrers
+from deskops.config import DeskConfig
+from deskops.identity import load_repository_registry
+from sldb.core.exceptions import SLDBStoreError
 
 #: Statuses ``closeout retire`` also removes when the history is empty: the pre-CC31 tasks left
 #: superseded or in a drawer status at a node, which no transition can close (task.debug d3).
@@ -49,6 +52,7 @@ _RETIRABLE_WITHOUT_HISTORY = frozenset({"superseded"}) | DRAWER_STATUSES
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
     from deskops.services.closeout_gates import CloseoutGraph
+    from deskops.services.closeout_gates import RepositoryReferences
 
 
 #: Engine of the ``evidence`` receipts ``deskops closeout verify`` writes (CC33a).
@@ -236,6 +240,14 @@ class ClosureService:
         ``files``. Every ref and test must resolve; a refusal writes nothing.
         The task is marked ``resolved`` and the closing commit says
         ``Closeout-Mode: resolved-by``.
+
+        A ref or test may be qualified by a repository of the desk's registry,
+        ``<repo-id>:<sha>`` or ``<repo-id>:<test path>``, when the work entered
+        another repository: it is checked in that repository's registered root
+        (a commit that is its HEAD or an ancestor; a .py file under one of its
+        tests/ directories, which the task's ``files`` do not widen) and kept as
+        written in the trailers. A registered root missing on this machine
+        refuses the close.
         """
         gates = self._ops.closeout_gates
         reason = " ".join((reason or "").split())
@@ -246,11 +258,22 @@ class ClosureService:
             )
 
         cleaned_refs = [str(ref).strip() for ref in refs or [] if str(ref).strip()]
-        unresolved_refs = [
-            ref
-            for ref in cleaned_refs
-            if not gates.reference_points_to_commit(ref) and not gates.reference_points_to_url(ref)
-        ]
+        cleaned_tests = [str(test).strip() for test in tests or [] if str(test).strip()]
+        try:
+            qualified = self._repository_references([*cleaned_refs, *cleaned_tests])
+        except SLDBStoreError as exc:
+            return ClosureOutcome(1, [f"Could not read the repository registry: {exc}"])
+        if refusal := self._missing_registered_root(qualified, cleaned_refs):
+            return refusal
+
+        def ref_is_commit(ref: str) -> bool:
+            entry, value = qualified.split(ref)
+            return (qualified.gates(entry) if entry is not None else gates).reference_points_to_commit(value)
+
+        def ref_is_url(ref: str) -> bool:
+            return qualified.split(ref)[0] is None and gates.reference_points_to_url(ref)
+
+        unresolved_refs = [ref for ref in cleaned_refs if not ref_is_commit(ref) and not ref_is_url(ref)]
         if unresolved_refs:
             return ClosureOutcome(
                 1,
@@ -259,13 +282,12 @@ class ClosureService:
                     "(need a commit that is HEAD or an ancestor, or an http(s) URL)."
                 ],
             )
-        if not any(gates.reference_points_to_commit(ref) for ref in cleaned_refs):
+        if not any(ref_is_commit(ref) for ref in cleaned_refs):
             return ClosureOutcome(
                 1,
                 ["Resolved-by needs at least one --ref naming a commit that is HEAD or an ancestor."],
             )
 
-        cleaned_tests = [str(test).strip() for test in tests or [] if str(test).strip()]
         if not cleaned_tests:
             return ClosureOutcome(
                 1,
@@ -281,7 +303,17 @@ class ClosureService:
         # below use its declared files all the same.
         payload, model_reads = self._read_closing_task(task_path)
         task_files = list(payload.get("files") or [])
-        unresolved_tests = [test for test in cleaned_tests if not gates.reference_points_to_test(test, files=task_files)]
+        if refusal := self._missing_registered_root(qualified, cleaned_tests):
+            return refusal
+
+        def test_is_accepted(test: str) -> bool:
+            entry, value = qualified.split(test)
+            if entry is not None:
+                # The task's files widen where tests live in this repository only.
+                return qualified.gates(entry).reference_points_to_test(value)
+            return gates.reference_points_to_test(value, files=task_files)
+
+        unresolved_tests = [test for test in cleaned_tests if not test_is_accepted(test)]
         if unresolved_tests:
             return ClosureOutcome(
                 1,
@@ -327,6 +359,29 @@ class ClosureService:
         if outcome.exit_code != 0:
             task_path.write_bytes(original)
         return outcome
+
+    def _repository_references(self, references: list[str]) -> "RepositoryReferences":
+        """The splitter of ``<repo-id>:<value>`` references over the desk's own registry.
+
+        The registry (``desk/registry/repo-*.md``) is read only when a reference has a
+        ``:`` and is not a URL, so a close with plain references never depends on it.
+        """
+        entries: list[Any] = []
+        own_identity: str | None = None
+        if any(":" in ref and not closeout_gates_module.URL_PATTERN.fullmatch(ref) for ref in references):
+            entries = load_repository_registry(self.desk_root, self.root)
+            own_identity = DeskConfig.load(self.desk_root).project_identity
+        return closeout_gates_module.RepositoryReferences(self.root, entries, own_identity=own_identity)
+
+    @staticmethod
+    def _missing_registered_root(
+        qualified: "RepositoryReferences", references: list[str]
+    ) -> ClosureOutcome | None:
+        for ref in references:
+            entry, _value = qualified.split(ref)
+            if entry is not None and (message := qualified.missing_root_message(entry)):
+                return ClosureOutcome(1, [message])
+        return None
 
     def close_retired(
         self,
