@@ -51,5 +51,11 @@ class InitCLI:
 
         for change in write_lifecycle_graph(target_path):
             print(f"Lifecycle graph: {change}")
+        # The store declares the namespaces of the seeded desk/atoms/tag-namespaces.yaml for
+        # sldb's tag family (CC35d resto); a declaration already equal is left alone.
+        from deskops.atom_tags import sync_tag_declaration
+
+        if sync_tag_declaration(target_path):
+            print("Declared the tag namespaces of desk/atoms/tag-namespaces.yaml in .sldb/store.yaml.")
         print("Initialization complete.")
         return 0
