@@ -58,8 +58,9 @@ Superficie: solo `deskops desk update` (dry-run sin `--apply`; `--apply` migra).
 - `deskops/cli/commands/desk.py` (`update`): con `--apply` migra antes de todo lo demás (antes del registro de
   modelos) e imprime `Migrating legacy task states...` y una línea b4 por campo; el reporte trae
   `Legacy task states to migrate` (dry-run) e `Invalid task documents (not written)` con la sugerencia de b1;
-  `sldb stores check` sin JSON ya no levanta `DeskopsEnvironmentError`: se reporta como
-  `Store check failed (...)` y `--apply` se salta las reparaciones del store (ver desvíos). `--apply` sale 0 si
+  si `sldb stores check` no da JSON y hay tareas inválidas nombradas, ya no levanta `DeskopsEnvironmentError`: se
+  reporta como `Store check failed (...)` y `--apply` se salta las reparaciones del store (ver desvíos). Sin tareas
+  inválidas sigue siendo error de entorno (exit 3), como fija `test_cli`. `--apply` sale 0 si
   migró todo o no había nada, 1 si queda algún no migrable. Las líneas `inconsistent task lifecycle ...` de la
   migración de task_type ya no se imprimen: las cubre el reporte nuevo.
 - `deskops/doctor_findings.py`: `invalid_task_findings(root)`, una línea de error por tarea inválida
@@ -195,9 +196,12 @@ Sin `--apply`; nada se aplicó en ningún desk real. Salidas: `~/proyectos/SLDB_
 | ~/proyectos/SLDB_1/UIs/sldb-ui | — | 17: `current_node: 'checklist-...'` sin history |
 | /srv/repos/antonia_gateway, ftcourier, manifest, plantilla_cliente, shared_etl-plataforma; deskops, sldb, spec2viz, scion, pron, graph_ui, marcado-ui | — | — |
 
-El kit Chatbot_Infra coincide con b11 (19 heredadas). spec2viz y graph_ui reportan `Store check failed (... AtomDoc)`:
-un átomo inválido, ajeno a esta tarea, que antes hacía caer `desk update` con `DeskopsEnvironmentError` y ahora se
-reporta.
+El kit Chatbot_Infra coincide con b11 (19 heredadas). spec2viz y graph_ui tienen un `AtomDoc` inválido, ajeno a esta
+tarea, que hace fallar `sldb stores check` (H1). La corrida de esta tabla (antes del rebase) lo reportaba como
+`Store check failed (... AtomDoc)`. Tras el rebase, `test_cli::test_desk_update_exits_three_when_stores_check_has_no_json`
+fija que un `stores check` sin JSON es un error de entorno (exit 3). Por eso `desk update` solo reporta y sigue cuando
+hay tareas inválidas ya nombradas (d2); si no, levanta `DeskopsEnvironmentError` como antes. Para esos dos desks el
+comportamiento queda como en main.
 
 ## Rebase sobre origin/main 4338f90b (CC33b)
 

@@ -334,11 +334,16 @@ class DeskCLI:
                     raise DeskopsEnvironmentError(
                         f"Could not parse 'sldb stores check' output for {store_dir}: {exc}"
                     ) from exc
-            if payload is None and result.returncode != 0:
-                # sldb stops at the first document its model rejects (a task listed below as an
-                # invalid task document): reported, and the rest of the update goes on (d2).
+            if payload is None and result.returncode != 0 and invalid_tasks + legacy_pending:
+                # sldb stops at the first document its model rejects, one of the tasks listed below
+                # as invalid: reported, and the rest of the update goes on (d2).
                 reason = (result.stderr or "").strip().splitlines()
                 store_check_error = f"exit code {result.returncode}" + (f": {reason[0]}" if reason else "")
+            elif payload is None and result.returncode != 0:
+                reason = f": {result.stderr.strip()}" if result.stderr and result.stderr.strip() else ""
+                raise DeskopsEnvironmentError(
+                    f"'sldb stores check' failed for {store_dir} with exit code {result.returncode}{reason}"
+                )
             elif payload is None:
                 raise DeskopsEnvironmentError(
                     f"'sldb stores check' produced no JSON output for {store_dir}"
