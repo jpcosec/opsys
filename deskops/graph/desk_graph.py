@@ -112,6 +112,13 @@ REFERENCE_FIELDS = (
 # part of an atom name, not a task reference; a real reference starts at a non-word, non-hyphen.
 TASK_OR_ISSUE = MentionPattern(regex=r"(?<![\w-])(?P<kind>task|issue)-[a-z0-9][a-z0-9-]*\b", target="{kind}:{0}")
 ATOM = MentionPattern(regex=r"\batom-[a-z0-9][a-z0-9-]*\b", target="atom:{0}")
+# The same atom named with its kind, `atom:atom-<slug>`, as a whole token: `xatom:atom-a`,
+# `atom:atom-a.b` and `atom:atom-a/b` name nothing (the token is longer than the atom id).
+ATOM_ID = MentionPattern(regex=r"(?<![\w:./-])atom:atom-[a-z0-9][a-z0-9-]*(?![\w:/-]|\.\w)", target="{0}")
+# A bullet of the drawer Board names one drawer entry: `- `tasks/<id>.md``, `- `<id>``.
+DRAWER_BULLET = MentionPattern(
+    regex=r"(?<=^- `)(?:tasks/|issues/)?(?P<id>(?P<kind>task|issue)-[^`\s/]+?)(?:\.md)?(?=`)", target="{kind}:{id}",
+)
 SOURCE_PATH = MentionPattern(
     regex=r"(?<![\w/.-])(?P<path>(?:deskops|desk|tests|spec|docs)/[A-Za-z0-9_./-]+\.(?:py|yaml|yml|md|toml|json|mmd))(?![\w/.-])",
     target="{path}",
@@ -119,7 +126,7 @@ SOURCE_PATH = MentionPattern(
 SECTION_MENTIONS = (
     SectionMentions(
         headings=("related atoms", "source atoms", "related tasks", "related issues", "related task", "related issue"),
-        patterns=(ATOM, TASK_OR_ISSUE), role=DEFAULT_ROLE,
+        patterns=(ATOM_ID, ATOM, TASK_OR_ISSUE), role=DEFAULT_ROLE,
     ),
     SectionMentions(headings=("source", "sources", "diagram source", "diagram sources"), patterns=(SOURCE_PATH,), role=DEFAULT_ROLE, kinds=("diagram",)),
 )
@@ -129,6 +136,12 @@ LINE_MENTIONS = (
         kinds=("task", "issue"), excluded_path_prefixes=("desk/drawer/tasks",), skipped_frontmatter_fields=PROVENANCE_FIELDS,
         patterns=(SOURCE_PATH,), role=DEFAULT_ROLE, locator="source-file-reference",
     ),
+    # `atom:atom-<slug>` anywhere in a task or issue: what `atoms merge` rewrites in prose.
+    LineMentions(
+        kinds=("task", "issue"), excluded_path_prefixes=("desk/drawer/tasks",), skipped_frontmatter_fields=PROVENANCE_FIELDS,
+        patterns=(ATOM_ID,), role=DEFAULT_ROLE, locator="atom-mention",
+    ),
+    LineMentions(kinds=("drawer_board",), patterns=(DRAWER_BULLET,), role=DEFAULT_ROLE, locator="drawer-bullet"),
 )
 MISSING_TARGET_KINDS = (
     MissingTargetKind(parts=("docs", "diagrams"), kind="diagram"),

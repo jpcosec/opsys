@@ -14,8 +14,6 @@ from typing import Any
 from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
-from sldb.api import Transaction
-
 from deskops import doc_access
 from deskops.atom_tags import axis_folder_relpath
 from deskops.atom_tags import axis_values
@@ -27,6 +25,8 @@ from deskops.models import AtomDoc
 from deskops.models import PillDoc
 from deskops.models.validation import check_document
 from deskops.models.validation import validated
+from deskops.services.references import referrers_of
+from deskops.services.references import rewrite_referrers
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
@@ -118,9 +118,6 @@ class AtomsService:
 
     def _resolve_artifact_selector(self, artifact_id: str, directory: Path, selector: str) -> Path:
         return doc_access.resolve_artifact_selector(self.root, artifact_id, directory, selector)
-
-    def _reference_points_to_atom(self, reference: str) -> bool:
-        return reference_points_to_atom(self.root, reference)
 
     def list_artifacts(self, artifact_id: str) -> list[dict[str, Any]]:
         return doc_access.list_artifacts(self.root, artifact_id)
@@ -219,7 +216,7 @@ class AtomsService:
         path = self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)
         payload = self._read_doc(path, AtomDoc)
         atom_id = str(payload.get("id") or path.stem)
-        inbound_references = self._find_inbound_atom_references(atom_id, excluded_path=path)
+        inbound_references = [item.location for item in referrers_of(self.root, path)]
         if inbound_references and not force:
             refs = "; ".join(inbound_references)
             raise ValueError(
@@ -306,7 +303,7 @@ class AtomsService:
         path = self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)
         payload = self._read_doc(path, AtomDoc)
         atom_id = str(payload.get("id") or path.stem)
-        inbound_references = self._find_inbound_atom_references(atom_id, excluded_path=path)
+        inbound_references = [item.location for item in referrers_of(self.root, path)]
         if inbound_references and not force:
             refs = "; ".join(inbound_references)
             raise ValueError(
@@ -386,15 +383,9 @@ class AtomsService:
                 "Re-run with --force to keep the target atom semantics and preserve the source atom as a redirect stub."
             )
 
-        inbound_references = self._find_inbound_atom_references(source_id, excluded_path=source_path)
-        rewritten_references: list[str] = []
-
         with doc_access.desk_transaction(self.root) as transaction:
-            rewritten_references = self._rewrite_inbound_atom_references(
-                source_id,
-                target_id,
-                excluded_paths={source_path, target_path},
-                transaction=transaction,
+            rewritten_references = rewrite_referrers(
+                self.root, source_path, target_path, transaction=transaction, excluded=(target_path,)
             )
             merged_answer = self._merge_atom_answers(target_payload, source_payload)
             target_payload["answer"] = merged_answer
@@ -763,72 +754,6 @@ class AtomsService:
         if not path.is_absolute():
             path = self.root / path
         return path.exists()
-
-    def _find_inbound_atom_references(self, atom_id: str, *, excluded_path: Path | None = None) -> list[str]:
-        needle = f"atom:{atom_id}"
-        matches: list[str] = []
-        if not self.desk_root.exists():
-            return matches
-        for path in sorted(self.desk_root.rglob("*")):
-            if excluded_path is not None and path == excluded_path:
-                continue
-            if not path.is_file() or path.suffix not in {".md", ".yaml", ".yml", ".json", ".txt"}:
-                continue
-            try:
-                lines = path.read_text(encoding="utf-8").splitlines()
-            except (OSError, UnicodeDecodeError):
-                continue
-            for line_number, line in enumerate(lines, start=1):
-                for reference in re.findall(r"atom:[a-zA-Z0-9_.-]+", line):
-                    if reference == needle and self._reference_points_to_atom(reference):
-                        matches.append(f"{path.relative_to(self.root)}:{line_number}")
-                        break
-        return matches
-
-    def _rewrite_inbound_atom_references(
-        self,
-        source_id: str,
-        target_id: str,
-        *,
-        excluded_paths: set[Path] | None = None,
-        transaction: Transaction | None = None,
-    ) -> list[str]:
-        needle = f"atom:{source_id}"
-        replacement = f"atom:{target_id}"
-        rewritten: list[str] = []
-        excluded = {path.resolve() for path in (excluded_paths or set())}
-        if not self.desk_root.exists():
-            return rewritten
-        for path in sorted(self.desk_root.rglob("*")):
-            if path.resolve() in excluded:
-                continue
-            if not path.is_file() or path.suffix not in {".md", ".yaml", ".yml", ".json", ".txt"}:
-                continue
-            try:
-                original_text = path.read_text(encoding="utf-8")
-            except (OSError, UnicodeDecodeError):
-                continue
-            if needle not in original_text:
-                continue
-            pattern = re.compile(rf"(?<![A-Za-z0-9_.-]){re.escape(needle)}(?![A-Za-z0-9_.-])")
-            updated_text = pattern.sub(replacement, original_text)
-            if updated_text == original_text:
-                continue
-            changed_lines = [
-                line_number
-                for line_number, (before, after) in enumerate(
-                    zip(original_text.splitlines(), updated_text.splitlines()), start=1
-                )
-                if before != after
-            ]
-            if not changed_lines:
-                continue
-            if transaction is not None:
-                transaction.record(path)
-            path.write_text(updated_text, encoding="utf-8")
-            for line_number in changed_lines:
-                rewritten.append(f"{path.relative_to(self.root)}:{line_number}")
-        return rewritten
 
     def _retarget_atom_documents(self, retargets: dict[str, str]) -> bool:
         """Update tracked atom document paths in the .sldb store after moves.

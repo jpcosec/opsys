@@ -13,9 +13,8 @@ from pathlib import Path
 
 from deskops import doc_access
 from deskops.errors import DomainError
-from deskops.models import BoardDoc
-from sldb.runtime.validation import extract_model_data
-from sldb.runtime.validation import render_model_markdown
+from deskops.services.references import referrers_of
+from deskops.services.references import rewrite_referrers
 
 _DEDICATED_VERBS = (
     ("desk/tasks/", "deskops closeout commit|supersede|retire"),
@@ -23,8 +22,6 @@ _DEDICATED_VERBS = (
     ("desk/atoms/", "deskops atoms delete"),
     ("desk/registry/", "deskops repo remove"),
 )
-_REFERENCE_SURFACES = ("desk", "docs")
-_REFERENCE_FILES = ("README.md", "AGENTS.md")
 #: Paths `deskops doctor` and `deskops desk update` require as the desk's structure.
 _REQUIRED_STRUCTURE = frozenset(
     {
@@ -41,6 +38,7 @@ class RetireResult:
     path: str
     reason: str
     refs: tuple[str, ...]
+    #: The files the retired document was removed from: the Boards and tasks whose fields named it, and the drawer Board.
     boards: tuple[str, ...] = ()
 
 
@@ -53,7 +51,12 @@ def retire_document(
     force: bool = False,
     ref_resolves=None,
 ) -> RetireResult:
-    """Delete one file under desk/ (and its store record) after checking the reason, refs and inbound links."""
+    """Delete one file under desk/ (and its store record) after checking the reason, refs and inbound links.
+
+    The declared fields that name it (`sldb.api.referrers`: a Board's or a task's `pills`) lose that
+    entry in the same transaction that deletes it, so a failure leaves every file as it was. A
+    mention in prose is never rewritten: it refuses the retirement unless `force` is given.
+    """
     root = root.resolve()
     path = Path(target)
     path = (path if path.is_absolute() else root / path).resolve()
@@ -86,29 +89,26 @@ def retire_document(
     if unresolved:
         raise DomainError(f"Unresolvable --ref: {', '.join(unresolved)} (use an ancestor commit or an existing path).")
 
-    updates = _board_pill_updates(root, path, relative)
     drawer_board = root / "desk" / "drawer" / "tasks" / "Board.md"
     unrouted_drawer = closed_issue and drawer_board.is_file() and _drawer_bullets_removed(drawer_board, path.stem) is not None
     if not force:
-        skip = _handled_boards(root, updates, path, relative)
-        if unrouted_drawer:
-            skip.add(drawer_board.resolve())
-        inbound = _inbound_references(root, path, relative, skip=skip)
-        if inbound:
+        # Declared fields (a Board's or a task's `pills`) are removed below; a mention in prose is never rewritten.
+        excluded = (drawer_board,) if unrouted_drawer else ()
+        kept = [item.path for item in referrers_of(root, path, excluded=excluded) if item.referrer.origin != "schema"]
+        if kept:
             raise DomainError(
-                f"Refusing to retire {relative}: still referenced by {', '.join(inbound)}. "
+                f"Refusing to retire {relative}: still referenced by {', '.join(dict.fromkeys(kept))}. "
                 "Update those first, or pass --force."
             )
 
     with doc_access.desk_transaction(root) as transaction:
-        for board_path, payload in updates:
-            _write_board(root, board_path, payload)
+        unrouted = rewrite_referrers(root, path, None, transaction=transaction)
         if unrouted_drawer:
             if transaction is not None:
                 transaction.record(drawer_board)
             drawer_board.write_text(_drawer_bullets_removed(drawer_board, path.stem), encoding="utf-8")
         doc_access.delete_doc(root, path)
-    boards = [board_path.relative_to(root).as_posix() for board_path, _ in updates]
+    boards = list(dict.fromkeys(location.rsplit(" (", 1)[0] for location in unrouted))
     if unrouted_drawer:
         boards.append(drawer_board.relative_to(root).as_posix())
     return RetireResult(path=relative, reason=reason, refs=clean_refs, boards=tuple(boards))
@@ -147,58 +147,6 @@ def _drawer_bullets_removed(board: Path, stem: str) -> str | None:
     return kept if kept != text else None
 
 
-def _pill_reference_matches(reference: str, relative: str, stem: str) -> bool:
-    return reference in {
-        relative,
-        f"desk/contexts/{stem}",
-        f"desk/contexts/{stem}.md",
-        stem,
-    }
-
-
-def _board_pill_updates(root: Path, path: Path, relative: str) -> list[tuple[Path, dict]]:
-    """Boards whose ``pills`` list routes ``relative``, with that entry removed."""
-    if not relative.startswith("desk/contexts/"):
-        return []
-    tasks_dir = root / "desk" / "tasks"
-    if not tasks_dir.is_dir():
-        return []
-    updates: list[tuple[Path, dict]] = []
-    for board_path in sorted(tasks_dir.glob("*.md")):
-        if board_path.name != "Board.md" and not board_path.stem.startswith("board-"):
-            continue
-        try:
-            payload = extract_model_data(BoardDoc, board_path.read_text(encoding="utf-8"))
-        except (OSError, UnicodeDecodeError, ValueError):
-            continue
-        payload.setdefault("id", board_path.stem)
-        pills = [str(item) for item in payload.get("pills") or []]
-        kept = [item for item in pills if not _pill_reference_matches(item, relative, path.stem)]
-        if kept == pills:
-            continue
-        payload["pills"] = kept
-        updates.append((board_path, payload))
-    return updates
-
-
-def _handled_boards(root: Path, updates: list[tuple[Path, dict]], path: Path, relative: str) -> set[Path]:
-    """Boards whose rewrite removes every textual reference to the retired pill."""
-    needles = {relative, path.stem}
-    handled: set[Path] = set()
-    for board_path, payload in updates:
-        try:
-            rewritten = render_model_markdown(BoardDoc, payload) + "\n"
-        except ValueError:
-            continue
-        if not any(needle in rewritten for needle in needles):
-            handled.add(board_path.resolve())
-    return handled
-
-
-def _write_board(root: Path, board_path: Path, payload: dict) -> None:
-    doc_access.write_doc(root, board_path, BoardDoc, payload)
-
-
 def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:
     if ref_resolves is not None:
         return ref_resolves(ref)
@@ -207,27 +155,3 @@ def _ref_resolves(root: Path, ref: str, ref_resolves) -> bool:
     from deskops.services.closeout_gates import CloseoutGatesService
 
     return CloseoutGatesService(root).reference_points_to_commit(ref)
-
-
-def _inbound_references(root: Path, path: Path, relative: str, *, skip: set[Path] | None = None) -> list[str]:
-    skip = skip or set()
-    needles = {relative}
-    if path.suffix == ".md":
-        needles.add(path.stem)
-    found: list[str] = []
-    candidates: list[Path] = []
-    for surface in _REFERENCE_SURFACES:
-        base = root / surface
-        if base.is_dir():
-            candidates.extend(sorted(base.rglob("*.md")))
-    candidates.extend(root / name for name in _REFERENCE_FILES if (root / name).is_file())
-    for candidate in candidates:
-        if candidate.resolve() == path or candidate.resolve() in skip:
-            continue
-        try:
-            text = candidate.read_text(encoding="utf-8")
-        except (OSError, UnicodeDecodeError):
-            continue
-        if any(needle in text for needle in needles):
-            found.append(candidate.relative_to(root).as_posix())
-    return found

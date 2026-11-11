@@ -411,7 +411,13 @@ deskops promote inbox-to-drawer-task manual-inbox-note --root .
 
 `deskops drawer remove` removes the file, its tracking, and its drawer-board
 bullets. It refuses when an active task records the entry in `from_drawer`
-unless `--force` is passed.
+unless `--force` is passed. Any other reference to the entry is left as it is.
+Each file that holds one is reported on stderr as
+`alert: <entry> still referenced by <file>`, and the exit code does not change.
+These references are what `sldb.api.referrers` finds over the desk graph: a
+drawer-board bullet in another form, such as `` `tasks/<id>.md` ``, or a task
+that names the entry. `deskops closeout` reports the files that still name the
+closed task in the same way.
 
 ```bash runnable
 deskops message send "Remove this candidate." \
@@ -425,8 +431,12 @@ deskops drawer remove task-removable-candidate --root .
 `deskops retire` removes one obsolete file under `desk/` that has no dedicated
 verb (pills, inbox notes, steps, roles, runtimes, FAQ docs, materializations,
 leftovers), with a reason and a `--ref` that resolves to an ancestor commit or
-an existing path. It refuses while other desk or docs files still reference the
-document unless `--force` is passed. Tasks, drawer entries, atoms, and registry
+an existing path. The declared fields that name the document lose that entry
+in the transaction that deletes it. For a pill, these are the `pills` of the
+Board and of every task. A mention in prose, such as a path in a task body, is
+never rewritten, so retire refuses while one remains unless `--force` is passed.
+Both kinds of reference are what `sldb.api.referrers` finds: the store's field
+index, and the mention patterns of the desk graph. Tasks, drawer entries, atoms, and registry
 entries keep their own verbs: `closeout`, `drawer remove`, `atoms delete`,
 `repo remove`.
 
@@ -767,8 +777,11 @@ deskops atoms create atom-from-diagram \
 
 ### Merge, delete, and validate
 
-Merge rewrites inbound `atom:<source>` references to the target and keeps the
-source as a redirect stub. `atoms split` is not shown here: since CC35a sldb
+Merge rewrites every reference to the source atom so that it names the target,
+in the same transaction as the merge. It covers fields such as a task's
+`atoms`, `atom:atom-<source>` anywhere in a task or issue, and a bare
+`atom-<source>` under a Related Atoms heading. The source stays as a redirect
+stub. `atoms delete` and `atoms split` find the same references. `atoms split` is not shown here: since CC35a sldb
 refuses headings inside a field, so a sectioned atom cannot be written through
 the CLI (see the drawer entry
 task-atoms-split-no-se-puede-alimentar-por-el-cli-desde-cc35a-sldb-rechaza-encabezados-en-el-field).
