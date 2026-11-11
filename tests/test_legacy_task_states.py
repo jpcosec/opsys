@@ -14,6 +14,7 @@ cancelled and a closed one (b6):
 from __future__ import annotations
 
 import contextlib
+import difflib
 import io
 import itertools
 from pathlib import Path
@@ -199,8 +200,11 @@ def test_desk_update_apply_migrates_by_the_table_reports_the_rest_and_a_second_r
         assert after[rel] != before[rel]
         extract_model_data(TaskDoc, after[rel])  # the model reads it now
         # Only the table's field moved.
-        changed = [a for a, b in zip(after[rel].splitlines(), before[rel].splitlines()) if a != b]
-        assert len(changed) == 1 and changed[0].startswith(("current_node: ''", "history:"))
+        diff = [d for d in difflib.ndiff(before[rel].splitlines(), after[rel].splitlines()) if d[:1] in "+-"]
+        assert diff in (
+            ["- current_node: ritual-execution", "+ current_node: ''"],
+            ["- history: []", "+ history:", "+ - superseded"],
+        ), diff
 
     assert main(["desk", "update", "--root", str(root), "--apply"]) == 1
     second = capsys.readouterr().out
