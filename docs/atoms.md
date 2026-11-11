@@ -43,9 +43,17 @@ Atoms use namespaced semantic tags for retrieval and grouping (`namespace:value`
 
 When creating tags, you must use an existing namespace defined in `desk/atoms/tag-namespaces.yaml` (such as `system`, `topic`, `layer`, `domain`, or `pattern`). 
 
+### Who checks the namespaces and the domain parents
+
+sldb does, as its rule family `builtin:tag_namespace:<name>` (sldb `docs/architecture/tags.md`). The desk's store declares the namespaces of `desk/atoms/tag-namespaces.yaml` in `.sldb/store.yaml` (`tag_namespaces`): `domain` is anchored by `CrossroadDoc.path` with `value: bare` (the crossroad of path `a.b` anchors `domain:a.b`), and `tag_models: [AtomDoc, ProtoAtomDoc]` limits the checks to atoms and protoatoms, so tasks, pills and the rest keep namespaces the registry does not declare without a finding. The file wins: `deskops init`, `deskops desk update --apply` and `deskops atoms add-namespace` write the declaration when it differs (a second run changes nothing), and `deskops desk update` reports `- Tag namespace declaration: .sldb/store.yaml differs from desk/atoms/tag-namespaces.yaml` until then. A store without `store.yaml` gets the declaration its index implies (sldb `declare_store`) plus the tags.
+
+- `deskops atoms validate` reports sldb's findings in the same words as before: `Unknown atom tag namespace '<ns>' for tag '<tag>'.` and `no written crossroad for domain path '<path>'`. They come from `sldb.api.tag_check`, so only documents the store tracks have them: a file written by hand is checked once `deskops desk update --apply` tracks it. `sldb stores check` and `deskops doctor` report the same findings.
+- Creating an atom, a protoatom or a crossroad is refused before anything is written, with `Unknown atom tag namespace ...` or `Write the parent first: no written crossroad for <paths>. ...` (exit 1). This is a bridge until sldb evaluates `on_write` when a document is created (sldb H4, q18): deskops reads only sldb's data (`tag_namespaces`, the anchors of `tag_tree`, `TagNamespace.required`).
+- A desk without a store (`deskops desk install`), or whose store declares no namespaces, checks neither namespaces nor domain parents.
+
 Desks can declare one tag namespace as the physical folder axis for atoms by setting `atom_folder_axis` in `desk/config.json`. The default is `null`, keeping atoms in a flat layout under `desk/atoms/`; the scaffolded `desk/config.json` does not set it. The value must be a namespace registered in `desk/atoms/tag-namespaces.yaml`, and `deskops atoms reorganize` exits non-zero while no axis is configured.
 - Only the axis namespace decides folder placement; all other tags are preserved but do not affect paths.
-- An atom with exactly one `axis:<value>` tag is placed under `desk/atoms/<value-as-folders>/` (e.g. dot-notation values like `mepu.licitaciones` become `mepu/licitaciones/`).
+- An atom with exactly one `axis:<value>` tag is placed under `desk/atoms/<value-as-folders>/` (e.g. dot-notation values like `mepu.licitaciones` become `mepu/licitaciones/`); the folder is sldb's `tag_folder`. A tag value with an empty segment (`a..b`, `a.`) is refused by the atom model, so it never reaches the folder.
 - An atom with multiple values of the axis namespace is rejected with an explicit error to maintain deterministic physical placement.
 - Atoms without an axis tag stay flat.
 
