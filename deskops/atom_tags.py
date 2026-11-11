@@ -166,6 +166,7 @@ def wanted_tag_declaration(root: Path) -> tuple[list[Any], list[str]]:
 
     from deskops.models.atom import DOMAIN_NAMESPACE
 
+    root = Path(root)
     namespaces = [
         TagNamespace(name=name, anchored_by=dict(DOMAIN_ANCHOR) if name == DOMAIN_NAMESPACE else None)
         for name in sorted(load_namespaces(default_registry_path(root)))
@@ -185,6 +186,7 @@ def sync_tag_declaration(root: Path, *, apply: bool = True) -> bool:
     from sldb.api.stores.store_declaration import load_declaration
     from sldb.api.stores.store_declaration import save_declaration
 
+    root = Path(root)
     store = tag_store(root)
     if store is None:
         return False
