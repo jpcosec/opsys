@@ -213,3 +213,46 @@ cierre (`_gate_outcome` → `closeout_rule_findings`) solo corre en `_close` con
 `run_gates=False`: sin regla de cierre, con `Closeout-Mode: legacy-resolved` y leyendo la tarea por frontmatter. No se
 reintrodujo nada de lo que CC33b borró (`__closeout_evidence__`, `closeout_evidence_verified`, `_add_closeout_facts`
 no aparecen en el diff de esta rama contra main). CHANGELOG se fusionó solo; `.sldb` no chocó (la rama no lo toca).
+
+## Tests (de a uno, con la guarda; TMPDIR=/dev/shm, MemoryMax=2G)
+
+Logs: `~/proyectos/SLDB_1/coord2-ccconfig/legacy/tests2/` (tras el rebase sobre 4338f90b) y `tests3/` (tras `7939bb54`).
+Guarda de pytest: la ampliada por el coordinador (ignora integ-deskops, AntonIA, mepu y cwd fuera de SLDB_1//dev/shm).
+
+| archivo | dónde | resultado |
+|---|---|---|
+| test_legacy_task_states | worktree (7939bb54) | 24 passed, rc 0 |
+| test_task_lifecycle_validator | worktree (7939bb54) | 37 passed, rc 0 |
+| test_closeout | worktree | 58 passed, rc 0 |
+| test_closeout_atomless / _declared_evidence / _evidence_receipts / _gates / _resolved_by / _rules / _skill_links / _test_paths | worktree | 15 / 19 / 5 / 3 / 19 / 12 / 3 / 31 passed, rc 0 |
+| test_cli | copia /dev/shm en 7939bb54 | 101 passed, rc 0 (en 78c6e779 fallaba `test_desk_update_exits_three_when_stores_check_has_no_json[-127]`; arreglado en 7939bb54) |
+| test_output_goldens (incluye `test_help_goldens`) | copia /dev/shm en 78c6e779 | 7 passed, rc 0, sin `--update-golden` |
+| test_command_registry, test_scaffold_golden | copia /dev/shm | 3, 3 passed, rc 0 |
+| test_retire_cli, test_doctor_alerts, test_doctor_unmodeled_surfaces, test_doctor_model_registration, test_desk_sync, test_task_types, test_federated_models, test_lifecycle_graph, test_activation_rules, test_doc_readability, test_cli_grammar | worktree (78c6e779) | 11, 5, 4, 8, 8, 16, 2, 9, 10, 6, 2 passed, rc 0 |
+
+**Antes del arreglo** (`tests/test_legacy_task_states.py` sobre un worktree detached en `cd759192`, con la tabla
+nueva reemplazada por un stub; log `t-legacy-before.log`): 24 failed. Los tests de comportamiento fallan por el
+defecto: `desk update` dry-run y `--apply` salen con 3 (caen con `'sldb stores check' failed`), doctor nombra 0 de las
+7 tareas inválidas, y retire no rechaza por adelantado. Los 19 unitarios fallan porque la tabla no existe.
+
+## Aceptación, línea por línea
+
+| línea | evidencia |
+|---|---|
+| Causa raíz escrita y commiteada antes del arreglo | commit `f045f583` (antes `85f034c5`), anterior al arreglo `817278bc` |
+| Test de reproducción sobre tmp_path con las 7 fixtures de b6: antes falla | `t-legacy-before.log`: 24 failed (desk update exit 3, doctor sin hallazgos por tarea) |
+| ...después `desk update --apply` migra según la tabla con las líneas de b4 | `test_desk_update_apply_migrates_by_the_table_...`: 5 líneas `<archivo>: <campo> <antes> -> <después>`; golden `tests/fixtures/golden/output/desk_update_legacy_migration.text` |
+| ...reporta los no migrables con rc 1 | mismo test: las 2 draft con el texto del validador y la sugerencia de b1, rc 1 |
+| ...una segunda corrida no migra nada | mismo test: sin líneas de migración, archivos byte-idénticos, solo los no migrables |
+| doctor con una tarea inválida la reporta y sigue (registro de modelos incluido) | `test_doctor_reports_each_invalid_task_and_runs_every_other_check`: 7 líneas `Invalid task document`, rc 1, "the desk is broken", `_check_models` corre; golden `doctor_invalid_task.text` |
+| Goldens de ayuda idénticos salvo retire; los de salida, salvo los mensajes nuevos con golden propio | `test_output_goldens` 7 passed sin `--update-golden`; solo cambió `help/deskops_closeout_retire.txt` (la lista de status); dos goldens nuevos de b5 |
+| closeout retire de superseded, cancelled, deferred y candidate; coherente en ritual-execution sigue rechazado | `test_closeout.py::test_closeout_retire_removes_a_pre_cc31_task_the_model_rejects[4 status]`, `..._refuses_a_coherent_task_at_ritual_execution`; con store: `test_retire_waits_while_another_task_is_invalid_then_retires_the_migrated_task` |
+| Copia del gateway: `desk update --apply` y luego `stores check` rc 0 | `worker-gw-after.log`: rc 0 tras simular en la copia la decisión del dueño sobre los 2 no migrables (listados arriba); sin esa decisión, rc 1 por H1 |
+| doctor en los 6 desks antes y después | tabla de arriba, idéntico en los seis; sin hallazgos nuevos de d2 |
+| 4 pasos del workflow en clon limpio | los corre el coordinador (b2) |
+| doc y CHANGELOG | `docs/operator-manual.md` (doctor, desk update, retire); `CHANGELOG.md` (Fixed) |
+
+## Limpieza
+
+Borradas las copias en `/dev/shm/legacy-w` y el worktree `/dev/shm/deskops-legacy-base`; los worktrees de goldens
+`/dev/shm/deskops-legacy` se quitaron al terminar cada cola. Nada aplicado en desks reales; nada escrito en sldb.
