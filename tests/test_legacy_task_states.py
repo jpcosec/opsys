@@ -10,12 +10,18 @@ cancelled and a closed one (b6):
   decide, and writes nothing; ``--apply`` migrates (one ``<file>: <field> <before> -> <after>``
   line per field, b4), reports the rest with exit 1, and a second run migrates nothing (d1);
 * ``deskops doctor`` reports each invalid task and goes on with every other check (d2, b9).
+
+A non-terminal status with an empty history (``active``, ``ready_for_testing``; task.debug of
+non-terminal tasks, decision of the overlord) is migrated to ``draft`` at the entry node with a
+migration note in its summary (n1-n5).
 """
 from __future__ import annotations
 
 import contextlib
 import difflib
 import io
+from datetime import datetime
+from datetime import timezone
 import itertools
 from pathlib import Path
 import sys
@@ -33,6 +39,9 @@ from deskops.models import TaskDoc
 from deskops.models.task_lifecycle import UNMIGRATABLE_SUGGESTION
 from deskops.models.task_lifecycle import legacy_state_migration
 from deskops.models.task_lifecycle import lifecycle_errors
+from deskops.models.task_lifecycle import lifecycle_table
+from deskops.models.task_lifecycle import migration_note
+from deskops.models.task_lifecycle import summary_with_migration_note
 from deskops.operations import DeskopsOperations
 from sldb.cli import main as sldb_main
 from sldb.runtime.validation import extract_model_data
@@ -151,7 +160,7 @@ def test_a_coherent_task_outside_the_lifecycle_is_not_touched(status: str) -> No
 @pytest.mark.parametrize(
     ("status", "node", "history"),
     [
-        ("active", "ritual-execution", []),
+        ("ready_for_testing", "ritual-execution", ["task_activates"]),  # n4: a non-empty history stays with its owner
         ("draft", "ritual-closeout", ["task_activates", "task_hands_to_closeout"]),
         ("draft", "ritual-testing", []),
         ("closed", "ritual-testing", ["task_activates"]),
@@ -160,6 +169,103 @@ def test_a_coherent_task_outside_the_lifecycle_is_not_touched(status: str) -> No
 def test_any_other_incoherent_state_is_left_to_its_owner(status: str, node: str, history: list[str]) -> None:
     assert lifecycle_errors(status, node, history)
     assert legacy_state_migration(status, node, history) is None
+
+
+# ------------------------------------------------------------------ non-terminal statuses (n1, n2)
+@pytest.mark.parametrize(
+    ("status", "node", "expected"),
+    [
+        ("active", "ritual-execution", {"status": ("active", "draft")}),
+        ("ready_for_testing", "ritual-execution", {"status": ("ready_for_testing", "draft")}),
+        ("active", "ritual-testing", {"status": ("active", "draft"), "current_node": ("ritual-testing", "ritual-execution")}),
+        ("blocked", "ritual-closeout", {"status": ("blocked", "draft"), "current_node": ("ritual-closeout", "ritual-execution")}),
+        ("in_progress", "", {"status": ("in_progress", "draft")}),  # an empty node stays empty
+    ],
+)
+def test_the_table_migrates_a_non_terminal_status_with_an_empty_history_to_draft(status: str, node: str, expected: dict) -> None:
+    assert lifecycle_table().entry_node == "ritual-execution"
+    assert lifecycle_errors(status, node, [])
+    changes = legacy_state_migration(status, node, [])
+    assert changes == expected
+    after_node = changes.get("current_node", (node, node))[1]
+    assert lifecycle_errors("draft", after_node, []) == []
+
+
+def test_the_migration_note_is_one_line_before_the_previous_summary() -> None:
+    day = datetime(2026, 11, 11, tzinfo=timezone.utc).date()
+    note = "Migrada a draft por deskops desk update: estado heredado 'active' sin history (2026-11-11)."
+    assert migration_note("active", day) == note
+    assert summary_with_migration_note("", "active", day) == note
+    assert summary_with_migration_note("Antes.\nOtra línea.", "active", day) == f"{note} Antes. Otra línea."
+
+
+#: (title, status, current_node, history): the reproduction's two tasks plus one at another node.
+NON_TERMINAL = [
+    ("Activa heredada", "active", "ritual-execution", []),
+    ("Lista para testing heredada", "ready_for_testing", "ritual-execution", []),
+    ("Activa en testing heredada", "active", "ritual-testing", []),
+]
+
+
+def test_desk_update_apply_migrates_non_terminal_tasks_to_draft_with_a_note(lifecycle_desk: Path, capsys) -> None:
+    root = lifecycle_desk
+    paths = _make_tasks(root, NON_TERMINAL)
+    # One task carries a summary, which the note keeps after it.
+    testing = root / "desk" / "tasks" / "task-activa-en-testing-heredada.md"
+    text = testing.read_text(encoding="utf-8")
+    assert text.count("summary: ''\n") == 1
+    testing.write_text(text.replace("summary: ''\n", "summary: 'Resumen previo: con dos puntos.'\n"), encoding="utf-8")
+    before = _texts(paths)
+    assert _sldb_check(root) != 0
+    capsys.readouterr()
+
+    assert main(["desk", "update", "--root", str(root)]) == 1  # dry-run lists, writes nothing
+    dry = capsys.readouterr().out
+    assert "- Legacy task states to migrate: 3 task(s)" in dry
+    assert "Invalid task documents" not in dry
+    assert _texts(paths) == before
+
+    today = datetime.now(timezone.utc).date()
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
+    out = capsys.readouterr().out
+    lines = out.splitlines(keepends=True)
+    block = lines[0] + "".join(itertools.takewhile(lambda line: line.startswith("- desk/tasks/"), lines[1:]))
+    assert block == _golden("desk_update_nonterminal_migration.text")
+    assert "Invalid task documents" not in out
+    assert "Skipped the other repairs" not in out
+
+    after = _texts(paths)
+    for (title, status, _node, _history), (rel, path) in zip(NON_TERMINAL, paths.items()):
+        data = extract_model_data(TaskDoc, after[rel])  # the model reads it now
+        assert data["status"] == "draft"
+        assert data["current_node"] == "ritual-execution"
+        assert data["history"] == []
+        note = migration_note(status, today)
+        expected = f"{note} Resumen previo: con dos puntos." if path == testing else note
+        assert data["summary"] == expected
+        # Only status, summary and (when it moved) current_node changed.
+        diff = [d[2:].split(":", 1)[0] for d in difflib.ndiff(before[rel].splitlines(), after[rel].splitlines()) if d[:1] in "+-"]
+        assert set(diff) == ({"status", "summary", "current_node"} if path == testing else {"status", "summary"}), diff
+    assert _sldb_check(root) == 0
+
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
+    second = capsys.readouterr().out
+    assert "Migrating legacy task states" not in second
+    assert _texts(paths) == after
+
+
+def test_doctor_points_a_non_terminal_task_to_desk_update(lifecycle_desk: Path, capsys) -> None:
+    root = lifecycle_desk
+    _make_tasks(root, NON_TERMINAL[:1])
+    capsys.readouterr()
+    assert main(["doctor", "--root", str(root)]) == 1
+    out = capsys.readouterr().out
+    assert (
+        "- Invalid task document: desk/tasks/task-activa-heredada.md: status: 'active' is not an entry status; "
+        "a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through "
+        "deskops advance and deskops closeout). Migrate it with deskops desk update --apply.\n"
+    ) in out
+    assert UNMIGRATABLE_SUGGESTION not in out
 
 
 # ------------------------------------------------------------------ desk update (d1, d2)

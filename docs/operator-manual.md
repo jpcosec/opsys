@@ -178,7 +178,17 @@ deskops desk update --root ../sibling --apply
   `superseded` gets `history [superseded]` (its node stays); `closed`,
   `resolved`, `done`, `complete` and `cancelled` (pre-lifecycle resolved), and
   `deferred` and `candidate` (drawer), get `current_node ''`, outside the
-  lifecycle. Any other task the model rejects is listed under
+  lifecycle. A non-terminal status with an empty history (any status that is
+  not `draft` nor one of those above, nor a closeout status: `active`,
+  `ready_for_testing`, `blocked`...) is backed by no transition, so it gets
+  `status draft` at the entry node `ritual-execution` (an empty
+  `current_node` stays empty), reported as
+  `desk/tasks/<task>.md: status active -> draft` plus
+  `current_node <node> -> ritual-execution` when the node moves, and its
+  `summary` gets one line in front, `Migrada a draft por deskops desk update:
+  estado heredado '<status>' sin history (<YYYY-MM-DD UTC>).`, followed by the
+  previous summary. A non-empty history with an incoherent status is not
+  migrated. Any other task the model rejects is listed under
   `Invalid task documents (not written)` with the validator's text and what its
   owner can do; it is never written. The write goes to the frontmatter, not
   through sldb (sldb rebuilds every task of the store on each write and stops at

@@ -1,0 +1,5 @@
+Migrating legacy task states...
+- desk/tasks/task-activa-en-testing-heredada.md: status active -> draft
+- desk/tasks/task-activa-en-testing-heredada.md: current_node ritual-testing -> ritual-execution
+- desk/tasks/task-activa-heredada.md: status active -> draft
+- desk/tasks/task-lista-para-testing-heredada.md: status ready_for_testing -> draft

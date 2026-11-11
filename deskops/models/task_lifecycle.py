@@ -25,6 +25,9 @@ A task is coherent in one of three states:
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
+from datetime import datetime
+from datetime import timezone
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -68,6 +71,18 @@ CLOSEOUT_STATES: dict[str, tuple[str, str | None]] = {
     "superseded": ("superseded", None),
     "resolved": ("resolved-by", None),
 }
+
+#: The statuses that end a task or keep it outside the lifecycle: what closeout writes
+#: (``CLOSEOUT_STATES``, ``superseded`` among them), a pre-lifecycle resolved status and a drawer
+#: status. Any other status that is not an entry status is non-terminal (``active``,
+#: ``ready_for_testing``, ``blocked``...): with an empty history nothing backs it.
+TERMINAL_STATUSES: frozenset[str] = (
+    frozenset({"superseded"}) | frozenset(CLOSEOUT_STATES) | LEGACY_RESOLVED_STATUSES | DRAWER_STATUSES
+)
+
+#: The status a non-terminal task with an empty history is migrated to (decision of the
+#: overlord, 2026-11-11, revisable): no transition and no receipt back its advanced status.
+MIGRATED_STATUS = "draft"
 
 
 @dataclass(frozen=True, slots=True)
@@ -167,7 +182,11 @@ def legacy_state_migration(status: str, current_node: str, history: list[str]) -
 
     * ``superseded``: ``history [superseded]``, the closeout record; ``current_node`` stays;
     * a pre-lifecycle resolved status (``LEGACY_RESOLVED_STATUSES``) or a drawer status
-      (``DRAWER_STATUSES``) at a node: ``current_node ''``, outside the lifecycle.
+      (``DRAWER_STATUSES``) at a node: ``current_node ''``, outside the lifecycle;
+    * a non-terminal status that is not an entry status (not in ``TERMINAL_STATUSES`` nor
+      ``ENTRY_STATUSES``): ``status draft`` and, when ``current_node`` is set and is not the entry
+      node, ``current_node`` the entry node (an empty one stays empty). ``deskops desk update``
+      also prepends ``migration_note`` to the task's summary.
 
     The result is checked against ``lifecycle_errors``, so it never proposes an incoherent state.
     """
@@ -180,8 +199,27 @@ def legacy_state_migration(status: str, current_node: str, history: list[str]) -
         changes["history"] = ([], ["superseded"])
     elif status in LEGACY_RESOLVED_STATUSES | DRAWER_STATUSES and current_node:
         changes["current_node"] = (current_node, "")
+    elif status not in TERMINAL_STATUSES and status not in ENTRY_STATUSES:
+        changes["status"] = (status, MIGRATED_STATUS)
+        entry_node = lifecycle_table().entry_node
+        if current_node and current_node != entry_node:
+            changes["current_node"] = (current_node, entry_node)
     else:
         return None
+    after_status = changes.get("status", (status, status))[1]
     after_node = changes.get("current_node", (current_node, current_node))[1]
     after_history = changes.get("history", (history, history))[1]
-    return None if lifecycle_errors(status, after_node, after_history) else changes
+    return None if lifecycle_errors(after_status, after_node, after_history) else changes
+
+
+def migration_note(status: str, today: date | None = None) -> str:
+    """The line the migration of a non-terminal status prepends to the task's summary."""
+    day = (today or datetime.now(timezone.utc).date()).isoformat()
+    return f"Migrada a draft por deskops desk update: estado heredado '{status}' sin history ({day})."
+
+
+def summary_with_migration_note(summary: str, status: str, today: date | None = None) -> str:
+    """``'<note> <previous summary>'`` on one line; the note alone when the summary was empty."""
+    previous = " ".join(str(summary or "").split())
+    note = migration_note(status, today)
+    return f"{note} {previous}" if previous else note

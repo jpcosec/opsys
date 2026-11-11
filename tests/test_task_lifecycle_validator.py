@@ -289,10 +289,10 @@ def test_a_consistent_direct_write_is_accepted(task_desk, capsys) -> None:
 
 
 # ------------------------------------------------------------------ desk update reports, never writes
-ACTIVE_ERROR = (
-    "status: 'active' is not an entry status; a task with an empty history at 'ritual-execution' has "
-    "status 'draft' (status changes only through deskops advance and deskops closeout)"
-)
+#: A non-empty history with an incoherent status: the migration table leaves it to its owner (an
+#: empty history with a non-terminal status is migrated to draft instead, task.debug of
+#: non-terminal tasks).
+ACTIVE_ERROR = "status: 'ready_for_testing' does not follow history 'task_activates'; expected 'active'"
 
 
 def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(lifecycle_desk: Path, capsys) -> None:
@@ -303,7 +303,7 @@ def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(lifecycl
 
     root = lifecycle_desk
     text = (
-        "---\nid: task-legacy\nstatus: active\ncurrent_node: ritual-execution\nhistory: []\ntask_type: code\n---\n\n"
+        "---\nid: task-legacy\nstatus: ready_for_testing\ncurrent_node: ritual-testing\nhistory:\n- task_activates\ntask_type: code\n---\n\n"
         "# Legacy\n\n## Goal\n\ng\n"
     )
     task = root / "desk" / "tasks" / "task-legacy.md"
@@ -328,7 +328,14 @@ def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_d
     desk update names the task with the validator's message, does not crash, writes nothing and
     leaves the store repairs for after the fix."""
     root, task = task_desk
-    text = task.read_text(encoding="utf-8").replace("status: draft", "status: active")
+    text = task.read_text(encoding="utf-8")
+    assert text.count("status: draft\n") == 1 and text.count("current_node: ritual-execution\n") == 1
+    assert text.count("history: []\n") == 1
+    text = (
+        text.replace("status: draft\n", "status: ready_for_testing\n")
+        .replace("current_node: ritual-execution\n", "current_node: ritual-testing\n")
+        .replace("history: []\n", "history:\n- task_activates\n")
+    )
     task.write_text(text, encoding="utf-8")
     capsys.readouterr()
     assert main(["desk", "update", "--root", str(root), "--apply"]) == 1

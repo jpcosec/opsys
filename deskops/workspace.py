@@ -755,7 +755,8 @@ scaffold_desk = seed_desk
 
 # ---------------------------------------------------------------------------
 # Tasks with a legacy lifecycle state (desks migrated before CC31): a terminal or drawer status
-# with an empty history at a node. TaskDoc's validator (CC37) rejects them on every model read,
+# with an empty history at a node, or a non-terminal one (active, ready_for_testing) with an
+# empty history. TaskDoc's validator (CC37) rejects them on every model read,
 # so they are listed from the frontmatter, one finding per document, and the migration table of
 # ``deskops.models.task_lifecycle.legacy_state_migration`` writes the frontmatter directly.
 
@@ -770,6 +771,18 @@ class LegacyTaskState:
     errors: list[str]
     #: ``{field: (before, after)}`` the table writes; empty when the table does not decide it.
     changes: dict[str, tuple[Any, Any]] = field(default_factory=dict)
+    #: The task's summary before the migration (the migration to draft prepends its note to it).
+    summary: str = ""
+
+    def written_fields(self, today: Any = None) -> dict[str, Any]:
+        """The frontmatter fields the migration writes: the table's, plus the summary with the
+        migration note when the status moves to draft (n2). The note is not a report line."""
+        from deskops.models.task_lifecycle import summary_with_migration_note
+
+        written = {name: after for name, (_before, after) in self.changes.items()}
+        if "status" in self.changes:
+            written["summary"] = summary_with_migration_note(self.summary, str(self.changes["status"][0]), today)
+        return written
 
     def migration_lines(self) -> list[str]:
         """``<file>: <field> <before> -> <after>``, one per changed field (b4)."""
@@ -844,7 +857,8 @@ def legacy_task_states(root: Path) -> tuple[list[LegacyTaskState], list[LegacyTa
             continue
         changes = legacy_state_migration(status, node, history)
         target = migratable if changes else unmigratable
-        target.append(LegacyTaskState(path, rel, task_id, errors, changes or {}))
+        summary = data.get("summary")
+        target.append(LegacyTaskState(path, rel, task_id, errors, changes or {}, "" if summary is None else str(summary)))
     return migratable, unmigratable
 
 
@@ -852,15 +866,15 @@ def _migrated_frontmatter(frontmatter: str, changes: dict[str, Any]) -> str:
     """The frontmatter with only the named top-level fields rewritten, so nothing else moves.
 
     A field is its ``name:`` line plus the block-list items under it (``- x`` or indented);
-    a scalar is written plain (``''`` when empty), a list as a block list. A missing field is
-    appended.
+    a scalar is written plain (``''`` when empty, single-quoted when YAML would not read it back
+    as the same string), a list as a block list. A missing field is appended.
     """
     lines = frontmatter.split("\n")
     for name, after in changes.items():
         if isinstance(after, list):
             value_lines = [f"{name}:"] + [f"- {item}" for item in after]
         else:
-            value_lines = [f"{name}: {after}" if after else f"{name}: ''"]
+            value_lines = [f"{name}: {_yaml_scalar(after)}" if after else f"{name}: ''"]
         index = next((i for i, line in enumerate(lines) if line.startswith(f"{name}:")), None)
         if index is None:
             lines.extend(value_lines)
@@ -870,6 +884,17 @@ def _migrated_frontmatter(frontmatter: str, changes: dict[str, Any]) -> str:
             end += 1
         lines[index:end] = value_lines
     return "\n".join(lines)
+
+
+def _yaml_scalar(value: Any) -> str:
+    """``value`` plain when YAML reads it back as the same string, else single-quoted."""
+    text = str(value)
+    try:
+        if "\n" not in text and yaml.safe_load(f"k: {text}") == {"k": text}:
+            return text
+    except yaml.YAMLError:
+        pass
+    return "'" + text.replace("\n", " ").replace("'", "''") + "'"
 
 
 def rewrite_task_fields(path: Path, changes: dict[str, Any]) -> list[str]:
@@ -906,7 +931,7 @@ def migrate_legacy_task_states(root: Path) -> tuple[list[str], list[LegacyTaskSt
     lines: list[str] = []
     failed: list[LegacyTaskState] = []
     for state in migratable:
-        if errors := rewrite_task_fields(state.path, {name: after for name, (_before, after) in state.changes.items()}):
+        if errors := rewrite_task_fields(state.path, state.written_fields()):
             failed.append(LegacyTaskState(state.path, state.rel, state.task_id, [f"not migrated, the result is still invalid: {'; '.join(errors)}"]))
             continue
         lines.extend(state.migration_lines())
