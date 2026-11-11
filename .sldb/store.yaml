@@ -487,6 +487,18 @@ include:
     name: review-task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro-preflight-2
   - path: desk/reviews/task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro/bundle-2.md
     name: review-task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro-bundle-2
+  - path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/preflight-1.md
+    name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-preflight-1
+  - path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/bundle-1.md
+    name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-bundle-1
+  - path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/preflight-2.md
+    name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-preflight-2
+  - path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/bundle-2.md
+    name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-bundle-2
+  - path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/preflight-3.md
+    name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-preflight-3
+  - path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/bundle-3.md
+    name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-bundle-3
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md

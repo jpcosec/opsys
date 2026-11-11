@@ -1,0 +1,9 @@
+{
+  "key": "task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "3a5202c11d758130ab4084086d644799479151125f2f75d7ca6ecfda7c0f78b5",
+  "output_sha256": "5069a4e523d782fb504c8353cb7493b74f197bbbbeb3bf2b309c694e92f2516c",
+  "start": "2026-11-11T03:32:26.555260+00:00",
+  "end": "2026-11-11T03:32:41.751919+00:00"
+}

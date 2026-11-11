@@ -1,0 +1,110 @@
+{
+  "key": "task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/bundle",
+  "input_sha256": "9873e0a5718be6f76979ae8568473cd6b776a9de5c717559306ad386911dea35",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp9/runs/subagents/20261111-033244/context-review/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/bundle/9873e0a5718be6f76979ae8568473cd6b776a9de5c717559306ad386911dea35/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece.md",
+      "sha256": "291034986baa5b2e5af8839bcf5cdf76e0b976e4a8859790bb65c68fd0f7923b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/services/desk_view.py",
+      "sha256": "8a1cb38f45b90c10991a3ce6cf85448add19c9f2bd0be84937ca205bb6cbfb19",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/data/desk_declaration.yaml",
+      "sha256": "ad1ad1b498e33374e0a4a5f4265db6dbdf11404cf6cee1313120e8698b371ebc",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/view.py",
+      "sha256": "37ac53e845f7391206f5cb7ade42c6305854db8fc0619f2da7fe6c267b026ffd",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/operations.py",
+      "sha256": "cda50ca9ef3a88581db7c23b0c0dccf41a9a68fd43ef6fbaeefb31bfb9aac6bc",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/domain_tree.py",
+      "sha256": "ee36b635648430142a890be00087283e4f6ff8906d9cc82fc4f85b76062a5a33",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/deskops-ui.md",
+      "sha256": "92ab78ef6b41fc14265b2c350f8b3c3265cc3b674b94aaa8744977f5637ccb9d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "78c30fbb27b32a08f0dc7b3e559bedd6b2bebe2e15c72e18a384a209a548f513",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/data/views/",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/runtime/",
+      "reason": "directory"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    },
+    {
+      "path": "tests/fixtures/golden/output/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-11T03:32:44.413884+00:00",
+  "finished": "2026-11-11T03:33:21.687957+00:00",
+  "retry_reason": "input cambiado: correcciones c1-c9 del TaskDoc"
+}

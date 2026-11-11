@@ -1,9 +1,9 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-11T03:28:48Z'
+  at: '2026-11-11T03:32:05Z'
   authority: generated
-  via: create_document
+  via: save_document_payload
 id: task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece
 status: draft
 summary: ''
@@ -22,6 +22,7 @@ files:
 - deskops/cli/commands/view.py
 - deskops/runtime/
 - deskops/operations.py
+- deskops/domain_tree.py
 - tests/
 - tests/fixtures/golden/output/
 - docs/deskops-ui.md
@@ -91,6 +92,30 @@ a5 (ETag): revision del payload = ETag de GD25. La clave revision y su guarda op
 a6 (DA4): las ViewDoc viven solo como semillas en deskops/data/views/, sin carpeta desk/views/. sldb serve las encuentra por el store de deskops enlazado. Si no las encuentra, hipótesis y nota a sldb.
 a7 (files): deskops: deskops/services/desk_view.py (borrado), deskops/data/views/, deskops/data/desk_declaration.yaml (solo si hace falta declarar las ViewDoc), deskops/cli/commands/view.py, deskops/runtime/, deskops/operations.py, tests/, tests/fixtures/golden/output/, docs/deskops-ui.md, CHANGELOG.md. graph_ui: frontends/desk/serve.py, frontends/mindmap/deskops_routes.py, tests/.
 a8 (4 pasos): los de deskops (sldb stores build --store .sldb; pytest, un proceso por archivo; sldb stores build --check --store .sldb; bash scripts/ci-knowledge-check.sh .) y todos los pasos de .github/workflows/ci.yml de graph_ui, con sus e2e. Los corre el coordinador en clones limpios.
+
+DISPOSICIÓN DE PREFLIGHT-1 Y BUNDLE-1 (2026-11-11, coordinador del plan; decisiones revisables):
+b1 (transporte de graph_ui): un solo transporte, GET /views/<vista> de sldb serve, como cliente directo con If-None-Match/ETag. Si sldb serve no responde, graph_ui devuelve 502 con el mensaje del error. No se usa la vía en proceso por CLI para leer vistas. Las acciones siguen por el CLI de deskops en proceso (DP4).
+b2 (enlace del store): el store de graph_ui ya enlaza a deskops (.sldb/store.yaml: links name deskops, path ../../deskops/.sldb). Las ViewDoc semilla de deskops/data/views/ se trackean en el store del propio repo deskops (su .sldb), declaradas con `sldb stores declare --write`, nunca a mano. Así sldb serve sobre cualquier store que enlace a deskops las encuentra. Para los tests de deskops, el desk de prueba se arma igual: un store de prueba que enlaza al store de deskops.
+b3 (desk_declaration.yaml): no hace falta tocarlo si b2 alcanza. Queda en files solo como reserva: si el worker lo toca, justifica en el informe por qué b2 no alcanzó.
+b4 (forma de la ViewDoc): el modelo es sldb.models.notation.view_doc (GD25). Cada parte del contrato de docs/deskops-ui.md se lee como lo da el modelo: relaciones (pills, atoms) por edges y hallazgos de reglas (CC32/CC33) por rules. La forma de cada ViewDoc sale del contrato y del modelo, no se inventa. Si el modelo no expresa una parte, hipótesis y nota a sldb.
+b5 (agregados del CLI): deskops view sobre run_view suma, con las mismas claves y el mismo orden que hoy, lo que no es documento: agents de herdr y runs/subagents/index.jsonl. `deskops view agents` sigue existiendo como hoy (cli/commands/view.py:28) y queda fuera de la comparación con goldens de ViewDoc.
+b6 (desk de prueba determinista): una fixture de tests arma el desk en tmp_path con ids, títulos y fechas fijas (created_at por flag o por frontmatter del fixture). Antes de comparar con los goldens, el test normaliza los valores de revision y de fechas a marcadores fijos ('<revision>', '<date>'). inbox entra en los goldens con esa normalización.
+b7 (alias privados): se borran los tres de deskops/operations.py:259-272 (_read_doc, _resolve_glob, _registered_repositories) y _repository_root si solo lo usa graph_ui. deskops/domain_tree.py todavía llama a uno: se cambia esa llamada a doc_access directamente (único cambio en domain_tree.py, que se suma a files). graph_ui deja de usarlos (deskops_routes.py).
+
+DISPOSICIÓN DE PREFLIGHT-2 Y BUNDLE-2 (2026-11-11, coordinador del plan; decisiones revisables; mandan sobre a2, b1-b7 y el SCOPE donde difieren):
+c1 (orden de integración; reemplaza a2): graph_ui lee las ViewDoc de deskops, así que deskops va primero. wt/cc34 en deskops trae las semillas ViewDoc, deskops view sobre run_view y el borrado de desk_view.py. wt/cc34-ui en graph_ui se verifica contra wt/cc34. El coordinador integra deskops y en seguida graph_ui. Mientras tanto, el master de graph_ui puede quedar rojo unos minutos contra deskops main; se acepta y no hay shim de compatibilidad. wt/cc34-ui parte del master de graph_ui después de que entre la integración wt/deskops-ui.
+c2 (transporte, cierra el choque con DP4): graph_ui LEE las vistas por GET /views/<vista> de sldb serve (b1). Las ACCIONES (advance, acknowledge, etc.) siguen por el CLI de deskops en proceso (DP4). La frase del SCOPE "lo pide a deskops en proceso como las acciones" vale solo para los agregados de b5: agents y runs los pide graph_ui al CLI de deskops en proceso (deskops view agents --format json), no a sldb serve.
+c3 (golden de task): el id es el de una tarea fija del desk de prueba de b6, invocado como `deskops view task <id> --format json`. El fixture lo define.
+c4 (normalización): se normalizan solo los valores de revision y de fechas, con los marcadores de b6. Todo lo demás se compara igual. "salvo revision" del contrato se lee como revision y fechas.
+c5 (6 desks): "responde" quiere decir exit 0, JSON válido con las claves del contrato y sin error. Se registra por desk en el informe.
+c6 (GET /views/board): devuelve el resultado de run_view, sin los agregados del CLI de b5. El test lo compara con `deskops view board --format json` quitando esos agregados.
+c7 (desk_declaration.yaml): "hace falta" quiere decir que sldb serve sobre el store de prueba enlazado no encuentra las ViewDoc con b2 solo. Si las encuentra, el archivo no se toca.
+c8 (tiempo): `time deskops view board --format json` sobre el desk real de deskops, en frío (primera corrida tras borrar .sldb_cache) y en caliente (segunda corrida). Los dos valores van al informe; la meta la verifica CC52.
+c9 (alias y agents):
+- Inventario de usos con `grep -rn "_read_doc\|_resolve_glob\|_registered_repositories\|_repository_root" deskops/ ~/proyectos/SLDB_1/UIs/graph_ui/frontends`; se borra cada alias sin usos tras el cambio.
+- agents() y la lectura de runs pasan de desk_view.py a deskops/runtime/ (agents de herdr) o a cli/commands/view.py, sin cambiar su salida.
+- Mapeo campo a campo del contrato (errors, counts, closeout, next, markdown, excerpt, command...): es parte del trabajo. El informe lleva una tabla campo -> fuente (ViewDoc por edges o rules, o agregado del CLI de b5); lo que no tenga fuente en el modelo, hipótesis y nota a sldb.
+- revision/ETag: cubre lo que ETag de GD25 cubre para esa vista. Si un cambio del Board ya no invalida la revision de task como hoy (sha256 de Board más tarea), se deja escrito y el test de 409 de graph_ui lo prueba con el cambio que sí la invalida.
 
 ## Validation
 

@@ -1,7 +1,7 @@
 name: task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece
 path: desk/tasks/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece.md
-source_hash: 0e17f30be4671540f0806d04702a56e08fa6e929808f3485a9362d79f82b4b57
-content_hash: f3cf972f66192be72afa6dd19af664c84569f8f65a662f2bb41f0308613def25
+source_hash: 291034986baa5b2e5af8839bcf5cdf76e0b976e4a8859790bb65c68fd0f7923b
+content_hash: 200cc8e9fcdebfbd9d6f7401ba46049fd6dc0b2a0086a296d30f7983a847db38
 field_hashes:
   title: 3e4bd1b83463f093f23cccec4ed681a4d3254493500dbd97b48897681fcf81af
   id: 7bbf98da961799c7e74b72f80ab41b2c6a08a8b2d3fe3ecef0f401d58e76b83c
@@ -16,8 +16,8 @@ field_hashes:
   references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
   pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
-  files: bf186b3a7f9b070f7a7e30b5a1164de639ca0cc07b93c28eafdd47cd9702a8c1
-  implementation_path: 78d693691b5fc57bbdfe97511ae306e971a176d6d26e491e041f48b1438cf0a4
+  files: 2e5407ecfa4cafc8d9e81745f5742dab10ce4be06805a66c227f2ceac23206f9
+  implementation_path: a2fd38cb8a067bb726743fee5f90d9adadd340b7c6c70aa95bffcf2169384fd1
   validation: 6ba7952cae7a119c5af30b651e88af40339229f900ab847cb0eee33c2b4c34ac
   done_when: 102afd725b94bb83ec7fca8da23f01dda8e294e80ec95fb37751b37ebd74ffd3
   task_type: 430e281fc3506e5a61bf187bc4220dab834ca38806ca4f603f817cc82f9791bb
@@ -34,6 +34,6 @@ semantic_tags:
 - workspace:desk
 provenance:
   by: agent
-  at: '2026-11-11T03:28:48Z'
+  at: '2026-11-11T03:32:05Z'
   authority: generated
-  via: create_document
+  via: save_document_payload

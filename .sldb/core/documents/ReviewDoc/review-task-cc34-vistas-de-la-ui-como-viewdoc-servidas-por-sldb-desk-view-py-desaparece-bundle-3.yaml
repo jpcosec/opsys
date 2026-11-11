@@ -1,0 +1,36 @@
+name: review-task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece-bundle-3
+path: desk/reviews/task-cc34-vistas-de-la-ui-como-viewdoc-servidas-por-sldb-desk-view-py-desaparece/bundle-3.md
+source_hash: c3b4a2c63616c1719406872b14e69563f99f33392698bc43973feeb236b62f4f
+content_hash: 8d3d8078e2bd3d1e0997332a484d945fc161916b0c48785d6f6028522901ffaa
+field_hashes:
+  id: c9ba9e6ada5b3f0435efc27c9427f69c9d71bb0873324cfe94c86c3db50278ed
+  title: 807a5c455f5ba9ad34ddbfb51c8afadafd16df39dd32ba09af848a789dd90a34
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: d85ef114bfff06456e55928040c4f0e67c0d10b1e463c31ece88cae8b890a06f
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: a8f274bf3ce7d6fde78092a9a3d1d92053bc897401280ad11701c280957b0a1b
+  input_sha256: dca1c93e24a270ed64c4ea9e41464d4f398efc50ac07aae244a061ed37f37353
+  output_sha256: 0024b3401227560aa93d183d5c216f2cf59e687f896046b92e276c39c845feba
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 5a6b0217e41226bfe7705226cc726d664670f90351e7212cf2182d435aaeb255
+  created_at: 742dfbb4c3490f2ae313fa68432e090ee942c796b7aee4721eb73551e1f1a248
+  disposed_at: 215fee58d4b0a57f839f8044d031a827ce35a2e5956a0184a6ef1edd7d68e320
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: a80f6572668dfc4e90877d87b1f8b5d8d6c644ed68ecfb98bb9001ff6f121dad
+  disposition: c9f6e7f5565a3b30b28ccb0c2b40a715c5e2e673a36a79fa0a567ad0bb330847
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-11T03:33:48Z'
+  authority: generated
+  via: save_document_payload
