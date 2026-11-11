@@ -119,7 +119,7 @@ def test_retire_refuses_while_referenced_unless_forced(tmp_path: Path, capsys) -
     relative = pill.relative_to(root).as_posix()
     # A mention in prose (the path, read by the desk graph's SOURCE_PATH pattern) is never rewritten.
     guide = root / "desk" / "tasks" / "task-guide.md"
-    guide.write_text(f"# Guide\n\nSee {relative}.\n", encoding="utf-8")
+    guide.write_text(f"# Guide\n\nSee {relative} for the old guardrail.\n", encoding="utf-8")
     capsys.readouterr()
 
     assert _retire(root, relative, "--ref", _git(root, "rev-parse", "HEAD")) == 1

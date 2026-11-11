@@ -295,13 +295,18 @@ Read next to the source guidance.
 """
 
 
-@pytest.mark.parametrize("setup", ["install", "init"])
-def test_atoms_merge_rewrites_both_mention_forms(tmp_path: Path, capsys, setup: str) -> None:
+@pytest.mark.parametrize("store", [False, True])
+def test_atoms_merge_rewrites_both_mention_forms(tmp_path: Path, capsys, store: bool) -> None:
     """`atom:atom-<slug>` in a task's prose (ATOM_ID line mentions) and the bare `atom-<slug>`
     under a Related Atoms heading (ATOM section mentions) are both referrers and both rewritten,
     on a desk without a store and on one with a store (`sldb.api.edges.referrers` fields + graph)."""
-    assert main([setup, str(tmp_path)]) == 0
-    _write_atoms(tmp_path)
+    if store:
+        assert main(["init", str(tmp_path)]) == 0
+        for title in ("Source guidance", "Target guidance"):
+            assert main(["add", "atom", "--root", str(tmp_path), "--title", title, "--five-wh-one-plus", "how", "--answer", f"{title}."]) == 0
+    else:
+        _install_sandbox(tmp_path)
+        _write_atoms(tmp_path)
     related = tmp_path / "desk" / "atoms" / "atom-related-guidance.md"
     related.write_text(RELATED_ATOM, encoding="utf-8")
     task_path = tmp_path / "desk" / "tasks" / "task-ref.md"
