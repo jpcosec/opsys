@@ -51,6 +51,13 @@ class LifecycleGraphMissing(RuntimeError):
     """The desk's store has no lifecycle graph, or it does not cover a task's state."""
 
 
+class LifecycleSeedOutOfDate(LifecycleGraphMissing):
+    """The edge ``deskops advance`` would take does not carry the package's effect (a desk's
+    lifecycle seed older than CC31, ``attributes: {}``): applying it would write a state the
+    ``TaskDoc`` validator rejects. Raised before any effect is applied; the fix is
+    ``deskops desk update --apply``, which restores the managed seed."""
+
+
 @dataclass(frozen=True, slots=True)
 class Transition:
     """One edge of the lifecycle graph leaving ``source``, with its effects as the edge declares them."""
@@ -61,6 +68,8 @@ class Transition:
     condition: str
     sets: dict[str, Any] = field(default_factory=dict)
     terminal: bool = False
+    #: The name of the ``RelationDoc`` that authors the edge (its file is ``desk/lifecycle/<name>.md``).
+    relation_doc: str = ""
     #: The findings of the task's ``on_transition`` rules (sldb GO08), as ``finding_dict`` gives
     #: them: every finding on a blocked edge, only alerts on a holding one, none without a document.
     findings: tuple[dict[str, Any], ...] = ()
@@ -152,6 +161,7 @@ def _transition(node: str, edge: Any) -> Transition:
         condition=str(edge.metadata.get("condition") or ""),
         sets=dict(effects.get("sets") or {}),
         terminal=bool(effects.get("terminal")),
+        relation_doc=str(edge.metadata.get("relation_doc") or ""),
         findings=tuple(finding_dict(f) for f in (getattr(edge, "findings", None) or ())),
     )
 
@@ -295,6 +305,7 @@ def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: Lifecyc
         return TransitionResult(node, status, False, True, f"Gate {node} is not complete ({gates}).")
     transition = holding[0]
     target = COMPLETE if transition.terminal else transition.target
+    _check_against_package(payload, transition, target)
     # The model validates the whole new state (TaskDoc's lifecycle coherence): the edge's
     # ``sets``, the history it appends to and the node it leads to are applied together.
     history = [str(item) for item in payload.get("history") or []]
@@ -302,6 +313,37 @@ def advance(root: Path, payload: dict[str, Any], model: type[Any], spec: Lifecyc
     payload.update(apply_effects(payload, {**transition.effects, "sets": sets}, model))
     verb = "Completed" if transition.terminal else "Advanced to"
     return TransitionResult(target, str(payload.get("status") or ""), True, False, f"{verb} {target} via {transition.relation_type}.")
+
+
+UPDATE_SEEDS = "deskops desk update --apply"
+
+
+def _check_against_package(payload: dict[str, Any], transition: Transition, target: str) -> None:
+    """Refuse an edge whose effect differs from the package's lifecycle table (b6).
+
+    The ``TaskDoc`` validator checks the new state against ``lifecycle_table()``, the package's
+    edges; the desk's edge is what ``advance`` applies. When the two differ (a desk seed older
+    than CC31 has no ``attributes.sets``), the write would fail inside pydantic without naming
+    the edge, so the edge is compared first: same ``relation_type``, same target, same
+    ``sets.status``. The table is cached; no file is read here.
+    """
+    from deskops.models.task_lifecycle import lifecycle_table
+
+    task_id = str(payload.get("id") or "")
+    edge_file = f"{LIFECYCLE_DIR.as_posix()}/{transition.relation_doc or transition.relation_type}.md"
+    head = f"Cannot advance {task_id} via {transition.relation_type}: the edge {edge_file}"
+    tail = f" The desk's lifecycle seeds are out of date: run '{UPDATE_SEEDS}'."
+    expected = lifecycle_table().edges.get(transition.relation_type)
+    if expected is None:
+        raise LifecycleSeedOutOfDate(f"{head} is not a transition of the deskops package lifecycle.{tail}")
+    seen = transition.sets.get("status")
+    if str(seen or "") != expected.status:
+        shown = "missing" if seen in (None, "") else str(seen)
+        raise LifecycleSeedOutOfDate(
+            f"{head} does not set status {expected.status} (attributes.sets.status is {shown}).{tail}"
+        )
+    if target != expected.target:
+        raise LifecycleSeedOutOfDate(f"{head} does not lead to {expected.target} (it leads to {target}).{tail}")
 
 
 # ---------------------------------------------------------------- writing the graph
