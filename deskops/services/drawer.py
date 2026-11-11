@@ -21,6 +21,8 @@ from sldb.runtime.validation import render_model_markdown
 
 from deskops import doc_access
 from deskops.models import TaskDoc
+from deskops.services.references import alert_dangling
+from deskops.services.references import dangling_referrers
 
 
 @dataclass
@@ -144,6 +146,9 @@ class DrawerService:
     def remove_entry(self, selector: str, *, force: bool = False) -> DrawerRemoval:
         """Remove one drawer file, its tracking, and its bullets on the drawer board.
 
+        Every other reference to it (``sldb.api.referrers`` over the desk graph) is left as it
+        is and reported on stderr as ``alert: <entry> still referenced by <referrer>``.
+
         A task in desk/tasks/ that records the entry in from_drawer blocks the
         removal unless force is set, so deleting the source cannot silently
         leave active work pointing at a file someone still expects to exist.
@@ -177,7 +182,10 @@ class DrawerService:
                         transaction.record(board)
                     board.write_text(updated, encoding="utf-8")
                     board_changed = True
+            # Read after the Board lost its bullets: what is left still names the entry once it is gone.
+            dangling = dangling_referrers(self.root, source)
             doc_access.delete_doc(self.root, source)
+        alert_dangling(relative, dangling)
 
         messages = [f"Removed drawer entry {relative}"]
         if board_changed:

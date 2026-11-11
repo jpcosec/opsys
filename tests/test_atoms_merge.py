@@ -3,6 +3,8 @@ from __future__ import annotations
 from pathlib import Path
 import sys
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
@@ -269,3 +271,50 @@ def test_atoms_merge_rewrites_only_whole_atom_tokens(tmp_path: Path, capsys) -> 
     assert "Longer token atom:atom-source-guidance-bar must stay." in task_text
     assert "Suffixed token atom:atom-source-guidance.extended must stay." in task_text
     assert "Prefixed token xatom:atom-source-guidance must stay." in task_text
+
+
+RELATED_ATOM = """---
+id: atom-related-guidance
+title: Related Guidance
+five_wh_one_plus: how
+tags:
+- system:deskops
+- topic:merge
+provenance: docs/source-guidance.md
+---
+
+# Related Guidance
+
+## Answer
+
+Read next to the source guidance.
+
+## Related Atoms
+
+- `atom-source-guidance`
+"""
+
+
+@pytest.mark.parametrize("setup", ["install", "init"])
+def test_atoms_merge_rewrites_both_mention_forms(tmp_path: Path, capsys, setup: str) -> None:
+    """`atom:atom-<slug>` in a task's prose (ATOM_ID line mentions) and the bare `atom-<slug>`
+    under a Related Atoms heading (ATOM section mentions) are both referrers and both rewritten,
+    on a desk without a store and on one with a store (`sldb.api.edges.referrers` fields + graph)."""
+    assert main([setup, str(tmp_path)]) == 0
+    _write_atoms(tmp_path)
+    related = tmp_path / "desk" / "atoms" / "atom-related-guidance.md"
+    related.write_text(RELATED_ATOM, encoding="utf-8")
+    task_path = tmp_path / "desk" / "tasks" / "task-ref.md"
+    task_path.write_text("# Ref\n\nDepends on atom:atom-source-guidance today.\n", encoding="utf-8")
+    capsys.readouterr()
+
+    assert main(["atoms", "merge", "atom-source-guidance", "--into", "atom-target-guidance", "--root", str(tmp_path)]) == 0
+    out = capsys.readouterr().out
+
+    assert "Inbound references rewritten: 2" in out
+    assert "desk/tasks/task-ref.md:3" in out
+    assert "desk/atoms/atom-related-guidance.md:19" in out
+    assert "Depends on atom:atom-target-guidance today." in task_path.read_text(encoding="utf-8")
+    related_text = related.read_text(encoding="utf-8")
+    assert "- `atom-target-guidance`" in related_text
+    assert "atom-source-guidance" not in related_text
