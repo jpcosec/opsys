@@ -303,7 +303,8 @@ def test_drawer_remove_alerts_each_reference_it_leaves_behind(tmp_path: Path, ca
     """The stem bullet goes with the entry; the path bullet and a task naming the entry stay, each
     reported on stderr (no rewrite, exit unchanged)."""
     _install_desk(tmp_path)
-    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md")
+    # The id makes the entry the graph node `task:task-loose-idea` the bullets and the task name.
+    entry = _drawer_file(tmp_path, "tasks/task-loose-idea.md", "---\nid: task-loose-idea\n---\n\n# Loose idea\n\nNotes.\n")
     board = _drawer_board(tmp_path)
     board.write_text(board.read_text(encoding="utf-8") + "- `tasks/task-loose-idea.md` — path bullet\n", encoding="utf-8")
     task = tmp_path / "desk" / "tasks" / "task-ref.md"
