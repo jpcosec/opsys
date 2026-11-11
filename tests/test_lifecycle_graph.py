@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from deskops import doc_access
+
 from pathlib import Path
 
 import pytest
@@ -144,7 +146,7 @@ def test_a_desk_edge_whose_sets_differ_from_the_package_is_refused_by_the_task_m
         operations.advance_task(task_id)
 
     assert "status: 'in_review' does not follow history 'task_activates'; expected 'active'" in str(excinfo.value)
-    stored = operations._read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
+    stored = doc_access.read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
     assert (stored["status"], stored["current_node"], stored["history"]) == ("draft", "ritual-execution", [])
     assert lifecycle.SPEC_PATH.read_bytes() == spec_before
     assert "in_review" not in lifecycle.SPEC_PATH.read_text(encoding="utf-8")
@@ -167,7 +169,7 @@ def test_advance_walks_the_graph_and_sets_status_per_transition(lifecycle_desk: 
     # task_completes back (CC33b) and the message names the rule and its clause.
     assert "rules/rule-closeout-task-code" in result.message, "the blocking rule is named"
     assert 'fact = "tests"' in result.message
-    payload = operations._read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
+    payload = doc_access.read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
     assert payload["history"] == ["task_activates", "task_hands_to_closeout"]
 
 

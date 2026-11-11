@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from deskops import doc_access
+
 import json
 from pathlib import Path
 
@@ -73,7 +75,7 @@ def test_create_task_bundle_writes_only_the_task(tmp_path: Path) -> None:
     )
 
     assert bundle.task_path == tmp_path / "desk" / "tasks" / "task-only-the-task.md"
-    payload = operations._read_doc(bundle.task_path, TaskDoc)
+    payload = doc_access.read_doc(bundle.task_path, TaskDoc)
     assert payload["current_node"] == "ritual-execution"
     assert "routine" not in payload and "checklists" not in payload
     assert not (tmp_path / "desk" / "routines").exists()

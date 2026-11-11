@@ -20,6 +20,9 @@ from deskops.cli.main import main
 from deskops.operations import DeskopsOperations
 from tests.activation_receipts import accept_receipts
 
+#: The seed ViewDocs of the package (DA4: they live only there).
+VIEWS_DIR = Path(__file__).resolve().parents[1] / "deskops" / "data" / "views"
+
 #: The task `deskops view task <id>` is captured on (c3).
 GOLDEN_TASK = "task-view-golden-execution"
 NOTE_CLOCK = (datetime(2026, 11, 4, 10, 15, 0), datetime(2026, 11, 4, 10, 16, 0))
@@ -90,8 +93,34 @@ def build_view_desk(root: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, st
     _fixed_clock(monkeypatch, NOTE_CLOCK[1])
     assert main(["message", "send", "--root", str(root), "--title", "Open question", "--kind", "unclear", "Question body"]) == 0
     monkeypatch.setattr("deskops.cli.commands.message.datetime", datetime)
+    install_views(root)
     assert execution == GOLDEN_TASK
     return {"execution": execution, "testing": testing, "closeout": closeout, "pill": pill, "atom": atom}
+
+
+def install_views(root: Path) -> list[str]:
+    """Track the package's seed ViewDocs in the test desk's own store, under ``views/``.
+
+    The real desks reach them through a link to the deskops store (b2); sldb's ``run_view``
+    does not resolve a ViewDoc of a linked store yet (H9), so the tests track a copy locally.
+    The copy is made through sldb (``add_model`` + ``create_document``), never by hand."""
+    from sldb import api
+    from sldb.core.exceptions import SLDBModelError
+    from sldb.models.notation.view_doc import ViewDoc
+    from sldb.runtime.validation import extract_model_data
+
+    store = root / ".sldb"
+    try:
+        api.add_model(store, "sldb.models.notation_models:ViewDoc", "")
+    except SLDBModelError:  # already registered
+        pass
+    (root / "views").mkdir(exist_ok=True)
+    names = []
+    for seed in sorted(VIEWS_DIR.glob("*.md")):
+        payload = ViewDoc.model_validate(extract_model_data(ViewDoc, seed.read_text(encoding="utf-8"))).model_dump()
+        api.create_document(store, "ViewDoc", root / "views" / seed.name, payload, payload["name"], "")
+        names.append(payload["name"])
+    return names
 
 
 def normalize_view(value: Any, root: Path) -> Any:

@@ -296,6 +296,19 @@ models:
   - representation.markdown
   - source.document.markdown
   - type.rule
+- name: ViewDoc
+  model_ref: sldb.models.notation_models:ViewDoc
+  path: /dev/shm/deskops-cc34/venv/lib/python3.13/site-packages/sldb/models/notation/view_doc.py
+  models_index: .sldb/core/models/ViewDoc.yaml
+  version: 1
+  canonical: false
+  family: null
+  semantics:
+  - layer.presentation
+  - representation.markdown
+  - source.document.markdown
+  - system.spec2viz
+  - type.view
 predicates:
 - name: has_model
   axis: WHAT
@@ -348,4 +361,4 @@ predicates:
   description: A composed field of the source (`__compositions__`) renders this document's
     payload into the source's text; the edge carries the composed field, the field
     holding the refs and the ref as authored.
-store_hash: b19311223a5b05b891b52ca7d271360cab7ec3a0cfef12eaeb2a958de98be9aa
+store_hash: 1c2fa1d5d47ba737915236d465730bbd9320ea4c693ce10c7a00368301458d58
