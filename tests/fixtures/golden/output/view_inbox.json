@@ -1,0 +1,25 @@
+{
+  "contract": 1,
+  "count": 1,
+  "errors": [],
+  "notes": [
+    {
+      "acknowledged": false,
+      "acknowledged_at": null,
+      "acknowledged_by": null,
+      "body": "Question body",
+      "date": "<date>",
+      "id": "20261104-101600-unclear-open-question",
+      "kind": "unclear",
+      "path": "desk/inbox/20261104-101600-unclear-open-question.md",
+      "revision": "<revision>",
+      "sender": "repo",
+      "status": "open",
+      "target": "repo",
+      "title": "Open question"
+    }
+  ],
+  "open": 1,
+  "root": "<root>",
+  "view": "inbox"
+}
