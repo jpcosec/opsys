@@ -105,7 +105,7 @@ def test_atom_creation_refuses_an_unwritten_domain(desk: Path, capsys) -> None:
     except (SystemExit, ValueError):
         code = 1
     assert code != 0
-    assert "Write the parent first: no written crossroad for pizzeria" in capsys.readouterr().out
+    assert "Invalid value: Write the parent first: no written crossroad for pizzeria." in capsys.readouterr().err
     assert not list((tmp_path / "desk" / "atoms").rglob("atom-oven-temperature.md"))
 
 
