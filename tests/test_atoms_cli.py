@@ -44,7 +44,7 @@ def test_atoms_validate_accepts_valid_atom(tmp_path: Path, capsys) -> None:
     assert "- valid" in captured.out
 
 
-def test_atoms_validate_all_reports_slug_namespace_and_provenance_errors(tmp_path: Path, capsys) -> None:
+def test_atoms_validate_all_reports_slug_and_provenance_errors(tmp_path: Path, capsys) -> None:
     _install_sandbox(tmp_path)
     atoms_dir = tmp_path / "desk" / "atoms"
     bad_atom = atoms_dir / "atom-bad.md"
@@ -70,7 +70,8 @@ def test_atoms_validate_all_reports_slug_namespace_and_provenance_errors(tmp_pat
     assert "Atom: bad-atom" in captured.out
     assert "filename must match atom id 'bad-atom'" in captured.out
     assert "atom id must follow slug convention atom-<slug>" in captured.out
-    assert "Unknown atom tag namespace 'unknown'" in captured.out
+    # Without a store sldb checks no namespace (test_domain_tree covers the declared desk).
+    assert "Unknown atom tag namespace" not in captured.out
     assert "provenance is not resolvable: docs/missing-source.md" in captured.out
 
 

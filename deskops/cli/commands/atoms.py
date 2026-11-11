@@ -7,6 +7,7 @@ from typing import Any
 from deskops.atom_tags import add_namespace
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import ensure_default_namespaces
+from deskops.atom_tags import sync_tag_declaration
 from deskops.cli.render import render
 from deskops.cli.render import render_error
 from deskops.domain_tree import DomainTree
@@ -35,6 +36,8 @@ class AtomsCLI:
                 return 1
             print(f"Added atom tag namespace {args.namespace}")
             print(f"Path: {registry_path}")
+            # The store declares the registry's namespaces (sldb checks them): keep it in step.
+            sync_tag_declaration(root)
             return 0
 
         if args.atoms_command == "validate":

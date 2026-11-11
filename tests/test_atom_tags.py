@@ -14,7 +14,7 @@ if str(SLDB_SRC) not in sys.path:
 
 from deskops.models import AtomDoc
 from deskops.atom_tags import add_namespace
-from deskops.atom_tags import validate_atom_tag_namespaces
+from deskops.atom_tags import axis_folder
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
@@ -60,20 +60,28 @@ def test_atom_doc_rejects_tags_without_namespace() -> None:
         AtomDoc(**invalid)
 
 
-def test_namespace_registry_validates_known_namespaces(tmp_path: Path) -> None:
-    registry = tmp_path / "desk" / "atoms" / "tag-namespaces.yaml"
-    add_namespace(
-        registry,
-        "system",
-        meaning="System, project, or tool the atom belongs to.",
-        use_when="The atom is about a specific system.",
-        do_not_use_when="The tag is only a general topic.",
-        examples=["system:deskops"],
-    )
+@pytest.mark.parametrize("tag", ["topic:a..b", "topic:a.", "system:deskops."])
+def test_atom_doc_rejects_a_tag_value_with_an_empty_segment(tag: str) -> None:
+    """sldb's tag_folder refuses an empty segment (CC35d H3): the atom model never lets one in."""
+    invalid = dict(ATOM_SAMPLE)
+    invalid["tags"] = [tag]
 
-    validate_atom_tag_namespaces(["system:deskops"], registry)
-    with pytest.raises(ValueError, match="Unknown atom tag namespace"):
-        validate_atom_tag_namespaces(["topic:atoms"], registry)
+    with pytest.raises(ValueError, match="empty segment"):
+        AtomDoc(**invalid)
+
+
+def test_atom_doc_keeps_dotted_tag_values() -> None:
+    sample = dict(ATOM_SAMPLE)
+    sample["tags"] = ["topic:a.b-c.d_e", "layer:document-model", "system:a.1"]
+
+    assert AtomDoc(**sample).tags == sample["tags"]
+
+
+def test_axis_folder_is_sldb_tag_folder() -> None:
+    assert axis_folder("mepu.licitaciones") == Path("mepu/licitaciones")
+    assert axis_folder("pizzeria") == Path("pizzeria")
+    with pytest.raises(ValueError):
+        axis_folder("a..b")
 
 
 def test_add_namespace_rejects_duplicate_namespace(tmp_path: Path) -> None:

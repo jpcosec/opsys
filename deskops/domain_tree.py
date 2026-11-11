@@ -8,23 +8,27 @@ as a redirect stub whose ``typed_as`` names the typed document.
 
 What one document must satisfy on its own (the form of its id, its tags and its
 domain paths, one ``domain:`` tag per protoatom, a crossroad id naming its path)
-is a validator of its model in ``deskops.models``. What is checked here needs
-other documents or the file tree: the written parents of a domain path, the file
-name of a document, the tag namespace registry and the target of ``typed_as``.
+is a validator of its model in ``deskops.models``. The declared namespaces and the
+written parents of a domain path are sldb's rule family ``builtin:tag_namespace``
+(``deskops.atom_tags``: the store declares ``domain`` anchored by ``CrossroadDoc.path``).
+What is checked here needs the file tree: the file name of a document and the
+target of ``typed_as``.
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
 from pathlib import Path
-import re
 from typing import Any
 
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
 from deskops import doc_access
-from deskops.atom_tags import default_registry_path
-from deskops.atom_tags import validate_atom_tag_namespaces
+from deskops.atom_tags import declared_namespaces
+from deskops.atom_tags import refuse_unanchored_domains
+from deskops.atom_tags import refuse_unplaced_tags
+from deskops.atom_tags import tag_findings
+from deskops.atom_tags import tag_store
 from deskops.bootstrap import MODEL_REFS
 from deskops.doc_access import ARTIFACT_MODELS
 from deskops.doc_access import ARTIFACT_PATHS
@@ -32,7 +36,6 @@ from deskops.models.atom import DOMAIN_NAMESPACE as DOMAIN
 from deskops.models.atom import AtomDoc
 from deskops.models.atom import domain_paths
 from deskops.models.crossroad import CROSSROAD_PREFIX
-from deskops.models.crossroad import DOMAIN_PATH_PATTERN
 from deskops.models.crossroad import CrossroadDoc
 from deskops.models.crossroad import crossroad_id
 from deskops.models.protoatom import PROTO_PREFIX
@@ -41,14 +44,6 @@ from deskops.models.validation import check_document
 from deskops.models.validation import validated
 
 __all__ = ["DOMAIN", "PROTO_PREFIX", "CROSSROAD_PREFIX", "domain_paths", "crossroad_id", "DomainTree"]
-
-_DOMAIN_PATH = re.compile(DOMAIN_PATH_PATTERN)
-
-
-def prefixes(path: str) -> list[str]:
-    """``a.b.c`` -> ``['a', 'a.b', 'a.b.c']``."""
-    parts = path.split(".")
-    return [".".join(parts[: index + 1]) for index in range(len(parts))]
 
 
 def read_crossroads(atoms_dir: Path) -> dict[str, dict[str, Any]]:
@@ -62,30 +57,6 @@ def read_crossroads(atoms_dir: Path) -> dict[str, dict[str, Any]]:
             continue
         found[str(payload["path"])] = {**payload, "file": file}
     return found
-
-
-def missing_parents(tags: list[str], crossroads: dict[str, Any]) -> list[str]:
-    missing: list[str] = []
-    for value in domain_paths(tags):
-        for prefix in prefixes(value):
-            if prefix not in crossroads and prefix not in missing:
-                missing.append(prefix)
-    return missing
-
-
-def require_domain_parents(atoms_dir: Path, tags: list[str]) -> None:
-    """Refuse domain tags whose path lacks a written crossroad for some prefix.
-
-    The form of each path is the model's invariant (``AtomDoc.tags``); this only asks
-    the file tree whether the parents are written.
-    """
-    missing = missing_parents(tags, read_crossroads(atoms_dir))
-    if missing:
-        commands = "; ".join(f"deskops atoms crossroad {path} --title ... --content ..." for path in missing)
-        raise ValueError(
-            f"Write the parent first: no written crossroad for {', '.join(missing)}. Every domain path "
-            f"needs a crossroad that describes its children; create them top-down: {commands}"
-        )
 
 
 @dataclass
@@ -118,7 +89,7 @@ class DomainTree:
         ).model_dump(mode="json")
         parent = path.rpartition(".")[0]
         if parent:
-            require_domain_parents(self.atoms_dir, [f"{DOMAIN}:{parent}"])
+            refuse_unanchored_domains(self.root, [f"{DOMAIN}:{parent}"])
         if path in read_crossroads(self.atoms_dir):
             raise FileExistsError(f"A crossroad for '{path}' already exists.")
         return self._create(CrossroadDoc, payload, [f"{DOMAIN}:{path}"])
@@ -129,8 +100,7 @@ class DomainTree:
         payload = validated(ProtoAtomDoc, {"id": doc_id, "title": title, "content": content, "tags": tags}).model_dump(
             mode="json"
         )
-        validate_atom_tag_namespaces(tags, default_registry_path(self.root))
-        require_domain_parents(self.atoms_dir, tags)
+        refuse_unplaced_tags(self.root, tags)
         return self._create(ProtoAtomDoc, payload, tags)
 
     def type_protoatom(
@@ -164,18 +134,46 @@ class DomainTree:
         return Typed(str(proto["id"]), proto_path, model.__name__, target_id, target_path)
 
     def check(self) -> list[dict[str, Any]]:
-        """Domain-tree errors per document under desk/atoms."""
-        crossroads = read_crossroads(self.atoms_dir)
+        """Domain-tree errors per document under desk/atoms. The namespace and domain-parent
+        errors are the findings of sldb's tag family (``tag_findings``), so only documents the
+        store tracks have them; the parent of a crossroad (which carries no tag) is read from
+        sldb's ``tag_tree``. Without a store neither is checked."""
+        findings = tag_findings(self.root)
+        unwritten = self._crossroads_without_parent()
         records: list[dict[str, Any]] = []
         for path in sorted(self.atoms_dir.rglob("*.md")):
+            found = findings.get(str(path), {"namespace": [], "anchor": []})
             if path.name.startswith(CROSSROAD_PREFIX):
-                doc_id, errors = self._check_crossroad(path, crossroads)
+                doc_id, errors = self._check_crossroad(path, unwritten)
             elif path.name.startswith(PROTO_PREFIX):
-                doc_id, errors = self._check_protoatom(path, crossroads)
+                doc_id, errors = self._check_protoatom(path, found["namespace"] + found["anchor"])
             else:
-                doc_id, errors = path.stem, self._check_atom(path, crossroads)
+                doc_id, errors = path.stem, list(found["anchor"])
             records.append({"id": doc_id, "path": str(path), "errors": errors})
         return records
+
+    def _crossroads_without_parent(self) -> dict[str, list[str]]:
+        """Crossroad path -> the ancestor paths without a written crossroad (``tag_tree``: an
+        intermediate node without a document); bridge until sldb H4."""
+        from sldb.api import tag_tree
+
+        store = tag_store(self.root)
+        namespace = declared_namespaces(store).get(DOMAIN) if store is not None else None
+        if namespace is None or namespace.anchored_by is None:
+            return {}
+        found: dict[str, list[str]] = {}
+
+        def walk(node: dict[str, Any], gaps: list[str]) -> None:
+            path = node["tag"].split(":", 1)[1]
+            if node["document"] is not None and gaps:
+                found[path] = list(gaps)
+            below = gaps + ([path] if node["document"] is None else [])
+            for child in node["children"]:
+                walk(child, below)
+
+        for top in tag_tree(store, DOMAIN)["roots"]:
+            walk(top, [])
+        return found
 
     def tree(self) -> dict[str, Any]:
         """Crossroads nested by path, with the documents hanging from each one."""
@@ -273,7 +271,7 @@ class DomainTree:
         folder = Path(ARTIFACT_PATHS[artifact]) if artifact else Path("typed") / model.__name__
         return self.desk_root / folder / f"{doc_id}.md"
 
-    def _check_crossroad(self, path: Path, crossroads: dict[str, Any]) -> tuple[str, list[str]]:
+    def _check_crossroad(self, path: Path, unwritten: dict[str, list[str]]) -> tuple[str, list[str]]:
         try:
             payload, errors = check_document(CrossroadDoc, path.read_text(encoding="utf-8"), invalid="crossroad is invalid")
         except Exception as exc:
@@ -281,42 +279,24 @@ class DomainTree:
         doc_id = str(payload.get("id") or path.stem)
         if path.stem != doc_id:
             errors.append(f"filename must match crossroad id '{doc_id}'")
-        parent = str(payload.get("path") or "").rpartition(".")[0]
-        if parent:
-            errors.extend(self._domain_errors([f"{DOMAIN}:{parent}"], crossroads))
+        errors.extend(
+            f"no written crossroad for domain path '{gap}'" for gap in unwritten.get(str(payload.get("path") or ""), [])
+        )
         return doc_id, errors
 
-    def _check_protoatom(self, path: Path, crossroads: dict[str, Any]) -> tuple[str, list[str]]:
+    def _check_protoatom(self, path: Path, tag_errors: list[str]) -> tuple[str, list[str]]:
         try:
             payload, errors = check_document(ProtoAtomDoc, path.read_text(encoding="utf-8"), invalid="protoatom is invalid")
         except Exception as exc:
             return path.stem, [f"protoatom is invalid: {_first_line(exc)}"]
         doc_id = str(payload.get("id") or path.stem)
-        tags = list(payload.get("tags") or []) if isinstance(payload.get("tags"), list) else []
         if path.stem != doc_id:
             errors.append(f"filename must match protoatom id '{doc_id}'")
-        try:
-            validate_atom_tag_namespaces(tags, default_registry_path(self.root))
-        except ValueError as exc:
-            errors.append(str(exc))
-        errors.extend(self._domain_errors(tags, crossroads))
+        errors.extend(tag_errors)
         typed_as = str(payload.get("typed_as") or "")
         if typed_as and not any(self.desk_root.rglob(f"{typed_as.split(':', 1)[-1]}.md")):
             errors.append(f"typed_as target not found: {typed_as}")
         return doc_id, errors
-
-    def _check_atom(self, path: Path, crossroads: dict[str, Any]) -> list[str]:
-        try:
-            tags = check_document(AtomDoc, path.read_text(encoding="utf-8"))[0].get("tags")
-        except Exception:
-            return []  # atoms validate already reports unreadable atoms
-        return self._domain_errors(list(tags) if isinstance(tags, list) else [], crossroads)
-
-    def _domain_errors(self, tags: list[str], crossroads: dict[str, Any]) -> list[str]:
-        """The domain paths of ``tags`` without a written crossroad. A malformed path is the
-        model's error (reported with the document), so it is left out here."""
-        valid = [f"{DOMAIN}:{value}" for value in domain_paths(tags) if _DOMAIN_PATH.fullmatch(value)]
-        return [f"no written crossroad for domain path '{path}'" for path in missing_parents(valid, crossroads)]
 
 
 def _redirect_content(model_name: str, doc_id: str) -> str:

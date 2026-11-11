@@ -12,6 +12,7 @@ from sldb.api import track_document_file
 from sldb.api import untrack_document
 from sldb.api import update_store_indexes
 
+from deskops.atom_tags import sync_tag_declaration
 from deskops.workspace import ensure_target_directory
 from deskops.workspace import inspect_desk
 from deskops.workspace import legacy_task_states
@@ -362,13 +363,19 @@ class DeskCLI:
         # track yet, each with its declared model (deskops/data/desk_declaration.yaml).
         untracked_docs = pending_desk_includes(root) if desk_dir.exists() else []
 
+        # The store declares the namespaces of desk/atoms/tag-namespaces.yaml for sldb's tag
+        # family; the file wins (deskops.atom_tags.sync_tag_declaration).
+        tag_declaration_pending = (
+            desk_dir.exists() and not missing_store and not store_check_error and sync_tag_declaration(root, apply=False)
+        )
+
         pending_local_types = pending_local_task_type_models(root)
         pending_migration = pending_task_type_migration(root)
         # A task whose lifecycle TaskDoc's validator rejects is not retyped (CC37); it is listed
         # below as a legacy state to migrate or as an invalid task document.
         pending_migration = [line for line in pending_migration if not line.startswith("inconsistent ")]
 
-        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration and not legacy_pending and not invalid_tasks and not store_check_error:
+        if not lifecycle_rewrites and not legacy_faq_pending and not missing_store and not missing_desk_files and not unregistered_models and not copied_models and not untracked_docs and not invalid_docs and not moved_contracts and not pending_local_types and not pending_migration and not legacy_pending and not invalid_tasks and not store_check_error and not tag_declaration_pending:
             print("Desk is up to date.")
             return 0
 
@@ -391,6 +398,8 @@ class DeskCLI:
             print(f"- Copied deskops models: {', '.join(copied_models)}")
         if untracked_docs:
             print(f"- Untracked desk documents: {', '.join(path for _model, path in untracked_docs)}")
+        if tag_declaration_pending:
+            print("- Tag namespace declaration: .sldb/store.yaml differs from desk/atoms/tag-namespaces.yaml")
         if pending_local_types:
             print(f"- Unregistered desk-local task types: {', '.join(pending_local_types)}")
         if pending_migration:
@@ -454,6 +463,14 @@ class DeskCLI:
         except Exception as exc:
             print(f"Error: could not migrate the task types: {exc}")
             failed = True
+
+        if tag_declaration_pending:
+            try:
+                sync_tag_declaration(root)
+            except Exception as exc:
+                print(f"Error: could not declare the tag namespaces: {exc}")
+                return 1
+            print("Declared the tag namespaces of desk/atoms/tag-namespaces.yaml in .sldb/store.yaml.")
 
         # Recomputed: the scaffold may have written declared documents (the lifecycle graph).
         untracked_docs = pending_desk_includes(root) if desk_dir.exists() and store_dir.exists() else []
