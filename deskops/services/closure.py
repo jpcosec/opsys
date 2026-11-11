@@ -180,27 +180,11 @@ class ClosureService:
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
         original = task_path.read_bytes()
-        try:
-            payload = doc_access.read_doc(task_path, TaskDoc)
-        except Exception:  # noqa: BLE001 - the model rejects the task: read it from its frontmatter
-            payload = None
-        if payload is None:
-            # A task whose lifecycle the model rejects (a legacy state no table decides) is
-            # closed from its frontmatter: superseded with its own record is coherent from any node.
-            if blocking := self._other_invalid_tasks(task_path):
-                return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, "supersede", blocking)])
-            frontmatter = _frontmatter(original.decode("utf-8"))
-            history = [str(item) for item in frontmatter.get("history") or []]
-            if errors := rewrite_task_fields(task_path, {"status": "superseded", "history": [*history, "superseded"]}):
-                return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {'; '.join(errors)}"])
-        else:
-            payload["status"] = "superseded"
-            payload["history"] = [*(payload.get("history") or []), "superseded"]
-            try:
-                doc_access.write_doc(self.root, task_path, TaskDoc, payload)
-            except Exception as exc:  # noqa: BLE001 - a task that cannot record superseded is not closed
-                task_path.write_bytes(original)
-                return ClosureOutcome(1, [f"Could not record superseded status on {task_id}: {exc}"])
+        payload, model_reads = self._read_closing_task(task_path)
+        if refusal := self._record_closing_status(
+            task_id, task_path, payload, model_reads, verb="supersede", status="superseded", event="superseded"
+        ):
+            return refusal
 
         trailers = [
             f"Task-Id: {task_id}",
@@ -293,7 +277,9 @@ class ClosureService:
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
         original = task_path.read_bytes()
-        payload = doc_access.read_doc(task_path, TaskDoc)
+        # A task the model rejects is read from its frontmatter, as supersede does: the gates
+        # below use its declared files all the same.
+        payload, model_reads = self._read_closing_task(task_path)
         task_files = list(payload.get("files") or [])
         unresolved_tests = [test for test in cleaned_tests if not gates.reference_points_to_test(test, files=task_files)]
         if unresolved_tests:
@@ -305,13 +291,10 @@ class ClosureService:
                 ],
             )
 
-        payload["status"] = "resolved"
-        payload["history"] = [*(payload.get("history") or []), "resolved-by"]
-        try:
-            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
-        except Exception as exc:  # noqa: BLE001 - a task that cannot record resolved is not closed
-            task_path.write_bytes(original)
-            return ClosureOutcome(1, [f"Could not record resolved status on {task_id}: {exc}"])
+        if refusal := self._record_closing_status(
+            task_id, task_path, payload, model_reads, verb="resolved-by", status="resolved", event="resolved-by"
+        ):
+            return refusal
 
         trailers = [
             f"Task-Id: {task_id}",
@@ -431,12 +414,62 @@ class ClosureService:
         )
 
     @staticmethod
+    def _read_closing_task(task_path: Path) -> tuple[dict[str, Any], bool]:
+        """The task's fields and whether the model reads it.
+
+        A task whose lifecycle the model rejects (a legacy state no table decides) is read from
+        its frontmatter instead, so supersede and resolved-by can still close it.
+        """
+        try:
+            return doc_access.read_doc(task_path, TaskDoc), True
+        except Exception:  # noqa: BLE001 - the model rejects the task: read it from its frontmatter
+            return _frontmatter(task_path.read_text(encoding="utf-8")), False
+
+    def _record_closing_status(
+        self,
+        task_id: str,
+        task_path: Path,
+        payload: dict[str, Any],
+        model_reads: bool,
+        *,
+        verb: str,
+        status: str,
+        event: str,
+    ) -> ClosureOutcome | None:
+        """Write ``status`` and append ``event`` to the history; ``None`` once written, else the refusal.
+
+        A task the model reads is written through it. One it rejects is written field by field
+        in its frontmatter (``rewrite_task_fields`` revalidates and restores on failure): the
+        closing status with its own record is coherent from any node. With a store, sldb
+        re-extracts the whole model on each write (H2), so another invalid task refuses the
+        close before anything is written.
+        """
+        original = task_path.read_bytes()
+        history = [str(item) for item in payload.get("history") or []]
+        if not model_reads:
+            if blocking := self._other_invalid_tasks(task_path):
+                return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, verb, blocking)])
+            if errors := rewrite_task_fields(task_path, {"status": status, "history": [*history, event]}):
+                return ClosureOutcome(1, [f"Could not record {status} status on {task_id}: {'; '.join(errors)}"])
+            return None
+        payload["status"] = status
+        payload["history"] = [*history, event]
+        try:
+            doc_access.write_doc(self.root, task_path, TaskDoc, payload)
+        except Exception as exc:  # noqa: BLE001 - a task that cannot record its closing status is not closed
+            task_path.write_bytes(original)
+            return ClosureOutcome(1, [f"Could not record {status} status on {task_id}: {exc}"])
+        return None
+
+    @staticmethod
     def _blocked_by_invalid_tasks(task_id: str, verb: str, blocking: list[str]) -> str:
         return (
             f"Cannot {verb} {task_id} yet: sldb rebuilds every task of the store when one "
             f"leaves it, and these task documents are invalid: {', '.join(blocking)}. "
+            "This is sldb H2 (note 3895e9f7): sldb re-extracts the whole model on every write. "
             "Migrate them with deskops desk update --apply (it lists the ones that need "
-            f"their owner's decision), then {verb} again."
+            "their owner's decision), or decide each by hand, or close it with deskops closeout "
+            f"supersede or retire once it is the only invalid task; then {verb} again."
         )
 
     def _other_invalid_tasks(self, task_path: Path) -> list[str]:

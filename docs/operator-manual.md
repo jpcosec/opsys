@@ -652,7 +652,17 @@ and nothing is written. It makes exactly one closing commit with
 `Closeout-Mode: resolved-by`, `Closeout-Reason`, one `Closeout-Ref` per ref and
 one `Closeout-Test` per test; the task is marked `resolved` (history
 `resolved-by`) and leaves the Board. `--paths` adds paths to the closing commit
-and `--message` replaces its subject.
+and `--message` replaces its subject. Like supersede, it also closes a task its
+model rejects (a lifecycle no migration decides, such as a `draft` after
+`task_hands_to_closeout`): it reads the task's `files` and history from the
+frontmatter, applies the same ref and test gates, writes `status: resolved` and
+the `resolved-by` record into the frontmatter (validated with `TaskDoc`, restored
+if it fails) and makes the same closing commit with the same trailers. In a desk
+with a store, supersede, retire and resolved-by refuse before writing anything
+while another task is invalid: sldb re-extracts the whole model on every write
+(sldb H2, note 3895e9f7). Migrate the others with `deskops desk update --apply`,
+decide them by hand, or close each with `closeout supersede` or `closeout retire`
+once it is the only invalid task, then run the close again.
 
 ```bash
 deskops closeout resolved-by --root . \
