@@ -1,0 +1,26 @@
+### 1 deskops init + 2 tareas (deskops main de6f3b83, sldb 84eb7f75)
+Initialization complete.
+Task: /dev/shm/repro-nonterm/desk/tasks/task-repro-active.md
+Task: /dev/shm/repro-nonterm/desk/tasks/task-repro-ready.md
+### 2 estado heredado escrito como lo dejaría un desk pre-CC31 (desk desechable de reproducción; el modelo no deja escribirlo por CLI)
+desk/tasks/task-repro-active.md status -> active | history: []
+desk/tasks/task-repro-ready.md status -> ready_for_testing | history: []
+### 3 deskops desk update (dry-run)
+- Invalid task documents (not written): 2 task(s)
+  - desk/tasks/task-repro-active.md: status: 'active' is not an entry status; a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through deskops advance and deskops closeout). To fix it, decide its state: deskops closeout supersede --task <id> --reason ... --ref ... if it was replaced, deskops closeout resolved-by --task <id> --reason ... --ref <commit> --test <file> if its work is done, or recreate it with deskops add task.
+  - desk/tasks/task-repro-ready.md: status: 'ready_for_testing' is not an entry status; a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through deskops advance and deskops closeout). To fix it, decide its state: deskops closeout supersede --task <id> --reason ... --ref ... if it was replaced, deskops closeout resolved-by --task <id> --reason ... --ref <commit> --test <file> if its work is done, or recreate it with deskops add task.
+- Store check failed ('sldb stores check' exit code 1: Unexpected: 1 validation error for TaskCodeDoc)
+
+Run with --apply to repair these issues.
+rc=1
+### 4 deskops desk update --apply
+- Invalid task documents (not written): 2 task(s)
+  - desk/tasks/task-repro-active.md: status: 'active' is not an entry status; a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through deskops advance and deskops closeout). To fix it, decide its state: deskops closeout supersede --task <id> --reason ... --ref ... if it was replaced, deskops closeout resolved-by --task <id> --reason ... --ref <commit> --test <file> if its work is done, or recreate it with deskops add task.
+  - desk/tasks/task-repro-ready.md: status: 'ready_for_testing' is not an entry status; a task with an empty history at 'ritual-execution' has status 'draft' (status changes only through deskops advance and deskops closeout). To fix it, decide its state: deskops closeout supersede --task <id> --reason ... --ref ... if it was replaced, deskops closeout resolved-by --task <id> --reason ... --ref <commit> --test <file> if its work is done, or recreate it with deskops add task.
+Skipped the other repairs (structure, lifecycle graph, models, tracking, task types, indexes): sldb cannot read the store while an invalid document remains. Fix the documents above and run deskops desk update --apply again.
+rc=1
+### 5 estado en disco
+desk/tasks/task-repro-ready.md:status: ready_for_testing
+desk/tasks/task-repro-ready.md:current_node: ritual-execution
+desk/tasks/task-repro-active.md:status: active
+desk/tasks/task-repro-active.md:current_node: ritual-execution
