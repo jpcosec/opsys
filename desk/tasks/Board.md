@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T23:48:21Z'
+  at: '2026-11-11T03:19:29Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -10,7 +10,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos.md
 - desk/tasks/task-advance-y-doctor-ante-semillas-del-ciclo-de-vida-anteriores-a-cc31-doctor-las-reporta-y-advance-fall.md
 - desk/tasks/task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de.md
 # List of pill-xxx paths
@@ -54,6 +53,5 @@ No active tasks routed.
 
 _Generated from the task references above._
 
-- CC33b: Reglas de cierre - RuleDocs por tipo sobre task_completes y reglas de campo; se borran los hechos y gates viejos [draft] - El cierre de cada tipo de tarea lo decide una RuleDoc semilla on_transition sobre task_completes que exige los recibos evidence de CC33a; las reglas de campo son RuleDocs alert; se borran __closeout_evidence__, closeout_evidence_verified, pill_graduation_verified y _add_closeout_facts; los chequeos de CC38 asignados a CC33 pasan a RuleDoc o quedan con razón.
 - advance y doctor ante semillas del ciclo de vida anteriores a CC31: doctor las reporta y advance falla nombrando la arista sin efecto sets [draft] - deskops doctor reporta las semillas managed del ciclo de vida desactualizadas y sugiere desk update --apply; deskops advance falla antes de escribir, con un mensaje que nombra la arista sin efecto sets.
-- Tareas con status terminal heredado y history vacía (desks pre-CC31): desk update las migra y doctor/desk update no caen por un documento inválido [draft] - deskops desk update --apply migra las tareas heredadas según la tabla de d1 y reporta las que no puede decidir; doctor y desk update reportan los documentos inválidos uno por uno sin caer.
+- Tareas con status terminal heredado y history vacía (desks pre-CC31): desk update las migra y doctor/desk update no caen por un documento inválido [draft] - deskops desk update --apply (o un subcomando de migración con dry-run) normaliza las tareas heredadas según la tabla de d1 y reporta las que no puede decidir; closeout retire puede retirar superseded, cancelled y deferred heredadas; doctor y desk update reportan los documentos inválidos uno por uno sin caer.

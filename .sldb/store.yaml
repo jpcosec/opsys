@@ -479,9 +479,6 @@ include:
     name: review-task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de-bundle-3
   - path: desk/reviews/task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de/reproduction-2.md
     name: review-task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de-reproduction-2
-- model: TaskCodeDoc
-  paths:
-  - desk/tasks/task-cc33b-reglas-de-cierre-ruledocs-por-tipo-sobre-task-completes-y-reglas-de-campo-se-borran-los-hechos.md
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
