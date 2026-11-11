@@ -287,3 +287,9 @@ Borradas las copias en `/dev/shm/legacy-w` y el worktree `/dev/shm/deskops-legac
    `.sldb` a medio escribir (8 archivos de `.sldb` modificados en una copia del gateway). Ahora, mientras sldb no lee el
    store, `--apply` solo migra e imprime `Skipped the other repairs (structure, lifecycle graph, models, tracking, task
    types, indexes)`. En el paso 2 del log, `git status` muestra solo las tres tareas migradas.
+
+Tests de esta ronda (en `5488dd7b`, de a uno con la guarda; logs en `~/proyectos/SLDB_1/coord2-ccconfig/legacy/tests4/`):
+test_legacy_task_states 25 passed; test_task_lifecycle_validator 37; test_closeout 59; test_closeout_atomless 15,
+_declared_evidence 19, _evidence_receipts 5, _gates 3, _resolved_by 19, _rules 12, _skill_links 3, _test_paths 31;
+test_retire_cli 11; test_desk_sync 8; test_cli 101 y test_output_goldens 7 (estos dos desde una copia en /dev/shm,
+sin `--update-golden`). Todos rc 0.
