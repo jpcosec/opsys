@@ -1,7 +1,16 @@
 # CC35c: informe del worker
 
 Nodo CC35c del plan `deskops-como-config`. Trata las referencias entrantes con `referrers` y `rewrite_references` de sldb, dentro de la transacción, y las menciones en prosa como `MentionPattern`.
-Rama `wt/cc35c`, rebasada sobre origin/main `797b89fe` (NONTERM), HEAD final `2f5a1682` + este informe. El rebase entró limpio: NONTERM toca `task_lifecycle.py`, `workspace.py`, `docs/operator-manual.md` (otra sección) y `CHANGELOG.md` (otra entrada), y este nodo no toca ninguno de los dos primeros.
+Rama `wt/cc35c`. Se rebasó dos veces sobre origin/main, y las dos entraron limpias:
+
+1. `797b89fe` (NONTERM): toca `task_lifecycle.py`, `workspace.py` y otra sección del manual.
+2. `0eb4f36b` (ADV): toca `doctor_findings.py`, `lifecycle.py`, `cli/commands/doctor.py` y otras secciones del manual y del CHANGELOG.
+
+Ninguno de los dos toca archivos de este nodo, así que no hubo choques que resolver.
+
+Después del segundo rebase volvieron a correr, desde /dev/shm: `test_lifecycle_seed_drift` (8), `test_lifecycle_graph` (9), `test_atoms_merge` (7), `test_retire_cli` (13), `test_inbox_promote_cli_gaps` (21), `test_closeout` (59), `test_output_goldens` (7) y `test_cli` (101). Todos verdes.
+
+Doctor volvió a correr en los 6 desks, con base `0eb4f36b` contra HEAD. ADV agrega hallazgos de semillas desactualizadas: deskops pasa a 13 y exit 1. Aun así, la salida de la base y la de HEAD son idénticas byte a byte en los 6 desks (`doctor-before-adv/` y `doctor-after-adv/`). `ci-knowledge-check.sh .` da exit 0 (`ci-knowledge-check-final.log`).
 
 ## Qué cambió
 
