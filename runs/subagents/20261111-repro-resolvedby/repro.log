@@ -1,0 +1,25 @@
+        _git(root, "add", "desk/tasks", "tests")
+        _git(root, "commit", "-q", "-m", "add incoherent task, board and test")
+        ref = _git(root, "rev-parse", "HEAD")
+        rc = main(["closeout", "resolved-by", "--root", str(root), "--task", "task-x", "--reason", "work entered", "--ref", ref, "--test", "tests/test_x.py"])
+        out = capsys.readouterr()
+        print("RC", rc, "\nOUT", out.out, "\nERR", out.err)
+>       assert rc == 0, out.out + out.err
+E       AssertionError: Validation error:
+E         1 validation error for TaskDoc
+E           Value error, Task task-x lifecycle is inconsistent: status: 'draft' does not follow history 'task_hands_to_closeout'; expected 'ready_for_testing' [type=value_error, input_value={'id': 'task-x', 'status'... 'done_when': 'Closed.'}, input_type=dict]
+E             For further information visit https://errors.pydantic.dev/2.14/v/value_error
+E         
+E       assert 1 == 0
+
+runs/subagents/20261111-repro-resolvedby/test_repro_resolved_by_invalid.py:26: AssertionError
+=============================== warnings summary ===============================
+../../../../../home/robocop/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636
+  /home/robocop/proyectos/SLDB_1/.venv/lib/python3.12/site-packages/_pytest/config/__init__.py:1636: PytestConfigWarning: Unknown config option: asyncio_default_fixture_loop_scope
+  
+    self._warn_or_fail_if_strict(f"Unknown config option: {key}\n")
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED runs/subagents/20261111-repro-resolvedby/test_repro_resolved_by_invalid.py::test_resolved_by_of_a_task_the_model_rejects
+1 failed, 1 warning in 1.34s

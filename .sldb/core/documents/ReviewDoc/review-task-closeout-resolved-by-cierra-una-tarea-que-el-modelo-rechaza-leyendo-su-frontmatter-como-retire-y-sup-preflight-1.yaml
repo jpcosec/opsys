@@ -1,0 +1,36 @@
+name: review-task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup-preflight-1
+path: desk/reviews/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup/preflight-1.md
+source_hash: e73e2b73bd9029f8c3f6b65269a554e39852c46ffb2a1313d23106e7e42fd26b
+content_hash: 09346a77530c897713800f6a94642f435fbc732c096fcb859ba7d33d9572805f
+field_hashes:
+  id: f5bb8118a3ba003c2c0093b1ce3ffbe98b32ca5288bcd4368ed3105b143c8018
+  title: 2af83f555ed0f9ac23cb199593109c42e2386652467c0e5a145d20aab8df22f0
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: 2c48f80693a2322e6aa06dbc00824d668f2128e4dd90e0ece65ba6496a42d8cf
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: ff73ede9c87acca8bc00fc40c8cb897b3ed37c512972f6cd45a9f62c7881c088
+  input_sha256: e7c132e1a0b2d018ef039d0a724b35d8dc0642088d2bdbb534fccf7c50261852
+  output_sha256: 4acba0ed91cee181b14085736d58c84aabda7a299b93b6968569bdb849823f83
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 6956264a35a907eaa6605d5c621ccaf2c82eb13ec6ca8b18533a5cd126179a42
+  created_at: 75d6f99a7168fcc28b04921196156fd6222ffa59bb04679d5740bca1e2e616d0
+  disposed_at: 4b19d7042b1f68acb50fe2bd8c66ba964dfe3a73e3e95c148f8bf5f7a7867786
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 7057f6e49da321a40c12528c2f193767343595ed5f9403e6e386081223e6b9ea
+  disposition: 93fb5ca707345358c94a4d1b6653d2ccc99c0de2f434080ad3cf66ae24f89cd0
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-11T17:43:42Z'
+  authority: generated
+  via: save_document_payload

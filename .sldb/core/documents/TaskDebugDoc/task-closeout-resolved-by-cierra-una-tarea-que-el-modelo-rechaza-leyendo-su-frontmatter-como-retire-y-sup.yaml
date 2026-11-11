@@ -1,0 +1,39 @@
+name: task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup
+path: desk/tasks/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup.md
+source_hash: ad8332b5db51ce61fabc85fd5cf9b5ecad6a487f550e77b14c61cd9b98409645
+content_hash: 48f3f06addc412371a768c0f50eeff1954c80632f055d1ff93a5b8fc9c40cd2f
+field_hashes:
+  title: 4758d513a59161887d8899603b0eb3e464c03489da8bd2156bef3a379f97a9bf
+  id: c4edb416588f12b2e4f07feb406d3ea1fb4de859293329c28952502aacfffaf7
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: 8d407ded0f430b0df72e929732e1732f6402a99aad012bf3136d0705755b552c
+  goal: 35695aaeb3267a9eafbb6d8804ea928091dc30f62576908ed9eaa5514e3535de
+  scope: 76e9b31c6e43d1e2132702e719dc0f9c59577eb3ab4659ad3cab5e7313a03494
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: 16b4b80b50b9d49fdd3565b242920f925f9fc42d3a0a2724a06421990ff42f04
+  implementation_path: 81420701c2a1c4ef1e8d37bddb4bc09dd89b1d3c053ade0622ecd6b39bb25903
+  validation: b7b4b5511a451747b4e059630fc4bb13236b9a4bca238e5d652861a8e23a375b
+  done_when: fdc5ef7e31ed9d05ff4fc8ef92f57f8e294c1db21081e67ffc8df82ef5b5a552
+  task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  from_drawer: 94cf5fc5b49a692d35447cb1f4821fbc8785b1c7d83bcee694e4bf0b58d93c3e
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-11T17:42:11Z'
+  authority: generated
+  via: create_document

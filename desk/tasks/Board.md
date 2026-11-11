@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-11T17:34:32Z'
+  at: '2026-11-11T17:42:23Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -11,6 +11,7 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo.md
+- desk/tasks/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -53,3 +54,4 @@ No active tasks routed.
 _Generated from the task references above._
 
 - CC35d resto: dominios, namespaces y tag_folder por la API de tags de sldb (GD27 con value bare y tag_models) [draft] - domain_tree, atom_tags y los chequeos de namespaces y padres de dominio pasan a la API de tags de sldb (declaración, reglas, tag_tree, tag_folder); se borran require_domain_parents, _domain_errors y validate_atom_tag_namespaces; goldens idénticos.
+- closeout resolved-by cierra una tarea que el modelo rechaza leyendo su frontmatter, como retire y supersede (huecos de legacy, parte 1) [draft] - deskops closeout resolved-by de una tarea que el modelo rechaza la cierra por CLI, con el mismo commit, los mismos trailers (Closeout-Mode: resolved-by) y las mismas compuertas de ref y test que una tarea válida, leyéndola por frontmatter como supersede; con store y otra tarea inválida en el mismo modelo, rechaza antes de escribir y nombra sldb H2 y la vía manual.

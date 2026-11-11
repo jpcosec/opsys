@@ -511,6 +511,12 @@ include:
     name: review-task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo-preflight-1
   - path: desk/reviews/task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo/bundle-1.md
     name: review-task-cc35d-resto-dominios-namespaces-y-tag-folder-por-la-api-de-tags-de-sldb-gd27-con-value-bare-y-tag-mo-bundle-1
+  - path: desk/reviews/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup/reproduction-1.md
+    name: review-task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup-reproduction-1
+  - path: desk/reviews/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup/preflight-1.md
+    name: review-task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup-preflight-1
+  - path: desk/reviews/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup/bundle-1.md
+    name: review-task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup-bundle-1
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
@@ -539,5 +545,8 @@ include:
   paths:
   - deskops/data/views/board.md
   - deskops/data/views/task.md
+- model: TaskDebugDoc
+  paths:
+  - desk/tasks/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup.md
 graph_backend: networkx
 policy: {}

@@ -1,0 +1,92 @@
+{
+  "key": "task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup/bundle",
+  "input_sha256": "51a0c1907639b51c50258d04a3b2c38e4e08e1c4004a11615dacc48585d5e203",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp22/runs/subagents/20261111-174251/context-review/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup/bundle/51a0c1907639b51c50258d04a3b2c38e4e08e1c4004a11615dacc48585d5e203/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-closeout-resolved-by-cierra-una-tarea-que-el-modelo-rechaza-leyendo-su-frontmatter-como-retire-y-sup.md",
+      "sha256": "ad8332b5db51ce61fabc85fd5cf9b5ecad6a487f550e77b14c61cd9b98409645",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/closeout.py",
+      "sha256": "2b58772c0d4c61b183de2af9b3c893d38dec04f81e4ec677cb108db3bde16fb5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "596d9592c5c12fe0cf880adbe2a2e71f02ad4168f2a1d43aa41b17ec6ffdc557",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/operator-manual.md",
+      "sha256": "96e6561cb13ba50c3c31fcd2e6a51f5711c7e38fdee052f0fb3ef17fa682d0ee",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/workflow-policy-reference.md",
+      "sha256": "09f14ada64ded93afe821eeb12ef391a64c2e71e07940c2d5da41984fc8b7731",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "f4e436a7d1878359ca8c7b870bc4036512db09de460a8a2e04f219abc77d8e3a",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "deskops/services/closure.py",
+      "reason": "size>=60000",
+      "size": 68349
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-11T17:42:52.243740+00:00",
+  "finished": "2026-11-11T17:43:15.293281+00:00"
+}
