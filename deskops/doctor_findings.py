@@ -19,6 +19,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 REGISTER = "deskops desk update --apply"
 
 # Per-document notes of `sldb stores check`: the document is fine, or it moved under an
@@ -120,6 +122,63 @@ def moved_documents(root: Path, missing: list[Path], untracked: list[Path]) -> t
         else:
             gone.append(old)
     return moves, gone, list(by_name.values())
+
+
+#: The fields of a lifecycle ``RelationDoc`` that govern a transition: a difference there breaks
+#: ``deskops advance`` (an error); any other difference of a managed seed is an alert (b1).
+TRANSITION_FIELDS = frozenset({"source_id", "target_id", "relation_type", "condition", "attributes"})
+
+#: The write provenance sldb adds to a document it edits (``sldb: {by, at, authority, via}``):
+#: not a field of the seed, so it is named only when nothing else differs.
+PROVENANCE_KEY = "sldb"
+
+
+@dataclass(frozen=True)
+class SeedDrift:
+    """A managed seed of the desk that differs from the deskops package."""
+
+    path: str
+    fields: tuple[str, ...]
+    governs_transition: bool
+
+    @property
+    def line(self) -> str:
+        what = ", ".join(self.fields)
+        return (
+            f"lifecycle seed out of date: {self.path} differs from the deskops package ({what}). "
+            f"Fix: {REGISTER}"
+        )
+
+
+def _frontmatter(text: str) -> dict[str, Any]:
+    if not text.startswith("---"):
+        return {}
+    parts = text.split("---", 2)
+    if len(parts) < 3:
+        return {}
+    try:
+        data = yaml.safe_load(parts[1])
+    except yaml.YAMLError:
+        return {}
+    return data if isinstance(data, dict) else {}
+
+
+def _body(text: str) -> str:
+    parts = text.split("---", 2) if text.startswith("---") else ["", "", text]
+    return parts[2] if len(parts) == 3 else text
+
+
+def seed_drift(rel: str, package_text: str, desk_text: str) -> SeedDrift:
+    """How the desk's copy of a managed seed differs from the package's: the top-level
+    frontmatter keys whose values differ, sorted, without sldb's write provenance; ``body``
+    when only the text below the frontmatter differs."""
+    package, desk = _frontmatter(package_text), _frontmatter(desk_text)
+    differ = sorted(k for k in set(package) | set(desk) if package.get(k) != desk.get(k))
+    fields = tuple(k for k in differ if k != PROVENANCE_KEY)
+    if not fields:
+        fields = ("body",) if _body(package_text) != _body(desk_text) else tuple(differ)
+    is_edge = "relation_type" in package and "target_id" in package
+    return SeedDrift(rel, fields, is_edge and bool(TRANSITION_FIELDS & set(fields)))
 
 
 def print_findings(findings: Findings, *, repair: bool) -> None:

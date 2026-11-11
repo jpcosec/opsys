@@ -90,6 +90,23 @@ first such document, so doctor names every one and still runs the other checks
 `Migrate it with deskops desk update --apply`; any other one says what its owner can
 do (`decide its state: deskops closeout supersede --task <id> --reason ... --ref ...`).
 
+`doctor` also compares the desk's managed seeds (the lifecycle graph and its rules
+under `desk/lifecycle/`) with the ones the installed deskops ships, by the same
+comparison `deskops desk update --apply` makes before rewriting them. Each copy
+that differs is one finding, naming the top-level frontmatter fields that differ
+(`body` when only the text below the frontmatter does; the `sldb:` write
+provenance is named only when nothing else differs):
+
+```text
+lifecycle seed out of date: desk/lifecycle/execution-task_activates.md differs from the deskops package (attributes). Fix: deskops desk update --apply
+```
+
+It is an **error** when a lifecycle edge's transition fields differ (`source_id`,
+`target_id`, `relation_type`, `condition`, `attributes`): `deskops advance` refuses
+that edge. Any other difference (a rule, the body or notes of a seed) is an
+**alert**. A desk seeded before CC31 has `attributes: {}` on its edges and shows
+up here; `deskops desk update --apply` restores the managed seeds.
+
 `--repair` acts on errors only (it scaffolds structure and registers models). Use it
 when you understand the reported errors:
 
@@ -477,6 +494,18 @@ operator records a human receipt (`engine: human`, `no model available`; see
 `ready_for_testing`. `advance` stops at `ritual-closeout`; it never closes a
 task. When no outgoing transition condition holds, it exits non-zero and names
 the blocked gate.
+
+Before applying an edge, `advance` checks it against the lifecycle the installed
+deskops ships: same `relation_type`, same target ritual and same
+`attributes.sets.status`. An edge that differs (a desk seeded before CC31 has
+`attributes: {}`) would write a state the task model rejects, so `advance` stops
+first, exits 1 and leaves the task unchanged:
+
+```text
+Error: Cannot advance task-x via task_activates: the edge desk/lifecycle/execution-task_activates.md does not set status active (attributes.sets.status is missing). The desk's lifecycle seeds are out of date: run 'deskops desk update --apply'.
+```
+
+`deskops doctor` reports the same seed; `deskops desk update --apply` restores it.
 
 There is no manual override: a transition fires only when its condition
 holds, and a blocked task stays where it is while `advance` names the gate.

@@ -121,12 +121,13 @@ def test_desk_update_apply_rewrites_a_relation_doc_without_attributes_and_then_c
     assert main(["doctor", "--root", str(lifecycle_desk)]) == 0
 
 
-def test_a_desk_edge_whose_sets_differ_from_the_package_is_refused_by_the_task_model(lifecycle_desk: Path) -> None:
+def test_a_desk_edge_whose_sets_differ_from_the_package_is_refused_before_the_write(lifecycle_desk: Path) -> None:
     """The effect is the edge's, but the task's lifecycle is checked against the package's edges
     (CC37 a1: ``desk update --apply`` restores a managed edge a desk changed). An edge edited
-    through sldb's API to set another status makes ``advance`` refuse the transition with the
-    validator's message, and the task stays as it was; no YAML of the package changes."""
-    from pydantic import ValidationError
+    through sldb's API to set another status makes ``advance`` refuse the transition before any
+    write: since the advance/doctor task.debug (d2) the refusal is ``LifecycleSeedOutOfDate``,
+    naming the edge and ``desk update --apply``, instead of the model's ValidationError. The task
+    stays as it was; no YAML of the package changes."""
     from sldb.api import save_document_payload
     from sldb.models.relation_doc import RelationDoc
     from sldb.runtime.validation import extract_model_data
@@ -140,10 +141,11 @@ def test_a_desk_edge_whose_sets_differ_from_the_package_is_refused_by_the_task_m
     operations = DeskopsOperations(lifecycle_desk)
     task_id = _task(operations, "Declared effect")  # the first desk operation scaffolds only what is missing
     accept_receipts(lifecycle_desk, task_id)
-    with pytest.raises(ValidationError) as excinfo:
+    with pytest.raises(lifecycle.LifecycleSeedOutOfDate) as excinfo:
         operations.advance_task(task_id)
 
-    assert "status: 'in_review' does not follow history 'task_activates'; expected 'active'" in str(excinfo.value)
+    assert "does not set status active (attributes.sets.status is in_review)" in str(excinfo.value)
+    assert "deskops desk update --apply" in str(excinfo.value)
     stored = operations._read_doc(lifecycle_desk / "desk" / "tasks" / f"{task_id}.md", TaskDoc)
     assert (stored["status"], stored["current_node"], stored["history"]) == ("draft", "ritual-execution", [])
     assert lifecycle.SPEC_PATH.read_bytes() == spec_before

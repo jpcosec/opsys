@@ -8,9 +8,10 @@ import sys
 
 from deskops.bootstrap import MODEL_REFS, SLDBBootstrap
 from deskops.doc_readability import is_unreadable_by_model
-from deskops.doctor_findings import REGISTER, Findings, invalid_task_findings, moved_documents, print_findings, read_store_check
+from deskops.doctor_findings import REGISTER, Findings, invalid_task_findings, moved_documents, print_findings, read_store_check, seed_drift
 from deskops.workspace import inspect_desk
 from deskops.workspace import modeled_desk_markdown_docs
+from deskops.workspace import desk_seed_text
 from deskops.workspace import seed_desk
 
 
@@ -46,6 +47,7 @@ class DoctorCLI:
         self._check_structure(root, desk_dir, inspection, repair, findings)
         if desk_dir.exists():
             self._check_documents(root, desk_dir, repair, findings)
+            self._check_managed_seeds(root, findings)
             self._check_models(root, repair, findings)
         return self._report(findings, repair)
 
@@ -85,6 +87,21 @@ class DoctorCLI:
         findings.errors += [f"Invalid desk document: {d}" for d in docs.unknown]
         findings.errors += docs.store_errors
         findings.errors += self._unreadable(root, docs.by_model)
+
+    def _check_managed_seeds(self, root: Path, findings: Findings) -> None:
+        """The managed seeds (the lifecycle graph and its rules) whose desk copy differs from the
+        package: what ``deskops desk update --apply`` would rewrite, by the same comparison
+        (``seed_desk(apply=False, restore_managed=True)``). One finding per file; an error when a
+        lifecycle edge's transition fields differ (``advance`` refuses it), else an alert (b1)."""
+        try:
+            rewritten = seed_desk(root, apply=False, restore_managed=True).rewritten_paths
+        except Exception as exc:
+            findings.errors.append(f"Could not compare the desk's managed seeds with the deskops package: {exc}")
+            return
+        for path in rewritten:
+            rel = path.resolve().relative_to(root).as_posix()
+            drift = seed_drift(rel, desk_seed_text(root.name, rel), path.read_text(encoding="utf-8"))
+            (findings.errors if drift.governs_transition else findings.alerts).append(drift.line)
 
     def _store_check(self, root: Path, findings: Findings) -> dict | None:
         result = subprocess.run(
