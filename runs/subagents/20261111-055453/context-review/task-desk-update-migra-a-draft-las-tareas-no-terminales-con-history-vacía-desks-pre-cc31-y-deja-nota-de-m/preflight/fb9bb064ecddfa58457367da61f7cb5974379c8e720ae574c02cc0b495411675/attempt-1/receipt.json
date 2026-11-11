@@ -1,0 +1,9 @@
+{
+  "key": "task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "fb9bb064ecddfa58457367da61f7cb5974379c8e720ae574c02cc0b495411675",
+  "output_sha256": "31d3cc7d85d8e0bd95b789959a5550bcfe4b4b5ee64bdf0fc44ab8c135b9a17e",
+  "start": "2026-11-11T05:54:53.453318+00:00",
+  "end": "2026-11-11T05:55:17.677015+00:00"
+}

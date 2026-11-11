@@ -1,0 +1,36 @@
+name: review-task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m-bundle-1
+path: desk/reviews/task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m/bundle-1.md
+source_hash: 71f1f8717acd6a600bcf4756e14bcb7240c18d66bc971727e26d96183072ca1e
+content_hash: 8cdce7154cd0b033d75b80ccfff03078a844016f7d7e3d93304932928cd35c03
+field_hashes:
+  id: b90ca8853ab0da3033bf66eccf014809c26345383de93dddcefe7dcf89adaf48
+  title: 3ceb9734c46d524f8a79e6f856d65fd94f403a0dffac0a92072e2bf4e4a558b5
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: 2c6c09082b0cda1e5f3ae339a97ca3ce49612b30cc0ce598ee9c4b6e19c1d62c
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 0ba3638ed3db8934931ce0a49c11ba3fbb4c5cc904137c65046a5f73363f6a57
+  input_sha256: 3883fa881a712b434514d1d4630a93e501eecfda3840a9fb386b051aa1d77b6a
+  output_sha256: a96ae2773e60c8dc24a6c2f1fb593a29ccfde25332fa03b2dcf4b85c803d27d1
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 2def73ce8bde7bd00e79b5a72a262dbf01b79f0d11a40cf13ee19b50602cba4b
+  created_at: db30014f9c442ebcde5a8b1221933a49fc87a421443a406a30ea83725410ae75
+  disposed_at: 49e6bf13544f1adc7b5c13c62fc1e3f948249263f438747ff7a9f51b09ab3d40
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 6531172d83dac16910a1a881f0f2d595dcb3e5b3e05047a614cf7b98da0e328f
+  disposition: b158d0ec321e52fc4daa55d4b35806cd32231fb4a4c8da4a39be17a9a2715c11
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-11T05:56:13Z'
+  authority: generated
+  via: save_document_payload

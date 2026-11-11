@@ -1,0 +1,81 @@
+{
+  "key": "task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m/bundle",
+  "input_sha256": "76a70fa5377e75f3793d52cf8c4bb0ad840edf7ebd183aa55d2e42f89807891d",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp13/runs/subagents/20261111-055520/context-review/task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m/bundle/76a70fa5377e75f3793d52cf8c4bb0ad840edf7ebd183aa55d2e42f89807891d/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-desk-update-migra-a-draft-las-tareas-no-terminales-con-history-vacía-desks-pre-cc31-y-deja-nota-de-m.md",
+      "sha256": "4d2c6463be80a256623dec2e2383a77c40d565af66a0f00b4579a5dbc2451e54",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/models/task_lifecycle.py",
+      "sha256": "0ba511264a35c4eb0d48d0ee2ac1d2c29e2759ee6319ec0dcd7bd421d49a74ca",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/workspace.py",
+      "sha256": "08f05f87fa9869e08d8c4f3591f8df14b1ac0a3576607c8dedfde8ebde900e40",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "a99c6b7babb0209800527877098156a8e53c9b557cdd5af3f5bba7d63eb30a4b",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    },
+    {
+      "path": "docs/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-11T05:55:20.439671+00:00",
+  "finished": "2026-11-11T05:55:39.992363+00:00"
+}
