@@ -258,3 +258,32 @@ defecto: `desk update` dry-run y `--apply` salen con 3 (caen con `'sldb stores c
 
 Borradas las copias en `/dev/shm/legacy-w` y el worktree `/dev/shm/deskops-legacy-base`; los worktrees de goldens
 `/dev/shm/deskops-legacy` se quitaron al terminar cada cola. Nada aplicado en desks reales; nada escrito en sldb.
+
+## Ronda de ajustes del coordinador (sugerencia de b1 y salida por CLI de las draft)
+
+1. **Sugerencia con la gramática real.** `UNMIGRATABLE_SUGGESTION` dice ahora: `decide its state: deskops closeout supersede --task <id> --reason ... --ref ... if it was replaced, deskops closeout resolved-by --task <id> --reason ... --ref <commit> --test <file> if its work is done, or recreate it with deskops add task`.
+   Golden `tests/fixtures/golden/output/doctor_invalid_task.text` regenerado con ese texto. Hipótesis (no probada aparte):
+   `closeout resolved-by` sigue cargando la tarea con el modelo, así que para una tarea inválida la salida que funciona
+   hoy es `supersede`.
+2. **`closeout supersede` de una tarea que el modelo rechaza.** Si `read_doc` con el modelo falla, lee el frontmatter y
+   escribe solo `status: superseded` e `history [..., superseded]` (`workspace.rewrite_task_fields`, la misma
+   reescritura línea a línea de la migración, que ahora también reemplaza una lista multilínea), y revalida con
+   `TaskDoc` (restaura si falla). El resultado es coherente desde cualquier nodo (`CLOSEOUT_STATES`). El commit, los
+   trailers (`Closeout-Mode: superseded`, `Closeout-Reason`, `Closeout-Ref`), el Board y el índice no cambian. Una
+   tarea que el modelo sí lee sigue la ruta de antes, sin cambios.
+   - **H2 lo impide con 2 inválidas en el mismo modelo**: el `untrack` de `_close` re-extrae todo el modelo. Por eso,
+     con store, supersede rechaza antes de escribir nada mientras haya otra tarea inválida (el mismo chequeo que retire).
+     Queda probado con 1: `test_legacy_task_states.py::test_supersede_closes_an_incoherent_task_by_cli_and_waits_while_another_is_invalid`
+     (con 2, rechazo limpio y árbol intacto; decidida la otra, cierra por CLI y `stores check` da rc 0). Sin store:
+     `test_closeout.py::test_closeout_supersede_closes_a_task_whose_lifecycle_the_model_rejects` (draft +
+     `[task_activates, task_hands_to_closeout]`, mismo commit y mismos trailers).
+   - **Gateway** (`worker-gw-after2.log`, deskops `b07f1deb`): con las dos draft, supersede de una rechaza (rc 1, sin
+     cambios). Decidida la otra (simulación en la copia), `closeout supersede --task task-linea-base-de-lint-del-gateway`
+     cierra por CLI (rc 0, `Closeout-Mode: superseded`). Luego `desk update --apply` rc 0, `stores check` PASS (68
+     documentos) rc 0, tercera corrida up to date y doctor sano. **Para las dos draft juntas no hay salida solo por CLI
+     mientras siga H2: el dueño tiene que decidir una a mano.**
+3. **Regresión tras el rebase, arreglada.** Con CC33b la semilla `desk/lifecycle/closeout-task_completes.md` cambió, y el
+   scaffold de `--apply` (que corría antes del salto) la reescribía y retrackeaba en sldb. Eso caía por H2 y dejaba
+   `.sldb` a medio escribir (8 archivos de `.sldb` modificados en una copia del gateway). Ahora, mientras sldb no lee el
+   store, `--apply` solo migra e imprime `Skipped the other repairs (structure, lifecycle graph, models, tracking, task
+   types, indexes)`. En el paso 2 del log, `git status` muestra solo las tres tareas migradas.
