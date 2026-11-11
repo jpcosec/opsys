@@ -22,25 +22,22 @@ from collections.abc import Iterable
 from dataclasses import dataclass
 from pathlib import Path
 import sys
-
-from sldb.api.documents.replace_text import replace_text
-from sldb.api.documents.transaction import Transaction
-from sldb.api.edges.project_graph import ProjectGraph
-from sldb.api.edges.referrer import Referrer
-from sldb.api.edges.referrers import Target
-from sldb.api.edges.referrers import find_hits
-from sldb.api.edges.referrers import resolve_target
-from sldb.api.edges.rewrite_mentions import mention_hits
-from sldb.api.edges.rewrite_mentions import rewritten_line
-from sldb.api.edges.rewrite_references import rewrite_references
-from sldb.api.stores.open_store import open_store
-from sldb.api.stores.store_location import StoreLocation
-from sldb.core.exceptions import SLDBDocumentTargetError
+from typing import TYPE_CHECKING
+from typing import Any
 
 from deskops import doc_access
 from deskops.graph.desk_graph import PROVENANCE_FIELDS
 from deskops.graph.desk_graph import desk_graph
 from deskops.paths import package_pythonpath
+
+if TYPE_CHECKING:
+    from sldb.api.documents.transaction import Transaction
+    from sldb.api.edges.project_graph import ProjectGraph
+    from sldb.api.edges.referrer import Referrer
+    from sldb.api.edges.referrers import Target
+
+# The GD22 pieces are imported where they are used, as `deskops.services.replace` does with
+# `replace_text`, so importing deskops does not depend on them.
 
 
 @dataclass(frozen=True)
@@ -56,14 +53,20 @@ class _Lookup:
     """The desk's store (when it has one), its graph, and a document resolved over both."""
 
     def __init__(self, root: Path) -> None:
+        from sldb.api.stores.open_store import open_store
+
         self.root = root.resolve()
-        self.location: StoreLocation | None = (
+        self.location: Any = (
             open_store(doc_access.store_path(self.root), mode="readonly") if doc_access.has_store(self.root) else None
         )
         self.graph: ProjectGraph = desk_graph(self.root)
 
     def target(self, path: Path | str) -> Target | None:
         """The document at ``path``, as a tracked document or as a graph node. None when it is neither."""
+        from sldb.api.edges.referrers import Target
+        from sldb.api.edges.referrers import resolve_target
+        from sldb.core.exceptions import SLDBDocumentTargetError
+
         relative = doc_access.relative_path(self.root, path)
         if self.location is not None:
             try:
@@ -74,6 +77,9 @@ class _Lookup:
         return Target(relative, None, None, None, node.id) if node is not None else None
 
     def hits(self, target: Target) -> list[Referrer]:
+        from sldb.api.edges.referrers import find_hits
+        from sldb.api.edges.rewrite_mentions import mention_hits
+
         if self.location is not None:
             return [referrer for referrer, _ in find_hits(self.location, target, self.graph)]
         return [referrer for referrer, _ in mention_hits(self.graph, target.node_id)] if target.node_id else []
@@ -108,6 +114,8 @@ def rewrite_referrers(
     joins ``transaction``. Returns where each change was made: ``<path> (<field>)`` or
     ``<path>:<line>``.
     """
+    from sldb.api.edges.rewrite_references import rewrite_references
+
     lookup = _Lookup(root)
     target = lookup.target(path)
     if target is None:
@@ -158,6 +166,7 @@ def _skipped(root: Path, path: Path | str, excluded: Iterable[Path | str]) -> se
 
 def _inbound(lookup: _Lookup, target: Target, skipped: set[str]) -> list[Inbound]:
     by_export_id = lookup.paths_by_export_id()
+    tracked = set(by_export_id.values())
     found: list[Inbound] = []
     for referrer in lookup.hits(target):
         if referrer.origin == "schema":
@@ -165,13 +174,32 @@ def _inbound(lookup: _Lookup, target: Target, skipped: set[str]) -> list[Inbound
             location = f"{source} ({referrer.field})"
         else:
             source, location = referrer.source, referrer.location or referrer.source
+            # A line mention (SOURCE_PATH) also reads the frontmatter. In a tracked document, the store's
+            # field index already gives those lines as fields, so they are not counted again as prose.
+            if source in tracked and _in_frontmatter(lookup.root / source, location):
+                continue
         if source not in skipped:
             found.append(Inbound(path=source, location=location, referrer=referrer))
     return found
 
 
+def _in_frontmatter(path: Path, location: str) -> bool:
+    try:
+        lines = path.read_text(encoding="utf-8").split("\n")
+        number = int(location.rsplit(":", 1)[1])
+    except (OSError, UnicodeDecodeError, ValueError):
+        return False
+    if not lines or lines[0] != "---":
+        return False
+    end = next((index for index, line in enumerate(lines[1:], start=2) if line == "---"), None)
+    return end is not None and number < end
+
+
 def _rewrite_mentions(lookup: _Lookup, target: Target, new: Target, mentions: list[Inbound], transaction: Transaction | None) -> list[str]:
     """Rewrite each mentioning file once. A file whose lines are unchanged is not written."""
+    from sldb.api.documents.replace_text import replace_text
+    from sldb.api.edges.rewrite_mentions import rewritten_line
+
     changed: list[str] = []
     by_path: dict[str, list[Inbound]] = {}
     for item in mentions:
