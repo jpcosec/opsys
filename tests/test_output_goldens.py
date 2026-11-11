@@ -675,7 +675,8 @@ def test_command_output_goldens(
         output_dir = GOLDEN_DIR / "output"
         output_dir.mkdir(parents=True, exist_ok=True)
         for stale in output_dir.glob("*"):
-            if f"output/{stale.name}" not in outputs:
+            # view_*.json belong to tests/test_view_goldens.py (CC34 a3).
+            if f"output/{stale.name}" not in outputs and not stale.name.startswith("view_"):
                 stale.unlink()
     for name, actual in sorted(outputs.items()):
         _check_golden(f"output/{name}", actual, request)
