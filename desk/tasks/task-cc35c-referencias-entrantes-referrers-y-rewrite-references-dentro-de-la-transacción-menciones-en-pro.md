@@ -1,9 +1,9 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-11T03:25:40Z'
+  at: '2026-11-11T03:26:57Z'
   authority: generated
-  via: create_document
+  via: save_document_payload
 id: task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro
 status: draft
 summary: ''
@@ -84,6 +84,14 @@ a5 (aceptación de retire de una pill): un test sobre tmp_path con una pill liga
 a6 (DO8): el grafo se arma con ProjectGraph(root, desk_graph_config()) en proceso, no con sldb.api.project_graph(store).
 a7 (files): deskops/services/, deskops/atom_references.py, deskops/graph/desk_graph.py, tests/, docs/, CHANGELOG.md.
 a8 (4 pasos): sldb stores build --store .sldb; pytest, un proceso por archivo de tests/; sldb stores build --check --store .sldb; bash scripts/ci-knowledge-check.sh . Los corre el coordinador en clon limpio.
+
+DISPOSICIÓN DE PREFLIGHT-1 Y BUNDLE-1 (2026-11-11, coordinador del plan; decisiones revisables):
+b1 (formas de mención): en el desk hay dos formas, `atom:atom-<slug>` (con prefijo de kind) y el id pelado `atom-<slug>`, a veces entre backticks. MentionPattern ATOM ya captura la segunda; la primera la cubre el target "atom:{0}". El test de atoms merge usa las dos y comprueba que las dos se reescriben. Si una no la ve referrers, se suma el patrón que falte en desk_graph.py.
+b2 (criterio para la nota a sldb): si con el MentionPattern declarado `sldb.api.edges.referrers` no devuelve la mención de una de las dos formas sobre un desk de tmp_path, es caso de sldb: hipótesis en el informe con el desk mínimo que lo reproduce. El coordinador abre la nota.
+b3 (drawer remove y closeout): las vías son `deskops drawer remove` (services/drawer.py remove_entry) y los cierres de closeout que borran la tarea (commit, supersede, retire, resolved-by). Si alguna hoy no toca referencias entrantes, sigue sin tocarlas (no se suma comportamiento). Cuando borra un documento que tiene referrers, reporta los que quedan colgando con un alert que nombra cada referrer, sin reescribir. Se prueba en un caso.
+b4 (retire de una pill): el comando es `deskops retire <path> --reason --ref` (acepta pills). Lo que se exige y prueba es una sola desk_transaction: Board y tareas se reescriben en la misma transacción, y un fallo forzado a mitad deja el disco sin cambios. El commit no es parte de retire.
+b5 (líneas antes y después): tabla en el informe runs/subagents/cc35c-worker-report.md con `wc -l` de cada archivo tocado de deskops/services/, deskops/atom_references.py y deskops/graph/desk_graph.py, antes (base) y después.
+b6 (docs/): sí entra. docs/operator-manual.md, en las secciones de atoms delete/split/merge, retire y drawer remove, si cambia lo que el operador ve.
 
 ## Validation
 

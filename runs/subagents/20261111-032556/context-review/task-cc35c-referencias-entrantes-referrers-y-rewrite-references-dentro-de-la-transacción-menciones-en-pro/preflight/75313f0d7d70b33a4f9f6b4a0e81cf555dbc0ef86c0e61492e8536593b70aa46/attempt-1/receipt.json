@@ -1,0 +1,9 @@
+{
+  "key": "task-cc35c-referencias-entrantes-referrers-y-rewrite-references-dentro-de-la-transacción-menciones-en-pro/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "75313f0d7d70b33a4f9f6b4a0e81cf555dbc0ef86c0e61492e8536593b70aa46",
+  "output_sha256": "ebdd026e86d73069dafd146b32f56b0937e28cd19565f9439465ab38ff0e5fdd",
+  "start": "2026-11-11T03:25:57.152578+00:00",
+  "end": "2026-11-11T03:26:10.699951+00:00"
+}
