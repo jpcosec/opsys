@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-10T21:33:46Z'
+  at: '2026-11-11T01:00:44Z'
   authority: generated
   via: save_document_payload
 id: task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de
@@ -44,7 +44,7 @@ Prioridad del overlord (2026-11-10), mismo origen que el task.debug de advance/d
 
 _Describe the concrete result this task must produce._
 
-deskops desk update --apply migra las tareas heredadas según la tabla de d1 y reporta las que no puede decidir; doctor y desk update reportan los documentos inválidos uno por uno sin caer.
+deskops desk update --apply (o un subcomando de migración con dry-run) normaliza las tareas heredadas según la tabla de d1 y reporta las que no puede decidir; closeout retire puede retirar superseded, cancelled y deferred heredadas; doctor y desk update reportan los documentos inválidos uno por uno sin caer.
 
 ## Scope
 
@@ -90,6 +90,19 @@ b7 (current_node vacío): si ya está vacío y el status está en OUTSIDE_LIFECY
 b8 (lectura sin el modelo): desk update y doctor listan las tareas leyendo el frontmatter, como doctor ya hace al listar documentos, y validan cada una con el modelo por separado. Un ValidationError es un hallazgo de ese documento, no corta el recorrido. La migración de d1 escribe el frontmatter corregido por la ruta de documentos de deskops (desk_transaction / sldb replace_text, la vía de CC35a/CC35d) y vuelve a validar con el modelo: si sigue inválida, revierte y la reporta.
 b9 (veredicto de doctor): una tarea inválida es un error (exit distinto de 0, "the desk is broken") con una línea por documento. Los demás chequeos corren igual, incluido el de modelos sin registrar.
 b10 (pills, átomos, Board): la tarea no liga pills ni átomos. Va por el Board como cualquier task.debug en ritual-execution; no hay enrutado especial.
+
+AMPLIACIÓN (2026-11-10, coordinador del plan por orden del overlord; prioridad máxima; decisiones revisables):
+d3 (closeout retire): `deskops closeout retire` no puede retirar justo las tareas heredadas, por dos causas.
+- El validador de CC37 las rechaza al cargarlas ('superseded is not an entry status; a task with an empty history at ritual-execution has status draft').
+- services/closure.py close_retired solo acepta status resolved, closed, done o complete, y la ayuda de retire dice lo mismo.
+Arreglo:
+- retire carga la tarea leyendo el frontmatter, sin el modelo (la misma lectura de b8).
+- retire acepta además superseded, cancelled y deferred (y candidate) con history vacía.
+- retire escribe el commit de cierre con Closeout-Mode: legacy-resolved, como hoy.
+- La ayuda y su golden se actualizan solo en la lista de status aceptados; ese golden de ayuda es el único que cambia, con autorización.
+- Test: retire de cada uno de esos status sobre una tarea heredada en tmp_path; y retire de una tarea coherente en ritual-execution sigue rechazado.
+d4 (normalización por CLI, pedido (a) del overlord): la vía de d1 es `deskops desk update`. Sin --apply es el dry-run y lista lo que migraría; con --apply migra. Si en el código resulta más claro, puede ser un subcomando propio (`deskops desk migrate-legacy-states` con dry-run por defecto y --apply). En ese caso desk update --apply lo llama, y el informe lo dice. No se relaja el validador salvo cancelled en LEGACY_RESOLVED_STATUSES (d1).
+b11 (conteo del kit, para el informe): el kit Chatbot_Infra tenía 19 tareas heredadas (18 superseded y 1 deferred). AntonIA las retira con el CLI. La reproducción y los tests van en un desk de prueba (tmp_path y copias en /dev/shm), nunca en desks reales; la vía es para cualquier desk (pron, scion, mepu, ftcourier, …).
 
 ## Validation
 
