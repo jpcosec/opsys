@@ -30,11 +30,18 @@ from deskops.constants import SKILL_TREE_PREFIXES
 from deskops.models import BoardDoc
 from deskops.models import TaskDoc
 from deskops import lifecycle
+from deskops.models.task_lifecycle import DRAWER_STATUSES
+from deskops.models.task_lifecycle import LEGACY_RESOLVED_STATUSES
+from deskops.models.task_lifecycle import _frontmatter
 from deskops.models.task_types import canonical_task_type_name
 from deskops.models.task_types import closeout_evidence_kinds
 from deskops.models.task_types import declared_evidence_list
 from deskops.services import closeout_gates as closeout_gates_module
 from deskops.services.atoms import reference_points_to_atom
+
+#: Statuses ``closeout retire`` also removes when the history is empty: the pre-CC31 tasks left
+#: superseded or in a drawer status at a node, which no transition can close (task.debug d3).
+_RETIRABLE_WITHOUT_HISTORY = frozenset({"superseded"}) | DRAWER_STATUSES
 
 if TYPE_CHECKING:
     from deskops.operations import DeskopsOperations
@@ -364,14 +371,28 @@ class ClosureService:
         if not task_path.is_file():
             return ClosureOutcome(1, [f"Task not found: {task_id}"])
 
-        payload = doc_access.read_doc(task_path, TaskDoc)
+        # Read from the frontmatter, not the model: the model rejects exactly the pre-CC31
+        # tasks retire is for (a terminal or drawer status with an empty history at a node).
+        payload = _frontmatter(task_path.read_text(encoding="utf-8"))
         status = str(payload.get("status") or "").strip().lower()
-        if status not in {"resolved", "closed", "done", "complete"}:
+        history = payload.get("history") or []
+        if not (status in LEGACY_RESOLVED_STATUSES or (status in _RETIRABLE_WITHOUT_HISTORY and not history)):
             return ClosureOutcome(
                 1,
                 [
                     f"Task {task_id} has status '{payload.get('status') or ''}'; only resolved, "
-                    "closed, done or complete tasks can be retired."
+                    "closed, done, complete or cancelled tasks, or superseded, deferred or "
+                    "candidate tasks with an empty history, can be retired."
+                ],
+            )
+        if blocking := self._other_invalid_tasks(task_path):
+            return ClosureOutcome(
+                1,
+                [
+                    f"Cannot retire {task_id} yet: sldb rebuilds every task of the store when one "
+                    f"leaves it, and these task documents are invalid: {', '.join(blocking)}. "
+                    "Migrate them with deskops desk update --apply (it lists the ones that need "
+                    "their owner's decision), then retire again."
                 ],
             )
 
@@ -398,6 +419,15 @@ class ClosureService:
             },
             success_line=f"Closing commit {{commit}} made in legacy-resolved mode: {reason}",
         )
+
+    def _other_invalid_tasks(self, task_path: Path) -> list[str]:
+        """The other tasks the model rejects, when the desk has a store to untrack from."""
+        if not doc_access.has_store(self.root):
+            return []
+        from deskops.workspace import legacy_task_states
+
+        migratable, unmigratable = legacy_task_states(self.root)
+        return [s.rel for s in [*migratable, *unmigratable] if s.path.resolve() != task_path.resolve()]
 
     def _ref_resolves(self, reference: str) -> bool:
         if self._ops.closeout_gates.reference_points_to_commit(reference):

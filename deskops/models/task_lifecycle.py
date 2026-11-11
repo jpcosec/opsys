@@ -51,7 +51,9 @@ DRAWER_STATUSES: frozenset[str] = frozenset({"deferred", "candidate"})
 
 #: The statuses of a task resolved before the lifecycle existed (no ``current_node``, empty
 #: history): what ``deskops closeout retire`` removes (``services/closure.py``, ``close_retired``).
-LEGACY_RESOLVED_STATUSES: frozenset[str] = frozenset({"resolved", "closed", "done", "complete"})
+#: ``cancelled`` is the legacy status of the pre-CC31 desks (Governance); adding it is a revisable
+#: decision of the plan coordinator (task.debug of legacy states, d1).
+LEGACY_RESOLVED_STATUSES: frozenset[str] = frozenset({"resolved", "closed", "done", "complete", "cancelled"})
 
 #: Every status a task outside the lifecycle (``current_node`` and ``history`` empty) may hold.
 OUTSIDE_LIFECYCLE_STATUSES: frozenset[str] = ENTRY_STATUSES | DRAWER_STATUSES | LEGACY_RESOLVED_STATUSES
@@ -147,3 +149,38 @@ def lifecycle_errors(status: str, current_node: str, history: list[str]) -> list
     if status != edge.status:
         errors.append(f"status: '{status}' does not follow history '{last}'; expected '{edge.status}'")
     return errors
+
+
+#: What the owner of a task the migration table does not cover is told to do (b1).
+UNMIGRATABLE_SUGGESTION = (
+    "decide its state: deskops closeout supersede <id> if it was replaced, deskops closeout "
+    "resolved-by <id> <commit> if its work is done, or recreate it with deskops add task"
+)
+
+
+def legacy_state_migration(status: str, current_node: str, history: list[str]) -> dict[str, tuple[Any, Any]] | None:
+    """The fields that bring a pre-CC31 task to a coherent state, as ``{field: (before, after)}``.
+
+    ``{}`` when the state is already coherent; ``None`` when it is incoherent and the table does
+    not decide it (the task's owner does). The table applies to an empty history only:
+
+    * ``superseded``: ``history [superseded]``, the closeout record; ``current_node`` stays;
+    * a pre-lifecycle resolved status (``LEGACY_RESOLVED_STATUSES``) or a drawer status
+      (``DRAWER_STATUSES``) at a node: ``current_node ''``, outside the lifecycle.
+
+    The result is checked against ``lifecycle_errors``, so it never proposes an incoherent state.
+    """
+    if not lifecycle_errors(status, current_node, history):
+        return {}
+    if history:
+        return None
+    changes: dict[str, tuple[Any, Any]] = {}
+    if status == "superseded":
+        changes["history"] = ([], ["superseded"])
+    elif status in LEGACY_RESOLVED_STATUSES | DRAWER_STATUSES and current_node:
+        changes["current_node"] = (current_node, "")
+    else:
+        return None
+    after_node = changes.get("current_node", (current_node, current_node))[1]
+    after_history = changes.get("history", (history, history))[1]
+    return None if lifecycle_errors(status, after_node, after_history) else changes

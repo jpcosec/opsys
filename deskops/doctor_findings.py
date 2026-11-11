@@ -139,3 +139,21 @@ def _section(title: str, lines: list[str]) -> None:
         print(title)
         for line in lines:
             print(f"- {line}")
+
+
+def invalid_task_findings(root: Path) -> list[str]:
+    """One error per task the model rejects, read from its frontmatter so none hides the rest.
+
+    `sldb stores check` stops at the first document its model rejects, so doctor names each
+    task here: the file, the validator's text, and what fixes it, `deskops desk update --apply`
+    when the migration table decides its state, or the owner's decision otherwise (b1).
+    """
+    from deskops.workspace import legacy_task_states
+
+    migratable, unmigratable = legacy_task_states(root)
+    lines = [
+        (state.rel, f"Invalid task document: {state.rel}: {'; '.join(state.errors)}. Migrate it with {REGISTER}.")
+        for state in migratable
+    ]
+    lines += [(state.rel, f"Invalid task document: {state.finding()}") for state in unmigratable]
+    return [line for _rel, line in sorted(lines)]

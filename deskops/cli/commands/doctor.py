@@ -8,7 +8,7 @@ import sys
 
 from deskops.bootstrap import MODEL_REFS, SLDBBootstrap
 from deskops.doc_readability import is_unreadable_by_model
-from deskops.doctor_findings import REGISTER, Findings, moved_documents, print_findings, read_store_check
+from deskops.doctor_findings import REGISTER, Findings, invalid_task_findings, moved_documents, print_findings, read_store_check
 from deskops.workspace import inspect_desk
 from deskops.workspace import modeled_desk_markdown_docs
 from deskops.workspace import seed_desk
@@ -69,6 +69,7 @@ class DoctorCLI:
             )
 
     def _check_documents(self, root: Path, desk_dir: Path, repair: bool, findings: Findings) -> None:
+        findings.errors += invalid_task_findings(root)
         payload = self._store_check(root, findings)
         if payload is None:
             return

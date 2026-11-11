@@ -751,3 +751,149 @@ def migrate_task_types(root: Path) -> list[str]:
 # Alias de compatibilidad hacia atrás
 scaffold_desk = seed_desk
 
+
+
+# ---------------------------------------------------------------------------
+# Tasks with a legacy lifecycle state (desks migrated before CC31): a terminal or drawer status
+# with an empty history at a node. TaskDoc's validator (CC37) rejects them on every model read,
+# so they are listed from the frontmatter, one finding per document, and the migration table of
+# ``deskops.models.task_lifecycle.legacy_state_migration`` writes the frontmatter directly.
+
+
+@dataclass(frozen=True)
+class LegacyTaskState:
+    """One task under ``desk/tasks`` whose lifecycle TaskDoc's validator rejects."""
+
+    path: Path
+    rel: str
+    task_id: str
+    errors: list[str]
+    #: ``{field: (before, after)}`` the table writes; empty when the table does not decide it.
+    changes: dict[str, tuple[Any, Any]] = field(default_factory=dict)
+
+    def migration_lines(self) -> list[str]:
+        """``<file>: <field> <before> -> <after>``, one per changed field (b4)."""
+        return [f"{self.rel}: {name} {_state_value(a)} -> {_state_value(b)}" for name, (a, b) in self.changes.items()]
+
+    def finding(self) -> str:
+        from deskops.models.task_lifecycle import UNMIGRATABLE_SUGGESTION
+
+        return f"{self.rel}: {'; '.join(self.errors)}. To fix it, {UNMIGRATABLE_SUGGESTION}."
+
+
+def _state_value(value: Any) -> str:
+    if isinstance(value, list):
+        return "[" + ", ".join(str(item) for item in value) + "]"
+    return str(value) if value not in ("", None) else "''"
+
+
+def _task_files(root: Path) -> list[Path]:
+    tasks_dir = root / "desk" / "tasks"
+    if not tasks_dir.is_dir():
+        return []
+    return [p for p in sorted(tasks_dir.glob("*.md")) if p.name != "Board.md" and not p.name.startswith("board-")]
+
+
+def _model_errors(text: str) -> list[str]:
+    """Why ``TaskDoc`` rejects the document; ``[]`` when it reads it."""
+    from deskops.models import TaskDoc
+    from deskops.models.validation import validation_messages
+    from pydantic import ValidationError
+    from sldb.runtime.validation import extract_model_data
+
+    try:
+        extract_model_data(TaskDoc, text)
+    except ValidationError as exc:
+        return validation_messages(exc)
+    except Exception as exc:  # noqa: BLE001 - any reason the model cannot read it is the finding
+        return [str(exc)]
+    return []
+
+
+def legacy_task_states(root: Path) -> tuple[list[LegacyTaskState], list[LegacyTaskState]]:
+    """``(migratable, unmigratable)``: the tasks the model rejects, read from their frontmatter.
+
+    Each task is validated on its own, so one invalid document does not stop the walk (b8). A
+    task whose lifecycle the table decides is migratable; any other rejected task is a finding
+    with the validator's text and the fixed suggestion (b1).
+    """
+    from deskops.models.task_lifecycle import legacy_state_migration
+    from deskops.models.task_lifecycle import lifecycle_errors
+
+    migratable: list[LegacyTaskState] = []
+    unmigratable: list[LegacyTaskState] = []
+    for path in _task_files(root):
+        rel = path.relative_to(root).as_posix()
+        try:
+            parsed = _task_frontmatter(path)
+        except (yaml.YAMLError, UnicodeDecodeError) as exc:
+            unmigratable.append(LegacyTaskState(path, rel, path.stem, [f"unreadable frontmatter: {exc}"]))
+            continue
+        if parsed is None:
+            continue
+        data, text = parsed
+        raw_history = data.get("history") or []
+        history = [str(h) for h in raw_history] if isinstance(raw_history, list) else [str(raw_history)]
+        status, node = str(data.get("status") or ""), str(data.get("current_node") or "")
+        task_id = str(data.get("id") or path.stem)
+        errors = lifecycle_errors(status, node, history)
+        if not errors:
+            errors = _model_errors(text)
+            if errors:
+                unmigratable.append(LegacyTaskState(path, rel, task_id, errors))
+            continue
+        changes = legacy_state_migration(status, node, history)
+        target = migratable if changes else unmigratable
+        target.append(LegacyTaskState(path, rel, task_id, errors, changes or {}))
+    return migratable, unmigratable
+
+
+def _migrated_frontmatter(frontmatter: str, changes: dict[str, tuple[Any, Any]]) -> str:
+    """The frontmatter with the table's fields rewritten line by line, so nothing else moves."""
+    lines = frontmatter.split("\n")
+    for name, (_before, after) in changes.items():
+        if isinstance(after, list):
+            value_lines = [f"{name}:"] + [f"- {item}" for item in after]
+        else:
+            value_lines = [f"{name}: {after}" if after else f"{name}: ''"]
+        # The table only writes a one-line field: an empty history, a node name.
+        index = next((i for i, line in enumerate(lines) if line.startswith(f"{name}:")), None)
+        if index is None:
+            lines.extend(value_lines)
+        elif index + 1 < len(lines) and lines[index + 1][:1] in (" ", "-"):
+            raise ValueError(f"{name} spans several lines")
+        else:
+            lines[index:index + 1] = value_lines
+    return "\n".join(lines)
+
+
+def migrate_legacy_task_states(root: Path) -> tuple[list[str], list[LegacyTaskState]]:
+    """Write the table's fields into each migratable task; ``(lines, not migrated)``.
+
+    The write goes to the file, not through sldb: sldb's untrack and model registration rebuild
+    every document of the model and fail on any other invalid task, so the document route cannot
+    write one task while another is still invalid. The new text is validated with ``TaskDoc``
+    on its own; a task it still rejects is restored byte for byte and reported. The store's
+    indexes are refreshed afterwards with the rest of ``desk update --apply``. Idempotent: a
+    migrated task is coherent, so a second run finds nothing.
+    """
+    migratable, _ = legacy_task_states(root)
+    lines: list[str] = []
+    failed: list[LegacyTaskState] = []
+    for state in migratable:
+        original = state.path.read_bytes()
+        text = original.decode("utf-8")
+        match = _FRONTMATTER_RE.match(text)
+        try:
+            new_fm = _migrated_frontmatter(match.group(1), state.changes)  # type: ignore[union-attr]
+        except (AttributeError, ValueError) as exc:
+            failed.append(LegacyTaskState(state.path, state.rel, state.task_id, [f"not migrated: {exc}"]))
+            continue
+        new_text = "---\n" + new_fm + "\n---\n" + text[match.end():]  # type: ignore[union-attr]
+        state.path.write_text(new_text, encoding="utf-8")
+        if errors := _model_errors(new_text):
+            state.path.write_bytes(original)
+            failed.append(LegacyTaskState(state.path, state.rel, state.task_id, [f"not migrated, the result is still invalid: {'; '.join(errors)}"]))
+            continue
+        lines.extend(state.migration_lines())
+    return lines, failed
