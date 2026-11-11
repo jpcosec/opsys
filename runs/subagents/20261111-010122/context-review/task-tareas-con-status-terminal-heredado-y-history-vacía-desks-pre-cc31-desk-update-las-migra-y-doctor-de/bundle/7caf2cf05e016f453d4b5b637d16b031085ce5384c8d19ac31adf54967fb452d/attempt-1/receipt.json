@@ -1,0 +1,9 @@
+{
+  "key": "task-tareas-con-status-terminal-heredado-y-history-vacía-desks-pre-cc31-desk-update-las-migra-y-doctor-de/bundle",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "7caf2cf05e016f453d4b5b637d16b031085ce5384c8d19ac31adf54967fb452d",
+  "output_sha256": "1ec3cd3677c1e3de52c0cd0b876df473bc3f3a424640a035e8c373c5c5aa8757",
+  "start": "2026-11-11T01:01:22.821376+00:00",
+  "end": "2026-11-11T01:01:39.758706+00:00"
+}
