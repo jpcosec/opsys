@@ -77,10 +77,10 @@ def test_a_drawer_task_outside_the_lifecycle_may_be_deferred() -> None:
     # The drawer candidates of the workspace-documental plan (CC37 c4, revisable).
     assert TaskDoc(**{**ENTRY, "status": "candidate", "current_node": ""}).status == "candidate"
     _rejects(TaskDoc, {**ENTRY, "status": "deferred"}, "status: 'deferred' is not an entry status")
-    _rejects(TaskDoc, {**ENTRY, "status": "active", "current_node": ""}, "status: 'active' is not an entry status; a task with an empty history and no current_node has status 'candidate', 'closed', 'complete', 'deferred', 'done', 'draft', 'resolved'")
+    _rejects(TaskDoc, {**ENTRY, "status": "active", "current_node": ""}, "status: 'active' is not an entry status; a task with an empty history and no current_node has status 'cancelled', 'candidate', 'closed', 'complete', 'deferred', 'done', 'draft', 'resolved'")
 
 
-@pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete"])
+@pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete", "cancelled"])
 def test_a_task_resolved_before_the_lifecycle_is_valid_only_outside_it(status: str) -> None:
     """``closeout retire`` removes tasks resolved before the lifecycle: no current_node, no history."""
     assert TaskDoc(**{**ENTRY, "status": status, "current_node": ""}).status == status
@@ -289,25 +289,34 @@ def test_a_consistent_direct_write_is_accepted(task_desk, capsys) -> None:
 
 
 # ------------------------------------------------------------------ desk update reports, never writes
+ACTIVE_ERROR = (
+    "status: 'active' is not an entry status; a task with an empty history at 'ritual-execution' has "
+    "status 'draft' (status changes only through deskops advance and deskops closeout)"
+)
+
+
 def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(lifecycle_desk: Path, capsys) -> None:
     """An untracked task with a legacy task_type (a pending migration) and a status no transition
-    wrote: desk update lists it and --apply neither migrates nor tracks it."""
+    wrote nor the legacy table decides: desk update lists it and --apply neither migrates nor
+    tracks it, and exits 1 while it waits for its owner."""
+    from deskops.models.task_lifecycle import UNMIGRATABLE_SUGGESTION
+
     root = lifecycle_desk
     text = (
-        "---\nid: task-legacy\nstatus: closed\ncurrent_node: ritual-execution\nhistory: []\ntask_type: code\n---\n\n"
+        "---\nid: task-legacy\nstatus: active\ncurrent_node: ritual-execution\nhistory: []\ntask_type: code\n---\n\n"
         "# Legacy\n\n## Goal\n\ng\n"
     )
     task = root / "desk" / "tasks" / "task-legacy.md"
     task.write_text(text, encoding="utf-8")
-    line = f"inconsistent task lifecycle in desk/tasks/task-legacy.md, not written: {ENTRY_ERROR}"
+    line = f"  - desk/tasks/task-legacy.md: {ACTIVE_ERROR}. To fix it, {UNMIGRATABLE_SUGGESTION}."
 
     assert main(["desk", "update", "--root", str(root)]) == 1
     out = capsys.readouterr().out
-    assert "- Inconsistent task lifecycles (not written): 1 task(s)" in out
+    assert "- Invalid task documents (not written): 1 task(s)" in out
     assert line in out
     assert "Pending task type migration" not in out
 
-    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 1
     assert line in capsys.readouterr().out
     assert task.read_text(encoding="utf-8") == text
     code, _ = _sldb_run(["docs", "list", "--store", str(root / ".sldb")])
@@ -315,14 +324,17 @@ def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(lifecycl
 
 
 def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_desk, capsys) -> None:
-    """A tracked task edited by hand outside the rules: sldb's store check refuses the store with
-    the validator's message, which desk update prints; nothing is written."""
+    """A tracked task edited by hand outside the rules: sldb's store check refuses the store, so
+    desk update names the task with the validator's message, does not crash, writes nothing and
+    leaves the store repairs for after the fix."""
     root, task = task_desk
-    text = task.read_text(encoding="utf-8").replace("status: draft", "status: closed")
+    text = task.read_text(encoding="utf-8").replace("status: draft", "status: active")
     task.write_text(text, encoding="utf-8")
     capsys.readouterr()
-    assert main(["desk", "update", "--root", str(root), "--apply"]) == 3
-    err = capsys.readouterr().err
-    assert "'sldb stores check' failed" in err
-    assert ENTRY_ERROR in err
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 1
+    out = capsys.readouterr().out
+    rel = task.relative_to(root).as_posix()
+    assert f"  - {rel}: {ACTIVE_ERROR}." in out
+    assert "- Store check failed ('sldb stores check' exit code 1" in out
+    assert "Skipped the store repairs" in out
     assert task.read_text(encoding="utf-8") == text

@@ -375,8 +375,10 @@ class ClosureService:
         # tasks retire is for (a terminal or drawer status with an empty history at a node).
         payload = _frontmatter(task_path.read_text(encoding="utf-8"))
         status = str(payload.get("status") or "").strip().lower()
-        history = payload.get("history") or []
-        if not (status in LEGACY_RESOLVED_STATUSES or (status in _RETIRABLE_WITHOUT_HISTORY and not history)):
+        history = [str(item) for item in payload.get("history") or []]
+        # ``superseded`` with only its closeout record is what ``desk update --apply`` leaves of it.
+        legacy_history = not history or (status == "superseded" and history == ["superseded"])
+        if not (status in LEGACY_RESOLVED_STATUSES or (status in _RETIRABLE_WITHOUT_HISTORY and legacy_history)):
             return ClosureOutcome(
                 1,
                 [

@@ -43,3 +43,158 @@ deskops no lista ni valida las tareas por su cuenta: toda su lectura pasa por es
 **d3 (closeout retire).** `ClosureService.close_retired` lee la tarea con `doc_access.read_doc(task_path, TaskDoc)`
 (extracción con el modelo, que la rechaza) y acepta solo `resolved, closed, done, complete`; la ayuda
 (`deskops/cli/registry.py`) dice lo mismo.
+
+## Arreglo
+
+Superficie: solo `deskops desk update` (dry-run sin `--apply`; `--apply` migra). Sin subcomando propio (ronda 3 de pi).
+
+- `deskops/models/task_lifecycle.py`: `cancelled` en `LEGACY_RESOLVED_STATUSES` (OUTSIDE es la unión);
+  `legacy_state_migration(status, node, history)` aplica la tabla de d1 solo con history vacía y verifica el
+  resultado con `lifecycle_errors`; `UNMIGRATABLE_SUGGESTION` es el texto fijo de b1.
+- `deskops/workspace.py`: `legacy_task_states(root)` lee `desk/tasks/*.md` por frontmatter y valida cada una por
+  separado (lifecycle y luego `TaskDoc`), así un documento inválido no corta el recorrido (b8);
+  `migrate_legacy_task_states(root)` reescribe solo las líneas de la tabla en el frontmatter, revalida con
+  `TaskDoc` y restaura byte a byte si sigue inválida.
+- `deskops/cli/commands/desk.py` (`update`): con `--apply` migra antes de todo lo demás (antes del registro de
+  modelos) e imprime `Migrating legacy task states...` y una línea b4 por campo; el reporte trae
+  `Legacy task states to migrate` (dry-run) e `Invalid task documents (not written)` con la sugerencia de b1;
+  `sldb stores check` sin JSON ya no levanta `DeskopsEnvironmentError`: se reporta como
+  `Store check failed (...)` y `--apply` se salta las reparaciones del store (ver desvíos). `--apply` sale 0 si
+  migró todo o no había nada, 1 si queda algún no migrable. Las líneas `inconsistent task lifecycle ...` de la
+  migración de task_type ya no se imprimen: las cubre el reporte nuevo.
+- `deskops/doctor_findings.py`: `invalid_task_findings(root)`, una línea de error por tarea inválida
+  (`Invalid task document: <archivo>: <lifecycle_errors>. ...`), con `Migrate it with deskops desk update --apply`
+  si la tabla la decide y la sugerencia de b1 si no. `deskops/cli/commands/doctor.py`: una línea que la llama
+  (más el import). Los demás chequeos corren igual (b9).
+- `deskops/services/closure.py` (`close_retired`): lee el frontmatter (sin el modelo), acepta
+  `LEGACY_RESOLVED_STATUSES` (con cancelled) y `superseded`, `deferred`, `candidate` con history vacía (y
+  `superseded` con `history [superseded]`, lo que deja la migración); con store, rechaza antes de escribir nada
+  si hay otra tarea inválida (ver desvíos). `Closeout-Mode: legacy-resolved` como hoy.
+- `deskops/cli/registry.py`: la frase de status de la ayuda de retire; su golden es el único de ayuda que cambia.
+
+Files sumados por el coordinador (autorización en el pane, revisable): `deskops/cli/commands/doctor.py` (solo la
+llamada al helper) y `deskops/cli/registry.py` (solo la frase de status de retire).
+
+## Hipótesis para sldb (b5: las abre el coordinador; el worker no escribe en sldb)
+
+Todas verificadas sobre una copia del gateway en `/dev/shm` con sldb `84eb7f75`.
+
+- **H1 (stores check aborta en el primer documento inválido).** `sldb.store.diagnostics.diagnose_store` →
+  `_diagnose_model` → `_diagnose_doc` → `_fields_state` → `hashing.hash_fields_with_map` → `extract_model_data`
+  no tiene guarda por documento: el `ValidationError` de un documento sale de `check_store` y `sldb.cli.main`
+  imprime `Unexpected: ...`, rc 1, sin JSON. Lo esperable es un hallazgo por documento (nota `invalid` o similar)
+  y el resto del diagnóstico. deskops lo esquiva leyendo las tareas por frontmatter.
+- **H2 (toda escritura del store re-extrae todos los documentos del modelo).** `sldb.api.replace_text` dentro de
+  `transaction`: el `untrack` del documento llama `untrack_document._forget` → `forget_document` →
+  `edge_rebuild.rebuild_edges_indexes` → `edge_sync._sync_model_docs`, que extrae con el modelo cada documento del
+  modelo y cae en cualquier otro inválido. Lo mismo `add_model`/herencia de modelos (`init_local_store`: "Inheriting
+  ReviewDoc ... Error: 1 validation error for TaskDoc") y `closeout retire` (untrack de la tarea). Consecuencia: con
+  dos tareas inválidas trackeadas en el mismo modelo no se puede escribir ninguna por la vía de documentos de b8.
+- **H3 (rollback incompleto).** En el caso de H2 la transacción termina en
+  `RollbackError: Rollback incomplete; not restored: .sldb/core/documents/TaskDoc/<...>.yaml, ...` y deja esos
+  índices modificados en el árbol (visto en `git status` de la copia). Una transacción fallida no debería dejar el
+  store a medio escribir.
+
+## Hipótesis de b1 (comandos de la sugerencia sobre una tarea inválida)
+
+- `deskops closeout supersede --task task-linea-base-de-lint-del-gateway ...` sobre la copia del gateway:
+  `Validation error: 1 validation error for TaskDoc ... status: 'draft' does not follow history
+  'task_hands_to_closeout'` (lee la tarea con el modelo). No opera sobre una tarea inválida.
+- `closeout resolved-by` usa la misma lectura con el modelo (no se probó aparte); `closeout retire` no acepta
+  `draft`. Para los dos draft del gateway, ningún comando de deskops puede hoy fijar su estado: el dueño tiene
+  que editar el frontmatter. No se amplió el alcance (b1).
+- La sugerencia fija de b1 usa `<id>` posicional (`deskops closeout supersede <id>`); la gramática real es
+  `--task <id> --reason ... --ref ...`. Se dejó el texto de b1 tal cual; corregirlo es decisión del coordinador.
+
+## Desvíos
+
+1. **La migración no escribe por `desk_transaction` / `sldb replace_text` (b8).** Por H2, esa vía no puede
+   escribir una tarea mientras otra del mismo modelo sea inválida, que es justo el caso del gateway y del kit. Se
+   escribe el frontmatter directo (solo las líneas de la tabla), se revalida con `TaskDoc` y se restaura si sigue
+   inválida; los índices del store se refrescan después con el resto de `desk update --apply` (stale hashes →
+   `update_store_indexes`), y la tercera corrida da "Desk is up to date.".
+2. **`desk update --apply` se salta las reparaciones del store mientras `stores check` no lee el store.** Intentar
+   registrar modelos o trackear en ese estado deja el store a medio escribir (H2, H3). Se imprime
+   `Skipped the store repairs (...)` y sale 1. Las reparaciones que no tocan el store (scaffold, migración) sí corren.
+   "Registro de modelos incluido" (d2) se cumple en doctor (el chequeo de modelos corre) y en desk update como
+   reporte; el registro efectivo espera a que no quede ningún inválido.
+3. **`closeout retire` con store rechaza si hay otra tarea inválida** (mismo motivo), antes de escribir nada, y
+   dice que corra `desk update --apply`. Además acepta `superseded` con `history [superseded]` (lo que deja la
+   migración); sin eso, la tabla de d1 dejaba las superseded del kit fuera del alcance de retire. Decisión revisable.
+4. **Copia del gateway: `stores check` rc 0 solo tras decidir los dos draft.** Ver abajo.
+
+## Copia del gateway (`/dev/shm`): tabla aplicada, stores check
+
+Log: `~/proyectos/SLDB_1/coord2-ccconfig/legacy/worker-gw-after.log` (copia de `/dev/shm/repro-legacy/gw`, borrada al final).
+
+| tarea | antes | `desk update --apply` |
+|---|---|---|
+| task-ci-propio-del-gateway | superseded, ritual-execution, [] | `history [] -> [superseded]` |
+| task-workflow-check-obligatorio-del-gateway | superseded, ritual-execution, [] | `history [] -> [superseded]` |
+| task-tope-por-tipo-y-pedidos-bloqueados | deferred, ritual-execution, [] | `current_node ritual-execution -> ''` |
+| task-linea-base-de-lint-del-gateway | draft, ritual-closeout, [task_activates, task_hands_to_closeout] | no migrable (b1) |
+| task-logs-de-llm-gateway-servir-sin-pii | ídem | no migrable (b1) |
+
+- Paso 3, `--apply`: tres líneas de migración, las dos draft reportadas, `Skipped the store repairs`, rc 1. El diff de
+  `desk/` toca solo esas líneas.
+- Paso 5, segunda corrida: ninguna línea de migración, solo los dos no migrables, rc 1, sin cambios.
+- Paso 6, `sldb stores check`: rc 1, por las dos draft (H1).
+- Paso 7: **simulación en la copia** de la decisión del dueño (las dos draft a `ready_for_testing`, coherente con su
+  history; ningún comando de deskops puede hacerlo, ver b1).
+- Paso 8, `--apply`: registra los modelos, retipa las tareas, trackea Board y phase, actualiza los índices, rc 0.
+- Paso 9, `sldb stores check`: `PASS: store integrity — 60 documents in 26 models`, rc 0.
+- Paso 10, tercera corrida: `Desk is up to date.`, rc 0. Paso 11, `doctor`: `Desk is healthy. No issues found.`, rc 0.
+
+**No migrables que quedan en el gateway real:** `desk/tasks/task-linea-base-de-lint-del-gateway.md` y
+`desk/tasks/task-logs-de-llm-gateway-servir-sin-pii.md` (draft tras `task_hands_to_closeout`; decide su dueño).
+
+## doctor en la copia del gateway (capturas)
+
+Antes (`worker-before-gw.log`, código de `cd759192`):
+```
+Errors (the desk is broken):
+- Legacy desk detected: sldb stores check failed: Unexpected: 1 validation error for TaskDoc. Migrate with: deskops desk migrate --root <repo>.
+- SLDB store check crashed (likely malformed documents): Unexpected: 1 validation error for TaskDoc
+- Unregistered models: ReviewDoc, TaskAggregateDoc, ... Register them with deskops desk update --apply.
+rc=1
+```
+Después (`worker-gw-after.log`, paso 2): las mismas tres líneas más una `Invalid task document: <archivo>: <texto del
+validador>. ...` por cada una de las cinco tareas: `Migrate it with deskops desk update --apply` para las tres de la
+tabla y la sugerencia de b1 para las dos draft. rc 1. El chequeo de modelos sigue corriendo.
+
+## doctor en los 6 desks, antes y después (solo lectura, sobre copias en /dev/shm)
+
+Capturas: `~/proyectos/SLDB_1/coord2-ccconfig/legacy/desks/<desk>.doctor-{before,after}.txt` (antes = worktree
+detached en `cd759192`; después = este worktree). Las copias se hicieron con rsync (sin `.venv`, `node_modules` ni
+`.sldb_cache`) y se borraron.
+
+| desk | antes | después | diff |
+|---|---|---|---|
+| deskops | rc 0 | rc 0 | idéntico |
+| sldb | rc 0 (25 alertas) | rc 0 | idéntico |
+| spec2viz | rc 1 | rc 1 | idéntico |
+| scion | rc 1 | rc 1 | idéntico |
+| pron | rc 1 | rc 1 | idéntico |
+| graph_ui | rc 1 | rc 1 | idéntico |
+
+Ningún hallazgo nuevo de d2 en esos seis: ninguno tiene tareas en `desk/tasks` que el modelo rechace. Los rc 1 son
+previos y no cambian.
+
+## `deskops desk update` en dry-run sobre copias de todos los desks (precisión del overlord)
+
+Sin `--apply`; nada se aplicó en ningún desk real. Salidas: `~/proyectos/SLDB_1/coord2-ccconfig/legacy/desks/<desk>.update-dry.txt`.
+
+| desk | migraría | no migrable (decide el dueño) |
+|---|---|---|
+| /srv/repos/Chatbot_Infra (kit) | 19: 18 `history [] -> [superseded]` y 1 `current_node ritual-execution -> ''` (task-identidad-del-store-desde-store-manifest-de-sldb, deferred) | — |
+| /srv/repos/Governance | 6: 5 cancelled `current_node ritual-execution -> ''` y 1 superseded | 1: task-rol-de-robocop-en-antonia-dev-y-mepu-dev-sin-llaves (active, history vacía) |
+| /srv/repos/labchile_chatbots | 1: task-traer-selfix-desde-psp-agent (superseded) | — |
+| /srv/repos/shared_llm-gateway | 3 (tabla de arriba) | 2 (las dos draft) |
+| /srv/repos/mepu | — | 1: task-spec-2-spec-de-ingesta-del-sftp-de-teva-a-raw-stg-y-core-hoy-y-objetivo (closed tras `task_hands_to_closeout`) |
+| ~/proyectos/SLDB_1/UIs/marcado | — | 59: `current_node: 'checklist-...'` sin history (53) e history con rutas de runs (6); forma pre-lifecycle de otro tipo, fuera de la tabla |
+| ~/proyectos/SLDB_1/UIs/sldb-ui | — | 17: `current_node: 'checklist-...'` sin history |
+| /srv/repos/antonia_gateway, ftcourier, manifest, plantilla_cliente, shared_etl-plataforma; deskops, sldb, spec2viz, scion, pron, graph_ui, marcado-ui | — | — |
+
+El kit Chatbot_Infra coincide con b11 (19 heredadas). spec2viz y graph_ui reportan `Store check failed (... AtomDoc)`:
+un átomo inválido, ajeno a esta tarea, que antes hacía caer `desk update` con `DeskopsEnvironmentError` y ahora se
+reporta.

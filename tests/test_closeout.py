@@ -943,7 +943,7 @@ def _retire_main(root: Path, *argv: str) -> int:
     return main(["closeout", "retire", "--root", str(root), "--task", "task-x", *argv])
 
 
-@pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete"])
+@pytest.mark.parametrize("status", ["resolved", "closed", "done", "complete", "cancelled"])
 def test_closeout_retire_removes_a_legacy_resolved_task(
     tmp_path: Path, capsys: pytest.CaptureFixture[str], status: str
 ) -> None:
@@ -983,6 +983,72 @@ def test_closeout_retire_removes_a_legacy_resolved_task(
         "desk/tasks/task-x.md",
         "runs/subagents/index.jsonl",
     ]
+
+
+def _commit_pre_cc31_task_on_board(root: Path, status: str) -> None:
+    """A task as a desk migrated before CC31 left it: a terminal or drawer status with an empty
+    history at the entry node, which TaskDoc's validator rejects."""
+    _write_legacy_task(root, status=status)
+    path = root / "desk" / "tasks" / "task-x.md"
+    text = path.read_text(encoding="utf-8")
+    path.write_text(text.replace("atoms: []\n", "atoms: []\ncurrent_node: ritual-execution\nhistory: []\n", 1), encoding="utf-8")
+    _write_board(root, "task-x")
+    _git(root, "add", "desk/tasks")
+    _git(root, "commit", "-q", "-m", "add pre-CC31 task and board")
+
+
+@pytest.mark.parametrize("status", ["superseded", "cancelled", "deferred", "candidate"])
+def test_closeout_retire_removes_a_pre_cc31_task_the_model_rejects(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], status: str
+) -> None:
+    """d3: retire reads the frontmatter, so the model's rejection of the legacy state does not stop it."""
+    from deskops.models.task_lifecycle import lifecycle_errors
+
+    assert lifecycle_errors(status, "ritual-execution", [])
+    root = _make_repo(tmp_path)
+    _commit_pre_cc31_task_on_board(root, status)
+    ref = _git(root, "rev-parse", "HEAD")
+
+    rc = _retire_main(root, "--reason", "Left by the pre-CC31 migration", "--ref", ref)
+
+    assert rc == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert "Task-Id: task-x" in message
+    assert "Closeout-Mode: legacy-resolved" in message
+    assert not (root / "desk" / "tasks" / "task-x.md").exists()
+    assert "desk/tasks/task-x.md" not in (root / "desk" / "tasks" / "Board.md").read_text(encoding="utf-8")
+    assert _git(root, "status", "--porcelain") == ""
+
+
+@pytest.mark.parametrize("status", ["superseded", "deferred", "candidate"])
+def test_closeout_retire_refuses_a_terminal_or_drawer_status_with_a_history(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], status: str
+) -> None:
+    """Only the pre-CC31 shape (empty history) is retired; a task closed through the lifecycle is not."""
+    root = _make_repo(tmp_path)
+    _commit_task_on_board(root)
+    path = root / "desk" / "tasks" / "task-x.md"
+    path.write_text(path.read_text(encoding="utf-8").replace("status: active", f"status: {status}"), encoding="utf-8")
+    _git(root, "commit", "-qam", "status by hand")
+    head = _git(root, "rev-parse", "HEAD")
+
+    assert _retire_main(root, "--reason", "not legacy", "--ref", head) == 1
+    assert "can be retired" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert path.exists()
+
+
+def test_closeout_retire_refuses_a_coherent_task_at_ritual_execution(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    root = _make_repo(tmp_path)
+    _commit_pre_cc31_task_on_board(root, "draft")
+    head = _git(root, "rev-parse", "HEAD")
+
+    assert _retire_main(root, "--reason", "still to do", "--ref", head) == 1
+    assert "has status 'draft'" in capsys.readouterr().out
+    assert _git(root, "rev-parse", "HEAD") == head
+    assert (root / "desk" / "tasks" / "task-x.md").exists()
 
 
 def test_closeout_retire_default_subject_names_the_task_file(
@@ -1040,7 +1106,10 @@ def test_closeout_retire_refuses_a_task_that_is_not_resolved(
     rc = _retire_main(root, "--reason", "not resolved yet", "--ref", ref)
 
     assert rc == 1
-    assert "only resolved, closed, done or complete tasks can be retired" in capsys.readouterr().out
+    assert (
+        "only resolved, closed, done, complete or cancelled tasks, or superseded, deferred or "
+        "candidate tasks with an empty history, can be retired"
+    ) in capsys.readouterr().out
     assert _git(root, "rev-parse", "HEAD") == head
     assert _git(root, "status", "--porcelain") == ""
     assert (root / "desk" / "tasks" / "task-x.md").read_text(encoding="utf-8").count("status: active") == 1

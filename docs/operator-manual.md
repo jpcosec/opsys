@@ -82,6 +82,14 @@ store moved under an expected change: a document edited, moved or added by hand,
 model contract that changed. Nothing is broken; register them with
 `deskops desk update --apply`. Alerts alone exit 0, and they are always printed.
 
+A task its model rejects (its `status`, `current_node` and `history` are not a state
+the lifecycle can produce) is an error of its own, one line per task with the file and
+the validator's text, read from the task's frontmatter: `sldb stores check` stops at the
+first such document, so doctor names every one and still runs the other checks
+(structure, store, models). A task the legacy migration decides says
+`Migrate it with deskops desk update --apply`; any other one says what its owner can
+do (`decide its state: deskops closeout supersede <id> ...`).
+
 `--repair` acts on errors only (it scaffolds structure and registers models). Use it
 when you understand the reported errors:
 
@@ -162,6 +170,24 @@ deskops desk update --root ../sibling --apply
   what it adopted, preserved, or left for manual conversion.
 - `desk update` is a dry run by default. Add `--apply` to create a missing
   store, register missing models, and write the lifecycle graph.
+- `desk update` also migrates the tasks a desk migrated before CC31 left in a
+  state no transition produces: an empty history with a terminal or drawer
+  status at a node. The dry run lists them as `Legacy task states to migrate`;
+  `--apply` writes them first, one line per changed field
+  (`desk/tasks/<task>.md: history [] -> [superseded]`). The table:
+  `superseded` gets `history [superseded]` (its node stays); `closed`,
+  `resolved`, `done`, `complete` and `cancelled` (pre-lifecycle resolved), and
+  `deferred` and `candidate` (drawer), get `current_node ''`, outside the
+  lifecycle. Any other task the model rejects is listed under
+  `Invalid task documents (not written)` with the validator's text and what its
+  owner can do; it is never written. The write goes to the frontmatter, not
+  through sldb (sldb rebuilds every task of the store on each write and stops at
+  the invalid one), and the new text is validated with `TaskDoc`; a task it
+  still rejects is restored. While `sldb stores check` cannot read the store,
+  `--apply` reports it and skips the store repairs (models, tracking, task
+  types, indexes) instead of leaving the store half written. `--apply` exits 0
+  when nothing is left and 1 while a task waits for its owner; a second run
+  migrates nothing.
 
 A dry run exits `1` when it finds divergence:
 
@@ -532,8 +558,13 @@ deskops closeout commit --root . \
 
 Two closes skip the evidence gates because no work is being proven.
 `closeout supersede` closes a task whose subject no longer exists. `closeout
-retire` removes a task whose status is already `resolved`, `closed`, `done`, or
-`complete`, as pre-lifecycle tasks are. Both need `--reason` and at least one
+retire` removes a task whose status is already `resolved`, `closed`, `done`,
+`complete` or `cancelled`, as pre-lifecycle tasks are, or `superseded`,
+`deferred` or `candidate` with an empty history (what a desk migrated before
+CC31 left; a `superseded` task with only its `superseded` record, what
+`desk update --apply` makes of it, too). Retire reads the task's frontmatter, so it also removes a task its
+model rejects; in a desk with a store it waits until no other task is invalid
+(`deskops desk update --apply` first). Both need `--reason` and at least one
 `--ref` (an ancestor commit; supersede also accepts an existing path), make
 exactly one closing commit with `Closeout-Mode: superseded` or
 `Closeout-Mode: legacy-resolved` trailers, and take the task off the Board.
