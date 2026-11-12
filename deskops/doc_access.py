@@ -20,6 +20,7 @@ from __future__ import annotations
 
 from contextlib import contextmanager
 import copy
+from functools import lru_cache
 from dataclasses import dataclass
 import json
 import os
@@ -40,6 +41,8 @@ from sldb.store.layout import store_exists
 from sldb.api.documents.frontmatter_keys import undeclared_frontmatter_keys
 from sldb.api.documents.structural_noise import find_structural_noise
 from sldb.cli.utils import parse_data_value
+from sldb.core.ast import AST_Handler
+from sldb.core.template_extractor import TemplateExtractor
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
@@ -515,6 +518,65 @@ def _parse_field_value(model: type[Any], field_name: str, raw_value: str) -> Any
     return parse_data_value(raw_value)
 
 
+@lru_cache(maxsize=None)
+def template_placeholders(model: type[Any]) -> dict[str, str]:
+    """The placeholder paragraph of each field in ``model``'s template, by field name.
+
+    A placeholder is the literal italic paragraph the template writes right before a field's
+    marker (``_Outline the expected implementation route or affected surface._`` before
+    ``⸢rev•implementation_path⸥``). sldb reads it as a paragraph anchor: render always writes it
+    and extract consumes it, so it is never part of the field. The template is the only source.
+    """
+    nodes = AST_Handler().split_nodes(model.__template__)
+    recipes = TemplateExtractor().extract_nodes(nodes)
+    placeholders: dict[str, str] = {}
+    for anchor, recipe in zip(recipes, recipes[1:]):
+        if anchor.get("outer_type") != "paragraph" or not anchor.get("anchor") or anchor.get("props"):
+            continue
+        fields = recipe.get("props") or ([recipe["name"]] if recipe.get("name") else [])
+        if len(fields) != 1:
+            continue
+        text = _paragraph_text(nodes[anchor["outer_index"]])
+        if len(text) > 2 and text[0] in "_*" and text[-1] == text[0]:
+            placeholders[fields[0]] = text
+    return placeholders
+
+
+def _paragraph_text(node: Any) -> str:
+    return "".join(child.content for child in node.children).strip()
+
+
+def strip_template_placeholders(model: type[Any], field_name: str, value: Any) -> Any:
+    """``value`` without the paragraphs that are exactly the template's placeholder of the field.
+
+    Only a text field (``str`` or ``str | None``) is normalized. A top-level paragraph whose
+    whole text is the placeholder is dropped, with the blank lines after it; a value that is
+    only the placeholder becomes ``""``. The phrase inside a longer paragraph, a quote, a list
+    or a code block is content and stays. Written as is, the placeholder would be rendered
+    after the template's own anchor and read back as content, one more copy per edit.
+    """
+    if model.model_fields[field_name].annotation not in (str, str | None) or not isinstance(value, str):
+        return value
+    placeholder = template_placeholders(model).get(field_name)
+    if not placeholder or placeholder not in value:
+        return value
+    dropped = [
+        node.map
+        for node in AST_Handler().split_nodes(value)
+        if node.type == "paragraph" and node.map and _paragraph_text(node) == placeholder
+    ]
+    if not dropped:
+        return value
+    lines = value.split("\n")
+    drop: set[int] = set()
+    for start, end in dropped:
+        drop.update(range(start, end))
+        while end < len(lines) and not lines[end].strip():
+            drop.add(end)
+            end += 1
+    return "\n".join(line for index, line in enumerate(lines) if index not in drop).strip("\n")
+
+
 # ---------------------------------------------------------------- paths and selectors
 def artifact_path(root: Path, artifact_id: str, doc_id: str) -> Path:
     return desk_root(root) / ARTIFACT_PATHS[artifact_id] / f"{doc_id}.md"
@@ -832,7 +894,9 @@ def edit_artifact_field(root: Path, subject: str, selector: str, field: str, raw
             "verdict is written by deskops review dispose (GC03); a new review is a new document"
         )
     payload = read_doc(path, model)
-    payload[field_name] = _parse_field_value(model, field_name, raw_value)
+    payload[field_name] = strip_template_placeholders(
+        model, field_name, _parse_field_value(model, field_name, raw_value)
+    )
     write_doc(root, path, model, payload)
     return DocumentRecord(kind=kind, doc_id=str(payload.get("id", path.stem)), path=path)
 

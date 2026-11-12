@@ -352,6 +352,16 @@ Field names accept hyphens in place of underscores. Values are parsed like SLDB
 field values, so JSON lists and quoted strings work. The document is re-rendered
 through its model.
 
+A section field of text whose template carries an italic placeholder paragraph
+(`_Outline the expected implementation route or affected surface._` in a task,
+`_Describe the incoming message with enough evidence to triage._` in an inbox
+note) gets it from the template on every render, so `edit` drops from the value
+any paragraph that is exactly that field's placeholder. Passing the raw section
+text back with a new paragraph leaves one placeholder, the same value twice leaves
+the same file, and a value that is only the placeholder empties the field. The
+phrase inside a longer paragraph, a quote, a list or a code block is content and
+stays. The placeholders are read from the model's template, never from a list.
+
 ```bash runnable
 deskops edit atom atom-operator-manual-evidence title "Operator manual evidence (edited)" --root .
 deskops edit pill pill-pattern-manual-examples-stay-runnable summary "Edited summary." --root .

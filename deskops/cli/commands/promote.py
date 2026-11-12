@@ -4,6 +4,8 @@ from pathlib import Path
 import re
 from typing import Any
 
+from deskops.doc_access import template_placeholders
+from deskops.models import TaskDoc
 from deskops.services.drawer import DrawerService
 
 
@@ -18,14 +20,11 @@ _TASK_SECTION_FIELDS: tuple[tuple[str, str], ...] = (
 
 _TASK_HEADING_TO_FIELD = {heading.lower(): field for field, heading in _TASK_SECTION_FIELDS}
 
-_TASK_SECTION_PLACEHOLDERS = {
-    "Rationale": "_Explain why this task exists or the business driver behind it._",
-    "Goal": "_Describe the concrete result this task must produce._",
-    "Scope": "_State what is in scope and what is out of scope._",
-    "Implementation Path": "_Outline the expected implementation route or affected surface._",
-    "Validation": "_List the checks required before this task can close._",
-    "Done When": "_Name the observable condition that makes the task complete._",
-}
+def _task_section_placeholder(heading: str) -> str | None:
+    """The TaskDoc template's placeholder paragraph under ``heading``: the same source that
+    ``deskops edit`` normalizes with, never a list kept by hand."""
+    field = _TASK_HEADING_TO_FIELD.get(heading.lower())
+    return template_placeholders(TaskDoc).get(field) if field else None
 
 
 def _strip_markdown_frontmatter(text: str) -> str:
@@ -68,7 +67,7 @@ def _parse_task_sections(text: str) -> dict[str, Any]:
             buffer = []
             return
         content = "\n".join(buffer).strip()
-        placeholder = _TASK_SECTION_PLACEHOLDERS.get(heading)
+        placeholder = _task_section_placeholder(heading)
         if placeholder:
             content_lines = content.splitlines()
             while content_lines and not content_lines[0].strip():
