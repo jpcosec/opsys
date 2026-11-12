@@ -49,6 +49,7 @@
     "- migrated desk/tasks/task-golden-alpha.md: task_type 'implementation' -> 'task.code' (tracked as TaskCodeDoc)",
     "- migrated desk/tasks/task-golden-beta.md: task_type 'implementation' -> 'task.code' (tracked as TaskCodeDoc)",
     "Applying repairs...",
+    "Declared the tag namespaces of desk/atoms/tag-namespaces.yaml in .sldb/store.yaml.",
     "Desk divergence report:",
     "Inheriting AtomDoc in <root>/.sldb...",
     "Inheriting BoardDoc in <root>/.sldb...",

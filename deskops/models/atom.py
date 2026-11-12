@@ -9,8 +9,14 @@ from sldb import StructuredNLDoc
 from .crossroad import check_domain_path
 
 ATOM_TAG_PATTERN = r"^[a-z][a-z0-9_]*:[a-z][a-z0-9_.-]*$"
+# The value is dot-separated segments, none empty (no ``a..b``, ``a.`` or ``.a``): sldb's
+# ``tag_folder`` refuses an empty segment (CC35d H3) and deskops derives atom folders with it.
+# Checked by ``check_atom_tags`` and not in the field's schema pattern, so the model contract
+# (its hash, which every store records) stays the same.
+ATOM_TAG_SEGMENTS_PATTERN = r"^[a-z][a-z0-9_]*:[a-z][a-z0-9_-]*(\.[a-z0-9_-]+)*$"
 DOMAIN_NAMESPACE = "domain"
 _ATOM_TAG = re.compile(ATOM_TAG_PATTERN)
+_ATOM_TAG_SEGMENTS = re.compile(ATOM_TAG_SEGMENTS_PATTERN)
 
 
 class AtomQuestion(StrEnum):
@@ -46,8 +52,9 @@ def check_slug_id(value: object, prefix: str, label: str) -> object:
 
 
 def check_atom_tags(tags: object) -> object:
-    """Each tag is ``namespace:value``; each ``domain:`` value is a domain path. Anything that is
-    not a list of strings is left to pydantic."""
+    """Each tag is ``namespace:value``; each ``domain:`` value is a domain path (its own, more
+    specific message), and any other value has no empty dot segment. Anything that is not a list
+    of strings is left to pydantic."""
     if not isinstance(tags, list):
         return tags
     for tag in tags:
@@ -58,6 +65,10 @@ def check_atom_tags(tags: object) -> object:
         namespace, value = tag.split(":", 1)
         if namespace == DOMAIN_NAMESPACE:
             check_domain_path(value)
+        elif _ATOM_TAG_SEGMENTS.fullmatch(tag) is None:
+            raise ValueError(
+                f"Invalid atom tag '{tag}': the value has an empty segment; separate non-empty segments with single dots."
+            )
     return tags
 
 

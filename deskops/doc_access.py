@@ -43,11 +43,11 @@ from sldb.cli.utils import parse_data_value
 from sldb.runtime.validation import extract_model_data
 from sldb.runtime.validation import render_model_markdown
 
-from deskops.atom_tags import axis_folder_relpath
+from deskops.atom_tags import axis_folder
 from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import folder_axis_value
 from deskops.atom_tags import load_namespaces
-from deskops.atom_tags import validate_atom_tag_namespaces
+from deskops.atom_tags import refuse_unplaced_tags
 from deskops.config import DeskConfig
 # CC35b-a3: untracked surface, resolved on disk
 from deskops.desk_paths import resolve_selector
@@ -550,7 +550,7 @@ def atom_doc_path(root: Path, atom_id: str, tags: list[str]) -> Path:
     if axis is not None:
         value = folder_axis_value(tags, axis)
         if value is not None:
-            return base / axis_folder_relpath(value) / f"{atom_id}.md"
+            return base / axis_folder(value) / f"{atom_id}.md"
     return base / f"{atom_id}.md"
 
 
@@ -800,10 +800,7 @@ def create_artifact(root: Path, artifact_id: str, raw_payload: dict[str, Any]) -
     doc_id = compiled.artifact_payload["id"]
     if artifact_id == "artifact.atom":
         tags = list(compiled.artifact_payload.get("tags") or [])
-        validate_atom_tag_namespaces(tags, default_registry_path(root))
-        from deskops.domain_tree import require_domain_parents
-
-        require_domain_parents(desk_root(root) / "atoms", tags)
+        refuse_unplaced_tags(root, tags)
         path = atom_doc_path(root, doc_id, tags)
     else:
         path = artifact_path(root, artifact_id, doc_id)

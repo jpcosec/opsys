@@ -725,6 +725,10 @@ creation, splitting, merging, deletion, and validation.
 
 A domain tag such as `domain:manual.docs` needs a written crossroad for every
 parent path, created top-down. Crossroads describe what hangs below a path.
+sldb checks it (and that every atom or protoatom namespace is declared) as its
+tag family, from the declaration `deskops init` and `deskops desk update --apply`
+write in `.sldb/store.yaml`; a desk without a store checks neither. See
+`docs/atoms.md` ("Who checks the namespaces and the domain parents").
 
 ```bash runnable
 deskops atoms add-namespace manual \

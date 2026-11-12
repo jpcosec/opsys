@@ -15,11 +15,11 @@ from typing import TYPE_CHECKING
 from urllib.parse import urlparse
 
 from deskops import doc_access
-from deskops.atom_tags import axis_folder_relpath
+from deskops.atom_tags import axis_folder
 from deskops.atom_tags import axis_values
-from deskops.atom_tags import default_registry_path
 from deskops.atom_tags import folder_axis_value
-from deskops.atom_tags import validate_atom_tag_namespaces
+from deskops.atom_tags import refuse_unplaced_tags
+from deskops.atom_tags import tag_findings
 from deskops.doc_access import DocumentRecord
 from deskops.models import AtomDoc
 from deskops.models import PillDoc
@@ -177,7 +177,7 @@ class AtomsService:
                 continue
             if value is None:
                 continue
-            target = self.desk_root / "atoms" / axis_folder_relpath(value) / f"{atom_id}.md"
+            target = self.desk_root / "atoms" / axis_folder(value) / f"{atom_id}.md"
             if target == path:
                 continue
             if target.exists():
@@ -201,9 +201,11 @@ class AtomsService:
     def validate_atoms(self, selector: str | None = None) -> list[dict[str, Any]]:
         self.ensure_workspace()
         paths = [self._resolve_artifact_selector("artifact.atom", self.desk_root / "atoms", selector)] if selector else self._all_atom_paths()
+        # Undeclared namespaces are sldb's tag family findings (only on tracked atoms).
+        findings = tag_findings(self.root)
         results: list[dict[str, Any]] = []
         for path in paths:
-            record = self._validate_atom_path(path)
+            record = self._validate_atom_path(path, findings.get(str(path), {}).get("namespace", []))
             results.append({
                 "id": record.doc_id,
                 "path": str(path),
@@ -239,17 +241,13 @@ class AtomsService:
         graph_path: str | None = None,
     ) -> AtomCreateResult:
         self.ensure_workspace()
-        from deskops.domain_tree import require_domain_parents
-
-        require_domain_parents(self.desk_root / "atoms", list(tags or []))
+        refuse_unplaced_tags(self.root, list(tags or []))
         source_flags = [flag for flag in (from_pill, from_graph, from_diagram) if flag]
         if len(source_flags) != 1:
             raise ValueError("Atom create requires exactly one source: --from-pill, --from-graph, or --from-diagram.")
 
         atom_id = str(atom_id).strip()
         normalized_question = str(five_wh_one_plus).strip()
-        if tags:
-            validate_atom_tag_namespaces(list(tags), default_registry_path(self.root))
 
         if from_pill:
             payload, source_selector, provenance = self._build_atom_from_pill(
@@ -718,7 +716,7 @@ class AtomsService:
             "The original atom is intentionally kept as a redirect stub so the old id remains traceable after inbound references are reconciled."
         )
 
-    def _validate_atom_path(self, path: Path) -> AtomValidationRecord:
+    def _validate_atom_path(self, path: Path, namespace_errors: list[str] | None = None) -> AtomValidationRecord:
         try:
             payload, errors = check_document(AtomDoc, path.read_text(encoding="utf-8"), invalid="model validation failed")
         except Exception as exc:
@@ -728,14 +726,7 @@ class AtomsService:
         if path.stem != doc_id:
             errors.append(f"filename must match atom id '{doc_id}'")
 
-        tags = payload.get("tags")
-        try:
-            validate_atom_tag_namespaces(
-                list(tags) if isinstance(tags, list) else [],
-                default_registry_path(self.root),
-            )
-        except ValueError as exc:
-            errors.append(str(exc))
+        errors.extend(namespace_errors or [])
 
         provenance = str(payload.get("provenance") or "").strip()
         if provenance and not self._provenance_is_resolvable(provenance):

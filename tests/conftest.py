@@ -44,6 +44,7 @@ def _git(root: Path, *argv: str) -> None:
 @pytest.fixture(scope="session")
 def _lifecycle_desk_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """One initialized desk (store, scaffold, lifecycle graph), built once per session."""
+    from deskops.atom_tags import sync_tag_declaration
     from deskops.bootstrap import SLDBBootstrap
     from deskops.lifecycle import write_lifecycle_graph
     from deskops.workspace import seed_desk
@@ -54,6 +55,9 @@ def _lifecycle_desk_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
         assert SLDBBootstrap().init_local_store(root) == 0
     seed_desk(root)
     write_lifecycle_graph(root)
+    # `deskops init` also declares the seeded tag namespaces in .sldb/store.yaml (CC35d resto);
+    # without this step the template is not "as deskops init leaves it" and desk update repairs it.
+    sync_tag_declaration(root)
     return root
 
 
