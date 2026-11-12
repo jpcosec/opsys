@@ -569,8 +569,5 @@ include:
   paths:
   - deskops/data/views/board.md
   - deskops/data/views/task.md
-- model: TaskDebugDoc
-  paths:
-  - desk/tasks/task-deskops-edit-task-y-edit-de-cualquier-artefacto-no-guarda-el-párrafo-placeholder-de-la-plantilla-com.md
 graph_backend: networkx
 policy: {}

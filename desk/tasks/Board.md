@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-12T03:12:55Z'
+  at: '2026-11-12T03:13:05Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -10,7 +10,6 @@ id: board-001
 scope: desk
 # List of task-xxx paths
 tasks:
-- desk/tasks/task-deskops-edit-task-y-edit-de-cualquier-artefacto-no-guarda-el-párrafo-placeholder-de-la-plantilla-com.md
 - desk/tasks/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper.md
 - desk/tasks/task-deskops-quita-las-guardas-que-esquivaban-h1-h3-de-sldb-cerrar-por-cli-dos-tareas-inválidas-del-mismo.md
 - desk/tasks/task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de.md
@@ -55,7 +54,6 @@ No active tasks routed.
 
 _Generated from the task references above._
 
-- deskops edit task (y edit de cualquier artefacto) no guarda el párrafo placeholder de la plantilla como contenido: una edición con el texto de la sección no lo duplica [draft] - Una edición por CLI de un campo de sección deja exactamente un placeholder de plantilla (el ancla) en el archivo, venga o no el placeholder dentro del valor. La edición es idempotente: el mismo valor dos veces deja el mismo archivo.
 - Los tests de deskops leen la ruta del sldb hermano de la variable de entorno SLDB_SRC, con un helper común [draft] - Un solo helper común resuelve la ruta de sldb para los tests: lee la variable de entorno SLDB_SRC y, si no está definida, usa la ruta hermana de hoy; los 18 archivos lo usan y ninguno repite la línea fija.
 - deskops quita las guardas que esquivaban H1-H3 de sldb: cerrar por CLI dos tareas inválidas del mismo modelo y reparar un desk que tiene un documento inválido [draft] - Con sldb corregido, deskops cierra por CLI dos o más tareas inválidas del mismo modelo (retire, supersede, resolved-by), y desk update --apply sobre un desk con documentos inválidos hace todas las reparaciones sin saltarse ninguna, mientras la migración de estados heredados y el listado de las tareas inválidas se quedan.
 - add task y el doctor sugieren task.external (o una tarea espejo) cuando los files o las referencias de una tarea apuntan a otro repo [draft] - Al crear una tarea cuyos files apuntan a otro repo, add task lo avisa con una línea (no bloquea) que nombra el repo y sugiere task.external o una tarea espejo en el desk de ese repo; y el doctor lista como alerta, sin cambiar su código de salida, las tareas existentes con esa forma que no son task.external.
