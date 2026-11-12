@@ -539,6 +539,12 @@ include:
     name: review-task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper-bundle-1
   - path: desk/reviews/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper/preflight-1.md
     name: review-task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper-preflight-1
+  - path: desk/reviews/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta/reproduction-1.md
+    name: review-task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta-reproduction-1
+  - path: desk/reviews/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta/preflight-1.md
+    name: review-task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta-preflight-1
+  - path: desk/reviews/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta/bundle-1.md
+    name: review-task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta-bundle-1
 - model: BoardDoc
   paths:
   - desk/tasks/Board.md
@@ -569,5 +575,8 @@ include:
   paths:
   - deskops/data/views/board.md
   - deskops/data/views/task.md
+- model: TaskDebugDoc
+  paths:
+  - desk/tasks/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta.md
 graph_backend: networkx
 policy: {}

@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-12T03:13:05Z'
+  at: '2026-11-12T03:38:00Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -13,6 +13,7 @@ tasks:
 - desk/tasks/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper.md
 - desk/tasks/task-deskops-quita-las-guardas-que-esquivaban-h1-h3-de-sldb-cerrar-por-cli-dos-tareas-inválidas-del-mismo.md
 - desk/tasks/task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de.md
+- desk/tasks/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta.md
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -57,3 +58,4 @@ _Generated from the task references above._
 - Los tests de deskops leen la ruta del sldb hermano de la variable de entorno SLDB_SRC, con un helper común [draft] - Un solo helper común resuelve la ruta de sldb para los tests: lee la variable de entorno SLDB_SRC y, si no está definida, usa la ruta hermana de hoy; los 18 archivos lo usan y ninguno repite la línea fija.
 - deskops quita las guardas que esquivaban H1-H3 de sldb: cerrar por CLI dos tareas inválidas del mismo modelo y reparar un desk que tiene un documento inválido [draft] - Con sldb corregido, deskops cierra por CLI dos o más tareas inválidas del mismo modelo (retire, supersede, resolved-by), y desk update --apply sobre un desk con documentos inválidos hace todas las reparaciones sin saltarse ninguna, mientras la migración de estados heredados y el listado de las tareas inválidas se quedan.
 - add task y el doctor sugieren task.external (o una tarea espejo) cuando los files o las referencias de una tarea apuntan a otro repo [draft] - Al crear una tarea cuyos files apuntan a otro repo, add task lo avisa con una línea (no bloquea) que nombra el repo y sugiere task.external o una tarea espejo en el desk de ese repo; y el doctor lista como alerta, sin cambiar su código de salida, las tareas existentes con esa forma que no son task.external.
+- deskops view board en menos de 2,5 s: construir una vez por corrida lo que hoy se rehace por tarjeta (transiciones, closeout, grafo del desk) y abrir el store menos veces [draft] - deskops view board, con el store construido y en un proceso nuevo, tarda 2,5 s o menos (mediana de 3, layout del benchmark de H11) y su salida es idéntica a la de hoy; lo que se construye una vez por corrida se comparte entre las tarjetas.

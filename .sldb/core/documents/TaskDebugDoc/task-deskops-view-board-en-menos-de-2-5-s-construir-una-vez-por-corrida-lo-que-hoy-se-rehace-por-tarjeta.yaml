@@ -1,0 +1,38 @@
+name: task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta
+path: desk/tasks/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta.md
+source_hash: 8432e93d18eb5f7be2dc4bdb465cf60264f4cdc191a78c16c33f14e4e7f62107
+content_hash: 821776cff9e7db0de4dbe007e80922ca6c0d52c3b73d1834cc27e2303ccd5990
+field_hashes:
+  title: 60a28f252069c017aed87a084097460f13d9039574110298ce696f5721380796
+  id: 3c0132c0bb1b49c93cc3d28efbf927d9d32c42b567a7154e382398360e65ae62
+  status: 6ae048f08fcab44bfbc8463f074bfdb40f94c6bdf56d3aad9a7e1c05e5d5b5c1
+  summary: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  tags: 9e7e8be2998f87dfcbb538781d827f202722ef7dad630b93bca343e20f247db8
+  current_node: ff5161892aac34735bf10c411f7230b62b7b56446e230a5d26fb75afde4704b6
+  history: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  why: 10a1d6cd1256f9ffc10bdf9edf1fc21a38a61f340b8824d0837f6777e4601a49
+  goal: a4a7d8b8fbf7653e5d7a21acb85d9eb2e1a59546ef9bc60287830022c4d203a9
+  scope: f983e5df2fa24ea5cecf62841ac59c75b117275aa5566facc5ef2135c9a051e5
+  references: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  depends_on: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  pills: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  files: 0a6d01448d1f3f9e7244ad7fd9161bd96de757f16b43c45d11bdb8944704abf9
+  implementation_path: 425403fc47e3b22fec7c916782b9147bced49c8023a480d91c9c4a5db62003df
+  validation: 8e19faba2eab64d43b7b3bee2995f04d1f5ada9e972e07df087e66d301fa5d02
+  done_when: 8c4f807af7e92084010f7d99abb9b8d2b5c0a69f427c1af2d4b04e5d87ac7651
+  task_type: 17aef8a679138336d87167505c61b03a7bc28c9a12b1ccf78947b619d28fae69
+  inherits_from: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+  inherit_acceptance_context: fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa
+  atoms: 4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945
+semantic_tags:
+- artifact:task
+- representation.markdown
+- source.document.markdown
+- type.workflow.task
+- workspace.desk
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-12T03:37:46Z'
+  authority: generated
+  via: create_document
