@@ -13,6 +13,10 @@ import re
 import subprocess
 from typing import Any
 from typing import Callable
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from deskops.identity import RegisteredRepository
 
 
 COMMIT_ID_PATTERN = re.compile(r"[0-9a-f]{7,40}")
@@ -247,6 +251,62 @@ class CloseoutGatesService:
         elif ".py" in stripped:
             candidates.append(stripped)
         return candidates
+
+
+class RepositoryReferences:
+    """Split closeout references qualified by a registered repository: ``<repo-id>:<value>``.
+
+    The reference is cut at its first ``:``. When what comes before it is the id of a
+    repository in the desk's own registry (``desk/registry/repo-*.md``), the rest is the
+    value (a commit id or a test path, which may carry a pytest ``::node``) and it is
+    checked in that repository's root. Otherwise the whole reference is what it was
+    before: a local commit, a local test path or an http(s) URL. A prefix naming the desk
+    itself (its ``project_identity`` or a registered repository whose root is the desk's
+    root) is local: the value is checked as an unqualified reference.
+    """
+
+    def __init__(
+        self,
+        root: Path,
+        entries: "list[RegisteredRepository]",
+        *,
+        own_identity: str | None = None,
+    ) -> None:
+        self.root = root.resolve()
+        self.entries = {entry.id: entry for entry in entries}
+        self.own_identity = (own_identity or "").strip() or None
+        self._gates: dict[Path, CloseoutGatesService] = {}
+
+    def split(self, reference: str) -> "tuple[RegisteredRepository | None, str]":
+        """(the other repository, the value) for a qualified reference, else (None, the local reference)."""
+        text = reference.strip()
+        if CloseoutGatesService.reference_points_to_url(text) or ":" not in text:
+            return None, text
+        prefix, value = text.split(":", 1)
+        if self.own_identity is not None and prefix == self.own_identity:
+            return None, value.strip()
+        entry = self.entries.get(prefix)
+        if entry is None:
+            return None, text
+        if entry.repo_root is not None and entry.repo_root.resolve() == self.root:
+            return None, value.strip()
+        return entry, value.strip()
+
+    @staticmethod
+    def missing_root_message(entry: "RegisteredRepository") -> str | None:
+        """The refusal for a registered repository whose root is not on this machine, else None."""
+        if entry.repo_root is not None and entry.repo_root.is_dir():
+            return None
+        location = entry.repo_root if entry.repo_root is not None else entry.relative_path or "(no path)"
+        return f"Registered repository {entry.id} is not at {location} on this machine."
+
+    def gates(self, entry: "RegisteredRepository") -> CloseoutGatesService:
+        """The evidence gates of a registered repository, rooted at its registered root."""
+        assert entry.repo_root is not None
+        root = entry.repo_root.resolve()
+        if root not in self._gates:
+            self._gates[root] = CloseoutGatesService(root)
+        return self._gates[root]
 
 
 class CloseoutGraph:
