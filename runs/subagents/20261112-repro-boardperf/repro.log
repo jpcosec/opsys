@@ -1,0 +1,10 @@
+### boardperf: lo que queda de deskops view board tras H11. Mediciones del h11-worker (informe runs/subagents/h11-worker-report.md de wt/h11 3448891a),
+### NO re-corridas por el coordinador (máquina cargada, 11-13); el worker de esta tarea mide su línea base propia con caché frío y caliente.
+### Layout: deskops 4904ddfe, sldb con H11, spec2viz b16c021, pron 7f2e308, scion 4ead6d0bf, en /dev/shm; mediana de 3, proceso nuevo.
+deskops view board, store construido, caliente: 11,97 s antes de H11 (10,9 s con d120766d) -> 4,94 s
+deskops view board, primera corrida tras el build: ~12 s -> 11,3 s (compone una vez y guarda)
+sldb views run board en el mismo layout: 1,59 s  => el trabajo propio de deskops es ~3,3 s
+### Hipótesis del h11-worker sobre ese trabajo propio de deskops:
+  - show_task de cada tarjeta: transition_findings, closeout (build_closeout_graph_context) y desk_graph (ProjectGraph, ~2 s) se rehacen por tarjeta
+  - 31 open_store -> migrate_store_layout -> _already_canonical: ~1,3 s bajo perfil, 16 000 Path.resolve (memoizarlo es de sldb)
+### Meta: 2,5 s o menos.

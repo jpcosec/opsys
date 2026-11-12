@@ -1,0 +1,36 @@
+name: review-task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta-preflight-1
+path: desk/reviews/task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta/preflight-1.md
+source_hash: af6ca7e6a0a146e27ff2955d722e4b0d8b737b9b8b1fc469ec9918c822f8dfa4
+content_hash: 9fea8bb2a93f325d3be8dc20ad6aa941a77fa0f6a166d2ba888511f3fe915ad9
+field_hashes:
+  id: c873a9b3f9f49d67ac4b718f95a5d9970bad445ef1c38607027cc6c39f62bb9e
+  title: c41e91c6002300090b0c79851bd94e1194cff0717c38f82a0d601ac971b5f98b
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: a497135237a03ffa20977358609f44819e1b5a77e9ea07c317804e3802956650
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 93300f8241682a4de4716c363df3f0a05d789349b63e40220e478d50adc76165
+  input_sha256: f3b468513526770ca554a70cc8c28d971722aa8eb3d291a14f84f31f1f0016db
+  output_sha256: 9990279ec7fd659cfed1c69a36c6ade6de8b87bdb3108d070288c5ac3ab01d80
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 83fd9017c278260ea7b321e24cd90ea9ab6d7f2d2c40b58558d4cab859f275de
+  created_at: 08de20d6b79f97d3c27c12cb6d5296e77945e7f17c3e51b126924b435b8843af
+  disposed_at: 4f3a64a964ccd3a9a8d4f16e319ccffdbdcd76a909078a86984f118e728c0015
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 977db72ab40a04d82e3919513c8c8a711e5cab2a37706f257ad39bd36a993ac8
+  disposition: e57c6c95b38d2c5038099ac2c8f6b47619f421d55568983bf1da15e6443efbac
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-12T03:40:17Z'
+  authority: generated
+  via: save_document_payload
