@@ -1,0 +1,9 @@
+{
+  "key": "task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de/bundle",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "752ad7131bda15f9c8a495117b910bc50b865e3fcdf788681fe29a884c236ca8",
+  "output_sha256": "20e27bd5f6c544d6a377d21a691be2e6b408a6e84abbdd5c2cb1dcf67303ed8d",
+  "start": "2026-11-12T02:26:13.284328+00:00",
+  "end": "2026-11-12T02:26:26.911025+00:00"
+}

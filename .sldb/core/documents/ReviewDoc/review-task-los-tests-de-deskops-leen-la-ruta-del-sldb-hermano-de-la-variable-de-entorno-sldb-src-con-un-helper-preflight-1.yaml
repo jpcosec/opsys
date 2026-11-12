@@ -1,0 +1,36 @@
+name: review-task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper-preflight-1
+path: desk/reviews/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper/preflight-1.md
+source_hash: e6bc05391e713f41c39a9753654a5d8248050900b0c95e129d522d980e4fd1f1
+content_hash: c5e5ba1d08781b919456e592b22501b5bce54cba9c1040dc5dc634198bd5f125
+field_hashes:
+  id: 0234af16e5d350d909591838175be488f8a9d8b6ce12ca2a17e77531c841a2f6
+  title: 0ad0d9925f9eb04fc4275afb841d3ed7bbdef429c3d2296433c23cf6f62fa8e5
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: c2caae604115762df3147f341b116336e19fc9c9c7b5d5493e2c449473b8d864
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: c79df51a24aaf633aae59f376b5e8eda446a2e97ea7da41162d822a8e20584ef
+  input_sha256: e97f68de308842262a16d22c6ea5d7798a93d665cc3a94243e8d73dd00a3da51
+  output_sha256: a766535bbefd80c1c1a3aaaf3377107bac9755883a395cc9f15037b089276fd7
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: c94e60c899b27cbed451ca9621c444873ce50da2bf0bfb1e30c2e2a9b558317b
+  created_at: 7a7641fd3b97104afaea7c9836bdce711bb745d8fa63a65dbb7dd0b5805ec6a6
+  disposed_at: b0b3d5cbfe6b6f2f8c23d45abce43e5bcd6786c18f8ac04f17576b355a1337bd
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 9604426db16a755ffbe7423e0b68adc74564636c530b8b22c496399f5d6a0166
+  disposition: 30c21ece48460914886fe3d08af8898dfb542463217dedffc6047934752110f2
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-12T02:31:03Z'
+  authority: generated
+  via: save_document_payload

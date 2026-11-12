@@ -1,0 +1,97 @@
+{
+  "key": "task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de/bundle",
+  "input_sha256": "752ad7131bda15f9c8a495117b910bc50b865e3fcdf788681fe29a884c236ca8",
+  "argv": [
+    "pi",
+    "--provider",
+    "deepseek",
+    "--model",
+    "deepseek-flash",
+    "--thinking",
+    "low",
+    "--offline",
+    "--no-session",
+    "--no-context-files",
+    "--no-skills",
+    "--no-extensions",
+    "--no-prompt-templates",
+    "--no-tools",
+    "--print",
+    "--system-prompt",
+    "Revisor barato aislado de un encargo de planificación. Trabajas solo con el input explícito: sin herramientas, historial ni otras fuentes. No ejecutas nada. Responde en español con estas secciones exactas: REFORMULACION (propósito, resultado, repo, límites), AMBIGUEDADES (numeradas, cada una con cita textual del input y qué obligaría a inventar; escribe \"ninguna\" si no hay), DRY-RUN (lecturas, cambios previstos, dependencias y validaciones futuras, sin ejecutar), FUTURO (lo que produce otro nodo o decide un humano, no ambigüedad). REFORMULACION describe el encargo del nodo, no esta revisión. DRY-RUN describe cómo lo ejecutaría un ejecutor futuro, hipotéticamente y sin ejecutar nada. Si el nodo es un agregado o paquete no ejecutable, dilo y además recorre cómo lo cumplen sus hijos, qué transfiere cada uno al siguiente y cómo se valida el resultado conjunto. Máximo 350 palabras.",
+    "@/mnt/ssd/proyectos/SLDB_1/deskops-desk-tmp27/runs/subagents/20261112-022613/context-review/task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de/bundle/752ad7131bda15f9c8a495117b910bc50b865e3fcdf788681fe29a884c236ca8/attempt-1/input.md"
+  ],
+  "model": "deepseek/deepseek-flash",
+  "profile": "runtime-pi-deepseek-flash",
+  "selection_reason": "deepseek-flash: perfil barato verificado en esta máquina por ritual-context-review (D4)",
+  "sources": [
+    {
+      "path": "desk/tasks/task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de.md",
+      "sha256": "ca285cee9f3e5a18f9a2ab79ad052688d236e4660f183c22ebdd7e158df0075d",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/operations.py",
+      "sha256": "45ae0f9191bbad1450bdd59250cc53615dbd70aef9e8bff744e60d30ba7c16c5",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/identity.py",
+      "sha256": "8dbbfa4a970c03191ade0a44a396f2ccbbdc742e09f1934bcb80e99a0d57d18b",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/operations.py",
+      "sha256": "9e494de197a5ae749e2dfe0d59df7cdad7cec0783a70a1b6db537a6630a605f4",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/cli/commands/doctor.py",
+      "sha256": "7b3b597767315b9b428884439f24a7ed01a4ed32ba845360dc3e3bc276044915",
+      "projection": "whole_file"
+    },
+    {
+      "path": "deskops/doctor_findings.py",
+      "sha256": "e956fecfb215d41b0ff2270aa637841c869525444d4ddd044be36452c9464abb",
+      "projection": "whole_file"
+    },
+    {
+      "path": "docs/operator-manual.md",
+      "sha256": "28004e95bdf697555e3dc941aaa419850f7434c41daa8be04be94e0ede669125",
+      "projection": "whole_file"
+    },
+    {
+      "path": "CHANGELOG.md",
+      "sha256": "b3665e14f51bfc4301b5ca71cc604b080fa7e224a4a2f803bd95ce5b19bfe8b6",
+      "projection": "whole_file"
+    }
+  ],
+  "omitted_sources": [
+    {
+      "path": "ritual-phase",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-execution",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-closeout",
+      "reason": "missing"
+    },
+    {
+      "path": "ritual-testing",
+      "reason": "missing"
+    },
+    {
+      "path": "context-review",
+      "reason": "missing"
+    },
+    {
+      "path": "tests/",
+      "reason": "directory"
+    }
+  ],
+  "started": "2026-11-12T02:26:13.284328+00:00",
+  "finished": "2026-11-12T02:26:26.911025+00:00"
+}

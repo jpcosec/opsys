@@ -1,0 +1,9 @@
+{
+  "key": "task-deskops-quita-las-guardas-que-esquivaban-h1-h3-de-sldb-cerrar-por-cli-dos-tareas-inválidas-del-mismo/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "9dc98c47fae33473e4b8bd661dcd127ae1d0ccd599d66de0d22d5e328f249f76",
+  "output_sha256": "feddaee1a19604f97442589a6106b0823b1eaa0042c58262707f6df30b1acb6e",
+  "start": "2026-11-12T02:27:21.924775+00:00",
+  "end": "2026-11-12T02:27:39.444053+00:00"
+}

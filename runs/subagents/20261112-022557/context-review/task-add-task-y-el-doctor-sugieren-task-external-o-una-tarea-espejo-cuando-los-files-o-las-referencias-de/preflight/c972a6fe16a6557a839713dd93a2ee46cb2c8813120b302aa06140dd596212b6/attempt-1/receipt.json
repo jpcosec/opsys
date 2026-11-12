@@ -1,0 +1,9 @@
+{
+  "key": "task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de/preflight",
+  "technical_ok": true,
+  "returncode": 0,
+  "input_sha256": "c972a6fe16a6557a839713dd93a2ee46cb2c8813120b302aa06140dd596212b6",
+  "output_sha256": "59148cab8807bb67412eff4267be62b3f4ef61c39921edec2bbd6e621b367fd3",
+  "start": "2026-11-12T02:25:58.210601+00:00",
+  "end": "2026-11-12T02:26:10.937811+00:00"
+}

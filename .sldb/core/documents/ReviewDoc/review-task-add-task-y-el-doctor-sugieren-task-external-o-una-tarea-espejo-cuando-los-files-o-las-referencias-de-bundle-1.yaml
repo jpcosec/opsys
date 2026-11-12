@@ -1,0 +1,36 @@
+name: review-task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de-bundle-1
+path: desk/reviews/task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de/bundle-1.md
+source_hash: 8bdc13a368b625bee9c5e067cf38f5f795f517b6b99478a325a34d50ec6e6af9
+content_hash: 90f9e1b5d10f3a1afa35d12450ea7f938289db211eabeb0754104b515217cf3b
+field_hashes:
+  id: d39fadb552c899f0bda1df1d801103f2981ba39d756bb095a8edcd92ce5c618f
+  title: 14a83ee23f1c3857a7161a7b27907c64276f6d97e24adadf69ad32228ccba38e
+  kind: 4c522949265daa3973b2389b594a235b5c6e47c70d2af6e23bd14f8173f56280
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: f450ccb16d771b9130ef3db824102b7788a7fc75e22e6bd893c432437183bbd0
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 7cf200b9899c7ae10d2b2c3f771639594943a0c8f3e122892470f958c7e4e93c
+  input_sha256: d21285c3bb63f902b967b649aa1f27b571452dadd4f6bd9eaa58ea7bd89fc22b
+  output_sha256: 6fb1dc113ed500a755512dde794c1daaac09f244f603c64f29e35f61cfc796dd
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 485ead047502a5c76bf999bc2a5a921ee96e981a75fa00146b549421d6107683
+  created_at: 8a0799e89e15527738341b2638572cc0ea7110af09bdc6c2daacf5c337340f5c
+  disposed_at: 1b080473954f23e5d8037366d0b8fd1f35987521f9205b359c80f20fa8c1cfa3
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: 1f3ed12aeb5ceb16c52066643a697e909c36aa6309dfc9edafcd9baf3789af9e
+  disposition: ebaccfb272dcdb414fb956dd67ef04763e7db08003f9b704e27c72f927205f35
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-12T02:30:38Z'
+  authority: generated
+  via: save_document_payload

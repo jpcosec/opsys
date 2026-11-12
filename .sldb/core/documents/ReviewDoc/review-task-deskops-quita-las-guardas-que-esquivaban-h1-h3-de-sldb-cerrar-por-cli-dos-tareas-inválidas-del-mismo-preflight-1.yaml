@@ -1,0 +1,36 @@
+name: review-task-deskops-quita-las-guardas-que-esquivaban-h1-h3-de-sldb-cerrar-por-cli-dos-tareas-inválidas-del-mismo-preflight-1
+path: desk/reviews/task-deskops-quita-las-guardas-que-esquivaban-h1-h3-de-sldb-cerrar-por-cli-dos-tareas-inválidas-del-mismo/preflight-1.md
+source_hash: 33bd203c90f61d3e02e13d3b43f04012123bbca124b3d9f2e0a0d4d30e6cbbfc
+content_hash: 9dabfeeb210db6268764cdc7eef5761fed709b9e123f1b52acf427c6c18c3780
+field_hashes:
+  id: ecdc4b85ea156e5b62926248d60ea1b4ec65f3dd72f74a9998ddb84ec2fe54cc
+  title: 2e871a2ad92363da23e1d59138ca95c7499c3c55a4b27eba62d084b0fb7c8961
+  kind: b7aa467a101908787d614f7bfc1dadd75a976b85a3bf6022dd451c30158bbff2
+  fact: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  value: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  subject: 7aca8d4d941da5163da8d7e91601086d19b5f93b56587f7d5890ea9aca0f19d9
+  subject_ref: 12ae32cb1ec02d01eda3581b127c1fee3b0dc53572ed6baf239721a03d82e126
+  engine: 6874c40de9971944b9706ccc769074b7f77cb595ed78bafba748db5266461238
+  actor: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  run_dir: 7f161ca3bf517edb36906f1869eef0090292d719be9ed8317ed89c04fe6c1a01
+  input_sha256: 6f75fa68ca24378fc031d20dd3d4fb83069d5a73b2342585d812d8fb8b8d64a7
+  output_sha256: 1bbd3a1135d3dfaeddac850ce104283355723f23343e4438a1c44e4550574c90
+  verdict: d288c584af270151f7b7cd7977b94160ce1d7b501dee2d6308f2ac84ebaacc99
+  reason: 0e61d2a4218fbd2cf88e02780e090a4d9fc9dacf6ac36c6eb4bb7c2ff5394781
+  created_at: 0ead6e37987b43c279f54808cf9238174ccbb4d5aa74816039daf2fd61487256
+  disposed_at: 7753a469055cae174a33e1485949dfdbfa3c6d6562317d92c7558ec8809b8e14
+  disposed_by: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  summary: e6de40876c21aae6a68a36dcc9a6ed87c57dbdde060e52fe9a98e4a71580d173
+  disposition: 1fc41e43a4b0a10044b844c534df52956c0cec34329517d375caad4575ac28ae
+  tags: 26f66ebae91f717518f0d0c6585e99f1cbd539bcb3504598ddeb732dec3a0af9
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.workflow.review
+- workspace.desk.runs
+- workspace:desk
+provenance:
+  by: agent
+  at: '2026-11-12T02:30:53Z'
+  authority: generated
+  via: save_document_payload
