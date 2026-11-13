@@ -1,0 +1,18 @@
+name: 20261112-132201-unclear-board-no-refleja-edit-task-goal
+path: desk/inbox/20261112-132201-unclear-board-no-refleja-edit-task-goal.md
+source_hash: b60dcf075c67a18e142730e1a9c9360a3cebd0f265aacc3e9a9437d2ce5f49d1
+content_hash: 57cdf1cdf3e70c742a8ba014619c64305030f7bc4517e77840607653c85828af
+field_hashes:
+  kind: 683144a12969e0fd85512737e57b4db93ed15ee760906165a5516d581a77889a
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: e69b253d95889509ffe72a735ed6ae0f3f6574335c13f9fa66fad8b94becbb1a
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: 3f08eb7b76205cd11b431fcd19c0f134951834730c92a7e68b023545d1e69ad4
+  body: 63dd331c4681708915913d6854fd085989ae8c694453342daf2e238bd184516e
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
