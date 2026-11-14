@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-14T10:48:07Z'
+  at: '2026-11-14T11:35:18Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -11,7 +11,6 @@ scope: desk
 # List of task-xxx paths
 tasks:
 - desk/tasks/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper.md
-- desk/tasks/task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de.md
 - desk/tasks/task-test-domain-tree-vuelve-a-verde-sldb-rechaza-al-trackear-un-átomo-con-namespace-no-declarado.md
 # List of pill-xxx paths
 pills:
@@ -55,5 +54,4 @@ No active tasks routed.
 _Generated from the task references above._
 
 - Los tests de deskops leen la ruta del sldb hermano de la variable de entorno SLDB_SRC, con un helper común [draft] - Un solo helper común resuelve la ruta de sldb para los tests: lee la variable de entorno SLDB_SRC y, si no está definida, usa la ruta hermana de hoy; los 18 archivos lo usan y ninguno repite la línea fija.
-- add task y el doctor sugieren task.external (o una tarea espejo) cuando los files o las referencias de una tarea apuntan a otro repo [draft] - Al crear una tarea cuyos files apuntan a otro repo, add task lo avisa con una línea (no bloquea) que nombra el repo y sugiere task.external o una tarea espejo en el desk de ese repo; y el doctor lista como alerta, sin cambiar su código de salida, las tareas existentes con esa forma que no son task.external.
 - test_domain_tree vuelve a verde: sldb rechaza al trackear un átomo con namespace no declarado [draft] - tests/test_domain_tree.py pasa entero contra sldb main. desk update --apply ante un documento que sldb rechaza por regla devuelve 1, nombra el documento y el código de la regla, y no escribe nada. atoms validate --all sigue informando el namespace desconocido.
