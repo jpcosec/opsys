@@ -9,6 +9,7 @@ from deskops.cli.parse_input import parse_task_input
 from deskops.cli.render import normalize
 from deskops.cli.render import render
 from deskops.cli.render import render_error
+from deskops.foreign_files import EXTERNAL_TASK_TYPE, foreign_repositories, task_warning
 from deskops.lifecycle import finding_line
 from deskops.models.task_types import closeout_evidence_kinds
 from deskops.operations import DeskopsOperations
@@ -76,6 +77,9 @@ class OperationsCLI:
             bundle = operations.create_task_bundle(payload)
             print(f"Created task bundle {bundle.task_id}")
             print(f"Task: {bundle.task_path}")
+            if task_type != EXTERNAL_TASK_TYPE:
+                for repo_id in foreign_repositories(root, payload.get("files")):
+                    print(task_warning(bundle.task_id, repo_id))
             if drawer_source is not None:
                 print(f"From drawer: {drawer_source} (kept; remove it by hand once the task supersedes it)")
             return 0

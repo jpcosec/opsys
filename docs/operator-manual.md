@@ -469,6 +469,22 @@ active task explicitly and records the drawer file with `--from-drawer`. The
 drawer file is kept for manual cleanup. Like every task, its type declares its
 closeout evidence: `--task-type task.docs` declares `commit` and `document`.
 
+When the `files` of a task name another repository of the desk's registry
+(`deskops repo register`), `add task` prints one more line after creating it, and
+creates it all the same (it never blocks and does not change the type):
+
+```text
+Files of <task-id> belong to repository <repo-id>; if the work lives there consider task_type task.external or a mirror task in its desk.
+```
+
+A file belongs to another repository when it is `<repo-id>:<path>` with a registered
+id, an absolute path under that repository's registered root, or a relative path that
+starts at the parent folder (`../<repo>/...`) and resolves under it. Anything else is
+local. Only `files` count, not `references`; the line is not printed for `task.external`
+or when every file is local. `deskops doctor` lists the same line as an alert for each
+open task (not closed, resolved, done, complete, superseded or cancelled) that is not
+`task.external` and has such files; it does not change doctor's exit code.
+
 ```bash runnable
 deskops add task --root . \
   --title "Close a manual task" \

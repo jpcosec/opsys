@@ -19,6 +19,7 @@ from deskops.doctor_findings import (
     read_store_check,
     seed_drift,
 )
+from deskops.foreign_files import open_foreign_tasks, task_warning
 from deskops.workspace import inspect_desk
 from deskops.workspace import modeled_desk_markdown_docs
 from deskops.workspace import desk_seed_text
@@ -58,6 +59,7 @@ class DoctorCLI:
         if desk_dir.exists():
             self._check_documents(root, desk_dir, repair, findings)
             self._check_managed_seeds(root, findings)
+            self._check_foreign_files(root, findings)
             self._check_models(root, repair, findings)
         return self._report(findings, repair)
 
@@ -118,6 +120,14 @@ class DoctorCLI:
             rel = path.resolve().relative_to(root).as_posix()
             drift = seed_drift(rel, desk_seed_text(root.name, rel), path.read_text(encoding="utf-8"))
             (findings.errors if drift.governs_transition else findings.alerts).append(drift.line)
+
+    def _check_foreign_files(self, root: Path, findings: Findings) -> None:
+        """An alert per open task, not task.external, whose files belong to another registered repo."""
+        try:
+            found = open_foreign_tasks(root)
+        except Exception:
+            return
+        findings.alerts += [task_warning(task_id, repo_id) for task_id, repo_id in found]
 
     def _store_check(self, root: Path, findings: Findings) -> dict | None:
         result = subprocess.run(
