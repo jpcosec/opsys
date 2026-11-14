@@ -323,11 +323,12 @@ def test_desk_update_reports_an_inconsistent_task_and_does_not_write_it(lifecycl
     assert "task-legacy" not in capsys.readouterr().out
 
 
-def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_desk, capsys) -> None:
-    """A tracked task edited by hand outside the rules: sldb's store check refuses the store, so
-    desk update names the task with the validator's message, does not crash, writes nothing and
-    leaves the store repairs for after the fix."""
+def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_desk, capsys, sldb_cache) -> None:
+    """A tracked task edited by hand outside the rules: sldb names it store/doc-invalid and goes
+    on, so desk update reports the validator's message, writes nothing to the task, and keeps the
+    other repairs instead of skipping them (g2)."""
     root, task = task_desk
+    sldb_cache(root)
     text = task.read_text(encoding="utf-8")
     assert text.count("status: draft\n") == 1 and text.count("current_node: ritual-execution\n") == 1
     assert text.count("history: []\n") == 1
@@ -342,6 +343,6 @@ def test_desk_update_names_a_tracked_inconsistent_task_and_writes_nothing(task_d
     out = capsys.readouterr().out
     rel = task.relative_to(root).as_posix()
     assert f"  - {rel}: {ACTIVE_ERROR}." in out
-    assert "- Store check failed ('sldb stores check' exit code 1" in out
-    assert "Skipped the other repairs" in out
+    assert "- Store check failed" not in out
+    assert "Skipped the other repairs" not in out
     assert task.read_text(encoding="utf-8") == text

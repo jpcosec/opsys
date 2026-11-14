@@ -8,7 +8,17 @@ import sys
 
 from deskops.bootstrap import MODEL_REFS, SLDBBootstrap
 from deskops.doc_readability import is_unreadable_by_model
-from deskops.doctor_findings import REGISTER, Findings, invalid_task_findings, moved_documents, print_findings, read_store_check, seed_drift
+from deskops.doctor_findings import (
+    REGISTER,
+    Findings,
+    invalid_document_findings,
+    invalid_task_findings,
+    invalid_task_paths,
+    moved_documents,
+    print_findings,
+    read_store_check,
+    seed_drift,
+)
 from deskops.workspace import inspect_desk
 from deskops.workspace import modeled_desk_markdown_docs
 from deskops.workspace import desk_seed_text
@@ -72,9 +82,15 @@ class DoctorCLI:
 
     def _check_documents(self, root: Path, desk_dir: Path, repair: bool, findings: Findings) -> None:
         findings.errors += invalid_task_findings(root)
+        task_paths = invalid_task_paths(root)
         payload = self._store_check(root, findings)
         if payload is None:
             return
+        findings.errors += [
+            f"Invalid desk document: {rel}: {what}"
+            for rel, what in invalid_document_findings(payload)
+            if rel not in task_paths
+        ]
         docs = read_store_check(root, payload)
         modeled = {p.resolve() for p in modeled_desk_markdown_docs(root, desk_dir) if p.name not in _IGNORED_MODELED_NAMES}
         untracked = sorted(p for p in modeled if p not in docs.tracked)

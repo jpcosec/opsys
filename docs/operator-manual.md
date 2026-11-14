@@ -84,9 +84,11 @@ model contract that changed. Nothing is broken; register them with
 
 A task its model rejects (its `status`, `current_node` and `history` are not a state
 the lifecycle can produce) is an error of its own, one line per task with the file and
-the validator's text, read from the task's frontmatter: `sldb stores check` stops at the
-first such document, so doctor names every one and still runs the other checks
-(structure, store, models). A task the legacy migration decides says
+the validator's text, read from the task's frontmatter, while doctor still runs the other
+checks (structure, store, models). `sldb stores check` names such a document as
+`store/doc-invalid` and goes on; doctor reads that finding too, for a tracked document
+under another model, and does not repeat a task its frontmatter listing already named.
+A task the legacy migration decides says
 `Migrate it with deskops desk update --apply`; any other one says what its owner can
 do (`decide its state: deskops closeout supersede --task <id> --reason ... --ref ...`).
 
@@ -207,15 +209,17 @@ deskops desk update --root ../sibling --apply
   previous summary. A non-empty history with an incoherent status is not
   migrated. Any other task the model rejects is listed under
   `Invalid task documents (not written)` with the validator's text and what its
-  owner can do; it is never written. The write goes to the frontmatter, not
-  through sldb (sldb rebuilds every task of the store on each write and stops at
-  the invalid one), and the new text is validated with `TaskDoc`; a task it
-  still rejects is restored. While `sldb stores check` cannot read the store,
-  `--apply` reports it and skips every other repair (structure, lifecycle
-  graph, models, tracking, task types, indexes) instead of leaving the store
-  half written. `--apply` exits 0
-  when nothing is left and 1 while a task waits for its owner; a second run
-  migrates nothing.
+  owner can do; it is never written. The migration writes the frontmatter
+  directly because the model rejects the state, and validates the new text with
+  `TaskDoc`; a task it still rejects is restored. A document sldb names with
+  `store/doc-invalid` that the task listing does not cover is reported under
+  `Invalid documents (not written)` with the model's rejection. `sldb stores
+  check` names invalid documents and goes on, so `--apply` keeps every other
+  repair (structure, lifecycle graph, models, tracking, task types, indexes); a
+  store check with no JSON and a failing exit code is still an environment
+  error. `--apply` exits 0
+  when nothing is left and 1 while a task or another invalid document waits
+  for its owner (as the dry-run does); a second run migrates nothing.
 
 A dry run exits `1` when it finds divergence:
 
@@ -623,11 +627,11 @@ retire` removes a task whose status is already `resolved`, `closed`, `done`,
 `deferred` or `candidate` with an empty history (what a desk migrated before
 CC31 left; a `superseded` task with only its `superseded` record, what
 `desk update --apply` makes of it, too). Retire reads the task's frontmatter, so it also removes a task its
-model rejects; in a desk with a store it waits until no other task is invalid
-(`deskops desk update --apply` first). `closeout supersede` also closes a task
+model rejects. `closeout supersede` also closes a task
 its model rejects (a lifecycle no migration decides, such as a `draft` after
 `task_hands_to_closeout`): it reads and writes the frontmatter, with the same
-commit and trailers, and waits the same way while another task is invalid. Both need `--reason` and at least one
+commit and trailers. Both close one invalid task while others remain invalid:
+sldb names the others with `store/doc-invalid` and goes on. Both need `--reason` and at least one
 `--ref` (an ancestor commit; supersede also accepts an existing path), make
 exactly one closing commit with `Closeout-Mode: superseded` or
 `Closeout-Mode: legacy-resolved` trailers, and take the task off the Board.
@@ -667,12 +671,12 @@ model rejects (a lifecycle no migration decides, such as a `draft` after
 `task_hands_to_closeout`): it reads the task's `files` and history from the
 frontmatter, applies the same ref and test gates, writes `status: resolved` and
 the `resolved-by` record into the frontmatter (validated with `TaskDoc`, restored
-if it fails) and makes the same closing commit with the same trailers. In a desk
-with a store, supersede, retire and resolved-by refuse before writing anything
-while another task is invalid: sldb re-extracts the whole model on every write
-(sldb H2, note 3895e9f7). Migrate the others with `deskops desk update --apply`,
-decide them by hand, or close each with `closeout supersede` or `closeout retire`
-once it is the only invalid task, then run the close again.
+if it fails) and makes the same closing commit with the same trailers. With a
+store, each of the three closes its invalid task while another one of the same
+model remains invalid: sldb names it with `store/doc-invalid` and goes on, so
+the tasks can be closed one after the other. Tasks that are not the one being
+closed can also be migrated with `deskops desk update --apply` or decided by
+hand.
 
 ```bash
 deskops closeout resolved-by --root . \

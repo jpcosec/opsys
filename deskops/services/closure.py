@@ -186,7 +186,7 @@ class ClosureService:
         original = task_path.read_bytes()
         payload, model_reads = self._read_closing_task(task_path)
         if refusal := self._record_closing_status(
-            task_id, task_path, payload, model_reads, verb="supersede", status="superseded", event="superseded"
+            task_id, task_path, payload, model_reads, status="superseded", event="superseded"
         ):
             return refusal
 
@@ -324,7 +324,7 @@ class ClosureService:
             )
 
         if refusal := self._record_closing_status(
-            task_id, task_path, payload, model_reads, verb="resolved-by", status="resolved", event="resolved-by"
+            task_id, task_path, payload, model_reads, status="resolved", event="resolved-by"
         ):
             return refusal
 
@@ -441,9 +441,6 @@ class ClosureService:
                     "candidate tasks with an empty history, can be retired."
                 ],
             )
-        if blocking := self._other_invalid_tasks(task_path):
-            return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, "retire", blocking)])
-
         trailers = [
             f"Task-Id: {task_id}",
             "Closeout-Mode: legacy-resolved",
@@ -487,7 +484,6 @@ class ClosureService:
         payload: dict[str, Any],
         model_reads: bool,
         *,
-        verb: str,
         status: str,
         event: str,
     ) -> ClosureOutcome | None:
@@ -495,15 +491,11 @@ class ClosureService:
 
         A task the model reads is written through it. One it rejects is written field by field
         in its frontmatter (``rewrite_task_fields`` revalidates and restores on failure): the
-        closing status with its own record is coherent from any node. With a store, sldb
-        re-extracts the whole model on each write (H2), so another invalid task refuses the
-        close before anything is written.
+        closing status with its own record is coherent from any node.
         """
         original = task_path.read_bytes()
         history = [str(item) for item in payload.get("history") or []]
         if not model_reads:
-            if blocking := self._other_invalid_tasks(task_path):
-                return ClosureOutcome(1, [self._blocked_by_invalid_tasks(task_id, verb, blocking)])
             if errors := rewrite_task_fields(task_path, {"status": status, "history": [*history, event]}):
                 return ClosureOutcome(1, [f"Could not record {status} status on {task_id}: {'; '.join(errors)}"])
             return None
@@ -515,26 +507,6 @@ class ClosureService:
             task_path.write_bytes(original)
             return ClosureOutcome(1, [f"Could not record {status} status on {task_id}: {exc}"])
         return None
-
-    @staticmethod
-    def _blocked_by_invalid_tasks(task_id: str, verb: str, blocking: list[str]) -> str:
-        return (
-            f"Cannot {verb} {task_id} yet: sldb rebuilds every task of the store when one "
-            f"leaves it, and these task documents are invalid: {', '.join(blocking)}. "
-            "This is sldb H2 (note 3895e9f7): sldb re-extracts the whole model on every write. "
-            "Migrate them with deskops desk update --apply (it lists the ones that need "
-            "their owner's decision), or decide each by hand, or close it with deskops closeout "
-            f"supersede or retire once it is the only invalid task; then {verb} again."
-        )
-
-    def _other_invalid_tasks(self, task_path: Path) -> list[str]:
-        """The other tasks the model rejects, when the desk has a store to untrack from."""
-        if not doc_access.has_store(self.root):
-            return []
-        from deskops.workspace import legacy_task_states
-
-        migratable, unmigratable = legacy_task_states(self.root)
-        return [s.rel for s in [*migratable, *unmigratable] if s.path.resolve() != task_path.resolve()]
 
     def _ref_resolves(self, reference: str) -> bool:
         if self._ops.closeout_gates.reference_points_to_commit(reference):

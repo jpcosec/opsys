@@ -41,6 +41,29 @@ def _git(root: Path, *argv: str) -> None:
     subprocess.run(["git", *argv], cwd=root, check=True, capture_output=True, text=True)
 
 
+@pytest.fixture(params=["warm", "cold"])
+def sldb_cache(request, tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    """Prepare a desk's sldb cache for the run: warm keeps it, cold starts from nothing.
+
+    Cold is the clean-clone case (H1-H3 reproduction): the store's `.sldb_cache/` is gone and
+    `XDG_CACHE_HOME` points at an empty directory. Call the fixture with the desk root after it
+    exists; it returns whether the run is cold.
+    """
+    cache_home = tmp_path / "xdg-cache"
+    cache_home.mkdir()
+    monkeypatch.setenv("XDG_CACHE_HOME", str(cache_home))
+
+    def prepare(root: Path) -> bool:
+        cold = request.param == "cold"
+        if cold:
+            shutil.rmtree(Path(root) / ".sldb_cache", ignore_errors=True)
+            shutil.rmtree(cache_home, ignore_errors=True)
+            cache_home.mkdir()
+        return cold
+
+    return prepare
+
+
 @pytest.fixture(scope="session")
 def _lifecycle_desk_template(tmp_path_factory: pytest.TempPathFactory) -> Path:
     """One initialized desk (store, scaffold, lifecycle graph), built once per session."""

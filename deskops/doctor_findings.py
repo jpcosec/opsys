@@ -17,11 +17,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
+import re
 from typing import Any
 
 import yaml
 
 REGISTER = "deskops desk update --apply"
+
+#: The finding sldb writes for a tracked document its model rejects (inbox 3895e9f7, H1).
+INVALID_DOCUMENT_CODE = "store/doc-invalid"
 
 # Per-document notes of `sldb stores check`: the document is fine, or it moved under an
 # expected change. Any other note (`missing`, or one this deskops does not know) is an error.
@@ -60,8 +64,13 @@ def read_store_check(root: Path, payload: dict[str, Any]) -> StoreDocs:
         for doc in model.get("documents", []):
             _read_doc(root, model.get("name"), doc, docs)
     docs.store_alerts = _store_level_alerts(payload)
-    # A missing document is read from its note, where it can be paired into a move.
-    docs.store_errors = [_entry_text(e) for e in payload.get("errors") or [] if not str(_code(e)).endswith("missing")]
+    # A missing document is read from its note, where it can be paired into a move. A
+    # store/doc-invalid document is named by invalid_document_findings, with its path.
+    docs.store_errors = [
+        _entry_text(e)
+        for e in payload.get("errors") or []
+        if not str(_code(e)).endswith(("missing", "doc_invalid"))
+    ]
     return docs
 
 
@@ -78,6 +87,8 @@ def _read_doc(root: Path, model_name: str | None, doc: dict[str, Any], docs: Sto
         docs.changed.append(f"{rel} ({ALERT_NOTES[note]})")
     elif note == "missing":
         docs.missing.append(path)
+    elif note == "doc_invalid":
+        pass  # named from sldb's `store/doc-invalid` finding, once, by invalid_document_findings
     elif note not in CLEAN_NOTES:
         docs.unknown.append(f"{rel} ({note})")
 
@@ -200,12 +211,49 @@ def _section(title: str, lines: list[str]) -> None:
             print(f"- {line}")
 
 
+def invalid_document_findings(payload: dict[str, Any]) -> list[tuple[str, str]]:
+    """``(relative path, what sldb says)`` for each document it names ``store/doc-invalid``.
+
+    Ordered by path. The finding carries the model's rejection (the validator's first errors);
+    the path is the one the store tracks for ``<model>:<document>``, so a caller can leave out
+    the documents its own frontmatter listing already reported (g3).
+    """
+    paths = {
+        (str(model.get("name") or ""), str(doc.get("name") or "")): str(doc["path"])
+        for model in payload.get("models") or []
+        for doc in model.get("documents") or []
+        if doc.get("path") and doc.get("name")
+    }
+    found: dict[str, str] = {}
+    for entry in payload.get("errors") or []:
+        if not isinstance(entry, dict) or entry.get("code") != INVALID_DOCUMENT_CODE:
+            continue
+        subject = str(entry.get("subject") or "")
+        model, _sep, name = subject.partition(":")
+        rel = paths.get((model, name or str(entry.get("document") or "")))
+        if rel is None:
+            match = re.search(r" rejects (.+?): \d+ validation error", str(entry.get("what") or ""))
+            rel = match.group(1) if match else ""
+        if rel:
+            found[rel] = str(entry.get("what") or "its model rejects it")
+    return sorted(found.items())
+
+
+def invalid_task_paths(root: Path) -> set[str]:
+    """The task files the frontmatter listing reports, so a store finding does not repeat them."""
+    from deskops.workspace import legacy_task_states
+
+    migratable, unmigratable = legacy_task_states(root)
+    return {state.rel for state in [*migratable, *unmigratable]}
+
+
 def invalid_task_findings(root: Path) -> list[str]:
     """One error per task the model rejects, read from its frontmatter so none hides the rest.
 
-    `sldb stores check` stops at the first document its model rejects, so doctor names each
-    task here: the file, the validator's text, and what fixes it, `deskops desk update --apply`
-    when the migration table decides its state, or the owner's decision otherwise (b1).
+    `sldb stores check` names each rejected document as `store/doc-invalid` and goes on; doctor
+    reads every task itself, with the file, the validator's text, and what fixes it,
+    `deskops desk update --apply` when the migration table decides its state, or the owner's
+    decision otherwise (b1).
     """
     from deskops.workspace import legacy_task_states
 

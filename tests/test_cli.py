@@ -2719,30 +2719,25 @@ def test_doctor_reports_untracked_documents_and_missing_structure(tmp_path: Path
 
 def test_doctor_reports_invalid_documents(tmp_path: Path, capsys) -> None:
     from deskops.cli.main import main
-    import subprocess
-    import sys
 
     root = tmp_path / "project"
     root.mkdir()
-    
+
     assert main(["init", str(root)]) == 0
     capsys.readouterr()
 
-    # Create a tracked document cleanly
+    # A tracked document whose text its model rejects (sldb names it store/doc-invalid and goes on).
     task_doc = root / "desk" / "tasks" / "task-foo.md"
     main(["add", "task", "--title", "Foo", "--task-type", "task.docs", "--root", str(root)])
     capsys.readouterr()
-
-    # Corrupt it
     task_doc.write_text("corrupted content", encoding="utf-8")
-    
-    # Let's run stores update so hash_c changes, but hash_d might be broken because it fails to parse
-    # Or just let doctor detect hash_c/hash_d mismatch from store check
-    
-    # Run doctor
+
     assert main(["doctor", "--root", str(root)]) == 1
-    out, err = capsys.readouterr()
-    assert "SLDB store check crashed (likely malformed documents)" in out
+    out, _err = capsys.readouterr()
+    assert "Errors (the desk is broken):" in out
+    assert "- Invalid desk document: desk/tasks/task-foo.md: invalid: TaskDocsDoc rejects desk/tasks/task-foo.md" in out
+    assert "SLDB store check crashed" not in out
+    assert len([line for line in out.splitlines() if "desk/tasks/task-foo.md" in line]) == 1  # not repeated
 
 def test_edit_pill_lifecycle_slots_including_drawer(tmp_path: Path, capsys) -> None:
     from sldb.runtime.validation import render_model_markdown

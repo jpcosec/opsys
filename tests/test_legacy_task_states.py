@@ -20,10 +20,13 @@ from __future__ import annotations
 import contextlib
 import difflib
 import io
+import json
 from datetime import datetime
 from datetime import timezone
 import itertools
 from pathlib import Path
+import shutil
+import subprocess
 import sys
 
 import pytest
@@ -119,6 +122,35 @@ def _sldb_check(root: Path) -> int:
             return int(sldb_main(["stores", "check", "--store", str(root / ".sldb"), "--pythonpath", str(ROOT)]) or 0)
         except SystemExit as exc:
             return exc.code if isinstance(exc.code, int) else 1
+
+
+def _store_doc_invalid_paths(root: Path) -> set[str]:
+    """The desk documents `sldb stores check` names with the store/doc-invalid finding."""
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "sldb",
+            "stores",
+            "check",
+            "--store",
+            str(root / ".sldb"),
+            "--format",
+            "json",
+            "--pythonpath",
+            str(ROOT),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    payload = json.loads(result.stdout or "{}")
+    return {
+        str(doc["path"])
+        for model in payload.get("models") or []
+        for doc in model.get("documents") or []
+        if doc.get("note") == "doc_invalid"
+    }
 
 
 def _texts(paths: dict[str, Path]) -> dict[str, str]:
@@ -283,7 +315,7 @@ def test_desk_update_dry_run_lists_the_migration_and_the_undecided_tasks_and_wri
     assert "- Invalid task documents (not written): 2 task(s)" in out
     for rel in UNMIGRATABLE:
         assert f"  - {rel}: {DRAFT_ERROR}. To fix it, {UNMIGRATABLE_SUGGESTION}.\n" in out
-    assert "- Store check failed ('sldb stores check' exit code 1" in out
+    assert "- Invalid documents (not written)" not in out  # the frontmatter listing already names them
     assert "Migrating legacy task states" not in out
     assert _texts(paths) == before
 
@@ -297,7 +329,7 @@ def test_desk_update_apply_migrates_by_the_table_reports_the_rest_and_a_second_r
     out = capsys.readouterr().out
     assert out.startswith("Migrating legacy task states...\n" + "".join(f"- {line}\n" for line in MIGRATION_LINES))
     assert "- Invalid task documents (not written): 2 task(s)" in out
-    assert "Skipped the other repairs" in out
+    assert "Skipped the other repairs" not in out
     after = _texts(paths)
     for rel in UNMIGRATABLE:
         assert after[rel] == before[rel]
@@ -339,6 +371,56 @@ def test_desk_update_apply_on_a_fully_migratable_desk_leaves_a_store_that_checks
     assert "Migrating legacy task states" not in capsys.readouterr().out
 
 
+def test_desk_update_apply_repairs_everything_with_an_invalid_document(lifecycle_desk: Path, capsys, sldb_cache) -> None:
+    """g2/g4b: with sldb naming the invalid task and going on, --apply keeps repairing the desk:
+    the missing structure is scaffolded and the derived indexes are updated (no skipped repairs)."""
+    root = lifecycle_desk
+    paths = _make_tasks(root, [LEGACY[3]])
+    rel = next(iter(paths))
+    shutil.rmtree(root / "desk" / "reviews")
+    sldb_cache(root)
+    capsys.readouterr()
+
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 1  # the task waits for its owner
+    out = capsys.readouterr().out
+    assert "- Invalid task documents (not written): 1 task(s)" in out
+    assert "- Missing desk structure: desk/reviews/" in out
+    assert "Scaffolded missing desk structure." in out
+    assert (root / "desk" / "reviews").is_dir()
+    assert "Updated store derived indexes." in out
+    assert "Skipped the other repairs" not in out
+    assert _store_doc_invalid_paths(root) == {rel}
+
+
+def test_desk_update_and_doctor_name_a_store_invalid_document_once(lifecycle_desk: Path, capsys, sldb_cache) -> None:
+    """g3: the sldb store/doc-invalid finding lists a non-task invalid document, while the task
+    listing stays the frontmatter one and is not repeated from the finding."""
+    root = lifecycle_desk
+    paths = _make_tasks(root, [LEGACY[3]])
+    task_rel = next(iter(paths))
+    ritual = root / "desk" / "rituals" / "phase.md"
+    text = ritual.read_text(encoding="utf-8")
+    assert text.count("id: ritual-phase\n") == 1
+    ritual.write_text(text.replace("id: ritual-phase\n", ""), encoding="utf-8")
+    sldb_cache(root)
+    capsys.readouterr()
+
+    assert main(["desk", "update", "--root", str(root)]) == 1
+    out = capsys.readouterr().out
+    assert "- Invalid task documents (not written): 1 task(s)" in out
+    assert "- Invalid documents (not written): 1 document(s)" in out
+    assert "  - desk/rituals/phase.md: invalid: RitualDoc rejects desk/rituals/phase.md" in out
+    assert f"  - {task_rel}: invalid: TaskCodeDoc rejects {task_rel}" not in out
+
+    capsys.readouterr()
+    assert main(["doctor", "--root", str(root)]) == 1
+    out = capsys.readouterr().out
+    assert f"- Invalid task document: {task_rel}:" in out
+    assert "- Invalid desk document: desk/rituals/phase.md: invalid: RitualDoc rejects desk/rituals/phase.md" in out
+    assert f"- Invalid desk document: {task_rel}:" not in out
+    assert "TaskCodeDoc:" not in out
+
+
 # ------------------------------------------------------------------ doctor (d2, b9)
 def test_doctor_reports_each_invalid_task_and_runs_every_other_check(legacy_desk, capsys, monkeypatch) -> None:
     root, _paths = legacy_desk
@@ -361,50 +443,102 @@ def test_doctor_reports_each_invalid_task_and_runs_every_other_check(legacy_desk
         assert any(f.startswith(f"- Invalid task document: {line.split(':', 1)[0]}: ") and f.endswith("Migrate it with deskops desk update --apply.") for f in findings)
     unmigratable = [f for f in findings if UNMIGRATABLE_SUGGESTION in f]
     assert "\n".join(unmigratable) + "\n" == _golden("doctor_invalid_task.text")
-    assert "SLDB store check crashed" in out  # the store check still runs after the task findings
+    # sldb now reports the invalid tasks and goes on, and the frontmatter listing is not repeated
+    # from its store/doc-invalid finding (g3).
+    assert "SLDB store check crashed" not in out
+    assert "- Invalid desk document: desk/tasks/" not in out
+    assert "TaskCodeDoc:" not in out  # sldb's finding does not repeat the frontmatter listing
     assert ran == ["models"]
 
 
 # ------------------------------------------------------------------ closeout retire with a store (d3)
 def _git(root: Path, *argv: str) -> str:
-    import subprocess
-
     return subprocess.run(["git", *argv], cwd=root, check=True, capture_output=True, text=True).stdout.strip()
 
 
-def test_retire_waits_while_another_task_is_invalid_then_retires_the_migrated_task(migratable_desk, capsys) -> None:
-    """sldb rebuilds every task of the store when one is untracked, so retire refuses up front
-    (nothing written) while another task is invalid; after desk update --apply it retires the
-    migrated superseded task, and the store still checks."""
-    root, _paths = migratable_desk
+def test_retire_closes_two_invalid_tasks_one_after_the_other(lifecycle_desk: Path, capsys, sldb_cache) -> None:
+    """sldb names each invalid task with store/doc-invalid and no longer stops the store on it:
+    retire closes one while the other is still invalid, then the other, and the store checks."""
+    root = lifecycle_desk
+    rows = [
+        ("Cerrada con historia heredada", "closed", "ritual-closeout", ["task_activates"]),
+        ("Cancelada con historia heredada", "cancelled", "ritual-closeout", ["task_activates"]),
+    ]
+    paths = _make_tasks(root, rows)
     _git(root, "add", "-A")
-    _git(root, "commit", "-q", "-m", "legacy desk")
+    _git(root, "commit", "-q", "-m", "two invalid retirable tasks")
     head = _git(root, "rev-parse", "HEAD")
-    retire = ["closeout", "retire", "--root", str(root), "--task", "task-ci-propio-del-gateway", "--reason", "pre-CC31", "--ref", head]
-    capsys.readouterr()
+    first, second = sorted(Path(rel).stem for rel in paths)
+    sldb_cache(root)
 
-    assert main(retire) == 1
-    out = capsys.readouterr().out
-    assert "Cannot retire task-ci-propio-del-gateway yet" in out
-    assert "desk/tasks/task-cerrada-heredada.md" in out
-    assert _git(root, "status", "--porcelain") == ""
-    assert _git(root, "rev-parse", "HEAD") == head
+    def retire(task_id: str) -> int:
+        return main(["closeout", "retire", "--root", str(root), "--task", task_id, "--reason", "pre-CC31", "--ref", head])
 
-    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0
-    _git(root, "add", "-A")
-    _git(root, "commit", "-q", "-m", "migrated")
     capsys.readouterr()
-    assert main(retire) == 0, capsys.readouterr().out
+    assert _store_doc_invalid_paths(root) == {f"desk/tasks/{first}.md", f"desk/tasks/{second}.md"}
+    assert retire(first) == 0, capsys.readouterr().out
     assert "Closeout-Mode: legacy-resolved" in _git(root, "log", "-1", "--format=%B")
-    assert not (root / "desk" / "tasks" / "task-ci-propio-del-gateway.md").exists()
+    assert not (root / "desk" / "tasks" / f"{first}.md").exists()
+    assert _store_doc_invalid_paths(root) == {f"desk/tasks/{second}.md"}
+
+    assert retire(second) == 0, capsys.readouterr().out
+    assert not (root / "desk" / "tasks" / f"{second}.md").exists()
+    assert _store_doc_invalid_paths(root) == set()
     assert _sldb_check(root) == 0
 
 
+def test_retire_closes_a_task_migrated_to_superseded_with_only_superseded_in_its_history(migratable_desk, capsys, sldb_cache) -> None:
+    """After desk update --apply the legacy superseded task retires: its history is exactly
+    [superseded], the closing commit is legacy-resolved and the store checks."""
+    root, _paths = migratable_desk
+    sldb_cache(root)
+    capsys.readouterr()
+    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0, capsys.readouterr().out
+    task = root / "desk" / "tasks" / "task-ci-propio-del-gateway.md"
+    assert extract_model_data(TaskDoc, task.read_text(encoding="utf-8"))["history"] == ["superseded"]
+    _git(root, "add", "-A")
+    _git(root, "commit", "-q", "-m", "migrated")
+    head = _git(root, "rev-parse", "HEAD")
+    capsys.readouterr()
+
+    retire = ["closeout", "retire", "--root", str(root), "--task", task.stem, "--reason", "pre-CC31", "--ref", head]
+    assert main(retire) == 0, capsys.readouterr().out
+    assert "Closeout-Mode: legacy-resolved" in _git(root, "log", "-1", "--format=%B")
+    assert not task.exists()
+    assert _sldb_check(root) == 0
+
+
+def test_desk_update_apply_exits_1_while_a_non_task_document_is_invalid(lifecycle_desk: Path, capsys, monkeypatch) -> None:
+    """The dry-run and --apply agree: a store/doc-invalid document that is not a task keeps both at 1."""
+    root = lifecycle_desk
+    monkeypatch.setattr("deskops.cli.commands.desk.invalid_document_findings", lambda _payload: [("desk/notes/x.md", "rejected by model")])
+    for argv in (["desk", "update", "--root", str(root)], ["desk", "update", "--root", str(root), "--apply"]):
+        capsys.readouterr()
+        assert main(argv) == 1
+        assert "Invalid documents (not written): 1 document(s)" in capsys.readouterr().out
+
+
+def test_desk_update_still_fails_when_stores_check_gives_no_json_and_exits_nonzero(lifecycle_desk: Path, capsys, monkeypatch) -> None:
+    """The kept branch: a store check with no JSON and a failing exit code is an environment error."""
+    import deskops.cli.commands.desk as desk_module
+    real_run = subprocess.run
+
+    def fake_run(argv, *args, **kwargs):
+        if isinstance(argv, list) and "stores" in argv and "check" in argv:
+            return subprocess.CompletedProcess(argv, 2, stdout="", stderr="boom")
+        return real_run(argv, *args, **kwargs)
+
+    monkeypatch.setattr(desk_module.subprocess, "run", fake_run)
+    # main turns the DeskopsEnvironmentError into its message and a failing exit code.
+    capsys.readouterr()
+    assert main(["desk", "update", "--root", str(lifecycle_desk)]) != 0
+    assert "'sldb stores check' failed for" in capsys.readouterr().err
+
+
 # ------------------------------------------------------------------ closeout supersede of an undecided task
-def test_supersede_closes_an_incoherent_task_by_cli_and_waits_while_another_is_invalid(lifecycle_desk: Path, capsys) -> None:
-    """The two gateway drafts after task_hands_to_closeout: supersede reads the frontmatter, so it
-    closes one by CLI; while the other is still invalid sldb cannot untrack (H2), so it refuses up
-    front and writes nothing. Once only one is invalid, it closes and the store checks."""
+def test_supersede_closes_two_incoherent_tasks_one_after_the_other(lifecycle_desk: Path, capsys, sldb_cache) -> None:
+    """The two gateway drafts after task_hands_to_closeout are both invalid under the same model:
+    supersede reads each frontmatter, closes one while the other is still invalid, then the other."""
     root = lifecycle_desk
     rows = [row for row in LEGACY if row[1] == "draft"]
     paths = _make_tasks(root, rows)
@@ -412,30 +546,22 @@ def test_supersede_closes_an_incoherent_task_by_cli_and_waits_while_another_is_i
     _git(root, "commit", "-q", "-m", "two incoherent drafts")
     head = _git(root, "rev-parse", "HEAD")
     first, second = sorted(Path(rel).stem for rel in paths)
+    sldb_cache(root)
 
     def supersede(task_id: str) -> int:
         return main(["closeout", "supersede", "--root", str(root), "--task", task_id, "--reason", "replaced", "--ref", head])
 
     capsys.readouterr()
-    assert supersede(first) == 1
-    assert f"Cannot supersede {first} yet" in capsys.readouterr().out
-    assert _git(root, "status", "--porcelain") == ""
-    assert _git(root, "rev-parse", "HEAD") == head
-
-    # The other draft's owner decides it (status as its history says), so one invalid task is left.
-    second_path = root / "desk" / "tasks" / f"{second}.md"
-    second_path.write_text(second_path.read_text(encoding="utf-8").replace("status: draft\n", "status: ready_for_testing\n"), encoding="utf-8")
-    _git(root, "add", "-A")
-    _git(root, "commit", "-q", "-m", "owner removed the second draft")
-    head = _git(root, "rev-parse", "HEAD")
-    capsys.readouterr()
-
+    assert _store_doc_invalid_paths(root) == {f"desk/tasks/{first}.md", f"desk/tasks/{second}.md"}
     assert supersede(first) == 0, capsys.readouterr().out
     message = _git(root, "log", "-1", "--format=%B")
     assert "Closeout-Mode: superseded" in message
     assert f"Task-Id: {first}" in message
     assert not (root / "desk" / "tasks" / f"{first}.md").exists()
-    assert main(["desk", "update", "--root", str(root), "--apply"]) == 0  # refreshes the hand-edited hash
+    assert _store_doc_invalid_paths(root) == {f"desk/tasks/{second}.md"}
+
+    assert supersede(second) == 0, capsys.readouterr().out
+    assert not (root / "desk" / "tasks" / f"{second}.md").exists()
     assert _sldb_check(root) == 0
 
 
@@ -473,18 +599,21 @@ def test_resolved_by_closes_the_only_invalid_task_and_the_store_checks(lifecycle
     assert _sldb_check(root) == 0
 
 
-def test_resolved_by_refuses_while_another_task_is_invalid_and_names_sldb_h2(lifecycle_desk: Path, capsys) -> None:
-    """With a store, sldb re-extracts the whole model on each write (H2): while the other draft is
-    invalid, resolved-by refuses before writing anything and names H2 and the manual route."""
+def test_resolved_by_closes_two_invalid_tasks_one_after_the_other(lifecycle_desk: Path, capsys, sldb_cache) -> None:
+    """The two invalid drafts of the same model: resolved-by closes one while the other is still
+    invalid (sldb names it store/doc-invalid and goes on), then the other, and the store checks."""
     root, (first, second), head = _resolved_by_desk(lifecycle_desk, 2)
+    sldb_cache(root)
     capsys.readouterr()
 
-    assert _resolved_by(root, first, head) == 1
-    out = capsys.readouterr().out
-    assert f"Cannot resolved-by {first} yet" in out
-    assert f"desk/tasks/{second}.md" in out
-    assert f"desk/tasks/{first}.md" not in out  # the task being closed is not "another"
-    assert "sldb H2 (note 3895e9f7)" in out
-    assert "decide each by hand" in out
-    assert _git(root, "status", "--porcelain") == ""
-    assert _git(root, "rev-parse", "HEAD") == head
+    assert _store_doc_invalid_paths(root) == {f"desk/tasks/{first}.md", f"desk/tasks/{second}.md"}
+    assert _resolved_by(root, first, head) == 0, capsys.readouterr().out
+    message = _git(root, "log", "-1", "--format=%B")
+    assert "Closeout-Mode: resolved-by" in message
+    assert f"Task-Id: {first}" in message
+    assert not (root / "desk" / "tasks" / f"{first}.md").exists()
+    assert _store_doc_invalid_paths(root) == {f"desk/tasks/{second}.md"}
+
+    assert _resolved_by(root, second, head) == 0, capsys.readouterr().out
+    assert not (root / "desk" / "tasks" / f"{second}.md").exists()
+    assert _sldb_check(root) == 0

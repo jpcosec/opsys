@@ -489,7 +489,9 @@ def _inspect_surface_store_health(root: Path, surface_docs: list[Path]) -> tuple
     return tracked, invalid, None
 
 
-_NOT_MALFORMED_NOTES = frozenset({"ok", "benign_mutation", "data_mutation", "contract_mutation", "missing"})
+#: A document the model rejects is broken (`store/doc-invalid`), but it is reported by its own
+#: listing (doctor's invalid task findings and sldb's finding), not as a legacy surface.
+_NOT_MALFORMED_NOTES = frozenset({"ok", "benign_mutation", "data_mutation", "contract_mutation", "missing", "doc_invalid"})
 
 
 def _dedupe(items: list[str]) -> list[str]:
