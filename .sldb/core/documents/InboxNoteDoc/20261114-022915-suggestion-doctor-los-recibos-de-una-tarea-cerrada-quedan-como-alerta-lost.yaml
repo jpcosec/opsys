@@ -1,0 +1,18 @@
+name: 20261114-022915-suggestion-doctor-los-recibos-de-una-tarea-cerrada-quedan-como-alerta-lost
+path: desk/inbox/20261114-022915-suggestion-doctor-los-recibos-de-una-tarea-cerrada-quedan-como-alerta-lost.md
+source_hash: 81473683da024965274eb6b3d4775fcb84da38221ed809f115e6b5012773cf53
+content_hash: 34cd8d6a3362a808fec6fccaeed682c1ecd240de878ad86700c53236dc1b073f
+field_hashes:
+  kind: f4accece99081750b6b8b5089a3f24b11d5ceba70797c3eb49000d84b98344fc
+  sender_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  target_project: be1a918d36a26b50ff05a32144905fa0851e3a2c55c93b05726d8a3bab97b3e7
+  created_at: feada47cc59eb33ef684a919ed303799205554d72d8e6c2ffb1b49e16f8714e1
+  status: 35ff74aeea25311f4fe759a6b762c8cd41a79adb23dd5615b92cf215175a63e5
+  title: f84e3d06b4e350fe816a8451547c07e3a72a2824866794e209c308f0a4090f6c
+  body: 9651e782430fca8c6e4ea044262581e6ef5981a5e5c58b9c3e1a674688157a00
+semantic_tags:
+- representation.markdown
+- source.document.markdown
+- type.desk.inbox-note
+- workspace.desk.inbox
+provenance: null
