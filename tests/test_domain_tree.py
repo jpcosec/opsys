@@ -7,9 +7,6 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-SLDB_SRC = ROOT.parent / "sldb" / "src"
-if str(SLDB_SRC) not in sys.path:
-    sys.path.insert(0, str(SLDB_SRC))
 
 import pytest
 
@@ -110,18 +107,49 @@ def test_atom_creation_refuses_an_unwritten_domain(desk: Path, capsys) -> None:
     assert not list((tmp_path / "desk" / "atoms").rglob("atom-oven-temperature.md"))
 
 
+def _undeclare_namespace(root: Path, name: str) -> None:
+    """Drop ``name`` from the store's tag declaration (what a store edited by hand looks like)."""
+    from sldb.api.stores.store_declaration import load_declaration, save_declaration
+
+    store = root / ".sldb"
+    declaration = load_declaration(store)
+    kept = [item for item in declaration.tag_namespaces if (item["name"] if isinstance(item, dict) else item.name) != name]
+    assert len(kept) < len(declaration.tag_namespaces)
+    save_declaration(store, declaration.model_copy(update={"tag_namespaces": kept}))
+
+
+def _tracked_atoms(root: Path) -> set[str]:
+    return _tracked(root / ".sldb", "AtomDoc")
+
+
 def test_validate_all_reports_atoms_hanging_from_unwritten_paths(desk: Path, capsys) -> None:
     tmp_path = desk
-    (tmp_path / "desk" / "atoms" / "atom-oven-temperature.md").write_text(HANGING_ATOM, encoding="utf-8")
-    # The finding is sldb's tag family: it sees the documents the store tracks.
-    assert main(["desk", "update", "--apply", "--root", str(tmp_path)]) == 0
-    capsys.readouterr()
+    atom_file = tmp_path / "desk" / "atoms" / "atom-oven-temperature.md"
+    atom_file.write_text(HANGING_ATOM, encoding="utf-8")
+    # sldb refuses to track an atom whose domain has no written crossroad: `desk update` says
+    # which document and which rule, and the store keeps no trace of it.
+    assert main(["desk", "update", "--apply", "--root", str(tmp_path)]) == 1
+    out = capsys.readouterr().out
+    assert "desk/atoms/atom-oven-temperature.md" in out
+    assert "rules/builtin:tag_namespace:domain" in out
+    assert "atom-oven-temperature" not in _tracked_atoms(tmp_path)
 
+    # The finding stays reachable for what the store already tracks: an atom tracked under a
+    # written tree whose crossroad is later removed.
+    _write_pizzeria_tree(tmp_path)
+    capsys.readouterr()
+    assert main(["desk", "update", "--apply", "--root", str(tmp_path)]) == 0
+    assert "atom-oven-temperature" in _tracked_atoms(tmp_path)
+    capsys.readouterr()
+    assert _atoms(tmp_path, "validate", "--all") == 0, capsys.readouterr().out
+
+    (tmp_path / "desk" / "atoms" / "pizzeria" / "crossroad-pizzeria.md").unlink()
+    main(["desk", "update", "--apply", "--root", str(tmp_path)])
+    capsys.readouterr()
     assert _atoms(tmp_path, "validate", "--all") == 1
     assert "no written crossroad for domain path 'pizzeria'" in capsys.readouterr().out
 
-    _write_pizzeria_tree(tmp_path)
-    assert _atoms(tmp_path, "proto", "proto-masa-madre", "--title", "Masa madre", "--tag", "domain:pizzeria.carta") == 0
+    assert _atoms(tmp_path, "crossroad", "pizzeria", "--title", "Pizzería", "--content", "Everything the pizzeria runs.") == 0
     capsys.readouterr()
     assert _atoms(tmp_path, "validate", "--all") == 0, capsys.readouterr().out
 
@@ -193,17 +221,30 @@ def test_a_desk_without_a_store_checks_no_domain_or_namespace(tmp_path: Path, ca
 
 
 def test_an_atom_with_an_undeclared_namespace_is_an_sldb_finding(desk: Path, capsys) -> None:
-    atom = HANGING_ATOM.replace("- domain:pizzeria", "- undeclared:value")
-    (desk / "desk" / "atoms" / "atom-oven-temperature.md").write_text(atom, encoding="utf-8")
+    atom_file = desk / "desk" / "atoms" / "atom-oven-temperature.md"
+    atom_file.write_text(HANGING_ATOM.replace("- domain:pizzeria", "- undeclared:value"), encoding="utf-8")
+    # sldb rejects the track: `desk update --apply` fails naming the document and the rule, and
+    # the store does not track the atom.
+    assert main(["desk", "update", "--apply", "--root", str(desk)]) == 1
+    out = capsys.readouterr().out
+    assert "desk/atoms/atom-oven-temperature.md" in out
+    assert "rules/builtin:tag_namespace:undeclared" in out
+    assert "atom-oven-temperature" not in _tracked_atoms(desk)
+
+    # An atom the store already tracks under a namespace that is later undeclared is a finding.
+    atom_file.write_text(HANGING_ATOM.replace("- domain:pizzeria", "- topic:value"), encoding="utf-8")
     assert main(["desk", "update", "--apply", "--root", str(desk)]) == 0
+    assert "atom-oven-temperature" in _tracked_atoms(desk)
+    _undeclare_namespace(desk, "topic")
+    capsys.readouterr()
 
     codes = {(finding.code, finding.subject.rsplit(":", 1)[-1]) for finding in tag_check(desk / ".sldb")}
-    assert ("rules/builtin:tag_namespace:undeclared", "atom-oven-temperature") in codes
-    capsys.readouterr()
+    # The namespace's own rule (left in the store by the hand edit) flags the tag.
+    assert ("rules/builtin:tag_namespace:topic", "atom-oven-temperature") in codes
     assert _atoms(desk, "validate", "--all") == 1
-    assert "Unknown atom tag namespace 'undeclared' for tag 'undeclared:value'." in capsys.readouterr().out
-    assert _atoms(desk, "proto", "proto-libre", "--title", "Libre", "--tag", "undeclared:x") == 1
-    assert "Unknown atom tag namespace 'undeclared' for tag 'undeclared:x'." in capsys.readouterr().out
+    assert "Unknown atom tag namespace 'topic' for tag 'topic:value'." in capsys.readouterr().out
+    assert _atoms(desk, "proto", "proto-libre", "--title", "Libre", "--tag", "topic:x") == 1
+    assert "Unknown atom tag namespace 'topic' for tag 'topic:x'." in capsys.readouterr().out
 
 
 def test_tasks_and_pills_with_undeclared_namespaces_are_not_findings(desk: Path) -> None:

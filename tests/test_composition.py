@@ -6,9 +6,6 @@ import sys
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
-SLDB_SRC = ROOT.parent / "sldb" / "src"
-if str(SLDB_SRC) not in sys.path:
-    sys.path.insert(0, str(SLDB_SRC))
 
 from deskops.models import BoardDoc, RitualDoc, TaskDoc
 from sldb.runtime.validation import extract_model_data

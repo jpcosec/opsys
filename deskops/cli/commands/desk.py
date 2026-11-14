@@ -473,7 +473,14 @@ class DeskCLI:
                 lifecycle.ensure_rule_model(root)
                 tracked_paths = apply_desk_includes(root)
             except Exception as exc:
-                print(f"Error: could not track the declared desk documents: {exc}")
+                # apply_includes tracks in order and stops at the first document sldb rejects, so
+                # the first one still pending is the one the rule (named in ``exc``) refused.
+                try:
+                    refused = next(iter(pending_desk_includes(root)), None)
+                except Exception:
+                    refused = None
+                where = f" ({refused[1]})" if refused else ""
+                print(f"Error: could not track the declared desk documents{where}: {exc}")
                 return 1
             for path in tracked_paths:
                 model_name = declared_models.get(path, "its declared model")

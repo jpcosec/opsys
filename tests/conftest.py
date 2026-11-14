@@ -2,11 +2,36 @@ from __future__ import annotations
 
 import contextlib
 import io
+import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
+
+# Where the sibling sldb lives for the tests. ``SLDB_SRC`` (the ``src`` directory of an sldb
+# checkout) wins and must exist; without it the sibling checkout ``../sldb/src`` is used when it
+# exists. The path goes first on ``sys.path`` here, once: conftest loads before any test module,
+# also when a single file is run (``python -m pytest tests/<file>``), so no test repeats it.
+# Run against another sldb: ``SLDB_SRC=/path/to/sldb/src python -m pytest -q tests/<file>``.
+_SIBLING_SLDB_SRC = Path(__file__).resolve().parents[2] / "sldb" / "src"
+
+
+def resolve_sldb_src() -> Path | None:
+    """The sldb ``src`` the tests import: ``$SLDB_SRC``, else the sibling checkout if present."""
+    declared = os.environ.get("SLDB_SRC")
+    if declared:
+        path = Path(declared).expanduser()
+        if not path.is_dir():
+            raise pytest.UsageError(f"SLDB_SRC={declared} does not exist")
+        return path.resolve()
+    return _SIBLING_SLDB_SRC if _SIBLING_SLDB_SRC.is_dir() else None
+
+
+SLDB_SRC = resolve_sldb_src()
+if SLDB_SRC is not None and str(SLDB_SRC) not in sys.path:
+    sys.path.insert(0, str(SLDB_SRC))
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:

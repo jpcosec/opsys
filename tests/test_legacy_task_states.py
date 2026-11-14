@@ -32,9 +32,6 @@ import sys
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-SLDB_SRC = ROOT.parent / "sldb" / "src"
-if str(SLDB_SRC) not in sys.path:
-    sys.path.insert(0, str(SLDB_SRC))
 
 from deskops.cli.commands.doctor import DoctorCLI
 from deskops.cli.main import main
