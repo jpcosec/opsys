@@ -569,7 +569,6 @@ include:
 - model: TaskCodeDoc
   paths:
   - desk/tasks/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper.md
-  - desk/tasks/task-test-domain-tree-vuelve-a-verde-sldb-rechaza-al-trackear-un-átomo-con-namespace-no-declarado.md
 - model: ViewDoc
   paths:
   - deskops/data/views/board.md
