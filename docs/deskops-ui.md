@@ -18,6 +18,11 @@ en los demás salen con el sobre de error `Unknown view: <vista>`.
 Reglas comunes:
 
 - **Solo lectura.** Ninguna vista escribe en `desk/`, `.sldb/` ni `runs/`.
+- **Una lectura por corrida.** `board` y `task` abren un `read_snapshot`: la ruta y el
+  payload de cada tarea, sus transiciones, el grafo de reglas y el contexto del grafo de
+  closeout se leen una vez y se comparten entre las tarjetas. El grafo no recorre `runs/`
+  salvo que una materialización declare un `target_identity` allí. Es una optimización de
+  lectura: el JSON y el texto no cambian (los fijan los goldens de `tests/test_view_goldens.py`).
 - **Sin datos inventados.** Una referencia que no resuelve (pill, atom, tarea del Board,
   nota, línea del índice de corridas, runtime de Herdr) no aparece como dato: va a
   `errors` como `{"reference": "<id o ruta>", "cause": "<por qué>"}`; si la referencia la hace

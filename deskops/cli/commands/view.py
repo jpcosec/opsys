@@ -182,11 +182,13 @@ class _Projection:
         return atoms
 
     # ------------------------------------------------ CLI aggregates (H1-H6)
-    def _effective(self, stem: str) -> dict[str, Any]:
-        """H6: the task's payload with its inherited fields (`resolve_task_payload`)."""
-        from deskops import doc_access
+    def _effective(self, stem: str, path: str | None = None) -> dict[str, Any]:
+        """H6: the task's payload with its inherited fields (`resolve_task_payload`).
 
-        return doc_access.resolve_task_payload(self.root, stem)
+        The view row already names the file, so the record is read once per task and shared
+        with its gates and closeout reads inside the same read snapshot.
+        """
+        return self.ops.task_record(stem, path=(self.root / path) if path else None)[2]
 
     @staticmethod
     def _atom_ids(payload: dict[str, Any]) -> list[str]:
@@ -208,10 +210,10 @@ class _Projection:
             _error(errors, task_id, cause)
         return [dict(gate) for gate in gates]
 
-    def _closeout(self, stem: str, node: str, errors: list[dict[str, str]]) -> dict[str, Any] | None:
+    def _closeout(self, stem: str, node: str, errors: list[dict[str, str]], path: str | None = None) -> dict[str, Any] | None:
         """H4: `verify_task_closeout` (read only), one evidence entry per gate."""
         try:
-            report = self.ops.verify_task_closeout(stem)
+            report = self.ops.verify_task_closeout(stem, task_path=(self.root / path) if path else None)
         except Exception as exc:
             _error(errors, stem, f"verify_task_closeout failed: {exc}")
             return None
@@ -253,7 +255,7 @@ class _Projection:
     def _card(self, row: dict[str, Any], errors: list[dict[str, str]], *, detail: bool = False) -> tuple[dict[str, Any], dict[str, Any]]:
         fields = row["fields"]
         stem = Path(row["path"]).stem
-        payload = self._effective(stem)
+        payload = self._effective(stem, row["path"])
         task_id = str(fields.get("id") or stem)
         node = str(fields.get("current_node") or "")
         gates = self._gates(stem, task_id, node, errors)
@@ -269,7 +271,7 @@ class _Projection:
             "gates": gates,
             "gates_holding": sum(1 for gate in gates if gate.get("holds")),
             "gates_total": len(gates),
-            "closeout": self._closeout(stem, node, errors),
+            "closeout": self._closeout(stem, node, errors, row["path"]),
             "pills": self._pills(pill_refs, errors, detail=detail, task=task_id),
             "atoms": self._atoms(self._atom_ids(payload), errors, detail=detail, task=task_id),
         }

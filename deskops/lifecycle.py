@@ -93,17 +93,25 @@ class LifecycleSpec:
 
 @dataclass(slots=True)
 class ReadSnapshot:
-    """Task-independent graph reads shared by every task read of one read-only pass.
+    """Reads shared by every task of one read-only pass.
 
     ``DeskopsOperations.read_snapshot`` opens one; ``transitions_from`` keeps the transitions
     leaving each node in it, ``transition_findings`` the store's rule graph (sldb loads the
-    whole index for it, ~3 s on a small desk) and the closure service the closeout graph context.
+    whole index for it, ~3 s on a small desk), the closure service the closeout graph context
+    and the operations facade the path, model payload and normalized payload of each task.
+    Nothing outlives the pass: the snapshot is dropped when the block closes.
     """
 
     transitions: dict[str, list["Transition"]] = field(default_factory=dict)
     graph_context: Any = None
     rule_graph: Any = None
     has_rules: bool | None = None
+    #: Cache key (resolved path or task id) -> (path, model payload, payload with effective fields).
+    task_records: dict[str, tuple[Path, dict[str, Any], dict[str, Any]]] = field(default_factory=dict)
+    #: Normalized task payloads, keyed by task id, shared by a task's inherited parents.
+    task_payloads: dict[str, dict[str, Any]] = field(default_factory=dict)
+    #: Resolved task path -> the ``Model:name`` its on_transition rules use.
+    task_documents: dict[str, str | None] = field(default_factory=dict)
 
 
 @dataclass(slots=True)
@@ -232,25 +240,31 @@ def transition_findings(root: Path, document: str, payload: dict[str, Any], *, s
     if not snapshot.has_rules:
         return []
     if snapshot.rule_graph is None:
-        snapshot.rule_graph = rule_graph(_store(root))
+        # The same graph sldb's transition_findings builds: its own index unless the rules
+        # may read a linked store (``rule_graph(store, None)``).
+        snapshot.rule_graph = rule_graph(_store(root), None)
     graph = snapshot.rule_graph
     return [finding_dict(f) for f in payload_findings(graph, "on_transition", resolve_subject(graph, document), payload)]
 
 
 def task_document(root: Path, task_path: Path) -> str | None:
     """The ``Model:name`` the desk's store tracks ``task_path`` under (the subject of its rules);
-    None for an untracked task or a desk without a store, where no rule runs."""
-    from sldb.api.stores.doc_status import doc_status
+    None for an untracked task or a desk without a store, where no rule runs.
+
+    Reads the store indexes deskops already keeps for the pass (``doc_access.index_entries``)
+    instead of opening the store once more for every task.
+    """
+    from deskops import doc_access
 
     if not (_store(root) / "core").exists():
         return None
     try:
-        status = doc_status(_store(root), task_path.resolve().relative_to(root.resolve()).as_posix())
+        entry = doc_access.index_entry(root, task_path)
     except Exception:
         return None
-    if not status.model or not status.name:
+    if entry is None or not entry.model or not entry.name:
         return None
-    return f"{status.model}:{status.name}"
+    return f"{entry.model}:{entry.name}"
 
 
 def lifecycle_transitions(root: Path, spec: LifecycleSpec | None = None) -> list[Transition]:

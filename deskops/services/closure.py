@@ -829,7 +829,7 @@ class ClosureService:
         type's closeout rule and any rule the desk adds there. A task the store does not track
         cannot be evaluated and raises."""
         task_path = self._task_path(task_id)
-        document = lifecycle.task_document(self.root, task_path)
+        document = self._ops.task_document(task_path)
         if document is None:
             raise RuntimeError(
                 f"{self._relative(task_path)} is not tracked in the desk's store, so its closeout rule cannot run; "
@@ -840,16 +840,27 @@ class ClosureService:
         return lifecycle.transition_findings(self.root, document, payload)
 
     # ---------------------------------------------------------------- closeout verify
-    def verify_task_closeout(self, task_selector: str, *, write_receipts: bool = False) -> dict[str, Any]:
+    def verify_task_closeout(
+        self,
+        task_selector: str,
+        *,
+        write_receipts: bool = False,
+        task_path: Path | None = None,
+    ) -> dict[str, Any]:
         """Run the closeout fact producers and return the gate envelope.
 
         With ``write_receipts`` (``deskops closeout verify``), it also writes one pinned
         ``ReviewDoc`` kind ``evidence`` per declared kind the producers verified (CC33a); the
         envelope is the same either way. Read-only callers (the board view, the closing gate)
-        leave it off.
+        leave it off. ``task_path`` is the file a view already resolved: the task record is
+        then read once per pass instead of resolving the selector and its payload again.
         """
-        task_path = doc_access.resolve_artifact_selector(self.root, "artifact.task", self.desk_root / "tasks", task_selector)
-        payload = doc_access.resolve_task_payload(self.root, task_path.stem)
+        task_path = (
+            Path(task_path).resolve()
+            if task_path is not None
+            else doc_access.resolve_artifact_selector(self.root, "artifact.task", self.desk_root / "tasks", task_selector)
+        )
+        task_path, _, payload = self._ops.task_record(task_selector, path=task_path)
         reference_evidence = self._closeout_reference_evidence(payload)
         changed_files = doc_access.coerce_list(payload.get("files") or [])
         type_kinds, extras, implicit = self._declared_closeout_evidence(payload)

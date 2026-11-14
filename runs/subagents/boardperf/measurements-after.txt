@@ -1,0 +1,15 @@
+final3 cold: 2.379405659 2.381176541 2.357587674 2.383680305 2.438480207 2.420458904 2.374807039 median 2.381176541
+final3 hot: 2.436382306 2.501884913 2.364067809 2.376252747 2.391502090 2.377531183 2.420882334 median 2.391502090
+### layout
+deskops 0e212b4b08d3ab3926a34786441956f3b64ea5ac
+sldb 81f04add7b1d0cfd674a74d3afb6a421a3a9d4b1
+spec2viz 22cd8137552aba003f7d18806e2be13fb439958a
+pron 7f2e30850418754d0dc7e9e6890642205042a7a2
+scion 3993a6fa01950ea1c92b72b75646be1b2e6847e1
+sldb-h11c 1e3d346ee97a74d3c8b5927c18e42792f0c2bace
+deskops baseline 9b3bb95aa503171125e8c6366e7000806abcc179
+deskops after 0e212b4b08d3ab3926a34786441956f3b64ea5ac
+### uptime
+ 06:24:38 up 17 days, 10:14,  0 user,  load average: 6.80, 6.38, 5.73
+### estado frío: sin .sldb_cache ni XDG_CACHE_HOME; store construido. La vista falla con Unknown view (H12) como hoy; no hay trabajo que medir.
+### estado caliente: store construido y caché de composición de H11 escrita por una corrida anterior en otro proceso.

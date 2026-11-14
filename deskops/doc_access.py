@@ -742,15 +742,34 @@ def editable_artifact(root: Path, subject: str, selector: str) -> tuple[type[Any
 
 
 # ---------------------------------------------------------------- tasks
-def resolve_task_payload(root: Path, task_id: str, stack: tuple[str, ...] = ()) -> dict[str, Any]:
-    """The normalized payload of a task with its inherited context (``effective_*``)."""
+def resolve_task_path(root: Path, task_id: str) -> Path:
+    """The file a task id, unique prefix or file name names under ``desk/tasks``."""
+    return resolve_glob(root, desk_root(root) / "tasks", task_id)
+
+
+def resolve_task_payload(
+    root: Path,
+    task_id: str,
+    stack: tuple[str, ...] = (),
+    *,
+    path: Path | None = None,
+    cache: dict[str, dict[str, Any]] | None = None,
+) -> dict[str, Any]:
+    """The normalized payload of a task with its inherited context (``effective_*``).
+
+    ``path`` skips resolving ``task_id`` again (a caller that already has the file, such as a
+    view row); ``cache`` keeps one payload per task id for a read-only pass, so a task read by
+    several operations and the parents it inherits from are parsed and resolved once.
+    """
     if task_id in stack:
         chain = " -> ".join([*stack, task_id])
         raise ValueError(f"Task inheritance cycle detected: {chain}")
-    path = resolve_glob(root, desk_root(root) / "tasks", task_id)
+    if cache is not None and task_id in cache:
+        return copy.deepcopy(cache[task_id])
+    path = Path(path) if path is not None else resolve_task_path(root, task_id)
     payload = compile_task_spec(read_doc(path, TaskDoc), entry_node="").task_payload
     inherited_ids = coerce_list(payload.get("inherits_from") or [])
-    inherited_payloads = [resolve_task_payload(root, parent_id, (*stack, task_id)) for parent_id in inherited_ids]
+    inherited_payloads = [resolve_task_payload(root, parent_id, (*stack, task_id), cache=cache) for parent_id in inherited_ids]
 
     payload["effective_references"] = merge_unique(
         *[parent.get("effective_references", parent.get("references", [])) for parent in inherited_payloads],
@@ -786,6 +805,8 @@ def resolve_task_payload(root: Path, task_id: str, stack: tuple[str, ...] = ()) 
     else:
         payload["effective_validation"] = coerce_list(payload.get("validation") or [])
         payload["effective_done_when"] = str(payload.get("done_when") or "")
+    if cache is not None:
+        cache[task_id] = copy.deepcopy(payload)
     return payload
 
 

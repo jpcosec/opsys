@@ -15,6 +15,7 @@ from typing import Iterator
 from typing import TYPE_CHECKING
 
 from deskops import doc_access
+from deskops import lifecycle
 from deskops.doc_access import ARTIFACT_MODELS
 from deskops.doc_access import ARTIFACT_PATHS
 from deskops.doc_access import ARTIFACT_SUBJECTS
@@ -170,6 +171,49 @@ class DeskopsOperations:
     def list_tasks(self) -> list[Task]:
         return self.tasks.list_tasks()
 
+    def task_record(self, task_id: str, *, path: Path | None = None) -> tuple[Path, dict[str, Any], dict[str, Any]]:
+        """``(path, model payload, payload with effective fields)`` of a task, read once per pass.
+
+        Inside ``read_snapshot`` the record is kept under the resolved path, the file stem and
+        the requested id; the payload cache also covers the tasks it inherits from. ``path``
+        lets a caller that already has the file (a view row) skip resolving the selector again.
+        """
+        snapshot = self.snapshot
+        resolved = Path(path).resolve() if path is not None else None
+        keys = [str(resolved)] if resolved is not None else [str(task_id)]
+        if resolved is not None:
+            keys += [resolved.stem, str(task_id)]
+        if snapshot is not None:
+            for key in keys:
+                if key in snapshot.task_records:
+                    return snapshot.task_records[key]
+        if resolved is None:
+            resolved = doc_access.resolve_task_path(self.root, task_id)
+        raw = doc_access.read_doc(resolved, doc_access.ARTIFACT_MODELS["artifact.task"])
+        payload = doc_access.resolve_task_payload(
+            self.root,
+            resolved.stem,
+            path=resolved,
+            cache=snapshot.task_payloads if snapshot is not None else None,
+        )
+        record = (resolved, raw, payload)
+        if snapshot is not None:
+            for key in [str(resolved), resolved.stem, str(task_id), str(payload.get("id") or "")]:
+                if key:
+                    snapshot.task_records[key] = record
+        return record
+
+    def task_document(self, task_path: Path) -> str | None:
+        """The ``Model:name`` a task's on_transition rules run under, once per pass."""
+        snapshot = self.snapshot
+        key = str(Path(task_path).resolve())
+        if snapshot is not None and key in snapshot.task_documents:
+            return snapshot.task_documents[key]
+        document = lifecycle.task_document(self.root, Path(task_path))
+        if snapshot is not None:
+            snapshot.task_documents[key] = document
+        return document
+
     def show_task(self, task_id: str) -> tuple[Task | None, list[dict[str, Any]]]:
         return self.tasks.show_task(task_id)
 
@@ -183,8 +227,8 @@ class DeskopsOperations:
         return self.tasks.render_next_action_diagram()
 
     # ---------------------------------------------------------------- closeout
-    def verify_task_closeout(self, task_selector: str) -> dict[str, Any]:
-        return self.closure.verify_task_closeout(task_selector)
+    def verify_task_closeout(self, task_selector: str, *, task_path: Path | None = None) -> dict[str, Any]:
+        return self.closure.verify_task_closeout(task_selector, task_path=task_path)
 
     # ---------------------------------------------------------------- drawer
     def resolve_drawer_source(self, selector: str) -> Path:

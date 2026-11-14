@@ -205,9 +205,46 @@ def desk_graph_config() -> ProjectGraphConfig:
     )
 
 
+@lru_cache(maxsize=1)
+def _desk_graph_config_without_runs() -> ProjectGraphConfig:
+    """The graph configuration with ``runs/`` left out of the file walk.
+
+    Run evidence is not a graph surface: no document surface or file rule reads it. The
+    walk still visits every one of its files (tens of thousands in this desk) for nothing,
+    so the closeout graph is built without it when no materialization declares a target
+    there (``_declares_target_under`` then returns False and the full configuration is used).
+    """
+    base = desk_graph_config()
+    exclusions = base.exclusions.model_copy(
+        update={"path_prefixes": (*base.exclusions.path_prefixes, "runs")}
+    )
+    return base.model_copy(update={"exclusions": exclusions})
+
+
+def _declares_target_under(root: Path, prefix: str) -> bool:
+    """Whether a materialization declares ``target_identity`` under ``prefix``."""
+    from sldb.api.edges.project_graph.frontmatter_mapping import frontmatter_mapping
+
+    directory = root / MATERIALIZATION_TARGETS.directory
+    if not directory.exists():
+        return False
+    for path in directory.rglob("*.md"):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        target = str((frontmatter_mapping(text) or {}).get(MATERIALIZATION_TARGETS.field) or "").strip()
+        normalized = target.removeprefix("./")
+        if normalized == prefix or normalized.startswith(f"{prefix}/"):
+            return True
+    return False
+
+
 def desk_graph(root: Path) -> ProjectGraph:
     """The desk's declared-edge graph, read source by source."""
-    return ProjectGraph(root, desk_graph_config())
+    root = Path(root).resolve()
+    config = desk_graph_config() if _declares_target_under(root, "runs") else _desk_graph_config_without_runs()
+    return ProjectGraph(root, config)
 
 
 def extract_doc_nodes(root: Path) -> list[DocumentNode]:

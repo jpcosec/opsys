@@ -1,0 +1,16 @@
+## /tmp/boardperf-evidence/baseline.prof
+open_store: calls=37 cumulative=1.177s
+desk_graph: calls=1 cumulative=1.696s
+build_closeout_graph_context: calls=5 cumulative=3.524s
+load_edge_index: calls=5 cumulative=1.219s
+select_documents: calls=24 cumulative=1.869s
+transition_findings: calls=4 cumulative=1.035s
+doc_status: calls=4 cumulative=0.194s
+## /tmp/boardperf-evidence/after.prof
+open_store: calls=12 cumulative=0.419s
+desk_graph: calls=1 cumulative=1.396s
+build_closeout_graph_context: calls=5 cumulative=2.925s
+load_edge_index: calls=4 cumulative=0.773s
+select_documents: calls=4 cumulative=0.633s
+transition_findings: calls=4 cumulative=0.391s
+doc_status: calls=0 cumulative=0.000s

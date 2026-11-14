@@ -201,3 +201,28 @@ def test_the_old_view_service_is_gone() -> None:
         if "desk_view" in path.read_text(encoding="utf-8") or "DeskView" in path.read_text(encoding="utf-8")
     ]
     assert hits == []
+
+
+def test_a_gate_read_failure_is_the_card_error(desk: dict, monkeypatch: pytest.MonkeyPatch) -> None:
+    """`_gates` turns a failure to read the transitions into the card's error, not a crash."""
+    from deskops import lifecycle
+
+    def no_graph(*args: object, **kwargs: object) -> list:
+        raise RuntimeError("lifecycle graph unavailable")
+
+    monkeypatch.setattr(lifecycle, "transitions_from", no_graph)
+    view = board_view(desk["root"])
+    errors = [item for item in view["errors"] if item["cause"].startswith("Lifecycle gates unavailable: ")]
+    assert errors and errors[0]["cause"] == "Lifecycle gates unavailable: lifecycle graph unavailable"
+
+
+def test_a_closeout_read_failure_is_the_card_error(desk: dict, monkeypatch: pytest.MonkeyPatch) -> None:
+    """`_closeout` records a failed read-only verify instead of dropping the card."""
+    def broken(self: DeskopsOperations, task_selector: str, **kwargs: object) -> dict:
+        raise RuntimeError("closeout unavailable")
+
+    monkeypatch.setattr(DeskopsOperations, "verify_task_closeout", broken)
+    view = board_view(desk["root"])
+    errors = [item for item in view["errors"] if item["cause"] == "verify_task_closeout failed: closeout unavailable"]
+    assert errors
+    assert all(card["closeout"] is None for column in view["columns"] for card in column["tasks"])

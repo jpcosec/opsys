@@ -157,20 +157,21 @@ class TasksService:
         whether its condition holds now (empty when the graph is missing or the task is
         complete)."""
         try:
-            task = doc_access.load_task(self.root, task_id)
+            task_path, payload, effective = self._ops.task_record(task_id)
         except FileNotFoundError:
             return None, []
-        return task, self._lifecycle_gates(task)
+        task = doc_access.hydrate_task(effective)
+        return task, self._lifecycle_gates(task, task_path, payload)
 
-    def _lifecycle_gates(self, task: Task) -> list[dict[str, Any]]:
+    def _lifecycle_gates(self, task: Task, task_path: Path | None = None, payload: dict[str, Any] | None = None) -> list[dict[str, Any]]:
         if not task.current_node or task.current_node == lifecycle.COMPLETE:
             return []
         try:
             transitions = lifecycle.transitions_from(self.root, task.current_node, snapshot=self._ops.snapshot)
         except Exception:
             return []
-        task_path = doc_access.resolve_glob(self.root, self.desk_root / "tasks", task.id)
-        payload = doc_access.read_doc(task_path, TaskDoc)
+        if task_path is None or payload is None:
+            task_path, payload, _ = self._ops.task_record(task.id)
         findings = self._transition_findings(task_path, payload)
         return [
             {
@@ -186,7 +187,7 @@ class TasksService:
     def _transition_findings(self, task_path: Path, payload: dict[str, Any]) -> list[dict[str, Any]]:
         """The findings of the task's ``on_transition`` rules (sldb GO08): what blocks the gate
         leaving its node, as ``show`` and ``next`` print them; empty for an untracked task."""
-        document = lifecycle.task_document(self.root, task_path)
+        document = self._ops.task_document(task_path)
         if document is None:
             return []
         try:
