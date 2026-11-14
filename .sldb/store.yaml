@@ -566,9 +566,6 @@ include:
   - desk/lifecycle/rule-closeout-task-docs.md
   - desk/lifecycle/rule-closeout-task-external.md
   - desk/lifecycle/rule-closeout-task-refactor.md
-- model: TaskCodeDoc
-  paths:
-  - desk/tasks/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper.md
 - model: ViewDoc
   paths:
   - deskops/data/views/board.md

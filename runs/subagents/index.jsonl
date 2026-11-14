@@ -162,3 +162,4 @@
 {"task_id": "task-deskops-view-board-en-menos-de-2-5-s-construir-una-vez-por-corrida-lo-que-hoy-se-rehace-por-tarjeta", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
 {"task_id": "task-add-task-y-el-doctor-sugieren-task-external-o-una-tarea-espejo-cuando-los-files-o-las-referencias-de", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
 {"task_id": "task-test-domain-tree-vuelve-a-verde-sldb-rechaza-al-trackear-un-\u00e1tomo-con-namespace-no-declarado", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}
+{"task_id": "task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper", "run_id": null, "run_dir": null, "session_sha256": null, "mode": "resolved-by", "commit": null}

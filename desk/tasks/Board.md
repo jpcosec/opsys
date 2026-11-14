@@ -1,7 +1,7 @@
 ---
 sldb:
   by: agent
-  at: '2026-11-14T13:23:26Z'
+  at: '2026-11-14T13:23:32Z'
   authority: generated
   via: save_document_payload
 # board-xxx
@@ -9,8 +9,7 @@ id: board-001
 # Affected workspace or domain
 scope: desk
 # List of task-xxx paths
-tasks:
-- desk/tasks/task-los-tests-de-deskops-leen-la-ruta-del-sldb-hermano-de-la-variable-de-entorno-sldb-src-con-un-helper.md
+tasks: []
 # List of pill-xxx paths
 pills:
 - pill-001-task-closure-commit
@@ -51,5 +50,3 @@ No active tasks routed.
 ## Task Details
 
 _Generated from the task references above._
-
-- Los tests de deskops leen la ruta del sldb hermano de la variable de entorno SLDB_SRC, con un helper común [draft] - Un solo helper común resuelve la ruta de sldb para los tests: lee la variable de entorno SLDB_SRC y, si no está definida, usa la ruta hermana de hoy; los 18 archivos lo usan y ninguno repite la línea fija.
